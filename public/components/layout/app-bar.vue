@@ -35,6 +35,9 @@
             >
               Nous contacter
             </v-tab>
+            <v-tab v-if="user && user.isAdmin" :to="{name: 'config'}" class="font-weight-bold">
+              Configuration
+            </v-tab>
           </v-tabs>
         </v-container>
       </v-col>
@@ -98,7 +101,7 @@ const { mapState, mapGetters, mapActions } = require('vuex')
 export default {
   components: { XsMenu },
   computed: {
-    ...mapState(['config']),
+    ...mapState(['config', 'textDark']),
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['themeColorDark']),
     ...mapGetters('session', ['activeAccount']),

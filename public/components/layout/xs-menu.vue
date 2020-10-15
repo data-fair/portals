@@ -24,6 +24,9 @@
       <v-list-item v-if="config.contact" :href="config.contact">
         <v-list-item-title>Nous contacter</v-list-item-title>
       </v-list-item>
+      <v-list-item v-if="user && user.isAdmin" :to="{name: 'config'}">
+        <v-list-item-title>Configuration</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

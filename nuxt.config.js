@@ -11,6 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   srcDir: 'public/',
+  mode: 'spa', // TODO remove this when VJSF is updated
   build: {
     transpile: [
       /@koumoul/,

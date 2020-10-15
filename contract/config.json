@@ -1,5 +1,13 @@
 {
   "type": "object",
+  "x-display": "expansion-panels",
+  "x-options": {
+    "expansionPanelsProps": {
+      "multiple": true,
+      "accordion": true,
+      "value": [0, 1, 2, 3]
+    }
+  },
   "allOf": [{
     "title": "Présentation",
     "required": ["themeColor", "footerColor"],

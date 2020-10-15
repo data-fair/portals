@@ -8,7 +8,7 @@
           md="4"
           sm="6"
           cols="12"
-          :class="{'py-1': true, 'text-center': $vuetify.breakpoint.xs}"
+          :class="{'pt-1 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
         >
           <a
             v-if="config.website"
@@ -19,6 +19,7 @@
             <v-img
               :src="logoUrl"
               :alt="config.title"
+              contain
               style="height:80px"
             />
           </a>
@@ -28,18 +29,19 @@
             style="height:100%"
             class="mr-3"
           >
-            <img
+            <v-img
               :src="logoUrl"
               :alt="config.title"
+              contain
               style="height:80px"
-            >
+            />
           </nuxt-link>
         </v-col>
         <v-col
           md="8"
           sm="6"
           cols="12"
-          class="py-1"
+          class="pt-1 pb-0"
         >
           <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} grey--text text--darken-2 font-weight-bold`">
             {{ config.title }}

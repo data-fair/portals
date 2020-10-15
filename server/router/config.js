@@ -20,18 +20,18 @@ const router = express.Router()
 // Read a preference
 router.get('', asyncWrap(async (req, res, next) => {
   const configuration = await req.app.get('db').collection('configuration')
-    .findOne({})
+    .findOne({ _id: 'main' }, { _id: 0 })
   res.status(200).json(Object.assign(defaults(schemaNoAllOf), configuration || {}))
 }))
 
 // Create or update user configuration
 router.post('', asyncWrap(async (req, res, next) => {
   const configuration = await req.app.get('db').collection('configuration')
-    .findOne({ _id: req.user.id }, { _id: 0 }) || {}
-  const update = Object.assign(defaults(schemaNoAllOf), configuration, req.body, { _id: req.user.id })
+    .findOne({ _id: 'main' }, { _id: 0 }) || {}
+  const update = Object.assign(defaults(schemaNoAllOf), configuration, req.body)
   // const valid = validate(update)
   // if (!valid) return res.status(400).send(validate.errors)
-  // await req.app.get('db').collection('configuration').updateOne({ _id: req.user.id }, { $set: update }, { upsert: true })
+  await req.app.get('db').collection('configuration').updateOne({ _id: 'main' }, { $set: update }, { upsert: true })
   res.status(200).json(update)
 }))
 
