@@ -29,7 +29,7 @@
           <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
             <iframe
               :id="'api-dataset-' + dataset.id"
-              :src="`${env.openapiViewerUrl}?proxy=false&hide-toolbar=true&url=${env.dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
+              :src="`${openapiViewerUrl}?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
               height="100%"
               width="100%"
               @load="iframeLoaded"
@@ -43,7 +43,6 @@
 
 <script>
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
-const { mapState } = require('vuex')
 
 export default {
   props: ['dataset', 'color'],
@@ -53,7 +52,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['env'])
+    dataFairUrl() {
+      return process.env.dataFairUrl
+    },
+    openapiViewerUrl() {
+      return process.env.openapiViewerUrl
+    }
   },
   watch: {
     dialog() {

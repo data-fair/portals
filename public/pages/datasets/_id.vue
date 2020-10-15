@@ -43,7 +43,7 @@
               <v-tooltip v-if="dataset.file" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    :href="env.dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
+                    :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
                     :color="'primary'"
                     icon
                     v-on="on"
@@ -56,7 +56,7 @@
               <v-tooltip v-if="dataset.file && dataset.extensions && dataset.extensions.find(e => e.active)" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    :href="env.dataFairUrl + '/api/v1/datasets/' + dataset.id + '/full'"
+                    :href="dataFairUrl + '/api/v1/datasets/' + dataset.id + '/full'"
                     icon
                     v-on="on"
                   >
@@ -260,11 +260,11 @@ export default {
   },
   async asyncData ({ app, env, params, error }) {
     try {
-      const dataset = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + params.id)
+      const dataset = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets/' + params.id)
       const query = { select: 'title,description,url,bbox' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) query.id = dataset.extras.reuses.join(',')
       else query.dataset = params.id
-      const applications = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params: query })
+      const applications = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications', { params: query })
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
         applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
       }
@@ -279,9 +279,12 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['env', 'config', 'publicUrl']),
+    ...mapState(['config', 'publicUrl']),
     url() {
       return process.env.publicUrl + '/datasets/' + this.$route.params.id
+    },
+    dataFairUrl() {
+      return process.env.dataFairUrl
     }
   },
   async mounted() {

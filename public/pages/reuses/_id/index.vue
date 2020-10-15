@@ -137,7 +137,7 @@
                   <v-tooltip v-if="dataset.file" top>
                     <template v-slot:activator="{ on }">
                       <v-btn
-                        :href="env.dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
+                        :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
                         :color="'primary'"
                         icon
                         v-on="on"
@@ -211,9 +211,9 @@ export default {
   },
   async asyncData ({ app, env, params, error }) {
     try {
-      const application = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + params.id)
-      const config = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + params.id + '/configuration')
-      const datasets = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') } })
+      const application = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id)
+      const config = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id + '/configuration')
+      const datasets = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') } })
       return { application, datasets }
     } catch (err) {
       error({ statusCode: err.response.status })
@@ -225,7 +225,7 @@ export default {
     baseApplication: null
   }),
   computed: {
-    ...mapState(['env', 'config', 'publicUrl']),
+    ...mapState(['config', 'publicUrl']),
     pageUrl() {
       return process.env.publicUrl + '/reuses/' + this.$route.params.id
     },
@@ -234,6 +234,9 @@ export default {
     },
     description() {
       return marked(this.application.description).html
+    },
+    dataFairUrl() {
+      return process.env.dataFairUrl
     }
   },
   async mounted() {

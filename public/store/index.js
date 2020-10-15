@@ -14,7 +14,6 @@ export default () => {
       owner: null,
       config: null,
       draft: false,
-      env: null,
       initialQuery: {},
       textDark: '#212121'
     },

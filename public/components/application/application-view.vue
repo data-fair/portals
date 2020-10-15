@@ -50,9 +50,6 @@ export default {
       dialog: null
     }
   },
-  computed: {
-    ...mapState(['env'])
-  },
   watch: {
     dialog() {
       const viewName = this.dialog ? `/reuses/${this.application.id}/application-dialog` : this.$route.path

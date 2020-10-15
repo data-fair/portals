@@ -52,9 +52,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['env', 'config']),
+    ...mapState(['config']),
     iframeSrc() {
-      return `${this.env.dataFairUrl}/embed/dataset/${this.dataset.id}/map?primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${process.env.dataFairUrl}/embed/dataset/${this.dataset.id}/map?primary=${encodeURIComponent(this.config.themeColor)}`
     }
   },
   watch: {

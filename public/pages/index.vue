@@ -44,7 +44,7 @@
           <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
             <client-only>
               <iframe
-                :src="env.dataFairUrl + '/app/' + featuredReuse.id + '?embed=true'"
+                :src="dataFairUrl + '/app/' + featuredReuse.id + '?embed=true'"
                 height="100%"
                 width="100%"
               />
@@ -284,12 +284,15 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['env', 'config', 'publicUrl', 'owner']),
+    ...mapState(['config', 'publicUrl', 'owner']),
     featuredReuse() {
       return (this.config.featuredReuse ? this.config.featuredReuse : this.applications.results[0])
     },
     homeUrl() {
       return process.env.publicUrl + '/assets/home'
+    },
+    dataFairUrl() {
+      return process.env.dataFairUrl
     }
   },
   methods: {

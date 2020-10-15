@@ -62,17 +62,14 @@
 </template>
 
 <script>
-const { mapState } = require('vuex')
-
 export default {
   props: ['dataset', 'color'],
   data: () => ({
     dialog: null
   }),
   computed: {
-    ...mapState(['env']),
     baseUrl () {
-      return `${this.env.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
+      return `${process.env.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
     }
   }
 }

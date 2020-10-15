@@ -98,7 +98,7 @@ const { mapState, mapGetters, mapActions } = require('vuex')
 export default {
   components: { XsMenu },
   computed: {
-    ...mapState(['env', 'config']),
+    ...mapState(['config']),
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['themeColorDark']),
     ...mapGetters('session', ['activeAccount']),
