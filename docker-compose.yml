@@ -1,0 +1,48 @@
+version: '3'
+services:
+  sd:
+    image: koumoul/simple-directory:2
+    ports:
+      - 6201:8080
+      - 1080:1080
+      - 1025:1025
+    environment:
+      - ADMINS=["superadmin@test.com"]
+      - PUBLIC_URL=http://localhost:6200/simple-directory
+      - MAILDEV_ACTIVE=true
+      - STORAGE_TYPE=file
+      - NUXT_BUILD_BLOCKING=false
+      - NO_UI=${NO_UI}
+      - ROLES_DEFAULTS=["admin", "contrib", "user"]
+    volumes:
+      - ./test/resources/users.json:/webapp/data/users.json
+      - ./test/resources/organizations.json:/webapp/data/organizations.json
+      
+  data-fair:
+    image: koumoul/data-fair:master
+    restart: on-failure:10
+    network_mode: host
+    environment:
+      - DEBUG=files
+      - MONGO_URL=mongodb://localhost:27017/data-fair
+      - OPENAPI_VIEWER_URL=http://localhost:6200/openapi-viewer/
+      - DIRECTORY_URL=http://localhost:6200/simple-directory
+      - PUBLIC_URL=http://localhost:6200/data-fair
+      - WS_PUBLIC_URL=ws://localhost:6200/data-fair
+
+  elasticsearch:
+    image: koumoul/data-fair-elasticsearch:latest
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+
+  mongo:
+    image: mongo:4.1
+    ports:
+      - 27017:27017
+
+  openapi-viewer:
+    image: koumoul/openapi-viewer:1
+    ports:
+      - 6202:8080

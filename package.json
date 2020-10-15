@@ -1,0 +1,73 @@
+{
+  "name": "data-fair-portal",
+  "version": "0.1.0",
+  "description": "A standard portal with simple configuration.",
+  "main": "index.js",
+  "scripts": {
+    "dev-server": "NODE_ENV=development nodemon server",
+    "dev-client": "NODE_ENV=development nuxt -p 3039",
+    "build": "nuxt build",
+    "analyze": "nuxt build --analyze",
+    "lint": "eslint --ext js,vue --ignore-path .gitignore .",
+    "lint-fix": "eslint --ext js,vue --ignore-path .gitignore --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/koumoul/portal-standard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/koumoul/portal-standard/issues"
+  },
+  "homepage": "https://gitlab.com/koumoul/portal-standard#readme",
+  "dependencies": {
+    "@hackmd/meta-marked": "^0.4.4",
+    "@koumoul/nuxt-config-inject": "^0.4.7",
+    "@koumoul/sd-express": "^0.19.1",
+    "@koumoul/sd-vue": "^0.19.0",
+    "@koumoul/v-iframe": "^0.2.3",
+    "@koumoul/vue-multianalytics": "^1.10.1",
+    "@mdi/font": "^5.6.55",
+    "@nuxtjs/axios": "^5.12.2",
+    "@nuxtjs/vuetify": "^1.11.2",
+    "ajv": "^6.12.6",
+    "config": "^3.3.2",
+    "cookie-parser": "^1.4.5",
+    "cookie-universal-nuxt": "^2.1.4",
+    "event-to-promise": "^0.8.0",
+    "express-fileupload": "^1.2.0",
+    "fs-extra": "^8.0.1",
+    "iframe-resizer": "4.0.4",
+    "js-cookie": "^2.2.0",
+    "json-schema-defaults": "^0.4.0",
+    "mobile-device-detect": "^0.2.3",
+    "moment": "^2.29.1",
+    "mongodb": "^3.3.2",
+    "nuxt": "^2.14.6",
+    "scrolling-element": "^1.0.2",
+    "tinycolor2": "^1.4.2",
+    "vue-clamp": "^0.3.1",
+    "vue-moment": "^4.0.0",
+    "vue-social-sharing": "^3.0.2",
+    "vuetify": "^2.3.14"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cors": "^2.8.5",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-vuetify": "^0.6.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-html": "^6.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-no-only-tests": "^2.4.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vuetify": "^1.0.0-beta.7",
+    "http-proxy-middleware": "^1.0.6",
+    "nodemon": "^1.19.3"
+  }
+}

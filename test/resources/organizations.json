@@ -1,0 +1,64 @@
+[{
+  "id": "orga1",
+  "name": "Orga 1",
+  "members": [{
+    "id": "superadmin",
+    "role": "admin"
+  }, {
+    "id": "admin1",
+    "role": "admin"
+  }, {
+    "id": "user1",
+    "role": "user"
+  }, {
+    "id": "manager1",
+    "role": "manager"
+  }]
+}, {
+  "id": "orga2",
+  "name": "Orga 2",
+  "members": [{
+    "id": "admin2",
+    "role": "admin"
+  }]
+}, {
+  "id": "orga3",
+  "name": "Orga 3",
+  "members": []
+}, {
+  "id": "orga4",
+  "name": "Orga 4",
+  "members": []
+}, {
+  "id": "orga5",
+  "name": "Orga 5",
+  "members": []
+}, {
+  "id": "orga6",
+  "name": "Orga 6",
+  "members": []
+}, {
+  "id": "orga7",
+  "name": "Orga 7",
+  "members": []
+}, {
+  "id": "orga8",
+  "name": "Orga 8",
+  "members": []
+}, {
+  "id": "orga9",
+  "name": "Orga 9",
+  "members": []
+}, {
+  "id": "orga10",
+  "name": "Orga 10",
+  "members": []
+}, {
+  "id": "orga11",
+  "name": "Orga 11",
+  "members": []
+}, {
+  "id": "orga12",
+  "name": "Orga 12",
+  "members": []
+}]
