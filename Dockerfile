@@ -14,11 +14,11 @@ ADD config config
 # Adding UI
 ADD nuxt.config.js .
 ADD public public
+ADD contract contract
 RUN npm run build
 
 # Adding server files
 ADD server server
-ADD contract contract
 ADD README.md .
 
 VOLUME /webapp/data
