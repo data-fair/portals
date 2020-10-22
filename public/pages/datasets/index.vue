@@ -203,7 +203,7 @@ import MapPreview from '../../components/dataset/map-preview.vue'
 import ApiView from '../../components/dataset/api-view.vue'
 import SchemaView from '../../components/dataset/schema-view.vue'
 import { isMobileOnly } from 'mobile-device-detect'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 const marked = require('@hackmd/meta-marked')
 
 export default {
@@ -248,7 +248,8 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['config', 'publicUrl', 'owner']),
+    ...mapState(['config', 'publicUrl']),
+    ...mapGetters(['owner']),
     url() {
       return process.env.publicUrl + '/datasets'
     },

@@ -29,6 +29,9 @@ export default () => {
       },
       footerColorDark(state) {
         return tinycolor(state.config.footerColor).getLuminance() < 0.4
+      },
+      owner(state) {
+        return (state.config && state.config.owner && state.config.owner.id && ('organization:' + state.config.owner.id)) || undefined
       }
     },
     mutations: {
@@ -41,9 +44,16 @@ export default () => {
         const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/config`, { params: { draft: state.draft } })
         commit('setAny', { config })
       },
-      async init({ commit, dispatch }, { req, env, app, route }) {
+      async init({ commit, dispatch, state }, { req, env, app, route }) {
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
+        dispatch('session/loop')
         await dispatch('fetchConfig')
+        if (state.session.user) {
+          const user = state.session.user
+          if (user && !user.organization && user.organizations.length && state.config.owner) {
+            dispatch('session/switchOrganization', state.config.owner.id)
+          }
+        }
         // const initialQuery = {}
         // env = { ...env }
         //

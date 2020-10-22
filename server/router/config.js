@@ -26,12 +26,12 @@ router.get('', asyncWrap(async (req, res, next) => {
 
 // Create or update user configuration
 router.post('', asyncWrap(async (req, res, next) => {
-  const configuration = await req.app.get('db').collection('configuration')
-    .findOne({ _id: 'main' }, { _id: 0 }) || {}
-  const update = Object.assign(defaults(schemaNoAllOf), configuration, req.body)
+  // const configuration = await req.app.get('db').collection('configuration')
+  //   .findOne({ _id: 'main' }, { _id: 0 }) || {}
+  const update = Object.assign(defaults(schemaNoAllOf), req.body)
   // const valid = validate(update)
   // if (!valid) return res.status(400).send(validate.errors)
-  await req.app.get('db').collection('configuration').updateOne({ _id: 'main' }, { $set: update }, { upsert: true })
+  await req.app.get('db').collection('configuration').replaceOne({ _id: 'main' }, update, { upsert: true })
   res.status(200).json(update)
 }))
 

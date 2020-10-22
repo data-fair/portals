@@ -24,31 +24,25 @@
       <v-list-item v-if="config.contact" :href="config.contact">
         <v-list-item-title>Nous contacter</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="user && user.isAdmin" :to="{name: 'config'}">
+      <!-- <v-list-item v-if="user && user.isAdmin" :to="{name: 'config'}">
         <v-list-item-title>Configuration</v-list-item-title>
-      </v-list-item>
+      </v-list-item> -->
     </v-list>
   </v-menu>
 </template>
 
 <script>
-const { mapState, mapGetters, mapActions } = require('vuex')
+const { mapState } = require('vuex')
 
 export default {
   computed: {
     ...mapState(['config']),
-    ...mapState('session', ['user', 'initialized']),
-    ...mapGetters(['themeColorDark']),
-    ...mapGetters('session', ['activeAccount']),
     directoryUrl() {
       return process.env.directoryUrl
     },
     dataFairUrl() {
       return process.env.dataFairUrl + (process.env.development ? '/' : '')
     }
-  },
-  methods: {
-    ...mapActions('session', ['logout', 'login'])
   }
 }
 </script>

@@ -1,10 +1,11 @@
 <template>
   <v-container>
+    <section-title text="Configuration du portail" />
     <v-row>
       <v-col :cols="6">
         <v-form>
           <v-jsf
-            v-if="config" :schema="schema" :value="config" :options="{context: {}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+            v-if="config" :schema="schema" :value="config" :options="{context: {dataFairUrl, directoryUrl, owner: config.owner && config.owner.id}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
             @change="updateConfig"
           />
         </v-form>
@@ -29,6 +30,7 @@ const schema = require('../../contract/config.json')
 // })
 
 export default {
+  layout: 'minimal',
   middleware: 'superadmin-required',
   components: { VJsf },
   data: () => ({
@@ -44,6 +46,12 @@ export default {
   computed: {
     assetsUrl () {
       return process.env.publicUrl + '/assets/'
+    },
+    dataFairUrl() {
+      return process.env.dataFairUrl
+    },
+    directoryUrl() {
+      return process.env.directoryUrl
     }
   },
   mounted: async function () {
@@ -51,6 +59,7 @@ export default {
   },
   methods: {
     async updateConfig () {
+      console.log(this.config)
       try {
         await this.$axios.post(process.env.publicUrl + '/api/v1/config', this.config)
         this.$store.dispatch('fetchConfig')

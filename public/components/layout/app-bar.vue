@@ -35,9 +35,9 @@
             >
               Nous contacter
             </v-tab>
-            <v-tab v-if="user && user.isAdmin" :to="{name: 'config'}" class="font-weight-bold">
+            <!-- <v-tab v-if="user && user.isAdmin" :to="{name: 'config'}" class="font-weight-bold">
               Configuration
-            </v-tab>
+            </v-tab> -->
           </v-tabs>
         </v-container>
       </v-col>
@@ -69,10 +69,10 @@
               <template v-slot:activator="{on}">
                 <v-btn text v-on="on">
                   <v-avatar :size="36">
-                    <img :src="`${directoryUrl}/api/avatars/${activeAccount.type}/${activeAccount.id}/avatar.png`">
+                    <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
                   </v-avatar>
                   &nbsp;
-                  {{ activeAccount.name }}
+                  {{ user.name }}
                 </v-btn>
               </template>
               <v-list>
@@ -104,7 +104,6 @@ export default {
     ...mapState(['config', 'textDark']),
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['themeColorDark']),
-    ...mapGetters('session', ['activeAccount']),
     directoryUrl() {
       return process.env.directoryUrl
     },

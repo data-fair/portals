@@ -240,7 +240,7 @@ export default {
       params: {
         size: 3,
         select: 'id,title,updatedAt,createdAt,createdBy',
-        owner: this.$store.state.owner,
+        owner: this.$store.getters.owner,
         sort: 'createdAt:-1',
         public: this.$store.state.config.publicOnly ? 'true' : 'false'
       }
@@ -249,7 +249,7 @@ export default {
       params: {
         size: 3,
         select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
-        owner: this.$store.state.owner,
+        owner: this.$store.getters.owner,
         sort: 'createdAt:-1',
         public: this.$store.state.config.publicOnly ? 'true' : 'false'
       }
@@ -260,7 +260,7 @@ export default {
       params: {
         size: 1000,
         select: 'count',
-        owner: this.$store.state.owner,
+        owner: this.$store.getters.owner,
         public: this.$store.state.config.publicOnly ? 'true' : 'false'
       }
     })
@@ -284,7 +284,7 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['config', 'publicUrl', 'owner']),
+    ...mapState(['config', 'publicUrl']),
     featuredReuse() {
       return (this.config.featuredReuse ? this.config.featuredReuse : this.applications.results[0])
     },
