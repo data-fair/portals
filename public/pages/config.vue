@@ -5,7 +5,7 @@
       <v-col :cols="6">
         <v-form>
           <v-jsf
-            v-if="config" :schema="schema" :value="config" :options="{context: {dataFairUrl, directoryUrl, owner: config.owner && config.owner.id}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+            v-if="config" :schema="schema" :value="config" :options="{httpLib, context: {dataFairUrl, directoryUrl, owner: config.owner && config.owner.id}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
             @change="updateConfig"
           />
         </v-form>
@@ -52,6 +52,13 @@ export default {
     },
     directoryUrl() {
       return process.env.directoryUrl
+    },
+    httpLib () {
+      return {
+        get: async (url, options) => {
+          return await this.$axios.get(url, Object.assign({ withCredentials: true }, options))
+        }
+      }
     }
   },
   mounted: async function () {

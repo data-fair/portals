@@ -260,8 +260,7 @@ export default {
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
         q: this.search,
-        facets: 'base-application,topics',
-        public: this.config.publicOnly ? 'true' : 'false'
+        facets: 'base-application,topics'
       }
       if (this.filters.apps.length) params['base-application'] = this.filters.apps.map(t => t.value.url).join(',')
       if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')

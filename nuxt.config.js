@@ -43,7 +43,8 @@ module.exports = {
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
   axios: {
     browserBaseURL: config.basePath,
-    baseURL: config.publicUrl
+    baseURL: config.publicUrl,
+    credentials: true
   },
   buildModules: ['@nuxtjs/vuetify'],
   vuetify: {

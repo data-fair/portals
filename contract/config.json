@@ -88,12 +88,6 @@
             "type": "string"
           }
         }
-      },
-      "publicOnly": {
-        "title": "Contenus publics",
-        "description": "Inclure uniquement les contenus publics. Décochez pour créer un portail privé à usage interne dans une organisation.",
-        "default": "true",
-        "type": "boolean"
       }
     }
   }, {

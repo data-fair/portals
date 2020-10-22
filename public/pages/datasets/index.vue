@@ -276,8 +276,7 @@ export default {
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
         facets: 'concepts,topics',
-        q: this.search,
-        public: this.config.publicOnly ? 'true' : 'false'
+        q: this.search
       }
       if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')

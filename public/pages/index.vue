@@ -241,8 +241,7 @@ export default {
         size: 3,
         select: 'id,title,updatedAt,createdAt,createdBy',
         owner: this.$store.getters.owner,
-        sort: 'createdAt:-1',
-        public: this.$store.state.config.publicOnly ? 'true' : 'false'
+        sort: 'createdAt:-1'
       }
     })
     const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
@@ -250,8 +249,7 @@ export default {
         size: 3,
         select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
         owner: this.$store.getters.owner,
-        sort: 'createdAt:-1',
-        public: this.$store.state.config.publicOnly ? 'true' : 'false'
+        sort: 'createdAt:-1'
       }
     })
 
@@ -260,8 +258,7 @@ export default {
       params: {
         size: 1000,
         select: 'count',
-        owner: this.$store.getters.owner,
-        public: this.$store.state.config.publicOnly ? 'true' : 'false'
+        owner: this.$store.getters.owner
       }
     })
     this.applications = await promiseApplications
