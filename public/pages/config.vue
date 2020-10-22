@@ -14,6 +14,9 @@
         <v-card v-for="asset in assets" :key="asset.key" class="px-3 my-3 pt-3" align="center">
           <v-img :height="asset.height" contain :src="assetsUrl+asset.key+'?t='+timestamp" />
           <v-file-input :label="asset.label" style="width:100%" @change="updateAsset(asset, $event)" />
+          <div v-if="asset.key === 'home'" class="caption">
+            Vous pouvez télécharger des illustrations open source <a href="https://undraw.co/" target="_blank">sur ce site</a>.
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -66,7 +69,6 @@ export default {
   },
   methods: {
     async updateConfig () {
-      console.log(this.config)
       try {
         await this.$axios.post(process.env.publicUrl + '/api/v1/config', this.config)
         this.$store.dispatch('fetchConfig')

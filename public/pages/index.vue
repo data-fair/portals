@@ -6,14 +6,13 @@
         md="5"
         offset-md="1"
       >
-        <v-card outlined>
-          <v-img
-            :src="homeUrl"
-            :alt="config.title"
-            min-height="200"
-            max-height="600"
-          />
-        </v-card>
+        <v-img
+          :src="homeUrl"
+          :alt="config.title"
+          min-height="200"
+          max-height="600"
+          contain
+        />
       </v-col>
       <v-col
         class="pt-2 order-sm-first"

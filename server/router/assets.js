@@ -12,7 +12,7 @@ const assets = {
     mimeType: 'image/png'
   },
   home: {
-    file: 'home.jpg',
+    file: 'undraw_Data_points_re_vkpq.png',
     mimeType: 'image/jpeg'
   },
   favicon: {
