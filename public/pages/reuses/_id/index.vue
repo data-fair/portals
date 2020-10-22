@@ -1,6 +1,7 @@
 <template lang="html">
   <div>
-    <v-container>
+    <error v-if="$fetchState.error" :error="$fetchState.error" />
+    <v-container v-else-if="application">
       <section-title :text="application.title" />
       <v-row>
         <v-col md="7" sm="12">
@@ -198,6 +199,7 @@ import MapPreview from '../../../components/dataset/map-preview.vue'
 import ApiView from '../../../components/dataset/api-view.vue'
 import Social from '~/components/social'
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
+import Error from '~/components/error.vue'
 const { mapState } = require('vuex')
 const marked = require('@hackmd/meta-marked')
 
@@ -207,22 +209,20 @@ export default {
     TablePreview,
     MapPreview,
     ApiView,
-    Social
+    Social,
+    Error
   },
-  async asyncData ({ app, env, params, error }) {
-    try {
-      const application = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id, { withCredentials: true })
-      const config = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id + '/configuration', { withCredentials: true })
-      const datasets = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
-      return { application, datasets }
-    } catch (err) {
-      error({ statusCode: err.response.status })
-    }
+  async fetch () {
+    this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
+    const config = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
+    this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
   },
   data: () => ({
     embedDialog: null,
     marked,
-    baseApplication: null
+    baseApplication: null,
+    application: null,
+    datasets: null
   }),
   computed: {
     ...mapState(['config', 'publicUrl']),
@@ -240,7 +240,7 @@ export default {
     }
   },
   async mounted() {
-    this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
+    if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
   },
   methods: {
     iframeLoaded () {
@@ -248,6 +248,7 @@ export default {
     }
   },
   head () {
+    if (!this.application) return { title: 'Page non trouvée' }
     const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
     return {
       title: this.application.title,

@@ -34,7 +34,8 @@ module.exports = {
     { src: '~plugins/moment' },
     { src: '~plugins/filters' },
     { src: '~plugins/polyfill', ssr: false },
-    { src: '~plugins/analytics', ssr: false }
+    { src: '~plugins/analytics', ssr: false },
+    { src: '~/plugins/window-size', ssr: false }
   ],
   router: {
     base: config.basePath,

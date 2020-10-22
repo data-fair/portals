@@ -1,41 +1,41 @@
 <template lang="html">
   <div>
-    <v-container class="py-0">
-      <v-breadcrumbs :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]">
-        <template slot="divider">
-          <v-icon>mdi-chevron-right</v-icon>
-        </template>
-      </v-breadcrumbs>
-    </v-container>
-    <v-divider />
-    <iframe
-      id="reuse-frame-full"
-      :src="embedUrl + '?embed=true'"
-      style="height:calc(100vh - 68px)"
-      width="100%"
-      @load="iframeLoaded"
-    />
+    <error v-if="$fetchState.error" :error="$fetchState.error" />
+    <div v-else-if="application">
+      <v-container class="py-0">
+        <v-breadcrumbs :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]">
+          <template slot="divider">
+            <v-icon>mdi-chevron-right</v-icon>
+          </template>
+        </v-breadcrumbs>
+      </v-container>
+      <v-divider />
+      <iframe
+        id="reuse-frame-full"
+        :src="embedUrl + '?embed=true'"
+        style="height:calc(100vh - 68px)"
+        width="100%"
+        @load="iframeLoaded"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
+import Error from '~/components/error.vue'
 const { mapState } = require('vuex')
 const marked = require('@hackmd/meta-marked')
 
 export default {
   layout: 'minimal',
-  async asyncData ({ app, env, params, error }) {
-    try {
-      const application = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + params.id, { withCredentials: true })
-      return { application }
-    } catch (err) {
-      console.log(err)
-      error({ statusCode: err.status })
-    }
+  components: { Error },
+  async fetch () {
+    this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
   },
   data: () => ({
-    marked
+    marked,
+    application: null
   }),
   computed: {
     ...mapState(['publicUrl']),
@@ -53,6 +53,7 @@ export default {
     }
   },
   head () {
+    if (!this.application) return { title: 'Page non trouvée' }
     const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
     return {
       title: this.application.title,

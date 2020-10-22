@@ -4,7 +4,8 @@
       <v-breadcrumbs :items="[{text: 'Les données', to: '/datasets', exact: true}, {text: dataset.title, disabled: true}]"/>
     </v-container>
     <v-divider/> -->
-    <v-container>
+    <error v-if="$fetchState.error" :error="$fetchState.error" />
+    <v-container v-else-if="dataset">
       <section-title :text="dataset.title" />
       <v-row>
         <v-col md="7" sm="12">
@@ -236,19 +237,21 @@
 </template>
 
 <script>
-// import Disqus from '../../components/disqus.vue'
-import TablePreview from '../../components/dataset/table-preview.vue'
-import MapPreview from '../../components/dataset/map-preview.vue'
-import ApiView from '../../components/dataset/api-view.vue'
-import SchemaView from '../../components/dataset/schema-view.vue'
+// import Disqus from '~/components/disqus.vue'
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
+import SchemaView from '~/components/dataset/schema-view.vue'
 import Attachments from '~/components/dataset/dataset-attachments.vue'
 import Social from '~/components/social'
+import Error from '~/components/error.vue'
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
 import { isMobileOnly } from 'mobile-device-detect'
 const { mapState } = require('vuex')
 const marked = require('@hackmd/meta-marked')
 
 export default {
+  layout: 'default',
   components: {
     // Disqus,
     TablePreview,
@@ -256,27 +259,27 @@ export default {
     ApiView,
     SchemaView,
     Attachments,
-    Social
+    Social,
+    Error
   },
-  async asyncData ({ app, env, params, error }) {
-    try {
-      const dataset = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets/' + params.id, { withCredentials: true })
-      const query = { select: 'title,description,url,bbox' }
-      if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) query.id = dataset.extras.reuses.join(',')
-      else query.dataset = params.id
-      const applications = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications', { params: query, withCredentials: true })
-      if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
-        applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
-      }
-      return { dataset, applications }
-    } catch (err) {
-      error({ statusCode: err.response.status })
+  async fetch () {
+    const dataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
+    const query = { select: 'title,description,url,bbox' }
+    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) query.id = dataset.extras.reuses.join(',')
+    else query.dataset = this.$route.params.id
+    const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params: query, withCredentials: true })
+    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
+      applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
     }
+    this.dataset = dataset
+    this.applications = applications
   },
   data: () => ({
     marked,
     baseApplications: {},
-    isMobileOnly
+    isMobileOnly,
+    dataset: null,
+    applications: null
   }),
   computed: {
     ...mapState(['config', 'publicUrl']),
@@ -297,66 +300,70 @@ export default {
     }
   },
   head () {
-    const description = marked(this.dataset.description || this.dataset.title).html.split('</p>').shift().replace('<p>', '')
-    const schema = {
-      '@context': 'http://schema.org',
-      '@type': 'Dataset',
-      url: this.url,
-      name: this.dataset.title,
-      author: {
-        '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
-        name: this.dataset.owner.name
-      },
-      dateCreated: this.dataset.createdAt,
-      dateModified: this.dataset.updatedAt,
-      sdPublisher: require('~/assets/organization.json'),
-      sdDatePublished: this.dataset.createdAt,
-      encodingFormat: 'application/json',
-      citation: this.dataset.origin
-    }
-    if (this.dataset.bbox) {
-      schema.spatialCoverage = {
-        '@type': 'Place',
-        geo: {
-          '@type': 'GeoShape',
-          box: this.dataset.bbox.slice(0, 2).join(',') + ' ' + this.dataset.bbox.slice(2, 4).join(',')
+    if (this.dataset) {
+      const description = marked(this.dataset.description || this.dataset.title).html.split('</p>').shift().replace('<p>', '')
+      const schema = {
+        '@context': 'http://schema.org',
+        '@type': 'Dataset',
+        url: this.url,
+        name: this.dataset.title,
+        author: {
+          '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
+          name: this.dataset.owner.name
+        },
+        dateCreated: this.dataset.createdAt,
+        dateModified: this.dataset.updatedAt,
+        sdPublisher: require('~/assets/organization.json'),
+        sdDatePublished: this.dataset.createdAt,
+        encodingFormat: 'application/json',
+        citation: this.dataset.origin
+      }
+      if (this.dataset.bbox) {
+        schema.spatialCoverage = {
+          '@type': 'Place',
+          geo: {
+            '@type': 'GeoShape',
+            box: this.dataset.bbox.slice(0, 2).join(',') + ' ' + this.dataset.bbox.slice(2, 4).join(',')
+          }
         }
       }
-    }
-    if (this.dataset.license && this.dataset.license.href) schema.license = this.dataset.license.href
-    if (this.applications && this.applications.count) {
-      schema.image = {
-        '@type': 'imageObject',
-        url: this.applications.results[0].href + '/capture'
-      }
-      schema.thumbnailUrl = this.applications.results[0].href + '/capture'
-    }
-    const meta = [
-      { hid: 'description', name: 'description', content: description },
-      { property: 'og:url', content: this.url },
-      { hid: 'og:title', property: 'og:title', content: this.dataset.title },
-      { property: 'og:description', content: description },
-      { property: 'og:type', content: 'article' },
-      { property: 'article:author', content: this.dataset.owner.name },
-      { property: 'article:modified_time', content: this.dataset.updatedAt },
-      { property: 'article:published_time', content: this.dataset.createdAt }
-    ]
-    if (this.applications && this.applications.count) {
-      meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })
-      meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
-      meta.push({ hid: 'og:image:height', property: 'og:image:height', content: 450 })
-    }
-    return {
-      title: this.dataset.title,
-      meta,
-      __dangerouslyDisableSanitizers: ['script'],
-      script: [
-        {
-          hid: 'schema',
-          innerHTML: JSON.stringify(schema),
-          type: 'application/ld+json'
+      if (this.dataset.license && this.dataset.license.href) schema.license = this.dataset.license.href
+      if (this.applications && this.applications.count) {
+        schema.image = {
+          '@type': 'imageObject',
+          url: this.applications.results[0].href + '/capture'
         }
+        schema.thumbnailUrl = this.applications.results[0].href + '/capture'
+      }
+      const meta = [
+        { hid: 'description', name: 'description', content: description },
+        { property: 'og:url', content: this.url },
+        { hid: 'og:title', property: 'og:title', content: this.dataset.title },
+        { property: 'og:description', content: description },
+        { property: 'og:type', content: 'article' },
+        { property: 'article:author', content: this.dataset.owner.name },
+        { property: 'article:modified_time', content: this.dataset.updatedAt },
+        { property: 'article:published_time', content: this.dataset.createdAt }
       ]
+      if (this.applications && this.applications.count) {
+        meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })
+        meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
+        meta.push({ hid: 'og:image:height', property: 'og:image:height', content: 450 })
+      }
+      return {
+        title: this.dataset.title,
+        meta,
+        __dangerouslyDisableSanitizers: ['script'],
+        script: [
+          {
+            hid: 'schema',
+            innerHTML: JSON.stringify(schema),
+            type: 'application/ld+json'
+          }
+        ]
+      }
+    } else {
+      return { title: 'Page non trouvée' }
     }
   }
 }

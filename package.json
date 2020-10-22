@@ -45,13 +45,14 @@
     "mobile-device-detect": "^0.2.3",
     "moment": "^2.29.1",
     "mongodb": "^3.3.2",
-    "nuxt": "^2.14.6",
+    "nuxt": "^2.14.7",
     "scrolling-element": "^1.0.2",
     "tinycolor2": "^1.4.2",
     "vue-clamp": "^0.3.1",
     "vue-moment": "^4.0.0",
     "vue-social-sharing": "^3.0.2",
-    "vuetify": "^2.3.14"
+    "vue-window-size": "0.6.2",
+    "vuetify": "^2.3.15"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -65,7 +66,7 @@
     "eslint-plugin-no-only-tests": "^2.4.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.2",
     "eslint-plugin-vue": "^6.2.2",
     "eslint-plugin-vuetify": "^1.0.0-beta.7",
     "http-proxy-middleware": "^1.0.6",
