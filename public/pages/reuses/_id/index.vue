@@ -211,9 +211,9 @@ export default {
   },
   async asyncData ({ app, env, params, error }) {
     try {
-      const application = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id)
-      const config = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id + '/configuration')
-      const datasets = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') } })
+      const application = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id, { withCredentials: true })
+      const config = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications/' + params.id + '/configuration', { withCredentials: true })
+      const datasets = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
       return { application, datasets }
     } catch (err) {
       error({ statusCode: err.response.status })
@@ -240,7 +240,7 @@ export default {
     }
   },
   async mounted() {
-    this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`)
+    this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
   },
   methods: {
     iframeLoaded () {

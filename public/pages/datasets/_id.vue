@@ -260,11 +260,11 @@ export default {
   },
   async asyncData ({ app, env, params, error }) {
     try {
-      const dataset = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets/' + params.id)
+      const dataset = await app.$axios.$get(env.dataFairUrl + '/api/v1/datasets/' + params.id, { withCredentials: true })
       const query = { select: 'title,description,url,bbox' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) query.id = dataset.extras.reuses.join(',')
       else query.dataset = params.id
-      const applications = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications', { params: query })
+      const applications = await app.$axios.$get(env.dataFairUrl + '/api/v1/applications', { params: query, withCredentials: true })
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
         applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
       }
@@ -288,7 +288,7 @@ export default {
     }
   },
   async mounted() {
-    const baseApps = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 } })
+    const baseApps = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 }, withCredentials: true })
     this.baseApplications = Object.assign({}, ...baseApps.results.map(a => ({ [a.url]: a })))
   },
   methods: {

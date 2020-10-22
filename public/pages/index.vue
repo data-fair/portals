@@ -242,7 +242,8 @@ export default {
         select: 'id,title,updatedAt,createdAt,createdBy',
         owner: this.$store.getters.owner,
         sort: 'createdAt:-1'
-      }
+      },
+      withCredentials: true
     })
     const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
       params: {
@@ -250,7 +251,8 @@ export default {
         select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
         owner: this.$store.getters.owner,
         sort: 'createdAt:-1'
-      }
+      },
+      withCredentials: true
     })
 
     // TODO: replace by a proper public stats route
@@ -259,7 +261,8 @@ export default {
         size: 1000,
         select: 'count',
         owner: this.$store.getters.owner
-      }
+      },
+      withCredentials: true
     })
     this.applications = await promiseApplications
     this.datasets = await promiseDatasets

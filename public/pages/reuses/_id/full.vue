@@ -27,7 +27,7 @@ export default {
   layout: 'minimal',
   async asyncData ({ app, env, params, error }) {
     try {
-      const application = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + params.id)
+      const application = await app.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + params.id, { withCredentials: true })
       return { application }
     } catch (err) {
       console.log(err)

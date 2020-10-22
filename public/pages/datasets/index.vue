@@ -215,7 +215,7 @@ export default {
     SchemaView
   },
   async fetch() {
-    this.concepts = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/vocabulary')).map(c => {
+    this.concepts = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/vocabulary', { withCredentials: true })).map(c => {
       const { identifiers, ...concept } = c
       concept.id = identifiers.shift()
       return concept
@@ -280,7 +280,7 @@ export default {
       }
       if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
-      const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params })
+      const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
       if (reset) this.datasets = datasets
       else datasets.results.forEach(r => this.datasets.results.push(r))
       this.loading = false
