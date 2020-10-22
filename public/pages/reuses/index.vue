@@ -196,7 +196,7 @@
 
 <script>
 import VClamp from 'vue-clamp'
-import ApplicationView from '../../components/application/application-view.vue'
+import ApplicationView from '~/components/application/application-view.vue'
 const { mapState, mapGetters } = require('vuex')
 const marked = require('@hackmd/meta-marked')
 

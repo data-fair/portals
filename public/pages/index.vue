@@ -215,12 +215,12 @@
 
 <script>
 import VClamp from 'vue-clamp'
-import Kpi from '../components/kpi.vue'
-import ApplicationView from '../components/application/application-view.vue'
-import TablePreview from '../components/dataset/table-preview.vue'
-import MapPreview from '../components/dataset/map-preview.vue'
-import ApiView from '../components/dataset/api-view.vue'
-import SchemaView from '../components/dataset/schema-view.vue'
+import Kpi from '~/components/kpi.vue'
+import ApplicationView from '~/components/application/application-view.vue'
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
+import SchemaView from '~/components/dataset/schema-view.vue'
 import { isMobileOnly } from 'mobile-device-detect'
 const { mapState } = require('vuex')
 const marked = require('@hackmd/meta-marked')

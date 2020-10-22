@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import AcceptCookies from '../components/accept-cookies'
+import AcceptCookies from '~/components/accept-cookies'
 import DynamicStyle from '~/components/layout/dynamic-style'
 const { mapState } = require('vuex')
 

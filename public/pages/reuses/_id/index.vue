@@ -193,10 +193,10 @@
 </template>
 
 <script>
-// import Disqus from '../../../components/disqus.vue'
-import TablePreview from '../../../components/dataset/table-preview.vue'
-import MapPreview from '../../../components/dataset/map-preview.vue'
-import ApiView from '../../../components/dataset/api-view.vue'
+// import Disqus from '~/components/disqus.vue'
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
 import Social from '~/components/social'
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
 import Error from '~/components/error.vue'
