@@ -239,6 +239,11 @@ export default {
       return process.env.dataFairUrl
     }
   },
+  watch: {
+    async application() {
+      if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
+    }
+  },
   async mounted() {
     if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
   },

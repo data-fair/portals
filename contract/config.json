@@ -14,14 +14,8 @@
       "owner": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["type", "id"],
+        "required": ["id"],
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["user", "organization"],
-            "description": "If the owner is a user or an organization",
-            "const": "organization"
-          },
           "id": {
             "type": "string",
             "description": "The unique id of the user or organization"
@@ -70,6 +64,11 @@
         "description": "Vous pouvez saisir du contenu riche au format HTML et/ou markdown.",
         "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
       },
+      "showKpis": {
+        "title": "Afficher les chiffres clés",
+        "type": "boolean",
+        "default": true
+      },
       "featuredReuse": {
         "title": "Visualisation mise en avant",
         "type": "object",
@@ -88,6 +87,50 @@
             "type": "string"
           }
         }
+      },
+      "homeDatasets": {
+        "type": "object",
+        "title": "Jeux de données page d'accueil",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }, {
+          "title": "Afficher les derniers",
+          "properties": {
+            "type": {
+              "const": "lasts"
+            }
+          }
+        }]
+      },
+      "homeReuses": {
+        "type": "object",
+        "title": "Visualisations page d'accueil",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }, {
+          "title": "Afficher les dernières",
+          "properties": {
+            "type": {
+              "const": "lasts"
+            }
+          }
+        }]
       }
     }
   }, {
@@ -120,14 +163,17 @@
     "properties": {
       "analytics": {
         "type": "object",
-        "properties": {
-          "active": {
-            "title": "Activer le système de suivi",
-            "type": "boolean",
-            "default": false
-          }
+        "default": {
+          "type": "none"
         },
         "oneOf": [{
+          "title": "Aucun suivi",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }, {
           "title": "Matomo (anciennement Piwik)",
           "properties": {
             "type": {

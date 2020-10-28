@@ -81,7 +81,7 @@ export default {
         const formData = new FormData()
         formData.append('asset', file)
         try {
-          await this.$axios.put(process.env.publicUrl + '/assets/' + asset, formData)
+          await this.$axios.put(process.env.publicUrl + '/assets/' + asset.key, formData)
           this.timestamp = Date.now()
         } catch (error) {
           if (error.response && error.response.status === 413) error.response.data = 'Le fichier est trop volumineux. Veuillez le retravailler pour qu\'il fasse moins de 1 Mo.'

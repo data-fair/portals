@@ -50,7 +50,7 @@ export default () => {
         await dispatch('fetchConfig')
         if (state.session.user) {
           const user = state.session.user
-          if (user && !user.organization && user.organizations.length && state.config.owner) {
+          if (user && state.config.owner && user.organizations.length && (!user.organization || user.organization.id !== state.config.owner.id)) {
             dispatch('session/switchOrganization', state.config.owner.id)
           }
         }

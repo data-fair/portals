@@ -41,7 +41,6 @@
     "fs-extra": "^8.0.1",
     "iframe-resizer": "4.0.4",
     "js-cookie": "^2.2.0",
-    "json-schema-defaults": "^0.4.0",
     "mobile-device-detect": "^0.2.3",
     "moment": "^2.29.1",
     "mongodb": "^3.3.2",
