@@ -27,10 +27,8 @@
 import VJsf from '@koumoul/vjsf/lib/VJsf.js'
 import '@koumoul/vjsf/lib/deps/third-party.js'
 import '@koumoul/vjsf/dist/main.css'
+import 'iframe-resizer/js/iframeResizer.contentWindow'
 const schema = require('../../contract/config.json')
-// Object.keys(schema.properties).forEach(k => {
-//   if (schema.properties[k].readOnly) delete schema.properties[k]
-// })
 
 export default {
   layout: 'minimal',
