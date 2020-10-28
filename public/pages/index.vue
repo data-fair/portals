@@ -33,19 +33,25 @@
           mdi-open-in-new
         </v-icon>
       </nuxt-link>
-      <v-responsive :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-        <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-          <client-only>
+      <client-only>
+        <iframe
+          v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'"
+          id="featured-reuse-frame"
+          :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'"
+          height="100%"
+          width="100%"
+          @load="iframeLoaded"
+        />
+        <v-responsive v-else :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
+          <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
             <iframe
-              id="featured-reuse-frame"
               :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'"
               height="100%"
               width="100%"
-              @load="iframeLoaded"
             />
-          </client-only>
-        </div>
-      </v-responsive>
+          </div>
+        </v-responsive>
+      </client-only>
     </div>
     <div v-if="config.homeDatasets && config.homeDatasets.type === 'lasts'">
       <h3 class="headline grey--text text--darken-2 font-weight-bold mb-3">
@@ -274,6 +280,7 @@ export default {
     applications: null,
     datasets: null,
     stats: null,
+    featuredBaseApplication: null,
     isMobileOnly
   }),
   computed: {
@@ -284,6 +291,14 @@ export default {
     dataFairUrl() {
       return process.env.dataFairUrl
     }
+  },
+  watch: {
+    async application() {
+      if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
+    }
+  },
+  async mounted() {
+    if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
   },
   methods: {
     marked(content) {
