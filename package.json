@@ -1,6 +1,6 @@
 {
   "name": "data-fair-portal",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A standard portal with simple configuration.",
   "main": "index.js",
   "scripts": {
