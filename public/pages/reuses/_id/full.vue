@@ -13,7 +13,7 @@
       <iframe
         id="reuse-frame-full"
         :src="embedUrl + '?embed=true'"
-        style="height:calc(100vh - 68px)"
+        :style="`height:${windowHeight - 68}px`"
         width="100%"
         @load="iframeLoaded"
       />

@@ -123,7 +123,6 @@ import DynamicStyle from '~/components/layout/dynamic-style'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  layout: 'void',
   components: { AcceptCookies, AppBar, DynamicStyle },
   computed: {
     ...mapState(['config', 'textDark']),

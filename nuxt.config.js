@@ -38,8 +38,7 @@ module.exports = {
     { src: '~/plugins/window-size', ssr: false }
   ],
   router: {
-    base: config.basePath,
-    middleware: ['preserve-query']
+    base: config.basePath
   },
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
   axios: {

@@ -14,7 +14,6 @@ import DynamicStyle from '~/components/layout/dynamic-style'
 const { mapState } = require('vuex')
 
 export default {
-  layout: 'void',
   components: { AcceptCookies, DynamicStyle },
   data: () => ({
     textDark: '#424242'
