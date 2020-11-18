@@ -22,10 +22,10 @@
             >
               Accueil
             </v-tab>
-            <v-tab :to="{name: 'datasets'}" class="font-weight-bold">
+            <v-tab v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'" :to="{name: 'datasets'}" class="font-weight-bold">
               Les données
             </v-tab>
-            <v-tab :to="{name: 'reuses'}" class="font-weight-bold">
+            <v-tab v-if="!config.reusesPage || config.reusesPage.type !== 'none'" :to="{name: 'reuses'}" class="font-weight-bold">
               Visualisations
             </v-tab>
             <v-tab

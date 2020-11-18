@@ -131,6 +131,50 @@
             }
           }
         }]
+      },
+      "datasetsPage": {
+        "type": "object",
+        "title": "Page des jeux de données",
+        "default": {
+          "type": "infiniteScroll"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      },
+      "reusesPage": {
+        "type": "object",
+        "title": "Page des réutilisations",
+        "default": {
+          "type": "infiniteScroll"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
       }
     }
   }, {
