@@ -16,7 +16,7 @@
     "url": "git+ssh://git@gitlab.com/koumoul/portal-standard.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://gitlab.com/koumoul/portal-standard/issues"
   },
