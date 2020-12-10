@@ -5,6 +5,7 @@ ARG VERSION
 ENV VERSION=$VERSION
 ENV NODE_ENV production
 WORKDIR /webapp
+ADD LICENSE .
 ADD package.json .
 ADD package-lock.json .
 RUN npm install --production
