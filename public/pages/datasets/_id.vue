@@ -282,7 +282,7 @@ export default {
     applications: null
   }),
   computed: {
-    ...mapState(['config', 'publicUrl']),
+    ...mapState(['config']),
     url() {
       return process.env.publicUrl + '/datasets/' + this.$route.params.id
     },

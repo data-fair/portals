@@ -248,7 +248,7 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['config', 'publicUrl']),
+    ...mapState(['config']),
     ...mapGetters(['owner']),
     url() {
       return process.env.publicUrl + '/datasets'

@@ -3,8 +3,8 @@ const Binary = require('mongodb').Binary
 const fileUpload = require('express-fileupload')
 const asyncWrap = require('../utils/async-wrap')
 const path = require('path')
-
 const router = express.Router()
+const adminRequired = require('../utils/auth').adminRequired
 
 const assets = {
   logo: {
@@ -34,7 +34,7 @@ router.get('/:type', asyncWrap(async (req, res, next) => {
   }
 }))
 
-router.put('/:type', fileUpload({ limits: { fileSize: 1 * 1024 * 1024 } }), asyncWrap(async (req, res, next) => {
+router.put('/:type', adminRequired, fileUpload({ limits: { fileSize: 1 * 1024 * 1024 } }), asyncWrap(async (req, res, next) => {
   if (!assets[req.params.type]) return res.status(400).send()
   // if (!req.activeAccount || req.activeAccount.type === 'user') return res.status(401).send('No active account or active account is not an organization')
   // if (req.activeAccountRole !== 'admin') return res.status(403).send('Only admins can edit settings')

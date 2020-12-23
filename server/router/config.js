@@ -2,6 +2,7 @@ const express = require('express')
 const ajv = require('ajv')({ useDefaults: true })
 const configurationchema = require('../../contract/config')
 const asyncWrap = require('../utils/async-wrap')
+const adminRequired = require('../utils/auth').adminRequired
 // const defaults = require('json-schema-defaults')
 
 const schemaNoAllOf = JSON.parse(JSON.stringify(configurationchema))
@@ -28,7 +29,7 @@ router.get('', asyncWrap(async (req, res, next) => {
 }))
 
 // Create or update user configuration
-router.post('', asyncWrap(async (req, res, next) => {
+router.post('', adminRequired, asyncWrap(async (req, res, next) => {
   // const configuration = await req.app.get('db').collection('configuration')
   //   .findOne({ _id: 'main' }, { _id: 0 }) || {}
   if (!validate(req.body)) return res.status(400).send(validate.errors)

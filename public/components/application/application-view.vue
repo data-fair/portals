@@ -41,7 +41,6 @@
 
 <script>
 import iFrameResize from 'iframe-resizer/js/iframeResizer'
-const { mapState } = require('vuex')
 
 export default {
   props: ['application'],

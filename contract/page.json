@@ -1,0 +1,131 @@
+{
+  "type": "object",
+  "required": ["_id", "title", "template"],
+  "additionalProperties": false,
+  "properties": {
+    "_id": {
+      "type": "string",
+      "title": "Identifiant",
+      "readOnly": true
+    },
+    "published": {
+      "type": "boolean",
+      "title": "Publiée",
+      "default": false,
+      "x-cols": 4
+    },
+    "template": {
+      "title": "Modèle de page",
+      "type": "string",
+      "oneOf": [{
+        "const": "blank",
+        "title": "Page blanche"
+      }],
+      "default": "blank",
+      "x-cols": 4
+    },
+    "navigation": {
+      "type": "object",
+      "title": "Disposition dans le menu",
+      "x-itemKey": "type",
+      "oneOf": [{
+        "title": "Absent",
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "none"
+          }
+        }
+      },{
+        "title": "Lien direct",
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "direct"
+          }
+        }
+      },{
+        "title": "Sous-menu",
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "menu"
+          },
+          "title": {
+            "type": "string",
+            "title": "Nom du bloc"
+          }
+        }
+      }],
+      "default":{"type": "none"},
+      "x-cols": 4
+    },
+    "title": {
+      "type": "string",
+      "title": "Libellé",
+      "default": "Nouvelle page",
+      "x-cols": 6
+    },
+    "config": {
+      "type": "object",
+      "readOnly": true
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "title": "Liste de thématiques",
+        "type": "object",
+        "properties": {
+          "color": {"type": "string"},
+          "title": {"type": "string"},
+          "id": {"type": "string"}
+        }
+      },
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/settings/organization/{context.owner.id}",
+      "x-itemsProp": "topics",
+      "x-itemTitle": "title",
+      "x-itemKey": "id",
+      "x-cols": 6
+    },
+    "created": {
+      "type": "object",
+      "additionalProperties": false,
+      "readOnly": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id of the user that created this page"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the user that created this page"
+        },
+        "date": {
+          "type": "string",
+          "description": "Creation date of this page",
+          "format": "date-time"
+        }
+      }
+    },
+    "updated": {
+      "type": "object",
+      "additionalProperties": false,
+      "readOnly": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id of the user that created this page"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the user that created this page"
+        },
+        "date": {
+          "type": "string",
+          "description": "Creation date of this page",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

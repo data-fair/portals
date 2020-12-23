@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <section-title text="Configuration du portail" />
     <v-row>
       <v-col :cols="6">
@@ -15,7 +15,7 @@
           <v-img :height="asset.height" contain :src="assetsUrl+asset.key+'?t='+timestamp" />
           <v-file-input :label="asset.label" style="width:100%" @change="updateAsset(asset, $event)" />
           <div v-if="asset.key === 'home'" class="caption">
-            Vous pouvez télécharger des illustrations open source <a href="https://undraw.co/" target="_blank">sur ce site</a>.
+            Vous pouvez télécharger des illustrations open source sur <a href="https://undraw.co/" target="_blank">ce site</a> ou sur <a href="https://www.manypixels.co/gallery/" target="_blank">celui ci</a>.
           </div>
         </v-card>
       </v-col>
@@ -31,7 +31,9 @@ import 'iframe-resizer/js/iframeResizer.contentWindow'
 const schema = require('../../contract/config.json')
 
 export default {
-  layout: 'minimal',
+  layout(context) {
+    return context.route.query.embed === 'true' ? 'minimal' : 'default'
+  },
   middleware: 'superadmin-required',
   components: { VJsf },
   data: () => ({

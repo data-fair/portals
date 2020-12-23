@@ -1,0 +1,149 @@
+{
+  "type": "object",
+  "required": ["elements"],
+  "additionalProperties": false,
+  "properties": {
+    "elements":{
+      "title": "Elements",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "x-itemKey": "type",
+        "oneOf": [{
+          "$ref": "#/definitions/title"
+        }, {
+          "$ref": "#/definitions/text"
+        }, {
+          "$ref": "#/definitions/application"
+        }, {
+          "$ref": "#/definitions/datasetTable"
+        }, {
+          "$ref": "#/definitions/twoColumns"
+        }],
+        "default": {
+          "type": "title",
+          "content": ""
+        }
+      }
+    }
+  },
+  "definitions": {
+    "title": {
+      "type": "object",
+      "title": "Titre",
+      "properties": {
+        "type": {
+          "const": "title"
+        },
+        "content": {
+          "title": "Texte",
+          "type": "string"
+        }
+      }
+    },
+    "text": {
+      "type": "object",
+      "title": "Texte",
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "content": {
+          "title": "Texte",
+          "type": "string",
+          "x-display": "textarea"
+        }
+      }
+    },
+    "application": {
+      "type": "object",
+      "title": "Visualisation d'un jeu de données",
+      "properties": {
+        "type": {
+          "const": "application"
+        },
+        "application": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "exposedUrl": {"type": "exposedUrl"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    },
+    "datasetTable": {
+      "type": "object",
+      "title": "Tableau d'un jeu de données",
+      "properties": {
+        "type": {
+          "const": "datasetTable"
+        },
+        "dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    },
+    "element":{
+      "title": "Element",
+      "type": "object",
+      "x-itemKey": "type",
+      "oneOf": [{
+        "$ref": "#/definitions/title"
+      }, {
+        "$ref": "#/definitions/text"
+      }, {
+        "$ref": "#/definitions/application"
+      }, {
+        "$ref": "#/definitions/datasetTable"
+      }],
+      "default": {
+        "type": "text",
+        "content": ""
+      }
+    },
+    "twoColumns": {
+      "type": "object",
+      "title": "2 colonnes",
+      "properties": {
+        "type": {
+          "const": "twoColumns"
+        },
+        "leftColumn": {
+          "title": "Colonne de gauche",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          },
+          "x-cols": 6
+        },
+        "rightColumn": {
+          "title": "Colonne de droite",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          },
+          "x-cols": 6
+        }
+      }
+    }
+  }
+}
