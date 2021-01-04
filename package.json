@@ -1,5 +1,5 @@
 {
-  "name": "data-fair-portal",
+  "name": "data-fair-portals",
   "version": "0.3.0",
   "description": "A standard portal with simple configuration.",
   "main": "index.js",
