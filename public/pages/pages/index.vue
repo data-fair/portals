@@ -38,7 +38,11 @@
           <v-card-actions class="py-0">
             <v-spacer />
             <!-- <table-preview :page="page" :color="'primary'" /> -->
-            <v-btn icon text :to="{ name: 'pages-id-edit', params: { id: page._id } }">
+            <v-btn
+              icon
+              text
+              :to="{ name: 'pages-id-edit', params: { id: page._id } }"
+            >
               <v-icon color="primary">
                 mdi-pencil
               </v-icon>
@@ -67,56 +71,56 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer.contentWindow'
-import CreatePageDialog from '~/components/create-page-dialog.vue'
-import RemoveConfirm from '~/components/remove-confirm.vue'
+  import 'iframe-resizer/js/iframeResizer.contentWindow'
+  import CreatePageDialog from '~/components/create-page-dialog.vue'
+  import RemoveConfirm from '~/components/remove-confirm.vue'
 
-export default {
-  layout: 'default',
-  middleware: 'superadmin-required',
-  components: { CreatePageDialog, RemoveConfirm },
-  data: () => ({
-    page: 1,
-    pages: null,
-    loading: false
-  }),
-  mounted: async function () {
-    this.refresh(true)
-  },
-  methods: {
-    async refresh(reset) {
-      this.loading = true
-      if (reset) this.page = 1
-      const params = { size: 12, page: this.page }
-      const pages = await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params })
-      if (reset) this.pages = pages
-      else pages.results.forEach(r => this.pages.results.push(r))
-      this.loading = false
+  export default {
+    layout: 'default',
+    middleware: 'superadmin-required',
+    components: { CreatePageDialog, RemoveConfirm },
+    data: () => ({
+      page: 1,
+      pages: null,
+      loading: false,
+    }),
+    mounted: async function () {
+      this.refresh(true)
     },
-    onScroll(e) {
-      if (!this.pages) return
-      const se = e.target.scrollingElement
-      if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.pages.results.length < this.pages.count) {
-        this.page += 1
-        this.refresh()
-      }
+    methods: {
+      async refresh(reset) {
+        this.loading = true
+        if (reset) this.page = 1
+        const params = { size: 12, page: this.page }
+        const pages = await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params })
+        if (reset) this.pages = pages
+        else pages.results.forEach(r => this.pages.results.push(r))
+        this.loading = false
+      },
+      onScroll(e) {
+        if (!this.pages) return
+        const se = e.target.scrollingElement
+        if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.pages.results.length < this.pages.count) {
+          this.page += 1
+          this.refresh()
+        }
+      },
+      async createPage (page) {
+        try {
+          const response = await this.$axios.$post(process.env.publicUrl + '/api/v1/pages', page)
+          this.$router.push({ name: 'pages-id-edit', params: { id: response._id } })
+        } catch (error) {
+          console.error(error)
+        }
+      },
+      async removePage (id) {
+        try {
+          await this.$axios.$delete(process.env.publicUrl + '/api/v1/pages/' + id)
+          this.refresh(true)
+        } catch (error) {
+          console.error(error)
+        }
+      },
     },
-    async createPage (page) {
-      try {
-        const response = await this.$axios.$post(process.env.publicUrl + '/api/v1/pages', page)
-        this.$router.push({ name: 'pages-id-edit', params: { id: response._id } })
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    async removePage (id) {
-      try {
-        await this.$axios.$delete(process.env.publicUrl + '/api/v1/pages/' + id)
-        this.refresh(true)
-      } catch (error) {
-        console.error(error)
-      }
-    }
   }
-}
 </script>

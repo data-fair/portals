@@ -42,28 +42,28 @@
 </template>
 
 <script>
-const { mapState } = require('vuex')
+  const { mapState } = require('vuex')
 
-export default {
-  props: ['dataset', 'color', 'fab'],
-  data() {
-    return {
-      dialog: null
-    }
-  },
-  computed: {
-    ...mapState(['config']),
-    iframeSrc() {
-      return `${process.env.dataFairUrl}/embed/dataset/${this.dataset.id}/map?primary=${encodeURIComponent(this.config.themeColor)}`
-    }
-  },
-  watch: {
-    dialog() {
-      const viewName = this.dialog ? `/datasets/${this.dataset.id}/map-dialog` : this.$route.path
-      if (this.$ma) this.$ma.trackView({ viewName })
-      else console.log('No analytics, track dialog view', viewName)
-    }
+  export default {
+    props: ['dataset', 'color', 'fab'],
+    data() {
+      return {
+        dialog: null,
+      }
+    },
+    computed: {
+      ...mapState(['config']),
+      iframeSrc() {
+        return `${process.env.dataFairUrl}/embed/dataset/${this.dataset.id}/map?primary=${encodeURIComponent(this.config.themeColor)}`
+      },
+    },
+    watch: {
+      dialog() {
+        const viewName = this.dialog ? `/datasets/${this.dataset.id}/map-dialog` : this.$route.path
+        if (this.$ma) this.$ma.trackView({ viewName })
+        else console.log('No analytics, track dialog view', viewName)
+      },
+    },
   }
-}
 
 </script>

@@ -4,7 +4,7 @@ export default async function ({ store, error }) {
   } else if (!store.state.session.user.isAdmin) {
     error({
       message: 'Vous n\'avez pas les permissions d\'accéder à cette page',
-      statusCode: 403
+      statusCode: 403,
     })
   } else {
     if (!store.state.session.user.adminMode) setTimeout(() => store.dispatch('session/setAdminMode', true), 100)

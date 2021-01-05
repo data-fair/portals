@@ -1,17 +1,13 @@
 # portal-standard
 
-A standard portal with simple configuration
+Portals manager for data-fair
 
-```
-npm i
-npm run dev
-```
+Install dependencies and launch service dependencies with docker-compose:
 
-Run the built version.
+    npm install
+    docker-compose up -d
 
-```
-NODE_ENV=development npm run build
-NODE_ENV=development npm start
-```
+Run the 2 development servers with these commands in separate shells:
 
-See portals-manager README to debug this portal in a VM for IE 11 support.
+    npm run dev-server
+    npm run dev-client

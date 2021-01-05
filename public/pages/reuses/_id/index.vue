@@ -194,109 +194,109 @@
 
 <script>
 // import Disqus from '~/components/disqus.vue'
-import TablePreview from '~/components/dataset/table-preview.vue'
-import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
-import Social from '~/components/social'
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
-import Error from '~/components/error.vue'
-const { mapState } = require('vuex')
-const marked = require('@hackmd/meta-marked')
+  import TablePreview from '~/components/dataset/table-preview.vue'
+  import MapPreview from '~/components/dataset/map-preview.vue'
+  import ApiView from '~/components/dataset/api-view.vue'
+  import Social from '~/components/social'
+  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import Error from '~/components/error.vue'
+  const { mapState } = require('vuex')
+  const marked = require('@hackmd/meta-marked')
 
-export default {
-  components: {
-    // Disqus,
-    TablePreview,
-    MapPreview,
-    ApiView,
-    Social,
-    Error
-  },
-  async fetch () {
-    this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
-    const config = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
-    this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
-  },
-  data: () => ({
-    embedDialog: null,
-    marked,
-    baseApplication: null,
-    application: null,
-    datasets: null
-  }),
-  computed: {
-    ...mapState(['config', 'publicUrl']),
-    pageUrl() {
-      return process.env.publicUrl + '/reuses/' + this.$route.params.id
+  export default {
+    components: {
+      // Disqus,
+      TablePreview,
+      MapPreview,
+      ApiView,
+      Social,
+      Error,
     },
-    embedUrl() {
-      return process.env.dataFairUrl + '/app/' + this.$route.params.id
+    async fetch () {
+      this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
+      const config = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
+      this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
     },
-    description() {
-      return marked(this.application.description).html
+    data: () => ({
+      embedDialog: null,
+      marked,
+      baseApplication: null,
+      application: null,
+      datasets: null,
+    }),
+    computed: {
+      ...mapState(['config', 'publicUrl']),
+      pageUrl() {
+        return process.env.publicUrl + '/reuses/' + this.$route.params.id
+      },
+      embedUrl() {
+        return process.env.dataFairUrl + '/app/' + this.$route.params.id
+      },
+      description() {
+        return marked(this.application.description).html
+      },
+      dataFairUrl() {
+        return process.env.dataFairUrl
+      },
     },
-    dataFairUrl() {
-      return process.env.dataFairUrl
-    }
-  },
-  watch: {
-    async application() {
+    watch: {
+      async application() {
+        if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
+      },
+    },
+    async mounted() {
       if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
-    }
-  },
-  async mounted() {
-    if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
-  },
-  methods: {
-    iframeLoaded () {
-      iFrameResize({ log: false }, '#reuse-frame')
-    }
-  },
-  head () {
-    if (!this.application) return { title: 'Page non trouvée' }
-    const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
-    return {
-      title: this.application.title,
-      meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:url', property: 'og:url', content: this.pageUrl },
-        { hid: 'og:title', property: 'og:title', content: this.application.title },
-        { hid: 'og:description', property: 'og:description', content: description },
-        { hid: 'og:image', property: 'og:image', content: this.application.href + '/capture' },
-        { hid: 'og:image:width', property: 'og:image:width', content: 800 },
-        { hid: 'og:image:height', property: 'og:image:height', content: 450 },
-        { hid: 'og:type', property: 'og:type', content: 'article' },
-        { property: 'article:author', content: this.application.owner.name },
-        { property: 'article:modified_time', content: this.application.updatedAt },
-        { property: 'article:published_time', content: this.application.createdAt }
-      ],
-      __dangerouslyDisableSanitizers: ['script'],
-      script: [
-        {
-          hid: 'schema',
-          innerHTML: JSON.stringify({
-            '@context': 'http://schema.org',
-            '@type': 'WebApplication',
-            url: this.url,
-            name: this.application.title,
-            author: {
-              '@type': this.application.owner.type === 'user' ? 'Person' : 'Organization',
-              name: this.application.owner.name
-            },
-            dateCreated: this.application.createdAt,
-            datePublished: this.application.createdAt,
-            dateModified: this.application.updatedAt,
-            publisher: require('~/assets/organization.json'),
-            image: {
-              '@type': 'imageObject',
-              url: this.application.href + '/capture'
-            },
-            thumbnailUrl: this.application.href + '/capture'
-          }),
-          type: 'application/ld+json'
-        }
-      ]
-    }
+    },
+    methods: {
+      iframeLoaded () {
+        iFrameResize({ log: false }, '#reuse-frame')
+      },
+    },
+    head () {
+      if (!this.application) return { title: 'Page non trouvée' }
+      const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
+      return {
+        title: this.application.title,
+        meta: [
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:url', property: 'og:url', content: this.pageUrl },
+          { hid: 'og:title', property: 'og:title', content: this.application.title },
+          { hid: 'og:description', property: 'og:description', content: description },
+          { hid: 'og:image', property: 'og:image', content: this.application.href + '/capture' },
+          { hid: 'og:image:width', property: 'og:image:width', content: 800 },
+          { hid: 'og:image:height', property: 'og:image:height', content: 450 },
+          { hid: 'og:type', property: 'og:type', content: 'article' },
+          { property: 'article:author', content: this.application.owner.name },
+          { property: 'article:modified_time', content: this.application.updatedAt },
+          { property: 'article:published_time', content: this.application.createdAt },
+        ],
+        __dangerouslyDisableSanitizers: ['script'],
+        script: [
+          {
+            hid: 'schema',
+            innerHTML: JSON.stringify({
+              '@context': 'http://schema.org',
+              '@type': 'WebApplication',
+              url: this.url,
+              name: this.application.title,
+              author: {
+                '@type': this.application.owner.type === 'user' ? 'Person' : 'Organization',
+                name: this.application.owner.name,
+              },
+              dateCreated: this.application.createdAt,
+              datePublished: this.application.createdAt,
+              dateModified: this.application.updatedAt,
+              publisher: require('~/assets/organization.json'),
+              image: {
+                '@type': 'imageObject',
+                url: this.application.href + '/capture',
+              },
+              thumbnailUrl: this.application.href + '/capture',
+            }),
+            type: 'application/ld+json',
+          },
+        ],
+      }
+    },
   }
-}
 </script>

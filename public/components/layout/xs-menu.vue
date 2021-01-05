@@ -32,19 +32,19 @@
 </template>
 
 <script>
-const { mapState } = require('vuex')
+  const { mapState } = require('vuex')
 
-export default {
-  computed: {
-    ...mapState(['config']),
-    directoryUrl() {
-      return process.env.directoryUrl
+  export default {
+    computed: {
+      ...mapState(['config']),
+      directoryUrl() {
+        return process.env.directoryUrl
+      },
+      dataFairUrl() {
+        return process.env.dataFairUrl + (process.env.development ? '/' : '')
+      },
     },
-    dataFairUrl() {
-      return process.env.dataFairUrl + (process.env.development ? '/' : '')
-    }
   }
-}
 </script>
 
 <style lang="css" scoped>

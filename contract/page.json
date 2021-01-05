@@ -3,9 +3,13 @@
   "required": ["_id", "title", "template"],
   "additionalProperties": false,
   "properties": {
-    "_id": {
+    "id": {
       "type": "string",
       "title": "Identifiant",
+      "readOnly": true
+    },
+    "portal": {
+      "id": {"type": "string"},
       "readOnly": true
     },
     "published": {
@@ -67,6 +71,10 @@
       "x-cols": 6
     },
     "config": {
+      "type": "object",
+      "readOnly": true
+    },
+    "configDraft": {
       "type": "object",
       "readOnly": true
     },

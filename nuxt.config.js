@@ -11,13 +11,14 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   srcDir: 'public/',
-  mode: 'spa', // TODO remove this when VJSF is updated
   build: {
     transpile: [
       /@koumoul/,
+      'vuetify',
+      // 'vuedraggable',
       'vue-clamp',
       'resize-detector',
-      'pbkdf2' // this is a nuxt dep, but weirly without this line we have a ie11 crash
+      'pbkdf2', // this is a nuxt dep, but weirly without this line we have a ie11 crash
     ],
     extend (webpackConf, { isServer, isDev, isClient }) {
       // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
@@ -25,36 +26,36 @@ module.exports = {
 
       // webpackConf.output.publicPath = config.publicUrl + '/_nuxt/'
     },
-    publicPath: config.publicUrl + '/_nuxt/'
+    publicPath: config.publicUrl + '/_nuxt/',
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
-    { src: '~plugins/config' },
+    { src: '~plugins/init' },
     { src: '~plugins/typography' },
     { src: '~plugins/moment' },
     { src: '~plugins/filters' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
-    { src: '~/plugins/window-size', ssr: false }
+    { src: '~/plugins/window-size', ssr: false },
   ],
   router: {
-    base: config.basePath
+    base: config.basePath,
   },
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
   axios: {
     browserBaseURL: config.basePath,
     baseURL: config.publicUrl,
-    credentials: true
+    credentials: true,
   },
   buildModules: ['@nuxtjs/vuetify'],
   vuetify: {
     defaultAssets: {
       font: {
-        family: 'Nunito'
-      }
+        family: 'Nunito',
+      },
     },
     icons: {
-      iconfont: 'mdi'
+      iconfont: 'mdi',
     },
     theme: {
       themes: {
@@ -62,14 +63,14 @@ module.exports = {
           primary: '#1E88E5', // colors.blue.darken1
           // primary: colors.blue.lighten1, // code near our logo 'dark' blue
           accent: '#F57C00', // colors.orange.darken2
-          warning: '#F57C00' // colors.orange.darken2
+          warning: '#F57C00', // colors.orange.darken2
         },
         dark: {
           primary: '#42A5F5', // colors.blue.lighten1,
-          accent: '#FF9800' // colors.orange.base
-        }
-      }
-    }
+          accent: '#FF9800', // colors.orange.base
+        },
+      },
+    },
   },
   env: {
     publicUrl: config.publicUrl,
@@ -77,15 +78,15 @@ module.exports = {
     dataFairUrl: config.dataFairUrl,
     openapiViewerUrl: config.openapiViewerUrl,
     sessionDomain: config.sessionDomain,
-    development: process.env.NODE_ENV === 'development'
+    development: process.env.NODE_ENV === 'development',
   },
   head: {
     title: 'Portail de données',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' }
-    ]
-  }
+      { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' },
+    ],
+  },
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -99,13 +100,13 @@ if (process.env.NODE_ENV === 'development') {
           const ind = appEntry.findIndex(e => e.includes('path=/__webpack_hmr'))
           if (ind >= 0) appEntry[ind] = appEntry[ind].replace('path=/__webpack_hmr', 'path=http://localhost:3039/__webpack_hmr')
         }
-      }
+      },
     },
     render: {
       setupMiddleware(app) {
         // Also necessary for livereload through a reverse-proxy
         app.use(cors())
-      }
-    }
+      },
+    },
   }
 }

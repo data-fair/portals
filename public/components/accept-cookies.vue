@@ -28,34 +28,34 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Cookies from 'js-cookie'
-export default {
-  data() {
-    return {
-      show: false
-    }
-  },
-  computed: {
-    ...mapState(['config'])
-  },
-  created() {
-    if (
-      this.config.analytics &&
+  import { mapState } from 'vuex'
+  import Cookies from 'js-cookie'
+  export default {
+    data() {
+      return {
+        show: false,
+      }
+    },
+    computed: {
+      ...mapState(['config']),
+    },
+    created() {
+      if (
+        this.config.analytics &&
         this.config.analytics.active &&
         !this.config.analytics.anonymized &&
         !Cookies.get('koumoul_portal_track')
-    ) {
-      this.show = true
-    }
-  },
-  methods: {
-    acceptCookies() {
-      Cookies.set('koumoul_portal_track', '1')
-      this.show = false
-    }
+      ) {
+        this.show = true
+      }
+    },
+    methods: {
+      acceptCookies() {
+        Cookies.set('koumoul_portal_track', '1')
+        this.show = false
+      },
+    },
   }
-}
 </script>
 
 <style lang="css">

@@ -5,7 +5,8 @@
   >
     <template v-if="fab" v-slot:activator="{ on }">
       <v-btn
-        fab small
+        fab
+        small
         style="position:absolute;right:20px;top:27px"
         v-on="on"
         @click="open"
@@ -18,7 +19,8 @@
     <template v-else v-slot:activator="{ on }">
       <v-btn
         color="warning"
-        icon text
+        icon
+        text
         v-on="on"
         @click="open"
       >
@@ -62,19 +64,19 @@
 </template>
 
 <script>
-export default {
-  props: {
-    label: { type: String, default: null },
-    fab: { type: Boolean, default: false }
-  },
-  data: () => ({
-    dialog: false
-  }),
-  methods: {
-    open (e) {
-      this.dialog = true
-      e.stopPropagation()
-    }
+  export default {
+    props: {
+      label: { type: String, default: null },
+      fab: { type: Boolean, default: false },
+    },
+    data: () => ({
+      dialog: false,
+    }),
+    methods: {
+      open (e) {
+        this.dialog = true
+        e.stopPropagation()
+      },
+    },
   }
-}
 </script>

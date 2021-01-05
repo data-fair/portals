@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "x-display": "expansion-panels",
+  "x-display": "tabs",
   "x-options": {
     "expansionPanelsProps": {
       "multiple": true,
@@ -9,29 +9,6 @@
     }
   },
   "allOf": [{
-    "title": "Propriétaire du portail",
-    "properties": {
-      "owner": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id"],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique id of the user or organization"
-          },
-          "name": {
-            "type": "string",
-            "description": "The display name of the user or organization"
-          }
-        },
-        "x-fromUrl": "{context.directoryUrl}/api/organizations?q={q}&size=1000",
-        "x-itemsProp": "results",
-        "x-itemTitle": "name",
-        "x-itemKey": "id"
-      }
-    }
-  }, {
     "title": "Présentation",
     "required": ["themeColor", "footerColor"],
     "properties": {
@@ -39,15 +16,76 @@
         "type": "string",
         "default": "#1E88E5",
         "title": "Couleur principale",
-        "format": "hexcolor",
         "x-display": "color-picker"
       },
       "footerColor": {
         "type": "string",
         "default": "#424242",
         "title": "Couleur du footer",
-        "format": "hexcolor",
         "x-display": "color-picker"
+      },
+      "logo": {
+        "type": "object",
+        "title": "Image avec logo et titre",
+        "contentMediaType": "image/*",
+        "writeOnly": true,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "home": {
+        "type": "object",
+        "title": "Image de bannière",
+        "contentMediaType": "image/*",
+        "writeOnly": true,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "favicon": {
+        "type": "object",
+        "title": "Favicon",
+        "contentMediaType": "image/*",
+        "writeOnly": true,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       }
     }
   }, {

@@ -40,27 +40,27 @@
 </template>
 
 <script>
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import iFrameResize from 'iframe-resizer/js/iframeResizer'
 
-export default {
-  props: ['application'],
-  data() {
-    return {
-      dialog: null
-    }
-  },
-  watch: {
-    dialog() {
-      const viewName = this.dialog ? `/reuses/${this.application.id}/application-dialog` : this.$route.path
-      if (this.$ma) this.$ma.trackView({ viewName })
-      else console.log('No analytics, track dialog view', viewName)
-    }
-  },
-  methods: {
-    iframeLoaded () {
-      iFrameResize({ log: false }, '#application-' + this.application.id)
-    }
+  export default {
+    props: ['application'],
+    data() {
+      return {
+        dialog: null,
+      }
+    },
+    watch: {
+      dialog() {
+        const viewName = this.dialog ? `/reuses/${this.application.id}/application-dialog` : this.$route.path
+        if (this.$ma) this.$ma.trackView({ viewName })
+        else console.log('No analytics, track dialog view', viewName)
+      },
+    },
+    methods: {
+      iframeLoaded () {
+        iFrameResize({ log: false }, '#application-' + this.application.id)
+      },
+    },
   }
-}
 
 </script>

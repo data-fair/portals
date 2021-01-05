@@ -195,114 +195,114 @@
 </template>
 
 <script>
-import VClamp from 'vue-clamp'
-import ApplicationView from '~/components/application/application-view.vue'
-const { mapState, mapGetters } = require('vuex')
-const marked = require('@hackmd/meta-marked')
+  import VClamp from 'vue-clamp'
+  import ApplicationView from '~/components/application/application-view.vue'
+  const { mapState, mapGetters } = require('vuex')
+  const marked = require('@hackmd/meta-marked')
 
-export default {
-  components: {
-    VClamp,
-    ApplicationView
-  },
-  async fetch() {
-    await this.refresh(true)
-  },
-  data: () => ({
-    applications: null,
-    size: 12,
-    page: 1,
-    search: null,
-    loading: false,
-    sort: 'updatedAt',
-    order: 0,
-    filters: {
-      apps: [],
-      topics: []
+  export default {
+    components: {
+      VClamp,
+      ApplicationView,
     },
-    sorts: [{
-      text: 'Date de mise à jour',
-      value: 'updatedAt'
-    }, {
-      text: 'Date de création',
-      value: 'createdAt'
-    }, {
-      text: 'Ordre alphabétique',
-      value: 'title'
-    }]
-  }),
-  computed: {
-    ...mapState(['config']),
-    ...mapGetters(['owner']),
-    url() {
-      return process.env.publicUrl + '/reuses'
+    async fetch() {
+      await this.refresh(true)
     },
-    baseApplicationsItems() {
-      if (!this.applications) return []
-      return this.applications.facets['base-application']
-        .concat(this.filters.apps.filter(c => !this.applications.facets['base-application'].find(fc => fc.value.url === c.value.url)).map(c => ({ value: c.value, count: 0 })))
+    data: () => ({
+      applications: null,
+      size: 12,
+      page: 1,
+      search: null,
+      loading: false,
+      sort: 'updatedAt',
+      order: 0,
+      filters: {
+        apps: [],
+        topics: [],
+      },
+      sorts: [{
+        text: 'Date de mise à jour',
+        value: 'updatedAt',
+      }, {
+        text: 'Date de création',
+        value: 'createdAt',
+      }, {
+        text: 'Ordre alphabétique',
+        value: 'title',
+      }],
+    }),
+    computed: {
+      ...mapState(['config']),
+      ...mapGetters(['owner']),
+      url() {
+        return process.env.publicUrl + '/reuses'
+      },
+      baseApplicationsItems() {
+        if (!this.applications) return []
+        return this.applications.facets['base-application']
+          .concat(this.filters.apps.filter(c => !this.applications.facets['base-application'].find(fc => fc.value.url === c.value.url)).map(c => ({ value: c.value, count: 0 })))
+      },
+      topicsItems() {
+        if (!this.applications) return []
+        return this.applications.facets.topics
+          .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t.id === tf.value.id) }))
+          .concat(this.filters.topics.filter(c => !this.applications.facets.topics.find(fc => fc.value.id === c.id)).map(c => ({ value: c, count: 0, filtered: true })))
+      },
     },
-    topicsItems() {
-      if (!this.applications) return []
-      return this.applications.facets.topics
-        .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t.id === tf.value.id) }))
-        .concat(this.filters.topics.filter(c => !this.applications.facets.topics.find(fc => fc.value.id === c.id)).map(c => ({ value: c, count: 0, filtered: true })))
-    }
-  },
-  methods: {
-    async refresh(reset) {
-      this.loading = true
-      if (reset) this.page = 1
-      const params = {
-        size: this.size,
-        page: this.page,
-        select: 'id,title,description,updatedAt,url,updatedBy,topics',
-        owner: this.owner,
-        sort: this.sort + ':' + (this.order * 2 - 1),
-        q: this.search,
-        facets: 'base-application,topics'
-      }
-      if (this.filters.apps.length) params['base-application'] = this.filters.apps.map(t => t.value.url).join(',')
-      if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
-      const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
-      if (reset) this.applications = applications
-      else applications.results.forEach(r => this.applications.results.push(r))
-      this.loading = false
+    methods: {
+      async refresh(reset) {
+        this.loading = true
+        if (reset) this.page = 1
+        const params = {
+          size: this.size,
+          page: this.page,
+          select: 'id,title,description,updatedAt,url,updatedBy,topics',
+          owner: this.owner,
+          sort: this.sort + ':' + (this.order * 2 - 1),
+          q: this.search,
+          facets: 'base-application,topics',
+        }
+        if (this.filters.apps.length) params['base-application'] = this.filters.apps.map(t => t.value.url).join(',')
+        if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
+        if (reset) this.applications = applications
+        else applications.results.forEach(r => this.applications.results.push(r))
+        this.loading = false
+      },
+      onScroll(e) {
+        if (!this.applications) return
+        const se = e.target.scrollingElement
+        if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.applications.results.length < this.applications.count) {
+          this.page += 1
+          this.refresh()
+        }
+      },
+      marked(content) {
+        return marked(content)
+      },
+      toggleTopic(topic) {
+        if (this.filters.topics.find(t => t.id === topic.id)) {
+          this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)
+        } else {
+          this.filters.topics.push(topic)
+        }
+        this.refresh(true)
+      },
     },
-    onScroll(e) {
-      if (!this.applications) return
-      const se = e.target.scrollingElement
-      if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.applications.results.length < this.applications.count) {
-        this.page += 1
-        this.refresh()
-      }
-    },
-    marked(content) {
-      return marked(content)
-    },
-    toggleTopic(topic) {
-      if (this.filters.topics.find(t => t.id === topic.id)) {
-        this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)
-      } else {
-        this.filters.topics.push(topic)
-      }
-      this.refresh(true)
-    }
-  },
-  head () {
-    const title = 'Dataviz - ' + this.config.title
-    const description = 'Découvrez toutes les visualisations de données que nous avons réalisées grâce à notre moteur de recherche.'
-    return {
-      title,
-      meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:url', property: 'og:url', content: this.url },
-        { hid: 'og:title', property: 'og:title', content: title },
-        { hid: 'og:description', property: 'og:description', content: description },
-        { hid: 'og:type', property: 'og:type', content: 'website' }
-      ]
+    head () {
+      const title = 'Dataviz - ' + this.config.title
+      const description = 'Découvrez toutes les visualisations de données que nous avons réalisées grâce à notre moteur de recherche.'
+      return {
+        title,
+        meta: [
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:url', property: 'og:url', content: this.url },
+          { hid: 'og:title', property: 'og:title', content: title },
+          { hid: 'og:description', property: 'og:description', content: description },
+          { hid: 'og:type', property: 'og:type', content: 'website' },
+        ],
       // TODO add DataCatalog schema
-    }
+      }
+    },
   }
-}
 </script>

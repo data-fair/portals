@@ -22,7 +22,11 @@
         <div v-if="config.description" v-html="marked(config.description).html" />
       </v-col>
     </v-row>
-    <kpi v-if="config.showKpis" class="mt-4" :stats="stats" />
+    <kpi
+      v-if="config.showKpis"
+      class="mt-4"
+      :stats="stats"
+    />
     <div v-if="config.featuredReuse && config.featuredReuse.id" class="mt-4">
       <nuxt-link
         :to="`/reuses/${config.featuredReuse.id}`"
@@ -212,118 +216,119 @@
 </template>
 
 <script>
-import VClamp from 'vue-clamp'
-import Kpi from '~/components/kpi.vue'
-import ApplicationView from '~/components/application/application-view.vue'
-import TablePreview from '~/components/dataset/table-preview.vue'
-import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
-import SchemaView from '~/components/dataset/schema-view.vue'
-import { isMobileOnly } from 'mobile-device-detect'
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
-const { mapState } = require('vuex')
-const marked = require('@hackmd/meta-marked')
+  import VClamp from 'vue-clamp'
+  import Kpi from '~/components/kpi.vue'
+  import ApplicationView from '~/components/application/application-view.vue'
+  import TablePreview from '~/components/dataset/table-preview.vue'
+  import MapPreview from '~/components/dataset/map-preview.vue'
+  import ApiView from '~/components/dataset/api-view.vue'
+  import SchemaView from '~/components/dataset/schema-view.vue'
+  import { isMobileOnly } from 'mobile-device-detect'
+  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  const { mapState } = require('vuex')
+  const marked = require('@hackmd/meta-marked')
 
-export default {
-  components: {
-    VClamp,
-    Kpi,
-    ApplicationView,
-    TablePreview,
-    MapPreview,
-    ApiView,
-    SchemaView
-  },
-  async fetch () {
-    const promiseApplications = this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', {
-      params: {
-        size: 3,
-        select: 'id,title,updatedAt,createdAt,createdBy',
-        owner: this.$store.getters.owner,
-        sort: 'createdAt:-1'
-      },
-      withCredentials: true
-    })
-    const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
-      params: {
-        size: 3,
-        select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
-        owner: this.$store.getters.owner,
-        sort: 'createdAt:-1'
-      },
-      withCredentials: true
-    })
+  export default {
+    middleware: 'portal-required',
+    components: {
+      VClamp,
+      Kpi,
+      ApplicationView,
+      TablePreview,
+      MapPreview,
+      ApiView,
+      SchemaView,
+    },
+    async fetch () {
+      const promiseApplications = this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', {
+        params: {
+          size: 3,
+          select: 'id,title,updatedAt,createdAt,createdBy',
+          owner: this.$store.getters.owner,
+          sort: 'createdAt:-1',
+        },
+        withCredentials: true,
+      })
+      const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
+        params: {
+          size: 3,
+          select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
+          owner: this.$store.getters.owner,
+          sort: 'createdAt:-1',
+        },
+        withCredentials: true,
+      })
 
-    // TODO: replace by a proper public stats route
-    const promiseStatsDatasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
-      params: {
-        size: 1000,
-        select: 'count',
-        owner: this.$store.getters.owner
-      },
-      withCredentials: true
-    })
-    this.applications = await promiseApplications
-    this.datasets = await promiseDatasets
-    const statsDatasets = await promiseStatsDatasets
-    this.stats = {
-      reuses: {
-        count: this.applications.count
-      },
-      datasets: {
-        count: statsDatasets.count,
-        numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0)
+      // TODO: replace by a proper public stats route
+      const promiseStatsDatasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
+        params: {
+          size: 1000,
+          select: 'count',
+          owner: this.$store.getters.owner,
+        },
+        withCredentials: true,
+      })
+      this.applications = await promiseApplications
+      this.datasets = await promiseDatasets
+      const statsDatasets = await promiseStatsDatasets
+      this.stats = {
+        reuses: {
+          count: this.applications.count,
+        },
+        datasets: {
+          count: statsDatasets.count,
+          numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0),
+        },
       }
-    }
-  },
-  data: () => ({
-    applications: null,
-    datasets: null,
-    stats: null,
-    featuredBaseApplication: null,
-    isMobileOnly
-  }),
-  computed: {
-    ...mapState(['config', 'publicUrl']),
-    homeUrl() {
-      return process.env.publicUrl + '/assets/home'
     },
-    dataFairUrl() {
-      return process.env.dataFairUrl
-    }
-  },
-  watch: {
-    async application() {
+    data: () => ({
+      applications: null,
+      datasets: null,
+      stats: null,
+      featuredBaseApplication: null,
+      isMobileOnly,
+    }),
+    computed: {
+      ...mapState(['config', 'publicUrl']),
+      homeUrl() {
+        return process.env.publicUrl + '/assets/home'
+      },
+      dataFairUrl() {
+        return process.env.dataFairUrl
+      },
+    },
+    watch: {
+      async application() {
+        if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
+      },
+    },
+    async mounted() {
       if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
-    }
-  },
-  async mounted() {
-    if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
-  },
-  methods: {
-    marked(content) {
-      return marked(content)
     },
-    iframeLoaded () {
-      iFrameResize({ log: false }, '#featured-reuse-frame')
-    }
-  },
-  head () {
-    const title = this.config.title
-    const description = 'Accédez facilement à nos données et découvrez les au travers de visualisations interactives.'
-    return {
-      title,
-      meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:url', property: 'og:url', content: process.env.publicUrl },
-        { hid: 'og:title', property: 'og:title', content: title },
-        { hid: 'og:description', property: 'og:description', content: description },
-        { hid: 'og:type', property: 'og:type', content: 'website' }
-      ]
+    methods: {
+      marked(content) {
+        return marked(content)
+      },
+      iframeLoaded () {
+        iFrameResize({ log: false }, '#featured-reuse-frame')
+      },
+    },
+    head () {
+      const title = this.config.title
+      const description = 'Accédez facilement à nos données et découvrez les au travers de visualisations interactives.'
+      return {
+        title,
+        meta: [
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:url', property: 'og:url', content: process.env.publicUrl },
+          { hid: 'og:title', property: 'og:title', content: title },
+          { hid: 'og:description', property: 'og:description', content: description },
+          { hid: 'og:type', property: 'og:type', content: 'website' },
+        ],
       // TODO add DataCatalog schema
-    }
+      }
+    },
   }
-}
 
 </script>
 

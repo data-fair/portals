@@ -22,19 +22,42 @@
             >
               Accueil
             </v-tab>
-            <v-tab v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'" :to="{name: 'datasets'}" class="font-weight-bold">
+            <v-tab
+              v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'"
+              :to="{name: 'datasets'}"
+              class="font-weight-bold"
+            >
               Les données
             </v-tab>
-            <v-tab v-if="!config.reusesPage || config.reusesPage.type !== 'none'" :to="{name: 'reuses'}" class="font-weight-bold">
+            <v-tab
+              v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
+              :to="{name: 'reuses'}"
+              class="font-weight-bold"
+            >
               Visualisations
             </v-tab>
             <template v-if="pages">
-              <v-tab v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')" :key="page._id" :to="{name: 'pages-id', params: {id: page._id}}" class="font-weight-bold">
+              <v-tab
+                v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
+                :key="page._id"
+                :to="{name: 'pages-id', params: {id: page._id}}"
+                class="font-weight-bold"
+              >
                 {{ page.title }}
               </v-tab>
-              <v-menu v-for="menu in extraMenus" :key="menu" offset-y nudge-left>
+              <v-menu
+                v-for="menu in extraMenus"
+                :key="menu"
+                offset-y
+                nudge-left
+              >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn text v-bind="attrs" :height="64" v-on="on">
+                  <v-btn
+                    text
+                    v-bind="attrs"
+                    :height="64"
+                    v-on="on"
+                  >
                     {{ menu }}
                     <v-icon right>
                       mdi-menu-down
@@ -42,7 +65,11 @@
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)" :key="page._id" :to="{name: 'pages-id', params: {id: page._id}}">
+                  <v-list-item
+                    v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
+                    :key="page._id"
+                    :to="{name: 'pages-id', params: {id: page._id}}"
+                  >
                     <v-list-item-title>{{ page.title }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -77,7 +104,11 @@
             nudge-left
           >
             <template v-slot:activator="{on}">
-              <v-btn text :height="64" v-on="on">
+              <v-btn
+                text
+                :height="64"
+                v-on="on"
+              >
                 <v-avatar :size="36">
                   <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
                 </v-avatar>
@@ -114,35 +145,35 @@
 </template>
 
 <script>
-import XsMenu from '~/components/layout/xs-menu'
-const { mapState, mapGetters, mapActions } = require('vuex')
+  import XsMenu from '~/components/layout/xs-menu'
+  const { mapState, mapGetters, mapActions } = require('vuex')
 
-export default {
-  components: { XsMenu },
-  async fetch() {
-    this.pages = (await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params: { size: 1000, select: '_id,title,navigation' } })).results
-  },
-  data: () => ({
-    pages: null
-  }),
-  computed: {
-    ...mapState(['config', 'textDark']),
-    ...mapState('session', ['user', 'initialized']),
-    ...mapGetters(['themeColorDark']),
-    directoryUrl() {
-      return process.env.directoryUrl
+  export default {
+    components: { XsMenu },
+    async fetch() {
+      this.pages = (await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params: { size: 1000, select: '_id,title,navigation' } })).results
     },
-    dataFairUrl() {
-      return process.env.dataFairUrl + (process.env.development ? '/' : '')
+    data: () => ({
+      pages: null,
+    }),
+    computed: {
+      ...mapState(['config', 'textDark']),
+      ...mapState('session', ['user', 'initialized']),
+      ...mapGetters(['themeColorDark']),
+      directoryUrl() {
+        return process.env.directoryUrl
+      },
+      dataFairUrl() {
+        return process.env.dataFairUrl + (process.env.development ? '/' : '')
+      },
+      extraMenus() {
+        return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
+      },
     },
-    extraMenus() {
-      return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
-    }
-  },
-  methods: {
-    ...mapActions('session', ['logout', 'login'])
+    methods: {
+      ...mapActions('session', ['logout', 'login']),
+    },
   }
-}
 </script>
 
 <style lang="css" scoped>

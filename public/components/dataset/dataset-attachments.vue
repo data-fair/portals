@@ -62,15 +62,15 @@
 </template>
 
 <script>
-export default {
-  props: ['dataset', 'color'],
-  data: () => ({
-    dialog: null
-  }),
-  computed: {
-    baseUrl () {
-      return `${process.env.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
-    }
+  export default {
+    props: ['dataset', 'color'],
+    data: () => ({
+      dialog: null,
+    }),
+    computed: {
+      baseUrl () {
+        return `${process.env.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
+      },
+    },
   }
-}
 </script>

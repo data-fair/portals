@@ -75,7 +75,7 @@
 
 <script>
 
-export default {
-  props: ['stats']
-}
+  export default {
+    props: ['stats'],
+  }
 </script>

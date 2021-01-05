@@ -11,7 +11,7 @@ const nuxt = require('./nuxt')
 const session = require('@koumoul/sd-express')({
   publicUrl: config.publicUrl,
   directoryUrl: config.directoryUrl,
-  cookieDomain: config.sessionDomain
+  cookieDomain: config.sessionDomain,
 })
 const debug = require('debug')('main')
 
@@ -35,9 +35,7 @@ app.use(bodyParser.text())
 app.use('/api/v1/session', session.router)
 
 app.use(session.auth)
-app.use('/api/v1/config', require('./router/config.js'))
-app.use('/api/v1/pages', require('./router/pages.js'))
-app.use('/assets', require('./router/assets.js'))
+app.use('/api/v1/portals', require('./router/portals'))
 
 let httpServer
 async function main() {

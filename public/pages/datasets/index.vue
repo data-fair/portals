@@ -197,134 +197,134 @@
 </template>
 
 <script>
-import VClamp from 'vue-clamp'
-import TablePreview from '~/components/dataset/table-preview.vue'
-import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
-import SchemaView from '~/components/dataset/schema-view.vue'
-import { isMobileOnly } from 'mobile-device-detect'
-const { mapState, mapGetters } = require('vuex')
-const marked = require('@hackmd/meta-marked')
+  import VClamp from 'vue-clamp'
+  import TablePreview from '~/components/dataset/table-preview.vue'
+  import MapPreview from '~/components/dataset/map-preview.vue'
+  import ApiView from '~/components/dataset/api-view.vue'
+  import SchemaView from '~/components/dataset/schema-view.vue'
+  import { isMobileOnly } from 'mobile-device-detect'
+  const { mapState, mapGetters } = require('vuex')
+  const marked = require('@hackmd/meta-marked')
 
-export default {
-  components: {
-    VClamp,
-    TablePreview,
-    MapPreview,
-    ApiView,
-    SchemaView
-  },
-  async fetch() {
-    this.concepts = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/vocabulary', { withCredentials: true })).map(c => {
-      const { identifiers, ...concept } = c
-      concept.id = identifiers.shift()
-      return concept
-    })
-    await this.refresh(true)
-  },
-  data: () => ({
-    datasets: null,
-    concepts: null,
-    size: 12,
-    page: 1,
-    search: null,
-    loading: false,
-    sort: 'updatedAt',
-    order: 0,
-    filters: {
-      concepts: [],
-      topics: []
+  export default {
+    components: {
+      VClamp,
+      TablePreview,
+      MapPreview,
+      ApiView,
+      SchemaView,
     },
-    sorts: [{
-      text: 'Date de mise à jour',
-      value: 'updatedAt'
-    }, {
-      text: 'Date de création',
-      value: 'createdAt'
-    }, {
-      text: 'Ordre alphabétique',
-      value: 'title'
-    }],
-    isMobileOnly
-  }),
-  computed: {
-    ...mapState(['config']),
-    ...mapGetters(['owner']),
-    url() {
-      return process.env.publicUrl + '/datasets'
+    async fetch() {
+      this.concepts = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/vocabulary', { withCredentials: true })).map(c => {
+        const { identifiers, ...concept } = c
+        concept.id = identifiers.shift()
+        return concept
+      })
+      await this.refresh(true)
     },
-    conceptsItems() {
-      if (!this.datasets) return []
-      return this.datasets.facets.concepts
-        .concat(this.filters.concepts.filter(c => !this.datasets.facets.concepts.find(fc => fc.value === c)).map(c => ({ value: c, count: 0 })))
+    data: () => ({
+      datasets: null,
+      concepts: null,
+      size: 12,
+      page: 1,
+      search: null,
+      loading: false,
+      sort: 'updatedAt',
+      order: 0,
+      filters: {
+        concepts: [],
+        topics: [],
+      },
+      sorts: [{
+        text: 'Date de mise à jour',
+        value: 'updatedAt',
+      }, {
+        text: 'Date de création',
+        value: 'createdAt',
+      }, {
+        text: 'Ordre alphabétique',
+        value: 'title',
+      }],
+      isMobileOnly,
+    }),
+    computed: {
+      ...mapState(['config']),
+      ...mapGetters(['owner']),
+      url() {
+        return process.env.publicUrl + '/datasets'
+      },
+      conceptsItems() {
+        if (!this.datasets) return []
+        return this.datasets.facets.concepts
+          .concat(this.filters.concepts.filter(c => !this.datasets.facets.concepts.find(fc => fc.value === c)).map(c => ({ value: c, count: 0 })))
+      },
+      topicsItems() {
+        if (!this.datasets) return []
+        return this.datasets.facets.topics
+          .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t.id === tf.value.id) }))
+          .concat(this.filters.topics.filter(c => !this.datasets.facets.topics.find(fc => fc.value.id === c.id)).map(c => ({ value: c, count: 0, filtered: true })))
+      },
     },
-    topicsItems() {
-      if (!this.datasets) return []
-      return this.datasets.facets.topics
-        .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t.id === tf.value.id) }))
-        .concat(this.filters.topics.filter(c => !this.datasets.facets.topics.find(fc => fc.value.id === c.id)).map(c => ({ value: c, count: 0, filtered: true })))
-    }
-  },
-  methods: {
-    async refresh(reset) {
-      this.loading = true
-      if (reset) this.page = 1
-      const params = {
-        size: this.size,
-        page: this.page,
-        select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics',
-        owner: this.owner,
-        sort: this.sort + ':' + (this.order * 2 - 1),
-        facets: 'concepts,topics',
-        q: this.search
-      }
-      if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
-      if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
-      const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
-      if (reset) this.datasets = datasets
-      else datasets.results.forEach(r => this.datasets.results.push(r))
-      this.loading = false
+    methods: {
+      async refresh(reset) {
+        this.loading = true
+        if (reset) this.page = 1
+        const params = {
+          size: this.size,
+          page: this.page,
+          select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics',
+          owner: this.owner,
+          sort: this.sort + ':' + (this.order * 2 - 1),
+          facets: 'concepts,topics',
+          q: this.search,
+        }
+        if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
+        if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
+        if (reset) this.datasets = datasets
+        else datasets.results.forEach(r => this.datasets.results.push(r))
+        this.loading = false
+      },
+      onScroll(e) {
+        if (!this.datasets) return
+        const se = e.target.scrollingElement
+        if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.datasets.results.length < this.datasets.count) {
+          this.page += 1
+          this.refresh()
+        }
+      },
+      conceptLabel(e) {
+        const concept = this.concepts.find(c => c.id === e.value)
+        return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
+      },
+      marked(content) {
+        return marked(content)
+      },
+      toggleTopic(topic) {
+        if (this.filters.topics.find(t => t.id === topic.id)) {
+          this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)
+        } else {
+          this.filters.topics.push(topic)
+        }
+        this.refresh(true)
+      },
     },
-    onScroll(e) {
-      if (!this.datasets) return
-      const se = e.target.scrollingElement
-      if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.datasets.results.length < this.datasets.count) {
-        this.page += 1
-        this.refresh()
-      }
-    },
-    conceptLabel(e) {
-      const concept = this.concepts.find(c => c.id === e.value)
-      return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
-    },
-    marked(content) {
-      return marked(content)
-    },
-    toggleTopic(topic) {
-      if (this.filters.topics.find(t => t.id === topic.id)) {
-        this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)
-      } else {
-        this.filters.topics.push(topic)
-      }
-      this.refresh(true)
-    }
-  },
-  head () {
-    const title = 'Datasets - ' + this.config.title
-    const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
-    return {
-      title,
-      meta: [
-        { hid: 'description', name: 'description', content: description },
-        { hid: 'og:url', property: 'og:url', content: this.url },
-        { hid: 'og:title', property: 'og:title', content: title },
-        { hid: 'og:description', property: 'og:description', content: description },
-        { hid: 'og:type', property: 'og:type', content: 'website' }
-      ]
+    head () {
+      const title = 'Datasets - ' + this.config.title
+      const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
+      return {
+        title,
+        meta: [
+          { hid: 'description', name: 'description', content: description },
+          { hid: 'og:url', property: 'og:url', content: this.url },
+          { hid: 'og:title', property: 'og:title', content: title },
+          { hid: 'og:description', property: 'og:description', content: description },
+          { hid: 'og:type', property: 'og:type', content: 'website' },
+        ],
       // TODO add DataCatalog schema
-    }
+      }
+    },
   }
-}
 
 </script>
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueMultianalytics from '@koumoul/vue-multianalytics/src'
 
 export default ({ store, env, app }) => {
+  if (!store.state.config) return
   const analytics = store.state.config.analytics
   if (!analytics || analytics.type === 'none') return
   try {

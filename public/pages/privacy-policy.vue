@@ -17,16 +17,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-export default {
-  computed: {
-    ...mapState(['config'])
-  },
-  head () {
-    return {
-      title: 'Politique de confidentialité - ' + this.config.title,
-      meta: [{ hid: 'description', name: 'description', content: 'Quelles informations sont collectées, à quoi elles servent et ce que nous faisons pour les protéger.' }]
-    }
+  import { mapState } from 'vuex'
+  export default {
+    computed: {
+      ...mapState(['config']),
+    },
+    head () {
+      return {
+        title: 'Politique de confidentialité - ' + this.config.title,
+        meta: [{ hid: 'description', name: 'description', content: 'Quelles informations sont collectées, à quoi elles servent et ce que nous faisons pour les protéger.' }],
+      }
+    },
   }
-}
 </script>

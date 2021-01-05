@@ -42,35 +42,35 @@
 </template>
 
 <script>
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import iFrameResize from 'iframe-resizer/js/iframeResizer'
 
-export default {
-  props: ['dataset', 'color'],
-  data() {
-    return {
-      dialog: null
-    }
-  },
-  computed: {
-    dataFairUrl() {
-      return process.env.dataFairUrl
+  export default {
+    props: ['dataset', 'color'],
+    data() {
+      return {
+        dialog: null,
+      }
     },
-    openapiViewerUrl() {
-      return process.env.openapiViewerUrl
-    }
-  },
-  watch: {
-    dialog() {
-      const viewName = this.dialog ? `/datasets/${this.dataset.id}/api-dialog` : this.$route.path
-      if (this.$ma) this.$ma.trackView({ viewName })
-      else console.log('No analytics, track dialog view', viewName)
-    }
-  },
-  methods: {
-    iframeLoaded () {
-      iFrameResize({ log: false }, '#api-dataset--' + this.dataset.id)
-    }
+    computed: {
+      dataFairUrl() {
+        return process.env.dataFairUrl
+      },
+      openapiViewerUrl() {
+        return process.env.openapiViewerUrl
+      },
+    },
+    watch: {
+      dialog() {
+        const viewName = this.dialog ? `/datasets/${this.dataset.id}/api-dialog` : this.$route.path
+        if (this.$ma) this.$ma.trackView({ viewName })
+        else console.log('No analytics, track dialog view', viewName)
+      },
+    },
+    methods: {
+      iframeLoaded () {
+        iFrameResize({ log: false }, '#api-dataset--' + this.dataset.id)
+      },
+    },
   }
-}
 
 </script>

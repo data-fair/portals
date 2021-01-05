@@ -29,25 +29,25 @@
 </template>
 
 <script>
-import iFrameResize from 'iframe-resizer/js/iframeResizer'
-const marked = require('@hackmd/meta-marked')
-const { mapState } = require('vuex')
+  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  const marked = require('@hackmd/meta-marked')
+  const { mapState } = require('vuex')
 
-export default {
-  props: ['value'],
-  computed: {
-    ...mapState(['config'])
-  },
-  methods: {
-    marked,
-    iframeSrc(dataset) {
-      return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+  export default {
+    props: ['value'],
+    computed: {
+      ...mapState(['config']),
     },
-    iframeLoaded (application) {
-      iFrameResize({ log: false }, '#application-' + application.id)
-    }
+    methods: {
+      marked,
+      iframeSrc(dataset) {
+        return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+      },
+      iframeLoaded (application) {
+        iFrameResize({ log: false }, '#application-' + application.id)
+      },
+    },
   }
-}
 </script>
 
 <style lang="css"></style>

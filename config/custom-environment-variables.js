@@ -6,6 +6,6 @@ module.exports = {
   sessionDomain: 'SESSION_DOMAIN',
   directoryUrl: 'DIRECTORY_URL',
   mongo: {
-    host: 'MONGO_HOST'
-  }
+    host: 'MONGO_HOST',
+  },
 }
