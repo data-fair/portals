@@ -118,6 +118,7 @@
 
 <script>
 
+  import debounce from 'debounce'
   import { mapGetters } from 'vuex'
   import VJsf from '@koumoul/vjsf/lib/VJsf.js'
   import '@koumoul/vjsf/lib/VJsf.css'
@@ -152,6 +153,14 @@
         return 800
       },
     },
+    watch: {
+      'portal.configDraft': {
+        handler: debounce(function() {
+          this.saveDraft()
+        }, 200),
+        deep: true,
+      },
+    },
     async created() {
       this.fetchPortal()
     },
@@ -159,7 +168,7 @@
       async fetchPortal() {
         this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.id}`)
         this.hasConfigDraft = !!this.portal.configDraft
-        this.portal.configDraft = this.portal.configDraft || {}
+        if (!this.portal.configDraft) this.$set(this.portal, 'configDraft', {})
       },
       refreshDraftPreview() {
         this.showDraftPreview = false
@@ -170,7 +179,17 @@
         setTimeout(() => { this.showProdPreview = true }, 1)
       },
       async saveDraft(e) {
+        this.$refs.configForm && this.$refs.configForm.validate()
+        if (!this.formValid) return
         this.showDraft = false
+        if (this.portal.configDraft.assets) {
+          for (const key in this.portal.configDraft.assets) {
+            if (this.portal.configDraft.assets[key] && this.portal.configDraft.assets[key].data) {
+              await this.uploadAsset(key, this.portal.configDraft.assets[key].data)
+              delete this.portal.configDraft.assets[key].data
+            }
+          }
+        }
         await this.$axios.$put(`api/v1/portals/${this.$route.params.id}/configDraft`, this.portal.configDraft)
         this.hasConfigDraft = true
         this.showDraft = true
@@ -192,17 +211,11 @@
         this.activeTab = 0
         this.fetchPortal()
       },
-      handleAsset(asset, e) {
-        this.$set(this.tempAssets, asset.key, e.target.files[0])
-      },
-      async uploadAsset(asset, e) {
-        this.showDraft = false
-        e.preventDefault()
+      async uploadAsset(key, file) {
         const formData = new FormData()
-        formData.append('asset', this.tempAssets[asset.key])
-        await this.$axios.$post(`api/v1/portals/${this.$route.params.id}/assets/${asset.key}`, formData,
+        formData.append('asset', file)
+        await this.$axios.$post(`api/v1/portals/${this.$route.params.id}/assets/${key}`, formData,
                                 { headers: { 'Content-Type': 'multipart/form-data' } })
-        this.showDraft = true
       },
     },
   }

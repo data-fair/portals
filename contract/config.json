@@ -24,66 +24,41 @@
         "title": "Couleur du footer",
         "x-display": "color-picker"
       },
-      "logo": {
+      "assets": {
         "type": "object",
-        "title": "Image avec logo et titre",
-        "contentMediaType": "image/*",
-        "writeOnly": true,
         "properties": {
-          "name": {
-            "type": "string"
+          "logo": {
+            "type": "object",
+            "title": "Image avec logo et titre",
+            "contentMediaType": "image/*",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           },
-          "size": {
-            "type": "number"
+          "home": {
+            "type": "object",
+            "title": "Image de bannière",
+            "contentMediaType": "image/*",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           },
-          "type": {
-            "type": "string"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "home": {
-        "type": "object",
-        "title": "Image de bannière",
-        "contentMediaType": "image/*",
-        "writeOnly": true,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "size": {
-            "type": "number"
-          },
-          "type": {
-            "type": "string"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "favicon": {
-        "type": "object",
-        "title": "Favicon",
-        "contentMediaType": "image/*",
-        "writeOnly": true,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "size": {
-            "type": "number"
-          },
-          "type": {
-            "type": "string"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time"
+          "favicon": {
+            "type": "object",
+            "title": "Favicon",
+            "contentMediaType": "image/*",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           }
         }
       }
