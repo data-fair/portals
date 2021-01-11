@@ -10,11 +10,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
+  ssr: process.env.NODE_ENV !== 'development',
   srcDir: 'public/',
   build: {
     transpile: [
       /@koumoul/,
-      'vuetify',
+      // 'vuetify',
       // 'vuedraggable',
       'vue-clamp',
       'resize-detector',

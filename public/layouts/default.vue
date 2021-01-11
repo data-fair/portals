@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background-color: #fcfcfc;">
+  <v-app v-if="config" style="background-color: #fcfcfc;">
     <dynamic-style />
     <client-only><accept-cookies /></client-only>
     <v-container class="py-0">
