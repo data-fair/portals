@@ -1,11 +1,12 @@
 <template lang="html">
   <v-container fluid>
-    <v-row class="mt-2">
+    <v-row>
       <v-col
         cols="12"
         sm="5"
         md="4"
         xl="3"
+        class="py-0"
       >
         <v-progress-linear v-if="!portal" indeterminate />
         <template v-else>
@@ -21,32 +22,33 @@
             />
 
             <v-row class="mt-3">
-              <v-col class="text-center">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      color="primary"
-                      type="submit"
-                      v-on="on"
-                    >
-                      Publier l'ébauche
-                    </v-btn>
-                  </template>
-                  <span>La version courante du portail est mise à jour à partir de l'ébauche</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      color="error"
-                      @click="showCancelDialog = true"
-                      v-on="on"
-                    >
-                      Réinitialiser
-                    </v-btn>
-                  </template>
-                  <span>Repartir de la version courante du portail pour l'ébauche</span>
-                </v-tooltip>
-              </v-col>
+              <v-spacer />
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    color="primary"
+                    type="submit"
+                    v-on="on"
+                  >
+                    Publier l'ébauche
+                  </v-btn>
+                </template>
+                <span>La version courante du portail est mise à jour à partir de l'ébauche</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    color="warning"
+                    class="ml-2 mr-3"
+                    @click="showCancelDialog = true"
+                    v-on="on"
+                  >
+                    Réinitialiser
+                  </v-btn>
+                </template>
+                <span>Repartir de la version courante du portail pour l'ébauche</span>
+              </v-tooltip>
             </v-row>
           </v-form>
         </template>
@@ -63,8 +65,12 @@
             <v-tab v-if="portal && hasConfigDraft" :key="0">
               ébauche
             </v-tab>
-            <v-tab-item :key="0" class="pa-1">
-              <v-card v-if="portal && hasConfigDraft && showDraft" elevation="8">
+            <v-tab-item :key="0" class="py-1 pl-0 pr-1">
+              <v-card
+                v-if="portal && hasConfigDraft && showDraft"
+                class="pa-0"
+                outlined
+              >
                 <iframe
                   :src="portal.draftLink"
                   :height="`${iframeHeight}px`"
@@ -72,12 +78,15 @@
                 />
               </v-card>
             </v-tab-item>
-            <template v-if="portal && portal.config && portal.config.content">
+            <template v-if="portal && portal.config">
               <v-tab :key="1">
                 version courante
               </v-tab>
               <v-tab-item :key="1">
-                <v-card elevation="8">
+                <v-card
+                  class="pa-0"
+                  outlined
+                >
                   <iframe
                     v-if="portal && showProd"
                     :src="portal.link"
@@ -104,7 +113,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn flat @click="showCancelDialog = false">
+          <v-btn text @click="showCancelDialog = false">
             Annuler
           </v-btn>
           <v-btn color="warning" @click="cancelDraft($event); showCancelDialog = false;">
