@@ -15,7 +15,7 @@ module.exports = async () => {
       req.url = (nuxtConfig.router.base + req.url).replace('//', '/')
       if (!req.query.portalId) {
         const host = req.headers.host
-        const portal = req.app.get('db').collection('portals').findOne({ host }, { projection: { _id: true } })
+        const portal = await req.app.get('db').collection('portals').findOne({ host }, { projection: { _id: true } })
         if (!portal) return res.status(404).send(`Aucun portail n'est associé au nom de domaine "${host}"`)
         req.headers['x-portal-id'] = portal._id
       }
