@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <manager-top />
+    <manager-top v-if="!embed" />
     <v-main>
       <nuxt-child />
     </v-main>
@@ -11,6 +11,11 @@
   import ManagerTop from '~/components/layout/manager-top.vue'
   export default {
     components: { ManagerTop },
+    computed: {
+      embed() {
+        return this.$route.query.embed === 'true'
+      },
+    },
   }
 
 </script>
