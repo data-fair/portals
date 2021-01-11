@@ -291,7 +291,7 @@
     computed: {
       ...mapState(['config', 'publicUrl']),
       homeUrl() {
-        return process.env.publicUrl + '/assets/home'
+        return `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/home`
       },
       dataFairUrl() {
         return process.env.dataFairUrl
