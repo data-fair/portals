@@ -41,7 +41,7 @@
             <v-btn
               icon
               text
-              :to="{ name: 'pages-id-edit', params: { id: page._id } }"
+              :to="{ name: 'manager-portals-portalId-pages-id-edit', params: { id: page.id } }"
             >
               <v-icon color="primary">
                 mdi-pencil
@@ -74,9 +74,10 @@
   import 'iframe-resizer/js/iframeResizer.contentWindow'
   import CreatePageDialog from '~/components/create-page-dialog.vue'
   import RemoveConfirm from '~/components/remove-confirm.vue'
+  const { mapState } = require('vuex')
 
   export default {
-    layout: 'default',
+    layout: 'manager',
     middleware: 'superadmin-required',
     components: { CreatePageDialog, RemoveConfirm },
     data: () => ({
@@ -84,6 +85,9 @@
       pages: null,
       loading: false,
     }),
+    computed: {
+      ...mapState(['portalId']),
+    },
     mounted: async function () {
       this.refresh(true)
     },
@@ -92,7 +96,7 @@
         this.loading = true
         if (reset) this.page = 1
         const params = { size: 12, page: this.page }
-        const pages = await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params })
+        const pages = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages`, { params })
         if (reset) this.pages = pages
         else pages.results.forEach(r => this.pages.results.push(r))
         this.loading = false
@@ -107,15 +111,15 @@
       },
       async createPage (page) {
         try {
-          const response = await this.$axios.$post(process.env.publicUrl + '/api/v1/pages', page)
-          this.$router.push({ name: 'pages-id-edit', params: { id: response._id } })
+          const response = await this.$axios.$post(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages`, page)
+          this.$router.push({ name: 'manager-portals-portalId-pages-id-edit', params: { id: response.id } })
         } catch (error) {
           console.error(error)
         }
       },
       async removePage (id) {
         try {
-          await this.$axios.$delete(process.env.publicUrl + '/api/v1/pages/' + id)
+          await this.$axios.$delete(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${id}`)
           this.refresh(true)
         } catch (error) {
           console.error(error)

@@ -201,6 +201,13 @@ router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
   res.json({ count, results })
 }))
 
+// Get a page
+router.get('/:id/pages/:pageId', session.auth, asyncWrap(async (req, res, next) => {
+  const page = await req.app.get('db').collection('pages').findOne({ id: req.params.pageId, 'portal._id': req.params.id })
+  if (!page) return res.status(404).send()
+  res.status(200).json(page)
+}))
+
 // Create a page
 router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
   const baseId = slug(req.body.title, { lower: true })
@@ -235,7 +242,7 @@ router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
 router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) => {
   const filter = { id: req.params.pageId, 'portal._id': req.portal._id }
   const page = await req.app.get('db').collection('pages')
-    .findOne(filter)
+    .findOne(filter, { projection: { _id: 0 } })
   if (!page) return res.status(404).send()
   // Restrict the parts of the page that can be edited by API
 

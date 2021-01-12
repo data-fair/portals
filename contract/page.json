@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["_id", "title", "template"],
+  "required": ["id", "title", "template"],
   "additionalProperties": false,
   "properties": {
     "id": {

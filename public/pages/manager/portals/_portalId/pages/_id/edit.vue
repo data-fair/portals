@@ -37,14 +37,14 @@
   import Blank from '~/components/pages/blank.vue'
   const { mapState } = require('vuex')
 
-  const context = require.context('../../../assets/templates', true, /\.json$/)
-  const pageSchema = require('../../../../contract/page.json')
+  const context = require.context('../../../../../../assets/templates', true, /\.json$/)
+  const pageSchema = require('~/../contract/page.json')
   Object.keys(pageSchema.properties).forEach(p => {
     if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
   })
 
   export default {
-    layout: 'default',
+    layout: 'manager',
     middleware: 'superadmin-required',
     components: { VJsf, Blank },
     data: () => ({
@@ -54,7 +54,7 @@
       pageSchema,
     }),
     computed: {
-      ...mapState(['config']),
+      ...mapState(['config', 'portalId']),
       template() {
         return context(`./${this.page.template}.json`)
       },
@@ -70,7 +70,7 @@
       },
     },
     mounted: async function () {
-      this.page = await this.$axios.$get(process.env.publicUrl + '/api/v1/pages/' + this.$route.params.id)
+      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${this.$route.params.id}`)
       this.pageConfig = this.page.config
       delete this.page.config
       if (this.config.owner) this.owner = this.config.owner
@@ -78,7 +78,7 @@
     methods: {
       async update (patch) {
         try {
-          await this.$axios.$patch(process.env.publicUrl + '/api/v1/pages/' + this.$route.params.id, patch)
+          await this.$axios.$patch(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${this.$route.params.id}`, patch)
         // this.$router.push({ name: 'pages' })
         } catch (error) { }
       },

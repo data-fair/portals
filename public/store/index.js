@@ -51,7 +51,7 @@ export default () => {
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
         dispatch('session/loop')
 
-        const portalId = route.query.portalId || env.portalId
+        const portalId = route.params.portalId || route.query.portalId || env.portalId
 
         // case where we are opening a portal
         if (portalId) {

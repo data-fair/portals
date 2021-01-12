@@ -175,7 +175,7 @@
     },
     methods: {
       async fetchPortal() {
-        this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.id}`)
+        this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.portalId}`)
         this.hasConfigDraft = !!this.portal.configDraft
         if (!this.portal.configDraft) this.$set(this.portal, 'configDraft', {})
       },
@@ -199,7 +199,7 @@
             }
           }
         }
-        await this.$axios.$put(`api/v1/portals/${this.$route.params.id}/configDraft`, this.portal.configDraft)
+        await this.$axios.$put(`api/v1/portals/${this.$route.params.portalId}/configDraft`, this.portal.configDraft)
         this.hasConfigDraft = true
         this.showDraft = true
         this.activeTab = 0
@@ -207,7 +207,7 @@
       async validateDraft(e) {
         e.preventDefault()
         this.showProd = false
-        await this.$axios.$post(`api/v1/portals/${this.$route.params.id}/_validate_draft`)
+        await this.$axios.$post(`api/v1/portals/${this.$route.params.portalId}/_validate_draft`)
         this.showProd = true
         this.activeTab = 1
         this.fetchPortal()
@@ -215,7 +215,7 @@
       async cancelDraft(e) {
         e.preventDefault()
         this.showDraft = false
-        await this.$axios.$post(`api/v1/portals/${this.$route.params.id}/_cancel_draft`)
+        await this.$axios.$post(`api/v1/portals/${this.$route.params.portalId}/_cancel_draft`)
         this.showDraft = true
         this.activeTab = 0
         this.fetchPortal()
@@ -223,7 +223,7 @@
       async uploadAsset(key, file) {
         const formData = new FormData()
         formData.append('asset', file)
-        await this.$axios.$post(`api/v1/portals/${this.$route.params.id}/assets/${key}`, formData,
+        await this.$axios.$post(`api/v1/portals/${this.$route.params.portalId}/assets/${key}`, formData,
                                 { headers: { 'Content-Type': 'multipart/form-data' } })
       },
     },

@@ -36,11 +36,20 @@
               </v-list-item-action>
               <v-list-item-action>
                 <v-btn
-                  :to="`/manager/portals/${portal._id}`"
+                  :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
                   icon
                   color="primary"
                 >
-                  <v-icon>mdi-pencil</v-icon>
+                  <v-icon>mdi-cog</v-icon>
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-action>
+                <v-btn
+                  :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
+                  icon
+                  color="primary"
+                >
+                  <v-icon>mdi-file-multiple</v-icon>
                 </v-btn>
               </v-list-item-action>
             </v-list-item>
