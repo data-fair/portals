@@ -7,7 +7,8 @@ const shortid = require('shortid')
 const multer = require('multer')
 const Ajv = require('ajv')
 const ajv = new Ajv()
-const validatePortal = ajv.compile(require('../../contract/portal'))
+const portalSchema = require('../../contract/portal')
+const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
 const asyncWrap = require('../utils/async-wrap')
@@ -16,6 +17,16 @@ const session = require('@koumoul/sd-express')({
   directoryUrl: config.directoryUrl,
   cookieDomain: config.sessionDomain,
 })
+
+const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
+configSchemaNoAllOf.allOf.forEach(a => {
+  Object.values(a.properties).forEach(p => {
+    if (p.dependencies) Object.assign(p.properties, p.dependencies.active.properties)
+  })
+})
+configSchemaNoAllOf.properties = Object.assign({}, ...configSchemaNoAllOf.allOf.map(a => a.properties))
+delete configSchemaNoAllOf.allOf
+const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
 
 function cleanPortal(portal) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
@@ -50,6 +61,8 @@ router.post('', session.auth, asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const collection = req.app.get('db').collection('portals')
   const portal = req.body
+  portal.config = portal.config || configDefaults
+  portal.configDraft = portal.configDraft || configDefaults
   if (portal._id) return res.status(400).send('You cannot specify the id of the created portal')
   if (portal.host) return res.status(400).send('You cannot specify the host of the created portal')
   portal._id = shortid.generate()

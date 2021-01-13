@@ -1,5 +1,6 @@
 <template lang="html">
   <v-container fluid>
+    <v-breadcrumbs :items="breadcrumbItems" large />
     <v-row>
       <v-col
         cols="12"
@@ -161,6 +162,13 @@
       iframeHeight() {
         return 800
       },
+      breadcrumbItems(){
+        return [
+          {text: 'Mes portails', to: {name: 'manager-portals'}, disabled: false, exact: true},
+          {text: this.portal && this.portal.title,  disabled: true},
+          {text: 'Pages', to: {name: 'manager-portals-portalId-pages', params: {portalId: this.portal && this.portal._id}}, disabled: false, exact: true},
+        ]
+      }
     },
     watch: {
       'portal.configDraft': {

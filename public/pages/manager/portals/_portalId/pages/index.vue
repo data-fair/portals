@@ -1,5 +1,6 @@
 <template>
-  <v-container v-scroll="onScroll">
+  <v-container v-scroll="onScroll" fluid>
+    <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title text="Gestion des pages de contenu" />
     <create-page-dialog @created="createPage" />
     <v-row v-if="pages">
@@ -84,12 +85,21 @@
       page: 1,
       pages: null,
       loading: false,
+      portal: null,
     }),
     computed: {
       ...mapState(['portalId']),
+      breadcrumbItems(){
+        return [
+          {text: 'Mes portails', to: {name: 'manager-portals'}, disabled: false, exact: true},
+          {text: this.portal && this.portal.title, to: {name: 'manager-portals-portalId', params: {portalId: this.portal && this.portal._id}}, disabled: false, exact: true},
+          {text: 'Pages', disabled: true},
+        ]
+      },
     },
     mounted: async function () {
       this.refresh(true)
+      this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.portalId}`)
     },
     methods: {
       async refresh(reset) {
