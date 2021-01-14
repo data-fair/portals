@@ -50,8 +50,7 @@ export default () => {
       async init({ commit, dispatch, state }, { req, env, app, route }) {
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
         dispatch('session/loop')
-
-        const portalId = route.params.portalId || route.query.portalId || env.portalId
+        const portalId = route.params.portalId || route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
 
         // case where we are opening a portal
         if (portalId) {
