@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <manager-top v-if="!embed" />
+    <client-only><manager-top v-if="!embed" /></client-only>
     <v-main>
       <nuxt-child />
     </v-main>
