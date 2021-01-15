@@ -102,6 +102,10 @@ async function setPortal(req, res, next) {
 
 // Get an existing portal as the owner
 router.get('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
+  if (req.params.noConfig === 'true') {
+    delete req.portal.config
+    delete req.portal.configDraft
+  }
   res.send(cleanPortal(req.portal))
 }))
 
@@ -138,9 +142,28 @@ const upload = multer({ storage })
 router.post('/:id/assets/:assetId', session.auth, setPortal, upload.any(), asyncWrap(async(req, res) => {
   res.send()
 }))
+
+const assets = {
+  logo: {
+    file: 'logo.png',
+    mimeType: 'image/png',
+  },
+  home: {
+    file: 'undraw_Data_points_re_vkpq.png',
+    mimeType: 'image/jpeg',
+  },
+  favicon: {
+    file: 'favicon.ico',
+    mimeType: 'image/x-icon',
+  },
+}
+
 router.get('/:id/assets/:assetId', asyncWrap(async(req, res) => {
+  if (!assets[req.params.assetId]) return res.status(404).send()
   const draft = req.query.draft === 'true'
-  res.sendFile(path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`))
+  const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
+  if (await fs.exists(filePath)) res.sendFile(filePath)
+  else res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file))
 }))
 
 // Validate the draft as the owner

@@ -21,7 +21,7 @@
             <v-list-item v-for="portal in portals" :key="portal._id">
               <v-list-item-content>
                 <v-list-item-title>
-                  <a :href="portal.link">{{ portal.title }}</a>
+                  <a :href="portal.link" target="_blank">{{ portal.title }}</a>
                 </v-list-item-title>
               </v-list-item-content>
 
@@ -121,6 +121,7 @@
   const { mapState, mapActions, mapGetters } = require('vuex')
 
   export default {
+    middleware: 'admin-required',
     layout: 'manager',
     data: () => ({
       showCreateDialog: false,

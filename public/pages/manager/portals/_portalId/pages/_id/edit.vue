@@ -45,18 +45,15 @@
   })
 
   export default {
-    layout: 'manager',
-    middleware: 'superadmin-required',
     components: { VJsf, Blank },
     data: () => ({
       page: null,
       pageConfig: null,
       owner: null,
       pageSchema,
-      portal: null,
     }),
     computed: {
-      ...mapState(['config', 'portalId']),
+      ...mapState(['config', 'portal']),
       template() {
         return context(`./${this.page.template}.json`)
       },
@@ -70,26 +67,25 @@
           },
         }
       },
-      breadcrumbItems(){
+      breadcrumbItems() {
         return [
-          {text: 'Mes portails', to: {name: 'manager-portals'}, disabled: false, exact: true},
-          {text: this.portal && this.portal.title, to: {name: 'manager-portals-portalId', params: {portalId: this.portal && this.portal._id}}, disabled: false, exact: true},
-          {text: 'Pages', to: {name: 'manager-portals-portalId-pages', params: {portalId: this.portal && this.portal._id}}, disabled: false, exact: true},
-          {text: this.page && this.page.title, disabled: true},
+          { text: 'Mes portails', to: { name: 'manager-portals' }, disabled: false, exact: true },
+          { text: this.portal.title, to: { name: 'manager-portals-portalId', params: { portalId: this.portal._id } }, disabled: false, exact: true },
+          { text: 'Pages', to: { name: 'manager-portals-portalId-pages', params: { portalId: this.portal._id } }, disabled: false, exact: true },
+          { text: this.page && this.page.title, disabled: true },
         ]
       },
     },
     mounted: async function () {
-      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${this.$route.params.id}`)
+      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
       this.pageConfig = this.page.config
       delete this.page.config
       if (this.config.owner) this.owner = this.config.owner
-      this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.portalId}`)
     },
     methods: {
       async update (patch) {
         try {
-          await this.$axios.$patch(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${this.$route.params.id}`, patch)
+          await this.$axios.$patch(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
         // this.$router.push({ name: 'pages' })
         } catch (error) { }
       },

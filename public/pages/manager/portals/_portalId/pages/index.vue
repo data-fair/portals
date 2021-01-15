@@ -48,7 +48,7 @@
                 mdi-pencil
               </v-icon>
             </v-btn>
-            <remove-confirm :label="page.title" @removed="removePage(page._id)" />
+            <remove-confirm :label="page.title" @removed="removePage(page.id)" />
           </v-card-actions>
         </v-card>
       </v-col>
@@ -75,38 +75,34 @@
   import 'iframe-resizer/js/iframeResizer.contentWindow'
   import CreatePageDialog from '~/components/create-page-dialog.vue'
   import RemoveConfirm from '~/components/remove-confirm.vue'
-  const { mapState } = require('vuex')
+  import { mapState } from 'vuex'
 
   export default {
-    layout: 'manager',
-    middleware: 'superadmin-required',
     components: { CreatePageDialog, RemoveConfirm },
     data: () => ({
       page: 1,
       pages: null,
       loading: false,
-      portal: null,
     }),
     computed: {
-      ...mapState(['portalId']),
-      breadcrumbItems(){
+      ...mapState(['portal']),
+      breadcrumbItems() {
         return [
-          {text: 'Mes portails', to: {name: 'manager-portals'}, disabled: false, exact: true},
-          {text: this.portal && this.portal.title, to: {name: 'manager-portals-portalId', params: {portalId: this.portal && this.portal._id}}, disabled: false, exact: true},
-          {text: 'Pages', disabled: true},
+          { text: 'Mes portails', to: { name: 'manager-portals' }, disabled: false, exact: true },
+          { text: this.portal.title, to: { name: 'manager-portals-portalId', params: { portalId: this.portal._id } }, disabled: false, exact: true },
+          { text: 'Pages', disabled: true },
         ]
       },
     },
     mounted: async function () {
       this.refresh(true)
-      this.portal = await this.$axios.$get(`api/v1/portals/${this.$route.params.portalId}`)
     },
     methods: {
       async refresh(reset) {
         this.loading = true
         if (reset) this.page = 1
         const params = { size: 12, page: this.page }
-        const pages = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages`, { params })
+        const pages = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
         if (reset) this.pages = pages
         else pages.results.forEach(r => this.pages.results.push(r))
         this.loading = false
@@ -121,15 +117,15 @@
       },
       async createPage (page) {
         try {
-          const response = await this.$axios.$post(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages`, page)
-          this.$router.push({ name: 'manager-portals-portalId-pages-id-edit', params: { id: response.id } })
+          const response = await this.$axios.$post(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, page)
+          this.$router.push({ name: 'manager-portals-portalId-pages-id-edit', params: { id: response.id, portalId: this.portal._id } })
         } catch (error) {
           console.error(error)
         }
       },
       async removePage (id) {
         try {
-          await this.$axios.$delete(process.env.publicUrl + `/api/v1/portals/${this.portalId}/pages/${id}`)
+          await this.$axios.$delete(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${id}`)
           this.refresh(true)
         } catch (error) {
           console.error(error)

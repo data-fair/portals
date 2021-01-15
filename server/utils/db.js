@@ -28,7 +28,7 @@ exports.connect = async () => {
 exports.init = async () => {
   console.log('Connecting to mongodb ' + `${config.mongo.host}:${config.mongo.port}`)
   const { db, client } = await exports.connect()
-  await ensureIndex(db, 'portals', { host: 1 }, { unique: true })
+  await ensureIndex(db, 'portals', { host: 1 }, { unique: true, sparse: true })
   await ensureIndex(db, 'pages', { id: 1, 'portal._id': 1 }, { unique: true })
   return { db, client }
 }

@@ -49,7 +49,7 @@
             <v-list-item disabled>
               <v-list-item-avatar class="ml-0 my-0">
                 <v-avatar :size="28">
-                  <img :src="activeAccount.type === 'user' ? `${directoryUrl}/api/avatars/user/${user.id}/avatar.png` : `${env.directoryUrl}/api/avatars/organization/${activeAccount.id}/avatar.png`">
+                  <img :src="activeAccount.type === 'user' ? `${directoryUrl}/api/avatars/user/${user.id}/avatar.png` : `${directoryUrl}/api/avatars/organization/${activeAccount.id}/avatar.png`">
                 </v-avatar>
               </v-list-item-avatar>
               <v-list-item-title>{{ activeAccount.type === 'user' ? 'Compte personnel' : activeAccount.name }}</v-list-item-title>

@@ -17,7 +17,7 @@
                   <v-list-item-title>
                     {{ portal.owner.name }} - {{ portal.title }}
                   </v-list-item-title>
-                  <v-list-item-subtitle>Adresse : <a :href="portal.link">{{ portal.link }}</a></v-list-item-subtitle>
+                  <v-list-item-subtitle>Adresse : <a :href="portal.link" target="_blank">{{ portal.link }}</a></v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-icon color="primary" @click="currentPortal = portal; newHost = portal.host; showPublishDialog = true;">
@@ -132,6 +132,7 @@ spec:
 <script>
   export default {
     layout: 'manager',
+    middleware: 'superadmin-required',
     data() {
       return {
         portals: null,

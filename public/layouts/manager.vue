@@ -13,7 +13,11 @@
     components: { ManagerTop },
     computed: {
       embed() {
-        return this.$route.query.embed === 'true'
+        try {
+          return window.self !== window.top
+        } catch (e) {
+          return true
+        }
       },
     },
   }

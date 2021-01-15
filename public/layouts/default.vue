@@ -125,10 +125,10 @@
   export default {
     components: { AcceptCookies, AppBar, DynamicStyle },
     computed: {
-      ...mapState(['config', 'textDark']),
+      ...mapState(['config', 'textDark', 'portal', 'draft']),
       ...mapGetters(['themeColorDark', 'footerColorDark']),
       logoUrl() {
-        return `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/logo?draft=${this.$store.state.draft}?draft=`
+        return `${process.env.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
       },
     },
     head() {
@@ -137,7 +137,7 @@
       const link = [
         { rel: 'canonical', href: canonical },
       ]
-      link.push({ rel: 'icon', type: 'image/x-icon', href: `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/favicon?draft=${this.$store.state.draft}` })
+      link.push({ rel: 'icon', type: 'image/x-icon', href: `${process.env.publicUrl}/api/v1/portals/${this.portal._id}/assets/favicon?draft=${this.draft}` })
       link.forEach((l) => {
         if (l.href.slice(-1) === '/') {
           l.href = l.href.slice(0, -1)
@@ -147,7 +147,7 @@
         { name: 'twitter:card', content: 'summary' },
         { hid: 'og:title', property: 'og:title', content: this.config.title },
         { property: 'og:locale', content: 'fr_FR' },
-        { hid: 'og:image', property: 'og:image', content: `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/home?draft=${this.$store.state.draft}` },
+        { hid: 'og:image', property: 'og:image', content: `${process.env.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}` },
         { hid: 'og:image:width', property: 'og:image:width', content: 567 },
         { hid: 'og:image:height', property: 'og:image:height', content: 383 },
       ]

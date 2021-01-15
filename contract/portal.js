@@ -2,7 +2,7 @@ const config = require('./config.json')
 
 module.exports = {
   type: 'object',
-  required: ['_id', 'owner'],
+  required: ['_id', 'owner', 'config', 'configDraft'],
   properties: {
     _id: {
       type: 'string',

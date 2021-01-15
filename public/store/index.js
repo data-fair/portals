@@ -12,6 +12,7 @@ export default () => {
     },
     state: {
       config: null,
+      portal: null,
       draft: false,
       initialQuery: {},
       textDark: '#212121',
@@ -43,8 +44,12 @@ export default () => {
       },
     },
     actions: {
-      async fetchConfig({ state, commit }) {
-        const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${state.portalId}/config`, { params: { draft: state.draft } })
+      async fetchPortalInfos({ state, commit }, portalId) {
+        const portal = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}`, { params: { noConfig: true } })
+        commit('setAny', { portal })
+      },
+      async fetchConfig({ state, commit }, portalId) {
+        const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
         commit('setAny', { config })
       },
       async init({ commit, dispatch, state }, { req, env, app, route }) {
@@ -52,8 +57,7 @@ export default () => {
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
         console.log('session loop')
         dispatch('session/loop')
-        const portalId = route.params.portalId || route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
-        console.log('portalId', portalId)
+        const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
 
         // case where we are opening a portal
         if (portalId) {
@@ -64,12 +68,12 @@ export default () => {
           console.log('set initial info')
           commit('setAny', {
             initialQuery,
-            portalId,
             draft,
+            portal: {
+              _id: portalId,
+            },
           })
-          console.log('fetch config')
           await dispatch('fetchConfig')
-          console.log('fetch config ok')
 
           // automatic swtich to the account that owns this portal if we are a member
           if (state.session.user) {
