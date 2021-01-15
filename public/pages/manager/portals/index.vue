@@ -15,7 +15,7 @@
           Créer un nouveau portail
         </v-btn>
       </v-row>
-      <v-row class="mt-2">
+      <v-row class="mt-6">
         <v-card v-if="portals && portals.length" min-width="500">
           <v-list>
             <v-list-item v-for="portal in portals" :key="portal._id">

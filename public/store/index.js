@@ -53,9 +53,7 @@ export default () => {
         commit('setAny', { config })
       },
       async init({ commit, dispatch, state }, { req, env, app, route }) {
-        console.log('session init')
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
-        console.log('session loop')
         dispatch('session/loop')
         const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
 
@@ -65,7 +63,6 @@ export default () => {
           if (route.query.draft) initialQuery.draft = route.query.draft
           if (route.query.portalId) initialQuery.portalId = route.query.portalId
           const draft = route.query.draft === 'true'
-          console.log('set initial info')
           commit('setAny', {
             initialQuery,
             draft,
@@ -84,7 +81,6 @@ export default () => {
               user.organizations.find(o => o.id === state.config.owner.id) &&
               (!user.organization || user.organization.id !== state.config.owner.id)
             ) {
-              console.log('switch orga', state.config.owner.id)
               dispatch('session/switchOrganization', state.config.owner.id)
             }
             if (
@@ -92,7 +88,6 @@ export default () => {
               state.config.owner.type === 'user' &&
               user.organization
             ) {
-              console.log('no orga')
               dispatch('session/switchOrganization', null)
             }
           }
