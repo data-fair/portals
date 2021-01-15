@@ -1,9 +1,12 @@
 export default async function ({ store, error }) {
   if (!store.state.session || !store.state.session.user) {
-    return store.dispatch('session/login')
+    error({
+      message: 'Vous devez être authentifié pour accéder à cette page.',
+      statusCode: 401,
+    })
   } else if (!store.state.session.user.organization || store.state.session.user.organization.role === 'user') {
     error({
-      message: 'Vous n\'avez pas les permissions d\'accéder à cette page',
+      message: 'Vous n\'avez pas la permission d\'accéder à cette page, il faut avoir le profil contributeur.',
       statusCode: 403,
     })
   }

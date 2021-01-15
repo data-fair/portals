@@ -1,12 +1,13 @@
 export default async function ({ store, error }) {
   if (!store.state.session || !store.state.session.user) {
-    return store.dispatch('session/login')
-  } else if (!store.state.session.user.isAdmin) {
     error({
-      message: 'Vous n\'avez pas les permissions d\'accéder à cette page',
+      message: 'Vous devez être authentifié pour accéder à cette page.',
+      statusCode: 401,
+    })
+  } else if (!store.state.session.user.adminAdmin) {
+    error({
+      message: 'Vous n\'avez pas la permission d\'accéder à cette page, il faut avoir activé le mode administration.',
       statusCode: 403,
     })
-  } else {
-    if (!store.state.session.user.adminMode) setTimeout(() => store.dispatch('session/setAdminMode', true), 100)
   }
 }
