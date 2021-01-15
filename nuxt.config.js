@@ -10,9 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  // ssr: process.env.NODE_ENV !== 'development',
-  // temporary
-  ssr: false,
+  ssr: process.env.NODE_ENV !== 'development',
   srcDir: 'public/',
   build: {
     transpile: [
