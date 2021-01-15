@@ -120,20 +120,14 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-item :href="dataFairUrl">
+              <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
                 <v-list-item-title>Back-office</v-list-item-title>
               </v-list-item>
-              <v-list-item v-if="user.isAdmin" :to="{name: 'pages'}">
-                <v-list-item-title>Gestion des pages</v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="user.isAdmin" :to="{name: 'config'}">
-                <v-list-item-title>Configuration du portail</v-list-item-title>
-              </v-list-item>
               <v-divider />
-              <v-list-item :href="directoryUrl + '/me'">
+              <v-list-item :href="dataFairUrl + '/me'" :disabled="embed">
                 <v-list-item-title>Mon compte</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="logout">
+              <v-list-item :disabled="embed" @click="logout">
                 <v-list-item-title>Se déconnecter</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -159,12 +153,12 @@
     computed: {
       ...mapState(['config', 'textDark', 'portal']),
       ...mapState('session', ['user', 'initialized']),
-      ...mapGetters(['themeColorDark']),
+      ...mapGetters(['themeColorDark', 'embed']),
       directoryUrl() {
         return process.env.directoryUrl
       },
       dataFairUrl() {
-        return process.env.dataFairUrl + (process.env.development ? '/' : '')
+        return process.env.dataFairUrl
       },
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)

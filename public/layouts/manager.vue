@@ -8,17 +8,12 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import ManagerTop from '~/components/layout/manager-top.vue'
   export default {
     components: { ManagerTop },
     computed: {
-      embed() {
-        try {
-          return window.self !== window.top
-        } catch (e) {
-          return true
-        }
-      },
+      ...mapGetters(['embed']),
     },
   }
 

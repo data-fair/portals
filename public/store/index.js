@@ -18,6 +18,13 @@ export default () => {
       textDark: '#212121',
     },
     getters: {
+      embed() {
+        try {
+          return window.self !== window.top
+        } catch (e) {
+          return true
+        }
+      },
       linkColor(state) {
         if (!state.config) return
         const c = tinycolor(state.config.themeColor)
