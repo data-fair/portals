@@ -73,7 +73,7 @@ export default () => {
               _id: portalId,
             },
           })
-          await dispatch('fetchConfig')
+          await dispatch('fetchConfig', portalId)
 
           // automatic swtich to the account that owns this portal if we are a member
           if (state.session.user) {

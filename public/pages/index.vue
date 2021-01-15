@@ -289,9 +289,9 @@
       isMobileOnly,
     }),
     computed: {
-      ...mapState(['config', 'publicUrl']),
+      ...mapState(['config', 'publicUrl', 'portal']),
       homeUrl() {
-        return `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/home?draft=${this.$store.state.draft}`
+        return `${process.env.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
       },
       dataFairUrl() {
         return process.env.dataFairUrl
