@@ -251,6 +251,7 @@
   const marked = require('@hackmd/meta-marked')
 
   export default {
+    middleware: 'portal-required',
     layout: 'default',
     components: {
       // Disqus,

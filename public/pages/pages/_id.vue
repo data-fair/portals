@@ -11,20 +11,23 @@
 <script>
   import Error from '~/components/error.vue'
   import Blank from '~/components/pages/blank.vue'
+  const { mapState } = require('vuex')
 
   export default {
+    middleware: 'portal-required',
     layout: 'default',
     components: {
       Blank,
       Error,
     },
     async fetch () {
-      this.page = await this.$axios.$get(process.env.publicUrl + '/api/v1/pages/' + this.$route.params.id)
+      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
     },
     data: () => ({
       page: null,
     }),
     computed: {
+      ...mapState(['portal']),
       url() {
         return process.env.publicUrl + '/pages/' + this.$route.params.id
       },

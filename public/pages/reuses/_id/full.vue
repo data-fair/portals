@@ -28,6 +28,7 @@
   const marked = require('@hackmd/meta-marked')
 
   export default {
+    middleware: 'portal-required',
     layout: 'minimal',
     components: { Error },
     async fetch () {

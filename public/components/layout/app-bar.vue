@@ -39,8 +39,8 @@
             <template v-if="pages">
               <v-tab
                 v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
-                :key="page._id"
-                :to="{name: 'pages-id', params: {id: page._id}}"
+                :key="page.id"
+                :to="{name: 'pages-id', params: {id: page.id}}"
                 class="font-weight-bold"
               >
                 {{ page.title }}
@@ -67,8 +67,8 @@
                 <v-list>
                   <v-list-item
                     v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
-                    :key="page._id"
-                    :to="{name: 'pages-id', params: {id: page._id}}"
+                    :key="page.id"
+                    :to="{name: 'pages-id', params: {id: page.id}}"
                   >
                     <v-list-item-title>{{ page.title }}</v-list-item-title>
                   </v-list-item>
@@ -151,13 +151,13 @@
   export default {
     components: { XsMenu },
     async fetch() {
-      this.pages = (await this.$axios.$get(process.env.publicUrl + '/api/v1/pages', { params: { size: 1000, select: '_id,title,navigation' } })).results
+      this.pages = (await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
     },
     data: () => ({
       pages: null,
     }),
     computed: {
-      ...mapState(['config', 'textDark']),
+      ...mapState(['config', 'textDark', 'portal']),
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters(['themeColorDark']),
       directoryUrl() {
