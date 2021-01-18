@@ -85,7 +85,7 @@
       "featuredReuse": {
         "title": "Visualisation mise en avant",
         "type": "object",
-        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner=organization:{context.owner}&size=1000",
+        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
         "x-itemKey": "href",

@@ -1,9 +1,10 @@
 <template>
-  <v-dialog
-    v-model="dialog"
+  <v-menu
+    v-model="menu"
     :fullscreen="$vuetify.breakpoint.smAndDown"
     scrollable
-    persistent
+    :close-on-click="false"
+    :close-on-content-click="false"
     max-width="700px"
   >
     <template v-slot:activator="{on}">
@@ -19,7 +20,7 @@
       </v-btn>
     </template>
 
-    <v-card v-if="dialog">
+    <v-card v-if="menu">
       <v-card-title class="title">
         Créer une nouvelle page
       </v-card-title>
@@ -42,7 +43,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click.native="dialog = false">
+        <v-btn text @click.native="menu = false">
           Annuler
         </v-btn>
         <v-btn color="primary" @click.native="confirm">
@@ -50,7 +51,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-menu>
 </template>
 
 <script>
@@ -62,13 +63,13 @@
     components: { VJsf },
     data: () => ({
       schema: require('../../contract/page.json'),
-      dialog: false,
+      menu: false,
       valid: false,
       editItem: {},
     }),
     watch: {
-      dialog () {
-        if (!this.dialog) {
+      menu () {
+        if (!this.menu) {
           this.editItem = {}
         }
       },
@@ -77,7 +78,7 @@
       confirm () {
         if (this.$refs.form.validate()) {
           this.$emit('created', this.editItem)
-          this.dialog = false
+          this.menu = false
         }
       },
     },

@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="config">
-    <template v-for="(element, i) in config.elements">
+    <template v-for="(element, i) in config.elements.filter(e => e)">
       <k-element
         v-if="!element.type.includes('Columns')"
         :key="i"

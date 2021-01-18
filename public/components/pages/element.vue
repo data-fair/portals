@@ -1,50 +1,47 @@
 <template>
-  <div>
+  <div v-if="value">
     <h2 v-if="value.type === 'title'">
       {{ value.content }}
     </h2>
     <div v-else-if="value.type === 'text'" v-html="marked(value.content).html" />
-    <v-responsive v-else-if="value.type === 'datasetTable'" :aspect-ratio="$vuetify.breakpoint.smAndUp ? 2.0 : 1.0">
-      <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-        <iframe
-          :id="'table-dataset-' + value.dataset.id"
-          :src="iframeSrc(value.dataset)"
-          height="100%"
-          width="100%"
-        />
-      </div>
-    </v-responsive>
-    <v-responsive v-else-if="value.type === 'application'" :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-      <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-        <iframe
-          :id="'application-' + value.application.id"
-          :src="value.application.exposedUrl + '?embed=true'"
-          height="100%"
-          width="100%"
-          @load="iframeLoaded(value.application)"
-        />
-      </div>
-    </v-responsive>
+    <v-iframe
+      v-else-if="value.type === 'datasetForm' && value.dataset"
+      :id="'form-dataset-' + value.dataset.id"
+      :src="formIframeSrc(value.dataset)"
+    />
+    <iframe
+      v-else-if="value.type === 'datasetTable' && value.dataset"
+      :id="'table-dataset-' + value.dataset.id"
+      :aspect-ratio="$vuetify.breakpoint.smAndUp ? 2.0 : 1.0"
+      :src="tableIframeSrc(value.dataset)"
+    />
+    <v-iframe
+      v-else-if="value.type === 'application' && value.application"
+      :src="value.application.exposedUrl + '?embed=true'"
+      @load="iframeLoaded(value.application)"
+    />
   </div>
 </template>
 
 <script>
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
   const marked = require('@hackmd/meta-marked')
   const { mapState } = require('vuex')
 
   export default {
+    components: { VIframe },
     props: ['value'],
     computed: {
       ...mapState(['config']),
     },
     methods: {
       marked,
-      iframeSrc(dataset) {
+      tableIframeSrc(dataset) {
         return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
       },
-      iframeLoaded (application) {
-        iFrameResize({ log: false }, '#application-' + application.id)
+      formIframeSrc(dataset) {
+        return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
       },
     },
   }

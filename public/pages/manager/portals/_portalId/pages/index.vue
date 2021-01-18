@@ -2,7 +2,7 @@
   <v-container v-scroll="onScroll" fluid>
     <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title text="Gestion des pages de contenu" />
-    <create-page-dialog @created="createPage" />
+    <create-page-menu @created="createPage" />
     <v-row v-if="pages">
       <v-col
         v-for="(page, i) in pages.results"
@@ -73,12 +73,12 @@
 
 <script>
   import 'iframe-resizer/js/iframeResizer.contentWindow'
-  import CreatePageDialog from '~/components/create-page-dialog.vue'
+  import CreatePageMenu from '~/components/create-page-menu.vue'
   import RemoveConfirm from '~/components/remove-confirm.vue'
   import { mapState } from 'vuex'
 
   export default {
-    components: { CreatePageDialog, RemoveConfirm },
+    components: { CreatePageMenu, RemoveConfirm },
     data: () => ({
       page: 1,
       pages: null,

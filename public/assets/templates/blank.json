@@ -16,6 +16,8 @@
         }, {
           "$ref": "#/definitions/application"
         }, {
+          "$ref": "#/definitions/datasetForm"
+        }, {
           "$ref": "#/definitions/datasetTable"
         }, {
           "$ref": "#/definitions/twoColumns"
@@ -79,6 +81,29 @@
         }
       }
     },
+    "datasetForm": {
+      "type": "object",
+      "title": "Formulaire de saisie vers un jeu de données",
+      "properties": {
+        "type": {
+          "const": "datasetForm"
+        },
+        "dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?isRest=true&status=finalized&q={q}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    },
     "datasetTable": {
       "type": "object",
       "title": "Tableau d'un jeu de données",
@@ -112,6 +137,8 @@
         "$ref": "#/definitions/text"
       }, {
         "$ref": "#/definitions/application"
+      }, {
+        "$ref": "#/definitions/datasetForm"
       }, {
         "$ref": "#/definitions/datasetTable"
       }],

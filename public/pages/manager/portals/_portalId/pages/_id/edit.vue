@@ -18,7 +18,7 @@
             v-if="pageConfig"
             :schema="template"
             :value="pageConfig"
-            :options="{httpLib, context: {dataFairUrl}, dialogProps: {maxWidth: 1000}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+            :options="{httpLib, context: {dataFairUrl}, dialogProps: {maxWidth: 1000}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...', editMode: 'inline'}"
             @change="update({ config: pageConfig })"
           />
         </v-form>
