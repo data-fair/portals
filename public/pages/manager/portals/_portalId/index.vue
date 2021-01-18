@@ -78,24 +78,22 @@
                 />
               </v-card>
             </v-tab-item>
-            <template>
-              <v-tab :key="1">
-                version courante
-              </v-tab>
-              <v-tab-item :key="1">
-                <v-card
-                  class="pa-0"
-                  outlined
-                >
-                  <iframe
-                    v-if="showProdPreview"
-                    :src="portal.link"
-                    :height="`${iframeHeight}px`"
-                    width="100%"
-                  />
-                </v-card>
-              </v-tab-item>
-            </template>
+            <v-tab :key="1">
+              version courante
+            </v-tab>
+            <v-tab-item :key="1">
+              <v-card
+                class="pa-0"
+                outlined
+              >
+                <iframe
+                  v-if="showProdPreview"
+                  :src="portal.link"
+                  :height="`${iframeHeight}px`"
+                  width="100%"
+                />
+              </v-card>
+            </v-tab-item>
           </v-tabs>
         </client-only>
       </v-col>
