@@ -9,7 +9,9 @@
         xl="3"
         class="py-0"
       >
+        <v-progress-linear v-if="!configDraft" indeterminate />
         <v-form
+          v-else
           ref="configForm"
           v-model="formValid"
           @submit="validateDraft"
@@ -65,7 +67,7 @@
             </v-tab>
             <v-tab-item :key="0" class="py-1 pl-0 pr-1">
               <v-card
-                v-if="showDraftPreview"
+                v-if="showDraft"
                 class="pa-0"
                 outlined
               >
@@ -143,7 +145,7 @@
         formValid: false,
         eventBus,
         showCancelDialog: false,
-        showDraftPreview: true,
+        showDraft: true,
         showProdPreview: true,
         activeTab: 0,
       }
@@ -171,6 +173,7 @@
           this.saveDraft()
         }, 200),
         deep: true,
+        immediate: false,
       },
     },
     async created() {
@@ -181,8 +184,8 @@
         this.configDraft = await this.$axios.$get(`api/v1/portals/${this.portal._id}/config`, { params: { draft: true } })
       },
       refreshDraftPreview() {
-        this.showDraftPreview = false
-        setTimeout(() => { this.showDraftPreview = true }, 1)
+        this.showDraft = false
+        setTimeout(() => { this.showDraft = true }, 1)
       },
       refreshProdPreview() {
         this.showProdPreview = false
