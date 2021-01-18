@@ -61,7 +61,10 @@
   import { mapState, mapGetters } from 'vuex'
   import eventBus from '~/event-bus'
   import OwnerShort from '~/components/owners/short.vue'
-  const sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
+  let sound
+  if (!process.server) {
+    sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
+  }
 
   export default {
     components: { OwnerShort },
@@ -96,7 +99,7 @@
         const channel = `user:${this.user.id}:notifications`
         eventBus.$emit('subscribe-notify', channel)
         eventBus.$on(channel, notification => {
-          sound.play()
+          if (sound) sound.play()
           if (this.notifications) {
             notification.new = true
             this.notifications.unshift(notification)
