@@ -14,12 +14,12 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-
   export default {
     props: ['owner'],
     computed: {
-      ...mapState(['env']),
+      directoryUrl() {
+        return process.env.directoryUrl
+      },
       label() {
         let label = this.owner.name
         if (this.owner.role) label += ` (${this.owner.role})`
