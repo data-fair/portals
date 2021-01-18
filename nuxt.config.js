@@ -48,7 +48,8 @@ module.exports = {
     { src: '~plugins/filters' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
-    { src: '~/plugins/window-size', ssr: false },
+    { src: '~plugins/window-size', ssr: false },
+    { src: '~plugins/ws', ssr: false },
   ],
   router: {
     base: config.basePath,
