@@ -78,7 +78,7 @@
     },
     mounted: async function () {
       this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
-      this.pageConfig = this.page.config
+      this.pageConfig = this.page.config || {}
       delete this.page.config
       if (this.config.owner) this.owner = this.config.owner
     },
