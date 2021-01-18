@@ -285,7 +285,6 @@
       this.applications = applications
     },
     data: () => ({
-      marked,
       baseApplications: {},
       isMobileOnly,
       dataset: null,
@@ -312,6 +311,7 @@
       iframeLoaded (id) {
         iFrameResize({ log: false }, '#' + id)
       },
+      marked,
     },
     head () {
       if (this.dataset) {

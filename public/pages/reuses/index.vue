@@ -279,9 +279,7 @@
           this.refresh()
         }
       },
-      marked(content) {
-        return marked(content)
-      },
+      marked,
       toggleTopic(topic) {
         if (this.filters.topics.find(t => t.id === topic.id)) {
           this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)

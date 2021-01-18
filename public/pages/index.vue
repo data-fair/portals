@@ -309,9 +309,7 @@
       if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
     },
     methods: {
-      marked(content) {
-        return marked(content)
-      },
+      marked,
       iframeLoaded () {
         iFrameResize({ log: false }, '#featured-reuse-frame')
       },

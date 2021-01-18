@@ -299,9 +299,7 @@
         const concept = this.concepts.find(c => c.id === e.value)
         return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
       },
-      marked(content) {
-        return marked(content)
-      },
+      marked,
       toggleTopic(topic) {
         if (this.filters.topics.find(t => t.id === topic.id)) {
           this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)

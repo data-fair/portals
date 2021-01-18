@@ -220,7 +220,6 @@
     },
     data: () => ({
       embedDialog: null,
-      marked,
       baseApplication: null,
       application: null,
       datasets: null,
@@ -249,6 +248,7 @@
       if (this.application) this.baseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
     },
     methods: {
+      marked,
       iframeLoaded () {
         iFrameResize({ log: false }, '#reuse-frame')
       },

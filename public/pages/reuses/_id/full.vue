@@ -35,7 +35,6 @@
       this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
     },
     data: () => ({
-      marked,
       application: null,
     }),
     computed: {
@@ -49,6 +48,7 @@
       },
     },
     methods: {
+      marked,
       iframeLoaded () {
         iFrameResize({ log: false }, '#reuse-frame-full')
       },
