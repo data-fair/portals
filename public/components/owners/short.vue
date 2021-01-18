@@ -3,7 +3,7 @@
     <template v-slot:activator="{on}">
       <span class="body-2" v-on="on">
         <v-avatar :size="28">
-          <img :src="`${env.directoryUrl}/api/avatars/${owner.type}/${owner.id}/avatar.png`">
+          <img :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/avatar.png`">
         </v-avatar>
       </span>
     </template>

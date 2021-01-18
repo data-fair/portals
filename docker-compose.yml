@@ -26,6 +26,7 @@ services:
       - DEBUG=files
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - OPENAPI_VIEWER_URL=http://localhost:6200/openapi-viewer/
+      - NOTIFY_URL=http://localhost:6200/notify
       - DIRECTORY_URL=http://localhost:6200/simple-directory
       - PUBLIC_URL=http://localhost:6200/data-fair
       - WS_PUBLIC_URL=ws://localhost:6200/data-fair
