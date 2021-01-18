@@ -77,6 +77,11 @@
         "description": "Vous pouvez saisir du contenu riche au format HTML et/ou markdown.",
         "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
       },
+      "public": {
+        "type": "boolean",
+        "title": "Cacher les ressources privées pour les utilisateurs connectés",
+        "default": false
+      },
       "showKpis": {
         "title": "Afficher les chiffres clés",
         "type": "boolean",
@@ -191,27 +196,64 @@
       }
     }
   }, {
+    "title": "Pied de page",
+    "properties": {
+      "footerLinks":{
+        "title": "Liens",
+        "type" : "array",
+        "items": {
+          "type": "object",
+          "oneOf": [{
+            "title": "Page du portail",
+            "properties": {
+              "type": {
+                "const": "internal"
+              },
+              "page":{
+                "title": "Page",
+                "type": "object",
+                "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+                "x-itemsProp": "results",
+                "x-itemTitle": "title",
+                "x-itemKey": "id",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },{
+            "title": "Lien externe",
+            "properties": {
+              "type": {
+                "const": "external"
+              },
+              "title": {
+                "title": "Libellé du lien",
+                "type": "string"
+              },
+              "href": {
+                "title": "URL",
+                "type": "string"
+              }
+            }
+          }],
+          "default": {
+            "type": "internal"
+          }
+        }
+      }
+    }
+  }, {
     "title": "Communication",
     "properties": {
-      "website": {
-        "type": "string",
-        "title": "Site web"
-      },
-      "email": {
-        "type": "string",
-        "title": "Email de contact"
-      },
       "twitter": {
         "type": "string",
         "title": "Compte twitter"
-      },
-      "cgu": {
-        "type": "string",
-        "title": "Page des CGU"
-      },
-      "contact": {
-        "type": "string",
-        "title": "Page de contact"
       }
     }
   }, {

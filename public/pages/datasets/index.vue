@@ -281,6 +281,7 @@
         }
         if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
         if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        if (this.config.public) params.visibility = 'public'
         const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
         if (reset) this.datasets = datasets
         else datasets.results.forEach(r => this.datasets.results.push(r))

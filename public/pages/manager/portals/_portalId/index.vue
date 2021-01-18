@@ -152,7 +152,11 @@
       ...mapState(['portal']),
       ...mapGetters('session', ['activeAccount']),
       context() {
-        return { owner: this.activeAccount.type + ':' + this.activeAccount.id, dataFairUrl: process.env.dataFairUrl }
+        return {
+          owner: this.activeAccount.type + ':' + this.activeAccount.id,
+          dataFairUrl: process.env.dataFairUrl,
+          portalUrl: `${process.env.publicUrl}/api/v1/portals/${this.portal._id}`,
+        }
       },
       iframeHeight() {
         return 800

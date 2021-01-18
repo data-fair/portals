@@ -265,6 +265,7 @@
         }
         if (this.filters.apps.length) params['base-application'] = this.filters.apps.map(t => t.value.url).join(',')
         if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        if (this.config.public) params.visibility = 'public'
         const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
         if (reset) this.applications = applications
         else applications.results.forEach(r => this.applications.results.push(r))

@@ -32,6 +32,11 @@
         return process.env.publicUrl + '/pages/' + this.$route.params.id
       },
     },
+    watch: {
+      async '$route.params.id' () {
+        this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
+      },
+    },
     head () {
       if (this.page) {
         return { title: this.page.title }

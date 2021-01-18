@@ -227,9 +227,13 @@ router.get('/:id/config', session.auth, asyncWrap(async (req, res) => {
 
 // Get the list of pages
 router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
+  const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
+  if (!portal) return res.status(404).send('Portail inconnu')
+  console.log(req.user)
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
+  if (!req.user || (portal.owner.type === 'user' && portal.owner.id !== req.user.id) || !req.user.organization || (portal.owner.type === 'organization' && portal.owner.id !== req.user.organization.id)) { filter.public = true }
   if (req.query.published === 'true')filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),

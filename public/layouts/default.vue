@@ -63,52 +63,28 @@
         width="100%"
       >
         <v-container>
-          <v-row>
-            <v-col sm="6" cols="12">
-              <v-col cols="9" offset="3">
-                <v-row>
-                  <h3 class="my-3">
-                    Portail
-                  </h3>
-                </v-row>
-                <v-row>
-                  <a :href="config.cgu ? config.cgu : 'https://koumoul.com/platform/term-of-service'" target="_blank">Conditions d'utilisation</a>
-                </v-row>
-                <v-row>
-                  <nuxt-link v-if="config.analytics && config.analytics.active && config.analytics.type === 'matomo' && config.analytics.params.trackerBase" to="/privacy-policy">
-                    Politique de confidentialité
-                  </nuxt-link>
-                </v-row>
-              </v-col>
-            </v-col>
-            <v-col sm="6" cols="12">
-              <v-col cols="9" offset="3">
-                <v-row>
-                  <h3 class="my-3">
-                    Communiquer
-                  </h3>
-                </v-row>
-                <v-row>
-                  <a v-if="config.contact" :href="config.contact">Nous contacter</a>
-                </v-row>
-                <v-row>
-                  <a v-if="config.email" :href="'mailto:' + config.email">Par email</a>
-                </v-row>
-                <v-row>
-                  <a v-if="config.website" :href="config.website">Site institutionnel</a>
-                </v-row>
-                <v-row>
-                  <a v-if="config.twitter" :href="'https://twitter.com/' + config.twitter">Twitter</a>
-                </v-row>
-              </v-col>
+          <v-row class="py-3">
+            <v-col
+              v-for="link in config.footerLinks"
+              :key="link.title"
+              cols="9"
+              sm="4"
+              offset="3"
+              offset-sm="2"
+              class="pa-0"
+            >
+              <nuxt-link v-if="link.type === 'internal'" to="/privacy-policy">
+                {{ link.page && link.page.title }}
+              </nuxt-link>
+              <a v-else :href="link.href">{{ link.title }}</a>
             </v-col>
           </v-row>
         </v-container>
 
         <v-divider :color="footerColorDark ? 'white' : textDark" />
 
-        <v-container class="text-center">
-          <span>&copy;2019 — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
+        <v-container class="text-center py-1">
+          <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
           <!-- Réalisé avec <v-icon color="red" small>mdi-heart</v-icon> par <strong><nuxt-link :to="localePath({name: 'index'})">Koumoul</nuxt-link></strong> -->
         </v-container>
       </v-card>

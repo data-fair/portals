@@ -16,7 +16,13 @@
       "type": "boolean",
       "title": "Publiée",
       "default": false,
-      "x-cols": 4
+      "x-cols": 3
+    },
+    "public": {
+      "type": "boolean",
+      "title": "Publique",
+      "default": false,
+      "x-cols": 3
     },
     "template": {
       "title": "Modèle de page",
@@ -26,7 +32,7 @@
         "title": "Page blanche"
       }],
       "default": "blank",
-      "x-cols": 4
+      "x-cols": 3
     },
     "navigation": {
       "type": "object",
@@ -62,7 +68,7 @@
         }
       }],
       "default":{"type": "none"},
-      "x-cols": 4
+      "x-cols": 3
     },
     "title": {
       "type": "string",
