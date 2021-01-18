@@ -229,7 +229,6 @@ router.get('/:id/config', session.auth, asyncWrap(async (req, res) => {
 router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
   const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
   if (!portal) return res.status(404).send('Portail inconnu')
-  console.log(req.user)
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
@@ -244,8 +243,14 @@ router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
 
 // Get a page
 router.get('/:id/pages/:pageId', session.auth, asyncWrap(async (req, res, next) => {
+  const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
+  if (!portal) return res.status(404).send('Portail inconnu')
   const page = await req.app.get('db').collection('pages').findOne({ id: req.params.pageId, 'portal._id': req.params.id })
   if (!page) return res.status(404).send()
+  if (!page.public) {
+    if (!req.user) return res.status(401).send()
+    else if ((portal.owner.type === 'user' && portal.owner.id !== req.user.id) || !req.user.organization || (portal.owner.type === 'organization' && portal.owner.id !== req.user.organization.id)) return res.status(403).send()
+  }
   res.status(200).json(page)
 }))
 

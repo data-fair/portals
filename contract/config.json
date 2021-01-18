@@ -124,6 +124,10 @@
           "properties": {
             "type": {
               "const": "lasts"
+            },
+            "size":{
+              "title": "Nombre d'éléments",
+              "type": "integer"
             }
           }
         }]
@@ -146,6 +150,10 @@
           "properties": {
             "type": {
               "const": "lasts"
+            },
+            "size":{
+              "title": "Nombre d'éléments",
+              "type": "integer"
             }
           }
         }]
