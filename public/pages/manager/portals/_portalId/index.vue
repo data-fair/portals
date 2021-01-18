@@ -87,7 +87,7 @@
                 outlined
               >
                 <iframe
-                  v-if="showProdPreview"
+                  v-if="showProd"
                   :src="portal.link"
                   :height="`${iframeHeight}px`"
                   width="100%"
@@ -144,7 +144,7 @@
         eventBus,
         showCancelDialog: false,
         showDraft: true,
-        showProdPreview: true,
+        showProd: true,
         activeTab: 0,
       }
     },
@@ -180,14 +180,6 @@
     methods: {
       async fetchConfigDraft() {
         this.configDraft = await this.$axios.$get(`api/v1/portals/${this.portal._id}/config`, { params: { draft: true } })
-      },
-      refreshDraftPreview() {
-        this.showDraft = false
-        setTimeout(() => { this.showDraft = true }, 1)
-      },
-      refreshProdPreview() {
-        this.showProdPreview = false
-        setTimeout(() => { this.showProdPreview = true }, 1)
       },
       async saveDraft(e) {
         this.$refs.configForm && this.$refs.configForm.validate()
