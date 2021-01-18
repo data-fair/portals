@@ -27,6 +27,15 @@ module.exports = {
       webpackConf.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
 
       // webpackConf.output.publicPath = config.publicUrl + '/_nuxt/'
+
+      // Loader for sounds
+      webpackConf.module.rules.push({
+        test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]',
+        },
+      })
     },
     publicPath: config.publicUrl + '/_nuxt/',
   },
@@ -80,6 +89,8 @@ module.exports = {
     directoryUrl: config.directoryUrl,
     dataFairUrl: config.dataFairUrl,
     openapiViewerUrl: config.openapiViewerUrl,
+    notifyUrl: config.notifyUrl,
+    notifyWSUrl: config.notifyWSUrl,
     sessionDomain: config.sessionDomain,
     development: process.env.NODE_ENV === 'development',
   },

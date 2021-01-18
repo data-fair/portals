@@ -74,6 +74,11 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
+              <notif-edit
+                v-if="user && notifyUrl"
+                :dataset="dataset"
+                :color="'primary'"
+              />
             </v-card-actions>
             <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
           </v-card>
@@ -241,6 +246,7 @@
   import TablePreview from '~/components/dataset/table-preview.vue'
   import MapPreview from '~/components/dataset/map-preview.vue'
   import ApiView from '~/components/dataset/api-view.vue'
+  import NotifEdit from '~/components/dataset/notif-edit.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import Attachments from '~/components/dataset/dataset-attachments.vue'
   import Social from '~/components/social'
@@ -258,6 +264,7 @@
       TablePreview,
       MapPreview,
       ApiView,
+      NotifEdit,
       SchemaView,
       Attachments,
       Social,
@@ -284,11 +291,15 @@
     }),
     computed: {
       ...mapState(['config']),
+      ...mapState('session', ['user']),
       url() {
         return process.env.publicUrl + '/datasets/' + this.$route.params.id
       },
       dataFairUrl() {
         return process.env.dataFairUrl
+      },
+      notifyUrl() {
+        return process.env.notifyUrl
       },
     },
     async mounted() {

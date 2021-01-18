@@ -132,6 +132,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <notifications-queue v-if="user && notifyUrl" :notify-url="notifyUrl" />
         </template>
       </v-col>
     </v-row>
@@ -140,10 +141,11 @@
 
 <script>
   import XsMenu from '~/components/layout/xs-menu'
+  import NotificationsQueue from '~/components/notifications-queue'
   const { mapState, mapGetters, mapActions } = require('vuex')
 
   export default {
-    components: { XsMenu },
+    components: { XsMenu, NotificationsQueue },
     async fetch() {
       this.pages = (await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
     },
@@ -159,6 +161,9 @@
       },
       dataFairUrl() {
         return process.env.dataFairUrl
+      },
+      notifyUrl() {
+        return process.env.notifyUrl
       },
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)

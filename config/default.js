@@ -4,6 +4,9 @@ module.exports = {
   directoryUrl: 'http://localhost:6200/simple-directory',
   dataFairUrl: 'http://localhost:6200/data-fair',
   openapiViewerUrl: 'http://localhost:6200/openapi-viewer',
+  notifyUrl: null,
+  privateNotifyUrl: null,
+  notifyWSUrl: null,
   sessionDomain: null,
   mongo: {
     host: 'localhost',
