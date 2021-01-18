@@ -97,7 +97,7 @@
             "title": {"type": "string"},
             "id": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?isRest=true&status=finalized&q={q}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&select=id,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
