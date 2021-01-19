@@ -121,7 +121,7 @@
             <v-list-item-title>Back-office</v-list-item-title>
           </v-list-item>
           <v-divider />
-          <v-list-item :href="dataFairUrl + '/me'" :disabled="embed">
+          <v-list-item :to="{name: 'me'}" :disabled="embed">
             <v-list-item-title>Mon compte</v-list-item-title>
           </v-list-item>
           <v-list-item :disabled="embed" @click="logout">
