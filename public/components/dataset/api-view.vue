@@ -25,26 +25,20 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-responsive :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-          <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-            <iframe
-              :id="'api-dataset-' + dataset.id"
-              :src="`${openapiViewerUrl}?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
-              height="100%"
-              width="100%"
-              @load="iframeLoaded"
-            />/>
-          </div>
-        </v-responsive>
+        <v-iframe
+          :src="`${openapiViewerUrl}?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
+        />
       </v-card>
     </v-dialog>
   </v-tooltip>
 </template>
 
 <script>
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
 
   export default {
+    components: { VIframe },
     props: ['dataset', 'color'],
     data() {
       return {
@@ -64,11 +58,6 @@
         const viewName = this.dialog ? `/datasets/${this.dataset.id}/api-dialog` : this.$route.path
         if (this.$ma) this.$ma.trackView({ viewName })
         else console.log('No analytics, track dialog view', viewName)
-      },
-    },
-    methods: {
-      iframeLoaded () {
-        iFrameResize({ log: false }, '#api-dataset--' + this.dataset.id)
       },
     },
   }

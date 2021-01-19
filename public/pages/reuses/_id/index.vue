@@ -76,13 +76,9 @@
         </v-col>
       </v-row>
 
-      <iframe
+      <v-iframe
         v-if="baseApplication && baseApplication.applicationName === 'Liste et fiches'"
-        id="reuse-frame"
         :src="embedUrl + '?embed=true'"
-        height="100%"
-        width="100%"
-        @load="iframeLoaded"
       />
       <v-col
         v-else
@@ -91,15 +87,7 @@
         sm="12"
         class="my-3 grow"
       >
-        <v-responsive :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-          <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-            <iframe
-              :src="embedUrl + '?embed=true'"
-              height="100%"
-              width="100%"
-            />
-          </div>
-        </v-responsive>
+        <v-iframe :src="embedUrl + '?embed=true'" />
       </v-col>
 
       <section-subtitle text="Données utilisées" />
@@ -198,7 +186,8 @@
   import MapPreview from '~/components/dataset/map-preview.vue'
   import ApiView from '~/components/dataset/api-view.vue'
   import Social from '~/components/social'
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
   const { mapState } = require('vuex')
   const marked = require('@hackmd/meta-marked')
@@ -212,6 +201,7 @@
       ApiView,
       Social,
       Error,
+      VIframe,
     },
     async fetch () {
       this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
@@ -249,9 +239,6 @@
     },
     methods: {
       marked,
-      iframeLoaded () {
-        iFrameResize({ log: false }, '#reuse-frame')
-      },
     },
     head () {
       if (!this.application) return { title: 'Page non trouvée' }

@@ -38,23 +38,8 @@
         </v-icon>
       </nuxt-link>
       <client-only>
-        <iframe
-          v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'"
-          id="featured-reuse-frame"
-          :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'"
-          height="100%"
-          width="100%"
-          @load="iframeLoaded"
-        />
-        <v-responsive v-else :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-          <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-            <iframe
-              :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'"
-              height="100%"
-              width="100%"
-            />
-          </div>
-        </v-responsive>
+        <v-iframe v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'" :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'" />
+        <v-iframe :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'" />
       </client-only>
     </div>
     <div v-if="config.homeDatasets && config.homeDatasets.type === 'lasts'">
@@ -224,7 +209,8 @@
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import { isMobileOnly } from 'mobile-device-detect'
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
   const { mapState } = require('vuex')
   const marked = require('@hackmd/meta-marked')
 
@@ -238,6 +224,7 @@
       MapPreview,
       ApiView,
       SchemaView,
+      VIframe,
     },
     async fetch () {
       const promiseApplications = this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', {
@@ -310,9 +297,6 @@
     },
     methods: {
       marked,
-      iframeLoaded () {
-        iFrameResize({ log: false }, '#featured-reuse-frame')
-      },
     },
     head () {
       const title = this.config.title

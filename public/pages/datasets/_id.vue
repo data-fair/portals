@@ -107,14 +107,7 @@
                     mdi-open-in-new
                   </v-icon>
                 </nuxt-link>
-                <iframe
-                  id="reuse-frame-dataset"
-                  :src="application.exposedUrl + '?embed=true'"
-                  height="100%"
-                  width="100%"
-                  class="mt-2"
-                  @load="iframeLoaded('reuse-frame-dataset')"
-                />
+                <v-iframe :src="application.exposedUrl + '?embed=true'" class="mt-2" />
               </v-col>
             </template>
             <template v-else>
@@ -135,15 +128,7 @@
                 <div class="mt-3" v-html="marked(application.description || '').html" />
               </v-col>
               <v-col md="6" sm="12">
-                <v-responsive :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-                  <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-                    <iframe
-                      :src="application.exposedUrl + '?embed=true'"
-                      height="100%"
-                      width="100%"
-                    />
-                  </div>
-                </v-responsive>
+                <v-iframe :src="application.exposedUrl + '?embed=true'" />
               </v-col>
             </template>
           </v-row>
@@ -159,20 +144,15 @@
           <section-subtitle :text="reuse.title" />
           <iframe
             v-if="reuse.fixedHeight"
-            :id="`external-reuse-${er}`"
             :src="reuse.link"
             :height="reuse.height"
             width="100%"
             class="mt-2"
           />
-          <iframe
+          <v-iframe
             v-else
-            :id="`external-reuse-${er}`"
             :src="reuse.link"
-            height="100%"
-            width="100%"
             class="mt-2"
-            @load="iframeLoaded(`external-reuse-${er}`)"
           />
         </v-col>
         <section-title v-if="dataset.extras && dataset.extras.externalReuses && dataset.extras.externalReuses.filter(r => r.type==='link').length" text="Réutilisations externes" />
@@ -253,7 +233,8 @@
   import Attachments from '~/components/dataset/dataset-attachments.vue'
   import Social from '~/components/social'
   import Error from '~/components/error.vue'
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
   import { isMobileOnly } from 'mobile-device-detect'
   const { mapState } = require('vuex')
   const marked = require('@hackmd/meta-marked')
@@ -271,6 +252,7 @@
       Attachments,
       Social,
       Error,
+      VIframe,
     },
     async fetch () {
       const dataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
@@ -308,9 +290,6 @@
       this.baseApplications = Object.assign({}, ...baseApps.results.map(a => ({ [a.url]: a })))
     },
     methods: {
-      iframeLoaded (id) {
-        iFrameResize({ log: false }, '#' + id)
-      },
       marked,
     },
     head () {

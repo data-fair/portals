@@ -6,19 +6,16 @@
     <div v-else-if="value.type === 'text'" v-html="marked(value.content).html" />
     <v-iframe
       v-else-if="value.type === 'datasetForm' && value.dataset"
-      :id="'form-dataset-' + value.dataset.id"
       :src="formIframeSrc(value.dataset)"
     />
-    <iframe
+    <v-iframe
       v-else-if="value.type === 'datasetTable' && value.dataset"
-      :id="'table-dataset-' + value.dataset.id"
       :aspect-ratio="$vuetify.breakpoint.smAndUp ? 2.0 : 1.0"
       :src="tableIframeSrc(value.dataset)"
     />
     <v-iframe
       v-else-if="value.type === 'application' && value.application"
       :src="value.application.exposedUrl + '?embed=true'"
-      @load="iframeLoaded(value.application)"
     />
   </div>
 </template>

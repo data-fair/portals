@@ -10,26 +10,21 @@
         </v-breadcrumbs>
       </v-container>
       <v-divider />
-      <iframe
-        id="reuse-frame-full"
-        :src="embedUrl + '?embed=true'"
-        :style="`height:${windowHeight - 68}px`"
-        width="100%"
-        @load="iframeLoaded"
-      />
+      <v-iframe :src="embedUrl + '?embed=true'" :style="`height:${windowHeight - 68}px`" />
     </div>
   </div>
 </template>
 
 <script>
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
   const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
     layout: 'minimal',
-    components: { Error },
+    components: { Error, VIframe },
     async fetch () {
       this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
     },
@@ -46,9 +41,6 @@
     },
     methods: {
       marked,
-      iframeLoaded () {
-        iFrameResize({ log: false }, '#reuse-frame-full')
-      },
     },
     head () {
       if (!this.application) return { title: 'Page non trouvée' }

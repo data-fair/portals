@@ -23,26 +23,18 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-responsive :aspect-ratio="$vuetify.breakpoint.smAndUp ? 1.5 : 1.0">
-          <div style="width:1px;min-width:100%;height:1px;min-height:100%;">
-            <iframe
-              :id="'application-' + application.id"
-              :src="application.exposedUrl + '?embed=true'"
-              height="100%"
-              width="100%"
-              @load="iframeLoaded"
-            />
-          </div>
-        </v-responsive>
+        <v-iframe :id="'application-' + application.id" :src="application.exposedUrl + '?embed=true'" />
       </v-card>
     </v-dialog>
   </v-tooltip>
 </template>
 
 <script>
-  import iFrameResize from 'iframe-resizer/js/iframeResizer'
+  import 'iframe-resizer/js/iframeResizer'
+  import VIframe from '@koumoul/v-iframe'
 
   export default {
+    components: { VIframe },
     props: ['application'],
     data() {
       return {
@@ -54,11 +46,6 @@
         const viewName = this.dialog ? `/reuses/${this.application.id}/application-dialog` : this.$route.path
         if (this.$ma) this.$ma.trackView({ viewName })
         else console.log('No analytics, track dialog view', viewName)
-      },
-    },
-    methods: {
-      iframeLoaded () {
-        iFrameResize({ log: false }, '#application-' + this.application.id)
       },
     },
   }
