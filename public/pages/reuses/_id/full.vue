@@ -24,7 +24,6 @@
 <script>
   import iFrameResize from 'iframe-resizer/js/iframeResizer'
   import Error from '~/components/error.vue'
-  const { mapState } = require('vuex')
   const marked = require('@hackmd/meta-marked')
 
   export default {
@@ -38,8 +37,6 @@
       application: null,
     }),
     computed: {
-      ...mapState(['publicUrl']),
-      ...mapState('session', ['user']),
       pageUrl() {
         return process.env.publicUrl + '/reuses/' + this.$route.params.id + '/full'
       },
