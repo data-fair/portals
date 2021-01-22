@@ -1,202 +1,212 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col
-        cols="12"
-        md="5"
-        offset-md="1"
-      >
-        <v-img
-          :src="homeUrl"
-          :alt="config.title"
-          min-height="200"
-          max-height="600"
-          contain
-        />
-      </v-col>
-      <v-col
-        class="pt-2 order-sm-first"
-        cols="12"
-        md="6"
-      >
-        <div v-if="config.description" v-html="marked(config.description).html" />
-      </v-col>
-    </v-row>
-    <kpi
-      v-if="config.showKpis"
-      class="mt-4"
-      :stats="stats"
+  <div>
+    <v-img
+      v-if="config.homeImageAsBanner"
+      :src="homeUrl"
+      :alt="config.title"
+      max-height="400px"
+      class="elevation-4"
     />
-    <div v-if="config.featuredReuse && config.featuredReuse.id" class="mt-4">
-      <nuxt-link
-        :to="`/reuses/${config.featuredReuse.id}`"
-        class="title"
-        style="text-decoration-line:none"
-      >
-        {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
-          mdi-open-in-new
-        </v-icon>
-      </nuxt-link>
-      <client-only>
-        <v-iframe v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'" :src="featuredReuseUrl" />
-      </client-only>
-    </div>
-    <div v-if="config.homeDatasets && config.homeDatasets.type === 'lasts'">
-      <h3 class="headline grey--text text--darken-2 font-weight-bold mb-3">
-        Derniers jeux de données
-      </h3>
-      <v-container
-        v-if="datasets"
-        class="px-0"
-        fluid
-      >
-        <v-row>
-          <v-col
-            v-for="(dataset, i) in datasets.results"
-            :key="i"
-            md="4"
-            sm="6"
-            cols="12"
-          >
-            <v-hover>
-              <v-card
-                slot-scope="{ hover }"
-                outlined
-                :elevation="hover ? 2 : 0"
-              >
-                <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
-                  <v-card-title>
-                    <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height:1.1;">
-                      <client-only>
-                        <v-clamp :max-lines="2" autoresize>
-                          {{ dataset.title }}
-                        </v-clamp>
-                      </client-only>
-                    </h3>
-                  </v-card-title>
-                  <v-card-text style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
-                    <client-only>
-                      <v-clamp
-                        :max-height="200"
-                        autoresize
-                        class="dataset-desc200"
-                        v-html="marked(dataset.description || '').html"
-                      />
-                    </client-only>
-                  </v-card-text>
-                </nuxt-link>
-                <v-card-actions class="py-0">
-                  <table-preview :dataset="dataset" :color="'primary'" />
-                  <map-preview
-                    v-if="dataset.bbox && dataset.bbox.length"
-                    :dataset="dataset"
-                    :color="'primary'"
-                  />
-                  <api-view
-                    v-if="!isMobileOnly"
-                    :dataset="dataset"
-                    :color="'primary'"
-                  />
-                  <schema-view :dataset="dataset" :color="'primary'" />
-                  <v-spacer />
-                  <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
-                </v-card-actions>
-              </v-card>
-            </v-hover>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-row align="center">
-        <v-col class="text-center">
-          <v-btn
-            :color="'primary'"
-            to="/datasets"
-            text
-            exact
-          >
-            <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les données
-          </v-btn>
+    <v-container>
+      <v-row v-if="!config.homeImageAsBanner">
+        <v-col
+          cols="12"
+          md="5"
+          offset-md="1"
+        >
+          <v-img
+            :src="homeUrl"
+            :alt="config.title"
+            min-height="200"
+            max-height="600"
+            contain
+          />
+        </v-col>
+        <v-col
+          class="pt-2 order-sm-first"
+          cols="12"
+          md="6"
+        >
+          <div v-if="config.description" v-html="marked(config.description).html" />
         </v-col>
       </v-row>
-    </div>
-    <div v-if="config.homeReuses && config.homeReuses.type === 'lasts' && applications && applications.results.length">
-      <h3 class="headline grey--text text--darken-2 font-weight-bold mb-2">
-        Dernières valorisations
-      </h3>
-      <v-container
-        class="pa-0"
-        fluid
-      >
-        <v-row>
-          <v-col
-            v-for="(application, i) in applications.results"
-            :key="i"
-            cols="12"
-          >
-            <v-hover>
-              <v-card
-                slot-scope="{ hover }"
-                outlined
-                :elevation="hover ? 2 : 0"
-              >
-                <nuxt-link :to="`/reuses/${application.id}`" style="text-decoration:none">
-                  <v-card-title class="py-2">
-                    <h3 class="title grey--text text--darken-2 font-weight-bold">
+      <div v-else-if="config.description" v-html="marked(config.description).html" />
+      <kpi
+        v-if="config.showKpis"
+        class="mt-4"
+        :stats="stats"
+      />
+      <div v-if="config.featuredReuse && config.featuredReuse.id" class="mt-4">
+        <nuxt-link
+          :to="`/reuses/${config.featuredReuse.id}`"
+          class="title"
+          style="text-decoration-line:none"
+        >
+          {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
+            mdi-open-in-new
+          </v-icon>
+        </nuxt-link>
+        <client-only>
+          <v-iframe v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'" :src="featuredReuseUrl" />
+        </client-only>
+      </div>
+      <div v-if="config.homeDatasets && config.homeDatasets.type === 'lasts'">
+        <h3 class="headline grey--text text--darken-2 font-weight-bold mb-3">
+          Derniers jeux de données
+        </h3>
+        <v-container
+          v-if="datasets"
+          class="px-0"
+          fluid
+        >
+          <v-row>
+            <v-col
+              v-for="(dataset, i) in datasets.results"
+              :key="i"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-hover>
+                <v-card
+                  slot-scope="{ hover }"
+                  outlined
+                  :elevation="hover ? 2 : 0"
+                >
+                  <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
+                    <v-card-title>
+                      <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height:1.1;">
+                        <client-only>
+                          <v-clamp :max-lines="2" autoresize>
+                            {{ dataset.title }}
+                          </v-clamp>
+                        </client-only>
+                      </h3>
+                    </v-card-title>
+                    <v-card-text style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
                       <client-only>
-                        <v-clamp :max-lines="1" autoresize>
-                          {{ application.title }}
-                        </v-clamp>
+                        <v-clamp
+                          :max-height="200"
+                          autoresize
+                          class="dataset-desc200"
+                          v-html="marked(dataset.description || '').html"
+                        />
                       </client-only>
-                    </h3>
-                  </v-card-title>
-                  <div>
-                    <v-img
-                      :src="`${application.href}/capture`"
-                      :alt="application.title"
-                      aspect-ratio="4"
+                    </v-card-text>
+                  </nuxt-link>
+                  <v-card-actions class="py-0">
+                    <table-preview :dataset="dataset" :color="'primary'" />
+                    <map-preview
+                      v-if="dataset.bbox && dataset.bbox.length"
+                      :dataset="dataset"
+                      :color="'primary'"
                     />
-                  </div>
-                </nuxt-link>
-                <v-card-actions class="py-0">
-                  <application-view :application="application" />
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                      <v-btn
-                        :to="{name: 'reuses-id-full', params:{id: application.id}}"
-                        icon
-                        v-on="on"
-                      >
-                        <v-icon color="primary">
-                          mdi-fullscreen
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Accéder à la visualisation en plein écran</span>
-                  </v-tooltip>
-                  <v-spacer />
-                  <v-subheader>
-                    Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}
-                  </v-subheader>
-                </v-card-actions>
-              </v-card>
-            </v-hover>
+                    <api-view
+                      v-if="!isMobileOnly"
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                    <schema-view :dataset="dataset" :color="'primary'" />
+                    <v-spacer />
+                    <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+                  </v-card-actions>
+                </v-card>
+              </v-hover>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-row align="center">
+          <v-col class="text-center">
+            <v-btn
+              :color="'primary'"
+              to="/datasets"
+              text
+              exact
+            >
+              <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les données
+            </v-btn>
           </v-col>
         </v-row>
-      </v-container>
-      <v-row align="center">
-        <v-col class="text-center">
-          <v-btn
-            :color="'primary'"
-            to="/reuses"
-            text
-            exact
-          >
-            <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les visualisations
-          </v-btn>
-        </v-col>
-      </v-row>
-    </div>
-  </v-container>
+      </div>
+      <div v-if="config.homeReuses && config.homeReuses.type === 'lasts' && applications && applications.results.length">
+        <h3 class="headline grey--text text--darken-2 font-weight-bold mb-2">
+          Dernières valorisations
+        </h3>
+        <v-container
+          class="pa-0"
+          fluid
+        >
+          <v-row>
+            <v-col
+              v-for="(application, i) in applications.results"
+              :key="i"
+              cols="12"
+            >
+              <v-hover>
+                <v-card
+                  slot-scope="{ hover }"
+                  outlined
+                  :elevation="hover ? 2 : 0"
+                >
+                  <nuxt-link :to="`/reuses/${application.id}`" style="text-decoration:none">
+                    <v-card-title class="py-2">
+                      <h3 class="title grey--text text--darken-2 font-weight-bold">
+                        <client-only>
+                          <v-clamp :max-lines="1" autoresize>
+                            {{ application.title }}
+                          </v-clamp>
+                        </client-only>
+                      </h3>
+                    </v-card-title>
+                    <div>
+                      <v-img
+                        :src="`${application.href}/capture`"
+                        :alt="application.title"
+                        aspect-ratio="4"
+                      />
+                    </div>
+                  </nuxt-link>
+                  <v-card-actions class="py-0">
+                    <application-view :application="application" />
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on }">
+                        <v-btn
+                          :to="{name: 'reuses-id-full', params:{id: application.id}}"
+                          icon
+                          v-on="on"
+                        >
+                          <v-icon color="primary">
+                            mdi-fullscreen
+                          </v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Accéder à la visualisation en plein écran</span>
+                    </v-tooltip>
+                    <v-spacer />
+                    <v-subheader>
+                      Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}
+                    </v-subheader>
+                  </v-card-actions>
+                </v-card>
+              </v-hover>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-row align="center">
+          <v-col class="text-center">
+            <v-btn
+              :color="'primary'"
+              to="/reuses"
+              text
+              exact
+            >
+              <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les visualisations
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </v-container>
+  </div>
 </template>
 
 <script>

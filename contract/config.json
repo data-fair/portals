@@ -29,7 +29,7 @@
         "properties": {
           "logo": {
             "type": "object",
-            "title": "Image avec logo et titre",
+            "title": "Image du logo",
             "contentMediaType": "image/*",
             "writeOnly": true,
             "properties": {
@@ -40,7 +40,7 @@
           },
           "home": {
             "type": "object",
-            "title": "Image de bannière",
+            "title": "Image principale",
             "contentMediaType": "image/*",
             "writeOnly": true,
             "properties": {
@@ -61,6 +61,11 @@
             }
           }
         }
+      },
+      "homeImageAsBanner": {
+        "type": "boolean",
+        "title": "Image principale en bannière",
+        "default": false
       }
     }
   }, {
@@ -259,6 +264,10 @@
   }, {
     "title": "Communication",
     "properties": {
+      "website": {
+        "type": "string",
+        "title": "Site web (accessible au clic sur le logo)"
+      },
       "twitter": {
         "type": "string",
         "title": "Compte twitter"

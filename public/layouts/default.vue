@@ -2,7 +2,7 @@
   <v-app v-if="config" style="background-color: #fcfcfc;">
     <dynamic-style />
     <client-only><accept-cookies /></client-only>
-    <v-container class="py-0">
+    <v-container class="pb-0">
       <v-row align="center">
         <v-col
           md="4"
@@ -41,7 +41,7 @@
           md="8"
           sm="6"
           cols="12"
-          class="pt-1 pb-0"
+          class="pt-0 pb-3"
         >
           <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} grey--text text--darken-2 font-weight-bold`">
             {{ config.title }}
@@ -50,7 +50,7 @@
       </v-row>
     </v-container>
 
-    <app-bar />
+    <app-bar class="mb-3" />
 
     <v-main>
       <nuxt-child />
