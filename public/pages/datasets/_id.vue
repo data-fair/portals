@@ -107,7 +107,7 @@
                     mdi-open-in-new
                   </v-icon>
                 </nuxt-link>
-                <v-iframe :src="application.exposedUrl + '?embed=true'" class="mt-2" />
+                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
               </v-col>
             </template>
             <template v-else>
@@ -128,7 +128,7 @@
                 <div class="mt-3" v-html="marked(application.description || '').html" />
               </v-col>
               <v-col md="6" sm="12">
-                <v-iframe :src="application.exposedUrl + '?embed=true'" />
+                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
               </v-col>
             </template>
           </v-row>

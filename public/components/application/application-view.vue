@@ -23,7 +23,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-iframe :id="'application-' + application.id" :src="application.exposedUrl + '?embed=true'" />
+        <v-iframe :id="'application-' + application.id" :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
       </v-card>
     </v-dialog>
   </v-tooltip>
@@ -32,6 +32,7 @@
 <script>
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
+  const { mapState } = require('vuex')
 
   export default {
     components: { VIframe },
@@ -40,6 +41,9 @@
       return {
         dialog: null,
       }
+    },
+    computed: {
+      ...mapState(['config']),
     },
     watch: {
       dialog() {

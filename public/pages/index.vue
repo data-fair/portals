@@ -38,8 +38,7 @@
         </v-icon>
       </nuxt-link>
       <client-only>
-        <v-iframe v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'" :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'" />
-        <v-iframe :src="dataFairUrl + '/app/' + config.featuredReuse.id + '?embed=true'" />
+        <v-iframe v-if="featuredBaseApplication && featuredBaseApplication.applicationName === 'Liste et fiches'" :src="featuredReuseUrl" />
       </client-only>
     </div>
     <div v-if="config.homeDatasets && config.homeDatasets.type === 'lasts'">
@@ -285,6 +284,9 @@
       },
       dataFairUrl() {
         return process.env.dataFairUrl
+      },
+      featuredReuseUrl() {
+        return `${process.env.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
     },
     watch: {

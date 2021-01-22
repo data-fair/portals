@@ -10,7 +10,7 @@
         </v-breadcrumbs>
       </v-container>
       <v-divider />
-      <v-iframe :src="embedUrl + '?embed=true'" :style="`height:${windowHeight - 68}px`" />
+      <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 68}px`" />
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
   import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
   const marked = require('@hackmd/meta-marked')
+  const { mapState } = require('vuex')
 
   export default {
     middleware: 'portal-required',
@@ -32,6 +33,7 @@
       application: null,
     }),
     computed: {
+      ...mapState(['config']),
       pageUrl() {
         return process.env.publicUrl + '/reuses/' + this.$route.params.id + '/full'
       },
