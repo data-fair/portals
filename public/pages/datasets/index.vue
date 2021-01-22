@@ -84,6 +84,29 @@
                 </v-tooltip>
               </v-btn-toggle>
             </v-col>
+            <v-col>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :disabled="!!downloading"
+                    icon
+                    target="_blank"
+                    @click="download(config.title+'.csv')"
+                    v-on="on"
+                  >
+                    <v-icon v-if="downloading !== config.title+'.csv'">
+                      mdi-file-table
+                    </v-icon>
+                    <v-progress-circular
+                      v-else
+                      indeterminate
+                      color="primary"
+                    />
+                  </v-btn>
+                </template>
+                <span>Exporter la sélection au format CSV</span>
+              </v-tooltip>
+            </v-col>
           </v-row>
         </v-col>
       </v-row>
@@ -203,6 +226,7 @@
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import { isMobileOnly } from 'mobile-device-detect'
+  import fileDownload from 'js-file-download'
   const { mapState, mapGetters } = require('vuex')
   const marked = require('@hackmd/meta-marked')
 
@@ -247,6 +271,7 @@
         value: 'title',
       }],
       isMobileOnly,
+      downloading: false,
     }),
     computed: {
       ...mapState(['config']),
@@ -307,6 +332,27 @@
           this.filters.topics.push(topic)
         }
         this.refresh(true)
+      },
+      async download(name) {
+        this.downloading = name
+        const params = {
+          size: 10000,
+          select: 'id,title,description,bbox,topics,href,updatedAt,createdAt',
+          owner: this.owner,
+          sort: this.sort + ':' + (this.order * 2 - 1),
+          q: this.search,
+        }
+        if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
+        if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        if (this.config.public) params.visibility = 'public'
+        try {
+          const datasets = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
+          const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
+          const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.updatedAt},${d.createdAt}`).join('\n')
+          const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
+          fileDownload(blob, name)
+        } catch (err) { }
+        this.downloading = null
       },
     },
     head () {
