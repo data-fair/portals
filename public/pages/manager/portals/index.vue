@@ -11,9 +11,50 @@
         </p>
       </v-row>
       <v-row>
-        <v-btn color="primary" @click="newPortal = {title: ''}; showCreateDialog = true;">
-          Créer un nouveau portail
-        </v-btn>
+        <v-menu
+          v-model="showCreateMenu"
+          :close-on-content-click="false"
+          max-width="500px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              v-bind="attrs"
+              v-on="on"
+            >
+              Créer un nouveau portail
+            </v-btn>
+          </template>
+          <v-card v-if="newPortal">
+            <v-card-title primary-title>
+              <h3 class="headline mb-0">
+                Créer un nouveau portail
+              </h3>
+            </v-card-title>
+            <v-card-text>
+              <v-form>
+                <v-text-field
+                  v-model="newPortal.title"
+                  name="title"
+                  label="Titre"
+                />
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn text @click="showCreateMenu = false">
+                Annuler
+              </v-btn>
+              <v-btn
+                :disabled="!newPortal.title"
+                color="primary"
+                @click="createPortal(); showCreateMenu = false"
+              >
+                Enregistrer
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
       </v-row>
       <v-row class="mt-6">
         <v-card v-if="portals && portals.length" min-width="500">
@@ -26,13 +67,7 @@
               </v-list-item-content>
 
               <v-list-item-action>
-                <v-btn
-                  icon
-                  color="warning"
-                  @click="currentPortal = portal; showDeleteDialog = true;"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <remove-confirm :label="portal.title" @removed="deletePortal(portal)" />
               </v-list-item-action>
               <v-list-item-action>
                 <v-btn
@@ -43,7 +78,7 @@
                   <v-icon>mdi-cog</v-icon>
                 </v-btn>
               </v-list-item-action>
-              <v-list-item-action>
+              <v-list-item-action class="ml-0">
                 <v-btn
                   :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
                   icon
@@ -57,74 +92,20 @@
         </v-card>
       </v-row>
     </v-col>
-
-    <v-dialog v-model="showCreateDialog" max-width="500px">
-      <v-card v-if="newPortal">
-        <v-card-title primary-title>
-          <h3 class="headline mb-0">
-            Créer un nouveau portail
-          </h3>
-        </v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-text-field
-              v-model="newPortal.title"
-              name="title"
-              label="Titre"
-            />
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="showCreateDialog = false">
-            Annuler
-          </v-btn>
-          <v-btn
-            :disabled="!newPortal.title"
-            color="primary"
-            @click="createPortal(); showCreateDialog = false"
-          >
-            Enregistrer
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="showDeleteDialog" max-width="500px">
-      <v-card v-if="currentPortal">
-        <v-card-title primary-title>
-          <h3 class="headline mb-0">
-            Suppression de {{ currentPortal.title }}
-          </h3>
-        </v-card-title>
-        <v-card-text>
-          <v-alert :value="true" type="warning">
-            Voulez vous vraiment supprimer ce portail ?
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="showDeleteDialog = false">
-            Annuler
-          </v-btn>
-          <v-btn color="warning" @click="deletePortal(currentPortal); showDeleteDialog = false">
-            Confirmer
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
 <script>
   import eventBus from '~/event-bus'
+  import RemoveConfirm from '~/components/remove-confirm.vue'
   const { mapState, mapActions, mapGetters } = require('vuex')
 
   export default {
+    components: { RemoveConfirm },
     middleware: 'admin-required',
     layout: 'manager',
     data: () => ({
-      showCreateDialog: false,
+      showCreateMenu: false,
       newPortal: null,
       portals: null,
       currentPortal: null,
@@ -135,7 +116,13 @@
       ...mapState(['env']),
       ...mapGetters('session', ['activeAccount']),
     },
-    watch: {},
+    watch: {
+      showCreateMenu() {
+        if (this.showCreateMenu) {
+          this.newPortal = { title: '' }
+        }
+      },
+    },
     async created() {
       if (!this.activeAccount) return
       this.refresh()
