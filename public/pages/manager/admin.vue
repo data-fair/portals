@@ -61,7 +61,7 @@
 
     <v-dialog
       v-model="showPublishDialog"
-      max-width="500px"
+      max-width="800px"
     >
       <v-card v-if="currentPortal">
         <v-card-title primary-title>
@@ -83,7 +83,16 @@
           </v-form>
           <template v-if="newHost">
             <p>
-              Il faut ajouter manuellement une règle de routage dans votre reverse proxy, ci-dessous un exemple de Ingress Kubernetes :
+              Il faut configurer une règle DNS pour pointer sur l'IP de la machine ou data-fair-portals est déployé (règle DNS de type "A record").
+            </p>
+            <p>
+              Il faut configurer votre reverse-proxy pour que le traffic entrant sur ce domaine soit redirigé vers votre installation de data-fair-portals.
+            </p>
+            <p>
+              Pour une exposition sécurisée par un certificat, c'est également au reverse-proxy de le supporter.
+            </p>
+            <p>
+              Ci-dessous un exemple de Ingress Kubernetes qui déclare la redirection et qui va automatiquement créer un certificat (ingress-controller et cert-manager doivent être configurés dans le cluster) :
             </p>
             <code style="width: 100%;">
               <pre>
@@ -91,12 +100,11 @@
 
 # Portal: {{ currentPortal.title }} ({{ currentPortal._id }})
 # Owner: {{ currentPortal.owner.name }} ({{ currentPortal.owner.type }}:{{ currentPortal.owner.id }})
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: portal-{{ newHost.replace(/\./g, '-') }}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
 spec:
   tls:
@@ -108,9 +116,12 @@ spec:
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: data-fair-portals
-              servicePort: 8080
+              service:
+                name: data-fair-portals
+                port:
+                  number: 8080
               </pre>
             </code>
           </template>
