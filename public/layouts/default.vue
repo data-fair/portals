@@ -73,9 +73,11 @@
               offset-sm="2"
               class="pa-0"
             >
-              <nuxt-link v-if="link.type === 'internal'" :to="{name: 'pages-id', params: {id: link.page.id}}">
-                {{ link.page && link.page.title }}
-              </nuxt-link>
+              <template v-if="link.type === 'internal'">
+                <nuxt-link v-if="link.page" :to="{name: 'pages-id', params: {id: link.page.id}}">
+                  {{ link.page.title }}
+                </nuxt-link>
+              </template>
               <a v-else :href="link.href">{{ link.title }}</a>
             </v-col>
           </v-row>
