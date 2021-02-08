@@ -19,7 +19,7 @@
           <v-jsf
             v-model="configDraft"
             :schema="schema"
-            :options="{context}"
+            :options="{context, editMode: 'inline'}"
           />
 
           <v-row class="mt-3">
