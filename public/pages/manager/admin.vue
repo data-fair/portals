@@ -61,7 +61,7 @@
 
     <v-dialog
       v-model="showPublishDialog"
-      max-width="800px"
+      fullscreen
     >
       <v-card v-if="currentPortal">
         <v-card-title primary-title>
@@ -74,11 +74,12 @@
             Publiez ce portail en tant que administrateur de la plateforme en définissant le domaine public.
             Ce domaine peut être un sous domaine du votre, ou bien complètement distinct, du moment que la règle DNS est bien définie.
           </p>
-          <v-form>
+          <v-form style="max-width: 400px;">
             <v-text-field
               v-model="newHost"
               name="host"
               label="Domaine"
+              outlined
             />
           </v-form>
           <template v-if="newHost">
@@ -95,8 +96,7 @@
               Ci-dessous un exemple de Ingress Kubernetes qui déclare la redirection et qui va automatiquement créer un certificat (ingress-controller et cert-manager doivent être configurés dans le cluster) :
             </p>
             <code style="width: 100%;">
-              <pre>
----
+              <pre>---
 
 # Portal: {{ currentPortal.title }} ({{ currentPortal._id }})
 # Owner: {{ currentPortal.owner.name }} ({{ currentPortal.owner.type }}:{{ currentPortal.owner.id }})
@@ -132,7 +132,7 @@ spec:
             Annuler
           </v-btn>
           <v-btn color="primary" @click="patchHost(); showPublishDialog = false">
-            Enregistrer
+            Publier
           </v-btn>
         </v-card-actions>
       </v-card>
