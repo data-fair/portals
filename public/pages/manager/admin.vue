@@ -100,7 +100,7 @@
 
 # Portal: {{ currentPortal.title }} ({{ currentPortal._id }})
 # Owner: {{ currentPortal.owner.name }} ({{ currentPortal.owner.type }}:{{ currentPortal.owner.id }})
-apiVersion: networking.k8s.io/v1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: portal-{{ newHost.replace(/\./g, '-') }}
@@ -116,12 +116,9 @@ spec:
       http:
         paths:
           - path: /
-            pathType: Prefix
             backend:
-              service:
-                name: data-fair-portals
-                port:
-                  number: 8080
+              serviceName: data-fair-portals
+              servicePort: 8080
               </pre>
             </code>
           </template>
