@@ -1,7 +1,7 @@
 {
   "name": "data-fair-portals",
   "version": "0.3.0",
-  "description": "A standard portal with simple configuration.",
+  "description": "Portals manager for data-fair",
   "main": "index.js",
   "scripts": {
     "dev-server": "NODE_ENV=development nodemon server",
