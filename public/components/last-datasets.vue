@@ -86,6 +86,8 @@
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import VClamp from 'vue-clamp'
+  import { isMobileOnly } from 'mobile-device-detect'
+
   const marked = require('@hackmd/meta-marked')
 
   export default {
@@ -99,6 +101,9 @@
     props: {
       datasets: { type: Object, required: true },
     },
+    data: () => ({
+      isMobileOnly,
+    }),
     methods: {
       marked,
     },
