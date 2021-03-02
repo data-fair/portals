@@ -6,6 +6,7 @@
       :alt="config.title"
       max-height="400px"
       class="elevation-4"
+      style="margin-top: -12px;"
     />
     <v-container>
       <v-row v-if="!config.homeImageAsBanner">
