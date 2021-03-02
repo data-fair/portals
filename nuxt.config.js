@@ -103,7 +103,7 @@ module.exports = {
     ],
   },
 }
-/*
+
 if (process.env.NODE_ENV === 'development') {
   module.exports.hooks = {
     build: {
@@ -125,4 +125,3 @@ if (process.env.NODE_ENV === 'development') {
     },
   }
 }
-*/
