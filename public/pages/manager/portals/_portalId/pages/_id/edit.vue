@@ -7,7 +7,7 @@
         v-if="page"
         :schema="pageSchema"
         :value="page"
-        :options="{context: {dataFairUrl, owner}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+        :options="{httpOptions: {withCredentials: true}, context: {dataFairUrl, owner}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
         @change="update"
       />
     </v-form>
@@ -18,7 +18,7 @@
             v-if="pageConfig"
             :schema="template"
             :value="pageConfig"
-            :options="{httpLib, context: {dataFairUrl}, dialogProps: {maxWidth: 1000}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+            :options="{httpOptions: {withCredentials: true}, context: {dataFairUrl}, dialogProps: {maxWidth: 1000}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
             @change="update({ config: pageConfig })"
           />
         </v-form>
@@ -59,13 +59,6 @@
       },
       dataFairUrl() {
         return process.env.dataFairUrl
-      },
-      httpLib () {
-        return {
-          get: async (url, options) => {
-            return await this.$axios.get(url, Object.assign({ withCredentials: true }, options))
-          },
-        }
       },
       breadcrumbItems() {
         return [

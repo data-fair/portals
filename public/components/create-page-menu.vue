@@ -36,7 +36,7 @@
               v-if="editItem"
               :schema="schema"
               :value="editItem"
-              :options="{hideReadOnly: true, context: {}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+              :options="{httpOptions: {withCredentials: true}, hideReadOnly: true, context: {}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
             />
           </slot>
         </v-form>
