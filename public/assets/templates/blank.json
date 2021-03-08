@@ -113,19 +113,20 @@
         },
         "alertType": {
           "type": "string",
+          "title": "Type d'accentuation",
           "default": "info",
           "oneOf": [{
             "const": "info",
-            "title": "information"
+            "title": "Information"
           }, {
             "const": "success",
-            "title": "succès"
+            "title": "Succès"
           }, {
             "const": "warning",
-            "title": "avertissement"
+            "title": "Avertissement"
           }, {
             "const": "error",
-            "title": "erreur"
+            "title": "Erreur"
           }]
         },
         "content": {
@@ -240,7 +241,7 @@
         "type": {
           "const": "card"
         },
-        "title": {
+        "cartTitle": {
           "title": "Titre",
           "type": "string"
         },
