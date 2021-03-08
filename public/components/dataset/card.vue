@@ -5,6 +5,7 @@
       outlined
       :elevation="hover ? 2 : 0"
       :loading="!dataset"
+      min-height="260"
     >
       <template v-if="dataset">
         <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
@@ -70,6 +71,7 @@
 </template>
 
 <script>
+  import { isMobileOnly } from 'mobile-device-detect'
   import VClamp from 'vue-clamp'
   import TablePreview from '~/components/dataset/table-preview.vue'
   import MapPreview from '~/components/dataset/map-preview.vue'
@@ -87,6 +89,11 @@
     },
     props: {
       dataset: { type: Object },
+    },
+    data() {
+      return {
+        isMobileOnly,
+      }
     },
     methods: {
       marked,

@@ -157,7 +157,6 @@
 
 <script>
 
-  import { isMobileOnly } from 'mobile-device-detect'
   import fileDownload from 'js-file-download'
   import DatasetCard from '~/components/dataset/card.vue'
   const { mapState, mapGetters } = require('vuex')
@@ -198,7 +197,6 @@
         text: 'Ordre alphabétique',
         value: 'title',
       }],
-      isMobileOnly,
       downloading: false,
     }),
     computed: {

@@ -8,7 +8,7 @@
         :schema="pageSchema"
         :value="page"
         :options="vjsfOpts"
-        @change="update"
+        @change="update(page)"
       />
     </v-form>
     <v-row>
