@@ -3,13 +3,18 @@
     :value="value"
     :label="label"
     :disabled="disabled"
+    hide-details
     class="markdown-editor"
   >
     <v-card v-if="!disabled" outlined>
       <textarea />
     </v-card>
-    <v-card v-else outlined>
-      <v-card-text class="pb-0" v-html="marked(value || '')" />
+    <v-card
+      v-else-if="value"
+      flat
+      class="px-0"
+    >
+      <v-card-text class="px-0 pb-0 pt-2" v-html="marked(value)" />
     </v-card>
   </v-input>
 </template>
@@ -23,6 +28,7 @@
       value: { type: String, default: '' },
       label: { type: String, default: '' },
       disabled: { type: Boolean, default: false },
+      minHeight: { type: String, default: '300px' },
     },
     async mounted() {
       if (this.disabled) return
@@ -36,6 +42,7 @@
         status: false,
         autoDownloadFontAwesome: false,
         spellChecker: false,
+        minHeight: this.minHeight,
         insertTexts: {
           link: ['[titre du lien', '](adresse du lien)'],
           image: ['![](', 'adresse de l\'image)'],
@@ -179,5 +186,9 @@
 
 .markdown-editor .EasyMDEContainer .CodeMirror {
   border: none;
+}
+
+.markdown-editor p:last-child {
+  margin-bottom: 0;
 }
 </style>

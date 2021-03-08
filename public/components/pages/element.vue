@@ -1,5 +1,5 @@
 <template>
-  <div v-if="value">
+  <div v-if="value" class="page-element">
     <h2 v-if="value.type === 'title'">
       {{ value.content }}
     </h2>
@@ -92,4 +92,8 @@
   }
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+.page-element .v-alert__content p:last-child {
+  margin-bottom: 0;
+}
+</style>

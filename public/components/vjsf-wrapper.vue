@@ -6,10 +6,12 @@
     @input="val => $emit('input', val)"
     @change="$emit('change')"
   >
-    <template slot="custom-markdown" slot-scope="{value: val, on, disabled}">
+    <template slot="custom-markdown" slot-scope="{value: val, on, disabled, label}">
       <markdown-editor
         :value="val"
         :disabled="disabled"
+        :label="label"
+        min-height="200px"
         @input="v => on.input(v)"
         @change="on.change()"
       />

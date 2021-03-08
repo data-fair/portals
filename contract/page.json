@@ -74,7 +74,7 @@
     },
     "title": {
       "type": "string",
-      "title": "Libellé",
+      "title": "Titre de la page",
       "default": "Nouvelle page",
       "x-cols": {"cols": 12, "md": 6},
       "x-class": "pr-2"
@@ -89,6 +89,7 @@
     },
     "topics": {
       "type": "array",
+      "title": "Thématiques",
       "items": {
         "title": "Liste de thématiques",
         "type": "object",
