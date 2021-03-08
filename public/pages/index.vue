@@ -62,7 +62,6 @@
           v-if="showLastApps"
           cols="12"
           md="4"
-          class="mt-4"
         >
           <last-apps :applications="applications" :full-width="$vuetify.breakpoint.mdAndUp" />
         </v-col>

@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <h3 class="headline grey--text text--darken-2 font-weight-bold mb-4 mt-6">
+    <h3 :class="`headline grey--text text--darken-2 font-weight-bold ${fullWidth ? 'mt-2 mb-2' : 'mt-6 mb-4'}`">
       Dernières valorisations
     </h3>
     <v-container
