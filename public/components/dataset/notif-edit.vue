@@ -11,7 +11,7 @@
         </v-icon>
       </v-btn>
     </template>
-    <span>Documentation de l'API</span>
+    <span>Notifications</span>
     <v-dialog
       v-model="dialog"
       :fullscreen="$vuetify.breakpoint.mdAndDown"

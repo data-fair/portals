@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "elements":{
-      "title": "Elements",
+      "title": "Éléments",
       "type": "array",
       "items": {
         "type": "object",
@@ -14,11 +14,19 @@
         }, {
           "$ref": "#/definitions/text"
         }, {
+          "$ref": "#/definitions/alert"
+        }, {
+          "$ref": "#/definitions/divider"
+        }, {
           "$ref": "#/definitions/application"
+        }, {
+          "$ref": "#/definitions/datasetCard"
         }, {
           "$ref": "#/definitions/datasetForm"
         }, {
           "$ref": "#/definitions/datasetTable"
+        }, {
+          "$ref": "#/definitions/card"
         }, {
           "$ref": "#/definitions/twoColumns"
         }],
@@ -30,16 +38,44 @@
     }
   },
   "definitions": {
+    "element":{
+      "title": "Element",
+      "type": "object",
+      "x-itemKey": "type",
+      "oneOf": [{
+        "$ref": "#/definitions/title"
+      }, {
+        "$ref": "#/definitions/text"
+      }, {
+        "$ref": "#/definitions/alert"
+      }, {
+        "$ref": "#/definitions/divider"
+      }, {
+        "$ref": "#/definitions/application"
+      }, {
+        "$ref": "#/definitions/datasetCard"
+      }, {
+        "$ref": "#/definitions/datasetForm"
+      }, {
+        "$ref": "#/definitions/datasetTable"
+      }],
+      "default": {
+        "type": "text",
+        "content": ""
+      }
+    },
     "title": {
       "type": "object",
       "title": "Titre",
       "properties": {
         "type": {
-          "const": "title"
+          "const": "title",
+          "title": "Type d'élément"
         },
         "content": {
-          "title": "Texte",
-          "type": "string"
+          "title": "Contenu",
+          "type": "string",
+          "x-props": { "hideDetails": "auto" }
         }
       }
     },
@@ -51,21 +87,65 @@
           "const": "text"
         },
         "content": {
-          "title": "Texte",
+          "title": "Contenu",
           "type": "string",
-          "x-display": "textarea"
+          "x-display": "custom-markdown",
+          "x-props": { "hideDetails": "auto" }
+        }
+      }
+    },
+    "divider": {
+      "type": "object",
+      "title": "Division horizontale",
+      "properties": {
+        "type": {
+          "const": "divider"
+        }
+      }
+    },
+    "alert": {
+      "type": "object",
+      "title": "Texte accentué",
+      "required": ["type", "alertType"],
+      "properties": {
+        "type": {
+          "const": "alert"
+        },
+        "alertType": {
+          "type": "string",
+          "default": "info",
+          "oneOf": [{
+            "const": "info",
+            "title": "information"
+          }, {
+            "const": "success",
+            "title": "succès"
+          }, {
+            "const": "warning",
+            "title": "avertissement"
+          }, {
+            "const": "error",
+            "title": "erreur"
+          }]
+        },
+        "content": {
+          "title": "Contenu",
+          "type": "string",
+          "x-display": "custom-markdown",
+          "x-props": { "hideDetails": "auto" }
         }
       }
     },
     "application": {
       "type": "object",
-      "title": "Visualisation d'un jeu de données",
+      "title": "Visualisation",
       "properties": {
         "type": {
           "const": "application"
         },
         "application": {
           "type": "object",
+          "title": "Visualisation",
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
@@ -81,6 +161,30 @@
         }
       }
     },
+    "datasetCard": {
+      "type": "object",
+      "title": "Fiche d'un jeu de données",
+      "properties": {
+        "type": {
+          "const": "datasetCard"
+        },
+        "dataset": {
+          "type": "object",
+          "title": "Jeu de données",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    },
     "datasetForm": {
       "type": "object",
       "title": "Formulaire de saisie vers un jeu de données",
@@ -90,6 +194,7 @@
         },
         "dataset": {
           "type": "object",
+          "title": "Jeu de données",
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
@@ -113,6 +218,7 @@
         },
         "dataset": {
           "type": "object",
+          "title": "Jeu de données",
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
@@ -127,24 +233,24 @@
         }
       }
     },
-    "element":{
-      "title": "Element",
+    "card": {
       "type": "object",
-      "x-itemKey": "type",
-      "oneOf": [{
-        "$ref": "#/definitions/title"
-      }, {
-        "$ref": "#/definitions/text"
-      }, {
-        "$ref": "#/definitions/application"
-      }, {
-        "$ref": "#/definitions/datasetForm"
-      }, {
-        "$ref": "#/definitions/datasetTable"
-      }],
-      "default": {
-        "type": "text",
-        "content": ""
+      "title": "Carte",
+      "properties": {
+        "type": {
+          "const": "card"
+        },
+        "title": {
+          "title": "Titre",
+          "type": "string"
+        },
+        "content": {
+          "title": "Contenu",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          }
+        }
       }
     },
     "twoColumns": {
@@ -160,7 +266,8 @@
           "items": {
             "$ref": "#/definitions/element"
           },
-          "x-cols": 6
+          "x-cols": {"cols": 12, "md": 6},
+          "x-class": "px-2"
         },
         "rightColumn": {
           "title": "Colonne de droite",
@@ -168,7 +275,8 @@
           "items": {
             "$ref": "#/definitions/element"
           },
-          "x-cols": 6
+          "x-cols": {"cols": 12, "md": 6},
+          "x-class": "px-2"
         }
       }
     }

@@ -7,7 +7,7 @@
         v-if="page"
         :schema="pageSchema"
         :value="page"
-        :options="{httpOptions: {withCredentials: true}, context: {dataFairUrl, owner}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+        :options="vjsfOpts"
         @change="update"
       />
     </v-form>
@@ -18,12 +18,15 @@
             v-if="pageConfig"
             :schema="template"
             :value="pageConfig"
-            :options="{httpOptions: {withCredentials: true}, context: {dataFairUrl}, dialogProps: {maxWidth: 1000}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
+            :options="vjsfOpts"
             @change="update({ config: pageConfig })"
           />
         </v-form>
       </v-col>
-      <v-col v-if="page" :cols="6">
+      <v-col
+        v-if="page"
+        :cols="6"
+      >
         <blank v-if="page.template === 'blank'" :config="pageConfig" />
       </v-col>
     </v-row>
@@ -31,9 +34,7 @@
 </template>
 
 <script>
-  import VJsf from '@koumoul/vjsf/lib/VJsf.js'
-  import '@koumoul/vjsf/lib/deps/third-party.js'
-  import '@koumoul/vjsf/dist/main.css'
+  import VJsf from '~/components/vjsf-wrapper.vue'
   import 'iframe-resizer/js/iframeResizer.contentWindow'
   import Blank from '~/components/pages/blank.vue'
   const { mapState } = require('vuex')
@@ -67,6 +68,11 @@
           { text: 'Pages', to: { name: 'manager-portals-portalId-pages', params: { portalId: this.portal._id } }, disabled: false, exact: true },
           { text: this.page && this.page.title, disabled: true },
         ]
+      },
+      vjsfOpts() {
+        return {
+          context: { dataFairUrl: this.dataFairUrl, owner: this.owner },
+        }
       },
     },
     mounted: async function () {

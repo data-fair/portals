@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const cors = require('cors')
+const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
 
@@ -83,6 +84,10 @@ module.exports = {
           accent: '#FF9800', // colors.orange.base
         },
       },
+    },
+    lang: {
+      locales: { fr },
+      current: 'fr',
     },
   },
   env: {
