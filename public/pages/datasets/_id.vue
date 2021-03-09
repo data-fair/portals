@@ -74,13 +74,11 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <client-only>
-                <notif-edit
-                  v-if="user && notifyUrl"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-              </client-only>
+              <notif-edit
+                v-if="user && notifyUrl"
+                :dataset="dataset"
+                :color="'primary'"
+              />
             </v-card-actions>
             <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
           </v-card>

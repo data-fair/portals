@@ -60,42 +60,40 @@
         xl="9"
         class="pa-0"
       >
-        <client-only>
-          <v-tabs v-model="activeTab" slider-color="primary">
-            <v-tab :key="0">
-              ébauche
-            </v-tab>
-            <v-tab-item :key="0" class="py-1 pl-0 pr-1">
-              <v-card
-                v-if="showDraft"
-                class="pa-0"
-                outlined
-              >
-                <iframe
-                  :src="portal.draftLink"
-                  :height="`${iframeHeight}px`"
-                  width="100%"
-                />
-              </v-card>
-            </v-tab-item>
-            <v-tab :key="1">
-              version courante
-            </v-tab>
-            <v-tab-item :key="1">
-              <v-card
-                class="pa-0"
-                outlined
-              >
-                <iframe
-                  v-if="showProd"
-                  :src="portal.link"
-                  :height="`${iframeHeight}px`"
-                  width="100%"
-                />
-              </v-card>
-            </v-tab-item>
-          </v-tabs>
-        </client-only>
+        <v-tabs v-model="activeTab" slider-color="primary">
+          <v-tab :key="0">
+            ébauche
+          </v-tab>
+          <v-tab-item :key="0" class="py-1 pl-0 pr-1">
+            <v-card
+              v-if="showDraft"
+              class="pa-0"
+              outlined
+            >
+              <iframe
+                :src="portal.draftLink"
+                :height="`${iframeHeight}px`"
+                width="100%"
+              />
+            </v-card>
+          </v-tab-item>
+          <v-tab :key="1">
+            version courante
+          </v-tab>
+          <v-tab-item :key="1">
+            <v-card
+              class="pa-0"
+              outlined
+            >
+              <iframe
+                v-if="showProd"
+                :src="portal.link"
+                :height="`${iframeHeight}px`"
+                width="100%"
+              />
+            </v-card>
+          </v-tab-item>
+        </v-tabs>
       </v-col>
     </v-row>
 

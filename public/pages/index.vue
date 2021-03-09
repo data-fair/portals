@@ -53,9 +53,7 @@
               mdi-open-in-new
             </v-icon>
           </nuxt-link>
-          <client-only>
-            <v-iframe :src="featuredReuseUrl" />
-          </client-only>
+          <v-iframe :src="featuredReuseUrl" />
         </v-col>
 
         <v-col

@@ -118,7 +118,6 @@
   import { mapState, mapGetters, mapActions } from 'vuex'
 
   export default {
-    props: ['navContext'],
     computed: {
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters('session', ['activeAccount']),

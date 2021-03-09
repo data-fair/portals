@@ -1,7 +1,7 @@
 <template>
   <v-app v-if="config" style="background-color: #fcfcfc;">
     <dynamic-style />
-    <client-only><accept-cookies /></client-only>
+    <accept-cookies />
     <v-container class="pb-0">
       <v-row align="center">
         <v-col
@@ -41,7 +41,7 @@
           md="8"
           sm="6"
           cols="12"
-          class="pt-0 pb-3"
+          :class="`pt-0 mb-3 ${$vuetify.breakpoint.xs ? 'text-center' : ''}`"
         >
           <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} grey--text text--darken-2 font-weight-bold`">
             {{ config.title }}
@@ -159,4 +159,7 @@ iframe {
     height: 4px!important;
 }
 
+.v-card__text, .v-card__title {
+  word-break: normal; /* maybe !important  */
+}
 </style>

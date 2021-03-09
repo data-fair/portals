@@ -2,7 +2,7 @@
   <v-container v-scroll="onScroll" fluid>
     <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title text="Gestion des pages de contenu" />
-    <create-page-menu @created="createPage" />
+    <client-only><create-page-menu @created="createPage" /></client-only>
     <v-row v-if="pages">
       <v-col
         v-for="(page, i) in pages.results"
@@ -14,9 +14,7 @@
         <v-card outlined>
           <v-card-title>
             <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1;">
-              <client-only>
-                {{ page.title }}
-              </client-only>
+              {{ page.title }}
             </h3>
           </v-card-title>
 

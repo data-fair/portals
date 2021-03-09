@@ -24,11 +24,9 @@
               <nuxt-link :to="`/reuses/${application.id}`" style="text-decoration:none">
                 <v-card-title class="py-2">
                   <h3 class="title grey--text text--darken-2 font-weight-bold">
-                    <client-only>
-                      <v-clamp :max-lines="1" autoresize>
-                        {{ application.title }}
-                      </v-clamp>
-                    </client-only>
+                    <v-clamp :max-lines="1" autoresize>
+                      {{ application.title }}
+                    </v-clamp>
                   </h3>
                 </v-card-title>
                 <div>
