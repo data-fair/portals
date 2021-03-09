@@ -112,66 +112,7 @@
           sm="6"
           cols="12"
         >
-          <v-hover>
-            <v-card
-              slot-scope="{ hover }"
-              outlined
-              :elevation="hover ? 2 : 0"
-            >
-              <nuxt-link :to="{name: 'reuses-id', params:{id: application.id}}" style="text-decoration:none">
-                <v-card-title>
-                  <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1">
-                    <client-only>
-                      <v-clamp :max-lines="2" autoresize>
-                        {{ application.title }}
-                      </v-clamp>
-                    </client-only>
-                  </h3>
-                </v-card-title>
-                <div class="pb-2">
-                  <v-img
-                    :src="`${application.href}/capture`"
-                    :alt="application.title"
-                    aspect-ratio="3"
-                  />
-                </div>
-                <v-row style="min-height:25px;">
-                  <v-col class="py-0">
-                    <v-chip
-                      v-for="topic of application.topics"
-                      :key="topic.id"
-                      small
-                      outlined
-                      :color="topic.color || 'default'"
-                      class="ml-2"
-                      style="font-weight: bold"
-                    >
-                      {{ topic.title }}
-                    </v-chip>
-                  </v-col>
-                </v-row>
-              </nuxt-link>
-              <v-card-actions class="py-0">
-                <application-view :application="application" />
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      :to="{name: 'reuses-id-full', params:{id: application.id}}"
-                      icon
-                      v-on="on"
-                    >
-                      <v-icon color="primary">
-                        mdi-fullscreen
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Accéder à la visualisation en plein écran</span>
-                </v-tooltip>
-                <v-spacer />
-                <v-subheader>Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
-              </v-card-actions>
-            </v-card>
-          </v-hover>
+          <application-card :application="application" />
         </v-col>
       </v-row>
       <v-row
@@ -194,16 +135,14 @@
 </template>
 
 <script>
-  import VClamp from 'vue-clamp'
-  import ApplicationView from '~/components/application/application-view.vue'
+  import ApplicationCard from '~/components/application/card.vue'
   const { mapState, mapGetters } = require('vuex')
   const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
     components: {
-      VClamp,
-      ApplicationView,
+      ApplicationCard,
     },
     async fetch() {
       await this.refresh(true)
