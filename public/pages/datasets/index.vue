@@ -51,7 +51,7 @@
                 @input="refresh(true)"
               />
             </v-col>
-            <v-col class="pl-0">
+            <v-col class="pl-0" :cols="4">
               <v-btn-toggle
                 v-model="order"
                 mandatory
@@ -84,7 +84,7 @@
                 </v-tooltip>
               </v-btn-toggle>
             </v-col>
-            <v-col>
+            <v-col :cols="2">
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -181,7 +181,7 @@
       page: 1,
       search: null,
       loading: false,
-      sort: 'updatedAt',
+      sort: 'createdAt',
       order: 0,
       filters: {
         concepts: [],

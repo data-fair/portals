@@ -213,7 +213,7 @@
       page: 1,
       search: null,
       loading: false,
-      sort: 'updatedAt',
+      sort: 'createdAt',
       order: 0,
       filters: {
         apps: [],
