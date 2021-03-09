@@ -10,5 +10,8 @@
   export default {
     props: ['error'],
     layout: 'empty',
+    mounted() {
+      if (this.error.statusCode === 401) this.$store.dispatch('session/login')
+    },
   }
 </script>
