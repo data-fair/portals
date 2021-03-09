@@ -1,7 +1,7 @@
 <template>
   <v-app v-if="config" style="background-color: #fcfcfc;">
     <dynamic-style />
-    <accept-cookies />
+    <client-only><accept-cookies /></client-only>
     <v-container class="pb-0">
       <v-row align="center">
         <v-col

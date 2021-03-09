@@ -25,7 +25,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-iframe :aspect-ratio="$vuetify.breakpoint.smAndUp ? 2.0 : 1.0" :src="iframeSrc" />
+        <v-iframe :aspect-ratio="$vuetify.breakpoint.smAndUp ? '2.0' : '1.0'" :src="iframeSrc" />
       </v-card>
     </v-dialog>
   </v-tooltip>

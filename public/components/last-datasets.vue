@@ -25,18 +25,22 @@
               <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
                 <v-card-title>
                   <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height:1.1;">
-                    <v-clamp :max-lines="2" autoresize>
-                      {{ dataset.title }}
-                    </v-clamp>
+                    <client-only>
+                      <v-clamp :max-lines="2" autoresize>
+                        {{ dataset.title }}
+                      </v-clamp>
+                    </client-only>
                   </h3>
                 </v-card-title>
                 <v-card-text style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
-                  <v-clamp
-                    :max-height="200"
-                    autoresize
-                    class="dataset-desc200"
-                    v-html="marked(dataset.description || '').html"
-                  />
+                  <client-only>
+                    <v-clamp
+                      :max-height="200"
+                      autoresize
+                      class="dataset-desc200"
+                      v-html="marked(dataset.description || '').html"
+                    />
+                  </client-only>
                 </v-card-text>
               </nuxt-link>
               <v-card-actions class="py-0">

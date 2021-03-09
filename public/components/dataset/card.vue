@@ -1,5 +1,5 @@
 <template>
-  <v-hover>
+  <v-hover :value="show">
     <v-card
       slot-scope="{ hover }"
       outlined
@@ -11,21 +11,25 @@
         <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
           <v-card-title>
             <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1;">
-              <v-clamp :max-lines="2" autoresize>
-                {{ dataset.title }}
-              </v-clamp>
+              <client-only>
+                <v-clamp :max-lines="2" autoresize>
+                  {{ dataset.title }}
+                </v-clamp>
+              </client-only>
             </h3>
           </v-card-title>
           <v-card-text style="height:170px;color: rgba(0,0,0,0.87)" class="py-0">
-            <v-clamp
-              :max-height="170"
-              class="dataset-desc170"
-              autoresize
-              v-html="marked(dataset.description || '').html"
-            />
+            <client-only>
+              <v-clamp
+                :max-height="170"
+                class="dataset-desc170"
+                autoresize
+                v-html="marked(dataset.description || '').html"
+              />
+            </client-only>
           </v-card-text>
           <v-row style="min-height:25px;">
-            <v-col class="py-1">
+            <v-col class="py-0">
               <v-chip
                 v-for="topic of dataset.topics"
                 :key="topic.id"
@@ -89,7 +93,11 @@
     data() {
       return {
         isMobileOnly,
+        show: false,
       }
+    },
+    mounted() {
+      this.show = true
     },
     methods: {
       marked,
@@ -97,5 +105,14 @@
   }
 </script>
 
-<style lang="css" scoped>
+<style>
+.dataset-desc170:before {
+  content:'';
+  width:100%;
+  height:82px;
+  position:absolute;
+  left:0;
+  top:160px;
+  background:linear-gradient(transparent 0, white);
+}
 </style>

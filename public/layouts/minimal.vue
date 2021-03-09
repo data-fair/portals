@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <dynamic-style />
-    <accept-cookies />
+    <client-only><accept-cookies /></client-only>
     <v-main>
       <nuxt-child />
     </v-main>

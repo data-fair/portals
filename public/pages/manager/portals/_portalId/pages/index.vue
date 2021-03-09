@@ -2,7 +2,7 @@
   <v-container v-scroll="onScroll" fluid>
     <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title text="Gestion des pages de contenu" />
-    <client-only><create-page-menu @created="createPage" /></client-only>
+    <create-page-menu @created="createPage" />
     <v-row v-if="pages">
       <v-col
         v-for="(page, i) in pages.results"
