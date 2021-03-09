@@ -86,12 +86,12 @@
     </v-tabs>
     <v-spacer />
 
-    <template v-if="initialized">
+    <template v-if="initialized && config.authentication !== 'none'">
       <v-btn
         v-if="!user"
         depressed
         color="primary"
-        @click="login"
+        @click="login(url)"
       >
         Se connecter
       </v-btn>
@@ -162,6 +162,9 @@
       },
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
+      },
+      url () {
+        return window.location.href
       },
     },
     methods: {
