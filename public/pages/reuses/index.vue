@@ -265,7 +265,7 @@
         params.select = 'id,title,description,updatedAt,url,updatedBy,topics'
         params.facets = 'base-application,topics'
         params.owner = this.owner
-        if (this.config.public) params.visibility = 'public'
+        if (this.config.authentication === 'none') params.visibility = 'public'
         this.$router.push({ query })
         const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
         if (reset) this.applications = applications

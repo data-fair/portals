@@ -102,7 +102,7 @@
           select: 'id,title,updatedAt,createdAt,createdBy',
           owner: this.$store.getters.owner,
           sort: 'createdAt:-1',
-          visibility: this.config.public ? 'public' : '',
+          visibility: this.config.authentication === 'none' ? 'public' : '',
         },
         withCredentials: true,
       })
@@ -112,7 +112,7 @@
           select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
           owner: this.$store.getters.owner,
           sort: 'createdAt:-1',
-          visibility: this.config.public ? 'public' : '',
+          visibility: this.config.authentication === 'none' ? 'public' : '',
         },
         withCredentials: true,
       })
@@ -123,7 +123,7 @@
           size: 1000,
           select: 'count',
           owner: this.$store.getters.owner,
-          visibility: this.config.public ? 'public' : '',
+          visibility: this.config.authentication === 'none' ? 'public' : '',
         },
         withCredentials: true,
       })

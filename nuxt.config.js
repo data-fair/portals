@@ -11,8 +11,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  ssr: process.env.NODE_ENV !== 'development',
-  // ssr: true,
+  // ssr: process.env.NODE_ENV !== 'development',
+  ssr: true,
   srcDir: 'public/',
   build: {
     transpile: [
@@ -51,6 +51,7 @@ module.exports = {
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size', ssr: false },
     { src: '~plugins/ws', ssr: false },
+    { src: '~plugins/auth', ssr: false },
   ],
   router: {
     base: config.basePath,

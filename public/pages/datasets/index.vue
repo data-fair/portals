@@ -234,7 +234,7 @@
         params.select = 'id,title,description,updatedAt,updatedBy,extras,bbox,topics'
         params.facets = 'concepts,topics'
         params.owner = this.owner
-        if (this.config.public) params.visibility = 'public'
+        if (this.config.authentication === 'none') params.visibility = 'public'
         this.$router.push({ query })
         const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
         if (reset) this.datasets = datasets
@@ -272,7 +272,7 @@
         }
         if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
         if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
-        if (this.config.public) params.visibility = 'public'
+        if (this.config.authentication === 'none') params.visibility = 'public'
         try {
           const datasets = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
           const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
