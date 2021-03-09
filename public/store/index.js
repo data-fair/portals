@@ -59,11 +59,16 @@ export default () => {
         const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
         commit('setAny', { config })
       },
-      async init({ commit, dispatch, state }, { req, env, app, route }) {
+      // called both on the server and the client by plugins/init.js
+      // on the server it is called before nuxtServerInit
+      init({ dispatch }, { req, env, app, route }) {
+        console.log('action init')
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
-        dispatch('session/loop')
+      },
+      // called only on the server, used to prefill the store
+      async nuxtServerInit({ dispatch, state, commit }, { route, req, env }) {
+        console.log('nuxtServerInit')
         const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
-
         // case where we are opening a portal
         if (portalId) {
           const initialQuery = {}
@@ -79,7 +84,7 @@ export default () => {
           })
           await dispatch('fetchConfig', portalId)
 
-          // automatic swtich to the account that owns this portal if we are a member
+          // automatic switch to the account that owns this portal if we are a member
           if (state.session.user) {
             const user = state.session.user
             if (

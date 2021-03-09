@@ -51,7 +51,9 @@ module.exports = {
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size', ssr: false },
     { src: '~plugins/ws', ssr: false },
+    { src: '~plugins/session', ssr: false },
     { src: '~plugins/auth', ssr: false },
+    { src: '~plugins/theme', ssr: false },
   ],
   router: {
     base: config.basePath,

@@ -123,14 +123,18 @@
         }
       },
     },
-    async created() {
-      if (!this.activeAccount) return
-      this.refresh()
+    async mounted() {
+      // parent.postMessage('path', this.$route.fullPath)
+      await this.refresh()
     },
     methods: {
       ...mapActions('session', ['login']),
       async refresh() {
         this.portals = await this.$axios.$get('api/v1/portals', { params: { owner: this.activeAccount.type + ':' + this.activeAccount.id } })
+        /* parent.postMessage('breadcrumbs', JSON.stringify([{
+          text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`,
+          href: '/manager/portals',
+        }])) */
       },
       async deletePortal(portal) {
         await this.$axios.$delete(`api/v1/portals/${portal._id}`)

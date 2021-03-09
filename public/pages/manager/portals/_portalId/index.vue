@@ -176,8 +176,8 @@
         immediate: false,
       },
     },
-    async created() {
-      this.fetchConfigDraft()
+    async mounted() {
+      await this.fetchConfigDraft()
     },
     methods: {
       async fetchConfigDraft() {

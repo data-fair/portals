@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <v-alert type="error">
+    <v-alert v-if="error.statusCode !== 401" type="error">
       {{ error.message }}
     </v-alert>
   </div>
