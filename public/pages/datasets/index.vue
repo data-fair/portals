@@ -174,31 +174,33 @@
       })
       await this.refresh(true)
     },
-    data: () => ({
-      datasets: null,
-      concepts: null,
-      size: 12,
-      page: 1,
-      search: null,
-      loading: false,
-      sort: 'createdAt',
-      order: 0,
-      filters: {
-        concepts: [],
-        topics: [],
-      },
-      sorts: [{
-        text: 'Date de mise à jour',
-        value: 'updatedAt',
-      }, {
-        text: 'Date de création',
-        value: 'createdAt',
-      }, {
-        text: 'Ordre alphabétique',
-        value: 'title',
-      }],
-      downloading: false,
-    }),
+    data: function() {
+      return {
+        datasets: null,
+        concepts: null,
+        size: 12,
+        page: 1,
+        search: this.$route.query.q || '',
+        loading: false,
+        sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
+        order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
+        filters: {
+          concepts: this.$route.query.concepts ? this.$route.query.concepts.split(',') : [],
+          topics: this.$route.query.topics ? this.$route.query.topics.split(',') : [],
+        },
+        sorts: [{
+          text: 'Date de mise à jour',
+          value: 'updatedAt',
+        }, {
+          text: 'Date de création',
+          value: 'createdAt',
+        }, {
+          text: 'Ordre alphabétique',
+          value: 'title',
+        }],
+        downloading: false,
+      }
+    },
     computed: {
       ...mapState(['config']),
       ...mapGetters(['owner']),
@@ -213,26 +215,27 @@
       topicsItems() {
         if (!this.datasets) return []
         return this.datasets.facets.topics
-          .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t.id === tf.value.id) }))
-          .concat(this.filters.topics.filter(c => !this.datasets.facets.topics.find(fc => fc.value.id === c.id)).map(c => ({ value: c, count: 0, filtered: true })))
+          .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
       },
     },
     methods: {
       async refresh(reset) {
         this.loading = true
         if (reset) this.page = 1
-        const params = {
-          size: this.size,
-          page: this.page,
-          select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics',
-          owner: this.owner,
+        const query = {
           sort: this.sort + ':' + (this.order * 2 - 1),
-          facets: 'concepts,topics',
           q: this.search,
         }
-        if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
-        if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
+        if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
+        const params = Object.assign({}, query)
+        params.size = this.size
+        params.page = this.page
+        params.select = 'id,title,description,updatedAt,updatedBy,extras,bbox,topics'
+        params.facets = 'concepts,topics'
+        params.owner = this.owner
         if (this.config.public) params.visibility = 'public'
+        this.$router.push({ query })
         const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
         if (reset) this.datasets = datasets
         else datasets.results.forEach(r => this.datasets.results.push(r))
@@ -251,10 +254,10 @@
         return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
       },
       toggleTopic(topic) {
-        if (this.filters.topics.find(t => t.id === topic.id)) {
-          this.filters.topics = this.filters.topics.filter(t => t.id !== topic.id)
+        if (this.filters.topics.find(t => t === topic.id)) {
+          this.filters.topics = this.filters.topics.filter(t => t !== topic.id)
         } else {
-          this.filters.topics.push(topic)
+          this.filters.topics.push(topic.id)
         }
         this.refresh(true)
       },
@@ -268,7 +271,7 @@
           q: this.search,
         }
         if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
-        if (this.filters.topics.length) params.topics = this.filters.topics.map(t => t.id).join(',')
+        if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
         if (this.config.public) params.visibility = 'public'
         try {
           const datasets = (await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
