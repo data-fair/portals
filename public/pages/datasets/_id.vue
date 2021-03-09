@@ -18,14 +18,14 @@
         >
           <v-card class="mb-3" outlined>
             <v-list>
-              <v-list-item>
+              <v-list-item v-if="dataset.origin">
                 <v-list-item-content>
-                  <v-list-item-title>Données publiées par <span class="font-weight-bold">{{ dataset.owner.name }}</span></v-list-item-title>
+                  <v-list-item-title>Données issues de <a :href="dataset.origin" rel="external">cette source</a></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.license">
                 <v-list-item-content>
-                  <v-list-item-title>Sous licence <a :href="dataset.license.href" rel="external">{{ dataset.license.title }}</a></v-list-item-title>
+                  <v-list-item-title>Licence : <a :href="dataset.license.href" rel="external">{{ dataset.license.title }}</a></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
