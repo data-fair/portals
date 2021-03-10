@@ -232,7 +232,11 @@ router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
-  if (!req.user || (portal.owner.type === 'user' && portal.owner.id !== req.user.id) || !req.user.organization || (portal.owner.type === 'organization' && portal.owner.id !== req.user.organization.id)) { filter.public = true }
+  if (!req.user ||
+    (portal.owner.type === 'user' && portal.owner.id !== req.user.id) ||
+    (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id))) {
+    filter.public = true
+  }
   if (req.query.published === 'true')filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),
@@ -249,7 +253,10 @@ router.get('/:id/pages/:pageId', session.auth, asyncWrap(async (req, res, next) 
   if (!page) return res.status(404).send()
   if (!page.public) {
     if (!req.user) return res.status(401).send()
-    else if ((portal.owner.type === 'user' && portal.owner.id !== req.user.id) || !req.user.organization || (portal.owner.type === 'organization' && portal.owner.id !== req.user.organization.id)) return res.status(403).send()
+    if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) return res.status(403).send()
+    if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) {
+      return res.status(403).send()
+    }
   }
   res.status(200).json(page)
 }))
