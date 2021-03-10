@@ -63,7 +63,7 @@ export default () => {
       setBreadcrumbs({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
         commit('setAny', { breadcrumbs })
-        if (global.parent) parent.postMessage({ breadcrumbs })
+        if (global.parent) parent.postMessage({ breadcrumbs }, '*')
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
