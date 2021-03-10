@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title :text="'Edition de la page ' + ((page && page.title) || '')" />
     <v-form ref="form">
       <v-jsf
@@ -77,6 +76,18 @@
     },
     mounted: async function () {
       this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
+      this.$store.dispatch('setBreadcrumbs', [{
+        text: 'portails',
+        to: '/manager/portals',
+      }, {
+        text: this.portal.title,
+        to: `/manager/portals/${this.portal._id}`,
+      }, {
+        text: 'pages',
+        to: `/manager/portals/${this.portal._id}/pages`,
+      }, {
+        text: this.page.title,
+      }])
       this.pageConfig = this.page.config || {}
       delete this.page.config
       if (this.config.owner) this.owner = this.config.owner

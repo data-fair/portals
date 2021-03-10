@@ -17,6 +17,7 @@ module.exports = {
   build: {
     transpile: [
       /@koumoul/,
+      'vuetify/lib',
       // 'vuetify',
       // 'vuedraggable',
       'vue-clamp',
@@ -54,6 +55,7 @@ module.exports = {
     { src: '~plugins/session', ssr: false },
     { src: '~plugins/auth', ssr: false },
     { src: '~plugins/theme', ssr: false },
+    { src: '~plugins/breadcrumbs.js', ssr: false },
   ],
   router: {
     base: config.basePath,

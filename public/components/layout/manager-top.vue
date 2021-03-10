@@ -16,6 +16,10 @@
         Administration
       </v-btn>
     </v-toolbar-items>
+    <v-breadcrumbs
+      v-if="breadcrumbs"
+      :items="breadcrumbs"
+    />
     <v-spacer />
     <v-toolbar-items>
       <template v-if="initialized">
@@ -119,6 +123,7 @@
 
   export default {
     computed: {
+      ...mapState(['breadcrumbs']),
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters('session', ['activeAccount']),
       directoryUrl() {

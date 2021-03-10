@@ -16,6 +16,7 @@ export default () => {
       draft: false,
       initialQuery: {},
       textDark: '#212121',
+      breadcrumbs: null,
     },
     getters: {
       embed() {
@@ -59,15 +60,18 @@ export default () => {
         const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
         commit('setAny', { config })
       },
+      setBreadcrumbs({ commit }, breadcrumbs) {
+        breadcrumbs.forEach(b => { b.exact = true })
+        commit('setAny', { breadcrumbs })
+        if (global.parent) parent.postMessage({ breadcrumbs })
+      },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
       init({ dispatch }, { req, env, app, route }) {
-        console.log('action init')
         dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit({ dispatch, state, commit }, { route, req, env }) {
-        console.log('nuxtServerInit')
         const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
         // case where we are opening a portal
         if (portalId) {

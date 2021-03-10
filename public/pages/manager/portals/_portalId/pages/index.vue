@@ -1,6 +1,5 @@
 <template>
   <v-container v-scroll="onScroll" fluid>
-    <v-breadcrumbs :items="breadcrumbItems" large />
     <section-title text="Gestion des pages de contenu" />
     <create-page-menu @created="createPage" />
     <v-row v-if="pages">
@@ -93,6 +92,16 @@
       },
     },
     mounted: async function () {
+      this.$store.dispatch('setBreadcrumbs', [{
+        text: 'portails',
+        to: '/manager/portals',
+        disabled: false,
+      }, {
+        text: this.portal.title,
+        to: `/manager/portals/${this.portal._id}`,
+      }, {
+        text: 'pages',
+      }])
       this.refresh(true)
     },
     methods: {

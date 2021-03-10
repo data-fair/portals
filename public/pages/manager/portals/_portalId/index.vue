@@ -1,6 +1,21 @@
 <template lang="html">
   <v-container fluid>
-    <v-breadcrumbs :items="breadcrumbItems" large />
+    <v-row>
+      <v-col>
+        <v-btn
+          text
+          :to="`/manager/portals/${portal._id}/pages`"
+          color="primary"
+          class="mb-2"
+        >
+          <v-icon small>
+            mdi-pencil
+          </v-icon>
+          &nbsp;
+          gestion des pages de contenu
+        </v-btn>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col
         cols="12"
@@ -19,7 +34,7 @@
           <v-jsf
             v-model="configDraft"
             :schema="schema"
-            :options="{httpOptions: {withCredentials: true}, context, editMode: 'inline'}"
+            :options="{context}"
           />
 
           <v-row class="mt-3">
@@ -125,9 +140,7 @@
 
   import debounce from 'debounce'
   import { mapState, mapGetters } from 'vuex'
-  import VJsf from '@koumoul/vjsf/lib/VJsf.js'
-  import '@koumoul/vjsf/lib/VJsf.css'
-  import '@koumoul/vjsf/lib/deps/third-party.js'
+  import VJsf from '~/components/vjsf-wrapper.vue'
   import eventBus from '~/event-bus.js'
 
   const schema = require('~/../contract/config.json')
@@ -159,13 +172,6 @@
       iframeHeight() {
         return 800
       },
-      breadcrumbItems() {
-        return [
-          { text: 'Mes portails', to: { name: 'manager-portals' }, disabled: false, exact: true },
-          { text: this.portal.title, disabled: true },
-          { text: 'Pages', to: { name: 'manager-portals-portalId-pages', params: { portalId: this.portal._id } }, disabled: false, exact: true },
-        ]
-      },
     },
     watch: {
       configDraft: {
@@ -177,6 +183,12 @@
       },
     },
     async mounted() {
+      this.$store.dispatch('setBreadcrumbs', [{
+        text: 'portails',
+        to: '/manager/portals',
+      }, {
+        text: this.portal.title,
+      }])
       await this.fetchConfigDraft()
     },
     methods: {

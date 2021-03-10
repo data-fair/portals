@@ -13,6 +13,7 @@
   import ManagerTop from '~/components/layout/manager-top.vue'
   export default {
     components: { ManagerTop },
+    middleware: 'breadcrumbs',
     computed: {
       ...mapGetters(['embed']),
     },
