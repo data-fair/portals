@@ -202,7 +202,7 @@
       }
     },
     computed: {
-      ...mapState(['config']),
+      ...mapState(['config', 'portal']),
       ...mapGetters(['owner']),
       url() {
         return process.env.publicUrl + '/datasets'
@@ -234,6 +234,7 @@
         params.select = 'id,title,description,updatedAt,updatedBy,extras,bbox,topics'
         params.facets = 'concepts,topics'
         params.owner = this.owner
+        params.publicationSites = 'data-fair-portals:' + this.portal._id
         if (this.config.authentication === 'none') params.visibility = 'public'
         this.$router.push({ query })
         const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })

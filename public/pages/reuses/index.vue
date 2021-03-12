@@ -173,7 +173,7 @@
       }
     },
     computed: {
-      ...mapState(['config']),
+      ...mapState(['config', 'portal']),
       ...mapGetters(['owner']),
       url() {
         return process.env.publicUrl + '/reuses'
@@ -204,6 +204,7 @@
         params.select = 'id,title,description,updatedAt,url,updatedBy,topics'
         params.facets = 'base-application,topics'
         params.owner = this.owner
+        params.publicationSites = 'data-fair-portals:' + this.portal._id
         if (this.config.authentication === 'none') params.visibility = 'public'
         this.$router.push({ query })
         const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
