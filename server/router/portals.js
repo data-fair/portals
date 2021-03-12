@@ -7,6 +7,7 @@ const shortid = require('shortid')
 const multer = require('multer')
 const Ajv = require('ajv')
 const ajv = new Ajv()
+const axios = require('axios')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
@@ -28,10 +29,40 @@ configSchemaNoAllOf.properties = Object.assign({}, ...configSchemaNoAllOf.allOf.
 delete configSchemaNoAllOf.allOf
 const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
 
+function link(portal, path = '') {
+  return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`
+}
+
 function cleanPortal(portal) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
-  portal.link = portal.host ? `https://${portal.host}` : `${config.publicUrl}?portalId=${portal._id}`
+  portal.link = link(portal)
   return portal
+}
+
+// portals are synced to settings.publicationSites in data-fair
+async function syncPortalUpdate (portal, cookie) {
+  const publicationSite = {
+    type: 'data-fair-portals',
+    id: portal._id,
+    title: portal.title,
+    url: link(portal),
+    datasetUrlTemplate: link(portal, '/datasets/{id}'),
+    applicationUrlTemplate: link(portal, '/reuses/{id}'),
+  }
+  if (portal.config && portal.config.authentication === 'required') {
+    publicationSite.private = true
+  }
+  await axios.post(
+    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites`,
+    publicationSite,
+    { headers: { cookie } },
+  )
+}
+async function syncPortalDelete (portal, cookie) {
+  await axios.delete(
+    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites/data-fair-portals/${portal._id}`,
+    { headers: { cookie } },
+  )
 }
 
 const router = module.exports = express.Router()
@@ -80,6 +111,7 @@ router.post('', session.auth, asyncWrap(async (req, res) => {
     return res.status(409).send('Ce portail existe déjà.')
   }
   await collection.insertOne(portal)
+  await syncPortalUpdate(portal, req.headers.cookie)
   res.send(cleanPortal(portal))
 }))
 
@@ -114,6 +146,7 @@ router.delete('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`data/${req.params.id}`)) await fs.remove(`data/${req.params.id}`)
+  await syncPortalDelete(req.portal, req.headers.cookie)
   res.send()
 }))
 
@@ -169,6 +202,7 @@ router.get('/:id/assets/:assetId', asyncWrap(async(req, res) => {
 // Validate the draft as the owner
 // Both configuration and uploaded resources
 router.post('/:id/_validate_draft', session.auth, setPortal, asyncWrap(async(req, res) => {
+  console.log(req.portal.configDraft)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
@@ -181,6 +215,7 @@ router.post('/:id/_validate_draft', session.auth, setPortal, asyncWrap(async(req
   if (await fs.exists(`data/${req.portal._id}/draft`)) {
     await fs.copy(`data/${req.portal._id}/draft`, `data/${req.portal._id}/prod`)
   }
+  await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
 router.post('/:id/_cancel_draft', session.auth, setPortal, asyncWrap(async(req, res) => {
@@ -196,8 +231,9 @@ router.post('/:id/_cancel_draft', session.auth, setPortal, asyncWrap(async(req, 
 router.put('/:id/host', session.auth, asyncWrap(async(req, res) => {
   if (!req.user) return res.status(401).send()
   if (!req.user.isAdmin) return res.status(403).send()
-  await req.app.get('db')
-    .collection('portals').updateOne({ _id: req.params.id }, { $set: { host: req.body } })
+  const portal = (await req.app.get('db').collection('portals')
+    .findOneAndUpdate({ _id: req.params.id }, { $set: { host: req.body } }, { returnOriginal: false })).value
+  await syncPortalUpdate(portal, req.headers.cookie)
   res.send()
 }))
 
