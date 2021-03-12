@@ -1,20 +1,21 @@
 <template lang="html">
   <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-btn
-          text
-          :to="`/manager/portals/${portal._id}/pages`"
-          color="primary"
-          class="mb-2"
-        >
-          <v-icon small>
-            mdi-pencil
-          </v-icon>
-          &nbsp;
-          gestion des pages de contenu
-        </v-btn>
-      </v-col>
+    <v-row class="px-0">
+      <v-spacer />
+      <v-list
+        dense
+        class="list-actions"
+        style="float:right;width:256px;"
+      >
+        <v-list-item :to="`/manager/portals/${portal._id}/pages`">
+          <v-list-item-icon>
+            <v-icon color="primary">
+              mdi-pencil
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Éditer les pages de contenu</v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-row>
     <v-row>
       <v-col

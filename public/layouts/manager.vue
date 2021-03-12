@@ -22,4 +22,7 @@
 </script>
 
 <style>
+.v-list.list-actions .v-list-item .v-list-item__icon {
+  margin-right: 16px;
+}
 </style>

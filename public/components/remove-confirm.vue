@@ -1,5 +1,5 @@
 <template>
-  <v-dialog
+  <v-menu
     v-model="dialog"
     width="500"
   >
@@ -60,7 +60,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-dialog>
+  </v-menu>
 </template>
 
 <script>

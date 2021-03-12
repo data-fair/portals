@@ -7,17 +7,15 @@
     :close-on-content-click="false"
     max-width="700px"
   >
-    <template v-slot:activator="{on}">
-      <v-btn
-        color="primary"
-        fab
-        small
-        absolute
-        right
-        v-on="on"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+    <template v-slot:activator="{on, attrs}">
+      <v-list-item v-bind="attrs" v-on="on">
+        <v-list-item-icon>
+          <v-icon color="primary">
+            mdi-plus-circle
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Créer une nouvelle page</v-list-item-title>
+      </v-list-item>
     </template>
 
     <v-card v-if="menu">

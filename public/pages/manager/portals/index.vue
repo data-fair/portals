@@ -1,29 +1,79 @@
 <template>
-  <v-container fluid>
-    <v-col>
-      <v-row>
-        <p>
-          Pour publier un de vos portails sur une adresse publique veuillez <a href="https://koumoul.com/contact">nous contacter</a>.
-        </p>
-        <p>
-          Cette adresse publique peut-être un sous domaine de koumoul.com (par exemple mon-portail.koumoul.com) ou bien un domaine complètement distinct.
-          Dans le second cas vous devez être propriétaire du nom de domaine en question et en capacité de définir ses règles DNS.
-        </p>
-      </v-row>
-      <v-row>
+  <v-row>
+    <v-col :style="this.$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
+      <v-container>
+        <v-col>
+          <v-row>
+            <p>
+              Pour publier un de vos portails sur une adresse publique veuillez <a href="https://koumoul.com/contact">nous contacter</a>.
+            </p>
+            <p>
+              Cette adresse publique peut-être un sous domaine de koumoul.com (par exemple mon-portail.koumoul.com) ou bien un domaine complètement distinct.
+              Dans le second cas vous devez être propriétaire du nom de domaine en question et en capacité de définir ses règles DNS.
+            </p>
+          </v-row>
+          <v-row class="mt-6">
+            <v-card
+              v-if="portals && portals.length"
+              min-width="500"
+              tile
+              outlined
+            >
+              <v-list class="py-0">
+                <template v-for="portal in portals">
+                  <v-list-item :key="portal._id">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        <a :href="portal.link" target="_blank">{{ portal.title }}</a>
+                      </v-list-item-title>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <remove-confirm :label="portal.title" @removed="deletePortal(portal)" />
+                    </v-list-item-action>
+                    <v-list-item-action>
+                      <v-btn
+                        :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
+                        icon
+                        color="primary"
+                      >
+                        <v-icon>mdi-cog</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-action class="ml-0">
+                      <v-btn
+                        :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
+                        icon
+                        color="primary"
+                      >
+                        <v-icon>mdi-file-multiple</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                  <v-divider :key="portal._id + '-divider'" />
+                </template>
+              </v-list>
+            </v-card>
+          </v-row>
+        </v-col>
+      </v-container>
+    </v-col>
+    <layout-navigation-right v-if="this.$vuetify.breakpoint.lgAndUp">
+      <v-list dense class="list-actions">
         <v-menu
           v-model="showCreateMenu"
           :close-on-content-click="false"
           max-width="500px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              v-bind="attrs"
-              v-on="on"
-            >
-              Créer un nouveau portail
-            </v-btn>
+            <v-list-item v-bind="attrs" v-on="on">
+              <v-list-item-icon>
+                <v-icon color="primary">
+                  mdi-plus-circle
+                </v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Créer un nouveau portail</v-list-item-title>
+            </v-list-item>
           </template>
           <v-card v-if="newPortal">
             <v-card-title primary-title>
@@ -55,44 +105,9 @@
             </v-card-actions>
           </v-card>
         </v-menu>
-      </v-row>
-      <v-row class="mt-6">
-        <v-card v-if="portals && portals.length" min-width="500">
-          <v-list>
-            <v-list-item v-for="portal in portals" :key="portal._id">
-              <v-list-item-content>
-                <v-list-item-title>
-                  <a :href="portal.link" target="_blank">{{ portal.title }}</a>
-                </v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <remove-confirm :label="portal.title" @removed="deletePortal(portal)" />
-              </v-list-item-action>
-              <v-list-item-action>
-                <v-btn
-                  :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
-                  icon
-                  color="primary"
-                >
-                  <v-icon>mdi-cog</v-icon>
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-action class="ml-0">
-                <v-btn
-                  :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
-                  icon
-                  color="primary"
-                >
-                  <v-icon>mdi-file-multiple</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-row>
-    </v-col>
-  </v-container>
+      </v-list>
+    </layout-navigation-right>
+  </v-row>
 </template>
 
 <script>

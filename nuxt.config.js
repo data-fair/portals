@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   // ssr: process.env.NODE_ENV !== 'development',
   ssr: true,
+  components: true,
   srcDir: 'public/',
   build: {
     transpile: [
