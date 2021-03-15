@@ -86,51 +86,65 @@
     </v-tabs>
     <v-spacer />
 
-    <template v-if="initialized && config.authentication !== 'none'">
-      <v-btn
-        v-if="!user"
-        depressed
-        color="primary"
-        @click="login(url)"
-      >
-        Se connecter
-      </v-btn>
-      <v-menu
-        v-else
-        offset-y
-        nudge-left
-      >
-        <template v-slot:activator="{on}">
-          <v-btn
-            text
-            :height="64"
-            v-on="on"
-          >
-            <v-avatar :size="36">
-              <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
-            </v-avatar>
-                  &nbsp;
-            {{ user.name }}
-            <v-icon right>
-              mdi-menu-down
-            </v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
-            <v-list-item-title>Back-office</v-list-item-title>
-          </v-list-item>
-          <v-divider />
-          <v-list-item :to="{name: 'me'}" :disabled="embed">
-            <v-list-item-title>Mon compte</v-list-item-title>
-          </v-list-item>
-          <v-list-item :disabled="embed" @click="logout">
-            <v-list-item-title>Se déconnecter</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+    <v-toolbar-items>
       <notifications-queue v-if="user && notifyUrl" :notify-url="notifyUrl" />
-    </template>
+      <template v-if="initialized && config.authentication !== 'none'">
+        <v-btn
+          v-if="!user"
+          depressed
+          color="primary"
+          @click="login(url)"
+        >
+          Se connecter
+        </v-btn>
+        <v-menu
+          v-else
+          offset-y
+          nudge-left
+        >
+          <template v-slot:activator="{on}">
+            <v-btn
+              text
+              :height="64"
+              v-on="on"
+            >
+              <v-avatar :size="36">
+                <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
+              </v-avatar>
+                  &nbsp;
+              {{ user.name }}
+              <v-icon right>
+                mdi-menu-down
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list outlined>
+            <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
+              <v-list-item-title>Back-office</v-list-item-title>
+            </v-list-item>
+            <v-divider />
+            <v-list-item :to="{name: 'me'}" :disabled="embed">
+              <v-list-item-title>Mon compte</v-list-item-title>
+            </v-list-item>
+            <!--<v-list-item dense>
+              <v-list-item-title style="overflow: visible;">
+                <v-switch
+                  v-model="$vuetify.theme.dark"
+                  hide-details
+                  class="mt-0"
+                  label="mode nuit"
+                  color="white"
+                  @change="setDarkCookie"
+                />
+              </v-list-item-title>
+            </v-list-item>-->
+            <v-list-item :disabled="embed" @click="logout">
+              <v-list-item-title>Se déconnecter</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+    </v-toolbar-items>
   </v-app-bar>
 </template>
 
@@ -169,6 +183,14 @@
     },
     methods: {
       ...mapActions('session', ['logout', 'login']),
+      reload() {
+        window.location.reload()
+      },
+      setDarkCookie(value) {
+        const maxAge = 60 * 60 * 24 * 100 // 100 days
+        this.$cookies.set('theme_dark', '' + value, { path: '/', domain: process.env.sessionDomain, maxAge })
+        this.reload()
+      },
     },
   }
 </script>
