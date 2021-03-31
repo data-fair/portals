@@ -115,6 +115,10 @@
                   </v-card-title>
                 </nuxt-link>
                 <v-card-actions style="height:50%">
+                  {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
+                  <template v-if="dataset.storage && dataset.storage.size">
+                    - {{ dataset.storage.size | bytes }}
+                  </template>
                   <v-spacer />
                   <table-preview :dataset="dataset" :color="'primary'" />
                   <map-preview

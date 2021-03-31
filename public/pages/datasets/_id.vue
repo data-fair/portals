@@ -18,6 +18,16 @@
         >
           <v-card class="mb-3" outlined>
             <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
+                    <template v-if="dataset.storage && dataset.storage.size">
+                      - {{ dataset.storage.size | bytes }}
+                    </template>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item v-if="dataset.origin">
                 <v-list-item-content>
                   <v-list-item-title>Données issues de <a :href="dataset.origin" rel="external">cette source</a></v-list-item-title>
