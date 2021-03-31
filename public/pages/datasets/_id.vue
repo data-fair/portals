@@ -87,53 +87,61 @@
         </v-col>
       </v-row>
 
-      <v-row v-if="applications">
-        <v-col>
-          <v-row
-            v-for="(application, i) in applications.results"
-            :key="application.id"
-            :reverse="i%2 !== 1"
-            class="my-3"
-            align="center"
-          >
-            <template v-if="baseApplications[application.url] && baseApplications[application.url].applicationName === 'Liste et fiches'">
-              <v-col class="text-center">
-                <nuxt-link
-                  :to="{name: 'reuses-id', params:{id: application.id}}"
-                  class="title"
-                  style="text-decoration-line:none"
-                >
-                  {{ application.title }}&nbsp;<v-icon color="primary">
-                    mdi-open-in-new
-                  </v-icon>
-                </nuxt-link>
-                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
-              </v-col>
-            </template>
-            <template v-else>
-              <v-col
-                md="6"
-                sm="12"
-                class="px-5 py-3"
+      <template v-if="applications">
+        <v-row
+          v-for="(application, i) in applications.results"
+          :key="application.id"
+          class="my-3"
+          align="center"
+        >
+          <template v-if="baseApplications[application.url] && baseApplications[application.url].applicationName === 'Liste et fiches'">
+            <v-col
+              class="text-center"
+              :order="0"
+              :order-md="1-i%2"
+            >
+              <nuxt-link
+                :to="{name: 'reuses-id', params:{id: application.id}}"
+                class="title"
+                style="text-decoration-line:none"
               >
-                <nuxt-link
-                  :to="{name: 'reuses-id', params:{id: application.id}}"
-                  class="title"
-                  style="text-decoration-line:none"
-                >
-                  {{ application.title }}&nbsp;<v-icon color="primary">
-                    mdi-open-in-new
-                  </v-icon>
-                </nuxt-link>
-                <div class="mt-3" v-html="marked(application.description || '').html" />
-              </v-col>
-              <v-col md="6" sm="12">
-                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
-              </v-col>
-            </template>
-          </v-row>
-        </v-col>
-      </v-row>
+                {{ application.title }}&nbsp;<v-icon color="primary">
+                  mdi-open-in-new
+                </v-icon>
+              </nuxt-link>
+              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col
+              md="6"
+              sm="12"
+              class="px-5 py-3"
+              :order="0"
+              :order-md="1-i%2"
+            >
+              <nuxt-link
+                :to="{name: 'reuses-id', params:{id: application.id}}"
+                class="title"
+                style="text-decoration-line:none"
+              >
+                {{ application.title }}&nbsp;<v-icon color="primary">
+                  mdi-open-in-new
+                </v-icon>
+              </nuxt-link>
+              <div class="mt-3" v-html="marked(application.description || '').html" />
+            </v-col>
+            <v-col
+              md="6"
+              sm="12"
+              :order="1"
+              :order-md="i%2"
+            >
+              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+            </v-col>
+          </template>
+        </v-row>
+      </template>
 
       <v-row v-if="dataset.extras && dataset.extras.externalReuses">
         <v-col

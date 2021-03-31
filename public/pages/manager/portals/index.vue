@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col :style="this.$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
+    <v-col :style="this.$vuetify.breakpoint.mdAndUp ? 'padding-right:256px;' : ''">
       <v-container>
         <v-col>
           <v-row>
@@ -58,7 +58,7 @@
         </v-col>
       </v-container>
     </v-col>
-    <layout-navigation-right v-if="this.$vuetify.breakpoint.lgAndUp">
+    <layout-navigation-right v-if="this.$vuetify.breakpoint.mdAndUp">
       <v-list dense class="list-actions">
         <v-menu
           v-model="showCreateMenu"
