@@ -271,6 +271,7 @@
               '@type': 'WebApplication',
               url: this.url,
               name: this.application.title,
+              description,
               author: {
                 '@type': this.application.owner.type === 'user' ? 'Person' : 'Organization',
                 name: this.application.owner.name,

@@ -319,7 +319,12 @@
           '@type': 'Dataset',
           url: this.url,
           name: this.dataset.title,
+          description,
           author: {
+            '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
+            name: this.dataset.owner.name,
+          },
+          creator: {
             '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
             name: this.dataset.owner.name,
           },
