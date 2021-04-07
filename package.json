@@ -59,6 +59,7 @@
     "vue-clamp": "^0.3.1",
     "vue-moment": "^4.0.0",
     "vue-social-sharing": "^3.0.4",
+    "vue-tweet-embed": "^2.4.0",
     "vue-window-size": "0.6.2",
     "vuetify": "^2.4.2"
   },

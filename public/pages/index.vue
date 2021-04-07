@@ -59,19 +59,28 @@
         </v-col>
 
         <v-col
-          v-if="showLastApps"
+          v-if="showLastApps || config.twitter"
           cols="12"
           md="4"
         >
-          <last-apps :applications="applications" :full-width="$vuetify.breakpoint.mdAndUp" />
+          <div v-if="config.twitter" class="elevation-3">
+            <timeline
+              :id="config.twitter"
+              :source-type="'profile'"
+              :options="{ tweetLimit: '3' }"
+            />
+          </div>
+          <last-apps
+            v-else
+            :applications="applications"
+            :full-width="$vuetify.breakpoint.mdAndUp"
+          />
         </v-col>
       </v-row>
-
       <last-apps
-        v-else-if="showLastApps"
+        v-else-if="showLastApps && config.twitter"
         :applications="applications"
       />
-
       <last-datasets v-if="config.homeDatasets && config.homeDatasets.type === 'lasts' && datasets && datasets.results.length" :datasets="datasets" />
     </v-container>
   </div>
@@ -84,6 +93,7 @@
   import { isMobileOnly } from 'mobile-device-detect'
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
+  import Timeline from 'vue-tweet-embed/dist/timeline'
   const { mapState } = require('vuex')
   const marked = require('@hackmd/meta-marked')
 
@@ -94,6 +104,7 @@
       LastDatasets,
       LastApps,
       VIframe,
+      Timeline,
     },
     async fetch () {
       const promiseApplications = this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', {
