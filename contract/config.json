@@ -70,7 +70,7 @@
     }
   }, {
     "title": "Contenu",
-    "required": ["title", "description"],
+    "required": ["title"],
     "properties": {
       "title": {
         "type": "string",
