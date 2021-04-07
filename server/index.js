@@ -29,6 +29,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/notify', createProxyMiddleware({ target: 'http://localhost:8088', pathRewrite: { '^/notify': '' } }))
 }
 
+app.use(session.cors({ acceptAllOrigins: true }))
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.text())
