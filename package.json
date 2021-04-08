@@ -24,7 +24,7 @@
   "dependencies": {
     "@hackmd/meta-marked": "^0.4.4",
     "@koumoul/nuxt-config-inject": "^0.4.10",
-    "@koumoul/sd-express": "^0.19.2",
+    "@koumoul/sd-express": "^0.20.0",
     "@koumoul/sd-vue": "^0.20.1",
     "@koumoul/v-iframe": "^0.2.3",
     "@koumoul/vjsf": "^1.23.9",
