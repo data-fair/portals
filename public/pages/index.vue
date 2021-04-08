@@ -60,8 +60,16 @@
             </client-only>
           </template>
           <template v-else>
-            <last-apps if="showLastApps" :applications="applications" />
-            <last-datasets v-if="showLastDatasets" :datasets="datasets" />
+            <last-apps
+              v-if="showLastApps"
+              :applications="applications"
+              small
+            />
+            <last-datasets
+              v-if="showLastDatasets"
+              :datasets="datasets"
+              small
+            />
           </template>
         </v-col>
 
@@ -73,13 +81,29 @@
           <timeline
             :id="config.twitter"
             :source-type="'profile'"
-            :options="{ tweetLimit: 2 }"
+            :options="{ tweetLimit }"
             class="elevation-3"
           />
         </v-col>
       </v-row>
-      <template v-if="!config.featuredReuse || !config.featuredReuse.id">
-        <last-apps if="showLastApps" :applications="applications" />
+      <template v-else>
+        <template v-if="config.featuredReuse && config.featuredReuse.id">
+          <nuxt-link
+            :to="`/reuses/${config.featuredReuse.id}`"
+            class="title"
+            style="text-decoration-line:none"
+          >
+            {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
+              mdi-open-in-new
+            </v-icon>
+          </nuxt-link>
+          <client-only>
+            <v-iframe :src="featuredReuseUrl" />
+          </client-only>
+        </template>
+      </template>
+      <template v-if="!config.twitter || (config.featuredReuse && config.featuredReuse.id)">
+        <last-apps v-if="showLastApps" :applications="applications" />
         <last-datasets v-if="showLastDatasets" :datasets="datasets" />
       </template>
     </v-container>
@@ -177,6 +201,10 @@
       },
       showLastDatasets() {
         return this.config.homeDatasets && this.config.homeDatasets.type === 'lasts' && this.datasets && this.datasets.results.length
+      },
+      tweetLimit() {
+        if (this.config.featuredReuse && this.config.featuredReuse.id) return 2
+        else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeReuses && this.config.homeReuses.size) || 0) / 2))
       },
     },
     watch: {

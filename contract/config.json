@@ -142,7 +142,8 @@
             },
             "size":{
               "title": "Nombre d'éléments",
-              "type": "integer"
+              "type": "integer",
+              "default": 3
             }
           }
         }]
@@ -168,7 +169,8 @@
             },
             "size":{
               "title": "Nombre d'éléments",
-              "type": "integer"
+              "type": "integer",
+              "default": 3
             }
           }
         }]
