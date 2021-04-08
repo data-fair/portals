@@ -39,49 +39,49 @@
       />
 
       <!-- reuses: featured and lasts -->
-      <v-row v-if="config.featuredReuse && config.featuredReuse.id">
+      <v-row v-if="config.twitter">
         <v-col
           cols="12"
           md="8"
+          sm="6"
         >
-          <nuxt-link
-            :to="`/reuses/${config.featuredReuse.id}`"
-            class="title"
-            style="text-decoration-line:none"
-          >
-            {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
-              mdi-open-in-new
-            </v-icon>
-          </nuxt-link>
-          <client-only>
-            <v-iframe :src="featuredReuseUrl" />
-          </client-only>
+          <template v-if="config.featuredReuse && config.featuredReuse.id">
+            <nuxt-link
+              :to="`/reuses/${config.featuredReuse.id}`"
+              class="title"
+              style="text-decoration-line:none"
+            >
+              {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
+                mdi-open-in-new
+              </v-icon>
+            </nuxt-link>
+            <client-only>
+              <v-iframe :src="featuredReuseUrl" />
+            </client-only>
+          </template>
+          <template v-else>
+            <last-apps if="showLastApps" :applications="applications" />
+            <last-datasets v-if="showLastDatasets" :datasets="datasets" />
+          </template>
         </v-col>
 
         <v-col
-          v-if="showLastApps || config.twitter"
           cols="12"
           md="4"
+          sm="6"
         >
-          <div v-if="config.twitter" class="elevation-3">
-            <timeline
-              :id="config.twitter"
-              :source-type="'profile'"
-              :options="{ tweetLimit: '3' }"
-            />
-          </div>
-          <last-apps
-            v-else
-            :applications="applications"
-            :full-width="$vuetify.breakpoint.mdAndUp"
+          <timeline
+            :id="config.twitter"
+            :source-type="'profile'"
+            :options="{ tweetLimit: 2 }"
+            class="elevation-3"
           />
         </v-col>
       </v-row>
-      <last-apps
-        v-else-if="showLastApps && config.twitter"
-        :applications="applications"
-      />
-      <last-datasets v-if="config.homeDatasets && config.homeDatasets.type === 'lasts' && datasets && datasets.results.length" :datasets="datasets" />
+      <template v-if="!config.featuredReuse || !config.featuredReuse.id">
+        <last-apps if="showLastApps" :applications="applications" />
+        <last-datasets v-if="showLastDatasets" :datasets="datasets" />
+      </template>
     </v-container>
   </div>
 </template>
@@ -174,6 +174,9 @@
       },
       showLastApps() {
         return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length
+      },
+      showLastDatasets() {
+        return this.config.homeDatasets && this.config.homeDatasets.type === 'lasts' && this.datasets && this.datasets.results.length
       },
     },
     watch: {

@@ -1,9 +1,10 @@
 <template lang="html">
   <div>
-    <h3 :class="`headline grey--text text--darken-2 font-weight-bold ${fullWidth ? 'mt-2 mb-2' : 'mt-6 mb-4'}`">
+    <h3 class="headline grey--text text--darken-2 font-weight-bold mt-6 mb-4">
       Dernières valorisations
     </h3>
     <v-container
+      v-if="applications"
       class="pa-0"
       fluid
     >
@@ -11,8 +12,8 @@
         <v-col
           v-for="(application, i) in applications.results"
           :key="i"
-          :md="fullWidth ? 12 : 4"
-          :sm="fullWidth ? 12 : 6"
+          :md="4"
+          :sm="6"
           :cols="12"
         >
           <v-hover>
@@ -91,7 +92,6 @@
     },
     props: {
       applications: { type: Object, required: true },
-      fullWidth: { type: Boolean, default: false },
     },
   }
 </script>
