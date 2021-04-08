@@ -17,7 +17,6 @@ export default () => {
       initialQuery: {},
       textDark: '#212121',
       breadcrumbs: null,
-      host: null,
     },
     getters: {
       embed() {
@@ -69,9 +68,6 @@ export default () => {
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
       init({ state, dispatch }, { req, env, app, route }) {
-        if (state.config && (!state.config.authentication || state.config.authentication === 'none')) {
-          return
-        }
         let baseUrl = env.publicUrl + '/api/v1/session'
         if (global.location && !env.publicUrl.startsWith(global.location.origin)) {
           baseUrl = global.location.origin + '/api/v1/session'
@@ -97,7 +93,6 @@ export default () => {
             portal: {
               _id: portalId,
             },
-            host: req.headers.host,
           })
           await dispatch('fetchConfig', portalId)
 
