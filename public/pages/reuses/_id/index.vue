@@ -17,39 +17,7 @@
               Visualisation publiée par <span class="font-weight-bold">{{ application.owner.name }} en utilisant l'application <span class="font-weight-bold">{{ baseApplication ? baseApplication.title : application.url.split('/').slice(-3,-2).pop() }}</span></span>
             </v-card-text>
             <v-card-actions>
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    icon
-                    v-on="on"
-                    @click="embedDialog=true"
-                  >
-                    <v-icon :color="'primary'">
-                      mdi-code-tags
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Intégrer dans un site</span>
-                <v-dialog
-                  v-model="embedDialog"
-                  :fullscreen="$vuetify.breakpoint.mdAndDown"
-                  :max-width="1200"
-                >
-                  <v-card>
-                    <v-toolbar dense flat>
-                      <v-toolbar-title>Intégrer dans un site</v-toolbar-title>
-                      <v-spacer />
-                      <v-btn icon @click.native="embedDialog = false">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-toolbar>
-                    <v-card-text>
-                      Pour intégrer cette application dans un site vous pouvez copier le code suivant dans le contenu HTML de votre site.
-                      <code class="pa-2 mt-2">&lt;iframe src="{{ embedUrl }}?embed=true" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
-                    </v-card-text>
-                  </v-card>
-                </v-dialog>
-              </v-tooltip>
+              <application-embed :application="application" />
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -64,12 +32,6 @@
                 </template>
                 <span>Accéder à la visualisation en plein écran</span>
               </v-tooltip>
-              <!-- <v-tooltip top>
-                <v-btn slot="activator" :href="embedUrl" icon>
-                  <v-icon color="primary">mdi-exit-to-app</v-icon>
-                </v-btn>
-                <span>Accéder à la visualisation en plein écran sans la barre de navigation</span>
-              </v-tooltip> -->
             </v-card-actions>
             <v-subheader>Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
           </v-card>
@@ -189,6 +151,7 @@
   import TablePreview from '~/components/dataset/table-preview.vue'
   import MapPreview from '~/components/dataset/map-preview.vue'
   import ApiView from '~/components/dataset/api-view.vue'
+  import ApplicationEmbed from '~/components/application/embed.vue'
   import Social from '~/components/social'
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
@@ -203,6 +166,7 @@
       TablePreview,
       MapPreview,
       ApiView,
+      ApplicationEmbed,
       Social,
       Error,
       VIframe,
@@ -213,7 +177,6 @@
       this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
     },
     data: () => ({
-      embedDialog: null,
       baseApplication: null,
       application: null,
       datasets: null,

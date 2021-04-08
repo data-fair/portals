@@ -79,6 +79,7 @@
                 <span>Télécharger les données enrichies</span>
               </v-tooltip>
               <schema-view :dataset="dataset" :color="'primary'" />
+              <dataset-embed :dataset="dataset" />
               <attachments
                 v-if="dataset.attachments && dataset.attachments.length"
                 :dataset="dataset"
@@ -249,6 +250,7 @@
   import NotifEdit from '~/components/dataset/notif-edit.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import Attachments from '~/components/dataset/dataset-attachments.vue'
+  import DatasetEmbed from '~/components/dataset/embed.vue'
   import Social from '~/components/social'
   import Error from '~/components/error.vue'
   import 'iframe-resizer/js/iframeResizer'
@@ -268,6 +270,7 @@
       NotifEdit,
       SchemaView,
       Attachments,
+      DatasetEmbed,
       Social,
       Error,
       VIframe,

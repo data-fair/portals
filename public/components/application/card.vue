@@ -62,7 +62,7 @@
 
 <script>
   import VClamp from 'vue-clamp'
-  import ApplicationView from '~/components/application/application-view.vue'
+  import ApplicationView from '~/components/application/view.vue'
 
   const marked = require('@hackmd/meta-marked')
 

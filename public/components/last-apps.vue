@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import ApplicationView from '~/components/application/application-view.vue'
+  import ApplicationView from '~/components/application/view.vue'
   import VClamp from 'vue-clamp'
 
   export default {
