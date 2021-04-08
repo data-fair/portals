@@ -1,7 +1,5 @@
-const config = require('config')
 const createError = require('http-errors')
 const permissions = require('./permissions')
-const visibility = require('./visibility')
 
 // Util functions shared accross the main find (GET on collection) endpoints
 
