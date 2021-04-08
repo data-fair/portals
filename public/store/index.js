@@ -17,6 +17,7 @@ export default () => {
       initialQuery: {},
       textDark: '#212121',
       breadcrumbs: null,
+      host: null,
     },
     getters: {
       embed() {
@@ -67,8 +68,19 @@ export default () => {
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      init({ dispatch }, { req, env, app, route }) {
-        dispatch('session/init', { cookies: this.$cookies, baseUrl: env.publicUrl + '/api/v1/session', cookieDomain: env.sessionDomain })
+      init({ state, dispatch }, { req, env, app, route }) {
+        if (state.config && (!state.config.authentication || state.config.authentication === 'none')) {
+          return
+        }
+        let baseUrl = env.publicUrl + '/api/v1/session'
+        if (global.location && !env.publicUrl.startsWith(global.location.origin)) {
+          baseUrl = global.location.origin + '/api/v1/session'
+        }
+        dispatch('session/init', {
+          cookies: this.$cookies,
+          baseUrl,
+          cookieDomain: env.sessionDomain,
+        })
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit({ dispatch, state, commit }, { route, req, env }) {
@@ -85,6 +97,7 @@ export default () => {
             portal: {
               _id: portalId,
             },
+            host: req.headers.host,
           })
           await dispatch('fetchConfig', portalId)
 
