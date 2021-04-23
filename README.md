@@ -1,6 +1,6 @@
 # data-fair-portals
 
-Portals manager for data-fair
+Portals manager for data-fair.
 
 Install dependencies and launch service dependencies with docker-compose:
 
