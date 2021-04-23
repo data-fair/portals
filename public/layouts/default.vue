@@ -54,6 +54,7 @@
 
     <v-main>
       <nuxt-child />
+      <layout-notifications />
     </v-main>
 
     <v-footer :class="'pa-0 mt-5 ' + (footerColorDark ? 'area--dark' : 'area--light')" height="auto">

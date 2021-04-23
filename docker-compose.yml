@@ -1,7 +1,7 @@
 version: '3'
 services:
   sd:
-    image: koumoul/simple-directory:2
+    image: koumoul/simple-directory:master
     ports:
       - 6201:8080
       - 1080:1080

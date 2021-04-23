@@ -11,4 +11,10 @@ module.exports = {
   mongo: {
     host: 'MONGO_HOST',
   },
+  mails: {
+    transport: {
+      __name: 'MAILS_TRANSPORT',
+      __format: 'json',
+    },
+  },
 }

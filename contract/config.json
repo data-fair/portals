@@ -283,6 +283,12 @@
       "twitter": {
         "type": "string",
         "title": "Compte twitter"
+      },
+      "contactEmail": {
+        "type": "string",
+        "title": "Email de contact",
+        "format": "email",
+        "description": "Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail."
       }
     }
   }, {

@@ -73,13 +73,13 @@
           </v-list>
         </v-menu>
       </template>
-      <!--<v-tab
-        v-if="config.contact"
-        :href="config.contact"
+      <v-tab
+        v-if="config.contactEmail"
+        to="/contact"
         class="font-weight-bold"
       >
-        Nous contacter
-      </v-tab>-->
+        Contact
+      </v-tab>
       <!-- <v-tab v-if="user && user.isAdmin" :to="{name: 'config'}" class="font-weight-bold">
               Configuration
             </v-tab> -->

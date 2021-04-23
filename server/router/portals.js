@@ -8,16 +8,14 @@ const multer = require('multer')
 const Ajv = require('ajv')
 const ajv = new Ajv()
 const axios = require('axios')
+const { RateLimiterMongo } = require('rate-limiter-flexible')
+const requestIp = require('request-ip')
+const emailValidator = require('email-validator')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
 const asyncWrap = require('../utils/async-wrap')
-const session = require('@koumoul/sd-express')({
-  publicUrl: config.publicUrl,
-  directoryUrl: config.directoryUrl,
-  cookieDomain: config.sessionDomain,
-})
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -68,7 +66,7 @@ async function syncPortalDelete (portal, cookie) {
 const router = module.exports = express.Router()
 
 // List user portals, or all portals for super admin
-router.get('', session.auth, asyncWrap(async (req, res) => {
+router.get('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const filter = {}
   if (req.query.owner) {
@@ -88,7 +86,7 @@ router.get('', session.auth, asyncWrap(async (req, res) => {
 }))
 
 // Create a new portal (cannot be used to update)
-router.post('', session.auth, asyncWrap(async (req, res) => {
+router.post('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const collection = req.app.get('db').collection('portals')
   const portal = req.body
@@ -133,7 +131,7 @@ async function setPortal(req, res, next) {
 }
 
 // Get an existing portal as the owner
-router.get('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
+router.get('/:id', setPortal, asyncWrap(async(req, res) => {
   if (req.params.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
@@ -142,7 +140,7 @@ router.get('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
 }))
 
 // Delete an existing portal as the owner
-router.delete('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
+router.delete('/:id', setPortal, asyncWrap(async(req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`data/${req.params.id}`)) await fs.remove(`data/${req.params.id}`)
@@ -151,7 +149,7 @@ router.delete('/:id', session.auth, setPortal, asyncWrap(async(req, res) => {
 }))
 
 // Update the draft configuration as the owner
-router.put('/:id/configDraft', session.auth, setPortal, asyncWrap(async(req, res) => {
+router.put('/:id/configDraft', setPortal, asyncWrap(async(req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.body } })
@@ -172,7 +170,7 @@ const storage = multer.diskStorage({
   },
 })
 const upload = multer({ storage })
-router.post('/:id/assets/:assetId', session.auth, setPortal, upload.any(), asyncWrap(async(req, res) => {
+router.post('/:id/assets/:assetId', setPortal, upload.any(), asyncWrap(async(req, res) => {
   res.send()
 }))
 
@@ -201,7 +199,7 @@ router.get('/:id/assets/:assetId', asyncWrap(async(req, res) => {
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
-router.post('/:id/_validate_draft', session.auth, setPortal, asyncWrap(async(req, res) => {
+router.post('/:id/_validate_draft', setPortal, asyncWrap(async(req, res) => {
   console.log(req.portal.configDraft)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
@@ -218,7 +216,7 @@ router.post('/:id/_validate_draft', session.auth, setPortal, asyncWrap(async(req
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
-router.post('/:id/_cancel_draft', session.auth, setPortal, asyncWrap(async(req, res) => {
+router.post('/:id/_cancel_draft', setPortal, asyncWrap(async(req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
   if (await fs.exists(`data/${req.portal._id}/prod`)) {
@@ -228,7 +226,7 @@ router.post('/:id/_cancel_draft', session.auth, setPortal, asyncWrap(async(req, 
 }))
 
 // Define the exposition host as super admin
-router.put('/:id/host', session.auth, asyncWrap(async(req, res) => {
+router.put('/:id/host', asyncWrap(async(req, res) => {
   if (!req.user) return res.status(401).send()
   if (!req.user.isAdmin) return res.status(403).send()
   const portal = (await req.app.get('db').collection('portals')
@@ -237,8 +235,7 @@ router.put('/:id/host', session.auth, asyncWrap(async(req, res) => {
   res.send()
 }))
 
-// Public access to the portal configuration, except for the draft that is reserved to owner
-router.get('/:id/config', session.auth, asyncWrap(async (req, res) => {
+async function setPortalAnonymous(req, res, next) {
   const draft = req.query.draft === 'true'
   if (draft && !req.user) {
     return res.status(401).send('Le mode brouillon demande d\'être authentifié')
@@ -258,11 +255,18 @@ router.get('/:id/config', session.auth, asyncWrap(async (req, res) => {
   // not very respectful of contract, but we use this to automatically switch user is possible in client
   config.owner = portal.owner
 
-  res.send(config)
+  req.portal = portal
+  req.config = config
+  next()
+}
+
+// Public access to the portal configuration, except for the draft that is reserved to owner
+router.get('/:id/config', setPortalAnonymous, asyncWrap(async (req, res) => {
+  res.send(req.config)
 }))
 
 // Get the list of pages
-router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
+router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
   if (!portal) return res.status(404).send('Portail inconnu')
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
@@ -282,7 +286,7 @@ router.get('/:id/pages', session.auth, asyncWrap(async (req, res, next) => {
 }))
 
 // Get a page
-router.get('/:id/pages/:pageId', session.auth, asyncWrap(async (req, res, next) => {
+router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
   const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
   if (!portal) return res.status(404).send('Portail inconnu')
   const page = await req.app.get('db').collection('pages').findOne({ id: req.params.pageId, 'portal._id': req.params.id })
@@ -368,4 +372,62 @@ router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) =
 router.delete('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) => {
   await req.app.get('db').collection('pages').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
   res.status(204).send()
+}))
+
+const matchingPortalHost = (portal, req) => {
+  if (req.portal.host && req.portal.host === req.headers.host) return true
+  if (!req.headers.origin || config.publicUrl.startsWith(req.headers.origin)) return true
+  return false
+}
+
+// Anonymous users can post an email to the registered contact
+const limiterOptions = {
+  keyPrefix: 'data-fair-portals-rate-limiter-contact',
+  points: 1,
+  duration: 60,
+}
+let _limiter
+const limiter = (req) => {
+  _limiter = _limiter || new RateLimiterMongo({ storeClient: req.app.get('client'), ...limiterOptions })
+  return _limiter
+}
+router.post('/:id/contact-email', setPortalAnonymous, asyncWrap(async (req, res, next) => {
+  if (!emailValidator.validate(req.body.from)) return res.status(400).send(req.messages.errors.badEmail)
+  if (!req.body.token) return res.status(401).send()
+  if (!req.config.contactEmail) return res.status(404).send('Adresse mail de contact non configurée')
+
+  // 1rst level of anti-spam prevention, no cross origin requests on this route
+  if (!matchingPortalHost(req.portal, req)) {
+    return res.status(405).send('Appel depuis un domaine extérieur non supporté')
+  }
+
+  const { verifyToken } = req.app.get('session')
+  try {
+    // 2nd level of anti-spam protection, validate that the user was present on the page for a few seconds before sending
+    await verifyToken(req.body.token)
+  } catch (err) {
+    if (err.name === 'NotBeforeError') {
+      return res.status(429).send('Message refusé, l\'activité ressemble à celle d\'un robot spammeur.')
+    } else {
+      return res.status(401).send('Invalid token')
+    }
+  }
+
+  try {
+    // 3rd level of anti-spam protection, simple rate limiting based on ip
+    await limiter(req).consume(requestIp.getClientIp(req), 1)
+  } catch (err) {
+    console.error('Rate limit error for /mails/contact route', requestIp.getClientIp(req), req.body.email, err)
+    return res.status(429).send('Trop de messages dans un bref interval. Veuillez patienter avant d\'essayer de nouveau.')
+  }
+
+  const mail = {
+    from: req.body.from,
+    to: req.config.contactEmail,
+    subject: req.body.subject,
+    text: req.body.text,
+  }
+  await req.app.get('mailTransport').sendMailAsync(mail)
+
+  res.status(200).send(req.body)
 }))

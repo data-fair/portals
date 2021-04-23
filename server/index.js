@@ -5,6 +5,7 @@ const { URL } = require('url')
 const event2promise = require('event-to-promise')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const nodemailer = require('nodemailer')
 const dbUtils = require('./utils/db')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
@@ -37,6 +38,7 @@ app.use(bodyParser.text())
 app.use('/api/v1/session', session.router)
 
 app.use(session.auth)
+app.set('session', session)
 app.use('/api/v1/portals', require('./router/portals'))
 
 let httpServer
@@ -45,9 +47,15 @@ async function main() {
   app.use(session.loginCallback)
   app.use(session.decode)
   app.use(nuxtMiddleware)
+
   const { client, db } = await dbUtils.init()
   app.set('db', db)
   app.set('client', client)
+
+  const transport = nodemailer.createTransport(config.mails.transport)
+  transport.sendMailAsync = require('util').promisify(transport.sendMail)
+  app.set('mailTransport', transport)
+
   app.use((err, req, res, next) => {
     console.error('Error in HTTP request', err.response ? err.response.data : err)
     res.status(err.status || 500).send(err.message)
