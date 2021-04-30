@@ -4,13 +4,13 @@
     <v-container v-else-if="application">
       <section-title :text="application.title" />
       <v-row>
-        <v-col md="7" sm="12">
+        <v-col md="7" cols="12">
           <div v-html="marked(application.description || '').html" />
         </v-col>
         <v-col
           md="4"
           offset-md="1"
-          sm="12"
+          cols="12"
         >
           <v-card class="mb-3" outlined>
             <v-card-text class="subheading">

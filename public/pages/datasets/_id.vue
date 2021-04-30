@@ -126,7 +126,7 @@
           <template v-else>
             <v-col
               md="6"
-              sm="12"
+              cols="12"
               class="px-5 py-3"
               :order="0"
               :order-md="1-i%2"
@@ -144,7 +144,7 @@
             </v-col>
             <v-col
               md="6"
-              sm="12"
+              cols="12"
               :order="1"
               :order-md="i%2"
             >
