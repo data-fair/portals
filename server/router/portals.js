@@ -375,8 +375,9 @@ router.delete('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) 
 }))
 
 const matchingPortalHost = (portal, req) => {
-  if (req.portal.host && req.portal.host === req.headers.host) return true
-  if (!req.headers.origin || config.publicUrl.startsWith(req.headers.origin)) return true
+  if (!req.headers.origin) return true
+  if (config.publicUrl.startsWith(req.headers.origin)) return true
+  if (req.portal.host && req.portal.host === new URL(req.headers.origin).host) return true
   return false
 }
 
