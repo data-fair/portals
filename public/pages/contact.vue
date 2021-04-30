@@ -33,7 +33,7 @@
       <v-row>
         <v-spacer />
         <v-btn
-          :disabled="!valid"
+          :disabled="!valid || loading"
           color="primary"
           @click="send"
         >
@@ -55,6 +55,7 @@
       message: { ...newMessage },
       token: null,
       tokenError: null,
+      loading: false,
     }),
     computed: {
       ...mapState(['portal', 'draft']),
@@ -70,6 +71,7 @@
     methods: {
       async send() {
         if (!this.$refs.form.validate()) return
+        this.loading = true
         try {
           await this.$axios.$post(`${process.env.publicUrl}/api/v1/portals/${this.portal._id}/contact-email?draft=${this.draft}`, { ...this.message, token: this.token })
           this.message = { ...newMessage }
@@ -78,6 +80,7 @@
         } catch (error) {
           eventBus.$emit('notification', { error })
         }
+        this.loading = false
       },
     },
   }
