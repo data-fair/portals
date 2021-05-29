@@ -155,7 +155,7 @@
             "title": {"type": "string"},
             "id": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -179,7 +179,7 @@
             "title": {"type": "string"},
             "id": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -203,7 +203,7 @@
             "title": {"type": "string"},
             "id": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -227,7 +227,7 @@
             "title": {"type": "string"},
             "id": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"

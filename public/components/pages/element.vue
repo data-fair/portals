@@ -76,7 +76,7 @@
     async created() {
       if (this.value.type === 'datasetCard' && this.value.dataset) {
         this.loading = true
-        this.resolvedDataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id)
+        this.resolvedDataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
         this.loading = false
       }
     },
