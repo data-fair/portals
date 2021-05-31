@@ -95,7 +95,7 @@
           :color="topicItem.value.color"
           :outlined="!topicItem.filtered"
           :dark="topicItem.filtered"
-          class="ml-3"
+          class="ml-3 my-1"
           @click="toggleTopic(topicItem.value)"
         >
           {{ topicItem.value.title }} ({{ topicItem.count }})
