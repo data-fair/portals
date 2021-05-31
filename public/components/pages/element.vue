@@ -15,7 +15,7 @@
     <div v-else-if="value.type === 'divider'" class="my-6">
       <v-divider />
     </div>
-    <dataset-card :dataset="resolvedDataset" v-else-if="value.type === 'datasetCard'" />
+    <dataset-card v-else-if="value.type === 'datasetCard'" :dataset="resolvedDataset" />
     <v-card
       v-else-if="value.type === 'card'"
       class="my-6"
@@ -68,7 +68,7 @@
     watch: {
       'value.dataset'() {
         this.resolveDataset()
-      }
+      },
     },
     async created() {
       await this.resolveDataset()
