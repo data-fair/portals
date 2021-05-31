@@ -62,49 +62,7 @@
             sm="6"
             cols="12"
           >
-            <v-hover>
-              <v-card
-                slot-scope="{ hover }"
-                height="100%"
-                outlined
-                :elevation="hover ? 2 : 0"
-              >
-                <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
-                  <v-card-title style="height:50%">
-                    <h3 class="title grey--text text--darken-2 font-weight-bold">
-                      {{ dataset.title }}
-                    </h3>
-                  </v-card-title>
-                </nuxt-link>
-                <v-card-actions style="height:50%">
-                  {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
-                  <template v-if="dataset.storage && dataset.storage.size">
-                    - {{ dataset.storage.size | bytes }}
-                  </template>
-                  <v-spacer />
-                  <table-preview :dataset="dataset" :color="'primary'" />
-                  <map-preview
-                    v-if="dataset.bbox"
-                    :dataset="dataset"
-                    :color="'primary'"
-                  />
-                  <api-view :dataset="dataset" :color="'primary'" />
-                  <v-tooltip v-if="dataset.file" top>
-                    <template v-slot:activator="{ on }">
-                      <v-btn
-                        :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
-                        :color="'primary'"
-                        icon
-                        v-on="on"
-                      >
-                        <v-icon>mdi-download</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Télécharger les données</span>
-                  </v-tooltip>
-                </v-card-actions>
-              </v-card>
-            </v-hover>
+            <dataset-card :dataset="dataset" />
           </v-col>
         </v-row>
       </v-container>
@@ -147,11 +105,9 @@
 </template>
 
 <script>
-// import Disqus from '~/components/disqus.vue'
-  import TablePreview from '~/components/dataset/table-preview.vue'
-  import MapPreview from '~/components/dataset/map-preview.vue'
-  import ApiView from '~/components/dataset/api-view.vue'
+  // import Disqus from '~/components/disqus.vue'
   import ApplicationEmbed from '~/components/application/embed.vue'
+  import DatasetCard from '~/components/dataset/card.vue'
   import Social from '~/components/social'
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
@@ -163,9 +119,7 @@
     middleware: 'portal-required',
     components: {
       // Disqus,
-      TablePreview,
-      MapPreview,
-      ApiView,
+      DatasetCard,
       ApplicationEmbed,
       Social,
       Error,
@@ -174,7 +128,13 @@
     async fetch () {
       this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
       const config = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
-      this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params: { ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(',') }, withCredentials: true })
+      this.datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
+        params: {
+          ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
+          select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics,image',
+        },
+        withCredentials: true,
+      })
     },
     data: () => ({
       baseApplication: null,
