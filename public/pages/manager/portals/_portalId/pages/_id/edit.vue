@@ -90,7 +90,7 @@
       }])
       this.pageConfig = this.page.config || {}
       delete this.page.config
-      if (this.config.owner) this.owner = this.config.owner
+      if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
     },
     methods: {
       async update (patch) {

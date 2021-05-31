@@ -261,6 +261,21 @@
         "type": {
           "const": "twoColumns"
         },
+        "layout": {
+          "type": "string",
+          "title": "Disposition",
+          "default": "equal",
+          "oneOf": [{
+            "const": "equal",
+            "title": "Largeur de même taille"
+          }, {
+            "const": "left",
+            "title": "Colonne gauche large"
+          }, {
+            "const": "right",
+            "title": "Colonne droite large"
+          }]
+        },
         "leftColumn": {
           "title": "Colonne de gauche",
           "type": "array",

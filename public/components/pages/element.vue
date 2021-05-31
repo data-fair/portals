@@ -15,15 +15,7 @@
     <div v-else-if="value.type === 'divider'" class="my-6">
       <v-divider />
     </div>
-    <v-row v-else-if="value.type === 'datasetCard'">
-      <v-col
-        md="4"
-        sm="6"
-        cols="12"
-      >
-        <dataset-card :dataset="resolvedDataset" />
-      </v-col>
-    </v-row>
+    <dataset-card :dataset="resolvedDataset" v-else-if="value.type === 'datasetCard'" />
     <v-card
       v-else-if="value.type === 'card'"
       class="my-6"
@@ -73,12 +65,13 @@
     computed: {
       ...mapState(['config']),
     },
-    async created() {
-      if (this.value.type === 'datasetCard' && this.value.dataset) {
-        this.loading = true
-        this.resolvedDataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
-        this.loading = false
+    watch: {
+      'value.dataset'() {
+        this.resolveDataset()
       }
+    },
+    async created() {
+      await this.resolveDataset()
     },
     methods: {
       marked,
@@ -87,6 +80,13 @@
       },
       formIframeSrc(dataset) {
         return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
+      },
+      async resolveDataset() {
+        if (this.value.type === 'datasetCard' && this.value.dataset) {
+          this.loading = true
+          this.resolvedDataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
+          this.loading = false
+        } else this.resolvedDataset = null
       },
     },
   }
