@@ -44,6 +44,7 @@
           cols="12"
           md="8"
           sm="6"
+          align-self="stretch"
         >
           <template v-if="config.featuredReuse && config.featuredReuse.id">
             <nuxt-link
@@ -56,7 +57,7 @@
               </v-icon>
             </nuxt-link>
             <client-only>
-              <v-iframe :src="featuredReuseUrl" />
+              <v-iframe :src="featuredReuseUrl" style="height:90%"/>
             </client-only>
           </template>
           <template v-else>
