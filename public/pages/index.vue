@@ -57,7 +57,7 @@
               </v-icon>
             </nuxt-link>
             <client-only>
-              <v-iframe :src="featuredReuseUrl" style="height:90%"/>
+              <v-iframe :src="featuredReuseUrl" style="height:90%" />
             </client-only>
           </template>
           <template v-else>
