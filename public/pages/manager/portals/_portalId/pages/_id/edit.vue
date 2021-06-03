@@ -4,8 +4,8 @@
     <v-form ref="form">
       <v-jsf
         v-if="page"
+        v-model="page"
         :schema="pageSchema"
-        :value="page"
         :options="vjsfOpts"
         @change="update(page)"
       />
@@ -15,8 +15,8 @@
         <v-form>
           <v-jsf
             v-if="pageConfig"
+            v-model="pageConfig"
             :schema="template"
-            :value="pageConfig"
             :options="vjsfOpts"
             @change="update({ config: pageConfig })"
           />
