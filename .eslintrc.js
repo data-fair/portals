@@ -9,12 +9,12 @@ module.exports = {
     'node/no-deprecated-api': 'off',
     'vue/require-prop-types': 'off',
     'vue/max-attributes-per-line': ['error', {
-      'singleline': 2,
-      'multiline': {
-        'max': 1,
-        'allowFirstLine': false
-      }
+      singleline: 2,
+      multiline: {
+        max: 1,
+        allowFirstLine: false,
+      },
     }],
-    'no-only-tests/no-only-tests': 'error'
+    'no-only-tests/no-only-tests': 'error',
   },
 }
