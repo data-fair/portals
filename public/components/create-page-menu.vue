@@ -32,8 +32,8 @@
           >
             <v-jsf
               v-if="editItem"
-              :schema="schema"
               v-model="editItem"
+              :schema="schema"
               :options="{httpOptions: {withCredentials: true}, hideReadOnly: true, context: {}, requiredMessage: 'Information obligatoire', noDataMessage: 'Aucune valeur correspondante', 'searchMessage': 'Recherchez...'}"
             />
           </slot>
