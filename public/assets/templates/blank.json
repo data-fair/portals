@@ -295,6 +295,23 @@
           "x-class": "px-2"
         }
       }
+    },
+    "responsiveFlow": {
+      "title": "Flux responsive",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "responsiveFlow"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/element"
+          },
+          "x-cols": {"cols": 12, "sm": 6, "md": 4},
+          "x-class": "px-2"
+        }
+      }
     }
   }
 }
