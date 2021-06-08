@@ -28,6 +28,8 @@
         }, {
           "$ref": "#/definitions/card"
         }, {
+          "$ref": "#/definitions/image"
+        }, {
           "$ref": "#/definitions/twoColumns"
         }, {
           "$ref": "#/definitions/responsiveFlow"
@@ -60,6 +62,8 @@
         "$ref": "#/definitions/datasetForm"
       }, {
         "$ref": "#/definitions/datasetTable"
+      }, {
+        "$ref": "#/definitions/image"
       }],
       "default": {
         "type": "text",
@@ -253,6 +257,20 @@
           "items": {
             "$ref": "#/definitions/element"
           }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "title": "Image",
+      "properties": {
+        "type": {
+          "const": "image"
+        },
+        "url": {
+          "title": "URL vers l'image",
+          "type": "string",
+          "x-props": { "hideDetails": "auto" }
         }
       }
     },

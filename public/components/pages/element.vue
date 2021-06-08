@@ -42,6 +42,10 @@
       v-else-if="value.type === 'application' && value.application"
       :src="value.application.exposedUrl + '?embed=true'"
     />
+    <v-img
+      v-else-if="value.type === 'image' && value.url"
+      :src="value.url"
+    />
   </div>
 </template>
 
