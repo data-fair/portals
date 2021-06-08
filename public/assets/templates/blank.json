@@ -29,6 +29,8 @@
           "$ref": "#/definitions/card"
         }, {
           "$ref": "#/definitions/twoColumns"
+        }, {
+          "$ref": "#/definitions/responsiveFlow"
         }],
         "default": {
           "type": "title",
@@ -307,9 +309,7 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/element"
-          },
-          "x-cols": {"cols": 12, "sm": 6, "md": 4},
-          "x-class": "px-2"
+          }
         }
       }
     }

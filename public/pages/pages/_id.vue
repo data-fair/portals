@@ -1,16 +1,17 @@
 <template lang="html">
   <div>
     <error v-if="$fetchState.error" :error="$fetchState.error" />
-    <v-container v-else-if="page">
-      <section-title :text="page.title" />
+    <template v-else-if="page">
       <blank v-if="page.template === 'blank'" :config="page.config" />
-    </v-container>
+      <thematic v-if="page.template === 'thematic'" :config="page.config" />
+    </template>
   </div>
 </template>
 
 <script>
   import Error from '~/components/error.vue'
   import Blank from '~/components/pages/blank.vue'
+  import Thematic from '~/components/pages/thematic.vue'
   const { mapState } = require('vuex')
 
   export default {
@@ -18,6 +19,7 @@
     layout: 'default',
     components: {
       Blank,
+      Thematic,
       Error,
     },
     async fetch () {

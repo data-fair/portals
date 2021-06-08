@@ -1,0 +1,137 @@
+{
+  "type": "object",
+  "required": ["elements"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "$ref": "#/definitions/title"
+    },
+    "banner": {
+      "title": "URL de l'image de bannière",
+      "type": "string",
+      "x-props": { "hideDetails": "auto" }
+    },
+    "description": {
+      "$ref": "#/definitions/description"
+    },
+    "blocks":{
+      "title": "Blocs",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/block"
+      }
+    }
+  },
+  "definitions": {
+    "title": {
+      "title": "Titre",
+      "type": "string",
+      "x-props": { "hideDetails": "auto" }
+    },
+    "description": {
+      "title": "Description générale",
+      "type": "string",
+      "x-display": "custom-markdown",
+      "x-props": { "hideDetails": "auto" }
+    },
+    "block":{
+      "title": "Bloc",
+      "type": "object",
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "alert": {
+          "$ref": "#/definitions/alert"
+        },
+        "application": {
+          "$ref": "#/definitions/application"
+        },
+        "datasets": {
+          "title": "Jeux de données associés",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/datasetCard"
+          }
+        }
+      }
+    },
+    "alert": {
+      "type": "object",
+      "title": "Texte accentué",
+      "required": ["type", "alertType"],
+      "properties": {
+        "alertType": {
+          "type": "string",
+          "title": "Type d'accentuation",
+          "default": "info",
+          "oneOf": [{
+            "const": "info",
+            "title": "Information"
+          }, {
+            "const": "success",
+            "title": "Succès"
+          }, {
+            "const": "warning",
+            "title": "Avertissement"
+          }, {
+            "const": "error",
+            "title": "Erreur"
+          }]
+        },
+        "content": {
+          "$ref": "#/definitions/description"
+        }
+      }
+    },
+    "application": {
+      "type": "object",
+      "title": "Visualisation",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "href": {"type": "string"},
+        "exposedUrl": {"type": "exposedUrl"},
+        "title": {"type": "string"},
+        "id": {"type": "string"}
+      },
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,title",
+      "x-itemsProp": "results",
+      "x-itemTitle": "title",
+      "x-itemKey": "href"
+    },
+    "datasetCard": {
+      "type": "object",
+      "title": "Fiche d'un jeu de données",
+      "properties": {
+        "render": {
+          "type": "string",
+          "title": "Rendu",
+          "default": "default",
+          "oneOf": [{
+            "const": "default",
+            "title": "Défaut"
+          }]
+        },
+        "dataset": {
+          "type": "object",
+          "title": "Jeu de données",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    }
+  }
+}

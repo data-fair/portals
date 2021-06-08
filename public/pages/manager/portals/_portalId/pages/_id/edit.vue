@@ -27,6 +27,7 @@
         :cols="6"
       >
         <blank v-if="page.template === 'blank'" :config="pageConfig" />
+        <thematic v-if="page.template === 'thematic'" :config="pageConfig" />
       </v-col>
     </v-row>
   </v-container>
@@ -36,6 +37,7 @@
   import VJsf from '~/components/vjsf-wrapper.vue'
   import 'iframe-resizer/js/iframeResizer.contentWindow'
   import Blank from '~/components/pages/blank.vue'
+  import Thematic from '~/components/pages/thematic.vue'
   const { mapState } = require('vuex')
 
   const context = require.context('../../../../../../assets/templates', true, /\.json$/)
@@ -45,7 +47,7 @@
   })
 
   export default {
-    components: { VJsf, Blank },
+    components: { VJsf, Blank, Thematic },
     data: () => ({
       page: null,
       pageConfig: null,

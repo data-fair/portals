@@ -30,6 +30,9 @@
       "oneOf": [{
         "const": "blank",
         "title": "Page blanche"
+      },{
+        "const": "thematic",
+        "title": "Page thématique"
       }],
       "default": "blank",
       "x-cols": {"cols": 6, "md": 3},
