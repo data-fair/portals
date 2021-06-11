@@ -10,7 +10,9 @@
         </v-breadcrumbs>
       </v-container>
       <v-divider />
-      <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 68}px`" />
+      <client-only>
+        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 68}px`" />
+      </client-only>
     </div>
   </div>
 </template>

@@ -38,19 +38,21 @@
         </v-col>
       </v-row>
 
-      <v-iframe
-        v-if="baseApplication && baseApplication.applicationName === 'Liste et fiches'"
-        :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`"
-      />
-      <v-col
-        v-else
-        md="10"
-        offset-md="1"
-        sm="12"
-        class="my-3 grow"
-      >
-        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
-      </v-col>
+      <client-only>
+        <v-iframe
+          v-if="baseApplication && baseApplication.applicationName === 'Liste et fiches'"
+          :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`"
+        />
+        <v-col
+          v-else
+          md="10"
+          offset-md="1"
+          sm="12"
+          class="my-3 grow"
+        >
+          <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+        </v-col>
+      </client-only>
 
       <section-subtitle text="Données utilisées" />
       <v-container v-if="datasets" fluid>

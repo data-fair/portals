@@ -120,7 +120,9 @@
                   mdi-open-in-new
                 </v-icon>
               </nuxt-link>
-              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
+              <client-only>
+                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
+              </client-only>
             </v-col>
           </template>
           <template v-else>
@@ -148,7 +150,9 @@
               :order="1"
               :order-md="i%2"
             >
-              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+              <client-only>
+                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+              </client-only>
             </v-col>
           </template>
         </v-row>
@@ -161,18 +165,20 @@
           class="text-center"
         >
           <section-subtitle :text="reuse.title" />
-          <iframe
-            v-if="reuse.fixedHeight"
-            :src="reuse.link"
-            :height="reuse.height"
-            width="100%"
-            class="mt-2"
-          />
-          <v-iframe
-            v-else
-            :src="reuse.link"
-            class="mt-2"
-          />
+          <client-only>
+            <iframe
+              v-if="reuse.fixedHeight"
+              :src="reuse.link"
+              :height="reuse.height"
+              width="100%"
+              class="mt-2"
+            />
+            <v-iframe
+              v-else
+              :src="reuse.link"
+              class="mt-2"
+            />
+          </client-only>
         </v-col>
         <section-title v-if="dataset.extras && dataset.extras.externalReuses && dataset.extras.externalReuses.filter(r => r.type==='link').length" text="Réutilisations externes" />
         <v-row v-if="dataset.extras && dataset.extras.externalReuses">
