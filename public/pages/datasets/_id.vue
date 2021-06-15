@@ -301,10 +301,10 @@
       applications: null,
     }),
     computed: {
-      ...mapState(['config', 'portal']),
+      ...mapState(['config', 'portal', 'publicUrl']),
       ...mapState('session', ['user']),
       url() {
-        return process.env.publicUrl + '/datasets/' + this.$route.params.id
+        return this.publicUrl + '/datasets/' + this.$route.params.id
       },
       dataFairUrl() {
         return process.env.dataFairUrl

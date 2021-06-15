@@ -146,7 +146,7 @@
     computed: {
       ...mapState(['config', 'publicUrl']),
       pageUrl() {
-        return process.env.publicUrl + '/reuses/' + this.$route.params.id
+        return this.publicUrl + '/reuses/' + this.$route.params.id
       },
       embedUrl() {
         return process.env.dataFairUrl + '/app/' + this.$route.params.id

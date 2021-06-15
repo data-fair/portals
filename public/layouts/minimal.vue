@@ -19,7 +19,7 @@
       textDark: '#424242',
     }),
     computed: {
-      ...mapState(['config']),
+      ...mapState(['config', 'publicUrl']),
     },
     head() {
       // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
@@ -27,7 +27,7 @@
       const link = [
         { rel: 'canonical', href: canonical },
       ]
-      link.push({ rel: 'icon', type: 'image/x-icon', href: `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/logo?favicon=${this.$store.state.draft}` })
+      link.push({ rel: 'icon', type: 'image/x-icon', href: `${this.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/logo?favicon=${this.$store.state.draft}` })
       link.forEach((l) => {
         if (l.href.slice(-1) === '/') {
           l.href = l.href.slice(0, -1)
@@ -37,7 +37,7 @@
         { name: 'twitter:card', content: 'summary' },
         { hid: 'og:title', property: 'og:title', content: this.config.title },
         { property: 'og:locale', content: 'fr_FR' },
-        { hid: 'og:image', property: 'og:image', content: `${process.env.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/home?draft=${this.$store.state.draft}` },
+        { hid: 'og:image', property: 'og:image', content: `${this.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/home?draft=${this.$store.state.draft}` },
         { hid: 'og:image:width', property: 'og:image:width', content: 567 },
         { hid: 'og:image:height', property: 'og:image:height', content: 383 },
       ]

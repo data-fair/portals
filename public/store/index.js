@@ -17,6 +17,7 @@ export default () => {
       initialQuery: {},
       textDark: '#212121',
       breadcrumbs: null,
+      publicUrl: null,
     },
     getters: {
       embed() {
@@ -93,6 +94,7 @@ export default () => {
             portal: {
               _id: portalId,
             },
+            publicUrl: `http${env.development ? '' : 's'}://${req.headers.host}`,
           })
           await dispatch('fetchConfig', portalId)
 

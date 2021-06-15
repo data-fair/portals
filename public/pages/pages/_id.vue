@@ -29,9 +29,9 @@
       page: null,
     }),
     computed: {
-      ...mapState(['portal']),
+      ...mapState(['portal', 'publicUrl']),
       url() {
-        return process.env.publicUrl + '/pages/' + this.$route.params.id
+        return this.publicUrl + '/pages/' + this.$route.params.id
       },
     },
     watch: {

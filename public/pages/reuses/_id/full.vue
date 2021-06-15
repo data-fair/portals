@@ -35,9 +35,9 @@
       application: null,
     }),
     computed: {
-      ...mapState(['config']),
+      ...mapState(['config', 'publicUrl']),
       pageUrl() {
-        return process.env.publicUrl + '/reuses/' + this.$route.params.id + '/full'
+        return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'
       },
       embedUrl() {
         return process.env.dataFairUrl + '/app/' + this.$route.params.id

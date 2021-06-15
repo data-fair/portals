@@ -189,7 +189,7 @@
     computed: {
       ...mapState(['config', 'publicUrl', 'portal']),
       homeUrl() {
-        return `${process.env.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
+        return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
       },
       dataFairUrl() {
         return process.env.dataFairUrl
@@ -226,7 +226,7 @@
         title,
         meta: [
           { hid: 'description', name: 'description', content: description },
-          { hid: 'og:url', property: 'og:url', content: process.env.publicUrl },
+          { hid: 'og:url', property: 'og:url', content: this.publicUrl },
           { hid: 'og:title', property: 'og:title', content: title },
           { hid: 'og:description', property: 'og:description', content: description },
           { hid: 'og:type', property: 'og:type', content: 'website' },
