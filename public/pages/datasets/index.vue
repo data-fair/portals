@@ -202,10 +202,10 @@
       }
     },
     computed: {
-      ...mapState(['config', 'portal']),
+      ...mapState(['config', 'portal', 'publicUrl']),
       ...mapGetters(['owner']),
       url() {
-        return process.env.publicUrl + '/datasets'
+        return this.publicUrl + '/datasets'
       },
       conceptsItems() {
         if (!this.datasets) return []
@@ -267,6 +267,7 @@
         const params = {
           size: 10000,
           select: 'id,title,description,bbox,topics,href,updatedAt,createdAt',
+          publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           owner: this.owner,
           sort: this.sort + ':' + (this.order * 2 - 1),
           q: this.search,
