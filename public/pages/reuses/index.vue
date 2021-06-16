@@ -173,10 +173,10 @@
       }
     },
     computed: {
-      ...mapState(['config', 'portal']),
+      ...mapState(['config', 'portal', 'publicUrl']),
       ...mapGetters(['owner']),
       url() {
-        return process.env.publicUrl + '/reuses'
+        return this.publicUrl + '/reuses'
       },
       baseApplicationsItems() {
         if (!this.applications) return []
