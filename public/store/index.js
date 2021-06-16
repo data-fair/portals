@@ -80,7 +80,7 @@ export default () => {
         })
       },
       // called only on the server, used to prefill the store
-      async nuxtServerInit({ dispatch, state, commit }, { route, req, env }) {
+      async nuxtServerInit({ dispatch, state, commit }, { route, req, env, redirect }) {
         const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
         // case where we are opening a portal
         if (portalId) {
@@ -108,6 +108,8 @@ export default () => {
               (!user.organization || user.organization.id !== state.config.owner.id)
             ) {
               dispatch('session/switchOrganization', state.config.owner.id)
+              // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
+              redirect({ path: route.path, query: { ...route.query, switch: 1 } })
             }
             if (
               user &&
@@ -115,6 +117,8 @@ export default () => {
               user.organization
             ) {
               dispatch('session/switchOrganization', null)
+              // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
+              redirect({ path: route.path, query: { ...route.query, switch: 1 } })
             }
           }
         }
