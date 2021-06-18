@@ -4,7 +4,6 @@ const webpack = require('webpack')
 const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
-config.publicPath = config.basePath + '/_nuxt/'
 if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (process.argv.slice(-1)[0] === 'build') config = nuxtConfigInject.prepare(config)
@@ -12,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
     fs.removeSync('.nuxt-standalone')
     fs.copySync('.nuxt', '.nuxt-standalone')
     nuxtConfigInject.replace(config)
-    nuxtConfigInject.replace({ ...config, basePath: '/', publicPath: '/_nuxt/' }, ['.nuxt-standalone/**/*'])
+    nuxtConfigInject.replace({ ...config, basePath: '/' }, ['.nuxt-standalone/**/*'])
   }
 }
 
@@ -34,8 +33,6 @@ module.exports = {
       // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
       webpackConf.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
 
-      // webpackConf.output.publicPath = config.publicUrl + '/_nuxt/'
-
       // Loader for sounds
       webpackConf.module.rules.push({
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
@@ -45,7 +42,6 @@ module.exports = {
         },
       })
     },
-    publicPath: config.publicPath,
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
