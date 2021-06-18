@@ -11,8 +11,10 @@ module.exports = async () => {
     // Prepare nuxt for rendering and serving UI
     const nuxt = new Nuxt(nuxtConfig)
     // alternate nuxtConfig for when the service is exposed on a separate domain name for a standalone portal
-    const nuxtStandaloneConfig = { ...nuxtConfig, buildDir: '.nuxt-standalone', router: { base: '/' } }
+    const nuxtStandaloneConfig = { ...nuxtConfig, buildDir: '.nuxt-standalone' }
+    nuxtStandaloneConfig.router = { ...nuxtConfig.router, base: '/' }
     nuxtStandaloneConfig.build = { ...nuxtConfig.build, publicPath: '/_nuxt/' }
+    nuxtStandaloneConfig.axios = { ...nuxtStandaloneConfig.axios, browserBaseURL: '/' }
     const nuxtStandalone = new Nuxt(nuxtStandaloneConfig)
     return async (req, res, next) => {
       if (!req.query.portalId) {

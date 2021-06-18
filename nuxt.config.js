@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
+if (!config.basePath.endsWith('/')) config.basePath += '/'
 
 if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
@@ -45,7 +46,7 @@ module.exports = {
         },
       })
     },
-    publicPath: config.publicUrl + '/_nuxt/',
+    publicPath: config.basePath + '_nuxt/',
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
@@ -69,7 +70,7 @@ module.exports = {
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
   axios: {
     browserBaseURL: config.basePath,
-    baseURL: config.publicUrl,
+    baseURL: 'http://localhost:' + config.port,
     credentials: true,
   },
   buildModules: ['@nuxtjs/vuetify'],
