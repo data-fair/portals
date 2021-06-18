@@ -1,11 +1,11 @@
 // alternate nuxtConfig for when the service is exposed on a separate domain name for a standalone portal
 
-let config = require('config')
+const config = require('config')
 config.basePath = '/'
 
 if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
-  if (process.argv.slice(-1)[0] === 'build') config = nuxtConfigInject.prepare(config)
+  if (process.argv.slice(-1)[0] === 'build') throw new Error('the standalone is not meant to be built, just executed on a copy of the normal build')
   else nuxtConfigInject.replace(config, ['.nuxt-standalone'])
 }
 
