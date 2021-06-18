@@ -9,8 +9,8 @@ if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (process.argv.slice(-1)[0] === 'build') config = nuxtConfigInject.prepare(config)
   else {
-    fs.remove('.nuxt-standalone')
-    fs.copy('.nuxt', '.nuxt-standalone')
+    fs.removeSync('.nuxt-standalone')
+    fs.copySync('.nuxt', '.nuxt-standalone')
     nuxtConfigInject.replace(config)
     nuxtConfigInject.replace({ ...config, basePath: '/' }, ['.nuxt-standalone/**/*'])
   }
