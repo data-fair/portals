@@ -14,8 +14,6 @@ ADD config config
 
 # Adding UI
 ADD nuxt.config.js .
-ADD nuxt.config.common.js .
-ADD nuxt.config.standalone.js .
 ADD public public
 ADD contract contract
 RUN npm run build

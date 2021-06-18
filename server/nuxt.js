@@ -1,8 +1,6 @@
 const { Nuxt } = require('nuxt')
 
 const nuxtConfig = require('../nuxt.config.js')
-// alternate nuxtConfig for when the service is exposed on a separate domain name for a standalone portal
-const nuxtConfigStandalone = require('../nuxt.config.standalone.js')
 
 module.exports = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -12,7 +10,8 @@ module.exports = async () => {
   } else {
     // Prepare nuxt for rendering and serving UI
     const nuxt = new Nuxt(nuxtConfig)
-    const nuxtStandalone = new Nuxt(nuxtConfigStandalone)
+    // alternate nuxtConfig for when the service is exposed on a separate domain name for a standalone portal
+    const nuxtStandalone = new Nuxt({ ...nuxtConfig, buildDir: '.nuxt-standalone' })
     return async (req, res, next) => {
       if (!req.query.portalId) {
         const host = req.headers.host
