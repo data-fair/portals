@@ -19,7 +19,7 @@ module.exports = async () => {
         const portal = await req.app.get('db').collection('portals').findOne({ host }, { projection: { _id: true } })
         if (portal) {
           req.headers['x-portal-id'] = portal._id
-          return nuxtStandalone.render(res, res)
+          return nuxtStandalone.render(req, res)
         }
       }
 
