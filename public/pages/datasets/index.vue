@@ -27,7 +27,7 @@
           <v-select
             v-model="filters.concepts"
             :loading="loading"
-            :items="conceptsItems"
+            :items="conceptsItems.filter(item => !!item.value)"
             :item-text="conceptLabel"
             multiple
             clearable
