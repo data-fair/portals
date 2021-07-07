@@ -252,7 +252,7 @@
       },
       conceptLabel(e) {
         const concept = this.concepts.find(c => c.id === e.value)
-        return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
+        return ((concept && concept.title && e.value) || e.value.split('/').pop()) + ` (${e.count})`
       },
       toggleTopic(topic) {
         if (this.filters.topics.find(t => t === topic.id)) {
