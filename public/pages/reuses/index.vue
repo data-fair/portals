@@ -157,7 +157,7 @@
         sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
         order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
         filters: {
-          apps: this.$route.query.apps ? this.$route.query.apps.split(',') : [],
+          apps: this.$route.query['base-application'] ? this.$route.query['base-application'].split(',') : [],
           topics: this.$route.query.topics ? this.$route.query.topics.split(',') : [],
         },
         sorts: [{
