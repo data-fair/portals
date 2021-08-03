@@ -44,17 +44,20 @@
         </v-icon>
       </v-btn>
     </share-network>
-    <share-network
-      v-if="isMobileOnly"
-      :url="url"
-      network="whatsapp"
-    >
-      <v-btn icon>
-        <v-icon color="grey darken-2">
-          mdi-whatsapp
-        </v-icon>
-      </v-btn>
-    </share-network>
+    <client-only>
+      <share-network
+        v-if="isMobileOnly"
+        :url="url"
+        :title="title"
+        network="whatsapp"
+      >
+        <v-btn icon>
+          <v-icon color="grey darken-2">
+            mdi-whatsapp
+          </v-icon>
+        </v-btn>
+      </share-network>
+    </client-only>
   </div>
 </template>
 
