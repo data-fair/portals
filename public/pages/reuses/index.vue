@@ -14,8 +14,8 @@
             v-model="search"
             label="Rechercher"
             append-icon="mdi-magnify"
-            @keyup.enter.native="refresh(true)"
-            @click:append="refresh(true)"
+            @keyup.enter.native="refresh()"
+            @click:append="refresh()"
           />
         </v-col>
         <v-col
@@ -34,7 +34,7 @@
             clearable
             label="Filtrer par application"
             no-data-text="Aucun concept"
-            @input="refresh(true)"
+            @input="refresh()"
           />
         </v-col>
         <v-col
@@ -49,7 +49,7 @@
                 v-model="sort"
                 :items="sorts"
                 label="Trier par"
-                @input="refresh(true)"
+                @input="refresh()"
               />
             </v-col>
             <v-col class="pl-0">
@@ -57,7 +57,7 @@
                 v-model="order"
                 mandatory
                 dense
-                @change="refresh(true)"
+                @change="refresh()"
               >
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
@@ -130,6 +130,17 @@
           <div v-else style="height: 40px;" />
         </v-col>
       </v-row>
+      <v-row
+        v-if="applications && applications.results.length < applications.count"
+        class="pt-5 pb-0"
+        align="center"
+      >
+        <v-col class="text-center pa-0">
+          <v-btn text @click="refresh(true)">
+            voir plus
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -145,7 +156,7 @@
       ApplicationCard,
     },
     async fetch() {
-      await this.refresh(true)
+      await this.refresh()
     },
     data: function() {
       return {
@@ -170,6 +181,7 @@
           text: 'Ordre alphabétique',
           value: 'title',
         }],
+        lastParams: null,
       }
     },
     computed: {
@@ -188,10 +200,14 @@
           .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
       },
     },
+    mounted() {
+      // case where SSR already fetched the first page
+      if (this.applications) this.continueFetch()
+    },
     methods: {
-      async refresh(reset) {
-        this.loading = true
-        if (reset) this.page = 1
+      async refresh(append) {
+        if (append) this.page += 1
+        else this.page = 1
         const query = {
           sort: this.sort + ':' + (this.order * 2 - 1),
           q: this.search,
@@ -206,18 +222,34 @@
         params.owner = this.owner
         params.publicationSites = 'data-fair-portals:' + this.portal._id
         if (this.config.authentication === 'none') params.visibility = 'public'
-        this.$router.push({ query })
-        const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
-        if (reset) this.applications = applications
-        else applications.results.forEach(r => this.applications.results.push(r))
-        this.loading = false
+        if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
+          this.lastParams = params
+          this.loading = true
+          this.$router.push({ query })
+          const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
+          if (append) applications.results.forEach(r => this.applications.results.push(r))
+          else this.applications = applications
+          this.loading = false
+
+          // if the page is too large for the user to trigger a scroll we append results immediately
+          if (process.client) {
+            await this.$nextTick()
+            await this.$nextTick()
+            this.continueFetch()
+          }
+        }
+      },
+      continueFetch() {
+        const html = document.getElementsByTagName('html')
+        if (html[0].scrollHeight === html[0].clientHeight && this.applications.results.length < this.applications.count) {
+          this.refresh(true)
+        }
       },
       onScroll(e) {
         if (!this.applications) return
         const se = e.target.scrollingElement
         if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.applications.results.length < this.applications.count) {
-          this.page += 1
-          this.refresh()
+          this.refresh(true)
         }
       },
       marked,
@@ -227,7 +259,7 @@
         } else {
           this.filters.topics.push(topic.id)
         }
-        this.refresh(true)
+        this.refresh()
       },
     },
     head () {
