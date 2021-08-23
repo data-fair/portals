@@ -16,6 +16,7 @@
       <v-tabs-slider :color="themeColorDark ? 'white' : textDark" />
       <v-tab
         :to="{name: 'index'}"
+        nuxt
         class="font-weight-bold"
       >
         Accueil
@@ -23,6 +24,7 @@
       <v-tab
         v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'"
         :to="{name: 'datasets'}"
+        nuxt
         class="font-weight-bold"
       >
         Les données
@@ -30,6 +32,7 @@
       <v-tab
         v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
         :to="{name: 'reuses'}"
+        nuxt
         class="font-weight-bold"
       >
         Visualisations
@@ -39,6 +42,7 @@
           v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
           :key="page.id"
           :to="{name: 'pages-id', params: {id: page.id}}"
+          nuxt
           class="font-weight-bold"
         >
           {{ page.title }}
@@ -67,6 +71,7 @@
               v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
               :key="page.id"
               :to="{name: 'pages-id', params: {id: page.id}}"
+              nuxt
             >
               <v-list-item-title>{{ page.title }}</v-list-item-title>
             </v-list-item>
@@ -80,9 +85,6 @@
       >
         Contact
       </v-tab>
-      <!-- <v-tab v-if="user && user.isAdmin" :to="{name: 'config'}" class="font-weight-bold">
-              Configuration
-            </v-tab> -->
     </v-tabs>
     <v-spacer />
 
@@ -123,7 +125,11 @@
               <v-list-item-title>Back-office</v-list-item-title>
             </v-list-item>
             <v-divider />
-            <v-list-item :to="{name: 'me'}" :disabled="embed">
+            <v-list-item
+              :to="{name: 'me'}"
+              :disabled="embed"
+              nuxt
+            >
               <v-list-item-title>Mon compte</v-list-item-title>
             </v-list-item>
             <!--<v-list-item dense>

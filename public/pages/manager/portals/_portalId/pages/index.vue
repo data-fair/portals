@@ -40,6 +40,7 @@
                 <v-btn
                   icon
                   text
+                  nuxt
                   :to="{ name: 'manager-portals-portalId-pages-id-edit', params: { id: page.id } }"
                 >
                   <v-icon color="primary">

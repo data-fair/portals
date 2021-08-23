@@ -7,7 +7,7 @@
         class="list-actions"
         style="float:right;width:256px;"
       >
-        <v-list-item :to="`/manager/portals/${portal._id}/pages`">
+        <v-list-item :to="`/manager/portals/${portal._id}/pages`" nuxt>
           <v-list-item-icon>
             <v-icon color="primary">
               mdi-pencil

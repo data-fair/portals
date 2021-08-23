@@ -37,6 +37,7 @@
         class="mt-4"
         :stats="stats"
       />
+      <topics v-if="config.showTopics" :topics="topics" />
 
       <!-- reuses: featured and lasts -->
       <v-row v-if="config.twitter">
@@ -112,7 +113,6 @@
 </template>
 
 <script>
-  import Kpi from '~/components/kpi.vue'
   import LastDatasets from '~/components/last-datasets.vue'
   import LastApps from '~/components/last-apps.vue'
   import { isMobileOnly } from 'mobile-device-detect'
@@ -125,7 +125,6 @@
   export default {
     middleware: 'portal-required',
     components: {
-      Kpi,
       LastDatasets,
       LastApps,
       VIframe,
@@ -163,6 +162,7 @@
           owner: this.$store.getters.owner,
           publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           visibility: this.config.authentication === 'none' ? 'public' : '',
+          facets: 'topics',
         },
         withCredentials: true,
       })
@@ -178,12 +178,13 @@
           numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0),
         },
       }
+      this.topics = statsDatasets.facets.topics
     },
     data: () => ({
       applications: null,
       datasets: null,
       stats: null,
-      featuredBaseApplication: null,
+      topics: null,
       isMobileOnly,
     }),
     computed: {
@@ -207,14 +208,6 @@
         if (this.config.featuredReuse && this.config.featuredReuse.id) return 2
         else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeReuses && this.config.homeReuses.size) || 0) / 2))
       },
-    },
-    watch: {
-      async application() {
-        if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
-      },
-    },
-    async mounted() {
-      if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
     },
     methods: {
       marked,

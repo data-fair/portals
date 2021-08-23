@@ -102,6 +102,11 @@
         "type": "boolean",
         "default": true
       },
+      "showTopics": {
+        "title": "Thématiques sur la page d'accueil",
+        "type": "boolean",
+        "default": true
+      },      
       "featuredReuse": {
         "title": "Visualisation mise en avant",
         "type": "object",

@@ -23,6 +23,7 @@
                   <v-btn
                     :to="{name: 'reuses-id-full', params:{id: application.id}}"
                     icon
+                    nuxt
                     v-on="on"
                   >
                     <v-icon color="primary">

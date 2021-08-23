@@ -12,13 +12,17 @@
       </v-btn>
     </template>
     <v-list>
-      <v-list-item :to="{name: 'index'}" exact>
+      <v-list-item
+        :to="{name: 'index'}"
+        exact
+        nuxt
+      >
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
-      <v-list-item :to="{name: 'datasets'}">
+      <v-list-item :to="{name: 'datasets'}" nuxt>
         <v-list-item-title>Les données</v-list-item-title>
       </v-list-item>
-      <v-list-item :to="{name: 'reuses'}">
+      <v-list-item :to="{name: 'reuses'}" nuxt>
         <v-list-item-title>Visualisations</v-list-item-title>
       </v-list-item>
       <template v-if="pages">
@@ -26,6 +30,7 @@
           v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
           :key="page.id"
           :to="{name: 'pages-id', params: {id: page.id}}"
+          nuxt
         >
           <v-list-item-title>{{ page.title }}</v-list-item-title>
         </v-list-item>
@@ -38,17 +43,12 @@
             v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
             :key="page.id"
             :to="{name: 'pages-id', params: {id: page.id}}"
+            nuxt
           >
             <v-list-item-title>{{ page.title }}</v-list-item-title>
           </v-list-item>
         </div>
       </template>
-      <!--<v-list-item v-if="config.contact" :href="config.contact">
-        <v-list-item-title>Nous contacter</v-list-item-title>
-      </v-list-item>-->
-      <!-- <v-list-item v-if="user && user.isAdmin" :to="{name: 'config'}">
-        <v-list-item-title>Configuration</v-list-item-title>
-      </v-list-item> -->
     </v-list>
   </v-menu>
 </template>
