@@ -1,6 +1,16 @@
 <template lang="html">
   <v-container fluid>
     <v-row class="px-0">
+      <v-alert v-if="error" type="error">
+        {{ error }}
+        <v-btn
+          icon
+          small
+          @click="error=null"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-alert>
       <v-spacer />
       <v-list
         dense
@@ -142,7 +152,6 @@
   import debounce from 'debounce'
   import { mapState, mapGetters } from 'vuex'
   import VJsf from '~/components/vjsf-wrapper.vue'
-  import eventBus from '~/event-bus.js'
 
   const schema = require('~/../contract/config.json')
 
@@ -153,11 +162,11 @@
         configDraft: null,
         schema,
         formValid: false,
-        eventBus,
         showCancelDialog: false,
         showDraft: true,
         showProd: true,
         activeTab: 0,
+        error: null,
       }
     },
     computed: {
@@ -230,8 +239,13 @@
       async uploadAsset(key, file) {
         const formData = new FormData()
         formData.append('asset', file)
-        await this.$axios.$post(`api/v1/portals/${this.portal._id}/assets/${key}`, formData,
-                                { headers: { 'Content-Type': 'multipart/form-data' } })
+        this.error = null
+        try {
+          await this.$axios.$post(`api/v1/portals/${this.portal._id}/assets/${key}`, formData,
+                                  { headers: { 'Content-Type': 'multipart/form-data' } })
+        } catch (err) {
+          this.error = (err.response && (err.response.data || err.response.status)) || err.message || err
+        }
       },
     },
   }
