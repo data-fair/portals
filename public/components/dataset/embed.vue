@@ -42,10 +42,8 @@
           />
           <br>
           <pre>
-&lt;iframe
-src="{{ previewLink }}"
-width="100%" height="300px" style="background-color: transparent; border: none;"
-/&gt;
+&lt;iframe src="{{ previewLink }}" width="100%" height="300px"
+style="background-color: transparent; border: none;" &gt;&lt;/iframe&gt;
         </pre>
           <br>
           Résultat:
