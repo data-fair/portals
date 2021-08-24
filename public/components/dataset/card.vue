@@ -10,13 +10,24 @@
     <template v-if="dataset">
       <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
         <v-card-title>
-          <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1;">
-            <client-only>
-              <v-clamp :max-lines="2" autoresize>
-                {{ dataset.title }}
-              </v-clamp>
-            </client-only>
-          </h3>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <h3
+                class="title grey--text text--darken-2 font-weight-bold"
+                style="height:40px;line-height: 1.1;"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-clamp
+                  :max-lines="2"
+                  autoresize
+                >
+                  {{ dataset.title }}
+                </v-clamp>
+              </h3>
+            </template>
+            <span>{{ dataset.title }}</span>
+          </v-tooltip>
         </v-card-title>
         <div
           v-if="dataset.image"

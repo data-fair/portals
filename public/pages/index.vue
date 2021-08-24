@@ -178,7 +178,7 @@
           numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0),
         },
       }
-      this.topics = statsDatasets.facets.topics
+      this.topics = statsDatasets.facets.topics || []
     },
     data: () => ({
       applications: null,

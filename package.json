@@ -60,7 +60,7 @@
     "shortid": "^2.2.16",
     "slugify": "^1.4.6",
     "tinycolor2": "^1.4.2",
-    "vue-clamp": "^0.3.1",
+    "vue-clamp": "^0.4.0",
     "vue-moment": "^4.0.0",
     "vue-social-sharing": "^3.0.4",
     "vue-tweet-embed": "^2.4.0",
