@@ -3,15 +3,55 @@
     <error v-if="$fetchState.error" :error="$fetchState.error" />
     <div v-else-if="application">
       <v-container class="py-0">
-        <v-breadcrumbs :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]">
-          <template slot="divider">
-            <v-icon>mdi-chevron-right</v-icon>
-          </template>
-        </v-breadcrumbs>
+        <v-row align="start">
+          <v-col
+            md="4"
+            sm="6"
+            cols="12"
+            :class="{'pt-3 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
+          >
+            <a
+              v-if="config.website"
+              :href="config.website || '/'"
+              style="height:100%"
+              class="mr-3"
+            >
+              <img
+                :src="logoUrl"
+                :alt="config.title"
+                style="height:68px"
+              >
+            </a>
+            <nuxt-link
+              v-else
+              to="/"
+              style="height:100%"
+              class="mr-3"
+            >
+              <img
+                :src="logoUrl"
+                :alt="config.title"
+                style="height:68px"
+              >
+            </nuxt-link>
+          </v-col>
+          <v-col
+            md="8"
+            sm="6"
+            cols="12"
+            :class="{'pt-3 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
+          >
+            <v-breadcrumbs :large="!$vuetify.breakpoint.xs" :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]">
+              <template slot="divider">
+                <v-icon>mdi-chevron-right</v-icon>
+              </template>
+            </v-breadcrumbs>
+          </v-col>
+        </v-row>
       </v-container>
       <v-divider />
       <client-only>
-        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 68}px`" />
+        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 87}px`" />
       </client-only>
     </div>
   </div>
@@ -35,7 +75,10 @@
       application: null,
     }),
     computed: {
-      ...mapState(['config', 'publicUrl']),
+      ...mapState(['config', 'publicUrl', 'portal', 'draft']),
+      logoUrl() {
+        return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
+      },
       pageUrl() {
         return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'
       },

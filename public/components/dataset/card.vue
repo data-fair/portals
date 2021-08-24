@@ -73,6 +73,21 @@
       </nuxt-link>
       <v-card-actions class="py-0">
         <table-preview :dataset="dataset" :color="'primary'" />
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+              color="primary"
+              icon
+              v-on="on"
+            >
+              <v-icon>
+                mdi-fullscreen
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Vue tabulaire en plein écran</span>
+        </v-tooltip>
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
           :dataset="dataset"
