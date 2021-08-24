@@ -17,6 +17,7 @@
       <v-tab
         :to="{name: 'index'}"
         nuxt
+        exact
         class="font-weight-bold"
       >
         Accueil
@@ -80,8 +81,9 @@
       </template>
       <v-tab
         v-if="config.contactEmail"
-        to="/contact"
+        :to="{name: 'contact'}"
         class="font-weight-bold"
+        nuxt
       >
         Contact
       </v-tab>

@@ -49,6 +49,13 @@
           </v-list-item>
         </div>
       </template>
+      <v-list-item
+        v-if="config.contactEmail"
+        :to="{name: 'contact'}"
+        nuxt
+      >
+        <v-list-item-title>Contact</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

@@ -184,7 +184,7 @@
       applications: null,
       datasets: null,
       stats: null,
-      topics: null,
+      topics: [],
       isMobileOnly,
     }),
     computed: {
