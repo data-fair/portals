@@ -1,13 +1,22 @@
 <template>
   <div>
-    <v-img
-      v-if="config.homeImageAsBanner"
-      :src="homeUrl"
-      :alt="config.title"
-      max-height="400px"
-      class="elevation-4"
-      style="margin-top: -12px;"
-    />
+    <template v-if="config.homeImageAsBanner">
+      <client-only v-if="config.homeReuse">
+        <v-iframe
+          :src="homeReuseUrl"
+          class="elevation-4"
+          style="margin-top: -12px;max-height: 400px;"
+        />
+      </client-only>
+      <v-img
+        v-else
+        :src="homeUrl"
+        :alt="config.title"
+        max-height="400px"
+        class="elevation-4"
+        style="margin-top: -12px;"
+      />
+    </template>
     <v-container>
       <v-row v-if="!config.homeImageAsBanner">
         <v-col
@@ -15,7 +24,11 @@
           md="5"
           offset-md="1"
         >
+          <client-only v-if="config.homeReuse">
+            <v-iframe :src="homeReuseUrl" style="max-height: 600px;" />
+          </client-only>
           <v-img
+            v-else
             :src="homeUrl"
             :alt="config.title"
             min-height="200"
@@ -197,6 +210,9 @@
       },
       featuredReuseUrl() {
         return `${process.env.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+      },
+      homeReuseUrl() {
+        return `${process.env.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
       showLastApps() {
         return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length
