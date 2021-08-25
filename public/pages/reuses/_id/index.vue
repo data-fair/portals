@@ -34,7 +34,7 @@
                 <span>Accéder à la visualisation en plein écran</span>
               </v-tooltip>
             </v-card-actions>
-            <v-subheader>Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+            <v-subheader>Mis à jour le {{ $dayjs(application.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
           </v-card>
         </v-col>
       </v-row>

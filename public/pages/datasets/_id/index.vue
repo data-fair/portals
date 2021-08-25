@@ -108,7 +108,7 @@
                 />
               </client-only>
             </v-card-actions>
-            <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+            <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
           </v-card>
         </v-col>
       </v-row>

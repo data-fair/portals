@@ -100,7 +100,7 @@
         />
         <schema-view :dataset="dataset" :color="'primary'" />
         <v-spacer />
-        <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+        <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
         <!-- <v-layout column>
             <span>Mis à jour le {{ dataset.meta.updated }}</span>
             <span>{{ dataset.meta.author }}</span>
