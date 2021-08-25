@@ -57,7 +57,7 @@
           class="pa-3"
           style="height:100%"
         >
-          <div v-html="marked(config.contactInfos).html" />
+          <div v-html="marked(config.contactInfos)" />
           <template v-if="config.twitter || config.facebook || config.linkedin">
             <v-divider />
             <h4>
@@ -96,8 +96,8 @@
 
 <script>
   import eventBus from '../event-bus'
+  import marked from 'marked'
   const { mapState } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   const newMessage = { from: '', subject: '', text: '' }
   export default {

@@ -5,7 +5,7 @@
       <section-title :text="application.title" />
       <v-row>
         <v-col md="7" cols="12">
-          <div v-html="marked(application.description || '').html" />
+          <div v-html="marked(application.description || '')" />
         </v-col>
         <v-col
           md="4"
@@ -115,8 +115,8 @@
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
+  import marked from 'marked'
   const { mapState } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
@@ -153,7 +153,7 @@
         return process.env.dataFairUrl + '/app/' + this.$route.params.id
       },
       description() {
-        return marked(this.application.description).html
+        return marked(this.application.description)
       },
       dataFairUrl() {
         return process.env.dataFairUrl
@@ -172,7 +172,7 @@
     },
     head () {
       if (!this.application) return { title: 'Page non trouvée' }
-      const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
+      const description = marked(this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
       return {
         title: this.application.title,
         meta: [

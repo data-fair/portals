@@ -58,7 +58,7 @@
 <script>
   import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
   const { mapState } = require('vuex')
 
   export default {
@@ -83,12 +83,9 @@
         return `${process.env.dataFairUrl}/embed/dataset/${this.$route.params.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
       },
     },
-    methods: {
-      marked,
-    },
     head () {
       if (this.dataset) {
-        const description = marked(this.dataset.description || this.dataset.title).html.split('</p>').shift().replace('<p>', '')
+        const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
         const schema = {
           '@context': 'http://schema.org',
           '@type': 'Dataset',

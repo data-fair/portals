@@ -33,7 +33,7 @@
                     :max-height="200"
                     autoresize
                     class="dataset-desc200"
-                    v-html="marked(dataset.description || '').html"
+                    v-html="marked(dataset.description || '')"
                   />
                 </client-only>
               </v-card-text>
@@ -81,8 +81,7 @@
   import SchemaView from '~/components/dataset/schema-view.vue'
   import VClamp from 'vue-clamp'
   import { isMobileOnly } from 'mobile-device-detect'
-
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
 
   export default {
     components: {

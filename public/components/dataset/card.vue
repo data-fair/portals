@@ -51,7 +51,7 @@
               :max-height="170"
               class="dataset-desc170"
               autoresize
-              v-html="marked(dataset.description || '').html"
+              v-html="marked(dataset.description || '')"
             />
           </client-only>
         </v-card-text>
@@ -118,7 +118,7 @@
   import MapPreview from '~/components/dataset/map-preview.vue'
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
 
   export default {
     components: {

@@ -21,7 +21,7 @@
 
 <script>
   import 'easymde/dist/easymde.min.css'
-  import marked from 'marked/lib/marked'
+  import marked from 'marked'
 
   export default {
     props: {

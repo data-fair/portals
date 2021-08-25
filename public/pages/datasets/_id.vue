@@ -41,21 +41,6 @@
             </v-list>
             <v-card-actions>
               <table-preview :dataset="dataset" :color="'primary'" />
-              <v-tooltip top>
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
-                    icon
-                    color="primary"
-                    v-on="on"
-                  >
-                    <v-icon>
-                      mdi-fullscreen
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Vue tabulaire en plein écran</span>
-              </v-tooltip>
               <map-preview
                 v-if="dataset.bbox && dataset.bbox.length"
                 :dataset="dataset"
@@ -64,13 +49,13 @@
               <api-view
                 v-if="!isMobileOnly"
                 :dataset="dataset"
-                color="primary"
+                :color="'primary'"
               />
               <v-tooltip v-if="dataset.file" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
-                    color="primary"
+                    :color="'primary'"
                     icon
                     v-on="on"
                   >

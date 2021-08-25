@@ -75,8 +75,6 @@
   import VClamp from 'vue-clamp'
   import ApplicationView from '~/components/application/view.vue'
 
-  const marked = require('@hackmd/meta-marked')
-
   export default {
     components: {
       VClamp,
@@ -89,9 +87,6 @@
       return {
         hover: false,
       }
-    },
-    methods: {
-      marked,
     },
   }
 </script>

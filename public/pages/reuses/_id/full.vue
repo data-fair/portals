@@ -61,7 +61,7 @@
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import Error from '~/components/error.vue'
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
   const { mapState } = require('vuex')
 
   export default {
@@ -86,12 +86,9 @@
         return process.env.dataFairUrl + '/app/' + this.$route.params.id
       },
     },
-    methods: {
-      marked,
-    },
     head () {
       if (!this.application) return { title: 'Page non trouvée' }
-      const description = marked(this.application.description || this.application.title).html.split('</p>').shift().replace('<p>', '')
+      const description = marked(this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
       return {
         title: this.application.title,
         meta: [

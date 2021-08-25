@@ -28,10 +28,10 @@
           cols="12"
           md="6"
         >
-          <div v-if="config.description" v-html="marked(config.description).html" />
+          <div v-if="config.description" v-html="marked(config.description)" />
         </v-col>
       </v-row>
-      <div v-else-if="config.description" v-html="marked(config.description).html" />
+      <div v-else-if="config.description" v-html="marked(config.description)" />
       <kpi
         v-if="config.showKpis"
         class="mt-4"
@@ -119,8 +119,8 @@
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import Timeline from 'vue-tweet-embed/dist/timeline'
+  import marked from 'marked'
   const { mapState } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',

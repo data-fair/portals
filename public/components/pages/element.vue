@@ -3,14 +3,14 @@
     <h2 v-if="value.type === 'title'">
       {{ value.content }}
     </h2>
-    <div v-else-if="value.type === 'text' && value.content" v-html="marked(value.content).html" />
+    <div v-else-if="value.type === 'text' && value.content" v-html="marked(value.content)" />
     <v-alert
       v-else-if="value.type === 'alert' && value.content"
       :type="value.alertType"
       border="left"
       text
     >
-      <div v-html="marked(value.content).html" />
+      <div v-html="marked(value.content)" />
     </v-alert>
     <div v-else-if="value.type === 'divider'" class="my-6">
       <v-divider />
@@ -53,7 +53,7 @@
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import DatasetCard from '~/components/dataset/card.vue'
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
   const { mapState } = require('vuex')
 
   export default {

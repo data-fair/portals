@@ -22,7 +22,6 @@
   },
   "homepage": "https://gitlab.com/koumoul/portal-standard#readme",
   "dependencies": {
-    "@hackmd/meta-marked": "^0.4.4",
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@koumoul/sd-express": "^0.21.0",
     "@koumoul/sd-vue": "^0.21.2",
@@ -47,6 +46,7 @@
     "js-cookie": "^2.2.0",
     "js-file-download": "^0.4.12",
     "json-schema-defaults": "^0.4.0",
+    "marked": "^0.6.3",
     "mobile-device-detect": "^0.2.3",
     "mongodb": "^3.6.4",
     "multer": "^1.4.2",

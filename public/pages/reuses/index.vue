@@ -148,7 +148,6 @@
 <script>
   import ApplicationCard from '~/components/application/card.vue'
   const { mapState, mapGetters } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
@@ -252,7 +251,6 @@
           this.refresh(true)
         }
       },
-      marked,
       toggleTopic(topic) {
         if (this.filters.topics.find(t => t === topic.id)) {
           this.filters.topics = this.filters.topics.filter(t => t !== topic.id)
