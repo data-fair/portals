@@ -49,7 +49,11 @@
       </v-container>
       <v-divider />
       <client-only>
-        <v-iframe :src="embedUrl" :style="`height:${windowHeight - 87}px`" />
+        <v-iframe
+          :src="embedUrl"
+          :style="`height:${windowHeight - 87}px`"
+          @message="receiveMessage"
+        />
       </client-only>
     </div>
   </div>
@@ -70,6 +74,7 @@
     },
     data: () => ({
       dataset: null,
+      embedUrl: null,
     }),
     computed: {
       ...mapState(['config', 'publicUrl', 'portal', 'draft']),
@@ -79,8 +84,23 @@
       pageUrl() {
         return this.publicUrl + '/datasets/' + this.$route.params.id + '/full'
       },
-      embedUrl() {
-        return `${process.env.dataFairUrl}/embed/dataset/${this.$route.params.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+    },
+    created() {
+      const query = {
+        ...this.$route.query,
+        primary: this.config.themeColor,
+      }
+      delete query.portalId
+      const url = new URL(`${process.env.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
+      Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
+      this.embedUrl = url.href
+    },
+    methods: {
+      receiveMessage(msg) {
+        console.log('message', msg)
+        if (msg.query) {
+          this.$router.push({ query: { ...msg.query, primary: undefined } })
+        }
       },
     },
     head () {
