@@ -32,7 +32,7 @@ jobs:
       id: docker_meta
       uses: crazy-max/ghaction-docker-meta@v1
       with:
-        images:
+        images: |
           ghcr.io/${{ github.repository }} # github packages
           koumoul/data-fair-portals # old docker hub
         tag-semver: |
