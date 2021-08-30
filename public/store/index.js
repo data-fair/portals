@@ -18,6 +18,9 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: null,
+      directoryUrl: null,
+      dataFairUrl: null,
+      openapiViewerUrl: null,
     },
     getters: {
       embed() {
@@ -54,11 +57,11 @@ export default () => {
     },
     actions: {
       async fetchPortalInfos({ state, commit }, portalId) {
-        const portal = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}`, { params: { noConfig: true } })
+        const portal = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}`, { params: { noConfig: true } })
         commit('setAny', { portal })
       },
       async fetchConfig({ state, commit }, portalId) {
-        const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
+        const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
         commit('setAny', { config })
       },
       setBreadcrumbs({ commit }, breadcrumbs) {
@@ -69,10 +72,16 @@ export default () => {
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
       init({ state, dispatch, commit }, { req, env, app, route }) {
-        const origin = req && req.headers ? new URL(req.headers.referer).origin : global.location.origin
+        let origin = ''
+        if (req && req.headers && req.headers.referer) origin = new URL(req.headers.referer).origin
+        if (global.location) origin = global.location.origin
         const directoryUrl = origin + '/simple-directory'
         const dataFairUrl = origin + '/data-fair'
-        commit('setAny', { dataFairUrl })
+        const openapiViewerUrl = origin + '/openapi-viewer'
+        const publicUrl = origin + '/'
+        const notifyUrl = origin + '/notify'
+        const notifyWSUrl = (origin + '/notify').replace('ws://', 'http://').replace('wss://', 'https://')
+        commit('setAny', { dataFairUrl, directoryUrl, openapiViewerUrl, publicUrl, notifyUrl, notifyWSUrl })
         dispatch('session/init', {
           cookies: this.$cookies,
           directoryUrl,

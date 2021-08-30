@@ -144,7 +144,7 @@
       Timeline,
     },
     async fetch () {
-      const promiseApplications = this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', {
+      const promiseApplications = this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/applications', {
         params: {
           size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
           select: 'id,title,updatedAt,createdAt,createdBy',
@@ -155,7 +155,7 @@
         },
         withCredentials: true,
       })
-      const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
+      const promiseDatasets = this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets', {
         params: {
           size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
           select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
@@ -168,7 +168,7 @@
       })
 
       // TODO: replace by a proper public stats route
-      const promiseStatsDatasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
+      const promiseStatsDatasets = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets', {
         params: {
           size: 1000,
           select: 'count',
@@ -206,13 +206,13 @@
         return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
       },
       dataFairUrl() {
-        return process.env.dataFairUrl
+        return this.$store.state.dataFairUrl
       },
       featuredReuseUrl() {
-        return `${process.env.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.state.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
       homeReuseUrl() {
-        return `${process.env.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.state.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
       showLastApps() {
         return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length

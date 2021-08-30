@@ -46,7 +46,7 @@
     computed: {
       ...mapState(['config']),
       iframeSrc() {
-        return `${process.env.dataFairUrl}/embed/dataset/${this.dataset.id}/fields?primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.state.dataFairUrl}/embed/dataset/${this.dataset.id}/fields?primary=${encodeURIComponent(this.config.themeColor)}`
       },
     },
     watch: {

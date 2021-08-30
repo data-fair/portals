@@ -80,15 +80,15 @@
     methods: {
       marked,
       tableIframeSrc(dataset) {
-        return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.state.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
       },
       formIframeSrc(dataset) {
-        return `${process.env.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.state.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
       },
       async resolveDataset() {
         if (this.value.type === 'datasetCard' && this.value.dataset) {
           this.loading = true
-          this.resolvedDataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
+          this.resolvedDataset = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
           this.loading = false
         } else this.resolvedDataset = null
       },

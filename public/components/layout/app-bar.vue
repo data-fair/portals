@@ -164,7 +164,7 @@
   export default {
     components: { XsMenu, NotificationsQueue },
     async fetch() {
-      this.pages = (await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+      this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
     },
     data: () => ({
       pages: null,
@@ -174,13 +174,13 @@
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters(['themeColorDark', 'embed']),
       directoryUrl() {
-        return process.env.directoryUrl
+        return this.$store.state.directoryUrl
       },
       dataFairUrl() {
-        return process.env.dataFairUrl
+        return this.$store.state.dataFairUrl
       },
       notifyUrl() {
-        return process.env.notifyUrl
+        return this.$store.state.notifyUrl
       },
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
@@ -196,7 +196,7 @@
       },
       setDarkCookie(value) {
         const maxAge = 60 * 60 * 24 * 100 // 100 days
-        this.$cookies.set('theme_dark', '' + value, { path: '/', domain: process.env.sessionDomain, maxAge })
+        this.$cookies.set('theme_dark', '' + value, { maxAge })
         this.reload()
       },
     },

@@ -60,7 +60,7 @@
         return context(`./${this.page.template}.json`)
       },
       dataFairUrl() {
-        return process.env.dataFairUrl
+        return this.$store.state.dataFairUrl
       },
       breadcrumbItems() {
         return [
@@ -77,7 +77,7 @@
       },
     },
     mounted: async function () {
-      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
+      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
       this.$store.dispatch('setBreadcrumbs', [{
         text: 'portails',
         to: '/manager/portals',
@@ -97,7 +97,7 @@
     methods: {
       async update (patch) {
         try {
-          await this.$axios.$patch(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
+          await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
         // this.$router.push({ name: 'pages' })
         } catch (error) { }
       },

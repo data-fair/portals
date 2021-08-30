@@ -1,5 +1,4 @@
 const fs = require('fs-extra')
-const cors = require('cors')
 const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
@@ -105,13 +104,8 @@ module.exports = {
     ],
   },
   env: {
-    publicUrl: config.publicUrl,
-    directoryUrl: config.directoryUrl,
-    dataFairUrl: config.dataFairUrl,
-    openapiViewerUrl: config.openapiViewerUrl,
     notifyUrl: config.notifyUrl,
     notifyWSUrl: config.notifyWSUrl,
-    sessionDomain: config.sessionDomain,
     development: process.env.NODE_ENV === 'development',
   },
   head: {

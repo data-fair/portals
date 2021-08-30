@@ -297,12 +297,12 @@
       VIframe,
     },
     async fetch () {
-      const dataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
+      const dataset = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
       const params = { select: 'title,description,url,bbox' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
       else params.dataset = this.$route.params.id
       params.publicationSites = 'data-fair-portals:' + this.portal._id
-      const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
+      const applications = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
         applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
       }
@@ -322,14 +322,14 @@
         return this.publicUrl + '/datasets/' + this.$route.params.id
       },
       dataFairUrl() {
-        return process.env.dataFairUrl
+        return this.$store.state.dataFairUrl
       },
       notifyUrl() {
-        return process.env.notifyUrl
+        return this.$store.state.notifyUrl
       },
     },
     async mounted() {
-      const baseApps = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 }, withCredentials: true })
+      const baseApps = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 }, withCredentials: true })
       this.baseApplications = Object.assign({}, ...baseApps.results.map(a => ({ [a.url]: a })))
     },
     methods: {

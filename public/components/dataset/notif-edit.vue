@@ -47,7 +47,7 @@
     },
     computed: {
       notifyUrl() {
-        return process.env.notifyUrl
+        return this.$store.state.notifyUrl
       },
       keys() {
         return [`data-fair:dataset:${this.dataset.id}:data-updated`]

@@ -113,7 +113,7 @@
     },
     async mounted() {
       try {
-        this.token = await this.$axios.$get(`${process.env.directoryUrl}/api/auth/anonymous-action`)
+        this.token = await this.$axios.$get(`${this.$store.state.directoryUrl}/api/auth/anonymous-action`)
       } catch (error) {
         this.tokenError = error
         eventBus.$emit('notification', { error })
@@ -124,7 +124,7 @@
         if (!this.$refs.form.validate()) return
         this.loading = true
         try {
-          await this.$axios.$post(`${process.env.publicUrl}/api/v1/portals/${this.portal._id}/contact-email?draft=${this.draft}`, { ...this.message, token: this.token })
+          await this.$axios.$post(`${this.$store.state.publicUrl}/api/v1/portals/${this.portal._id}/contact-email?draft=${this.draft}`, { ...this.message, token: this.token })
           this.message = { ...newMessage }
           this.$refs.form.resetValidation()
           eventBus.$emit('notification', { type: 'success', msg: 'Votre demande a été envoyée' })

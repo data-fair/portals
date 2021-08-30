@@ -69,7 +69,7 @@
     }),
     computed: {
       baseUrl () {
-        return `${process.env.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
+        return `${this.$store.state.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
       },
     },
   }

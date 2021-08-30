@@ -70,7 +70,7 @@
     layout: 'minimal',
     components: { Error, VIframe },
     async fetch () {
-      this.dataset = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
+      this.dataset = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
     },
     data: () => ({
       dataset: null,
@@ -91,7 +91,7 @@
         primary: this.config.themeColor,
       }
       delete query.portalId
-      const url = new URL(`${process.env.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
+      const url = new URL(`${this.$store.state.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
       Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
       this.embedUrl = url.href
     },

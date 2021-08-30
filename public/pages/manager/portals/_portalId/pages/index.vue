@@ -118,7 +118,7 @@
         this.loading = true
         if (reset) this.page = 1
         const params = { size: 12, page: this.page }
-        const pages = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
+        const pages = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
         if (reset) this.pages = pages
         else pages.results.forEach(r => this.pages.results.push(r))
         this.loading = false
@@ -133,7 +133,7 @@
       },
       async createPage (page) {
         try {
-          const response = await this.$axios.$post(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, page)
+          const response = await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, page)
           this.$router.push({ name: 'manager-portals-portalId-pages-id-edit', params: { id: response.id, portalId: this.portal._id } })
         } catch (error) {
           console.error(error)
@@ -141,7 +141,7 @@
       },
       async removePage (id) {
         try {
-          await this.$axios.$delete(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${id}`)
+          await this.$axios.$delete(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${id}`)
           this.refresh(true)
         } catch (error) {
           console.error(error)

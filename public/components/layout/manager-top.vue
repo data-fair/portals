@@ -132,7 +132,7 @@
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters('session', ['activeAccount']),
       directoryUrl() {
-        return process.env.directoryUrl
+        return this.$store.state.directoryUrl
       },
     },
     methods: {

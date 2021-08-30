@@ -23,7 +23,7 @@
     },
     head() {
       // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
-      const canonical = process.env.publicUrl + this.$route.path
+      const canonical = this.$store.state.publicUrl + this.$route.path
       const link = [
         { rel: 'canonical', href: canonical },
       ]
