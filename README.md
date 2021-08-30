@@ -1,4 +1,4 @@
-# data-fair-portals
+# data-fair/portals
 
 Portals manager for data-fair.
 

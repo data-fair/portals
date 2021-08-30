@@ -1,5 +1,5 @@
 {
-  "name": "data-fair-portals",
+  "name": "@data-fair/portals",
   "version": "0.11.0",
   "description": "Portals manager for data-fair",
   "main": "index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/koumoul/portal-standard.git"
+    "url": "git+ssh://git@gitlab.com/data-fair/portals.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/koumoul/portal-standard/issues"
+    "url": "https://gitlab.com/data-fair/portals/issues"
   },
-  "homepage": "https://gitlab.com/koumoul/portal-standard#readme",
+  "homepage": "https://gitlab.com/data-fair/portals#readme",
   "dependencies": {
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@koumoul/sd-express": "^0.21.0",
