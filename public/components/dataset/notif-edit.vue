@@ -47,7 +47,7 @@
     },
     computed: {
       notifyUrl() {
-        return this.$store.state.notifyUrl
+        return this.$store.getters.notifyUrl
       },
       keys() {
         return [`data-fair:dataset:${this.dataset.id}:data-updated`]

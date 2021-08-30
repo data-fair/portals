@@ -14,7 +14,7 @@
     computed: {
       ...mapState(['config']),
       embedUrl() {
-        return `${this.$store.state.directoryUrl}/me?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.$store.getters.directoryUrl}/me?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
     },
   }

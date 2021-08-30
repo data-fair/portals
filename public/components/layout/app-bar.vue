@@ -174,13 +174,13 @@
       ...mapState('session', ['user', 'initialized']),
       ...mapGetters(['themeColorDark', 'embed']),
       directoryUrl() {
-        return this.$store.state.directoryUrl
+        return this.$store.getters.directoryUrl
       },
       dataFairUrl() {
-        return this.$store.state.dataFairUrl
+        return this.$store.getters.dataFairUrl
       },
       notifyUrl() {
-        return this.$store.state.notifyUrl
+        return this.$store.getters.notifyUrl
       },
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)

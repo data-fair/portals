@@ -17,10 +17,7 @@ export default () => {
       initialQuery: {},
       textDark: '#212121',
       breadcrumbs: null,
-      publicUrl: null,
-      directoryUrl: null,
-      dataFairUrl: null,
-      openapiViewerUrl: null,
+      publicUrl: '',
     },
     getters: {
       embed() {
@@ -49,6 +46,21 @@ export default () => {
         if (!state.config) return
         return state.config.owner.type + ':' + state.config.owner.id
       },
+      directoryUrl(state) {
+        return state.publicUrl + '/simple-directory'
+      },
+      dataFairUrl(state) {
+        return state.publicUrl + '/data-fair'
+      },
+      openapiViewerUrl(state) {
+        return state.publicUrl + '/openapi-viewer'
+      },
+      notifyUrl(state) {
+        return state.publicUrl + '/notify'
+      },
+      notifyWSUrl(state, getters) {
+        return getters.notifyUrl.replace('ws://', 'http://').replace('wss://', 'https://')
+      },
     },
     mutations: {
       setAny(state, params) {
@@ -71,20 +83,14 @@ export default () => {
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      init({ state, dispatch, commit }, { req, env, app, route }) {
-        let origin = ''
-        if (req && req.headers && req.headers.referer) origin = new URL(req.headers.referer).origin
-        if (global.location) origin = global.location.origin
-        const directoryUrl = origin + '/simple-directory'
-        const dataFairUrl = origin + '/data-fair'
-        const openapiViewerUrl = origin + '/openapi-viewer'
-        const publicUrl = origin
-        const notifyUrl = origin + '/notify'
-        const notifyWSUrl = (origin + '/notify').replace('ws://', 'http://').replace('wss://', 'https://')
-        commit('setAny', { dataFairUrl, directoryUrl, openapiViewerUrl, publicUrl, notifyUrl, notifyWSUrl })
+      init({ state, dispatch, commit, getters }, { req, env, app, route }) {
+        if (req && req.headers && req.headers.host) {
+          const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
+          commit('setAny', { publicUrl })
+        }
         dispatch('session/init', {
           cookies: this.$cookies,
-          directoryUrl,
+          directoryUrl: getters.directoryUrl,
         })
       },
       // called only on the server, used to prefill the store
@@ -102,7 +108,6 @@ export default () => {
             portal: {
               _id: portalId,
             },
-            publicUrl: `http${env.development ? '' : 's'}://${req.headers.host}`,
           })
           await dispatch('fetchConfig', portalId)
 

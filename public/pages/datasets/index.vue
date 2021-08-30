@@ -178,7 +178,7 @@
       DatasetCard,
     },
     async fetch() {
-      this.concepts = (await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/vocabulary', { withCredentials: true })).map(c => {
+      this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary', { withCredentials: true })).map(c => {
         const { identifiers, ...concept } = c
         concept.id = identifiers.shift()
         return concept
@@ -256,7 +256,7 @@
           this.lastParams = params
           this.loading = true
           this.$router.push({ query })
-          const datasets = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
+          const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
           if (append) datasets.results.forEach(r => this.datasets.results.push(r))
           else this.datasets = datasets
           this.loading = false
@@ -308,7 +308,7 @@
         if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
         if (this.config.authentication === 'none') params.visibility = 'public'
         try {
-          const datasets = (await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
+          const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
           const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
           const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.updatedAt},${d.createdAt}`).join('\n')
           const blob = new Blob([header + '\n' + content], { type: 'text/csv' })

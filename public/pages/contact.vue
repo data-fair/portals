@@ -113,7 +113,7 @@
     },
     async mounted() {
       try {
-        this.token = await this.$axios.$get(`${this.$store.state.directoryUrl}/api/auth/anonymous-action`)
+        this.token = await this.$axios.$get(`${this.$store.getters.directoryUrl}/api/auth/anonymous-action`)
       } catch (error) {
         this.tokenError = error
         eventBus.$emit('notification', { error })

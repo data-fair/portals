@@ -44,7 +44,7 @@
     },
     computed: {
       embedUrl() {
-        return this.$store.state.dataFairUrl + '/app/' + this.application.id
+        return this.$store.getters.dataFairUrl + '/app/' + this.application.id
       },
     },
   }

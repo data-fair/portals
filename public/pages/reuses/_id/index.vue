@@ -129,9 +129,9 @@
       VIframe,
     },
     async fetch () {
-      this.application = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
-      const config = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
-      this.datasets = await this.$axios.$get(this.$store.state.dataFairUrl + '/api/v1/datasets', {
+      this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
+      const config = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration', { withCredentials: true })
+      this.datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
         params: {
           ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
           select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics,image',
@@ -150,22 +150,22 @@
         return this.publicUrl + '/reuses/' + this.$route.params.id
       },
       embedUrl() {
-        return this.$store.state.dataFairUrl + '/app/' + this.$route.params.id
+        return this.$store.getters.dataFairUrl + '/app/' + this.$route.params.id
       },
       description() {
         return marked(this.application.description)
       },
       dataFairUrl() {
-        return this.$store.state.dataFairUrl
+        return this.$store.getters.dataFairUrl
       },
     },
     watch: {
       async application() {
-        if (this.application) this.baseApplication = await this.$axios.$get(this.$store.state.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
+        if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
       },
     },
     async mounted() {
-      if (this.application) this.baseApplication = await this.$axios.$get(this.$store.state.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
+      if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { withCredentials: true })
     },
     methods: {
       marked,

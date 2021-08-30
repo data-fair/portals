@@ -60,7 +60,7 @@
         return context(`./${this.page.template}.json`)
       },
       dataFairUrl() {
-        return this.$store.state.dataFairUrl
+        return this.$store.getters.dataFairUrl
       },
       breadcrumbItems() {
         return [

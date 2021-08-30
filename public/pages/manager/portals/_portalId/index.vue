@@ -175,7 +175,7 @@
       context() {
         return {
           owner: this.activeAccount.type + ':' + this.activeAccount.id,
-          dataFairUrl: this.$store.state.dataFairUrl,
+          dataFairUrl: this.$store.getters.dataFairUrl,
           portalUrl: `${this.publicUrl}/api/v1/portals/${this.portal._id}`,
         }
       },
