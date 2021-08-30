@@ -6,13 +6,13 @@ const event2promise = require('event-to-promise')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const nodemailer = require('nodemailer')
+const originalUrl = require('original-url')
+const { format: formatUrl } = require('url')
 const dbUtils = require('./utils/db')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@koumoul/sd-express')({
-  publicUrl: config.publicUrl,
   directoryUrl: config.directoryUrl,
-  cookieDomain: config.sessionDomain,
 })
 const debug = require('debug')('main')
 
@@ -30,22 +30,27 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/notify', createProxyMiddleware({ target: 'http://localhost:8088', pathRewrite: { '^/notify': '' } }))
 }
 
-app.use(session.cors({ acceptAllOrigins: true }))
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.text())
-
-app.use('/api/v1/session', session.router)
 
 app.use(session.auth)
 app.set('session', session)
 app.use('/api/v1/portals', require('./router/portals'))
 
+// set current baseUrl, i.e. the url of the service on the current user's domain
+const basePath = new URL(config.publicUrl).pathname
+app.use('/', (req, res, next) => {
+  const u = originalUrl(req)
+  req.publicBaseUrl = u.full ? formatUrl({ protocol: u.protocol, hostname: u.hostname, port: u.port, pathname: basePath.slice(0, -1) }) : config.publicUrl
+  req.publicWsBaseUrl = req.publicBaseUrl.replace('http:', 'ws:').replace('https:', 'wss:')
+  req.publicBasePath = basePath
+  next()
+})
+
 let httpServer
 async function main() {
   const nuxtMiddleware = await nuxt()
-  app.use(session.loginCallback)
-  app.use(session.decode)
   app.use(nuxtMiddleware)
 
   const { client, db } = await dbUtils.init()

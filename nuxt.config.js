@@ -61,7 +61,6 @@ module.exports = {
   axios: {
     browserBaseURL: config.basePath,
     baseURL: 'http://localhost:' + config.port,
-    credentials: true,
   },
   buildModules: ['@nuxtjs/vuetify'],
   vuetify: {
@@ -124,6 +123,7 @@ module.exports = {
   },
 }
 
+/*
 if (process.env.NODE_ENV === 'development') {
   module.exports.hooks = {
     build: {
@@ -145,3 +145,4 @@ if (process.env.NODE_ENV === 'development') {
     },
   }
 }
+*/

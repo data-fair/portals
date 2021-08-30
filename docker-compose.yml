@@ -1,7 +1,7 @@
 version: '3'
 services:
   sd:
-    image: koumoul/simple-directory:master
+    image: koumoul/simple-directory:multi-domain
     ports:
       - 6201:8080
       - 1080:1080
@@ -19,7 +19,7 @@ services:
       - ./test/resources/organizations.json:/webapp/data/organizations.json
 
   data-fair:
-    image: koumoul/data-fair:master
+    image: koumoul/data-fair:multi-domain
     restart: on-failure:10
     network_mode: host
     environment:
