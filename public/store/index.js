@@ -73,8 +73,14 @@ export default () => {
         commit('setAny', { portal })
       },
       async fetchConfig({ state, commit }, portalId) {
-        const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
-        commit('setAny', { config })
+        console.log('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
+        try {
+          const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
+          commit('setAny', { config })
+        } catch (err) {
+          console.error('failure to fetch config', err)
+          throw err
+        }
       },
       setBreadcrumbs({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
@@ -86,6 +92,7 @@ export default () => {
       init({ state, dispatch, commit, getters }, { req, env, app, route }) {
         if (req && req.headers && req.headers.host) {
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
+          console.log('current public url', publicUrl)
           commit('setAny', { publicUrl })
         }
         dispatch('session/init', {
