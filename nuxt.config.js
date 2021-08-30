@@ -1,6 +1,5 @@
 const fs = require('fs-extra')
 const cors = require('cors')
-const webpack = require('webpack')
 const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
