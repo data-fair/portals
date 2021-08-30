@@ -7,13 +7,24 @@
   >
     <nuxt-link :to="{name: 'reuses-id', params:{id: application.id}}" style="text-decoration:none">
       <v-card-title>
-        <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1">
-          <client-only>
-            <v-clamp :max-lines="2" autoresize>
-              {{ application.title }}
-            </v-clamp>
-          </client-only>
-        </h3>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <h3
+              class="title grey--text text--darken-2 font-weight-bold"
+              style="height:40px;line-height: 1.1;"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-clamp
+                :max-lines="2"
+                autoresize
+              >
+                {{ application.title }}
+              </v-clamp>
+            </h3>
+          </template>
+          <span>{{ application.title }}</span>
+        </v-tooltip>
       </v-card-title>
       <div class="pb-2">
         <v-img
@@ -55,7 +66,7 @@
         <span>Accéder à la visualisation en plein écran</span>
       </v-tooltip>
       <v-spacer />
-      <v-subheader>Mis à jour le {{ application.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+      <v-subheader>Mis à jour le {{ $dayjs(application.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
     </v-card-actions>
   </v-card>
 </template>
@@ -63,8 +74,6 @@
 <script>
   import VClamp from 'vue-clamp'
   import ApplicationView from '~/components/application/view.vue'
-
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     components: {
@@ -78,9 +87,6 @@
       return {
         hover: false,
       }
-    },
-    methods: {
-      marked,
     },
   }
 </script>

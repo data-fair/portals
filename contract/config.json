@@ -9,9 +9,13 @@
     }
   },
   "allOf": [{
-    "title": "Présentation",
+    "title": "Général",
     "required": ["themeColor", "footerColor"],
     "properties": {
+      "title": {
+        "type": "string",
+        "default": "Portail de données"
+      },
       "themeColor": {
         "type": "string",
         "default": "#1E88E5",
@@ -21,8 +25,23 @@
       "footerColor": {
         "type": "string",
         "default": "#424242",
-        "title": "Couleur du footer",
+        "title": "Couleur du pied de page",
         "x-display": "color-picker"
+      },
+      "authentication": {
+        "type": "string",
+        "oneOf": [{
+          "const": "none",
+          "title": "Aucune, portail opendata"
+        },{
+          "const": "optional",
+          "title": "Optionnelle pour voir les contenus protégés"
+        },{
+          "const": "required",
+          "title": "Requise pour accéder au portail"
+        }],
+        "title": "Authentification",
+        "default": "optional"
       },
       "assets": {
         "type": "object",
@@ -62,169 +81,8 @@
           }
         }
       },
-      "homeImageAsBanner": {
-        "type": "boolean",
-        "title": "Image principale en bannière",
-        "default": false
-      }
-    }
-  }, {
-    "title": "Contenu",
-    "required": ["title"],
-    "properties": {
-      "title": {
-        "type": "string",
-        "default": "Portail de données"
-      },
-      "description": {
-        "type": "string",
-        "maxLength": 50000,
-        "description": "Vous pouvez saisir du contenu riche au format HTML et/ou markdown.",
-        "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
-      },
-      "authentication": {
-        "type": "string",
-        "oneOf": [{
-          "const": "none",
-          "title": "Aucune, portail opendata"
-        },{
-          "const": "optional",
-          "title": "Optionnelle pour voir les contenus protégés"
-        },{
-          "const": "required",
-          "title": "Requise pour accéder au portail"
-        }],
-        "title": "Authentification",
-        "default": "optional"
-      },
-      "showKpis": {
-        "title": "Afficher les chiffres clés",
-        "type": "boolean",
-        "default": true
-      },
-      "featuredReuse": {
-        "title": "Visualisation mise en avant",
-        "type": "object",
-        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
-        "x-itemsProp": "results",
-        "x-itemTitle": "title",
-        "x-itemKey": "href",
-        "properties": {
-          "href": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        }
-      },
-      "homeDatasets": {
-        "type": "object",
-        "title": "Jeux de données page d'accueil",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }, {
-          "title": "Afficher les derniers",
-          "properties": {
-            "type": {
-              "const": "lasts"
-            },
-            "size":{
-              "title": "Nombre d'éléments",
-              "type": "integer",
-              "default": 3
-            }
-          }
-        }]
-      },
-      "homeReuses": {
-        "type": "object",
-        "title": "Visualisations page d'accueil",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }, {
-          "title": "Afficher les dernières",
-          "properties": {
-            "type": {
-              "const": "lasts"
-            },
-            "size":{
-              "title": "Nombre d'éléments",
-              "type": "integer",
-              "default": 3
-            }
-          }
-        }]
-      },
-      "datasetsPage": {
-        "type": "object",
-        "title": "Page des jeux de données",
-        "default": {
-          "type": "infiniteScroll"
-        },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      },
-      "reusesPage": {
-        "type": "object",
-        "title": "Page des réutilisations",
-        "default": {
-          "type": "infiniteScroll"
-        },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      }
-    }
-  }, {
-    "title": "Pied de page",
-    "properties": {
       "footerLinks":{
-        "title": "Liens",
+        "title": "Liens en pied de page",
         "type" : "array",
         "items": {
           "type": "object",
@@ -274,7 +132,173 @@
       }
     }
   }, {
-    "title": "Communication",
+    "title": "Page d'accueil",
+    "properties": {
+      "homeImageAsBanner": {
+        "type": "boolean",
+        "title": "Image principale en bannière",
+        "default": false
+      },
+      "homeReuse": {
+        "title": "Remplacer l'image principale par une visualisation",
+        "type": "object",
+        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
+        "x-itemsProp": "results",
+        "x-itemTitle": "title",
+        "x-itemKey": "href",
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "description": {
+        "type": "string",
+        "maxLength": 50000,
+        "description": "Vous pouvez saisir du contenu riche au format HTML et/ou markdown.",
+        "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
+      },
+      "showKpis": {
+        "title": "Afficher les chiffres clés",
+        "type": "boolean",
+        "default": true
+      },
+      "showTopics": {
+        "title": "Afficher les thématiques",
+        "type": "boolean",
+        "default": true
+      },
+      "featuredReuse": {
+        "title": "Visualisation mise en avant",
+        "type": "object",
+        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
+        "x-itemsProp": "results",
+        "x-itemTitle": "title",
+        "x-itemKey": "href",
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "homeDatasets": {
+        "type": "object",
+        "title": "Liste réduite de jeux de données",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }, {
+          "title": "Afficher les derniers",
+          "properties": {
+            "type": {
+              "const": "lasts"
+            },
+            "size":{
+              "title": "Nombre d'éléments",
+              "type": "integer",
+              "default": 3
+            }
+          }
+        }]
+      },
+      "homeReuses": {
+        "type": "object",
+        "title": "Liste réduite de visualisations",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }, {
+          "title": "Afficher les dernières",
+          "properties": {
+            "type": {
+              "const": "lasts"
+            },
+            "size":{
+              "title": "Nombre d'éléments",
+              "type": "integer",
+              "default": 3
+            }
+          }
+        }]
+      }
+    }
+  }, {
+    "title": "Contenu",
+    "required": ["title"],
+    "properties": {
+      "datasetsPage": {
+        "type": "object",
+        "title": "Page des jeux de données",
+        "default": {
+          "type": "infiniteScroll"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      },
+      "reusesPage": {
+        "type": "object",
+        "title": "Page des réutilisations",
+        "default": {
+          "type": "infiniteScroll"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      }
+    }
+  }, {
+    "title": "Communication & contact",
     "properties": {
       "website": {
         "type": "string",
@@ -282,13 +306,26 @@
       },
       "twitter": {
         "type": "string",
-        "title": "Compte twitter"
+        "title": "Compte Twitter"
+      },
+      "facebook": {
+        "type": "string",
+        "title": "Compte Facebook"
+      },
+      "linkedin": {
+        "type": "string",
+        "title": "Compte LinkedIn"
       },
       "contactEmail": {
         "type": "string",
         "title": "Email de contact",
         "format": "email",
         "description": "Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail."
+      },
+      "contactInfos": {
+        "type": "string",
+        "title": "Informations de contact",
+        "maxLength": 10000
       }
     }
   }, {

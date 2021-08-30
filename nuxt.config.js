@@ -30,9 +30,6 @@ module.exports = {
       'pbkdf2', // this is a nuxt dep, but weirly without this line we have a ie11 crash
     ],
     extend (webpackConf, { isServer, isDev, isClient }) {
-      // Ignore all locale files of moment.js, those we want are loaded in plugins/moment.js
-      webpackConf.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
-
       // Loader for sounds
       webpackConf.module.rules.push({
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
@@ -48,7 +45,6 @@ module.exports = {
     { src: '~plugins/axios-errors' },
     { src: '~plugins/init' },
     { src: '~plugins/typography' },
-    { src: '~plugins/moment' },
     { src: '~plugins/filters' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
@@ -62,7 +58,7 @@ module.exports = {
   router: {
     base: config.basePath,
   },
-  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
+  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', '@nuxtjs/dayjs'],
   axios: {
     browserBaseURL: config.basePath,
     baseURL: 'http://localhost:' + config.port,
@@ -100,6 +96,15 @@ module.exports = {
       locales: { fr },
       current: 'fr',
     },
+  },
+  dayjs: {
+    locales: ['fr'],
+    defaultLocale: 'fr',
+    defaultTimeZone: 'Europe/Paris',
+    plugins: [
+      'timezone',
+      // 'advancedFormat',
+    ],
   },
   env: {
     publicUrl: config.publicUrl,

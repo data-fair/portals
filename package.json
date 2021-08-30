@@ -1,6 +1,6 @@
 {
-  "name": "data-fair-portals",
-  "version": "0.10.3",
+  "name": "@data-fair/portals",
+  "version": "0.11.0",
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "scripts": {
@@ -13,24 +13,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/koumoul/portal-standard.git"
+    "url": "git+ssh://git@gitlab.com/data-fair/portals.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/koumoul/portal-standard/issues"
+    "url": "https://gitlab.com/data-fair/portals/issues"
   },
-  "homepage": "https://gitlab.com/koumoul/portal-standard#readme",
+  "homepage": "https://gitlab.com/data-fair/portals#readme",
   "dependencies": {
-    "@hackmd/meta-marked": "^0.4.4",
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@koumoul/sd-express": "^0.21.0",
     "@koumoul/sd-vue": "^0.21.2",
-    "@koumoul/v-iframe": "^0.2.3",
+    "@koumoul/v-iframe": "^0.4.0",
     "@koumoul/vjsf": "^2.0.2",
     "@koumoul/vue-multianalytics": "^1.10.1",
     "@mdi/font": "^5.8.55",
     "@nuxtjs/axios": "^5.12.5",
+    "@nuxtjs/dayjs": "^1.4.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "ajv": "^6.12.6",
     "config": "^3.3.3",
@@ -46,8 +46,8 @@
     "js-cookie": "^2.2.0",
     "js-file-download": "^0.4.12",
     "json-schema-defaults": "^0.4.0",
+    "marked": "^0.6.3",
     "mobile-device-detect": "^0.2.3",
-    "moment": "^2.29.1",
     "mongodb": "^3.6.4",
     "multer": "^1.4.2",
     "nodemailer": "^6.5.0",
@@ -60,8 +60,7 @@
     "shortid": "^2.2.16",
     "slugify": "^1.4.6",
     "tinycolor2": "^1.4.2",
-    "vue-clamp": "^0.3.1",
-    "vue-moment": "^4.0.0",
+    "vue-clamp": "^0.4.0",
     "vue-social-sharing": "^3.0.4",
     "vue-tweet-embed": "^2.4.0",
     "vue-window-size": "0.6.2",

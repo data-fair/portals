@@ -34,6 +34,7 @@
                     <v-list-item-action>
                       <v-btn
                         :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
+                        nuxt
                         icon
                         color="primary"
                       >
@@ -43,6 +44,7 @@
                     <v-list-item-action class="ml-0">
                       <v-btn
                         :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
+                        nuxt
                         icon
                         color="primary"
                       >

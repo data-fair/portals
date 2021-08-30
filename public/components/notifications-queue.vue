@@ -45,7 +45,7 @@
         >
           <v-list-item-content>
             <v-list-item-title>{{ notif.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ notif.date | moment("DD/MM/YYYY, HH:mm") }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ $dayjs(notif.date).format("DD/MM/YYYY, HH:mm") }}</v-list-item-subtitle>
             <v-list-item-subtitle>{{ notif.body }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>

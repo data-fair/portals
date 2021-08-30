@@ -1,13 +1,22 @@
 <template>
   <div>
-    <v-img
-      v-if="config.homeImageAsBanner"
-      :src="homeUrl"
-      :alt="config.title"
-      max-height="400px"
-      class="elevation-4"
-      style="margin-top: -12px;"
-    />
+    <template v-if="config.homeImageAsBanner">
+      <client-only v-if="config.homeReuse">
+        <v-iframe
+          :src="homeReuseUrl"
+          class="elevation-4"
+          style="margin-top: -12px;max-height: 400px;"
+        />
+      </client-only>
+      <v-img
+        v-else
+        :src="homeUrl"
+        :alt="config.title"
+        max-height="400px"
+        class="elevation-4"
+        style="margin-top: -12px;"
+      />
+    </template>
     <v-container>
       <v-row v-if="!config.homeImageAsBanner">
         <v-col
@@ -15,7 +24,11 @@
           md="5"
           offset-md="1"
         >
+          <client-only v-if="config.homeReuse">
+            <v-iframe :src="homeReuseUrl" style="max-height: 600px;" />
+          </client-only>
           <v-img
+            v-else
             :src="homeUrl"
             :alt="config.title"
             min-height="200"
@@ -28,15 +41,16 @@
           cols="12"
           md="6"
         >
-          <div v-if="config.description" v-html="marked(config.description).html" />
+          <div v-if="config.description" v-html="marked(config.description)" />
         </v-col>
       </v-row>
-      <div v-else-if="config.description" v-html="marked(config.description).html" />
+      <div v-else-if="config.description" v-html="marked(config.description)" />
       <kpi
         v-if="config.showKpis"
         class="mt-4"
         :stats="stats"
       />
+      <topics v-if="config.showTopics" :topics="topics" />
 
       <!-- reuses: featured and lasts -->
       <v-row v-if="config.twitter">
@@ -112,20 +126,18 @@
 </template>
 
 <script>
-  import Kpi from '~/components/kpi.vue'
   import LastDatasets from '~/components/last-datasets.vue'
   import LastApps from '~/components/last-apps.vue'
   import { isMobileOnly } from 'mobile-device-detect'
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import Timeline from 'vue-tweet-embed/dist/timeline'
+  import marked from 'marked'
   const { mapState } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
     components: {
-      Kpi,
       LastDatasets,
       LastApps,
       VIframe,
@@ -163,6 +175,7 @@
           owner: this.$store.getters.owner,
           publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           visibility: this.config.authentication === 'none' ? 'public' : '',
+          facets: 'topics',
         },
         withCredentials: true,
       })
@@ -178,12 +191,13 @@
           numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0),
         },
       }
+      this.topics = statsDatasets.facets.topics || []
     },
     data: () => ({
       applications: null,
       datasets: null,
       stats: null,
-      featuredBaseApplication: null,
+      topics: [],
       isMobileOnly,
     }),
     computed: {
@@ -197,6 +211,9 @@
       featuredReuseUrl() {
         return `${process.env.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
+      homeReuseUrl() {
+        return `${process.env.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+      },
       showLastApps() {
         return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length
       },
@@ -207,14 +224,6 @@
         if (this.config.featuredReuse && this.config.featuredReuse.id) return 2
         else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeReuses && this.config.homeReuses.size) || 0) / 2))
       },
-    },
-    watch: {
-      async application() {
-        if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
-      },
-    },
-    async mounted() {
-      if (this.config.featuredReuse && this.config.featuredReuse.id) this.featuredBaseApplication = await this.$axios.$get(process.env.dataFairUrl + `/api/v1/applications/${this.config.featuredReuse.id}/base-application`, { withCredentials: true })
     },
     methods: {
       marked,

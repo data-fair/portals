@@ -33,7 +33,7 @@
                     :max-height="200"
                     autoresize
                     class="dataset-desc200"
-                    v-html="marked(dataset.description || '').html"
+                    v-html="marked(dataset.description || '')"
                   />
                 </client-only>
               </v-card-text>
@@ -52,7 +52,7 @@
               />
               <schema-view :dataset="dataset" :color="'primary'" />
               <v-spacer />
-              <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+              <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
             </v-card-actions>
           </v-card>
         </v-hover>
@@ -81,8 +81,7 @@
   import SchemaView from '~/components/dataset/schema-view.vue'
   import VClamp from 'vue-clamp'
   import { isMobileOnly } from 'mobile-device-detect'
-
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
 
   export default {
     components: {

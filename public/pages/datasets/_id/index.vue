@@ -9,7 +9,7 @@
       <section-title :text="dataset.title" />
       <v-row>
         <v-col md="7" sm="12">
-          <div v-html="marked(dataset.description || '').html" />
+          <div v-html="marked(dataset.description || '')" />
         </v-col>
         <v-col
           md="4"
@@ -41,6 +41,21 @@
             </v-list>
             <v-card-actions>
               <table-preview :dataset="dataset" :color="'primary'" />
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+                    icon
+                    color="primary"
+                    v-on="on"
+                  >
+                    <v-icon>
+                      mdi-fullscreen
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Vue tabulaire en plein écran</span>
+              </v-tooltip>
               <map-preview
                 v-if="dataset.bbox && dataset.bbox.length"
                 :dataset="dataset"
@@ -49,13 +64,13 @@
               <api-view
                 v-if="!isMobileOnly"
                 :dataset="dataset"
-                :color="'primary'"
+                color="primary"
               />
               <v-tooltip v-if="dataset.file" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
-                    :color="'primary'"
+                    color="primary"
                     icon
                     v-on="on"
                   >
@@ -93,7 +108,7 @@
                 />
               </client-only>
             </v-card-actions>
-            <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+            <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
           </v-card>
         </v-col>
       </v-row>
@@ -142,7 +157,7 @@
                   mdi-open-in-new
                 </v-icon>
               </nuxt-link>
-              <div class="mt-3" v-html="marked(application.description || '').html" />
+              <div class="mt-3" v-html="marked(application.description || '')" />
             </v-col>
             <v-col
               md="6"
@@ -194,7 +209,7 @@
                 <card-title :text="reuse.title" />
               </v-card-title>
               <v-card-text>
-                <div v-html="marked(reuse.description || '').html" />
+                <div v-html="marked(reuse.description || '')" />
               </v-card-text>
               <v-card-actions style="height:20%">
                 <v-spacer />
@@ -262,8 +277,8 @@
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import { isMobileOnly } from 'mobile-device-detect'
+  import marked from 'marked'
   const { mapState } = require('vuex')
-  const marked = require('@hackmd/meta-marked')
 
   export default {
     middleware: 'portal-required',
@@ -322,7 +337,7 @@
     },
     head () {
       if (this.dataset) {
-        const description = marked(this.dataset.description || this.dataset.title).html.split('</p>').shift().replace('<p>', '')
+        const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
         const schema = {
           '@context': 'http://schema.org',
           '@type': 'Dataset',

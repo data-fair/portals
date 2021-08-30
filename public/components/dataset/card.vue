@@ -10,13 +10,24 @@
     <template v-if="dataset">
       <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
         <v-card-title>
-          <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height: 1.1;">
-            <client-only>
-              <v-clamp :max-lines="2" autoresize>
-                {{ dataset.title }}
-              </v-clamp>
-            </client-only>
-          </h3>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <h3
+                class="title grey--text text--darken-2 font-weight-bold"
+                style="height:40px;line-height: 1.1;"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-clamp
+                  :max-lines="2"
+                  autoresize
+                >
+                  {{ dataset.title }}
+                </v-clamp>
+              </h3>
+            </template>
+            <span>{{ dataset.title }}</span>
+          </v-tooltip>
         </v-card-title>
         <div
           v-if="dataset.image"
@@ -40,7 +51,7 @@
               :max-height="170"
               class="dataset-desc170"
               autoresize
-              v-html="marked(dataset.description || '').html"
+              v-html="marked(dataset.description || '')"
             />
           </client-only>
         </v-card-text>
@@ -62,6 +73,21 @@
       </nuxt-link>
       <v-card-actions class="py-0">
         <table-preview :dataset="dataset" :color="'primary'" />
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+              color="primary"
+              icon
+              v-on="on"
+            >
+              <v-icon>
+                mdi-fullscreen
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Vue tabulaire en plein écran</span>
+        </v-tooltip>
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
           :dataset="dataset"
@@ -74,7 +100,7 @@
         />
         <schema-view :dataset="dataset" :color="'primary'" />
         <v-spacer />
-        <v-subheader>Mis à jour le {{ dataset.updatedAt | moment("DD/MM/YYYY") }}</v-subheader>
+        <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
         <!-- <v-layout column>
             <span>Mis à jour le {{ dataset.meta.updated }}</span>
             <span>{{ dataset.meta.author }}</span>
@@ -92,7 +118,7 @@
   import MapPreview from '~/components/dataset/map-preview.vue'
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
-  const marked = require('@hackmd/meta-marked')
+  import marked from 'marked'
 
   export default {
     components: {

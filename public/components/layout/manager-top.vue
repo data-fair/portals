@@ -6,11 +6,16 @@
     class="px-0 main-app-bar"
   >
     <v-toolbar-items>
-      <v-btn text :to="{name: 'manager-portals'}">
+      <v-btn
+        text
+        nuxt
+        :to="{name: 'manager-portals'}"
+      >
         Mes portails
       </v-btn>
       <v-btn
         text
+        nuxt
         :to="{name: 'manager-admin'}"
       >
         Administration

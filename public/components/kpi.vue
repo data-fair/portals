@@ -13,7 +13,7 @@
                 class="mx-auto"
               />
             </h3>
-            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px">
+            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;text-transform:uppercase;">
               Jeux de données
             </h3>
           </v-col>
@@ -34,7 +34,7 @@
               />
             </h3>
 
-            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px">
+            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;text-transform:uppercase;">
               Enregistrements
             </h3>
           </v-col>
@@ -54,7 +54,7 @@
                 class="mx-auto"
               />
             </h3>
-            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px">
+            <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;text-transform:uppercase;">
               Visualisations
             </h3>
           </v-col>

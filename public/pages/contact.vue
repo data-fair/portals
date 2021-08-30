@@ -1,51 +1,102 @@
 <template lang="html">
   <v-container data-iframe-height>
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="message.from"
-        :rules="[v => !!v || '']"
-        :disabled="!!tokenError"
-        label="Votre adresse email"
-        name="email"
-        required
-      />
-      <v-text-field
-        v-model="message.subject"
-        :rules="[v => !!v || '']"
-        :disabled="!!tokenError"
-        label="Sujet"
-        name="subject"
-        required
-      />
-      <v-textarea
-        v-model="message.text"
-        :rules="[v => !!v || '']"
-        :disabled="!!tokenError"
-        label="Votre demande"
-        name="text"
-        outlined
-        required
-      />
-      <v-row>
-        <v-spacer />
-        <v-btn
-          :disabled="!valid || loading"
-          color="primary"
-          @click="send"
+    <v-row>
+      <v-col>
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
         >
-          Envoyer
-        </v-btn>
-      </v-row>
-    </v-form>
+          <v-text-field
+            v-model="message.from"
+            :rules="[v => !!v || '']"
+            :disabled="!!tokenError"
+            label="Votre adresse email"
+            name="email"
+            required
+          />
+          <v-text-field
+            v-model="message.subject"
+            :rules="[v => !!v || '']"
+            :disabled="!!tokenError"
+            label="Sujet"
+            name="subject"
+            required
+          />
+          <v-textarea
+            v-model="message.text"
+            :rules="[v => !!v || '']"
+            :disabled="!!tokenError"
+            label="Votre demande"
+            name="text"
+            outlined
+            required
+          />
+          <v-row>
+            <v-spacer />
+            <v-btn
+              :disabled="!valid || loading"
+              color="primary"
+              @click="send"
+            >
+              Envoyer
+            </v-btn>
+          </v-row>
+        </v-form>
+      </v-col>
+      <v-col
+        v-if="config.contactInfos && config.contactInfos.length"
+        :cols="12"
+        :sm="5"
+        :md="4"
+        :lg="3"
+      >
+        <v-card
+          :elevation="0"
+          outlined
+          class="pa-3"
+          style="height:100%"
+        >
+          <div v-html="marked(config.contactInfos)" />
+          <template v-if="config.twitter || config.facebook || config.linkedin">
+            <v-divider />
+            <h4>
+              Retrouvez-nous sur les réseaux sociaux
+            </h4>
+            <v-btn
+              v-if="config.twitter"
+              :href="'https://twitter.com/' + config.twitter"
+              icon
+              color="primary"
+            >
+              <v-icon>mdi-twitter</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="config.facebook"
+              :href="'https://www.facebook.com/' + config.facebook"
+              icon
+              color="primary"
+            >
+              <v-icon>mdi-facebook</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="config.linkedin"
+              :href="'https://www.linkedin.com/company/' + config.linkedin"
+              icon
+              color="primary"
+            >
+              <v-icon>mdi-linkedin</v-icon>
+            </v-btn>
+          </template>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
   import eventBus from '../event-bus'
+  import marked from 'marked'
   const { mapState } = require('vuex')
 
   const newMessage = { from: '', subject: '', text: '' }
@@ -58,7 +109,7 @@
       loading: false,
     }),
     computed: {
-      ...mapState(['portal', 'draft']),
+      ...mapState(['config', 'portal', 'draft']),
     },
     async mounted() {
       try {
@@ -82,9 +133,28 @@
         }
         this.loading = false
       },
+      marked,
     },
   }
 </script>
 
 <style lang="css">
+hr{
+  display: block;
+  flex: 1 1 0px;
+  max-width: 100%;
+  height: 0px;
+  max-height: 0px;
+  border: solid;
+  border-width: thin 0 0 0;
+  transition: inherit;
+  border-color: rgba(0, 0, 0, 0.12);
+  margin-top:8px;
+  margin-bottom:8px;
+}
+
+h4 {
+  color: #424242 !important;
+  caret-color: #424242 !important;
+}
 </style>

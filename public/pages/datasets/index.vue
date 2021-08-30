@@ -14,8 +14,8 @@
             v-model="search"
             label="Rechercher"
             append-icon="mdi-magnify"
-            @keyup.enter.native="refresh(true)"
-            @click:append="refresh(true)"
+            @keyup.enter.native="refresh()"
+            @click:append="refresh()"
           />
         </v-col>
         <v-col
@@ -27,13 +27,13 @@
           <v-select
             v-model="filters.concepts"
             :loading="loading"
-            :items="conceptsItems"
+            :items="conceptsItems.filter(item => !!item.value)"
             :item-text="conceptLabel"
             multiple
             clearable
             label="Filter par concepts"
             no-data-text="Aucun concept"
-            @input="refresh(true)"
+            @input="refresh()"
           />
         </v-col>
         <v-col
@@ -48,7 +48,7 @@
                 v-model="sort"
                 :items="sorts"
                 label="Trier par"
-                @input="refresh(true)"
+                @input="refresh()"
               />
             </v-col>
             <v-col class="pl-0" :cols="4">
@@ -56,7 +56,7 @@
                 v-model="order"
                 mandatory
                 dense
-                @change="refresh(true)"
+                @change="refresh()"
               >
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
@@ -151,6 +151,17 @@
           <div v-else style="height: 40px;" />
         </v-col>
       </v-row>
+      <v-row
+        v-if="datasets && datasets.results.length < datasets.count"
+        class="pt-5 pb-0"
+        align="center"
+      >
+        <v-col class="text-center pa-0">
+          <v-btn text @click="refresh(true)">
+            voir plus
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -172,7 +183,7 @@
         concept.id = identifiers.shift()
         return concept
       })
-      await this.refresh(true)
+      await this.refresh()
     },
     data: function() {
       return {
@@ -199,6 +210,7 @@
           value: 'title',
         }],
         downloading: false,
+        lastParams: null,
       }
     },
     computed: {
@@ -218,10 +230,14 @@
           .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
       },
     },
+    mounted() {
+      // case where SSR already fetched the first page
+      if (this.datasets) this.continueFetch()
+    },
     methods: {
-      async refresh(reset) {
-        this.loading = true
-        if (reset) this.page = 1
+      async refresh(append) {
+        if (append) this.page += 1
+        else this.page = 1
         const query = {
           sort: this.sort + ':' + (this.order * 2 - 1),
           q: this.search,
@@ -236,18 +252,34 @@
         params.owner = this.owner
         params.publicationSites = 'data-fair-portals:' + this.portal._id
         if (this.config.authentication === 'none') params.visibility = 'public'
-        this.$router.push({ query })
-        const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
-        if (reset) this.datasets = datasets
-        else datasets.results.forEach(r => this.datasets.results.push(r))
-        this.loading = false
+        if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
+          this.lastParams = params
+          this.loading = true
+          this.$router.push({ query })
+          const datasets = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })
+          if (append) datasets.results.forEach(r => this.datasets.results.push(r))
+          else this.datasets = datasets
+          this.loading = false
+
+          // if the page is too large for the user to trigger a scroll we append results immediately
+          if (process.client) {
+            await this.$nextTick()
+            await this.$nextTick()
+            this.continueFetch()
+          }
+        }
+      },
+      continueFetch() {
+        const html = document.getElementsByTagName('html')
+        if (html[0].scrollHeight === html[0].clientHeight && this.datasets.results.length < this.datasets.count) {
+          this.refresh(true)
+        }
       },
       onScroll(e) {
         if (!this.datasets) return
         const se = e.target.scrollingElement
         if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.datasets.results.length < this.datasets.count) {
-          this.page += 1
-          this.refresh()
+          this.refresh(true)
         }
       },
       conceptLabel(e) {
@@ -260,7 +292,7 @@
         } else {
           this.filters.topics.push(topic.id)
         }
-        this.refresh(true)
+        this.refresh()
       },
       async download(name) {
         this.downloading = name

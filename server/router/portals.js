@@ -166,6 +166,7 @@ const storage = multer.diskStorage({
     cb(null, dir)
   },
   filename(req, file, cb) {
+    if (!assets[req.params.assetId]) return cb(new Error('asset inconnu ' + req.params.assetId))
     cb(null, req.params.assetId)
   },
 })

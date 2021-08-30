@@ -33,13 +33,14 @@
                   </v-chip>
                 </v-col>
               </v-row>
-              <v-subheader>Mis à jour le {{ page.updated.date | moment("DD/MM/YYYY") }} par {{ page.updated.name }}</v-subheader>
+              <v-subheader>Mis à jour le {{ $dayjs(page.updated.date).format("DD/MM/YYYY") }} par {{ page.updated.name }}</v-subheader>
               <v-card-actions class="py-0">
                 <v-spacer />
                 <!-- <table-preview :page="page" :color="'primary'" /> -->
                 <v-btn
                   icon
                   text
+                  nuxt
                   :to="{ name: 'manager-portals-portalId-pages-id-edit', params: { id: page.id } }"
                 >
                   <v-icon color="primary">
