@@ -78,7 +78,7 @@ export default () => {
         const directoryUrl = origin + '/simple-directory'
         const dataFairUrl = origin + '/data-fair'
         const openapiViewerUrl = origin + '/openapi-viewer'
-        const publicUrl = origin + '/'
+        const publicUrl = origin
         const notifyUrl = origin + '/notify'
         const notifyWSUrl = (origin + '/notify').replace('ws://', 'http://').replace('wss://', 'https://')
         commit('setAny', { dataFairUrl, directoryUrl, openapiViewerUrl, publicUrl, notifyUrl, notifyWSUrl })
