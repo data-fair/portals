@@ -18,6 +18,7 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: '',
+      vuetifyTheme: null,
     },
     getters: {
       embed() {
@@ -66,6 +67,11 @@ export default () => {
       setAny(state, params) {
         Object.assign(state, params)
       },
+      setThemeColor(state, color) {
+        console.log(state.vuetifyTheme)
+        state.vuetifyTheme.primary = color
+        console.log(state.vuetifyTheme)
+      },
     },
     actions: {
       async fetchPortalInfos({ state, commit }, portalId) {
@@ -89,7 +95,7 @@ export default () => {
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      init({ state, dispatch, commit, getters }, { req, env, app, route }) {
+      async init({ state, dispatch, commit, getters }, { req, env, app, route }) {
         if (req && req.headers && req.headers.host) {
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
           console.log('current public url', publicUrl)
@@ -99,25 +105,29 @@ export default () => {
           cookies: this.$cookies,
           directoryUrl: getters.directoryUrl,
         })
+
+        if (!state.portal) {
+          const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
+          if (portalId) {
+            const initialQuery = {}
+            if (route.query.draft) initialQuery.draft = route.query.draft
+            if (route.query.portalId) initialQuery.portalId = route.query.portalId
+            const draft = route.query.draft === 'true'
+            commit('setAny', {
+              initialQuery,
+              draft,
+              portal: {
+                _id: portalId,
+              },
+            })
+            await dispatch('fetchConfig', portalId)
+          }
+        }
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit({ dispatch, state, commit }, { route, req, env, redirect }) {
-        const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
         // case where we are opening a portal
-        if (portalId) {
-          const initialQuery = {}
-          if (route.query.draft) initialQuery.draft = route.query.draft
-          if (route.query.portalId) initialQuery.portalId = route.query.portalId
-          const draft = route.query.draft === 'true'
-          commit('setAny', {
-            initialQuery,
-            draft,
-            portal: {
-              _id: portalId,
-            },
-          })
-          await dispatch('fetchConfig', portalId)
-
+        if (state.portal) {
           // automatic switch to the account that owns this portal if we are a member
           if (state.session.user) {
             const user = state.session.user

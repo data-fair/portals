@@ -42,6 +42,7 @@ module.exports = {
   plugins: [
     { src: '~plugins/axios-errors' },
     { src: '~plugins/init' },
+    { src: '~plugins/theme' },
     { src: '~plugins/typography' },
     { src: '~plugins/filters' },
     { src: '~plugins/polyfill', ssr: false },
@@ -50,7 +51,6 @@ module.exports = {
     { src: '~plugins/ws', ssr: false },
     { src: '~plugins/session', ssr: false },
     { src: '~plugins/auth', ssr: false },
-    { src: '~plugins/theme', ssr: false },
     { src: '~plugins/breadcrumbs.js', ssr: false },
   ],
   router: {
