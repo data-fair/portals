@@ -68,7 +68,7 @@ export default () => {
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      init({ state, dispatch }, { req, env, app, route }) {
+      async init({ state, dispatch, commit }, { req, env, app, route }) {
         let baseUrl = env.publicUrl + '/api/v1/session'
         if (global.location && !env.publicUrl.startsWith(global.location.origin)) {
           baseUrl = global.location.origin + '/api/v1/session'
@@ -78,26 +78,29 @@ export default () => {
           baseUrl,
           cookieDomain: env.sessionDomain,
         })
+        if (!state.portal) {
+          const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
+          if (portalId) {
+            const initialQuery = {}
+            if (route.query.draft) initialQuery.draft = route.query.draft
+            if (route.query.portalId) initialQuery.portalId = route.query.portalId
+            const draft = route.query.draft === 'true'
+            commit('setAny', {
+              initialQuery,
+              draft,
+              portal: {
+                _id: portalId,
+              },
+              publicUrl: `http${env.development ? '' : 's'}://${req.headers.host}`,
+            })
+            await dispatch('fetchConfig', portalId)
+          }
+        }
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit({ dispatch, state, commit }, { route, req, env, redirect }) {
-        const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
         // case where we are opening a portal
-        if (portalId) {
-          const initialQuery = {}
-          if (route.query.draft) initialQuery.draft = route.query.draft
-          if (route.query.portalId) initialQuery.portalId = route.query.portalId
-          const draft = route.query.draft === 'true'
-          commit('setAny', {
-            initialQuery,
-            draft,
-            portal: {
-              _id: portalId,
-            },
-            publicUrl: `http${env.development ? '' : 's'}://${req.headers.host}`,
-          })
-          await dispatch('fetchConfig', portalId)
-
+        if (state.portal) {
           // automatic switch to the account that owns this portal if we are a member
           if (state.session.user) {
             const user = state.session.user
