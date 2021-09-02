@@ -10,6 +10,7 @@ module.exports = {
   notifyWSUrl: 'NOTIFY_WS_URL',
   mongo: {
     host: 'MONGO_HOST',
+    db: 'MONGO_DB',
   },
   mails: {
     transport: {
