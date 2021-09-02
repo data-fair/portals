@@ -18,6 +18,7 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: '',
+      publicBaseUrl: '',
     },
     getters: {
       embed() {
@@ -47,16 +48,16 @@ export default () => {
         return state.config.owner.type + ':' + state.config.owner.id
       },
       directoryUrl(state) {
-        return state.publicUrl + '/simple-directory'
+        return state.publicBaseUrl + '/simple-directory'
       },
       dataFairUrl(state) {
-        return state.publicUrl + '/data-fair'
+        return state.publicBaseUrl + '/data-fair'
       },
       openapiViewerUrl(state) {
-        return state.publicUrl + '/openapi-viewer'
+        return state.publicBaseUrl + '/openapi-viewer'
       },
       notifyUrl(state) {
-        return state.publicUrl + '/notify'
+        return state.publicBaseUrl + '/notify'
       },
       notifyWSUrl(state, getters) {
         return getters.notifyUrl.replace('ws://', 'http://').replace('wss://', 'https://')
@@ -93,10 +94,10 @@ export default () => {
         if (req && req.headers && req.headers.host && new URL(env.mainPublicUrl).host !== req.headers.host) {
           // portal exposed on an external domain has to be at the root
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
-          commit('setAny', { publicUrl })
+          commit('setAny', { publicUrl, publicBaseUrl: publicUrl })
         } else {
           // accessing the portal simply as a page the portals manager
-          commit('setAny', { publicUrl: env.mainPublicUrl })
+          commit('setAny', { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin })
         }
         dispatch('session/init', {
           cookies: this.$cookies,
