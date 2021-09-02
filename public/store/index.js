@@ -18,7 +18,6 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: '',
-      vuetifyTheme: null,
     },
     getters: {
       embed() {
@@ -66,11 +65,6 @@ export default () => {
     mutations: {
       setAny(state, params) {
         Object.assign(state, params)
-      },
-      setThemeColor(state, color) {
-        console.log(state.vuetifyTheme)
-        state.vuetifyTheme.primary = color
-        console.log(state.vuetifyTheme)
       },
     },
     actions: {
