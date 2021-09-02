@@ -69,7 +69,7 @@ export default () => {
     },
     actions: {
       async fetchPortalInfos({ state, commit }, portalId) {
-        const portal = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}`, { params: { noConfig: true } })
+        const portal = await this.$axios.$get(`api/v1/portals/${portalId}`, { params: { noConfig: true } })
         commit('setAny', { portal })
       },
       async fetchConfig({ state, commit }, portalId) {

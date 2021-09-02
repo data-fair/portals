@@ -104,8 +104,6 @@ module.exports = {
     ],
   },
   env: {
-    notifyUrl: config.notifyUrl,
-    notifyWSUrl: config.notifyWSUrl,
     development: process.env.NODE_ENV === 'development',
   },
   head: {
