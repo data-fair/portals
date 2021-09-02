@@ -90,10 +90,13 @@ export default () => {
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
       async init({ state, dispatch, commit, getters }, { req, env, app, route }) {
-        if (req && req.headers && req.headers.host) {
+        if (req && req.headers && req.headers.host && new URL(env.mainPublicUrl).host !== req.headers.host) {
+          // portal exposed on an external domain has to be at the root
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
-          console.log('current public url', publicUrl)
           commit('setAny', { publicUrl })
+        } else {
+          // accessing the portal simply as a page the portals manager
+          commit('setAny', { publicUrl: env.mainPublicUrl })
         }
         dispatch('session/init', {
           cookies: this.$cookies,

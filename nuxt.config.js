@@ -104,6 +104,7 @@ module.exports = {
     ],
   },
   env: {
+    mainPublicUrl: config.publicUrl,
     development: process.env.NODE_ENV === 'development',
   },
   head: {
