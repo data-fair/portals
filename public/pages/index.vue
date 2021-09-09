@@ -158,7 +158,7 @@
       const promiseDatasets = this.$axios.$get(process.env.dataFairUrl + '/api/v1/datasets', {
         params: {
           size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
-          select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
+          select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox',
           owner: this.$store.getters.owner,
           publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           sort: 'createdAt:-1',

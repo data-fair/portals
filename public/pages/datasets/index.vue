@@ -201,7 +201,7 @@
         },
         sorts: [{
           text: 'Date de mise à jour',
-          value: 'updatedAt',
+          value: 'dataUpdatedAt',
         }, {
           text: 'Date de création',
           value: 'createdAt',
