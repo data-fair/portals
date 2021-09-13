@@ -40,9 +40,52 @@ function cleanPortal(portal) {
   return portal
 }
 
+const styledSanitizeOpts = {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+  allowedAttributes: {
+    ...sanitizeHtml.defaults.allowedAttributes,
+    '*': ['style'],
+  },
+  allowedStyles: {
+    '*': {
+      // Match HEX and RGB
+      color: [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+      'text-align': [/^left$/, /^right$/, /^center$/],
+      // Match any number with px, em, or %
+      'font-size': [/^\d+(?:px|em|%)$/],
+      // manage absolute and relative positioning
+      position: [/^(absolute|relative)$/],
+      top: [/^\d+(?:px|%)$/],
+      right: [/^\d+(?:px|%)$/],
+      bottom: [/^\d+(?:px|%)$/],
+      left: [/^\d+(?:px|%)$/],
+      float: [/^(left|right)$/],
+      // manage simple flex layouts
+      // https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+      display: [/^(flex|inline-flex|block|inline|inline-block)$/i],
+      'flex-direction': [/^(row|row-reverse|column|column-reverse)$/i],
+      'flex-wrap': [/^(nowrap|wrap|wrap-reverse)$/i],
+      order: [/^\d+$/],
+      'flex-shrink': [/^\d+$/],
+      'flex-grow': [/^\d+$/],
+      'flex-basis': [/^(auto)$/i],
+      flex: [/^(none)$/, /^\d+(?: \d+)(?: auto)$/i],
+      'justify-content': [/^(flex-start|flex-end|center|space-between|space-around|space-evenly|start|end|left|right)$/i],
+      'align-self': [/^(auto|flex-start|flex-end|center|baseline|stretch)$/i],
+      'align-items': [/^(stretch|flex-start|flex-end|center|baseline|first baseline|last baseline|start|end|self-start|self-end)$/i],
+      'align-content': [/^(flex-start|flex-end|center|stretch|space-between|space-around)$/i],
+      gap: [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+      'row-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+    },
+  },
+}
+
 function cleanConfig(conf) {
   if (conf.description) conf.description = sanitizeHtml(conf.description)
   if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
+  if (conf.customFooter && conf.customFooter.html) conf.customFooter.html = sanitizeHtml(conf.customFooter.html, styledSanitizeOpts)
+  if (conf.customHeader && conf.customHeader.html) conf.customHeader.html = sanitizeHtml(conf.customHeader.html, styledSanitizeOpts)
   return conf
 }
 

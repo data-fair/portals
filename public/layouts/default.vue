@@ -2,7 +2,12 @@
   <v-app v-if="config" style="background-color: #fcfcfc;">
     <dynamic-style />
     <client-only><accept-cookies /></client-only>
-    <v-container class="pb-0">
+    <v-container
+      v-if="config.customHeader && config.customHeader.active"
+      :fluid="config.customHeader.fluid"
+      v-html="$vuetify.breakpoint.smAndDown ? (config.customHeader.htmlXS || config.customHeader.htmlMD) : (config.customHeader.htmlMD || config.customHeader.htmlSM)"
+    />
+    <v-container v-else class="pb-0">
       <v-row align="center">
         <v-col
           md="4"
@@ -63,7 +68,13 @@
         tile
         width="100%"
       >
-        <v-container>
+        <v-container
+          v-if="config.customFooter && config.customFooter.active"
+          class="k-custom-footer"
+          :fluid="config.customFooter.fluid"
+          v-html="$vuetify.breakpoint.smAndDown ? (config.customFooter.htmlXS || config.customFooter.htmlMD) : (config.customFooter.htmlMD || config.customFooter.htmlSM)"
+        />
+        <v-container v-else>
           <v-row class="py-3">
             <v-col
               v-for="link in config.footerLinks"
