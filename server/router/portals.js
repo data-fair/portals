@@ -11,6 +11,7 @@ const axios = require('axios')
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
+const sanitizeHtml = require('sanitize-html')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
@@ -34,7 +35,15 @@ function link(portal, path = '') {
 function cleanPortal(portal) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
   portal.link = link(portal)
+  if (portal.config) portal.config = cleanConfig(portal.config)
+  if (portal.configDraft) portal.configDraft = cleanConfig(portal.configDraft)
   return portal
+}
+
+function cleanConfig(conf) {
+  if (conf.description) conf.description = sanitizeHtml(conf.description)
+  if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
+  return conf
 }
 
 // portals are synced to settings.publicationSites in data-fair
@@ -90,8 +99,8 @@ router.post('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const collection = req.app.get('db').collection('portals')
   const portal = req.body
-  portal.config = portal.config || configDefaults
-  portal.configDraft = portal.configDraft || configDefaults
+  portal.config = cleanConfig(portal.config || configDefaults)
+  portal.configDraft = cleanConfig(portal.configDraft || configDefaults)
   if (portal._id) return res.status(400).send('You cannot specify the id of the created portal')
   if (portal.host) return res.status(400).send('You cannot specify the host of the created portal')
   portal._id = shortid.generate()
@@ -152,7 +161,7 @@ router.delete('/:id', setPortal, asyncWrap(async(req, res) => {
 router.put('/:id/configDraft', setPortal, asyncWrap(async(req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await req.app.get('db')
-    .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.body } })
+    .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: cleanConfig(req.body) } })
   res.send()
 }))
 
@@ -263,7 +272,7 @@ async function setPortalAnonymous(req, res, next) {
 
 // Public access to the portal configuration, except for the draft that is reserved to owner
 router.get('/:id/config', setPortalAnonymous, asyncWrap(async (req, res) => {
-  res.send(req.config)
+  res.send(cleanConfig(req.config))
 }))
 
 // Get the list of pages

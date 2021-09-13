@@ -22,7 +22,8 @@ module.exports = {
       // 'vuedraggable',
       'vue-clamp',
       'resize-detector',
-      'pbkdf2', // this is a nuxt dep, but weirly without this line we have a ie11 crash
+      'sanitize-html',
+      'pbkdf2', // this is a nuxt dep, but weirdly without this line we have a ie11 crash
     ],
     extend (webpackConf, { isServer, isDev, isClient }) {
       // webpackConf.output.publicPath = config.publicUrl + '/_nuxt/'
