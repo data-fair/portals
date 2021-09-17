@@ -170,13 +170,13 @@
       }
     },
     computed: {
-      ...mapState(['portal', 'publicUrl']),
+      ...mapState(['portal']),
       ...mapGetters('session', ['activeAccount']),
       context() {
         return {
           owner: this.activeAccount.type + ':' + this.activeAccount.id,
           dataFairUrl: process.env.dataFairUrl,
-          portalUrl: `${this.publicUrl}/api/v1/portals/${this.portal._id}`,
+          portalUrl: `${process.env.publicUrl}/api/v1/portals/${this.portal._id}`,
         }
       },
       iframeHeight() {
