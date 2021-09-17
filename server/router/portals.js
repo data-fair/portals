@@ -446,7 +446,7 @@ const limiter = (req) => {
   return _limiter
 }
 router.post('/:id/contact-email', setPortalAnonymous, asyncWrap(async (req, res, next) => {
-  if (!emailValidator.validate(req.body.from)) return res.status(400).send(req.messages.errors.badEmail)
+  if (!emailValidator.validate(req.body.from)) return res.status(400).send('Adresse mail non renseignée ou malformée.')
   if (!req.body.token) return res.status(401).send()
   if (!req.config.contactEmail) return res.status(404).send('Adresse mail de contact non configurée')
 
