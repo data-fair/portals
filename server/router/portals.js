@@ -27,6 +27,9 @@ configSchemaNoAllOf.allOf.forEach(a => {
 configSchemaNoAllOf.properties = Object.assign({}, ...configSchemaNoAllOf.allOf.map(a => a.properties))
 delete configSchemaNoAllOf.allOf
 const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
+// TODO find a better default lib
+delete configDefaults.homeReuse
+delete configDefaults.featuredReuse
 
 function link(portal, path = '') {
   return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`

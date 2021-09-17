@@ -128,7 +128,8 @@
           "default": {
             "type": "internal"
           }
-        }
+        },
+        "default": []
       }
     }
   }, {
@@ -315,6 +316,10 @@
       "linkedin": {
         "type": "string",
         "title": "Compte LinkedIn"
+      },
+      "youtube": {
+        "type": "string",
+        "title": "Identifiant chaîne Youtube"
       },
       "contactEmail": {
         "type": "string",
