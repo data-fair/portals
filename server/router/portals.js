@@ -47,7 +47,7 @@ const styledSanitizeOpts = {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
-    '*': ['style'],
+    '*': ['style', 'class'],
   },
   allowedStyles: {
     '*': {
@@ -58,10 +58,12 @@ const styledSanitizeOpts = {
       'font-size': [/^\d+(?:px|em|%)$/],
       // manage absolute and relative positioning
       position: [/^(absolute|relative)$/],
-      top: [/^\d+(?:px|%)$/],
-      right: [/^\d+(?:px|%)$/],
-      bottom: [/^\d+(?:px|%)$/],
-      left: [/^\d+(?:px|%)$/],
+      width: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      height: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      top: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      right: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      bottom: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      left: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
       float: [/^(left|right)$/],
       // manage simple flex layouts
       // https://css-tricks.com/snippets/css/a-guide-to-flexbox/
@@ -87,8 +89,10 @@ const styledSanitizeOpts = {
 function cleanConfig(conf) {
   if (conf.description) conf.description = sanitizeHtml(conf.description)
   if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
-  if (conf.customFooter && conf.customFooter.html) conf.customFooter.html = sanitizeHtml(conf.customFooter.html, styledSanitizeOpts)
-  if (conf.customHeader && conf.customHeader.html) conf.customHeader.html = sanitizeHtml(conf.customHeader.html, styledSanitizeOpts)
+  if (conf.customFooter && conf.customFooter.htmlXS) conf.customFooter.htmlXS = sanitizeHtml(conf.customFooter.htmlXS, styledSanitizeOpts)
+  if (conf.customFooter && conf.customFooter.htmlMD) conf.customFooter.htmlMD = sanitizeHtml(conf.customFooter.htmlMD, styledSanitizeOpts)
+  if (conf.customHeader && conf.customHeader.htmlXS) conf.customHeader.htmlXS = sanitizeHtml(conf.customHeader.htmlXS, styledSanitizeOpts)
+  if (conf.customHeader && conf.customHeader.htmlMD) conf.customHeader.htmlMD = sanitizeHtml(conf.customHeader.htmlMD, styledSanitizeOpts)
   return conf
 }
 

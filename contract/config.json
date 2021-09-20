@@ -412,6 +412,7 @@
     "properties": {
       "customHeader": {
         "type": "object",
+        "additionalProperties": false,
         "title": "Entête personnalisé",
         "properties": {
           "active": {
@@ -443,6 +444,7 @@
       "customFooter": {
         "type": "object",
         "title": "Pied de page personnalisé",
+        "additionalProperties": false,
         "properties": {
           "active": {
             "type": "boolean",
