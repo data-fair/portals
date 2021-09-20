@@ -34,7 +34,11 @@
                 :height="200"
                 contains
               />
-              <v-card-text v-else style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
+              <v-card-text
+                v-else
+                style="height:200px;color: rgba(0,0,0,0.87)"
+                class="py-0"
+              >
                 <client-only>
                   <v-clamp
                     :max-height="200"
