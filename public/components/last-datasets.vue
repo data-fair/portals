@@ -27,7 +27,14 @@
                   </client-only>
                 </h3>
               </v-card-title>
-              <v-card-text style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
+              <v-img
+                v-if="dataset.image"
+                :src="dataset.thumbnail || dataset.image"
+                :alt="dataset.title"
+                :height="200"
+                contains
+              />
+              <v-card-text v-else style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
                 <client-only>
                   <v-clamp
                     :max-height="200"

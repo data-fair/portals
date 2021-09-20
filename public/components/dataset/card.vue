@@ -38,7 +38,7 @@
             :src="dataset.thumbnail || dataset.image"
             :alt="dataset.title"
             :max-height="155"
-            contain
+            contains
           />
         </div>
         <v-card-text
