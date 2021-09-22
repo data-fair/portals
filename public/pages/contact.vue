@@ -58,7 +58,7 @@
           style="height:100%"
         >
           <div v-html="marked(config.contactInfos)" />
-          <template v-if="config.twitter || config.facebook || config.linkedin">
+          <template v-if="config.twitter || config.facebook || config.linkedin || config.youtube">
             <v-divider />
             <h4>
               Retrouvez-nous sur les réseaux sociaux
@@ -78,6 +78,14 @@
               color="primary"
             >
               <v-icon>mdi-facebook</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="config.youtube"
+              :href="'https://www.youtube.com/channel/' + config.youtube"
+              icon
+              color="primary"
+            >
+              <v-icon>mdi-youtube</v-icon>
             </v-btn>
             <v-btn
               v-if="config.linkedin"

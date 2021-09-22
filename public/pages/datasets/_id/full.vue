@@ -121,7 +121,7 @@
             name: this.dataset.owner.name,
           },
           dateCreated: this.dataset.createdAt,
-          dateModified: this.dataset.updatedAt,
+          dateModified: this.dataset.dataUpdatedAt,
           sdPublisher: require('~/assets/organization.json'),
           sdDatePublished: this.dataset.createdAt,
           encodingFormat: 'application/json',
@@ -151,7 +151,7 @@
           { property: 'og:description', content: description },
           { property: 'og:type', content: 'article' },
           { property: 'article:author', content: this.dataset.owner.name },
-          { property: 'article:modified_time', content: this.dataset.updatedAt },
+          { property: 'article:modified_time', content: this.dataset.dataUpdatedAt },
           { property: 'article:published_time', content: this.dataset.createdAt },
         ]
         if (this.applications && this.applications.count) {

@@ -101,8 +101,13 @@
           />
         </v-col>
       </v-row>
-      <template v-else>
-        <template v-if="config.featuredReuse && config.featuredReuse.id">
+      <v-row v-else-if="config.featuredReuse && config.featuredReuse.id">
+        <v-col
+          md="10"
+          offset-md="1"
+          cols="12"
+          class="my-3 grow"
+        >
           <nuxt-link
             :to="`/reuses/${config.featuredReuse.id}`"
             class="title"
@@ -115,8 +120,8 @@
           <client-only>
             <v-iframe :src="featuredReuseUrl" />
           </client-only>
-        </template>
-      </template>
+        </v-col>
+      </v-row>
       <template v-if="!config.twitter || (config.featuredReuse && config.featuredReuse.id)">
         <last-apps v-if="showLastApps" :applications="applications" />
         <last-datasets v-if="showLastDatasets" :datasets="datasets" />
@@ -158,7 +163,7 @@
       const promiseDatasets = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
         params: {
           size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
-          select: 'id,title,description,updatedAt,createdAt,createdBy,extras,bbox',
+          select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox,image',
           owner: this.$store.getters.owner,
           publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           sort: 'createdAt:-1',

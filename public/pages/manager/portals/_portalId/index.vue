@@ -170,7 +170,7 @@
       }
     },
     computed: {
-      ...mapState(['portal', 'publicUrl']),
+      ...mapState(['portal']),
       ...mapGetters('session', ['activeAccount']),
       context() {
         return {

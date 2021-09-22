@@ -201,7 +201,7 @@
         },
         sorts: [{
           text: 'Date de mise à jour',
-          value: 'updatedAt',
+          value: 'dataUpdatedAt',
         }, {
           text: 'Date de création',
           value: 'createdAt',
@@ -247,7 +247,7 @@
         const params = Object.assign({}, query)
         params.size = this.size
         params.page = this.page
-        params.select = 'id,title,description,updatedAt,updatedBy,extras,bbox,topics,image'
+        params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image'
         params.facets = 'concepts,topics'
         params.owner = this.owner
         params.publicationSites = 'data-fair-portals:' + this.portal._id
@@ -298,7 +298,7 @@
         this.downloading = name
         const params = {
           size: 10000,
-          select: 'id,title,description,bbox,topics,href,updatedAt,createdAt',
+          select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt',
           publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
           owner: this.owner,
           sort: this.sort + ':' + (this.order * 2 - 1),
@@ -310,7 +310,7 @@
         try {
           const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params, withCredentials: true })).results
           const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
-          const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.updatedAt},${d.createdAt}`).join('\n')
+          const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
           const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
           fileDownload(blob, name)
         } catch (err) { }

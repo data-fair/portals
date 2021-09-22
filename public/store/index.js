@@ -103,7 +103,6 @@ export default () => {
           cookies: this.$cookies,
           directoryUrl: getters.directoryUrl,
         })
-
         if (!state.portal) {
           const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
           if (portalId) {

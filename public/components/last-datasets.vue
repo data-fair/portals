@@ -27,7 +27,18 @@
                   </client-only>
                 </h3>
               </v-card-title>
-              <v-card-text style="height:200px;color: rgba(0,0,0,0.87)" class="py-0">
+              <v-img
+                v-if="dataset.image"
+                :src="dataset.thumbnail || dataset.image"
+                :alt="dataset.title"
+                :height="200"
+                contains
+              />
+              <v-card-text
+                v-else
+                style="height:200px;color: rgba(0,0,0,0.87)"
+                class="py-0"
+              >
                 <client-only>
                   <v-clamp
                     :max-height="200"
@@ -52,7 +63,7 @@
               />
               <schema-view :dataset="dataset" :color="'primary'" />
               <v-spacer />
-              <v-subheader>Mis à jour le {{ $dayjs(dataset.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
+              <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>
             </v-card-actions>
           </v-card>
         </v-hover>

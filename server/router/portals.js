@@ -11,6 +11,7 @@ const axios = require('axios')
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
+const sanitizeHtml = require('sanitize-html')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
@@ -26,6 +27,9 @@ configSchemaNoAllOf.allOf.forEach(a => {
 configSchemaNoAllOf.properties = Object.assign({}, ...configSchemaNoAllOf.allOf.map(a => a.properties))
 delete configSchemaNoAllOf.allOf
 const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
+// TODO find a better default lib
+delete configDefaults.homeReuse
+delete configDefaults.featuredReuse
 
 function link(portal, path = '') {
   return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`
@@ -34,7 +38,62 @@ function link(portal, path = '') {
 function cleanPortal(portal) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
   portal.link = link(portal)
+  if (portal.config) portal.config = cleanConfig(portal.config)
+  if (portal.configDraft) portal.configDraft = cleanConfig(portal.configDraft)
   return portal
+}
+
+const styledSanitizeOpts = {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+  allowedAttributes: {
+    ...sanitizeHtml.defaults.allowedAttributes,
+    '*': ['style', 'class'],
+  },
+  allowedStyles: {
+    '*': {
+      // Match HEX and RGB
+      color: [/^#(0x)?[0-9a-f]+$/i, /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/],
+      'text-align': [/^left$/, /^right$/, /^center$/],
+      // Match any number with px, em, or %
+      'font-size': [/^\d+(?:px|em|%)$/],
+      // manage absolute and relative positioning
+      position: [/^(absolute|relative)$/],
+      width: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      height: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      top: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      right: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      bottom: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      left: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      float: [/^(left|right)$/],
+      // manage simple flex layouts
+      // https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+      display: [/^(flex|inline-flex|block|inline|inline-block)$/i],
+      'flex-direction': [/^(row|row-reverse|column|column-reverse)$/i],
+      'flex-wrap': [/^(nowrap|wrap|wrap-reverse)$/i],
+      order: [/^\d+$/],
+      'flex-shrink': [/^\d+$/],
+      'flex-grow': [/^\d+$/],
+      'flex-basis': [/^(auto)$/i],
+      flex: [/^(none)$/, /^\d+(?: \d+)(?: auto)$/i],
+      'justify-content': [/^(flex-start|flex-end|center|space-between|space-around|space-evenly|start|end|left|right)$/i],
+      'align-self': [/^(auto|flex-start|flex-end|center|baseline|stretch)$/i],
+      'align-items': [/^(stretch|flex-start|flex-end|center|baseline|first baseline|last baseline|start|end|self-start|self-end)$/i],
+      'align-content': [/^(flex-start|flex-end|center|stretch|space-between|space-around)$/i],
+      gap: [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+      'row-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
+    },
+  },
+}
+
+function cleanConfig(conf) {
+  if (conf.description) conf.description = sanitizeHtml(conf.description)
+  if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
+  if (conf.customFooter && conf.customFooter.htmlXS) conf.customFooter.htmlXS = sanitizeHtml(conf.customFooter.htmlXS, styledSanitizeOpts)
+  if (conf.customFooter && conf.customFooter.htmlMD) conf.customFooter.htmlMD = sanitizeHtml(conf.customFooter.htmlMD, styledSanitizeOpts)
+  if (conf.customHeader && conf.customHeader.htmlXS) conf.customHeader.htmlXS = sanitizeHtml(conf.customHeader.htmlXS, styledSanitizeOpts)
+  if (conf.customHeader && conf.customHeader.htmlMD) conf.customHeader.htmlMD = sanitizeHtml(conf.customHeader.htmlMD, styledSanitizeOpts)
+  return conf
 }
 
 // portals are synced to settings.publicationSites in data-fair
@@ -90,8 +149,8 @@ router.post('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const collection = req.app.get('db').collection('portals')
   const portal = req.body
-  portal.config = portal.config || configDefaults
-  portal.configDraft = portal.configDraft || configDefaults
+  portal.config = cleanConfig(portal.config || configDefaults)
+  portal.configDraft = cleanConfig(portal.configDraft || configDefaults)
   if (portal._id) return res.status(400).send('You cannot specify the id of the created portal')
   if (portal.host) return res.status(400).send('You cannot specify the host of the created portal')
   portal._id = shortid.generate()
@@ -152,7 +211,7 @@ router.delete('/:id', setPortal, asyncWrap(async(req, res) => {
 router.put('/:id/configDraft', setPortal, asyncWrap(async(req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await req.app.get('db')
-    .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.body } })
+    .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: cleanConfig(req.body) } })
   res.send()
 }))
 
@@ -263,7 +322,7 @@ async function setPortalAnonymous(req, res, next) {
 
 // Public access to the portal configuration, except for the draft that is reserved to owner
 router.get('/:id/config', setPortalAnonymous, asyncWrap(async (req, res) => {
-  res.send(req.config)
+  res.send(cleanConfig(req.config))
 }))
 
 // Get the list of pages
@@ -394,7 +453,7 @@ const limiter = (req) => {
   return _limiter
 }
 router.post('/:id/contact-email', setPortalAnonymous, asyncWrap(async (req, res, next) => {
-  if (!emailValidator.validate(req.body.from)) return res.status(400).send(req.messages.errors.badEmail)
+  if (!emailValidator.validate(req.body.from)) return res.status(400).send('Adresse mail non renseignée ou malformée.')
   if (!req.body.token) return res.status(401).send()
   if (!req.config.contactEmail) return res.status(404).send('Adresse mail de contact non configurée')
 
