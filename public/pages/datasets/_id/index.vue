@@ -14,7 +14,7 @@
             :src="dataset.thumbnail || dataset.image"
             :alt="dataset.title"
             class="mb-3"
-            style="max-height:300px"
+            style="max-height:300px;max-width:95%"
           >
           <div v-html="marked(dataset.description || '')" />
         </v-col>
