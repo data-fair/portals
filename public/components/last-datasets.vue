@@ -32,7 +32,6 @@
                 :src="dataset.thumbnail || dataset.image"
                 :alt="dataset.title"
                 :height="200"
-                contains
               />
               <v-card-text
                 v-else
