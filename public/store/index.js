@@ -96,7 +96,7 @@ export default () => {
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
           console.log('portal served on specific domain', publicUrl)
           commit('setAny', { publicUrl, publicBaseUrl: publicUrl })
-        } else {
+        } else if (!state.publicUrl) {
           // accessing the portal simply as a page the portals manager
           const publicUrlInfo = { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin }
           console.log('portal served on default domain', publicUrlInfo)
