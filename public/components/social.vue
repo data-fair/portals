@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="share-network">
     <share-network
       :url="url"
       :title="title"
@@ -73,4 +73,7 @@
 </script>
 
 <style lang="css" scoped>
+.share-network a {
+  text-decoration:none;
+}
 </style>

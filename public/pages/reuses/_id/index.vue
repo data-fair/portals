@@ -36,6 +36,19 @@
             </v-card-actions>
             <v-subheader>Mis à jour le {{ $dayjs(application.updatedAt).format("DD/MM/YYYY") }}</v-subheader>
           </v-card>
+          <v-row>
+            <v-spacer />
+            <v-col cols="auto">
+              <v-subheader :color="'primary'">
+                Partager
+              </v-subheader>
+              <social
+                v-if="application"
+                :url="pageUrl"
+                :title="application.title"
+              />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
@@ -70,12 +83,8 @@
         </v-row>
       </v-container>
 
-      <v-row class="mb-4 align-center">
-        <v-col
-          cols="12"
-          sm="6"
-          md="8"
-        >
+      <v-row class="my-4 text-center">
+        <v-col cols="12">
           <v-btn
             :color="'primary'"
             to="/reuses"
@@ -84,20 +93,6 @@
           >
             <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste des visualisations
           </v-btn>
-        </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-          md="4"
-        >
-          <v-subheader :color="'primary'">
-            Partager
-          </v-subheader>
-          <social
-            v-if="application"
-            :url="pageUrl"
-            :title="application.title"
-          />
         </v-col>
       </v-row>
 

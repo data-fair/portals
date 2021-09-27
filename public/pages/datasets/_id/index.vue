@@ -8,13 +8,20 @@
     <v-container v-else-if="dataset">
       <section-title :text="dataset.title" />
       <v-row>
-        <v-col md="7" sm="12">
+        <v-col :md="7" :cols="12">
+          <img
+            v-if="dataset.image"
+            :src="dataset.thumbnail || dataset.image"
+            :alt="dataset.title"
+            class="mb-3"
+            style="max-height:300px;max-width:95%"
+          >
           <div v-html="marked(dataset.description || '')" />
         </v-col>
         <v-col
-          md="4"
-          offset-md="1"
-          sm="12"
+          :md="4"
+          :offset-md="1"
+          :cols="12"
         >
           <v-card class="mb-3" outlined>
             <v-list>
@@ -110,6 +117,19 @@
             </v-card-actions>
             <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>
           </v-card>
+          <v-row>
+            <v-spacer />
+            <v-col cols="auto">
+              <v-subheader :color="'primary'">
+                Partager
+              </v-subheader>
+              <social
+                v-if="dataset"
+                :url="url"
+                :title="dataset.title"
+              />
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
@@ -227,11 +247,9 @@
         </v-row>
       </v-row>
 
-      <v-row class="mb-4 align-center">
+      <v-row class="my-4 text-center">
         <v-col
           cols="12"
-          sm="6"
-          md="8"
         >
           <v-btn
             :color="'primary'"
@@ -241,20 +259,6 @@
           >
             <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste des jeux de données
           </v-btn>
-        </v-col>
-        <v-col
-          cols="12"
-          sm="6"
-          md="4"
-        >
-          <v-subheader :color="'primary'">
-            Partager
-          </v-subheader>
-          <social
-            v-if="dataset"
-            :url="url"
-            :title="dataset.title"
-          />
         </v-col>
       </v-row>
       <!-- <section-subtitle text="Discussion"/>
@@ -297,8 +301,8 @@
       VIframe,
     },
     async fetch () {
-      const dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
-      const params = { select: 'title,description,url,bbox' }
+      const dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id)
+      const params = { select: 'title,description,url,bbox,image' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
       else params.dataset = this.$route.params.id
       params.publicationSites = 'data-fair-portals:' + this.portal._id
