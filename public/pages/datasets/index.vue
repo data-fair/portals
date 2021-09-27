@@ -256,7 +256,7 @@
           this.lastParams = params
           this.loading = true
           this.$router.push({ query })
-          const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets')
+          const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })
           if (append) datasets.results.forEach(r => this.datasets.results.push(r))
           else this.datasets = datasets
           this.loading = false
