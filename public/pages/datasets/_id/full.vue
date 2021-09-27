@@ -70,7 +70,7 @@
     layout: 'minimal',
     components: { Error, VIframe },
     async fetch () {
-      this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { withCredentials: true })
+      this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id)
     },
     data: () => ({
       dataset: null,

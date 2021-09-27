@@ -38,7 +38,6 @@
     computed: {
       vjsfOptions() {
         return {
-          httpOptions: { withCredentials: true },
           editMode: 'inline',
           arrayItemCardProps: { outlined: true },
           ...this.options,

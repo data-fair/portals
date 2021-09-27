@@ -306,7 +306,7 @@
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
       else params.dataset = this.$route.params.id
       params.publicationSites = 'data-fair-portals:' + this.portal._id
-      const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
+      const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
         applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
       }
@@ -333,7 +333,7 @@
       },
     },
     async mounted() {
-      const baseApps = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 }, withCredentials: true })
+      const baseApps = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 } })
       this.baseApplications = Object.assign({}, ...baseApps.results.map(a => ({ [a.url]: a })))
     },
     methods: {

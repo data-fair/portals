@@ -158,7 +158,6 @@
           sort: 'createdAt:-1',
           visibility: this.config.authentication === 'none' ? 'public' : '',
         },
-        withCredentials: true,
       })
       const promiseDatasets = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
         params: {
@@ -169,7 +168,6 @@
           sort: 'createdAt:-1',
           visibility: this.config.authentication === 'none' ? 'public' : '',
         },
-        withCredentials: true,
       })
 
       // TODO: replace by a proper public stats route
@@ -182,7 +180,6 @@
           visibility: this.config.authentication === 'none' ? 'public' : '',
           facets: 'topics',
         },
-        withCredentials: true,
       })
       this.applications = await promiseApplications
       this.datasets = await promiseDatasets

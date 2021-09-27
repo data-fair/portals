@@ -90,7 +90,7 @@
       async resolveDataset() {
         if (this.value.type === 'datasetCard' && this.value.dataset) {
           this.loading = true
-          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { withCredentials: true })
+          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id)
           this.loading = false
         } else this.resolvedDataset = null
       },
