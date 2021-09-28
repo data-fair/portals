@@ -18,7 +18,7 @@
     props: ['owner'],
     computed: {
       directoryUrl() {
-        return process.env.directoryUrl
+        return this.$store.getters.directoryUrl
       },
       label() {
         let label = this.owner.name

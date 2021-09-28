@@ -1,16 +1,19 @@
-const cors = require('cors')
+const fs = require('fs-extra')
 const fr = require('vuetify/es5/locale/fr').default
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
-
 if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (process.argv.slice(-1)[0] === 'build') config = nuxtConfigInject.prepare(config)
-  else nuxtConfigInject.replace(config)
+  else {
+    fs.removeSync('.nuxt-standalone')
+    fs.copySync('.nuxt', '.nuxt-standalone')
+    nuxtConfigInject.replace(config)
+    nuxtConfigInject.replace({ ...config, basePath: '/' }, ['.nuxt-standalone/**/*'])
+  }
 }
 
 module.exports = {
-  // ssr: process.env.NODE_ENV !== 'development',
   ssr: true,
   components: true,
   srcDir: 'public/',
@@ -26,8 +29,6 @@ module.exports = {
       'pbkdf2', // this is a nuxt dep, but weirdly without this line we have a ie11 crash
     ],
     extend (webpackConf, { isServer, isDev, isClient }) {
-      // webpackConf.output.publicPath = config.publicUrl + '/_nuxt/'
-
       // Loader for sounds
       webpackConf.module.rules.push({
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
@@ -37,7 +38,6 @@ module.exports = {
         },
       })
     },
-    publicPath: config.publicUrl + '/_nuxt/',
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
@@ -60,8 +60,7 @@ module.exports = {
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', '@nuxtjs/dayjs'],
   axios: {
     browserBaseURL: config.basePath,
-    baseURL: config.publicUrl,
-    credentials: true,
+    baseURL: 'http://localhost:' + config.port,
   },
   buildModules: ['@nuxtjs/vuetify'],
   vuetify: {
@@ -106,13 +105,7 @@ module.exports = {
     ],
   },
   env: {
-    publicUrl: config.publicUrl,
-    directoryUrl: config.directoryUrl,
-    dataFairUrl: config.dataFairUrl,
-    openapiViewerUrl: config.openapiViewerUrl,
-    notifyUrl: config.notifyUrl,
-    notifyWSUrl: config.notifyWSUrl,
-    sessionDomain: config.sessionDomain,
+    mainPublicUrl: config.publicUrl,
     development: process.env.NODE_ENV === 'development',
   },
   head: {
@@ -124,6 +117,7 @@ module.exports = {
   },
 }
 
+/*
 if (process.env.NODE_ENV === 'development') {
   module.exports.hooks = {
     build: {
@@ -145,3 +139,4 @@ if (process.env.NODE_ENV === 'development') {
     },
   }
 }
+*/

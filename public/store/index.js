@@ -17,7 +17,8 @@ export default () => {
       initialQuery: {},
       textDark: '#212121',
       breadcrumbs: null,
-      publicUrl: null,
+      publicUrl: '',
+      publicBaseUrl: '',
     },
     getters: {
       embed() {
@@ -46,6 +47,21 @@ export default () => {
         if (!state.config) return
         return state.config.owner.type + ':' + state.config.owner.id
       },
+      directoryUrl(state) {
+        return state.publicBaseUrl + '/simple-directory'
+      },
+      dataFairUrl(state) {
+        return state.publicBaseUrl + '/data-fair'
+      },
+      openapiViewerUrl(state) {
+        return state.publicBaseUrl + '/openapi-viewer'
+      },
+      notifyUrl(state) {
+        return state.publicBaseUrl + '/notify'
+      },
+      notifyWSUrl(state, getters) {
+        return getters.notifyUrl.replace('ws://', 'http://').replace('wss://', 'https://')
+      },
     },
     mutations: {
       setAny(state, params) {
@@ -54,12 +70,18 @@ export default () => {
     },
     actions: {
       async fetchPortalInfos({ state, commit }, portalId) {
-        const portal = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}`, { params: { noConfig: true } })
+        const portal = await this.$axios.$get(`api/v1/portals/${portalId}`, { params: { noConfig: true } })
         commit('setAny', { portal })
       },
       async fetchConfig({ state, commit }, portalId) {
-        const config = await this.$axios.$get(`${process.env.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
-        commit('setAny', { config })
+        console.log('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
+        try {
+          const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
+          commit('setAny', { config })
+        } catch (err) {
+          console.error('failure to fetch config', err)
+          throw err
+        }
       },
       setBreadcrumbs({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
@@ -68,15 +90,21 @@ export default () => {
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      async init({ state, dispatch, commit }, { req, env, app, route }) {
-        let baseUrl = env.publicUrl + '/api/v1/session'
-        if (global.location && !env.publicUrl.startsWith(global.location.origin)) {
-          baseUrl = global.location.origin + '/api/v1/session'
+      async init({ state, dispatch, commit, getters }, { req, env, app, route }) {
+        if (req && req.headers && req.headers.host && new URL(env.mainPublicUrl).host !== req.headers.host) {
+          // portal exposed on an external domain has to be at the root
+          const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
+          console.log('portal served on specific domain', publicUrl)
+          commit('setAny', { publicUrl, publicBaseUrl: publicUrl })
+        } else if (!state.publicUrl) {
+          // accessing the portal simply as a page the portals manager
+          const publicUrlInfo = { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin }
+          console.log('portal served on default domain', publicUrlInfo)
+          commit('setAny', publicUrlInfo)
         }
         dispatch('session/init', {
           cookies: this.$cookies,
-          baseUrl,
-          cookieDomain: env.sessionDomain,
+          directoryUrl: getters.directoryUrl,
         })
         if (!state.portal) {
           const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
@@ -91,7 +119,6 @@ export default () => {
               portal: {
                 _id: portalId,
               },
-              publicUrl: `http${env.development ? '' : 's'}://${req.headers.host}`,
             })
             await dispatch('fetchConfig', portalId)
           }

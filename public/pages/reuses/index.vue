@@ -225,7 +225,7 @@
           this.lastParams = params
           this.loading = true
           this.$router.push({ query })
-          const applications = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications', { params, withCredentials: true })
+          const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
           if (append) applications.results.forEach(r => this.applications.results.push(r))
           else this.applications = applications
           this.loading = false

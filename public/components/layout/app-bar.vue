@@ -93,48 +93,49 @@
     <v-toolbar-items>
       <notifications-queue v-if="user && notifyUrl" :notify-url="notifyUrl" />
       <template v-if="initialized && config.authentication !== 'none'">
-        <v-btn
-          v-if="!user"
-          depressed
-          color="primary"
-          @click="login(url)"
-        >
-          Se connecter
-        </v-btn>
-        <v-menu
-          v-else
-          offset-y
-          nudge-left
-        >
-          <template v-slot:activator="{on}">
-            <v-btn
-              text
-              :height="64"
-              v-on="on"
-            >
-              <v-avatar :size="36">
-                <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
-              </v-avatar>
+        <client-only>
+          <v-btn
+            v-if="!user"
+            depressed
+            color="primary"
+            :href="loginUrl(url, false, {org: config.owner.type === 'organization' ? config.owner.id : '', primary: config.themeColor})"
+          >
+            Se connecter
+          </v-btn>
+          <v-menu
+            v-else
+            offset-y
+            nudge-left
+          >
+            <template v-slot:activator="{on}">
+              <v-btn
+                text
+                :height="64"
+                v-on="on"
+              >
+                <v-avatar :size="36">
+                  <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
+                </v-avatar>
                   &nbsp;
-              {{ user.name }}
-              <v-icon right>
-                mdi-menu-down
-              </v-icon>
-            </v-btn>
-          </template>
-          <v-list outlined>
-            <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
-              <v-list-item-title>Back-office</v-list-item-title>
-            </v-list-item>
-            <v-divider />
-            <v-list-item
-              :to="{name: 'me'}"
-              :disabled="embed"
-              nuxt
-            >
-              <v-list-item-title>Mon compte</v-list-item-title>
-            </v-list-item>
-            <!--<v-list-item dense>
+                {{ user.name }}
+                <v-icon right>
+                  mdi-menu-down
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-list outlined>
+              <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
+                <v-list-item-title>Back-office</v-list-item-title>
+              </v-list-item>
+              <v-divider />
+              <v-list-item
+                :to="{name: 'me'}"
+                :disabled="embed"
+                nuxt
+              >
+                <v-list-item-title>Mon compte</v-list-item-title>
+              </v-list-item>
+              <!--<v-list-item dense>
               <v-list-item-title style="overflow: visible;">
                 <v-switch
                   v-model="$vuetify.theme.dark"
@@ -146,11 +147,12 @@
                 />
               </v-list-item-title>
             </v-list-item>-->
-            <v-list-item :disabled="embed" @click="logout">
-              <v-list-item-title>Se déconnecter</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+              <v-list-item :disabled="embed" @click="logout">
+                <v-list-item-title>Se déconnecter</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </client-only>
       </template>
     </v-toolbar-items>
   </v-app-bar>
@@ -164,7 +166,7 @@
   export default {
     components: { XsMenu, NotificationsQueue },
     async fetch() {
-      this.pages = (await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+      this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
     },
     data: () => ({
       pages: null,
@@ -172,21 +174,13 @@
     computed: {
       ...mapState(['config', 'textDark', 'portal']),
       ...mapState('session', ['user', 'initialized']),
-      ...mapGetters(['themeColorDark', 'embed']),
-      directoryUrl() {
-        return process.env.directoryUrl
-      },
-      dataFairUrl() {
-        return process.env.dataFairUrl
-      },
-      notifyUrl() {
-        return process.env.notifyUrl
-      },
+      ...mapGetters(['themeColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
+      ...mapGetters('session', ['loginUrl']),
       extraMenus() {
         return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
       },
       url () {
-        return window.location.href
+        return global.location && global.location.href
       },
     },
     methods: {
@@ -196,7 +190,7 @@
       },
       setDarkCookie(value) {
         const maxAge = 60 * 60 * 24 * 100 // 100 days
-        this.$cookies.set('theme_dark', '' + value, { path: '/', domain: process.env.sessionDomain, maxAge })
+        this.$cookies.set('theme_dark', '' + value, { maxAge })
         this.reload()
       },
     },

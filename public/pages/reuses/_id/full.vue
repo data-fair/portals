@@ -69,7 +69,7 @@
     layout: 'minimal',
     components: { Error, VIframe },
     async fetch () {
-      this.application = await this.$axios.$get(process.env.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { withCredentials: true })
+      this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id)
     },
     data: () => ({
       application: null,
@@ -83,7 +83,7 @@
         return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'
       },
       embedUrl() {
-        return process.env.dataFairUrl + '/app/' + this.$route.params.id
+        return this.$store.getters.dataFairUrl + '/app/' + this.$route.params.id
       },
     },
     head () {

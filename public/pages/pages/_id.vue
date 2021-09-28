@@ -23,7 +23,7 @@
       Error,
     },
     async fetch () {
-      this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
+      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
     },
     data: () => ({
       page: null,
@@ -36,7 +36,7 @@
     },
     watch: {
       async '$route.params.id' () {
-        this.page = await this.$axios.$get(process.env.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
+        this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
       },
     },
     head () {

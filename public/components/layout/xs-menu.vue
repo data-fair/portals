@@ -68,10 +68,10 @@
     computed: {
       ...mapState(['config']),
       directoryUrl() {
-        return process.env.directoryUrl
+        return this.$store.getters.directoryUrl
       },
       dataFairUrl() {
-        return process.env.dataFairUrl + (process.env.development ? '/' : '')
+        return this.$store.getters.dataFairUrl + (process.env.development ? '/' : '')
       },
     },
   }

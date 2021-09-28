@@ -36,7 +36,7 @@
 <script>
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
-
+  import { mapGetters } from 'vuex'
   export default {
     components: { VIframe },
     props: ['dataset', 'color'],
@@ -46,12 +46,7 @@
       }
     },
     computed: {
-      dataFairUrl() {
-        return process.env.dataFairUrl
-      },
-      openapiViewerUrl() {
-        return process.env.openapiViewerUrl
-      },
+      ...mapGetters(['dataFairUrl', 'openapiViewerUrl']),
     },
     watch: {
       dialog() {
