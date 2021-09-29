@@ -1,5 +1,7 @@
 <template lang="html">
-  <v-iframe :src="embedUrl" />
+  <no-ssr>
+    <v-iframe :src="embedUrl" />
+  </no-ssr>
 </template>
 
 <script>
@@ -13,9 +15,13 @@
     components: { VIframe },
     computed: {
       ...mapState(['config']),
+      ...mapState('session', ['user']),
       embedUrl() {
         return `${this.$store.getters.directoryUrl}/me?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
+    },
+    mounted() {
+      if (!this.user) this.$router.push('/')
     },
   }
 </script>
