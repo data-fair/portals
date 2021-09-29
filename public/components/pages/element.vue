@@ -40,7 +40,7 @@
     />
     <v-iframe
       v-else-if="value.type === 'application' && value.application"
-      :src="value.application.exposedUrl + '?embed=true'"
+      :src="applicationIframeSrc(value.application)"
     />
     <v-img
       v-else-if="value.type === 'image' && value.url"
@@ -86,6 +86,9 @@
       },
       formIframeSrc(dataset) {
         return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
+      },
+      applicationIframeSrc(application) {
+        return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
       async resolveDataset() {
         if (this.value.type === 'datasetCard' && this.value.dataset) {
