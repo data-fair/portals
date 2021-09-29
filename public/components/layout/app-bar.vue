@@ -124,7 +124,7 @@
               </v-btn>
             </template>
             <v-list outlined>
-              <v-list-item :href="dataFairUrl + '/'" :disabled="embed">
+              <v-list-item :href="mainDataFairUrl + '/'" :disabled="embed">
                 <v-list-item-title>Back-office</v-list-item-title>
               </v-list-item>
               <v-divider />
@@ -181,6 +181,9 @@
       },
       url () {
         return global.location && global.location.href
+      },
+      mainDataFairUrl() {
+        return process.env.mainDataFairUrl
       },
     },
     methods: {

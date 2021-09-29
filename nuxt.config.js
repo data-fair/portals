@@ -106,6 +106,7 @@ module.exports = {
   },
   env: {
     mainPublicUrl: config.publicUrl,
+    mainDataFairUrl: config.dataFairUrl,
     development: process.env.NODE_ENV === 'development',
   },
   head: {
