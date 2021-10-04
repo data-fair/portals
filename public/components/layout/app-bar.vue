@@ -195,7 +195,7 @@
       },
       backOfficeUrl() {
         let url = this.mainDataFairUrl + '/'
-        if (this.config.owner.type === 'organization') url += '?org=' + this.config.owner.id
+        url += '?account=' + encodeURIComponent(this.config.owner.type + ':' + this.config.owner.id)
         return url
       },
     },
