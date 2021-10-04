@@ -123,16 +123,23 @@
                 </v-icon>
               </v-btn>
             </template>
-            <v-list outlined>
-              <v-list-item :href="mainDataFairUrl + '/'" :disabled="embed">
-                <v-list-item-title>Back-office</v-list-item-title>
-              </v-list-item>
-              <v-divider />
+            <v-list outlined class="py-0">
+              <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id))">
+                <v-list-item
+                  :href="backOfficeUrl"
+                  :disabled="embed"
+                >
+                  <v-list-item-action><v-icon>mdi-wrench</v-icon></v-list-item-action>
+                  <v-list-item-title>Back-office</v-list-item-title>
+                </v-list-item>
+                <v-divider />
+              </template>
               <v-list-item
                 :to="{name: 'me'}"
                 :disabled="embed"
                 nuxt
               >
+                <v-list-item-action><v-icon>mdi-information-outline</v-icon></v-list-item-action>
                 <v-list-item-title>Mon compte</v-list-item-title>
               </v-list-item>
               <!--<v-list-item dense>
@@ -148,6 +155,7 @@
               </v-list-item-title>
             </v-list-item>-->
               <v-list-item :disabled="embed" @click="logout">
+                <v-list-item-action><v-icon>mdi-logout</v-icon></v-list-item-action>
                 <v-list-item-title>Se déconnecter</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -184,6 +192,11 @@
       },
       mainDataFairUrl() {
         return process.env.mainDataFairUrl
+      },
+      backOfficeUrl() {
+        let url = this.mainDataFairUrl + '/'
+        if (this.config.owner.type === 'organization') url += '?org=' + this.config.owner.id
+        return url
       },
     },
     methods: {

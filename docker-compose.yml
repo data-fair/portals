@@ -1,7 +1,7 @@
 version: '3'
 services:
   sd:
-    image: koumoul/simple-directory:multi-domain
+    image: koumoul/simple-directory:master
     ports:
       - 6201:8080
       - 1080:1080
@@ -19,7 +19,7 @@ services:
       - ./test/resources/organizations.json:/webapp/data/organizations.json
 
   data-fair:
-    image: koumoul/data-fair:multi-domain
+    image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
     environment:
@@ -34,12 +34,11 @@ services:
       # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/s/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
 
   notify:
-    image: koumoul/notify:master
+    image: ghcr.io/data-fair/notify:master
     network_mode: host
     environment:
       - PORT=8088
       - PUBLIC_URL=http://localhost:6200/notify
-      - WS_PUBLIC_URL=ws://localhost:6200/notify
       - DIRECTORY_URL=http://localhost:6200/simple-directory
       - SECRET_NOTIFICATIONS=secret-notifications
       - SECRET_SENDMAILS=secret-sendmails
