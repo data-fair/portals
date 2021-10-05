@@ -106,6 +106,8 @@ metadata:
   name: portal-{{ newHost.replace(/\./g, '-') }}
   annotations:
     kubernetes.io/tls-acme: "true"
+    # Remove matched prefix from all rules
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   tls:
     - hosts:
@@ -115,7 +117,19 @@ spec:
     - host: {{ newHost }}
       http:
         paths:
-          - path: /
+          - path: /simple-directory/(.*)
+            backend:
+              serviceName: simple-directory
+              servicePort: 8080
+          - path: /data-fair/(.*)
+            backend:
+              serviceName: data-fair-cache
+              servicePort: 80
+          - path: /notify/(.*)
+            backend:
+              serviceName: notify
+              servicePort: 8080
+          - path: /?(.*)
             backend:
               serviceName: data-fair-portals
               servicePort: 8080
