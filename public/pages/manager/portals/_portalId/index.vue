@@ -51,31 +51,50 @@
           <v-row class="mt-3">
             <v-spacer />
 
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  color="primary"
-                  type="submit"
-                  v-on="on"
-                >
-                  Publier l'ébauche
-                </v-btn>
-              </template>
-              <span>La version courante du portail est mise à jour à partir de l'ébauche</span>
-            </v-tooltip>
-            <v-tooltip bottom>
+            <v-btn
+              color="primary"
+              type="submit"
+              title="La version courante du portail est mise à jour à partir de l'ébauche"
+              v-on="on"
+            >
+              Publier l'ébauche
+            </v-btn>
+            <v-menu
+              v-model="showCancelDialog"
+              max-width="500px"
+              :close-on-content-click="false"
+            >
               <template v-slot:activator="{ on }">
                 <v-btn
                   color="warning"
                   class="ml-2 mr-3"
+                  title="Repartir de la version courante du portail pour l'ébauche"
                   @click="showCancelDialog = true"
                   v-on="on"
                 >
                   Réinitialiser
                 </v-btn>
               </template>
-              <span>Repartir de la version courante du portail pour l'ébauche</span>
-            </v-tooltip>
+              <v-card>
+                <v-card-title primary-title>
+                  Effacer le brouillon
+                </v-card-title>
+                <v-card-text>
+                  <v-alert :value="true" type="error">
+                    Attention le brouillon sera perdu et l'application reviendra à son état validé précédent.
+                  </v-alert>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn text @click="showCancelDialog = false">
+                    Annuler
+                  </v-btn>
+                  <v-btn color="warning" @click="cancelDraft($event); showCancelDialog = false;">
+                    Confirmer
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-menu>
           </v-row>
         </v-form>
       </v-col>
@@ -122,28 +141,6 @@
         </v-tabs>
       </v-col>
     </v-row>
-
-    <v-dialog v-model="showCancelDialog" max-width="500px">
-      <v-card>
-        <v-card-title primary-title>
-          Effacer le brouillon
-        </v-card-title>
-        <v-card-text>
-          <v-alert :value="true" type="error">
-            Attention le brouillon sera perdu et l'application reviendra à son état validé précédent.
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="showCancelDialog = false">
-            Annuler
-          </v-btn>
-          <v-btn color="warning" @click="cancelDraft($event); showCancelDialog = false;">
-            Confirmer
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
