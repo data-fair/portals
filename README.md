@@ -2,6 +2,7 @@
 
 Portals manager for data-fair.
 
+
 Install dependencies and launch service dependencies with docker-compose:
 
     npm install
