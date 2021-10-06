@@ -17,6 +17,7 @@ module.exports = {
   ssr: true,
   components: true,
   srcDir: 'public/',
+  telemetry: false,
   build: {
     transpile: [
       /@koumoul/,

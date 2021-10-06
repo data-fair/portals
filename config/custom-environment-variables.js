@@ -18,4 +18,8 @@ module.exports = {
       __format: 'json',
     },
   },
+  proxyNuxt: {
+    __name: 'PROXY_NUXT',
+      __format: 'json',
+  },
 }

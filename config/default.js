@@ -8,6 +8,7 @@ module.exports = {
   privateNotifyUrl: null,
   notifyWSUrl: null,
   sessionDomain: null,
+  proxyNuxt: false,
   mongo: {
     host: 'localhost',
     port: 27017,

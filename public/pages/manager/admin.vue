@@ -108,6 +108,9 @@ metadata:
     kubernetes.io/tls-acme: "true"
     # Remove matched prefix from all rules
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # Add some trailing slashes to some urls and remove deprecated /s prefix
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(/openapi-viewer)$ $1/ redirect;
 spec:
   tls:
     - hosts:
@@ -128,6 +131,10 @@ spec:
           - path: /notify/(.*)
             backend:
               serviceName: notify
+              servicePort: 8080
+          - path: /openapi-viewer/(.*)
+            backend:
+              serviceName: openapi-viewer
               servicePort: 8080
           - path: /?(.*)
             backend:
