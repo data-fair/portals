@@ -47,8 +47,12 @@
               </v-list-item>
             </v-list>
             <v-card-actions>
-              <table-preview :dataset="dataset" :color="'primary'" />
-              <v-tooltip top>
+              <table-preview
+                v-if="!dataset.isMetaOnly"
+                :dataset="dataset"
+                :color="'primary'"
+              />
+              <v-tooltip v-if="!dataset.isMetaOnly" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
@@ -69,7 +73,7 @@
                 :color="'primary'"
               />
               <api-view
-                v-if="!isMobileOnly"
+                v-if="!isMobileOnly && !dataset.isMetaOnly"
                 :dataset="dataset"
                 color="primary"
               />
@@ -100,8 +104,12 @@
                 </template>
                 <span>Télécharger les données enrichies</span>
               </v-tooltip>
-              <schema-view :dataset="dataset" :color="'primary'" />
-              <dataset-embed :dataset="dataset" />
+              <schema-view
+                v-if="!dataset.isMetaOnly"
+                :dataset="dataset"
+                :color="'primary'"
+              />
+              <dataset-embed v-if="!dataset.isMetaOnly" :dataset="dataset" />
               <attachments
                 v-if="dataset.attachments && dataset.attachments.length"
                 :dataset="dataset"

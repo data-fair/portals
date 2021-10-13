@@ -71,8 +71,12 @@
         </v-row>
       </nuxt-link>
       <v-card-actions class="py-0">
-        <table-preview :dataset="dataset" :color="'primary'" />
-        <v-tooltip top>
+        <table-preview
+          v-if="!dataset.isMetaOnly"
+          :dataset="dataset"
+          :color="'primary'"
+        />
+        <v-tooltip v-if="!dataset.isMetaOnly" top>
           <template v-slot:activator="{ on }">
             <v-btn
               :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
@@ -93,11 +97,15 @@
           :color="'primary'"
         />
         <api-view
-          v-if="!isMobileOnly"
+          v-if="!isMobileOnly && !dataset.isMetaOnly"
           :dataset="dataset"
           :color="'primary'"
         />
-        <schema-view :dataset="dataset" :color="'primary'" />
+        <schema-view
+          v-if="!dataset.isMetaOnly"
+          :dataset="dataset"
+          :color="'primary'"
+        />
         <v-spacer />
         <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>
         <!-- <v-layout column>

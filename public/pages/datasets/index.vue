@@ -247,7 +247,7 @@
         const params = Object.assign({}, query)
         params.size = this.size
         params.page = this.page
-        params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image'
+        params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
         params.facets = 'concepts,topics'
         params.owner = this.owner
         params.publicationSites = 'data-fair-portals:' + this.portal._id
