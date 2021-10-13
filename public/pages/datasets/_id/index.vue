@@ -25,7 +25,7 @@
         >
           <v-card class="mb-3" outlined>
             <v-list>
-              <v-list-item>
+              <v-list-item v-if="!dataset.isMetaOnly">
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
