@@ -25,7 +25,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card-text>
+        <v-card-text class="pa-0">
           <v-iframe aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
         </v-card-text>
       </v-card>

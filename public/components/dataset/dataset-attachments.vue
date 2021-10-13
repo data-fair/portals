@@ -26,13 +26,14 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card-text>
-          <v-list>
+        <v-card-text class="pa-0">
+          <v-list class="mb-0">
             <v-list-item v-for="attachment in dataset.attachments" :key="attachment.name">
-              <v-list-item-avatar size="80">
+              <v-list-item-avatar size="80" class="my-0">
                 <v-row>
                   <v-col>
                     <span>{{ attachment.name.split('.').pop().toUpperCase() }}</span>
+                    <br>
                     <small>{{ attachment.size | bytes }}</small>
                     <!-- <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon> -->
                   </v-col>
