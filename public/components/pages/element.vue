@@ -10,7 +10,7 @@
       border="left"
       text
     >
-      <div v-html="marked(value.content)" />
+      <div v-html="sanitizeHtml(marked(value.content))" />
     </v-alert>
     <div v-else-if="value.type === 'divider'" class="my-6">
       <v-divider />
@@ -54,7 +54,7 @@
   import VIframe from '@koumoul/v-iframe'
   import DatasetCard from '~/components/dataset/card.vue'
   import marked from 'marked'
-  import sanitizeHtml from 'sanitize-html'
+  import sanitizeHtml from '~/assets/sanitize'
   const { mapState } = require('vuex')
 
   export default {

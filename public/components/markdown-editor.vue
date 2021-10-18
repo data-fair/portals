@@ -14,7 +14,7 @@
       flat
       class="px-0"
     >
-      <v-card-text class="px-0 pb-0 pt-2" v-html="marked(value)" />
+      <v-card-text class="px-0 pb-0 pt-2" v-html="sanitizeHtml(marked(value))" />
     </v-card>
   </v-input>
 </template>
@@ -22,6 +22,7 @@
 <script>
   import 'easymde/dist/easymde.min.css'
   import marked from 'marked'
+  import sanitizeHtml from '~/assets/sanitize'
 
   export default {
     props: {
@@ -38,7 +39,9 @@
       const config = {
         element: this.$el.querySelector('textarea'),
         initialValue: this.value,
-        renderingConfig: {},
+        renderingConfig: {
+          sanitizerFunction: sanitizeHtml,
+        },
         status: false,
         autoDownloadFontAwesome: false,
         spellChecker: false,
@@ -171,6 +174,7 @@
     },
     methods: {
       marked,
+      sanitizeHtml,
     },
   }
 </script>

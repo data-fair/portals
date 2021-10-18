@@ -43,11 +43,14 @@ function cleanPortal(portal) {
   return portal
 }
 
+// WARNING, synced with public/assets/sanitize.js
 const styledSanitizeOpts = {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe']),
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
     '*': ['style', 'class'],
+    iframe: ['src', 'width', 'height', 'frameborder', 'allowfullscreen'],
+    img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes'],
   },
   allowedStyles: {
     '*': {
