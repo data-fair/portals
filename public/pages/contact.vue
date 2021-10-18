@@ -63,38 +63,7 @@
             <h4>
               Retrouvez-nous sur les réseaux sociaux
             </h4>
-            <v-btn
-              v-if="config.twitter"
-              :href="'https://twitter.com/' + config.twitter"
-              icon
-              color="primary"
-            >
-              <v-icon>mdi-twitter</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="config.facebook"
-              :href="'https://www.facebook.com/' + config.facebook"
-              icon
-              color="primary"
-            >
-              <v-icon>mdi-facebook</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="config.youtube"
-              :href="'https://www.youtube.com/channel/' + config.youtube"
-              icon
-              color="primary"
-            >
-              <v-icon>mdi-youtube</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="config.linkedin"
-              :href="'https://www.linkedin.com/company/' + config.linkedin"
-              icon
-              color="primary"
-            >
-              <v-icon>mdi-linkedin</v-icon>
-            </v-btn>
+            <social-links />
           </template>
         </v-card>
       </v-col>

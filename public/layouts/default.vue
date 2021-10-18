@@ -7,53 +7,7 @@
       :fluid="config.customHeader.fluid"
       v-html="$vuetify.breakpoint.smAndDown ? (config.customHeader.htmlXS || config.customHeader.htmlMD) : (config.customHeader.htmlMD || config.customHeader.htmlSM)"
     />
-    <v-container v-else class="pb-0">
-      <v-row align="center">
-        <v-col
-          md="4"
-          sm="6"
-          cols="12"
-          :class="{'pt-1 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
-        >
-          <a
-            v-if="config.website"
-            :href="config.website || '/'"
-            style="height:100%"
-            class="mr-3"
-          >
-            <v-img
-              :src="logoUrl"
-              :alt="config.title"
-              contain
-              style="height:80px"
-            />
-          </a>
-          <nuxt-link
-            v-else
-            to="/"
-            style="height:100%"
-            class="mr-3"
-          >
-            <v-img
-              :src="logoUrl"
-              :alt="config.title"
-              contain
-              style="height:80px"
-            />
-          </nuxt-link>
-        </v-col>
-        <v-col
-          md="8"
-          sm="6"
-          cols="12"
-          :class="`pt-0 mb-3 ${$vuetify.breakpoint.xs ? 'text-center' : ''}`"
-        >
-          <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} grey--text text--darken-2 font-weight-bold`">
-            {{ config.title }}
-          </h1>
-        </v-col>
-      </v-row>
-    </v-container>
+    <layout-header v-else />
 
     <app-bar class="mb-3" />
 
@@ -94,7 +48,7 @@
             </v-col>
 
             <v-col
-              v-if="config.twitter || config.facebook || config.linkedin || config.youtube"
+              v-if="config.twitter || config.facebook || config.linkedin || config.youtube || config.instagram"
               cols="10"
               sm="4"
               offset="2"
@@ -104,38 +58,7 @@
               <h5>
                 Retrouvez-nous sur les réseaux sociaux
               </h5>
-              <v-btn
-                v-if="config.twitter"
-                :href="'https://twitter.com/' + config.twitter"
-                icon
-                color="primary"
-              >
-                <v-icon>mdi-twitter</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="config.facebook"
-                :href="'https://www.facebook.com/' + config.facebook"
-                icon
-                color="primary"
-              >
-                <v-icon>mdi-facebook</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="config.youtube"
-                :href="'https://www.youtube.com/channel/' + config.youtube"
-                icon
-                color="primary"
-              >
-                <v-icon>mdi-youtube</v-icon>
-              </v-btn>
-              <v-btn
-                v-if="config.linkedin"
-                :href="'https://www.linkedin.com/company/' + config.linkedin"
-                icon
-                color="primary"
-              >
-                <v-icon>mdi-linkedin</v-icon>
-              </v-btn>
+              <social-links />
             </v-col>
           </v-row>
         </v-container>

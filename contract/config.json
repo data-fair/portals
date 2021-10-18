@@ -22,12 +22,6 @@
         "title": "Couleur principale",
         "x-display": "color-picker"
       },
-      "footerColor": {
-        "type": "string",
-        "default": "#424242",
-        "title": "Couleur du pied de page",
-        "x-display": "color-picker"
-      },
       "authentication": {
         "type": "string",
         "oneOf": [{
@@ -80,8 +74,39 @@
             }
           }
         }
+      }
+    }
+  }, {
+    "title": "Entête",
+    "properties": {
+      "website": {
+        "type": "string",
+        "title": "Site web accessible au clic sur le logo"
       },
-      "footerLinks":{
+      "headerSocial": {
+        "type": "boolean",
+        "title": "Montrer les liens de réseaux sociaux dans l'entête"
+      },
+      "headerLogo2": {
+        "type": "string",
+        "title": "Logo secondaire (affiché à droite de l'entête)",
+        "description": "copiez l'url d'une image"
+      },
+      "headerLogo2Link": {
+        "type": "string",
+        "title": "Site web accessible au clic sur le logo secondaire"
+      }
+    }
+  }, {
+    "title": "Pied de page",
+    "properties": {
+      "footerColor": {
+        "type": "string",
+        "default": "#424242",
+        "title": "Couleur du pied de page",
+        "x-display": "color-picker"
+      },
+      "footerLinks": {
         "title": "Liens en pied de page",
         "type" : "array",
         "items": {
@@ -301,10 +326,6 @@
   }, {
     "title": "Communication & contact",
     "properties": {
-      "website": {
-        "type": "string",
-        "title": "Site web (accessible au clic sur le logo)"
-      },
       "twitter": {
         "type": "string",
         "title": "Compte Twitter"
@@ -320,6 +341,10 @@
       "youtube": {
         "type": "string",
         "title": "Identifiant chaîne Youtube"
+      },
+      "instagram": {
+        "type": "string",
+        "title": "Compte Instagram"
       },
       "contactEmail": {
         "type": "string",
