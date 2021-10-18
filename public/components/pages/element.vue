@@ -3,14 +3,14 @@
     <h2 v-if="value.type === 'title'">
       {{ value.content }}
     </h2>
-    <div v-else-if="value.type === 'text' && value.content" v-html="sanitizeHtml(marked(value.content))" />
+    <div v-else-if="value.type === 'text' && value.content" v-html="$sanitize(marked(value.content))" />
     <v-alert
       v-else-if="value.type === 'alert' && value.content"
       :type="value.alertType"
       border="left"
       text
     >
-      <div v-html="sanitizeHtml(marked(value.content))" />
+      <div v-html="$sanitize(marked(value.content))" />
     </v-alert>
     <div v-else-if="value.type === 'divider'" class="my-6">
       <v-divider />
@@ -54,7 +54,6 @@
   import VIframe from '@koumoul/v-iframe'
   import DatasetCard from '~/components/dataset/card.vue'
   import marked from 'marked'
-  import sanitizeHtml from '~/assets/sanitize'
   const { mapState } = require('vuex')
 
   export default {
@@ -80,7 +79,6 @@
     },
     methods: {
       marked,
-      sanitizeHtml,
       tableIframeSrc(dataset) {
         return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
       },

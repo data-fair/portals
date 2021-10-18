@@ -47,6 +47,7 @@ module.exports = {
     { src: '~plugins/theme' },
     { src: '~plugins/typography' },
     { src: '~plugins/filters' },
+    { src: '~plugins/sanitize' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size', ssr: false },

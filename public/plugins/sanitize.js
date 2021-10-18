@@ -1,10 +1,11 @@
-import sanitizeHtml from 'sanitize-html'
+import Vue from 'vue'
+import VueSanitize from 'vue-sanitize'
 
 // WARNING, synced with server/router/portals
 const styledSanitizeOpts = {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe']),
+  allowedTags: VueSanitize.defaults.allowedTags.concat(['img', 'iframe']),
   allowedAttributes: {
-    ...sanitizeHtml.defaults.allowedAttributes,
+    ...VueSanitize.defaults.allowedAttributes,
     '*': ['style', 'class'],
     iframe: ['src', 'width', 'height', 'frameborder', 'allowfullscreen'],
     img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes'],
@@ -46,4 +47,4 @@ const styledSanitizeOpts = {
   },
 }
 
-export default (html) => sanitizeHtml(html, styledSanitizeOpts)
+Vue.use(VueSanitize, styledSanitizeOpts)
