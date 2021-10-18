@@ -23,4 +23,9 @@ module.exports = {
       default: 'localhost',
     },
   },
+  copyright: {
+    src: 'https://koumoul.com/logo-slogan-white-2.png',
+    title: 'Koumoul',
+    href: 'https://koumoul.com',
+  },
 }

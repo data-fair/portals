@@ -28,47 +28,15 @@
           :fluid="config.customFooter.fluid"
           v-html="$vuetify.breakpoint.smAndDown ? (config.customFooter.htmlXS || config.customFooter.htmlMD) : (config.customFooter.htmlMD || config.customFooter.htmlSM)"
         />
-        <v-container v-else>
-          <v-row class="py-3">
-            <v-col
-              v-for="link in config.footerLinks"
-              :key="link.title"
-              cols="10"
-              sm="4"
-              offset="2"
-              offset-sm="2"
-              class="pa-0"
-            >
-              <template v-if="link.type === 'internal'">
-                <nuxt-link v-if="link.page" :to="{name: 'pages-id', params: {id: link.page.id}}">
-                  {{ link.page.title }}
-                </nuxt-link>
-              </template>
-              <a v-else :href="link.href">{{ link.title }}</a>
-            </v-col>
+        <layout-footer v-else />
 
-            <v-col
-              v-if="config.twitter || config.facebook || config.linkedin || config.youtube || config.instagram"
-              cols="10"
-              sm="4"
-              offset="2"
-              offset-sm="2"
-              class="pa-0 white--text"
-            >
-              <h5>
-                Retrouvez-nous sur les réseaux sociaux
-              </h5>
-              <social-links />
-            </v-col>
-          </v-row>
-        </v-container>
-
-        <v-divider :color="footerColorDark ? 'white' : textDark" />
-
-        <v-container class="text-center py-1">
-          <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
-          <!-- Réalisé avec <v-icon color="red" small>mdi-heart</v-icon> par <strong><nuxt-link :to="localePath({name: 'index'})">Koumoul</nuxt-link></strong> -->
-        </v-container>
+        <template v-if="!config.footerCopyrightAsLogo">
+          <v-divider :dark="footerColorDark" />
+          <v-container class="text-center py-1">
+            <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
+            <!-- Réalisé avec <v-icon color="red" small>mdi-heart</v-icon> par <strong><nuxt-link :to="localePath({name: 'index'})">Koumoul</nuxt-link></strong> -->
+          </v-container>
+        </template>
       </v-card>
     </v-footer>
   </v-app>
@@ -85,9 +53,6 @@
     computed: {
       ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
       ...mapGetters(['themeColorDark', 'footerColorDark']),
-      logoUrl() {
-        return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
-      },
     },
     head() {
       // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue

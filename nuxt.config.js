@@ -110,6 +110,7 @@ module.exports = {
     mainPublicUrl: config.publicUrl,
     mainDataFairUrl: config.dataFairUrl,
     development: process.env.NODE_ENV === 'development',
+    copyright: config.copyright,
   },
   head: {
     title: 'Portail de données',

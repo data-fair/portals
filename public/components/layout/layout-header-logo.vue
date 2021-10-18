@@ -1,5 +1,5 @@
 <template>
-  <div style="float:left;">
+  <div :style="`float:${float};`">
     <a
       v-if="config.website"
       :href="config.website || '/'"
@@ -30,11 +30,13 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
+  import { mapState } from 'vuex'
   export default {
+    props: {
+      float: { type: String, default: 'left' },
+    },
     computed: {
       ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-      ...mapGetters(['themeColorDark']),
       logoUrl() {
         return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
       },
