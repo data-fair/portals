@@ -1,18 +1,21 @@
 <template>
   <v-container fluid>
+    <v-list
+      dense
+      class="list-actions"
+      style="float:right;width:256px;"
+    >
+      <v-list-item :href="pageLink" target="_blank">
+        <v-list-item-icon>
+          <v-icon color="primary">
+            mdi-open-in-new
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Ouvrir dans le portail</v-list-item-title>
+      </v-list-item>
+    </v-list>
+
     <section-title :text="'Edition de la page ' + ((page && page.title) || '')" />
-    <layout-navigation-right v-if="this.$vuetify.breakpoint.lgAndUp">
-      <v-list dense class="list-actions">
-        <v-list-item :to="`/pages/${$route.params.id}`" target="_blank">
-          <v-list-item-icon>
-            <v-icon color="primary">
-              mdi-open-in-new
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Ouvrir dans le portail</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </layout-navigation-right>
 
     <v-form ref="form">
       <v-jsf
@@ -87,6 +90,11 @@
         return {
           context: { dataFairUrl: this.dataFairUrl, owner: this.owner },
         }
+      },
+      pageLink() {
+        const url = new URL(this.portal.link)
+        url.pathname = '/pages/' + this.$route.params.id
+        return url.href
       },
     },
     mounted: async function () {
