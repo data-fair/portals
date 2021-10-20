@@ -24,7 +24,10 @@ module.exports = {
     },
   },
   copyright: {
-    src: 'https://koumoul.com/logo-slogan-white-2.png',
+    src: {
+      dark: 'https://koumoul.com/static/logo-title-right-white.png',
+      light: 'https://koumoul.com/static/logo-title-right.png',
+    },
     title: 'Koumoul',
     href: 'https://koumoul.com',
   },

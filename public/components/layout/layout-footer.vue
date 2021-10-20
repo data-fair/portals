@@ -117,7 +117,13 @@
       ...mapGetters(['footerColorDark']),
       extraLogos() {
         const logos = [...this.config.footerExtraLogos || []]
-        if (this.config.footerCopyrightAsLogo) logos.push(process.env.copyright)
+        const copyright = { ...process.env.copyright }
+        if (this.footerColorDark) {
+          copyright.src = copyright.src.dark
+        } else {
+          copyright.src = copyright.src.light
+        }
+        if (this.config.footerCopyrightAsLogo) logos.push(copyright)
         return logos
       },
     },
