@@ -5,6 +5,7 @@
       :href="'https://twitter.com/' + config.twitter"
       icon
       color="primary"
+      target="blank"
     >
       <v-icon>mdi-twitter</v-icon>
     </v-btn>
@@ -13,6 +14,7 @@
       :href="'https://www.facebook.com/' + config.facebook"
       icon
       color="primary"
+      target="blank"
     >
       <v-icon>mdi-facebook</v-icon>
     </v-btn>
@@ -21,6 +23,7 @@
       :href="'https://www.youtube.com/channel/' + config.youtube"
       icon
       color="primary"
+      target="blank"
     >
       <v-icon>mdi-youtube</v-icon>
     </v-btn>
@@ -29,6 +32,7 @@
       :href="'https://www.linkedin.com/company/' + config.linkedin"
       icon
       color="primary"
+      target="blank"
     >
       <v-icon>mdi-linkedin</v-icon>
     </v-btn>
@@ -37,6 +41,7 @@
       :href="'https://www.instagram.com/' + config.instagram"
       icon
       color="primary"
+      target="blank"
     >
       <v-icon>mdi-instagram</v-icon>
     </v-btn>
