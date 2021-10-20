@@ -29,23 +29,18 @@
         />
       </v-card-text>
     </v-card>
-    <v-iframe
-      v-else-if="value.type === 'datasetForm' && value.dataset"
-      :src="formIframeSrc(value.dataset)"
-    />
-    <v-iframe
-      v-else-if="value.type === 'datasetTable' && value.dataset"
-      :aspect-ratio="$vuetify.breakpoint.smAndUp ? 2.0 : 1.0"
-      :src="tableIframeSrc(value.dataset)"
-    />
-    <v-iframe
-      v-else-if="value.type === 'application' && value.application"
-      :src="applicationIframeSrc(value.application)"
-    />
-    <v-img
-      v-else-if="value.type === 'image' && value.url"
-      :src="value.url"
-    />
+    <client-only v-else>
+      <v-iframe v-if="value.type === 'datasetForm' && value.dataset" :src="formIframeSrc(value.dataset)" />
+      <v-iframe v-else-if="value.type === 'datasetTable' && value.dataset" :src="tableIframeSrc(value.dataset)" />
+      <v-iframe
+        v-else-if="value.type === 'application' && value.application"
+        :src="applicationIframeSrc(value.application)"
+      />
+      <v-img
+        v-else-if="value.type === 'image' && value.url"
+        :src="value.url"
+      />
+    </client-only>
   </div>
 </template>
 

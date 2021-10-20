@@ -23,7 +23,9 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-iframe :id="'application-' + application.id" :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+        <client-only>
+          <v-iframe :id="'application-' + application.id" :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+        </client-only>
       </v-card>
     </v-dialog>
   </v-tooltip>

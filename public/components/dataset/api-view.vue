@@ -25,9 +25,9 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-iframe
-          :src="`${openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
-        />
+        <client-only>
+          <v-iframe :src="`${openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`" />
+        </client-only>
       </v-card>
     </v-dialog>
   </v-tooltip>

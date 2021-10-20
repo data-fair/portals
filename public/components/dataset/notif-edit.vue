@@ -26,7 +26,9 @@
           </v-btn>
         </v-toolbar>
         <v-card-text class="pa-0">
-          <v-iframe aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
+          <client-only>
+            <v-iframe :aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
+          </client-only>
         </v-card-text>
       </v-card>
     </v-dialog>

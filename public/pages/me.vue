@@ -1,7 +1,7 @@
 <template lang="html">
-  <no-ssr>
+  <client-only>
     <v-iframe :src="embedUrl" />
-  </no-ssr>
+  </client-only>
 </template>
 
 <script>

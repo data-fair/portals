@@ -26,7 +26,9 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-iframe :src="iframeSrc" />
+        <client-only>
+          <v-iframe :src="iframeSrc" />
+        </client-only>
       </v-card>
     </v-dialog>
   </v-tooltip>
