@@ -84,13 +84,12 @@
               </h3>
             </v-card-title>
             <v-card-text>
-              <v-form>
-                <v-text-field
-                  v-model="newPortal.title"
-                  name="title"
-                  label="Titre"
-                />
-              </v-form>
+              <v-text-field
+                v-model="newPortal.title"
+                name="title"
+                label="Titre"
+                @keyup.enter.native="createPortal(); showCreateMenu = false"
+              />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
