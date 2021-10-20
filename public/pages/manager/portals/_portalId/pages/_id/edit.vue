@@ -1,6 +1,19 @@
 <template>
   <v-container fluid>
     <section-title :text="'Edition de la page ' + ((page && page.title) || '')" />
+    <layout-navigation-right v-if="this.$vuetify.breakpoint.lgAndUp">
+      <v-list dense class="list-actions">
+        <v-list-item :to="`/pages/${$route.params.id}`" target="_blank">
+          <v-list-item-icon>
+            <v-icon color="primary">
+              mdi-open-in-new
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Ouvrir dans le portail</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </layout-navigation-right>
+
     <v-form ref="form">
       <v-jsf
         v-if="page"
