@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pb-0" style="background-color: #fcfcfc;">
+  <v-container class="pb-0">
     <v-row v-if="config.headerSocial" class="mb-0">
       <v-spacer /><social-links />
     </v-row>
