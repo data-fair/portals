@@ -5,6 +5,7 @@
       :href="config.website || '/'"
       style="height:100%"
       class="mr-3"
+      target="blank"
     >
       <img
         :src="logoUrl"
