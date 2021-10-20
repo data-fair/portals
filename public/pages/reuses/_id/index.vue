@@ -53,13 +53,7 @@
       </v-row>
 
       <client-only>
-        <v-iframe
-          v-if="baseApplication && baseApplication.applicationName === 'Liste et fiches'"
-          :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`"
-        />
-        <v-col v-else class="my-3 grow">
-          <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
-        </v-col>
+        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
       </client-only>
 
       <section-subtitle text="Données utilisées" />

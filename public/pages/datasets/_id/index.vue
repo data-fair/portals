@@ -148,56 +148,34 @@
           class="my-3"
           align="center"
         >
-          <template v-if="baseApplications[application.url] && baseApplications[application.url].applicationName === 'Liste et fiches'">
-            <v-col
-              class="text-center"
-              :order="0"
-              :order-md="1-i%2"
+          <v-col
+            md="6"
+            cols="12"
+            class="px-5 py-3"
+            :order="0"
+            :order-md="1-i%2"
+          >
+            <nuxt-link
+              :to="{name: 'reuses-id', params:{id: application.id}}"
+              class="title"
+              style="text-decoration-line:none"
             >
-              <nuxt-link
-                :to="{name: 'reuses-id', params:{id: application.id}}"
-                class="title"
-                style="text-decoration-line:none"
-              >
-                {{ application.title }}&nbsp;<v-icon color="primary">
-                  mdi-open-in-new
-                </v-icon>
-              </nuxt-link>
-              <client-only>
-                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" class="mt-2" />
-              </client-only>
-            </v-col>
-          </template>
-          <template v-else>
-            <v-col
-              md="6"
-              cols="12"
-              class="px-5 py-3"
-              :order="0"
-              :order-md="1-i%2"
-            >
-              <nuxt-link
-                :to="{name: 'reuses-id', params:{id: application.id}}"
-                class="title"
-                style="text-decoration-line:none"
-              >
-                {{ application.title }}&nbsp;<v-icon color="primary">
-                  mdi-open-in-new
-                </v-icon>
-              </nuxt-link>
-              <div class="mt-3" v-html="marked(application.description || '')" />
-            </v-col>
-            <v-col
-              md="6"
-              cols="12"
-              :order="1"
-              :order-md="i%2"
-            >
-              <client-only>
-                <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
-              </client-only>
-            </v-col>
-          </template>
+              {{ application.title }}&nbsp;<v-icon color="primary">
+                mdi-open-in-new
+              </v-icon>
+            </nuxt-link>
+            <div class="mt-3" v-html="marked(application.description || '')" />
+          </v-col>
+          <v-col
+            md="6"
+            cols="12"
+            :order="1"
+            :order-md="i%2"
+          >
+            <client-only>
+              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+            </client-only>
+          </v-col>
         </v-row>
       </template>
 
