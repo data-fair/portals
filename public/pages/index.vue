@@ -5,7 +5,7 @@
         <v-iframe
           :src="homeReuseUrl"
           class="elevation-4"
-          style="margin-top: -12px;max-height: 400px;"
+          style="margin-top: -12px;height: 400px;"
         />
       </client-only>
       <v-img
@@ -25,7 +25,7 @@
           offset-md="1"
         >
           <client-only v-if="config.homeReuse">
-            <v-iframe :src="homeReuseUrl" style="max-height: 600px;" />
+            <v-iframe :src="homeReuseUrl" style="height: 600px;" />
           </client-only>
           <v-img
             v-else
