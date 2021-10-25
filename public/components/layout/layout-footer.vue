@@ -10,7 +10,7 @@
     </v-row>
     <v-row
       v-if="extraLogos.length"
-      :justify="config.footerLogo ? 'left' : 'center'"
+      :justify="config.footerLogo ? 'start' : 'center'"
       class="mx-0 my-2"
     >
       <v-col cols="12" md="6">

@@ -35,7 +35,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="dataset.origin">
+              <v-list-item v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
                 <v-list-item-content>
                   <v-list-item-title>Données issues de <a :href="dataset.origin" rel="external">cette source</a></v-list-item-title>
                 </v-list-item-content>
