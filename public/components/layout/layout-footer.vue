@@ -1,43 +1,35 @@
 <template>
   <v-container>
-    <v-row v-if="config.footerSocial && !config.footerLogo" class="ma-0 text-center">
-      <social-links-col :dark="footerColorDark" />
-    </v-row>
     <v-row
-      v-if="config.footerLogo || extraLogos.length"
-      class="ma-0 text-center"
+      v-if="config.footerSocial || config.footerLogo"
+      class="mx-0 my-2 text-center"
       justify="center"
     >
-      <v-col
-        xl="12"
-        md="8"
-      >
-        <v-row
-          v-if="config.footerLogo"
-          justify="center"
-          class="mx-0 my-2"
-        >
-          <layout-header-logo float="none" />
-          <social-links-col v-if="config.footerSocial" :dark="footerColorDark" />
-        </v-row>
-        <v-row
-          v-if="extraLogos.length"
-          justify="center"
-          class="mx-0 my-2"
-        >
-          <a
+      <layout-header-logo v-if="config.footerLogo" float="none" />
+      <social-links-col v-if="config.footerSocial" :dark="footerColorDark" />
+    </v-row>
+    <v-row
+      v-if="extraLogos.length"
+      :justify="config.footerLogo ? 'left' : 'center'"
+      class="my-2"
+    >
+      <v-col cols="12" md="6">
+        <v-row align="center">
+          <v-col
             v-for="(extraLogo, i) in extraLogos"
             :key="i"
-            :title="extraLogo.title"
-            :href="extraLogo.href"
+            cols="4"
+            class="text-center pa-1"
           >
-            <img
-              :src="extraLogo.src"
-              :alt="extraLogo.title"
-              contain
-              style="height:40px; float:left;"
-            >
-          </a>
+            <a :title="extraLogo.title" :href="extraLogo.href">
+              <img
+                :src="extraLogo.src"
+                :alt="extraLogo.title"
+                contain
+                style="height:40px;"
+              >
+            </a>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -52,19 +44,11 @@
         class="pa-0"
       >
         <template v-if="link.type === 'internal'">
-          <nuxt-link
-            v-if="link.page"
-            :to="{name: 'pages-id', params: {id: link.page.id}}"
-            style="text-decoration: none;"
-          >
+          <nuxt-link v-if="link.page" :to="{name: 'pages-id', params: {id: link.page.id}}">
             {{ link.page.title }}
           </nuxt-link>
         </template>
-        <a
-          v-else
-          :href="link.href"
-          style="text-decoration: none;"
-        >{{ link.title }}</a>
+        <a v-else :href="link.href">{{ link.title }}</a>
       </v-col>
     </v-row>
     <v-row v-if="config.footerLinksMode === 'lines'" class="ma-0 text-center">
@@ -77,7 +61,6 @@
             :key="`internal-${i}`"
             :to="{name: 'pages-id', params: {id: link.page.id}}"
             class="mx-3"
-            style="text-decoration: none;"
           >
             {{ link.page.title }}
           </nuxt-link>
@@ -86,7 +69,6 @@
             :key="`external-${i}`"
             :href="link.href"
             class="mx-3"
-            style="text-decoration: none;"
           >{{ link.title }}</a>
         </template>
       </v-col>
