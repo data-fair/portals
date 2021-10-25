@@ -50,6 +50,7 @@
       <v-divider />
       <client-only>
         <v-iframe
+          v-if="embedUrl"
           :src="embedUrl"
           :style="`height:${windowHeight - 87}px`"
           @message="receiveMessage"
@@ -75,6 +76,7 @@
     data: () => ({
       dataset: null,
       embedUrl: null,
+      lastIframeQuery: {},
     }),
     computed: {
       ...mapState(['config', 'publicUrl', 'portal', 'draft']),
@@ -85,22 +87,38 @@
         return this.publicUrl + '/datasets/' + this.$route.params.id + '/full'
       },
     },
+    watch: {
+      '$route.query'() {
+        this.setEmbedUrl()
+      },
+    },
     created() {
-      const query = {
-        ...this.$route.query,
-        primary: this.config.themeColor,
-      }
-      delete query.portalId
-      const url = new URL(`${this.$store.getters.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
-      Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
-      this.embedUrl = url.href
+      this.setEmbedUrl()
     },
     methods: {
+      hasQueryChange(query = {}) {
+        if (Object.keys(query).find(key => query[key] !== this.lastIframeQuery[key])) return true
+        if (Object.keys(this.lastIframeQuery).find(key => this.lastIframeQuery[key] !== query[key])) return true
+        return false
+      },
+      async setEmbedUrl() {
+        const query = { ...this.$route.query, primary: this.config.themeColor }
+        delete query.portalId
+        if (!this.hasQueryChange(query)) return
+        this.lastIframeQuery = query
+
+        const url = new URL(`${this.$store.getters.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
+        Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
+        this.embedUrl = url.href
+      },
       receiveMessage(msg) {
-        console.log('message', msg)
-        if (msg.query) {
-          this.$router.push({ query: { ...msg.query, primary: undefined } })
-        }
+        if (!msg.query) return
+        if (!this.hasQueryChange(msg.query)) return
+        this.lastIframeQuery = { ...msg.query }
+
+        if (msg.query.primary) delete msg.query.primary
+        if (this.$route.query.portalId) msg.query.portalId = this.$route.query.portalId
+        this.$router.push({ name: this.$route.name, params: this.$route.params, query: msg.query })
       },
     },
     head () {

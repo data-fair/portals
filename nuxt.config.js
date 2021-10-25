@@ -50,7 +50,7 @@ module.exports = {
     { src: '~plugins/sanitize' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
-    { src: '~plugins/window-size', ssr: false },
+    { src: '~plugins/window-size' },
     { src: '~plugins/ws', ssr: false },
     { src: '~plugins/session', ssr: false },
     { src: '~plugins/auth', ssr: false },
