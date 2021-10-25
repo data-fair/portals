@@ -173,7 +173,7 @@
         return {
           owner: this.activeAccount.type + ':' + this.activeAccount.id,
           dataFairUrl: this.$store.getters.dataFairUrl,
-          portalUrl: `${this.publicUrl}/api/v1/portals/${this.portal._id}`,
+          portalUrl: `api/v1/portals/${this.portal._id}`,
         }
       },
       iframeHeight() {
