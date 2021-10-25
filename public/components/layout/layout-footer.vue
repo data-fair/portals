@@ -11,7 +11,7 @@
     <v-row
       v-if="extraLogos.length"
       :justify="config.footerLogo ? 'left' : 'center'"
-      class="my-2"
+      class="mx-0 my-2"
     >
       <v-col cols="12" md="6">
         <v-row align="center">
@@ -19,7 +19,7 @@
             v-for="(extraLogo, i) in extraLogos"
             :key="i"
             cols="4"
-            class="text-center pa-1"
+            class="pa-1"
           >
             <a :title="extraLogo.title" :href="extraLogo.href">
               <img
