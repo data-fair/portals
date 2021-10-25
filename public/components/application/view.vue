@@ -13,7 +13,8 @@
     <v-dialog
       v-model="dialog"
       :fullscreen="$vuetify.breakpoint.mdAndDown"
-      :max-width="1200"
+      :max-width="1190"
+      transition="none"
     >
       <v-card v-if="dialog">
         <v-toolbar dense flat>

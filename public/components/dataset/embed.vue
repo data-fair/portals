@@ -12,7 +12,11 @@
       </v-btn>
     </template>
     <span>Intégrer dans un site</span>
-    <v-dialog v-model="embedDialog" max-width="1200">
+    <v-dialog
+      v-model="embedDialog"
+      :max-width="1190"
+      transition="none"
+    >
       <v-card outlined>
         <v-toolbar
           dense
