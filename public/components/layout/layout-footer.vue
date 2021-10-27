@@ -4,15 +4,18 @@
       v-if="config.footerSocial || config.footerLogo"
       class="mx-0 my-2 text-center"
       justify="center"
+      align="center"
     >
       <layout-header-logo v-if="config.footerLogo" float="none" />
       <v-col
         v-if="config.footerSocial && (config.twitter || config.facebook || config.linkedin || config.youtube || config.instagram)"
         :class="{'pa-0': true, 'white--text': footerColorDark}"
       >
-        <h5 v-if="!config.footerLogo || windowWidth>600">
-          Retrouvez-nous sur les réseaux sociaux
-        </h5>
+        <client-only>
+          <h5 v-if="!config.footerLogo || windowWidth>600">
+            Retrouvez-nous sur les réseaux sociaux
+          </h5>
+        </client-only>
         <social-links />
       </v-col>
     </v-row>
@@ -81,15 +84,29 @@
     <v-row v-if="config.footerImportantLinks && config.footerImportantLinks.length" class="ma-0 text-center">
       <v-col>
         <v-divider :dark="footerColorDark" />
-        <v-btn
+        <template
           v-for="(link, i) in config.footerImportantLinks"
-          :key="i"
-          text
-          :nuxt="link.type === 'internal'"
-          :href="link.type !== 'internal' && link.href"
-          :dark="footerColorDark"
-          v-text="link.type === 'internal' ? link.page.title : link.title"
-        />
+        >
+          <v-btn
+            v-if="link.type === 'internal' && link.page"
+            :key="`impInternal-${i}`"
+            text
+            nuxt
+            :to="{name: 'pages-id', params: {id: link.page.id}}"
+            :dark="footerColorDark"
+          >
+            {{ link.page.title }}
+          </v-btn>
+          <v-btn
+            v-else
+            :key="`impExternal-${i}`"
+            text
+            :href="link.href"
+            :dark="footerColorDark"
+          >
+            {{ link.title }}
+          </v-btn>
+        </template>
         <v-divider :dark="footerColorDark" />
       </v-col>
     </v-row>

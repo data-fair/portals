@@ -55,7 +55,6 @@
               color="primary"
               type="submit"
               title="La version courante du portail est mise à jour à partir de l'ébauche"
-              v-on="on"
             >
               Publier l'ébauche
             </v-btn>

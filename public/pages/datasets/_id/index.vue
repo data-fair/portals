@@ -40,7 +40,7 @@
                   <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
                     Données issues de <a :href="dataset.origin" rel="external">cette source</a>
                   </v-list-item-title>
-                  <v-list-item-title v-else>
+                  <v-list-item-title v-else-if="dataset.origin">
                     Données produites par : <strong>{{ dataset.origin }}</strong>
                   </v-list-item-title>
                 </v-list-item-content>
