@@ -21,13 +21,15 @@
     </v-row>
     <v-row
       v-if="extraLogos.length"
-      :justify="config.footerLogo ? 'start' : 'center'"
+      align-content="space-between"
       class="mx-0 my-2 text-center"
     >
-      <v-col>
+      <v-col
+        v-for="(extraLogo, i) in extraLogos"
+        :key="i"
+        class="pa-0"
+      >
         <a
-          v-for="(extraLogo, i) in extraLogos"
-          :key="i"
           :title="extraLogo.title"
           :href="extraLogo.href"
           class="px-2"
