@@ -6,31 +6,36 @@
       justify="center"
     >
       <layout-header-logo v-if="config.footerLogo" float="none" />
-      <social-links-col v-if="config.footerSocial" :dark="footerColorDark" />
+      <v-col
+        v-if="config.footerSocial && (config.twitter || config.facebook || config.linkedin || config.youtube || config.instagram)"
+        :class="{'pa-0': true, 'white--text': footerColorDark}"
+      >
+        <h5 v-if="!config.footerLogo || windowWidth>600">
+          Retrouvez-nous sur les réseaux sociaux
+        </h5>
+        <social-links />
+      </v-col>
     </v-row>
     <v-row
       v-if="extraLogos.length"
       :justify="config.footerLogo ? 'start' : 'center'"
-      class="mx-0 my-2"
+      class="mx-0 my-2 text-center"
     >
-      <v-col cols="12" md="6">
-        <v-row align="center">
-          <v-col
-            v-for="(extraLogo, i) in extraLogos"
-            :key="i"
-            cols="4"
-            class="pa-1"
+      <v-col>
+        <a
+          v-for="(extraLogo, i) in extraLogos"
+          :key="i"
+          :title="extraLogo.title"
+          :href="extraLogo.href"
+          class="px-2"
+        >
+          <img
+            :src="extraLogo.src"
+            :alt="extraLogo.title"
+            contain
+            style="height:40px;"
           >
-            <a :title="extraLogo.title" :href="extraLogo.href">
-              <img
-                :src="extraLogo.src"
-                :alt="extraLogo.title"
-                contain
-                style="height:40px;"
-              >
-            </a>
-          </v-col>
-        </v-row>
+        </a>
       </v-col>
     </v-row>
     <v-row v-if="config.footerLinksMode === 'columns' || !config.footerLinksMode" class="mx-0 my-2">
@@ -52,7 +57,7 @@
       </v-col>
     </v-row>
     <v-row v-if="config.footerLinksMode === 'lines'" class="ma-0 text-center">
-      <v-col class="pb-0">
+      <v-col class="py-0">
         <template
           v-for="(link, i) in config.footerLinks"
         >
@@ -83,7 +88,7 @@
           :nuxt="link.type === 'internal'"
           :href="link.type !== 'internal' && link.href"
           :dark="footerColorDark"
-          v-text="link.title"
+          v-text="link.type === 'internal' ? link.page.title : link.title"
         />
         <v-divider :dark="footerColorDark" />
       </v-col>
