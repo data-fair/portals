@@ -37,6 +37,25 @@
           />
         </v-col>
       </v-row>
+      <template v-else-if="element.type === 'tabs'">
+        <v-tabs :key="'t'+i" v-model="tabs[i]">
+          <v-tab v-for="tab in element.tabs" :key="tab.title">
+            {{ tab.title }}
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items :key="'ti'+i" v-model="tabs[i]">
+          <v-tab-item
+            v-for="tab in element.tabs"
+            :key="'ti-'+tab.title"
+          >
+            <k-element
+              v-for="(iElement, j) in tab.elements"
+              :key="`${i}t${j}`"
+              :value="iElement"
+            />
+          </v-tab-item>
+        </v-tabs-items>
+      </template>
       <k-element
         v-else
         :key="i"
@@ -52,6 +71,9 @@
   export default {
     components: { KElement },
     props: ['config'],
+    data: () => ({
+      tabs: {},
+    }),
   }
 </script>
 
