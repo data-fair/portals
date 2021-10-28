@@ -1,37 +1,39 @@
 <template>
-  <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <v-btn
-        :fab="fab"
-        :icon="!fab"
-        v-on="{...on, click: () => dialog = true}"
-      >
-        <v-icon :color="color || 'primary'">
-          mdi-table-large
-        </v-icon>
-      </v-btn>
-    </template>
-    <span>Voir le tableau</span>
-    <v-dialog
-      v-model="dialog"
-      :fullscreen="$vuetify.breakpoint.mdAndDown"
-      :max-width="1190"
-      transition="none"
-    >
-      <v-card v-if="dialog">
-        <v-toolbar dense flat>
-          <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
-          <v-spacer />
-          <v-btn icon @click.native="dialog = false">
-            <v-icon>mdi-close</v-icon>
+  <v-dialog
+    v-model="dialog"
+    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    :max-width="1190"
+    transition="none"
+  >
+    <template v-slot:activator="{ on: onDialog }">
+      <v-tooltip top>
+        <template v-slot:activator="{ on: onTooltip }">
+          <v-btn
+            :fab="fab"
+            :icon="!fab"
+            v-on="{...onDialog, ...onTooltip}"
+          >
+            <v-icon :color="color || 'primary'">
+              mdi-table-large
+            </v-icon>
           </v-btn>
-        </v-toolbar>
-        <client-only>
-          <v-iframe :src="iframeSrc" />
-        </client-only>
-      </v-card>
-    </v-dialog>
-  </v-tooltip>
+        </template>
+        <span>Voir le tableau</span>
+      </v-tooltip>
+    </template>
+    <v-card v-if="dialog">
+      <v-toolbar dense flat>
+        <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
+        <v-spacer />
+        <v-btn icon @click.native="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <client-only>
+        <v-iframe :src="iframeSrc" />
+      </client-only>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>

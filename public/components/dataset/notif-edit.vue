@@ -1,38 +1,36 @@
 <template>
-  <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <v-btn
-        icon
-        v-on="{...on, click: () => dialog = true}"
-        @click="dialog=true"
-      >
-        <v-icon :color="color || 'primary'">
-          mdi-bell
-        </v-icon>
-      </v-btn>
-    </template>
-    <span>Notifications</span>
-    <v-dialog
-      v-model="dialog"
-      :fullscreen="$vuetify.breakpoint.mdAndDown"
-      :max-width="500"
-    >
-      <v-card v-if="dialog">
-        <v-toolbar dense flat>
-          <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
-          <v-spacer />
-          <v-btn icon @click.native="dialog = false">
-            <v-icon>mdi-close</v-icon>
+  <v-dialog
+    v-model="dialog"
+    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    :max-width="500"
+  >
+    <template #activator="{on: onDialog}">
+      <v-tooltip top>
+        <template v-slot:activator="{ on: onTooltip }">
+          <v-btn icon v-on="{...onDialog, ...onTooltip}">
+            <v-icon :color="color || 'primary'">
+              mdi-bell
+            </v-icon>
           </v-btn>
-        </v-toolbar>
-        <v-card-text class="pa-0">
-          <client-only>
-            <v-iframe :aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
-          </client-only>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </v-tooltip>
+        </template>
+        <span>Notifications</span>
+      </v-tooltip>
+    </template>
+    <v-card v-if="dialog">
+      <v-toolbar dense flat>
+        <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
+        <v-spacer />
+        <v-btn icon @click.native="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card-text class="pa-0">
+        <client-only>
+          <v-iframe :aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
+        </client-only>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
