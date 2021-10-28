@@ -2,12 +2,7 @@
   <v-app v-if="config">
     <dynamic-style />
     <client-only><accept-cookies /></client-only>
-    <v-container
-      v-if="config.customHeader && config.customHeader.active"
-      :fluid="config.customHeader.fluid"
-      v-html="$vuetify.breakpoint.smAndDown ? (config.customHeader.htmlXS || config.customHeader.htmlMD) : (config.customHeader.htmlMD || config.customHeader.htmlSM)"
-    />
-    <layout-header v-else />
+    <layout-header />
 
     <app-bar class="mb-3" />
 
@@ -22,13 +17,7 @@
         tile
         width="100%"
       >
-        <v-container
-          v-if="config.customFooter && config.customFooter.active"
-          class="k-custom-footer"
-          :fluid="config.customFooter.fluid"
-          v-html="$vuetify.breakpoint.smAndDown ? (config.customFooter.htmlXS || config.customFooter.htmlMD) : (config.customFooter.htmlMD || config.customFooter.htmlSM)"
-        />
-        <layout-footer v-else />
+        <layout-footer />
 
         <template v-if="!config.footerCopyrightAsLogo">
           <v-divider :dark="footerColorDark" />
