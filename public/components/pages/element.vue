@@ -1,6 +1,14 @@
 <template>
   <div v-if="value" class="page-element">
-    <h2 v-if="value.type === 'title'">
+    <v-alert
+      v-if="error"
+      type="error"
+      border="left"
+      text
+    >
+      <div v-text="error" />
+    </v-alert>
+    <h2 v-else-if="value.type === 'title'">
       {{ value.content }}
     </h2>
     <div v-else-if="value.type === 'text' && value.content" v-html="$sanitize(marked(value.content))" />
@@ -59,6 +67,7 @@
       return {
         loading: false,
         resolvedDataset: null,
+        error: null,
       }
     },
     computed: {
@@ -84,9 +93,15 @@
         return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
       },
       async resolveDataset() {
+        this.error = null
         if (this.value.type === 'datasetCard' && this.value.dataset) {
           this.loading = true
-          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id)
+          try {
+            this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id)
+          } catch (err) {
+            this.resolvedDataset = null
+            this.error = err.message
+          }
           this.loading = false
         } else this.resolvedDataset = null
       },
