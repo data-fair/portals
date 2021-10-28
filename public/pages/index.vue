@@ -133,7 +133,6 @@
 <script>
   import LastDatasets from '~/components/last-datasets.vue'
   import LastApps from '~/components/last-apps.vue'
-  import { isMobileOnly } from 'mobile-device-detect'
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
   import Timeline from 'vue-tweet-embed/dist/timeline'
@@ -200,7 +199,6 @@
       datasets: null,
       stats: null,
       topics: [],
-      isMobileOnly,
     }),
     computed: {
       ...mapState(['config', 'publicUrl', 'portal']),

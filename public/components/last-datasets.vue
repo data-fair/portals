@@ -55,11 +55,13 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <api-view
-                v-if="!isMobileOnly"
-                :dataset="dataset"
-                :color="'primary'"
-              />
+              <client-only>
+                <api-view
+                  v-if="!isMobileOnly"
+                  :dataset="dataset"
+                  :color="'primary'"
+                />
+              </client-only>
               <schema-view :dataset="dataset" :color="'primary'" />
               <v-spacer />
               <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>

@@ -96,11 +96,13 @@
           :dataset="dataset"
           :color="'primary'"
         />
-        <api-view
-          v-if="!isMobileOnly && !dataset.isMetaOnly"
-          :dataset="dataset"
-          :color="'primary'"
-        />
+        <client-only>
+          <api-view
+            v-if="!isMobileOnly && !dataset.isMetaOnly"
+            :dataset="dataset"
+            :color="'primary'"
+          />
+        </client-only>
         <schema-view
           v-if="!dataset.isMetaOnly"
           :dataset="dataset"

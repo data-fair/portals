@@ -77,11 +77,13 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <api-view
-                v-if="!isMobileOnly && !dataset.isMetaOnly"
-                :dataset="dataset"
-                color="primary"
-              />
+              <client-only>
+                <api-view
+                  v-if="!isMobileOnly && !dataset.isMetaOnly"
+                  :dataset="dataset"
+                  color="primary"
+                />
+              </client-only>
               <v-tooltip v-if="dataset.file" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
