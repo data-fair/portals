@@ -342,14 +342,16 @@
         },
         "tabs":{
           "type": "array",
+          "title": "Onglets",
           "items": {
             "type": "object",
             "properties": {
               "title": {
-                "title": "Libellé",
+                "title": "Titre onglet",
                 "type": "string"
               },
               "elements": {
+                "title": "Éléments",
                 "type": "array",
                 "items": {
                   "$ref": "#/definitions/element"
