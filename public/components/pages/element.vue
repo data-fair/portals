@@ -11,7 +11,11 @@
     <h2 v-else-if="value.type === 'title'">
       {{ value.content }}
     </h2>
-    <div v-else-if="value.type === 'text' && value.content" v-html="$sanitize(marked(value.content))" />
+    <div
+      v-else-if="value.type === 'text' && value.content"
+      style="overflow-wrap: break-word;"
+      v-html="$sanitize(marked(value.content))"
+    />
     <v-alert
       v-else-if="value.type === 'alert' && value.content"
       :type="value.alertType"

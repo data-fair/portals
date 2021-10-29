@@ -125,3 +125,9 @@
     },
   }
 </script>
+
+<style>
+.vjsf-property .v-alert__content {
+  max-width: 100%;
+}
+</style>

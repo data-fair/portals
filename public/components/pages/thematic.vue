@@ -22,7 +22,7 @@
         <v-row>
           <v-col
             :cols="12"
-            :md="6"
+            :md="block.application ? 6 : 12"
           >
             <k-element
               v-if="block.title"
@@ -38,11 +38,11 @@
             />
           </v-col>
           <v-col
+            v-if="block.application"
             :cols="12"
             :md="6"
           >
             <k-element
-              v-if="block.application"
               :value="{type: 'application', application: block.application}"
             />
           </v-col>
