@@ -11,6 +11,8 @@
       <client-only><layout-notifications /></client-only>
     </v-main>
 
+    <layout-scroll-to-top />
+
     <v-footer :class="'pa-0 mt-5 ' + (footerColorDark ? 'area--dark' : 'area--light')" height="auto">
       <v-card
         :color="config.footerColor"
