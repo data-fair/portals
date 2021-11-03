@@ -486,7 +486,7 @@
             }
           }
         }, {
-          "title": "Google Analytics",
+          "title": "Google Analytics (ancien mode Universal Analytics)",
           "properties": {
             "type": {
               "const": "ga",
@@ -506,6 +506,27 @@
                 "appVersion": {
                   "type": "string",
                   "title": "Version de l'application"
+                }
+              }
+            },
+            "anonymized": {
+              "const": "false",
+              "title": "Système configuré en mode anonyme"
+            }
+          }
+        }, {
+          "title": "Google Analytics (nouveau mode Global site tag)",
+          "properties": {
+            "type": {
+              "const": "gtag"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "measurementId": {
+                  "type": "string",
+                  "title": "Identifiant de mesure",
+                  "description": "Trouvez cet identifiant dans l'interface de Google Analytics > Administration > Assistant de configuration > Installation de la balise"
                 }
               }
             },
