@@ -30,6 +30,8 @@
         }, {
           "$ref": "#/definitions/image"
         }, {
+          "$ref": "#/definitions/iframe"
+        }, {
           "$ref": "#/definitions/twoColumns"
         }, {
           "$ref": "#/definitions/responsiveFlow"
@@ -66,6 +68,8 @@
         "$ref": "#/definitions/datasetTable"
       }, {
         "$ref": "#/definitions/image"
+      }, {
+        "$ref": "#/definitions/iframe"
       }],
       "default": {
         "type": "text",
@@ -271,6 +275,20 @@
         },
         "url": {
           "title": "URL vers l'image",
+          "type": "string",
+          "x-props": { "hideDetails": "auto" }
+        }
+      }
+    },
+    "iframe": {
+      "type": "object",
+      "title": "Iframe",
+      "properties": {
+        "type": {
+          "const": "iframe"
+        },
+        "url": {
+          "title": "URL vers la page à ouvrir dans une iframe",
           "type": "string",
           "x-props": { "hideDetails": "auto" }
         }

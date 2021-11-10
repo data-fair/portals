@@ -52,6 +52,10 @@
         v-else-if="value.type === 'image' && value.url"
         :src="value.url"
       />
+      <v-iframe
+        v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
+        :src="value.url"
+      />
     </client-only>
   </div>
 </template>
@@ -108,6 +112,15 @@
           }
           this.loading = false
         } else this.resolvedDataset = null
+      },
+      isValidUrl(url) {
+        try {
+          // eslint-disable-next-line no-new
+          new URL(url)
+          return true
+        } catch (err) {
+          return false
+        }
       },
     },
   }
