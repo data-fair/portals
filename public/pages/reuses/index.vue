@@ -222,11 +222,7 @@
         params.publicationSites = 'data-fair-portals:' + this.portal._id
         if (this.config.authentication === 'none') params.visibility = 'public'
         if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
-          if (this.search) {
-            const trackEvent = { action: 'search', label: this.search }
-            if (this.$ma) this.$ma.trackEvent(trackEvent)
-            else console.log('No analytics, search reuses track event', trackEvent)
-          }
+          if (this.search) this.$ma.trackEvent({ action: 'search', label: this.search })
           this.lastParams = params
           this.loading = true
           this.$router.push({ query })

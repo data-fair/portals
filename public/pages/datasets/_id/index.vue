@@ -91,6 +91,7 @@
                     color="primary"
                     icon
                     v-on="on"
+                    @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
                   >
                     <v-icon>mdi-download</v-icon>
                   </v-btn>

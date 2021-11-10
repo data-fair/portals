@@ -50,8 +50,7 @@
     watch: {
       dialog() {
         const viewName = this.dialog ? `/datasets/${this.dataset.id}/api-dialog` : this.$route.path
-        if (this.$ma) this.$ma.trackView({ viewName })
-        else console.log('No analytics, track dialog view', viewName)
+        this.$ma.trackView({ viewName })
       },
     },
   }
