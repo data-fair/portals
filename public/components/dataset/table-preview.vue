@@ -30,7 +30,7 @@
         </v-btn>
       </v-toolbar>
       <client-only>
-        <v-iframe :src="iframeSrc" />
+        <v-iframe :src="iframeSrc" @message="onMessage" />
       </client-only>
     </v-card>
   </v-dialog>
@@ -59,6 +59,15 @@
         const viewName = this.dialog ? `/datasets/${this.dataset.id}/table-dialog` : this.$route.path
         if (this.$ma) this.$ma.trackView({ viewName })
         else console.log('No analytics, track dialog view', viewName)
+      },
+    },
+    methods: {
+      // receiving a message from the iframe
+      onMessage(message) {
+        if (message.trackEvent) {
+          if (this.$ma) this.$ma.trackEvent(message.trackEvent)
+          else console.log('No analytics, track event from table preview', message.trackEvent)
+        }
       },
     },
   }
