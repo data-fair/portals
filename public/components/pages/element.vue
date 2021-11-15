@@ -119,7 +119,13 @@
           new URL(url)
           return true
         } catch (err) {
-          return false
+          try {
+            // eslint-disable-next-line no-new
+            new URL(window.location.origin + url)
+            return true
+          } catch (err) {
+            return false
+          }
         }
       },
     },
