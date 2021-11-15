@@ -128,6 +128,10 @@ spec:
             backend:
               serviceName: data-fair-cache
               servicePort: 80
+          - path: /data-fair-processings/(.*)
+            backend:
+              serviceName: data-fair-processings
+              servicePort: 8080
           - path: /notify/(.*)
             backend:
               serviceName: notify
