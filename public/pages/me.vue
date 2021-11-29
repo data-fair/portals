@@ -3,13 +3,13 @@
     <client-only>
       <v-iframe :src="sdUrl" />
 
-      <h2 class="text-h5 mb-3 ml-3">
+      <h2 class="text-h5 my-3 ml-3">
         Mes notifications
       </h2>
       <v-iframe v-if="notifUrl" :src="notifUrl" />
 
-      <h2 class="text-h5 mb-3 ml-3">
-        Mes clés d'API
+      <h2 class="text-h5 my-3 ml-3">
+        Clés d'API
       </h2>
       <v-iframe :src="apiKeysUrl" />
     </client-only>
@@ -32,11 +32,12 @@
       ...mapState(['config', 'publicBaseUrl', 'portal']),
       ...mapGetters(['owner', 'directoryUrl', 'notifyUrl', 'dataFairUrl']),
       ...mapState('session', ['user']),
+      ...mapGetters('session', ['activeAccount']),
       sdUrl() {
         return `${this.directoryUrl}/me?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true`
       },
       apiKeysUrl() {
-        return `${this.dataFairUrl}/embed/settings/user/${this.user.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}`
+        return `${this.dataFairUrl}/embed/settings/${this.activeAccount.type}/${this.activeAccount.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}`
       },
       notifUrl() {
         if (!this.topics) return
