@@ -26,7 +26,7 @@
       </v-toolbar>
       <v-card-text class="pa-0">
         <client-only>
-          <v-iframe :aspect-ratio="0.1" :src="`${notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys)}&title=${encodeURIComponent(titles)}`" />
+          <v-iframe :aspect-ratio="0.1" :src="notifUrl" />
         </client-only>
       </v-card-text>
     </v-card>
@@ -36,6 +36,7 @@
 <script>
   import 'iframe-resizer/js/iframeResizer'
   import VIframe from '@koumoul/v-iframe'
+  const { mapState, mapGetters } = require('vuex')
 
   export default {
     components: { VIframe },
@@ -46,14 +47,14 @@
       }
     },
     computed: {
-      notifyUrl() {
-        return this.$store.getters.notifyUrl
-      },
-      keys() {
-        return [`data-fair:dataset:${this.dataset.id}:data-updated`]
-      },
-      titles() {
-        return 'mise à jour des données'
+      ...mapState(['config', 'publicBaseUrl']),
+      ...mapGetters(['owner', 'notifyUrl']),
+      notifUrl() {
+        const keys = [`data-fair:dataset-data-updated:${this.dataset.id}`, `data-fair:dataset-breaking-change:${this.dataset.id}`]
+        const titles = ['mise à jour des données', 'rupture de compatibilité des données']
+        const icon = `${this.directoryUrl}/api/avatars/${this.config.owner.type}/${this.config.owner.id}/avatar.png`
+        const urlTemplate = `${this.publicBaseUrl}/datasets/{id}`
+        return `${this.notifyUrl}/embed/subscribe?primary=${encodeURIComponent(this.config.themeColor)}&key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}`
       },
     },
   }
