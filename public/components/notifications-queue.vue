@@ -40,13 +40,16 @@
         <v-list-item
           v-for="notif in notifications"
           :key="notif._id"
-          style="cursor: default"
           :value="notif._id"
+          three-line
+          :href="notif.url"
         >
           <v-list-item-content>
-            <v-list-item-title>{{ notif.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ $dayjs(notif.date).format("DD/MM/YYYY, HH:mm") }}</v-list-item-subtitle>
-            <v-list-item-subtitle>{{ notif.body }}</v-list-item-subtitle>
+            <v-list-item-title>{{ notif.title.fr || notif.title }}</v-list-item-title>
+            <v-list-item-subtitle>{{ $dayjs(notif.date).format("lll") }}</v-list-item-subtitle>
+            <v-list-item-subtitle v-if="notif.body" :title="notif.body.fr || notif.body">
+              {{ notif.body.fr || notif.body }}
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <owner-short v-if="notif.sender" :owner="notif.sender" />
