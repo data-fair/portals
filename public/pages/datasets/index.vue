@@ -210,7 +210,7 @@
           value: 'title',
         }],
         downloading: false,
-        lastParams: null,
+        lastParams: {},
       }
     },
     computed: {

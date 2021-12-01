@@ -180,7 +180,7 @@
           text: 'Ordre alphabétique',
           value: 'title',
         }],
-        lastParams: null,
+        lastParams: {},
       }
     },
     computed: {
