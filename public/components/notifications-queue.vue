@@ -26,9 +26,16 @@
     </template>
 
     <v-list :width="500" dense>
+      <v-list-item v-if="!user">
+        <v-list-item-content>
+          <v-list-item-title>
+            Vous devez vous <a :href="loginHref">connecter / créer un compte</a> pour recevoir des notifications.
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <v-list-item v-if="notifications && !notifications.length">
         <v-list-item-content>
-          <v-list-item-title>Vous n'avez pas encore reçu de notification</v-list-item-title>
+          <v-list-item-title>Vous n'avez pas encore reçu de notification.</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item-group
@@ -71,7 +78,7 @@
 
   export default {
     components: { OwnerShort },
-    props: ['notifyUrl'],
+    props: ['notifyUrl', 'loginHref'],
     data: () => ({
       menu: false,
       countNew: null,
@@ -80,12 +87,13 @@
       size: 10,
     }),
     computed: {
-      ...mapState(['textDark']),
+      ...mapState(['textDark', 'config']),
       ...mapState('session', ['user']),
       ...mapGetters(['themeColorDark']),
     },
     watch: {
       menu(value) {
+        if (!this.user) return
         if (value) {
           this.fetchNotifications()
         } else {
@@ -96,25 +104,24 @@
       },
     },
     mounted() {
+      if (!this.user) return
       this.countNotifications()
-      // always subscribe to notifications from notify
-      if (this.user) {
-        const channel = `user:${this.user.id}:notifications`
-        eventBus.$emit('subscribe-notify', channel)
-        eventBus.$on(channel, notification => {
-          if (sound) sound.play()
-          if (this.notifications) {
-            notification.new = true
-            this.notifications.unshift(notification)
-            // TODO: replace this with a endpoint simply to reset pointer
-            this.$axios.$get(`${this.notifyUrl}/api/v1/notifications`, { params: { size: 1 } })
-          }
+      // subscribe to notifications from notify through websockets
+      const channel = `user:${this.user.id}:notifications`
+      eventBus.$emit('subscribe-notify', channel)
+      eventBus.$on(channel, notification => {
+        if (sound) sound.play()
+        if (this.notifications) {
+          notification.new = true
+          this.notifications.unshift(notification)
+          // TODO: replace this with a endpoint simply to reset pointer
+          this.$axios.$get(`${this.notifyUrl}/api/v1/notifications`, { params: { size: 1 } })
+        }
 
-          if (this.countNew !== null) {
-            this.countNew += 1
-          }
-        })
-      }
+        if (this.countNew !== null) {
+          this.countNew += 1
+        }
+      })
     },
     methods: {
       async countNotifications() {

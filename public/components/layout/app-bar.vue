@@ -91,14 +91,20 @@
     <v-spacer />
 
     <v-toolbar-items>
-      <notifications-queue v-if="user && notifyUrl" :notify-url="notifyUrl" />
+      <client-only>
+        <notifications-queue
+          v-if="notifyUrl && config.authentication !== 'none'"
+          :notify-url="notifyUrl"
+          :login-href="loginHref"
+        />
+      </client-only>
       <template v-if="initialized && config.authentication !== 'none'">
         <client-only>
           <v-btn
             v-if="!user"
             depressed
             color="primary"
-            :href="loginUrl(url, false, {org: config.owner.type === 'organization' ? config.owner.id : '', primary: config.themeColor})"
+            :href="loginHref"
           >
             Se connecter
           </v-btn>
@@ -197,6 +203,13 @@
         let url = this.mainDataFairUrl + '/'
         url += '?account=' + encodeURIComponent(this.config.owner.type + ':' + this.config.owner.id)
         return url
+      },
+      loginHref() {
+        return this.loginUrl(
+          this.url,
+          false,
+          { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor },
+        )
       },
     },
     methods: {
