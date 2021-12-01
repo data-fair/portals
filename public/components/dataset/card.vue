@@ -38,6 +38,7 @@
             :src="dataset.thumbnail || dataset.image"
             :alt="dataset.title"
             :max-height="155"
+            :contain="!!config.datasetThumbnailContain"
           />
         </div>
         <v-card-text

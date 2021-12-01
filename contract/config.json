@@ -10,7 +10,7 @@
   },
   "allOf": [{
     "title": "Général",
-    "required": ["themeColor", "footerColor"],
+    "required": ["themeColor"],
     "properties": {
       "title": {
         "type": "string",
@@ -21,6 +21,11 @@
         "default": "#1E88E5",
         "title": "Couleur principale",
         "x-display": "color-picker"
+      },
+      "datasetThumbnailContain": {
+        "type": "boolean",
+        "title": "Ne pas recadrer les images dans les vignettes de jeux de données",
+        "default": false
       },
       "authentication": {
         "type": "string",
