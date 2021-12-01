@@ -60,7 +60,7 @@ export default () => {
         return state.publicBaseUrl + '/notify'
       },
       notifyWSUrl(state, getters) {
-        return getters.notifyUrl.replace('ws://', 'http://').replace('wss://', 'https://')
+        return getters.notifyUrl.replace('http://', 'ws://').replace('https://', 'wss://')
       },
     },
     mutations: {

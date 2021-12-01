@@ -43,5 +43,5 @@ function configureWS (wsUrl, suffix = '') {
 
 export default ({ store, env }) => {
   // configureWS(env.wsPublicUrl)
-  if (env.notifyWSUrl) configureWS(env.notifyWSUrl, '-notify')
+  configureWS(store.getters.notifyWSUrl, '-notify')
 }
