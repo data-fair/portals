@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container>
+  <v-container v-if="user">
     <client-only>
       <v-iframe :src="sdUrl" />
 
@@ -54,7 +54,7 @@
       },
     },
     async mounted() {
-      if (!this.user) this.$router.push('/')
+      if (!this.user) return this.$router.push('/')
       const params = {
         facets: 'topics',
         owner: this.owner,
