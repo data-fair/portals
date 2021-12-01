@@ -46,7 +46,7 @@
         >
           <v-list-item-content>
             <v-list-item-title>{{ notif.title.fr || notif.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ $dayjs(notif.date).format("lll") }}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ $dayjs(notif.date).format('lll') }}</v-list-item-subtitle>
             <v-list-item-subtitle v-if="notif.body" :title="notif.body.fr || notif.body">
               {{ notif.body.fr || notif.body }}
             </v-list-item-subtitle>

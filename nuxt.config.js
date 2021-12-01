@@ -48,6 +48,7 @@ module.exports = {
     { src: '~plugins/typography' },
     { src: '~plugins/filters' },
     { src: '~plugins/sanitize' },
+    { src: '~/plugins/dayjs' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size' },
@@ -59,7 +60,7 @@ module.exports = {
   router: {
     base: config.basePath,
   },
-  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', '@nuxtjs/dayjs'],
+  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
   axios: {
     browserBaseURL: config.basePath,
     baseURL: 'http://localhost:' + config.port,
