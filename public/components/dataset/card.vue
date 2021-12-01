@@ -129,6 +129,7 @@
   import ApiView from '~/components/dataset/api-view.vue'
   import SchemaView from '~/components/dataset/schema-view.vue'
   import marked from 'marked'
+  import { mapState } from 'vuex'
 
   export default {
     components: {
@@ -146,6 +147,9 @@
         isMobileOnly,
         hover: false,
       }
+    },
+    computed: {
+      ...mapState(['config']),
     },
     methods: {
       marked,

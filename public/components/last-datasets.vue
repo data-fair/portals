@@ -95,6 +95,7 @@
   import VClamp from 'vue-clamp'
   import { isMobileOnly } from 'mobile-device-detect'
   import marked from 'marked'
+  import { mapState } from 'vuex'
 
   export default {
     components: {
@@ -111,6 +112,9 @@
     data: () => ({
       isMobileOnly,
     }),
+    computed: {
+      ...mapState(['config']),
+    },
     methods: {
       marked,
     },
