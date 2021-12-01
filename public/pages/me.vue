@@ -45,7 +45,7 @@
         const keys = [`data-fair:dataset-published:data-fair-portals:${this.portal._id}`]
         const titles = ['Nouveau jeu de données sur ' + portalTitle]
         for (const topic of this.topics) {
-          keys.push(`data-fair:dataset-published-topic:$data-fair-portals:${this.portal._id}:${topic.id}`)
+          keys.push(`data-fair:dataset-published-topic:data-fair-portals:${this.portal._id}:${topic.id}`)
           titles.push(`Nouveau jeu de données dans la thématique ${topic.title} sur ${portalTitle}`)
         }
         const icon = `${this.directoryUrl}/api/avatars/${this.config.owner.type}/${this.config.owner.id}/avatar.png`
