@@ -8,18 +8,25 @@
     <xs-menu :pages="pages" :extra-menus="extraMenus" />
     <v-tabs
       v-show="$vuetify.breakpoint.mdAndUp"
+      v-model="activeTab"
       background-color="primary"
       height="64"
       :dark="themeColorDark"
       centered
+      slider-size="4"
     >
       <v-tabs-slider :color="themeColorDark ? 'white' : textDark" />
+      <v-tab
+        :value="hidden"
+        style="width:0px;min-width:0px;max-width:0px;padding:0px;"
+      />
       <v-tab
         :to="{name: 'index'}"
         nuxt
         exact
         class="font-weight-bold"
         :class="{'white--text': themeColorDark}"
+        @click="activeTab = '/'"
       >
         Accueil
       </v-tab>
@@ -79,6 +86,7 @@
               :key="page.id"
               :to="{name: 'pages-id', params: {id: page.id}}"
               nuxt
+              @click="activeTab = 'hidden'"
             >
               <v-list-item-title>{{ page.title }}</v-list-item-title>
             </v-list-item>
@@ -191,6 +199,7 @@
     },
     data: () => ({
       pages: null,
+      activeTab: null,
     }),
     computed: {
       ...mapState(['config', 'textDark', 'portal']),
