@@ -157,11 +157,11 @@
           align="center"
         >
           <v-col
-            md="6"
+            :md="application.preferLargeDisplay ? 12 : 6"
             cols="12"
             class="px-5 py-3"
             :order="0"
-            :order-md="1-i%2"
+            :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
               :to="{name: 'reuses-id', params:{id: application.id}}"
@@ -175,10 +175,10 @@
             <div class="mt-3" v-html="marked(application.description || '')" />
           </v-col>
           <v-col
-            md="6"
+            :md="application.preferLargeDisplay ? 12 : 6"
             cols="12"
             :order="1"
-            :order-md="i%2"
+            :order-md="application.preferLargeDisplay ? 1 : i%2"
           >
             <client-only>
               <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
@@ -296,7 +296,7 @@
     },
     async fetch () {
       const dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id)
-      const params = { select: 'title,description,url,bbox,image' }
+      const params = { select: 'title,description,url,bbox,image,preferLargeDisplay' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
       else params.dataset = this.$route.params.id
       params.publicationSites = 'data-fair-portals:' + this.portal._id
