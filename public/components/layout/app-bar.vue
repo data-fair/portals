@@ -63,6 +63,7 @@
               text
               v-bind="attrs"
               :height="64"
+              :class="{'white--text': themeColorDark}"
               v-on="on"
             >
               {{ menu }}
