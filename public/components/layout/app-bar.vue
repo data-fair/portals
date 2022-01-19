@@ -19,6 +19,7 @@
         nuxt
         exact
         class="font-weight-bold"
+        :class="{'white--text': themeColorDark}"
       >
         Accueil
       </v-tab>
@@ -27,6 +28,7 @@
         :to="{name: 'datasets'}"
         nuxt
         class="font-weight-bold"
+        :class="{'white--text': themeColorDark}"
       >
         Les données
       </v-tab>
@@ -35,6 +37,7 @@
         :to="{name: 'reuses'}"
         nuxt
         class="font-weight-bold"
+        :class="{'white--text': themeColorDark}"
       >
         Visualisations
       </v-tab>
@@ -45,6 +48,7 @@
           :to="{name: 'pages-id', params: {id: page.id}}"
           nuxt
           class="font-weight-bold"
+          :class="{'white--text': themeColorDark}"
         >
           {{ page.title }}
         </v-tab>
@@ -83,6 +87,7 @@
         v-if="config.contactEmail"
         :to="{name: 'contact'}"
         class="font-weight-bold"
+        :class="{'white--text': themeColorDark}"
         nuxt
       >
         Contact
