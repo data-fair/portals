@@ -92,13 +92,6 @@
     }),
     computed: {
       ...mapState(['portal']),
-      breadcrumbItems() {
-        return [
-          { text: 'Mes portails', to: { name: 'manager-portals' }, disabled: false, exact: true },
-          { text: this.portal.title, to: { name: 'manager-portals-portalId', params: { portalId: this.portal._id } }, disabled: false, exact: true },
-          { text: 'Pages', disabled: true },
-        ]
-      },
     },
     mounted: async function () {
       this.$store.dispatch('setBreadcrumbs', [{

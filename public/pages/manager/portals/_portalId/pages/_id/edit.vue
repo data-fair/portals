@@ -78,14 +78,6 @@
       dataFairUrl() {
         return this.$store.getters.dataFairUrl
       },
-      breadcrumbItems() {
-        return [
-          { text: 'Mes portails', to: { name: 'manager-portals' }, disabled: false, exact: true },
-          { text: this.portal.title, to: { name: 'manager-portals-portalId', params: { portalId: this.portal._id } }, disabled: false, exact: true },
-          { text: 'Pages', to: { name: 'manager-portals-portalId-pages', params: { portalId: this.portal._id } }, disabled: false, exact: true },
-          { text: this.page && this.page.title, disabled: true },
-        ]
-      },
       vjsfOpts() {
         return {
           context: { dataFairUrl: this.dataFairUrl, owner: this.owner },
