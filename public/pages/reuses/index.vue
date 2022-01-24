@@ -246,7 +246,7 @@
         }
       },
       onScroll(e) {
-        if (!this.applications) return
+        if (!this.applications || this.loading) return
         const se = e.target.scrollingElement
         if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.applications.results.length < this.applications.count) {
           this.refresh(true)

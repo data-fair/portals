@@ -1,8 +1,18 @@
 const config = require('config')
+const memoize = require('memoizee')
 
 const { Nuxt } = require('nuxt')
 
 const nuxtConfig = require('../nuxt.config.js')
+
+const getPortalFromHost = memoize(async (db, host) => {
+  return db.collection('portals').findOne({ host }, { projection: { _id: true } })
+}, {
+  normalizer ([db, host]) {
+    return host
+  },
+  maxAge: process.env.NODE_ENV === 'development' ? 1000 : 30000,
+})
 
 module.exports = async () => {
   if (config.proxyNuxt) {
@@ -20,7 +30,7 @@ module.exports = async () => {
     return async (req, res, next) => {
       if (!req.query.portalId) {
         const host = req.headers.host
-        const portal = await req.app.get('db').collection('portals').findOne({ host }, { projection: { _id: true } })
+        const portal = await getPortalFromHost(req.app.get('db'), host)
         if (portal) {
           req.headers['x-portal-id'] = portal._id
           return nuxtStandalone.render(req, res)
