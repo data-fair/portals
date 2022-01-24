@@ -17,7 +17,7 @@
     >
       <v-tabs-slider :color="themeColorDark ? 'white' : textDark" />
       <v-tab
-        :value="hidden"
+        :value="'hidden'"
         style="width:0px;min-width:0px;max-width:0px;padding:0px;"
       />
       <v-tab
