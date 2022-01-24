@@ -131,7 +131,7 @@
         </v-col>
       </v-row>
       <v-row
-        v-if="applications && applications.results.length < applications.count"
+        v-if="applications && applications.results.length < applications.count && !loading"
         class="pt-5 pb-0"
         align="center"
       >
@@ -248,7 +248,7 @@
       onScroll(e) {
         if (!this.applications || this.loading) return
         const se = e.target.scrollingElement
-        if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.applications.results.length < this.applications.count) {
+        if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.applications.results.length < this.applications.count) {
           this.refresh(true)
         }
       },

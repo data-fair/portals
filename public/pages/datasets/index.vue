@@ -152,7 +152,7 @@
         </v-col>
       </v-row>
       <v-row
-        v-if="datasets && datasets.results.length < datasets.count"
+        v-if="datasets && datasets.results.length < datasets.count && !loading"
         class="pt-5 pb-0"
         align="center"
       >
@@ -279,7 +279,7 @@
       onScroll(e) {
         if (!this.datasets || this.loading) return
         const se = e.target.scrollingElement
-        if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.datasets.results.length < this.datasets.count) {
+        if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.datasets.results.length < this.datasets.count) {
           this.refresh(true)
         }
       },
