@@ -100,7 +100,7 @@
 
 # Portal: {{ currentPortal.title }} ({{ currentPortal._id }})
 # Owner: {{ currentPortal.owner.name }} ({{ currentPortal.owner.type }}:{{ currentPortal.owner.id }})
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: portal-{{ newHost.replace(/\./g, '-') }}
@@ -108,7 +108,7 @@ metadata:
     kubernetes.io/tls-acme: "true"
     # Remove matched prefix from all rules
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    # Add some trailing slashes to some urls and remove deprecated /s prefix
+    # Add some trailing slashes to some urls
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^(/openapi-viewer)$ $1/ redirect;
 spec:
@@ -121,29 +121,40 @@ spec:
       http:
         paths:
           - path: /simple-directory/(.*)
+            pathType: Prefix
             backend:
-              serviceName: simple-directory
-              servicePort: 8080
+              service:
+                name: simple-directory
+                port:
+                  number: 8080
           - path: /data-fair/(.*)
+            pathType: Prefix
             backend:
-              serviceName: data-fair-cache
-              servicePort: 80
+              service:
+                name: data-fair-cache
+                port:
+                  number: 80
           - path: /data-fair-processings/(.*)
+            pathType: Prefix
             backend:
-              serviceName: data-fair-processings
-              servicePort: 8080
+              service:
+                name: data-fair-processings
+                port:
+                  number: 8080
           - path: /notify/(.*)
+            pathType: Prefix
             backend:
-              serviceName: notify
-              servicePort: 8080
-          - path: /openapi-viewer/(.*)
-            backend:
-              serviceName: openapi-viewer
-              servicePort: 8080
+              service:
+                name: notify
+                port:
+                  number: 8080
           - path: /?(.*)
+            pathType: Prefix
             backend:
-              serviceName: data-fair-portals
-              servicePort: 8080
+              service:
+                name: data-fair-portals
+                port:
+                  number: 8080
               </pre>
             </code>
           </template>
