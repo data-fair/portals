@@ -51,7 +51,7 @@
       </v-container>
       <v-divider />
       <client-only>
-        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`height:${windowHeight - 87}px`" />
+        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" :style="`min-height:${windowHeight - 87}px`" />
       </client-only>
     </div>
   </div>
