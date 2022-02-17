@@ -1,5 +1,9 @@
 <template>
-  <div v-if="value" class="page-element">
+  <div
+    v-if="value"
+    class="page-element"
+    :class="{'fill-height': value.fillHeight}"
+  >
     <v-alert
       v-if="error"
       type="error"
@@ -32,7 +36,6 @@
       v-else-if="value.type === 'card'"
       class="my-6"
     >
-      <v-card-title>{{ value.title }}</v-card-title>
       <v-card-text>
         <k-element
           v-for="(element, i) in value.content"
@@ -41,6 +44,39 @@
         />
       </v-card-text>
     </v-card>
+    <v-card
+      v-else-if="value.type === 'cardSimple'"
+      outlined
+      class="d-flex flex-column fill-height"
+    >
+      <v-card-title
+        class="primary--text text--darken-1 justify-center"
+        :class="{'text-h6': value.titleSize === 'normal' || !value.titleSize, 'text-h4': value.titleSize === 'large', 'text-h1': value.titleSize === 'xl'}"
+      >
+        {{ value.title }}
+      </v-card-title>
+      <v-card-text
+        v-if="value.content"
+        style="overflow-wrap: break-word;"
+        v-html="$sanitize(marked(value.content))"
+      />
+      <v-spacer />
+      <v-card-actions v-if="value.actions && value.actions.length" class="justify-center mb-2">
+        <k-element
+          v-for="(action, i) in value.actions"
+          :key="i"
+          :value="action"
+        />
+      </v-card-actions>
+    </v-card>
+    <v-btn
+      v-else-if="value.type === 'button' && value.href"
+      :href="value.href"
+      outlined
+      color="primary"
+    >
+      {{ value.label }}
+    </v-btn>
     <client-only v-else>
       <v-iframe v-if="value.type === 'datasetForm' && value.dataset" :src="formIframeSrc(value.dataset)" />
       <v-iframe v-else-if="value.type === 'datasetTable' && value.dataset" :src="tableIframeSrc(value.dataset)" />

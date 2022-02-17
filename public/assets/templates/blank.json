@@ -67,6 +67,8 @@
       }, {
         "$ref": "#/definitions/datasetTable"
       }, {
+        "$ref": "#/definitions/cardSimple"
+      }, {
         "$ref": "#/definitions/image"
       }, {
         "$ref": "#/definitions/iframe"
@@ -146,6 +148,24 @@
           "type": "string",
           "x-display": "custom-markdown",
           "x-props": { "hideDetails": "auto" }
+        }
+      }
+    },
+    "button": {
+      "type": "object",
+      "title": "Bouton",
+      "required": ["type", "label", "href"],
+      "properties": {
+        "type": {
+          "const": "button"
+        },
+        "label": {
+          "type": "string",
+          "title": "Libellé"
+        },
+        "href": {
+          "type": "string",
+          "title": "URL"
         }
       }
     },
@@ -248,20 +268,51 @@
     },
     "card": {
       "type": "object",
-      "title": "Carte",
+      "title": "Boite",
       "properties": {
         "type": {
           "const": "card"
-        },
-        "cartTitle": {
-          "title": "Titre",
-          "type": "string"
         },
         "content": {
           "title": "Contenu",
           "type": "array",
           "items": {
             "$ref": "#/definitions/element"
+          }
+        }
+      }
+    },
+    "cardSimple": {
+      "type": "object",
+      "title": "Carte",
+      "properties": {
+        "type": {
+          "const": "cardSimple"
+        },
+        "title": {
+          "title": "Titre",
+          "type": "string"
+        },
+        "titleSize": {
+          "title": "Taille du titre",
+          "type": "string"
+        },
+        "content": {
+          "title": "Contenu",
+          "type": "string",
+          "x-display": "custom-markdown",
+          "x-props": { "hideDetails": "auto" }
+        },
+        "fillHeight": {
+          "title": "Étendre à la verticale",
+          "type": "boolean",
+          "default": false
+        },
+        "actions": {
+          "title": "Actions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/button"
           }
         }
       }
