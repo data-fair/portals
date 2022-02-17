@@ -12,7 +12,14 @@
     >
       <div v-text="error" />
     </v-alert>
-    <h2 v-else-if="value.type === 'title'">
+    <h2 v-else-if="value.type === 'title'" :class="titleClass">
+      <v-icon
+        v-if="value.icon"
+        left
+        :class="titleClass"
+      >
+        mdi-{{ value.icon.name }}
+      </v-icon>
       {{ value.content }}
     </h2>
     <div
@@ -49,10 +56,12 @@
       outlined
       class="d-flex flex-column fill-height"
     >
-      <v-card-title
-        class="primary--text text--darken-1 justify-center"
-        :class="{'text-h6': value.titleSize === 'normal' || !value.titleSize, 'text-h4': value.titleSize === 'large', 'text-h1': value.titleSize === 'xl'}"
-      >
+      <v-row v-if="value.icon" class="justify-center mt-2">
+        <v-icon :class="cardTitleClass">
+          mdi-{{ value.icon.name }}
+        </v-icon>
+      </v-row>
+      <v-card-title :class="cardTitleClass">
         {{ value.title }}
       </v-card-title>
       <v-card-text
@@ -75,6 +84,9 @@
       outlined
       color="primary"
     >
+      <v-icon v-if="value.icon" left>
+        mdi-{{ value.icon.name }}
+      </v-icon>
       {{ value.label }}
     </v-btn>
     <client-only v-else>
@@ -116,6 +128,21 @@
     },
     computed: {
       ...mapState(['config']),
+      titleClass() {
+        if (!this.value || this.value.type !== 'title') return null
+        const margins = {
+          h6: '2',
+          h3: '4',
+          h1: '6',
+        }
+        let res = `text-${this.value.titleSize || 'h3'} my-${margins[this.value.titleSize] || '4'}`
+        if (this.value.colored) res += ' primary--text text--darken-1'
+        return res
+      },
+      cardTitleClass() {
+        if (!this.value || this.value.type !== 'cardSimple') return
+        return `primary--text text--darken-1 justify-center text-${this.value.titleSize || 'h6'}`
+      },
     },
     watch: {
       'value.dataset'() {

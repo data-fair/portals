@@ -90,6 +90,24 @@
           "title": "Contenu",
           "type": "string",
           "x-props": { "hideDetails": "auto" }
+        },
+        "titleSize": {
+          "title": "Taille du titre",
+          "type": "string",
+          "oneOf": [
+            {"const": "h6", "title": "normal"},
+            {"const": "h3", "title": "grand"},
+            {"const": "h1", "title": "très grand"}
+          ],
+          "default": "h3"
+        },
+        "colored" : {
+          "type": "boolean",
+          "title": "Utiliser la couleur du thème",
+          "default": false
+        },
+        "icon": {
+          "$ref": "#/definitions/icon"
         }
       }
     },
@@ -166,6 +184,9 @@
         "href": {
           "type": "string",
           "title": "URL"
+        },
+        "icon": {
+          "$ref": "#/definitions/icon"
         }
       }
     },
@@ -289,13 +310,22 @@
         "type": {
           "const": "cardSimple"
         },
+        "icon": {
+          "$ref": "#/definitions/icon"
+        },
         "title": {
           "title": "Titre",
           "type": "string"
         },
         "titleSize": {
           "title": "Taille du titre",
-          "type": "string"
+          "type": "string",
+          "oneOf": [
+            {"const": "h6", "title": "normal"},
+            {"const": "h3", "title": "grand"},
+            {"const": "h1", "title": "très grand"}
+          ],
+          "default": "h6"
         },
         "content": {
           "title": "Contenu",
@@ -328,6 +358,23 @@
           "title": "URL vers l'image",
           "type": "string",
           "x-props": { "hideDetails": "auto" }
+        }
+      }
+    },
+    "icon": {
+      "type": "object",
+      "title": "Icone",
+      "x-fromUrl": "https://koumoul.com/s/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
+      "x-itemKey": "name",
+      "x-itemTitle": "name",
+      "x-itemIcon": "svg",
+      "x-itemsProp": "results",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "svg": {
+          "type": "string"
         }
       }
     },

@@ -38,27 +38,30 @@
         </v-col>
       </v-row>
       <template v-else-if="element.type === 'tabs'">
-        <v-tabs
-          :key="'t'+i"
-          v-model="tabs[i]"
-          show-arrows
-        >
-          <v-tab v-for="(tab, j) in element.tabs" :key="`t-${i}-${j}`">
-            {{ tab.title }}
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items :key="'ti'+i" v-model="tabs[i]">
-          <v-tab-item
-            v-for="(tab, j) in element.tabs"
-            :key="`ti-${i}-${j}`"
+        <v-card :key="'t'+i">
+          <v-tabs
+            v-model="tabs[i]"
+            show-arrows
           >
-            <k-element
-              v-for="(iElement, k) in tab.elements"
-              :key="`ti-${i}-${j}-${k}`"
-              :value="iElement"
-            />
-          </v-tab-item>
-        </v-tabs-items>
+            <v-tab v-for="(tab, j) in element.tabs" :key="`t-${i}-${j}`">
+              {{ tab.title }}
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items :key="'ti'+i" v-model="tabs[i]">
+            <v-tab-item
+              v-for="(tab, j) in element.tabs"
+              :key="`ti-${i}-${j}`"
+              class="pa-3"
+              style="height:100%"
+            >
+              <k-element
+                v-for="(iElement, k) in tab.elements"
+                :key="`ti-${i}-${j}-${k}`"
+                :value="iElement"
+              />
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
       </template>
       <k-element
         v-else
