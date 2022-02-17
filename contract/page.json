@@ -102,7 +102,7 @@
           "id": {"type": "string"}
         }
       },
-      "x-fromUrl": "{context.dataFairUrl}/api/v1/settings/organization/{context.owner.id}",
+      "x-fromUrl": "{context.settingsUrl}",
       "x-itemsProp": "topics",
       "x-itemTitle": "title",
       "x-itemKey": "id",

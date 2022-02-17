@@ -30,7 +30,7 @@
       <v-col :cols="6">
         <v-form>
           <v-jsf
-            v-if="pageConfig"
+            v-if="pageConfig && template"
             v-model="pageConfig"
             :schema="template"
             :options="vjsfOpts"
@@ -73,14 +73,18 @@
     computed: {
       ...mapState(['config', 'portal']),
       template() {
-        return context(`./${this.page.template}.json`)
+        return this.page.template && context(`./${this.page.template}.json`)
       },
       dataFairUrl() {
         return this.$store.getters.dataFairUrl
       },
       vjsfOpts() {
         return {
-          context: { dataFairUrl: this.dataFairUrl, owner: this.owner },
+          context: {
+            dataFairUrl: this.dataFairUrl,
+            settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
+            owner: this.owner,
+          },
         }
       },
       pageLink() {
