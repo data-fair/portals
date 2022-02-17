@@ -53,7 +53,7 @@
               </v-tooltip>
               <v-spacer />
               <v-subheader>
-                Mis à jour le {{ $dayjs(application.updatedAt).format("DD/MM/YYYY") }}
+                Mis à jour le {{ application.updatedAt | date('L') }}
               </v-subheader>
             </v-card-actions>
           </v-card>

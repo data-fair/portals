@@ -84,7 +84,7 @@
                   color="primary"
                 />
               </client-only>
-              <v-tooltip v-if="dataFiles.original" top>
+              <v-tooltip v-if="dataFiles && dataFiles.original" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :href="dataFiles.original.url"
@@ -98,7 +98,7 @@
                 </template>
                 <span>Télécharger les données originales</span>
               </v-tooltip>
-              <v-tooltip v-if="dataFiles.full" top>
+              <v-tooltip v-if="dataFiles && dataFiles.full" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :href="dataFiles.full.url"
@@ -112,7 +112,7 @@
                 </template>
                 <span>Télécharger les données enrichies</span>
               </v-tooltip>
-              <v-tooltip v-if="dataFiles['export-csv']" top>
+              <v-tooltip v-if="dataFiles && dataFiles['export-csv']" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
                     :href="dataFiles['export-csv'].url"
@@ -124,7 +124,7 @@
                     </v-icon>
                   </v-btn>
                 </template>
-                <span>Télécharger les données</span>
+                <span>Télécharger les données (export du {{ dataFiles['export-csv'].updatedAt | date('LL') }})</span>
               </v-tooltip>
               <schema-view
                 v-if="!dataset.isMetaOnly"
@@ -145,7 +145,7 @@
                 />
               </client-only>
             </v-card-actions>
-            <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>
+            <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt | date("LL") }}</v-subheader>
           </v-card>
           <v-row>
             <v-spacer />

@@ -43,7 +43,7 @@
               </v-row>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>{{ attachment.title || attachment.name }} - <small>Mis à jour le {{ $dayjs(attachment.updatedAt).format("DD/MM/YYYY") }}</small></v-list-item-title>
+              <v-list-item-title>{{ attachment.title || attachment.name }} - <small>Mis à jour le {{ attachment.updatedAt | date('L') }}</small></v-list-item-title>
               <v-list-item-sub-title>{{ attachment.description }}</v-list-item-sub-title>
             </v-list-item-content>
             <v-list-item-action>

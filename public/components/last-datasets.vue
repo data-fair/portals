@@ -65,7 +65,7 @@
               </client-only>
               <schema-view :dataset="dataset" :color="'primary'" />
               <v-spacer />
-              <v-subheader>Mis à jour le {{ $dayjs(dataset.dataUpdatedAt).format("DD/MM/YYYY") }}</v-subheader>
+              <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt | date('L') }}</v-subheader>
             </v-card-actions>
           </v-card>
         </v-hover>

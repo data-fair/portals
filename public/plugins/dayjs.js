@@ -21,7 +21,7 @@ Vue.filter('fromNow', (value) => {
 
 export default async ({ app }) => {
   // dayjs.locale(app.i18n.locale)
-  dayjs.locale('fs')
+  dayjs.locale('fr')
   /* app.i18n.onLanguageSwitched = (oldLocale, newLocale) => {
     dayjs.locale(newLocale)
   } */
