@@ -26,7 +26,7 @@
         }, {
           "$ref": "#/definitions/datasetTable"
         }, {
-          "$ref": "#/definitions/card"
+          "$ref": "#/definitions/cardSimple"
         }, {
           "$ref": "#/definitions/image"
         }, {
@@ -37,6 +37,8 @@
           "$ref": "#/definitions/responsiveFlow"
         }, {
           "$ref": "#/definitions/tabs"
+        }, {
+          "$ref": "#/definitions/card"
         }],
         "default": {
           "type": "title",

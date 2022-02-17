@@ -67,6 +67,7 @@
       <v-card-text
         v-if="value.content"
         style="overflow-wrap: break-word;"
+        class="text-body-1 px-8"
         v-html="$sanitize(marked(value.content))"
       />
       <v-spacer />
@@ -132,8 +133,8 @@
         if (!this.value || this.value.type !== 'title') return null
         const margins = {
           h6: '2',
-          h3: '4',
-          h1: '6',
+          h3: '6',
+          h1: '8',
         }
         let res = `text-${this.value.titleSize || 'h3'} my-${margins[this.value.titleSize] || '4'}`
         if (this.value.colored) res += ' primary--text text--darken-1'
