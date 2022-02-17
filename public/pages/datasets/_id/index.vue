@@ -84,10 +84,10 @@
                   color="primary"
                 />
               </client-only>
-              <v-tooltip v-if="dataset.file" top>
+              <v-tooltip v-if="dataFiles.original" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    :href="dataFairUrl+'/api/v1/datasets/'+dataset.id +'/raw'"
+                    :href="dataFiles.original.url"
                     color="primary"
                     icon
                     v-on="on"
@@ -98,10 +98,10 @@
                 </template>
                 <span>Télécharger les données originales</span>
               </v-tooltip>
-              <v-tooltip v-if="dataset.file && dataset.extensions && dataset.extensions.find(e => e.active)" top>
+              <v-tooltip v-if="dataFiles.full" top>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    :href="dataFairUrl + '/api/v1/datasets/' + dataset.id + '/full'"
+                    :href="dataFiles.full.url"
                     icon
                     v-on="on"
                   >
@@ -111,6 +111,20 @@
                   </v-btn>
                 </template>
                 <span>Télécharger les données enrichies</span>
+              </v-tooltip>
+              <v-tooltip v-if="dataFiles['export-csv']" top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :href="dataFiles['export-csv'].url"
+                    icon
+                    v-on="on"
+                  >
+                    <v-icon :color="'primary'">
+                      mdi-download
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Télécharger les données</span>
               </v-tooltip>
               <schema-view
                 v-if="!dataset.isMetaOnly"
@@ -295,7 +309,9 @@
       VIframe,
     },
     async fetch () {
-      const dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id)
+      const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`)
+      this.dataset = dataset
+
       const params = { select: 'title,description,url,bbox,image,preferLargeDisplay' }
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
       else params.dataset = this.$route.params.id
@@ -304,13 +320,16 @@
       if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
         applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
       }
-      this.dataset = dataset
       this.applications = applications
+
+      const dataFiles = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}/data-files`)
+      this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
     },
     data: () => ({
       isMobileOnly,
       dataset: null,
       applications: null,
+      dataFiles: null,
     }),
     computed: {
       ...mapState(['config', 'portal', 'publicUrl']),
