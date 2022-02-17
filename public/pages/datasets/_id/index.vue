@@ -308,7 +308,6 @@
       this.applications = applications
     },
     data: () => ({
-      baseApplications: {},
       isMobileOnly,
       dataset: null,
       applications: null,
@@ -326,10 +325,7 @@
         return this.$store.getters.notifyUrl
       },
     },
-    async mounted() {
-      const baseApps = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/base-applications', { params: { size: 1000 } })
-      this.baseApplications = Object.assign({}, ...baseApps.results.map(a => ({ [a.url]: a })))
-    },
+    async mounted() {},
     methods: {
       marked,
     },
