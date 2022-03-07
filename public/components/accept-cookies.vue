@@ -29,7 +29,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import Cookies from 'js-cookie'
 export default {
   data () {
     return {
@@ -44,14 +43,14 @@ export default {
       this.config.analytics &&
         this.config.analytics.active &&
         !this.config.analytics.anonymized &&
-        !Cookies.get('koumoul_portal_track')
+        !this.$cookies.get('koumoul_portal_track', '1')
     ) {
       this.show = true
     }
   },
   methods: {
     acceptCookies () {
-      Cookies.set('koumoul_portal_track', '1')
+      this.$cookies.set('koumoul_portal_track', '1')
       this.show = false
     }
   }
