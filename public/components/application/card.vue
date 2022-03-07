@@ -55,12 +55,10 @@
 </template>
 
 <script>
-import VClamp from 'vue-clamp'
 import ApplicationView from '~/components/application/view.vue'
 
 export default {
   components: {
-    VClamp,
     ApplicationView
   },
   props: {
