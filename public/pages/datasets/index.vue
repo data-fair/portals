@@ -119,19 +119,11 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-row v-if="topicsItems.length">
-        <v-chip
-          v-for="topicItem in topicsItems"
-          :key="topicItem.value.id"
-          :color="topicItem.value.color"
-          :outlined="!topicItem.filtered"
-          :dark="topicItem.filtered"
-          class="ml-3 my-1"
-          @click="toggleTopic(topicItem.value)"
-        >
-          {{ topicItem.value.title }} ({{ topicItem.count }})
-        </v-chip>
-      </v-row>
+      <topics-facets
+        v-if="topicsItems.length"
+        :items="topicsItems"
+        @toggle="toggleTopic"
+      />
     </v-container>
     <v-container v-scroll="onScroll">
       <v-row v-if="datasets">
@@ -258,6 +250,11 @@ export default {
       if (!this.datasets) return []
       return this.datasets.facets.topics
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
+        .sort((tf1, tf2) => {
+          if (tf1.filtered && !tf2.filtered) return -1
+          if (tf2.filtered && !tf1.filtered) return 1
+          return tf2.count - tf1.count
+        })
     }
   },
   mounted () {

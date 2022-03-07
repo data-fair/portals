@@ -59,15 +59,14 @@
           </client-only>
         </v-card-text>
         <v-row style="min-height:25px;">
-          <v-col class="py-0">
+          <v-col class="pt-0 pb-1">
             <v-chip
               v-for="topic of dataset.topics"
               :key="topic.id"
               small
-              outlined
-              :color="topic.color || 'default'"
-              class="ml-2"
-              style="font-weight: bold"
+              dark
+              :color="topic.color ? $readableColor(topic.color) : 'default'"
+              class="ml-2 mt-1 font-weight-bold"
             >
               {{ topic.title }}
             </v-chip>

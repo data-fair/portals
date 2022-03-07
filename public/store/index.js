@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import tinycolor from 'tinycolor2'
 import { sessionStoreBuilder } from '@koumoul/sd-vue/src'
 
 Vue.use(Vuex)
@@ -30,18 +29,15 @@ export default () => {
       },
       linkColor (state) {
         if (!state.config) return
-        const c = tinycolor(state.config.themeColor)
-        const darkness = 1 - c.getLuminance()
-        if (darkness > 0.7) return state.config.themeColor
-        return c.darken((0.7 - darkness) * 100).toString()
+        return Vue.prototype.$readableColor(state.config.themeColor)
       },
       themeColorDark (state) {
         if (!state.config) return
-        return tinycolor(state.config.themeColor).getLuminance() < 0.4
+        return Vue.prototype.$color(state.config.themeColor).getLuminance() < 0.4
       },
       footerColorDark (state) {
         if (!state.config) return
-        return tinycolor(state.config.footerColor).getLuminance() < 0.4
+        return Vue.prototype.$color(state.config.footerColor).getLuminance() < 0.4
       },
       owner (state) {
         if (!state.config) return

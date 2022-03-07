@@ -84,6 +84,7 @@ module.exports = {
     { src: '~plugins/filters' },
     { src: '~plugins/sanitize' },
     { src: '~/plugins/dayjs' },
+    { src: '~/plugins/color' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size' },
@@ -106,15 +107,6 @@ module.exports = {
     ['@nuxtjs/google-fonts', { download: true, display: 'swap', families: { Nunito: [100, 300, 400, 500, 700, 900] } }]
   ],
   vuetify: vuetifyOptions,
-  dayjs: {
-    locales: ['fr'],
-    defaultLocale: 'fr',
-    defaultTimeZone: 'Europe/Paris',
-    plugins: [
-      'timezone'
-      // 'advancedFormat',
-    ]
-  },
   env: {
     mainPublicUrl: config.publicUrl,
     mainDataFairUrl: config.dataFairUrl,

@@ -42,10 +42,9 @@
             v-for="topic of application.topics"
             :key="topic.id"
             small
-            outlined
-            :color="topic.color || 'default'"
-            class="ml-2"
-            style="font-weight: bold"
+            dark
+            :color="topic.color ? $readableColor(topic.color) : 'default'"
+            class="ml-2 mt-1 font-weight-bold"
           >
             {{ topic.title }}
           </v-chip>
