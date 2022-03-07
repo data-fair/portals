@@ -21,7 +21,7 @@ Vue.component('SectionTitle', {
     }
   },
   render: function (createElement) {
-    return createElement('h2', { class: 'headline grey--text text--darken-3 my-4' }, this.text)
+    return createElement('h2', { class: 'headline grey--text text--darken-3 my-4' }, [this.text, this.$slots.after])
   }
 })
 

@@ -1,10 +1,37 @@
 <template>
   <div>
-    <v-container class="py-2">
+    <v-container
+      class="py-2"
+      style="position: relative"
+    >
       <section-title
         v-if="datasets"
         :text="datasets.count + ' jeux de données'"
-      />
+      >
+        <template #after>
+          <v-tooltip top>
+            <template #activator="{ on }">
+              <v-btn
+                :disabled="!!downloading"
+                icon
+                target="_blank"
+                @click="download(config.title+'.csv')"
+                v-on="on"
+              >
+                <v-icon v-if="downloading !== config.title+'.csv'">
+                  mdi-file-table
+                </v-icon>
+                <v-progress-circular
+                  v-else
+                  indeterminate
+                  color="primary"
+                />
+              </v-btn>
+            </template>
+            <span>Exporter la sélection au format CSV</span>
+          </v-tooltip>
+        </template>
+      </section-title>
       <section-title
         v-else
         text="..."
@@ -19,7 +46,11 @@
           <v-text-field
             v-model="search"
             label="Rechercher"
+            outlined
+            dense
             append-icon="mdi-magnify"
+            hide-details
+            class="mb-2"
             @keyup.enter.native="refresh()"
             @click:append="refresh()"
           />
@@ -37,8 +68,12 @@
             :item-text="conceptLabel"
             multiple
             clearable
+            outlined
+            dense
             label="Filter par concepts"
             no-data-text="Aucun concept"
+            hide-details
+            class="mb-2"
             @input="refresh()"
           />
         </v-col>
@@ -48,30 +83,29 @@
           sm="6"
           md="4"
         >
-          <v-row align="center">
-            <v-col class="pr-1">
-              <v-select
-                v-model="sort"
-                :items="sorts"
-                label="Trier par"
-                @input="refresh()"
-              />
-            </v-col>
-            <v-col
-              class="pl-0"
-              :cols="4"
-            >
+          <v-select
+            v-model="sort"
+            dense
+            outlined
+            :items="sorts"
+            label="Trier par"
+            hide-details
+            class="select-sort mb-2"
+            @input="refresh()"
+          >
+            <template #append-outer>
               <v-btn-toggle
                 v-model="order"
                 mandatory
                 dense
+                class="ma-0"
                 @change="refresh()"
               >
                 <v-tooltip top>
                   <template #activator="{ on }">
                     <v-btn
                       text
-                      small
+                      :height="40"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-descending</v-icon>
@@ -83,7 +117,7 @@
                   <template #activator="{ on }">
                     <v-btn
                       text
-                      small
+                      :height="40"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-ascending</v-icon>
@@ -92,31 +126,8 @@
                   <span>Croissant</span>
                 </v-tooltip>
               </v-btn-toggle>
-            </v-col>
-            <v-col :cols="2">
-              <v-tooltip top>
-                <template #activator="{ on }">
-                  <v-btn
-                    :disabled="!!downloading"
-                    icon
-                    target="_blank"
-                    @click="download(config.title+'.csv')"
-                    v-on="on"
-                  >
-                    <v-icon v-if="downloading !== config.title+'.csv'">
-                      mdi-file-table
-                    </v-icon>
-                    <v-progress-circular
-                      v-else
-                      indeterminate
-                      color="primary"
-                    />
-                  </v-btn>
-                </template>
-                <span>Exporter la sélection au format CSV</span>
-              </v-tooltip>
-            </v-col>
-          </v-row>
+            </template>
+          </v-select>
         </v-col>
       </v-row>
       <topics-facets
@@ -348,3 +359,10 @@ export default {
 }
 
 </script>
+
+<style>
+.select-sort .v-input__append-outer {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+</style>

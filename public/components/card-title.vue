@@ -22,7 +22,10 @@
 </template>
 
 <script>
+import VClamp from 'vue-clamp'
+
 export default {
+  components: { VClamp },
   props: {
     title: { type: String, required: true }
   }

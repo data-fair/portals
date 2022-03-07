@@ -19,7 +19,11 @@
           <v-text-field
             v-model="search"
             label="Rechercher"
+            outlined
+            dense
             append-icon="mdi-magnify"
+            class="mb-2"
+            hide-details
             @keyup.enter.native="refresh()"
             @click:append="refresh()"
           />
@@ -38,6 +42,10 @@
             item-value="value.url"
             multiple
             clearable
+            outlined
+            dense
+            class="mb-2"
+            hide-details
             label="Filtrer par application"
             no-data-text="Aucun concept"
             @input="refresh()"
@@ -49,27 +57,29 @@
           sm="6"
           md="4"
         >
-          <v-row align="center">
-            <v-col class="pr-1">
-              <v-select
-                v-model="sort"
-                :items="sorts"
-                label="Trier par"
-                @input="refresh()"
-              />
-            </v-col>
-            <v-col class="pl-0">
+          <v-select
+            v-model="sort"
+            outlined
+            dense
+            :items="sorts"
+            label="Trier par"
+            hide-details
+            class="select-sort mb-2"
+            @input="refresh()"
+          >
+            <template #append-outer>
               <v-btn-toggle
                 v-model="order"
                 mandatory
                 dense
+                class="ma-0"
                 @change="refresh()"
               >
                 <v-tooltip top>
                   <template #activator="{ on }">
                     <v-btn
                       text
-                      small
+                      :height="40"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-descending</v-icon>
@@ -81,7 +91,7 @@
                   <template #activator="{ on }">
                     <v-btn
                       text
-                      small
+                      :height="40"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-ascending</v-icon>
@@ -90,8 +100,8 @@
                   <span>Croissant</span>
                 </v-tooltip>
               </v-btn-toggle>
-            </v-col>
-          </v-row>
+            </template>
+          </v-select>
         </v-col>
       </v-row>
       <topics-facets
@@ -287,3 +297,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.select-sort .v-input__append-outer {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+</style>
