@@ -161,12 +161,12 @@ export default {
         h1: '8'
       }
       let res = `text-${this.value.titleSize || 'h3'} my-${margins[this.value.titleSize] || '4'}`
-      if (this.value.colored) res += ' primary--text text--darken-1'
+      if (this.value.colored) res += ' primary--text'
       return res
     },
     cardTitleClass () {
       if (!this.value || this.value.type !== 'cardSimple') return
-      return `primary--text text--darken-1 justify-center text-${this.value.titleSize || 'h6'}`
+      return `primary--text justify-center text-${this.value.titleSize || 'h6'}`
     }
   },
   watch: {

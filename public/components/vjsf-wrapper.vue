@@ -43,6 +43,7 @@ export default {
       return {
         editMode: 'inline',
         arrayItemCardProps: { outlined: true },
+        colorPickerProps: { showSwatches: true },
         ...this.options
       }
     }

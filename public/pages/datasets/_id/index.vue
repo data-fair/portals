@@ -295,9 +295,9 @@
                   :href="reuse.link"
                   target="_blank"
                   color="primary"
-                  depressed
+                  text
                 >
-                  Accéder
+                  Ouvrir
                 </v-btn>
                 <v-spacer />
               </v-card-actions>
@@ -341,7 +341,7 @@ import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import { isMobileOnly } from 'mobile-device-detect'
 import marked from 'marked'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
@@ -456,6 +456,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
+    ...mapGetters(['themeColorDark']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id
