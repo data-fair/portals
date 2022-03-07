@@ -1,7 +1,7 @@
 version: '3'
 services:
   sd:
-    image: koumoul/simple-directory:master
+    image: ghcr.io/data-fair/simple-directory:master
     ports:
       - 6201:8080
       - 1080:1080
@@ -44,14 +44,14 @@ services:
       - SECRET_SENDMAILS=secret-sendmails
 
   elasticsearch:
-    image: koumoul/data-fair-elasticsearch:latest
+    image: ghcr.io/data-fair/elasticsearch:7.17.1
     ports:
       - 9200:9200
     environment:
       - discovery.type=single-node
 
   mongo:
-    image: mongo:4.1
+    image: mongo:4.2
     ports:
       - 27017:27017
 
