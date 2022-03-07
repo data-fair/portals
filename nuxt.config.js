@@ -8,10 +8,10 @@ if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (isBuilding) config = nuxtConfigInject.prepare(config)
   else {
-    fs.removeSync('.nuxt-standalone')
-    fs.copySync('.nuxt', '.nuxt-standalone')
+    fs.removeSync('nuxt-dist-standalone')
+    fs.copySync('nuxt-dist', 'nuxt-dist-standalone')
     nuxtConfigInject.replace(config)
-    nuxtConfigInject.replace({ ...config, basePath: '/' }, ['.nuxt-standalone/**/*'])
+    nuxtConfigInject.replace({ ...config, basePath: '/' }, ['nuxt-dist-standalone/**/*'])
   }
 }
 
@@ -53,6 +53,7 @@ module.exports = {
   standalone: true,
   components: true,
   srcDir: 'public/',
+  buildDir: 'nuxt-dist',
   telemetry: false,
   build: {
     transpile: [
@@ -80,12 +81,12 @@ module.exports = {
   plugins: [
     { src: '~plugins/axios-errors' },
     { src: '~plugins/init' },
+    { src: '~plugins/color' },
     { src: '~plugins/theme' },
     { src: '~plugins/typography' },
     { src: '~plugins/filters' },
     { src: '~plugins/sanitize' },
-    { src: '~/plugins/dayjs' },
-    { src: '~/plugins/color' },
+    { src: '~plugins/dayjs' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },
     { src: '~plugins/window-size' },

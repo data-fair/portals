@@ -2,6 +2,8 @@
 /npm-debug.log
 .nuxt
 .nuxt-standalone
+nuxt-dist
+nuxt-dist-standalone
 /data
 
 public/assets/css/

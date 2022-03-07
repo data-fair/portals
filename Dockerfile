@@ -39,8 +39,7 @@ WORKDIR /webapp
 
 # We could copy /webapp whole, but this is better for layering / efficient cache use
 COPY --from=builder /webapp/node_modules /webapp/node_modules
-COPY --from=builder /webapp/.nuxt /webapp/.nuxt
-COPY --from=builder /webapp/.nuxt-standalone /webapp/.nuxt-standalone
+COPY --from=builder /webapp/nuxt-dist /webapp/nuxt-dist
 ADD nuxt.config.js nuxt.config.js
 ADD server server
 ADD config config
