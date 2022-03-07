@@ -2,7 +2,7 @@ const fs = require('fs-extra')
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
 
-const isBuilding = process.argv.slice(-1)[0] === 'build'
+const isBuilding = process.argv.filter(a => !a.startsWith('--')).slice(-1)[0] === 'build'
 
 if (process.env.NODE_ENV === 'production') {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
