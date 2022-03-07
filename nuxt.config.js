@@ -50,6 +50,7 @@ if (process.env.NODE_ENV !== 'production' || isBuilding) {
 
 module.exports = {
   ssr: true,
+  standalone: true,
   components: true,
   srcDir: 'public/',
   telemetry: false,
