@@ -9,26 +9,7 @@
       :to="{name: 'reuses-id', params:{id: application.id}}"
       style="text-decoration:none"
     >
-      <v-card-title>
-        <v-tooltip top>
-          <template #activator="{ on, attrs }">
-            <h3
-              class="title grey--text text--darken-2 font-weight-bold"
-              style="height:40px;line-height: 1.1;"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-clamp
-                :max-lines="2"
-                autoresize
-              >
-                {{ application.title }}
-              </v-clamp>
-            </h3>
-          </template>
-          <span>{{ application.title }}</span>
-        </v-tooltip>
-      </v-card-title>
+      <card-title :title="application.title" />
       <div class="pb-2">
         <v-img
           :src="`${application.href}/capture`"

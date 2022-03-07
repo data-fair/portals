@@ -36,15 +36,3 @@ Vue.component('SectionSubtitle', {
     return createElement('h3', { class: 'title grey--text text--darken-3 my-3' }, this.text)
   }
 })
-
-Vue.component('CardTitle', {
-  props: {
-    text: {
-      type: String,
-      required: true
-    }
-  },
-  render: function (createElement) {
-    return createElement('h3', { class: 'title grey--text text--darken-2 font-weight-bold' }, this.text)
-  }
-})

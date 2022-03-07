@@ -236,9 +236,9 @@
         </v-row>
       </template>
 
-      <v-row v-if="dataset.extras && dataset.extras.externalReuses">
+      <v-row v-if="iframeExternalReuses.length">
         <v-col
-          v-for="(reuse, er) in dataset.extras.externalReuses.filter(r => r.type==='embed')"
+          v-for="(reuse, er) in iframeExternalReuses"
           :key="er"
           class="text-center"
         >
@@ -258,34 +258,44 @@
             />
           </client-only>
         </v-col>
+      </v-row>
+      <template v-if="linkExternalReuses.length">
         <section-title
-          v-if="dataset.extras && dataset.extras.externalReuses && dataset.extras.externalReuses.filter(r => r.type==='link').length"
           text="Réutilisations externes"
         />
-        <v-row v-if="dataset.extras && dataset.extras.externalReuses">
+        <v-row>
           <v-col
-            v-for="(reuse, er) in dataset.extras.externalReuses.filter(r => r.type==='link')"
+            v-for="(reuse, er) in linkExternalReuses"
             :key="er"
             md="4"
             sm="6"
             cols="12"
           >
             <v-card
-              raised
+              outlined
               height="100%"
             >
-              <v-card-title style="height:30%">
-                <card-title :text="reuse.title" />
-              </v-card-title>
-              <v-card-text>
-                <div v-html="marked(reuse.description || '')" />
+              <card-title :title="reuse.title" />
+              <v-card-text
+                style="height:130px;color: rgba(0,0,0,0.87)"
+                class="py-0"
+              >
+                <client-only>
+                  <v-clamp
+                    :max-height="170"
+                    class="external-reuse-desc130:before"
+                    autoresize
+                    v-html="marked(reuse.description || '')"
+                  />
+                </client-only>
               </v-card-text>
-              <v-card-actions style="height:20%">
+              <v-card-actions>
                 <v-spacer />
                 <v-btn
                   :href="reuse.link"
                   target="_blank"
                   color="primary"
+                  depressed
                 >
                   Accéder
                 </v-btn>
@@ -294,7 +304,7 @@
             </v-card>
           </v-col>
         </v-row>
-      </v-row>
+      </template>
 
       <v-row class="my-4 text-center">
         <v-col
@@ -455,6 +465,12 @@ export default {
     },
     notifyUrl () {
       return this.$store.getters.notifyUrl
+    },
+    iframeExternalReuses () {
+      return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []
+    },
+    linkExternalReuses () {
+      return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'link')) || []
     }
   },
   async mounted () {},
@@ -463,3 +479,15 @@ export default {
   }
 }
 </script>
+
+<style>
+.external-reuse-desc130:before {
+  content:'';
+  width:100%;
+  height:82px;
+  position:absolute;
+  left:0;
+  top:120px;
+  background:linear-gradient(transparent 0, white);
+}
+</style>
