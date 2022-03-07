@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@koumoul/sd-vue": "^1.2.0",
-    "@koumoul/v-iframe": "^0.9.0",
+    "@koumoul/v-iframe": "^0.10.0",
     "@koumoul/vjsf": "^2.11.3",
     "@koumoul/vue-multianalytics": "^1.11.3",
     "@mdi/font": "^6.5.95",
