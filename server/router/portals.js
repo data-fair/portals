@@ -31,11 +31,11 @@ const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
 delete configDefaults.homeReuse
 delete configDefaults.featuredReuse
 
-function link(portal, path = '') {
+function link (portal, path = '') {
   return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`
 }
 
-function cleanPortal(portal) {
+function cleanPortal (portal) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
   portal.link = link(portal)
   if (portal.config) portal.config = cleanConfig(portal.config)
@@ -50,7 +50,7 @@ const styledSanitizeOpts = {
     ...sanitizeHtml.defaults.allowedAttributes,
     '*': ['style', 'class'],
     iframe: ['src', 'width', 'height', 'frameborder', 'allowfullscreen'],
-    img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes'],
+    img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes']
   },
   allowedStyles: {
     '*': {
@@ -84,12 +84,12 @@ const styledSanitizeOpts = {
       'align-content': [/^(flex-start|flex-end|center|stretch|space-between|space-around)$/i],
       gap: [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
       'row-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
-      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
-    },
-  },
+      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/]
+    }
+  }
 }
 
-function cleanConfig(conf) {
+function cleanConfig (conf) {
   if (conf.description) conf.description = sanitizeHtml(conf.description)
   if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
   if (conf.customFooter && conf.customFooter.htmlXS) conf.customFooter.htmlXS = sanitizeHtml(conf.customFooter.htmlXS, styledSanitizeOpts)
@@ -107,7 +107,7 @@ async function syncPortalUpdate (portal, cookie) {
     title: portal.title,
     url: link(portal),
     datasetUrlTemplate: link(portal, '/datasets/{id}'),
-    applicationUrlTemplate: link(portal, '/reuses/{id}'),
+    applicationUrlTemplate: link(portal, '/reuses/{id}')
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
@@ -115,13 +115,13 @@ async function syncPortalUpdate (portal, cookie) {
   await axios.post(
     `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites`,
     publicationSite,
-    { headers: { cookie } },
+    { headers: { cookie } }
   )
 }
 async function syncPortalDelete (portal, cookie) {
   await axios.delete(
     `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites/data-fair-portals/${portal._id}`,
-    { headers: { cookie } },
+    { headers: { cookie } }
   )
 }
 
@@ -160,7 +160,7 @@ router.post('', asyncWrap(async (req, res) => {
   portal.owner = {
     type: req.user.organization ? 'organization' : 'user',
     id: req.user.organization ? req.user.organization.id : req.user.id,
-    name: req.user.organization ? req.user.organization.name : req.user.name,
+    name: req.user.organization ? req.user.organization.name : req.user.name
   }
   if (portal.owner.type === 'organization' && req.user.organization.role !== 'admin') {
     return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
@@ -176,7 +176,7 @@ router.post('', asyncWrap(async (req, res) => {
 }))
 
 // Read the portal matching a request, check that the user is owner
-async function setPortal(req, res, next) {
+async function setPortal (req, res, next) {
   if (!req.user) return res.status(401).send()
   const portal = await req.app.get('db')
     .collection('portals').findOne({ _id: req.params.id }, { owner: true })
@@ -193,7 +193,7 @@ async function setPortal(req, res, next) {
 }
 
 // Get an existing portal as the owner
-router.get('/:id', setPortal, asyncWrap(async(req, res) => {
+router.get('/:id', setPortal, asyncWrap(async (req, res) => {
   if (req.params.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
@@ -202,7 +202,7 @@ router.get('/:id', setPortal, asyncWrap(async(req, res) => {
 }))
 
 // Delete an existing portal as the owner
-router.delete('/:id', setPortal, asyncWrap(async(req, res) => {
+router.delete('/:id', setPortal, asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`data/${req.params.id}`)) await fs.remove(`data/${req.params.id}`)
@@ -211,7 +211,7 @@ router.delete('/:id', setPortal, asyncWrap(async(req, res) => {
 }))
 
 // Update the draft configuration as the owner
-router.put('/:id/configDraft', setPortal, asyncWrap(async(req, res) => {
+router.put('/:id/configDraft', setPortal, asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: cleanConfig(req.body) } })
@@ -222,37 +222,37 @@ router.put('/:id/configDraft', setPortal, asyncWrap(async(req, res) => {
 // We upload resources only in a draft folder
 // use POST _validate_draft to copy resources to production
 const storage = multer.diskStorage({
-  async destination(req, file, cb) {
+  async destination (req, file, cb) {
     const dir = `data/${req.portal._id}/draft`
     if (!await fs.exists(dir)) await fs.ensureDir(dir)
     cb(null, dir)
   },
-  filename(req, file, cb) {
+  filename (req, file, cb) {
     if (!assets[req.params.assetId]) return cb(new Error('asset inconnu ' + req.params.assetId))
     cb(null, req.params.assetId)
-  },
+  }
 })
 const upload = multer({ storage })
-router.post('/:id/assets/:assetId', setPortal, upload.any(), asyncWrap(async(req, res) => {
+router.post('/:id/assets/:assetId', setPortal, upload.any(), asyncWrap(async (req, res) => {
   res.send()
 }))
 
 const assets = {
   logo: {
     file: 'logo.png',
-    mimeType: 'image/png',
+    mimeType: 'image/png'
   },
   home: {
     file: 'undraw_Data_points_re_vkpq.png',
-    mimeType: 'image/jpeg',
+    mimeType: 'image/jpeg'
   },
   favicon: {
     file: 'favicon.ico',
-    mimeType: 'image/x-icon',
-  },
+    mimeType: 'image/x-icon'
+  }
 }
 
-router.get('/:id/assets/:assetId', asyncWrap(async(req, res) => {
+router.get('/:id/assets/:assetId', asyncWrap(async (req, res) => {
   if (!assets[req.params.assetId]) return res.status(404).send()
   const draft = req.query.draft === 'true'
   const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
@@ -262,16 +262,16 @@ router.get('/:id/assets/:assetId', asyncWrap(async(req, res) => {
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
-router.post('/:id/_validate_draft', setPortal, asyncWrap(async(req, res) => {
+router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
   console.log(req.portal.configDraft)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
         config: {
           ...req.portal.configDraft,
-          updatedAt: new Date().toISOString(),
-        },
-      },
+          updatedAt: new Date().toISOString()
+        }
+      }
     })
   if (await fs.exists(`data/${req.portal._id}/draft`)) {
     await fs.copy(`data/${req.portal._id}/draft`, `data/${req.portal._id}/prod`)
@@ -279,7 +279,7 @@ router.post('/:id/_validate_draft', setPortal, asyncWrap(async(req, res) => {
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
-router.post('/:id/_cancel_draft', setPortal, asyncWrap(async(req, res) => {
+router.post('/:id/_cancel_draft', setPortal, asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
   if (await fs.exists(`data/${req.portal._id}/prod`)) {
@@ -289,7 +289,7 @@ router.post('/:id/_cancel_draft', setPortal, asyncWrap(async(req, res) => {
 }))
 
 // Define the exposition host as super admin
-router.put('/:id/host', asyncWrap(async(req, res) => {
+router.put('/:id/host', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   if (!req.user.isAdmin) return res.status(403).send()
   const portal = (await req.app.get('db').collection('portals')
@@ -298,7 +298,7 @@ router.put('/:id/host', asyncWrap(async(req, res) => {
   res.send()
 }))
 
-async function setPortalAnonymous(req, res, next) {
+async function setPortalAnonymous (req, res, next) {
   const draft = req.query.draft === 'true'
   if (draft && !req.user) {
     return res.status(401).send('Le mode brouillon demande d\'être authentifié')
@@ -343,7 +343,7 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   if (req.query.published === 'true')filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),
-    pages.countDocuments(filter),
+    pages.countDocuments(filter)
   ])
   res.json({ count, results })
 }))
@@ -370,12 +370,12 @@ router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
   req.body.id = baseId
   req.body.portal = {
     _id: req.portal._id,
-    title: req.portal.title,
+    title: req.portal.title
   }
   req.body.created = req.body.updated = {
     id: req.user.id,
     name: req.user.name,
-    date: new Date().toISOString(),
+    date: new Date().toISOString()
   }
   const valid = validatePage(req.body)
   if (!valid) return res.status(400).send(validatePage.errors)
@@ -410,7 +410,7 @@ router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) =
   req.body.updated = {
     id: req.user.id,
     name: req.user.name,
-    date: new Date().toISOString(),
+    date: new Date().toISOString()
   }
 
   const patch = {}
@@ -425,7 +425,7 @@ router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) =
     }
   }
   const patchedPage = Object.assign({}, page, req.body)
-  var valid = validatePage(JSON.parse(JSON.stringify(patchedPage)))
+  const valid = validatePage(JSON.parse(JSON.stringify(patchedPage)))
   if (!valid) return res.status(400).send(validatePage.errors)
 
   await req.app.get('db').collection('pages').findOneAndUpdate(filter, patch)
@@ -448,7 +448,7 @@ const matchingPortalHost = (portal, req) => {
 const limiterOptions = {
   keyPrefix: 'data-fair-portals-rate-limiter-contact',
   points: 1,
-  duration: 60,
+  duration: 60
 }
 let _limiter
 const limiter = (req) => {
@@ -489,7 +489,7 @@ router.post('/:id/contact-email', setPortalAnonymous, asyncWrap(async (req, res,
     from: req.body.from,
     to: req.config.contactEmail,
     subject: req.body.subject,
-    text: req.body.text,
+    text: req.body.text
   }
   await req.app.get('mailTransport').sendMailAsync(mail)
 

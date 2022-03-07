@@ -12,7 +12,7 @@ const dbUtils = require('./utils/db')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@koumoul/sd-express')({
-  directoryUrl: config.directoryUrl,
+  directoryUrl: config.directoryUrl
 })
 const debug = require('debug')('main')
 
@@ -49,7 +49,7 @@ app.use('/', (req, res, next) => {
 })
 
 let httpServer
-async function main() {
+async function main () {
   const nuxtMiddleware = await nuxt()
   app.use(nuxtMiddleware)
 

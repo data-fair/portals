@@ -1,7 +1,10 @@
 <template lang="html">
   <v-container fluid>
     <v-row class="px-0">
-      <v-alert v-if="error" type="error">
+      <v-alert
+        v-if="error"
+        type="error"
+      >
         {{ error }}
         <v-btn
           icon
@@ -17,7 +20,10 @@
         class="list-actions"
         style="float:right;width:256px;"
       >
-        <v-list-item :to="`/manager/portals/${portal._id}/pages`" nuxt>
+        <v-list-item
+          :to="`/manager/portals/${portal._id}/pages`"
+          nuxt
+        >
           <v-list-item-icon>
             <v-icon color="primary">
               mdi-pencil
@@ -35,7 +41,10 @@
         xl="3"
         class="py-0"
       >
-        <v-progress-linear v-if="!configDraft" indeterminate />
+        <v-progress-linear
+          v-if="!configDraft"
+          indeterminate
+        />
         <v-form
           v-else
           ref="configForm"
@@ -63,7 +72,7 @@
               max-width="500px"
               :close-on-content-click="false"
             >
-              <template v-slot:activator="{ on }">
+              <template #activator="{ on }">
                 <v-btn
                   color="warning"
                   class="ml-2 mr-3"
@@ -79,16 +88,25 @@
                   Effacer le brouillon
                 </v-card-title>
                 <v-card-text>
-                  <v-alert :value="true" type="error">
+                  <v-alert
+                    :value="true"
+                    type="error"
+                  >
                     Attention le brouillon sera perdu et l'application reviendra à son état validé précédent.
                   </v-alert>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn text @click="showCancelDialog = false">
+                  <v-btn
+                    text
+                    @click="showCancelDialog = false"
+                  >
                     Annuler
                   </v-btn>
-                  <v-btn color="warning" @click="cancelDraft($event); showCancelDialog = false;">
+                  <v-btn
+                    color="warning"
+                    @click="cancelDraft($event); showCancelDialog = false;"
+                  >
                     Confirmer
                   </v-btn>
                 </v-card-actions>
@@ -104,11 +122,17 @@
         xl="9"
         class="pa-0"
       >
-        <v-tabs v-model="activeTab" slider-color="primary">
+        <v-tabs
+          v-model="activeTab"
+          slider-color="primary"
+        >
           <v-tab :key="0">
             ébauche
           </v-tab>
-          <v-tab-item :key="0" class="py-1 pl-0 pr-1">
+          <v-tab-item
+            :key="0"
+            class="py-1 pl-0 pr-1"
+          >
             <v-card
               v-if="showDraft"
               class="pa-0"
@@ -145,104 +169,104 @@
 
 <script>
 
-  import debounce from 'debounce'
-  import { mapState, mapGetters } from 'vuex'
-  import VJsf from '~/components/vjsf-wrapper.vue'
+import debounce from 'debounce'
+import { mapState, mapGetters } from 'vuex'
+import VJsf from '~/components/vjsf-wrapper.vue'
 
-  const schema = require('~/../contract/config.json')
+const schema = require('~/../contract/config.json')
 
-  export default {
-    components: { VJsf },
-    data() {
+export default {
+  components: { VJsf },
+  data () {
+    return {
+      configDraft: null,
+      schema,
+      formValid: false,
+      showCancelDialog: false,
+      showDraft: true,
+      showProd: true,
+      activeTab: 0,
+      error: null
+    }
+  },
+  computed: {
+    ...mapState(['portal']),
+    ...mapGetters('session', ['activeAccount']),
+    context () {
       return {
-        configDraft: null,
-        schema,
-        formValid: false,
-        showCancelDialog: false,
-        showDraft: true,
-        showProd: true,
-        activeTab: 0,
-        error: null,
+        owner: this.activeAccount.type + ':' + this.activeAccount.id,
+        dataFairUrl: this.$store.getters.dataFairUrl,
+        portalUrl: `api/v1/portals/${this.portal._id}`
       }
     },
-    computed: {
-      ...mapState(['portal']),
-      ...mapGetters('session', ['activeAccount']),
-      context() {
-        return {
-          owner: this.activeAccount.type + ':' + this.activeAccount.id,
-          dataFairUrl: this.$store.getters.dataFairUrl,
-          portalUrl: `api/v1/portals/${this.portal._id}`,
-        }
-      },
-      iframeHeight() {
-        return 800
-      },
+    iframeHeight () {
+      return 800
+    }
+  },
+  watch: {
+    configDraft: {
+      handler: debounce(function () {
+        this.saveDraft()
+      }, 200),
+      deep: true,
+      immediate: false
+    }
+  },
+  async mounted () {
+    this.$store.dispatch('setBreadcrumbs', [{
+      text: 'portails',
+      to: '/manager/portals'
+    }, {
+      text: this.portal.title
+    }])
+    await this.fetchConfigDraft()
+  },
+  methods: {
+    async fetchConfigDraft () {
+      this.configDraft = await this.$axios.$get(`api/v1/portals/${this.portal._id}/config`, { params: { draft: true } })
     },
-    watch: {
-      configDraft: {
-        handler: debounce(function() {
-          this.saveDraft()
-        }, 200),
-        deep: true,
-        immediate: false,
-      },
-    },
-    async mounted() {
-      this.$store.dispatch('setBreadcrumbs', [{
-        text: 'portails',
-        to: '/manager/portals',
-      }, {
-        text: this.portal.title,
-      }])
-      await this.fetchConfigDraft()
-    },
-    methods: {
-      async fetchConfigDraft() {
-        this.configDraft = await this.$axios.$get(`api/v1/portals/${this.portal._id}/config`, { params: { draft: true } })
-      },
-      async saveDraft(e) {
-        this.$refs.configForm && this.$refs.configForm.validate()
-        if (!this.formValid) return
-        this.showDraft = false
-        if (this.configDraft.assets) {
-          for (const key in this.configDraft.assets) {
-            if (this.configDraft.assets[key] && this.configDraft.assets[key].data) {
-              await this.uploadAsset(key, this.configDraft.assets[key].data)
-              delete this.configDraft.assets[key].data
-            }
+    async saveDraft (e) {
+      this.$refs.configForm && this.$refs.configForm.validate()
+      if (!this.formValid) return
+      this.showDraft = false
+      if (this.configDraft.assets) {
+        for (const key in this.configDraft.assets) {
+          if (this.configDraft.assets[key] && this.configDraft.assets[key].data) {
+            await this.uploadAsset(key, this.configDraft.assets[key].data)
+            delete this.configDraft.assets[key].data
           }
         }
-        await this.$axios.$put(`api/v1/portals/${this.portal._id}/configDraft`, this.configDraft)
-        this.showDraft = true
-        this.activeTab = 0
-      },
-      async validateDraft(e) {
-        e.preventDefault()
-        this.showProd = false
-        await this.$axios.$post(`api/v1/portals/${this.portal._id}/_validate_draft`)
-        this.showProd = true
-        this.activeTab = 1
-      },
-      async cancelDraft(e) {
-        e.preventDefault()
-        this.showDraft = false
-        await this.$axios.$post(`api/v1/portals/${this.portal._id}/_cancel_draft`)
-        this.showDraft = true
-        this.activeTab = 0
-        this.fetchConfigDraft()
-      },
-      async uploadAsset(key, file) {
-        const formData = new FormData()
-        formData.append('asset', file)
-        this.error = null
-        try {
-          await this.$axios.$post(`api/v1/portals/${this.portal._id}/assets/${key}`, formData,
-                                  { headers: { 'Content-Type': 'multipart/form-data' } })
-        } catch (err) {
-          this.error = (err.response && (err.response.data || err.response.status)) || err.message || err
-        }
-      },
+      }
+      await this.$axios.$put(`api/v1/portals/${this.portal._id}/configDraft`, this.configDraft)
+      this.showDraft = true
+      this.activeTab = 0
     },
+    async validateDraft (e) {
+      e.preventDefault()
+      this.showProd = false
+      await this.$axios.$post(`api/v1/portals/${this.portal._id}/_validate_draft`)
+      this.showProd = true
+      this.activeTab = 1
+    },
+    async cancelDraft (e) {
+      e.preventDefault()
+      this.showDraft = false
+      await this.$axios.$post(`api/v1/portals/${this.portal._id}/_cancel_draft`)
+      this.showDraft = true
+      this.activeTab = 0
+      this.fetchConfigDraft()
+    },
+    async uploadAsset (key, file) {
+      const formData = new FormData()
+      formData.append('asset', file)
+      this.error = null
+      try {
+        await this.$axios.$post(`api/v1/portals/${this.portal._id}/assets/${key}`, formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } })
+      } catch (err) {
+        this.error = (err.response && (err.response.data || err.response.status)) || err.message || err
+      }
+    }
   }
+}
 </script>

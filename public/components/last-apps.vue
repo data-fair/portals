@@ -17,11 +17,17 @@
             outlined
             :elevation="hover ? 2 : 0"
           >
-            <nuxt-link :to="`/reuses/${application.id}`" style="text-decoration:none">
+            <nuxt-link
+              :to="`/reuses/${application.id}`"
+              style="text-decoration:none"
+            >
               <v-card-title class="py-2">
                 <h3 class="title grey--text text--darken-2 font-weight-bold">
                   <client-only>
-                    <v-clamp :max-lines="1" autoresize>
+                    <v-clamp
+                      :max-lines="1"
+                      autoresize
+                    >
                       {{ application.title }}
                     </v-clamp>
                   </client-only>
@@ -38,7 +44,7 @@
             <v-card-actions class="py-0">
               <application-view :application="application" />
               <v-tooltip top>
-                <template v-slot:activator="{ on }">
+                <template #activator="{ on }">
                   <v-btn
                     :to="{name: 'reuses-id-full', params:{id: application.id}}"
                     icon
@@ -76,19 +82,19 @@
 </template>
 
 <script>
-  import ApplicationView from '~/components/application/view.vue'
-  import VClamp from 'vue-clamp'
+import ApplicationView from '~/components/application/view.vue'
+import VClamp from 'vue-clamp'
 
-  export default {
-    components: {
-      ApplicationView,
-      VClamp,
-    },
-    props: {
-      applications: { type: Object, required: true },
-      small: { type: Boolean, default: false },
-    },
+export default {
+  components: {
+    ApplicationView,
+    VClamp
+  },
+  props: {
+    applications: { type: Object, required: true },
+    small: { type: Boolean, default: false }
   }
+}
 </script>
 
 <style lang="css" scoped>

@@ -49,12 +49,12 @@
 </template>
 
 <script>
-  const { mapState } = require('vuex')
-  export default {
-    computed: {
-      ...mapState(['config']),
-    },
+const { mapState } = require('vuex')
+export default {
+  computed: {
+    ...mapState(['config'])
   }
+}
 </script>
 
 <style>

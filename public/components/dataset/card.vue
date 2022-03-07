@@ -8,10 +8,13 @@
     @mouseleave="hover = false"
   >
     <template v-if="dataset">
-      <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
+      <nuxt-link
+        :to="`/datasets/${dataset.id}`"
+        style="text-decoration:none"
+      >
         <v-card-title>
           <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <h3
                 class="title grey--text text--darken-2 font-weight-bold"
                 style="height:40px;line-height: 1.1;"
@@ -77,8 +80,11 @@
           :dataset="dataset"
           :color="'primary'"
         />
-        <v-tooltip v-if="!dataset.isMetaOnly" top>
-          <template v-slot:activator="{ on }">
+        <v-tooltip
+          v-if="!dataset.isMetaOnly"
+          top
+        >
+          <template #activator="{ on }">
             <v-btn
               :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
               color="primary"
@@ -122,39 +128,39 @@
 </template>
 
 <script>
-  import { isMobileOnly } from 'mobile-device-detect'
-  import VClamp from 'vue-clamp'
-  import TablePreview from '~/components/dataset/table-preview.vue'
-  import MapPreview from '~/components/dataset/map-preview.vue'
-  import ApiView from '~/components/dataset/api-view.vue'
-  import SchemaView from '~/components/dataset/schema-view.vue'
-  import marked from 'marked'
-  import { mapState } from 'vuex'
+import { isMobileOnly } from 'mobile-device-detect'
+import VClamp from 'vue-clamp'
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
+import SchemaView from '~/components/dataset/schema-view.vue'
+import marked from 'marked'
+import { mapState } from 'vuex'
 
-  export default {
-    components: {
-      VClamp,
-      TablePreview,
-      MapPreview,
-      ApiView,
-      SchemaView,
-    },
-    props: {
-      dataset: { type: Object },
-    },
-    data() {
-      return {
-        isMobileOnly,
-        hover: false,
-      }
-    },
-    computed: {
-      ...mapState(['config']),
-    },
-    methods: {
-      marked,
-    },
+export default {
+  components: {
+    VClamp,
+    TablePreview,
+    MapPreview,
+    ApiView,
+    SchemaView
+  },
+  props: {
+    dataset: { type: Object, default: null }
+  },
+  data () {
+    return {
+      isMobileOnly,
+      hover: false
+    }
+  },
+  computed: {
+    ...mapState(['config'])
+  },
+  methods: {
+    marked
   }
+}
 </script>
 
 <style>

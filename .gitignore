@@ -3,3 +3,6 @@
 .nuxt
 .nuxt-standalone
 /data
+
+public/assets/css/
+public/assets/fonts/

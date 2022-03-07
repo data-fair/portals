@@ -16,6 +16,6 @@ export default async ({ store, req, env, app, route, $vuetify, redirect, error }
         console.log(`desactivating account ${oldValue.name}`)
         app.router.go()
       }
-    },
+    }
   )
 }

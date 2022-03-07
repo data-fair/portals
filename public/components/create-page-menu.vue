@@ -7,8 +7,11 @@
     :close-on-content-click="false"
     max-width="700px"
   >
-    <template v-slot:activator="{on, attrs}">
-      <v-list-item v-bind="attrs" v-on="on">
+    <template #activator="{on, attrs}">
+      <v-list-item
+        v-bind="attrs"
+        v-on="on"
+      >
         <v-list-item-icon>
           <v-icon color="primary">
             mdi-plus-circle
@@ -24,7 +27,10 @@
       </v-card-title>
 
       <v-card-text>
-        <v-form ref="form" v-model="valid">
+        <v-form
+          ref="form"
+          v-model="valid"
+        >
           <slot
             name="form"
             :valid="valid"
@@ -41,10 +47,16 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click.native="menu = false">
+        <v-btn
+          text
+          @click.native="menu = false"
+        >
           Annuler
         </v-btn>
-        <v-btn color="primary" @click.native="confirm">
+        <v-btn
+          color="primary"
+          @click.native="confirm"
+        >
           Enregistrer
         </v-btn>
       </v-card-actions>
@@ -53,34 +65,34 @@
 </template>
 
 <script>
-  import VJsf from '@koumoul/vjsf/lib/VJsf.js'
-  import '@koumoul/vjsf/lib/deps/third-party.js'
-  import '@koumoul/vjsf/dist/main.css'
+import VJsf from '@koumoul/vjsf/lib/VJsf.js'
+import '@koumoul/vjsf/lib/deps/third-party.js'
+import '@koumoul/vjsf/dist/main.css'
 
-  export default {
-    components: { VJsf },
-    data: () => ({
-      schema: require('../../contract/page.json'),
-      menu: false,
-      valid: false,
-      editItem: {},
-    }),
-    watch: {
-      menu () {
-        if (!this.menu) {
-          this.editItem = {}
-        }
-      },
-    },
-    methods: {
-      confirm () {
-        if (this.$refs.form.validate()) {
-          this.$emit('created', this.editItem)
-          this.menu = false
-        }
-      },
-    },
+export default {
+  components: { VJsf },
+  data: () => ({
+    schema: require('../../contract/page.json'),
+    menu: false,
+    valid: false,
+    editItem: {}
+  }),
+  watch: {
+    menu () {
+      if (!this.menu) {
+        this.editItem = {}
+      }
+    }
+  },
+  methods: {
+    confirm () {
+      if (this.$refs.form.validate()) {
+        this.$emit('created', this.editItem)
+        this.menu = false
+      }
+    }
   }
+}
 </script>
 
 <style lang="css" scoped>

@@ -21,14 +21,14 @@
 </template>
 
 <script>
-  const { mapState, mapGetters } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
-  export default {
-    computed: {
-      ...mapState(['textDark']),
-      ...mapGetters(['linkColor']),
-    },
+export default {
+  computed: {
+    ...mapState(['textDark']),
+    ...mapGetters(['linkColor'])
   }
+}
 </script>
 
 <style lang="css" scoped>

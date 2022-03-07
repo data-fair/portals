@@ -23,17 +23,17 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({ fab: false }),
-    methods: {
-      onScroll () {
-        const top = window.pageYOffset || document.documentElement.offsetTop || 0
-        this.fab = top > 300
-      },
-      toTop () {
-        if (this.$route.hash) this.$router.push({ hash: '' })
-        this.$vuetify.goTo(0)
-      },
+export default {
+  data: () => ({ fab: false }),
+  methods: {
+    onScroll () {
+      const top = window.pageYOffset || document.documentElement.offsetTop || 0
+      this.fab = top > 300
     },
+    toTop () {
+      if (this.$route.hash) this.$router.push({ hash: '' })
+      this.$vuetify.goTo(0)
+    }
   }
+}
 </script>

@@ -42,7 +42,7 @@
           nudge-left
           max-height="500"
         >
-          <template v-slot:activator="{on}">
+          <template #activator="{on}">
             <v-btn
               text
               class="px-0"
@@ -124,24 +124,24 @@
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
-  export default {
-    computed: {
-      ...mapState(['breadcrumbs']),
-      ...mapState('session', ['user', 'initialized']),
-      ...mapGetters('session', ['activeAccount']),
-      directoryUrl() {
-        return this.$store.getters.directoryUrl
-      },
-    },
-    methods: {
-      ...mapActions('session', ['logout', 'login', 'setAdminMode', 'switchOrganization']),
-      reload() {
-        window.location.reload()
-      },
-    },
+export default {
+  computed: {
+    ...mapState(['breadcrumbs']),
+    ...mapState('session', ['user', 'initialized']),
+    ...mapGetters('session', ['activeAccount']),
+    directoryUrl () {
+      return this.$store.getters.directoryUrl
+    }
+  },
+  methods: {
+    ...mapActions('session', ['logout', 'login', 'setAdminMode', 'switchOrganization']),
+    reload () {
+      window.location.reload()
+    }
   }
+}
 </script>
 
 <style lang="css">

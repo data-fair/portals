@@ -1,28 +1,66 @@
-FROM koumoul/webapp-base:1.10.2
-MAINTAINER "contact@koumoul.com"
+######################################
+# Stage: nodejs dependencies and build
+FROM node:16.13.2-alpine3.14 AS builder
 
-ARG VERSION
-ENV VERSION=$VERSION
-ENV NODE_ENV production
 WORKDIR /webapp
-ADD LICENSE .
 ADD package.json .
 ADD package-lock.json .
-RUN npm install --production
+# use clean-modules on the same line as npm ci to be lighter in the cache
+RUN npm ci && \
+    ./node_modules/.bin/clean-modules --yes --exclude exceljs/lib/doc/ --exclude mocha/lib/test.js --exclude "**/*.mustache"
 
-ADD config config
-
-# Adding UI
-ADD nuxt.config.js .
+# Adding UI files
 ADD public public
+ADD nuxt.config.js .
+ADD config config
 ADD contract contract
-RUN npm run build
 
-# Adding server files
+# Build UI
+ENV NODE_ENV production
+RUN npm run build && \
+    rm -rf dist
+
+# Check quality
+ADD .gitignore .gitignore
+RUN npm run lint
+
+# Cleanup /webapp/node_modules so it can be copied by next stage
+RUN npm prune --production
+RUN rm -rf node_modules/.cache
+
+##################################
+# Stage: main nodejs service stage
+FROM node:16.13.2-alpine3.14
+MAINTAINER "contact@koumoul.com"
+
+RUN apk add --no-cache dumb-init
+
+WORKDIR /webapp
+
+# We could copy /webapp whole, but this is better for layering / efficient cache use
+COPY --from=builder /webapp/node_modules /webapp/node_modules
+COPY --from=builder /webapp/.nuxt /webapp/.nuxt
+COPY --from=builder /webapp/.nuxt-standalone /webapp/.nuxt-standalone
+ADD nuxt.config.js nuxt.config.js
 ADD server server
-ADD README.md .
+ADD config config
+ADD contract contract
 
+# Adding licence, manifests, etc.
+ADD package.json .
+ADD README.md BUILD.json* ./
+ADD LICENSE .
+ADD nodemon.json .
+
+# configure node webapp environment
+ENV NODE_ENV production
+ENV DEBUG db,upgrade*
+# the following line would be a good practice
+# unfortunately it is a problem to activate now that the service was already deployed
+# with volumes belonging to root
+#USER node
 VOLUME /webapp/data
 EXPOSE 8080
+
 
 CMD ["node", "server"]

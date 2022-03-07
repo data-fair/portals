@@ -1,7 +1,10 @@
 <template>
   <!-- smaller screens: navigation in menu -->
-  <v-menu bottom left>
-    <template v-slot:activator="{ on }">
+  <v-menu
+    bottom
+    left
+  >
+    <template #activator="{ on }">
       <v-btn
         v-show="$vuetify.breakpoint.smAndDown"
         icon
@@ -19,10 +22,16 @@
       >
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
-      <v-list-item :to="{name: 'datasets'}" nuxt>
+      <v-list-item
+        :to="{name: 'datasets'}"
+        nuxt
+      >
         <v-list-item-title>Les données</v-list-item-title>
       </v-list-item>
-      <v-list-item :to="{name: 'reuses'}" nuxt>
+      <v-list-item
+        :to="{name: 'reuses'}"
+        nuxt
+      >
         <v-list-item-title>Visualisations</v-list-item-title>
       </v-list-item>
       <template v-if="pages">
@@ -61,20 +70,20 @@
 </template>
 
 <script>
-  const { mapState } = require('vuex')
+const { mapState } = require('vuex')
 
-  export default {
-    props: ['pages', 'extraMenus'],
-    computed: {
-      ...mapState(['config']),
-      directoryUrl() {
-        return this.$store.getters.directoryUrl
-      },
-      dataFairUrl() {
-        return this.$store.getters.dataFairUrl + (process.env.development ? '/' : '')
-      },
+export default {
+  props: ['pages', 'extraMenus'],
+  computed: {
+    ...mapState(['config']),
+    directoryUrl () {
+      return this.$store.getters.directoryUrl
     },
+    dataFairUrl () {
+      return this.$store.getters.dataFairUrl + (process.env.development ? '/' : '')
+    }
   }
+}
 </script>
 
 <style lang="css" scoped>

@@ -10,16 +10,16 @@ module.exports = {
   notifyWSUrl: 'NOTIFY_WS_URL',
   mongo: {
     host: 'MONGO_HOST',
-    db: 'MONGO_DB',
+    db: 'MONGO_DB'
   },
   mails: {
     transport: {
       __name: 'MAILS_TRANSPORT',
-      __format: 'json',
-    },
+      __format: 'json'
+    }
   },
   proxyNuxt: {
     __name: 'PROXY_NUXT',
-      __format: 'json',
-  },
+    __format: 'json'
+  }
 }

@@ -8,7 +8,7 @@ const styledSanitizeOpts = {
     ...VueSanitize.defaults.allowedAttributes,
     '*': ['style', 'class'],
     iframe: ['src', 'width', 'height', 'frameborder', 'allowfullscreen'],
-    img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes'],
+    img: ['title', 'alt', 'src', 'style', 'class', 'height', 'width', 'sizes']
   },
   allowedStyles: {
     '*': {
@@ -42,9 +42,9 @@ const styledSanitizeOpts = {
       'align-content': [/^(flex-start|flex-end|center|stretch|space-between|space-around)$/i],
       gap: [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
       'row-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
-      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/],
-    },
-  },
+      'column-gap': [/^\d+(?:px)$/, /^\d+(?:px) \d+(?:px)$/]
+    }
+  }
 }
 
 Vue.use(VueSanitize, styledSanitizeOpts)

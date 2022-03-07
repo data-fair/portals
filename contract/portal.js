@@ -5,11 +5,11 @@ module.exports = {
   required: ['_id', 'owner', 'config', 'configDraft'],
   properties: {
     _id: {
-      type: 'string',
+      type: 'string'
     },
     host: {
       type: 'string',
-      description: 'Le nom de domaine (exemple = test1.koumoul.com)',
+      description: 'Le nom de domaine (exemple = test1.koumoul.com)'
     },
     owner: {
       type: 'object',
@@ -19,19 +19,19 @@ module.exports = {
         type: {
           type: 'string',
           enum: ['user', 'organization'],
-          description: 'If the owner is a user or an organization',
+          description: 'If the owner is a user or an organization'
         },
         id: {
           type: 'string',
-          description: 'The unique id of the user or organization',
+          description: 'The unique id of the user or organization'
         },
         name: {
           type: 'string',
-          description: 'The display name of the user or organization',
-        },
-      },
+          description: 'The display name of the user or organization'
+        }
+      }
     },
     config,
-    configDraft: config,
-  },
+    configDraft: config
+  }
 }

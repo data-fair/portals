@@ -72,47 +72,47 @@
 </template>
 
 <script>
-  import eventBus from '../event-bus'
-  import marked from 'marked'
-  const { mapState } = require('vuex')
+import eventBus from '../event-bus'
+import marked from 'marked'
+const { mapState } = require('vuex')
 
-  const newMessage = { from: '', subject: '', text: '' }
-  export default {
-    data: () => ({
-      valid: true,
-      message: { ...newMessage },
-      token: null,
-      tokenError: null,
-      loading: false,
-    }),
-    computed: {
-      ...mapState(['config', 'portal', 'draft']),
-    },
-    async mounted() {
+const newMessage = { from: '', subject: '', text: '' }
+export default {
+  data: () => ({
+    valid: true,
+    message: { ...newMessage },
+    token: null,
+    tokenError: null,
+    loading: false
+  }),
+  computed: {
+    ...mapState(['config', 'portal', 'draft'])
+  },
+  async mounted () {
+    try {
+      this.token = await this.$axios.$get(`${this.$store.getters.directoryUrl}/api/auth/anonymous-action`)
+    } catch (error) {
+      this.tokenError = error
+      eventBus.$emit('notification', { error })
+    }
+  },
+  methods: {
+    async send () {
+      if (!this.$refs.form.validate()) return
+      this.loading = true
       try {
-        this.token = await this.$axios.$get(`${this.$store.getters.directoryUrl}/api/auth/anonymous-action`)
+        await this.$axios.$post(`${this.$store.state.publicUrl}/api/v1/portals/${this.portal._id}/contact-email?draft=${this.draft}`, { ...this.message, token: this.token })
+        this.message = { ...newMessage }
+        this.$refs.form.resetValidation()
+        eventBus.$emit('notification', { type: 'success', msg: 'Votre demande a été envoyée' })
       } catch (error) {
-        this.tokenError = error
         eventBus.$emit('notification', { error })
       }
+      this.loading = false
     },
-    methods: {
-      async send() {
-        if (!this.$refs.form.validate()) return
-        this.loading = true
-        try {
-          await this.$axios.$post(`${this.$store.state.publicUrl}/api/v1/portals/${this.portal._id}/contact-email?draft=${this.draft}`, { ...this.message, token: this.token })
-          this.message = { ...newMessage }
-          this.$refs.form.resetValidation()
-          eventBus.$emit('notification', { type: 'success', msg: 'Votre demande a été envoyée' })
-        } catch (error) {
-          eventBus.$emit('notification', { error })
-        }
-        this.loading = false
-      },
-      marked,
-    },
+    marked
   }
+}
 </script>
 
 <style lang="css">

@@ -18,10 +18,16 @@
             :height="windowHeight / 2"
             contain
           />
-          <h2 v-if="error.statusCode === 401" class="headline grey--text text--darken-1 my-5">
+          <h2
+            v-if="error.statusCode === 401"
+            class="headline grey--text text--darken-1 my-5"
+          >
             Vous devez être authentifié pour accéder à cette page.
           </h2>
-          <h2 v-if="error.statusCode === 403" class="headline grey--text text--darken-1 my-5">
+          <h2
+            v-if="error.statusCode === 403"
+            class="headline grey--text text--darken-1 my-5"
+          >
             Vous n'avez pas les droits pour accéder à cette page.
           </h2>
         </template>
@@ -49,9 +55,9 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      error: { type: Object, default: null },
-    },
+export default {
+  props: {
+    error: { type: Object, default: null }
   }
+}
 </script>

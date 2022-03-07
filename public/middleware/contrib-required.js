@@ -5,7 +5,7 @@ export default async function ({ store, error }) {
   } else if (!store.state.session.user.organization || store.state.session.user.organization.role === 'user') {
     error({
       message: 'Vous n\'avez pas la permission d\'accéder à cette page, il faut avoir le profil contributeur.',
-      statusCode: 403,
+      statusCode: 403
     })
   }
 }

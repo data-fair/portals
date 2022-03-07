@@ -17,7 +17,10 @@
         v-if="config.description"
         :value="{type: 'text', content: config.description}"
       />
-      <div v-for="(block, i) in (config.blocks || []).filter(e => e)" :key="i">
+      <div
+        v-for="(block, i) in (config.blocks || []).filter(e => e)"
+        :key="i"
+      >
         <v-divider class="my-6" />
         <v-row>
           <v-col
@@ -69,12 +72,12 @@
 </template>
 
 <script>
-  import KElement from '~/components/pages/element.vue'
+import KElement from '~/components/pages/element.vue'
 
-  export default {
-    components: { KElement },
-    props: ['config'],
-  }
+export default {
+  components: { KElement },
+  props: ['config']
+}
 </script>
 
 <style lang="css"></style>

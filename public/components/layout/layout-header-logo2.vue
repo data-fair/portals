@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  export default {
-    props: ['config'],
-  }
+export default {
+  props: ['config']
+}
 </script>
 
 <style>

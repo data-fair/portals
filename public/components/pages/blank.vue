@@ -6,14 +6,20 @@
         :key="i"
         class="mb-6"
       >
-        <v-col :cols="12" :md="element.layout === 'left' ? 8 : (element.layout === 'right' ? 4 : 6)">
+        <v-col
+          :cols="12"
+          :md="element.layout === 'left' ? 8 : (element.layout === 'right' ? 4 : 6)"
+        >
           <k-element
             v-for="(lElement, li) in element.leftColumn"
             :key="`${i}l${li}`"
             :value="lElement"
           />
         </v-col>
-        <v-col :cols="12" :md="element.layout === 'left' ? 4 : (element.layout === 'right' ? 8 : 6)">
+        <v-col
+          :cols="12"
+          :md="element.layout === 'left' ? 4 : (element.layout === 'right' ? 8 : 6)"
+        >
           <k-element
             v-for="(rElement, ri) in element.rightColumn"
             :key="`${i}r${ri}`"
@@ -39,7 +45,10 @@
         </v-col>
       </v-row>
       <template v-else-if="element.type === 'tabs'">
-        <v-card :key="'t'+i" class="mb-6">
+        <v-card
+          :key="'t'+i"
+          class="mb-6"
+        >
           <v-tabs
             v-model="tabs[i]"
             show-arrows
@@ -52,7 +61,10 @@
               {{ tab.title }}
             </v-tab>
           </v-tabs>
-          <v-tabs-items :key="'ti'+i" v-model="tabs[i]">
+          <v-tabs-items
+            :key="'ti'+i"
+            v-model="tabs[i]"
+          >
             <v-tab-item
               v-for="(tab, j) in element.tabs"
               :key="`ti-${i}-${j}`"
@@ -78,15 +90,15 @@
 </template>
 
 <script>
-  import KElement from '~/components/pages/element.vue'
+import KElement from '~/components/pages/element.vue'
 
-  export default {
-    components: { KElement },
-    props: ['config'],
-    data: () => ({
-      tabs: {},
-    }),
-  }
+export default {
+  components: { KElement },
+  props: ['config'],
+  data: () => ({
+    tabs: {}
+  })
+}
 </script>
 
 <style lang="css"></style>

@@ -21,7 +21,7 @@ exports.connect = async () => {
   let client
   const opts = {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   }
   try {
     client = await MongoClient.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`, opts)

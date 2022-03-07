@@ -31,18 +31,18 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  export default {
-    props: {
-      float: { type: String, default: 'left' },
-    },
-    computed: {
-      ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-      logoUrl() {
-        return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
-      },
-    },
+import { mapState } from 'vuex'
+export default {
+  props: {
+    float: { type: String, default: 'left' }
+  },
+  computed: {
+    ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
+    logoUrl () {
+      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
+    }
   }
+}
 </script>
 
 <style>

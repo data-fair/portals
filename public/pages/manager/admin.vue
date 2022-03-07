@@ -12,15 +12,26 @@
           </v-card-title>
           <v-card-text>
             <v-list>
-              <v-list-item v-for="portal in publicPortals" :key="portal._id">
+              <v-list-item
+                v-for="portal in publicPortals"
+                :key="portal._id"
+              >
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ portal.owner.name }} - {{ portal.title }}
                   </v-list-item-title>
-                  <v-list-item-subtitle>Adresse : <a :href="portal.link" target="_blank">{{ portal.link }}</a></v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                    Adresse : <a
+                      :href="portal.link"
+                      target="_blank"
+                    >{{ portal.link }}</a>
+                  </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-icon color="primary" @click="currentPortal = portal; newHost = portal.host; showPublishDialog = true;">
+                  <v-icon
+                    color="primary"
+                    @click="currentPortal = portal; newHost = portal.host; showPublishDialog = true;"
+                  >
                     mdi-earth
                   </v-icon>
                 </v-list-item-action>
@@ -40,7 +51,10 @@
           </v-card-title>
           <v-card-text>
             <v-list>
-              <v-list-item v-for="portal in privatePortals" :key="portal._id">
+              <v-list-item
+                v-for="portal in privatePortals"
+                :key="portal._id"
+              >
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ portal.owner.name }} - {{ portal.title }}
@@ -48,7 +62,10 @@
                   <v-list-item-subtitle>Adresse : <a :href="portal.link">{{ portal.link }}</a></v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-icon color="primary" @click="currentPortal = portal; newHost = portal.host; showPublishDialog = true;">
+                  <v-icon
+                    color="primary"
+                    @click="currentPortal = portal; newHost = portal.host; showPublishDialog = true;"
+                  >
                     mdi-earth
                   </v-icon>
                 </v-list-item-action>
@@ -161,10 +178,16 @@ spec:
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="showPublishDialog = false">
+          <v-btn
+            text
+            @click="showPublishDialog = false"
+          >
             Annuler
           </v-btn>
-          <v-btn color="primary" @click="patchHost(); showPublishDialog = false">
+          <v-btn
+            color="primary"
+            @click="patchHost(); showPublishDialog = false"
+          >
             Publier
           </v-btn>
         </v-card-actions>
@@ -174,39 +197,39 @@ spec:
 </template>
 
 <script>
-  export default {
-    layout: 'manager',
-    middleware: 'superadmin-required',
-    data() {
-      return {
-        portals: null,
-        showPublishDialog: false,
-        currentPortal: null,
-        newHost: null,
-      }
+export default {
+  layout: 'manager',
+  middleware: 'superadmin-required',
+  data () {
+    return {
+      portals: null,
+      showPublishDialog: false,
+      currentPortal: null,
+      newHost: null
+    }
+  },
+  computed: {
+    publicPortals () {
+      return this.portals && this.portals.filter(p => !!p.host)
     },
-    computed: {
-      publicPortals() {
-        return this.portals && this.portals.filter(p => !!p.host)
-      },
-      privatePortals() {
-        return this.portals && this.portals.filter(p => !p.host)
-      },
+    privatePortals () {
+      return this.portals && this.portals.filter(p => !p.host)
+    }
+  },
+  async mounted () {
+    this.refresh()
+  },
+  methods: {
+    async refresh () {
+      this.portals = await this.$axios.$get('api/v1/portals', { params: { size: 10000 } })
     },
-    async mounted() {
+    async patchHost () {
+      await this.$axios.put(`api/v1/portals/${this.currentPortal._id}/host`, this.newHost,
+        { headers: { 'Content-Type': 'text/plain' } })
       this.refresh()
-    },
-    methods: {
-      async refresh() {
-        this.portals = await this.$axios.$get('api/v1/portals', { params: { size: 10000 } })
-      },
-      async patchHost() {
-        await this.$axios.put(`api/v1/portals/${this.currentPortal._id}/host`, this.newHost,
-                              { headers: { 'Content-Type': 'text/plain' } })
-        this.refresh()
-      },
-    },
+    }
   }
+}
 </script>
 
 <style lang="css">

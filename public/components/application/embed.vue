@@ -7,8 +7,11 @@
   >
     <template #activator="{on: onDialog}">
       <v-tooltip top>
-        <template v-slot:activator="{ on: onTooltip }">
-          <v-btn icon v-on="{...onDialog, ...onTooltip}">
+        <template #activator="{ on: onTooltip }">
+          <v-btn
+            icon
+            v-on="{...onDialog, ...onTooltip}"
+          >
             <v-icon :color="'primary'">
               mdi-code-tags
             </v-icon>
@@ -18,10 +21,16 @@
       </v-tooltip>
     </template>
     <v-card>
-      <v-toolbar dense flat>
+      <v-toolbar
+        dense
+        flat
+      >
         <v-toolbar-title>Intégrer dans un site</v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click.native="embedDialog = false">
+        <v-btn
+          icon
+          @click.native="embedDialog = false"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -34,18 +43,18 @@
 </template>
 
 <script>
-  export default {
-    props: ['application'],
-    data() {
-      return {
-        embedDialog: null,
-      }
-    },
-    computed: {
-      embedUrl() {
-        return this.$store.getters.dataFairUrl + '/app/' + this.application.id
-      },
-    },
+export default {
+  props: ['application'],
+  data () {
+    return {
+      embedDialog: null
+    }
+  },
+  computed: {
+    embedUrl () {
+      return this.$store.getters.dataFairUrl + '/app/' + this.application.id
+    }
   }
+}
 
 </script>

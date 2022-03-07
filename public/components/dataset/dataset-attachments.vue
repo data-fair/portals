@@ -7,7 +7,7 @@
   >
     <template #activator="{on: onDialog}">
       <v-tooltip top>
-        <template v-slot:activator="{ on: onTooltip }">
+        <template #activator="{ on: onTooltip }">
           <v-btn
             :disabled="dataset.status === 'error'"
             icon
@@ -22,17 +22,29 @@
       </v-tooltip>
     </template>
     <v-card v-if="dialog">
-      <v-toolbar dense flat>
+      <v-toolbar
+        dense
+        flat
+      >
         <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click.native="dialog = false">
+        <v-btn
+          icon
+          @click.native="dialog = false"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
       <v-card-text class="pa-0">
         <v-list class="mb-0">
-          <v-list-item v-for="attachment in dataset.attachments" :key="attachment.name">
-            <v-list-item-avatar size="80" class="my-0">
+          <v-list-item
+            v-for="attachment in dataset.attachments"
+            :key="attachment.name"
+          >
+            <v-list-item-avatar
+              size="80"
+              class="my-0"
+            >
               <v-row>
                 <v-col>
                   <span>{{ attachment.name.split('.').pop().toUpperCase() }}</span>
@@ -65,15 +77,15 @@
 </template>
 
 <script>
-  export default {
-    props: ['dataset', 'color'],
-    data: () => ({
-      dialog: null,
-    }),
-    computed: {
-      baseUrl () {
-        return `${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
-      },
-    },
+export default {
+  props: ['dataset', 'color'],
+  data: () => ({
+    dialog: null
+  }),
+  computed: {
+    baseUrl () {
+      return `${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.dataset.id}/metadata-attachments`
+    }
   }
+}
 </script>

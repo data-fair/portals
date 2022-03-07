@@ -16,9 +16,9 @@ export default function ({ $axios, store }) {
           url: config.url,
           method: config.method,
           headers: config.headers,
-          params: config.params,
+          params: config.params
         },
-        data: error.response.data,
+        data: error.response.data
       }
       err.isAxiosError = true
       return Promise.reject(err)

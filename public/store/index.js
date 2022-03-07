@@ -8,7 +8,7 @@ Vue.use(Vuex)
 export default () => {
   return new Vuex.Store({
     modules: {
-      session: sessionStoreBuilder(),
+      session: sessionStoreBuilder()
     },
     state: {
       config: null,
@@ -18,64 +18,64 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: '',
-      publicBaseUrl: '',
+      publicBaseUrl: ''
     },
     getters: {
-      embed() {
+      embed () {
         try {
           return window.self !== window.top
         } catch (e) {
           return true
         }
       },
-      linkColor(state) {
+      linkColor (state) {
         if (!state.config) return
         const c = tinycolor(state.config.themeColor)
         const darkness = 1 - c.getLuminance()
         if (darkness > 0.7) return state.config.themeColor
         return c.darken((0.7 - darkness) * 100).toString()
       },
-      themeColorDark(state) {
+      themeColorDark (state) {
         if (!state.config) return
         return tinycolor(state.config.themeColor).getLuminance() < 0.4
       },
-      footerColorDark(state) {
+      footerColorDark (state) {
         if (!state.config) return
         return tinycolor(state.config.footerColor).getLuminance() < 0.4
       },
-      owner(state) {
+      owner (state) {
         if (!state.config) return
         return state.config.owner.type + ':' + state.config.owner.id
       },
-      directoryUrl(state) {
+      directoryUrl (state) {
         return state.publicBaseUrl + '/simple-directory'
       },
-      dataFairUrl(state) {
+      dataFairUrl (state) {
         return state.publicBaseUrl + '/data-fair'
       },
-      openapiViewerUrl(state) {
+      openapiViewerUrl (state) {
         return state.publicBaseUrl + '/openapi-viewer'
       },
-      notifyUrl(state) {
+      notifyUrl (state) {
         return state.publicBaseUrl + '/notify'
       },
-      notifyWSUrl(state, getters) {
+      notifyWSUrl (state, getters) {
         let url = getters.notifyUrl.replace('http://', 'ws://').replace('https://', 'wss://')
         if (!url.endsWith('/')) url += '/'
         return url
-      },
+      }
     },
     mutations: {
-      setAny(state, params) {
+      setAny (state, params) {
         Object.assign(state, params)
-      },
+      }
     },
     actions: {
-      async fetchPortalInfos({ state, commit }, portalId) {
+      async fetchPortalInfos ({ state, commit }, portalId) {
         const portal = await this.$axios.$get(`api/v1/portals/${portalId}`, { params: { noConfig: true } })
         commit('setAny', { portal })
       },
-      async fetchConfig({ state, commit }, portalId) {
+      async fetchConfig ({ state, commit }, portalId) {
         console.log('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
         try {
           const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
@@ -85,14 +85,14 @@ export default () => {
           throw err
         }
       },
-      setBreadcrumbs({ commit }, breadcrumbs) {
+      setBreadcrumbs ({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
         commit('setAny', { breadcrumbs })
         if (global.parent) parent.postMessage({ breadcrumbs }, '*')
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
-      async init({ state, dispatch, commit, getters }, { req, env, app, route }) {
+      async init ({ state, dispatch, commit, getters }, { req, env, app, route }) {
         if (req && req.headers && req.headers.host && new URL(env.mainPublicUrl).host !== req.headers.host) {
           // portal exposed on an external domain has to be at the root
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
@@ -106,7 +106,7 @@ export default () => {
         }
         dispatch('session/init', {
           cookies: this.$cookies,
-          directoryUrl: getters.directoryUrl,
+          directoryUrl: getters.directoryUrl
         })
         if (!state.portal) {
           const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
@@ -119,15 +119,15 @@ export default () => {
               initialQuery,
               draft,
               portal: {
-                _id: portalId,
-              },
+                _id: portalId
+              }
             })
             await dispatch('fetchConfig', portalId)
           }
         }
       },
       // called only on the server, used to prefill the store
-      async nuxtServerInit({ dispatch, state, commit }, { route, req, env, redirect }) {
+      async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {
         // case where we are opening a portal
         if (state.portal) {
           // automatic switch to the account that owns this portal if we are a member
@@ -154,7 +154,7 @@ export default () => {
             }
           }
         }
-      },
-    },
+      }
+    }
   })
 }

@@ -5,7 +5,10 @@
       class="list-actions"
       style="float:right;width:256px;"
     >
-      <v-list-item :href="pageLink" target="_blank">
+      <v-list-item
+        :href="pageLink"
+        target="_blank"
+      >
         <v-list-item-icon>
           <v-icon color="primary">
             mdi-open-in-new
@@ -42,84 +45,90 @@
         v-if="page"
         :cols="6"
       >
-        <blank v-if="page.template === 'blank'" :config="pageConfig" />
-        <thematic v-if="page.template === 'thematic'" :config="pageConfig" />
+        <blank
+          v-if="page.template === 'blank'"
+          :config="pageConfig"
+        />
+        <thematic
+          v-if="page.template === 'thematic'"
+          :config="pageConfig"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-  import VJsf from '~/components/vjsf-wrapper.vue'
-  import 'iframe-resizer/js/iframeResizer.contentWindow'
-  import Blank from '~/components/pages/blank.vue'
-  import Thematic from '~/components/pages/thematic.vue'
-  const { mapState } = require('vuex')
+import VJsf from '~/components/vjsf-wrapper.vue'
+import 'iframe-resizer/js/iframeResizer.contentWindow'
+import Blank from '~/components/pages/blank.vue'
+import Thematic from '~/components/pages/thematic.vue'
+const { mapState } = require('vuex')
 
-  const context = require.context('../../../../../../assets/templates', true, /\.json$/)
-  const pageSchema = require('~/../contract/page.json')
-  Object.keys(pageSchema.properties).forEach(p => {
-    if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
-  })
+const context = require.context('../../../../../../assets/templates', true, /\.json$/)
+const pageSchema = require('~/../contract/page.json')
+Object.keys(pageSchema.properties).forEach(p => {
+  if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
+})
 
-  export default {
-    components: { VJsf, Blank, Thematic },
-    data: () => ({
-      page: null,
-      pageConfig: null,
-      owner: null,
-      pageSchema,
-    }),
-    computed: {
-      ...mapState(['config', 'portal']),
-      template() {
-        return this.page.template && context(`./${this.page.template}.json`)
-      },
-      dataFairUrl() {
-        return this.$store.getters.dataFairUrl
-      },
-      vjsfOpts() {
-        return {
-          context: {
-            dataFairUrl: this.dataFairUrl,
-            settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
-            owner: this.owner,
-          },
+export default {
+  components: { VJsf, Blank, Thematic },
+  data: () => ({
+    page: null,
+    pageConfig: null,
+    owner: null,
+    pageSchema
+  }),
+  computed: {
+    ...mapState(['config', 'portal']),
+    template () {
+      return this.page.template && context(`./${this.page.template}.json`)
+    },
+    dataFairUrl () {
+      return this.$store.getters.dataFairUrl
+    },
+    vjsfOpts () {
+      return {
+        context: {
+          dataFairUrl: this.dataFairUrl,
+          settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
+          owner: this.owner
         }
-      },
-      pageLink() {
-        const url = new URL(this.portal.link)
-        url.pathname = '/pages/' + this.$route.params.id
-        return url.href
-      },
+      }
     },
-    mounted: async function () {
-      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
-      this.$store.dispatch('setBreadcrumbs', [{
-        text: 'portails',
-        to: '/manager/portals',
-      }, {
-        text: this.portal.title,
-        to: `/manager/portals/${this.portal._id}`,
-      }, {
-        text: 'pages',
-        to: `/manager/portals/${this.portal._id}/pages`,
-      }, {
-        text: this.page.title,
-      }])
-      this.pageConfig = this.page.config || {}
-      delete this.page.config
-      if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
-    },
-    methods: {
-      async update (patch) {
-        try {
-          await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
+    pageLink () {
+      const url = new URL(this.portal.link)
+      url.pathname = '/pages/' + this.$route.params.id
+      return url.href
+    }
+  },
+  mounted: async function () {
+    this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
+    this.$store.dispatch('setBreadcrumbs', [{
+      text: 'portails',
+      to: '/manager/portals'
+    }, {
+      text: this.portal.title,
+      to: `/manager/portals/${this.portal._id}`
+    }, {
+      text: 'pages',
+      to: `/manager/portals/${this.portal._id}/pages`
+    }, {
+      text: this.page.title
+    }])
+    this.pageConfig = this.page.config || {}
+    delete this.page.config
+    if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
+  },
+  methods: {
+    async update (patch) {
+      try {
+        await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
         // this.$router.push({ name: 'pages' })
-        } catch (error) { }
-      },
-    },
+      } catch (error) { }
+    }
   }
+}
 </script>
 
 <style>

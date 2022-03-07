@@ -12,7 +12,7 @@ module.exports = {
   mongo: {
     host: 'localhost',
     port: 27017,
-    db: 'data-fair-portals-' + (process.env.NODE_ENV || 'development'),
+    db: 'data-fair-portals-' + (process.env.NODE_ENV || 'development')
   },
   mails: {
     // transport is a full configuration object for createTransport of nodemailer
@@ -20,15 +20,15 @@ module.exports = {
     transport: {
       port: 1025,
       ignoreTLS: true,
-      default: 'localhost',
-    },
+      default: 'localhost'
+    }
   },
   copyright: {
     src: {
       dark: 'https://koumoul.com/static/logo-title-right-white.png',
-      light: 'https://koumoul.com/static/logo-title-right.png',
+      light: 'https://koumoul.com/static/logo-title-right.png'
     },
     title: 'Koumoul',
-    href: 'https://koumoul.com',
-  },
+    href: 'https://koumoul.com'
+  }
 }

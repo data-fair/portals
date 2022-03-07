@@ -4,11 +4,17 @@
       <v-breadcrumbs :items="[{text: 'Les données', to: '/datasets', exact: true}, {text: dataset.title, disabled: true}]"/>
     </v-container>
     <v-divider/> -->
-    <error v-if="$fetchState.error" :error="$fetchState.error" />
+    <error
+      v-if="$fetchState.error"
+      :error="$fetchState.error"
+    />
     <v-container v-else-if="dataset">
       <section-title :text="dataset.title" />
       <v-row>
-        <v-col :md="7" :cols="12">
+        <v-col
+          :md="7"
+          :cols="12"
+        >
           <img
             v-if="dataset.image"
             :src="dataset.thumbnail || dataset.image"
@@ -23,7 +29,10 @@
           :offset-md="1"
           :cols="12"
         >
-          <v-card class="mb-3" outlined>
+          <v-card
+            class="mb-3"
+            outlined
+          >
             <v-list>
               <v-list-item v-if="!dataset.isMetaOnly">
                 <v-list-item-content>
@@ -38,7 +47,10 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
-                    Données issues de <a :href="dataset.origin" rel="external">cette source</a>
+                    Données issues de <a
+                      :href="dataset.origin"
+                      rel="external"
+                    >cette source</a>
                   </v-list-item-title>
                   <v-list-item-title v-else-if="dataset.origin">
                     Données produites par : <strong>{{ dataset.origin }}</strong>
@@ -47,7 +59,12 @@
               </v-list-item>
               <v-list-item v-if="dataset.license">
                 <v-list-item-content>
-                  <v-list-item-title>Licence : <a :href="dataset.license.href" rel="external">{{ dataset.license.title }}</a></v-list-item-title>
+                  <v-list-item-title>
+                    Licence : <a
+                      :href="dataset.license.href"
+                      rel="external"
+                    >{{ dataset.license.title }}</a>
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -57,8 +74,11 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <v-tooltip v-if="!dataset.isMetaOnly" top>
-                <template v-slot:activator="{ on }">
+              <v-tooltip
+                v-if="!dataset.isMetaOnly"
+                top
+              >
+                <template #activator="{ on }">
                   <v-btn
                     :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
                     icon
@@ -84,8 +104,11 @@
                   color="primary"
                 />
               </client-only>
-              <v-tooltip v-if="dataFiles && dataFiles.original" top>
-                <template v-slot:activator="{ on }">
+              <v-tooltip
+                v-if="dataFiles && dataFiles.original"
+                top
+              >
+                <template #activator="{ on }">
                   <v-btn
                     :href="dataFiles.original.url"
                     color="primary"
@@ -98,8 +121,11 @@
                 </template>
                 <span>Télécharger les données originales</span>
               </v-tooltip>
-              <v-tooltip v-if="dataFiles && dataFiles.full" top>
-                <template v-slot:activator="{ on }">
+              <v-tooltip
+                v-if="dataFiles && dataFiles.full"
+                top
+              >
+                <template #activator="{ on }">
                   <v-btn
                     :href="dataFiles.full.url"
                     icon
@@ -112,8 +138,11 @@
                 </template>
                 <span>Télécharger les données enrichies</span>
               </v-tooltip>
-              <v-tooltip v-if="dataFiles && dataFiles['export-csv']" top>
-                <template v-slot:activator="{ on }">
+              <v-tooltip
+                v-if="dataFiles && dataFiles['export-csv']"
+                top
+              >
+                <template #activator="{ on }">
                   <v-btn
                     :href="dataFiles['export-csv'].url"
                     icon
@@ -131,7 +160,10 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <dataset-embed v-if="!dataset.isMetaOnly" :dataset="dataset" />
+              <dataset-embed
+                v-if="!dataset.isMetaOnly"
+                :dataset="dataset"
+              />
               <attachments
                 v-if="dataset.attachments && dataset.attachments.length"
                 :dataset="dataset"
@@ -186,7 +218,10 @@
                 mdi-open-in-new
               </v-icon>
             </nuxt-link>
-            <div class="mt-3" v-html="marked(application.description || '')" />
+            <div
+              class="mt-3"
+              v-html="marked(application.description || '')"
+            />
           </v-col>
           <v-col
             :md="application.preferLargeDisplay ? 12 : 6"
@@ -223,7 +258,10 @@
             />
           </client-only>
         </v-col>
-        <section-title v-if="dataset.extras && dataset.extras.externalReuses && dataset.extras.externalReuses.filter(r => r.type==='link').length" text="Réutilisations externes" />
+        <section-title
+          v-if="dataset.extras && dataset.extras.externalReuses && dataset.extras.externalReuses.filter(r => r.type==='link').length"
+          text="Réutilisations externes"
+        />
         <v-row v-if="dataset.extras && dataset.extras.externalReuses">
           <v-col
             v-for="(reuse, er) in dataset.extras.externalReuses.filter(r => r.type==='link')"
@@ -232,7 +270,10 @@
             sm="6"
             cols="12"
           >
-            <v-card raised height="100%">
+            <v-card
+              raised
+              height="100%"
+            >
               <v-card-title style="height:30%">
                 <card-title :text="reuse.title" />
               </v-card-title>
@@ -277,148 +318,148 @@
 
 <script>
 // import Disqus from '~/components/disqus.vue'
-  import TablePreview from '~/components/dataset/table-preview.vue'
-  import MapPreview from '~/components/dataset/map-preview.vue'
-  import ApiView from '~/components/dataset/api-view.vue'
-  import NotifEdit from '~/components/dataset/notif-edit.vue'
-  import SchemaView from '~/components/dataset/schema-view.vue'
-  import Attachments from '~/components/dataset/dataset-attachments.vue'
-  import DatasetEmbed from '~/components/dataset/embed.vue'
-  import Social from '~/components/social'
-  import Error from '~/components/error.vue'
-  import 'iframe-resizer/js/iframeResizer'
-  import VIframe from '@koumoul/v-iframe'
-  import { isMobileOnly } from 'mobile-device-detect'
-  import marked from 'marked'
-  const { mapState } = require('vuex')
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
+import NotifEdit from '~/components/dataset/notif-edit.vue'
+import SchemaView from '~/components/dataset/schema-view.vue'
+import Attachments from '~/components/dataset/dataset-attachments.vue'
+import DatasetEmbed from '~/components/dataset/embed.vue'
+import Social from '~/components/social'
+import Error from '~/components/error.vue'
+import 'iframe-resizer/js/iframeResizer'
+import VIframe from '@koumoul/v-iframe'
+import { isMobileOnly } from 'mobile-device-detect'
+import marked from 'marked'
+const { mapState } = require('vuex')
 
-  export default {
-    middleware: 'portal-required',
-    layout: 'default',
-    components: {
-      // Disqus,
-      TablePreview,
-      MapPreview,
-      ApiView,
-      NotifEdit,
-      SchemaView,
-      Attachments,
-      DatasetEmbed,
-      Social,
-      Error,
-      VIframe,
-    },
-    async fetch () {
-      const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`)
-      this.dataset = dataset
+export default {
+  components: {
+    // Disqus,
+    TablePreview,
+    MapPreview,
+    ApiView,
+    NotifEdit,
+    SchemaView,
+    Attachments,
+    DatasetEmbed,
+    Social,
+    Error,
+    VIframe
+  },
+  layout: 'default',
+  middleware: 'portal-required',
+  data: () => ({
+    isMobileOnly,
+    dataset: null,
+    applications: null,
+    dataFiles: null
+  }),
+  async fetch () {
+    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`)
+    this.dataset = dataset
 
-      const params = { select: 'title,description,url,bbox,image,preferLargeDisplay' }
-      if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
-      else params.dataset = this.$route.params.id
-      params.publicationSites = 'data-fair-portals:' + this.portal._id
-      const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
-      if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
-        applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
+    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay' }
+    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
+    else params.dataset = this.$route.params.id
+    params.publicationSites = 'data-fair-portals:' + this.portal._id
+    const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
+    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
+      applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
+    }
+    this.applications = applications
+
+    const dataFiles = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}/data-files`)
+    this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
+  },
+  head () {
+    if (this.dataset) {
+      const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
+      const schema = {
+        '@context': 'http://schema.org',
+        '@type': 'Dataset',
+        url: this.url,
+        name: this.dataset.title,
+        description,
+        author: {
+          '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
+          name: this.dataset.owner.name
+        },
+        creator: {
+          '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
+          name: this.dataset.owner.name
+        },
+        dateCreated: this.dataset.createdAt,
+        dateModified: this.dataset.dataUpdatedAt,
+        sdPublisher: require('~/assets/organization.json'),
+        sdDatePublished: this.dataset.createdAt,
+        encodingFormat: 'application/json',
+        citation: this.dataset.origin
       }
-      this.applications = applications
-
-      const dataFiles = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}/data-files`)
-      this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
-    },
-    data: () => ({
-      isMobileOnly,
-      dataset: null,
-      applications: null,
-      dataFiles: null,
-    }),
-    computed: {
-      ...mapState(['config', 'portal', 'publicUrl']),
-      ...mapState('session', ['user']),
-      url() {
-        return this.publicUrl + '/datasets/' + this.$route.params.id
-      },
-      dataFairUrl() {
-        return this.$store.getters.dataFairUrl
-      },
-      notifyUrl() {
-        return this.$store.getters.notifyUrl
-      },
-    },
-    async mounted() {},
-    methods: {
-      marked,
-    },
-    head () {
-      if (this.dataset) {
-        const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
-        const schema = {
-          '@context': 'http://schema.org',
-          '@type': 'Dataset',
-          url: this.url,
-          name: this.dataset.title,
-          description,
-          author: {
-            '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
-            name: this.dataset.owner.name,
-          },
-          creator: {
-            '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
-            name: this.dataset.owner.name,
-          },
-          dateCreated: this.dataset.createdAt,
-          dateModified: this.dataset.dataUpdatedAt,
-          sdPublisher: require('~/assets/organization.json'),
-          sdDatePublished: this.dataset.createdAt,
-          encodingFormat: 'application/json',
-          citation: this.dataset.origin,
-        }
-        if (this.dataset.bbox) {
-          schema.spatialCoverage = {
-            '@type': 'Place',
-            geo: {
-              '@type': 'GeoShape',
-              box: this.dataset.bbox.slice(0, 2).join(',') + ' ' + this.dataset.bbox.slice(2, 4).join(','),
-            },
+      if (this.dataset.bbox) {
+        schema.spatialCoverage = {
+          '@type': 'Place',
+          geo: {
+            '@type': 'GeoShape',
+            box: this.dataset.bbox.slice(0, 2).join(',') + ' ' + this.dataset.bbox.slice(2, 4).join(',')
           }
         }
-        if (this.dataset.license && this.dataset.license.href) schema.license = this.dataset.license.href
-        if (this.applications && this.applications.count) {
-          schema.image = {
-            '@type': 'imageObject',
-            url: this.applications.results[0].href + '/capture',
-          }
-          schema.thumbnailUrl = this.applications.results[0].href + '/capture'
+      }
+      if (this.dataset.license && this.dataset.license.href) schema.license = this.dataset.license.href
+      if (this.applications && this.applications.count) {
+        schema.image = {
+          '@type': 'imageObject',
+          url: this.applications.results[0].href + '/capture'
         }
-        const meta = [
-          { hid: 'description', name: 'description', content: description },
-          { property: 'og:url', content: this.url },
-          { hid: 'og:title', property: 'og:title', content: this.dataset.title },
-          { property: 'og:description', content: description },
-          { property: 'og:type', content: 'article' },
-          { property: 'article:author', content: this.dataset.owner.name },
-          { property: 'article:modified_time', content: this.dataset.dataUpdatedAt },
-          { property: 'article:published_time', content: this.dataset.createdAt },
+        schema.thumbnailUrl = this.applications.results[0].href + '/capture'
+      }
+      const meta = [
+        { hid: 'description', name: 'description', content: description },
+        { property: 'og:url', content: this.url },
+        { hid: 'og:title', property: 'og:title', content: this.dataset.title },
+        { property: 'og:description', content: description },
+        { property: 'og:type', content: 'article' },
+        { property: 'article:author', content: this.dataset.owner.name },
+        { property: 'article:modified_time', content: this.dataset.dataUpdatedAt },
+        { property: 'article:published_time', content: this.dataset.createdAt }
+      ]
+      if (this.applications && this.applications.count) {
+        meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })
+        meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
+        meta.push({ hid: 'og:image:height', property: 'og:image:height', content: 450 })
+      }
+      return {
+        title: this.dataset.title,
+        meta,
+        __dangerouslyDisableSanitizers: ['script'],
+        script: [
+          {
+            hid: 'schema',
+            innerHTML: JSON.stringify(schema),
+            type: 'application/ld+json'
+          }
         ]
-        if (this.applications && this.applications.count) {
-          meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })
-          meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
-          meta.push({ hid: 'og:image:height', property: 'og:image:height', content: 450 })
-        }
-        return {
-          title: this.dataset.title,
-          meta,
-          __dangerouslyDisableSanitizers: ['script'],
-          script: [
-            {
-              hid: 'schema',
-              innerHTML: JSON.stringify(schema),
-              type: 'application/ld+json',
-            },
-          ],
-        }
-      } else {
-        return { title: 'Page non trouvée' }
       }
+    } else {
+      return { title: 'Page non trouvée' }
+    }
+  },
+  computed: {
+    ...mapState(['config', 'portal', 'publicUrl']),
+    ...mapState('session', ['user']),
+    url () {
+      return this.publicUrl + '/datasets/' + this.$route.params.id
     },
+    dataFairUrl () {
+      return this.$store.getters.dataFairUrl
+    },
+    notifyUrl () {
+      return this.$store.getters.notifyUrl
+    }
+  },
+  async mounted () {},
+  methods: {
+    marked
   }
+}
 </script>

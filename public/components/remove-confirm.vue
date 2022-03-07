@@ -3,7 +3,10 @@
     v-model="dialog"
     width="500"
   >
-    <template v-if="fab" v-slot:activator="{ on }">
+    <template
+      v-if="fab"
+      #activator="{ on }"
+    >
       <v-btn
         fab
         small
@@ -16,7 +19,10 @@
         </v-icon>
       </v-btn>
     </template>
-    <template v-else v-slot:activator="{ on }">
+    <template
+      v-else
+      #activator="{ on }"
+    >
       <v-btn
         color="warning"
         icon
@@ -49,7 +55,10 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click.native="dialog = false">
+        <v-btn
+          text
+          @click.native="dialog = false"
+        >
           Annuler
         </v-btn>
         <v-btn
@@ -64,19 +73,19 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      label: { type: String, default: null },
-      fab: { type: Boolean, default: false },
-    },
-    data: () => ({
-      dialog: false,
-    }),
-    methods: {
-      open (e) {
-        this.dialog = true
-        e.stopPropagation()
-      },
-    },
+export default {
+  props: {
+    label: { type: String, default: null },
+    fab: { type: Boolean, default: false }
+  },
+  data: () => ({
+    dialog: false
+  }),
+  methods: {
+    open (e) {
+      this.dialog = true
+      e.stopPropagation()
+    }
   }
+}
 </script>

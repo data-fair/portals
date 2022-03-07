@@ -62,14 +62,14 @@
 </template>
 
 <script>
-  import { isMobileOnly } from 'mobile-device-detect'
+import { isMobileOnly } from 'mobile-device-detect'
 
-  export default {
-    props: ['url', 'title'],
-    data: () => ({
-      isMobileOnly,
-    }),
-  }
+export default {
+  props: ['url', 'title'],
+  data: () => ({
+    isMobileOnly
+  })
+}
 </script>
 
 <style lang="css" scoped>

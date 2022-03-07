@@ -5,10 +5,13 @@
     @mouseenter="hover = true"
     @mouseleave="hover = false"
   >
-    <nuxt-link :to="{name: 'reuses-id', params:{id: application.id}}" style="text-decoration:none">
+    <nuxt-link
+      :to="{name: 'reuses-id', params:{id: application.id}}"
+      style="text-decoration:none"
+    >
       <v-card-title>
         <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <h3
               class="title grey--text text--darken-2 font-weight-bold"
               style="height:40px;line-height: 1.1;"
@@ -52,7 +55,7 @@
     <v-card-actions class="py-0">
       <application-view :application="application" />
       <v-tooltip top>
-        <template v-slot:activator="{ on }">
+        <template #activator="{ on }">
           <v-btn
             :to="{name: 'reuses-id-full', params:{id: application.id}}"
             icon
@@ -72,23 +75,23 @@
 </template>
 
 <script>
-  import VClamp from 'vue-clamp'
-  import ApplicationView from '~/components/application/view.vue'
+import VClamp from 'vue-clamp'
+import ApplicationView from '~/components/application/view.vue'
 
-  export default {
-    components: {
-      VClamp,
-      ApplicationView,
-    },
-    props: {
-      application: { type: Object },
-    },
-    data() {
-      return {
-        hover: false,
-      }
-    },
+export default {
+  components: {
+    VClamp,
+    ApplicationView
+  },
+  props: {
+    application: { type: Object, default: null }
+  },
+  data () {
+    return {
+      hover: false
+    }
   }
+}
 </script>
 
 <style lang="css" scoped>

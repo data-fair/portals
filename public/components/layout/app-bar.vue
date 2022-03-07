@@ -5,7 +5,10 @@
     height="64"
     style="max-height: 64px;"
   >
-    <xs-menu :pages="pages" :extra-menus="extraMenus" />
+    <xs-menu
+      :pages="pages"
+      :extra-menus="extraMenus"
+    />
     <v-tabs
       v-show="$vuetify.breakpoint.mdAndUp"
       v-model="activeTab"
@@ -65,7 +68,7 @@
           offset-y
           nudge-left
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-btn
               text
               v-bind="attrs"
@@ -128,7 +131,7 @@
             offset-y
             nudge-left
           >
-            <template v-slot:activator="{on}">
+            <template #activator="{on}">
               <v-btn
                 text
                 :height="64"
@@ -144,7 +147,10 @@
                 </v-icon>
               </v-btn>
             </template>
-            <v-list outlined class="py-0">
+            <v-list
+              outlined
+              class="py-0"
+            >
               <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id))">
                 <v-list-item
                   :href="backOfficeUrl"
@@ -175,7 +181,10 @@
                 />
               </v-list-item-title>
             </v-list-item>-->
-              <v-list-item :disabled="embed" @click="logout">
+              <v-list-item
+                :disabled="embed"
+                @click="logout"
+              >
                 <v-list-item-action><v-icon>mdi-logout</v-icon></v-list-item-action>
                 <v-list-item-title>Se déconnecter</v-list-item-title>
               </v-list-item>
@@ -188,58 +197,58 @@
 </template>
 
 <script>
-  import XsMenu from '~/components/layout/xs-menu'
-  import NotificationsQueue from '~/components/notifications-queue'
-  const { mapState, mapGetters, mapActions } = require('vuex')
+import XsMenu from '~/components/layout/xs-menu'
+import NotificationsQueue from '~/components/notifications-queue'
+const { mapState, mapGetters, mapActions } = require('vuex')
 
-  export default {
-    components: { XsMenu, NotificationsQueue },
-    async fetch() {
-      this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+export default {
+  components: { XsMenu, NotificationsQueue },
+  data: () => ({
+    pages: null,
+    activeTab: null
+  }),
+  async fetch () {
+    this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+  },
+  computed: {
+    ...mapState(['config', 'textDark', 'portal']),
+    ...mapState('session', ['user', 'initialized']),
+    ...mapGetters(['themeColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
+    ...mapGetters('session', ['loginUrl']),
+    extraMenus () {
+      return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
     },
-    data: () => ({
-      pages: null,
-      activeTab: null,
-    }),
-    computed: {
-      ...mapState(['config', 'textDark', 'portal']),
-      ...mapState('session', ['user', 'initialized']),
-      ...mapGetters(['themeColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
-      ...mapGetters('session', ['loginUrl']),
-      extraMenus() {
-        return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
-      },
-      url () {
-        return global.location && global.location.href
-      },
-      mainDataFairUrl() {
-        return process.env.mainDataFairUrl
-      },
-      backOfficeUrl() {
-        let url = this.mainDataFairUrl + '/'
-        url += '?account=' + encodeURIComponent(this.config.owner.type + ':' + this.config.owner.id)
-        return url
-      },
-      loginHref() {
-        return this.loginUrl(
-          this.url,
-          false,
-          { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor },
-        )
-      },
+    url () {
+      return global.location && global.location.href
     },
-    methods: {
-      ...mapActions('session', ['logout', 'login']),
-      reload() {
-        window.location.reload()
-      },
-      setDarkCookie(value) {
-        const maxAge = 60 * 60 * 24 * 100 // 100 days
-        this.$cookies.set('theme_dark', '' + value, { maxAge })
-        this.reload()
-      },
+    mainDataFairUrl () {
+      return process.env.mainDataFairUrl
     },
+    backOfficeUrl () {
+      let url = this.mainDataFairUrl + '/'
+      url += '?account=' + encodeURIComponent(this.config.owner.type + ':' + this.config.owner.id)
+      return url
+    },
+    loginHref () {
+      return this.loginUrl(
+        this.url,
+        false,
+        { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor }
+      )
+    }
+  },
+  methods: {
+    ...mapActions('session', ['logout', 'login']),
+    reload () {
+      window.location.reload()
+    },
+    setDarkCookie (value) {
+      const maxAge = 60 * 60 * 24 * 100 // 100 days
+      this.$cookies.set('theme_dark', '' + value, { maxAge })
+      this.reload()
+    }
   }
+}
 </script>
 
 <style lang="css" scoped>

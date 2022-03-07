@@ -7,8 +7,11 @@
   >
     <template #activator="{on: onDialog}">
       <v-tooltip top>
-        <template v-slot:activator="{ on: onTooltip }">
-          <v-btn icon v-on="{...onDialog, ...onTooltip}">
+        <template #activator="{ on: onTooltip }">
+          <v-btn
+            icon
+            v-on="{...onDialog, ...onTooltip}"
+          >
             <v-icon :color="'primary'">
               mdi-code-tags
             </v-icon>
@@ -31,7 +34,10 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-card-text v-if="embedDialog" class="pb-0 px-4">
+      <v-card-text
+        v-if="embedDialog"
+        class="pb-0 px-4"
+      >
         Pour intégrer une prévisualisation de ce jeu de données dans un site vous pouvez copier le code suivant ou un code similaire dans le code source HTML.
         <br>
         <v-select
@@ -63,19 +69,19 @@ style="background-color: transparent; border: none;" &gt;&lt;/iframe&gt;
 </template>
 
 <script>
-  export default {
-    props: ['dataset'],
-    data() {
-      return {
-        embedDialog: null,
-        previewId: 'table',
-      }
-    },
-    computed: {
-      previewLink() {
-        return this.dataset && this.dataset.previews.find(p => p.id === this.previewId).href
-      },
-    },
+export default {
+  props: ['dataset'],
+  data () {
+    return {
+      embedDialog: null,
+      previewId: 'table'
+    }
+  },
+  computed: {
+    previewLink () {
+      return this.dataset && this.dataset.previews.find(p => p.id === this.previewId).href
+    }
   }
+}
 
 </script>

@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col :style="this.$vuetify.breakpoint.mdAndUp ? 'padding-right:256px;' : ''">
+    <v-col :style="$vuetify.breakpoint.mdAndUp ? 'padding-right:256px;' : ''">
       <v-container>
         <v-col>
           <v-row>
@@ -24,12 +24,18 @@
                   <v-list-item :key="portal._id">
                     <v-list-item-content>
                       <v-list-item-title>
-                        <a :href="portal.link" target="_blank">{{ portal.title }}</a>
+                        <a
+                          :href="portal.link"
+                          target="_blank"
+                        >{{ portal.title }}</a>
                       </v-list-item-title>
                     </v-list-item-content>
 
                     <v-list-item-action>
-                      <remove-confirm :label="portal.title" @removed="deletePortal(portal)" />
+                      <remove-confirm
+                        :label="portal.title"
+                        @removed="deletePortal(portal)"
+                      />
                     </v-list-item-action>
                     <v-list-item-action>
                       <v-btn
@@ -60,15 +66,21 @@
         </v-col>
       </v-container>
     </v-col>
-    <layout-navigation-right v-if="this.$vuetify.breakpoint.mdAndUp">
-      <v-list dense class="list-actions">
+    <layout-navigation-right v-if="$vuetify.breakpoint.mdAndUp">
+      <v-list
+        dense
+        class="list-actions"
+      >
         <v-menu
           v-model="showCreateMenu"
           :close-on-content-click="false"
           max-width="500px"
         >
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item v-bind="attrs" v-on="on">
+          <template #activator="{ on, attrs }">
+            <v-list-item
+              v-bind="attrs"
+              v-on="on"
+            >
               <v-list-item-icon>
                 <v-icon color="primary">
                   mdi-plus-circle
@@ -93,7 +105,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn text @click="showCreateMenu = false">
+              <v-btn
+                text
+                @click="showCreateMenu = false"
+              >
                 Annuler
               </v-btn>
               <v-btn
@@ -112,57 +127,57 @@
 </template>
 
 <script>
-  import eventBus from '~/event-bus'
-  import RemoveConfirm from '~/components/remove-confirm.vue'
-  const { mapState, mapActions, mapGetters } = require('vuex')
+import eventBus from '~/event-bus'
+import RemoveConfirm from '~/components/remove-confirm.vue'
+const { mapState, mapActions, mapGetters } = require('vuex')
 
-  export default {
-    components: { RemoveConfirm },
-    middleware: 'admin-required',
-    layout: 'manager',
-    data: () => ({
-      showCreateMenu: false,
-      newPortal: null,
-      portals: null,
-      currentPortal: null,
-      showDeleteDialog: false,
-    }),
-    computed: {
-      ...mapState('session', ['user', 'initialized']),
-      ...mapState(['env']),
-      ...mapGetters('session', ['activeAccount']),
+export default {
+  components: { RemoveConfirm },
+  layout: 'manager',
+  middleware: 'admin-required',
+  data: () => ({
+    showCreateMenu: false,
+    newPortal: null,
+    portals: null,
+    currentPortal: null,
+    showDeleteDialog: false
+  }),
+  computed: {
+    ...mapState('session', ['user', 'initialized']),
+    ...mapState(['env']),
+    ...mapGetters('session', ['activeAccount'])
+  },
+  watch: {
+    showCreateMenu () {
+      if (this.showCreateMenu) {
+        this.newPortal = { title: '' }
+      }
+    }
+  },
+  async mounted () {
+    await this.refresh()
+  },
+  methods: {
+    ...mapActions('session', ['login']),
+    async refresh () {
+      this.portals = await this.$axios.$get('api/v1/portals', { params: { owner: this.activeAccount.type + ':' + this.activeAccount.id } })
+      this.$store.dispatch('setBreadcrumbs', [{
+        text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`
+      }])
     },
-    watch: {
-      showCreateMenu() {
-        if (this.showCreateMenu) {
-          this.newPortal = { title: '' }
-        }
-      },
+    async deletePortal (portal) {
+      await this.$axios.$delete(`api/v1/portals/${portal._id}`)
+      this.refresh()
     },
-    async mounted() {
-      await this.refresh()
-    },
-    methods: {
-      ...mapActions('session', ['login']),
-      async refresh() {
-        this.portals = await this.$axios.$get('api/v1/portals', { params: { owner: this.activeAccount.type + ':' + this.activeAccount.id } })
-        this.$store.dispatch('setBreadcrumbs', [{
-          text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`,
-        }])
-      },
-      async deletePortal(portal) {
-        await this.$axios.$delete(`api/v1/portals/${portal._id}`)
-        this.refresh()
-      },
-      async createPortal() {
-        try {
-          await this.$axios.$post('api/v1/portals', this.newPortal)
-          eventBus.$emit('notification', { type: 'success', msg: 'Portail créé' })
-        } catch (error) {
-          eventBus.$emit('notification', { error, msg: 'Impossible de créer le portail' })
-        }
-        this.refresh()
-      },
-    },
+    async createPortal () {
+      try {
+        await this.$axios.$post('api/v1/portals', this.newPortal)
+        eventBus.$emit('notification', { type: 'success', msg: 'Portail créé' })
+      } catch (error) {
+        eventBus.$emit('notification', { error, msg: 'Impossible de créer le portail' })
+      }
+      this.refresh()
+    }
   }
+}
 </script>

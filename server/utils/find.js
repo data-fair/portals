@@ -3,7 +3,7 @@ const permissions = require('./permissions')
 
 // Util functions shared accross the main find (GET on collection) endpoints
 
-function queryVal(val) {
+function queryVal (val) {
   if (val === 'true') return true
   if (val === 'false') return false
   return val
@@ -15,7 +15,7 @@ exports.query = (req, fieldsMap, forceShowAll) => {
 
   if (req.query.q) {
     query.$text = {
-      $search: req.query.q,
+      $search: req.query.q
     }
   }
 

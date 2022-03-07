@@ -7,8 +7,11 @@
   >
     <template #activator="{on: onDialog}">
       <v-tooltip top>
-        <template v-slot:activator="{ on: onTooltip }">
-          <v-btn icon v-on="{...onDialog, ...onTooltip}">
+        <template #activator="{ on: onTooltip }">
+          <v-btn
+            icon
+            v-on="{...onDialog, ...onTooltip}"
+          >
             <v-icon :color="color || 'primary'">
               mdi-view-list
             </v-icon>
@@ -18,10 +21,16 @@
       </v-tooltip>
     </template>
     <v-card v-if="dialog">
-      <v-toolbar dense flat>
+      <v-toolbar
+        dense
+        flat
+      >
         <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
         <v-spacer />
-        <v-btn icon @click.native="dialog = false">
+        <v-btn
+          icon
+          @click.native="dialog = false"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -33,29 +42,29 @@
 </template>
 
 <script>
-  import VIframe from '@koumoul/v-iframe'
-  const { mapState } = require('vuex')
+import VIframe from '@koumoul/v-iframe'
+const { mapState } = require('vuex')
 
-  export default {
-    components: { VIframe },
-    props: ['dataset', 'color'],
-    data() {
-      return {
-        dialog: null,
-      }
-    },
-    computed: {
-      ...mapState(['config']),
-      iframeSrc() {
-        return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}/fields?primary=${encodeURIComponent(this.config.themeColor)}`
-      },
-    },
-    watch: {
-      dialog() {
-        const viewName = this.dialog ? `/datasets/${this.dataset.id}/schema-dialog` : this.$route.path
-        this.$ma.trackView({ viewName })
-      },
-    },
+export default {
+  components: { VIframe },
+  props: ['dataset', 'color'],
+  data () {
+    return {
+      dialog: null
+    }
+  },
+  computed: {
+    ...mapState(['config']),
+    iframeSrc () {
+      return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}/fields?primary=${encodeURIComponent(this.config.themeColor)}`
+    }
+  },
+  watch: {
+    dialog () {
+      const viewName = this.dialog ? `/datasets/${this.dataset.id}/schema-dialog` : this.$route.path
+      this.$ma.trackView({ viewName })
+    }
   }
+}
 
 </script>

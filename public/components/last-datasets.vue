@@ -17,11 +17,20 @@
             outlined
             :elevation="hover ? 2 : 0"
           >
-            <nuxt-link :to="`/datasets/${dataset.id}`" style="text-decoration:none">
+            <nuxt-link
+              :to="`/datasets/${dataset.id}`"
+              style="text-decoration:none"
+            >
               <v-card-title>
-                <h3 class="title grey--text text--darken-2 font-weight-bold" style="height:40px;line-height:1.1;">
+                <h3
+                  class="title grey--text text--darken-2 font-weight-bold"
+                  style="height:40px;line-height:1.1;"
+                >
                   <client-only>
-                    <v-clamp :max-lines="2" autoresize>
+                    <v-clamp
+                      :max-lines="2"
+                      autoresize
+                    >
                       {{ dataset.title }}
                     </v-clamp>
                   </client-only>
@@ -50,7 +59,10 @@
               </v-card-text>
             </nuxt-link>
             <v-card-actions class="py-0">
-              <table-preview :dataset="dataset" :color="'primary'" />
+              <table-preview
+                :dataset="dataset"
+                :color="'primary'"
+              />
               <map-preview
                 v-if="dataset.bbox && dataset.bbox.length"
                 :dataset="dataset"
@@ -63,7 +75,10 @@
                   :color="'primary'"
                 />
               </client-only>
-              <schema-view :dataset="dataset" :color="'primary'" />
+              <schema-view
+                :dataset="dataset"
+                :color="'primary'"
+              />
               <v-spacer />
               <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt | date('L') }}</v-subheader>
             </v-card-actions>
@@ -88,37 +103,37 @@
 
 <script>
 
-  import TablePreview from '~/components/dataset/table-preview.vue'
-  import MapPreview from '~/components/dataset/map-preview.vue'
-  import ApiView from '~/components/dataset/api-view.vue'
-  import SchemaView from '~/components/dataset/schema-view.vue'
-  import VClamp from 'vue-clamp'
-  import { isMobileOnly } from 'mobile-device-detect'
-  import marked from 'marked'
-  import { mapState } from 'vuex'
+import TablePreview from '~/components/dataset/table-preview.vue'
+import MapPreview from '~/components/dataset/map-preview.vue'
+import ApiView from '~/components/dataset/api-view.vue'
+import SchemaView from '~/components/dataset/schema-view.vue'
+import VClamp from 'vue-clamp'
+import { isMobileOnly } from 'mobile-device-detect'
+import marked from 'marked'
+import { mapState } from 'vuex'
 
-  export default {
-    components: {
-      TablePreview,
-      MapPreview,
-      ApiView,
-      SchemaView,
-      VClamp,
-    },
-    props: {
-      datasets: { type: Object, required: true },
-      small: { type: Boolean, default: false },
-    },
-    data: () => ({
-      isMobileOnly,
-    }),
-    computed: {
-      ...mapState(['config']),
-    },
-    methods: {
-      marked,
-    },
+export default {
+  components: {
+    TablePreview,
+    MapPreview,
+    ApiView,
+    SchemaView,
+    VClamp
+  },
+  props: {
+    datasets: { type: Object, required: true },
+    small: { type: Boolean, default: false }
+  },
+  data: () => ({
+    isMobileOnly
+  }),
+  computed: {
+    ...mapState(['config'])
+  },
+  methods: {
+    marked
   }
+}
 </script>
 
 <style lang="css" scoped>

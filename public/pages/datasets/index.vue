@@ -1,8 +1,14 @@
 <template>
   <div>
     <v-container class="py-2">
-      <section-title v-if="datasets" :text="datasets.count + ' jeux de données'" />
-      <section-title v-else text="..." />
+      <section-title
+        v-if="datasets"
+        :text="datasets.count + ' jeux de données'"
+      />
+      <section-title
+        v-else
+        text="..."
+      />
       <v-row align="center">
         <v-col
           class="py-0"
@@ -51,7 +57,10 @@
                 @input="refresh()"
               />
             </v-col>
-            <v-col class="pl-0" :cols="4">
+            <v-col
+              class="pl-0"
+              :cols="4"
+            >
               <v-btn-toggle
                 v-model="order"
                 mandatory
@@ -59,7 +68,7 @@
                 @change="refresh()"
               >
                 <v-tooltip top>
-                  <template v-slot:activator="{ on }">
+                  <template #activator="{ on }">
                     <v-btn
                       text
                       small
@@ -71,7 +80,7 @@
                   <span>Décroissant</span>
                 </v-tooltip>
                 <v-tooltip top>
-                  <template v-slot:activator="{ on }">
+                  <template #activator="{ on }">
                     <v-btn
                       text
                       small
@@ -86,7 +95,7 @@
             </v-col>
             <v-col :cols="2">
               <v-tooltip top>
-                <template v-slot:activator="{ on }">
+                <template #activator="{ on }">
                   <v-btn
                     :disabled="!!downloading"
                     icon
@@ -148,7 +157,10 @@
             :color="'primary'"
             indeterminate
           />
-          <div v-else style="height: 40px;" />
+          <div
+            v-else
+            style="height: 40px;"
+          />
         </v-col>
       </v-row>
       <v-row
@@ -157,7 +169,10 @@
         align="center"
       >
         <v-col class="text-center pa-0">
-          <v-btn text @click="refresh(true)">
+          <v-btn
+            text
+            @click="refresh(true)"
+          >
             voir plus
           </v-btn>
         </v-col>
@@ -168,171 +183,171 @@
 
 <script>
 
-  import fileDownload from 'js-file-download'
-  import DatasetCard from '~/components/dataset/card.vue'
-  const { mapState, mapGetters } = require('vuex')
+import fileDownload from 'js-file-download'
+import DatasetCard from '~/components/dataset/card.vue'
+const { mapState, mapGetters } = require('vuex')
 
-  export default {
-    middleware: 'portal-required',
-    components: {
-      DatasetCard,
-    },
-    async fetch() {
-      this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
-        const { identifiers, ...concept } = c
-        concept.id = identifiers.shift()
-        return concept
-      })
-      await this.refresh()
-    },
-    data: function() {
-      return {
-        datasets: null,
-        concepts: null,
-        size: 12,
-        page: 1,
-        search: this.$route.query.q || '',
-        loading: false,
-        sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
-        order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
-        filters: {
-          concepts: this.$route.query.concepts ? this.$route.query.concepts.split(',') : [],
-          topics: this.$route.query.topics ? this.$route.query.topics.split(',') : [],
-        },
-        sorts: [{
-          text: 'Date de mise à jour',
-          value: 'dataUpdatedAt',
-        }, {
-          text: 'Date de création',
-          value: 'createdAt',
-        }, {
-          text: 'Ordre alphabétique',
-          value: 'title',
-        }],
-        downloading: false,
-        lastParams: {},
-      }
-    },
-    computed: {
-      ...mapState(['config', 'portal', 'publicUrl']),
-      ...mapGetters(['owner']),
-      url() {
-        return this.publicUrl + '/datasets'
+export default {
+  components: {
+    DatasetCard
+  },
+  middleware: 'portal-required',
+  data: function () {
+    return {
+      datasets: null,
+      concepts: null,
+      size: 12,
+      page: 1,
+      search: this.$route.query.q || '',
+      loading: false,
+      sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
+      order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
+      filters: {
+        concepts: this.$route.query.concepts ? this.$route.query.concepts.split(',') : [],
+        topics: this.$route.query.topics ? this.$route.query.topics.split(',') : []
       },
-      conceptsItems() {
-        if (!this.datasets) return []
-        return this.datasets.facets.concepts
-          .concat(this.filters.concepts.filter(c => !this.datasets.facets.concepts.find(fc => fc.value === c)).map(c => ({ value: c, count: 0 })))
-      },
-      topicsItems() {
-        if (!this.datasets) return []
-        return this.datasets.facets.topics
-          .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
-      },
-    },
-    mounted() {
-      // case where SSR already fetched the first page
-      if (this.datasets) this.continueFetch()
-    },
-    methods: {
-      async refresh(append) {
-        if (append) this.page += 1
-        else this.page = 1
-        const query = {
-          sort: this.sort + ':' + (this.order * 2 - 1),
-          q: this.search,
-        }
-        if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
-        if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
-        const params = Object.assign({}, query)
-        params.size = this.size
-        params.page = this.page
-        params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
-        params.facets = 'concepts,topics'
-        params.owner = this.owner
-        params.publicationSites = 'data-fair-portals:' + this.portal._id
-        if (this.config.authentication === 'none') params.visibility = 'public'
-        if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
-          if (params.q && params.q !== this.lastParams.q) this.$ma.trackEvent({ action: 'search', label: this.search })
-          this.lastParams = params
-          this.loading = true
-          this.$router.push({ query })
-          const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })
-          if (append) datasets.results.forEach(r => this.datasets.results.push(r))
-          else this.datasets = datasets
-          this.loading = false
-
-          // if the page is too large for the user to trigger a scroll we append results immediately
-          if (process.client) {
-            await this.$nextTick()
-            await this.$nextTick()
-            this.continueFetch()
-          }
-        }
-      },
-      continueFetch() {
-        const html = document.getElementsByTagName('html')
-        if (html[0].scrollHeight === html[0].clientHeight && this.datasets.results.length < this.datasets.count) {
-          this.refresh(true)
-        }
-      },
-      onScroll(e) {
-        if (!this.datasets || this.loading) return
-        const se = e.target.scrollingElement
-        if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.datasets.results.length < this.datasets.count) {
-          this.refresh(true)
-        }
-      },
-      conceptLabel(e) {
-        const concept = this.concepts.find(c => c.id === e.value)
-        return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
-      },
-      toggleTopic(topic) {
-        if (this.filters.topics.find(t => t === topic.id)) {
-          this.filters.topics = this.filters.topics.filter(t => t !== topic.id)
-        } else {
-          this.filters.topics.push(topic.id)
-        }
-        this.refresh()
-      },
-      async download(name) {
-        this.downloading = name
-        const params = {
-          size: 10000,
-          select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt',
-          publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
-          owner: this.owner,
-          sort: this.sort + ':' + (this.order * 2 - 1),
-          q: this.search,
-        }
-        if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
-        if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
-        if (this.config.authentication === 'none') params.visibility = 'public'
-        try {
-          const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
-          const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
-          const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
-          const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
-          fileDownload(blob, name)
-        } catch (err) { }
-        this.downloading = null
-      },
-    },
-    head () {
-      const title = 'Datasets - ' + this.config.title
-      const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
-      return {
-        title,
-        meta: [
-          { hid: 'description', name: 'description', content: description },
-          { hid: 'og:url', property: 'og:url', content: this.url },
-          { hid: 'og:title', property: 'og:title', content: title },
-          { hid: 'og:description', property: 'og:description', content: description },
-          { hid: 'og:type', property: 'og:type', content: 'website' },
-        ],
+      sorts: [{
+        text: 'Date de mise à jour',
+        value: 'dataUpdatedAt'
+      }, {
+        text: 'Date de création',
+        value: 'createdAt'
+      }, {
+        text: 'Ordre alphabétique',
+        value: 'title'
+      }],
+      downloading: false,
+      lastParams: {}
+    }
+  },
+  async fetch () {
+    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
+      const { identifiers, ...concept } = c
+      concept.id = identifiers.shift()
+      return concept
+    })
+    await this.refresh()
+  },
+  head () {
+    const title = 'Datasets - ' + this.config.title
+    const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
+    return {
+      title,
+      meta: [
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:url', property: 'og:url', content: this.url },
+        { hid: 'og:title', property: 'og:title', content: title },
+        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'og:type', property: 'og:type', content: 'website' }
+      ]
       // TODO add DataCatalog schema
+    }
+  },
+  computed: {
+    ...mapState(['config', 'portal', 'publicUrl']),
+    ...mapGetters(['owner']),
+    url () {
+      return this.publicUrl + '/datasets'
+    },
+    conceptsItems () {
+      if (!this.datasets) return []
+      return this.datasets.facets.concepts
+        .concat(this.filters.concepts.filter(c => !this.datasets.facets.concepts.find(fc => fc.value === c)).map(c => ({ value: c, count: 0 })))
+    },
+    topicsItems () {
+      if (!this.datasets) return []
+      return this.datasets.facets.topics
+        .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
+    }
+  },
+  mounted () {
+    // case where SSR already fetched the first page
+    if (this.datasets) this.continueFetch()
+  },
+  methods: {
+    async refresh (append) {
+      if (append) this.page += 1
+      else this.page = 1
+      const query = {
+        sort: this.sort + ':' + (this.order * 2 - 1),
+        q: this.search
+      }
+      if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
+      if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
+      const params = Object.assign({}, query)
+      params.size = this.size
+      params.page = this.page
+      params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
+      params.facets = 'concepts,topics'
+      params.owner = this.owner
+      params.publicationSites = 'data-fair-portals:' + this.portal._id
+      if (this.config.authentication === 'none') params.visibility = 'public'
+      if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
+        if (params.q && params.q !== this.lastParams.q) this.$ma.trackEvent({ action: 'search', label: this.search })
+        this.lastParams = params
+        this.loading = true
+        this.$router.push({ query })
+        const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })
+        if (append) datasets.results.forEach(r => this.datasets.results.push(r))
+        else this.datasets = datasets
+        this.loading = false
+
+        // if the page is too large for the user to trigger a scroll we append results immediately
+        if (process.client) {
+          await this.$nextTick()
+          await this.$nextTick()
+          this.continueFetch()
+        }
       }
     },
+    continueFetch () {
+      const html = document.getElementsByTagName('html')
+      if (html[0].scrollHeight === html[0].clientHeight && this.datasets.results.length < this.datasets.count) {
+        this.refresh(true)
+      }
+    },
+    onScroll (e) {
+      if (!this.datasets || this.loading) return
+      const se = e.target.scrollingElement
+      if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.datasets.results.length < this.datasets.count) {
+        this.refresh(true)
+      }
+    },
+    conceptLabel (e) {
+      const concept = this.concepts.find(c => c.id === e.value)
+      return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
+    },
+    toggleTopic (topic) {
+      if (this.filters.topics.find(t => t === topic.id)) {
+        this.filters.topics = this.filters.topics.filter(t => t !== topic.id)
+      } else {
+        this.filters.topics.push(topic.id)
+      }
+      this.refresh()
+    },
+    async download (name) {
+      this.downloading = name
+      const params = {
+        size: 10000,
+        select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt',
+        publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
+        owner: this.owner,
+        sort: this.sort + ':' + (this.order * 2 - 1),
+        q: this.search
+      }
+      if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
+      if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
+      if (this.config.authentication === 'none') params.visibility = 'public'
+      try {
+        const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
+        const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
+        const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
+        const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
+        fileDownload(blob, name)
+      } catch (err) { }
+      this.downloading = null
+    }
   }
+}
 
 </script>

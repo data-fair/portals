@@ -1,5 +1,8 @@
 <template>
-  <v-row v-if="topics" class="my-3">
+  <v-row
+    v-if="topics"
+    class="my-3"
+  >
     <v-chip
       v-for="topic in topics"
       :key="topic.value.id"
@@ -15,9 +18,9 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      topics: { type: Array, required: true },
-    },
+export default {
+  props: {
+    topics: { type: Array, required: true }
   }
+}
 </script>

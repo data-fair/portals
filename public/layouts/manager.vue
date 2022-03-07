@@ -8,16 +8,16 @@
 </template>
 
 <script>
-  import 'iframe-resizer/js/iframeResizer.contentWindow'
-  import { mapGetters } from 'vuex'
-  import ManagerTop from '~/components/layout/manager-top.vue'
-  export default {
-    components: { ManagerTop },
-    middleware: 'breadcrumbs',
-    computed: {
-      ...mapGetters(['embed']),
-    },
+import 'iframe-resizer/js/iframeResizer.contentWindow'
+import { mapGetters } from 'vuex'
+import ManagerTop from '~/components/layout/manager-top.vue'
+export default {
+  components: { ManagerTop },
+  middleware: 'breadcrumbs',
+  computed: {
+    ...mapGetters(['embed'])
   }
+}
 
 </script>
 
