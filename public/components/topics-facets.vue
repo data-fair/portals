@@ -1,24 +1,32 @@
 <template>
   <v-row v-if="items.length">
     <v-col>
-      <v-chip
+      <v-btn
         v-for="topicItem in items"
         :key="topicItem.value.id"
         :color="topicItem.value.color ? $readableColor(topicItem.value.color) : 'default'"
-        label
         dark
-        class="mr-3 mb-1 font-weight-bold"
-        :class="{'elevation-8' : topicItem.filtered}"
+        rounded
+        :depressed="!topicItem.filtered"
+        :outlined="topicItem.filtered"
+        class="mr-3 mb-1 font-weight-bold text-none"
         @click="$emit('toggle', topicItem.value)"
       >
+        <v-icon
+          v-if="topicItem.value.icon && topicItem.value.icon.name"
+          left
+          :size="24"
+        >
+          mdi-{{ topicItem.value.icon.name }}
+        </v-icon>
         {{ topicItem.value.title }} ({{ topicItem.count }})
         <v-icon
           v-if="topicItem.filtered"
-          class="ml-1"
+          right
         >
           mdi-filter-variant
         </v-icon>
-      </v-chip>
+      </v-btn>
     </v-col>
   </v-row>
 </template>

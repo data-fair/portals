@@ -3,18 +3,25 @@
     v-if="topics"
     class="my-3"
   >
-    <v-chip
+    <v-btn
       v-for="topic in topics"
       :key="topic.value.id"
       :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
       :to="{name: 'datasets', query: {topics: topic.value.id}}"
-      class="ml-3 my-1"
+      class="ml-3 my-1 font-weight-bold text-none"
       dark
-      label
-      nuxt
+      rounded
+      depressed
     >
+      <v-icon
+        v-if="topic.value.icon && topic.value.icon.name"
+        left
+        :size="24"
+      >
+        mdi-{{ topic.value.icon.name }}
+      </v-icon>
       {{ topic.value.title }} ({{ topic.count }})
-    </v-chip>
+    </v-btn>
   </v-row>
 </template>
 

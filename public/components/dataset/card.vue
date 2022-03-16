@@ -49,6 +49,13 @@
               :color="topic.color ? $readableColor(topic.color) : 'default'"
               class="ml-2 mt-1 font-weight-bold"
             >
+              <v-icon
+                v-if="topic.icon && topic.icon.name"
+                left
+                small
+              >
+                mdi-{{ topic.icon.name }}
+              </v-icon>
               {{ topic.title }}
             </v-chip>
           </v-col>
