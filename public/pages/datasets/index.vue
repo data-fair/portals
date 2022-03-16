@@ -46,6 +46,7 @@
         >
           <v-text-field
             v-model="search"
+            autofocus
             label="Rechercher"
             outlined
             dense
