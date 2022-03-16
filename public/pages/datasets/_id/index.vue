@@ -369,7 +369,7 @@ export default {
     const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`)
     this.dataset = dataset
 
-    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay' }
+    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000 }
     if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
     else params.dataset = this.$route.params.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
