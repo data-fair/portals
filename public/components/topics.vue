@@ -12,6 +12,7 @@
       dark
       rounded
       depressed
+      outlined
     >
       <v-icon
         v-if="topic.value.icon && topic.value.icon.name"

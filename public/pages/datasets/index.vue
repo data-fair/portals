@@ -15,6 +15,7 @@
                 :disabled="!!downloading"
                 icon
                 target="_blank"
+                class="ml-2"
                 @click="download(config.title+'.csv')"
                 v-on="on"
               >

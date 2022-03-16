@@ -7,8 +7,8 @@
         :color="topicItem.value.color ? $readableColor(topicItem.value.color) : 'default'"
         dark
         rounded
-        :depressed="!topicItem.filtered"
-        :outlined="topicItem.filtered"
+        depressed
+        :outlined="!topicItem.filtered"
         class="mr-3 mb-1 font-weight-bold text-none"
         @click="$emit('toggle', topicItem.value)"
       >
@@ -20,12 +20,6 @@
           mdi-{{ topicItem.value.icon.name }}
         </v-icon>
         {{ topicItem.value.title }} ({{ topicItem.count }})
-        <v-icon
-          v-if="topicItem.filtered"
-          right
-        >
-          mdi-filter-variant
-        </v-icon>
       </v-btn>
     </v-col>
   </v-row>
