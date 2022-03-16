@@ -2,6 +2,7 @@
   <v-row
     v-if="topics"
     class="my-3"
+    justify="center"
   >
     <v-btn
       v-for="topic in topics"

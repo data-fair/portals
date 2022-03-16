@@ -285,6 +285,11 @@
         "type": "boolean",
         "default": true
       },
+      "showSearch": {
+        "title": "Afficher un champ de recherche sur la page d'accueil",
+        "type": "boolean",
+        "default": false
+      },
       "showTopics": {
         "title": "Afficher les thématiques",
         "type": "boolean",

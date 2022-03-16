@@ -59,6 +59,25 @@
         class="mt-4"
         :stats="stats"
       />
+      <v-row
+        v-if="config.showSearch"
+        justify="center"
+        class="py-4"
+      >
+        <v-text-field
+          v-model="search"
+          autofocus
+          rounded
+          style="max-width:400px;"
+          placeholder="Rechercher"
+          outlined
+          append-icon="mdi-magnify"
+          hide-details
+          class="mb-2 v-input--is-focused primary--text"
+          @keyup.enter.native="$router.push({name: 'datasets', query: {q: search}})"
+          @click:append="$router.push({name: 'datasets', query: {q: search}})"
+        />
+      </v-row>
       <topics
         v-if="config.showTopics"
         :topics="topics"
@@ -172,7 +191,8 @@ export default {
     applications: null,
     datasets: null,
     stats: null,
-    topics: []
+    topics: [],
+    search: ''
   }),
   async fetch () {
     const promiseApplications = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', {
