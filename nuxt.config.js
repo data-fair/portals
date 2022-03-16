@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
   else {
     fs.removeSync('nuxt-dist-standalone')
     fs.copySync('nuxt-dist', 'nuxt-dist-standalone')
-    nuxtConfigInject.replace(config)
+    nuxtConfigInject.replace(config, ['nuxt-dist/**/*'])
     nuxtConfigInject.replace({ ...config, basePath: '/' }, ['nuxt-dist-standalone/**/*'])
   }
 }
