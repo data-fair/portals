@@ -291,6 +291,7 @@ export default {
       params.facets = 'concepts,topics'
       params.owner = this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
+      params.html = true
       if (this.config.authentication === 'none') params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
         if (params.q && params.q !== this.lastParams.q) this.$ma.trackEvent({ action: 'search', label: this.search })

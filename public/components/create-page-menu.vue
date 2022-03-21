@@ -36,7 +36,7 @@
             :valid="valid"
             :model="editItem"
           >
-            <v-jsf
+            <lazy-v-jsf
               v-if="editItem"
               v-model="editItem"
               :schema="schema"
@@ -65,12 +65,7 @@
 </template>
 
 <script>
-import VJsf from '@koumoul/vjsf/lib/VJsf.js'
-import '@koumoul/vjsf/lib/deps/third-party.js'
-import '@koumoul/vjsf/dist/main.css'
-
 export default {
-  components: { VJsf },
   data: () => ({
     schema: require('../../contract/page.json'),
     menu: false,

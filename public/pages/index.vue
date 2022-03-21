@@ -46,13 +46,13 @@
         >
           <div
             v-if="config.description"
-            v-html="marked(config.description)"
+            v-html="config.description"
           />
         </v-col>
       </v-row>
       <div
         v-else-if="config.description"
-        v-html="marked(config.description)"
+        v-html="config.description"
       />
       <kpi
         v-if="config.showKpis"
@@ -176,7 +176,6 @@ import LastApps from '~/components/last-apps.vue'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Timeline from 'vue-tweet-embed/dist/timeline'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 export default {
@@ -280,9 +279,6 @@ export default {
       if (this.config.featuredReuse && this.config.featuredReuse.id) return 2
       else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeReuses && this.config.homeReuses.size) || 0) / 2))
     }
-  },
-  methods: {
-    marked
   }
 }
 

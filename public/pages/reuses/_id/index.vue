@@ -11,7 +11,7 @@
           md="7"
           cols="12"
         >
-          <div v-html="marked(application.description || '')" />
+          <div v-html="application.description" />
         </v-col>
         <v-col
           md="4"
@@ -110,7 +110,6 @@ import Social from '~/components/social'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 export default {
@@ -129,19 +128,20 @@ export default {
     datasets: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id)
+    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
     const config = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
     this.datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
         select: 'id,title,description,updatedAt,updatedBy,extras,bbox,topics,image',
-        size: 1000
+        size: 1000,
+        html: true
       }
     })
   },
   head () {
     if (!this.application) return { title: 'Page non trouvée' }
-    const description = marked(this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
+    const description = (this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
     return {
       title: this.application.title,
       meta: [
@@ -194,23 +194,17 @@ export default {
     embedUrl () {
       return this.$store.getters.dataFairUrl + '/app/' + this.$route.params.id
     },
-    description () {
-      return marked(this.application.description)
-    },
     dataFairUrl () {
       return this.$store.getters.dataFairUrl
     }
   },
   watch: {
     async application () {
-      if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`)
+      if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
     }
   },
   async mounted () {
-    if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`)
-  },
-  methods: {
-    marked
+    if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
   }
 }
 </script>

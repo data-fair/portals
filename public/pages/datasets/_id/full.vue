@@ -69,7 +69,6 @@
 <script>
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 export default {
@@ -82,11 +81,11 @@ export default {
     lastIframeQuery: {}
   }),
   async fetch () {
-    this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id)
+    this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { params: { html: true } })
   },
   head () {
     if (this.dataset) {
-      const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
+      const description = (this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
       const schema = {
         '@context': 'http://schema.org',
         '@type': 'Dataset',

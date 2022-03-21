@@ -62,4 +62,4 @@ VOLUME /webapp/data
 EXPOSE 8080
 
 
-CMD ["node", "server"]
+CMD ["dumb-init", "node", "--max-http-header-size", "64000", "server"]

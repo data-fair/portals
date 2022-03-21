@@ -57,7 +57,7 @@
           class="pa-3"
           style="height:100%"
         >
-          <div v-html="marked(config.contactInfos)" />
+          <div v-html="config.contactInfos" />
           <template v-if="config.twitter || config.facebook || config.linkedin || config.youtube">
             <v-divider />
             <h4>
@@ -73,7 +73,6 @@
 
 <script>
 import eventBus from '../event-bus'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 const newMessage = { from: '', subject: '', text: '' }
@@ -109,8 +108,7 @@ export default {
         eventBus.$emit('notification', { error })
       }
       this.loading = false
-    },
-    marked
+    }
   }
 }
 </script>

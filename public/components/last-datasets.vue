@@ -53,7 +53,7 @@
                     :max-height="200"
                     autoresize
                     class="dataset-desc200"
-                    v-html="marked(dataset.description || '')"
+                    v-html="dataset.description"
                   />
                 </client-only>
               </v-card-text>
@@ -109,7 +109,6 @@ import ApiView from '~/components/dataset/api-view.vue'
 import SchemaView from '~/components/dataset/schema-view.vue'
 import VClamp from 'vue-clamp'
 import { isMobileOnly } from 'mobile-device-detect'
-import marked from 'marked'
 import { mapState } from 'vuex'
 
 export default {
@@ -129,9 +128,6 @@ export default {
   }),
   computed: {
     ...mapState(['config'])
-  },
-  methods: {
-    marked
   }
 }
 </script>

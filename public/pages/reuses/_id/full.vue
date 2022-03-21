@@ -70,7 +70,6 @@
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 export default {
@@ -81,11 +80,11 @@ export default {
     application: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id)
+    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
   },
   head () {
     if (!this.application) return { title: 'Page non trouvée' }
-    const description = marked(this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
+    const description = (this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
     return {
       title: this.application.title,
       meta: [

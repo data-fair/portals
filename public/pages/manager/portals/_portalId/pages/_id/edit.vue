@@ -21,7 +21,7 @@
     <section-title :text="'Edition de la page ' + ((page && page.title) || '')" />
 
     <v-form ref="form">
-      <v-jsf
+      <lazy-v-jsf
         v-if="page"
         v-model="page"
         :schema="pageSchema"
@@ -32,7 +32,7 @@
     <v-row>
       <v-col :cols="6">
         <v-form>
-          <v-jsf
+          <lazy-v-jsf
             v-if="pageConfig && template"
             v-model="pageConfig"
             :schema="template"
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import VJsf from '~/components/vjsf-wrapper.vue'
 import 'iframe-resizer/js/iframeResizer.contentWindow'
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
@@ -72,7 +71,7 @@ Object.keys(pageSchema.properties).forEach(p => {
 })
 
 export default {
-  components: { VJsf, Blank, Thematic },
+  components: { Blank, Thematic },
   data: () => ({
     page: null,
     pageConfig: null,
@@ -130,9 +129,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.vjsf-property .v-alert__content {
-  max-width: 100%;
-}
-</style>

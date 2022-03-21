@@ -22,7 +22,7 @@
             class="mb-3"
             style="max-height:300px;max-width:95%"
           >
-          <div v-html="marked(dataset.description || '')" />
+          <div v-html="dataset.description" />
         </v-col>
         <v-col
           :md="4"
@@ -220,7 +220,7 @@
             </nuxt-link>
             <div
               class="mt-3"
-              v-html="marked(application.description || '')"
+              v-html="application.description"
             />
           </v-col>
           <v-col
@@ -285,7 +285,7 @@
                     :max-height="170"
                     class="external-reuse-desc130:before"
                     autoresize
-                    v-html="marked(reuse.description || '')"
+                    v-html="reuse.description"
                   />
                 </client-only>
               </v-card-text>
@@ -340,7 +340,6 @@ import Error from '~/components/error.vue'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import { isMobileOnly } from 'mobile-device-detect'
-import marked from 'marked'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
@@ -366,10 +365,10 @@ export default {
     dataFiles: null
   }),
   async fetch () {
-    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`)
+    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`, { params: { html: true } })
     this.dataset = dataset
 
-    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000 }
+    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
     if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
     else params.dataset = this.$route.params.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
@@ -384,7 +383,7 @@ export default {
   },
   head () {
     if (this.dataset) {
-      const description = marked(this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
+      const description = (this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
       const schema = {
         '@context': 'http://schema.org',
         '@type': 'Dataset',
@@ -474,10 +473,7 @@ export default {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'link')) || []
     }
   },
-  async mounted () {},
-  methods: {
-    marked
-  }
+  async mounted () {}
 }
 </script>
 

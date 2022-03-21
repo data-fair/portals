@@ -51,5 +51,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style>
+.vjsf-property .v-alert__content {
+  max-width: 100%;
+}
 </style>

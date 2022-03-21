@@ -51,7 +51,7 @@
           v-model="formValid"
           @submit="validateDraft"
         >
-          <v-jsf
+          <lazy-v-jsf
             v-model="configDraft"
             :schema="schema"
             :options="{context}"
@@ -171,12 +171,10 @@
 
 import debounce from 'debounce'
 import { mapState, mapGetters } from 'vuex'
-import VJsf from '~/components/vjsf-wrapper.vue'
 
 const schema = require('~/../contract/config.json')
 
 export default {
-  components: { VJsf },
   data () {
     return {
       configDraft: null,
