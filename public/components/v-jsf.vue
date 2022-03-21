@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-jsf
+  <v-jsf-original
     :value="value"
     :schema="schema"
     :options="vjsfOptions"
@@ -19,18 +19,18 @@
         @change="on.change()"
       />
     </template>
-  </v-jsf>
+  </v-jsf-original>
 </template>
 
 <script>
-import VJsf from '@koumoul/vjsf/lib/VJsf.js'
+import VJsfOriginal from '@koumoul/vjsf/lib/VJsf.js'
 import '@koumoul/vjsf/lib/deps/third-party.js'
 import '@koumoul/vjsf/dist/main.css'
 import MarkdownEditor from '~/components/markdown-editor.vue'
 
 export default {
   components: {
-    VJsf,
+    VJsfOriginal,
     MarkdownEditor
   },
   props: {
