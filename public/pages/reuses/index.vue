@@ -227,11 +227,6 @@ export default {
       if (!this.applications) return []
       return this.applications.facets.topics
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
-        .sort((tf1, tf2) => {
-          if (tf1.filtered && !tf2.filtered) return -1
-          if (tf2.filtered && !tf1.filtered) return 1
-          return tf2.count - tf1.count
-        })
     }
   },
   mounted () {
