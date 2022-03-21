@@ -82,7 +82,7 @@ import eventBus from '~/event-bus'
 import OwnerShort from '~/components/owners/short.vue'
 let sound
 if (!process.server) {
-  sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
+  // sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
 }
 
 export default {
@@ -119,7 +119,7 @@ export default {
     const channel = `user:${this.user.id}:notifications`
     eventBus.$emit('subscribe-notify', channel)
     eventBus.$on(channel, notification => {
-      if (sound) sound.play()
+      // if (sound) sound.play()
       if (this.notifications) {
         notification.new = true
         this.notifications.unshift(notification)
