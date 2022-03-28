@@ -80,10 +80,10 @@
 import { mapState, mapGetters } from 'vuex'
 import eventBus from '~/event-bus'
 import OwnerShort from '~/components/owners/short.vue'
-let sound
+/* let sound
 if (!process.server) {
-  // sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
-}
+  sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
+} */
 
 export default {
   components: { OwnerShort },
