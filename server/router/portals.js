@@ -12,6 +12,7 @@ const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
 const sanitizeHtml = require('sanitize-html')
+const marked = require('marked')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
@@ -35,15 +36,14 @@ function link (portal, path = '') {
   return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`
 }
 
-function cleanPortal (portal) {
+function cleanPortal (portal, html) {
   portal.draftLink = `${config.publicUrl}?portalId=${portal._id}&draft=true`
   portal.link = link(portal)
-  if (portal.config) portal.config = cleanConfig(portal.config)
-  if (portal.configDraft) portal.configDraft = cleanConfig(portal.configDraft)
+  if (portal.config) portal.config = cleanConfig(portal.config, html)
+  if (portal.configDraft) portal.configDraft = cleanConfig(portal.configDraft, html)
   return portal
 }
 
-// WARNING, synced with public/assets/sanitize.js
 const styledSanitizeOpts = {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe']),
   allowedAttributes: {
@@ -89,14 +89,22 @@ const styledSanitizeOpts = {
   }
 }
 
-function cleanConfig (conf) {
-  if (conf.description) conf.description = sanitizeHtml(conf.description)
-  if (conf.contactInfos) conf.contactInfos = sanitizeHtml(conf.contactInfos)
-  if (conf.customFooter && conf.customFooter.htmlXS) conf.customFooter.htmlXS = sanitizeHtml(conf.customFooter.htmlXS, styledSanitizeOpts)
-  if (conf.customFooter && conf.customFooter.htmlMD) conf.customFooter.htmlMD = sanitizeHtml(conf.customFooter.htmlMD, styledSanitizeOpts)
-  if (conf.customHeader && conf.customHeader.htmlXS) conf.customHeader.htmlXS = sanitizeHtml(conf.customHeader.htmlXS, styledSanitizeOpts)
-  if (conf.customHeader && conf.customHeader.htmlMD) conf.customHeader.htmlMD = sanitizeHtml(conf.customHeader.htmlMD, styledSanitizeOpts)
+function cleanConfig (conf, html) {
+  if (conf.description && html) conf.description = sanitizeHtml(marked(conf.description), styledSanitizeOpts)
+  if (conf.contactInfos && html) conf.contactInfos = sanitizeHtml(marked(conf.contactInfos), styledSanitizeOpts)
   return conf
+}
+
+function cleanPageConfig (conf, html) {
+  if (!conf) return
+  if (typeof conf !== 'object') return
+  if (!html) return
+  if (['text', 'alert', 'cardSimple'].includes(conf.type) && conf.content) {
+    conf.content = sanitizeHtml(marked(conf.content), styledSanitizeOpts)
+  }
+  Object.keys(conf).forEach(key => {
+    if (Array.isArray(conf[key])) conf[key].forEach(item => cleanPageConfig(item, html))
+  })
 }
 
 // portals are synced to settings.publicationSites in data-fair
@@ -198,7 +206,7 @@ router.get('/:id', setPortal, asyncWrap(async (req, res) => {
     delete req.portal.config
     delete req.portal.configDraft
   }
-  res.send(cleanPortal(req.portal))
+  res.send(cleanPortal(req.portal, req.query.html === 'true'))
 }))
 
 // Delete an existing portal as the owner
@@ -263,7 +271,6 @@ router.get('/:id/assets/:assetId', asyncWrap(async (req, res) => {
 // Validate the draft as the owner
 // Both configuration and uploaded resources
 router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
-  console.log(req.portal.configDraft)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
@@ -325,7 +332,7 @@ async function setPortalAnonymous (req, res, next) {
 
 // Public access to the portal configuration, except for the draft that is reserved to owner
 router.get('/:id/config', setPortalAnonymous, asyncWrap(async (req, res) => {
-  res.send(cleanConfig(req.config))
+  res.send(cleanConfig(req.config, req.query.html === 'true'))
 }))
 
 // Get the list of pages
@@ -361,6 +368,8 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
       return res.status(403).send()
     }
   }
+  if (page.config) cleanPageConfig(page.config, req.query.html === 'true')
+  if (page.configDraft) cleanPageConfig(page.configDraft, req.query.html === 'true')
   res.status(200).json(page)
 }))
 

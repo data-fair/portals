@@ -17,7 +17,8 @@ export default () => {
       textDark: '#212121',
       breadcrumbs: null,
       publicUrl: '',
-      publicBaseUrl: ''
+      publicBaseUrl: '',
+      html: false
     },
     getters: {
       embed () {
@@ -74,7 +75,9 @@ export default () => {
       async fetchConfig ({ state, commit }, portalId) {
         console.log('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
         try {
-          const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, { params: { draft: state.draft } })
+          const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, {
+            params: { draft: state.draft, html: state.html }
+          })
           commit('setAny', { config })
         } catch (err) {
           console.error('failure to fetch config', err)
@@ -116,7 +119,8 @@ export default () => {
               draft,
               portal: {
                 _id: portalId
-              }
+              },
+              html: true
             })
             await dispatch('fetchConfig', portalId)
           }

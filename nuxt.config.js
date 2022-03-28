@@ -63,7 +63,6 @@ module.exports = {
       // 'vuedraggable',
       'vue-clamp',
       'resize-detector',
-      'sanitize-html',
       'pbkdf2' // this is a nuxt dep, but weirdly without this line we have a ie11 crash
     ],
     extend (webpackConf, { isServer, isDev, isClient }) {
@@ -85,7 +84,6 @@ module.exports = {
     { src: '~plugins/theme' },
     { src: '~plugins/typography' },
     { src: '~plugins/filters' },
-    { src: '~plugins/sanitize' },
     { src: '~plugins/dayjs' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },

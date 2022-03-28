@@ -28,7 +28,7 @@
     <div
       v-else-if="value.type === 'text' && value.content"
       style="overflow-wrap: break-word;"
-      v-html="$sanitize(marked(value.content))"
+      v-html="value.content"
     />
     <v-alert
       v-else-if="value.type === 'alert' && value.content"
@@ -36,7 +36,7 @@
       border="left"
       text
     >
-      <div v-html="$sanitize(marked(value.content))" />
+      <div v-html="value.content" />
     </v-alert>
     <div
       v-else-if="value.type === 'divider'"
@@ -80,7 +80,7 @@
         v-if="value.content"
         style="overflow-wrap: break-word;"
         class="text-body-1 px-8"
-        v-html="$sanitize(marked(value.content))"
+        v-html="value.content"
       />
       <v-spacer />
       <v-card-actions
@@ -137,7 +137,6 @@
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import DatasetCard from '~/components/dataset/card.vue'
-import marked from 'marked'
 const { mapState } = require('vuex')
 
 export default {
@@ -178,7 +177,6 @@ export default {
     await this.resolveDataset()
   },
   methods: {
-    marked,
     tableIframeSrc (dataset) {
       return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
     },

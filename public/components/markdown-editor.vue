@@ -19,7 +19,7 @@
     >
       <v-card-text
         class="px-0 pb-0 pt-2"
-        v-html="$sanitize(marked(value))"
+        v-html="marked(value)"
       />
     </v-card>
   </v-input>
@@ -44,9 +44,6 @@ export default {
     const config = {
       element: this.$el.querySelector('textarea'),
       initialValue: this.value,
-      renderingConfig: {
-        sanitizerFunction: this.$sanitize
-      },
       status: false,
       autoDownloadFontAwesome: false,
       spellChecker: false,

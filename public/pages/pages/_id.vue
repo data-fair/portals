@@ -35,7 +35,7 @@ export default {
     page: null
   }),
   async fetch () {
-    this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
+    await this.fetchPage()
   },
   head () {
     if (this.page) {
@@ -52,7 +52,12 @@ export default {
   },
   watch: {
     async '$route.params.id' () {
-      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id)
+      await this.fetchPage()
+    }
+  },
+  methods: {
+    async fetchPage () {
+      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } })
     }
   }
 }

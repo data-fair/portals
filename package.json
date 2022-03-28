@@ -103,7 +103,6 @@
     "scrolling-element": "^1.0.2",
     "tinycolor2": "^1.4.2",
     "vue-clamp": "^0.4.0",
-    "vue-sanitize": "^0.2.1",
     "vue-tweet-embed": "^2.4.0",
     "vue-window-size": "0.6.2"
   }
