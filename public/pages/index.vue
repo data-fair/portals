@@ -201,7 +201,8 @@ export default {
         owner: this.$store.getters.owner,
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         sort: 'createdAt:-1',
-        visibility: this.config.authentication === 'none' ? 'public' : ''
+        visibility: this.config.authentication === 'none' ? 'public' : '',
+        html: true
       }
     })
     const promiseDatasets = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
@@ -211,7 +212,8 @@ export default {
         owner: this.$store.getters.owner,
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         sort: 'createdAt:-1',
-        visibility: this.config.authentication === 'none' ? 'public' : ''
+        visibility: this.config.authentication === 'none' ? 'public' : '',
+        html: true
       }
     })
 
