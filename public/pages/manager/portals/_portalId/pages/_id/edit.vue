@@ -47,11 +47,11 @@
       >
         <blank
           v-if="page.template === 'blank'"
-          :config="pageConfig"
+          :config="pageConfigRender"
         />
         <thematic
           v-if="page.template === 'thematic'"
-          :config="pageConfig"
+          :config="pageConfigRender"
         />
       </v-col>
     </v-row>
@@ -75,6 +75,7 @@ export default {
   data: () => ({
     page: null,
     pageConfig: null,
+    pageConfigRender: null,
     owner: null,
     pageSchema
   }),
@@ -118,11 +119,15 @@ export default {
     this.pageConfig = this.page.config || {}
     delete this.page.config
     if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
+
+    const htmlPage = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, { params: { html: true } })
+    this.pageConfigRender = htmlPage.config
   },
   methods: {
     async update (patch) {
       try {
-        await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
+        const htmlPage = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch, { params: { html: true } })
+        this.pageConfigRender = htmlPage.config
         // this.$router.push({ name: 'pages' })
       } catch (error) { }
     }

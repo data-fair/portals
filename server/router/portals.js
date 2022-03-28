@@ -44,6 +44,11 @@ function cleanPortal (portal, html) {
   return portal
 }
 
+function cleanPage (page, html) {
+  if (page.config) cleanPageConfig(page.config, html)
+  if (page.configDraft) cleanPageConfig(page.configDraft, html)
+}
+
 const styledSanitizeOpts = {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe']),
   allowedAttributes: {
@@ -102,6 +107,8 @@ function cleanPageConfig (conf, html) {
   if (['text', 'alert', 'cardSimple'].includes(conf.type) && conf.content) {
     conf.content = sanitizeHtml(marked(conf.content), styledSanitizeOpts)
   }
+  if (conf.description) conf.description = sanitizeHtml(marked(conf.description), styledSanitizeOpts)
+  if (conf.alert && conf.alert.content) conf.alert.content = sanitizeHtml(marked(conf.alert.content), styledSanitizeOpts)
   Object.keys(conf).forEach(key => {
     if (Array.isArray(conf[key])) conf[key].forEach(item => cleanPageConfig(item, html))
   })
@@ -180,7 +187,7 @@ router.post('', asyncWrap(async (req, res) => {
   }
   await collection.insertOne(portal)
   await syncPortalUpdate(portal, req.headers.cookie)
-  res.send(cleanPortal(portal))
+  res.send(cleanPortal(portal, req.params.html === true))
 }))
 
 // Read the portal matching a request, check that the user is owner
@@ -368,8 +375,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
       return res.status(403).send()
     }
   }
-  if (page.config) cleanPageConfig(page.config, req.query.html === 'true')
-  if (page.configDraft) cleanPageConfig(page.configDraft, req.query.html === 'true')
+  cleanPage(page, req.query.html === 'true')
   res.status(200).json(page)
 }))
 
@@ -400,6 +406,7 @@ router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
       req.body.id = `${baseId}-${i}`
     }
   }
+  cleanPage(req.body, req.query.html === 'true')
   res.status(200).send(req.body)
 }))
 
@@ -438,6 +445,7 @@ router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) =
   if (!valid) return res.status(400).send(validatePage.errors)
 
   await req.app.get('db').collection('pages').findOneAndUpdate(filter, patch)
+  cleanPage(patchedPage, req.query.html === 'true')
   res.status(200).send(patchedPage)
 }))
 
