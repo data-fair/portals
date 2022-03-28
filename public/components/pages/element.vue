@@ -191,7 +191,7 @@ export default {
       if (this.value.type === 'datasetCard' && this.value.dataset) {
         this.loading = true
         try {
-          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id)
+          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.value.dataset.id, { params: { html: true } })
         } catch (err) {
           this.resolvedDataset = null
           this.error = err.message
