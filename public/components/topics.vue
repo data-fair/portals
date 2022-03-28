@@ -9,7 +9,7 @@
       :key="topic.value.id"
       :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
       :to="{name: 'datasets', query: {topics: topic.value.id}}"
-      class="ml-3 my-1 font-weight-bold text-none"
+      class="mx-2 my-1 font-weight-bold text-none"
       dark
       rounded
       depressed
