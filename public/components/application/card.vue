@@ -14,7 +14,7 @@
         <v-img
           :src="`${application.href}/capture`"
           :alt="application.title"
-          aspect-ratio="21/9"
+          :aspect-ratio="21/9"
         />
       </div>
       <v-row style="min-height:25px;">
