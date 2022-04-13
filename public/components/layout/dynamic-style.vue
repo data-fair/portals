@@ -10,7 +10,7 @@
     color: white;
     }
 
-    .v-application .area--light a, .v-application .area--light h3, .v-application .area--light span {
+    .v-application .area--light a, .v-application .area--light h3, .v-application .area--light span, .v-application .area--light .v-tabs-bar.primary .v-tab--active {
     color: {{ textDark }};
     }
 
