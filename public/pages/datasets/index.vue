@@ -197,6 +197,14 @@ export default {
     DatasetCard
   },
   middleware: 'portal-required',
+  async fetch () {
+    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
+      const { identifiers, ...concept } = c
+      concept.id = identifiers.shift()
+      return concept
+    })
+    await this.refresh()
+  },
   data: function () {
     return {
       datasets: null,
@@ -224,14 +232,6 @@ export default {
       downloading: false,
       lastParams: {}
     }
-  },
-  async fetch () {
-    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
-      const { identifiers, ...concept } = c
-      concept.id = identifiers.shift()
-      return concept
-    })
-    await this.refresh()
   },
   head () {
     const title = 'Datasets - ' + this.config.title
@@ -277,6 +277,7 @@ export default {
         sort: this.sort + ':' + (this.order * 2 - 1),
         q: this.search
       }
+      if (this.$route.query.id && this.$route.query.id.length) query.id = this.$route.query.id
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       const params = Object.assign({}, query)
