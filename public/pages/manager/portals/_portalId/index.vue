@@ -55,6 +55,7 @@
             v-model="configDraft"
             :schema="schema"
             :options="{context}"
+            @change="saveDraft"
           />
 
           <v-row class="mt-3">
@@ -169,7 +170,6 @@
 
 <script>
 
-import debounce from 'debounce'
 import { mapState, mapGetters } from 'vuex'
 
 const schema = require('~/../contract/config.json')
@@ -199,15 +199,6 @@ export default {
     },
     iframeHeight () {
       return 800
-    }
-  },
-  watch: {
-    configDraft: {
-      handler: debounce(function () {
-        this.saveDraft()
-      }, 200),
-      deep: true,
-      immediate: false
     }
   },
   async mounted () {
