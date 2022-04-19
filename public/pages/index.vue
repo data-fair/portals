@@ -66,7 +66,7 @@
       >
         <v-text-field
           v-model="search"
-          autofocus
+          :autofocus="!draft"
           rounded
           style="max-width:400px;"
           placeholder="Rechercher"
@@ -258,7 +258,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'publicUrl', 'portal']),
+    ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['readableThemeColor']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`

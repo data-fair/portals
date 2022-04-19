@@ -46,7 +46,7 @@
         >
           <v-text-field
             v-model="search"
-            autofocus
+            :autofocus="!draft"
             label="Rechercher"
             outlined
             dense
@@ -197,14 +197,6 @@ export default {
     DatasetCard
   },
   middleware: 'portal-required',
-  async fetch () {
-    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
-      const { identifiers, ...concept } = c
-      concept.id = identifiers.shift()
-      return concept
-    })
-    await this.refresh()
-  },
   data: function () {
     return {
       datasets: null,
@@ -233,6 +225,14 @@ export default {
       lastParams: {}
     }
   },
+  async fetch () {
+    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
+      const { identifiers, ...concept } = c
+      concept.id = identifiers.shift()
+      return concept
+    })
+    await this.refresh()
+  },
   head () {
     const title = 'Datasets - ' + this.config.title
     const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
@@ -249,7 +249,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'portal', 'publicUrl']),
+    ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
       return this.publicUrl + '/datasets'

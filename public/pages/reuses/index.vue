@@ -18,7 +18,7 @@
         >
           <v-text-field
             v-model="search"
-            autofocus
+            :autofocus="!draft"
             label="Rechercher"
             outlined
             dense
@@ -214,7 +214,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'portal', 'publicUrl']),
+    ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
       return this.publicUrl + '/reuses'
