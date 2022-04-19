@@ -3,7 +3,7 @@
   <!-- cf https://stackoverflow.com/a/57331310 -->
   <component :is="'style'">
     .v-application a {
-    color: {{ linkColor }};
+    color: {{ readableThemeColor }};
     }
 
     .v-application .area--dark a, .v-application .area--dark h3, .v-application .area--dark span {
@@ -15,7 +15,7 @@
     }
 
     .v-application .primary--text {
-    color: {{ linkColor }}!important;
+    color: {{ readableThemeColor }}!important;
     }
   </component>
 </template>
@@ -26,7 +26,7 @@ const { mapState, mapGetters } = require('vuex')
 export default {
   computed: {
     ...mapState(['textDark']),
-    ...mapGetters(['linkColor'])
+    ...mapGetters(['readableThemeColor'])
   }
 }
 </script>

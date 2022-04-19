@@ -37,7 +37,7 @@
       <client-only>
         <v-iframe
           :id="'application-' + application.id"
-          :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`"
+          :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`"
         />
       </client-only>
     </v-card>
@@ -47,7 +47,7 @@
 <script>
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: { VIframe },
@@ -58,7 +58,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config']),
+    ...mapGetters(['readableThemeColor'])
   },
   watch: {
     dialog () {

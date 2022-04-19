@@ -176,7 +176,7 @@ import LastApps from '~/components/last-apps.vue'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Timeline from 'vue-tweet-embed/dist/timeline'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
@@ -259,6 +259,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal']),
+    ...mapGetters(['readableThemeColor']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
     },
@@ -266,7 +267,7 @@ export default {
       return this.$store.getters.dataFairUrl
     },
     featuredReuseUrl () {
-      return `${this.$store.getters.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.$store.getters.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     homeReuseUrl () {
       return `${this.$store.getters.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`

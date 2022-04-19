@@ -28,7 +28,7 @@ export default () => {
           return true
         }
       },
-      linkColor (state) {
+      readableThemeColor (state) {
         if (!state.config) return
         return Vue.prototype.$readableColor(state.config.themeColor)
       },

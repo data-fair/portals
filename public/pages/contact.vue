@@ -37,6 +37,7 @@
             <v-btn
               :disabled="!valid || loading"
               color="primary"
+              text
               @click="send"
             >
               Envoyer
@@ -73,7 +74,7 @@
 
 <script>
 import eventBus from '../event-bus'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 const newMessage = { from: '', subject: '', text: '' }
 export default {
@@ -85,7 +86,8 @@ export default {
     loading: false
   }),
   computed: {
-    ...mapState(['config', 'portal', 'draft'])
+    ...mapState(['config', 'portal', 'draft']),
+    ...mapGetters(['themeColorDark'])
   },
   async mounted () {
     try {
