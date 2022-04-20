@@ -6,6 +6,7 @@
     "elements":{
       "title": "Éléments",
       "type": "array",
+      "x-itemTitle": "type",
       "items": {
         "type": "object",
         "x-itemKey": "type",
