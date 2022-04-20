@@ -54,6 +54,7 @@
     "cookie-universal-nuxt": "^2.1.5",
     "dayjs": "^1.10.7",
     "debounce": "^1.2.0",
+    "debug": "^4.3.4",
     "email-validator": "^2.0.4",
     "event-to-promise": "^0.8.0",
     "express-fileupload": "^1.2.1",
