@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { sessionStoreBuilder } from '@koumoul/sd-vue/src'
 
+const debug = require('debug')('portals:store')
+debug.log = console.log.bind(console)
+
 Vue.use(Vuex)
 
 export default () => {
@@ -73,7 +76,7 @@ export default () => {
         commit('setAny', { portal })
       },
       async fetchConfig ({ state, commit }, portalId) {
-        console.log('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
+        debug('fetch config', `${state.publicUrl}/api/v1/portals/${portalId}/config`)
         try {
           const config = await this.$axios.$get(`${state.publicUrl}/api/v1/portals/${portalId}/config`, {
             params: { draft: state.draft, html: state.html }
@@ -92,14 +95,17 @@ export default () => {
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
       async init ({ state, dispatch, commit, getters }, { req, env, app, route }) {
+        debug('init')
         if (req && req.headers && req.headers.host && new URL(env.mainPublicUrl).host !== req.headers.host) {
+          debug('init in external domain mode')
           // portal exposed on an external domain has to be at the root
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
           // console.log('portal served on specific domain', publicUrl)
           commit('setAny', { publicUrl, publicBaseUrl: publicUrl })
         } else if (!state.publicUrl) {
-          // accessing the portal simply as a page the portals manager
+          // accessing the portal simply as a page of the portals manager
           const publicUrlInfo = { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin }
+          debug('init publicUrlInfo', publicUrlInfo)
           // console.log('portal served on default domain', publicUrlInfo)
           commit('setAny', publicUrlInfo)
         }
@@ -109,6 +115,7 @@ export default () => {
         })
         if (!state.portal) {
           const portalId = route.query.portalId || env.portalId || (req && req.headers && req.headers['x-portal-id'])
+          debug('init portal from id ?', portalId)
           if (portalId) {
             const initialQuery = {}
             if (route.query.draft) initialQuery.draft = route.query.draft
@@ -128,6 +135,7 @@ export default () => {
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {
+        debug('nuxtServerInit in portal mode ?', !!state.portal)
         // case where we are opening a portal
         if (state.portal) {
           // automatic switch to the account that owns this portal if we are a member
