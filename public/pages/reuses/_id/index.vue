@@ -62,7 +62,7 @@
       </v-row>
 
       <client-only>
-        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`" />
       </client-only>
 
       <section-subtitle text="Données utilisées" />
@@ -110,7 +110,7 @@ import Social from '~/components/social'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
@@ -188,6 +188,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
+    ...mapGetters(['readableThemeColor']),
     pageUrl () {
       return this.publicUrl + '/reuses/' + this.$route.params.id
     },

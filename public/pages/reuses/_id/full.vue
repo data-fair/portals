@@ -58,7 +58,7 @@
       <v-divider />
       <client-only>
         <v-iframe
-          :src="embedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`"
+          :src="embedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`"
           :style="`min-height:${windowHeight - 87}px`"
         />
       </client-only>
@@ -70,7 +70,7 @@
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: { Error, VIframe },
@@ -130,6 +130,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
+    ...mapGetters(['readableThemeColor']),
     logoUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
     },

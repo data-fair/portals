@@ -270,7 +270,7 @@ export default {
       return `${this.$store.getters.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     homeReuseUrl () {
-      return `${this.$store.getters.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.$store.getters.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     showLastApps () {
       return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length

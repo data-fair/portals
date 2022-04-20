@@ -230,7 +230,7 @@
             :order-md="application.preferLargeDisplay ? 1 : i%2"
           >
             <client-only>
-              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(config.themeColor)}`" />
+              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`" />
             </client-only>
           </v-col>
         </v-row>
@@ -455,7 +455,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['themeColorDark']),
+    ...mapGetters(['themeColorDark', 'readableThemeColor']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id
