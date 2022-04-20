@@ -2,8 +2,7 @@ const debug = require('debug')('portals:theme')
 debug.log = console.log.bind(console)
 
 export default async ({ store, $vuetify }) => {
-  // use store.state.portal as well as store.state.config as config is filled in manager pages too
-  if (store.state.portal && store.state.config) {
+  if (store.state.inPortal && store.state.config) {
     $vuetify.theme.themes.light.primary = store.state.config.themeColor
     debug('apply color from config in store', store.state.config.themeColor)
   } else {

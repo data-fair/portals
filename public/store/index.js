@@ -21,7 +21,8 @@ export default () => {
       breadcrumbs: null,
       publicUrl: '',
       publicBaseUrl: '',
-      html: false
+      html: false,
+      inPortal: false
     },
     getters: {
       embed () {
@@ -127,7 +128,8 @@ export default () => {
               portal: {
                 _id: portalId
               },
-              html: true
+              html: true,
+              inPortal: true
             })
             await dispatch('fetchConfig', portalId)
           }
