@@ -95,10 +95,10 @@ export default {
           owner: this.owner
         },
         arrayItemCardProps: { outlined: true, tile: true },
-        fieldProps: { dense: true },
         hideReadOnlyEmpty: true,
         hideReadOnlyTooltips: true,
-        hideReadOnlyLabels: true
+        hideReadOnlyLabels: true,
+        readOnlyFieldProps: { dense: true }
       }
     },
     pageLink () {
@@ -150,17 +150,8 @@ export default {
   margin-top: -1px;
 }
 
-.v-application .page-form .vjsf-array-item .vjsf-array-item {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
 .v-application .page-form .vjsf-array-item .v-card__text {
   padding-left: 8px;
   padding-right: 8px;
-}
-
-.v-application .page-form .vjsf-array-item .vjsf-array-header {
-  margin-left: -4px;
 }
 </style>

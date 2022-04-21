@@ -8,8 +8,7 @@
     },
     "banner": {
       "title": "URL de l'image de bannière",
-      "type": "string",
-      "x-props": { "hideDetails": "auto" }
+      "type": "string"
     },
     "description": {
       "$ref": "#/definitions/description"
@@ -25,14 +24,12 @@
   "definitions": {
     "title": {
       "title": "Titre",
-      "type": "string",
-      "x-props": { "hideDetails": "auto" }
+      "type": "string"
     },
     "description": {
       "title": "Description générale",
       "type": "string",
-      "x-display": "custom-markdown",
-      "x-props": { "hideDetails": "auto" }
+      "x-display": "custom-markdown"
     },
     "block":{
       "title": "Bloc",
@@ -55,7 +52,8 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/datasetCard"
-          }
+          },
+          "x-options": { "hideReadOnlyLabels": false }
         }
       }
     },
@@ -106,6 +104,7 @@
     "datasetCard": {
       "type": "object",
       "title": "Fiche d'un jeu de données",
+      "x-options": { "hideReadOnlyLabels": true },
       "properties": {
         "render": {
           "type": "string",
@@ -114,7 +113,8 @@
           "oneOf": [{
             "const": "default",
             "title": "Défaut"
-          }]
+          }],
+          "x-options": { "hideReadOnly": true }
         },
         "dataset": {
           "type": "object",
