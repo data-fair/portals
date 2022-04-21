@@ -289,10 +289,9 @@ export default {
     async refresh (append) {
       if (append) this.page += 1
       else this.page = 1
-      const query = {
-        sort: this.sort + ':' + (this.order * 2 - 1),
-        q: this.search
-      }
+      const query = {}
+      if (this.search) query.q = this.search
+      if (this.sort !== 'createdAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
       if (this.filters.id.length) query.id = this.filters.id.join(',')
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
