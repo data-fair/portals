@@ -177,6 +177,7 @@ export default {
       })
       this.easymde.codemirror.on('blur', () => {
         // timeout to prevent triggering save when clicking on a menu button
+        clearTimeout(this.blurTimeout)
         this.blurTimeout = setTimeout(() => {
           if (changed) this.$emit('change')
           changed = false
