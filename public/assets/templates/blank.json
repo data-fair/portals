@@ -91,8 +91,7 @@
         },
         "content": {
           "title": "Contenu",
-          "type": "string",
-          "x-props": { "hideDetails": "auto" }
+          "type": "string"
         },
         "titleSize": {
           "title": "Taille du titre",
@@ -102,12 +101,14 @@
             {"const": "h3", "title": "grand"},
             {"const": "h1", "title": "très grand"}
           ],
-          "default": "h3"
+          "default": "h3",
+          "x-options": { "hideReadOnly": true }
         },
         "colored" : {
           "type": "boolean",
           "title": "Utiliser la couleur du thème",
-          "default": false
+          "default": false,
+          "x-options": { "hideReadOnly": true }
         },
         "icon": {
           "$ref": "#/definitions/icon"
@@ -124,8 +125,7 @@
         "content": {
           "title": "Contenu",
           "type": "string",
-          "x-display": "custom-markdown",
-          "x-props": { "hideDetails": "auto" }
+          "x-display": "custom-markdown"
         }
       }
     },
@@ -167,8 +167,7 @@
         "content": {
           "title": "Contenu",
           "type": "string",
-          "x-display": "custom-markdown",
-          "x-props": { "hideDetails": "auto" }
+          "x-display": "custom-markdown"
         }
       }
     },
@@ -328,18 +327,19 @@
             {"const": "h3", "title": "grand"},
             {"const": "h1", "title": "très grand"}
           ],
-          "default": "h6"
+          "default": "h6",
+          "x-options": { "hideReadOnly": true }
         },
         "content": {
           "title": "Contenu",
           "type": "string",
-          "x-display": "custom-markdown",
-          "x-props": { "hideDetails": "auto" }
+          "x-display": "custom-markdown"
         },
         "fillHeight": {
           "title": "Étendre à la verticale",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-options": { "hideReadOnly": true }
         },
         "actions": {
           "title": "Actions",
@@ -359,8 +359,7 @@
         },
         "url": {
           "title": "URL vers l'image",
-          "type": "string",
-          "x-props": { "hideDetails": "auto" }
+          "type": "string"
         }
       }
     },
@@ -390,8 +389,7 @@
         },
         "url": {
           "title": "URL vers la page à ouvrir dans une iframe",
-          "type": "string",
-          "x-props": { "hideDetails": "auto" }
+          "type": "string"
         }
       }
     },
@@ -406,6 +404,7 @@
           "type": "string",
           "title": "Disposition",
           "default": "equal",
+          "x-options": { "hideReadOnly": true },
           "oneOf": [{
             "const": "equal",
             "title": "Largeur de même taille"
@@ -420,6 +419,7 @@
         "leftColumn": {
           "title": "Colonne de gauche",
           "type": "array",
+          "x-itemTitle": "type",
           "items": {
             "$ref": "#/definitions/element"
           },
@@ -429,6 +429,7 @@
         "rightColumn": {
           "title": "Colonne de droite",
           "type": "array",
+          "x-itemTitle": "type",
           "items": {
             "$ref": "#/definitions/element"
           },
@@ -446,6 +447,7 @@
         },
         "items": {
           "type": "array",
+          "x-itemTitle": "type",
           "items": {
             "$ref": "#/definitions/element"
           }
@@ -472,6 +474,7 @@
               "elements": {
                 "title": "Éléments",
                 "type": "array",
+                "x-itemTitle": "type",
                 "items": {
                   "$ref": "#/definitions/element"
                 }

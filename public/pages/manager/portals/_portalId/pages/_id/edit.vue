@@ -31,7 +31,7 @@
     </v-form>
     <v-row>
       <v-col :cols="6">
-        <v-form>
+        <v-form class="page-form">
           <lazy-v-jsf
             v-if="pageConfig && template"
             v-model="pageConfig"
@@ -93,7 +93,12 @@ export default {
           dataFairUrl: this.dataFairUrl,
           settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
           owner: this.owner
-        }
+        },
+        arrayItemCardProps: { outlined: true, tile: true },
+        fieldProps: { dense: true },
+        hideReadOnlyEmpty: true,
+        hideReadOnlyTooltips: true,
+        hideReadOnlyLabels: true
       }
     },
     pageLink () {
@@ -134,3 +139,28 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-application .page-form .vjsf-array {
+  padding-top: 16px !important;
+}
+.v-application .page-form .vjsf-array-item {
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+  margin-top: -1px;
+}
+
+.v-application .page-form .vjsf-array-item .vjsf-array-item {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.v-application .page-form .vjsf-array-item .v-card__text {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.v-application .page-form .vjsf-array-item .vjsf-array-header {
+  margin-left: -4px;
+}
+</style>
