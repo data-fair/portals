@@ -424,7 +424,7 @@
             "$ref": "#/definitions/element"
           },
           "x-cols": {"cols": 12, "md": 6},
-          "x-class": "px-0"
+          "x-class": "px-1"
         },
         "rightColumn": {
           "title": "Colonne de droite",
@@ -434,7 +434,7 @@
             "$ref": "#/definitions/element"
           },
           "x-cols": {"cols": 12, "md": 6},
-          "x-class": "px-0"
+          "x-class": "px-1"
         }
       }
     },

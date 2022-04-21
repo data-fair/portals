@@ -147,7 +147,10 @@ export default {
 .v-application .page-form .vjsf-array-item {
   padding-bottom: 0px !important;
   padding-top: 0px !important;
-  margin-top: -1px;
+}
+
+.v-application .page-form .vjsf-array-item-active>.v-card {
+  border: 1px solid rgba(0, 0, 0, 0.8);
 }
 
 .v-application .page-form .vjsf-array-item .v-card__text {

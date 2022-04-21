@@ -47,7 +47,8 @@
                         <v-icon>mdi-cog</v-icon>
                       </v-btn>
                     </v-list-item-action>
-                    <v-list-item-action class="ml-0">
+                    <!-- not really necessary and the icon is confusing
+                      <v-list-item-action class="ml-0">
                       <v-btn
                         :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
                         nuxt
@@ -57,8 +58,9 @@
                         <v-icon>mdi-file-multiple</v-icon>
                       </v-btn>
                     </v-list-item-action>
+                  </v-list-item>-->
+                    <v-divider :key="portal._id + '-divider'" />
                   </v-list-item>
-                  <v-divider :key="portal._id + '-divider'" />
                 </template>
               </v-list>
             </v-card>
