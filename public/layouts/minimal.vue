@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="minimal-layout">
     <dynamic-style />
     <client-only><accept-cookies /></client-only>
     <v-main>
@@ -50,25 +50,3 @@ export default {
 }
 
 </script>
-
-<style>
-@media only screen and (min-width: 1904px){
-  .container.padded {
-    max-width:100%!important;
-  }
-
-  .container {
-    max-width:1315px!important;
-  }
-}
-
-iframe {
-  background-color: transparent;
-  border: none;
-}
-
-.v-tabs__slider {
-    height: 4px!important;
-}
-
-</style>

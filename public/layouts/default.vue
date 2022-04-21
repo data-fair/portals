@@ -84,7 +84,7 @@ export default {
     max-width:100%!important;
   }
 
-  .container {
+  .container:not(.container--fluid) {
     max-width:1315px!important;
   }
 }
