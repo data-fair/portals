@@ -57,10 +57,9 @@
                       >
                         <v-icon>mdi-file-multiple</v-icon>
                       </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>-->
-                    <v-divider :key="portal._id + '-divider'" />
+                    </v-list-item-action>-->
                   </v-list-item>
+                  <v-divider :key="portal._id + '-divider'" />
                 </template>
               </v-list>
             </v-card>

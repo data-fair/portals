@@ -6,7 +6,7 @@
     >
       <section-title
         v-if="datasets"
-        :text="datasets.count + ' jeux de données'"
+        :text="datasets.count + ' ' + (datasets.count> 1 ? 'jeux de données' : 'jeu de données')"
       >
         <template #after>
           <v-tooltip top>
@@ -203,13 +203,14 @@ export default {
       concepts: null,
       size: 12,
       page: 1,
-      search: this.$route.query.q || '',
+      search: '',
       loading: false,
-      sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
-      order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
+      sort: '',
+      order: 0,
       filters: {
-        concepts: this.$route.query.concepts ? this.$route.query.concepts.split(',') : [],
-        topics: this.$route.query.topics ? this.$route.query.topics.split(',') : []
+        concepts: [],
+        topics: [],
+        id: []
       },
       sorts: [{
         text: 'Date de mise à jour',
@@ -231,6 +232,7 @@ export default {
       concept.id = identifiers.shift()
       return concept
     })
+    this.readQueryParams()
     await this.refresh()
   },
   head () {
@@ -265,11 +267,25 @@ export default {
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
     }
   },
+  watch: {
+    async $route (to, from) {
+      this.readQueryParams()
+      await this.refresh()
+    }
+  },
   mounted () {
     // case where SSR already fetched the first page
     if (this.datasets) this.continueFetch()
   },
   methods: {
+    readQueryParams () {
+      this.search = this.$route.query.q || ''
+      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt'
+      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
+      this.filters.concepts = this.$route.query.concepts ? this.$route.query.concepts.split(',') : []
+      this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
+      this.filters.id = this.$route.query.id ? this.$route.query.id.split(',') : []
+    },
     async refresh (append) {
       if (append) this.page += 1
       else this.page = 1
@@ -277,10 +293,10 @@ export default {
         sort: this.sort + ':' + (this.order * 2 - 1),
         q: this.search
       }
-      if (this.$route.query.id && this.$route.query.id.length) query.id = this.$route.query.id
+      if (this.filters.id.length) query.id = this.filters.id.join(',')
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
-      const params = Object.assign({}, query)
+      const params = { ...query }
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
@@ -290,10 +306,10 @@ export default {
       params.html = true
       if (this.config.authentication === 'none') params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
-        if (params.q && params.q !== this.lastParams.q) this.$ma.trackEvent({ action: 'search', label: this.search })
+        if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })
         this.lastParams = params
         this.loading = true
-        this.$router.push({ query })
+        if (!append) this.$router.push({ query })
         const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })
         if (append) datasets.results.forEach(r => this.datasets.results.push(r))
         else this.datasets = datasets

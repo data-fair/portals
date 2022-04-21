@@ -3,7 +3,7 @@
     <v-container class="py-2">
       <section-title
         v-if="applications"
-        :text="applications.count + ' visualisations'"
+        :text="applications.count + ' ' + (applications.count> 1 ? 'visualisations' : 'visualisation')"
       />
       <section-title
         v-else
@@ -174,13 +174,13 @@ export default {
       applications: null,
       size: 12,
       page: 1,
-      search: this.$route.query.q || '',
+      search: '',
       loading: false,
-      sort: this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt',
-      order: this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0,
+      sort: '',
+      order: 0,
       filters: {
-        apps: this.$route.query['base-application'] ? this.$route.query['base-application'].split(',') : [],
-        topics: this.$route.query.topics ? this.$route.query.topics.split(',') : []
+        apps: [],
+        topics: []
       },
       sorts: [{
         text: 'Date de mise à jour',
@@ -196,6 +196,7 @@ export default {
     }
   },
   async fetch () {
+    this.readQueryParams()
     await this.refresh()
   },
   head () {
@@ -229,11 +230,24 @@ export default {
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
     }
   },
+  watch: {
+    async $route (to, from) {
+      this.readQueryParams()
+      await this.refresh()
+    }
+  },
   mounted () {
     // case where SSR already fetched the first page
     if (this.applications) this.continueFetch()
   },
   methods: {
+    readQueryParams () {
+      this.search = this.$route.query.q || ''
+      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt'
+      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
+      this.filters.apps = this.$route.query['base-application'] ? this.$route.query['base-application'].split(',') : []
+      this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
+    },
     async refresh (append) {
       if (append) this.page += 1
       else this.page = 1
@@ -243,7 +257,7 @@ export default {
       }
       if (this.filters.apps.length) query['base-application'] = this.filters.apps.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
-      const params = Object.assign({}, query)
+      const params = { ...query }
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,updatedAt,url,updatedBy,topics'
@@ -253,10 +267,10 @@ export default {
       params.html = true
       if (this.config.authentication === 'none') params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
-        if (params.q && params.q !== this.lastParams.q) this.$ma.trackEvent({ action: 'search', label: this.search })
+        if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })
         this.lastParams = params
         this.loading = true
-        this.$router.push({ query })
+        if (!append) this.$router.push({ query })
         const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
         if (append) applications.results.forEach(r => this.applications.results.push(r))
         else this.applications = applications
