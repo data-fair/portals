@@ -32,32 +32,22 @@
                     </v-list-item-content>
 
                     <v-list-item-action>
-                      <remove-confirm
-                        :label="portal.title"
-                        @removed="deletePortal(portal)"
-                      />
-                    </v-list-item-action>
-                    <v-list-item-action>
                       <v-btn
                         :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
                         nuxt
                         icon
                         color="primary"
+                        title="gérer le portail"
                       >
-                        <v-icon>mdi-cog</v-icon>
+                        <v-icon>mdi-pencil</v-icon>
                       </v-btn>
                     </v-list-item-action>
-                    <!-- not really necessary and the icon is confusing
-                      <v-list-item-action class="ml-0">
-                      <v-btn
-                        :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
-                        nuxt
-                        icon
-                        color="primary"
-                      >
-                        <v-icon>mdi-file-multiple</v-icon>
-                      </v-btn>
-                    </v-list-item-action>-->
+                    <v-list-item-action>
+                      <remove-confirm
+                        :label="portal.title"
+                        @removed="deletePortal(portal)"
+                      />
+                    </v-list-item-action>
                   </v-list-item>
                   <v-divider :key="portal._id + '-divider'" />
                 </template>
