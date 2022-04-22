@@ -299,6 +299,7 @@
         "content": {
           "title": "Contenu",
           "type": "array",
+          "x-options": { "sortableOptions": { "group": "page-element" } },
           "items": {
             "$ref": "#/definitions/element"
           }
@@ -420,6 +421,7 @@
           "title": "Colonne de gauche",
           "type": "array",
           "x-itemTitle": "type",
+          "x-options": { "sortableOptions": { "group": "page-element" } },
           "items": {
             "$ref": "#/definitions/element"
           },
@@ -430,6 +432,7 @@
           "title": "Colonne de droite",
           "type": "array",
           "x-itemTitle": "type",
+          "x-options": { "sortableOptions": { "group": "page-element" } },
           "items": {
             "$ref": "#/definitions/element"
           },
@@ -448,6 +451,7 @@
         "items": {
           "type": "array",
           "x-itemTitle": "type",
+          "x-options": { "sortableOptions": { "group": "page-element" } },
           "items": {
             "$ref": "#/definitions/element"
           }
@@ -475,6 +479,7 @@
                 "title": "Éléments",
                 "type": "array",
                 "x-itemTitle": "type",
+                "x-options": { "sortableOptions": { "group": "page-element" } },
                 "items": {
                   "$ref": "#/definitions/element"
                 }
