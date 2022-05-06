@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="config.homeImageAsBanner">
+    <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
       <client-only v-if="config.homeReuse">
         <v-iframe
           :src="homeReuseUrl"
@@ -18,7 +18,7 @@
       />
     </template>
     <v-container>
-      <v-row v-if="!config.homeImageAsBanner">
+      <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">
         <v-col
           cols="12"
           md="5"

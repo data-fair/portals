@@ -255,6 +255,11 @@
         "title": "Image principale en bannière",
         "default": false
       },
+      "homeImageHidden": {
+        "type": "boolean",
+        "title": "Image principale masquée",
+        "default": false
+      },
       "homeReuse": {
         "title": "Remplacer l'image principale par une visualisation",
         "type": "object",
