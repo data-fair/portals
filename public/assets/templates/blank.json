@@ -103,13 +103,13 @@
             {"const": "h1", "title": "très grand"}
           ],
           "default": "h3",
-          "x-options": { "hideReadOnly": true }
+          "x-options": { "hideInArrayItem": true }
         },
         "colored" : {
           "type": "boolean",
           "title": "Utiliser la couleur du thème",
           "default": false,
-          "x-options": { "hideReadOnly": true }
+          "x-options": { "hideInArrayItem": true }
         },
         "icon": {
           "$ref": "#/definitions/icon"
@@ -330,7 +330,7 @@
             {"const": "h1", "title": "très grand"}
           ],
           "default": "h6",
-          "x-options": { "hideReadOnly": true }
+          "x-options": { "hideInArrayItem": true }
         },
         "content": {
           "title": "Contenu",
@@ -341,7 +341,7 @@
           "title": "Étendre à la verticale",
           "type": "boolean",
           "default": false,
-          "x-options": { "hideReadOnly": true }
+          "x-options": { "hideInArrayItem": true }
         },
         "actions": {
           "title": "Actions",
@@ -406,7 +406,7 @@
           "type": "string",
           "title": "Disposition",
           "default": "equal",
-          "x-options": { "hideReadOnly": true },
+          "x-options": { "hideInArrayItem": true },
           "oneOf": [{
             "const": "equal",
             "title": "Largeur de même taille"
