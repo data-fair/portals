@@ -81,7 +81,7 @@
     <layout-navigation-right v-if="$vuetify.breakpoint.lgAndUp">
       <v-list
         dense
-        class="list-actions"
+        class="list-actions mr-2"
       >
         <create-page-menu @created="createPage" />
       </v-list>

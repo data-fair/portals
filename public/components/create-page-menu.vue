@@ -5,6 +5,7 @@
     scrollable
     :close-on-click="false"
     :close-on-content-click="false"
+    min-width="700px"
     max-width="700px"
   >
     <template #activator="{on, attrs}">
@@ -21,7 +22,10 @@
       </v-list-item>
     </template>
 
-    <v-card v-if="menu">
+    <v-card
+      v-if="menu"
+      data-iframe-height
+    >
       <v-card-title class="title">
         Créer une nouvelle page
       </v-card-title>

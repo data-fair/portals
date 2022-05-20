@@ -60,12 +60,13 @@
     <layout-navigation-right v-if="$vuetify.breakpoint.mdAndUp">
       <v-list
         dense
-        class="list-actions"
+        class="list-actions mr-2"
       >
         <v-menu
           v-model="showCreateMenu"
           :close-on-content-click="false"
           max-width="500px"
+          min-width="500px"
         >
           <template #activator="{ on, attrs }">
             <v-list-item
