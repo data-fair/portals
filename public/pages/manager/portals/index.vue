@@ -81,7 +81,10 @@
               <v-list-item-title>Créer un nouveau portail</v-list-item-title>
             </v-list-item>
           </template>
-          <v-card v-if="newPortal">
+          <v-card
+            v-if="newPortal"
+            data-iframe-height
+          >
             <v-card-title primary-title>
               <h3 class="headline mb-0">
                 Créer un nouveau portail
