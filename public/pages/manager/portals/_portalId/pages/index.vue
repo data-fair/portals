@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer.contentWindow'
 import CreatePageMenu from '~/components/create-page-menu.vue'
 import RemoveConfirm from '~/components/remove-confirm.vue'
 import { mapState } from 'vuex'

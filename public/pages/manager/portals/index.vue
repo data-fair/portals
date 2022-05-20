@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row data-iframe-height>
     <v-col :style="$vuetify.breakpoint.mdAndUp ? 'padding-right:256px;' : ''">
       <v-container>
         <v-col>

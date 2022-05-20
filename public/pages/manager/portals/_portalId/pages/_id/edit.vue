@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer.contentWindow'
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
 const { mapState } = require('vuex')

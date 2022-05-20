@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-iframe-height>
     <v-progress-linear
       v-if="!config"
       indeterminate

@@ -1,5 +1,8 @@
 <template lang="html">
-  <v-container fluid>
+  <v-container
+    fluid
+    data-iframe-height
+  >
     <v-row v-if="portals">
       <v-col
         cols="12"

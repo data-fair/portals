@@ -8,9 +8,14 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer.contentWindow'
 import { mapGetters } from 'vuex'
 import ManagerTop from '~/components/layout/manager-top.vue'
+import 'iframe-resizer/js/iframeResizer.contentWindow'
+
+global.iFrameResizer = {
+  heightCalculationMethod: 'taggedElement'
+}
+
 export default {
   components: { ManagerTop },
   middleware: 'breadcrumbs',
