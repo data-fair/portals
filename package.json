@@ -48,6 +48,7 @@
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@koumoul/sd-express": "^1.0.0",
     "@nuxtjs/axios": "^5.12.5",
+    "@nuxtjs/i18n": "^7.2.2",
     "ajv": "^6.12.6",
     "config": "^3.3.3",
     "cookie-parser": "^1.4.5",
@@ -78,7 +79,7 @@
     "vue-social-sharing": "^3.0.4"
   },
   "devDependencies": {
-    "@koumoul/sd-vue": "^1.2.0",
+    "@data-fair/sd-vue": "1.4.1-beta.6",
     "@koumoul/v-iframe": "^0.10.0",
     "@koumoul/vjsf": "2.13.0",
     "@koumoul/vue-multianalytics": "^1.11.3",

@@ -8,7 +8,7 @@ export default async ({ app, store, $vuetify, route }) => {
   } else {
     debug('keep color from original vuetify config', $vuetify.theme.themes.light.primary)
   }
-  if (route.path.startsWith('/manager/') && app.$cookies.get('theme_dark') !== undefined) {
+  if (process.client && route.path.startsWith('/manager/') && app.$cookies.get('theme_dark') !== undefined) {
     $vuetify.theme.dark = app.$cookies.get('theme_dark')
   }
 }

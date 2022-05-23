@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { sessionStoreBuilder } from '@koumoul/sd-vue/src'
+import { sessionStoreBuilder } from '@data-fair/sd-vue/src'
 
 const debug = require('debug')('portals:store')
 debug.log = console.log.bind(console)

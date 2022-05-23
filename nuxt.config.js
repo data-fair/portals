@@ -58,9 +58,7 @@ module.exports = {
   build: {
     transpile: [
       /@koumoul/,
-      'vuetify/lib',
-      // 'vuetify',
-      // 'vuedraggable',
+      /@data-fair/,
       'vue-clamp',
       'resize-detector',
       'pbkdf2' // this is a nuxt dep, but weirdly without this line we have a ie11 crash
@@ -96,7 +94,20 @@ module.exports = {
   router: {
     base: config.basePath
   },
-  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt'],
+  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', ['@nuxtjs/i18n', {
+    seo: false,
+    locales: ['fr', 'en'],
+    defaultLocale: config.i18n.defaultLocale,
+    vueI18nLoader: true,
+    strategy: 'no_prefix',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_lang'
+    },
+    vueI18n: {
+      fallbackLocale: config.i18n.defaultLocale
+    }
+  }]],
   axios: {
     browserBaseURL: config.basePath,
     baseURL: 'http://localhost:' + config.port
@@ -111,7 +122,8 @@ module.exports = {
     mainPublicUrl: config.publicUrl,
     mainDataFairUrl: config.dataFairUrl,
     development: process.env.NODE_ENV === 'development',
-    copyright: config.copyright
+    copyright: config.copyright,
+    i18n: config.i18n
   },
   head: {
     title: 'Portail de données',

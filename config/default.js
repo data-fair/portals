@@ -30,5 +30,9 @@ module.exports = {
     },
     title: 'Koumoul',
     href: 'https://koumoul.com'
+  },
+  i18n: {
+    locales: 'fr,en',
+    defaultLocale: 'fr'
   }
 }
