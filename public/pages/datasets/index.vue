@@ -296,6 +296,7 @@ export default {
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       const params = { ...query }
+      params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'

@@ -257,6 +257,7 @@ export default {
       if (this.filters.apps.length) query['base-application'] = this.filters.apps.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       const params = { ...query }
+      params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,updatedAt,url,updatedBy,topics'
