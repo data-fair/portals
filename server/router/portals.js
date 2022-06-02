@@ -177,7 +177,7 @@ router.post('', asyncWrap(async (req, res) => {
     id: req.user.organization ? req.user.organization.id : req.user.id,
     name: req.user.organization ? req.user.organization.name : req.user.name
   }
-  if (portal.owner.type === 'organization' && req.user.organization.role !== 'admin') {
+  if (portal.owner.type === 'organization' && (req.user.organization.role !== 'admin' || !!req.user.organization.department)) {
     return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
   }
   if (!validatePortal(portal)) return res.status(400).send(validatePortal.errors)
@@ -198,7 +198,7 @@ async function setPortal (req, res, next) {
   if (!portal) return res.status(404).send('Portail inconnu')
   if (portal.owner.type === 'organisation') {
     const orga = req.user.organizations.find(o => o.id === portal.owner.id)
-    if (!orga || orga.role !== 'admin') return res.status(403).send()
+    if (!orga || orga.role !== 'admin' || !!orga.department) return res.status(403).send()
   }
   if (portal.owner.type === 'user' && req.user.id !== portal.owner.id) {
     return res.status(403).send()
