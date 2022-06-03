@@ -1,5 +1,8 @@
 <template lang="html">
-  <v-container v-if="user">
+  <v-container
+    v-if="user"
+    style="max-width:600px;"
+  >
     <client-only>
       <v-iframe :src="sdUrl" />
 
