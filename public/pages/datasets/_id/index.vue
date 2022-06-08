@@ -261,7 +261,7 @@
       </v-row>
       <template v-if="linkExternalReuses.length">
         <section-title
-          text="Réutilisations externes"
+          text="Réutilisations"
         />
         <v-row>
           <v-col
