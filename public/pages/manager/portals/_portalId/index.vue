@@ -58,7 +58,7 @@
             @change="saveDraft"
           />
 
-          <v-row class="mt-3">
+          <v-row class="my-3 mx-0">
             <v-spacer />
 
             <v-btn
