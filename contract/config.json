@@ -447,6 +447,10 @@
         "type": "string",
         "title": "Compte Instagram"
       },
+      "vimeo": {
+        "type": "string",
+        "title": "Identifiant chaîne Vimeo"
+      },
       "contactEmail": {
         "type": "string",
         "title": "Email de contact",

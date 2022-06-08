@@ -64,6 +64,10 @@ export default () => {
         let url = getters.notifyUrl.replace('http://', 'ws://').replace('https://', 'wss://')
         if (!url.endsWith('/')) url += '/'
         return url
+      },
+      hasSocialLinks (state) {
+        return state.config &&
+          (state.config.twitter || state.config.facebook || state.config.linkedin || state.config.instagram || state.config.youtube || state.config.vimeo)
       }
     },
     mutations: {

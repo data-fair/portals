@@ -11,7 +11,7 @@
         float="none"
       />
       <v-col
-        v-if="config.footerSocial && (config.twitter || config.facebook || config.linkedin || config.youtube || config.instagram)"
+        v-if="config.footerSocial && hasSocialLinks"
         :class="{'pa-0': true, 'white--text': footerColorDark}"
       >
         <client-only>
@@ -138,7 +138,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState(['config', 'env']),
-    ...mapGetters(['footerColorDark']),
+    ...mapGetters(['footerColorDark', 'hasSocialLinks']),
     extraLogos () {
       const logos = [...this.config.footerExtraLogos || []]
       const copyright = { ...process.env.copyright }

@@ -59,7 +59,7 @@
           style="height:100%"
         >
           <div v-html="config.contactInfos" />
-          <template v-if="config.twitter || config.facebook || config.linkedin || config.youtube">
+          <template v-if="hasSocialLinks">
             <v-divider />
             <h4>
               Retrouvez-nous sur les réseaux sociaux
@@ -87,7 +87,7 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal', 'draft']),
-    ...mapGetters(['themeColorDark'])
+    ...mapGetters(['themeColorDark', 'hasSocialLinks'])
   },
   async mounted () {
     try {
