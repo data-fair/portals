@@ -84,7 +84,7 @@
       />
 
       <!-- reuses: featured and lasts -->
-      <v-row v-if="config.twitter">
+      <v-row v-if="config.twitter && config.showTwitterTimeline !== false">
         <v-col
           cols="12"
           md="8"

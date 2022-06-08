@@ -301,6 +301,12 @@
         "type": "boolean",
         "default": true
       },
+      "showTwitterTimeline": {
+        "title": "Afficher la timeline Twitter",
+        "description": "Seulement appliqué si le compte Twitter est renseigné dans la section \"Communication & contact\"",
+        "type": "boolean",
+        "default": true
+      },
       "featuredReuse": {
         "title": "Visualisation mise en avant",
         "type": "object",
