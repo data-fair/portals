@@ -31,6 +31,7 @@ import Vue from 'vue'
 import { ObserveVisibility } from 'vue-observe-visibility'
 import 'easymde/dist/easymde.min.css'
 import marked from 'marked'
+const sanitizeHtml = require('../../shared/sanitize-html.js')
 
 Vue.directive('observe-visibility', ObserveVisibility)
 
@@ -57,6 +58,9 @@ export default {
       const config = {
         element: this.$el.querySelector('textarea'),
         initialValue: this.value,
+        renderingConfig: {
+          sanitizerFunction: sanitizeHtml
+        },
         status: false,
         autoDownloadFontAwesome: false,
         spellChecker: false,
