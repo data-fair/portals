@@ -69,6 +69,7 @@
     "nodemon": "^1.19.3",
     "nuxt-start": "^2.15.8",
     "original-url": "^1.2.3",
+    "prom-client": "^14.0.1",
     "rate-limiter-flexible": "^2.2.1",
     "reconnecting-websocket": "^4.4.0",
     "request-ip": "^2.1.3",

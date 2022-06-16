@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer')
 const originalUrl = require('original-url')
 const { format: formatUrl } = require('url')
 const dbUtils = require('./utils/db')
+const prometheus = require('./utils/prometheus')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@koumoul/sd-express')({
@@ -62,9 +63,15 @@ async function main () {
   app.set('mailTransport', transport)
 
   app.use((err, req, res, next) => {
-    console.error('Error in HTTP request', err.response ? err.response.data : err)
-    res.status(err.status || 500).send(err.message)
+    const status = err.statusCode || err.status || 500
+    if (status === 500) {
+      console.error('(http) Error in express route', err)
+      prometheus.internalError.inc({ errorCode: 'http' })
+    }
+    res.status(status).send(err.message)
   })
+
+  if (config.prometheus.active) await prometheus.start(db)
 
   httpServer = http.createServer(app).listen(config.port)
   await event2promise(httpServer, 'listening')
@@ -85,6 +92,7 @@ process.on('SIGTERM', async function onSigterm () {
       httpServer.close()
       await event2promise(httpServer, 'close')
     }
+    if (config.prometheus.active) await prometheus.stop()
     console.log('shutting down now')
     process.exit()
   } catch (err) {
