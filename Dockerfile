@@ -11,6 +11,7 @@ RUN npm ci && \
 
 # Adding UI files
 ADD public public
+ADD shared shared
 ADD nuxt.config.js .
 ADD config config
 ADD contract contract
@@ -42,6 +43,7 @@ COPY --from=builder /webapp/node_modules /webapp/node_modules
 COPY --from=builder /webapp/nuxt-dist /webapp/nuxt-dist
 ADD nuxt.config.js nuxt.config.js
 ADD server server
+ADD shared shared
 ADD config config
 ADD contract contract
 
