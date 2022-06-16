@@ -34,5 +34,9 @@ module.exports = {
   i18n: {
     locales: 'fr,en',
     defaultLocale: 'fr'
+  },
+  prometheus: {
+    active: true,
+    port: 9090
   }
 }
