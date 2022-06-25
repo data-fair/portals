@@ -29,6 +29,8 @@ module.exports = async () => {
     nuxtStandaloneConfig.axios = { ...nuxtStandaloneConfig.axios, browserBaseURL: '/' }
     const nuxtStandalone = new Nuxt(nuxtStandaloneConfig)
     return async (req, res, next) => {
+      // accept buffering and caching of this response in the reverse proxy
+      res.setHeader('X-Accel-Buffering', 'yes')
       if (!req.query.portalId) {
         const host = req.headers.host
         const portal = await getPortalFromHost(req.app.get('db'), host)
