@@ -11,6 +11,7 @@ const axios = require('axios')
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
+const mime = require('mime-types')
 const sanitizeHtml = require('../../shared/sanitize-html')
 const marked = require('marked')
 const portalSchema = require('../../contract/portal')
@@ -164,7 +165,7 @@ async function setPortal (req, res, next) {
 
 // Get an existing portal as the owner
 router.get('/:id', setPortal, asyncWrap(async (req, res) => {
-  if (req.params.noConfig === 'true') {
+  if (req.query.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
   }
@@ -194,7 +195,7 @@ router.put('/:id/configDraft', setPortal, asyncWrap(async (req, res) => {
 const storage = multer.diskStorage({
   async destination (req, file, cb) {
     const dir = `data/${req.portal._id}/draft`
-    if (!await fs.exists(dir)) await fs.ensureDir(dir)
+    await fs.ensureDir(dir)
     cb(null, dir)
   },
   filename (req, file, cb) {
@@ -210,24 +211,28 @@ router.post('/:id/assets/:assetId', setPortal, upload.any(), asyncWrap(async (re
 const assets = {
   logo: {
     file: 'logo.png',
-    mimeType: 'image/png'
+    size: { height: 80 }
   },
   home: {
     file: 'undraw_Data_points_re_vkpq.png',
-    mimeType: 'image/jpeg'
+    size: { width: 1904 }
   },
   favicon: {
     file: 'favicon.ico',
-    mimeType: 'image/x-icon'
+    size: { width: 48, height: 48 }
   }
 }
 
-router.get('/:id/assets/:assetId', asyncWrap(async (req, res) => {
+router.get('/:id/assets/:assetId', setPortal, asyncWrap(async (req, res) => {
   if (!assets[req.params.assetId]) return res.status(404).send()
   const draft = req.query.draft === 'true'
-  const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
-  if (await fs.exists(filePath)) res.sendFile(filePath)
-  else res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file))
+  const asset = req.portal[draft ? 'configDraft' : 'config']?.assets[req.params.assetId]
+  if (asset) {
+    const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
+    res.sendFile(filePath, { headers: { 'content-type': mime.contentType(asset.name) } })
+  } else {
+    res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file))
+  }
 }))
 
 // Validate the draft as the owner

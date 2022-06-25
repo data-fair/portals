@@ -8,14 +8,21 @@
           style="margin-top: -12px;height: 400px;"
         />
       </client-only>
-      <v-img
+      <v-row
         v-else
-        :src="homeUrl"
-        :alt="config.title"
-        max-height="400px"
-        class="elevation-4"
-        style="margin-top: -12px;"
-      />
+        justify="center"
+        class="ma-0"
+      >
+        <v-img
+
+          :src="homeUrl"
+          :alt="config.title"
+          max-height="400px"
+          max-width="1904px"
+          class="elevation-4"
+          style="margin-top: -12px;"
+        />
+      </v-row>
     </template>
     <v-container>
       <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">

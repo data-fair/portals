@@ -24,7 +24,7 @@ export default {
     const link = [
       { rel: 'canonical', href: canonical }
     ]
-    link.push({ rel: 'icon', type: 'image/x-icon', href: `${this.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/logo?favicon=${this.$store.state.draft}` })
+    link.push({ rel: 'icon', type: 'image/x-icon', href: `${this.publicUrl}/api/v1/portals/${this.$store.state.portalId}/assets/favicon?draft=${this.$store.state.draft}` })
     link.forEach((l) => {
       if (l.href.slice(-1) === '/') {
         l.href = l.href.slice(0, -1)
