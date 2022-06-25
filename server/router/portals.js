@@ -229,9 +229,9 @@ router.get('/:id/assets/:assetId', setPortal, asyncWrap(async (req, res) => {
   const asset = req.portal[draft ? 'configDraft' : 'config']?.assets[req.params.assetId]
   if (asset) {
     const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
-    res.sendFile(filePath, { headers: { 'content-type': mime.contentType(asset.name) } })
+    res.sendFile(filePath, { headers: { 'content-type': mime.contentType(asset.name) }, cacheControl: false })
   } else {
-    res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file))
+    res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file), { cacheControl: false })
   }
 }))
 
