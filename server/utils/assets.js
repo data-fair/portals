@@ -23,7 +23,7 @@ const assets = {
 exports.prepareFitHashedAsset = async (dir, asset) => {
   const buffer = await sharp(path.join(dir, asset))
     .resize(assets[asset].size.width, assets[asset].size.height, { fit: 'inside', withoutEnlargement: true })
-    .toFormat('png')
+    .png({ adaptiveFiltering: true, compressionLevel: 9, palette: true })
     .toBuffer()
   const files = await fs.readdir(dir)
   for (const file of files) {
@@ -45,7 +45,7 @@ exports.fillConfigAssets = async (dir, conf) => {
       const hashedFile = files.find(f => f.startsWith(asset + '-fit-'))
       // this condition should not be necessary, here only to complete missing hashed images from older portals
       if (hashedFile) conf.assets[asset].hash = hashedFile.replace(asset + '-fit-', '').slice(0, -4)
-      else conf.assets[asset].hash = exports.prepareFitHashedAsset(dir, asset)
+      else conf.assets[asset].hash = await exports.prepareFitHashedAsset(dir, asset)
     }
   }
 }
