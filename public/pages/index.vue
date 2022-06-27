@@ -201,23 +201,23 @@ export default {
     search: ''
   }),
   async fetch () {
-    const promiseApplications = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', {
+    const promiseApplications = this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
       params: {
         size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
         select: 'id,title,updatedAt,createdAt,createdBy',
-        owner: this.$store.getters.owner,
-        publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
+        owner: this.owner,
+        publicationSites: 'data-fair-portals:' + this.portal._id,
         sort: 'createdAt:-1',
         visibility: this.config.authentication === 'none' ? 'public' : '',
         html: true
       }
     })
-    const promiseDatasets = this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
+    const promiseDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
         select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox,image',
-        owner: this.$store.getters.owner,
-        publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
+        owner: this.owner,
+        publicationSites: 'data-fair-portals:' + this.portal._id,
         sort: 'createdAt:-1',
         visibility: this.config.authentication === 'none' ? 'public' : '',
         html: true
@@ -225,12 +225,12 @@ export default {
     })
 
     // TODO: replace by a proper public stats route
-    const promiseStatsDatasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
+    const promiseStatsDatasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         size: 1000,
         select: 'count',
-        owner: this.$store.getters.owner,
-        publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
+        owner: this.owner,
+        publicationSites: 'data-fair-portals:' + this.portal._id,
         visibility: this.config.authentication === 'none' ? 'public' : '',
         facets: 'topics'
       }
@@ -266,18 +266,15 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readableThemeColor']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner']),
     homeUrl () {
-      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.$store.state.draft}`
-    },
-    dataFairUrl () {
-      return this.$store.getters.dataFairUrl
+      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },
     featuredReuseUrl () {
-      return `${this.$store.getters.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+      return `${this.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     homeReuseUrl () {
-      return `${this.$store.getters.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+      return `${this.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     showLastApps () {
       return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length

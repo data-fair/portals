@@ -54,7 +54,8 @@ async function main () {
   const nuxtMiddleware = await nuxt()
   app.use(nuxtMiddleware)
 
-  const { client, db } = await dbUtils.init()
+  const { db, client } = await require('../upgrade')()
+  await dbUtils.init(db)
   app.set('db', db)
   app.set('client', client)
 

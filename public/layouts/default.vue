@@ -50,7 +50,7 @@ export default {
     const link = [
       { rel: 'canonical', href: canonical }
     ]
-    link.push({ rel: 'icon', type: 'image/x-icon', href: `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/favicon?draft=${this.draft}` })
+    link.push({ rel: 'icon', type: 'image/x-icon', href: `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/favicon?draft=${this.draft}&hash=${this.config.assets.favicon && this.config.assets.favicon.hash}` })
     link.forEach((l) => {
       if (l.href.slice(-1) === '/') {
         l.href = l.href.slice(0, -1)
@@ -60,7 +60,7 @@ export default {
       { name: 'twitter:card', content: 'summary' },
       { hid: 'og:title', property: 'og:title', content: this.config.title },
       { property: 'og:locale', content: 'fr_FR' },
-      { hid: 'og:image', property: 'og:image', content: `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}` },
+      { hid: 'og:image', property: 'og:image', content: `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}` },
       { hid: 'og:image:width', property: 'og:image:width', content: 567 },
       { hid: 'og:image:height', property: 'og:image:height', content: 383 }
     ]

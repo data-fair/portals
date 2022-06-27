@@ -39,7 +39,7 @@ export default {
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
     logoUrl () {
-      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
+      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     }
   }
 }

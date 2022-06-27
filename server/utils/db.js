@@ -18,6 +18,7 @@ async function ensureIndex (db, collection, key, options = {}) {
 }
 
 exports.connect = async () => {
+  console.log('Connecting to mongodb ' + `${config.mongo.host}:${config.mongo.port}`)
   let client
   const opts = {
     useNewUrlParser: true,
@@ -35,10 +36,7 @@ exports.connect = async () => {
   return { db, client }
 }
 
-exports.init = async () => {
-  console.log('Connecting to mongodb ' + `${config.mongo.host}:${config.mongo.port}`)
-  const { db, client } = await exports.connect()
+exports.init = async (db) => {
   await ensureIndex(db, 'portals', { host: 1 }, { name: 'host_1', unique: true, sparse: true })
   await ensureIndex(db, 'pages', { id: 1, 'portal._id': 1 }, { unique: true })
-  return { db, client }
 }

@@ -4,21 +4,21 @@ const path = require('path')
 const express = require('express')
 const slug = require('slugify')
 const shortid = require('shortid')
-const multer = require('multer')
 const Ajv = require('ajv')
 const ajv = new Ajv()
 const axios = require('axios')
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
-const mime = require('mime-types')
-const sanitizeHtml = require('../../shared/sanitize-html')
 const marked = require('marked')
+
+const sanitizeHtml = require('../../shared/sanitize-html')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
 const asyncWrap = require('../utils/async-wrap')
+const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -184,56 +184,18 @@ router.delete('/:id', setPortal, asyncWrap(async (req, res) => {
 // Update the draft configuration as the owner
 router.put('/:id/configDraft', setPortal, asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
+  await fillConfigAssets(`data/${req.portal._id}/draft`, req.body)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: cleanConfig(req.body) } })
   res.send()
 }))
 
-// Upload draft resources as the owner
-// We upload resources only in a draft folder
-// use POST _validate_draft to copy resources to production
-const storage = multer.diskStorage({
-  async destination (req, file, cb) {
-    const dir = `data/${req.portal._id}/draft`
-    await fs.ensureDir(dir)
-    cb(null, dir)
-  },
-  filename (req, file, cb) {
-    if (!assets[req.params.assetId]) return cb(new Error('asset inconnu ' + req.params.assetId))
-    cb(null, req.params.assetId)
-  }
-})
-const upload = multer({ storage })
-router.post('/:id/assets/:assetId', setPortal, upload.any(), asyncWrap(async (req, res) => {
+router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, res) => {
+  await prepareFitHashedAsset(`data/${req.params.id}/draft`, req.params.assetId)
   res.send()
 }))
 
-const assets = {
-  logo: {
-    file: 'logo.png',
-    size: { height: 80 }
-  },
-  home: {
-    file: 'undraw_Data_points_re_vkpq.png',
-    size: { width: 1904 }
-  },
-  favicon: {
-    file: 'favicon.ico',
-    size: { width: 48, height: 48 }
-  }
-}
-
-router.get('/:id/assets/:assetId', setPortal, asyncWrap(async (req, res) => {
-  if (!assets[req.params.assetId]) return res.status(404).send()
-  const draft = req.query.draft === 'true'
-  const asset = req.portal[draft ? 'configDraft' : 'config']?.assets[req.params.assetId]
-  if (asset) {
-    const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
-    res.sendFile(filePath, { headers: { 'content-type': mime.contentType(asset.name) }, cacheControl: false })
-  } else {
-    res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file), { cacheControl: false })
-  }
-}))
+router.get('/:id/assets/:assetId', setPortal, asyncWrap(downloadAsset))
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources

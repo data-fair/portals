@@ -132,7 +132,7 @@ export default {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['readableThemeColor']),
     logoUrl () {
-      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}`
+      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     },
     pageUrl () {
       return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'

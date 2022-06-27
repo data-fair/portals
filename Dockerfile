@@ -46,6 +46,7 @@ ADD server server
 ADD shared shared
 ADD config config
 ADD contract contract
+ADD upgrade upgrade
 
 # Adding licence, manifests, etc.
 ADD package.json .
