@@ -21,30 +21,38 @@ const assets = {
 }
 
 exports.prepareFitHashedAsset = async (dir, asset) => {
-  const buffer = await sharp(path.join(dir, asset))
+  const originalBuffer = await fs.readFile(path.join(dir, asset))
+  const buffer = await sharp(originalBuffer)
     .resize(assets[asset].size.width, assets[asset].size.height, { fit: 'inside', withoutEnlargement: true })
     .png({ adaptiveFiltering: true, compressionLevel: 9, palette: true })
     .toBuffer()
   const files = await fs.readdir(dir)
   for (const file of files) {
-    if (file.startsWith(asset + '-fit-')) {
+    if (file.startsWith(asset + '-')) {
       await fs.remove(path.join(dir, file))
     }
   }
-  const hash = (await hasha.async(buffer)).slice(0, 10)
-  await fs.writeFile(path.join(dir, `${asset}-fit-${hash}.png`), buffer)
+  let hash
+  if (buffer.length <= originalBuffer.length) {
+    hash = 'fit-' + (await hasha.async(buffer)).slice(0, 10) + '.png'
+    await fs.writeFile(path.join(dir, `${asset}-${hash}`), buffer)
+  } else {
+    hash = (await hasha.async(originalBuffer)).slice(0, 10)
+    await fs.writeFile(path.join(dir, `${asset}-${hash}`), buffer)
+  }
   return hash
 }
 
-exports.fillConfigAssets = async (dir, conf) => {
+exports.fillConfigAssets = async (dir, conf, force) => {
   if (!await fs.pathExists(dir)) return
   const files = await fs.readdir(dir)
   for (const asset in conf.assets || {}) {
     if (!files.includes(asset)) delete conf.assets[asset]
     else {
-      const hashedFile = files.find(f => f.startsWith(asset + '-fit-'))
+      const hashedFile = files.find(f => f.startsWith(asset + '-'))
       // this condition should not be necessary, here only to complete missing hashed images from older portals
-      if (hashedFile) conf.assets[asset].hash = hashedFile.replace(asset + '-fit-', '').slice(0, -4)
+      // TODO: if the resized file is not smaller than original do not store hash in config ?
+      if (hashedFile && !force) conf.assets[asset].hash = hashedFile.replace(asset + '-', '')
       else conf.assets[asset].hash = await exports.prepareFitHashedAsset(dir, asset)
     }
   }
@@ -76,7 +84,7 @@ exports.downloadAsset = async (req, res) => {
     const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
     if (req.query.hash && req.query.hash !== 'undefined') {
       const maxAge = draft ? 0 : 31536000
-      res.sendFile(`${filePath}-fit-${req.query.hash}.png`, { headers: { 'cache-control': 'public,max-age=' + maxAge } })
+      res.sendFile(`${filePath}-${req.query.hash}`, { headers: { 'cache-control': 'public,max-age=' + maxAge } })
     } else {
       res.sendFile(filePath, { headers: { 'content-type': mime.contentType(asset.name), 'cache-control': 'public,max-age=0' } })
     }
