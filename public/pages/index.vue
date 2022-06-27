@@ -14,10 +14,9 @@
         class="ma-0"
       >
         <v-img
-
           :src="homeUrl"
           :alt="config.title"
-          max-height="400px"
+          height="400px"
           max-width="1904px"
           class="elevation-4"
           style="margin-top: -12px;"
