@@ -75,7 +75,19 @@ module.exports = {
     },
     // extract css in separate files
     // this might create some slight clipping, but much better for caching
-    extractCSS: true
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      }
+    }
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
