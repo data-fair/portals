@@ -200,25 +200,26 @@ export default {
     search: ''
   }),
   async fetch () {
+    const baseFilter = {
+      owner: this.owner,
+      publicationSites: 'data-fair-portals:' + this.portal._id,
+      visibility: this.config.authentication === 'none' ? 'public' : ''
+    }
     const promiseApplications = this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
       params: {
+        ...baseFilter,
         size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
         select: 'id,title,updatedAt,createdAt,createdBy',
-        owner: this.owner,
-        publicationSites: 'data-fair-portals:' + this.portal._id,
         sort: 'createdAt:-1',
-        visibility: this.config.authentication === 'none' ? 'public' : '',
         html: true
       }
     })
     const promiseDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
+        ...baseFilter,
         size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
         select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox,image',
-        owner: this.owner,
-        publicationSites: 'data-fair-portals:' + this.portal._id,
         sort: 'createdAt:-1',
-        visibility: this.config.authentication === 'none' ? 'public' : '',
         html: true
       }
     })
@@ -226,11 +227,11 @@ export default {
     // TODO: replace by a proper public stats route
     const promiseStatsDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
+        ...baseFilter,
         size: 1000,
         select: 'count',
-        owner: this.owner,
-        publicationSites: 'data-fair-portals:' + this.portal._id,
-        visibility: this.config.authentication === 'none' ? 'public' : '',
+        raw: true,
+        count: false,
         facets: 'topics'
       }
     })
@@ -242,7 +243,7 @@ export default {
         count: this.applications.count
       },
       datasets: {
-        count: statsDatasets.count,
+        count: this.datasets.count,
         numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0)
       }
     }

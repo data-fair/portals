@@ -261,7 +261,8 @@ export default {
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,updatedAt,url,updatedBy,topics'
-      if (!append) params.facets = 'base-application,topics'
+      if (append) params.count = false
+      else params.facets = 'base-application,topics'
       params.owner = this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true

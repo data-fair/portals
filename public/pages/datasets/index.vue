@@ -300,7 +300,8 @@ export default {
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
-      if (!append) params.facets = 'concepts,topics'
+      if (append) params.count = false
+      else params.facets = 'concepts,topics'
       params.owner = this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
