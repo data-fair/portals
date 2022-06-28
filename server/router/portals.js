@@ -195,7 +195,7 @@ router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, re
   res.send()
 }))
 
-router.get('/:id/assets/:assetId', asyncWrap(downloadAsset))
+router.get('/:id/assets/:assetId', setPortalAnonymous, asyncWrap(downloadAsset))
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
