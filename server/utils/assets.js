@@ -22,10 +22,15 @@ const assets = {
 
 exports.prepareFitHashedAsset = async (dir, asset) => {
   const originalBuffer = await fs.readFile(path.join(dir, asset))
-  const buffer = await sharp(originalBuffer)
-    .resize(assets[asset].size.width, assets[asset].size.height, { fit: 'inside', withoutEnlargement: true })
-    .png({ adaptiveFiltering: true, compressionLevel: 9, palette: true })
-    .toBuffer()
+  let buffer
+  try {
+    buffer = await sharp(originalBuffer)
+      .resize(assets[asset].size.width, assets[asset].size.height, { fit: 'inside', withoutEnlargement: true })
+      .png({ adaptiveFiltering: true, compressionLevel: 9, palette: true })
+      .toBuffer()
+  } catch (err) {
+    console.warn('failure to resize asset image', dir, asset, err)
+  }
   const files = await fs.readdir(dir)
   for (const file of files) {
     if (file.startsWith(asset + '-')) {
@@ -33,7 +38,7 @@ exports.prepareFitHashedAsset = async (dir, asset) => {
     }
   }
   let hash
-  if (buffer.length <= originalBuffer.length) {
+  if (buffer && buffer.length <= originalBuffer.length) {
     hash = 'fit-' + (await hasha.async(buffer)).slice(0, 10) + '.png'
     await fs.writeFile(path.join(dir, `${asset}-${hash}`), buffer)
   } else {
