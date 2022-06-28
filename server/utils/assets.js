@@ -80,11 +80,15 @@ const storage = multer.diskStorage({
 exports.uploadAssets = multer({ storage })
 
 exports.downloadAsset = async (req, res) => {
+  const portal = await req.app.get('db')
+    .collection('portals').findOne({ _id: req.params.id })
+  if (!portal) return res.status(404).send('Portail inconnu')
+
   // accept buffering and caching of this response in the reverse proxy
   res.setHeader('X-Accel-Buffering', 'yes')
   if (!assets[req.params.assetId]) return res.status(404).send()
   const draft = req.query.draft === 'true'
-  const asset = req.portal[draft ? 'configDraft' : 'config']?.assets[req.params.assetId]
+  const asset = portal[draft ? 'configDraft' : 'config']?.assets[req.params.assetId]
   if (asset) {
     const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
     if (req.query.hash && req.query.hash !== 'undefined') {
