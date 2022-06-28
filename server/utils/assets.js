@@ -43,7 +43,7 @@ exports.prepareFitHashedAsset = async (dir, asset) => {
     await fs.writeFile(path.join(dir, `${asset}-${hash}`), buffer)
   } else {
     hash = (await hasha.async(originalBuffer)).slice(0, 10)
-    await fs.writeFile(path.join(dir, `${asset}-${hash}`), buffer)
+    await fs.writeFile(path.join(dir, `${asset}-${hash}`), originalBuffer)
   }
   return hash
 }
