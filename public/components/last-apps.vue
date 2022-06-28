@@ -35,7 +35,7 @@
               </v-card-title>
               <div>
                 <v-img
-                  :src="`${application.href}/capture`"
+                  :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
                   :alt="application.title"
                   aspect-ratio="3"
                 />
