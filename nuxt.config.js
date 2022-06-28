@@ -57,7 +57,7 @@ module.exports = {
   telemetry: false,
   build: {
     // always the same url to fetch static resource, even in multi-domain mode
-    // publicPath: config.publicUrl + '/_nuxt/',
+    // publicPath: config.publicUrl + '/_nuxt/', // this is broken for some reason, too bad
     transpile: [
       /@koumoul/,
       /@data-fair/,
@@ -77,19 +77,7 @@ module.exports = {
     },
     // extract css in separate files
     // this might create some slight clipping, but much better for caching
-    extractCSS: true,
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          styles: {
-            name: 'styles',
-            test: /\.(css|vue)$/,
-            chunks: 'all',
-            enforce: true
-          }
-        }
-      }
-    }
+    extractCSS: true
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [

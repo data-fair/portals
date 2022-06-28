@@ -224,7 +224,7 @@ export default {
     })
 
     // TODO: replace by a proper public stats route
-    const promiseStatsDatasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
+    const promiseStatsDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         size: 1000,
         select: 'count',
