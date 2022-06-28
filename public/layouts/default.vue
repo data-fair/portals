@@ -101,4 +101,30 @@ iframe {
 .v-card__text, .v-card__title {
   word-break: normal; /* maybe !important  */
 }
+
+/* used to display descriptions in dataset cards with bottom gradient */
+.dataset-desc170:before {
+  content:'';
+  width:100%;
+  height:82px;
+  position:absolute;
+  left:0;
+  top:160px;
+  background:linear-gradient(transparent 0, white);
+}
+.dataset-desc200:before {
+  content:'';
+  width:100%;
+  height:72px;
+  position:absolute;
+  left:0;
+  top:200px;
+  background:linear-gradient(transparent 0, white);
+}
+
+/* select-sort class is used in applications and datasets lists */
+.select-sort .v-input__append-outer {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
 </style>

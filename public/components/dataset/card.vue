@@ -147,13 +147,4 @@ export default {
 </script>
 
 <style>
-.dataset-desc170:before {
-  content:'';
-  width:100%;
-  height:82px;
-  position:absolute;
-  left:0;
-  top:160px;
-  background:linear-gradient(transparent 0, white);
-}
 </style>

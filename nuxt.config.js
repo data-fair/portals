@@ -72,7 +72,10 @@ module.exports = {
           name: '[path][name].[ext]'
         }
       })
-    }
+    },
+    // extract css in separate files
+    // this might create some slight clipping, but much better for caching
+    extractCSS: true
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [

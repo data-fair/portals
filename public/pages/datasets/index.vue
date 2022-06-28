@@ -376,8 +376,4 @@ export default {
 </script>
 
 <style>
-.select-sort .v-input__append-outer {
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-}
 </style>
