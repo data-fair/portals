@@ -52,7 +52,7 @@ app.use('/', (req, res, next) => {
 let httpServer
 async function main () {
   const nuxtMiddleware = await nuxt()
-  app.use(require('cors')())
+  // app.use(require('cors')())
   app.use(nuxtMiddleware)
 
   const { db, client } = await require('../upgrade')()

@@ -57,7 +57,7 @@ module.exports = {
   telemetry: false,
   build: {
     // always the same url to fetch static resource, even in multi-domain mode
-    publicPath: config.publicUrl + '/_nuxt/',
+    // publicPath: config.publicUrl + '/_nuxt/',
     transpile: [
       /@koumoul/,
       /@data-fair/,
