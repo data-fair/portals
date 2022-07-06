@@ -38,8 +38,8 @@
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
-                    <template v-if="dataset.storage && dataset.storage.size">
-                      - {{ dataset.storage.size | bytes }}
+                    <template v-if="dataset.storage && dataset.storage.indexed && dataset.storage.indexed.size">
+                      - {{ dataset.storage.indexed.size | bytes }}
                     </template>
                   </v-list-item-title>
                 </v-list-item-content>

@@ -151,9 +151,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: data-fair-cache
+                name: data-fair
                 port:
-                  number: 80
+                  number: 8080
           - path: /data-fair-processings/(.*)
             pathType: Prefix
             backend:
