@@ -86,7 +86,7 @@ module.exports = {
     { src: '~plugins/color' },
     { src: '~plugins/theme' },
     { src: '~plugins/typography' },
-    { src: '~plugins/filters' },
+    { src: '~plugins/filter-bytes' },
     { src: '~plugins/dayjs' },
     { src: '~plugins/polyfill', ssr: false },
     { src: '~plugins/analytics', ssr: false },

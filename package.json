@@ -104,6 +104,7 @@
     "iframe-resizer": "4.0.4",
     "js-file-download": "^0.4.12",
     "mobile-device-detect": "^0.2.3",
+    "number-abbreviate": "^2.0.0",
     "nuxt": "^2.15.8",
     "nuxt-webpack-optimisations": "^2.2.0",
     "scrolling-element": "^1.0.2",
