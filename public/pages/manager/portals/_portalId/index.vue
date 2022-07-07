@@ -194,6 +194,7 @@ export default {
       return {
         owner: this.activeAccount.type + ':' + this.activeAccount.id,
         dataFairUrl: this.$store.getters.dataFairUrl,
+        publicUrl: this.$store.state.publicUrl,
         portalUrl: `api/v1/portals/${this.portal._id}`
       }
     },

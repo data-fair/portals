@@ -10,17 +10,10 @@
   },
   "allOf": [{
     "title": "Général",
-    "required": ["themeColor"],
     "properties": {
       "title": {
         "type": "string",
         "default": "Portail de données"
-      },
-      "themeColor": {
-        "type": "string",
-        "default": "#1E88E5",
-        "title": "Couleur principale",
-        "x-display": "color-picker"
       },
       "datasetThumbnailContain": {
         "type": "boolean",
@@ -82,6 +75,33 @@
             }
           }
         }
+      }
+    }
+  }, {
+    "title": "Style",
+    "required": ["themeColor"],
+    "properties": {
+      "themeColor": {
+        "type": "string",
+        "default": "#1E88E5",
+        "title": "Couleur principale",
+        "x-display": "color-picker"
+      },
+      "bodyFont": {
+        "title": "Police principale",
+        "type": "object",
+        "x-fromUrl": "{context.publicUrl}/api/v1/fonts",
+        "x-itemTitle": "name",
+        "x-itemKey": "name",
+        "description": "Ces polices sont issues de Google Fonts. La police par défaut est Nunito."
+      },
+      "headingsFont": {
+        "title": "Police des titres",
+        "type": "object",
+        "x-fromUrl": "{context.publicUrl}/api/v1/fonts",
+        "x-itemTitle": "name",
+        "x-itemKey": "name",
+        "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
       }
     }
   }, {

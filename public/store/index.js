@@ -44,6 +44,14 @@ export default () => {
         if (!state.config) return
         return Vue.prototype.$color(state.config.footerColor).getLuminance() < 0.4
       },
+      bodyFontFamily (state) {
+        if (!state.config || !state.config.bodyFont) return '"Nunito", serif'
+        return `"${state.config.bodyFont.name}", ${state.config.bodyFont.category}`
+      },
+      headingsFontFamily (state, getters) {
+        if (!state.config || !state.config.headingsFont) return getters.bodyFontFamily
+        return `"${state.config.headingsFont.name}", ${state.config.headingsFont.category}`
+      },
       owner (state) {
         if (!state.config) return
         return state.config.owner.type + ':' + state.config.owner.id
