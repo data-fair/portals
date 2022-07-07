@@ -470,7 +470,8 @@
       },
       "youtube": {
         "type": "string",
-        "title": "Identifiant chaîne Youtube"
+        "title": "Identifiant Youtube",
+        "description": "Vous pouvez renseigner directement un identifiant d'utilisateur ou bien celui d'une chaine avec \"c/\" en préfixe."
       },
       "instagram": {
         "type": "string",

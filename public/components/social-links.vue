@@ -24,7 +24,7 @@
 
     <v-btn
       v-if="config.youtube"
-      :href="'https://www.youtube.com/channel/' + config.youtube"
+      :href="'https://www.youtube.com/' + (config.youtube.includes('/') ? config.youtube : 'user/' + config.youtube)"
       icon
       color="primary"
       target="blank"
