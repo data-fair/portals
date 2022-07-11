@@ -50,6 +50,7 @@
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/i18n": "^7.2.2",
     "ajv": "^6.12.6",
+    "cacheable-lookup": "^6.0.4",
     "config": "^3.3.3",
     "cookie-parser": "^1.4.5",
     "cookie-universal-nuxt": "^2.1.5",
@@ -84,7 +85,7 @@
     "vue-social-sharing": "^3.0.4"
   },
   "devDependencies": {
-    "@data-fair/sd-vue": "1.4.1-beta.6",
+    "@data-fair/sd-vue": "2.1.1",
     "@koumoul/v-iframe": "^0.10.0",
     "@koumoul/vjsf": "2.17.0",
     "@koumoul/vue-multianalytics": "^1.11.3",
@@ -107,7 +108,7 @@
     "mobile-device-detect": "^0.2.3",
     "number-abbreviate": "^2.0.0",
     "nuxt": "^2.15.8",
-    "nuxt-webpack-optimisations": "^2.2.0",
+    "nuxt-webpack-optimisations": "^2.2.3",
     "scrolling-element": "^1.0.2",
     "tinycolor2": "^1.4.2",
     "vue-clamp": "^0.4.0",

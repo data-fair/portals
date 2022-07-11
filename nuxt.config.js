@@ -118,7 +118,7 @@ module.exports = {
     baseURL: 'http://localhost:' + config.port
   },
   buildModules: [
-    'nuxt-webpack-optimisations',
+    // 'nuxt-webpack-optimisations',
     '@nuxtjs/vuetify',
     ['@nuxtjs/google-fonts', { download: true, display: 'swap', families: { Nunito: [100, 300, 400, 500, 700, 900] } }]
   ],

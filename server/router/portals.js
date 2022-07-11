@@ -1,12 +1,10 @@
 const config = require('config')
 const fs = require('fs-extra')
-const path = require('path')
 const express = require('express')
 const slug = require('slugify')
 const shortid = require('shortid')
 const Ajv = require('ajv')
 const ajv = new Ajv()
-const axios = require('axios')
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
@@ -19,6 +17,7 @@ const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
 const asyncWrap = require('../utils/async-wrap')
 const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
+const axios = require('../utils/axios')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -83,15 +82,17 @@ async function syncPortalUpdate (portal, cookie) {
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
   }
+  const id = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
   await axios.post(
-    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites`,
+    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${id}/publication-sites`,
     publicationSite,
     { headers: { cookie } }
   )
 }
 async function syncPortalDelete (portal, cookie) {
+  const id = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
   await axios.delete(
-    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${portal.owner.id}/publication-sites/data-fair-portals/${portal._id}`,
+    `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${id}/publication-sites/data-fair-portals/${portal._id}`,
     { headers: { cookie } }
   )
 }
@@ -103,15 +104,20 @@ router.get('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const filter = {}
   if (req.query.owner) {
-    const [ownerType, ownerId] = req.query.owner.split(':')
+    const [ownerType, ownerId, ownerDepartment] = req.query.owner.split(':')
     if (ownerType === 'user' && ownerId !== req.user.id) {
       return res.status(403).send('Vous n\'êtes pas l\'utilisateur demandé.')
     }
-    if (ownerType === 'organization' && !req.user.organizations.find(o => o.id === ownerId)) {
+    const userOrg = req.user.organizations.find(o => o.id === ownerId)
+    if (ownerType === 'organization' && !userOrg) {
       return res.status(403).send('Vous n\'appartenez pas à l\'organisation demandée.')
+    }
+    if (ownerType === 'organization' && userOrg && userOrg.department && userOrg.department !== ownerDepartment) {
+      return res.status(403).send('Vous n\'appartenez pas au département demandé.')
     }
     filter['owner.type'] = ownerType
     filter['owner.id'] = ownerId
+    if (ownerDepartment) filter['owner.department'] = ownerDepartment
   } else if (!req.user.isAdmin) {
     return res.status(403).send('Seul un super administrateur peut requêter la liste des portails sans filtre sur propriétaire.')
   }
@@ -133,7 +139,10 @@ router.post('', asyncWrap(async (req, res) => {
     id: req.user.organization ? req.user.organization.id : req.user.id,
     name: req.user.organization ? req.user.organization.name : req.user.name
   }
-  if (portal.owner.type === 'organization' && (req.user.organization.role !== 'admin' || !!req.user.organization.department)) {
+  if (req.user.organization && req.user.organization.department) {
+    portal.owner.department = req.user.organization.department
+  }
+  if (portal.owner.type === 'organization' && req.user.organization.role !== 'admin') {
     return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
   }
   if (!validatePortal(portal)) return res.status(400).send(validatePortal.errors)
@@ -154,10 +163,11 @@ async function setPortal (req, res, next) {
   if (!portal) return res.status(404).send('Portail inconnu')
   if (portal.owner.type === 'organisation') {
     const orga = req.user.organizations.find(o => o.id === portal.owner.id)
-    if (!orga || orga.role !== 'admin' || !!orga.department) return res.status(403).send()
+    if (!orga || orga.role !== 'admin') return res.status(403).send('admin only')
+    if (orga.department && orga.department !== portal.owner.department) return res.status(403).send('wrong department')
   }
   if (portal.owner.type === 'user' && req.user.id !== portal.owner.id) {
-    return res.status(403).send()
+    return res.status(403).send('user himself only')
   }
   req.portal = portal
   next()
@@ -209,7 +219,7 @@ router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
         }
       }
     })
-  if (await fs.exists(`data/${req.portal._id}/draft`)) {
+  if (await fs.pathExists(`data/${req.portal._id}/draft`)) {
     await fs.copy(`data/${req.portal._id}/draft`, `data/${req.portal._id}/prod`)
   }
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
@@ -218,7 +228,7 @@ router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
 router.post('/:id/_cancel_draft', setPortal, asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
-  if (await fs.exists(`data/${req.portal._id}/prod`)) {
+  if (await fs.pathExists(`data/${req.portal._id}/prod`)) {
     await fs.copy(`data/${req.portal._id}/prod`, `data/${req.portal._id}/draft`)
   }
   res.send()
@@ -271,12 +281,11 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
-  if (!req.user ||
-    (portal.owner.type === 'user' && portal.owner.id !== req.user.id) ||
-    (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id))) {
-    filter.public = true
-  }
-  if (req.query.published === 'true')filter.published = true
+  if (!req.user) filter.public = true
+  if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
+  if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
+  if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) filter.public = true
+  if (req.query.published === 'true') filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),
     pages.countDocuments(filter)
@@ -294,6 +303,9 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
     if (!req.user) return res.status(401).send()
     if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) return res.status(403).send()
     if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) {
+      return res.status(403).send()
+    }
+    if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) {
       return res.status(403).send()
     }
   }

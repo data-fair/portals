@@ -54,7 +54,9 @@ export default () => {
       },
       owner (state) {
         if (!state.config) return
-        return state.config.owner.type + ':' + state.config.owner.id
+        let owner = state.config.owner.type + ':' + state.config.owner.id
+        if (state.config.department) owner += ':' + state.config.owner.department
+        return owner
       },
       directoryUrl (state) {
         return state.publicBaseUrl + '/simple-directory'

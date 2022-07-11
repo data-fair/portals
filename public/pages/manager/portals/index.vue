@@ -155,7 +155,9 @@ export default {
   methods: {
     ...mapActions('session', ['login']),
     async refresh () {
-      this.portals = await this.$axios.$get('api/v1/portals', { params: { owner: this.activeAccount.type + ':' + this.activeAccount.id } })
+      let owner = this.activeAccount.type + ':' + this.activeAccount.id
+      if (this.activeAccount.department) owner += ':' + this.activeAccount.department
+      this.portals = await this.$axios.$get('api/v1/portals', { params: { owner } })
       this.$store.dispatch('setBreadcrumbs', [{
         text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`
       }])

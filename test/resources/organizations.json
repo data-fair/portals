@@ -1,6 +1,13 @@
 [{
   "id": "orga1",
   "name": "Orga 1",
+  "departments": [{
+    "id": "dep1",
+    "name": "department 1"
+  }, {
+    "id": "dep2",
+    "name": "department 2"
+  }],
   "members": [{
     "id": "superadmin",
     "role": "admin"
@@ -13,6 +20,10 @@
   }, {
     "id": "manager1",
     "role": "manager"
+  }, {
+    "id": "admindep1",
+    "role": "admin",
+    "department": "dep1"
   }]
 }, {
   "id": "orga2",

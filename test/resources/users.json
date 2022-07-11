@@ -30,4 +30,10 @@
     "password": {
       "clear": "passwd"
     }
+}, {
+  "id": "admindep1",
+  "email": "admindep1@test.com",
+    "password": {
+      "clear": "passwd"
+    }
 }]
