@@ -27,7 +27,6 @@ module.exports = async () => {
     const nuxtStandaloneConfig = { ...nuxtConfig, buildDir: 'nuxt-dist-standalone', dev: false }
     nuxtStandaloneConfig.router = { ...nuxtConfig.router, base: '/' }
     nuxtStandaloneConfig.axios = { ...nuxtStandaloneConfig.axios, browserBaseURL: '/' }
-    nuxtStandaloneConfig.build = { ...nuxtStandaloneConfig.build, publicPath: config.publicUrl + '/_nuxt_standalone/' }
     const nuxtStandalone = new Nuxt(nuxtStandaloneConfig)
     return async (req, res, next) => {
       // accept buffering and caching of this response in the reverse proxy
@@ -43,11 +42,7 @@ module.exports = async () => {
 
       // re-apply the prefix that was removed by an optional reverse proxy
       req.url = (nuxtConfig.router.base + req.url).replace('//', '/')
-      if (req.url.includes('/_nuxt_standalone/')) {
-        nuxtStandalone.render(req, res)
-      } else {
-        nuxt.render(req, res)
-      }
+      nuxt.render(req, res)
     }
   }
 }
