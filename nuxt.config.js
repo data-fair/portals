@@ -1,7 +1,6 @@
 const fs = require('fs-extra')
 let config = require('config')
 config.basePath = new URL(config.publicUrl + '/').pathname
-config.publicPath = config.publicUrl + '/_nuxt/'
 
 const isBuilding = process.argv.filter(a => !a.startsWith('--')).slice(-1)[0] === 'build'
 
@@ -12,11 +11,7 @@ if (process.env.NODE_ENV === 'production') {
     fs.removeSync('nuxt-dist-standalone')
     fs.copySync('nuxt-dist', 'nuxt-dist-standalone')
     nuxtConfigInject.replace(config, ['nuxt-dist/**/*'])
-    nuxtConfigInject.replace({
-      ...config,
-      basePath: '/',
-      publicPath: config.publicUrl + '/_nuxt_standalone/'
-    }, ['nuxt-dist-standalone/**/*'])
+    nuxtConfigInject.replace({ ...config, basePath: '/' }, ['nuxt-dist-standalone/**/*'])
   }
 }
 
@@ -62,7 +57,7 @@ module.exports = {
   telemetry: false,
   build: {
     // always the same url to fetch static resource, even in multi-domain mode
-    publicPath: config.publicPath,
+    publicPath: config.publicUrl + '/_nuxt/',
     transpile: [
       /@koumoul/,
       /@data-fair/,
