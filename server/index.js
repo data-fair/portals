@@ -78,7 +78,6 @@ async function main () {
       console.error('(http) Error in express route', err)
       prometheus.internalError.inc({ errorCode: 'http' })
     }
-    console.log(err)
     res.status(status).send(err.message)
   })
 
