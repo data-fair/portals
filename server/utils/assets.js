@@ -85,27 +85,28 @@ exports.downloadAsset = async (req, res) => {
   if (!assets[req.params.assetId]) return res.status(404).send()
   const draft = req.query.draft === 'true'
   const asset = req.config.assets[req.params.assetId]
-  if (asset) {
-    const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
-    if (req.query.hash && req.query.hash !== 'undefined') {
-      const maxAge = draft ? 0 : 31536000
-      res.sendFile(`${filePath}-${req.query.hash}`, {
-        headers: {
-          'content-type': mime.contentType(req.query.hash) || mime.contentType(asset.name),
-          'cache-control': 'public,max-age=' + maxAge
-        }
-      })
-    } else {
+  if (!asset) return res.status(404).send()
+  const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
+  if (req.query.hash && req.query.hash !== 'undefined') {
+    const maxAge = draft ? 0 : 31536000
+    res.sendFile(`${filePath}-${req.query.hash}`, {
+      headers: {
+        'content-type': mime.contentType(req.query.hash) || mime.contentType(asset.name),
+        'cache-control': 'public,max-age=' + maxAge
+      }
+    })
+  } else {
+    if (await fs.pathExists(filePath)) {
       res.sendFile(filePath, {
         headers: {
           'content-type': mime.contentType(asset.name),
           'cache-control': 'public,max-age=0'
         }
       })
+    } else {
+      res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file), {
+        headers: { 'cache-control': 'public,max-age=0' }
+      })
     }
-  } else {
-    res.sendFile(path.resolve(__dirname, '../../public/static', assets[req.params.assetId].file), {
-      headers: { 'cache-control': 'public,max-age=0' }
-    })
   }
 }
