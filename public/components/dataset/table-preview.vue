@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="dialog"
-    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
     :max-width="1190"
     transition="none"
   >
@@ -40,7 +40,7 @@
           :src="iframeSrc"
           scrolling="yes"
           :iframe-resizer="false"
-          :style="`height: ${windowHeight - 48}px;`"
+          :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
           @message="onMessage"
         />
       </client-only>
