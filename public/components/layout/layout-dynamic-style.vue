@@ -2,6 +2,10 @@
   <!-- a little bit of dynamic css -->
   <!-- cf https://stackoverflow.com/a/57331310 -->
   <component :is="'style'">
+    html {
+    overflow-y: {{ htmlOverflow }} !important;
+    }
+
     /* apply fonts */
     .v-application {
     font-family: {{ bodyFontFamily }} !important;
@@ -43,11 +47,16 @@
 const { mapState, mapGetters } = require('vuex')
 
 export default {
+  props: {
+    // defined here as the css rules from default and embed layout are loaded in the same chunk
+    htmlOverflow: { type: String, default: 'auto' }
+  },
   computed: {
     ...mapState(['textDark']),
     ...mapGetters(['readableThemeColor', 'bodyFontFamily', 'headingsFontFamily'])
   }
 }
+
 </script>
 
 <style lang="css" scoped>

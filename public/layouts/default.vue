@@ -1,6 +1,6 @@
 <template>
   <v-app v-if="config">
-    <layout-dynamic-style />
+    <layout-dynamic-style html-overflow="scroll" />
     <client-only><accept-cookies /></client-only>
     <layout-header />
 
