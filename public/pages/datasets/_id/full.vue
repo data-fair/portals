@@ -59,6 +59,8 @@
           v-if="embedUrl"
           :src="embedUrl"
           :style="`height:${windowHeight - 87}px`"
+          scrolling="yes"
+          :iframe-resizer="false"
           @message="receiveMessage"
         />
       </client-only>

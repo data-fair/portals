@@ -115,6 +115,8 @@
       />
       <v-iframe
         v-else-if="value.type === 'datasetTable' && value.dataset"
+        scrolling="yes"
+        :iframe-resizer="false"
         :src="tableIframeSrc(value.dataset)"
       />
       <v-iframe
