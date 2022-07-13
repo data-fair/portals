@@ -38,6 +38,9 @@
       <client-only>
         <v-iframe
           :src="iframeSrc"
+          scrolling="yes"
+          :iframe-resizer="false"
+          :style="`height: ${windowHeight - 48}px;`"
           @message="onMessage"
         />
       </client-only>
@@ -60,7 +63,7 @@ export default {
   computed: {
     ...mapState(['config']),
     iframeSrc () {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
     }
   },
   watch: {

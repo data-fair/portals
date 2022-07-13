@@ -32,5 +32,6 @@ module.exports = {
       __format: 'json'
     },
     port: 'PROMETHEUS_PORT'
-  }
+  },
+  tablePreviewPath: 'TABLE_PREVIEW_PATH'
 }

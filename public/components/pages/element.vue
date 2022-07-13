@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     tableIframeSrc (dataset) {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/table?primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
     },
     formIframeSrc (dataset) {
       return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`

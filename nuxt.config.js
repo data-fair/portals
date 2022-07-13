@@ -128,7 +128,8 @@ module.exports = {
     mainDataFairUrl: config.dataFairUrl,
     development: process.env.NODE_ENV === 'development',
     copyright: config.copyright,
-    i18n: config.i18n
+    i18n: config.i18n,
+    tablePreviewPath: config.tablePreviewPath
   },
   head: {
     title: 'Portail de données',

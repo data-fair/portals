@@ -184,7 +184,7 @@ export default {
       if (!this.hasQueryChange(query)) return
       this.lastIframeQuery = query
 
-      const url = new URL(`${this.$store.getters.dataFairUrl}/embed/dataset/${this.$route.params.id}/table`)
+      const url = new URL(`${this.$store.getters.dataFairUrl}/embed/dataset/${this.$route.params.id}${process.env.tablePreviewPath}`)
       Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
       this.embedUrl = url.href
     },

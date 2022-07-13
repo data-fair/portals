@@ -137,7 +137,7 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapState(['config', 'env']),
+    ...mapState(['config']),
     ...mapGetters(['footerColorDark', 'hasSocialLinks']),
     extraLogos () {
       const logos = [...this.config.footerExtraLogos || []]

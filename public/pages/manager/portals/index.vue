@@ -139,7 +139,6 @@ export default {
   }),
   computed: {
     ...mapState('session', ['user', 'initialized']),
-    ...mapState(['env']),
     ...mapGetters('session', ['activeAccount'])
   },
   watch: {

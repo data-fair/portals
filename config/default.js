@@ -38,5 +38,6 @@ module.exports = {
   prometheus: {
     active: true,
     port: 9090
-  }
+  },
+  tablePreviewPath: '/table'
 }
