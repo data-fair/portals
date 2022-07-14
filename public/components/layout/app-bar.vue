@@ -12,7 +12,6 @@
     <v-tabs
       v-show="$vuetify.breakpoint.mdAndUp"
       v-model="activeTab"
-      background-color="primary"
       height="64"
       :dark="themeColorDark"
       centered

@@ -5,7 +5,7 @@
         <v-iframe
           :src="homeReuseUrl"
           class="elevation-4"
-          style="margin-top: -12px;height: 400px;"
+          style="margin-top: -11px;height: 400px;"
         />
       </client-only>
       <v-row
@@ -19,7 +19,7 @@
           height="400px"
           max-width="1904px"
           class="elevation-4"
-          style="margin-top: -12px;"
+          style="margin-top: -11px;"
         />
       </v-row>
     </template>

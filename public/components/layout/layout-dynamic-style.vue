@@ -40,6 +40,13 @@
     .v-application .primary--text {
     color: {{ readableThemeColor }}!important;
     }
+
+    .theme--light.v-app-bar.v-toolbar.v-sheet {
+    background: linear-gradient(270deg, {{ $color(config.themeColor).darken(10).toHexString() }} 0%, {{ $color(config.themeColor).brighten(10).toHexString() }} 100%);
+    }
+    .theme--light.v-app-bar.v-toolbar.v-sheet {
+    border: 1px solid {{ $color(config.themeColor).darken(10).toHexString() }} !important;
+    }
   </component>
 </template>
 
@@ -52,7 +59,7 @@ export default {
     htmlOverflow: { type: String, default: 'auto' }
   },
   computed: {
-    ...mapState(['textDark']),
+    ...mapState(['textDark', 'config']),
     ...mapGetters(['readableThemeColor', 'bodyFontFamily', 'headingsFontFamily'])
   }
 }
