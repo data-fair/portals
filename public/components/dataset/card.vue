@@ -1,11 +1,9 @@
 <template>
   <v-card
-    outlined
     :loading="!dataset"
     min-height="260"
-    :elevation="hover ? 4 : 0"
-    @mouseenter="hover = true"
-    @mouseleave="hover = false"
+    outlined
+    hover
   >
     <template v-if="dataset">
       <nuxt-link
@@ -39,7 +37,7 @@
             />
           </client-only>
         </v-card-text>
-        <v-row style="min-height:25px;">
+        <v-row style="min-height:32px;">
           <v-col class="pt-0 pb-1">
             <v-chip
               v-for="topic of dataset.topics"
@@ -136,8 +134,7 @@ export default {
   },
   data () {
     return {
-      isMobileOnly,
-      hover: false
+      isMobileOnly
     }
   },
   computed: {

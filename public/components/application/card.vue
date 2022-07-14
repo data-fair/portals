@@ -1,9 +1,7 @@
 <template lang="html">
   <v-card
+    hover
     outlined
-    :elevation="hover ? 4 : 0"
-    @mouseenter="hover = true"
-    @mouseleave="hover = false"
   >
     <nuxt-link
       :to="{name: 'reuses-id', params:{id: application.id}}"
@@ -17,8 +15,8 @@
           :aspect-ratio="21/9"
         />
       </div>
-      <v-row style="min-height:25px;">
-        <v-col class="py-0">
+      <v-row style="min-height:32px;">
+        <v-col class="pt-0 pb-1">
           <v-chip
             v-for="topic of application.topics"
             :key="topic.id"
@@ -63,11 +61,6 @@ export default {
   },
   props: {
     application: { type: Object, default: null }
-  },
-  data () {
-    return {
-      hover: false
-    }
   }
 }
 </script>
