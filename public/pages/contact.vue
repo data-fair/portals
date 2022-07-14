@@ -14,6 +14,8 @@
             label="Votre adresse email"
             name="email"
             required
+            outlined
+            dense
           />
           <v-text-field
             v-model="message.subject"
@@ -22,6 +24,8 @@
             label="Sujet"
             name="subject"
             required
+            outlined
+            dense
           />
           <v-textarea
             v-model="message.text"
@@ -32,7 +36,7 @@
             outlined
             required
           />
-          <v-row>
+          <v-row class="mx-0">
             <v-spacer />
             <v-btn
               :disabled="!valid || loading"
