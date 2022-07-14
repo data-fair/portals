@@ -162,7 +162,7 @@
           </client-only>
         </v-col>
       </v-row>
-      <template v-if="!config.twitter || (config.featuredReuse && config.featuredReuse.id)">
+      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredReuse && config.featuredReuse.id)">
         <last-apps
           v-if="showLastApps"
           :applications="applications"
