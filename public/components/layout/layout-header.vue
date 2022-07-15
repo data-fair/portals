@@ -16,7 +16,7 @@
         :config="config"
       />
       <v-col class="text-center">
-        <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} grey--text text--darken-2 font-weight-bold`">
+        <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} primary--text font-weight-bold`">
           {{ config.title }}
         </h1>
       </v-col>
