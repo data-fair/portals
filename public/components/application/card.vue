@@ -1,7 +1,7 @@
 <template lang="html">
   <v-card
     hover
-    outlined
+    class="also-outlined"
   >
     <nuxt-link
       :to="{name: 'reuses-id', params:{id: application.id}}"

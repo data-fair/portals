@@ -132,4 +132,12 @@ iframe {
   margin-top: 0px !important;
   margin-bottom: 0px !important;
 }
+
+/* darker outlined cards */
+.theme--light.v-sheet.v-sheet--outlined {
+  border: 1px solid rgba(0, 0, 0, 0.22);
+}
+.theme--light.v-sheet.also-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.22);
+}
 </style>

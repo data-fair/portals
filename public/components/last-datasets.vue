@@ -31,22 +31,10 @@
 
 <script>
 
-import TablePreview from '~/components/dataset/table-preview.vue'
-import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
-import SchemaView from '~/components/dataset/schema-view.vue'
-import VClamp from 'vue-clamp'
 import { isMobileOnly } from 'mobile-device-detect'
 import { mapState } from 'vuex'
 
 export default {
-  components: {
-    TablePreview,
-    MapPreview,
-    ApiView,
-    SchemaView,
-    VClamp
-  },
   props: {
     datasets: { type: Object, required: true },
     small: { type: Boolean, default: false }

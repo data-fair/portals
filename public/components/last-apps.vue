@@ -30,14 +30,7 @@
 </template>
 
 <script>
-import ApplicationView from '~/components/application/view.vue'
-import VClamp from 'vue-clamp'
-
 export default {
-  components: {
-    ApplicationView,
-    VClamp
-  },
   props: {
     applications: { type: Object, required: true },
     small: { type: Boolean, default: false }

@@ -2,8 +2,8 @@
   <v-card
     :loading="!dataset"
     min-height="260"
-    outlined
     hover
+    class="also-outlined"
   >
     <template v-if="dataset">
       <nuxt-link

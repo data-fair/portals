@@ -137,7 +137,7 @@
             :id="config.twitter"
             :source-type="'profile'"
             :options="{ tweetLimit }"
-            class="elevation-3"
+            class="theme--light v-card v-sheet v-sheet--outlined"
           />
         </v-col>
       </v-row>
