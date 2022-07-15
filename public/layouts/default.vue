@@ -138,6 +138,6 @@ iframe {
   border: 1px solid rgba(0, 0, 0, 0.22);
 }
 .theme--light.v-sheet.also-outlined {
-  border: 1px solid rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(0, 0, 0, 0.16);
 }
 </style>

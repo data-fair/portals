@@ -14,6 +14,7 @@
       rounded
       depressed
       outlined
+      elevation="3"
     >
       <v-icon
         v-if="topic.value.icon && topic.value.icon.name"
