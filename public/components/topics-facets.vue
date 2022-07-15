@@ -7,7 +7,7 @@
         :color="topicItem.value.color ? $readableColor(topicItem.value.color) : 'default'"
         dark
         rounded
-        elevation="3"
+        elevation="2"
         :outlined="!topicItem.filtered"
         class="mr-3 mb-1 font-weight-bold text-none"
         @click="$emit('toggle', topicItem.value)"
