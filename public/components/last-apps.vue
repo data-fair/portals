@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <h3 class="headline grey--text text--darken-2 font-weight-bold mt-6 mb-4">
-      Dernières valorisations
+      Dernières visualisations
     </h3>
     <v-row>
       <v-col
@@ -11,59 +11,7 @@
         :sm="small ? 12 : 6"
         :cols="12"
       >
-        <v-hover>
-          <v-card
-            slot-scope="{ hover }"
-            outlined
-            :elevation="hover ? 2 : 0"
-          >
-            <nuxt-link
-              :to="`/reuses/${application.id}`"
-              style="text-decoration:none"
-            >
-              <v-card-title class="py-2">
-                <h3 class="title grey--text text--darken-2 font-weight-bold">
-                  <client-only>
-                    <v-clamp
-                      :max-lines="1"
-                      autoresize
-                    >
-                      {{ application.title }}
-                    </v-clamp>
-                  </client-only>
-                </h3>
-              </v-card-title>
-              <div>
-                <v-img
-                  :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
-                  :alt="application.title"
-                  aspect-ratio="3"
-                />
-              </div>
-            </nuxt-link>
-            <v-card-actions class="py-0">
-              <application-view :application="application" />
-              <v-tooltip top>
-                <template #activator="{ on }">
-                  <v-btn
-                    :to="{name: 'reuses-id-full', params:{id: application.id}}"
-                    icon
-                    v-on="on"
-                  >
-                    <v-icon color="primary">
-                      mdi-fullscreen
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Accéder à la visualisation en plein écran</span>
-              </v-tooltip>
-              <v-spacer />
-              <v-subheader>
-                Mis à jour le {{ application.updatedAt | date('L') }}
-              </v-subheader>
-            </v-card-actions>
-          </v-card>
-        </v-hover>
+        <application-card :application="application" />
       </v-col>
     </v-row>
     <v-row align="center">

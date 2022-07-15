@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="embedDialog"
-    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
     :max-width="1190"
     transition="none"
   >

@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="dialog"
-    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    :fullscreen="$vuetify.breakpoint.smAndDown"
     :max-width="500"
   >
     <template #activator="{on: onDialog}">
