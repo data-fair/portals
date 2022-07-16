@@ -227,13 +227,14 @@ export default {
     }
   },
   async fetch () {
+    this.readQueryParams()
+    const refreshPromise = this.refresh()
     this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
       const { identifiers, ...concept } = c
       concept.id = identifiers.shift()
       return concept
     })
-    this.readQueryParams()
-    await this.refresh()
+    await refreshPromise
   },
   head () {
     const title = 'Datasets - ' + this.config.title
