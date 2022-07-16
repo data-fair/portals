@@ -299,12 +299,13 @@ export default {
       params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly'
+      params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly,-userPermissions'
       if (append) params.count = false
       else params.facets = 'concepts,topics'
       params.owner = this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
+      params.truncate = 600
       if (this.config.authentication === 'none') params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
         if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })
@@ -353,7 +354,7 @@ export default {
       this.downloading = name
       const params = {
         size: 10000,
-        select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt',
+        select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
