@@ -282,9 +282,9 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
   if (!req.user) filter.public = true
-  if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
-  if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
-  if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) filter.public = true
+  else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
+  else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
+  else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) filter.public = true
   if (req.query.published === 'true') filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),
