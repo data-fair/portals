@@ -221,34 +221,24 @@ export default {
         select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox,image,-userPermissions',
         sort: 'createdAt:-1',
         html: true,
-        truncate: 600
-      }
-    })
-
-    // TODO: replace by a proper public stats route
-    const promiseStatsDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
-      params: {
-        ...baseFilter,
-        size: 1000,
-        select: 'count',
-        raw: true,
-        count: false,
+        truncate: 600,
+        sums: 'count',
         facets: 'topics'
       }
     })
+
     this.applications = await promiseApplications
     this.datasets = await promiseDatasets
-    const statsDatasets = await promiseStatsDatasets
     this.stats = {
       reuses: {
         count: this.applications.count
       },
       datasets: {
         count: this.datasets.count,
-        numlines: statsDatasets.results.reduce((result, { count }) => result + (count || 0), 0)
+        numlines: this.datasets.sums.count
       }
     }
-    this.topics = statsDatasets.facets.topics || []
+    this.topics = this.datasets.facets.topics || []
   },
   head () {
     const title = this.config.title
