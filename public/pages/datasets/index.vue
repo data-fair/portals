@@ -300,7 +300,7 @@ export default {
       params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,description,dataUpdatedAt,dataUpdatedBy,extras,bbox,topics,image,isMetaOnly,-userPermissions'
+      params.select = 'id,title,description,dataUpdatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions,-links'
       if (append) params.count = false
       else params.facets = 'concepts,topics'
       params.owner = this.owner

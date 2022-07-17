@@ -133,12 +133,14 @@
           md="4"
           sm="6"
         >
-          <timeline
-            :id="config.twitter"
-            :source-type="'profile'"
-            :options="{ tweetLimit }"
-            class="theme--light v-card v-sheet v-sheet--outlined"
-          />
+          <client-only>
+            <timeline
+              :id="config.twitter"
+              :source-type="'profile'"
+              :options="{ tweetLimit }"
+              class="theme--light v-card v-sheet v-sheet--outlined"
+            />
+          </client-only>
         </v-col>
       </v-row>
       <v-row v-else-if="config.featuredReuse && config.featuredReuse.id">
@@ -209,7 +211,7 @@ export default {
       params: {
         ...baseFilter,
         size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
-        select: 'id,title,updatedAt,createdAt,createdBy,-userPermissions',
+        select: 'id,title,updatedAt,createdAt,-userPermissions,-links',
         sort: 'createdAt:-1',
         html: true
       }
@@ -218,7 +220,7 @@ export default {
       params: {
         ...baseFilter,
         size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
-        select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,createdBy,extras,bbox,image,-userPermissions',
+        select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions,-links',
         sort: 'createdAt:-1',
         html: true,
         truncate: 600,
