@@ -2,7 +2,7 @@
   <v-dialog
     v-model="dialog"
     :fullscreen="$vuetify.breakpoint.smAndDown"
-    :max-width="1190"
+    :max-width="1200"
     transition="none"
   >
     <template #activator="{ on: onDialog }">

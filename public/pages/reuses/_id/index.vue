@@ -91,7 +91,7 @@
             text
             exact
           >
-            <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste des visualisations
+            <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
           </v-btn>
         </v-col>
       </v-row>
