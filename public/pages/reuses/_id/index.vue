@@ -133,7 +133,7 @@ export default {
     this.datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
-        select: 'id,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions,-links',
+        select: 'id,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
         size: 1000,
         html: true
       }

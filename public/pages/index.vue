@@ -211,7 +211,7 @@ export default {
       params: {
         ...baseFilter,
         size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
-        select: 'id,title,updatedAt,createdAt,-userPermissions,-links',
+        select: 'id,title,updatedAt,createdAt,-userPermissions',
         sort: 'createdAt:-1',
         html: true
       }
@@ -220,7 +220,7 @@ export default {
       params: {
         ...baseFilter,
         size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
-        select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions,-links',
+        select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
         sort: 'createdAt:-1',
         html: true,
         truncate: 600,
