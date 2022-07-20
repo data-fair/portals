@@ -16,7 +16,7 @@
         :config="config"
       />
       <v-col class="text-center">
-        <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} primary--text font-weight-bold`">
+        <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} ${titleColor} font-weight-bold`">
           {{ config.title }}
         </h1>
       </v-col>
@@ -33,7 +33,14 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-    ...mapGetters(['themeColorDark'])
+    ...mapGetters(['themeColorDark']),
+    titleColor () {
+      return {
+        grey: 'grey--text text--darken-2',
+        primary: 'primary--text',
+        secondary: 'secondary--text'
+      }[this.config.titleColor || 'grey']
+    }
   }
 }
 </script>

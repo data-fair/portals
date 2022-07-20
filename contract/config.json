@@ -87,6 +87,12 @@
         "title": "Couleur principale",
         "x-display": "color-picker"
       },
+      "secondaryColor": {
+        "type": "string",
+        "default": "#1E88E5",
+        "title": "Couleur secondaire",
+        "x-display": "color-picker"
+      },
       "bodyFont": {
         "title": "Police principale",
         "type": "object",
@@ -102,6 +108,82 @@
         "x-itemTitle": "name",
         "x-itemKey": "name",
         "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
+      },
+      "backgroundColor": {
+        "title": "Couleur du fond",
+        "type": "string",
+        "default": "white",
+        "oneOf": [{
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }]
+      },
+      "titleColor": {
+        "title": "Couleur du titre",
+        "description": "Si nécessaire une variante foncée de la couleur sera utilisée pour préserver la lisibilité.",
+        "type": "string",
+        "default": "grey",
+        "oneOf": [{
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }]
+      },
+      "appBarColor": {
+        "title": "Couleur de la barre de navigation",
+        "type": "string",
+        "default": "primary",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "primaryGradient1",
+          "title": "couleur principale avec léger dégradé"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "secondaryGradient1",
+          "title": "couleur secondaire avec léger dégradé"
+        }, {
+          "const": "primarySecondaryGradient",
+          "title": "dégradé couleur principale vers couleur secondaire"
+        }, {
+          "const": "secondaryPrimaryGradient",
+          "title": "dégradé couleur secondaire vers couleur principale"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
+      },
+      "footerColor": {
+        "type": "string",
+        "default": "grey",
+        "title": "Couleur du pied de page",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
       }
     }
   }, {
@@ -128,12 +210,6 @@
   }, {
     "title": "Pied de page",
     "properties": {
-      "footerColor": {
-        "type": "string",
-        "default": "#424242",
-        "title": "Couleur du pied de page",
-        "x-display": "color-picker"
-      },
       "footerSocial": {
         "type": "boolean",
         "default": true,

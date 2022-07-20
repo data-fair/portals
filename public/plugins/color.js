@@ -8,5 +8,13 @@ const readableColor = (color) => {
   return c.darken((0.7 - darkness) * 100).toString()
 }
 
+const backgroundableColor = (color) => {
+  const c = tinycolor(color)
+  const brightness = c.getLuminance()
+  if (brightness > 0.7) return color
+  return c.brighten((0.7 - brightness) * 100).toString()
+}
+
 Vue.prototype.$color = tinycolor
 Vue.prototype.$readableColor = readableColor
+Vue.prototype.$backgroundableColor = backgroundableColor

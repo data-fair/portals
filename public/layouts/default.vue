@@ -18,7 +18,7 @@
       height="auto"
     >
       <v-card
-        :color="config.footerColor"
+        :color="footerColor"
         tile
         width="100%"
       >
@@ -77,7 +77,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'footerColorDark'])
+    ...mapGetters(['themeColorDark', 'footerColor', 'footerColorDark'])
   }
 }
 

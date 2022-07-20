@@ -6,6 +6,10 @@
     overflow-y: {{ htmlOverflow }} !important;
     }
 
+    .v-application.theme--light#app {
+    background: {{ backgroundColor }};
+    }
+
     /* apply fonts */
     .v-application {
     font-family: {{ bodyFontFamily }} !important;
@@ -40,13 +44,75 @@
     .v-application .primary--text {
     color: {{ readableThemeColor }}!important;
     }
+    .v-application .secondary--text {
+    color: {{ readableSecondaryColor }}!important;
+    }
 
-    .theme--light.v-app-bar.v-toolbar.v-sheet {
-    background: linear-gradient(270deg, {{ $color(config.themeColor).darken(10).toHexString() }} 0%, {{ $color(config.themeColor).brighten(10).toHexString() }} 100%);
-    }
-    .theme--light.v-app-bar.v-toolbar.v-sheet {
-    border: 1px solid {{ $color(config.themeColor).darken(10).toHexString() }} !important;
-    }
+    /* various styles of the app bar */
+    <template v-if="config.appBarColor === 'primaryGradient1' && themeColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(10).toHexString() }} 0%, {{ $color(config.themeColor).darken(20).toHexString() }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ $color(config.themeColor).darken(20).toHexString() }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'primaryGradient1' && !themeColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(20).toHexString() }} 0%, {{ $color(config.themeColor).darken(10).toHexString() }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ $color(config.themeColor).darken(10).toHexString() }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'secondaryGradient1' && secondaryColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(10).toHexString() }} 0%, {{ $color(secondaryColor).darken(20).toHexString() }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ $color(secondaryColor).darken(20).toHexString() }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'secondaryGradient1' && !secondaryColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(20).toHexString() }} 0%, {{ $color(secondaryColor).darken(10).toHexString() }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ $color(secondaryColor).darken(10).toHexString() }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'primarySecondaryGradient' && themeColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ config.themeColor }} 0%, {{ readableSecondaryColor }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ config.themeColor }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'primarySecondaryGradient' && !themeColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ config.themeColor }} 0%, {{ backgroundableSecondaryColor }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ config.themeColor }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && secondaryColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ secondaryColor }} 0%, {{ readableThemeColor }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ secondaryColor }} !important;
+      }
+    </template>
+    <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && !secondaryColorDark">
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, {{ secondaryColor }} 0%, {{ backgroundableThemeColor }} 100%);
+      }
+      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      border: 1px solid {{ secondaryColor }} !important;
+      }
+    </template>
   </component>
 </template>
 
@@ -60,7 +126,17 @@ export default {
   },
   computed: {
     ...mapState(['textDark', 'config']),
-    ...mapGetters(['readableThemeColor', 'bodyFontFamily', 'headingsFontFamily'])
+    ...mapGetters([
+      'backgroundColor',
+      'readableThemeColor',
+      'backgroundableThemeColor',
+      'themeColorDark',
+      'secondaryColorDark',
+      'secondaryColor',
+      'readableSecondaryColor',
+      'backgroundableSecondaryColor',
+      'bodyFontFamily', 'headingsFontFamily'
+    ])
   }
 }
 

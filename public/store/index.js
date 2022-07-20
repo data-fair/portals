@@ -32,17 +32,49 @@ export default () => {
           return true
         }
       },
+      backgroundColor (state) {
+        if (!state.config) return
+        console.log(state.config.backgroundColor)
+        if (state.config.backgroundColor === 'white' || !state.config.backgroundColor) return '#FFFFFF'
+        if (state.config.backgroundColor === 'lightGrey') return '#FAFAFA'
+      },
+      secondaryColor (state) {
+        if (!state.config) return
+        return state.config.secondaryColor || state.config.themeColor
+      },
       readableThemeColor (state) {
         if (!state.config) return
         return Vue.prototype.$readableColor(state.config.themeColor)
+      },
+      backgroundableThemeColor (state, getters) {
+        if (!state.config) return
+        return Vue.prototype.$backgroundableColor(state.config.themeColor)
+      },
+      readableSecondaryColor (state, getters) {
+        if (!state.config) return
+        return Vue.prototype.$readableColor(getters.secondaryColor)
+      },
+      backgroundableSecondaryColor (state, getters) {
+        if (!state.config) return
+        return Vue.prototype.$backgroundableColor(getters.secondaryColor)
       },
       themeColorDark (state) {
         if (!state.config) return
         return Vue.prototype.$color(state.config.themeColor).getLuminance() < 0.4
       },
-      footerColorDark (state) {
+      footerColor (state, getters) {
+        if (state.config.footerColor === 'primary') return state.config.themeColor
+        if (state.config.footerColor === 'secondary') return getters.secondaryColor
+        if (state.config.footerColor === 'grey' || !state.config.footerColor) return '#424242'
+        if (state.config.footerColor === 'white') return '#FFFFFF'
+      },
+      footerColorDark (state, getters) {
         if (!state.config) return
-        return Vue.prototype.$color(state.config.footerColor).getLuminance() < 0.4
+        return Vue.prototype.$color(getters.footerColor).getLuminance() < 0.4
+      },
+      secondaryColorDark (state, getters) {
+        if (!state.config) return
+        return Vue.prototype.$color(getters.secondaryColor).getLuminance() < 0.4
       },
       bodyFontFamily (state) {
         if (!state.config || !state.config.bodyFont) return '"Nunito", serif'

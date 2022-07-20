@@ -26,7 +26,7 @@
         :to="{name: 'datasets'}"
         nuxt
       >
-        <v-list-item-title>Les données</v-list-item-title>
+        <v-list-item-title>Données</v-list-item-title>
       </v-list-item>
       <v-list-item
         :to="{name: 'reuses'}"

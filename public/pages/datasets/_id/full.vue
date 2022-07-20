@@ -44,7 +44,7 @@
           >
             <v-breadcrumbs
               :large="!$vuetify.breakpoint.xs"
-              :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Les données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]"
+              :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]"
             >
               <template slot="divider">
                 <v-icon>mdi-chevron-right</v-icon>

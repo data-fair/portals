@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
-    :class="themeColorDark ? 'area--dark' : 'area--light'"
-    color="primary"
+    :class="`app-bar-${config.appBarColor || 'primary'} ` + (appBarDark ? 'area--dark' : 'area--light')"
+    :color="appBarMainColor"
     height="64"
     style="max-height: 64px;"
   >
@@ -13,11 +13,11 @@
       v-show="$vuetify.breakpoint.mdAndUp"
       v-model="activeTab"
       height="64"
-      :dark="themeColorDark"
+      :dark="appBarDark"
       centered
       slider-size="4"
     >
-      <v-tabs-slider :color="themeColorDark ? 'white' : textDark" />
+      <v-tabs-slider :color="appBarDark ? 'white' : textDark" />
       <v-tab
         :value="'hidden'"
         style="width:0px;min-width:0px;max-width:0px;padding:0px;"
@@ -27,7 +27,7 @@
         nuxt
         exact
         class="font-weight-bold"
-        :class="{'white--text': themeColorDark}"
+        :class="{'white--text': appBarDark}"
         @click="activeTab = '/'"
       >
         Accueil
@@ -37,16 +37,16 @@
         :to="{name: 'datasets'}"
         nuxt
         class="font-weight-bold"
-        :class="{'white--text': themeColorDark}"
+        :class="{'white--text': appBarDark}"
       >
-        Les données
+        Données
       </v-tab>
       <v-tab
         v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
         :to="{name: 'reuses'}"
         nuxt
         class="font-weight-bold"
-        :class="{'white--text': themeColorDark}"
+        :class="{'white--text': appBarDark}"
       >
         Visualisations
       </v-tab>
@@ -57,7 +57,7 @@
           :to="{name: 'pages-id', params: {id: page.id}}"
           nuxt
           class="font-weight-bold"
-          :class="{'white--text': themeColorDark}"
+          :class="{'white--text': appBarDark}"
         >
           {{ page.title }}
         </v-tab>
@@ -73,7 +73,7 @@
               v-bind="attrs"
               :height="64"
               class="font-weight-bold"
-              :class="{'white--text': themeColorDark}"
+              :class="{'white--text': appBarDark}"
               v-on="on"
             >
               {{ menu }}
@@ -99,7 +99,7 @@
         v-if="config.contactEmail"
         :to="{name: 'contact'}"
         class="font-weight-bold"
-        :class="{'white--text': themeColorDark}"
+        :class="{'white--text': appBarDark}"
         nuxt
       >
         Contact
@@ -133,6 +133,7 @@
             <template #activator="{on}">
               <v-btn
                 text
+                :class="{'white--text': appBarDark}"
                 :height="64"
                 v-on="on"
               >
@@ -212,7 +213,7 @@ export default {
   computed: {
     ...mapState(['config', 'textDark', 'portal']),
     ...mapState('session', ['user', 'initialized']),
-    ...mapGetters(['themeColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
+    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
     ...mapGetters('session', ['loginUrl']),
     extraMenus () {
       return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
@@ -234,6 +235,20 @@ export default {
         false,
         { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor }
       )
+    },
+    appBarMainColor () {
+      const appBarColor = this.config.appBarColor || 'primary'
+      if (appBarColor.startsWith('secondary')) return 'secondary'
+      if (appBarColor.startsWith('primary')) return 'primary'
+      if (appBarColor === 'grey') return '#424242'
+      return appBarColor
+    },
+    appBarDark () {
+      if (this.appBarMainColor === 'secondary') return this.secondaryColorDark
+      if (this.appBarMainColor === 'primary') return this.themeColorDark
+      if (this.config.appBarColor === 'grey') return true
+      if (this.config.appBarColor === 'white') return false
+      return true
     }
   },
   methods: {
