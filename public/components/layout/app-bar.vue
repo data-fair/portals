@@ -120,7 +120,7 @@
           <v-btn
             v-if="!user"
             depressed
-            color="primary"
+            color="transparent"
             :href="loginHref"
           >
             Se connecter
