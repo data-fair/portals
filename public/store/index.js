@@ -67,6 +67,7 @@ export default () => {
         if (state.config.footerColor === 'secondary') return getters.secondaryColor
         if (state.config.footerColor === 'grey' || !state.config.footerColor) return '#424242'
         if (state.config.footerColor === 'white') return '#FFFFFF'
+        return state.config.footerColor
       },
       footerColorDark (state, getters) {
         if (!state.config) return

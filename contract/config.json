@@ -146,13 +146,13 @@
           "title": "couleur principale"
         }, {
           "const": "primaryGradient1",
-          "title": "couleur principale avec léger dégradé"
+          "title": "couleur principale avec dégradé"
         }, {
           "const": "secondary",
           "title": "couleur secondaire"
         }, {
           "const": "secondaryGradient1",
-          "title": "couleur secondaire avec léger dégradé"
+          "title": "couleur secondaire avec dégradé"
         }, {
           "const": "primarySecondaryGradient",
           "title": "dégradé couleur principale vers couleur secondaire"
