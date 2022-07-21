@@ -9,7 +9,7 @@
       :error="$fetchState.error"
     />
     <v-container v-else-if="datasets">
-      <template v-for="dataset in datasets.results">
+      <template v-for="dataset in datasets.results.filter(d => d.extras && d.extras.externalReuses && d.extras.externalReuses.length)">
         <nuxt-link
           :key="'title-' + dataset.id"
           :to="`/datasets/${dataset.id}`"
