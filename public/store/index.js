@@ -34,7 +34,6 @@ export default () => {
       },
       backgroundColor (state) {
         if (!state.config) return
-        console.log(state.config.backgroundColor)
         if (state.config.backgroundColor === 'white' || !state.config.backgroundColor) return '#FFFFFF'
         if (state.config.backgroundColor === 'lightGrey') return '#FAFAFA'
       },

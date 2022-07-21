@@ -5,60 +5,12 @@
       :error="$fetchState.error"
     />
     <div v-else-if="dataset">
-      <v-container class="py-0">
-        <v-row align="start">
-          <v-col
-            md="4"
-            sm="6"
-            cols="12"
-            :class="{'pt-3 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
-          >
-            <a
-              v-if="config.website"
-              :href="config.website || '/'"
-              class="mr-3"
-            >
-              <img
-                :src="logoUrl"
-                :alt="config.title"
-                style="height:68px"
-              >
-            </a>
-            <nuxt-link
-              v-else
-              to="/"
-              class="mr-3"
-            >
-              <img
-                :src="logoUrl"
-                :alt="config.title"
-                style="height:68px"
-              >
-            </nuxt-link>
-          </v-col>
-          <v-col
-            md="8"
-            sm="6"
-            cols="12"
-            :class="{'pt-3 pb-0': true, 'text-center': $vuetify.breakpoint.xs}"
-          >
-            <v-breadcrumbs
-              :large="!$vuetify.breakpoint.xs"
-              :items="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]"
-            >
-              <template slot="divider">
-                <v-icon>mdi-chevron-right</v-icon>
-              </template>
-            </v-breadcrumbs>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-divider />
+      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
           v-if="embedUrl"
           :src="embedUrl"
-          :style="`height:${windowHeight - 87}px`"
+          :style="`height:${windowHeight - 65}px`"
           scrolling="yes"
           :iframe-resizer="false"
           @message="receiveMessage"
@@ -159,9 +111,6 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    logoUrl () {
-      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
-    },
     pageUrl () {
       return this.publicUrl + '/datasets/' + this.$route.params.id + '/full'
     }
