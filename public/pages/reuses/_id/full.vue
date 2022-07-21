@@ -9,7 +9,9 @@
       <client-only>
         <v-iframe
           :src="embedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`"
-          :style="`height:${windowHeight - 65}px`"
+          :style="`height:${windowHeight - 64}px`"
+          scrolling="yes"
+          :iframe-resizer="false"
         />
       </client-only>
     </div>

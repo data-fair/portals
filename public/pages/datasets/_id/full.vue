@@ -10,7 +10,7 @@
         <v-iframe
           v-if="embedUrl"
           :src="embedUrl"
-          :style="`height:${windowHeight - 65}px`"
+          :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
           @message="receiveMessage"
