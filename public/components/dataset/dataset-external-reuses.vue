@@ -25,6 +25,7 @@
     </v-row>
     <template v-if="linkExternalReuses.length">
       <section-title
+        v-if="showTitle"
         text="Réutilisations"
       />
       <v-row>
@@ -78,14 +79,17 @@ import VIframe from '@koumoul/v-iframe'
 export default {
   components: { VIframe },
   props: {
-    dataset: { required: true }
+    dataset: { type: Object, required: true },
+    showIframes: { type: Boolean, default: true },
+    showTitle: { type: Boolean, default: true }
   },
   computed: {
     iframeExternalReuses () {
+      if (!this.showIframes) return []
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []
     },
     linkExternalReuses () {
-      return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'link')) || []
+      return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'link' || (!this.showIframes && er.type === 'embed'))) || []
     }
   }
 }

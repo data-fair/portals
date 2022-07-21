@@ -21,6 +21,8 @@
         <dataset-external-reuses
           :key="'reuses-' + dataset.id"
           :dataset="dataset"
+          :show-title="false"
+          :show-iframes="false"
         />
       </template>
     </v-container>
