@@ -50,66 +50,66 @@
 
     /* various styles of the app bar */
     <template v-if="config.appBarColor === 'primaryGradient1' && themeColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(10).toHexString() }} 20%, {{ $color(config.themeColor).darken(20).toHexString() }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ $color(config.themeColor).darken(20).toHexString() }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'primaryGradient1' && !themeColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(20).toHexString() }} 20%, {{ $color(config.themeColor).darken(10).toHexString() }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ $color(config.themeColor).darken(10).toHexString() }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'secondaryGradient1' && secondaryColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(10).toHexString() }} 20%, {{ $color(secondaryColor).darken(20).toHexString() }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ $color(secondaryColor).darken(20).toHexString() }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'secondaryGradient1' && !secondaryColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(20).toHexString() }} 20%, {{ $color(secondaryColor).darken(10).toHexString() }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ $color(secondaryColor).darken(10).toHexString() }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'primarySecondaryGradient' && themeColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ config.themeColor }} 20%, {{ readableSecondaryColor }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ readableSecondaryColor }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'primarySecondaryGradient' && !themeColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ config.themeColor }} 20%, {{ backgroundableSecondaryColor }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ backgroundableSecondaryColor }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && secondaryColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ secondaryColor }} 20%, {{ readableThemeColor }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ readableThemeColor }} !important;
       }
     </template>
     <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && !secondaryColorDark">
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       background: linear-gradient(90deg, {{ secondaryColor }} 20%, {{ backgroundableThemeColor }} 100%);
       }
-      .theme--light.v-app-bar.v-toolbar.v-sheet {
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
       border: 2px solid {{ backgroundableThemeColor }} !important;
       }
     </template>

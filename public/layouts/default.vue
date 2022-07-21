@@ -4,7 +4,7 @@
     <client-only><accept-cookies /></client-only>
     <layout-header />
 
-    <app-bar class="mb-3" />
+    <app-bar class="main-app-bar mb-3" />
 
     <v-main>
       <nuxt-child />
