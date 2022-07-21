@@ -284,7 +284,7 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   if (!req.user) filter.public = true
   else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
   else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
-  else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) filter.public = true
+  else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) filter.public = true
   if (req.query.published === 'true') filter.published = true
   const [results, count] = await Promise.all([
     pages.find(filter).limit(1000).project(project).toArray(),
@@ -305,7 +305,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
     if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) {
       return res.status(403).send()
     }
-    if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department !== portal.owner.department) {
+    if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) {
       return res.status(403).send()
     }
   }
