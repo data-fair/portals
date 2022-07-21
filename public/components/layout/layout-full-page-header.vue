@@ -10,11 +10,12 @@
         :href="config.website || '/'"
         style="height: 100%"
       >
-        <img
+        <v-img
           :src="logoUrl"
-          style="height: 100%:"
+          style="height: 100%;"
           :alt="config.title"
-        >
+          contain
+        />
       </a>
       <nuxt-link
         v-else
