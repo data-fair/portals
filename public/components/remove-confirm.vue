@@ -11,6 +11,7 @@
         fab
         small
         style="position:absolute;right:20px;top:27px"
+        title="supprimer"
         v-on="on"
         @click="open"
       >
@@ -26,7 +27,7 @@
       <v-btn
         color="warning"
         icon
-        text
+        title="supprimer"
         v-on="on"
         @click="open"
       >

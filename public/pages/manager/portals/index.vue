@@ -43,6 +43,17 @@
                       </v-btn>
                     </v-list-item-action>
                     <v-list-item-action>
+                      <v-btn
+                        :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
+                        nuxt
+                        icon
+                        color="primary"
+                        title="éditer les pages de contenu"
+                      >
+                        <v-icon>mdi-text-box-edit</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-action>
                       <remove-confirm
                         :label="portal.title"
                         @removed="deletePortal(portal)"

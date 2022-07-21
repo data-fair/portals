@@ -26,7 +26,7 @@
         >
           <v-list-item-icon>
             <v-icon color="primary">
-              mdi-pencil
+              mdi-text-box-edit
             </v-icon>
           </v-list-item-icon>
           <v-list-item-title>Éditer les pages de contenu</v-list-item-title>

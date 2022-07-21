@@ -39,11 +39,24 @@
               <v-subheader>Mis à jour le {{ page.updated.date | date('LL') }} par {{ page.updated.name }}</v-subheader>
               <v-card-actions class="py-0">
                 <v-spacer />
-                <!-- <table-preview :page="page" :color="'primary'" /> -->
                 <v-btn
                   icon
                   text
                   nuxt
+                  title="ouvrir dans le portail"
+                  target="_blank"
+                  :href="pageLink(page)"
+                >
+                  <v-icon color="primary">
+                    mdi-open-in-new
+                  </v-icon>
+                </v-btn>
+
+                <v-btn
+                  icon
+                  text
+                  nuxt
+                  title="éditer"
                   :to="{ name: 'manager-portals-portalId-pages-id-edit', params: { id: page.id } }"
                 >
                   <v-icon color="primary">
@@ -150,6 +163,11 @@ export default {
       } catch (error) {
         console.error(error)
       }
+    },
+    pageLink (page) {
+      const url = new URL(this.portal.link)
+      url.pathname = '/pages/' + page.id
+      return url.href
     }
   }
 }
