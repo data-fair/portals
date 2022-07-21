@@ -506,6 +506,18 @@
           }
         }]
       },
+      "datasetsDefaultSort": {
+        "type": "string",
+        "title": "Tri par défaut de la liste des jeux de données",
+        "default": "createdAt",
+        "oneOf": [{
+          "title": "Date de création",
+          "const": "createdAt"
+        }, {
+          "title": "Date de mise à jour",
+          "const": "dataUpdatedAt"
+        }]
+      },
       "reusesPage": {
         "type": "object",
         "title": "Page des réutilisations",

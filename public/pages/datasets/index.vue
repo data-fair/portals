@@ -213,11 +213,11 @@ export default {
         id: []
       },
       sorts: [{
-        text: 'Date de mise à jour',
-        value: 'dataUpdatedAt'
-      }, {
         text: 'Date de création',
         value: 'createdAt'
+      }, {
+        text: 'Date de mise à jour',
+        value: 'dataUpdatedAt'
       }, {
         text: 'Ordre alphabétique',
         value: 'title'
@@ -266,6 +266,9 @@ export default {
       if (!this.datasets) return []
       return this.datasets.facets.topics
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
+    },
+    defaultSort () {
+      return this.config.datasetsDefaultSort || 'createdAt'
     }
   },
   watch: {
@@ -281,7 +284,7 @@ export default {
   methods: {
     readQueryParams () {
       this.search = this.$route.query.q || ''
-      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt'
+      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : this.defaultSort
       this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
       this.filters.concepts = this.$route.query.concepts ? this.$route.query.concepts.split(',') : []
       this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
@@ -292,12 +295,12 @@ export default {
       else this.page = 1
       const query = {}
       if (this.search) query.q = this.search
-      if (this.sort !== 'createdAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
+      if (this.sort !== this.defaultSort || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
       if (this.filters.id.length) query.id = this.filters.id.join(',')
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       const params = { ...query }
-      params.sort = params.sort || 'createdAt:-1'
+      params.sort = params.sort || this.defaultSort + ':-1'
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'

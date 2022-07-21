@@ -183,11 +183,11 @@ export default {
         topics: []
       },
       sorts: [{
-        text: 'Date de mise à jour',
-        value: 'updatedAt'
-      }, {
         text: 'Date de création',
         value: 'createdAt'
+      }, {
+        text: 'Date de mise à jour',
+        value: 'updatedAt'
       }, {
         text: 'Ordre alphabétique',
         value: 'title'
