@@ -200,7 +200,7 @@ export default {
     await this.refresh()
   },
   head () {
-    const title = 'Dataviz - ' + this.config.title
+    const title = 'Visualisations - ' + this.config.title
     const description = 'Découvrez toutes les visualisations de données que nous avons réalisées grâce à notre moteur de recherche.'
     return {
       title,

@@ -520,7 +520,7 @@
       },
       "reusesPage": {
         "type": "object",
-        "title": "Page des réutilisations",
+        "title": "Page des visualisations",
         "default": {
           "type": "infiniteScroll"
         },
@@ -529,6 +529,28 @@
           "properties": {
             "type": {
               "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      },
+      "externalReusesPage": {
+        "type": "object",
+        "title": "Page des réutilisations",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Liste",
+          "properties": {
+            "type": {
+              "const": "list"
             }
           }
         },{

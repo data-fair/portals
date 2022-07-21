@@ -237,7 +237,7 @@ export default {
     await refreshPromise
   },
   head () {
-    const title = 'Datasets - ' + this.config.title
+    const title = 'Données - ' + this.config.title
     const description = 'Trouvez facilement toutes les données que nous avons publiées grâce à notre moteur de recherche.'
     return {
       title,

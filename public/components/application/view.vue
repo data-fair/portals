@@ -16,7 +16,7 @@
             <v-icon>mdi-tooltip-image-outline</v-icon>
           </v-btn>
         </template>
-        <span>Voir la réutilisation</span>
+        <span>Voir la visualisation</span>
       </v-tooltip>
     </template>
 

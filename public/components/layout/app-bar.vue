@@ -50,6 +50,15 @@
       >
         Visualisations
       </v-tab>
+      <v-tab
+        v-if="config.externalReusesPage && config.externalReusesPage.type !== 'none'"
+        :to="{name: 'external-reuses'}"
+        nuxt
+        class="font-weight-bold"
+        :class="{'white--text': appBarDark}"
+      >
+        Réutilisations
+      </v-tab>
       <template v-if="pages">
         <v-tab
           v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"

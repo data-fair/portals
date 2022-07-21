@@ -23,16 +23,25 @@
         <v-list-item-title>Accueil</v-list-item-title>
       </v-list-item>
       <v-list-item
+        v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'"
         :to="{name: 'datasets'}"
         nuxt
       >
         <v-list-item-title>Données</v-list-item-title>
       </v-list-item>
       <v-list-item
+        v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
         :to="{name: 'reuses'}"
         nuxt
       >
         <v-list-item-title>Visualisations</v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        v-if="!config.externalReusesPage || config.externalReusesPage.type !== 'none'"
+        :to="{name: 'external-reuses'}"
+        nuxt
+      >
+        <v-list-item-title>Réutilisations</v-list-item-title>
       </v-list-item>
       <template v-if="pages">
         <v-list-item
