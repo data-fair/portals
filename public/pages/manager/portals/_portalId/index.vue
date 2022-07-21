@@ -18,6 +18,23 @@
       <v-list
         dense
         class="list-actions"
+        style="float:right;width:200px;"
+      >
+        <v-list-item
+          :href="portal.link"
+          target="_blank"
+        >
+          <v-list-item-icon>
+            <v-icon color="primary">
+              mdi-open-in-new
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Ouvrir le portail</v-list-item-title>
+        </v-list-item>
+      </v-list>
+      <v-list
+        dense
+        class="list-actions"
         style="float:right;width:256px;"
       >
         <v-list-item

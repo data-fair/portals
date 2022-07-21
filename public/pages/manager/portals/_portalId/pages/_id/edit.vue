@@ -102,7 +102,8 @@ export default {
     },
     pageLink () {
       const url = new URL(this.portal.link)
-      url.pathname = '/pages/' + this.$route.params.id
+      if (!url.pathname.endsWith('/')) url.pathname += '/'
+      url.pathname += 'pages/' + this.$route.params.id
       return url.href
     }
   },
