@@ -1,7 +1,6 @@
 <template>
   <v-app-bar
-    elevation="0"
-    outlined
+    flat
     color="white"
     app
   >
