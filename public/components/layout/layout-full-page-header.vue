@@ -2,7 +2,7 @@
   <v-app-bar
     elevation="0"
     outlined
-    color="transparent"
+    color="white"
     app
   >
     <a
