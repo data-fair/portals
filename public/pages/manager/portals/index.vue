@@ -29,6 +29,10 @@
                           target="_blank"
                         >{{ portal.title }}</a>
                       </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <span>{{ portal.owner.name }}</span>
+                        <span v-if="portal.owner.department"> - {{ portal.owner.department }}</span>
+                      </v-list-item-subtitle>
                     </v-list-item-content>
 
                     <v-list-item-action>
