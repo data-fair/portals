@@ -42,7 +42,7 @@ module.exports = async () => {
 
       // re-apply the prefix that was removed by an optional reverse proxy
       req.url = (nuxtConfig.router.base + req.url).replace('//', '/')
-      nuxt.render(req, res)
+      return nuxt.render(req, res)
     }
   }
 }
