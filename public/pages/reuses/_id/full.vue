@@ -8,12 +8,13 @@
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
-          v-if="embedUrl"
-          :src="embedUrl"
+          :src="`${dataFairUrl}/app/${$route.params.id}`"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
-          @message="receiveMessage"
+          :sync-query-params="true"
+          :query-params-extra="{primary: readableThemeColor, embed: true}"
+          :query-params-exclude="['portalId']"
         />
       </client-only>
     </div>
@@ -31,9 +32,7 @@ export default {
   layout: 'minimal',
   middleware: 'portal-required',
   data: () => ({
-    application: null,
-    embedUrl: null,
-    lastIframeQuery: {}
+    application: null
   }),
   async fetch () {
     this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
@@ -86,46 +85,12 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readableThemeColor']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
     logoUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     },
     pageUrl () {
       return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'
-    }
-  },
-  watch: {
-    '$route.query' () {
-      this.setEmbedUrl()
-    }
-  },
-  created () {
-    this.setEmbedUrl()
-  },
-  methods: {
-    hasQueryChange (query = {}) {
-      if (Object.keys(query).find(key => query[key] !== this.lastIframeQuery[key])) return true
-      if (Object.keys(this.lastIframeQuery).find(key => this.lastIframeQuery[key] !== query[key])) return true
-      return false
-    },
-    async setEmbedUrl () {
-      const query = { ...this.$route.query, embed: true, primary: this.readableThemeColor }
-      delete query.portalId
-      if (!this.hasQueryChange(query)) return
-      this.lastIframeQuery = query
-
-      const url = new URL(`${this.$store.getters.dataFairUrl}/app/${this.$route.params.id}`)
-      Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
-      this.embedUrl = url.href
-    },
-    receiveMessage (msg) {
-      if (!msg.query) return
-      if (!this.hasQueryChange(msg.query)) return
-      this.lastIframeQuery = { ...msg.query }
-
-      if (msg.query.primary) delete msg.query.primary
-      if (this.$route.query.portalId) msg.query.portalId = this.$route.query.portalId
-      this.$router.push({ name: this.$route.name, params: this.$route.params, query: msg.query })
     }
   }
 }

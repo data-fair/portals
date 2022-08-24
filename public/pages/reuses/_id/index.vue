@@ -62,7 +62,12 @@
       </v-row>
 
       <client-only>
-        <v-iframe :src="embedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`" />
+        <v-iframe
+          :src="`${dataFairUrl}/app/${$route.params.id}`"
+          :sync-query-params="true"
+          :query-params-extra="{primary: readableThemeColor, embed: true}"
+          :query-params-exclude="['portalId']"
+        />
       </client-only>
 
       <section-subtitle text="Données utilisées" />
@@ -128,9 +133,9 @@ export default {
     datasets: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
-    const config = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
-    this.datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', {
+    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
+    const config = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
+    this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
         select: 'id,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
@@ -188,24 +193,18 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readableThemeColor']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
     pageUrl () {
       return this.publicUrl + '/reuses/' + this.$route.params.id
-    },
-    embedUrl () {
-      return this.$store.getters.dataFairUrl + '/app/' + this.$route.params.id
-    },
-    dataFairUrl () {
-      return this.$store.getters.dataFairUrl
     }
   },
   watch: {
     async application () {
-      if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
+      if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
     }
   },
   async mounted () {
-    if (this.application) this.baseApplication = await this.$axios.$get(this.$store.getters.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
+    if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
   }
 }
 </script>

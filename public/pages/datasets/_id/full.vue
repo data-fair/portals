@@ -8,12 +8,13 @@
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
-          v-if="embedUrl"
-          :src="embedUrl"
+          :src="`${dataFairUrl}/embed/dataset/${$route.params.id}${tablePreviewPath}`"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
-          @message="receiveMessage"
+          :sync-query-params="true"
+          :query-params-extra="{primary: config.themeColor}"
+          :query-params-exclude="['portalId']"
         />
       </client-only>
     </div>
@@ -23,7 +24,7 @@
 <script>
 import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: { Error, VIframe },
@@ -31,8 +32,7 @@ export default {
   middleware: 'portal-required',
   data: () => ({
     dataset: null,
-    embedUrl: null,
-    lastIframeQuery: {}
+    tablePreviewPath: process.env.tablePreviewPath
   }),
   async fetch () {
     this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.id, { params: { html: true } })
@@ -111,42 +111,9 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
+    ...mapGetters(['dataFairUrl']),
     pageUrl () {
       return this.publicUrl + '/datasets/' + this.$route.params.id + '/full'
-    }
-  },
-  watch: {
-    '$route.query' () {
-      this.setEmbedUrl()
-    }
-  },
-  created () {
-    this.setEmbedUrl()
-  },
-  methods: {
-    hasQueryChange (query = {}) {
-      if (Object.keys(query).find(key => query[key] !== this.lastIframeQuery[key])) return true
-      if (Object.keys(this.lastIframeQuery).find(key => this.lastIframeQuery[key] !== query[key])) return true
-      return false
-    },
-    async setEmbedUrl () {
-      const query = { ...this.$route.query, primary: this.config.themeColor }
-      delete query.portalId
-      if (!this.hasQueryChange(query)) return
-      this.lastIframeQuery = query
-
-      const url = new URL(`${this.$store.getters.dataFairUrl}/embed/dataset/${this.$route.params.id}${process.env.tablePreviewPath}`)
-      Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
-      this.embedUrl = url.href
-    },
-    receiveMessage (msg) {
-      if (!msg.query) return
-      if (!this.hasQueryChange(msg.query)) return
-      this.lastIframeQuery = { ...msg.query }
-
-      if (msg.query.primary) delete msg.query.primary
-      if (this.$route.query.portalId) msg.query.portalId = this.$route.query.portalId
-      this.$router.push({ name: this.$route.name, params: this.$route.params, query: msg.query })
     }
   }
 }
