@@ -64,7 +64,7 @@
       <client-only>
         <v-iframe
           :src="`${dataFairUrl}/app/${$route.params.id}`"
-          :sync-query-params="true"
+          :sync-state="true"
           :query-params-extra="{primary: readableThemeColor, embed: true}"
           :query-params-exclude="['portalId']"
         />

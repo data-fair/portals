@@ -86,7 +86,7 @@
   },
   "devDependencies": {
     "@data-fair/sd-vue": "2.1.1",
-    "@koumoul/v-iframe": "^0.14.2",
+    "@koumoul/v-iframe": "^0.19.1",
     "@koumoul/vjsf": "2.17.0",
     "@koumoul/vue-multianalytics": "^1.11.3",
     "@mdi/font": "^7.0.96",

@@ -96,8 +96,7 @@ module.exports = {
     { src: '~plugins/window-size' },
     { src: '~plugins/ws', ssr: false },
     { src: '~plugins/session', ssr: false },
-    { src: '~plugins/auth', ssr: false },
-    { src: '~plugins/breadcrumbs.js', ssr: false }
+    { src: '~plugins/auth', ssr: false }
   ],
   router: {
     base: config.basePath

@@ -12,7 +12,7 @@
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
-          :sync-query-params="true"
+          :sync-state="true"
           :query-params-extra="{primary: readableThemeColor, embed: true}"
           :query-params-exclude="['portalId']"
         />

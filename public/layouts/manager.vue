@@ -11,6 +11,7 @@
 import { mapGetters } from 'vuex'
 import ManagerTop from '~/components/layout/manager-top.vue'
 import 'iframe-resizer/js/iframeResizer.contentWindow'
+import '@koumoul/v-iframe/content-window.js'
 
 global.iFrameResizer = {
   heightCalculationMethod: 'taggedElement'
@@ -18,9 +19,11 @@ global.iFrameResizer = {
 
 export default {
   components: { ManagerTop },
-  middleware: 'breadcrumbs',
   computed: {
     ...mapGetters(['embed'])
+  },
+  created () {
+    global.vIframeOptions = { router: this.$router }
   }
 }
 
