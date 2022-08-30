@@ -7,7 +7,7 @@
     v-on="on"
   >
     <v-icon color="primary">
-      mdi-download
+      mdi-camera
     </v-icon>
   </v-btn>
 </template>
