@@ -42,6 +42,12 @@
                 </template>
                 <span>Accéder à la visualisation en plein écran</span>
               </v-tooltip>
+              <application-capture
+                v-if="baseApplication"
+                :application="application"
+                :base-application="baseApplication"
+                :synced-state="syncedState"
+              />
             </v-card-actions>
             <v-subheader>Mis à jour le {{ application.updatedAt | date('LL') }}</v-subheader>
           </v-card>
@@ -67,6 +73,7 @@
           :sync-state="true"
           :query-params-extra="{primary: readableThemeColor, embed: true}"
           :query-params-exclude="['portalId']"
+          @state="s => syncedState = s"
         />
       </client-only>
 
@@ -130,7 +137,8 @@ export default {
   data: () => ({
     baseApplication: null,
     application: null,
-    datasets: null
+    datasets: null,
+    syncedState: null
   }),
   async fetch () {
     this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })

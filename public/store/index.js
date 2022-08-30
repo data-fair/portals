@@ -107,6 +107,9 @@ export default () => {
         if (!url.endsWith('/')) url += '/'
         return url
       },
+      captureUrl (state) {
+        return state.publicBaseUrl + '/capture'
+      },
       hasSocialLinks (state) {
         return state.config &&
           (state.config.twitter || state.config.facebook || state.config.linkedin || state.config.instagram || state.config.youtube || state.config.vimeo)

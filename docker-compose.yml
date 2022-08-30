@@ -62,3 +62,13 @@ services:
     image: koumoul/openapi-viewer:1
     ports:
       - 6202:8080
+
+  capture:
+    image: koumoul/capture:master
+    network_mode: host
+    shm_size: '1gb'
+    environment:
+      - PORT=8087
+      - DEBUG=capture
+      - PUBLIC_URL=http://localhost:6200/capture
+      - PROMETHEUS_ACTIVE=false

@@ -30,6 +30,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/data-fair', createProxyMiddleware({ target: 'http://localhost:8080', pathRewrite: { '^/data-fair': '' }, ws: true }))
   app.use('/openapi-viewer', createProxyMiddleware({ target: 'http://localhost:6202', pathRewrite: { '^/openapi-viewer': '' } }))
   app.use('/notify', createProxyMiddleware({ target: 'http://localhost:8088', pathRewrite: { '^/notify': '' } }))
+  app.use('/capture', createProxyMiddleware({ target: 'http://localhost:8087', pathRewrite: { '^/capture': '' } }))
 }
 
 app.use(cookieParser())
