@@ -1,10 +1,9 @@
 <template>
   <v-btn
     v-if="meta['df:sync-state']"
-    :href="href"
-    download
     icon
-    v-on="on"
+    :loading="downloading"
+    @click="download"
   >
     <v-icon color="primary">
       mdi-camera
@@ -13,6 +12,7 @@
 </template>
 
 <script>
+import fileDownload from 'js-file-download'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -30,6 +30,9 @@ export default {
       default: null
     }
   },
+  data: () => ({
+    downloading: false
+  }),
   computed: {
     ...mapGetters(['captureUrl']),
     href () {
@@ -47,6 +50,14 @@ export default {
     },
     meta () {
       return (this.baseApplication && this.baseApplication.meta) || {}
+    }
+  },
+  methods: {
+    async download () {
+      this.downloading = true
+      const res = await this.$axios.get(this.href, { responseType: 'blob' })
+      fileDownload(res.data, this.application.id + '.' + res.headers['content-type'].split('/').pop())
+      this.downloading = false
     }
   }
 }
