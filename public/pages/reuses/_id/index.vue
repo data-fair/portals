@@ -27,21 +27,7 @@
             </v-card-text>
             <v-card-actions>
               <application-embed :application="application" />
-              <v-tooltip top>
-                <template #activator="{ on }">
-                  <v-btn
-                    :to="{name: 'reuses-id-full', params:{id: application.id}}"
-                    icon
-                    nuxt
-                    v-on="on"
-                  >
-                    <v-icon color="primary">
-                      mdi-fullscreen
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Accéder à la visualisation en plein écran</span>
-              </v-tooltip>
+              <application-fullscreen :application="application" />
               <application-capture
                 v-if="baseApplication"
                 :application="application"

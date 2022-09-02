@@ -98,21 +98,10 @@
           align-self="stretch"
         >
           <template v-if="config.featuredReuse && config.featuredReuse.id">
-            <nuxt-link
-              :to="`/reuses/${config.featuredReuse.id}`"
-              class="title"
-              style="text-decoration-line:none"
-            >
-              {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
-                mdi-open-in-new
-              </v-icon>
-            </nuxt-link>
-            <client-only>
-              <v-iframe
-                :src="featuredReuseUrl"
-                style="height:90%"
-              />
-            </client-only>
+            <application-featured
+              :application="config.featuredReuse"
+              iframe-style="height:90%"
+            />
           </template>
           <template v-else>
             <last-apps
@@ -150,18 +139,7 @@
           cols="12"
           class="my-3 grow"
         >
-          <nuxt-link
-            :to="`/reuses/${config.featuredReuse.id}`"
-            class="title"
-            style="text-decoration-line:none"
-          >
-            {{ config.featuredReuse.title }}&nbsp;<v-icon :color="'primary'">
-              mdi-open-in-new
-            </v-icon>
-          </nuxt-link>
-          <client-only>
-            <v-iframe :src="featuredReuseUrl" />
-          </client-only>
+          <application-featured :application="config.featuredReuse" />
         </v-col>
       </v-row>
       <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredReuse && config.featuredReuse.id)">
@@ -262,9 +240,6 @@ export default {
     ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
-    },
-    featuredReuseUrl () {
-      return `${this.dataFairUrl}/app/${this.config.featuredReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     homeReuseUrl () {
       return `${this.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
