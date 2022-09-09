@@ -10,7 +10,7 @@
       <card-title :title="application.title" />
       <div class="pb-2">
         <v-img
-          :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
+          :src="`${application.href}/capture?updatedAt=${application.fullUpdatedAt || application.updatedAt}`"
           :alt="application.title"
           :aspect-ratio="21/9"
         />
