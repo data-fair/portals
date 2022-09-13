@@ -189,7 +189,7 @@ export default {
       params: {
         ...baseFilter,
         size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
-        select: 'id,title,updatedAt,createdAt,-userPermissions',
+        select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
         sort: 'createdAt:-1',
         html: true
       }
@@ -199,7 +199,7 @@ export default {
         ...baseFilter,
         size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
         select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
-        sort: 'createdAt:-1',
+        sort: (this.config.datasetsDefaultSort || 'createdAt') + ':-1',
         html: true,
         truncate: 600,
         sums: 'count',
