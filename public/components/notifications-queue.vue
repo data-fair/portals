@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import eventBus from '~/event-bus'
 import OwnerShort from '~/components/owners/short.vue'
 /* let sound

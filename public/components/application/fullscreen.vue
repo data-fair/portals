@@ -2,7 +2,7 @@
   <v-tooltip top>
     <template #activator="{ on }">
       <v-btn
-        :to="{name: 'reuses-id-full', params:{id: application.id}}"
+        :to="{name: 'reuses-id-full', params:{id: application.id}, query: syncedStateParams}"
         icon
         nuxt
         v-on="on"
@@ -19,7 +19,19 @@
 <script>
 export default {
   props: {
-    application: { type: Object, required: true }
+    application: { type: Object, required: true },
+    syncedState: { type: Object, default: null }
+  },
+  computed: {
+    syncedStateParams () {
+      if (!this.syncedState) return {}
+      const url = new URL(this.syncedState.href)
+      const params = {}
+      for (const key of [...url.searchParams.keys()]) {
+        if (key !== 'embed' && key !== 'primary') params[key] = url.searchParams.get(key)
+      }
+      return params
+    }
   }
 }
 </script>

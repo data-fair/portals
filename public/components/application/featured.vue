@@ -11,7 +11,10 @@
         </v-icon>
       </nuxt-link>
       <v-spacer />
-      <application-fullscreen :application="application" />
+      <application-fullscreen
+        :application="application"
+        :synced-state="syncedState"
+      />
       <application-capture
         v-if="baseApplication && fullApplication"
         :application="fullApplication"

@@ -27,7 +27,10 @@
             </v-card-text>
             <v-card-actions>
               <application-embed :application="application" />
-              <application-fullscreen :application="application" />
+              <application-fullscreen
+                :application="application"
+                :synced-state="syncedState"
+              />
               <application-capture
                 v-if="baseApplication"
                 :application="application"
