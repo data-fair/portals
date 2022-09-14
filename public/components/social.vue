@@ -1,7 +1,7 @@
 <template>
   <div class="share-network">
     <share-network
-      :url="url"
+      :url="shareUrl"
       :title="title"
       network="twitter"
     >
@@ -12,7 +12,7 @@
       </v-btn>
     </share-network>
     <share-network
-      :url="url"
+      :url="shareUrl"
       :title="title"
       network="linkedin"
     >
@@ -23,7 +23,7 @@
       </v-btn>
     </share-network>
     <share-network
-      :url="url"
+      :url="shareUrl"
       :title="title"
       network="reddit"
     >
@@ -34,7 +34,7 @@
       </v-btn>
     </share-network>
     <share-network
-      :url="url"
+      :url="shareUrl"
       :title="title"
       network="facebook"
     >
@@ -47,7 +47,7 @@
     <client-only>
       <share-network
         v-if="isMobileOnly"
-        :url="url"
+        :url="shareUrl"
         :title="title"
         network="whatsapp"
       >
@@ -63,12 +63,19 @@
 
 <script>
 import { isMobileOnly } from 'mobile-device-detect'
+const { mapState } = require('vuex')
 
 export default {
   props: ['url', 'title'],
   data: () => ({
     isMobileOnly
-  })
+  }),
+  computed: {
+    ...mapState(['publicUrl']),
+    shareUrl () {
+      return this.url || (this.publicUrl + this.$route.fullPath)
+    }
+  }
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div>
     <v-row class="ma-0">
       <nuxt-link
-        :to="`/reuses/${application.id}`"
+        :to="{path: `/reuses/${application.id}`, query: syncedStateParams}"
         class="title"
         style="text-decoration-line:none"
       >
@@ -13,8 +13,8 @@
       <v-spacer />
       <application-fullscreen :application="application" />
       <application-capture
-        v-if="baseApplication"
-        :application="application"
+        v-if="baseApplication && fullApplication"
+        :application="fullApplication"
         :base-application="baseApplication"
         :synced-state="syncedState"
       />
@@ -51,13 +51,25 @@ export default {
     }
   },
   data: () => ({
-    baseApplication: null
+    baseApplication: null,
+    fullApplication: null,
+    syncedState: null
   }),
   computed: {
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner'])
+    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner']),
+    syncedStateParams () {
+      if (!this.syncedState) return {}
+      const url = new URL(this.syncedState.href)
+      const params = {}
+      for (const key of [...url.searchParams.keys()]) {
+        if (key !== 'embed' && key !== 'primary') params[key] = url.searchParams.get(key)
+      }
+      return params
+    }
   },
   async mounted () {
     this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
+    this.fullApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}`, { params: { raw: true, select: '-userPermissions,-owner' } })
   }
 }
 </script>

@@ -45,7 +45,6 @@
               </v-subheader>
               <social
                 v-if="application"
-                :url="pageUrl"
                 :title="application.title"
               />
             </v-col>

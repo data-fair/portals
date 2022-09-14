@@ -187,7 +187,6 @@
               </v-subheader>
               <social
                 v-if="dataset"
-                :url="url"
                 :title="dataset.title"
               />
             </v-col>
