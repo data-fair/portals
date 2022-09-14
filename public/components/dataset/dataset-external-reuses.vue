@@ -75,9 +75,10 @@
 
 <script>
 import VIframe from '@koumoul/v-iframe'
+import VClamp from 'vue-clamp'
 
 export default {
-  components: { VIframe },
+  components: { VIframe, VClamp },
   props: {
     dataset: { type: Object, required: true },
     showIframes: { type: Boolean, default: true },
