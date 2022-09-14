@@ -48,74 +48,9 @@
     color: {{ readableSecondaryColor }}!important;
     }
 
-    /* various styles of the app bar */
-    <template v-if="config.appBarColor === 'primaryGradient1' && themeColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(10).toHexString() }} 20%, {{ $color(config.themeColor).darken(20).toHexString() }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ $color(config.themeColor).darken(20).toHexString() }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'primaryGradient1' && !themeColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ $color(config.themeColor).brighten(20).toHexString() }} 20%, {{ $color(config.themeColor).darken(10).toHexString() }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ $color(config.themeColor).darken(10).toHexString() }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'secondaryGradient1' && secondaryColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(10).toHexString() }} 20%, {{ $color(secondaryColor).darken(20).toHexString() }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ $color(secondaryColor).darken(20).toHexString() }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'secondaryGradient1' && !secondaryColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ $color(secondaryColor).brighten(20).toHexString() }} 20%, {{ $color(secondaryColor).darken(10).toHexString() }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ $color(secondaryColor).darken(10).toHexString() }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'primarySecondaryGradient' && themeColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ config.themeColor }} 20%, {{ readableSecondaryColor }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ readableSecondaryColor }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'primarySecondaryGradient' && !themeColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ config.themeColor }} 20%, {{ backgroundableSecondaryColor }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ backgroundableSecondaryColor }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && secondaryColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ secondaryColor }} 20%, {{ readableThemeColor }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ readableThemeColor }} !important;
-      }
-    </template>
-    <template v-if="config.appBarColor === 'secondaryPrimaryGradient' && !secondaryColorDark">
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, {{ secondaryColor }} 20%, {{ backgroundableThemeColor }} 100%);
-      }
-      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid {{ backgroundableThemeColor }} !important;
-      }
-    </template>
+    {{ appBarStyle }}
   </component>
 </template>
-
 <script>
 const { mapState, mapGetters } = require('vuex')
 
@@ -136,7 +71,91 @@ export default {
       'readableSecondaryColor',
       'backgroundableSecondaryColor',
       'bodyFontFamily', 'headingsFontFamily'
-    ])
+    ]),
+    appBarStyle () {
+      // various styles of the app bar
+      if (this.config.appBarColor === 'primaryGradient1' && this.themeColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.$color(this.config.themeColor).brighten(10).toHexString()} 20%, ${this.$color(this.config.themeColor).darken(20).toHexString()} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.$color(this.config.themeColor).darken(20).toHexString()} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'primaryGradient1' && !this.themeColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.$color(this.config.themeColor).brighten(20).toHexString()}} 20%, ${this.$color(this.config.themeColor).darken(10).toHexString()}} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.$color(this.config.themeColor).darken(10).toHexString()}} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'secondaryGradient1' && this.secondaryColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.$color(this.secondaryColor).brighten(10).toHexString()} 20%, ${this.$color(this.secondaryColor).darken(20).toHexString()} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.$color(this.secondaryColor).darken(20).toHexString()} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'secondaryGradient1' && !this.secondaryColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.$color(this.secondaryColor).brighten(20).toHexString()} 20%, ${this.$color(this.secondaryColor).darken(10).toHexString()} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.$color(this.secondaryColor).darken(10).toHexString()} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'primarySecondaryGradient' && this.themeColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.config.themeColor} 20%, ${this.readableSecondaryColor} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.readableSecondaryColor} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'primarySecondaryGradient' && !this.themeColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.config.themeColor} 20%, ${this.backgroundableSecondaryColor}} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.backgroundableSecondaryColor}} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'secondaryPrimaryGradient' && this.secondaryColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.secondaryColor} 20%, ${this.readableThemeColor} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.readableThemeColor} !important;
+      }
+      `
+      }
+      if (this.config.appBarColor === 'secondaryPrimaryGradient' && !this.secondaryColorDark) {
+        return `
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      background: linear-gradient(90deg, ${this.secondaryColor} 20%, ${this.backgroundableThemeColor} 100%);
+      }
+      .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+      border: 2px solid ${this.backgroundableThemeColor} !important;
+      }
+      `
+      }
+      return ''
+    }
   }
 }
 
