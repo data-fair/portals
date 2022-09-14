@@ -47,7 +47,7 @@
                 Partager
               </v-subheader>
               <social
-                v-if="application"
+                v-if="application && application.public"
                 :title="application.title"
               />
             </v-col>

@@ -186,7 +186,7 @@
                 Partager
               </v-subheader>
               <social
-                v-if="dataset"
+                v-if="dataset && dataset.public"
                 :title="dataset.title"
               />
             </v-col>
