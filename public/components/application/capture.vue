@@ -35,9 +35,9 @@ export default {
     downloading: false
   }),
   computed: {
-    ...mapGetters(['captureUrl']),
+    ...mapGetters(['dataFairUrl']),
     href () {
-      const url = new URL(this.application.href + '/capture')
+      const url = new URL(`${this.dataFairUrl}/api/v1/applications/${this.application.id}/capture`)
       url.searchParams.set('width', this.meta['df:capture-width'] || '1280')
       url.searchParams.set('height', this.meta['df:capture-height'] || '720')
       url.searchParams.set('updatedAt', this.application.fullUpdatedAt)
