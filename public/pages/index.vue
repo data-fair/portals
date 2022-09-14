@@ -72,7 +72,6 @@
       >
         <v-text-field
           v-model="search"
-          :autofocus="!draft"
           rounded
           style="max-width:400px;"
           placeholder="Rechercher"
