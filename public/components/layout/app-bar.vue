@@ -26,7 +26,7 @@
         exact
         class="font-weight-bold"
         :class="{'white--text': appBarDark}"
-        @click="activeTab = '/'"
+        @click="activeTab = homeFullPath"
       >
         Accueil
       </v-tab>
@@ -216,7 +216,8 @@ export default {
     activeTab: null
   }),
   async fetch () {
-    this.activeTab = this.$route.path
+    debug('homeFullPath', this.homeFullPath)
+    if (this.$route.path === '/') this.activeTab = this.homeFullPath
     this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
   },
   computed: {
@@ -224,6 +225,10 @@ export default {
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['themeColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
     ...mapGetters('session', ['loginUrl']),
+    homeFullPath () {
+      const base = this.$router.options.base
+      return base.endsWith('/') ? base : base + '/'
+    },
     extraMenus () {
       return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
     },
