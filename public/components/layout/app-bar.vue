@@ -10,7 +10,8 @@
       :extra-menus="extraMenus"
     />
     <v-tabs
-      v-show="$vuetify.breakpoint.mdAndUp"
+      v-if="initialized && activeTab !== null"
+      v-show="!$vuetify.breakpoint.smAndDown"
       v-model="activeTab"
       height="64"
       :dark="appBarDark"
@@ -19,7 +20,7 @@
     >
       <v-tabs-slider :color="appBarDark ? 'white' : textDark" />
       <v-tab
-        :value="'hidden'"
+        value="hidden"
         style="width:0px;min-width:0px;max-width:0px;padding:0px;"
       />
       <v-tab
@@ -210,6 +211,8 @@
 import XsMenu from '~/components/layout/xs-menu'
 import NotificationsQueue from '~/components/notifications-queue'
 const { mapState, mapGetters, mapActions } = require('vuex')
+const debug = require('debug')('app-bar')
+debug.log = console.log.bind(console)
 
 export default {
   components: { XsMenu, NotificationsQueue },
@@ -219,6 +222,7 @@ export default {
   }),
   async fetch () {
     this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+    this.activeTab = this.$route.path
   },
   computed: {
     ...mapState(['config', 'textDark', 'portal']),
@@ -259,6 +263,11 @@ export default {
       if (this.config.appBarColor === 'grey') return true
       if (this.config.appBarColor === 'white') return false
       return true
+    }
+  },
+  watch: {
+    activeTab () {
+      debug('watcher activeTab', this.activeTab)
     }
   },
   methods: {
