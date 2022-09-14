@@ -10,19 +10,16 @@
       :extra-menus="extraMenus"
     />
     <v-tabs
-      v-if="initialized && activeTab !== null"
+      v-if="initialized && pages"
       v-show="!$vuetify.breakpoint.smAndDown"
-      v-model="activeTab"
+      v-model="computedActiveTab"
       height="64"
       :dark="appBarDark"
       centered
       slider-size="4"
+      optional
     >
       <v-tabs-slider :color="appBarDark ? 'white' : textDark" />
-      <v-tab
-        value="hidden"
-        style="width:0px;min-width:0px;max-width:0px;padding:0px;"
-      />
       <v-tab
         :to="{name: 'index'}"
         nuxt
@@ -60,51 +57,49 @@
       >
         Réutilisations
       </v-tab>
-      <template v-if="pages">
-        <v-tab
-          v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
-          :key="page.id"
-          :to="{name: 'pages-id', params: {id: page.id}}"
-          nuxt
-          class="font-weight-bold"
-          :class="{'white--text': appBarDark}"
-        >
-          {{ page.title }}
-        </v-tab>
-        <v-menu
-          v-for="menu in extraMenus"
-          :key="menu"
-          offset-y
-          nudge-left
-        >
-          <template #activator="{ on, attrs }">
-            <v-btn
-              text
-              v-bind="attrs"
-              :height="64"
-              class="font-weight-bold"
-              :class="{'white--text': appBarDark}"
-              v-on="on"
-            >
-              {{ menu }}
-              <v-icon right>
-                mdi-menu-down
-              </v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
-              :key="page.id"
-              :to="{name: 'pages-id', params: {id: page.id}}"
-              nuxt
-              @click="activeTab = 'hidden'"
-            >
-              <v-list-item-title>{{ page.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </template>
+      <v-tab
+        v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
+        :key="page.id"
+        :to="{name: 'pages-id', params: {id: page.id}}"
+        nuxt
+        class="font-weight-bold"
+        :class="{'white--text': appBarDark}"
+      >
+        {{ page.title }}
+      </v-tab>
+      <v-menu
+        v-for="menu in extraMenus"
+        :key="menu"
+        offset-y
+        nudge-left
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn
+            text
+            v-bind="attrs"
+            :height="64"
+            class="font-weight-bold"
+            :class="{'white--text': appBarDark}"
+            v-on="on"
+          >
+            {{ menu }}
+            <v-icon right>
+              mdi-menu-down
+            </v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
+            :key="page.id"
+            :to="{name: 'pages-id', params: {id: page.id}}"
+            nuxt
+            @click="activeTab = null"
+          >
+            <v-list-item-title>{{ page.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-tab
         v-if="config.contactEmail"
         :to="{name: 'contact'}"
@@ -221,8 +216,8 @@ export default {
     activeTab: null
   }),
   async fetch () {
-    this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
     this.activeTab = this.$route.path
+    this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
   },
   computed: {
     ...mapState(['config', 'textDark', 'portal']),
@@ -263,6 +258,15 @@ export default {
       if (this.config.appBarColor === 'grey') return true
       if (this.config.appBarColor === 'white') return false
       return true
+    },
+    computedActiveTab: {
+      get () {
+        return this.activeTab
+      },
+      set (value) {
+        if (value === 0) value = '/'
+        this.activeTab = value
+      }
     }
   },
   watch: {
