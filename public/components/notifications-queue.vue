@@ -18,7 +18,7 @@
           color="pink"
           overlap
         >
-          <v-icon :color="themeColorDark ? 'white' : textDark">
+          <v-icon :color="backgroundDark ? 'white' : textDark">
             mdi-bell
           </v-icon>
         </v-badge>
@@ -87,7 +87,7 @@ if (!process.server) {
 
 export default {
   components: { OwnerShort },
-  props: ['notifyUrl', 'loginHref'],
+  props: ['notifyUrl', 'loginHref', 'backgroundDark'],
   data: () => ({
     menu: false,
     countNew: null,
@@ -97,8 +97,7 @@ export default {
   }),
   computed: {
     ...mapState(['textDark', 'config']),
-    ...mapState('session', ['user']),
-    ...mapGetters(['themeColorDark'])
+    ...mapState('session', ['user'])
   },
   watch: {
     menu (value) {

@@ -122,6 +122,7 @@
           v-if="notifyUrl && config.authentication !== 'none'"
           :notify-url="notifyUrl"
           :login-href="loginHref"
+          :background-dark="appBarDark"
         />
       </client-only>
       <template v-if="initialized && config.authentication !== 'none'">

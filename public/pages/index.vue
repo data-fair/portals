@@ -127,7 +127,6 @@
               :id="config.twitter"
               :source-type="'profile'"
               :options="{ tweetLimit }"
-              class="theme--light v-card v-sheet v-sheet--outlined"
             />
           </client-only>
         </v-col>

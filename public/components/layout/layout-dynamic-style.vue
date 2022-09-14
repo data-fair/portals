@@ -80,7 +80,7 @@ export default {
       background: linear-gradient(90deg, ${this.$color(this.config.themeColor).brighten(10).toHexString()} 20%, ${this.$color(this.config.themeColor).darken(20).toHexString()} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.$color(this.config.themeColor).darken(20).toHexString()} !important;
+      border: 1px solid ${this.$color(this.config.themeColor).darken(20).toHexString()} !important;
       }
       `
       }
@@ -90,7 +90,7 @@ export default {
       background: linear-gradient(90deg, ${this.$color(this.config.themeColor).brighten(20).toHexString()}} 20%, ${this.$color(this.config.themeColor).darken(10).toHexString()}} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.$color(this.config.themeColor).darken(10).toHexString()}} !important;
+      border: 1px solid ${this.$color(this.config.themeColor).darken(10).toHexString()}} !important;
       }
       `
       }
@@ -100,7 +100,7 @@ export default {
       background: linear-gradient(90deg, ${this.$color(this.secondaryColor).brighten(10).toHexString()} 20%, ${this.$color(this.secondaryColor).darken(20).toHexString()} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.$color(this.secondaryColor).darken(20).toHexString()} !important;
+      border: 1px solid ${this.$color(this.secondaryColor).darken(20).toHexString()} !important;
       }
       `
       }
@@ -110,7 +110,7 @@ export default {
       background: linear-gradient(90deg, ${this.$color(this.secondaryColor).brighten(20).toHexString()} 20%, ${this.$color(this.secondaryColor).darken(10).toHexString()} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.$color(this.secondaryColor).darken(10).toHexString()} !important;
+      border: 1px solid ${this.$color(this.secondaryColor).darken(10).toHexString()} !important;
       }
       `
       }
@@ -120,7 +120,7 @@ export default {
       background: linear-gradient(90deg, ${this.config.themeColor} 20%, ${this.readableSecondaryColor} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.readableSecondaryColor} !important;
+      border: 1px solid ${this.readableSecondaryColor} !important;
       }
       `
       }
@@ -130,7 +130,7 @@ export default {
       background: linear-gradient(90deg, ${this.config.themeColor} 20%, ${this.backgroundableSecondaryColor}} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.backgroundableSecondaryColor}} !important;
+      border: 1px solid ${this.backgroundableSecondaryColor}} !important;
       }
       `
       }
@@ -140,7 +140,7 @@ export default {
       background: linear-gradient(90deg, ${this.secondaryColor} 20%, ${this.readableThemeColor} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.readableThemeColor} !important;
+      border: 1px solid ${this.readableThemeColor} !important;
       }
       `
       }
@@ -150,7 +150,7 @@ export default {
       background: linear-gradient(90deg, ${this.secondaryColor} 20%, ${this.backgroundableThemeColor} 100%);
       }
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      border: 2px solid ${this.backgroundableThemeColor} !important;
+      border: 1px solid ${this.backgroundableThemeColor} !important;
       }
       `
       }
