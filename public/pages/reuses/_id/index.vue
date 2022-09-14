@@ -40,16 +40,13 @@
             </v-card-actions>
             <v-subheader>Mis à jour le {{ application.updatedAt | date('LL') }}</v-subheader>
           </v-card>
-          <v-row>
+          <v-row v-if="application && application.public">
             <v-spacer />
             <v-col cols="auto">
               <v-subheader :color="'primary'">
                 Partager
               </v-subheader>
-              <social
-                v-if="application && application.public"
-                :title="application.title"
-              />
+              <social :title="application.title" />
             </v-col>
           </v-row>
         </v-col>

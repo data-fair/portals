@@ -179,16 +179,13 @@
             </v-card-actions>
             <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt | date("LL") }}</v-subheader>
           </v-card>
-          <v-row>
+          <v-row v-if="dataset && dataset.public">
             <v-spacer />
             <v-col cols="auto">
               <v-subheader :color="'primary'">
                 Partager
               </v-subheader>
-              <social
-                v-if="dataset && dataset.public"
-                :title="dataset.title"
-              />
+              <social :title="dataset.title" />
             </v-col>
           </v-row>
         </v-col>
