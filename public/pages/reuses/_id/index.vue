@@ -32,6 +32,7 @@
                 :synced-state="syncedState"
               />
               <application-capture
+                v-if="baseApplication"
                 :application="application"
                 :base-application="baseApplication"
                 :synced-state="syncedState"
@@ -125,12 +126,8 @@ export default {
     syncedState: null
   }),
   async fetch () {
-    const applicationPromise = this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
-    const baseApplicationPromise = this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.$route.params.id}/base-application`, { params: { html: true } })
-    const configPromise = this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
-    this.application = await applicationPromise
-    this.baseApplication = await baseApplicationPromise
-    const config = await configPromise
+    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
+    const config = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
     this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
@@ -143,18 +140,6 @@ export default {
   head () {
     if (!this.application) return { title: 'Page non trouvée' }
     const description = (this.application.description || this.application.title).split('</p>').shift().replace('<p>', '')
-    const imageUrl = new URL(`${this.dataFairUrl}/api/v1/applications/${this.application.id}/capture`)
-    const imageWidth = this.meta['df:capture-width'] || '800'
-    const imageHeight = this.meta['df:capture-height'] || '450'
-    imageUrl.searchParams.set('width', imageWidth)
-    imageUrl.searchParams.set('height', imageHeight)
-    imageUrl.searchParams.set('updatedAt', this.application.fullUpdatedAt)
-    imageUrl.searchParams.set('app_primary', this.readableThemeColor)
-    imageUrl.searchParams.set('app_embed', true)
-    for (const key in this.$route.query) {
-      if (key !== 'portalId') imageUrl.searchParams.set('app_' + key, this.$route.query[key])
-    }
-
     return {
       title: this.application.title,
       meta: [
@@ -162,9 +147,9 @@ export default {
         { hid: 'og:url', property: 'og:url', content: this.pageUrl },
         { hid: 'og:title', property: 'og:title', content: this.application.title },
         { hid: 'og:description', property: 'og:description', content: description },
-        { hid: 'og:image', property: 'og:image', content: imageUrl.href },
-        { hid: 'og:image:width', property: 'og:image:width', content: imageWidth },
-        { hid: 'og:image:height', property: 'og:image:height', content: imageHeight },
+        { hid: 'og:image', property: 'og:image', content: this.application.href + '/capture' },
+        { hid: 'og:image:width', property: 'og:image:width', content: 800 },
+        { hid: 'og:image:height', property: 'og:image:height', content: 450 },
         { hid: 'og:type', property: 'og:type', content: 'article' },
         { property: 'article:author', content: this.application.owner.name },
         { property: 'article:modified_time', content: this.application.updatedAt },
@@ -190,9 +175,9 @@ export default {
             publisher: require('~/assets/organization.json'),
             image: {
               '@type': 'imageObject',
-              url: imageUrl.href
+              url: this.application.href + '/capture'
             },
-            thumbnailUrl: imageUrl.href
+            thumbnailUrl: this.application.href + '/capture'
           }),
           type: 'application/ld+json'
         }
@@ -204,10 +189,15 @@ export default {
     ...mapGetters(['readableThemeColor', 'dataFairUrl']),
     pageUrl () {
       return this.publicUrl + '/reuses/' + this.$route.params.id
-    },
-    meta () {
-      return (this.baseApplication && this.baseApplication.meta) || {}
     }
+  },
+  watch: {
+    async application () {
+      if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
+    }
+  },
+  async mounted () {
+    if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
   }
 }
 </script>
