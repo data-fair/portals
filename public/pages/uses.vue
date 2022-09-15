@@ -18,8 +18,8 @@
             {{ dataset.title }}
           </h3>
         </nuxt-link>
-        <dataset-external-reuses
-          :key="'reuses-' + dataset.id"
+        <dataset-uses
+          :key="'applications-' + dataset.id"
           :dataset="dataset"
           :show-title="false"
           :show-iframes="false"
@@ -62,7 +62,7 @@ export default {
     ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
-      return this.publicUrl + '/external-reuses'
+      return this.publicUrl + '/uses'
     }
   },
   methods: {

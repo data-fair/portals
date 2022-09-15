@@ -1,9 +1,9 @@
 <template>
   <div>
     <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
-      <client-only v-if="config.homeReuse">
+      <client-only v-if="config.homeapplication">
         <v-iframe
-          :src="homeReuseUrl"
+          :src="homeapplicationUrl"
           class="elevation-4"
           style="margin-top: -11px;height: 400px;"
         />
@@ -30,9 +30,9 @@
           md="5"
           offset-md="1"
         >
-          <client-only v-if="config.homeReuse">
+          <client-only v-if="config.homeapplication">
             <v-iframe
-              :src="homeReuseUrl"
+              :src="homeapplicationUrl"
               style="height: 600px;"
             />
           </client-only>
@@ -88,7 +88,7 @@
         :topics="topics"
       />
 
-      <!-- reuses: featured and lasts -->
+      <!-- applications: featured and lasts -->
       <v-row v-if="config.twitter && config.showTwitterTimeline !== false">
         <v-col
           cols="12"
@@ -96,9 +96,9 @@
           sm="6"
           align-self="stretch"
         >
-          <template v-if="config.featuredReuse && config.featuredReuse.id">
+          <template v-if="config.featuredapplication && config.featuredapplication.id">
             <application-featured
-              :application="config.featuredReuse"
+              :application="config.featuredapplication"
               iframe-style="height:90%"
             />
           </template>
@@ -130,17 +130,17 @@
           </client-only>
         </v-col>
       </v-row>
-      <v-row v-else-if="config.featuredReuse && config.featuredReuse.id">
+      <v-row v-else-if="config.featuredapplication && config.featuredapplication.id">
         <v-col
           md="10"
           offset-md="1"
           cols="12"
           class="my-3 grow"
         >
-          <application-featured :application="config.featuredReuse" />
+          <application-featured :application="config.featuredapplication" />
         </v-col>
       </v-row>
-      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredReuse && config.featuredReuse.id)">
+      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredapplication && config.featuredapplication.id)">
         <last-apps
           v-if="showLastApps"
           :applications="applications"
@@ -186,7 +186,7 @@ export default {
     const promiseApplications = this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
       params: {
         ...baseFilter,
-        size: (this.config.homeReuses && this.config.homeReuses.size) || 3,
+        size: (this.config.homeapplications && this.config.homeapplications.size) || 3,
         select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
         sort: 'createdAt:-1',
         html: true
@@ -208,7 +208,7 @@ export default {
     this.applications = await promiseApplications
     this.datasets = await promiseDatasets
     this.stats = {
-      reuses: {
+      applications: {
         count: this.applications.count
       },
       datasets: {
@@ -239,18 +239,18 @@ export default {
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },
-    homeReuseUrl () {
-      return `${this.dataFairUrl}/app/${this.config.homeReuse.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+    homeapplicationUrl () {
+      return `${this.dataFairUrl}/app/${this.config.homeapplication.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     showLastApps () {
-      return this.config.homeReuses && this.config.homeReuses.type === 'lasts' && this.applications && this.applications.results.length
+      return this.config.homeapplications && this.config.homeapplications.type === 'lasts' && this.applications && this.applications.results.length
     },
     showLastDatasets () {
       return this.config.homeDatasets && this.config.homeDatasets.type === 'lasts' && this.datasets && this.datasets.results.length
     },
     tweetLimit () {
-      if (this.config.featuredReuse && this.config.featuredReuse.id) return 2
-      else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeReuses && this.config.homeReuses.size) || 0) / 2))
+      if (this.config.featuredapplication && this.config.featuredapplication.id) return 2
+      else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeapplications && this.config.homeapplications.size) || 0) / 2))
     }
   }
 }

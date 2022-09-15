@@ -40,8 +40,8 @@
         Données
       </v-tab>
       <v-tab
-        v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
-        :to="{name: 'reuses'}"
+        v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
+        :to="{name: 'applications'}"
         nuxt
         class="font-weight-bold"
         :class="{'white--text': appBarDark}"
@@ -50,7 +50,7 @@
       </v-tab>
       <v-tab
         v-if="config.externalReusesPage && config.externalReusesPage.type !== 'none'"
-        :to="{name: 'external-reuses'}"
+        :to="{name: 'uses'}"
         nuxt
         class="font-weight-bold"
         :class="{'white--text': appBarDark}"

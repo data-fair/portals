@@ -18,7 +18,7 @@
       <v-col class="text-center">
         <v-btn
           :color="'primary'"
-          to="/reuses"
+          to="/applications"
           text
           exact
         >

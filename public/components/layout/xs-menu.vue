@@ -30,15 +30,15 @@
         <v-list-item-title>Données</v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="!config.reusesPage || config.reusesPage.type !== 'none'"
-        :to="{name: 'reuses'}"
+        v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
+        :to="{name: 'applications'}"
         nuxt
       >
         <v-list-item-title>Visualisations</v-list-item-title>
       </v-list-item>
       <v-list-item
         v-if="!config.externalReusesPage || config.externalReusesPage.type !== 'none'"
-        :to="{name: 'external-reuses'}"
+        :to="{name: 'uses'}"
         nuxt
       >
         <v-list-item-title>Réutilisations</v-list-item-title>

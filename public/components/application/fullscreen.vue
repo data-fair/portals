@@ -2,7 +2,7 @@
   <v-tooltip top>
     <template #activator="{ on }">
       <v-btn
-        :to="{name: 'reuses-id-full', params:{id: application.id}, query: syncedStateParams}"
+        :to="{name: 'applications-id-full', params:{id: application.id}, query: syncedStateParams}"
         icon
         nuxt
         v-on="on"

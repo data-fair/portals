@@ -206,7 +206,7 @@
             :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
-              :to="{name: 'reuses-id', params:{id: application.id}}"
+              :to="{name: 'applications-id', params:{id: application.id}}"
               class="title"
               style="text-decoration-line:none"
             >
@@ -234,22 +234,22 @@
 
       <v-row v-if="iframeExternalReuses.length">
         <v-col
-          v-for="(reuse, er) in iframeExternalReuses"
+          v-for="(application, er) in iframeExternalReuses"
           :key="er"
           class="text-center"
         >
-          <section-subtitle :text="reuse.title" />
+          <section-subtitle :text="application.title" />
           <client-only>
             <iframe
-              v-if="reuse.fixedHeight"
-              :src="reuse.link"
-              :height="reuse.height"
+              v-if="application.fixedHeight"
+              :src="application.link"
+              :height="application.height"
               width="100%"
               class="mt-2"
             />
             <v-iframe
               v-else
-              :src="reuse.link"
+              :src="application.link"
               class="mt-2"
             />
           </client-only>
@@ -261,7 +261,7 @@
         />
         <v-row>
           <v-col
-            v-for="(reuse, er) in linkExternalReuses"
+            v-for="(application, er) in linkExternalReuses"
             :key="er"
             md="4"
             sm="6"
@@ -271,7 +271,7 @@
               outlined
               height="100%"
             >
-              <card-title :title="reuse.title" />
+              <card-title :title="application.title" />
               <v-card-text
                 style="height:130px;color: rgba(0,0,0,0.87)"
                 class="py-0"
@@ -279,16 +279,16 @@
                 <client-only>
                   <v-clamp
                     :max-height="170"
-                    class="external-reuse-desc130:before"
+                    class="use-desc130:before"
                     autoresize
-                    v-html="reuse.description"
+                    v-html="application.description"
                   />
                 </client-only>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-                  :href="reuse.link"
+                  :href="application.link"
                   target="_blank"
                   color="primary"
                   text
@@ -365,12 +365,12 @@ export default {
     this.dataset = dataset
 
     const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
-    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) params.id = dataset.extras.reuses.join(',')
+    if (dataset.extras && dataset.extras.applications && dataset.extras.applications.length) params.id = dataset.extras.applications.join(',')
     else params.dataset = this.$route.params.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
-    if (dataset.extras && dataset.extras.reuses && dataset.extras.reuses.length) {
-      applications.results = dataset.extras.reuses.map(id => applications.results.find(a => a.id === id)).filter(a => a)
+    if (dataset.extras && dataset.extras.applications && dataset.extras.applications.length) {
+      applications.results = dataset.extras.applications.map(id => applications.results.find(a => a.id === id)).filter(a => a)
     }
     this.applications = applications
 
@@ -474,7 +474,7 @@ export default {
 </script>
 
 <style>
-.external-reuse-desc130:before {
+.use-desc130:before {
   content:'';
   width:100%;
   height:82px;

@@ -2,22 +2,22 @@
   <div>
     <v-row v-if="iframeExternalReuses.length">
       <v-col
-        v-for="(reuse, er) in iframeExternalReuses"
+        v-for="(application, er) in iframeExternalReuses"
         :key="er"
         class="text-center"
       >
-        <section-subtitle :text="reuse.title" />
+        <section-subtitle :text="application.title" />
         <client-only>
           <iframe
-            v-if="reuse.fixedHeight"
-            :src="reuse.link"
-            :height="reuse.height"
+            v-if="application.fixedHeight"
+            :src="application.link"
+            :height="application.height"
             width="100%"
             class="mt-2"
           />
           <v-iframe
             v-else
-            :src="reuse.link"
+            :src="application.link"
             class="mt-2"
           />
         </client-only>
@@ -30,7 +30,7 @@
       />
       <v-row>
         <v-col
-          v-for="(reuse, er) in linkExternalReuses"
+          v-for="(application, er) in linkExternalReuses"
           :key="er"
           md="4"
           sm="6"
@@ -40,7 +40,7 @@
             outlined
             height="100%"
           >
-            <card-title :title="reuse.title" />
+            <card-title :title="application.title" />
             <v-card-text
               style="height:130px;color: rgba(0,0,0,0.87)"
               class="py-0"
@@ -48,16 +48,16 @@
               <client-only>
                 <v-clamp
                   :max-height="170"
-                  class="external-reuse-desc130:before"
+                  class="use-desc130:before"
                   autoresize
-                  v-html="reuse.description"
+                  v-html="application.description"
                 />
               </client-only>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn
-                :href="reuse.link"
+                :href="application.link"
                 target="_blank"
                 color="primary"
                 text

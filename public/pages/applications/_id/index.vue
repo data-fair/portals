@@ -84,7 +84,7 @@
         <v-col cols="12">
           <v-btn
             :color="'primary'"
-            to="/reuses"
+            to="/applications"
             text
             exact
           >
@@ -188,7 +188,7 @@ export default {
     ...mapState(['config', 'publicUrl']),
     ...mapGetters(['readableThemeColor', 'dataFairUrl']),
     pageUrl () {
-      return this.publicUrl + '/reuses/' + this.$route.params.id
+      return this.publicUrl + '/applications/' + this.$route.params.id
     }
   },
   watch: {

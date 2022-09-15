@@ -5,7 +5,7 @@
       :error="$fetchState.error"
     />
     <div v-else-if="application">
-      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'reuses'}, exact: true}, {text: application.title, to: {name: 'reuses-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
+      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
           :src="`${dataFairUrl}/app/${$route.params.id}`"
@@ -90,7 +90,7 @@ export default {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     },
     pageUrl () {
-      return this.publicUrl + '/reuses/' + this.$route.params.id + '/full'
+      return this.publicUrl + '/applications/' + this.$route.params.id + '/full'
     }
   }
 }

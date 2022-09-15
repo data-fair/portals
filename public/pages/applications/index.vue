@@ -218,7 +218,7 @@ export default {
     ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
-      return this.publicUrl + '/reuses'
+      return this.publicUrl + '/applications'
     },
     baseApplicationsItems () {
       if (!this.applications) return []

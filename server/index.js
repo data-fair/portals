@@ -58,6 +58,10 @@ app.use('/', (req, res, next) => {
   next()
 })
 
+app.get('/reuses*', (req, res, next) => {
+  res.redirect(req.publicBaseUrl + req.url.replace('/reuses', '/applications'))
+})
+
 let httpServer
 async function main () {
   const nuxtMiddleware = await nuxt()

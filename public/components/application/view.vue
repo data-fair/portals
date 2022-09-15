@@ -63,7 +63,7 @@ export default {
   },
   watch: {
     dialog () {
-      const viewName = this.dialog ? `/reuses/${this.application.id}/application-dialog` : this.$route.path
+      const viewName = this.dialog ? `/applications/${this.application.id}/application-dialog` : this.$route.path
       this.$ma.trackView({ viewName })
     }
   }

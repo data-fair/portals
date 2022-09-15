@@ -79,7 +79,7 @@
               class="headline grey--text text--darken-2 font-weight-bold"
               style="height:40px"
             >
-              <span v-if="stats">{{ stats.reuses.count }}</span>
+              <span v-if="stats">{{ stats.applications.count }}</span>
               <v-skeleton-loader
                 v-else
                 max-width="80"

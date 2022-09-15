@@ -2,7 +2,7 @@
   <div>
     <v-row class="ma-0">
       <nuxt-link
-        :to="{path: `/reuses/${application.id}`, query: syncedStateParams}"
+        :to="{path: `/applications/${application.id}`, query: syncedStateParams}"
         class="title"
         style="text-decoration-line:none"
       >

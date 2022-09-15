@@ -4,7 +4,7 @@
     class="also-outlined"
   >
     <nuxt-link
-      :to="{name: 'reuses-id', params:{id: application.id}}"
+      :to="{name: 'applications-id', params:{id: application.id}}"
       style="text-decoration:none"
     >
       <card-title :title="application.title" />
@@ -35,7 +35,7 @@
       <v-tooltip top>
         <template #activator="{ on }">
           <v-btn
-            :to="{name: 'reuses-id-full', params:{id: application.id}}"
+            :to="{name: 'applications-id-full', params:{id: application.id}}"
             icon
             v-on="on"
           >
