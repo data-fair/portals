@@ -113,6 +113,41 @@ export default () => {
       hasSocialLinks (state) {
         return state.config &&
           (state.config.twitter || state.config.facebook || state.config.linkedin || state.config.instagram || state.config.youtube || state.config.vimeo)
+      },
+      portalHead (state) {
+        return (route) => {
+          console.log(this)
+          // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
+          const canonical = state.publicUrl + route.path
+          const link = [
+            { rel: 'canonical', href: canonical }
+          ]
+          link.push({ rel: 'icon', type: 'image/x-icon', href: `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/favicon?draft=${state.draft}&hash=${state.config.assets.favicon && state.config.assets.favicon.hash}` })
+          link.forEach((l) => {
+            if (l.href.slice(-1) === '/') {
+              l.href = l.href.slice(0, -1)
+            }
+          })
+          const fonts = []
+          if (state.config.bodyFont) fonts.push(state.config.bodyFont.name)
+          if (state.config.headingsFont) fonts.push(state.config.headingsFont.name)
+          if (fonts.length) {
+            link.push({ rel: 'stylesheet', href: `https://fonts.googleapis.com/css?family=${fonts.join('|')}&display=swap` })
+          }
+          const meta = [
+            { name: 'twitter:card', content: 'summary' },
+            { hid: 'og:title', property: 'og:title', content: state.config.title },
+            { property: 'og:locale', content: 'fr_FR' },
+            { hid: 'og:image', property: 'og:image', content: `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/home?draft=${state.draft}&hash=${state.config.assets.home && state.config.assets.home.hash}` },
+            { hid: 'og:image:width', property: 'og:image:width', content: 567 },
+            { hid: 'og:image:height', property: 'og:image:height', content: 383 }
+          ]
+          if (state.config.twitter) meta.push({ name: 'twitter:site', content: state.config.twitter })
+          return {
+            meta,
+            link
+          }
+        }
       }
     },
     mutations: {
