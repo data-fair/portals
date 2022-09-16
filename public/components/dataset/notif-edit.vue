@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicBaseUrl']),
-    ...mapGetters(['owner', 'notifyUrl']),
+    ...mapGetters(['owner', 'notifyUrl', 'directoryUrl']),
     notifUrl () {
       const keys = [`data-fair:dataset-data-updated:${this.dataset.id}`, `data-fair:dataset-breaking-change:${this.dataset.id}`]
       const titles = ['mise à jour des données', 'rupture de compatibilité des données']

@@ -72,6 +72,17 @@ export default () => {
         if (!state.config) return
         return Vue.prototype.$color(getters.footerColor).getLuminance() < 0.4
       },
+      personalNavigationColor (state, getters) {
+        if (state.config.personalNavigationColor === 'primary' || !state.config.personalNavigationColor) return state.config.themeColor
+        if (state.config.personalNavigationColor === 'secondary') return getters.secondaryColor
+        if (state.config.personalNavigationColor === 'grey' || !state.config.footerColor) return '#424242'
+        if (state.config.personalNavigationColor === 'white') return '#FFFFFF'
+        return state.config.personalNavigationColor
+      },
+      personalNavigationColorDark (state, getters) {
+        if (!state.config) return
+        return Vue.prototype.$color(getters.personalNavigationColor).getLuminance() < 0.4
+      },
       secondaryColorDark (state, getters) {
         if (!state.config) return
         return Vue.prototype.$color(getters.secondaryColor).getLuminance() < 0.4
@@ -113,6 +124,9 @@ export default () => {
       hasSocialLinks (state) {
         return state.config &&
           (state.config.twitter || state.config.facebook || state.config.linkedin || state.config.instagram || state.config.youtube || state.config.vimeo)
+      },
+      logoUrl (state) {
+        return `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/logo?draft=${state.draft}&hash=${state.config.assets.logo && state.config.assets.logo.hash}`
       },
       portalHead (state) {
         return (route) => {

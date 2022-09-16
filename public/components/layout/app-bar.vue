@@ -168,12 +168,11 @@
                 <v-divider />
               </template>
               <v-list-item
-                :to="{name: 'me'}"
-                :disabled="embed"
+                :to="{name: 'me-account'}"
                 nuxt
               >
-                <v-list-item-action><v-icon>mdi-information-outline</v-icon></v-list-item-action>
-                <v-list-item-title>Mon compte</v-list-item-title>
+                <v-list-item-action><v-icon>mdi-account-key</v-icon></v-list-item-action>
+                <v-list-item-title>Espace personnel</v-list-item-title>
               </v-list-item>
               <!--<v-list-item dense>
               <v-list-item-title style="overflow: visible;">

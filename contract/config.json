@@ -184,6 +184,24 @@
           "const": "white",
           "title": "blanc"
         }]
+      },
+      "personalNavigationColor": {
+        "type": "string",
+        "default": "primary",
+        "title": "Couleur de la barre de navigation dans l'espace personnel",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
       }
     }
   }, {

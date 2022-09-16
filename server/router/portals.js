@@ -9,12 +9,15 @@ const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
 const marked = require('marked')
+const { nanoid } = require('nanoid')
 
 const sanitizeHtml = require('../../shared/sanitize-html')
 const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
+const useSchema = require('../../contract/use.json')
+const validateUse = ajv.compile(useSchema)
 const asyncWrap = require('../utils/async-wrap')
 const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
 const axios = require('../utils/axios')
@@ -67,6 +70,12 @@ function cleanPageConfig (conf, html) {
   Object.keys(conf).forEach(key => {
     if (Array.isArray(conf[key])) conf[key].forEach(item => cleanPageConfig(item, html))
   })
+}
+
+function cleanUse (use, html) {
+  if (!use) return
+  if (use.description) use.description = sanitizeHtml(marked(use.description))
+  return use
 }
 
 // portals are synced to settings.publicationSites in data-fair
@@ -174,7 +183,7 @@ async function setPortal (req, res, next) {
 }
 
 // Get an existing portal as the owner
-router.get('/:id', setPortal, asyncWrap(async (req, res) => {
+router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   if (req.query.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
@@ -183,7 +192,7 @@ router.get('/:id', setPortal, asyncWrap(async (req, res) => {
 }))
 
 // Delete an existing portal as the owner
-router.delete('/:id', setPortal, asyncWrap(async (req, res) => {
+router.delete('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`data/${req.params.id}`)) await fs.remove(`data/${req.params.id}`)
@@ -192,7 +201,7 @@ router.delete('/:id', setPortal, asyncWrap(async (req, res) => {
 }))
 
 // Update the draft configuration as the owner
-router.put('/:id/configDraft', setPortal, asyncWrap(async (req, res) => {
+router.put('/:id/configDraft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await fillConfigAssets(`data/${req.portal._id}/draft`, req.body)
   await req.app.get('db')
@@ -205,11 +214,11 @@ router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, re
   res.send()
 }))
 
-router.get('/:id/assets/:assetId', setPortalAnonymous, asyncWrap(downloadAsset))
+router.get('/:id/assets/:assetId', asyncWrap(setPortalAnonymous), asyncWrap(downloadAsset))
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
-router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
+router.post('/:id/_validate_draft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
@@ -225,7 +234,7 @@ router.post('/:id/_validate_draft', setPortal, asyncWrap(async (req, res) => {
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
-router.post('/:id/_cancel_draft', setPortal, asyncWrap(async (req, res) => {
+router.post('/:id/_cancel_draft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
   if (await fs.pathExists(`data/${req.portal._id}/prod`)) {
@@ -270,7 +279,7 @@ async function setPortalAnonymous (req, res, next) {
 }
 
 // Public access to the portal configuration, except for the draft that is reserved to owner
-router.get('/:id/config', setPortalAnonymous, asyncWrap(async (req, res) => {
+router.get('/:id/config', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res) => {
   res.send(cleanConfig(req.config, req.query.html === 'true'))
 }))
 
@@ -314,7 +323,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
 }))
 
 // Create a page
-router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
+router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
   const baseId = slug(req.body.title, { lower: true })
   req.body.id = baseId
   req.body.portal = {
@@ -345,7 +354,7 @@ router.post('/:id/pages', setPortal, asyncWrap(async (req, res, next) => {
 }))
 
 // Patch some of the attributes of a page
-router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) => {
+router.patch('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
   const filter = { id: req.params.pageId, 'portal._id': req.portal._id }
   const page = await req.app.get('db').collection('pages')
     .findOne(filter, { projection: { _id: 0 } })
@@ -383,9 +392,105 @@ router.patch('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) =
   res.status(200).send(patchedPage)
 }))
 
-router.delete('/:id/pages/:pageId', setPortal, asyncWrap(async (req, res, next) => {
+router.delete('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
   await req.app.get('db').collection('pages').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
   res.status(204).send()
+}))
+
+// Create a use
+router.post('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  req.body._id = nanoid()
+  req.body.portal = {
+    _id: req.portal._id,
+    title: req.portal.title
+  }
+  req.body.created = req.body.updated = {
+    id: req.user.id,
+    name: req.user.name,
+    date: new Date().toISOString()
+  }
+  req.body.owner = {
+    type: 'user',
+    id: req.user.id,
+    name: req.user.name
+  }
+  req.body.status = 'draft'
+  const valid = validateUse(req.body)
+  if (!valid) return res.status(400).send(validateUse.errors)
+  await req.app.get('db').collection('uses').insertOne(req.body)
+  cleanUse(req.body, req.query.html === 'true')
+  res.status(200).send(req.body)
+}))
+
+router.patch('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  const db = req.app.get('db')
+  const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
+  if (!use) return res.status(404).send('use not found')
+  if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
+    await setPortal(req, res, next)
+  }
+  const acceptedParts = Object.keys(useSchema.properties).filter(k => !useSchema.properties[k].readOnly)
+  for (const key in req.body) {
+    if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
+  }
+  req.body.updated = {
+    id: req.user.id,
+    name: req.user.name,
+    date: new Date().toISOString()
+  }
+
+  const patch = {}
+  for (const key in req.body) {
+    if (!req.body[key]) {
+      patch.$unset = patch.$unset || {}
+      patch.$unset[key] = undefined
+      req.body[key] = undefined
+    } else {
+      patch.$set = patch.$set || {}
+      patch.$set[key] = req.body[key]
+    }
+  }
+  const patchedUse = Object.assign({}, use, req.body)
+  const valid = validateUse(JSON.parse(JSON.stringify(patchedUse)))
+  if (!valid) return res.status(400).send(validateUse.errors)
+
+  await req.app.get('db').collection('uses').findOneAndUpdate({ _id: req.params.useId, 'portal._id': req.portal._id }, patch)
+  cleanPage(patchedUse, req.query.html === 'true')
+  res.status(200).send(patchedUse)
+}))
+
+router.delete('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  const db = req.app.get('db')
+  const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
+  if (!use) return res.status(404).send('use not found')
+  if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
+    await setPortal(req, res, next)
+  }
+  await req.app.get('db').collection('uses').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
+  res.status(204).send()
+}))
+
+router.post('/:id/uses/:useId/_submit', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  const db = req.app.get('db')
+  const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
+  if (!use) return res.status(404).send('use not found')
+  const baseSlug = slug(use.title, { lower: true })
+  let useSlug = baseSlug
+  let updateOk = false
+  let i = 1
+  while (!updateOk) {
+    try {
+      await req.app.get('db').collection('pages').updateOne(
+        { _id: req.params.useId },
+        { $set: { slug: useSlug, owner: req.portal.owner, status: 'waitingForValidation' } })
+      updateOk = true
+    } catch (err) {
+      if (err.code !== 11000) throw err
+      i += 1
+      useSlug = `${baseSlug}-${i}`
+    }
+  }
+  return res.status(204).send()
 }))
 
 const matchingPortalHost = (portal, req) => {
@@ -406,7 +511,7 @@ const limiter = (req) => {
   _limiter = _limiter || new RateLimiterMongo({ storeClient: req.app.get('client'), ...limiterOptions })
   return _limiter
 }
-router.post('/:id/contact-email', setPortalAnonymous, asyncWrap(async (req, res, next) => {
+router.post('/:id/contact-email', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
   if (!emailValidator.validate(req.body.from)) return res.status(400).send('Adresse mail non renseignée ou malformée.')
   if (!req.body.token) return res.status(401).send()
   if (!req.config.contactEmail) return res.status(404).send('Adresse mail de contact non configurée')

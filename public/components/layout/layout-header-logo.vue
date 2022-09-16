@@ -31,16 +31,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   props: {
     float: { type: String, default: 'left' }
   },
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-    logoUrl () {
-      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
-    }
+    ...mapGetters(['logoUrl'])
   }
 }
 </script>
