@@ -16,7 +16,7 @@ const portalSchema = require('../../contract/portal')
 const validatePortal = ajv.compile(portalSchema)
 const pageSchema = require('../../contract/page.json')
 const validatePage = ajv.compile(pageSchema)
-const useSchema = require('../../contract/use.json')
+const useSchema = require('../../contract/use')
 const validateUse = ajv.compile(useSchema)
 const asyncWrap = require('../utils/async-wrap')
 const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
@@ -397,9 +397,39 @@ router.delete('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, 
   res.status(204).send()
 }))
 
+// Get the list of uses
+router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => {
+  const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
+  const uses = req.app.get('db').collection('uses')
+  const filter = {
+    'portal._id': req.params.id,
+    status: 'published',
+    'owner.type': req.portal.owner.type,
+    'owner.id': req.portal.owner.id
+  }
+  if (req.query.owner === 'me') {
+    filter['owner.type'] = 'user'
+    filter['owner.id'] = req.user.id
+    filter.status = 'draft'
+  } else if (req.query.creator === 'me') {
+    filter['created.id'] = req.user.id
+    filter.status = { $in: ['waitingForValidation', 'published'] }
+  } else if (req.query.status) {
+    // only owner of portal can filter on
+    // we use setPortal just to check that the user is owner
+    await setPortal(req, res, next)
+    filter.status = req.query.status
+  }
+  const [results, count] = await Promise.all([
+    uses.find(filter).limit(10000).project(project).toArray(),
+    uses.countDocuments(filter)
+  ])
+  res.json({ count, results })
+}))
+
 // Create a use
 router.post('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
-  req.body._id = nanoid()
+  req.body._id = req.body.slug = nanoid()
   req.body.portal = {
     _id: req.portal._id,
     title: req.portal.title
@@ -422,7 +452,7 @@ router.post('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, re
   res.status(200).send(req.body)
 }))
 
-router.patch('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
   const db = req.app.get('db')
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
@@ -433,6 +463,7 @@ router.patch('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, r
   for (const key in req.body) {
     if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
   }
+  req.body.slug = req.body.slug || req.body.id
   req.body.updated = {
     id: req.user.id,
     name: req.user.name,
@@ -464,6 +495,7 @@ router.delete('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
   if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
+    // we use setPortal just to check that the user is owner
     await setPortal(req, res, next)
   }
   await req.app.get('db').collection('uses').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
@@ -474,13 +506,17 @@ router.post('/:id/uses/:useId/_submit', asyncWrap(setPortalAnonymous), asyncWrap
   const db = req.app.get('db')
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
+  if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
+    // we use setPortal just to check that the user is owner
+    await setPortal(req, res, next)
+  }
   const baseSlug = slug(use.title, { lower: true })
   let useSlug = baseSlug
   let updateOk = false
   let i = 1
   while (!updateOk) {
     try {
-      await req.app.get('db').collection('pages').updateOne(
+      await req.app.get('db').collection('uses').updateOne(
         { _id: req.params.useId },
         { $set: { slug: useSlug, owner: req.portal.owner, status: 'waitingForValidation' } })
       updateOk = true

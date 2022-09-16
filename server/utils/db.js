@@ -39,5 +39,5 @@ exports.connect = async () => {
 exports.init = async (db) => {
   await ensureIndex(db, 'portals', { host: 1 }, { name: 'host_1', unique: true, sparse: true })
   await ensureIndex(db, 'pages', { id: 1, 'portal._id': 1 }, { unique: true })
-  await ensureIndex(db, 'uses', { slug: 1, 'portal._id': 1 }, { unique: true, sparse: true })
+  await ensureIndex(db, 'uses', { slug: 1, 'portal._id': 1 }, { name: 'slug_1_portal._id_1', unique: true, sparse: true })
 }

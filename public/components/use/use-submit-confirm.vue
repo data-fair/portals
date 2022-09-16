@@ -3,55 +3,34 @@
     v-model="dialog"
     width="500"
   >
-    <template
-      v-if="fab"
-      #activator="{ on }"
-    >
+    <template #activator="{ on }">
       <v-btn
-        fab
-        small
-        style="position:absolute;right:20px;top:27px"
-        title="supprimer"
-        :disabled="disabled"
-        v-on="on"
-        @click="open"
-      >
-        <v-icon color="warning">
-          mdi-delete
-        </v-icon>
-      </v-btn>
-    </template>
-    <template
-      v-else
-      #activator="{ on }"
-    >
-      <v-btn
-        color="warning"
+        color="success"
         icon
-        title="supprimer"
+        title="soumettre pour publication"
         :disabled="disabled"
         v-on="on"
         @click="open"
       >
         <v-icon>
-          mdi-delete
+          mdi-share
         </v-icon>
       </v-btn>
     </template>
 
     <v-card>
       <v-card-title class="title">
-        Suppression d'un élément
+        Soumission d'une réutilisation
       </v-card-title>
 
       <v-card-text>
         <p>
-          Voulez vous vraiment supprimer l'élément <span
-            v-if="label"
+          Voulez vous vraiment soumettre la réutilisation <span
+            v-if="title"
             class="accent--text"
-          >{{ label }}</span> ?
+          >{{ title }}</span> ?
         </p>
-        <p>La suppression est définitive.</p>
+        <p>Une fois la soumission effectuée vous ne pourrez plus éditer ces informations.</p>
       </v-card-text>
 
       <v-divider />
@@ -65,8 +44,8 @@
           Annuler
         </v-btn>
         <v-btn
-          color="warning"
-          @click.native="$emit('removed');dialog = false"
+          color="success"
+          @click.native="$emit('submitted');dialog = false"
         >
           Oui
         </v-btn>
@@ -78,8 +57,7 @@
 <script>
 export default {
   props: {
-    label: { type: String, default: null },
-    fab: { type: Boolean, default: false },
+    title: { type: String, default: null },
     disabled: { type: Boolean, default: false }
   },
   data: () => ({

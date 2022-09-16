@@ -34,6 +34,13 @@
       </v-list-item>
       <v-list-item
         :nuxt="true"
+        :to="`/me/uses`"
+      >
+        <v-list-item-action><v-icon>mdi-share-circle</v-icon></v-list-item-action>
+        <v-list-item-title>Mes réutilisations</v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        :nuxt="true"
         :to="`/me/notifications`"
       >
         <v-list-item-action><v-icon>mdi-bell-circle</v-icon></v-list-item-action>

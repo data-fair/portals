@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container style="max-width:640px;">
+  <v-container style="max-width:640px !important;">
     <h2 class="text-h4 my-4 ml-3">
       <v-icon
         size="36"

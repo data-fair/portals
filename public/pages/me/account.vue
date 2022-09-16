@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-container style="max-width:640px;">
+  <v-container style="max-width:640px !important;">
     <v-iframe :src="sdUrl" />
   </v-container>
 </template>

@@ -35,11 +35,7 @@
 <script>
 const { mapState } = require('vuex')
 
-const context = require.context('../../../../../../assets/templates', true, /\.json$/)
-const useSchema = require('~/../contract/use.json')
-Object.keys(useSchema.properties).forEach(p => {
-  if (useSchema.properties[p].readOnly) delete useSchema.properties[p]
-})
+const useSchema = require('~/../contract/use')
 
 export default {
   data: () => ({
@@ -51,9 +47,6 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal']),
-    template () {
-      return this.use.template && context(`./${this.use.template}.json`)
-    },
     dataFairUrl () {
       return this.$store.getters.dataFairUrl
     },
@@ -61,7 +54,6 @@ export default {
       return {
         context: {
           dataFairUrl: this.dataFairUrl,
-          settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
           owner: this.owner
         },
         arrayItemCardProps: { outlined: true, tile: true },
