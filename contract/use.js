@@ -22,9 +22,9 @@ module.exports = {
       },
       readOnly: true
     },
-    status: {
-      type: 'string',
-      enum: ['draft', 'waitingForValidation', 'published']
+    published: {
+      type: 'boolean',
+      default: false
     },
     title: {
       type: 'string',

@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer')
 const originalUrl = require('original-url')
 const { format: formatUrl } = require('url')
 const googleFonts = require('google-fonts-complete')
+const EventEmitter = require('events')
 const dbUtils = require('./utils/db')
 const prometheus = require('./utils/prometheus')
 const { createProxyMiddleware } = require('http-proxy-middleware')
@@ -17,6 +18,8 @@ const session = require('@koumoul/sd-express')({
   directoryUrl: config.directoryUrl
 })
 const debug = require('debug')('main')
+
+global.events = new EventEmitter()
 
 const publicHost = new URL(config.publicUrl).host
 debug('Public host', publicHost)

@@ -66,6 +66,7 @@
     "fs-extra": "^8.0.1",
     "google-fonts-complete": "^2.1.1",
     "hasha": "^5.2.2",
+    "http-errors": "^2.0.0",
     "json-schema-defaults": "^0.4.0",
     "marked": "^0.6.3",
     "memoizee": "^0.4.15",
@@ -84,7 +85,6 @@
     "run": "^1.4.0",
     "sanitize-html": "^2.7.2",
     "sharp": "^0.30.7",
-    "shortid": "^2.2.16",
     "slugify": "^1.4.6",
     "vue-social-sharing": "^3.0.4"
   },
@@ -111,6 +111,7 @@
     "js-file-download": "^0.4.12",
     "mobile-device-detect": "^0.2.3",
     "mocha": "^10.0.0",
+    "nock": "^13.2.9",
     "number-abbreviate": "^2.0.0",
     "nuxt": "^2.15.8",
     "nuxt-webpack-optimisations": "^2.2.3",

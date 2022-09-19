@@ -1,9 +1,24 @@
 const config = require('config')
 const fs = require('fs-extra')
 const axios = require('axios')
+const nock = require('nock')
 const debug = require('debug')('test')
 const app = require('../server/app')
 const axiosAuth = require('@koumoul/sd-express').axiosAuth
+
+before('global mocks', () => {
+  debug('preparing mocks')
+
+  // synchronization of publication sites to data-fair
+  nock('http://mock-data-fair.com')
+    .persist()
+    .post(/\/api\/v1\/settings\/(user|organization)\/(.*)\/publication-sites/, (body) => {
+      global.events.emit('publicationSite', body)
+      return true
+    }).reply(200)
+
+  debug('mocks ok')
+})
 
 before('init globals', async () => {
   debug('init globals')
@@ -32,6 +47,8 @@ before('init globals', async () => {
   await Promise.all([
     global.ax.builder().then(ax => { global.ax.anonymous = ax }),
     global.ax.builder('user1@test.com:passwd').then(ax => { global.ax.user1 = ax }),
+    global.ax.builder('admin2@test.com:passwd').then(ax => { global.ax.admin2 = ax }),
+    global.ax.builder('admin2@test.com:passwd', 'orga2').then(ax => { global.ax.admin2Org = ax }),
     global.ax.builder('superadmin@test.com:superpasswd:adminMode').then(ax => { global.ax.superadmin = ax })
   ])
   debug('init globals ok')
