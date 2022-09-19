@@ -6,6 +6,7 @@
       style="float:right;width:256px;"
     >
       <v-list-item
+        v-if="use && use.published"
         :href="useLink"
         target="_blank"
       >
@@ -18,7 +19,7 @@
       </v-list-item>
     </v-list>
 
-    <section-title :text="'Edition de l\'utilisation ' + ((use && use.title) || '')" />
+    <section-title :text="'Edition de la réutilisation ' + ((use && use.title) || '')" />
 
     <v-form ref="form">
       <lazy-v-jsf
@@ -39,6 +40,7 @@ const useSchema = require('~/../contract/use')
 
 export default {
   data: () => ({
+    fullUse: null,
     use: null,
     useConfig: null,
     useConfigRender: null,
@@ -52,26 +54,21 @@ export default {
     },
     vjsfOpts () {
       return {
-        context: {
-          dataFairUrl: this.dataFairUrl,
-          owner: this.owner
-        },
-        arrayItemCardProps: { outlined: true, tile: true },
-        hideReadOnlyEmpty: true,
-        hideReadOnlyTooltips: true,
-        hideReadOnlyLabels: true,
-        readOnlyFieldProps: { dense: true }
+        hideReadOnly: true,
+        deleteReadOnly: true,
+        autofocus: true
       }
     },
     useLink () {
       const url = new URL(this.portal.link)
       if (!url.pathname.endsWith('/')) url.pathname += '/'
-      url.pathname += 'uses/' + this.$route.params.id
+      url.pathname += 'uses/' + this.fullUse.slug
       return url.href
     }
   },
   mounted: async function () {
-    this.use = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
+    this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
+    this.use = { ...this.fullUse }
     this.$store.dispatch('setBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals'
@@ -89,6 +86,7 @@ export default {
     async update (patch) {
       try {
         await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`, patch)
+        this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
         // this.$router.push({ name: 'uses' })
       } catch (error) {
         console.error(error)

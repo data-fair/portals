@@ -25,7 +25,7 @@ exports.pagination = (query, defaultSize = 10) => {
 }
 
 exports.project = (selectStr, exclude = []) => {
-  const select = { _id: 0 }
+  const select = {}
   if (!selectStr) {
     exclude.forEach(e => {
       select[e] = 0

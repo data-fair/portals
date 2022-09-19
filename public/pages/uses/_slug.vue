@@ -32,10 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['portal', 'publicUrl']),
-    url () {
-      return this.publicUrl + '/uses/' + this.$route.params.id
-    }
+    ...mapState(['portal', 'publicUrl'])
   },
   watch: {
     async '$route.params.id' () {
@@ -44,7 +41,9 @@ export default {
   },
   methods: {
     async fetchuse () {
-      this.use = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/` + this.$route.params.id, { params: { html: true } })
+      console.log(this.$route.params)
+      console.log(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params: { html: true, slug: this.$route.params.slug } })
+      this.use = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params: { html: true, slug: this.$route.params.slug } })
     }
   }
 }

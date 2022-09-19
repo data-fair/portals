@@ -2,7 +2,7 @@
   <v-row>
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
-        <section-title text="Éditer les uses de contenu" />
+        <section-title text="Gérer les réutilisations" />
         <v-row v-if="uses">
           <v-col
             v-for="(use, i) in uses.results"
@@ -57,7 +57,7 @@
                   text
                   nuxt
                   title="éditer"
-                  :to="{ name: 'manager-portals-portalId-uses-id-edit', params: { id: use.id } }"
+                  :to="{ name: 'manager-portals-portalId-uses-id-edit', params: { id: use._id } }"
                 >
                   <v-icon color="primary">
                     mdi-pencil
@@ -96,7 +96,7 @@
         dense
         class="list-actions mr-2"
       >
-        <create-use-menu @created="createUse" />
+        <use-create-menu @created="createUse" />
       </v-list>
     </layout-navigation-right>
   </v-row>
@@ -108,6 +108,7 @@ import { mapState } from 'vuex'
 
 export default {
   components: { RemoveConfirm },
+  layout: 'manager',
   data: () => ({
     pagination: 1,
     uses: null,
@@ -148,9 +149,11 @@ export default {
       }
     },
     async createUse (use) {
+      use.owner = this.portal.owner
       try {
         const response = await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, use)
-        this.$router.push({ name: 'manager-portals-portalId-uses-id-edit', params: { id: response.id, portalId: this.portal._id } })
+        await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${response._id}/_submit`)
+        this.$router.push({ name: 'manager-portals-portalId-uses-id-edit', params: { id: response._id, portalId: this.portal._id } })
       } catch (error) {
         console.error(error)
       }

@@ -17,7 +17,9 @@
     <v-card-actions class="py-0">
       <slot name="actions" />
       <v-spacer />
-      <v-subheader>Mis à jour le {{ use.updated.date | date('L') }}</v-subheader>
+      <v-subheader v-if="use.publishedAt">
+        Publiée le {{ use.updated.date | date('L') }}
+      </v-subheader>
     </v-card-actions>
   </v-card>
 </template>

@@ -23,7 +23,7 @@
       Soumissions précédentes
     </h3>
     <v-row
-      v-if="submittedUses"
+      v-if="submittedUses && submittedUses.length"
       class="my-3"
     >
       <v-col
@@ -34,6 +34,12 @@
       >
         <use-card :use="use" />
       </v-col>
+    </v-row>
+    <v-row
+      v-else-if="submittedUses"
+      class="my-6"
+    >
+      <v-subheader>Vous n'avez pas encore soumis de réutilisation.</v-subheader>
     </v-row>
     <v-row
       v-else
@@ -123,17 +129,19 @@
     </v-row>
 
     <template v-if="editItem">
-      <v-form
-        ref="editForm"
-        v-model="validForm"
-        class="mt-6"
-      >
-        <lazy-v-jsf
-          v-model="editItem"
-          :schema="schema"
-          :options="{hideReadOnly: true, deleteReadOnly: true, autofocus: true, fieldProps: {outlined: true, dense: true}}"
-        />
-      </v-form>
+      <v-row class="mx-0 mb-2">
+        <v-form
+          ref="editForm"
+          v-model="validForm"
+          class="mt-6"
+        >
+          <lazy-v-jsf
+            v-model="editItem"
+            :schema="schema"
+            :options="{hideReadOnly: true, deleteReadOnly: true, autofocus: true, fieldProps: {outlined: true, dense: true}}"
+          />
+        </v-form>
+      </v-row>
       <v-row class="mx-0">
         <v-spacer />
         <v-btn
@@ -156,9 +164,8 @@
 
 <script>
 import { mapState } from 'vuex'
-const schema = require('~/../contract/use')
-schema.properties.slug['x-display'] = 'hidden'
-schema.properties.published['x-display'] = 'hidden'
+const schema = JSON.parse(JSON.stringify(require('~/../contract/use')))
+schema.properties.published.readOnly = true
 
 export default {
   layout: 'personal',

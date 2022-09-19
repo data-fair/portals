@@ -58,6 +58,29 @@
                       </v-btn>
                     </v-list-item-action>
                     <v-list-item-action>
+                      <v-btn
+                        :to="{name: 'manager-portals-portalId-uses', params: {portalId: portal._id}}"
+                        nuxt
+                        icon
+                        color="primary"
+                        title="gérer les réutilisations"
+                      >
+                        <v-icon
+                          color="primary"
+                          style="position:relative;top:-4px;"
+                        >
+                          mdi-share
+                        </v-icon>
+                        <v-icon
+                          color="primary"
+                          size="16"
+                          style="position:absolute;bottom:-3px;right:-3px;"
+                        >
+                          mdi-pencil
+                        </v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-action>
                       <remove-confirm
                         :label="portal.title"
                         @removed="deletePortal(portal)"

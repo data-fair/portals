@@ -49,6 +49,33 @@
           <v-list-item-title>Éditer les pages de contenu</v-list-item-title>
         </v-list-item>
       </v-list>
+      <v-list
+        dense
+        class="list-actions"
+        style="float:right;width:256px;"
+      >
+        <v-list-item
+          :to="`/manager/portals/${portal._id}/uses`"
+          nuxt
+        >
+          <v-list-item-icon style="position:relative;">
+            <v-icon
+              color="primary"
+              style="position:relative;top:-2px;left:-1px;"
+            >
+              mdi-share
+            </v-icon>
+            <v-icon
+              color="primary"
+              size="16"
+              style="position:absolute;bottom:-2px;right:-2px;"
+            >
+              mdi-pencil
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Gérer les réutilisations</v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-row>
     <v-row>
       <v-col

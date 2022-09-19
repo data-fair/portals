@@ -41,7 +41,6 @@
             <v-btn
               :disabled="!valid || loading"
               color="primary"
-              text
               @click="send"
             >
               Envoyer

@@ -407,6 +407,7 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
     'owner.type': req.portal.owner.type,
     'owner.id': req.portal.owner.id
   }
+  if (req.query.slug) query.slug = req.query.slug
   if (req.query.owner === 'me') {
     query['owner.type'] = 'user'
     query['owner.id'] = req.user.id
@@ -438,7 +439,7 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
 
 // Create a use
 router.post('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
-  req.body._id = nanoid()
+  req.body._id = req.body.slug = nanoid()
   req.body.portal = {
     _id: req.portal._id,
     title: req.portal.title,
@@ -491,6 +492,7 @@ router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async 
     }
   }
   if (req.body.published && !use.published) {
+    req.body.publishedAt = use.publishedAt || new Date()
     const baseSlug = slug(use.title, { lower: true })
     let useSlug = baseSlug
     let updateOk = false
@@ -499,7 +501,7 @@ router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async 
       try {
         await req.app.get('db').collection('uses').updateOne(
           { _id: req.params.useId },
-          { $set: { slug: useSlug } })
+          { $set: { slug: useSlug, publishedAt: req.body.publishedAt } })
         updateOk = true
         req.body.slug = useSlug
       } catch (err) {
@@ -516,6 +518,17 @@ router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async 
   await req.app.get('db').collection('uses').findOneAndUpdate({ _id: req.params.useId, 'portal._id': req.portal._id }, patch)
   cleanPage(patchedUse, req.query.html === 'true')
   res.status(200).send(patchedUse)
+}))
+
+router.get('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  const db = req.app.get('db')
+  const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
+  if (!use) return res.status(404).send('use not found')
+  if (!use.published && (use.owner.type !== 'user' || use.owner.id !== req.user.id)) {
+    // we use setPortal just to check that the user is owner
+    await setPortal(req, res)
+  }
+  res.send(use)
 }))
 
 router.delete('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {

@@ -11,10 +11,10 @@
     }
 
     .v-btn.primary.theme--light {
-    background: linear-gradient(90deg, {{ config.themeColor }} 0%, {{ darkPrimary10 }} 100%);
+    background: linear-gradient(90deg, {{ readableThemeColor }} 0%, {{ darkReadablePrimary10 }} 100%);
     }
     .v-application.theme--light .v-btn.primary.v-btn--has-bg {
-    border: 1px solid {{ darkPrimary10 }} !important;
+    border: 1px solid {{ darkReadablePrimary10 }} !important;
     }
 
     /* apply fonts */
@@ -71,6 +71,9 @@ export default {
     ]),
     darkPrimary10 () {
       return this.$color(this.config.themeColor).darken(10).toHexString()
+    },
+    darkReadablePrimary10 () {
+      return this.$color(this.readableThemeColor).darken(10).toHexString()
     },
     lightPrimary10 () {
       return this.$color(this.config.themeColor).brighten(10).toHexString()

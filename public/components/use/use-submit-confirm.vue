@@ -30,7 +30,7 @@
             class="accent--text"
           >{{ title }}</span> ?
         </p>
-        <p>Une fois la soumission effectuée vous ne pourrez plus éditer ces informations.</p>
+        <p>Une fois la soumission effectuée vous ne pourrez plus éditer ses informations.</p>
       </v-card-text>
 
       <v-divider />

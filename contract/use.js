@@ -13,7 +13,8 @@ module.exports = {
     owner,
     slug: {
       type: 'string',
-      title: "Identifiant lisible pour l'URL"
+      title: "Identifiant lisible pour l'URL",
+      readOnly: true
     },
     portal: {
       type: 'object',
@@ -24,11 +25,23 @@ module.exports = {
     },
     published: {
       type: 'boolean',
+      title: 'Publiée',
       default: false
+    },
+    publishedAt: {
+      type: 'string',
+      description: 'Date de publication',
+      format: 'date-time',
+      readOnly: true
     },
     title: {
       type: 'string',
       title: 'Titre de la réutilisation'
+    },
+    description: {
+      type: 'string',
+      'x-display': 'custom-markdown',
+      title: 'Description'
     },
     created: {
       type: 'object',
