@@ -195,7 +195,7 @@ router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
 router.delete('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
-  if (await fs.pathExists(`data/${req.params.id}`)) await fs.remove(`data/${req.params.id}`)
+  if (await fs.pathExists(`${config.dataDir}/${req.params.id}`)) await fs.remove(`${config.dataDir}/${req.params.id}`)
   await syncPortalDelete(req.portal, req.headers.cookie)
   res.send()
 }))
@@ -203,14 +203,14 @@ router.delete('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
 // Update the draft configuration as the owner
 router.put('/:id/configDraft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
-  await fillConfigAssets(`data/${req.portal._id}/draft`, req.body)
+  await fillConfigAssets(`${config.dataDir}/${req.portal._id}/draft`, req.body)
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: cleanConfig(req.body) } })
   res.send()
 }))
 
 router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, res) => {
-  await prepareFitHashedAsset(`data/${req.params.id}/draft`, req.params.assetId)
+  await prepareFitHashedAsset(`${config.dataDir}/${req.params.id}/draft`, req.params.assetId)
   res.send()
 }))
 
@@ -228,8 +228,8 @@ router.post('/:id/_validate_draft', asyncWrap(setPortal), asyncWrap(async (req, 
         }
       }
     })
-  if (await fs.pathExists(`data/${req.portal._id}/draft`)) {
-    await fs.copy(`data/${req.portal._id}/draft`, `data/${req.portal._id}/prod`)
+  if (await fs.pathExists(`${config.dataDir}/${req.portal._id}/draft`)) {
+    await fs.copy(`${config.dataDir}/${req.portal._id}/draft`, `${config.dataDir}/${req.portal._id}/prod`)
   }
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
@@ -237,8 +237,8 @@ router.post('/:id/_validate_draft', asyncWrap(setPortal), asyncWrap(async (req, 
 router.post('/:id/_cancel_draft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
-  if (await fs.pathExists(`data/${req.portal._id}/prod`)) {
-    await fs.copy(`data/${req.portal._id}/prod`, `data/${req.portal._id}/draft`)
+  if (await fs.pathExists(`${config.dataDir}/${req.portal._id}/prod`)) {
+    await fs.copy(`${config.dataDir}/${req.portal._id}/prod`, `${config.dataDir}/${req.portal._id}/draft`)
   }
   res.send()
 }))

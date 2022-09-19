@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs-extra')
+const config = require('config')
 const sharp = require('sharp')
 const hasha = require('hasha')
 const multer = require('multer')
@@ -68,7 +69,7 @@ exports.fillConfigAssets = async (dir, conf, force) => {
 // use POST _validate_draft to copy resources to production
 const storage = multer.diskStorage({
   async destination (req, file, cb) {
-    const dir = `data/${req.params.id}/draft`
+    const dir = path.resolve(config.dataDir, req.params.id, 'draft')
     await fs.ensureDir(dir)
     cb(null, dir)
   },
@@ -90,7 +91,7 @@ exports.downloadAsset = async (req, res) => {
       headers: { 'cache-control': 'public,max-age=0' }
     })
   }
-  const filePath = path.join(process.cwd(), `data/${req.params.id}/${draft ? 'draft' : 'prod'}/${req.params.assetId}`)
+  const filePath = path.resolve(config.dataDir, req.params.id, draft ? 'draft' : 'prod', req.params.assetId)
   if (req.query.hash && req.query.hash !== 'undefined') {
     const maxAge = draft ? 0 : 31536000
     return res.sendFile(`${filePath}-${req.query.hash}`, {
