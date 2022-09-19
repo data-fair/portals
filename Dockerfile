@@ -21,8 +21,15 @@ ENV NODE_ENV production
 RUN npm run build && \
     rm -rf dist
 
+# Adding server files
+ADD server server
+ADD shared shared
+ADD upgrade upgrade
+ADD contract contract
+
 # Check quality
 ADD .gitignore .gitignore
+ADD test test
 RUN npm run lint
 RUN npm run test
 
