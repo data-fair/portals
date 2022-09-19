@@ -21,6 +21,7 @@ const validateUse = ajv.compile(useSchema)
 const asyncWrap = require('../utils/async-wrap')
 const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
 const axios = require('../utils/axios')
+const findUtils = require('../utils/find')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -399,32 +400,40 @@ router.delete('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, 
 
 // Get the list of uses
 router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => {
-  const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const uses = req.app.get('db').collection('uses')
-  const filter = {
+  const query = {
     'portal._id': req.params.id,
     published: true,
     'owner.type': req.portal.owner.type,
     'owner.id': req.portal.owner.id
   }
   if (req.query.owner === 'me') {
-    filter['owner.type'] = 'user'
-    filter['owner.id'] = req.user.id
-    filter.published = false
+    query['owner.type'] = 'user'
+    query['owner.id'] = req.user.id
+    query.published = false
   } else if (req.query.creator === 'me') {
-    filter['created.id'] = req.user.id
-    delete filter.published
+    query['created.id'] = req.user.id
+    delete query.published
   } else if (req.query.published) {
     // only owner of portal can filter on published
     // we use setPortal just to check that the user is owner
     await setPortal(req, res)
-    filter.published = req.query.published === 'true'
+    query.published = req.query.published === 'true'
   }
-  const [results, count] = await Promise.all([
-    uses.find(filter).limit(10000).project(project).toArray(),
-    uses.countDocuments(filter)
-  ])
-  res.json({ count, results })
+  const sort = findUtils.sort(req.query.sort)
+  const project = findUtils.project(req.query.select)
+  const [skip, size] = findUtils.pagination(req.query)
+
+  const countPromise = req.query.count !== 'false' && uses.countDocuments(query)
+  const resultsPromise = size > 0 && uses.find(query).collation({ locale: 'en' }).limit(size).skip(skip).sort(sort).project(project).toArray()
+  const response = {}
+  if (countPromise) response.count = await countPromise
+  if (resultsPromise) response.results = await resultsPromise
+  else response.results = []
+  response.results.forEach(r => {
+    cleanUse(r, req.query.html === 'true')
+  })
+  res.json(response)
 }))
 
 // Create a use

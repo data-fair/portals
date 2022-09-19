@@ -536,7 +536,7 @@
           "const": "dataUpdatedAt"
         }]
       },
-      "reusesPage": {
+      "applicationsPage": {
         "type": "object",
         "title": "Page des visualisations",
         "default": {
@@ -558,17 +558,17 @@
           }
         }]
       },
-      "externalReusesPage": {
+      "usesPage": {
         "type": "object",
         "title": "Page des réutilisations",
         "default": {
           "type": "none"
         },
         "oneOf": [{
-          "title": "Liste",
+          "title": "Liste avec scroll infini",
           "properties": {
             "type": {
-              "const": "list"
+              "const": "infiniteScroll"
             }
           }
         },{

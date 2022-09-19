@@ -49,7 +49,7 @@
         Visualisations
       </v-tab>
       <v-tab
-        v-if="config.externalReusesPage && config.externalReusesPage.type !== 'none'"
+        v-if="config.usesPage && config.usesPage.type !== 'none'"
         :to="{name: 'uses'}"
         nuxt
         class="font-weight-bold"

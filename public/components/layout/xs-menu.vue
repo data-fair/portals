@@ -37,7 +37,7 @@
         <v-list-item-title>Visualisations</v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="!config.externalReusesPage || config.externalReusesPage.type !== 'none'"
+        v-if="!config.usesPage || config.usesPage.type !== 'none'"
         :to="{name: 'uses'}"
         nuxt
       >

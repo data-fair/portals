@@ -33,6 +33,7 @@
         <v-list-item-title>Mon compte</v-list-item-title>
       </v-list-item>
       <v-list-item
+        v-if="config.usesPage && config.usesPage.type !== 'none'"
         :nuxt="true"
         :to="`/me/uses`"
       >

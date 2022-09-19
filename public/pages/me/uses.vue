@@ -158,7 +158,7 @@
 import { mapState } from 'vuex'
 const schema = require('~/../contract/use')
 schema.properties.slug['x-display'] = 'hidden'
-schema.properties.status['x-display'] = 'hidden'
+schema.properties.published['x-display'] = 'hidden'
 
 export default {
   layout: 'personal',
@@ -187,10 +187,10 @@ export default {
       }
     },
     async fetchDrafts () {
-      this.draftUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { owner: 'me' } })).results
+      this.draftUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { owner: 'me', size: 10000 } })).results
     },
     async fetchSubmitted () {
-      this.submittedUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { creator: 'me' } })).results
+      this.submittedUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { creator: 'me', size: 10000 } })).results
     },
     editUse (use) {
       this.fullEditItem = use
