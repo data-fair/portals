@@ -24,6 +24,7 @@ RUN npm run build && \
 # Check quality
 ADD .gitignore .gitignore
 RUN npm run lint
+RUN npm run test
 
 # Cleanup /webapp/node_modules so it can be copied by next stage
 RUN npm prune --production

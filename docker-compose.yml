@@ -1,29 +1,47 @@
 version: '3'
 services:
   sd:
+    profiles:
+      - dev
+      - test
     image: ghcr.io/data-fair/simple-directory:master
-    ports:
-      - 6201:8080
-      - 1080:1080
-      - 1025:1025
+    network_mode: host
     environment:
       - ADMINS=["superadmin@test.com"]
       - PUBLIC_URL=http://localhost:6200/simple-directory
       - MAILDEV_ACTIVE=true
       - STORAGE_TYPE=file
-      - NUXT_BUILD_BLOCKING=false
-      - NO_UI=${NO_UI}
       - ROLES_DEFAULTS=["admin", "contrib", "user"]
       - PROMETHEUS_ACTIVE=false
+      - NUXT_BUILD_BLOCKING=false
+      - NO_UI=${NO_UI}
+      - AUTHRATELIMIT_ATTEMPTS=200
     volumes:
       - ./test/resources/users.json:/webapp/data/users.json
       - ./test/resources/organizations.json:/webapp/data/organizations.json
 
+  notify:
+    profiles:
+      - dev
+      - test
+    image: ghcr.io/data-fair/notify:master
+    network_mode: host
+    environment:
+      - PORT=8088
+      - PUBLIC_URL=http://localhost:6200/notify
+      - DIRECTORY_URL=http://localhost:6200/simple-directory
+      - SECRET_NOTIFICATIONS=secret-notifications
+      - SECRET_SENDMAILS=secret-sendmails
+      - PROMETHEUS_ACTIVE=false
+
   data-fair:
+    profiles:
+      - dev
     image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
     environment:
+      - PORT=6201
       - DEBUG=files
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - OPENAPI_VIEWER_URL=http://localhost:6200/openapi-viewer/
@@ -37,18 +55,9 @@ services:
       # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/s/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
       - PROMETHEUS_ACTIVE=false
 
-  notify:
-    image: ghcr.io/data-fair/notify:master
-    network_mode: host
-    environment:
-      - PORT=8088
-      - PUBLIC_URL=http://localhost:6200/notify
-      - DIRECTORY_URL=http://localhost:6200/simple-directory
-      - SECRET_NOTIFICATIONS=secret-notifications
-      - SECRET_SENDMAILS=secret-sendmails
-      - PROMETHEUS_ACTIVE=false
-
   elasticsearch:
+    profiles:
+      - dev
     image: ghcr.io/data-fair/elasticsearch:7.17.1
     ports:
       - 9200:9200
@@ -56,16 +65,23 @@ services:
       - discovery.type=single-node
 
   mongo:
+    profiles:
+      - dev
+      - test
     image: mongo:4.2
     ports:
       - 27017:27017
 
   openapi-viewer:
+    profiles:
+      - dev
     image: koumoul/openapi-viewer:1
     ports:
       - 6202:8080
 
   capture:
+    profiles:
+      - dev
     image: ghcr.io/data-fair/capture:master
     network_mode: host
     shm_size: '1gb'

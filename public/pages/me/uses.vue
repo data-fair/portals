@@ -20,7 +20,7 @@
     </v-alert>
 
     <h3 class="text-h5">
-      Précédement soumises
+      Soumissions précédentes
     </h3>
     <v-row
       v-if="submittedUses"

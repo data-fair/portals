@@ -6,6 +6,9 @@
   "scripts": {
     "dev-server": "NODE_ENV=development nodemon server",
     "dev-client": "NODE_ENV=development nuxt -p 3039",
+    "dev-deps": "docker-compose --profile dev up -d",
+    "test": "NODE_ENV=test mocha --exit --bail test/",
+    "test-deps": "docker-compose --profile test up -d",
     "build": "nuxt build --standalone",
     "analyze": "nuxt build --analyze",
     "lint": "eslint --ext js,vue --ignore-path .gitignore .",
@@ -107,6 +110,7 @@
     "iframe-resizer": "4.0.4",
     "js-file-download": "^0.4.12",
     "mobile-device-detect": "^0.2.3",
+    "mocha": "^10.0.0",
     "number-abbreviate": "^2.0.0",
     "nuxt": "^2.15.8",
     "nuxt-webpack-optimisations": "^2.2.3",
