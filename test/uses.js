@@ -1,4 +1,6 @@
 const assert = require('assert').strict
+const fs = require('fs-extra')
+const FormData = require('form-data')
 
 describe('Uses API', () => {
   it('Create a portal and manage uses', async () => {
@@ -55,5 +57,30 @@ describe('Uses API', () => {
     uses = (await global.ax.anonymous.get(`/api/v1/portals/${portal._id}/uses`)).data
     assert.equal(uses.count, 1)
     assert.equal(uses.results[0].slug, 'use-1-title-3')
+  })
+
+  it('Create use with image', async () => {
+    const portal = (await global.ax.admin2Org.post('/api/v1/portals')).data
+
+    const ax = global.ax.user1
+    const form = new FormData()
+    form.append('image', fs.readFileSync('./public/static/logo.png'), 'logo.png')
+    form.append('body', JSON.stringify({ title: 'Title in multipart form data' }), { contentType: 'application/json' })
+    let use = (await ax.post(`/api/v1/portals/${portal._id}/uses`, form, { headers: { 'Content-Length': form.getLengthSync(), ...form.getHeaders() } })).data
+    assert.equal(use.title, 'Title in multipart form data')
+    assert.equal(use.image.name, 'logo.png')
+    assert.equal(use.image.type, 'image/png')
+    let imageRes = await ax.get(`/api/v1/portals/${portal._id}/uses/${use._id}/image`)
+    assert.equal(imageRes.headers['content-type'], 'image/png')
+
+    const form2 = new FormData()
+    form2.append('image', fs.readFileSync('./public/static/logo.png'), 'logo.jpg')
+    form2.append('body', JSON.stringify({ title: 'Patched title in multipart form data' }), { contentType: 'application/json' })
+    await ax.patch(`/api/v1/portals/${portal._id}/uses/${use._id}`, form2, { headers: { 'Content-Length': form2.getLengthSync(), ...form2.getHeaders() } })
+    use = (await ax.get(`/api/v1/portals/${portal._id}/uses/${use._id}`)).data
+    assert.equal(use.image.name, 'logo.jpg')
+    assert.equal(use.image.type, 'image/jpeg')
+    imageRes = await ax.get(`/api/v1/portals/${portal._id}/uses/${use._id}/image`)
+    assert.equal(imageRes.headers['content-type'], 'image/jpeg')
   })
 })

@@ -43,6 +43,12 @@ module.exports = {
       'x-display': 'custom-markdown',
       title: 'Description'
     },
+    image: {
+      type: 'object',
+      contentMediaType: 'image/*',
+      title: 'Image',
+      writeOnly: true
+    },
     created: {
       type: 'object',
       additionalProperties: false,

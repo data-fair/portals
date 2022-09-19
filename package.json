@@ -106,6 +106,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.1",
     "eslint-plugin-vue": "^8.5.0",
+    "form-data": "^4.0.0",
     "http-proxy-middleware": "^1.0.6",
     "iframe-resizer": "4.0.4",
     "js-file-download": "^0.4.12",
