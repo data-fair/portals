@@ -3,6 +3,7 @@ const config = require('config')
 const fs = require('fs-extra')
 const multer = require('multer')
 const { nanoid } = require('nanoid')
+const sharp = require('sharp')
 
 exports.directory = (portalId, useId) => path.resolve(config.dataDir, portalId, 'prod', 'uses', useId)
 
@@ -21,3 +22,19 @@ const storage = multer.diskStorage({
   }
 })
 exports.uploadImage = multer({ storage })
+
+exports.afterUpload = async (req) => {
+  if (req.body.body) req.body = JSON.parse(req.body.body)
+  const image = req.files && req.files.find(f => f.fieldname === 'image')
+  if (image) {
+    req.body.image = {
+      name: image.originalname,
+      type: image.mimetype,
+      size: image.size
+    }
+    await sharp(image.path)
+      .resize(600, null, { fit: 'inside', withoutEnlargement: true })
+      .png({ adaptiveFiltering: true, compressionLevel: 9, palette: true })
+      .toFile(image.path + '-thumbnail.png')
+  }
+}

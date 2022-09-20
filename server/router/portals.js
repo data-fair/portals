@@ -441,15 +441,7 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
 
 // Create a use
 router.post('/:id/uses', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.any(), asyncWrap(async (req, res, next) => {
-  if (req.body.body) req.body = JSON.parse(req.body.body)
-  const image = req.files && req.files.find(f => f.fieldname === 'image')
-  if (image) {
-    req.body.image = {
-      name: image.originalname,
-      type: image.mimetype,
-      size: image.size
-    }
-  }
+  await usesUtils.afterUpload(req)
   req.body._id = req.body.slug = req.params.useId || nanoid()
   req.body.portal = {
     _id: req.portal._id,
@@ -475,15 +467,7 @@ router.post('/:id/uses', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.an
 }))
 
 router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.any(), asyncWrap(async (req, res, next) => {
-  if (req.body.body) req.body = JSON.parse(req.body.body)
-  const image = req.files && req.files.find(f => f.fieldname === 'image')
-  if (image) {
-    req.body.image = {
-      name: image.originalname,
-      type: image.mimetype,
-      size: image.size
-    }
-  }
+  await usesUtils.afterUpload(req)
   const db = req.app.get('db')
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
@@ -555,14 +539,22 @@ router.get('/:id/uses/:useId/image', asyncWrap(setPortalAnonymous), asyncWrap(as
   const db = req.app.get('db')
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
-  if (!use.published && (use.owner.type !== 'user' || use.owner.id !== req.user.id)) {
-    // we use setPortal just to check that the user is owner
-    await setPortal(req, res)
-  }
   if (!use.image) return res.status(404).send('use image not found')
   res.sendFile(path.join(usesUtils.directory(req.params.id, req.params.useId), 'image'), {
     headers: {
       'content-type': use.image.type,
+      'cache-control': use.published ? 'public' : 'private'
+    }
+  })
+}))
+
+router.get('/:id/uses/:useId/image-thumbnail', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  const db = req.app.get('db')
+  const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
+  if (!use) return res.status(404).send('use not found')
+  if (!use.image) return res.status(404).send('use image not found')
+  res.sendFile(path.join(usesUtils.directory(req.params.id, req.params.useId), 'image-thumbnail.png'), {
+    headers: {
       'cache-control': use.published ? 'public' : 'private'
     }
   })

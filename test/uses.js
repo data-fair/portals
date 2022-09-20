@@ -72,6 +72,9 @@ describe('Uses API', () => {
     assert.equal(use.image.type, 'image/png')
     let imageRes = await ax.get(`/api/v1/portals/${portal._id}/uses/${use._id}/image`)
     assert.equal(imageRes.headers['content-type'], 'image/png')
+    const thumbnailRes = await ax.get(`/api/v1/portals/${portal._id}/uses/${use._id}/image-thumbnail`)
+    assert.equal(thumbnailRes.headers['content-type'], 'image/png')
+    assert.ok(thumbnailRes.headers['content-length'] < imageRes.headers['content-length'])
 
     const form2 = new FormData()
     form2.append('image', fs.readFileSync('./public/static/logo.png'), 'logo.jpg')
