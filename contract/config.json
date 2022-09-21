@@ -558,6 +558,51 @@
           }
         }]
       },
+      "externalReusesPage": {
+        "type": "object",
+        "title": "Page des réutilisations (déprécié)",
+        "description": "Cette page est liée au système déprécié de réutilisations saisies directement sur les jeux de données dans le back-office. À la place utilisez la gestion des réutilisations intégrée au portail, voir les 2 options ci-dessous.",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Liste",
+          "properties": {
+            "type": {
+              "const": "list"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      },
+      "usesManagement": {
+        "type": "object",
+        "title": "Gestion des réutilisations",
+        "default": {
+          "type": "managers"
+        },
+        "oneOf": [{
+          "title": "Uniquement pour les gestionnaires du portail",
+          "properties": {
+            "type": {
+              "const": "managers"
+            }
+          }
+        }, {
+          "title": "Pour tous les utilisateurs du portail",
+          "properties": {
+            "type": {
+              "const": "users"
+            }
+          }
+        }]
+      },
       "usesPage": {
         "type": "object",
         "title": "Page des réutilisations",

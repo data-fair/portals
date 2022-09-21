@@ -5,10 +5,6 @@ exports.exec = async (db, debug) => {
     for (const configKey of ['config', 'configDraft']) {
       if (portal[configKey]) {
         const previousConfig = JSON.stringify(portal[configKey])
-        if (portal[configKey].externalReusesPage) {
-          portal[configKey].usesPage = portal[configKey].externalReusesPage
-          if (portal[configKey].usesPage === 'list') portal[configKey].usesPage = 'infiniteScroll'
-        }
         if (portal[configKey].reusesPage) {
           portal[configKey].applicationsPage = portal[configKey].reusesPage
         }

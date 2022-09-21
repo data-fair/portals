@@ -37,6 +37,14 @@
       >
         <v-list-item-title>Visualisations</v-list-item-title>
       </v-list-item>
+      <!-- DEPRECATED -->
+      <v-list-item
+        v-if="!config.externalReusesPage || config.externalReusesPage.type !== 'none'"
+        :to="{name: 'external-reuses'}"
+        nuxt
+      >
+        <v-list-item-title>Réutilisations</v-list-item-title>
+      </v-list-item>
       <v-list-item
         v-if="!config.usesPage || config.usesPage.type !== 'none'"
         :to="{name: 'uses'}"

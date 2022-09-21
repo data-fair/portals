@@ -48,6 +48,16 @@
       >
         Visualisations
       </v-tab>
+      <!-- DEPRECATED -->
+      <v-tab
+        v-if="config.externalReusesPage && config.externalReusesPage.type !== 'none'"
+        :to="{name: 'external-reuses'}"
+        nuxt
+        class="font-weight-bold"
+        :class="{'white--text': appBarDark}"
+      >
+        Réutilisations
+      </v-tab>
       <v-tab
         v-if="config.usesPage && config.usesPage.type !== 'none'"
         :to="{name: 'uses'}"
