@@ -80,7 +80,10 @@
         </v-row>
       </v-container>
 
-      <v-row class="my-4 text-center">
+      <v-row
+        v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
+        class="my-4 text-center"
+      >
         <v-col cols="12">
           <v-btn
             :color="'primary'"

@@ -80,7 +80,10 @@
         </v-row>
       </v-container>
     </template>
-    <v-row class="my-4 text-center">
+    <v-row
+      v-if="config.usesPage && config.usesPage.type !== 'none'"
+      class="my-4 text-center"
+    >
       <v-col cols="12">
         <v-btn
           :color="'primary'"
@@ -133,7 +136,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['portal', 'publicUrl']),
+    ...mapState(['portal', 'publicUrl', 'config']),
     ...mapGetters(['dataFairUrl'])
   },
   watch: {
