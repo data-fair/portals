@@ -2,10 +2,13 @@
   <v-row>
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
+        <client-only>
+          <v-iframe :src="notifSubscribeUrl" />
+        </client-only>
         <section-title text="Gérer les réutilisations" />
         <v-switch
           v-model="published"
-          label="publié"
+          label="réutilisations publiées"
           @change="refresh(true)"
         />
         <v-row v-if="uses">
@@ -80,11 +83,12 @@
 </template>
 
 <script>
-import RemoveConfirm from '~/components/remove-confirm.vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+import 'iframe-resizer/js/iframeResizer'
+import VIframe from '@koumoul/v-iframe'
 
 export default {
-  components: { RemoveConfirm },
+  components: { VIframe },
   layout: 'manager',
   data: () => ({
     pagination: 1,
@@ -93,7 +97,14 @@ export default {
     published: false
   }),
   computed: {
-    ...mapState(['portal'])
+    ...mapState(['portal']),
+    ...mapGetters(['dataFairUrl', 'notifyUrl']),
+    notifSubscribeUrl () {
+      const keysParam = [`portals:use-submitted:${this.portal._id}`]
+      const titlesParam = [`Un contributeur demande de publier une réutilisation sur ${this.portal.title || this.portal._id}`]
+      const urlTemplate = [`${this.dataFairUrl}/extra/portals?p=.%2F${this.portal._id}%2Fuses%2F{id}%2F/edit`]
+      return `${this.notifyUrl}/embed/subscribe?key=${encodeURIComponent(keysParam)}&title=${encodeURIComponent(titlesParam)}&url-template=${encodeURIComponent(urlTemplate)}&register=false`
+    }
   },
   mounted: async function () {
     this.$store.dispatch('setBreadcrumbs', [{

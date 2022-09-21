@@ -24,6 +24,10 @@ module.exports = {
       default: 'localhost'
     }
   },
+  // secrets that can be used to configure global webhooks for example to update users and organizations
+  secretKeys: {
+    notifications: null
+  },
   copyright: {
     src: {
       dark: 'https://koumoul.com/static/logo-title-right-white.png',

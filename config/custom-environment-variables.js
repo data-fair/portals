@@ -18,6 +18,9 @@ module.exports = {
       __format: 'json'
     }
   },
+  secretKeys: {
+    notifications: 'SECRET_NOTIFICATIONS'
+  },
   proxyNuxt: {
     __name: 'PROXY_NUXT',
     __format: 'json'

@@ -51,7 +51,7 @@ services:
       - PRIVATE_URL=http://localhost:8087
       - PUBLIC_URL=http://localhost:6200/data-fair
       - WS_PUBLIC_URL=ws://localhost:6200/data-fair
-      - EXTRA_NAV_ITEMS=[{"id":"portal","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
+      - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
       # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/s/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
       - PROMETHEUS_ACTIVE=false
 

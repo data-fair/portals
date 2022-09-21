@@ -24,6 +24,7 @@ const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } =
 const axios = require('../utils/axios')
 const findUtils = require('../utils/find')
 const usesUtils = require('../utils/uses')
+const notifications = require('../utils/notifications')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -164,6 +165,17 @@ router.post('', asyncWrap(async (req, res) => {
   }
   await collection.insertOne(portal)
   await syncPortalUpdate(portal, req.headers.cookie)
+  notifications.subscribe(req, {
+    outputs: ['devices', 'email'],
+    locale: 'fr',
+    sender: portal.owner,
+    visibility: 'private',
+    topic: {
+      key: `portals:use-submitted:${portal._id}`,
+      title: `Un contributeur demande de publier une réutilisation sur ${portal.title || portal._id}`
+    },
+    urlTemplate: `${config.dataFairUrl}/extra/portals?p=.%2F${portal._id}%2Fuses%2F{id}%2Fedit`
+  })
   res.send(cleanPortal(portal, req.params.html === true))
 }))
 
@@ -586,6 +598,14 @@ router.post('/:id/uses/:useId/_submit', asyncWrap(setPortalAnonymous), asyncWrap
   await req.app.get('db').collection('uses').updateOne(
     { _id: req.params.useId },
     { $set: { owner: req.portal.owner, published: false } })
+  notifications.send({
+    sender: { ...req.portal.owner },
+    topic: { key: `portals:use-submitted:${req.portal._id}` },
+    title: `Un contributeur demande de publier une réutilisation sur ${req.portal.title || req.portal._id}`,
+    body: use.title,
+    urlParams: { id: use._id },
+    visibility: 'private'
+  })
   return res.status(204).send()
 }))
 
