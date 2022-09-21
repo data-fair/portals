@@ -1,5 +1,8 @@
 <template>
-  <v-row class="pb-2">
+  <v-row
+    class="pb-2"
+    justify="center"
+  >
     <v-col
       sm="4"
       cols="12"
@@ -66,6 +69,7 @@
       </v-card>
     </v-col>
     <v-col
+      v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
       sm="4"
       cols="12"
     >
@@ -101,8 +105,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
-  props: ['stats']
+  props: ['stats'],
+  computed: {
+    ...mapState(['config'])
+  }
 }
 </script>
