@@ -4,7 +4,7 @@ const urlPattern = '(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-z
 
 module.exports = {
   type: 'object',
-  required: ['_id', 'title', 'author', 'datasets'],
+  required: ['_id', 'title'],
   additionalProperties: false,
   properties: {
     _id: {
@@ -52,7 +52,6 @@ module.exports = {
       'x-itemsProp': 'results',
       'x-itemTitle': 'title',
       'x-itemKey': 'href',
-      minItems: 1,
       items: {
         type: 'object',
         title: 'Jeu de données',
