@@ -10,7 +10,7 @@ describe('Uses API', () => {
 
     // create a use in the user's personal space
     const ax = global.ax.user1
-    const use = (await ax.post(`/api/v1/portals/${portal._id}/uses`, { title: 'use 1' })).data
+    const use = (await ax.post(`/api/v1/portals/${portal._id}/uses`, { title: 'use 1', author: 'Test', datasets: [{ id: 'test' }] })).data
     assert.equal(use.portal._id, portal._id)
     assert.deepEqual(use.portal.owner, portal.owner)
     // at first the user is the owner
@@ -65,7 +65,7 @@ describe('Uses API', () => {
     const ax = global.ax.user1
     const form = new FormData()
     form.append('image', fs.readFileSync('./public/static/logo.png'), 'logo.png')
-    form.append('body', JSON.stringify({ title: 'Title in multipart form data' }), { contentType: 'application/json' })
+    form.append('body', JSON.stringify({ title: 'Title in multipart form data', author: 'Test', datasets: [{ id: 'test' }] }), { contentType: 'application/json' })
     let use = (await ax.post(`/api/v1/portals/${portal._id}/uses`, form, { headers: { 'Content-Length': form.getLengthSync(), ...form.getHeaders() } })).data
     assert.equal(use.title, 'Title in multipart form data')
     assert.equal(use.image.name, 'logo.png')
