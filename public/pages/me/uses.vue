@@ -12,12 +12,6 @@
     <p class="mt-6">
       Faites connaitre votre utilisation des données de ce portail.
     </p>
-    <v-alert
-      type="info"
-      outlined
-    >
-      Si vous soumettez une réutilisation votre nom d'utilisateur et votre avatar seront visibles pour les utilisateurs du portail.
-    </v-alert>
 
     <h3 class="text-h5">
       Soumissions précédentes
@@ -131,6 +125,7 @@
     <template v-if="editItem">
       <v-row class="mx-0">
         <v-form
+          id="edit-form"
           ref="editForm"
           v-model="validForm"
           class="mt-6"
@@ -189,9 +184,9 @@ export default {
   },
   methods: {
     newItem () {
-      this.editItem = {
+      this.editUse({
         title: 'Nouvelle réutilisation'
-      }
+      })
     },
     async fetchDrafts () {
       this.draftUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { owner: 'me', size: 10000 } })).results
@@ -199,9 +194,13 @@ export default {
     async fetchSubmitted () {
       this.submittedUses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, { params: { creator: 'me', size: 10000 } })).results
     },
-    editUse (use) {
+    async editUse (use) {
       this.fullEditItem = use
       this.editItem = JSON.parse(JSON.stringify(use))
+      // await new Promise(resolve => setTimeout(resolve, 1000))
+      await this.$nextTick()
+      console.log(scroll)
+      this.$vuetify.goTo('#edit-form')
     },
     async save () {
       if (!this.$refs.editForm.validate()) return

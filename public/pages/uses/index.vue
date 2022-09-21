@@ -93,7 +93,10 @@
           sm="6"
           cols="12"
         >
-          <use-card :use="use" />
+          <use-card
+            :use="use"
+            :link="true"
+          />
         </v-col>
       </v-row>
       <v-row
@@ -155,8 +158,8 @@ export default {
         topics: []
       },
       sorts: [{
-        text: 'Date de création',
-        value: 'created.date'
+        text: 'Date de publication',
+        value: 'publishedAt'
       }, {
         text: 'Date de mise à jour',
         value: 'updated.date'
@@ -205,7 +208,7 @@ export default {
   methods: {
     readQueryParams () {
       this.search = this.$route.query.q || ''
-      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt'
+      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'publishedAt'
       this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
     },
     async refresh (append) {
@@ -213,12 +216,12 @@ export default {
       else this.page = 1
       const query = {}
       if (this.search) query.q = this.search
-      if (this.sort !== 'createdAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
+      if (this.sort !== 'publishedAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
       const params = { ...query }
-      params.sort = params.sort || 'created.date:-1'
+      params.sort = params.sort || 'publishedAt:-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,updated.date'
+      params.select = 'id,title,author,image,publishedAt,published,slug'
       if (append) params.count = false
       params.html = true
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {

@@ -9,6 +9,7 @@
         v-show="$vuetify.breakpoint.smAndDown"
         icon
         color="primary"
+        class="mx-1"
         v-on="on"
       >
         <v-icon>mdi-menu</v-icon>

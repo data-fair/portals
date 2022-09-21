@@ -1,11 +1,11 @@
 <template lang="html">
   <v-card
-    :hover="use.status === 'published'"
+    :hover="use.published && link"
     class="also-outlined"
   >
     <nuxt-link
-      v-if="use.status === 'published' && link"
-      :to="{name: 'uses-id', params:{id: use.id}}"
+      v-if="use.published && link"
+      :to="`/uses/${use.slug}`"
       style="text-decoration:none"
     >
       <use-card-content :use="use" />

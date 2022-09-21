@@ -410,6 +410,8 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
     'owner.id': req.portal.owner.id
   }
   if (req.query.slug) query.slug = req.query.slug
+  if (req.query.q) query.$text = { $search: req.query.q }
+
   if (req.query.owner === 'me') {
     query['owner.type'] = 'user'
     query['owner.id'] = req.user.id

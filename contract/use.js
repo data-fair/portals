@@ -1,8 +1,10 @@
 const owner = require('./partial/owner')
 
+const urlPattern = '(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})'
+
 module.exports = {
   type: 'object',
-  required: ['_id', 'title'],
+  required: ['_id', 'title', 'author', 'description'],
   additionalProperties: false,
   properties: {
     _id: {
@@ -36,12 +38,12 @@ module.exports = {
     },
     title: {
       type: 'string',
-      title: 'Titre de la réutilisation'
+      title: 'Titre de la réutilisation',
+      'x-props': { autofocus: true }
     },
-    description: {
+    author: {
       type: 'string',
-      'x-display': 'custom-markdown',
-      title: 'Description'
+      title: 'Auteur'
     },
     image: {
       type: 'object',
@@ -52,6 +54,50 @@ module.exports = {
         name: { type: 'string' },
         type: { type: 'string' },
         size: { type: 'number' }
+      }
+    },
+    description: {
+      type: 'string',
+      'x-display': 'custom-markdown',
+      title: 'Description',
+      minLength: 20
+    },
+    links: {
+      type: 'object',
+      title: 'Liens',
+      properties: {
+        web: {
+          type: 'string',
+          // cf https://stackoverflow.com/a/17773849/10132434
+          pattern: urlPattern,
+          title: 'Web',
+          description: 'Ajoutez un lien vers une page Web.',
+          'x-props': { hideDetails: 'auto' }
+        },
+        iframe: {
+          type: 'string',
+          // cf https://stackoverflow.com/a/17773849/10132434
+          pattern: urlPattern,
+          title: 'Intégration dans un cadre',
+          description: 'Ajoutez une adresse de page Web à afficher directement dans un cadre à côté de la description de cette réutilisation.',
+          'x-props': { hideDetails: 'auto' }
+        },
+        android: {
+          type: 'string',
+          // cf https://stackoverflow.com/a/17773849/10132434
+          pattern: urlPattern,
+          title: 'Android',
+          description: 'Ajoutez un lien vers une application Android dans un store.',
+          'x-props': { hideDetails: 'auto' }
+        },
+        ios: {
+          type: 'string',
+          // cf https://stackoverflow.com/a/17773849/10132434
+          pattern: urlPattern,
+          title: 'IOS',
+          description: 'Ajoutez un lien vers une application IOS dans un store.',
+          'x-props': { hideDetails: 'auto' }
+        }
       }
     },
     created: {
