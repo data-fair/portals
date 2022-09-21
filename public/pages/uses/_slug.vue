@@ -62,13 +62,42 @@
           <v-iframe :src="use.links.iframe" />
         </client-only>
       </v-row>
+      <section-subtitle text="Données utilisées" />
+      <v-container
+        v-if="datasets"
+        fluid
+      >
+        <v-row>
+          <v-col
+            v-for="(dataset, i) in datasets.results"
+            :key="i"
+            md="4"
+            sm="6"
+            cols="12"
+          >
+            <dataset-card :dataset="dataset" />
+          </v-col>
+        </v-row>
+      </v-container>
     </template>
+    <v-row class="my-4 text-center">
+      <v-col cols="12">
+        <v-btn
+          :color="'primary'"
+          to="/uses"
+          text
+          exact
+        >
+          <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import VIframe from '@koumoul/v-iframe'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
@@ -82,10 +111,19 @@ export default {
       { key: 'web', icon: 'mdi-web', title: 'Ouvrir la page Web sur ' },
       { key: 'android', icon: 'mdi-android', title: 'Voir l\'application Android sur ' },
       { key: 'ios', icon: 'mdi-apple-ios', title: 'Voir l\'application IOS sur ' }
-    ]
+    ],
+    datasets: null
   }),
   async fetch () {
     await this.fetchuse()
+    this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
+      params: {
+        ids: (this.use.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
+        select: 'id,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
+        size: 1000,
+        html: true
+      }
+    })
   },
   head () {
     if (this.use) {
@@ -95,7 +133,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['portal', 'publicUrl'])
+    ...mapState(['portal', 'publicUrl']),
+    ...mapGetters(['dataFairUrl'])
   },
   watch: {
     async '$route.params.id' () {

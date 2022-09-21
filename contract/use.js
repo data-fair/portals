@@ -4,7 +4,7 @@ const urlPattern = '(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-z
 
 module.exports = {
   type: 'object',
-  required: ['_id', 'title', 'author', 'description'],
+  required: ['_id', 'title', 'author', 'datasets'],
   additionalProperties: false,
   properties: {
     _id: {
@@ -44,6 +44,26 @@ module.exports = {
     author: {
       type: 'string',
       title: 'Auteur'
+    },
+    datasets: {
+      type: 'array',
+      title: 'Jeux de données',
+      'x-fromUrl': '{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title',
+      'x-itemsProp': 'results',
+      'x-itemTitle': 'title',
+      'x-itemKey': 'href',
+      minItems: 1,
+      items: {
+        type: 'object',
+        title: 'Jeu de données',
+        additionalProperties: false,
+        required: ['id'],
+        properties: {
+          href: { type: 'string' },
+          title: { type: 'string' },
+          id: { type: 'string' }
+        }
+      }
     },
     image: {
       type: 'object',

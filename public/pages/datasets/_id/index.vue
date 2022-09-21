@@ -232,6 +232,71 @@
         </v-row>
       </template>
 
+      <template v-if="applications">
+        <v-row
+          v-for="(application, i) in applications.results"
+          :key="application.id"
+          class="my-3"
+          align="center"
+        >
+          <v-col
+            :md="application.preferLargeDisplay ? 12 : 6"
+            cols="12"
+            class="px-5 py-3"
+            :order="0"
+            :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
+          >
+            <nuxt-link
+              :to="{name: 'applications-id', params:{id: application.id}}"
+              class="title"
+              style="text-decoration-line:none"
+            >
+              {{ application.title }}&nbsp;<v-icon color="primary">
+                mdi-open-in-new
+              </v-icon>
+            </nuxt-link>
+            <div
+              class="mt-3"
+              v-html="application.description"
+            />
+          </v-col>
+          <v-col
+            :md="application.preferLargeDisplay ? 12 : 6"
+            cols="12"
+            :order="1"
+            :order-md="application.preferLargeDisplay ? 1 : i%2"
+          >
+            <client-only>
+              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`" />
+            </client-only>
+          </v-col>
+        </v-row>
+      </template>
+
+      <template v-if="(uses && uses.length) || (user && config.usesManagement && config.usesManagement.type === 'users')">
+        <section-title
+          text="Réutilisations"
+        />
+        <p>
+          Vous souhaitez faire connaitre une réutilisation de cette donnée ? Rendez vous dans votre <nuxt-link :to="{ name: 'me-uses', query: { dataset: dataset.id } }">
+            espace personnel
+          </nuxt-link>.
+        </p>
+        <v-col
+          v-for="use of uses"
+          :key="use._id"
+          xl="3"
+          md="4"
+          sm="6"
+          cols="12"
+        >
+          <use-card
+            :use="use"
+            :link="true"
+          />
+        </v-col>
+      </template>
+
       <v-row v-if="iframeExternalReuses.length">
         <v-col
           v-for="(application, er) in iframeExternalReuses"
@@ -358,7 +423,8 @@ export default {
     isMobileOnly,
     dataset: null,
     applications: null,
-    dataFiles: null
+    dataFiles: null,
+    uses: null
   }),
   async fetch () {
     const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`, { params: { html: true } })
@@ -376,6 +442,10 @@ export default {
 
     const dataFiles = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}/data-files`)
     this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
+
+    this.uses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, {
+      params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: this.$route.params.id }
+    })).results
   },
   head () {
     if (this.dataset) {

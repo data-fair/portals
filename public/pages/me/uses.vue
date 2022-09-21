@@ -133,7 +133,7 @@
           <lazy-v-jsf
             v-model="editItem"
             :schema="schema"
-            :options="{hideReadOnly: true, deleteReadOnly: true, autofocus: true, fieldProps: {outlined: true, dense: true}}"
+            :options="vjsfOptions"
           />
         </v-form>
       </v-row>
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 const schema = JSON.parse(JSON.stringify(require('~/../contract/use')))
 schema.properties.published.readOnly = true
 
@@ -177,15 +177,38 @@ export default {
     }
   },
   computed: {
-    ...mapState(['portal'])
+    ...mapState(['portal']),
+    ...mapState('session', ['user']),
+    ...mapGetters(['dataFairUrl', 'owner']),
+    vjsfOptions () {
+      return {
+        hideReadOnly: true,
+        deleteReadOnly: true,
+        autofocus: true,
+        fieldProps: { outlined: true, dense: true },
+        context: {
+          dataFairUrl: this.dataFairUrl,
+          owner: this.owner
+        }
+      }
+    }
   },
   async mounted () {
     await Promise.all([this.fetchDrafts(), this.fetchSubmitted()])
+    if (this.$route.query.dataset) {
+      const dataset = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.$route.query.dataset}`)
+      this.editUse({
+        title: 'Nouvelle réutilisation',
+        author: this.user.name,
+        datasets: [{ id: dataset.id, title: dataset.title, href: dataset.href }]
+      })
+    }
   },
   methods: {
     newItem () {
       this.editUse({
-        title: 'Nouvelle réutilisation'
+        title: 'Nouvelle réutilisation',
+        author: this.user.name
       })
     },
     async fetchDrafts () {
