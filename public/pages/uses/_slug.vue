@@ -41,8 +41,6 @@ export default {
   },
   methods: {
     async fetchuse () {
-      console.log(this.$route.params)
-      console.log(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params: { html: true, slug: this.$route.params.slug } })
       this.use = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params: { html: true, slug: this.$route.params.slug } })
     }
   }

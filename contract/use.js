@@ -47,7 +47,12 @@ module.exports = {
       type: 'object',
       contentMediaType: 'image/*',
       title: 'Image',
-      writeOnly: true
+      writeOnly: true,
+      properties: {
+        name: { type: 'string' },
+        type: { type: 'string' },
+        size: { type: 'number' }
+      }
     },
     created: {
       type: 'object',

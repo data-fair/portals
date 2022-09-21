@@ -3,6 +3,11 @@
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
         <section-title text="Gérer les réutilisations" />
+        <v-switch
+          v-model="published"
+          label="publié"
+          @change="refresh(true)"
+        />
         <v-row v-if="uses">
           <v-col
             v-for="(use, i) in uses.results"
@@ -11,35 +16,10 @@
             sm="6"
             cols="12"
           >
-            <v-card outlined>
-              <v-card-title>
-                <h3
-                  class="title grey--text text--darken-2 font-weight-bold"
-                  style="height:40px;line-height: 1.1;"
-                >
-                  {{ use.title }}
-                </h3>
-              </v-card-title>
-
-              <v-row style="min-height:25px;">
-                <v-col class="py-0">
-                  <v-chip
-                    v-for="topic of use.topics"
-                    :key="topic.id"
-                    small
-                    outlined
-                    :color="topic.color || 'default'"
-                    class="ml-2"
-                    style="font-weight: bold"
-                  >
-                    {{ topic.title }}
-                  </v-chip>
-                </v-col>
-              </v-row>
-              <v-subheader>Mis à jour le {{ use.updated.date | date('LL') }} par {{ use.updated.name }}</v-subheader>
-              <v-card-actions class="py-0">
-                <v-spacer />
+            <use-card :use="use">
+              <template #actions>
                 <v-btn
+                  :disabled="!use.published"
                   icon
                   text
                   nuxt
@@ -51,24 +31,21 @@
                     mdi-open-in-new
                   </v-icon>
                 </v-btn>
-
                 <v-btn
                   icon
-                  text
-                  nuxt
                   title="éditer"
-                  :to="{ name: 'manager-portals-portalId-uses-id-edit', params: { id: use._id } }"
+                  :disabled="!!editItem"
+                  :to="`/manager/portals/${portal._id}/uses/${use._id}/edit`"
                 >
                   <v-icon color="primary">
                     mdi-pencil
                   </v-icon>
                 </v-btn>
                 <remove-confirm
-                  :label="use.title"
-                  @removed="removeUse(use.id)"
+                  @removed="deleteUse(use)"
                 />
-              </v-card-actions>
-            </v-card>
+              </template>
+            </use-card>
           </v-col>
         </v-row>
         <v-row
@@ -112,7 +89,8 @@ export default {
   data: () => ({
     pagination: 1,
     uses: null,
-    loading: false
+    loading: false,
+    published: false
   }),
   computed: {
     ...mapState(['portal'])
@@ -134,7 +112,7 @@ export default {
     async refresh (reset) {
       this.loading = true
       if (reset) this.pagination = 1
-      const params = { size: 12, use: this.pagination }
+      const params = { size: 12, page: this.pagination, published: this.published }
       const uses = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params })
       if (reset) this.uses = uses
       else uses.results.forEach(r => this.uses.results.push(r))
@@ -167,10 +145,9 @@ export default {
       }
     },
     useLink (use) {
-      console.log(this.portal.link)
       const url = new URL(this.portal.link)
       if (!url.pathname.endsWith('/')) url.pathname += '/'
-      url.pathname += 'uses/' + use.id
+      url.pathname += 'uses/' + use.slug
       return url.href
     }
   }

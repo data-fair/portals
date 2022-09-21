@@ -129,7 +129,7 @@
     </v-row>
 
     <template v-if="editItem">
-      <v-row class="mx-0 mb-2">
+      <v-row class="mx-0">
         <v-form
           ref="editForm"
           v-model="validForm"
@@ -142,7 +142,7 @@
           />
         </v-form>
       </v-row>
-      <v-row class="mx-0">
+      <v-row class="mx-0 mb-2">
         <v-spacer />
         <v-btn
           text
@@ -206,10 +206,13 @@ export default {
     async save () {
       if (!this.$refs.editForm.validate()) return
       this.saving = true
+      const formData = new FormData()
+      if (this.editItem.image && this.editItem.image.data) formData.append('image', this.editItem.image.data)
+      formData.append('body', JSON.stringify(this.editItem))
       if (this.fullEditItem && this.fullEditItem._id) {
-        await this.$axios.$patch(`/api/v1/portals/${this.portal._id}/uses/${this.fullEditItem._id}`, this.editItem)
+        await this.$axios.$patch(`/api/v1/portals/${this.portal._id}/uses/${this.fullEditItem._id}`, formData)
       } else {
-        await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses`, this.editItem)
+        await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses`, formData)
       }
       await this.fetchDrafts()
       this.editItem = null

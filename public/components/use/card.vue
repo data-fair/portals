@@ -4,7 +4,7 @@
     class="also-outlined"
   >
     <nuxt-link
-      v-if="use.status === 'published'"
+      v-if="use.status === 'published' && link"
       :to="{name: 'uses-id', params:{id: use.id}}"
       style="text-decoration:none"
     >
@@ -18,7 +18,10 @@
       <slot name="actions" />
       <v-spacer />
       <v-subheader v-if="use.publishedAt">
-        Publiée le {{ use.updated.date | date('L') }}
+        Publiée le {{ use.publishedAt | date('L') }}
+      </v-subheader>
+      <v-subheader v-else>
+        Mise à jour le {{ use.updated.date | date('L') }}
       </v-subheader>
     </v-card-actions>
   </v-card>
@@ -27,7 +30,8 @@
 <script>
 export default {
   props: {
-    use: { type: Object, default: null }
+    use: { type: Object, default: null },
+    link: { type: Boolean, default: false }
   }
 }
 </script>

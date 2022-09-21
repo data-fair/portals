@@ -4,7 +4,6 @@
     :value="value"
     :label="label"
     :disabled="disabled"
-    hide-details
     class="markdown-editor"
   >
     <v-card

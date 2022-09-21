@@ -84,13 +84,11 @@ export default {
   },
   methods: {
     async update (patch) {
-      try {
-        await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`, patch)
-        this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
-        // this.$router.push({ name: 'uses' })
-      } catch (error) {
-        console.error(error)
-      }
+      const formData = new FormData()
+      if (patch.image && patch.image.data) formData.append('image', patch.image.data)
+      formData.append('body', JSON.stringify(patch))
+      await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`, formData)
+      this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
     }
   }
 }

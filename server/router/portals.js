@@ -77,7 +77,7 @@ function cleanPageConfig (conf, html) {
 
 function cleanUse (use, html) {
   if (!use) return
-  if (use.description) use.description = sanitizeHtml(marked(use.description))
+  if (use.description && html) use.description = sanitizeHtml(marked(use.description))
   return use
 }
 
@@ -413,7 +413,7 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
   if (req.query.owner === 'me') {
     query['owner.type'] = 'user'
     query['owner.id'] = req.user.id
-    query.published = false
+    query.published = { $ne: true }
   } else if (req.query.creator === 'me') {
     query['created.id'] = req.user.id
     delete query.published
@@ -486,7 +486,7 @@ router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), usesUtils.upload
 
   const patch = {}
   for (const key in req.body) {
-    if (!req.body[key]) {
+    if ([null, ''].includes(req.body[key])) {
       patch.$unset = patch.$unset || {}
       patch.$unset[key] = undefined
       req.body[key] = undefined
