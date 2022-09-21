@@ -277,7 +277,7 @@
         <section-title
           text="Réutilisations"
         />
-        <p>
+        <p v-if="user && config.usesManagement && config.usesManagement.type === 'users'">
           Vous souhaitez faire connaitre une réutilisation de cette donnée ? Rendez vous dans votre <nuxt-link :to="{ name: 'me-uses', query: { dataset: dataset.id } }">
             espace personnel
           </nuxt-link>.
