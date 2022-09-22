@@ -1,5 +1,8 @@
 <template>
-  <v-row>
+  <v-row
+    style="overflow:hidden"
+    class="nav-tabs-or-menu"
+  >
     <nav-menu
       :visible="$vuetify.breakpoint.smAndDown || overflowing"
       :background-dark="backgroundDark"

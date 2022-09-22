@@ -120,9 +120,12 @@ export default {
       await this.$nextTick()
       const wrapperWidth = this.$refs.tabs.$el.querySelector('.v-slide-group__wrapper').offsetWidth
       const contentWidth = this.$refs.tabs.$el.querySelector('.v-slide-group__content').offsetWidth
-      debug(`check overflowing ${i} : wrapper=${wrapperWidth}, content=${contentWidth}`)
-      if (wrapperWidth < contentWidth) {
+      const localWidth = this.$el.offsetWidth
+      const parentWidth = this.$parent.$el.offsetWidth
+      debug(`check overflowing ${i} : wrapper=${wrapperWidth}, content=${contentWidth}, local=${localWidth}, parent=${parentWidth}`)
+      if (wrapperWidth < contentWidth || parentWidth < localWidth) {
         this.$emit('overflowing', true)
+        break
       }
     }
   }
