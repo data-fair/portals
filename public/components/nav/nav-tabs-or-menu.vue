@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar-items>
+  <v-row>
     <nav-menu
       :visible="$vuetify.breakpoint.smAndDown || overflowing"
       :background-dark="backgroundDark"
@@ -11,7 +11,7 @@
       :navigation="navigation"
       @overflowing="overflowing = true"
     />
-  </v-toolbar-items>
+  </v-row>
 </template>
 
 <script>

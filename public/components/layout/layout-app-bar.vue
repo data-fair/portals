@@ -11,8 +11,6 @@
       :navigation="navigation"
     />
 
-    <v-spacer />
-
     <v-toolbar-items>
       <client-only>
         <notifications-queue
