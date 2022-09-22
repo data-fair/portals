@@ -440,6 +440,12 @@
         "type": "boolean",
         "default": false
       },
+      "showSearchOverBanner": {
+        "title": "Afficher le champ de recherche par dessus la bannière",
+        "type": "boolean",
+        "default": false,
+        "x-if": "showSearch"
+      },
       "showTopics": {
         "title": "Afficher les thématiques",
         "type": "boolean",

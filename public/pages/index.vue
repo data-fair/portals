@@ -22,6 +22,18 @@
           style="margin-top: -11px;"
         />
       </v-row>
+      <v-row
+        v-if="config.showSearch && config.showSearchOverBanner"
+        justify="center"
+        style="position: absolute; top: 130px;width: 100%;"
+      >
+        <nav-home-search />
+      </v-row>
+      <topics
+        v-if="config.showTopics && config.showSearchOverBanner"
+        :topics="topics"
+        style="position: absolute; top: 190px;width: 100%;"
+      />
     </template>
     <v-container>
       <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">
@@ -66,25 +78,14 @@
         :stats="stats"
       />
       <v-row
-        v-if="config.showSearch"
+        v-if="config.showSearch && !config.showSearchOverBanner"
         justify="center"
         class="py-4"
       >
-        <v-text-field
-          v-model="search"
-          rounded
-          style="max-width:400px;"
-          placeholder="Rechercher"
-          outlined
-          append-icon="mdi-magnify"
-          hide-details
-          class="mb-2 v-input--is-focused primary--text"
-          @keyup.enter.native="$router.push({name: 'datasets', query: {q: search}})"
-          @click:append="$router.push({name: 'datasets', query: {q: search}})"
-        />
+        <nav-home-search />
       </v-row>
       <topics
-        v-if="config.showTopics"
+        v-if="config.showTopics && !config.showSearchOverBanner"
         :topics="topics"
       />
 
@@ -174,8 +175,7 @@ export default {
     applications: null,
     datasets: null,
     stats: null,
-    topics: [],
-    search: ''
+    topics: []
   }),
   async fetch () {
     const baseFilter = {

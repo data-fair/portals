@@ -15,6 +15,7 @@
       depressed
       outlined
       elevation="2"
+      style="background-color:white"
     >
       <v-icon
         v-if="topic.value.icon && topic.value.icon.name"
