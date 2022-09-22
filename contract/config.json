@@ -110,7 +110,7 @@
         "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
       },
       "backgroundColor": {
-        "title": "Couleur du fond",
+        "title": "Couleur du fond de la page",
         "type": "string",
         "default": "white",
         "oneOf": [{
@@ -165,6 +165,33 @@
         }, {
           "const": "white",
           "title": "blanc"
+        }]
+      },
+      "appBarBehavior": {
+        "title": "Comportement de la barre de navigation",
+        "type": "string",
+        "default": "scroll",
+        "oneOf": [{
+          "const": "scroll",
+          "title": "disparait au scroll"
+        }, {
+          "const": "stick",
+          "title": "toujours visible"
+        }, {
+          "const": "stickHome",
+          "title": "toujours visible uniquement sur la page d'accueil"
+        }]
+      },
+      "headerColor": {
+        "title": "Couleur de l'entête",
+        "type": "string",
+        "default": "page",
+        "oneOf": [{
+          "const": "page",
+          "title": "couleur du fond de la page"
+        }, {
+          "const": "appBar",
+          "title": "couleur de la barre de navigation"
         }]
       },
       "footerColor": {

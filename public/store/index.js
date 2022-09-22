@@ -63,6 +63,28 @@ export default () => {
         if (!state.config) return
         return Vue.prototype.$color(state.config.themeColor).getLuminance() < 0.4
       },
+      appBarMainColor (state) {
+        const appBarColor = state.config.appBarColor || 'primary'
+        if (appBarColor.startsWith('secondary')) return 'secondary'
+        if (appBarColor.startsWith('primary')) return 'primary'
+        if (appBarColor === 'grey') return '#424242'
+        return appBarColor
+      },
+      appBarMainColorDark (state, getters) {
+        if (getters.appBarMainColor === 'secondary') return getters.secondaryColorDark
+        if (getters.appBarMainColor === 'primary') return getters.themeColorDark
+        if (state.config.appBarColor === 'grey') return true
+        if (state.config.appBarColor === 'white') return false
+        return true
+      },
+      headerColor (state, getters) {
+        if (state.config.headerColor === 'page' || !state.config.headerColor) return getters.backgroundColor
+        if (state.config.headerColor === 'appBar') return 'transparent'
+      },
+      headerColorDark (state, getters) {
+        if (getters.headerColor === 'transparent') return getters.appBarMainColorDark
+        return false
+      },
       footerColor (state, getters) {
         if (state.config.footerColor === 'primary') return state.config.themeColor
         if (state.config.footerColor === 'secondary') return getters.secondaryColor

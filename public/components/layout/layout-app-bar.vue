@@ -1,31 +1,32 @@
 <template>
-  <v-app-bar
-    :class="`app-bar-${config.appBarColor || 'primary'} ` + (appBarDark ? 'area--dark' : 'area--light')"
-    :color="appBarMainColor"
-    height="64"
-    style="max-height: 64px;"
-  >
-    <nav-tabs-or-menu
-      v-if="initialized && navigation"
-      :background-dark="appBarDark"
-      :navigation="navigation"
-    />
+  <v-app-bar v-bind="appBarProps">
+    <!-- 128 px -->
+    <layout-header />
 
-    <v-toolbar-items>
-      <client-only>
-        <notifications-queue
-          v-if="notifyUrl && config.authentication !== 'none'"
-          :notify-url="notifyUrl"
-          :login-href="loginHref"
-          :background-dark="appBarDark"
-        />
-      </client-only>
-      <layout-personal-menu
-        v-if="initialized && config.authentication !== 'none'"
-        :login-href="loginHref"
-        :background-dark="appBarDark"
+    <!-- 64 px -->
+    <template #extension>
+      <nav-tabs-or-menu
+        v-if="initialized && navigation"
+        :background-dark="appBarMainColorDark"
+        :navigation="navigation"
       />
-    </v-toolbar-items>
+
+      <v-toolbar-items>
+        <client-only>
+          <notifications-queue
+            v-if="notifyUrl && config.authentication !== 'none'"
+            :notify-url="notifyUrl"
+            :login-href="loginHref"
+            :background-dark="appBarMainColorDark"
+          />
+        </client-only>
+        <layout-personal-menu
+          v-if="initialized && config.authentication !== 'none'"
+          :login-href="loginHref"
+          :background-dark="appBarMainColorDark"
+        />
+      </v-toolbar-items>
+    </template>
   </v-app-bar>
 </template>
 
@@ -43,7 +44,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal']),
     ...mapState('session', ['initialized']),
-    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation']),
+    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColor', 'appBarMainColorDark']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href
@@ -55,19 +56,21 @@ export default {
         { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor }
       )
     },
-    appBarMainColor () {
-      const appBarColor = this.config.appBarColor || 'primary'
-      if (appBarColor.startsWith('secondary')) return 'secondary'
-      if (appBarColor.startsWith('primary')) return 'primary'
-      if (appBarColor === 'grey') return '#424242'
-      return appBarColor
-    },
-    appBarDark () {
-      if (this.appBarMainColor === 'secondary') return this.secondaryColorDark
-      if (this.appBarMainColor === 'primary') return this.themeColorDark
-      if (this.config.appBarColor === 'grey') return true
-      if (this.config.appBarColor === 'white') return false
-      return true
+    appBarProps () {
+      const props = {
+        class: `main-app-bar mb-3 app-bar-${this.config.appBarColor || 'primary'}`,
+        color: this.appBarMainColor,
+        height: 128,
+        extensionHeight: 64,
+        style: 'max-height:192px;'
+      }
+      if (this.appBarMainColorDark) props.class += ' area--dark'
+      else props.class += ' area--light'
+      if (this.config.appBarBehavior === 'stick' || (this.config.appBarBehavior === 'stickHome' && this.$route.path === '/')) {
+        props.app = true
+        props.hideOnScroll = true
+      }
+      return props
     }
   },
   methods: {
@@ -83,5 +86,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+.main-app-bar .v-toolbar__content {
+  padding: 0 !important;
+}
 </style>

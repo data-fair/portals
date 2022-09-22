@@ -18,7 +18,8 @@
 export default {
   props: {
     navigation: { type: Array, required: true },
-    backgroundDark: { type: Boolean, required: true }
+    backgroundDark: { type: Boolean, required: true },
+    dense: { type: Boolean, default: false }
   },
   data: () => ({
     overflowing: false
