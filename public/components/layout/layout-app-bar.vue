@@ -5,121 +5,12 @@
     height="64"
     style="max-height: 64px;"
   >
-    <xs-menu
-      :pages="pages"
-      :extra-menus="extraMenus"
+    <nav-tabs-or-menu
+      v-if="initialized && navigation"
+      :background-dark="appBarDark"
+      :navigation="navigation"
     />
-    <v-tabs
-      v-if="initialized && pages"
-      v-show="!$vuetify.breakpoint.smAndDown"
-      v-model="computedActiveTab"
-      height="64"
-      :dark="appBarDark"
-      centered
-      slider-size="4"
-      optional
-    >
-      <v-tabs-slider :color="appBarDark ? 'white' : textDark" />
-      <v-tab
-        :to="{name: 'index'}"
-        nuxt
-        exact
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-        @click="activeTab = homeFullPath"
-      >
-        Accueil
-      </v-tab>
-      <v-tab
-        v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'"
-        :to="{name: 'datasets'}"
-        nuxt
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-      >
-        Données
-      </v-tab>
-      <v-tab
-        v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
-        :to="{name: 'applications'}"
-        nuxt
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-      >
-        Visualisations
-      </v-tab>
-      <!-- DEPRECATED -->
-      <v-tab
-        v-if="config.externalReusesPage && config.externalReusesPage.type !== 'none'"
-        :to="{name: 'external-reuses'}"
-        nuxt
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-      >
-        Réutilisations
-      </v-tab>
-      <v-tab
-        v-if="config.usesPage && config.usesPage.type !== 'none'"
-        :to="{name: 'uses'}"
-        nuxt
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-      >
-        Réutilisations
-      </v-tab>
-      <v-tab
-        v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'direct')"
-        :key="page.id"
-        :to="{name: 'pages-id', params: {id: page.id}}"
-        nuxt
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-      >
-        {{ page.title }}
-      </v-tab>
-      <v-menu
-        v-for="menu in extraMenus"
-        :key="menu"
-        offset-y
-        nudge-left
-      >
-        <template #activator="{ on, attrs }">
-          <v-btn
-            text
-            v-bind="attrs"
-            :height="64"
-            class="font-weight-bold"
-            :class="{'white--text': appBarDark}"
-            v-on="on"
-          >
-            {{ menu }}
-            <v-icon right>
-              mdi-menu-down
-            </v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="page in pages.filter(p => p.navigation && p.navigation.type === 'menu' && p.navigation.title === menu)"
-            :key="page.id"
-            :to="{name: 'pages-id', params: {id: page.id}}"
-            nuxt
-            @click="activeTab = null"
-          >
-            <v-list-item-title>{{ page.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-tab
-        v-if="config.contactEmail"
-        :to="{name: 'contact'}"
-        class="font-weight-bold"
-        :class="{'white--text': appBarDark}"
-        nuxt
-      >
-        Contact
-      </v-tab>
-    </v-tabs>
+
     <v-spacer />
 
     <v-toolbar-items>
@@ -212,34 +103,24 @@
 </template>
 
 <script>
-import XsMenu from '~/components/layout/xs-menu'
-import NotificationsQueue from '~/components/notifications-queue'
 const { mapState, mapGetters, mapActions } = require('vuex')
 const debug = require('debug')('app-bar')
 debug.log = console.log.bind(console)
 
 export default {
-  components: { XsMenu, NotificationsQueue },
-  data: () => ({
-    pages: null,
-    activeTab: null
-  }),
   async fetch () {
-    debug('homeFullPath', this.homeFullPath)
-    if (this.$route.path === '/') this.activeTab = this.homeFullPath
-    this.pages = (await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+    await this.$store.dispatch('fetchPages')
   },
   computed: {
-    ...mapState(['config', 'textDark', 'portal']),
+    ...mapState(['config', 'portal', 'pages']),
     ...mapState('session', ['user', 'initialized']),
-    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
+    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation']),
     ...mapGetters('session', ['loginUrl']),
-    homeFullPath () {
-      const base = this.$router.options.base
-      return base.endsWith('/') ? base : base + '/'
-    },
     extraMenus () {
-      return (this.pages || []).filter(p => p.navigation && p.navigation.type === 'menu').map(p => p.navigation.title).filter((m, i, s) => s.indexOf(m) === i)
+      return (this.pages || [])
+        .filter(p => p.navigation && p.navigation.type === 'menu')
+        .map(p => p.navigation.title)
+        .filter((m, i, s) => s.indexOf(m) === i)
     },
     url () {
       return global.location && global.location.href
@@ -272,20 +153,6 @@ export default {
       if (this.config.appBarColor === 'grey') return true
       if (this.config.appBarColor === 'white') return false
       return true
-    },
-    computedActiveTab: {
-      get () {
-        return this.activeTab
-      },
-      set (value) {
-        if (value === 0) value = '/'
-        this.activeTab = value
-      }
-    }
-  },
-  watch: {
-    activeTab () {
-      debug('watcher activeTab', this.activeTab)
     }
   },
   methods: {

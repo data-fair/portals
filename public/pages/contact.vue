@@ -81,6 +81,7 @@ const { mapState, mapGetters } = require('vuex')
 
 const newMessage = { from: '', subject: '', text: '' }
 export default {
+  middleware: 'portal-required',
   data: () => ({
     valid: true,
     message: { ...newMessage },

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { sessionStoreBuilder } from '@data-fair/sd-vue/src'
+import navigation from './navigation'
 
 const debug = require('debug')('portals:store')
 debug.log = console.log.bind(console)
@@ -10,6 +11,7 @@ Vue.use(Vuex)
 export default () => {
   return new Vuex.Store({
     modules: {
+      navigation: navigation(),
       session: sessionStoreBuilder()
     },
     state: {
@@ -130,7 +132,6 @@ export default () => {
       },
       portalHead (state) {
         return (route) => {
-          console.log(this)
           // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
           const canonical = state.publicUrl + route.path
           const link = [

@@ -4,7 +4,7 @@
     <client-only><accept-cookies /></client-only>
     <layout-header />
 
-    <app-bar class="main-app-bar mb-3" />
+    <layout-app-bar class="main-app-bar mb-3" />
 
     <v-main>
       <nuxt-child />
@@ -37,12 +37,9 @@
 </template>
 
 <script>
-import AcceptCookies from '~/components/accept-cookies'
-import AppBar from '~/components/layout/app-bar'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { AcceptCookies, AppBar },
   head () {
     return this.portalHead(this.$route)
   },
