@@ -22,18 +22,21 @@
           style="margin-top: -11px;"
         />
       </v-row>
-      <v-row
-        v-if="config.showSearch && config.showSearchOverBanner"
-        justify="center"
-        style="position: absolute; top: 130px;width: 100%;"
+      <v-container
+        v-if="config.showSearchOverBanner"
+        style="position:relative;top: -260px;height:0;"
       >
-        <nav-home-search />
-      </v-row>
-      <topics
-        v-if="config.showTopics && config.showSearchOverBanner"
-        :topics="topics"
-        style="position: absolute; top: 190px;width: 100%;"
-      />
+        <v-row
+          v-if="config.showSearch"
+          justify="center"
+        >
+          <nav-home-search />
+        </v-row>
+        <topics
+          v-if="config.showTopics"
+          :topics="topics"
+        />
+      </v-container>
     </template>
     <v-container>
       <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">
