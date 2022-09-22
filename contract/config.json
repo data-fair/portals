@@ -440,16 +440,15 @@
         "type": "boolean",
         "default": false
       },
-      "showSearchOverBanner": {
-        "title": "Afficher le champ de recherche par dessus la bannière",
-        "type": "boolean",
-        "default": false,
-        "x-if": "showSearch"
-      },
       "showTopics": {
         "title": "Afficher les thématiques",
         "type": "boolean",
         "default": true
+      },
+      "showSearchOverBanner": {
+        "title": "Afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
+        "type": "boolean",
+        "default": false
       },
       "showTwitterTimeline": {
         "title": "Afficher la timeline Twitter",
