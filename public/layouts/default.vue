@@ -6,7 +6,7 @@
     <!-- header and navigation -->
     <layout-app-bar />
 
-    <v-main>
+    <v-main class="pt-3">
       <nuxt-child />
       <client-only><layout-notifications /></client-only>
     </v-main>
