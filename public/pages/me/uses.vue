@@ -222,7 +222,6 @@ export default {
       this.editItem = JSON.parse(JSON.stringify(use))
       // await new Promise(resolve => setTimeout(resolve, 1000))
       await this.$nextTick()
-      console.log(scroll)
       this.$vuetify.goTo('#edit-form')
     },
     async save () {

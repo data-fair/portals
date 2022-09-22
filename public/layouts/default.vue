@@ -3,7 +3,6 @@
     <layout-dynamic-style html-overflow="scroll" />
     <client-only><accept-cookies /></client-only>
     <layout-header />
-
     <layout-app-bar class="main-app-bar mb-3" />
 
     <v-main>
