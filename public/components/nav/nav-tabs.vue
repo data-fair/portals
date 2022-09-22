@@ -116,9 +116,14 @@ export default {
     }
   },
   async mounted () {
-    await this.$nextTick()
-    if (this.$refs.tabs.$el.querySelector('.v-slide-group__wrapper').offsetWidth < this.$refs.tabs.$el.querySelector('.v-slide-group__content').offsetWidth) {
-      this.$emit('overflowing', true)
+    for (let i = 0; i < 4; i++) {
+      await this.$nextTick()
+      const wrapperWidth = this.$refs.tabs.$el.querySelector('.v-slide-group__wrapper').offsetWidth
+      const contentWidth = this.$refs.tabs.$el.querySelector('.v-slide-group__content').offsetWidth
+      debug(`check overflowing ${i} : wrapper=${wrapperWidth}, content=${contentWidth}`)
+      if (wrapperWidth < contentWidth) {
+        this.$emit('overflowing', true)
+      }
     }
   }
 }
