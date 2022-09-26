@@ -30,7 +30,7 @@ const { mapState, mapGetters } = require('vuex')
 export default {
   components: { VIframe },
   layout: 'personal',
-  middleware: 'portal-required',
+  middleware: ['portal-required', 'auth-required'],
   data () {
     return { topics: null }
   },

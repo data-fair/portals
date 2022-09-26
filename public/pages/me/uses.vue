@@ -164,7 +164,7 @@ schema.properties.published.readOnly = true
 
 export default {
   layout: 'personal',
-  middleware: 'portal-required',
+  middleware: ['portal-required', 'auth-required'],
   data () {
     return {
       validForm: false,

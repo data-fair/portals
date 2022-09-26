@@ -89,7 +89,7 @@
     "vue-social-sharing": "^3.0.4"
   },
   "devDependencies": {
-    "@data-fair/sd-vue": "2.1.1",
+    "@data-fair/sd-vue": "2.4.0",
     "@koumoul/v-iframe": "^0.19.4",
     "@koumoul/vjsf": "2.20.1",
     "@koumoul/vue-multianalytics": "^1.11.3",

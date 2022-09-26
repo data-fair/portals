@@ -62,7 +62,7 @@
               </template>
               <v-list-item
                 :disabled="embed"
-                @click="logout"
+                @click="logout(false);$router.push('/')"
               >
                 <v-list-item-action><v-icon>mdi-logout</v-icon></v-list-item-action>
                 <v-list-item-title>Se déconnecter</v-list-item-title>
