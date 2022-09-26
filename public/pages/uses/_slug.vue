@@ -30,12 +30,23 @@
       </v-row>
       <v-row>
         <v-col
+          v-if="use.image"
           cols="12"
-          md="5"
-          offset-md="1"
         >
+          <a
+            v-if="use.links.web || use.links.android || use.links.ios"
+            :href="use.links.web || use.links.android || use.links.ios"
+          >
+            <v-img
+              :src="`${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image`"
+              :alt="use.title"
+              min-height="200"
+              max-height="600"
+              contain
+            />
+          </a>
           <v-img
-            v-if="use.image"
+            v-else
             :src="`${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image`"
             :alt="use.title"
             min-height="200"
@@ -44,23 +55,22 @@
           />
         </v-col>
         <v-col
-          class="pt-2 order-md-first"
+          class="pt-2"
           cols="12"
-          md="6"
         >
           <div
             v-if="use.description"
             v-html="use.description"
           />
         </v-col>
-      </v-row>
-      <v-row
-        v-if="use.links && use.links.iframe"
-        class="mt-4"
-      >
-        <client-only>
-          <v-iframe :src="use.links.iframe" />
-        </client-only>
+        <v-col
+          v-if="use.links && use.links.iframe"
+          cols="12"
+        >
+          <client-only>
+            <v-iframe :src="use.links.iframe" />
+          </client-only>
+        </v-col>
       </v-row>
       <section-subtitle text="Données utilisées" />
       <v-container
