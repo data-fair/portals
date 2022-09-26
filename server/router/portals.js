@@ -583,7 +583,7 @@ router.delete('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async
     // we use setPortal just to check that the user is owner
     await setPortal(req, res)
   }
-  await req.app.get('db').collection('uses').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
+  await req.app.get('db').collection('uses').deleteOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   res.status(204).send()
 }))
 
