@@ -426,11 +426,13 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
   if (req.query.q) query.$text = { $search: req.query.q }
 
   if (req.query.owner === 'me') {
+    if (!req.user) return res.status(403).send('owner=me filter is for authenticated users')
     query['owner.type'] = 'user'
     query['owner.id'] = req.user.id
     query.published = { $ne: true }
   } else if (req.query.creator === 'me') {
     query['created.id'] = req.user.id
+    if (!req.user) return res.status(403).send('creator=me filter is for authenticated users')
     delete query.published
   } else if (req.query.published) {
     // only owner of portal can filter on published
