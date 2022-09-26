@@ -73,6 +73,30 @@
                 "type": "string"
               }
             }
+          },
+          "font1": {
+            "type": "object",
+            "title": "Police 1 (formats WOFF ou WOFF2)",
+            "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
+            "contentMediaType": ".woff,.woff2",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "font2": {
+            "type": "object",
+            "title": "Police 2 (formats WOFF ou WOFF2)",
+            "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
+            "contentMediaType": ".woff,.woff2",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -96,16 +120,16 @@
       "bodyFont": {
         "title": "Police principale",
         "type": "object",
-        "x-fromUrl": "{context.publicUrl}/api/v1/fonts",
-        "x-itemTitle": "name",
+        "x-fromUrl": "{context.portalUrl}/fonts",
+        "x-itemTitle": "label",
         "x-itemKey": "name",
         "description": "Ces polices sont issues de Google Fonts. La police par défaut est Nunito."
       },
       "headingsFont": {
         "title": "Police des titres",
         "type": "object",
-        "x-fromUrl": "{context.publicUrl}/api/v1/fonts",
-        "x-itemTitle": "name",
+        "x-fromUrl": "{context.portalUrl}/fonts",
+        "x-itemTitle": "label",
         "x-itemKey": "name",
         "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
       },

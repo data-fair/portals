@@ -224,6 +224,21 @@ router.put('/:id/configDraft', asyncWrap(setPortal), asyncWrap(async (req, res) 
   res.send()
 }))
 
+const googleFonts = require('google-fonts-complete')
+const fonts = Object.entries(googleFonts)
+  .filter(entry => entry[1].subsets.includes('latin'))
+  .map(([name, info]) => ({ source: 'google-fonts', name, label: name, category: info.category }))
+router.get('/:id/fonts', asyncWrap(setPortal), (req, res, next) => {
+  const assetsFonts = []
+  if (req.portal.configDraft?.assets?.font1?.name) {
+    assetsFonts.push({ source: 'assets', name: 'font1', label: `Police 1 (${req.portal.configDraft.assets.font1.name})` })
+  }
+  if (req.portal.configDraft?.assets?.font2?.name) {
+    assetsFonts.push({ source: 'assets', name: 'font2', label: `Police 2 (${req.portal.configDraft.assets.font2.name})` })
+  }
+  res.send([...assetsFonts, ...fonts])
+})
+
 router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, res) => {
   await prepareFitHashedAsset(`${config.dataDir}/${req.params.id}/draft`, req.params.assetId)
   res.send()

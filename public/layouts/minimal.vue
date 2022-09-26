@@ -1,6 +1,5 @@
 <template>
   <v-app class="minimal-layout">
-    <layout-dynamic-style />
     <client-only><accept-cookies /></client-only>
     <v-main>
       <nuxt-child />

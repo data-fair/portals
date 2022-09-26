@@ -1,6 +1,5 @@
 <template>
   <v-app v-if="config">
-    <layout-dynamic-style html-overflow="scroll" />
     <client-only><accept-cookies /></client-only>
 
     <!-- header and navigation -->
@@ -41,7 +40,7 @@ const { mapState, mapGetters } = require('vuex')
 
 export default {
   head () {
-    return this.portalHead(this.$route)
+    return this.portalHead(this.$route, true, 'scroll')
   },
   computed: {
     ...mapState(['config']),

@@ -1,9 +1,5 @@
 <template>
   <v-app v-if="config">
-    <layout-dynamic-style
-      html-overflow="scroll"
-      :apply-fonts="false"
-    />
     <client-only><accept-cookies /></client-only>
 
     <layout-personal-app-bar :nav-context="navContext" />
@@ -31,7 +27,7 @@ export default {
     }
   }),
   head () {
-    return this.portalHead(this.$route)
+    return this.portalHead(this.$route, false, 'scroll')
   },
   computed: {
     ...mapState(['config']),

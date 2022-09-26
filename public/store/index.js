@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { sessionStoreBuilder } from '@data-fair/sd-vue/src'
 import navigation from './navigation'
+import style from './style'
 
 const debug = require('debug')('portals:store')
 debug.log = console.log.bind(console)
@@ -12,6 +13,7 @@ export default () => {
   return new Vuex.Store({
     modules: {
       navigation: navigation(),
+      style: style(),
       session: sessionStoreBuilder()
     },
     state: {
@@ -33,91 +35,6 @@ export default () => {
         } catch (e) {
           return true
         }
-      },
-      backgroundColor (state) {
-        if (!state.config) return
-        if (state.config.backgroundColor === 'white' || !state.config.backgroundColor) return '#FFFFFF'
-        if (state.config.backgroundColor === 'lightGrey') return '#FAFAFA'
-      },
-      secondaryColor (state) {
-        if (!state.config) return
-        return state.config.secondaryColor || state.config.themeColor
-      },
-      readableThemeColor (state) {
-        if (!state.config) return
-        return Vue.prototype.$readableColor(state.config.themeColor)
-      },
-      backgroundableThemeColor (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$backgroundableColor(state.config.themeColor)
-      },
-      readableSecondaryColor (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$readableColor(getters.secondaryColor)
-      },
-      backgroundableSecondaryColor (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$backgroundableColor(getters.secondaryColor)
-      },
-      themeColorDark (state) {
-        if (!state.config) return
-        return Vue.prototype.$color(state.config.themeColor).getLuminance() < 0.4
-      },
-      appBarMainColor (state) {
-        const appBarColor = state.config.appBarColor || 'primary'
-        if (appBarColor.startsWith('secondary')) return 'secondary'
-        if (appBarColor.startsWith('primary')) return 'primary'
-        if (appBarColor === 'grey') return '#424242'
-        return appBarColor
-      },
-      appBarMainColorDark (state, getters) {
-        if (getters.appBarMainColor === 'secondary') return getters.secondaryColorDark
-        if (getters.appBarMainColor === 'primary') return getters.themeColorDark
-        if (state.config.appBarColor === 'grey') return true
-        if (state.config.appBarColor === 'white') return false
-        return true
-      },
-      headerColor (state, getters) {
-        if (state.config.headerColor === 'page' || !state.config.headerColor) return getters.backgroundColor
-        if (state.config.headerColor === 'appBar') return 'transparent'
-      },
-      headerColorDark (state, getters) {
-        if (getters.headerColor === 'transparent') return getters.appBarMainColorDark
-        return false
-      },
-      footerColor (state, getters) {
-        if (state.config.footerColor === 'primary') return state.config.themeColor
-        if (state.config.footerColor === 'secondary') return getters.secondaryColor
-        if (state.config.footerColor === 'grey' || !state.config.footerColor) return '#424242'
-        if (state.config.footerColor === 'white') return '#FFFFFF'
-        return state.config.footerColor
-      },
-      footerColorDark (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$color(getters.footerColor).getLuminance() < 0.4
-      },
-      personalNavigationColor (state, getters) {
-        if (state.config.personalNavigationColor === 'primary' || !state.config.personalNavigationColor) return state.config.themeColor
-        if (state.config.personalNavigationColor === 'secondary') return getters.secondaryColor
-        if (state.config.personalNavigationColor === 'grey' || !state.config.footerColor) return '#424242'
-        if (state.config.personalNavigationColor === 'white') return '#FFFFFF'
-        return state.config.personalNavigationColor
-      },
-      personalNavigationColorDark (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$color(getters.personalNavigationColor).getLuminance() < 0.4
-      },
-      secondaryColorDark (state, getters) {
-        if (!state.config) return
-        return Vue.prototype.$color(getters.secondaryColor).getLuminance() < 0.4
-      },
-      bodyFontFamily (state) {
-        if (!state.config || !state.config.bodyFont) return '"Nunito", serif'
-        return `"${state.config.bodyFont.name}", ${state.config.bodyFont.category}`
-      },
-      headingsFontFamily (state, getters) {
-        if (!state.config || !state.config.headingsFont) return getters.bodyFontFamily
-        return `"${state.config.headingsFont.name}", ${state.config.headingsFont.category}`
       },
       owner (state) {
         if (!state.config) return
@@ -152,8 +69,8 @@ export default () => {
       logoUrl (state) {
         return `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/logo?draft=${state.draft}&hash=${state.config.assets.logo && state.config.assets.logo.hash}`
       },
-      portalHead (state) {
-        return (route) => {
+      portalHead (state, getters) {
+        return (route, applyFonts = true, htmlOverflow = 'auto') => {
           // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
           const canonical = state.publicUrl + route.path
           const link = [
@@ -165,11 +82,15 @@ export default () => {
               l.href = l.href.slice(0, -1)
             }
           })
-          const fonts = []
-          if (state.config.bodyFont) fonts.push(state.config.bodyFont.name)
-          if (state.config.headingsFont) fonts.push(state.config.headingsFont.name)
-          if (fonts.length) {
-            link.push({ rel: 'stylesheet', href: `https://fonts.googleapis.com/css?family=${fonts.join('|')}&display=swap` })
+          const googleFonts = []
+          if (state.config.bodyFont && state.config.bodyFont.source === 'google-fonts') {
+            googleFonts.push(state.config.bodyFont.name)
+          }
+          if (state.config.headingsFont && state.config.headingsFont.source === 'google-fonts') {
+            googleFonts.push(state.config.headingsFont.name)
+          }
+          if (googleFonts.length) {
+            link.push({ rel: 'stylesheet', href: `https://fonts.googleapis.com/css?family=${googleFonts.join('|')}&display=swap` })
           }
           const meta = [
             { name: 'twitter:card', content: 'summary' },
@@ -182,7 +103,10 @@ export default () => {
           if (state.config.twitter) meta.push({ name: 'twitter:site', content: state.config.twitter })
           return {
             meta,
-            link
+            link,
+            style: [{ vmid: 'config-style', cssText: getters.fullConfigStyle(applyFonts, htmlOverflow), type: 'text/css' }],
+            // __dangerouslyDisableSanitizersByTagID: { 'config-style': ['cssText'] }
+            __dangerouslyDisableSanitizers: ['style']
           }
         }
       }

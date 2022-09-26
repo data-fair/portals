@@ -18,6 +18,12 @@ const assets = {
   favicon: {
     file: 'favicon.ico',
     size: { width: 48, height: 48 }
+  },
+  font1: {
+    file: 'font1.woff2'
+  },
+  font2: {
+    file: 'font1.woff2'
   }
 }
 

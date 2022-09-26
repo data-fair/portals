@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser')
 const nodemailer = require('nodemailer')
 const originalUrl = require('original-url')
 const { format: formatUrl } = require('url')
-const googleFonts = require('google-fonts-complete')
 const EventEmitter = require('events')
 const dbUtils = require('./utils/db')
 const prometheus = require('./utils/prometheus')
@@ -44,13 +43,6 @@ app.use(session.auth)
 app.set('session', session)
 app.use('/api/v1', require('./router/root'))
 app.use('/api/v1/portals', require('./router/portals'))
-
-const fonts = Object.entries(googleFonts)
-  .filter(entry => entry[1].subsets.includes('latin'))
-  .map(([name, info]) => ({ source: 'google-fonts', name, category: info.category }))
-app.get('/api/v1/fonts', (req, res, next) => {
-  res.send(fonts)
-})
 
 // set current baseUrl, i.e. the url of the service on the current user's domain
 const basePath = new URL(config.publicUrl).pathname
