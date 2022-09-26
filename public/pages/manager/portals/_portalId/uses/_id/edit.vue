@@ -1,23 +1,26 @@
 <template>
   <v-container>
-    <v-list
-      dense
-      class="list-actions"
-      style="float:right;width:256px;"
-    >
-      <v-list-item
-        v-if="use && use.published"
-        :href="useLink"
-        target="_blank"
+    <v-row>
+      <v-spacer />
+      <v-list
+        dense
+        class="list-actions"
+        style="float:right;width:256px;"
       >
-        <v-list-item-icon>
-          <v-icon color="primary">
-            mdi-open-in-new
-          </v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Ouvrir dans le portail</v-list-item-title>
-      </v-list-item>
-    </v-list>
+        <v-list-item
+          v-if="use && use.published && !hasChange"
+          :href="useLink"
+          target="_blank"
+        >
+          <v-list-item-icon>
+            <v-icon color="primary">
+              mdi-open-in-new
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Ouvrir dans le portail</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-row>
 
     <section-title :text="'Edition de la réutilisation ' + ((use && use.title) || '')" />
 
@@ -53,8 +56,7 @@ export default {
   data: () => ({
     fullUse: null,
     use: null,
-    useConfig: null,
-    useConfigRender: null,
+    savedUse: null,
     useSchema,
     saving: false
   }),
@@ -80,11 +82,15 @@ export default {
       if (!url.pathname.endsWith('/')) url.pathname += '/'
       url.pathname += 'uses/' + this.fullUse.slug
       return url.href
+    },
+    hasChange () {
+      return JSON.stringify(this.use) !== this.savedUse
     }
   },
   mounted: async function () {
     this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
     this.use = { ...this.fullUse }
+    this.savedUse = JSON.stringify(this.use)
     this.$store.dispatch('setBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals'
@@ -108,6 +114,7 @@ export default {
       await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`, formData)
       this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
       this.saving = false
+      this.savedUse = JSON.stringify(this.use)
     }
   }
 }
