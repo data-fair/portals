@@ -48,7 +48,7 @@ module.exports = {
     datasets: {
       type: 'array',
       title: 'Jeux de données',
-      'x-fromUrl': '{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title',
+      'x-fromUrl': '{context.dataFairUrl}/api/v1/datasets?q={q}&publicationSites={context.publicationSite}&visibility=public&select=id,title',
       'x-itemsProp': 'results',
       'x-itemTitle': 'title',
       'x-itemKey': 'href',

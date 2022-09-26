@@ -44,7 +44,6 @@ export default {
     use: null,
     useConfig: null,
     useConfigRender: null,
-    owner: null,
     useSchema
   }),
   computed: {
@@ -56,7 +55,11 @@ export default {
       return {
         hideReadOnly: true,
         deleteReadOnly: true,
-        autofocus: true
+        autofocus: true,
+        context: {
+          dataFairUrl: this.dataFairUrl,
+          publicationSite: 'data-fair-portals:' + this.portal._id
+        }
       }
     },
     useLink () {

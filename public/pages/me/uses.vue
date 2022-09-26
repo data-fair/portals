@@ -188,7 +188,7 @@ export default {
         fieldProps: { outlined: true, dense: true },
         context: {
           dataFairUrl: this.dataFairUrl,
-          owner: this.owner
+          publicationSite: 'data-fair-portals:' + this.portal._id
         }
       }
     }
