@@ -404,7 +404,7 @@
         "title": "Image principale masquée",
         "default": false
       },
-      "homeReuse": {
+      "homeApplication": {
         "title": "Remplacer l'image principale par une visualisation",
         "type": "object",
         "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
@@ -456,7 +456,7 @@
         "type": "boolean",
         "default": true
       },
-      "featuredReuse": {
+      "featuredApplication": {
         "title": "Visualisation mise en avant",
         "type": "object",
         "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
@@ -502,7 +502,7 @@
           }
         }]
       },
-      "homeReuses": {
+      "homeApplications": {
         "type": "object",
         "title": "Liste réduite de visualisations",
         "default": {

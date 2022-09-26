@@ -1,9 +1,9 @@
 <template>
   <div>
     <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
-      <client-only v-if="config.homeapplication">
+      <client-only v-if="config.homeApplication">
         <v-iframe
-          :src="homeapplicationUrl"
+          :src="homeApplicationUrl"
           class="elevation-4"
           style="margin-top: -11px;height: 400px;"
         />
@@ -45,9 +45,9 @@
           md="5"
           offset-md="1"
         >
-          <client-only v-if="config.homeapplication">
+          <client-only v-if="config.homeApplication">
             <v-iframe
-              :src="homeapplicationUrl"
+              :src="homeApplicationUrl"
               style="height: 600px;"
             />
           </client-only>
@@ -100,9 +100,9 @@
           sm="6"
           align-self="stretch"
         >
-          <template v-if="config.featuredapplication && config.featuredapplication.id">
+          <template v-if="config.featuredApplication && config.featuredApplication.id">
             <application-featured
-              :application="config.featuredapplication"
+              :application="config.featuredApplication"
               iframe-style="height:90%"
             />
           </template>
@@ -134,17 +134,17 @@
           </client-only>
         </v-col>
       </v-row>
-      <v-row v-else-if="config.featuredapplication && config.featuredapplication.id">
+      <v-row v-else-if="config.featuredApplication && config.featuredApplication.id">
         <v-col
           md="10"
           offset-md="1"
           cols="12"
           class="my-3 grow"
         >
-          <application-featured :application="config.featuredapplication" />
+          <application-featured :application="config.featuredApplication" />
         </v-col>
       </v-row>
-      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredapplication && config.featuredapplication.id)">
+      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredApplication && config.featuredApplication.id)">
         <last-apps
           v-if="showLastApps"
           :applications="applications"
@@ -189,7 +189,7 @@ export default {
     const promiseApplications = this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
       params: {
         ...baseFilter,
-        size: (this.config.homeapplications && this.config.homeapplications.size) || 3,
+        size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
         select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
         sort: 'createdAt:-1',
         html: true
@@ -242,18 +242,18 @@ export default {
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },
-    homeapplicationUrl () {
-      return `${this.dataFairUrl}/app/${this.config.homeapplication.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+    homeApplicationUrl () {
+      return `${this.dataFairUrl}/app/${this.config.homeApplication.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
     },
     showLastApps () {
-      return this.config.homeapplications && this.config.homeapplications.type === 'lasts' && this.applications && this.applications.results.length
+      return this.config.homeApplications && this.config.homeApplications.type === 'lasts' && this.applications && this.applications.results.length
     },
     showLastDatasets () {
       return this.config.homeDatasets && this.config.homeDatasets.type === 'lasts' && this.datasets && this.datasets.results.length
     },
     tweetLimit () {
-      if (this.config.featuredapplication && this.config.featuredapplication.id) return 2
-      else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeapplications && this.config.homeapplications.size) || 0) / 2))
+      if (this.config.featuredApplication && this.config.featuredApplication.id) return 2
+      else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeApplications && this.config.homeApplications.size) || 0) / 2))
     }
   }
 }
