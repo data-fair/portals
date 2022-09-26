@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-list
       dense
       class="list-actions"
@@ -21,15 +21,26 @@
 
     <section-title :text="'Edition de la réutilisation ' + ((use && use.title) || '')" />
 
-    <v-form ref="form">
-      <lazy-v-jsf
-        v-if="use"
-        v-model="use"
-        :schema="useSchema"
-        :options="vjsfOpts"
-        @change="update(use)"
-      />
-    </v-form>
+    <v-row class="mx-0">
+      <v-form ref="form">
+        <lazy-v-jsf
+          v-if="use"
+          v-model="use"
+          :schema="useSchema"
+          :options="vjsfOpts"
+        />
+      </v-form>
+    </v-row>
+    <v-row class="mx-0 mb-2">
+      <v-spacer />
+      <v-btn
+        :disabled="saving"
+        color="primary"
+        @click="save(use)"
+      >
+        enregistrer
+      </v-btn>
+    </v-row>
   </v-container>
 </template>
 
@@ -44,7 +55,8 @@ export default {
     use: null,
     useConfig: null,
     useConfigRender: null,
-    useSchema
+    useSchema,
+    saving: false
   }),
   computed: {
     ...mapState(['config', 'portal']),
@@ -56,6 +68,7 @@ export default {
         hideReadOnly: true,
         deleteReadOnly: true,
         autofocus: true,
+        fieldProps: { outlined: true, dense: true },
         context: {
           dataFairUrl: this.dataFairUrl,
           publicationSite: 'data-fair-portals:' + this.portal._id
@@ -86,12 +99,15 @@ export default {
     }])
   },
   methods: {
-    async update (patch) {
+    async save (patch) {
+      if (!this.$refs.form.validate()) return
+      this.saving = true
       const formData = new FormData()
       if (patch.image && patch.image.data) formData.append('image', patch.image.data)
       formData.append('body', JSON.stringify(patch))
       await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`, formData)
       this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
+      this.saving = false
     }
   }
 }
