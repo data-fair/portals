@@ -16,6 +16,7 @@
           :content="countNew"
           :value="!!countNew"
           color="pink"
+          style="color:white !important;"
           overlap
         >
           <v-icon :color="backgroundDark ? 'white' : textDark">
