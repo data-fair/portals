@@ -186,30 +186,32 @@ export default {
       publicationSites: 'data-fair-portals:' + this.portal._id,
       visibility: this.config.authentication === 'none' ? 'public' : ''
     }
-    const promiseApplications = this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
-      params: {
-        ...baseFilter,
-        size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
-        select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
-        sort: 'createdAt:-1',
-        html: true
-      }
-    })
-    const promiseDatasets = this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
-      params: {
-        ...baseFilter,
-        size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
-        select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
-        sort: (this.config.datasetsDefaultSort || 'createdAt') + ':-1',
-        html: true,
-        truncate: 600,
-        sums: 'count',
-        facets: 'topics'
-      }
-    })
+    const [applications, datasets] = await Promise.all([
+      this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
+        params: {
+          ...baseFilter,
+          size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
+          select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
+          sort: 'createdAt:-1',
+          html: true
+        }
+      }),
+      this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
+        params: {
+          ...baseFilter,
+          size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
+          select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
+          sort: (this.config.datasetsDefaultSort || 'createdAt') + ':-1',
+          html: true,
+          truncate: 600,
+          sums: 'count',
+          facets: 'topics'
+        }
+      })
+    ])
 
-    this.applications = await promiseApplications
-    this.datasets = await promiseDatasets
+    this.applications = applications
+    this.datasets = datasets
     this.stats = {
       applications: {
         count: this.applications.count

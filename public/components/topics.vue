@@ -4,10 +4,12 @@
     class="my-3"
     justify="center"
   >
-    <v-hover v-slot="{hover}">
+    <v-hover
+      v-for="topic in topics"
+      v-slot="{hover}"
+      :key="topic.value.id"
+    >
       <v-btn
-        v-for="topic in topics"
-        :key="topic.value.id"
         :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
         :to="{name: 'datasets', query: {topics: topic.value.id}}"
         class="mx-2 my-1 font-weight-bold text-none"
