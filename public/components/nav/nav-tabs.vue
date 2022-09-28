@@ -32,7 +32,7 @@
           <v-tab
             v-bind="attrs"
             class="font-weight-bold"
-            :class="{'white--text': backgroundDark}"
+            :class="{'white--text': backgroundDark, 'primary--text': !backgroundDark}"
             v-on="on"
           >
             {{ item.title }}
