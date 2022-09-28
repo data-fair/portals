@@ -195,10 +195,9 @@
           >
             <nuxt-link
               :to="{name: 'applications-id', params:{id: application.id}}"
-              class="title"
-              style="text-decoration-line:none"
+              class="title icon-link"
             >
-              {{ application.title }}&nbsp;<v-icon color="primary">
+              <span>{{ application.title }}</span>&nbsp;<v-icon color="primary">
                 mdi-open-in-new
               </v-icon>
             </nuxt-link>
@@ -236,10 +235,9 @@
           >
             <nuxt-link
               :to="{name: 'applications-id', params:{id: application.id}}"
-              class="title"
-              style="text-decoration-line:none"
+              class="title icon-link"
             >
-              {{ application.title }}&nbsp;<v-icon color="primary">
+              <span>{{ application.title }}</span>&nbsp;<v-icon color="primary">
                 mdi-open-in-new
               </v-icon>
             </nuxt-link>
@@ -359,17 +357,14 @@
         <v-col
           cols="12"
         >
-          <v-hover v-slot="{hover}">
-            <v-btn
-              :color="'primary'"
-              to="/datasets"
-              :depressed="hover && hoverInverse"
-              :text="!(hover && hoverInverse)"
-              exact
-            >
-              <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
-            </v-btn>
-          </v-hover>
+          <nuxt-link
+            class="title icon-link"
+            to="/datasets"
+          >
+            <v-icon color="primary">
+              mdi-reply
+            </v-icon>&nbsp;<span>retourner à la liste</span>
+          </nuxt-link>
         </v-col>
       </v-row>
       <!-- <section-subtitle text="Discussion"/>
@@ -512,7 +507,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'readableThemeColor', 'hoverInverse']),
+    ...mapGetters(['themeColorDark', 'readableThemeColor']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id

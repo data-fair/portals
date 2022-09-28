@@ -299,28 +299,34 @@
           "type": "string",
           "oneOf": [{
             "const": "hoverElevate",
-            "title": "élève le cadre au survol (ajout d'une ombre)"
+            "title": "élèver le cadre au survol (ajout d'une ombre)"
           }, {
             "const": "hoverColorTitle",
-            "title": "colore le titre au survol"
+            "title": "colorer le titre au survol"
           }, {
             "const": "hoverUnderlineTitle",
-            "title": "souligne le titre au survol"
+            "title": "souligner le titre au survol"
           }, {
             "const": "hoverColorBorder",
-            "title": "colore le bord au survol"
+            "title": "colorer le bord au survol"
           }]
         },
         "default": ["hoverElevate"]
       },
       "buttonOptions": {
-        "title": "Options des boutons",
+        "title": "Options des boutons et des liens",
         "type": "array",
         "items": {
           "type": "string",
           "oneOf": [{
             "const": "hoverInverse",
-            "title": "inverse la couleur au survol"
+            "title": "inverser la couleur des boutons au survol"
+          }, {
+            "const": "hoverUnderline",
+            "title": "souligner les liens au survol"
+          }, {
+            "const": "alwaysUnderline",
+            "title": "toujours souligner les liens"
           }]
         },
         "default": []

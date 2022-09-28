@@ -3,7 +3,6 @@
     title="Accéder à la visualisation en plein écran"
     icon="mdi-fullscreen"
     :to="{name: 'applications-id-full', params:{id: application.id}, query: syncedStateParams}"
-    v-on="onDialog"
   />
 </template>
 

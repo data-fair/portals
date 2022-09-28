@@ -85,17 +85,14 @@
         class="my-4 text-center"
       >
         <v-col cols="12">
-          <v-hover v-slot="{hover}">
-            <v-btn
-              :color="'primary'"
-              to="/applications"
-              :depressed="hover && hoverInverse"
-              :text="!(hover && hoverInverse)"
-              exact
-            >
-              <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
-            </v-btn>
-          </v-hover>
+          <nuxt-link
+            class="title icon-link"
+            to="/applications"
+          >
+            <v-icon color="primary">
+              mdi-reply
+            </v-icon>&nbsp;<span>retourner à la liste</span>
+          </nuxt-link>
         </v-col>
       </v-row>
 
@@ -192,7 +189,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'hoverInverse']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id
     }

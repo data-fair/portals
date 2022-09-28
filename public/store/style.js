@@ -220,6 +220,52 @@ export default () => ({
     }
     `
     },
+    linksStyle (state, getters) {
+      let style = `
+`
+      if (getters.buttonOptions.includes('hoverUnderline')) {
+        style += `
+        .v-application#app .v-tabs a:hover {
+          text-decoration: none;
+        }
+        .v-application#app a.v-btn:hover {
+          text-decoration: none;
+        }
+        .v-application#app a.icon-link:hover {
+          text-decoration: none;
+        }
+        .v-application#app a:hover {
+          text-decoration: underline;
+        }
+        .v-application#app a.icon-link:hover span {
+          text-decoration: underline;
+        }`
+      }
+      if (getters.buttonOptions.includes('alwaysUnderline')) {
+        style += `
+        .v-application#app .v-tabs a {
+          text-decoration: none;
+        }
+        .v-application#app a.v-btn {
+          text-decoration: none;
+        }
+        .v-application#app a.icon-link {
+          text-decoration: none;
+        }
+        .v-application#app a {
+          text-decoration: underline;
+        }
+        .v-application#app a.icon-link span {
+          text-decoration: underline;
+        }`
+      } else {
+        style += `
+        .v-application#app a {
+          text-decoration: none;
+        }`
+      }
+      return style
+    },
     fullConfigStyle (state, getters, rootState) {
       return (applyFonts, htmlOverflow) => {
         return `
@@ -242,6 +288,7 @@ html {
 ${getters.assetFontFace('bodyFont')}
 ${getters.assetFontFace('headingsFont')}
 ${applyFonts ? getters.fontsStyle : ''}
+${getters.linksStyle}
 
 / * some police tuning */
 .v-application#app a {

@@ -7,7 +7,6 @@
     <nuxt-link
       v-if="to"
       :to="to"
-      style="text-decoration:none"
     >
       <card-title
         :title="title"

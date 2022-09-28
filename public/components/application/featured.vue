@@ -3,10 +3,9 @@
     <v-row class="ma-0">
       <nuxt-link
         :to="{path: `/applications/${application.id}`, query: syncedStateParams}"
-        class="title"
-        style="text-decoration-line:none"
+        class="title icon-link"
       >
-        {{ application.title }}&nbsp;<v-icon :color="'primary'">
+        <span>{{ application.title }}</span>&nbsp;<v-icon :color="'primary'">
           mdi-open-in-new
         </v-icon>
       </nuxt-link>

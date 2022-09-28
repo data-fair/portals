@@ -79,9 +79,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped>
-.share-network a {
-  text-decoration:none;
-}
-</style>
