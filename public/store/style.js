@@ -98,6 +98,10 @@ export default () => ({
     appBarElevation (state, getters) {
       return Math.min(getters.elevation * 2, 6)
     },
+    radius (state, getters, rootState) {
+      if (!('radius' in rootState.config)) return 4
+      return rootState.config.radius
+    },
     fontFamily (state, getters, rootState) {
       return (key) => {
         if (!rootState.config || !rootState.config[key]) return '"Nunito", serif'
@@ -236,10 +240,15 @@ ${applyFonts ? getters.fontsStyle : ''}
 .v-application#app a {
   color: ${getters.readableThemeColor};
 }
-.v-application#app .area--dark a, .v-application#app .area--dark h3, .v-application#app .area--dark span {
+.v-application#app .area--dark a,
+.v-application#app .area--dark h3,
+.v-application#app .area--dark span {
   color: white;
 }
-.v-application#app .area--light a, .v-application#app .area--light h3, .v-application#app .area--light span, .v-application#app .area--light .v-tabs-bar.primary .v-tab--active {
+.v-application#app .area--light a,
+.v-application#app .area--light h3,
+.v-application#app .area--light span,
+.v-application#app .area--light .v-tabs-bar.primary .v-tab--active {
   color: ${getters.readableThemeColor}!important;
 }
 .v-application#app .primary--text {
@@ -254,6 +263,30 @@ ${getters.appBarStyle}
      
 /* style of the personal navigation bar */
 ${getters.personalNavigationStyle}
+
+/* default radius */
+.v-application#app .v-sheet.v-card,
+.v-application#app .v-text-field--outlined:not(.v-text-field--rounded),
+.v-application#app .v-text-field--solo:not(.v-text-field--rounded),
+.v-application#app .v-btn:not(.v-btn--rounded):not(.v-btn--text) {
+  border-radius: ${getters.radius}px;
+}
+.v-application#app .v-btn-toggle > .v-btn.v-btn:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.v-application#app .v-btn-toggle > .v-btn.v-btn:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.v-application#app .v-menu__content {
+  border-bottom-left-radius: ${getters.radius}px;
+  border-bottom-right-radius: ${getters.radius}px;
+}
+.v-application#app .v-sheet.v-card.v-sheet--shaped {
+  border-top-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
         `
       }
     }

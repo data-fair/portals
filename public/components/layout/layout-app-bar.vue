@@ -92,6 +92,7 @@ export default {
   padding: 0 !important;
 }
 .main-app-bar .v-toolbar__extension {
-  padding: 0 !important;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 </style>

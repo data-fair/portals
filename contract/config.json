@@ -272,6 +272,25 @@
           "const": 6,
           "title": "élévation importante"
         }]
+      },
+      "radius": {
+        "title": "Arrondis des angles",
+        "description": "Contrôle l'arrondi appliqué à de multiples cadres et boutons dans les pages.",
+        "type": "number",
+        "default": 4,
+        "oneOf": [{
+          "const": 0,
+          "title": "aucun arrondi"
+        }, {
+          "const": 4,
+          "title": "léger arrondi"
+        }, {
+          "const": 8,
+          "title": "arrondi intermédiaire"
+        }, {
+          "const": 16,
+          "title": "arrondi important"
+        }]
       }
     }
   }, {
