@@ -9,6 +9,7 @@
       <v-btn
         v-show="visible"
         text
+        tile
         class="font-weight-bold"
         :class="{'white--text': backgroundDark}"
         :height="64"

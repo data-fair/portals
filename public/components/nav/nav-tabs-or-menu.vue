@@ -1,7 +1,7 @@
 <template>
   <v-row
     style="overflow:hidden"
-    class="nav-tabs-or-menu"
+    class="nav-tabs-or-menu mx-0"
   >
     <nav-menu
       :visible="$vuetify.breakpoint.smAndDown || overflowing"

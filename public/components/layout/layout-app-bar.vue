@@ -90,4 +90,7 @@ export default {
 .main-app-bar .v-toolbar__content {
   padding: 0 !important;
 }
+.main-app-bar .v-toolbar__extension {
+  padding: 0 !important;
+}
 </style>
