@@ -228,6 +228,9 @@ export default () => ({
         .v-application#app .v-tabs a:hover {
           text-decoration: none;
         }
+        .v-application#app .v-card>a:hover {
+          text-decoration: none;
+        }
         .v-application#app a.v-btn:hover {
           text-decoration: none;
         }
@@ -244,6 +247,9 @@ export default () => ({
       if (getters.buttonOptions.includes('alwaysUnderline')) {
         style += `
         .v-application#app .v-tabs a {
+          text-decoration: none;
+        }
+        .v-application#app .v-card>a {
           text-decoration: none;
         }
         .v-application#app a.v-btn {

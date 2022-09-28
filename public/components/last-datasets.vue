@@ -16,17 +16,14 @@
     </v-row>
     <v-row align="center">
       <v-col class="text-center">
-        <v-hover v-slot="{hover}">
-          <v-btn
-            :color="'primary'"
-            to="/datasets"
-            :depressed="hover && hoverInverse"
-            :text="!(hover && hoverInverse)"
-            exact
-          >
-            <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les données
-          </v-btn>
-        </v-hover>
+        <nuxt-link
+          class="title icon-link"
+          to="/datasets"
+        >
+          <v-icon color="primary">
+            mdi-open-in-new
+          </v-icon>&nbsp;<span>toutes les données</span>
+        </nuxt-link>
       </v-col>
     </v-row>
   </div>
