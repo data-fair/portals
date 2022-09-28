@@ -78,8 +78,7 @@ module.exports = {
     description: {
       type: 'string',
       'x-display': 'custom-markdown',
-      title: 'Description',
-      minLength: 20
+      title: 'Description'
     },
     links: {
       type: 'object',
