@@ -102,7 +102,7 @@ export default {
     notifSubscribeUrl () {
       const keysParam = [`portals:use-submitted:${this.portal._id}`]
       const titlesParam = [`Un contributeur demande de publier une réutilisation sur ${this.portal.title || this.portal._id}`]
-      const urlTemplate = [`${this.dataFairUrl}/extra/portals?p=.%2F${this.portal._id}%2Fuses%2F{id}%2F/edit`]
+      const urlTemplate = [`${this.dataFairUrl}/extra/portals?p=.%2F${this.portal._id}%2Fuses%2F{id}%2Fedit`]
       return `${this.notifyUrl}/embed/subscribe?key=${encodeURIComponent(keysParam)}&title=${encodeURIComponent(titlesParam)}&url-template=${encodeURIComponent(urlTemplate)}&register=false`
     }
   },
