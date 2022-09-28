@@ -4,7 +4,7 @@
       <client-only v-if="config.homeApplication">
         <v-iframe
           :src="homeApplicationUrl"
-          class="elevation-4"
+          :class="`elevation-${appBarElevation}`"
           style="margin-top: -11px;height: 400px;"
         />
       </client-only>
@@ -18,7 +18,7 @@
           :alt="config.title"
           height="400px"
           max-width="1904px"
-          class="elevation-4"
+          :class="`elevation-${appBarElevation}`"
           style="margin-top: -11px;"
         />
       </v-row>
@@ -238,7 +238,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner', 'appBarElevation']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },

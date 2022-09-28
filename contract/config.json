@@ -253,6 +253,25 @@
           "const": "white",
           "title": "blanc"
         }]
+      },
+      "elevation": {
+        "title": "Élévation des éléments",
+        "description": "Contrôle l'effet d'ombre créé autour de certains éléments et qui ajoute du relief aux pages.",
+        "type": "number",
+        "default": 1,
+        "oneOf": [{
+          "const": 0,
+          "title": "aucune élévation"
+        }, {
+          "const": 1,
+          "title": "légère élévation"
+        }, {
+          "const": 3,
+          "title": "élévation intermédiaire"
+        }, {
+          "const": 6,
+          "title": "élévation importante"
+        }]
       }
     }
   }, {

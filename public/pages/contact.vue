@@ -41,6 +41,7 @@
             <v-btn
               :disabled="!valid || loading"
               color="primary"
+              :elevation="elevation"
               @click="send"
             >
               Envoyer
@@ -91,7 +92,7 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal', 'draft']),
-    ...mapGetters(['themeColorDark', 'hasSocialLinks'])
+    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation'])
   },
   async mounted () {
     try {

@@ -44,7 +44,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal']),
     ...mapState('session', ['initialized']),
-    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColor', 'appBarMainColorDark']),
+    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColor', 'appBarMainColorDark', 'appBarElevation']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href
@@ -70,6 +70,7 @@ export default {
         props.app = true
         props.hideOnScroll = true
       }
+      props.elevation = this.appBarElevation
       return props
     }
   },

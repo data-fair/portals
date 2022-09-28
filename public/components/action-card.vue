@@ -1,5 +1,9 @@
 <template>
-  <v-card v-bind="cardProps">
+  <v-card
+    v-bind="cardProps"
+    @mouseenter="hovered = true"
+    @mouseleave="hovered = false"
+  >
     <nuxt-link
       v-if="to"
       :to="to"
@@ -17,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {},
@@ -27,17 +31,24 @@ export default {
     to: { type: [String, Object], default: null }
   },
   data () {
-    return {}
+    return {
+      hovered: false
+    }
   },
   computed: {
     ...mapState(['config']),
+    ...mapGetters(['elevation']),
     cardProps () {
-      return {
+      const props = {
+        elevation: this.elevation,
         loading: this.loading,
         minHeight: 260,
-        hover: !!this.to,
         class: 'also-outlined'
       }
+      if (this.to) {
+        if (this.hovered) props.elevation = Math.max(this.elevation * 2, 8)
+      }
+      return props
     }
   }
 }

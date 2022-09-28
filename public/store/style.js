@@ -91,6 +91,13 @@ export default () => ({
     lightPrimary20 (state, getters, rootState) {
       return Vue.prototype.$color(rootState.config.themeColor).brighten(20).toHexString()
     },
+    elevation (state, getters, rootState) {
+      if (!('elevation' in rootState.config)) return 1
+      return rootState.config.elevation
+    },
+    appBarElevation (state, getters) {
+      return Math.min(getters.elevation * 2, 6)
+    },
     fontFamily (state, getters, rootState) {
       return (key) => {
         if (!rootState.config || !rootState.config[key]) return '"Nunito", serif'

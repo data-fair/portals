@@ -14,7 +14,7 @@
       rounded
       depressed
       outlined
-      elevation="2"
+      :elevation="elevation"
       style="background-color:white"
     >
       <v-icon
@@ -30,9 +30,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     topics: { type: Array, required: true }
+  },
+  computed: {
+    ...mapGetters(['elevation'])
   }
 }
 </script>

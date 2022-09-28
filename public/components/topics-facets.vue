@@ -7,7 +7,7 @@
         :color="topicItem.value.color ? $readableColor(topicItem.value.color) : 'default'"
         dark
         rounded
-        elevation="2"
+        :elevation="elevation"
         :outlined="!topicItem.filtered"
         class="mr-3 mb-1 font-weight-bold text-none"
         @click="$emit('toggle', topicItem.value)"
@@ -26,9 +26,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     items: { type: Array, required: true }
+  },
+  computed: {
+    ...mapGetters(['elevation'])
   }
 }
 </script>

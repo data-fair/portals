@@ -5,7 +5,7 @@
       :src="config.banner"
       :alt="config.title"
       max-height="400px"
-      class="elevation-4"
+      :class="`elevation-${appBarElevation}`"
       style="margin-top: -12px;"
     />
     <v-container>
@@ -73,10 +73,13 @@
 
 <script>
 import KElement from '~/components/pages/element.vue'
-
+import { mapGetters } from 'vuex'
 export default {
   components: { KElement },
-  props: ['config']
+  props: ['config'],
+  computed: {
+    ...mapGetters(['elevation'])
+  }
 }
 </script>
 
