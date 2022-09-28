@@ -9,7 +9,10 @@
       :to="to"
       style="text-decoration:none"
     >
-      <card-title :title="title" />
+      <card-title
+        :title="title"
+        :color-class="titleColorClass"
+      />
       <slot />
     </nuxt-link>
     <template v-else>
@@ -38,6 +41,18 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['elevation']),
+    options () {
+      return this.config.actionCardOptions || ['hoverElevate']
+    },
+    titleColorClass () {
+      let c = ''
+      if (this.to && this.hovered) {
+        if (this.options.includes('hoverColorTitle')) c += ' primary--text'
+        if (this.options.includes('hoverUnderlineTitle')) c += ' text-decoration-underline'
+      }
+
+      return c
+    },
     cardProps () {
       const props = {
         elevation: this.elevation,
@@ -45,9 +60,12 @@ export default {
         minHeight: 260,
         class: 'also-outlined'
       }
-      if (this.to) {
-        if (this.hovered) props.elevation = Math.max(this.elevation * 2, 8)
+
+      if (this.to && this.hovered) {
+        if (this.options.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
+        if (this.options.includes('hoverColorBorder')) props.class = 'primary-outlined'
       }
+
       return props
     }
   }

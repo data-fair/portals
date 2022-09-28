@@ -287,6 +287,9 @@ ${getters.personalNavigationStyle}
   border-top-left-radius: 24px;
   border-bottom-right-radius: 24px;
 }
+.v-application#app .theme--light.v-sheet.primary-outlined {
+  border: 1px solid ${getters.readableThemeColor};
+}
         `
       }
     }

@@ -255,7 +255,7 @@
         }]
       },
       "elevation": {
-        "title": "Élévation des éléments",
+        "title": "Élévation / ombres",
         "description": "Contrôle l'effet d'ombre créé autour de certains éléments et qui ajoute du relief aux pages.",
         "type": "number",
         "default": 1,
@@ -291,6 +291,27 @@
           "const": 16,
           "title": "arrondi important"
         }]
+      },
+      "actionCardOptions": {
+        "title": "Options des vignettes cliquables",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "hoverElevate",
+            "title": "élève le cadre au survol (ajout d'une ombre)"
+          }, {
+            "const": "hoverColorTitle",
+            "title": "colore le titre au survol"
+          }, {
+            "const": "hoverUnderlineTitle",
+            "title": "souligne le titre au survol"
+          }, {
+            "const": "hoverColorBorder",
+            "title": "colore le bord au survol"
+          }]
+        },
+        "default": ["hoverElevate"]
       }
     }
   }, {

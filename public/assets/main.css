@@ -52,9 +52,9 @@ iframe {
 }
 
 /* darker outlined cards */
-.theme--light.v-sheet.v-sheet--outlined {
+.v-application#app .theme--light.v-sheet.v-sheet--outlined {
   border: 1px solid rgba(0, 0, 0, 0.22);
 }
-.theme--light.v-sheet.also-outlined {
+.v-application#app .theme--light.v-sheet.also-outlined {
   border: 1px solid rgba(0, 0, 0, 0.16);
 }
