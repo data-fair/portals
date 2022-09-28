@@ -19,7 +19,10 @@
           v-if="$vuetify.breakpoint.xs"
           :config="config"
         />
-        <v-col class="text-center">
+        <v-col
+          v-if="!config.headerNoTitle"
+          class="text-center"
+        >
           <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} ${titleColor} font-weight-bold`">
             {{ config.title }}
           </h1>

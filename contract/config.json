@@ -304,6 +304,11 @@
         "type": "boolean",
         "title": "Montrer les liens de réseaux sociaux dans l'entête"
       },
+      "headerNoTitle": {
+        "type": "boolean",
+        "title": "Masquer le titre dans l'entête",
+        "description": "Peut avoir du sens si le logo est très explicite"
+      },
       "headerLogo2": {
         "type": "string",
         "title": "Logo secondaire (affiché à droite de l'entête)",
