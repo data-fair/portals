@@ -185,7 +185,7 @@
           "title": "dégradé couleur secondaire vers couleur principale"
         }, {
           "const": "grey",
-          "title": "gris"
+          "title": "gris foncé"
         }, {
           "const": "white",
           "title": "blanc"
