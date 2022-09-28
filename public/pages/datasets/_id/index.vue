@@ -74,24 +74,12 @@
                 :dataset="dataset"
                 :color="'primary'"
               />
-              <v-tooltip
+              <action-icon
                 v-if="!dataset.isMetaOnly"
-                top
-              >
-                <template #activator="{ on }">
-                  <v-btn
-                    :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
-                    icon
-                    color="primary"
-                    v-on="on"
-                  >
-                    <v-icon>
-                      mdi-fullscreen
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Vue tabulaire en plein écran</span>
-              </v-tooltip>
+                title="Vue tabulaire en plein écran"
+                icon="mdi-fullscreen"
+                :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+              />
               <map-preview
                 v-if="dataset.bbox && dataset.bbox.length"
                 :dataset="dataset"
@@ -371,14 +359,17 @@
         <v-col
           cols="12"
         >
-          <v-btn
-            :color="'primary'"
-            to="/datasets"
-            text
-            exact
-          >
-            <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
-          </v-btn>
+          <v-hover v-slot="{hover}">
+            <v-btn
+              :color="'primary'"
+              to="/datasets"
+              :depressed="hover && hoverInverse"
+              :text="!(hover && hoverInverse)"
+              exact
+            >
+              <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
+            </v-btn>
+          </v-hover>
         </v-col>
       </v-row>
       <!-- <section-subtitle text="Discussion"/>
@@ -521,7 +512,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'readableThemeColor']),
+    ...mapGetters(['themeColorDark', 'readableThemeColor', 'hoverInverse']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id

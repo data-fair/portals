@@ -312,6 +312,18 @@
           }]
         },
         "default": ["hoverElevate"]
+      },
+      "buttonOptions": {
+        "title": "Options des boutons",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "hoverInverse",
+            "title": "inverse la couleur au survol"
+          }]
+        },
+        "default": []
       }
     }
   }, {

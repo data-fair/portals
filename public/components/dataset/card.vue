@@ -61,26 +61,13 @@
         <table-preview
           v-if="!dataset.isMetaOnly"
           :dataset="dataset"
-          :color="'primary'"
         />
-        <v-tooltip
+        <action-icon
           v-if="!dataset.isMetaOnly"
-          top
-        >
-          <template #activator="{ on }">
-            <v-btn
-              :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
-              color="primary"
-              icon
-              v-on="on"
-            >
-              <v-icon>
-                mdi-fullscreen
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Vue tabulaire en plein écran</span>
-        </v-tooltip>
+          title="Vue tabulaire en plein écran"
+          icon="mdi-fullscreen"
+          :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+        />
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
           :dataset="dataset"

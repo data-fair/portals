@@ -6,20 +6,11 @@
     transition="none"
   >
     <template #activator="{ on: onDialog }">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            :fab="fab"
-            :icon="!fab"
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-table-large
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Voir le tableau</span>
-      </v-tooltip>
+      <action-icon
+        title="Voir le tableau"
+        icon="mdi-table-large"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

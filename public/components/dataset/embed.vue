@@ -6,19 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            icon
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="'primary'">
-              mdi-code-tags
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Intégrer dans un site</span>
-      </v-tooltip>
+      <action-icon
+        title="Intégrer dans un site"
+        icon="mdi-code-tags"
+        v-on="onDialog"
+      />
     </template>
     <v-card outlined>
       <v-toolbar

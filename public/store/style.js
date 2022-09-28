@@ -102,6 +102,13 @@ export default () => ({
       if (!('radius' in rootState.config)) return 4
       return rootState.config.radius
     },
+    buttonOptions (state, getters, rootState) {
+      if (!('buttonOptions' in rootState.config)) return []
+      return rootState.config.buttonOptions
+    },
+    hoverInverse (state, getters) {
+      return getters.buttonOptions.includes('hoverInverse')
+    },
     fontFamily (state, getters, rootState) {
       return (key) => {
         if (!rootState.config || !rootState.config[key]) return '"Nunito", serif'
@@ -268,7 +275,7 @@ ${getters.personalNavigationStyle}
 .v-application#app .v-sheet.v-card,
 .v-application#app .v-text-field--outlined:not(.v-text-field--rounded),
 .v-application#app .v-text-field--solo:not(.v-text-field--rounded),
-.v-application#app .v-btn:not(.v-btn--rounded):not(.v-btn--text) {
+.v-application#app .v-btn:not(.v-btn--rounded):not(.v-btn--text):not(.v-btn--fab):not(.v-btn--icon) {
   border-radius: ${getters.radius}px;
 }
 .v-application#app .v-btn-toggle > .v-btn.v-btn:first-child {

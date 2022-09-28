@@ -6,20 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            :disabled="dataset.status === 'error'"
-            icon
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-attachment
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Pièces jointes</span>
-      </v-tooltip>
+      <action-icon
+        title="Pièces jointes"
+        icon="mdi-attachment"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

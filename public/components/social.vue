@@ -5,44 +5,45 @@
       :title="title"
       network="twitter"
     >
-      <v-btn icon>
-        <v-icon color="grey darken-2">
-          mdi-twitter
-        </v-icon>
-      </v-btn>
+      <action-icon
+        title="Partager sur Twitter"
+        icon="mdi-twitter"
+        color="grey darken-2"
+      />
     </share-network>
+
     <share-network
       :url="shareUrl"
       :title="title"
       network="linkedin"
     >
-      <v-btn icon>
-        <v-icon color="grey darken-2">
-          mdi-linkedin
-        </v-icon>
-      </v-btn>
+      <action-icon
+        title="Partager sur LinkedIn"
+        icon="mdi-linkedin"
+        color="grey darken-2"
+      />
     </share-network>
     <share-network
       :url="shareUrl"
       :title="title"
       network="reddit"
     >
-      <v-btn icon>
-        <v-icon color="grey darken-2">
-          mdi-reddit
-        </v-icon>
-      </v-btn>
+      <action-icon
+        title="Partager sur Reddit"
+        icon="mdi-reddit"
+        color="grey darken-2"
+      />
     </share-network>
     <share-network
       :url="shareUrl"
       :title="title"
       network="facebook"
     >
-      <v-btn icon>
-        <v-icon color="grey darken-2">
-          mdi-facebook
-        </v-icon>
-      </v-btn>
+      <action-icon
+        title="Partager sur Facebook"
+        icon="mdi-facebook"
+        color="grey darken-2"
+      />
     </share-network>
     <client-only>
       <share-network
@@ -51,11 +52,11 @@
         :title="title"
         network="whatsapp"
       >
-        <v-btn icon>
-          <v-icon color="grey darken-2">
-            mdi-whatsapp
-          </v-icon>
-        </v-btn>
+        <action-icon
+          title="Partager sur WhatsApp"
+          icon="mdi-whatsapp"
+          color="grey darken-2"
+        />
       </share-network>
     </client-only>
   </div>

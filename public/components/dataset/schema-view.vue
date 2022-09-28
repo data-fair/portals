@@ -6,19 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            icon
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-view-list
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Description des champs</span>
-      </v-tooltip>
+      <action-icon
+        title="Description des champs"
+        icon="mdi-view-list"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

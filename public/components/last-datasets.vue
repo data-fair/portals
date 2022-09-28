@@ -16,14 +16,17 @@
     </v-row>
     <v-row align="center">
       <v-col class="text-center">
-        <v-btn
-          :color="'primary'"
-          to="/datasets"
-          text
-          exact
-        >
-          <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les données
-        </v-btn>
+        <v-hover v-slot="{hover}">
+          <v-btn
+            :color="'primary'"
+            to="/datasets"
+            :depressed="hover && hoverInverse"
+            :text="!(hover && hoverInverse)"
+            exact
+          >
+            <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les données
+          </v-btn>
+        </v-hover>
       </v-col>
     </v-row>
   </div>
@@ -32,7 +35,7 @@
 <script>
 
 import { isMobileOnly } from 'mobile-device-detect'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -43,7 +46,8 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config']),
+    ...mapGetters(['hoverInverse'])
   }
 }
 </script>

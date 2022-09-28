@@ -4,28 +4,30 @@
     class="my-3"
     justify="center"
   >
-    <v-btn
-      v-for="topic in topics"
-      :key="topic.value.id"
-      :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
-      :to="{name: 'datasets', query: {topics: topic.value.id}}"
-      class="mx-2 my-1 font-weight-bold text-none"
-      dark
-      rounded
-      depressed
-      outlined
-      :elevation="elevation"
-      style="background-color:white"
-    >
-      <v-icon
-        v-if="topic.value.icon && topic.value.icon.name"
-        left
-        :size="24"
+    <v-hover v-slot="{hover}">
+      <v-btn
+        v-for="topic in topics"
+        :key="topic.value.id"
+        :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
+        :to="{name: 'datasets', query: {topics: topic.value.id}}"
+        class="mx-2 my-1 font-weight-bold text-none"
+        dark
+        rounded
+        depressed
+        :outlined="!(hover && hoverInverse)"
+        :elevation="elevation"
+        :style="hover && hoverInverse ? '' : 'background-color:white'"
       >
-        mdi-{{ topic.value.icon.name }}
-      </v-icon>
-      {{ topic.value.title }} ({{ topic.count }})
-    </v-btn>
+        <v-icon
+          v-if="topic.value.icon && topic.value.icon.name"
+          left
+          :size="24"
+        >
+          mdi-{{ topic.value.icon.name }}
+        </v-icon>
+        {{ topic.value.title }} ({{ topic.count }})
+      </v-btn>
+    </v-hover>
   </v-row>
 </template>
 
@@ -37,7 +39,7 @@ export default {
     topics: { type: Array, required: true }
   },
   computed: {
-    ...mapGetters(['elevation'])
+    ...mapGetters(['elevation', 'hoverInverse'])
   }
 }
 </script>

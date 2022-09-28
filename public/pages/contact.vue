@@ -38,14 +38,17 @@
           />
           <v-row class="mx-0">
             <v-spacer />
-            <v-btn
-              :disabled="!valid || loading"
-              color="primary"
-              :elevation="elevation"
-              @click="send"
-            >
-              Envoyer
-            </v-btn>
+            <v-hover v-slot="{hover}">
+              <v-btn
+                :disabled="!valid || loading"
+                color="primary"
+                :outlined="hover && hoverInverse"
+                :elevation="elevation"
+                @click="send"
+              >
+                Envoyer
+              </v-btn>
+            </v-hover>
           </v-row>
         </v-form>
       </v-col>
@@ -92,7 +95,7 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal', 'draft']),
-    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation'])
+    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse'])
   },
   async mounted () {
     try {

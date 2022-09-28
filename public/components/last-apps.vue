@@ -16,24 +16,32 @@
     </v-row>
     <v-row align="center">
       <v-col class="text-center">
-        <v-btn
-          :color="'primary'"
-          to="/applications"
-          text
-          exact
-        >
-          <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les visualisations
-        </v-btn>
+        <v-hover v-slot="{hover}">
+          <v-btn
+            :color="'primary'"
+            to="/applications"
+            :depressed="hover && hoverInverse"
+            :text="!(hover && hoverInverse)"
+            exact
+          >
+            <v-icon>mdi-open-in-new</v-icon>&nbsp;Toutes les visualisations
+          </v-btn>
+        </v-hover>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     applications: { type: Object, required: true },
     small: { type: Boolean, default: false }
+  },
+  computed: {
+    ...mapGetters(['hoverInverse'])
   }
 }
 </script>

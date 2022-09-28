@@ -85,14 +85,17 @@
         class="my-4 text-center"
       >
         <v-col cols="12">
-          <v-btn
-            :color="'primary'"
-            to="/applications"
-            text
-            exact
-          >
-            <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
-          </v-btn>
+          <v-hover v-slot="{hover}">
+            <v-btn
+              :color="'primary'"
+              to="/applications"
+              :depressed="hover && hoverInverse"
+              :text="!(hover && hoverInverse)"
+              exact
+            >
+              <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
+            </v-btn>
+          </v-hover>
         </v-col>
       </v-row>
 
@@ -189,7 +192,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'hoverInverse']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id
     }

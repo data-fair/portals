@@ -1,19 +1,10 @@
 <template>
-  <v-tooltip top>
-    <template #activator="{ on }">
-      <v-btn
-        :to="{name: 'applications-id-full', params:{id: application.id}, query: syncedStateParams}"
-        icon
-        nuxt
-        v-on="on"
-      >
-        <v-icon color="primary">
-          mdi-fullscreen
-        </v-icon>
-      </v-btn>
-    </template>
-    <span>Accéder à la visualisation en plein écran</span>
-  </v-tooltip>
+  <action-icon
+    title="Accéder à la visualisation en plein écran"
+    icon="mdi-fullscreen"
+    :to="{name: 'applications-id-full', params:{id: application.id}, query: syncedStateParams}"
+    v-on="onDialog"
+  />
 </template>
 
 <script>

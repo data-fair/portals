@@ -6,21 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            :fab="fab"
-            :icon="!fab"
-            :text="!fab"
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-map-marker
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Carte générique</span>
-      </v-tooltip>
+      <action-icon
+        title="Carte générique"
+        icon="mdi-map-marker"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

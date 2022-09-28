@@ -6,18 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            icon
-            color="primary"
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon>mdi-tooltip-image-outline</v-icon>
-          </v-btn>
-        </template>
-        <span>Voir la visualisation</span>
-      </v-tooltip>
+      <action-icon
+        title="Voir la visualisation"
+        icon="mdi-tooltip-image-outline"
+        v-on="onDialog"
+      />
     </template>
 
     <v-card v-if="dialog">

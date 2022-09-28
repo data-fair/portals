@@ -6,19 +6,11 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            icon
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-cog
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Documentation de l'API</span>
-      </v-tooltip>
+      <action-icon
+        title="Documentation de l'API"
+        icon=" mdi-cog"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

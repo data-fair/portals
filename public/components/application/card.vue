@@ -27,20 +27,7 @@
     <template #bottom>
       <v-card-actions class="py-0">
         <application-view :application="application" />
-        <v-tooltip top>
-          <template #activator="{ on }">
-            <v-btn
-              :to="{name: 'applications-id-full', params:{id: application.id}}"
-              icon
-              v-on="on"
-            >
-              <v-icon color="primary">
-                mdi-fullscreen
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Accéder à la visualisation en plein écran</span>
-        </v-tooltip>
+        <application-fullscreen :application="application" />
         <v-spacer />
         <v-subheader>Mis à jour le {{ application.updatedAt | date('L') }}</v-subheader>
       </v-card-actions>

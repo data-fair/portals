@@ -1,15 +1,11 @@
 <template>
-  <v-btn
+  <action-icon
     v-if="meta['df:sync-state']"
-    icon
+    title="Télécharger une capture"
+    icon="mdi-camera"
     :loading="downloading"
-    title="télécharger une capture"
     @click="download"
-  >
-    <v-icon color="primary">
-      mdi-camera
-    </v-icon>
-  </v-btn>
+  />
 </template>
 
 <script>

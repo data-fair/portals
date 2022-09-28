@@ -5,19 +5,11 @@
     :max-width="500"
   >
     <template #activator="{on: onDialog}">
-      <v-tooltip top>
-        <template #activator="{ on: onTooltip }">
-          <v-btn
-            icon
-            v-on="{...onDialog, ...onTooltip}"
-          >
-            <v-icon :color="color || 'primary'">
-              mdi-bell
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Notifications</span>
-      </v-tooltip>
+      <action-icon
+        title="Notifications"
+        icon="mdi-bell"
+        v-on="onDialog"
+      />
     </template>
     <v-card v-if="dialog">
       <v-toolbar

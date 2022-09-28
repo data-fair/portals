@@ -95,14 +95,17 @@
       class="my-4 text-center"
     >
       <v-col cols="12">
-        <v-btn
-          :color="'primary'"
-          to="/uses"
-          text
-          exact
-        >
-          <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
-        </v-btn>
+        <v-hover v-slot="{hover}">
+          <v-btn
+            :color="'primary'"
+            to="/uses"
+            :depressed="hover && hoverInverse"
+            :text="!(hover && hoverInverse)"
+            exact
+          >
+            <v-icon>mdi-reply</v-icon>&nbsp;Retourner à la liste
+          </v-btn>
+        </v-hover>
       </v-col>
     </v-row>
   </v-container>
@@ -147,7 +150,7 @@ export default {
   },
   computed: {
     ...mapState(['portal', 'publicUrl', 'config']),
-    ...mapGetters(['dataFairUrl'])
+    ...mapGetters(['dataFairUrl', 'hoverInverse'])
   },
   watch: {
     async '$route.params.id' () {

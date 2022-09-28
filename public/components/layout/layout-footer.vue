@@ -19,7 +19,10 @@
             Retrouvez-nous sur les réseaux sociaux
           </h5>
         </client-only>
-        <social-links />
+        <social-links
+          :dark="footerColorDark"
+          :color="footerColorDark ? footerColor : 'primary'"
+        />
       </v-col>
     </v-row>
     <v-row
@@ -138,7 +141,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['footerColorDark', 'hasSocialLinks']),
+    ...mapGetters(['footerColor', 'footerColorDark', 'hasSocialLinks']),
     extraLogos () {
       const logos = [...this.config.footerExtraLogos || []]
       const copyright = { ...process.env.copyright }
