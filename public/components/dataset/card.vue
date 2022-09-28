@@ -1,65 +1,63 @@
 <template>
-  <v-card
+  <action-card
     :loading="!dataset"
-    min-height="260"
-    hover
-    class="also-outlined"
+    :to="dataset && `/datasets/${dataset.id}`"
+    :title="dataset && dataset.title"
   >
     <template v-if="dataset">
-      <nuxt-link
-        :to="`/datasets/${dataset.id}`"
-        style="text-decoration:none"
+      <div
+        v-if="dataset.image"
+        class="pb-2"
+        style="height:170px;"
       >
-        <card-title :title="dataset.title" />
-        <div
-          v-if="dataset.image"
-          class="pb-2"
-          style="height:170px;"
-        >
-          <v-img
-            :src="dataset.thumbnail || dataset.image"
-            :alt="dataset.title"
-            :max-height="155"
-            :contain="!!config.datasetThumbnailContain"
+        <v-img
+          :src="dataset.thumbnail || dataset.image"
+          :alt="dataset.title"
+          :max-height="155"
+          :contain="!!config.datasetThumbnailContain"
+        />
+      </div>
+      <v-card-text
+        v-else
+        style="height:170px;color: rgba(0,0,0,0.87)"
+        class="py-0"
+      >
+        <client-only>
+          <v-clamp
+            :max-height="170"
+            class="dataset-desc170"
+            autoresize
+            v-html="dataset.description"
           />
-        </div>
-        <v-card-text
-          v-else
-          style="height:170px;color: rgba(0,0,0,0.87)"
-          class="py-0"
-        >
-          <client-only>
-            <v-clamp
-              :max-height="170"
-              class="dataset-desc170"
-              autoresize
-              v-html="dataset.description"
-            />
-          </client-only>
-        </v-card-text>
-        <v-row style="min-height:32px;">
-          <v-col class="pt-0 pb-1">
-            <v-chip
-              v-for="topic of dataset.topics"
-              :key="topic.id"
+        </client-only>
+      </v-card-text>
+      <v-row style="min-height:32px;">
+        <v-col class="pt-0 pb-1">
+          <v-chip
+            v-for="topic of dataset.topics"
+            :key="topic.id"
+            small
+            dark
+            :color="topic.color ? $readableColor(topic.color) : 'default'"
+            class="ml-2 mt-1 font-weight-bold"
+          >
+            <v-icon
+              v-if="topic.icon && topic.icon.name"
+              left
               small
-              dark
-              :color="topic.color ? $readableColor(topic.color) : 'default'"
-              class="ml-2 mt-1 font-weight-bold"
             >
-              <v-icon
-                v-if="topic.icon && topic.icon.name"
-                left
-                small
-              >
-                mdi-{{ topic.icon.name }}
-              </v-icon>
-              {{ topic.title }}
-            </v-chip>
-          </v-col>
-        </v-row>
-      </nuxt-link>
-      <v-card-actions class="py-0">
+              mdi-{{ topic.icon.name }}
+            </v-icon>
+            {{ topic.title }}
+          </v-chip>
+        </v-col>
+      </v-row>
+    </template>
+    <template #bottom>
+      <v-card-actions
+        v-if="dataset"
+        class="py-0"
+      >
         <table-preview
           v-if="!dataset.isMetaOnly"
           :dataset="dataset"
@@ -109,7 +107,7 @@
         <!-- <v-btn :to="dataset.href" color="warning" flat exact>Lire la suite</v-btn> -->
       </v-card-actions>
     </template>
-  </v-card>
+  </action-card>
 </template>
 
 <script>

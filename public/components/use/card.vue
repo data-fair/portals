@@ -1,37 +1,40 @@
 <template lang="html">
-  <v-card
-    :hover="use.published && link"
-    class="also-outlined"
+  <action-card
+    :to="use.published && link && `/uses/${use.slug}`"
+    :title="use.title"
   >
-    <nuxt-link
-      v-if="use.published && link"
-      :to="`/uses/${use.slug}`"
-      style="text-decoration:none"
-    >
-      <use-card-content :use="use" />
-    </nuxt-link>
-    <use-card-content
-      v-else
-      :use="use"
-    />
-    <v-card-actions class="py-0">
-      <slot name="actions" />
-      <v-spacer />
-      <v-subheader v-if="use.publishedAt">
-        Publiée le {{ use.publishedAt | date('L') }}
-      </v-subheader>
-      <v-subheader v-else>
-        Mise à jour le {{ use.updated.date | date('L') }}
-      </v-subheader>
-    </v-card-actions>
-  </v-card>
+    <div class="pb-2">
+      <v-img
+        :src="use.image && use.image.name && `${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image-thumbnail`"
+        :alt="use.title"
+        :aspect-ratio="21/9"
+      />
+    </div>
+    <template #bottom>
+      <v-card-actions class="py-0">
+        <slot name="actions" />
+        <v-spacer />
+        <v-subheader v-if="use.publishedAt">
+          Publiée le {{ use.publishedAt | date('L') }}
+        </v-subheader>
+        <v-subheader v-else>
+          Mise à jour le {{ use.updated.date | date('L') }}
+        </v-subheader>
+      </v-card-actions>
+    </template>
+  </action-card>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: {
     use: { type: Object, default: null },
     link: { type: Boolean, default: false }
+  },
+  computed: {
+    ...mapState(['publicUrl', 'portal'])
   }
 }
 </script>

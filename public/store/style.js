@@ -54,7 +54,6 @@ export default () => ({
       return false
     },
     footerColor (state, getters, rootState) {
-      console.log('state', state)
       if (rootState.config.footerColor === 'primary') return rootState.config.themeColor
       if (rootState.config.footerColor === 'secondary') return getters.secondaryColor
       if (rootState.config.footerColor === 'grey' || !rootState.config.footerColor) return '#424242'
