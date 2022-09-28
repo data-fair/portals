@@ -228,7 +228,8 @@ export default {
       showDraft: true,
       showProd: true,
       activeTab: 0,
-      error: null
+      error: null,
+      fonts: null
     }
   },
   computed: {
@@ -239,7 +240,8 @@ export default {
         owner: this.activeAccount.type + ':' + this.activeAccount.id,
         dataFairUrl: this.$store.getters.dataFairUrl,
         publicUrl: this.$store.state.publicUrl,
-        portalUrl: `api/v1/portals/${this.portal._id}`
+        portalUrl: `api/v1/portals/${this.portal._id}`,
+        fonts: this.fonts
       }
     },
     iframeHeight () {
@@ -254,24 +256,31 @@ export default {
       text: this.portal.title
     }])
     await this.fetchConfigDraft()
+    await this.fetchFonts()
   },
   methods: {
     async fetchConfigDraft () {
       this.configDraft = await this.$axios.$get(`api/v1/portals/${this.portal._id}/config`, { params: { draft: true } })
     },
+    async fetchFonts () {
+      this.fonts = await this.$axios.$get(`api/v1/portals/${this.portal._id}/fonts`, { params: { draft: true } })
+    },
     async saveDraft (e) {
       this.$refs.configForm && this.$refs.configForm.validate()
       if (!this.formValid) return
       this.showDraft = false
+      let uploadedFont = false
       if (this.configDraft.assets) {
         for (const key in this.configDraft.assets) {
           if (this.configDraft.assets[key] && this.configDraft.assets[key].data) {
             await this.uploadAsset(key, this.configDraft.assets[key].data)
             delete this.configDraft.assets[key].data
+            if (key.startsWith('font')) uploadedFont = true
           }
         }
       }
       await this.$axios.$put(`api/v1/portals/${this.portal._id}/configDraft`, this.configDraft)
+      if (uploadedFont) await this.fetchFonts()
       this.showDraft = true
       this.activeTab = 0
     },
