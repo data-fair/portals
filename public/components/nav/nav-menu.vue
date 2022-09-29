@@ -14,10 +14,15 @@
         :height="64"
         v-on="on"
       >
-        <v-icon class="mr-2">
+        <v-icon class="mx-1">
           mdi-menu
         </v-icon>
-        {{ activeItemTitle }}
+        <span
+          v-if="!$vuetify.breakpoint.xs"
+          class="ml-1"
+        >
+          {{ activeItemTitle }}
+        </span>
       </v-btn>
     </template>
     <v-list>

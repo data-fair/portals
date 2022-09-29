@@ -7,12 +7,14 @@
       class="mr-3"
       target="blank"
     >
-      <img
+
+      <v-img
         :src="logoUrl"
         :alt="config.title"
         contain
-        :style="`height:${height}px`"
-      >
+        :height="height"
+        :max-width="$vuetify.breakpoint.width / 2"
+      />
     </a>
     <nuxt-link
       v-else
@@ -20,12 +22,13 @@
       :style="`height:${height}px; display: block;`"
       class="mr-3"
     >
-      <img
+      <v-img
         :src="logoUrl"
         :alt="config.title"
         contain
-        :style="`height:${height}px`"
-      >
+        :height="height"
+        :max-width="$vuetify.breakpoint.width / 2.5"
+      />
     </nuxt-link>
   </div>
 </template>

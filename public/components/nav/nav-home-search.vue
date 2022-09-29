@@ -2,7 +2,7 @@
   <v-text-field
     v-model="search"
     rounded
-    style="max-width:400px;"
+    style="max-width:360px;"
     placeholder="Rechercher"
     outlined
     append-icon="mdi-magnify"

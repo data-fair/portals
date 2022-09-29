@@ -62,7 +62,7 @@ export default {
     },
     appBarProps () {
       const props = {
-        class: `main-app-bar mb-3 app-bar-${this.config.appBarColor || 'primary'}`,
+        class: `main-app-bar mb-3 app-bar-${this.config.appBarColor || 'primary'} app-bar-${this.$vuetify.breakpoint.name}`,
         color: this.appBarMainColor,
         height: this.config.headerHide ? 1 : 128,
         extensionHeight: 64,
@@ -100,5 +100,9 @@ export default {
 .main-app-bar .v-toolbar__extension {
   padding-left: 12px;
   padding-right: 12px;
+}
+.main-app-bar.app-bar-xs .v-toolbar__extension {
+  padding-left: 6px;
+  padding-right: 0px;
 }
 </style>
