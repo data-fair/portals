@@ -3,7 +3,7 @@
     <a
       v-if="config.website"
       :href="config.website || '/'"
-      style="height:100%"
+      :style="`height:${height}px; display: block;`"
       class="mr-3"
       target="blank"
     >
@@ -11,20 +11,20 @@
         :src="logoUrl"
         :alt="config.title"
         contain
-        style="height:80px"
+        :style="`height:${height}px`"
       >
     </a>
     <nuxt-link
       v-else
       to="/"
-      style="height:100%"
+      :style="`height:${height}px; display: block;`"
       class="mr-3"
     >
       <img
         :src="logoUrl"
         :alt="config.title"
         contain
-        style="height:80px"
+        :style="`height:${height}px`"
       >
     </nuxt-link>
   </div>
@@ -34,7 +34,8 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   props: {
-    float: { type: String, default: 'left' }
+    float: { type: String, default: 'left' },
+    height: { type: Number, default: 80 }
   },
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),

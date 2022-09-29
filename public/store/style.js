@@ -96,7 +96,7 @@ export default () => ({
       return rootState.config.elevation
     },
     appBarElevation (state, getters) {
-      return Math.max(Math.min(getters.elevation * 2, 6), 1)
+      return Math.min(getters.elevation * 2, 6)
     },
     radius (state, getters, rootState) {
       if (!('radius' in rootState.config)) return 4

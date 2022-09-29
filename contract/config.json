@@ -297,6 +297,12 @@
   }, {
     "title": "Entête",
     "properties": {
+      "headerHide": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "masquer entièrement l'entête",
+        "description": "le logo sera affiché à gauche de la barre de navigation"
+      },
       "headerColor": {
         "title": "Couleur de l'entête",
         "type": "string",

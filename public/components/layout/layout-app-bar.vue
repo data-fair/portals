@@ -1,10 +1,14 @@
 <template>
   <v-app-bar v-bind="appBarProps">
     <!-- 128 px -->
-    <layout-header />
+    <layout-header v-if="!config.headerHide" />
 
     <!-- 64 px -->
     <template #extension>
+      <layout-header-logo
+        v-if="config.headerHide"
+        :height="56"
+      />
       <nav-tabs-or-menu
         v-if="initialized && navigation"
         :background-dark="appBarMainColorDark"
@@ -60,7 +64,7 @@ export default {
       const props = {
         class: `main-app-bar mb-3 app-bar-${this.config.appBarColor || 'primary'}`,
         color: this.appBarMainColor,
-        height: 128,
+        height: this.config.headerHide ? 1 : 128,
         extensionHeight: 64,
         style: 'max-height:192px;'
       }
@@ -69,8 +73,9 @@ export default {
       if (this.config.appBarBehavior === 'stick' || (this.config.appBarBehavior === 'stickHome' && this.$route.path === '/')) {
         props.app = true
         props.hideOnScroll = true
+        if (this.appBarElevation === 0) props.elevateOnScroll = true
       }
-      props.elevation = this.appBarElevation
+      if (!props.elevateOnScroll) props.elevation = this.appBarElevation
       return props
     }
   },
