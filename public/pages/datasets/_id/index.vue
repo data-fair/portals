@@ -31,9 +31,9 @@
         >
           <v-card
             class="mb-3"
-            outlined
+            v-bind="infoCardProps"
           >
-            <v-list>
+            <v-list style="background-color: transparent;">
               <v-list-item v-if="!dataset.isMetaOnly">
                 <v-list-item-content>
                   <v-list-item-title>
@@ -330,7 +330,7 @@
                 <client-only>
                   <v-clamp
                     :max-height="170"
-                    class="use-desc130:before"
+                    class="card-gradient-desc130:before"
                     autoresize
                     v-html="application.description"
                   />
@@ -507,7 +507,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'readableThemeColor']),
+    ...mapGetters(['themeColorDark', 'readableThemeColor', 'infoCardProps']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id
@@ -530,13 +530,4 @@ export default {
 </script>
 
 <style>
-.use-desc130:before {
-  content:'';
-  width:100%;
-  height:82px;
-  position:absolute;
-  left:0;
-  top:120px;
-  background:linear-gradient(transparent 0, white);
-}
 </style>

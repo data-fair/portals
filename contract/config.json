@@ -118,6 +118,13 @@
         "title": "Couleur secondaire",
         "x-display": "color-picker"
       },
+      "secondaryBackgroundColor": {
+        "type": "string",
+        "default": "#CFD8DC",
+        "title": "Couleur d'arrière plan secondaire",
+        "description": "Si vous fournissez une couleur trop foncée elle sera automatiquement éclaircie pour préserver le contraste des contenus.",
+        "x-display": "color-picker"
+      },
       "bodyFont": {
         "title": "Police principale",
         "type": "object",
@@ -144,6 +151,9 @@
         }, {
           "const": "lightGrey",
           "title": "gris clair"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
         }]
       },
       "elevation": {
@@ -191,6 +201,9 @@
         "items": {
           "type": "string",
           "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour grisé"
+          }, {
             "const": "hoverElevate",
             "title": "élèver le cadre au survol (ajout d'une ombre)"
           }, {
@@ -204,7 +217,53 @@
             "title": "colorer le bord au survol"
           }]
         },
-        "default": ["hoverElevate"]
+        "default": ["outlined", "hoverElevate"]
+      },
+      "actionCardBackgroundColor": {
+        "title": "Couleur du fond des vignettes cliquables",
+        "type": "string",
+        "default": "white",
+        "oneOf": [{
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
+        }]
+      },
+      "infoCardOptions": {
+        "title": "Options des vignettes d'information",
+        "type": "array",
+        "x-display": "switch",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour grisé"
+          }, {
+            "const": "elevate",
+            "title": "élèver (applique l'élévation par défaut de votre configuration)"
+          }]
+        },
+        "default": ["outlined"]
+      },
+      "infoCardBackgroundColor": {
+        "title": "Couleur du fond des vignettes d'information",
+        "type": "string",
+        "default": "white",
+        "oneOf": [{
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
+        }]
       },
       "buttonOptions": {
         "title": "Options des boutons et des liens",
@@ -377,10 +436,16 @@
           "title": "couleur secondaire"
         }, {
           "const": "grey",
-          "title": "gris"
+          "title": "gris foncé"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
         }, {
           "const": "white",
           "title": "blanc"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
         }]
       },
       "footerSocial": {
@@ -567,7 +632,45 @@
         "title": "afficher les chiffres clés",
         "type": "boolean",
         "x-display": "switch",
-        "default": true
+        "default": true,
+        "x-props": {"hideDetails": "auto"}
+      },
+      "kpiOptions": {
+        "type": "array",
+        "title": "Options d'affichage des chilffres clés",
+        "x-if": "showKpis",
+        "x-display": "switch",
+        "x-props": {"hideDetails": "auto"},
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour grisé"
+          }, {
+            "const": "shaped",
+            "title": "2 angles arrondis"
+          }, {
+            "const": "elevate",
+            "title": "élèver (applique l'élévation par défaut de votre configuration)"
+          }]
+        },
+        "default": ["outlined", "shaped"]
+      },
+      "kpiBackgroundColor": {
+        "title": "Couleur du fond des chiffres clés",
+        "x-if": "showKpis",
+        "type": "string",
+        "default": "white",
+        "oneOf": [{
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
+        }]
       },
       "showSearch": {
         "title": "afficher un champ de recherche sur la page d'accueil",

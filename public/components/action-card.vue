@@ -39,15 +39,12 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['elevation']),
-    options () {
-      return this.config.actionCardOptions || ['hoverElevate']
-    },
+    ...mapGetters(['elevation', 'actionCardOptions', 'actionCardBackgroundColor']),
     titleColorClass () {
       let c = 'underline-link'
       if (this.to && this.hovered) {
-        if (this.options.includes('hoverColorTitle')) c += ' primary--text'
-        if (this.options.includes('hoverUnderlineTitle')) c += ' underline-link-hover'
+        if (this.actionCardOptions.includes('hoverColorTitle')) c += ' primary--text'
+        if (this.actionCardOptions.includes('hoverUnderlineTitle')) c += ' underline-link-hover'
       }
 
       return c
@@ -57,12 +54,13 @@ export default {
         elevation: this.elevation,
         loading: this.loading,
         minHeight: 260,
-        class: 'also-outlined'
+        style: `background-color:${this.actionCardBackgroundColor}`
       }
+      if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
 
       if (this.to && this.hovered) {
-        if (this.options.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
-        if (this.options.includes('hoverColorBorder')) props.class = 'primary-outlined'
+        if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
+        if (this.actionCardOptions.includes('hoverColorBorder')) props.class = 'primary-outlined'
       }
 
       return props

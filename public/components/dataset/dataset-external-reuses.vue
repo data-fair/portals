@@ -48,7 +48,7 @@
               <client-only>
                 <v-clamp
                   :max-height="170"
-                  class="external-reuse-desc130:before"
+                  class="card-gradient-desc130:before"
                   autoresize
                   v-html="reuse.description"
                 />

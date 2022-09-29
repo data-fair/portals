@@ -25,7 +25,7 @@
         <client-only>
           <v-clamp
             :max-height="170"
-            class="dataset-desc170"
+            class="card-gradient-desc170"
             autoresize
             v-html="dataset.description"
           />

@@ -6,6 +6,7 @@ export default () => ({
       if (!rootState.config) return
       if (rootState.config.backgroundColor === 'white' || !rootState.config.backgroundColor) return '#FFFFFF'
       if (rootState.config.backgroundColor === 'lightGrey') return '#FAFAFA'
+      if (rootState.config.backgroundColor === 'secondaryBackground') return getters.secondaryBackgroundColor
     },
     secondaryColor (state, getters, rootState) {
       if (!rootState.config) return
@@ -26,6 +27,10 @@ export default () => ({
     backgroundableSecondaryColor (state, getters, rootState) {
       if (!rootState.config) return
       return Vue.prototype.$backgroundableColor(getters.secondaryColor)
+    },
+    secondaryBackgroundColor (state, getters, rootState) {
+      if (!rootState.config) return
+      return Vue.prototype.$backgroundableColor(rootState.config.secondaryBackgroundColor || '#FFFFFF')
     },
     themeColorDark (state, getters, rootState) {
       if (!rootState.config) return
@@ -57,7 +62,9 @@ export default () => ({
       if (rootState.config.footerColor === 'primary') return rootState.config.themeColor
       if (rootState.config.footerColor === 'secondary') return getters.secondaryColor
       if (rootState.config.footerColor === 'grey' || !rootState.config.footerColor) return '#424242'
+      if (rootState.config.footerColor === 'lightGrey' || !rootState.config.footerColor) return '#FAFAFA'
       if (rootState.config.footerColor === 'white') return '#FFFFFF'
+      if (rootState.config.footerColor === 'secondaryBackground') return getters.secondaryBackgroundColor
       return rootState.config.footerColor
     },
     footerColorDark (state, getters, rootState) {
@@ -102,12 +109,45 @@ export default () => ({
       if (!('radius' in rootState.config)) return 4
       return rootState.config.radius
     },
+    actionCardOptions (state, getters, rootState) {
+      return rootState.config.actionCardOptions || ['outlined', 'hoverElevate']
+    },
+    actionCardBackgroundColor (state, getters, rootState) {
+      if (!rootState.config) return
+      if (rootState.config.actionCardBackgroundColor === 'white' || !rootState.config.actionCardBackgroundColor) return '#FFFFFF'
+      if (rootState.config.actionCardBackgroundColor === 'lightGrey') return '#FAFAFA'
+      if (rootState.config.actionCardBackgroundColor === 'secondaryBackground') return getters.secondaryBackgroundColor
+    },
+    infoCardOptions (state, getters, rootState) {
+      return rootState.config.infoCardOptions || ['outlined']
+    },
+    infoCardProps (state, getters) {
+      return {
+        elevation: getters.infoCardOptions.includes('elevate') ? getters.elevation : 0,
+        class: getters.infoCardOptions.includes('outlined') ? 'also-outlined' : '',
+        style: `background-color: ${getters.infoCardBackgroundColor}`
+      }
+    },
+    infoCardBackgroundColor (state, getters, rootState) {
+      if (!rootState.config) return
+      if (rootState.config.infoCardBackgroundColor === 'white' || !rootState.config.infoCardBackgroundColor) return '#FFFFFF'
+      if (rootState.config.infoCardBackgroundColor === 'lightGrey') return '#FAFAFA'
+      if (rootState.config.infoCardBackgroundColor === 'secondaryBackground') return getters.secondaryBackgroundColor
+    },
     buttonOptions (state, getters, rootState) {
-      if (!('buttonOptions' in rootState.config)) return []
-      return rootState.config.buttonOptions
+      return rootState.config.buttonOptions || []
     },
     hoverInverse (state, getters) {
       return getters.buttonOptions.includes('hoverInverse')
+    },
+    kpiOptions (state, getters, rootState) {
+      return rootState.config.kpiOptions || ['outlined', 'shaped']
+    },
+    kpiBackgroundColor (state, getters, rootState) {
+      if (!rootState.config) return
+      if (rootState.config.kpiBackgroundColor === 'white' || !rootState.config.kpiBackgroundColor) return '#FFFFFF'
+      if (rootState.config.kpiBackgroundColor === 'lightGrey') return '#FAFAFA'
+      if (rootState.config.kpiBackgroundColor === 'secondaryBackground') return getters.secondaryBackgroundColor
     },
     fontFamily (state, getters, rootState) {
       return (key) => {
@@ -338,7 +378,27 @@ ${getters.personalNavigationStyle}
 }
 .v-application#app .theme--light.v-sheet.primary-outlined {
   border: 2px solid ${getters.readableThemeColor};
-  margin: -1px;
+  margin: ${!getters.actionCardOptions.includes('outlined') ? -2 : -1}px;
+}
+
+/* used to display descriptions in cards with bottom gradient */
+.card-gradient-desc170:before {
+  content:'';
+  width:100%;
+  height:82px;
+  position:absolute;
+  left:0;
+  top:160px;
+  background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
+}
+.card-gradient-desc130:before {
+  content:'';
+  width:100%;
+  height:82px;
+  position:absolute;
+  left:0;
+  top:120px;
+  background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
 }
         `
       }

@@ -20,7 +20,7 @@
         >
           <v-card
             class="mb-3"
-            outlined
+            v-bind="infoCardProps"
           >
             <v-card-text class="subheading">
               Visualisation publiée par <span class="font-weight-bold">{{ application.owner.name }} en utilisant l'application <span class="font-weight-bold">{{ baseApplication ? baseApplication.title : application.url.split('/').slice(-3,-2).pop() }}</span></span>
@@ -189,7 +189,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
+    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'infoCardProps']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id
     }

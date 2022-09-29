@@ -7,10 +7,7 @@
       sm="4"
       cols="12"
     >
-      <v-card
-        shaped
-        outlined
-      >
+      <v-card v-bind="cardProps">
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
@@ -39,10 +36,7 @@
       sm="4"
       cols="12"
     >
-      <v-card
-        shaped
-        outlined
-      >
+      <v-card v-bind="cardProps">
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
@@ -73,10 +67,7 @@
       sm="4"
       cols="12"
     >
-      <v-card
-        shaped
-        outlined
-      >
+      <v-card v-bind="cardProps">
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
@@ -105,12 +96,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: ['stats'],
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config']),
+    ...mapGetters(['kpiOptions', 'kpiBackgroundColor', 'elevation']),
+    cardProps () {
+      return {
+        shaped: this.kpiOptions.includes('shaped'),
+        elevation: this.kpiOptions.includes('elevate') ? this.elevation : 0,
+        class: this.kpiOptions.includes('outlined') ? 'also-outlined' : '',
+        style: `background-color:${this.kpiBackgroundColor}`
+      }
+    }
   }
 }
 </script>
