@@ -6,7 +6,17 @@
       color="transparent"
       :href="loginHref"
     >
-      Se connecter
+      <v-icon
+        v-if="dense"
+        large
+        :color="backgroundDark ? 'white' : 'primary'"
+        title="se connecter"
+      >
+        mdi-account-circle
+      </v-icon>
+      <template v-else>
+        Se connecter
+      </template>
     </v-btn>
     <v-menu
       v-else
@@ -24,16 +34,18 @@
             <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
           </v-avatar>
                   &nbsp;
-          {{ user.name }}
-          <v-icon right>
-            mdi-menu-down
-          </v-icon>
+          <template v-if="!dense">
+            {{ user.name }}
+          </template>
         </v-btn>
       </template>
       <v-list
         outlined
         class="py-0"
       >
+        <v-subheader v-if="dense">
+          {{ user.name }}
+        </v-subheader>
         <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id))">
           <v-list-item
             :href="backOfficeUrl"
@@ -69,13 +81,16 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
   props: ['loginHref', 'backgroundDark'],
   computed: {
-    ...mapState(['config']),
+    ...mapState(['config', 'textDark']),
     ...mapState('session', ['user']),
     ...mapGetters(['directoryUrl', 'embed']),
     backOfficeUrl () {
       let url = process.env.mainDataFairUrl + '/'
       url += '?account=' + encodeURIComponent(this.config.owner.type + ':' + this.config.owner.id)
       return url
+    },
+    dense () {
+      return this.config.headerHide || this.$vuetify.breakpoint.smAndDown
     }
   },
   methods: {
