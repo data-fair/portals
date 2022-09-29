@@ -94,57 +94,27 @@
                   color="primary"
                 />
               </client-only>
-              <v-tooltip
+              <action-icon
                 v-if="dataFiles && dataFiles.original"
-                top
-              >
-                <template #activator="{ on }">
-                  <v-btn
-                    :href="dataFiles.original.url"
-                    color="primary"
-                    icon
-                    v-on="on"
-                    @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-                  >
-                    <v-icon>mdi-download</v-icon>
-                  </v-btn>
-                </template>
-                <span>Télécharger les données originales</span>
-              </v-tooltip>
-              <v-tooltip
+                title="Télécharger les données originales"
+                icon=" mdi-download"
+                :href="dataFiles.original.url"
+                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+              />
+              <action-icon
                 v-if="dataFiles && dataFiles.full"
-                top
-              >
-                <template #activator="{ on }">
-                  <v-btn
-                    :href="dataFiles.full.url"
-                    icon
-                    v-on="on"
-                  >
-                    <v-icon :color="'primary'">
-                      mdi-download-multiple
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Télécharger les données enrichies</span>
-              </v-tooltip>
-              <v-tooltip
+                title="Télécharger les données enrichies"
+                icon=" mdi-download-multiple"
+                :href="dataFiles.full.url"
+                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+              />
+              <action-icon
                 v-if="dataFiles && dataFiles['export-csv']"
-                top
-              >
-                <template #activator="{ on }">
-                  <v-btn
-                    :href="dataFiles['export-csv'].url"
-                    icon
-                    v-on="on"
-                  >
-                    <v-icon :color="'primary'">
-                      mdi-download
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Télécharger les données (export du {{ dataFiles['export-csv'].updatedAt | date('LL') }})</span>
-              </v-tooltip>
+                :title="`Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') })`"
+                icon="mdi-download"
+                :href="dataFiles['export-csv'].url"
+                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+              />
               <schema-view
                 v-if="!dataset.isMetaOnly"
                 :dataset="dataset"
