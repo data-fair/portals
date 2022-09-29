@@ -19,12 +19,12 @@
           height="400px"
           max-width="1904px"
           :class="`elevation-${appBarElevation}`"
-          style="margin-top: -11px;"
+          :style="`margin-top: ${config.appBarTransparency ? -75 : -11}px;`"
         />
       </v-row>
       <v-container
         v-if="config.showSearchOverBanner"
-        style="position:relative;top: -260px;height:0;"
+        :style="`position:relative;top: ${config.appBarTransparency ? -230 : -260}px;height:0;`"
       >
         <v-row
           v-if="config.showSearch"

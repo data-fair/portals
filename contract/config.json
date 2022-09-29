@@ -292,6 +292,12 @@
           "const": "stickHome",
           "title": "toujours visible uniquement sur la page d'accueil"
         }]
+      },
+      "appBarTransparency": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "appliquer un léger effet de transparence",
+        "default": false
       }
     }
   }, {

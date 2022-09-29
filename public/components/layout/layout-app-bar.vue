@@ -76,6 +76,7 @@ export default {
         if (this.appBarElevation === 0) props.elevateOnScroll = true
       }
       if (!props.elevateOnScroll) props.elevation = this.appBarElevation
+      if (this.config.appBarTransparency) props.style += 'opacity:0.85;'
       return props
     }
   },

@@ -338,6 +338,7 @@ ${getters.personalNavigationStyle}
 }
 .v-application#app .theme--light.v-sheet.primary-outlined {
   border: 2px solid ${getters.readableThemeColor};
+  margin: -1px;
 }
         `
       }
