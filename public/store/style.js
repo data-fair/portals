@@ -348,7 +348,7 @@ ${getters.personalNavigationStyle}
   border-bottom-right-radius: 24px;
 }
 .v-application#app .theme--light.v-sheet.primary-outlined {
-  border: 1px solid ${getters.readableThemeColor};
+  border: 2px solid ${getters.readableThemeColor};
 }
         `
       }
