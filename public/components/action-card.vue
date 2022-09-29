@@ -57,6 +57,7 @@ export default {
         style: `background-color:${this.actionCardBackgroundColor}`
       }
       if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
+      else props.class = 'not-outlined'
 
       if (this.to && this.hovered) {
         if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)

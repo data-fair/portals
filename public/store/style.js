@@ -397,7 +397,6 @@ ${getters.personalNavigationStyle}
 }
 .v-application#app .theme--light.v-sheet.primary-outlined {
   border: 2px solid ${getters.readableThemeColor};
-  margin: ${!getters.actionCardOptions.includes('outlined') ? -2 : -1}px;
 }
 
 /* used to display descriptions in cards with bottom gradient */

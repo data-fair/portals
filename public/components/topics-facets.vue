@@ -7,14 +7,12 @@
         v-slot="{hover}"
       >
         <v-btn
-          :color="topicItem.value.color ? $readableColor(topicItem.value.color) : 'default'"
           class="mr-3 mb-1 font-weight-bold text-none"
           dark
           rounded
           depressed
           :elevation="elevation"
-          :outlined="(!topicItem.filtered && !(hover && hoverInverse)) || (topicItem.filtered && hover && hoverInverse)"
-          :style="(hover && hoverInverse) || topicItem.filtered ? '' : 'background-color:white'"
+          :style="style(topicItem, hover)"
           @click="$emit('toggle', topicItem.value)"
         >
           <v-icon
@@ -40,6 +38,22 @@ export default {
   },
   computed: {
     ...mapGetters(['elevation', 'hoverInverse'])
+  },
+  methods: {
+    style (topicItem, hover) {
+      const color = this.$readableColor(topicItem.value.color)
+      if ((!topicItem.filtered && !(hover && this.hoverInverse)) || (topicItem.filtered && hover && this.hoverInverse)) {
+        return `
+        border: 2px solid ${color};
+        color: ${color};
+        background-color:white;`
+      } else {
+        return `
+        border: 2px solid transparent;
+        color: white;
+        background-color:${color};`
+      }
+    }
   }
 }
 </script>

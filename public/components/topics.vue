@@ -10,15 +10,13 @@
       :key="topic.value.id"
     >
       <v-btn
-        :color="topic.value.color ? $readableColor(topic.value.color) : 'default'"
         :to="{name: 'datasets', query: {topics: topic.value.id}}"
         class="mx-2 my-1 font-weight-bold text-none"
         dark
         rounded
         depressed
-        :outlined="!(hover && hoverInverse)"
+        :style="style(topic, hover)"
         :elevation="elevation"
-        :style="hover && hoverInverse ? '' : 'background-color:white'"
       >
         <v-icon
           v-if="topic.value.icon && topic.value.icon.name"
@@ -42,6 +40,22 @@ export default {
   },
   computed: {
     ...mapGetters(['elevation', 'hoverInverse'])
+  },
+  methods: {
+    style (topic, hover) {
+      const color = this.$readableColor(topic.value.color)
+      if (!(hover && this.hoverInverse)) {
+        return `
+        border: 2px solid ${color};
+        color: ${color};
+        background-color:white;`
+      } else {
+        return `
+        border: 2px solid transparent;
+        color: white;
+        background-color:${color};`
+      }
+    }
   }
 }
 </script>
