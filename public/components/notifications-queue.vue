@@ -14,6 +14,7 @@
         v-on="on"
       >
         <v-badge
+          class="notifications-badge"
           :content="countNew"
           :value="!!countNew"
           color="pink"
@@ -135,12 +136,12 @@ export default {
   methods: {
     async countNotifications () {
       const res = await this.$axios.$get(`${this.notifyUrl}/api/v1/notifications`, { params: { size: 0, count: false } })
-      this.countNew = res.countNew
+      this.countNew = res.countNew + 10
     },
     async fetchNotifications () {
       this.loading = true
       const res = await this.$axios.$get(`${this.notifyUrl}/api/v1/notifications`, { params: { size: this.size, count: false } })
-      this.countNew = res.countNew
+      this.countNew = res.countNew + 10
       this.notifications = res.results
       this.loading = false
     }
@@ -148,8 +149,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-.notifications-queue .v-badge .v-badge__badge {
+<style lang="css">
+#app .notifications-badge.v-badge .v-badge__badge {
 color:white !important;
 }
 </style>
