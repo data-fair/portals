@@ -286,11 +286,13 @@ export default () => ({
         // see https://www.30secondsofcode.org/css/s/hover-underline-animation
         style += `
         .page-element a,
+        p>a,
         .underline-link {
           display: inline-block;
           position: relative;
         }
         .page-element a:after,
+        p>a:after,
         .underline-link:after {
           content: '';
           position: absolute;
@@ -304,6 +306,7 @@ export default () => ({
           transition: transform 0.25s ease-out;
         }
         .page-element a:hover:after,
+        p>a:hover:after,
         .underline-link:hover:after,
         .underline-link-hover:after {
           transform: scaleX(1);
