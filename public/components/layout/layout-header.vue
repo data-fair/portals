@@ -8,7 +8,12 @@
         class="mb-0"
         style="height: 36px;"
       >
-        <v-spacer /><social-links v-if="config.headerSocial" />
+        <v-spacer />
+        <social-links
+          v-if="config.headerSocial"
+          :dark="headerColorDark"
+          class="pt-2"
+        />
       </v-row>
       <v-row
         align="center"
