@@ -50,6 +50,7 @@
                     Données issues de <a
                       :href="dataset.origin"
                       rel="external"
+                      class="underline-link"
                     >cette source</a>
                   </v-list-item-title>
                   <v-list-item-title v-else-if="dataset.origin">
@@ -63,6 +64,7 @@
                     Licence : <a
                       :href="dataset.license.href"
                       rel="external"
+                      class="underline-link"
                     >{{ dataset.license.title }}</a>
                   </v-list-item-title>
                 </v-list-item-content>
