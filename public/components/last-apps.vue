@@ -17,12 +17,12 @@
     <v-row align="center">
       <v-col class="text-center">
         <nuxt-link
-          class="title icon-link"
+          class="title"
           to="/applications"
         >
           <v-icon color="primary">
             mdi-open-in-new
-          </v-icon>&nbsp;<span>toutes les visualisations</span>
+          </v-icon>&nbsp;<span class="underline-link">toutes les visualisations</span>
         </nuxt-link>
       </v-col>
     </v-row>

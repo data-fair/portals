@@ -222,52 +222,41 @@ export default () => ({
     },
     linksStyle (state, getters) {
       let style = `
+      .v-application#app a {
+        text-decoration: none;
+      }
 `
       if (getters.buttonOptions.includes('hoverUnderline')) {
+        // see https://www.30secondsofcode.org/css/s/hover-underline-animation
         style += `
-        .v-application#app .v-tabs a:hover {
-          text-decoration: none;
+        .page-element a,
+        .underline-link {
+          display: inline-block;
+          position: relative;
         }
-        .v-application#app .v-card>a:hover {
-          text-decoration: none;
+        .page-element a:after,
+        .underline-link:after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          transform: scaleX(0);
+          height: 2px;
+          bottom: 0;
+          left: 0;
+          background-color: ${getters.readableThemeColor};
+          transform-origin: bottom right;
+          transition: transform 0.25s ease-out;
         }
-        .v-application#app a.v-btn:hover {
-          text-decoration: none;
-        }
-        .v-application#app a.icon-link:hover {
-          text-decoration: none;
-        }
-        .v-application#app a:hover {
-          text-decoration: underline;
-        }
-        .v-application#app a.icon-link:hover span {
-          text-decoration: underline;
+        .page-element a:hover:after,
+        .underline-link:hover:after,
+        .underline-link-hover:after {
+          transform: scaleX(1);
+          transform-origin: bottom left;
         }`
-      }
-      if (getters.buttonOptions.includes('alwaysUnderline')) {
+      } else if (getters.buttonOptions.includes('alwaysUnderline')) {
         style += `
-        .v-application#app .v-tabs a {
-          text-decoration: none;
-        }
-        .v-application#app .v-card>a {
-          text-decoration: none;
-        }
-        .v-application#app a.v-btn {
-          text-decoration: none;
-        }
-        .v-application#app a.icon-link {
-          text-decoration: none;
-        }
-        .v-application#app a {
+        .underline-link {
           text-decoration: underline;
-        }
-        .v-application#app a.icon-link span {
-          text-decoration: underline;
-        }`
-      } else {
-        style += `
-        .v-application#app a {
-          text-decoration: none;
         }`
       }
       return style

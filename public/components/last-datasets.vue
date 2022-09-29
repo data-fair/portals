@@ -17,12 +17,12 @@
     <v-row align="center">
       <v-col class="text-center">
         <nuxt-link
-          class="title icon-link"
+          class="title"
           to="/datasets"
         >
           <v-icon color="primary">
             mdi-open-in-new
-          </v-icon>&nbsp;<span>toutes les données</span>
+          </v-icon>&nbsp;<span class="underline-link">toutes les données</span>
         </nuxt-link>
       </v-col>
     </v-row>

@@ -86,12 +86,12 @@
       >
         <v-col cols="12">
           <nuxt-link
-            class="title icon-link"
+            class="title"
             to="/applications"
           >
             <v-icon color="primary">
               mdi-reply
-            </v-icon>&nbsp;<span>retourner à la liste</span>
+            </v-icon>&nbsp;<span class="underline-link">retourner à la liste</span>
           </nuxt-link>
         </v-col>
       </v-row>

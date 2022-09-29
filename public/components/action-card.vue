@@ -44,10 +44,10 @@ export default {
       return this.config.actionCardOptions || ['hoverElevate']
     },
     titleColorClass () {
-      let c = ''
+      let c = 'underline-link'
       if (this.to && this.hovered) {
         if (this.options.includes('hoverColorTitle')) c += ' primary--text'
-        if (this.options.includes('hoverUnderlineTitle')) c += ' text-decoration-underline'
+        if (this.options.includes('hoverUnderlineTitle')) c += ' underline-link-hover'
       }
 
       return c
