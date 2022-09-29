@@ -75,6 +75,17 @@
               }
             }
           },
+          "footerBackground": {
+            "type": "object",
+            "title": "Arrière plan du pied de page",
+            "contentMediaType": "image/*",
+            "writeOnly": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
           "font1": {
             "type": "object",
             "title": "Police 1 (formats WOFF ou WOFF2)",
@@ -446,6 +457,27 @@
         }, {
           "const": "secondaryBackground",
           "title": "couleur d'arrière plan secondaire"
+        }]
+      },
+      "footerBackgroundImage": {
+        "type": "string",
+        "default": "none",
+        "title": "Utilisation de l'image d'arrière plan",
+        "oneOf": [{
+          "const": "none",
+          "title": "non affichée"
+        }, {
+          "const": "left",
+          "title": "à gauche"
+        }, {
+          "const": "center",
+          "title": "centrée"
+        }, {
+          "const": "right",
+          "title": "à droite"
+        }, {
+          "const": "repeat-x",
+          "title": "répétée"
         }]
       },
       "footerSocial": {

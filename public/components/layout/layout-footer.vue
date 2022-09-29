@@ -104,6 +104,7 @@
     <v-row
       v-if="config.footerImportantLinks && config.footerImportantLinks.length"
       class="ma-0 text-center"
+      :style="`background-color: ${footerColor};opacity: 0.85;`"
     >
       <v-col>
         <v-divider :dark="footerColorDark" />

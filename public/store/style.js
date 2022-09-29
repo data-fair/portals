@@ -240,6 +240,22 @@ export default () => ({
       }
       return ''
     },
+    footerStyle (state, getters, rootState, rootGetters) {
+      if (rootGetters.footerBackgroundUrl && rootState.config.footerBackgroundImage && rootState.config.footerBackgroundImage !== 'none') {
+        const transparentBg = Vue.prototype.$color(getters.footerColor).setAlpha(0.75).toRgbString()
+        return `
+        #app .v-footer .container {
+          background:linear-gradient(90deg, transparent 0, ${transparentBg} 30% 70%, transparent 100%);
+        }
+        #app .v-footer>.v-card {
+          background-image: url(${rootGetters.footerBackgroundUrl});
+          background-position: bottom ${rootState.config.footerBackgroundImage};
+          background-repeat: ${rootState.config.footerBackgroundImage.startsWith('repeat') ? rootState.config.footerBackgroundImage : 'no-repeat'};
+        }
+        `
+      }
+      return ''
+    },
     personalNavigationStyle (state, getters, rootState) {
       const darkened = Vue.prototype.$color(getters.personalNavigationColor).darken(10).toHexString()
       const brightened = Vue.prototype.$color(getters.personalNavigationColor).brighten(10).toHexString()
@@ -400,6 +416,9 @@ ${getters.personalNavigationStyle}
   top:120px;
   background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
 }
+
+/* footer style */
+${getters.footerStyle}
         `
       }
     }

@@ -15,6 +15,10 @@ const assets = {
     file: 'undraw_Data_points_re_vkpq.png',
     size: { width: 1904 }
   },
+  footerBackground: {
+    file: 'footer.png',
+    size: { height: 300 }
+  },
   favicon: {
     file: 'favicon.ico',
     size: { width: 48, height: 48 }
@@ -23,7 +27,7 @@ const assets = {
     file: 'font1.woff2'
   },
   font2: {
-    file: 'font1.woff2'
+    file: 'font2.woff2'
   }
 }
 

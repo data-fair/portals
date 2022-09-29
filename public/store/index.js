@@ -69,6 +69,9 @@ export default () => {
       logoUrl (state) {
         return `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/logo?draft=${state.draft}&hash=${state.config.assets.logo && state.config.assets.logo.hash}`
       },
+      footerBackgroundUrl (state) {
+        return state.config.assets.footerBackground && `${state.publicUrl}/api/v1/portals/${state.portal._id}/assets/footerBackground?draft=${state.draft}&hash=${state.config.assets.footerBackground.hash}`
+      },
       portalHead (state, getters) {
         return (route, applyFonts = true, htmlOverflow = 'auto') => {
           // For i18n support, see https://github.com/nuxt/nuxtjs.org/blob/master/layouts/default.vue
