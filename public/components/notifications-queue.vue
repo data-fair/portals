@@ -1,6 +1,7 @@
 <template>
   <v-menu
     v-model="menu"
+    class="notifications-queue"
     nudge-left
     offset-y
     max-height="400"
@@ -16,7 +17,6 @@
           :content="countNew"
           :value="!!countNew"
           color="pink"
-          style="color:white !important;"
           overlap
         >
           <v-icon :color="backgroundDark ? 'white' : textDark">
@@ -149,4 +149,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.notifications-queue .v-badge .v-badge__badge {
+color:white !important;
+}
 </style>
