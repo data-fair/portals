@@ -17,7 +17,8 @@
       },
       "datasetThumbnailContain": {
         "type": "boolean",
-        "title": "Ne pas recadrer les images dans les vignettes de jeux de données",
+        "x-display": "switch",
+        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
         "default": false
       },
       "authentication": {
@@ -145,115 +146,6 @@
           "title": "gris clair"
         }]
       },
-      "titleColor": {
-        "title": "Couleur du titre",
-        "description": "Si nécessaire une variante foncée de la couleur sera utilisée pour préserver la lisibilité.",
-        "type": "string",
-        "default": "grey",
-        "oneOf": [{
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }]
-      },
-      "appBarColor": {
-        "title": "Couleur de la barre de navigation",
-        "type": "string",
-        "default": "primary",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "primaryGradient1",
-          "title": "couleur principale avec dégradé"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "secondaryGradient1",
-          "title": "couleur secondaire avec dégradé"
-        }, {
-          "const": "primarySecondaryGradient",
-          "title": "dégradé couleur principale vers couleur secondaire"
-        }, {
-          "const": "secondaryPrimaryGradient",
-          "title": "dégradé couleur secondaire vers couleur principale"
-        }, {
-          "const": "grey",
-          "title": "gris foncé"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
-      "appBarBehavior": {
-        "title": "Comportement de la barre de navigation",
-        "type": "string",
-        "default": "scroll",
-        "oneOf": [{
-          "const": "scroll",
-          "title": "disparait au scroll"
-        }, {
-          "const": "stick",
-          "title": "toujours visible"
-        }, {
-          "const": "stickHome",
-          "title": "toujours visible uniquement sur la page d'accueil"
-        }]
-      },
-      "headerColor": {
-        "title": "Couleur de l'entête",
-        "type": "string",
-        "default": "page",
-        "oneOf": [{
-          "const": "page",
-          "title": "couleur du fond de la page"
-        }, {
-          "const": "appBar",
-          "title": "couleur de la barre de navigation"
-        }]
-      },
-      "footerColor": {
-        "type": "string",
-        "default": "grey",
-        "title": "Couleur du pied de page",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
-      "personalNavigationColor": {
-        "type": "string",
-        "default": "primary",
-        "title": "Couleur de la barre de navigation dans l'espace personnel",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
       "elevation": {
         "title": "Élévation / ombres",
         "description": "Contrôle l'effet d'ombre créé autour de certains éléments et qui ajoute du relief aux pages.",
@@ -295,6 +187,7 @@
       "actionCardOptions": {
         "title": "Options des vignettes cliquables",
         "type": "array",
+        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -316,6 +209,7 @@
       "buttonOptions": {
         "title": "Options des boutons et des liens",
         "type": "array",
+        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -333,20 +227,118 @@
       }
     }
   }, {
+    "title": "Barre de navigation",
+    "properties": {
+      "appBarColor": {
+        "title": "Couleur de la barre de navigation",
+        "type": "string",
+        "default": "primary",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "primaryGradient1",
+          "title": "couleur principale avec dégradé"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "secondaryGradient1",
+          "title": "couleur secondaire avec dégradé"
+        }, {
+          "const": "primarySecondaryGradient",
+          "title": "dégradé couleur principale vers couleur secondaire"
+        }, {
+          "const": "secondaryPrimaryGradient",
+          "title": "dégradé couleur secondaire vers couleur principale"
+        }, {
+          "const": "grey",
+          "title": "gris foncé"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
+      },
+      "personalNavigationColor": {
+        "type": "string",
+        "default": "primary",
+        "title": "Couleur de la barre de navigation dans l'espace personnel",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
+      },
+      "appBarBehavior": {
+        "title": "Comportement de la barre de navigation",
+        "type": "string",
+        "default": "scroll",
+        "x-display": "radio",
+        "oneOf": [{
+          "const": "scroll",
+          "title": "disparait au scroll"
+        }, {
+          "const": "stick",
+          "title": "toujours visible"
+        }, {
+          "const": "stickHome",
+          "title": "toujours visible uniquement sur la page d'accueil"
+        }]
+      }
+    }
+  }, {
     "title": "Entête",
     "properties": {
+      "headerColor": {
+        "title": "Couleur de l'entête",
+        "type": "string",
+        "default": "page",
+        "oneOf": [{
+          "const": "page",
+          "title": "couleur du fond de la page"
+        }, {
+          "const": "appBar",
+          "title": "couleur de la barre de navigation"
+        }]
+      },
       "website": {
         "type": "string",
         "title": "Site web accessible au clic sur le logo"
       },
       "headerSocial": {
         "type": "boolean",
-        "title": "Montrer les liens de réseaux sociaux dans l'entête"
+        "x-display": "switch",
+        "title": "montrer les liens de réseaux sociaux dans l'entête"
       },
       "headerNoTitle": {
         "type": "boolean",
-        "title": "Masquer le titre dans l'entête",
+        "x-display": "switch",
+        "title": "masquer le titre dans l'entête",
         "description": "Peut avoir du sens si le logo est très explicite"
+      },
+      "titleColor": {
+        "title": "Couleur du titre",
+        "description": "Si nécessaire une variante foncée de la couleur sera utilisée pour préserver la lisibilité.",
+        "type": "string",
+        "default": "grey",
+        "oneOf": [{
+          "const": "grey",
+          "title": "gris foncé"
+        }, {
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }]
       },
       "headerLogo2": {
         "type": "string",
@@ -361,19 +353,40 @@
   }, {
     "title": "Pied de page",
     "properties": {
+      "footerColor": {
+        "type": "string",
+        "default": "grey",
+        "title": "Couleur du pied de page",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
+      },
       "footerSocial": {
         "type": "boolean",
+        "x-display": "switch",
         "default": true,
-        "title": "Montrer les liens de réseaux sociaux dans le pied de page"
+        "title": "montrer les liens de réseaux sociaux dans le pied de page"
       },
       "footerCopyrightAsLogo": {
         "type": "boolean",
+        "x-display": "switch",
         "default": false,
-        "title": "Masquer le copyright du bas de page et le remplacer par un logo"
+        "title": "masquer le copyright du bas de page et le remplacer par un logo"
       },
       "footerLogo": {
         "type": "boolean",
-        "title": "Afficher le logo principal dans le pied de page"
+        "x-display": "switch",
+        "title": "afficher le logo principal dans le pied de page"
       },
       "footerLinksMode": {
         "type": "string",
@@ -502,12 +515,14 @@
     "properties": {
       "homeImageAsBanner": {
         "type": "boolean",
-        "title": "Image principale en bannière",
+        "x-display": "switch",
+        "title": "image principale en bannière",
         "default": false
       },
       "homeImageHidden": {
         "type": "boolean",
-        "title": "Image principale masquée",
+        "x-display": "switch",
+        "title": "image principale masquée",
         "default": false
       },
       "homeApplication": {
@@ -537,29 +552,34 @@
         "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
       },
       "showKpis": {
-        "title": "Afficher les chiffres clés",
+        "title": "afficher les chiffres clés",
         "type": "boolean",
+        "x-display": "switch",
         "default": true
       },
       "showSearch": {
-        "title": "Afficher un champ de recherche sur la page d'accueil",
+        "title": "afficher un champ de recherche sur la page d'accueil",
         "type": "boolean",
+        "x-display": "switch",
         "default": false
       },
       "showTopics": {
-        "title": "Afficher les thématiques",
+        "title": "afficher les thématiques",
         "type": "boolean",
+        "x-display": "switch",
         "default": true
       },
       "showSearchOverBanner": {
-        "title": "Afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
+        "title": "afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
         "type": "boolean",
+        "x-display": "switch",
         "default": false
       },
       "showTwitterTimeline": {
-        "title": "Afficher la timeline Twitter",
+        "title": "afficher la timeline Twitter",
         "description": "Seulement appliqué si le compte Twitter est renseigné dans la section \"Communication & contact\"",
         "type": "boolean",
+        "x-display": "switch",
         "default": true
       },
       "featuredApplication": {
@@ -843,7 +863,8 @@
             },
             "anonymized": {
               "type": "boolean",
-              "title": "Système configuré en mode anonyme",
+              "x-display": "switch",
+              "title": "système configuré en mode anonyme",
               "description": "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
             }
           }
