@@ -48,7 +48,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal']),
     ...mapState('session', ['initialized']),
-    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColor', 'appBarMainColorDark', 'appBarElevation']),
+    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColorDark', 'appBarElevation']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href
@@ -62,8 +62,7 @@ export default {
     },
     appBarProps () {
       const props = {
-        class: `main-app-bar mb-3 app-bar-${this.config.appBarColor || 'primary'} app-bar-${this.$vuetify.breakpoint.name}`,
-        color: this.appBarMainColor,
+        class: `main-app-bar mb-3 app-bar-${this.$vuetify.breakpoint.name}`,
         height: this.config.headerHide ? 1 : 128,
         extensionHeight: 64,
         style: 'max-height:192px;'
@@ -76,7 +75,6 @@ export default {
         if (this.appBarElevation === 0) props.elevateOnScroll = true
       }
       if (!props.elevateOnScroll) props.elevation = this.appBarElevation
-      if (this.config.appBarTransparency) props.color = this.$color(this.appBarMainColor).setAlpha(0.85).toRgbString()
       return props
     }
   },

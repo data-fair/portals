@@ -38,9 +38,10 @@ export default () => ({
     },
     appBarMainColor (state, getters, rootState) {
       const appBarColor = rootState.config.appBarColor || 'primary'
-      if (appBarColor.startsWith('secondary')) return 'secondary'
-      if (appBarColor.startsWith('primary')) return 'primary'
+      if (appBarColor.startsWith('secondary')) return getters.secondaryColor
+      if (appBarColor.startsWith('primary')) return rootState.config.themeColor
       if (appBarColor === 'grey') return '#424242'
+      if (appBarColor === 'white') return '#FFFFFF'
       return appBarColor
     },
     appBarMainColorDark (state, getters, rootState) {
@@ -232,13 +233,27 @@ export default () => ({
         color2 = getters.backgroundableThemeColor
       }
       if (color1 && color2) {
+        if (rootState.config.appBarTransparency) {
+          color1 = Vue.prototype.$color(color1).setAlpha(0.85).toRgbString()
+          color2 = Vue.prototype.$color(color2).setAlpha(0.85).toRgbString()
+        }
         return `
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
-      background: linear-gradient(90deg, ${color1} 20%, ${color2} 100%);
+        background: linear-gradient(90deg, ${color1} 20%, ${color2} 100%);
       }
       `
+      } else {
+        let color = getters.appBarMainColor
+        console.log('appBarMainColor', getters.appBarMainColor)
+        if (rootState.config.appBarTransparency) {
+          color = Vue.prototype.$color(color).setAlpha(0.85).toRgbString()
+        }
+        return `
+        .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
+          background: ${color};
+        }
+        `
       }
-      return ''
     },
     footerStyle (state, getters, rootState, rootGetters) {
       if (rootGetters.footerBackgroundUrl && rootState.config.footerBackgroundImage && rootState.config.footerBackgroundImage !== 'none') {
