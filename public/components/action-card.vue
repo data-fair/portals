@@ -41,10 +41,16 @@ export default {
     ...mapState(['config']),
     ...mapGetters(['elevation', 'actionCardOptions', 'actionCardBackgroundColor']),
     titleColorClass () {
-      let c = 'underline-link'
-      if (this.to && this.hovered) {
-        if (this.actionCardOptions.includes('hoverColorTitle')) c += ' primary--text'
-        if (this.actionCardOptions.includes('hoverUnderlineTitle')) c += ' underline-link-hover'
+      let c
+
+      if (this.to && this.hovered && this.actionCardOptions.includes('hoverColorTitle')) {
+        c += ' primary--text'
+      } else {
+        c += ' grey--text text--darken-2'
+      }
+      if (this.actionCardOptions.includes('hoverUnderlineTitle')) {
+        c += ' underline-link'
+        if (this.to && this.hovered) c += ' underline-link-hover'
       }
 
       return c
