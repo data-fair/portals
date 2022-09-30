@@ -234,8 +234,8 @@ export default () => ({
       }
       if (color1 && color2) {
         if (rootState.config.appBarTransparency) {
-          color1 = Vue.prototype.$color(color1).setAlpha(0.85).toRgbString()
-          color2 = Vue.prototype.$color(color2).setAlpha(0.85).toRgbString()
+          color1 = Vue.prototype.$color(color1).setAlpha(0.90).toRgbString()
+          color2 = Vue.prototype.$color(color2).setAlpha(0.90).toRgbString()
         }
         return `
       .theme--light.v-app-bar.main-app-bar.v-toolbar.v-sheet {
@@ -257,7 +257,7 @@ export default () => ({
     },
     footerStyle (state, getters, rootState, rootGetters) {
       if (rootGetters.footerBackgroundUrl && rootState.config.footerBackgroundImage && rootState.config.footerBackgroundImage !== 'none') {
-        const transparentBg = Vue.prototype.$color(getters.footerColor).setAlpha(0.75).toRgbString()
+        const transparentBg = Vue.prototype.$color(getters.footerColor).setAlpha(0.8).toRgbString()
         return `
         #app .v-footer .container {
           background:linear-gradient(90deg, transparent 0, ${transparentBg} 30% 70%, transparent 100%);

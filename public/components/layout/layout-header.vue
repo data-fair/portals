@@ -12,6 +12,7 @@
         <social-links
           v-if="config.headerSocial"
           :dark="headerColorDark"
+          :tooltip-bottom="true"
           class="pt-2"
         />
       </v-row>

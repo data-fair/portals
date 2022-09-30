@@ -1,5 +1,8 @@
 <template>
-  <v-tooltip top>
+  <v-tooltip
+    :bottom="tooltipBottom"
+    :top="!tooltipBottom"
+  >
     <template #activator="{ on: onTooltip }">
       <v-btn
         v-bind="compProps.btn"
@@ -25,6 +28,7 @@ export default {
     title: { type: String, required: true },
     icon: { type: String, required: true },
     dark: { type: Boolean, default: false },
+    tooltipBottom: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
     color: { type: String, default: 'primary' },
     to: { type: [String, Object], default: null },
