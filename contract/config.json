@@ -3,32 +3,30 @@
   "x-display": "expansion-panels",
   "x-options": {
     "expansionPanelsProps": {
-      "multiple": true,
+      "multiple": false,
       "accordion": true,
-      "value": [0]
-    }
+      "value": 0
+    },
+    "fieldProps": {"hideDetails": "auto", "outlined": true, "dense": true},
+    "radioItemProps": {"dense": true, "hideDetails": true}
   },
   "allOf": [{
     "title": "Général",
     "properties": {
       "title": {
         "type": "string",
+        "title": "Titre du portail",
         "default": "Portail de données"
-      },
-      "datasetThumbnailContain": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
-        "default": false
       },
       "authentication": {
         "type": "string",
+        "x-display": "radio",
         "oneOf": [{
           "const": "none",
-          "title": "Aucune, portail opendata"
+          "title": "Aucune"
         },{
           "const": "optional",
-          "title": "Optionnelle pour voir les contenus protégés"
+          "title": "Optionnelle pour voir les contenus protégés, configurer des notifications, etc"
         },{
           "const": "required",
           "title": "Requise pour accéder au portail"
@@ -38,6 +36,7 @@
       },
       "assets": {
         "type": "object",
+        "x-options": {"fieldProps": {"outlined": true, "dense": true, "hideDetails": "auto"}},
         "properties": {
           "logo": {
             "type": "object",
@@ -245,6 +244,12 @@
           "title": "couleur d'arrière plan secondaire"
         }]
       },
+      "datasetThumbnailContain": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
+        "default": false
+      },
       "infoCardOptions": {
         "title": "Options des vignettes d'information",
         "type": "array",
@@ -329,24 +334,6 @@
           "title": "blanc"
         }]
       },
-      "personalNavigationColor": {
-        "type": "string",
-        "default": "primary",
-        "title": "Couleur de la barre de navigation dans l'espace personnel",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
       "appBarBehavior": {
         "title": "Comportement de la barre de navigation",
         "type": "string",
@@ -398,7 +385,8 @@
       "headerSocial": {
         "type": "boolean",
         "x-display": "switch",
-        "title": "montrer les liens de réseaux sociaux dans l'entête"
+        "title": "montrer les liens de réseaux sociaux dans l'entête",
+        "x-class": "no-margin"
       },
       "headerNoTitle": {
         "type": "boolean",
@@ -768,7 +756,7 @@
               "const": "lasts"
             },
             "size":{
-              "title": "Nombre d'éléments",
+              "title": "Nombre de jeux de données",
               "type": "integer",
               "default": 3
             }
@@ -795,7 +783,7 @@
               "const": "lasts"
             },
             "size":{
-              "title": "Nombre d'éléments",
+              "title": "Nombre de visualisations",
               "type": "integer",
               "default": 3
             }
@@ -970,6 +958,29 @@
         "title": "Informations de contact",
         "x-display": "custom-markdown",
         "maxLength": 10000
+      }
+    }
+  }, {
+    "title": "Espace personnel",
+    "description": "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification.",
+    "properties": {
+      "personalNavigationColor": {
+        "type": "string",
+        "default": "primary",
+        "title": "Couleur de la barre de navigation dans l'espace personnel",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }]
       }
     }
   }, {

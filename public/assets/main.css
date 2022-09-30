@@ -41,3 +41,23 @@ iframe {
 .v-application#app .theme--light.v-sheet.not-outlined {
   border: 2px solid transparent;
 }
+
+/* vjsf tuning */
+#app .vjsf-property .v-input--hide-details {
+  margin-bottom: 12px;
+}
+#app .vjsf-property .v-input--hide-details .v-radio:not(:last-child),
+#app .vjsf-property .v-input--hide-details .v-input--selection-controls,
+#app .vjsf-property.no-margin .v-input {
+  margin-bottom: 0px;
+}
+#app .vjsf-property .v-input--hide-details .v-radio:last-child,
+#app .vjsf-property .v-input--hide-details .v-input--selection-controls:last-child {
+  margin-bottom: 8px;
+}
+#app .vjsf-property .v-text-field--outlined .v-input__append-outer {
+  margin-top: 2px;
+}
+#app .vjsf-property .v-input--selection-controls .v-input__append-outer {
+  margin-top: -6px;
+}

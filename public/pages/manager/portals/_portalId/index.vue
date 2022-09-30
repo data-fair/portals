@@ -137,7 +137,7 @@
                     :value="true"
                     type="error"
                   >
-                    Attention le brouillon sera perdu et l'application reviendra à son état validé précédent.
+                    Attention le brouillon sera perdu et le portal reviendra à son état validé précédent.
                   </v-alert>
                 </v-card-text>
                 <v-card-actions>
