@@ -244,12 +244,6 @@
           "title": "couleur d'arrière plan secondaire"
         }]
       },
-      "datasetThumbnailContain": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
-        "default": false
-      },
       "infoCardOptions": {
         "title": "Options des vignettes d'information",
         "type": "array",
@@ -471,12 +465,14 @@
       "footerSocial": {
         "type": "boolean",
         "x-display": "switch",
+        "x-class": "no-margin",
         "default": true,
         "title": "montrer les liens de réseaux sociaux dans le pied de page"
       },
       "footerCopyrightAsLogo": {
         "type": "boolean",
         "x-display": "switch",
+        "x-class": "no-margin",
         "default": false,
         "title": "masquer le copyright du bas de page et le remplacer par un logo"
       },
@@ -696,18 +692,21 @@
         "title": "afficher un champ de recherche sur la page d'accueil",
         "type": "boolean",
         "x-display": "switch",
+        "x-class": "no-margin",
         "default": false
       },
       "showTopics": {
         "title": "afficher les thématiques",
         "type": "boolean",
         "x-display": "switch",
+        "x-class": "no-margin",
         "default": true
       },
       "showSearchOverBanner": {
         "title": "afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
         "type": "boolean",
         "x-display": "switch",
+        "x-class": "no-margin",
         "default": false
       },
       "showTwitterTimeline": {
@@ -792,8 +791,7 @@
       }
     }
   }, {
-    "title": "Contenu",
-    "required": ["title"],
+    "title": "Jeux de données",
     "properties": {
       "datasetsPage": {
         "type": "object",
@@ -829,6 +827,17 @@
           "const": "dataUpdatedAt"
         }]
       },
+      "datasetThumbnailContain": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
+        "default": false
+      }
+    }
+  }, {
+    "title": "Visusalisations",
+    "description": "Les visualisations publiées dans le portail sont listées dans une page dédiée. Cette page n'est pas nécessaire : vous pouvez choisir de faire passer les utilisateurs par les pages des jeux de données avant de voir les visualisations.",
+    "properties": {
       "applicationsPage": {
         "type": "object",
         "title": "Page des visualisations",
@@ -850,30 +859,12 @@
             }
           }
         }]
-      },
-      "externalReusesPage": {
-        "type": "object",
-        "title": "Page des réutilisations (déprécié)",
-        "description": "Cette page est liée au système déprécié de réutilisations saisies directement sur les jeux de données dans le back-office. À la place utilisez la gestion des réutilisations intégrée au portail, voir les 2 options ci-dessous.",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Liste",
-          "properties": {
-            "type": {
-              "const": "list"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      },
+      }
+    }
+  }, {
+    "title": "Réutilisations",
+    "description": "Les réutilisations peuvent être soumises par les utilisateurs authentifiés si vous activez la fonctionnalité. Les gestionnaires du portail font un travail de saisie et de modération avant le rendu final dans le portail.",
+    "properties": {
       "usesManagement": {
         "type": "object",
         "title": "Gestion des réutilisations",
@@ -907,6 +898,29 @@
           "properties": {
             "type": {
               "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      },
+      "externalReusesPage": {
+        "type": "object",
+        "title": "Page des réutilisations (ancien fonctionnement déprécié)",
+        "description": "Cette page est liée au système déprécié de réutilisations saisies directement sur les jeux de données dans le back-office. À la place utilisez la gestion des réutilisations intégrée au portail, voir les 2 options ci-dessous.",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Liste",
+          "properties": {
+            "type": {
+              "const": "list"
             }
           }
         },{

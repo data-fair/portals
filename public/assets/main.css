@@ -61,3 +61,6 @@ iframe {
 #app .vjsf-property .v-input--selection-controls .v-input__append-outer {
   margin-top: -6px;
 }
+#app .vjsf-array {
+  margin-bottom: 6px;
+}
