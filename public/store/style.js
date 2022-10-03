@@ -45,11 +45,7 @@ export default () => ({
       return appBarColor
     },
     appBarMainColorDark (state, getters, rootState) {
-      if (getters.appBarMainColor === 'secondary') return getters.secondaryColorDark
-      if (getters.appBarMainColor === 'primary') return getters.themeColorDark
-      if (rootState.config.appBarColor === 'grey') return true
-      if (rootState.config.appBarColor === 'white') return false
-      return true
+      return Vue.prototype.$color(getters.appBarMainColor).getLuminance() < 0.4
     },
     headerColor (state, getters, rootState) {
       if (rootState.config.headerColor === 'page' || !rootState.config.headerColor) return getters.backgroundColor
@@ -244,7 +240,6 @@ export default () => ({
       `
       } else {
         let color = getters.appBarMainColor
-        console.log('appBarMainColor', getters.appBarMainColor)
         if (rootState.config.appBarTransparency) {
           color = Vue.prototype.$color(color).setAlpha(0.85).toRgbString()
         }
