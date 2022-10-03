@@ -186,9 +186,8 @@ async function setPortal (req, res, next) {
     .collection('portals').findOne({ _id: req.params.id })
   if (!portal) throw createError(404, 'Portail inconnu')
   if (portal.owner.type === 'organisation') {
-    const orga = req.user.organizations.find(o => o.id === portal.owner.id)
+    const orga = req.user.organizations.find(o => o.id === portal.owner.id && (orga.department || null) === (portal.owner.department || null))
     if (!orga || orga.role !== 'admin') throw createError(403, 'admin only')
-    if (orga.department && orga.department !== portal.owner.department) throw createError(403, 'wrong department')
   }
   if (portal.owner.type === 'user' && req.user.id !== portal.owner.id) {
     throw createError(403, 'user himself only')
