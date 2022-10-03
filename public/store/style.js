@@ -354,7 +354,7 @@ ${getters.assetFontFace('headingsFont')}
 ${applyFonts ? getters.fontsStyle : ''}
 ${getters.linksStyle}
 
-/ * some police tuning */
+/* some police tuning */
 .v-application#app a {
   color: ${getters.readableThemeColor};
 }
