@@ -185,7 +185,7 @@ async function setPortal (req, res, next) {
   const portal = await req.app.get('db')
     .collection('portals').findOne({ _id: req.params.id })
   if (!portal) throw createError(404, 'Portail inconnu')
-  if (portal.owner.type === 'organisation') {
+  if (portal.owner.type === 'organization') {
     const orga = req.user.organizations.find(o => o.id === portal.owner.id && (orga.department || null) === (portal.owner.department || null))
     if (!orga || orga.role !== 'admin') throw createError(403, 'admin only')
   }
