@@ -65,14 +65,16 @@ export default {
         class: `main-app-bar mb-3 app-bar-${this.$vuetify.breakpoint.name}`,
         height: this.config.headerHide ? 1 : 128,
         extensionHeight: 64,
-        style: 'max-height:192px;'
+        style: 'max-height:192px;',
+        app: true
       }
       if (this.appBarMainColorDark) props.class += ' area--dark'
       else props.class += ' area--light'
       if (this.config.appBarBehavior === 'stick' || (this.config.appBarBehavior === 'stickHome' && this.$route.path === '/')) {
-        props.app = true
         props.hideOnScroll = true
         if (this.appBarElevation === 0) props.elevateOnScroll = true
+      } else {
+        props.absolute = true
       }
       if (!props.elevateOnScroll) props.elevation = this.appBarElevation
       return props
