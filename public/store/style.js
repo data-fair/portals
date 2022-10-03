@@ -410,25 +410,18 @@ ${getters.personalNavigationStyle}
 }
 
 /* used to display descriptions in cards with bottom gradient */
+.card-gradient-desc170 {
+  position: relative;
+}
 .card-gradient-desc170:before {
   content:'';
   width:100%;
   height:82px;
   position:absolute;
   left:0;
-  top:160px;
+  bottom:0;
   background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
 }
-.card-gradient-desc130:before {
-  content:'';
-  width:100%;
-  height:82px;
-  position:absolute;
-  left:0;
-  top:120px;
-  background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
-}
-
 /* footer style */
 ${getters.footerStyle}
         `
