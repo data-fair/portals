@@ -150,47 +150,6 @@
           </v-row>
         </v-col>
       </v-row>
-
-      <template v-if="applications">
-        <v-row
-          v-for="(application, i) in applications.results"
-          :key="application.id"
-          class="my-3"
-          align="center"
-        >
-          <v-col
-            :md="application.preferLargeDisplay ? 12 : 6"
-            cols="12"
-            class="px-5 py-3"
-            :order="0"
-            :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
-          >
-            <nuxt-link
-              :to="{name: 'applications-id', params:{id: application.id}}"
-              class="title"
-            >
-              <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon color="primary">
-                mdi-open-in-new
-              </v-icon>
-            </nuxt-link>
-            <div
-              class="mt-3"
-              v-html="application.description"
-            />
-          </v-col>
-          <v-col
-            :md="application.preferLargeDisplay ? 12 : 6"
-            cols="12"
-            :order="1"
-            :order-md="application.preferLargeDisplay ? 1 : i%2"
-          >
-            <client-only>
-              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`" />
-            </client-only>
-          </v-col>
-        </v-row>
-      </template>
-
       <template v-if="applications">
         <v-row
           v-for="(application, i) in applications.results"
