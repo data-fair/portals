@@ -35,7 +35,7 @@
           >
             <v-list style="background-color: transparent;">
               <v-list-item v-if="!dataset.isMetaOnly">
-                <v-list-item-content>
+                <v-list-item-content class="pt-0">
                   <v-list-item-title>
                     {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
                     <template v-if="dataset.storage && dataset.storage.indexed && dataset.storage.indexed.size">
@@ -45,7 +45,21 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
-                <v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-list-item-title style="white-space:normal;">
+                    <v-col class="py-0">
+                      <topics
+                        :topics="dataset.topics"
+                        small
+                        justify="left"
+                        row-class="mt-0 mb-2"
+                      />
+                    </v-col>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="dataset.origin">
+                <v-list-item-content class="pt-0">
                   <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
                     Données issues de <a
                       :href="dataset.origin"
@@ -54,18 +68,93 @@
                     >cette source</a>
                   </v-list-item-title>
                   <v-list-item-title v-else-if="dataset.origin">
-                    Données produites par : <strong>{{ dataset.origin }}</strong>
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      Données produites par :
+                    </v-subheader>
+                    <strong>{{ dataset.origin }}</strong>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.license">
-                <v-list-item-content>
+                <v-list-item-content class="pt-0">
                   <v-list-item-title>
-                    Licence : <a
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      licence :
+                    </v-subheader>
+                    <a
                       :href="dataset.license.href"
                       rel="external"
                       class="underline-link"
                     >{{ dataset.license.title }}</a>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="dataset.keywords && dataset.keywords.length">
+                <v-list-item-content class="pt-0">
+                  <v-list-item-title style="white-space:normal;">
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      Mots clés :
+                    </v-subheader>
+                    <v-chip
+                      v-for="(keyword,i) in dataset.keywords"
+                      :key="i"
+                      class="ma-1"
+                    >
+                      {{ keyword }}
+                    </v-chip>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="dataset.spatial">
+                <v-list-item-content class="pt-0">
+                  <v-list-item-title style="white-space:normal;">
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      Couverture géographique :
+                    </v-subheader>
+                    {{ dataset.spatial }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="dataset.temporal && dataset.temporal.start">
+                <v-list-item-content class="pt-0">
+                  <v-list-item-title style="white-space:normal;">
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      Couverture temporelle :
+                    </v-subheader>
+                    <template v-if="dataset.temporal.end">
+                      {{ dataset.temporal.start | date('LL') }} - {{ dataset.temporal.end | date('LL') }}
+                    </template>
+                    <template v-else>
+                      à partir du {{ dataset.temporal.start | date('LL') }}
+                    </template>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="dataset.frequency">
+                <v-list-item-content class="pt-0">
+                  <v-list-item-title style="white-space:normal;">
+                    <v-subheader
+                      style="height:36px"
+                      class="pa-0"
+                    >
+                      Fréquence de mise à jour :
+                    </v-subheader>
+                    {{ frequencies[dataset.frequency] }}
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -454,6 +543,24 @@ export default {
     },
     linkExternalReuses () {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'link')) || []
+    },
+    frequencies () {
+      return {
+        triennial: 'tous les 3 ans',
+        biennial: 'tous les 2 ans',
+        annual: 'tous les ans',
+        semiannual: '2 fois pas ans',
+        threeTimesAYear: '3 fois par an',
+        quarterly: 'chaque trimestre',
+        bimonthly: 'tous les 2 mois',
+        monthly: 'tous les mois',
+        semimonthly: '2 fois pas mois',
+        biweekly: 'toutes les 2 semaines',
+        threeTimesAMonth: '3 fois par mois',
+        daily: 'tous les jours',
+        continuous: 'en continu',
+        irregular: 'irrégulier'
+      }
     }
   },
   async mounted () {}

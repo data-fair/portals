@@ -221,7 +221,8 @@ export default {
         numlines: this.datasets.sums.count
       }
     }
-    this.topics = this.datasets.facets.topics || []
+    const topicsFacets = this.datasets.facets.topics || []
+    this.topics = topicsFacets.map(f => ({ ...f.value, count: f.count }))
   },
   head () {
     const title = this.config.title
