@@ -18,7 +18,7 @@ export default () => ({
     },
     backgroundableThemeColor (state, getters, rootState) {
       if (!rootState.config) return
-      return Vue.prototype.$backgroundableColor(rootState.config.themeColor)
+      return Vue.prototype.$readableColor(rootState.config.themeColor, getters.readableThemeColor)
     },
     readableSecondaryColor (state, getters, rootState) {
       if (!rootState.config) return
@@ -26,11 +26,11 @@ export default () => ({
     },
     backgroundableSecondaryColor (state, getters, rootState) {
       if (!rootState.config) return
-      return Vue.prototype.$backgroundableColor(getters.secondaryColor)
+      return Vue.prototype.$readableColor(getters.secondaryColor, getters.readableThemeColor)
     },
     secondaryBackgroundColor (state, getters, rootState) {
       if (!rootState.config) return
-      return Vue.prototype.$backgroundableColor(rootState.config.secondaryBackgroundColor || '#FFFFFF')
+      return Vue.prototype.$readableColor(rootState.config.secondaryBackgroundColor || '#FFFFFF', getters.readableThemeColor)
     },
     themeColorDark (state, getters, rootState) {
       if (!rootState.config) return
