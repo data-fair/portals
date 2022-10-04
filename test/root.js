@@ -8,13 +8,6 @@ describe('root', () => {
     assert.equal(res.data.version, 'test')
   })
 
-  it('Get service admin info', async () => {
-    const ax = global.ax.superadmin
-    const res = await ax.get('/api/v1/admin/info')
-    assert.equal(res.status, 200)
-    assert.equal(res.data.version, 'test')
-  })
-
   it('Get service status', async () => {
     const ax = global.ax.superadmin
     const res = await ax.get('/api/v1/status')
