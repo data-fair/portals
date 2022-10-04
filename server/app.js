@@ -55,7 +55,9 @@ app.use('/', (req, res, next) => {
 })
 
 app.get('/reuses*', (req, res, next) => {
-  res.redirect(req.publicBaseUrl + req.url.replace('/reuses', '/applications'))
+  const redirectUrl = req.publicBaseUrl + req.originalUrl.replace('/reuses', '/applications')
+  console.log('redirect reuse', req.originalUrl, redirectUrl)
+  res.redirect(redirectUrl)
 })
 
 let httpServer
