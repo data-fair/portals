@@ -15,18 +15,23 @@
         Publiée le {{ use.publishedAt | date('L') }} par {{ use.author }}.
       </v-subheader>
       <v-row class="mt-3 mb-6 mx-0">
-        <v-btn
+        <v-hover
           v-for="linkType of linkTypes.filter(lt => use.links && use.links[lt.key])"
+          v-slot="{hover}"
           :key="linkType.key"
-          fab
-          small
-          :href="use.links[linkType.key]"
-          color="primary"
-          class="mx-1"
-          :title="linkTitle(linkType.title, use.links[linkType.key])"
         >
-          <v-icon>{{ linkType.icon }}</v-icon>
-        </v-btn>
+          <v-btn
+            fab
+            small
+            :href="use.links[linkType.key]"
+            color="primary"
+            class="mx-1"
+            :outlined="hover && hoverInverse"
+            :title="linkTitle(linkType.title, use.links[linkType.key])"
+          >
+            <v-icon>{{ linkType.icon }}</v-icon>
+          </v-btn>
+        </v-hover>
       </v-row>
       <v-row>
         <v-col
@@ -147,7 +152,7 @@ export default {
   },
   computed: {
     ...mapState(['portal', 'publicUrl', 'config']),
-    ...mapGetters(['dataFairUrl'])
+    ...mapGetters(['dataFairUrl', 'hoverInverse'])
   },
   watch: {
     async '$route.params.id' () {

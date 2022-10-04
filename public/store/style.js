@@ -363,6 +363,15 @@ ${getters.linksStyle}
 .v-application#app .area--dark span {
   color: white;
 }
+.v-application#app .v-btn:not(.v-btn--outlined).primary,
+.v-application#app .v-btn:not(.v-btn--outlined).secondary,
+.v-application#app .v-btn:not(.v-btn--outlined).accent,
+.v-application#app .v-btn:not(.v-btn--outlined).success,
+.v-application#app .v-btn:not(.v-btn--outlined).error,
+.v-application#app .v-btn:not(.v-btn--outlined).warning,
+.v-application#app .v-btn:not(.v-btn--outlined).info {
+  color: white;
+}
 .v-application#app .area--light a,
 .v-application#app .area--light h3,
 .v-application#app .area--light span,
