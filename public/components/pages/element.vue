@@ -50,7 +50,8 @@
     />
     <v-card
       v-else-if="value.type === 'card'"
-      class="my-6"
+      class="my-6 also-outlined"
+      :elevation="elevation"
     >
       <v-card-text>
         <k-element
@@ -154,7 +155,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readableThemeColor']),
+    ...mapGetters(['readableThemeColor', 'elevation']),
     titleClass () {
       if (!this.value || this.value.type !== 'title') return null
       const margins = {
