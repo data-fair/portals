@@ -415,12 +415,24 @@ ${getters.personalNavigationStyle}
 }
 .card-gradient-desc170:before {
   content:'';
-  width:100%;
-  height:82px;
   position:absolute;
+  width:100%;
+  height:170px;
   left:0;
-  bottom:0;
-  background:linear-gradient(transparent 0, ${getters.actionCardBackgroundColor});
+  top:0;
+  background:linear-gradient(transparent 0, transparent 70%, ${getters.actionCardBackgroundColor});
+}
+.card-gradient-desc130 {
+  position: relative;
+}
+.card-gradient-desc130:before {
+  content:'';
+  position:absolute;
+  width:100%;
+  height:130px;
+  left:0;
+  top:0;
+  background:linear-gradient(transparent 0, transparent 50%, ${getters.actionCardBackgroundColor});
 }
 /* footer style */
 ${getters.footerStyle}

@@ -47,8 +47,8 @@
             >
               <client-only>
                 <v-clamp
-                  :max-height="170"
-                  class="card-gradient-desc170"
+                  :max-height="130"
+                  class="card-gradient-desc130"
                   autoresize
                   v-html="application.description"
                 />
