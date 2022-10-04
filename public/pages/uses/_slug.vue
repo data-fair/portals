@@ -35,7 +35,15 @@
       </v-row>
       <v-row>
         <v-col
-          v-if="use.image"
+          v-if="use.links && use.links.iframe"
+          cols="12"
+        >
+          <client-only>
+            <v-iframe :src="use.links.iframe" />
+          </client-only>
+        </v-col>
+        <v-col
+          v-else-if="use.image"
           cols="12"
         >
           <a
@@ -60,21 +68,12 @@
           />
         </v-col>
         <v-col
-          class="pt-2"
           cols="12"
         >
           <div
             v-if="use.description"
             v-html="use.description"
           />
-        </v-col>
-        <v-col
-          v-if="use.links && use.links.iframe"
-          cols="12"
-        >
-          <client-only>
-            <v-iframe :src="use.links.iframe" />
-          </client-only>
         </v-col>
       </v-row>
       <section-subtitle text="Données utilisées" />
