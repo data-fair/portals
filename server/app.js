@@ -45,12 +45,11 @@ app.use('/api/v1', require('./router/root'))
 app.use('/api/v1/portals', require('./router/portals'))
 
 // set current baseUrl, i.e. the url of the service on the current user's domain
-const basePath = new URL(config.publicUrl).pathname
+const publicUrl = new URL(config.publicUrl)
 app.use('/', (req, res, next) => {
   const u = originalUrl(req)
-  req.publicBaseUrl = u.full ? formatUrl({ protocol: u.protocol, hostname: u.hostname, port: u.port, pathname: basePath.slice(0, -1) }) : config.publicUrl
-  req.publicWsBaseUrl = req.publicBaseUrl.replace('http:', 'ws:').replace('https:', 'wss:')
-  req.publicBasePath = basePath
+  if (u.hostname === publicUrl.hostname) req.publicBaseUrl = config.publicUrl
+  else req.publicBaseUrl = formatUrl({ protocol: u.protocol, hostname: u.hostname })
   next()
 })
 
