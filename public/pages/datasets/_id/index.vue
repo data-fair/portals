@@ -44,7 +44,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item>
+              <!--<v-list-item>
                 <v-list-item-content class="py-0">
                   <v-list-item-title style="white-space:normal;">
                     <v-col class="py-0">
@@ -57,7 +57,7 @@
                     </v-col>
                   </v-list-item-title>
                 </v-list-item-content>
-              </v-list-item>
+              </v-list-item>-->
               <v-list-item v-if="dataset.origin">
                 <v-list-item-content class="pt-0">
                   <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
