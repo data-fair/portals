@@ -295,14 +295,12 @@ export default () => ({
       if (getters.buttonOptions.includes('hoverUnderline')) {
         // see https://www.30secondsofcode.org/css/s/hover-underline-animation
         style += `
-        .page-element a,
-        p>a,
+        p>a:not(.v-btn),
         .underline-link {
           display: inline-block;
           position: relative;
         }
-        .page-element a:after,
-        p>a:after,
+        p>a:not(.v-btn):after,
         .underline-link:after {
           content: '';
           position: absolute;
