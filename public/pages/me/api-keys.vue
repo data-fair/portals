@@ -39,7 +39,7 @@ export default {
     ...mapGetters(['dataFairUrl']),
     ...mapState('session', ['user']),
     apiKeysUrl () {
-      return `${this.dataFairUrl}/embed/settings/user/${this.user.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.dataFairUrl}/embed/settings/user/${this.user.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
     }
   }
 }
