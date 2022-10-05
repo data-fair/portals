@@ -370,6 +370,9 @@ ${getters.linksStyle}
 .v-application#app .v-btn:not(.v-btn--outlined).info {
   color: white;
 }
+.v-application#app .theme--dark.v-list a {
+  color: white;
+}
 .v-application#app .area--light a,
 .v-application#app .area--light h3,
 .v-application#app .area--light span,
