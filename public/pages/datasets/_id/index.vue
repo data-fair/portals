@@ -34,8 +34,11 @@
             v-bind="infoCardProps"
           >
             <v-list style="background-color: transparent;">
-              <v-list-item v-if="!dataset.isMetaOnly">
-                <v-list-item-content class="pt-0">
+              <v-list-item
+                v-if="!dataset.isMetaOnly"
+                style="min-height: 36px;"
+              >
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title>
                     {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
                     <template v-if="dataset.storage && dataset.storage.indexed && dataset.storage.indexed.size">
@@ -59,7 +62,7 @@
                 </v-list-item-content>
               </v-list-item>-->
               <v-list-item v-if="dataset.origin">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
                     Données issues de <a
                       :href="dataset.origin"
@@ -69,7 +72,7 @@
                   </v-list-item-title>
                   <v-list-item-title v-else-if="dataset.origin">
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       Données produites par :
@@ -79,10 +82,10 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.license">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title>
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       licence :
@@ -96,10 +99,10 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.keywords && dataset.keywords.length">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title style="white-space:normal;">
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       Mots clés :
@@ -115,10 +118,10 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.spatial">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title style="white-space:normal;">
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       Couverture géographique :
@@ -128,10 +131,10 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.temporal && dataset.temporal.start">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title style="white-space:normal;">
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       Couverture temporelle :
@@ -146,10 +149,10 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item v-if="dataset.frequency">
-                <v-list-item-content class="pt-0">
+                <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title style="white-space:normal;">
                     <v-subheader
-                      style="height:36px"
+                      style="height:26px"
                       class="pa-0"
                     >
                       Fréquence de mise à jour :
@@ -159,7 +162,7 @@
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <v-card-actions>
+            <v-card-actions class="py-0">
               <table-preview
                 v-if="!dataset.isMetaOnly"
                 :dataset="dataset"
