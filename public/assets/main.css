@@ -17,8 +17,8 @@ iframe {
     height: 4px!important;
 }
 
-.v-card__text, .v-card__title {
-  word-break: normal; /* maybe !important  */
+#app .v-card__text, #app .v-card__title {
+  word-break: normal;
 }
 
 .v-list.list-actions .v-list-item .v-list-item__icon {
