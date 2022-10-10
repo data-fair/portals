@@ -84,6 +84,7 @@
         v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowBanner'"
         :topics="topics"
         :options="config.homeTopicsOptions"
+        row-class="mt-0 mb-3"
       />
       <div
         v-else-if="config.description"
