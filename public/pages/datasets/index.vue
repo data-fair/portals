@@ -343,6 +343,7 @@ export default {
       }
     },
     conceptLabel (e) {
+      if (!this.concepts) return null
       const concept = this.concepts.find(c => c.id === e.value)
       return ((concept && concept.title) || e.value.split('/').pop()) + ` (${e.count})`
     },

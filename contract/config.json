@@ -735,7 +735,7 @@
         "title": "afficher les thématiques sur la page d'accueil",
         "type": "boolean",
         "x-display": "switch",
-        "default": true
+        "default": false
       },
       "homeTopicsPosition": {
         "title": "Position des thématiques sur la page d'accueil",

@@ -16,11 +16,11 @@ exports.exec = async (db, debug) => {
         delete portal[configKey].showSearchOverBanner
 
         // simple rename of showSearch -> homeShowSearch and showTopics => homeShowTopics
-        if ('showSearch ' in portal[configKey]) {
+        if ('showSearch' in portal[configKey]) {
           portal[configKey].homeShowSearch = portal[configKey].showSearch
         }
         delete portal[configKey].showSearch
-        if ('showTopics ' in portal[configKey]) {
+        if ('showTopics' in portal[configKey]) {
           portal[configKey].homeShowTopics = portal[configKey].showTopics
         }
         delete portal[configKey].showTopics
