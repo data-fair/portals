@@ -738,7 +738,7 @@
         "default": true
       },
       "homeTopicsPosition": {
-        "title": "Position du champ de recherche sur la page d'accueil",
+        "title": "Position des thématiques sur la page d'accueil",
         "x-if": "homeShowTopics",
         "type": "string",
         "default": "belowKpi",
@@ -752,6 +752,33 @@
           "title": "sous la bannière",
           "const": "belowBanner"
         }]
+      },
+      "homeTopicsOptions": {
+        "title": "Options de l'affichage des thématiques sur la page d'accueil",
+        "type": "array",
+        "x-if": "homeShowTopics",
+        "x-display": "switch",
+        "x-props": {"hideDetails": "auto"},
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour"
+          }, {
+            "const": "rounded",
+            "title": "arrondir"
+          }, {
+            "const": "elevate",
+            "title": "élèver (applique l'élévation par défaut de votre configuration)"
+          }, {
+            "const": "reverseColor",
+            "title": "inverser la couleur de fond et de texte"
+          }, {
+            "const": "card",
+            "title": "rendu vignette plus grand"
+          }]
+        },
+        "default": ["outlined", "rounded", "elevate"]
       },
       "showTwitterTimeline": {
         "title": "afficher la timeline Twitter",

@@ -34,7 +34,10 @@
         v-if="config.homeShowTopics && config.homeTopicsPosition === 'overBanner'"
         :style="`position:relative;top: ${config.appBarTransparency ? -210 : -240}px;height:0;`"
       >
-        <topics :topics="topics" />
+        <topics
+          :topics="topics"
+          :options="config.homeTopicsOptions"
+        />
       </v-container>
     </template>
     <v-container>
@@ -80,6 +83,7 @@
       <topics
         v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowBanner'"
         :topics="topics"
+        :options="config.homeTopicsOptions"
       />
       <div
         v-else-if="config.description"
@@ -100,6 +104,7 @@
       <topics
         v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowKpi'"
         :topics="topics"
+        :options="config.homeTopicsOptions"
       />
 
       <!-- applications: featured and lasts -->

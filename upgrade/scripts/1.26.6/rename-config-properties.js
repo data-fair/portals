@@ -28,6 +28,9 @@ exports.exec = async (db, debug) => {
         if (portal[configKey].homeShowSearch) {
           portal[configKey].homeSearchOptions = portal[configKey].homeSearchOptions || ['outlined', 'rounded']
         }
+        if (portal[configKey].homeShowTopics) {
+          portal[configKey].homeTopicsOptions = portal[configKey].homeTopicsOptions || ['outlined', 'rounded', 'elevate']
+        }
 
         if (JSON.stringify(portal[configKey]) !== previousConfig) {
           debug(`save ${configKey} of portal ${portal._id}`)
