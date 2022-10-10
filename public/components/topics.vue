@@ -13,9 +13,9 @@
         v-if="options.includes('card')"
         :to="{name: 'datasets', query: {topics: topic.id}}"
         :style="style(topic, hover)"
-        v-bind="btnProps(hover)"
+        v-bind="compProps(hover)"
       >
-        <v-card-title class="justify-center pb-1">
+        <v-card-title class="justify-center pt-3 pb-1">
           <v-icon
             v-if="topic.icon && topic.icon.name"
             left
@@ -27,7 +27,7 @@
         </v-card-title>
         <v-card-text
           :style="`color: ${textColor(topic, hover)};`"
-          class="font-weight-bold text-none justify-center"
+          class="font-weight-bold text-none justify-center pb-3"
         >
           {{ topic.title }} <template v-if="topic.count">
             ({{ topic.count }})
@@ -39,7 +39,7 @@
         :to="{name: 'datasets', query: {topics: topic.id}}"
         dark
         :small="small"
-        v-bind="btnProps(hover)"
+        v-bind="compProps(hover, true)"
         depressed
         :style="style(topic, hover)"
       >
@@ -73,12 +73,16 @@ export default {
     ...mapGetters(['elevation', 'hoverInverse', 'radius', 'actionCardOptions'])
   },
   methods: {
-    btnProps (hover) {
+    compProps (hover, btn) {
       const props = {
         class: 'mx-2 my-1 font-weight-bold text-none',
         outlined: this.options.includes('outlined'),
-        elevation: this.options.includes('elevate') ? this.elevation : 0,
-        rounded: this.options.includes('rounded') ? 'xl' : !!this.radius
+        elevation: this.options.includes('elevate') ? this.elevation : 0
+      }
+      if (btn) {
+        props.rounded = this.options.includes('rounded')
+      } else {
+        props.rounded = this.options.includes('rounded') ? 'xl' : !!this.radius
       }
       if (hover) {
         if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
