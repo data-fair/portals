@@ -25,6 +25,10 @@ exports.exec = async (db, debug) => {
         }
         delete portal[configKey].showTopics
 
+        if (portal[configKey].homeShowSearch) {
+          portal[configKey].homeSearchOptions = portal[configKey].homeSearchOptions || ['outlined', 'rounded']
+        }
+
         if (JSON.stringify(portal[configKey]) !== previousConfig) {
           debug(`save ${configKey} of portal ${portal._id}`)
           await db.collection('portals').updateOne({ _id: portal._id }, { $set: { [configKey]: portal[configKey] } })

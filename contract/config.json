@@ -710,6 +710,27 @@
           "const": "belowBanner"
         }]
       },
+      "homeSearchOptions": {
+        "title": "Options du champ de recherche sur la page d'accueil",
+        "type": "array",
+        "x-if": "homeShowSearch",
+        "x-display": "switch",
+        "x-props": {"hideDetails": "auto"},
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour"
+          }, {
+            "const": "solo",
+            "title": "élever"
+          }, {
+            "const": "rounded",
+            "title": "arrondir"
+          }]
+        },
+        "default": ["outlined", "rounded"]
+      },
       "homeShowTopics": {
         "title": "afficher les thématiques sur la page d'accueil",
         "type": "boolean",
@@ -731,13 +752,6 @@
           "title": "sous la bannière",
           "const": "belowBanner"
         }]
-      },
-      "showSearchOverBanner": {
-        "title": "afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
-        "type": "boolean",
-        "x-display": "switch",
-        "x-class": "no-margin",
-        "default": false
       },
       "showTwitterTimeline": {
         "title": "afficher la timeline Twitter",
