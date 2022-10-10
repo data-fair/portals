@@ -35,14 +35,14 @@ export default {
 </script>
 
 <style>
-.nav-home-search .v-input__append-inner {
+#app .nav-home-search .v-input__append-inner {
   margin-top: 0;
   height: 100%;
 }
-.nav-home-search .v-input__append-inner>.v-input__icon {
+#app .nav-home-search .v-input__append-inner>.v-input__icon {
   height: 100%;
 }
-.nav-home-search:not(.v-text-field--rounded) .v-input__slot {
+#app .nav-home-search:not(.v-text-field--rounded) .v-input__slot {
   padding-left: 20px;
   padding-right: 20px;
 }

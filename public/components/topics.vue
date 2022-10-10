@@ -15,7 +15,7 @@
         :style="style(topic, hover)"
         v-bind="btnProps"
       >
-        <v-card-title class="justify-center pb-0">
+        <v-card-title class="justify-center pb-1">
           <v-icon
             v-if="topic.icon && topic.icon.name"
             left
