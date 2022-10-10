@@ -23,19 +23,18 @@
         />
       </v-row>
       <v-container
-        v-if="config.showSearchOverBanner"
+        v-if="config.homeShowSearch && config.homeSearchPosition === 'overBanner'"
         :style="`position:relative;top: ${config.appBarTransparency ? -230 : -260}px;height:0;`"
       >
-        <v-row
-          v-if="config.showSearch"
-          justify="center"
-        >
+        <v-row justify="center">
           <nav-home-search />
         </v-row>
-        <topics
-          v-if="config.showTopics"
-          :topics="topics"
-        />
+      </v-container>
+      <v-container
+        v-if="config.homeShowTopics && config.homeTopicsPosition === 'overBanner'"
+        :style="`position:relative;top: ${config.appBarTransparency ? -210 : -240}px;height:0;`"
+      >
+        <topics :topics="topics" />
       </v-container>
     </template>
     <v-container>
@@ -71,6 +70,17 @@
           />
         </v-col>
       </v-row>
+      <v-row
+        v-if="config.homeShowSearch && config.homeSearchPosition === 'belowBanner'"
+        justify="center"
+        class="pt-6 pb-4"
+      >
+        <nav-home-search />
+      </v-row>
+      <topics
+        v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowBanner'"
+        :topics="topics"
+      />
       <div
         v-else-if="config.description"
         v-html="config.description"
@@ -81,14 +91,14 @@
         :stats="stats"
       />
       <v-row
-        v-if="config.showSearch && !config.showSearchOverBanner"
+        v-if="config.homeShowSearch && config.homeSearchPosition === 'belowKpi'"
         justify="center"
         class="py-4"
       >
         <nav-home-search />
       </v-row>
       <topics
-        v-if="config.showTopics && !config.showSearchOverBanner"
+        v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowKpi'"
         :topics="topics"
       />
 

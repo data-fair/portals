@@ -688,19 +688,49 @@
           "title": "couleur d'arrière plan secondaire"
         }]
       },
-      "showSearch": {
+      "homeShowSearch": {
         "title": "afficher un champ de recherche sur la page d'accueil",
         "type": "boolean",
         "x-display": "switch",
-        "x-class": "no-margin",
         "default": false
       },
-      "showTopics": {
-        "title": "afficher les thématiques",
+      "homeSearchPosition": {
+        "title": "Position du champ de recherche sur la page d'accueil",
+        "x-if": "homeShowSearch",
+        "type": "string",
+        "default": "belowKpi",
+        "oneOf": [{
+          "title": "sous la description et les chiffres clés",
+          "const": "belowKpi"
+        }, {
+          "title": "sur la bannière",
+          "const": "overBanner"
+        }, {
+          "title": "sous la bannière",
+          "const": "belowBanner"
+        }]
+      },
+      "homeShowTopics": {
+        "title": "afficher les thématiques sur la page d'accueil",
         "type": "boolean",
         "x-display": "switch",
-        "x-class": "no-margin",
         "default": true
+      },
+      "homeTopicsPosition": {
+        "title": "Position du champ de recherche sur la page d'accueil",
+        "x-if": "homeShowTopics",
+        "type": "string",
+        "default": "belowKpi",
+        "oneOf": [{
+          "title": "sous la description et les chiffres clés",
+          "const": "belowKpi"
+        }, {
+          "title": "sur la bannière",
+          "const": "overBanner"
+        }, {
+          "title": "sous la bannière",
+          "const": "belowBanner"
+        }]
       },
       "showSearchOverBanner": {
         "title": "afficher la recherche par dessus la bannière (champ de recherche et thématiques)",
