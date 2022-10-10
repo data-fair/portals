@@ -13,7 +13,7 @@
         v-if="options.includes('card')"
         :to="{name: 'datasets', query: {topics: topic.id}}"
         :style="style(topic, hover)"
-        v-bind="btnProps"
+        v-bind="btnProps(hover)"
       >
         <v-card-title class="justify-center pb-1">
           <v-icon
@@ -39,7 +39,7 @@
         :to="{name: 'datasets', query: {topics: topic.id}}"
         dark
         :small="small"
-        v-bind="btnProps"
+        v-bind="btnProps(hover)"
         depressed
         :style="style(topic, hover)"
       >
@@ -70,17 +70,21 @@ export default {
     options: { type: Array, default: () => ['outlined', 'rounded', 'elevate'] }
   },
   computed: {
-    ...mapGetters(['elevation', 'hoverInverse', 'radius']),
-    btnProps () {
-      return {
+    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'actionCardOptions'])
+  },
+  methods: {
+    btnProps (hover) {
+      const props = {
         class: 'mx-2 my-1 font-weight-bold text-none',
         outlined: this.options.includes('outlined'),
         elevation: this.options.includes('elevate') ? this.elevation : 0,
         rounded: this.options.includes('rounded') ? 'xl' : !!this.radius
       }
-    }
-  },
-  methods: {
+      if (hover) {
+        if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
+      }
+      return props
+    },
     isDark (hover) {
       let dark = hover && this.hoverInverse
       if (this.options.includes('reverseColor')) dark = !dark
