@@ -76,7 +76,7 @@ export default {
         class: 'mx-2 my-1 font-weight-bold text-none',
         outlined: this.options.includes('outlined'),
         elevation: this.options.includes('elevate') ? this.elevation : 0,
-        rounded: this.options.includes('rounded') ? 'xl' : true
+        rounded: this.options.includes('rounded') ? 'xl' : !!this.radius
       }
     }
   },
