@@ -5,7 +5,7 @@ const readableColorCache = {}
 
 // default background is #FAFAFA the light grey background
 const readableColor = (color, background = '#FAFAFA') => {
-  const cacheKey = JSON.stringify(color, background)
+  const cacheKey = JSON.stringify([color, background])
   if (readableColorCache[cacheKey]) return readableColorCache[cacheKey]
   const c = tinycolor(color)
   const dark = tinycolor(background).getLuminance() < 0.5
