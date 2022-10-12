@@ -10,7 +10,10 @@
         :aspect-ratio="21/9"
       />
     </div>
-    <v-row style="min-height:32px;">
+    <v-row
+      style="min-height:40px;"
+      class="py-1"
+    >
       <v-col class="pt-0 pb-1">
         <v-chip
           v-for="topic of application.topics"
@@ -25,11 +28,16 @@
       </v-col>
     </v-row>
     <template #bottom>
-      <v-card-actions class="py-0">
+      <v-card-actions class="pa-1">
         <application-view :application="application" />
         <application-fullscreen :application="application" />
         <v-spacer />
-        <v-subheader>Mis à jour le {{ application.updatedAt | date('L') }}</v-subheader>
+        <span
+          class="text-caption px-1"
+          style="line-height:1rem"
+        >
+          Mis à jour le {{ application.updatedAt | date('L') }}
+        </span>
       </v-card-actions>
     </template>
   </action-card>

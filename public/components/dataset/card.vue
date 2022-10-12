@@ -31,7 +31,10 @@
           />
         </client-only>
       </v-card-text>
-      <v-row style="min-height:32px;">
+      <v-row
+        style="min-height:40px;"
+        class="py-1"
+      >
         <v-col class="pt-0 pb-1">
           <v-chip
             v-for="topic of dataset.topics"
@@ -56,7 +59,7 @@
     <template #bottom>
       <v-card-actions
         v-if="dataset"
-        class="py-0"
+        class="pa-1"
       >
         <table-preview
           v-if="!dataset.isMetaOnly"
@@ -86,12 +89,12 @@
           :color="'primary'"
         />
         <v-spacer />
-        <v-subheader>Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}</v-subheader>
-        <!-- <v-layout column>
-            <span>Mis à jour le {{ dataset.meta.updated }}</span>
-            <span>{{ dataset.meta.author }}</span>
-          </v-layout> -->
-        <!-- <v-btn :to="dataset.href" color="warning" flat exact>Lire la suite</v-btn> -->
+        <span
+          class="text-caption px-1"
+          style="line-height:1rem"
+        >
+          Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
+        </span>
       </v-card-actions>
     </template>
   </action-card>
@@ -115,7 +118,8 @@ export default {
     SchemaView
   },
   props: {
-    dataset: { type: Object, default: null }
+    dataset: { type: Object, default: null },
+    thumbnailApplication: { type: Boolean, default: false }
   },
   data () {
     return {

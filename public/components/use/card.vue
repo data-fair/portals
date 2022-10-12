@@ -11,15 +11,23 @@
       />
     </div>
     <template #bottom>
-      <v-card-actions class="py-0">
+      <v-card-actions
+        class="pa-1"
+        style="min-height:40px;"
+      >
         <slot name="actions" />
         <v-spacer />
-        <v-subheader v-if="use.publishedAt">
-          Publiée le {{ use.publishedAt | date('L') }}
-        </v-subheader>
-        <v-subheader v-else>
-          Mise à jour le {{ use.updated.date | date('L') }}
-        </v-subheader>
+        <span
+          class="text-caption px-1"
+          style="line-height:1rem"
+        >
+          <template v-if="use.publishedAt">
+            Publiée le {{ use.publishedAt | date('L') }}
+          </template>
+          <template v-else>
+            Mise à jour le {{ use.updated.date | date('L') }}
+          </template>
+        </span>
       </v-card-actions>
     </template>
   </action-card>
