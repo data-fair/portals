@@ -898,6 +898,12 @@
           "const": "dataUpdatedAt"
         }]
       },
+      "datasetThumbnailApplication": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "utiliser la vignette de la 1ère application du jeu de données comme image",
+        "default": false
+      },
       "datasetThumbnailContain": {
         "type": "boolean",
         "x-display": "switch",
@@ -906,7 +912,7 @@
       }
     }
   }, {
-    "title": "Visusalisations",
+    "title": "Visualisations",
     "description": "Les visualisations publiées dans le portail sont listées dans une page dédiée. Cette page n'est pas nécessaire : vous pouvez choisir de faire passer les utilisateurs par les pages des jeux de données avant de voir les visualisations.",
     "properties": {
       "applicationsPage": {

@@ -11,10 +11,16 @@
         :sm="small ? 12 : 6"
         :cols="12"
       >
-        <dataset-card :dataset="dataset" />
+        <dataset-card
+          :dataset="dataset"
+          :thumbnail-application="config.datasetThumbnailApplication"
+        />
       </v-col>
     </v-row>
-    <v-row align="center">
+    <v-row
+      v-if="!config.datasetsPage || config.datasetsPage.type !== 'none'"
+      align="center"
+    >
       <v-col class="text-center">
         <nuxt-link
           class="title"

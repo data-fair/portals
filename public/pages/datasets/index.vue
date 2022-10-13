@@ -147,7 +147,10 @@
           sm="6"
           cols="12"
         >
-          <dataset-card :dataset="dataset" />
+          <dataset-card
+            :dataset="dataset"
+            :thumbnail-application="config.datasetThumbnailApplication"
+          />
         </v-col>
       </v-row>
       <v-row

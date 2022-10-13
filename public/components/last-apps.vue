@@ -14,7 +14,10 @@
         <application-card :application="application" />
       </v-col>
     </v-row>
-    <v-row align="center">
+    <v-row
+      v-if="!config.applicationsPage || config.applicationsPage.type !== 'none'"
+      align="center"
+    >
       <v-col class="text-center">
         <nuxt-link
           class="title"
@@ -30,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -38,6 +41,7 @@ export default {
     small: { type: Boolean, default: false }
   },
   computed: {
+    ...mapState(['config']),
     ...mapGetters(['hoverInverse'])
   }
 }

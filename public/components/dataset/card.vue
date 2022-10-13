@@ -17,6 +17,18 @@
           :contain="!!config.datasetThumbnailContain"
         />
       </div>
+      <div
+        v-else-if="thumbnailApplication && dataset.extras && dataset.extras.reuses && dataset.extras.reuses[0]"
+        class="pb-2"
+        style="height:170px;"
+      >
+        <v-img
+          :src="`${dataFairUrl}/api/v1/applications/${dataset.extras.reuses[0]}/capture`"
+          :alt="dataset.title"
+          :max-height="155"
+          :contain="!!config.datasetThumbnailContain"
+        />
+      </div>
       <v-card-text
         v-else
         style="height:170px;color: rgba(0,0,0,0.87)"
@@ -107,7 +119,7 @@ import TablePreview from '~/components/dataset/table-preview.vue'
 import MapPreview from '~/components/dataset/map-preview.vue'
 import ApiView from '~/components/dataset/api-view.vue'
 import SchemaView from '~/components/dataset/schema-view.vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -127,7 +139,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config']),
+    ...mapGetters(['dataFairUrl'])
   }
 }
 </script>
