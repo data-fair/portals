@@ -18,12 +18,12 @@
         />
       </div>
       <div
-        v-else-if="thumbnailApplication && dataset.extras && dataset.extras.reuses && dataset.extras.reuses[0]"
+        v-else-if="thumbnailApplication && dataset.extras && dataset.extras.applications && dataset.extras.applications[0]"
         class="pb-2"
         style="height:170px;"
       >
         <v-img
-          :src="`${dataFairUrl}/api/v1/applications/${dataset.extras.reuses[0]}/capture`"
+          :src="`${dataFairUrl}/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`"
           :alt="dataset.title"
           :max-height="155"
           :contain="!!config.datasetThumbnailContain"
