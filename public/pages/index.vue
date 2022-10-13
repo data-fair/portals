@@ -73,6 +73,10 @@
           />
         </v-col>
       </v-row>
+      <div
+        v-else-if="config.description"
+        v-html="config.description"
+      />
       <v-row
         v-if="config.homeShowSearch && config.homeSearchPosition === 'belowBanner'"
         justify="center"
@@ -85,10 +89,6 @@
         :topics="topics"
         :options="config.homeTopicsOptions"
         row-class="mt-0 mb-3"
-      />
-      <div
-        v-else-if="config.description"
-        v-html="config.description"
       />
       <kpi
         v-if="config.showKpis"
