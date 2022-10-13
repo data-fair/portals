@@ -36,7 +36,7 @@ export default {
       const url = new URL(`${this.dataFairUrl}/api/v1/applications/${this.application.id}/capture`)
       url.searchParams.set('width', this.meta['df:capture-width'] || '1280')
       url.searchParams.set('height', this.meta['df:capture-height'] || '720')
-      url.searchParams.set('updatedAt', this.application.fullUpdatedAt)
+      url.searchParams.set('updatedAt', this.application.updatedAt)
       if (this.syncedState && this.syncedState.href) {
         const stateUrl = new URL(this.syncedState.href)
         for (const key of stateUrl.searchParams.keys()) {

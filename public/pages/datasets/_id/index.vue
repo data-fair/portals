@@ -444,8 +444,11 @@ export default {
     else params.dataset = this.$route.params.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
-    if (dataset.extras && dataset.extras.applications && dataset.extras.applications.length) {
+    if (dataset.extras && dataset.extras.applications) {
       applications.results = dataset.extras.applications.map(id => applications.results.find(a => a.id === id)).filter(a => a)
+      const ordered = dataset.extras.applications.map(appRef => applications.results.find(a => a.id === appRef.id)).filter(a => a)
+      const remaining = applications.results.filter(a => !dataset.extras.applications.find(appRef => appRef.id === a.id))
+      applications.results = [...ordered, ...remaining]
     }
     this.applications = applications
 

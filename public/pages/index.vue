@@ -207,7 +207,7 @@ export default {
         params: {
           ...baseFilter,
           size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
-          select: 'id,title,updatedAt,fullUpdatedAt,createdAt,-userPermissions',
+          select: 'id,title,updatedAt,createdAt,-userPermissions',
           sort: 'createdAt:-1',
           html: true
         }
