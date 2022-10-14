@@ -28,12 +28,21 @@
             class="mx-1"
             :outlined="hover && hoverInverse"
             :title="linkTitle(linkType.title, use.links[linkType.key])"
+            target="_blank"
           >
             <v-icon>{{ linkType.icon }}</v-icon>
           </v-btn>
         </v-hover>
       </v-row>
       <v-row>
+        <v-col
+          cols="12"
+        >
+          <div
+            v-if="use.description"
+            v-html="use.description"
+          />
+        </v-col>
         <v-col
           v-if="use.links && use.links.iframe"
           cols="12"
@@ -65,14 +74,6 @@
             min-height="200"
             max-height="600"
             contain
-          />
-        </v-col>
-        <v-col
-          cols="12"
-        >
-          <div
-            v-if="use.description"
-            v-html="use.description"
           />
         </v-col>
       </v-row>
