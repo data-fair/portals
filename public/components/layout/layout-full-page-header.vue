@@ -32,7 +32,6 @@
     </div>
     <v-spacer />
     <v-breadcrumbs
-      v-if="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]"
       :large="!$vuetify.breakpoint.xs"
       :items="breadcrumbs"
       class="px-1"
