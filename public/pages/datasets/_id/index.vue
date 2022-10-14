@@ -440,8 +440,7 @@ export default {
     this.dataset = dataset
 
     const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
-    if (dataset.extras && dataset.extras.applications && dataset.extras.applications.length) params.id = dataset.extras.applications.join(',')
-    else params.dataset = this.$route.params.id
+    params.dataset = this.$route.params.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
     if (dataset.extras && dataset.extras.applications) {
