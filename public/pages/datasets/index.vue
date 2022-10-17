@@ -37,12 +37,15 @@
         v-else
         text="..."
       />
-      <v-row align="center">
+      <v-row
+        align="center"
+        :dense="!!showOwnersFacets"
+      >
         <v-col
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
         >
           <v-text-field
             v-model="search"
@@ -61,7 +64,7 @@
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
         >
           <v-select
             v-model="filters.concepts"
@@ -80,10 +83,25 @@
           />
         </v-col>
         <v-col
+          v-if="showOwnersFacets"
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
+        >
+          <owner-facets
+            v-if="datasets && datasets.facets.owner.find(o => !!o.value.department)"
+            v-model="filters.owner"
+            :loading="loading"
+            :items="datasets.facets.owner"
+            @input="refresh()"
+          />
+        </v-col>
+        <v-col
+          class="py-0"
+          cols="12"
+          sm="6"
+          :md="filterCols"
         >
           <v-select
             v-model="sort"
@@ -213,7 +231,8 @@ export default {
       filters: {
         concepts: [],
         topics: [],
-        id: []
+        id: [],
+        owner: []
       },
       sorts: [{
         text: 'Date de création',
@@ -231,13 +250,12 @@ export default {
   },
   async fetch () {
     this.readQueryParams()
-    const refreshPromise = this.refresh()
+    await this.refresh()
     this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
       const { identifiers, ...concept } = c
       concept.id = identifiers.shift()
       return concept
     })
-    await refreshPromise
   },
   head () {
     const title = 'Données - ' + this.config.title
@@ -272,6 +290,12 @@ export default {
     },
     defaultSort () {
       return this.config.datasetsDefaultSort || 'createdAt'
+    },
+    showOwnersFacets () {
+      return this.datasets && this.datasets.facets.owner.find(o => !!o.value.department)
+    },
+    filterCols () {
+      return this.showOwnersFacets ? 3 : 4
     }
   },
   watch: {
@@ -292,6 +316,7 @@ export default {
       this.filters.concepts = this.$route.query.concepts ? this.$route.query.concepts.split(',') : []
       this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
       this.filters.id = this.$route.query.id ? this.$route.query.id.split(',') : []
+      this.filters.owner = this.$route.query.owner ? this.$route.query.owner.split(',') : []
     },
     async refresh (append) {
       if (append) this.page += 1
@@ -302,14 +327,15 @@ export default {
       if (this.filters.id.length) query.id = this.filters.id.join(',')
       if (this.filters.concepts.length) query.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
+      if (this.filters.owner.length) query.owner = this.filters.owner.join(',')
       const params = { ...query }
       params.sort = params.sort || this.defaultSort + ':-1'
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
       if (append) params.count = false
-      else params.facets = 'concepts,topics'
-      params.owner = this.owner
+      else params.facets = 'concepts,topics,owner'
+      params.owner = query.owner || this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
       params.truncate = 600

@@ -14,7 +14,7 @@
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
         >
           <v-text-field
             v-model="search"
@@ -33,7 +33,7 @@
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
         >
           <v-select
             v-model="filters.apps"
@@ -53,10 +53,25 @@
           />
         </v-col>
         <v-col
+          v-if="showOwnersFacets"
           class="py-0"
           cols="12"
           sm="6"
-          md="4"
+          :md="filterCols"
+        >
+          <owner-facets
+            v-if="datasets && datasets.facets.owner.find(o => !!o.value.department)"
+            v-model="filters.owner"
+            :loading="loading"
+            :items="datasets.facets.owner"
+            @input="refresh()"
+          />
+        </v-col>
+        <v-col
+          class="py-0"
+          cols="12"
+          sm="6"
+          :md="filterCols"
         >
           <v-select
             v-model="sort"
@@ -180,7 +195,8 @@ export default {
       order: 0,
       filters: {
         apps: [],
-        topics: []
+        topics: [],
+        owner: []
       },
       sorts: [{
         text: 'Date de création',
@@ -228,6 +244,12 @@ export default {
       if (!this.applications) return []
       return this.applications.facets.topics
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
+    },
+    showOwnersFacets () {
+      return this.applications && this.applications.facets.owner.find(o => !!o.value.department)
+    },
+    filterCols () {
+      return this.showOwnersFacets ? 3 : 4
     }
   },
   watch: {
@@ -247,6 +269,7 @@ export default {
       this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
       this.filters.apps = this.$route.query['base-application'] ? this.$route.query['base-application'].split(',') : []
       this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
+      this.filters.owner = this.$route.query.owner ? this.$route.query.owner.split(',') : []
     },
     async refresh (append) {
       if (append) this.page += 1
@@ -256,14 +279,15 @@ export default {
       if (this.sort !== 'createdAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
       if (this.filters.apps.length) query['base-application'] = this.filters.apps.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
+      if (this.filters.owner.length) query.owner = this.filters.owner.join(',')
       const params = { ...query }
       params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
       params.select = 'id,title,updatedAt,url,topics,-userPermissions'
       if (append) params.count = false
-      else params.facets = 'base-application,topics'
-      params.owner = this.owner
+      else params.facets = 'base-application,topics,owner'
+      params.owner = query.owner || this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
       if (this.config.authentication === 'none') params.visibility = 'public'

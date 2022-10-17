@@ -107,6 +107,7 @@
         >
           Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
         </span>
+        <owner-department :owner="dataset.owner" />
       </v-card-actions>
     </template>
   </action-card>

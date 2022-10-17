@@ -38,6 +38,7 @@
         >
           Mis à jour le {{ application.updatedAt | date('L') }}
         </span>
+        <owner-department :owner="application.owner" />
       </v-card-actions>
     </template>
   </action-card>

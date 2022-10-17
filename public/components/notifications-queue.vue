@@ -81,14 +81,12 @@
 <script>
 import { mapState } from 'vuex'
 import eventBus from '~/event-bus'
-import OwnerShort from '~/components/owners/short.vue'
 /* let sound
 if (!process.server) {
   sound = new Audio(require('@/assets/sounds/Information_Block.ogg'))
 } */
 
 export default {
-  components: { OwnerShort },
   props: ['notifyUrl', 'loginHref', 'backgroundDark'],
   data: () => ({
     menu: false,
