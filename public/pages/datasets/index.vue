@@ -396,6 +396,7 @@ export default {
       }
       if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
+      if (this.filters.owner.length) params.owner = this.filters.owner.join(',')
       if (this.config.authentication === 'none') params.visibility = 'public'
       try {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
