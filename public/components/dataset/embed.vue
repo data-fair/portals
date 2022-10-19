@@ -41,6 +41,7 @@
           item-value="id"
           style="max-width: 200px;"
           hide-details
+          :menu-props="{offsetY: true}"
         />
         <br>
         <pre>

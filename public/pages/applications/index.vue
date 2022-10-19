@@ -48,7 +48,8 @@
             class="mb-2"
             hide-details
             label="Filtrer par application"
-            no-data-text="Aucun concept"
+            no-data-text="Aucune application"
+            :menu-props="{offsetY: true}"
             @input="refresh()"
           />
         </v-col>
@@ -81,6 +82,7 @@
             label="Trier par"
             hide-details
             class="select-sort mb-2"
+            :menu-props="{offsetY: true}"
             @input="refresh()"
           >
             <template #append-outer>
