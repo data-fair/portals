@@ -12,6 +12,7 @@
     label="Filter par propriétaire"
     hide-details
     class="mb-2"
+    :menu-props="{offsetY: true}"
     @input="e => $emit('input', e)"
   >
     <template #item="{item, on , attrs}">
@@ -29,7 +30,7 @@
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>
-            {{ itemText(item) }}
+            {{ itemText(item) }} ({{ item.count }})
           </v-list-item-title>
         </v-list-item-content>
         <v-list-item-avatar
