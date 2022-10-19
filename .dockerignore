@@ -1,4 +1,8 @@
-node_modules
-coverage
-.nyc_output
-.nuxt
+/node_modules
+/coverage
+/.nyc_output
+/.nuxt
+/nuxt-dist
+/nuxt-dist-standalone
+/.git
+/data

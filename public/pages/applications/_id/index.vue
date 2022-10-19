@@ -22,10 +22,29 @@
             class="mb-3"
             v-bind="infoCardProps"
           >
-            <v-card-text class="subheading">
-              Visualisation publiée par <span class="font-weight-bold">{{ application.owner.name }} en utilisant l'application <span class="font-weight-bold">{{ baseApplication ? baseApplication.title : application.url.split('/').slice(-3,-2).pop() }}</span></span>
-            </v-card-text>
-            <v-card-actions>
+            <v-list style="background-color: transparent;">
+              <v-list-item style="min-height: 36px;">
+                <v-list-item-content class="pt-0 pb-2">
+                  <v-list-item-title style="white-space: normal;">
+                    Visualisation publiée par <span class="font-weight-bold">{{ application.owner.name }}</span> en utilisant l'application <span class="font-weight-bold">{{ baseApplication ? baseApplication.title : application.url.split('/').slice(-3,-2).pop() }}</span>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="application.owner.department">
+                <v-list-item-content class="pt-0 pb-2">
+                  <v-list-item-title>
+                    <v-avatar
+                      :size="28"
+                      class="mr-1"
+                    >
+                      <img :src="`${directoryUrl}/api/avatars/${application.owner.type}/${application.owner.id}/${application.owner.department}/avatar.png`">
+                    </v-avatar>
+                    {{ application.owner.departmentName || application.owner.department }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-card-actions class="py-0">
               <application-embed :application="application" />
               <application-fullscreen
                 :application="application"

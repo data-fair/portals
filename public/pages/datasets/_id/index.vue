@@ -81,6 +81,19 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="dataset.owner.department">
+                <v-list-item-content class="pt-0 pb-2">
+                  <v-list-item-title>
+                    <v-avatar
+                      :size="28"
+                      class="mr-1"
+                    >
+                      <img :src="`${directoryUrl}/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`">
+                    </v-avatar>
+                    {{ dataset.owner.departmentName || dataset.owner.department }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item v-if="dataset.license">
                 <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title>
@@ -531,16 +544,10 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'readableThemeColor', 'infoCardProps']),
+    ...mapGetters(['themeColorDark', 'readableThemeColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id
-    },
-    dataFairUrl () {
-      return this.$store.getters.dataFairUrl
-    },
-    notifyUrl () {
-      return this.$store.getters.notifyUrl
     },
     iframeExternalReuses () {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []
