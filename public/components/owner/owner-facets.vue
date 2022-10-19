@@ -49,7 +49,7 @@
         </v-list-item-avatar>
       </v-list-item>
     </template>
-    <template #selection="{item, index}">
+    <template #selection="{item}">
       <div class="v-select__selection v-select__selection--comma">
         <!--{{ itemText(item) }}--><v-avatar
           :size="24"
