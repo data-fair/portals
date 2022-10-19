@@ -51,9 +51,8 @@
     </template>
     <template #selection="{item, index}">
       <div class="v-select__selection v-select__selection--comma">
-        {{ itemText(item) }} <v-avatar
+        <!--{{ itemText(item) }}--><v-avatar
           :size="24"
-          class="ml-1"
         >
           <img
             v-if="item.value.department"
@@ -64,7 +63,7 @@
             :src="`${directoryUrl}/api/avatars/${item.value.type}/${item.value.id}/avatar.png`"
           >
         </v-avatar>
-        {{ index < value.length - 1 ? ', ' : '' }}
+        <!--{{ index < value.length - 1 ? ', ' : '' }}-->
       </div>
     </template>
   </v-select>
