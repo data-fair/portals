@@ -60,10 +60,10 @@
           :md="filterCols"
         >
           <owner-facets
-            v-if="datasets && datasets.facets.owner.find(o => !!o.value.department)"
+            v-if="applications && applications.facets.owner.find(o => !!o.value.department)"
             v-model="filters.owner"
             :loading="loading"
-            :items="datasets.facets.owner"
+            :items="applications.facets.owner"
             @input="refresh()"
           />
         </v-col>
