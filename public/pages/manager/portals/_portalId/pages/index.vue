@@ -3,6 +3,27 @@
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
         <section-title text="Éditer les pages de contenu" />
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+            lg="4"
+          >
+            <v-select
+              v-model="filters.template"
+              label="Modèle de page"
+              outlined
+              dense
+              :items="pageSchema.properties.template.oneOf"
+              item-text="title"
+              item-value="const"
+              clearable
+              hide-details
+              :menu-props="{offsetY: true}"
+              @change="refresh(true)"
+            />
+          </v-col>
+        </v-row>
         <v-row v-if="pages">
           <v-col
             v-for="(page, i) in pages.results"
@@ -20,7 +41,16 @@
                   {{ page.title }}
                 </h3>
               </v-card-title>
+              <v-row
+                class="pl-7"
+                style="height:35px;"
+              >
+                <span class="text-caption">
 
+                  {{ templateNames[page.template] }}
+
+                </span>
+              </v-row>
               <v-row style="min-height:25px;">
                 <v-col class="py-0">
                   <v-chip
@@ -106,16 +136,24 @@
 import CreatePageMenu from '~/components/create-page-menu.vue'
 import RemoveConfirm from '~/components/remove-confirm.vue'
 import { mapState } from 'vuex'
+const pageSchema = require('~/../contract/page.json')
 
 export default {
   components: { CreatePageMenu, RemoveConfirm },
   data: () => ({
     pagination: 1,
     pages: null,
-    loading: false
+    loading: false,
+    pageSchema,
+    filters: {
+      template: null
+    }
   }),
   computed: {
-    ...mapState(['portal'])
+    ...mapState(['portal']),
+    templateNames () {
+      return this.pageSchema.properties.template.oneOf.reduce((a, item) => { a[item.const] = item.title; return a }, {})
+    }
   },
   mounted: async function () {
     this.$store.dispatch('setBreadcrumbs', [{
@@ -135,6 +173,7 @@ export default {
       this.loading = true
       if (reset) this.pagination = 1
       const params = { size: 12, page: this.pagination }
+      if (this.filters.template) params.template = this.filters.template
       const pages = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
       if (reset) this.pages = pages
       else pages.results.forEach(r => this.pages.results.push(r))
