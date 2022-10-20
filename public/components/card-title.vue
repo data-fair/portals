@@ -4,12 +4,12 @@
       <template #activator="{ on, attrs }">
         <h3
           :class="`title ${colorClass || 'grey--text text--darken-2'} font-weight-bold`"
-          style="height:44px;line-height: 1.1;overflow: hidden;"
+          :style="`height:${lines * 22}px;line-height: 1.1;overflow: hidden;`"
           v-bind="attrs"
           v-on="on"
         >
           <v-clamp
-            :max-lines="2"
+            :max-lines="lines"
             autoresize
           >
             {{ title }}
@@ -28,7 +28,8 @@ export default {
   components: { VClamp },
   props: {
     title: { type: String, required: true },
-    colorClass: { type: String, default: null }
+    colorClass: { type: String, default: null },
+    lines: { type: Number, default: 2 }
   }
 }
 </script>

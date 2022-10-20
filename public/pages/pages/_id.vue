@@ -13,6 +13,10 @@
         v-if="page.template === 'thematic'"
         :config="page.config"
       />
+      <news
+        v-if="page.template === 'news'"
+        :config="page.config"
+      />
     </template>
   </div>
 </template>
@@ -21,12 +25,14 @@
 import Error from '~/components/error.vue'
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
+import News from '~/components/pages/news.vue'
 const { mapState } = require('vuex')
 
 export default {
   components: {
     Blank,
     Thematic,
+    News,
     Error
   },
   layout: 'default',

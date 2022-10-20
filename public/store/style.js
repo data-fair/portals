@@ -444,6 +444,18 @@ ${getters.personalNavigationStyle}
   top:0;
   background:linear-gradient(transparent 0, transparent 50%, ${getters.actionCardBackgroundColor});
 }
+.card-gradient-white-desc130 {
+  position: relative;
+}
+.card-gradient-white-desc130:before {
+  content:'';
+  position:absolute;
+  width:100%;
+  height:130px;
+  left:0;
+  top:0;
+  background:linear-gradient(transparent 0, transparent 50%, white);
+}
 /* footer style */
 ${getters.footerStyle}
         `

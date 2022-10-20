@@ -109,7 +109,7 @@
       />
 
       <!-- applications: featured and lasts -->
-      <v-row v-if="config.twitter && config.showTwitterTimeline !== false">
+      <v-row v-if="twoThirdsLayout">
         <v-col
           cols="12"
           md="8"
@@ -141,13 +141,14 @@
           md="4"
           sm="6"
         >
-          <client-only>
+          <client-only v-if="showTwitterTimeline">
             <timeline
               :id="config.twitter"
               :source-type="'profile'"
               :options="{ tweetLimit }"
             />
           </client-only>
+          <news-last v-if="config.showLastNews" />
         </v-col>
       </v-row>
       <v-row v-else-if="config.featuredApplication && config.featuredApplication.id">
@@ -273,6 +274,12 @@ export default {
     tweetLimit () {
       if (this.config.featuredApplication && this.config.featuredApplication.id) return 2
       else return Math.max(1, Math.ceil(((this.config.homeDatasets && this.config.homeDatasets.size) || 0) / 2) + Math.ceil(((this.config.homeApplications && this.config.homeApplications.size) || 0) / 2))
+    },
+    showTwitterTimeline () {
+      return this.config.twitter && this.config.showTwitterTimeline !== false
+    },
+    twoThirdsLayout () {
+      return this.showTwitterTimeline || this.config.showLastNews
     }
   }
 }

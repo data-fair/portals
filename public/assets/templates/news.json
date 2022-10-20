@@ -1,0 +1,109 @@
+{
+  "type": "object",
+  "required": ["elements"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "$ref": "#/definitions/title"
+    },
+    "banner": {
+      "title": "URL de l'image de bannière",
+      "type": "string"
+    },
+    "description": {
+      "$ref": "#/definitions/description"
+    },
+    "blocks":{
+      "title": "Blocs",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/block"
+      }
+    }
+  },
+  "definitions": {
+    "title": {
+      "title": "Titre",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description générale",
+      "type": "string",
+      "x-display": "custom-markdown"
+    },
+    "block":{
+      "title": "Bloc",
+      "type": "object",
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/title"
+        },
+        "description": {
+          "$ref": "#/definitions/description"
+        },
+        "alert": {
+          "$ref": "#/definitions/alert"
+        },
+        "application": {
+          "$ref": "#/definitions/application"
+        },
+        "datasets": {
+          "title": "Jeux de données associés",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/datasetCard"
+          },
+          "x-options": { "hideReadOnlyLabels": false }
+        }
+      }
+    },
+    "application": {
+      "type": "object",
+      "title": "Visualisation",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "href": {"type": "string"},
+        "exposedUrl": {"type": "exposedUrl"},
+        "title": {"type": "string"},
+        "id": {"type": "string"}
+      },
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,title",
+      "x-itemsProp": "results",
+      "x-itemTitle": "title",
+      "x-itemKey": "href"
+    },
+    "datasetCard": {
+      "type": "object",
+      "title": "Fiche d'un jeu de données",
+      "x-options": { "hideReadOnlyLabels": true },
+      "properties": {
+        "render": {
+          "type": "string",
+          "title": "Rendu",
+          "default": "default",
+          "oneOf": [{
+            "const": "default",
+            "title": "Défaut"
+          }],
+          "x-options": { "hideInArrayItem": true }
+        },
+        "dataset": {
+          "type": "object",
+          "title": "Jeu de données",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "href": {"type": "string"},
+            "title": {"type": "string"},
+            "id": {"type": "string"}
+          },
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href"
+        }
+      }
+    }
+  }
+}

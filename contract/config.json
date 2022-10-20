@@ -787,6 +787,12 @@
         "x-display": "switch",
         "default": true
       },
+      "showLastNews": {
+        "title": "afficher les dernières actualités",
+        "type": "boolean",
+        "x-display": "switch",
+        "default": false
+      },
       "featuredApplication": {
         "title": "Visualisation mise en avant",
         "type": "object",
@@ -998,6 +1004,33 @@
           "properties": {
             "type": {
               "const": "list"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      }
+    }
+  }, {
+    "title": "Actualités",
+    "description": "Les actualités sont des pages de contenu qui peuvent être consultées dans l'ordre de publication.",
+    "properties": {
+      "newsPage": {
+        "type": "object",
+        "title": "Page des actualités",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
             }
           }
         },{

@@ -1,0 +1,93 @@
+<template>
+  <v-card
+    outlined
+    rounded="xl"
+  >
+    <v-card-title>
+      <span
+        v-t="newsRes ? newsRes.count + ' ' + (newsRes.count> 1 ? 'actualités' : 'actualité') : '...'"
+        class="text-caption"
+      />
+    </v-card-title>
+    <v-card-text>
+      <v-row v-if="newsRes">
+        <v-col
+          v-for="(news, i) in newsRes.results"
+          :key="i"
+          cols="12"
+          class="pa-0"
+        >
+          <news-card
+            :news="news"
+            :dense="true"
+          />
+          <v-divider v-if="i < newsRes.count - 1" />
+        </v-col>
+      </v-row>
+      <v-row
+        class="pt-5 pb-0"
+        align="center"
+      >
+        <v-col class="text-center pa-0">
+          <v-progress-circular
+            v-if="loading"
+            :size="40"
+            :width="5"
+            :color="'primary'"
+            indeterminate
+          />
+          <div
+            v-else
+            style="height: 40px;"
+          />
+        </v-col>
+      </v-row>
+      <v-row
+        v-if="newsRes && newsRes.results.length < newsRes.count && !loading"
+        class="pt-5 pb-0"
+        align="center"
+      >
+        <v-col class="text-center pa-0">
+          <v-btn
+            text
+            to="/news"
+          >
+            voir toutes les actualités
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script>
+const { mapState } = require('vuex')
+
+export default {
+  data: function () {
+    return {
+      newsRes: null,
+      loading: false
+    }
+  },
+  async fetch () {
+    const params = {
+      html: true,
+      published: true,
+      template: 'news',
+      select: 'id,title,config,publishedAt,published',
+      sort: 'publishedAt:-1',
+      size: 3
+    }
+    this.loading = true
+    this.newsRes = await this.$axios.$get(`/api/v1/portals/${this.portal._id}/pages`, { params })
+    this.loading = false
+  },
+  computed: {
+    ...mapState(['portal'])
+  }
+}
+</script>
+
+<style>
+</style>

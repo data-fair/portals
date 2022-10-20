@@ -28,6 +28,9 @@ export default () => ({
       if (config.usesPage && config.usesPage.type !== 'none') {
         navigation.push({ title: 'Réutilisations', to: '/uses' })
       }
+      if (config.newsPage && config.newsPage.type !== 'none') {
+        navigation.push({ title: 'Actualités', to: '/news' })
+      }
       for (const page of state.pages) {
         if (page.navigation && page.navigation.type === 'direct') {
           navigation.push({ title: page.title, to: `/pages/${page.id}` })

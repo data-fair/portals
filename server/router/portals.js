@@ -317,17 +317,20 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const portal = await req.app.get('db').collection('portals').findOne({ _id: req.params.id }, { owner: 1 })
   if (!portal) return res.status(404).send('Portail inconnu')
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
+  const sort = findUtils.sort(req.query.sort)
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
+  if (req.query.template) filter.template = req.query.template
   if (!req.user) filter.public = true
   else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
   else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
   else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) filter.public = true
-  if (req.query.published === 'true') filter.published = true
+  if (filter.public || req.query.published === 'true') filter.published = true
   const [results, count] = await Promise.all([
-    pages.find(filter).limit(1000).project(project).toArray(),
+    pages.find(filter).limit(1000).project(project).sort(sort).toArray(),
     pages.countDocuments(filter)
   ])
+  results.forEach(page => cleanPage(page, req.query.html === 'true'))
   res.json({ count, results })
 }))
 
@@ -399,6 +402,9 @@ router.patch('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, r
     id: req.user.id,
     name: req.user.name,
     date: new Date().toISOString()
+  }
+  if (req.body.published && !page.published) {
+    req.body.publishedAt = new Date()
   }
 
   const patch = {}

@@ -21,6 +21,12 @@
       "default": false,
       "x-cols": {"cols": 6, "md": 3}
     },
+    "publishedAt": {
+      "type": "string",
+      "description": "Creation date of this page",
+      "format": "date-time",
+      "readOnly": true
+    },
     "public": {
       "type": "boolean",
       "title": "Publique",
@@ -36,6 +42,9 @@
       },{
         "const": "thematic",
         "title": "Page thématique"
+      },{
+        "const": "news",
+        "title": "Actualité"
       }],
       "default": "blank",
       "x-cols": {"cols": 6, "md": 3},
