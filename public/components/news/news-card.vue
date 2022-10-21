@@ -78,7 +78,7 @@ export default {
       if (this.hovered && this.actionCardOptions.includes('hoverColorTitle')) {
         c += ' primary--text'
       } else {
-        c += ' grey--text text--darken-2'
+        c += ' grey--text text--darken-3'
       }
       if (this.actionCardOptions.includes('hoverUnderlineTitle')) {
         c += ' underline-link'

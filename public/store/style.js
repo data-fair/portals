@@ -353,7 +353,7 @@ ${applyFonts ? getters.fontsStyle : ''}
 ${getters.linksStyle}
 
 /* some police tuning */
-.v-application#app a {
+.v-application#app a:not(.v-tab):not(.v-list-item) {
   color: ${getters.readableThemeColor};
 }
 .v-application#app .area--dark a,
@@ -373,7 +373,7 @@ ${getters.linksStyle}
 .v-application#app .theme--dark.v-list a {
   color: white;
 }
-.v-application#app .area--light a,
+.v-application#app .area--light a:not(.v-tab):not(.v-list-item),
 .v-application#app .area--light h3,
 .v-application#app .area--light span,
 .v-application#app .area--light .v-tabs-bar.primary .v-tab--active {

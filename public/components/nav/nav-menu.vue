@@ -9,6 +9,7 @@
       <v-btn
         v-show="visible"
         text
+        tile
         class="font-weight-bold"
         :class="{'white--text': backgroundDark}"
         :height="64"
@@ -32,6 +33,7 @@
           :key="`single-item-${i}`"
           :to="item.to"
           nuxt
+          active-class="primary--text"
         >
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
@@ -45,6 +47,7 @@
             :key="`child-${i}-${j}`"
             :to="child.to"
             nuxt
+            active-class="primary--text"
           >
             <v-list-item-title>{{ child.title }}</v-list-item-title>
           </v-list-item>

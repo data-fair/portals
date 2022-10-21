@@ -11,7 +11,7 @@
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
-              class="headline grey--text text--darken-2 font-weight-bold"
+              class="headline grey--text text--darken-3 font-weight-bold"
               style="height:40px"
             >
               <span v-if="stats">{{ stats.datasets.count }}</span>
@@ -23,7 +23,7 @@
               />
             </h3>
             <h3
-              class="title grey--text text--darken-2 font-weight-bold"
+              class="title grey--text text--darken-3 font-weight-bold"
               style="height:40px;text-transform:uppercase;"
             >
               Jeux de données
@@ -40,7 +40,7 @@
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
-              class="headline grey--text text--darken-2 font-weight-bold"
+              class="headline grey--text text--darken-3 font-weight-bold"
               style="height:40px"
             >
               <span v-if="stats">{{ stats.datasets.numlines.toLocaleString() }}</span>
@@ -53,7 +53,7 @@
             </h3>
 
             <h3
-              class="title grey--text text--darken-2 font-weight-bold"
+              class="title grey--text text--darken-3 font-weight-bold"
               style="height:40px;text-transform:uppercase;"
             >
               Enregistrements
@@ -71,7 +71,7 @@
         <v-card-title class="text-center pb-2">
           <v-col class="pa-0">
             <h3
-              class="headline grey--text text--darken-2 font-weight-bold"
+              class="headline grey--text text--darken-3 font-weight-bold"
               style="height:40px"
             >
               <span v-if="stats">{{ stats.applications.count }}</span>
@@ -83,7 +83,7 @@
               />
             </h3>
             <h3
-              class="title grey--text text--darken-2 font-weight-bold"
+              class="title grey--text text--darken-3 font-weight-bold"
               style="height:40px;text-transform:uppercase;"
             >
               Visualisations

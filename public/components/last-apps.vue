@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <h3 class="headline grey--text text--darken-2 font-weight-bold mt-6 mb-4">
+    <h3 class="headline grey--text text--darken-3 font-weight-bold mt-6 mb-4">
       Dernières visualisations
     </h3>
     <v-row>

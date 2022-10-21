@@ -52,7 +52,7 @@ export default {
     titleColor () {
       if (this.headerColorDark) return 'white--text'
       return {
-        grey: 'grey--text text--darken-2',
+        grey: 'grey--text text--darken-3',
         primary: 'primary--text',
         secondary: 'secondary--text'
       }[this.config.titleColor || 'grey']

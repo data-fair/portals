@@ -29,7 +29,7 @@ export default {
   components: {},
   props: {
     loading: { type: Boolean, default: false },
-    title: { type: String, default: null },
+    title: { type: String, default: '' },
     to: { type: [String, Object], default: null }
   },
   data () {
@@ -46,7 +46,7 @@ export default {
       if (this.to && this.hovered && this.actionCardOptions.includes('hoverColorTitle')) {
         c += ' primary--text'
       } else {
-        c += ' grey--text text--darken-2'
+        c += ' grey--text text--darken-3'
       }
       if (this.actionCardOptions.includes('hoverUnderlineTitle')) {
         c += ' underline-link'

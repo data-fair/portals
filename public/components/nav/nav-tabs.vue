@@ -18,7 +18,7 @@
         nuxt
         :exact="item.to === '/'"
         class="font-weight-bold"
-        :class="{'white--text': backgroundDark}"
+        :class="{'white--text': backgroundDark, 'grey--text text--darken-3': !backgroundDark && computedActiveTab !== item.to, 'primary--text': !backgroundDark && computedActiveTab === item.to}"
       >
         {{ item.title }}
       </v-tab>
@@ -32,7 +32,7 @@
           <v-tab
             v-bind="attrs"
             class="font-weight-bold"
-            :class="{'white--text': backgroundDark, 'primary--text': !backgroundDark}"
+            :class="{'white--text': backgroundDark, 'grey--text text--darken-3': !backgroundDark && computedActiveTab !== item.to, 'primary--text': !backgroundDark && computedActiveTab === i}"
             v-on="on"
           >
             {{ item.title }}

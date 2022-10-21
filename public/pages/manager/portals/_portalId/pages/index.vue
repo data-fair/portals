@@ -35,7 +35,7 @@
             <v-card outlined>
               <v-card-title>
                 <h3
-                  class="title grey--text text--darken-2 font-weight-bold"
+                  class="title grey--text text--darken-3 font-weight-bold"
                   style="height:40px;line-height: 1.1;"
                 >
                   {{ page.title }}

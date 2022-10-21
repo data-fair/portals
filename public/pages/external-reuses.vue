@@ -15,7 +15,7 @@
           :key="'title-' + dataset.id"
           :to="`/datasets/${dataset.id}`"
         >
-          <h3 class="headline grey--text text--darken-2 font-weight-bold mt-6 mb-4">
+          <h3 class="headline grey--text text--darken-3 font-weight-bold mt-6 mb-4">
             {{ dataset.title }}
           </h3>
         </nuxt-link>

@@ -3,7 +3,7 @@
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <h3
-          :class="`title ${colorClass || 'grey--text text--darken-2'} font-weight-bold`"
+          :class="`title ${colorClass || 'grey--text text--darken-3'} font-weight-bold`"
           :style="`height:${lines * 22}px;line-height: 1.1;overflow: hidden;`"
           v-bind="attrs"
           v-on="on"
