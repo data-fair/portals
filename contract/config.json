@@ -349,6 +349,12 @@
         "x-display": "switch",
         "title": "appliquer un léger effet de transparence",
         "default": false
+      },
+      "appBarFluid": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "utiliser toute la largeur de l'écran pour le contenu de la barre de navigation",
+        "default": true
       }
     }
   }, {

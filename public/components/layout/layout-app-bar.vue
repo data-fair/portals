@@ -14,7 +14,6 @@
         :background-dark="appBarMainColorDark"
         :navigation="navigation"
       />
-
       <v-toolbar-items>
         <client-only>
           <notifications-queue
@@ -70,6 +69,7 @@ export default {
       }
       if (this.appBarMainColorDark) props.class += ' area--dark'
       else props.class += ' area--light'
+      if (this.config.appBarFluid !== false) props.class += ' app-bar-fluid'
       if (this.config.appBarBehavior === 'stick' || (this.config.appBarBehavior === 'stickHome' && this.$route.path === '/')) {
         props.hideOnScroll = true
         if (this.appBarElevation === 0) props.elevateOnScroll = true
@@ -104,5 +104,26 @@ export default {
 .main-app-bar.app-bar-xs .v-toolbar__extension {
   padding-left: 6px;
   padding-right: 0px;
+}
+
+.main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 960px) {
+  .main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+    max-width: 900px;
+  }
+}
+@media (min-width: 1264px) {
+  .main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+    max-width: 1185px;
+  }
+}
+@media (min-width: 1904px) {
+  .main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+    max-width: 1785px;
+  }
 }
 </style>

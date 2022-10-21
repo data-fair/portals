@@ -8,13 +8,11 @@
       target="blank"
     >
 
-      <v-img
+      <img
         :src="logoUrl"
         :alt="config.title"
-        contain
-        :height="height"
-        :max-width="$vuetify.breakpoint.width / 2"
-      />
+        :style="`max-height:${height}px;max-width:${$vuetify.breakpoint.width / 2}px`"
+      >
     </a>
     <nuxt-link
       v-else
@@ -22,13 +20,11 @@
       :style="`height:${height}px; display: block;`"
       class="mr-3"
     >
-      <v-img
+      <img
         :src="logoUrl"
         :alt="config.title"
-        contain
-        :height="height"
-        :max-width="$vuetify.breakpoint.width / 2.5"
-      />
+        :style="`max-height:${height}px;max-width:${$vuetify.breakpoint.width / 2}px`"
+      >
     </nuxt-link>
   </div>
 </template>
