@@ -12,7 +12,7 @@ export default () => ({
       if (!state.pages) return null
       const config = state.config
       const navigation = []
-      if (config.website) {
+      if (config.website || !config.headerHide) {
         navigation.push({ title: 'Accueil', to: '/' })
       }
       if (!config.datasetsPage || config.datasetsPage.type !== 'none') {
