@@ -58,6 +58,7 @@
           <a
             v-if="use.links.web || use.links.android || use.links.ios"
             :href="use.links.web || use.links.android || use.links.ios"
+            target="_blank"
           >
             <v-img
               :src="`${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image`"
