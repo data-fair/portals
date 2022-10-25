@@ -14,6 +14,7 @@ exports.init = (portal) => {
       'assetId'
     ],
     attachmentsAsImage: true,
+    thumbnails: { resizeMode: 'fitIn', trim: false },
     schema: [
       {
         key: 'attachmentPath',
