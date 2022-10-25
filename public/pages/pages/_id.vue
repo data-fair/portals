@@ -73,7 +73,7 @@ export default {
         params: {
           select: 'assetId,_attachment_url',
           qs: `pageId:"${this.$route.params.id}"`,
-          thumbnail: '1785' // max width of the vertical layout
+          thumbnail: '1785x800' // max width of the vertical layout
         }
       })
       this.images = images.results.reduce((a, image) => { a[image.assetId] = image._attachment_url; return a }, {})
