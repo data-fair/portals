@@ -14,6 +14,7 @@
             v-for="(lElement, li) in element.leftColumn"
             :key="`${i}l${li}`"
             :value="lElement"
+            :images="images"
           />
         </v-col>
         <v-col
@@ -24,6 +25,7 @@
             v-for="(rElement, ri) in element.rightColumn"
             :key="`${i}r${ri}`"
             :value="rElement"
+            :images="images"
           />
         </v-col>
       </v-row>
@@ -41,6 +43,7 @@
         >
           <k-element
             :value="lElement"
+            :images="images"
           />
         </v-col>
       </v-row>
@@ -75,6 +78,7 @@
                 v-for="(iElement, k) in tab.elements"
                 :key="`ti-${i}-${j}-${k}`"
                 :value="iElement"
+                :images="images"
               />
             </v-tab-item>
           </v-tabs-items>
@@ -84,6 +88,7 @@
         v-else
         :key="i"
         :value="element"
+        :images="images"
       />
     </template>
   </v-container>
@@ -94,7 +99,7 @@ import KElement from '~/components/pages/element.vue'
 
 export default {
   components: { KElement },
-  props: ['config'],
+  props: ['config', 'images'],
   data: () => ({
     tabs: {}
   })

@@ -58,6 +58,7 @@
           v-for="(element, i) in value.content"
           :key="i"
           :value="element"
+          :images="images"
         />
       </v-card-text>
     </v-card>
@@ -92,6 +93,7 @@
           v-for="(action, i) in value.actions"
           :key="i"
           :value="action"
+          :images="images"
         />
       </v-card-actions>
     </v-card>
@@ -124,11 +126,12 @@
         v-else-if="value.type === 'application' && value.application"
         :src="applicationIframeSrc(value.application)"
       />
-      <v-img
-        v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))"
-        :src="value.url || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
-        :title="value.title"
-      />
+      <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
+        <v-img
+          :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
+          :title="value.title"
+        />
+      </template>
       <v-iframe
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
         :src="value.url"
@@ -146,7 +149,7 @@ const { mapState, mapGetters } = require('vuex')
 export default {
   name: 'KElement',
   components: { VIframe, DatasetCard },
-  props: ['value'],
+  props: ['value', 'images'],
   data () {
     return {
       loading: false,

@@ -76,7 +76,7 @@ import KElement from '~/components/pages/element.vue'
 import { mapGetters } from 'vuex'
 export default {
   components: { KElement },
-  props: ['config'],
+  props: ['config', 'images'],
   computed: {
     ...mapGetters(['elevation'])
   }

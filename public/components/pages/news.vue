@@ -3,7 +3,7 @@
     <v-container>
       <v-img
         v-if="config.mainImage && config.mainImage.attachmentPath"
-        :src="`${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
+        :src="(images && images[config.mainImage.assetId]) || `${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
         :alt="config.title"
         max-height="400px"
         :class="`elevation-${appBarElevation}`"
@@ -76,7 +76,7 @@ import KElement from '~/components/pages/element.vue'
 import { mapGetters } from 'vuex'
 export default {
   components: { KElement },
-  props: ['config'],
+  props: ['config', 'images'],
   computed: {
     ...mapGetters(['elevation', 'imagesDatasetUrl'])
   }

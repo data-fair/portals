@@ -8,14 +8,17 @@
       <blank
         v-if="page.template === 'blank'"
         :config="page.config"
+        :images="images"
       />
       <thematic
         v-if="page.template === 'thematic'"
         :config="page.config"
+        :images="images"
       />
       <news
         v-if="page.template === 'news'"
         :config="page.config"
+        :images="images"
       />
     </template>
   </div>
@@ -26,7 +29,7 @@ import Error from '~/components/error.vue'
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
 import News from '~/components/pages/news.vue'
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
@@ -38,7 +41,8 @@ export default {
   layout: 'default',
   middleware: 'portal-required',
   data: () => ({
-    page: null
+    page: null,
+    images: null
   }),
   async fetch () {
     await this.fetchPage()
@@ -52,6 +56,7 @@ export default {
   },
   computed: {
     ...mapState(['portal', 'publicUrl']),
+    ...mapGetters(['imagesDatasetUrl']),
     url () {
       return this.publicUrl + '/pages/' + this.$route.params.id
     }
@@ -63,7 +68,15 @@ export default {
   },
   methods: {
     async fetchPage () {
-      this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } })
+      this.page = await this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } })
+      const images = await this.$axios.$get(this.imagesDatasetUrl + '/lines', {
+        params: {
+          select: 'assetId,_attachment_url',
+          qs: `pageId:"${this.$route.params.id}"`,
+          thumbnail: '1785' // max width of the vertical layout
+        }
+      })
+      this.images = images.results.reduce((a, image) => { a[image.assetId] = image._attachment_url; return a }, {})
     }
   }
 }
