@@ -17,6 +17,13 @@ before('global mocks', () => {
       return true
     }).reply(200)
 
+  nock('http://mock-data-fair.com')
+    .persist()
+    .put(/\/api\/v1\/datasets\/(.*)/, (body) => {
+      global.events.emit('imagesDataset', body)
+      return true
+    }).reply(200)
+
   debug('mocks ok')
 })
 
