@@ -1,14 +1,14 @@
 <template>
   <div v-if="config">
-    <v-img
-      v-if="config.banner"
-      :src="config.banner"
-      :alt="config.title"
-      max-height="400px"
-      :class="`elevation-${appBarElevation}`"
-      style="margin-top: -12px;"
-    />
     <v-container>
+      <v-img
+        v-if="config.mainImage && config.mainImage.attachmentPath"
+        :src="`${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
+        :alt="config.title"
+        max-height="400px"
+        :class="`elevation-${appBarElevation}`"
+        style="margin-top: -12px;"
+      />
       <k-element
         v-if="config.title"
         :value="{type: 'title', content: config.title}"
@@ -78,7 +78,7 @@ export default {
   components: { KElement },
   props: ['config'],
   computed: {
-    ...mapGetters(['elevation'])
+    ...mapGetters(['elevation', 'imagesDatasetUrl'])
   }
 }
 </script>

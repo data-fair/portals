@@ -48,6 +48,9 @@ export default () => {
       dataFairUrl (state) {
         return state.publicBaseUrl + '/data-fair'
       },
+      imagesDatasetUrl (state, getters) {
+        return `${getters.dataFairUrl}/api/v1/datasets/portals-images-${state.portal._id.toLowerCase()}`
+      },
       openapiViewerUrl (state) {
         return state.publicBaseUrl + '/openapi-viewer'
       },

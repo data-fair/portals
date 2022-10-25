@@ -96,7 +96,11 @@ export default {
         context: {
           dataFairUrl: this.dataFairUrl,
           settingsUrl: `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`,
-          owner: this.owner
+          owner: this.owner,
+          page: {
+            id: this.$route.params.id,
+            title: this.page.title
+          }
         },
         arrayItemCardProps: { outlined: true, tile: true },
         hideReadOnlyEmpty: true,

@@ -125,8 +125,9 @@
         :src="applicationIframeSrc(value.application)"
       />
       <v-img
-        v-else-if="value.type === 'image' && value.url"
-        :src="value.url"
+        v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))"
+        :src="value.url || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
+        :title="value.title"
       />
       <v-iframe
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
@@ -155,7 +156,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readableThemeColor', 'elevation']),
+    ...mapGetters(['readableThemeColor', 'elevation', 'imagesDatasetUrl']),
     titleClass () {
       if (!this.value || this.value.type !== 'title') return null
       const margins = {

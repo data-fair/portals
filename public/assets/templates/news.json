@@ -6,9 +6,37 @@
     "title": {
       "$ref": "#/definitions/title"
     },
-    "banner": {
-      "title": "URL de l'image de bannière",
-      "type": "string"
+    "mainImage": {
+      "type": "object",
+      "x-display": "custom-df-image",
+      "properties": {
+        "assetId": {
+          "const": "main"
+        },
+        "assetTitle": {
+          "const": "Image principale"
+        },
+        "pageId": {
+          "type": "string",
+          "readOnly": true
+        },
+        "pageTitle": {
+          "type": "string",
+          "readOnly": true
+        },
+        "_updatedAt": {
+          "type": "string",
+          "readOnly": true
+        },
+        "_id": {
+          "type": "string",
+          "readOnly": true
+        },
+        "attachmentPath": {
+          "type": "string",
+          "readOnly": true
+        }
+      }
     },
     "description": {
       "$ref": "#/definitions/description"

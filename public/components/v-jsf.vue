@@ -19,6 +19,19 @@
         @change="on.change()"
       />
     </template>
+
+    <template
+      slot="custom-df-image"
+      slot-scope="context"
+    >
+      <df-image
+        :line="{assetId: context.schema.properties.assetId.const, assetTitle: context.schema.properties.assetTitle.const, pageId: vjsfOptions.context.page.id, pageTitle: vjsfOptions.context.page.title}"
+        :value="context.value"
+        :disabled="context.disabled"
+        :label="context.label"
+        v-on="context.on"
+      />
+    </template>
   </v-jsf-original>
 </template>
 
@@ -48,6 +61,7 @@ export default {
       }
     }
   }
+
 }
 </script>
 

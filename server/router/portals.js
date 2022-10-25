@@ -25,6 +25,7 @@ const axios = require('../utils/axios')
 const findUtils = require('../utils/find')
 const usesUtils = require('../utils/uses')
 const notifications = require('../utils/notifications')
+const imagesDatasetUtils = require('../utils/images-dataset')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -82,7 +83,7 @@ function cleanUse (use, html) {
   return use
 }
 
-// portals are synced to settings.publicationSites in data-fair
+// portals are synced to settings.publicationSites in data-fair and to a dataset containing images
 async function syncPortalUpdate (portal, cookie) {
   const publicationSite = {
     type: 'data-fair-portals',
@@ -101,11 +102,34 @@ async function syncPortalUpdate (portal, cookie) {
     publicationSite,
     { headers: { cookie } }
   )
+
+  await axios.put(
+    `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}`,
+    imagesDatasetUtils.init(portal),
+    { headers: { cookie } }
+  )
+  if (portal.config && portal.config.authentication === 'required') {
+    await axios.put(
+      `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}/permissions`,
+      [],
+      { headers: { cookie } }
+    )
+  } else {
+    await axios.put(
+      `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}/permissions`,
+      [{ operations: [], classes: ['read'] }],
+      { headers: { cookie } }
+    )
+  }
 }
 async function syncPortalDelete (portal, cookie) {
   const id = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
   await axios.delete(
     `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${id}/publication-sites/data-fair-portals/${portal._id}`,
+    { headers: { cookie } }
+  )
+  await axios.delete(
+    `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}`,
     { headers: { cookie } }
   )
 }
