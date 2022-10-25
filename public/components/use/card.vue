@@ -1,6 +1,6 @@
 <template lang="html">
   <action-card
-    :to="use.published && link && `/uses/${use.slug}`"
+    :to="(use.published && link && `/uses/${use.slug}`) || null"
     :title="use.title"
   >
     <div class="pb-2">

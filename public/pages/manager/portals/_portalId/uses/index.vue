@@ -9,7 +9,7 @@
         <v-switch
           v-model="published"
           label="réutilisations publiées"
-          @change="refresh(true)"
+          @change="refresh()"
         />
         <v-row v-if="uses">
           <v-col
@@ -37,7 +37,6 @@
                 <v-btn
                   icon
                   title="éditer"
-                  :disabled="!!editItem"
                   :to="`/manager/portals/${portal._id}/uses/${use._id}/edit`"
                 >
                   <v-icon color="primary">
@@ -69,6 +68,20 @@
             />
           </v-col>
         </v-row>
+        <v-row
+          v-if="uses && uses.results.length < uses.count && !loading"
+          class="pt-5 pb-0"
+          align="center"
+        >
+          <v-col class="text-center pa-0">
+            <v-btn
+              text
+              @click="refresh(true)"
+            >
+              voir plus
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-container>
     </v-col>
     <layout-navigation-right v-if="$vuetify.breakpoint.lgAndUp">
@@ -91,7 +104,7 @@ export default {
   components: { VIframe },
   layout: 'manager',
   data: () => ({
-    pagination: 1,
+    page: 1,
     uses: null,
     loading: false,
     published: false
@@ -117,24 +130,36 @@ export default {
     }, {
       text: 'uses'
     }])
-    this.refresh(true)
+    this.refresh()
   },
   methods: {
-    async refresh (reset) {
+    async refresh (append) {
       this.loading = true
-      if (reset) this.pagination = 1
-      const params = { size: 12, page: this.pagination, published: this.published }
+      if (append) this.page += 1
+      else this.page = 1
+      const params = { size: 2, page: this.page, published: this.published }
       const uses = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, { params })
-      if (reset) this.uses = uses
-      else uses.results.forEach(r => this.uses.results.push(r))
+      if (append) uses.results.forEach(r => this.uses.results.push(r))
+      else this.uses = uses
       this.loading = false
+
+      // if the page is too large for the user to trigger a scroll we append results immediately
+      if (process.client) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        this.continueFetch()
+      }
+    },
+    continueFetch () {
+      const html = document.getElementsByTagName('html')
+      if (html[0].clientHeight >= (html[0].scrollHeight - 300) && this.uses.results.length < this.uses.count) {
+        this.refresh(true)
+      }
     },
     onScroll (e) {
-      if (!this.uses) return
+      if (!this.uses || this.loading) return
       const se = e.target.scrollingElement
-      if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.uses.results.length < this.uses.count) {
-        this.pagination += 1
-        this.refresh()
+      if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.uses.results.length < this.uses.count) {
+        this.refresh(true)
       }
     },
     async createUse (use) {
@@ -150,7 +175,7 @@ export default {
     async removeUse (id) {
       try {
         await this.$axios.$delete(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${id}`)
-        this.refresh(true)
+        this.refresh()
       } catch (error) {
         console.error(error)
       }

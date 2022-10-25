@@ -313,7 +313,7 @@ export default {
     },
     continueFetch () {
       const html = document.getElementsByTagName('html')
-      if (html[0].scrollHeight === html[0].clientHeight && this.applications.results.length < this.applications.count) {
+      if (html[0].clientHeight >= (html[0].scrollHeight - 300) && this.applications.results.length < this.applications.count) {
         this.refresh(true)
       }
     },

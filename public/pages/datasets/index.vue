@@ -362,7 +362,7 @@ export default {
     },
     continueFetch () {
       const html = document.getElementsByTagName('html')
-      if (html[0].scrollHeight === html[0].clientHeight && this.datasets.results.length < this.datasets.count) {
+      if (html[0].clientHeight >= (html[0].scrollHeight - 300) && this.datasets.results.length < this.datasets.count) {
         this.refresh(true)
       }
     },

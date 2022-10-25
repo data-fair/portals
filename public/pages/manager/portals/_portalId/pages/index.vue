@@ -20,7 +20,7 @@
               clearable
               hide-details
               :menu-props="{offsetY: true}"
-              @change="refresh(true)"
+              @change="refresh()"
             />
           </v-col>
         </v-row>
@@ -119,6 +119,20 @@
             />
           </v-col>
         </v-row>
+        <v-row
+          v-if="pages && pages.results.length < pages.count && !loading"
+          class="pt-5 pb-0"
+          align="center"
+        >
+          <v-col class="text-center pa-0">
+            <v-btn
+              text
+              @click="refresh(true)"
+            >
+              voir plus
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-container>
     </v-col>
     <layout-navigation-right v-if="$vuetify.breakpoint.lgAndUp">
@@ -166,25 +180,38 @@ export default {
     }, {
       text: 'pages'
     }])
-    this.refresh(true)
+    this.refresh()
   },
   methods: {
-    async refresh (reset) {
+    async refresh (append) {
       this.loading = true
-      if (reset) this.pagination = 1
+      if (append) this.pagination += 1
+      else this.pagination = 1
       const params = { size: 12, page: this.pagination }
       if (this.filters.template) params.template = this.filters.template
       const pages = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
-      if (reset) this.pages = pages
-      else pages.results.forEach(r => this.pages.results.push(r))
+      if (append) pages.results.forEach(r => this.pages.results.push(r))
+      else this.pages = pages
       this.loading = false
+
+      // if the page is too large for the user to trigger a scroll we append results immediately
+      if (process.client) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        this.continueFetch()
+      }
+    },
+    continueFetch () {
+      const html = document.getElementsByTagName('html')
+      if (html[0].clientHeight >= (html[0].scrollHeight - 300) && this.pages.results.length < this.pages.count) {
+        this.refresh(true)
+      }
     },
     onScroll (e) {
-      if (!this.pages) return
+      if (!this.pages || this.loading) return
       const se = e.target.scrollingElement
-      if (se.clientHeight + se.scrollTop > se.scrollHeight - 140 && this.pages.results.length < this.pages.count) {
+      if (se.clientHeight + se.scrollTop > se.scrollHeight - 300 && this.pages.results.length < this.pages.count) {
         this.pagination += 1
-        this.refresh()
+        this.refresh(true)
       }
     },
     async createPage (page) {
@@ -198,7 +225,7 @@ export default {
     async removePage (id) {
       try {
         await this.$axios.$delete(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${id}`)
-        this.refresh(true)
+        this.refresh()
       } catch (error) {
         console.error(error)
       }

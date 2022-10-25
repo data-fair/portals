@@ -148,7 +148,7 @@ export default {
     },
     continueFetch () {
       const html = document.getElementsByTagName('html')
-      if (html[0].scrollHeight === html[0].clientHeight && this.newsRes.results.length < this.newsRes.count) {
+      if (html[0].clientHeight >= (html[0].scrollHeight - 300) && this.newsRes.results.length < this.newsRes.count) {
         this.refresh(true)
       }
     },
