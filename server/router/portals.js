@@ -226,6 +226,13 @@ router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
     delete req.portal.config
     delete req.portal.configDraft
   }
+  // this is to manage transition with old portals that do not have an images dataset
+  // TODO: remove this in a few months
+  try {
+    await axios.get(`${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(req.portal)}`)
+  } catch (err) {
+    await syncPortalUpdate(req.portal, req.headers.cookie)
+  }
   res.send(cleanPortal(req.portal, req.query.html === 'true'))
 }))
 
