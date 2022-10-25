@@ -76,7 +76,7 @@ export default {
           thumbnail: '1785x800' // max width of the vertical layout
         }
       })
-      this.images = images.results.reduce((a, image) => { a[image.assetId] = image._attachment_url; return a }, {})
+      this.images = images.results.reduce((a, image) => { a[image.assetId] = image._thumbnail || image._attachment_url; return a }, {})
     }
   }
 }
