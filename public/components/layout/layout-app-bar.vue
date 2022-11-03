@@ -106,11 +106,13 @@ export default {
   padding-right: 0px;
 }
 
-.main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+.main-app-bar .v-toolbar__extension {
   margin-right: auto;
   margin-left: auto;
 }
-
+.main-app-bar.app-bar-fluid .v-toolbar__extension {
+  max-width: 1928px;
+}
 @media (min-width: 960px) {
   .main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
     max-width: 900px;
