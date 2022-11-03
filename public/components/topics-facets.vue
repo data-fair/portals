@@ -9,7 +9,7 @@
         <v-btn
           class="mr-3 mb-1 font-weight-bold text-none"
           dark
-          rounded
+          :rounded="config.topicsOptions.includes('rounded')"
           depressed
           :elevation="elevation"
           :style="style(topicItem, hover)"
@@ -30,18 +30,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
     items: { type: Array, required: true }
   },
   computed: {
-    ...mapGetters(['elevation', 'hoverInverse'])
+    ...mapState(['config']),
+    ...mapGetters(['elevation', 'hoverInverse', 'readableTopicColor'])
   },
   methods: {
     style (topicItem, hover) {
-      const color = this.$readableColor(topicItem.value.color)
+      const color = this.readableTopicColor(topicItem.value)
       if ((!topicItem.filtered && !(hover && this.hoverInverse)) || (topicItem.filtered && hover && this.hoverInverse)) {
         return `
         border: 2px solid ${color};

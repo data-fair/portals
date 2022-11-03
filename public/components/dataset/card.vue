@@ -53,7 +53,8 @@
             :key="topic.id"
             small
             dark
-            :color="topic.color ? $readableColor(topic.color) : 'default'"
+            :label="!config.topicsOptions.includes('rounded')"
+            :color="readableTopicColor(topic)"
             class="ml-2 mt-1 font-weight-bold"
           >
             <v-icon
@@ -141,7 +142,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['dataFairUrl'])
+    ...mapGetters(['dataFairUrl', 'readableTopicColor'])
   }
 }
 </script>

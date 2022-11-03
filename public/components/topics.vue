@@ -50,6 +50,7 @@
         >
           mdi-{{ topic.icon.name }}
         </v-icon>
+
         {{ topic.title }} <template v-if="topic.count">
           ({{ topic.count }})
         </template>
@@ -70,7 +71,7 @@ export default {
     options: { type: Array, default: () => ['outlined', 'rounded', 'elevate'] }
   },
   computed: {
-    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'actionCardOptions'])
+    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'actionCardOptions', 'readableTopicColor'])
   },
   methods: {
     compProps (hover, btn) {
@@ -95,10 +96,10 @@ export default {
       return dark
     },
     textColor (topic, hover) {
-      return this.isDark(hover) ? 'white' : this.$readableColor(topic.color)
+      return this.isDark(hover) ? 'white' : this.readableTopicColor(topic)
     },
     style (topic, hover) {
-      const color = this.$readableColor(topic.color)
+      const color = this.readableTopicColor(topic)
       const borderColor = this.options.includes('outlined') ? color : 'transparent'
       if (this.isDark(hover)) {
         return `

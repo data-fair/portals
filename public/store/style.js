@@ -95,6 +95,16 @@ export default () => ({
     lightPrimary20 (state, getters, rootState) {
       return Vue.prototype.$color(rootState.config.themeColor).brighten(20).toHexString()
     },
+    topicColor (state, getters, rootState) {
+      return (topic) => {
+        if (rootState.config.topicsBackgroundColor === 'primary') return rootState.config.themeColor
+        if (rootState.config.topicsBackgroundColor === 'secondary') return getters.secondaryColor
+        return topic.color || '#f5f5f5'
+      }
+    },
+    readableTopicColor (state, getters, rootState) {
+      return (topic) => Vue.prototype.$readableColor(getters.topicColor(topic))
+    },
     elevation (state, getters, rootState) {
       if (!('elevation' in rootState.config)) return 1
       return rootState.config.elevation
@@ -398,6 +408,9 @@ ${getters.personalNavigationStyle}
 .v-application#app .v-text-field--solo:not(.v-text-field--rounded),
 .v-application#app .v-btn:not(.v-btn--rounded):not(.v-btn--text):not(.v-btn--fab):not(.v-btn--icon) {
   border-radius: ${getters.radius}px;
+}
+.v-application#app .v-chip.v-chip--label {
+  border-radius: ${getters.radius}px !important;
 }
 .v-application#app .v-btn-toggle > .v-btn.v-btn:first-child {
   border-top-right-radius: 0;

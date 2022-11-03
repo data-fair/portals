@@ -293,6 +293,34 @@
           }]
         },
         "default": []
+      },
+      "topicsBackgroundColor": {
+        "title": "Couleur des étiquettes de thématiques",
+        "type": "string",
+        "default": "individual",
+        "oneOf": [{
+          "const": "individual",
+          "title": "couleur individuelle de la thématique"
+        }, {
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }]
+      },
+      "topicsOptions": {
+        "title": "Options des étiquettes de thématiques",
+        "type": "array",
+        "x-display": "switch",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "rounded",
+            "title": "arrondir"
+          }]
+        },
+        "default": ["rounded"]
       }
     }
   }, {

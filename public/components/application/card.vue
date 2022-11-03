@@ -20,7 +20,7 @@
           :key="topic.id"
           small
           dark
-          :color="topic.color ? $readableColor(topic.color) : 'default'"
+          :color="readableTopicColor(topic)"
           class="ml-2 mt-1 font-weight-bold"
         >
           {{ topic.title }}
@@ -46,6 +46,7 @@
 
 <script>
 import ApplicationView from '~/components/application/view.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -53,6 +54,9 @@ export default {
   },
   props: {
     application: { type: Object, default: null }
+  },
+  computed: {
+    ...mapGetters(['readableTopicColor'])
   }
 }
 </script>
