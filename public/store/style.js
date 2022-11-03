@@ -471,6 +471,15 @@ ${getters.personalNavigationStyle}
 }
 /* footer style */
 ${getters.footerStyle}
+
+/* home page style */
+#app .nav-home-search input::placeholder {
+  color: ${getters.readableThemeColor};
+  font-weight: bold;
+}
+#app .nav-home-search .v-input__icon--append button {
+  color: ${getters.readableThemeColor};
+}
         `
       }
     }

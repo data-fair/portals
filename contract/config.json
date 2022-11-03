@@ -761,6 +761,9 @@
           }, {
             "const": "rounded",
             "title": "arrondir"
+          }, {
+            "const": "outer-btn",
+            "title": "afficher un bouton d'action à droite"
           }]
         },
         "default": ["outlined", "rounded"]
