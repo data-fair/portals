@@ -6,7 +6,11 @@ exports.exec = async (db, debug) => {
     ['topicsOptions', ['rounded']],
     ['datasetsCardLayout', 'dense'],
     ['applicationsCardLayout', 'dense'],
-    ['usesCardLayout', 'dense']
+    ['usesCardLayout', 'dense'],
+    ['actionCardOptions', ['outlined', 'hoverElevate']],
+    ['actionCardBackgroundColor', 'white'],
+    ['actionCardHorizontalOptions', ['outlined', 'flat', 'hoverColorTitle', 'hoverColorBorder']],
+    ['actionCardHorizontalBackgroundColor', 'white']
   ]
   for (const defaultValue of defaultValues) {
     for (const configKey of ['config', 'configDraft']) {

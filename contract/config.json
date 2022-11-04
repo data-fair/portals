@@ -205,7 +205,7 @@
         }]
       },
       "actionCardOptions": {
-        "title": "Options des vignettes cliquables",
+        "title": "Options des vignettes cliquables (sauf disposition horizontale)",
         "type": "array",
         "x-display": "switch",
         "items": {
@@ -216,6 +216,9 @@
           }, {
             "const": "hoverElevate",
             "title": "élèver le cadre au survol (ajout d'une ombre)"
+          }, {
+            "const": "flat",
+            "title": "ne pas appliquer l'élévation par défaut du style"
           }, {
             "const": "hoverColorTitle",
             "title": "colorer le titre au survol"
@@ -230,7 +233,50 @@
         "default": ["outlined", "hoverElevate"]
       },
       "actionCardBackgroundColor": {
-        "title": "Couleur du fond des vignettes cliquables",
+        "title": "Couleur du fond des vignettes cliquables (sauf disposition horizontale)",
+        "type": "string",
+        "default": "white",
+        "oneOf": [{
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
+        }]
+      },
+      "actionCardHorizontalOptions": {
+        "title": "Options des vignettes cliquables - disposition horizontale",
+        "type": "array",
+        "x-display": "switch",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour grisé"
+          }, {
+            "const": "hoverElevate",
+            "title": "élèver le cadre au survol (ajout d'une ombre)"
+          }, {
+            "const": "flat",
+            "title": "ne pas appliquer l'élévation par défaut du style"
+          }, {
+            "const": "hoverColorTitle",
+            "title": "colorer le titre au survol"
+          }, {
+            "const": "hoverUnderlineTitle",
+            "title": "souligner le titre au survol"
+          }, {
+            "const": "hoverColorBorder",
+            "title": "colorer le bord au survol"
+          }]
+        },
+        "default": ["outlined", "flat", "hoverColorTitle", "hoverColorBorder"]
+      },
+      "actionCardHorizontalBackgroundColor": {
+        "title": "Couleur du fond des vignettes cliquables - disposition horizontale",
         "type": "string",
         "default": "white",
         "oneOf": [{

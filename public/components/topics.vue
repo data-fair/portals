@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -71,7 +71,8 @@ export default {
     options: { type: Array, default: () => ['outlined', 'rounded', 'elevate'] }
   },
   computed: {
-    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'actionCardOptions', 'readableTopicColor'])
+    ...mapState(['config']),
+    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'readableTopicColor'])
   },
   methods: {
     compProps (hover, btn) {
@@ -86,7 +87,7 @@ export default {
         props.rounded = this.options.includes('rounded') ? 'xl' : !!this.radius
       }
       if (hover) {
-        if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
+        if (this.config.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
       }
       return props
     },

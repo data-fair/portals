@@ -116,14 +116,14 @@ export default () => ({
       if (!('radius' in rootState.config)) return 4
       return rootState.config.radius
     },
-    actionCardOptions (state, getters, rootState) {
-      return rootState.config.actionCardOptions || ['outlined', 'hoverElevate']
-    },
     actionCardBackgroundColor (state, getters, rootState) {
-      if (!rootState.config) return
-      if (rootState.config.actionCardBackgroundColor === 'white' || !rootState.config.actionCardBackgroundColor) return '#FFFFFF'
-      if (rootState.config.actionCardBackgroundColor === 'lightGrey') return '#FAFAFA'
-      if (rootState.config.actionCardBackgroundColor === 'secondaryBackground') return getters.secondaryBackgroundColor
+      return (horizontal = false) => {
+        if (!rootState.config) return
+        const bgColor = horizontal ? rootState.config.actionCardHorinzontalBackgroundColor : rootState.config.actionCardBackgroundColor
+        if (bgColor === 'white' || !bgColor) return '#FFFFFF'
+        if (bgColor === 'lightGrey') return '#FAFAFA'
+        if (bgColor === 'secondaryBackground') return getters.secondaryBackgroundColor
+      }
     },
     infoCardOptions (state, getters, rootState) {
       return rootState.config.infoCardOptions || ['outlined']
@@ -339,7 +339,7 @@ export default () => ({
       return style
     },
     gradientDescStyle (state, getters) {
-      return (height) => `
+      return (height, horizontal) => `
       .card-gradient-desc${height} {
         position: relative;
       }
@@ -350,7 +350,7 @@ export default () => ({
         height:${height}px;
         left:0;
         top:0;
-        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, ${getters.actionCardBackgroundColor});
+        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, ${getters.actionCardBackgroundColor(horizontal)});
       }
       .card-gradient-white-desc${height} {
         position: relative;
@@ -462,7 +462,7 @@ ${getters.personalNavigationStyle}
 /* used to display descriptions in cards with bottom gradient */
 ${getters.gradientDescStyle(170)}
 ${getters.gradientDescStyle(130)}
-${getters.gradientDescStyle(90)}
+${getters.gradientDescStyle(90, true)}
 
 /* footer style */
 ${getters.footerStyle}

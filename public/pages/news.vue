@@ -11,16 +11,19 @@
       />
     </v-container>
     <v-container v-scroll="onScroll">
-      <v-row v-if="newsRes">
+      <v-row
+        v-if="newsRes"
+        dense
+      >
         <v-col
           v-for="(news, i) in newsRes.results"
           :key="i"
           cols="12"
         >
           <news-card
+            layout="horizontal"
             :news="news"
           />
-          <v-divider v-if="i < newsRes.count - 1" />
         </v-col>
       </v-row>
       <v-row

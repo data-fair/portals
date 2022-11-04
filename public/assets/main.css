@@ -36,7 +36,10 @@ iframe {
   border: 1px solid rgba(0, 0, 0, 0.22);
 }
 .v-application#app .theme--light.v-sheet.also-outlined {
-  border: 2px solid rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+}
+.v-application#app .theme--light.v-sheet.also-outlined {
+  padding: 1px;
 }
 .v-application#app .theme--light.v-sheet.not-outlined {
   border: 2px solid transparent;

@@ -46,7 +46,10 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['elevation', 'actionCardOptions', 'actionCardBackgroundColor']),
+    ...mapGetters(['elevation', 'actionCardBackgroundColor']),
+    actionCardOptions () {
+      return this.layout === 'horizontal' ? this.config.actionCardHorizontalOptions : this.config.actionCardOptions
+    },
     titleColorClass () {
       let c
 
@@ -66,14 +69,14 @@ export default {
       const props = {
         elevation: this.elevation,
         loading: this.loading,
-        style: `background-color:${this.actionCardBackgroundColor}`
+        style: `background-color:${this.actionCardBackgroundColor(this.layout === 'horizontal')}`
       }
       if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
       else props.class = 'not-outlined'
 
-      if (this.layout === 'dense') {
-        props.minHeight = 260
-      }
+      if (this.layout === 'dense') props.minHeight = 260
+
+      if (this.actionCardOptions.includes('flat')) props.elevation = 0
 
       if (this.to && this.hovered) {
         if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
