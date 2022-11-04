@@ -1,74 +1,14 @@
 <template>
-  <action-card
+  <card-action-card
     :loading="!dataset"
     :to="dataset && `/datasets/${dataset.id}`"
     :title="dataset && dataset.title"
+    :img="img"
+    :img-contain="!!config.datasetThumbnailContain"
+    :html="dataset && dataset.description"
+    :topics="dataset && dataset.topics"
+    :layout="layout"
   >
-    <template v-if="dataset">
-      <div
-        v-if="dataset.image"
-        class="pb-2"
-        style="height:170px;"
-      >
-        <v-img
-          :src="dataset.thumbnail || dataset.image"
-          :alt="dataset.title"
-          :max-height="155"
-          :contain="!!config.datasetThumbnailContain"
-        />
-      </div>
-      <div
-        v-else-if="thumbnailApplication && dataset.extras && dataset.extras.applications && dataset.extras.applications[0]"
-        class="pb-2"
-        style="height:170px;"
-      >
-        <v-img
-          :src="`${dataFairUrl}/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`"
-          :alt="dataset.title"
-          :max-height="155"
-          :contain="!!config.datasetThumbnailContain"
-        />
-      </div>
-      <v-card-text
-        v-else
-        style="height:170px;color: rgba(0,0,0,0.87)"
-        class="py-0"
-      >
-        <client-only>
-          <v-clamp
-            :max-height="170"
-            class="card-gradient-desc170"
-            autoresize
-            v-html="dataset.description"
-          />
-        </client-only>
-      </v-card-text>
-      <v-row
-        style="min-height:40px;"
-        class="py-1"
-      >
-        <v-col class="pt-0 pb-1">
-          <v-chip
-            v-for="topic of dataset.topics"
-            :key="topic.id"
-            small
-            dark
-            :label="!config.topicsOptions.includes('rounded')"
-            :color="readableTopicColor(topic)"
-            class="ml-2 mt-1 font-weight-bold"
-          >
-            <v-icon
-              v-if="topic.icon && topic.icon.name"
-              left
-              small
-            >
-              mdi-{{ topic.icon.name }}
-            </v-icon>
-            {{ topic.title }}
-          </v-chip>
-        </v-col>
-      </v-row>
-    </template>
     <template #bottom>
       <v-card-actions
         v-if="dataset"
@@ -111,12 +51,11 @@
         <owner-department :owner="dataset.owner" />
       </v-card-actions>
     </template>
-  </action-card>
+  </card-action-card>
 </template>
 
 <script>
 import { isMobileOnly } from 'mobile-device-detect'
-import VClamp from 'vue-clamp'
 import TablePreview from '~/components/dataset/table-preview.vue'
 import MapPreview from '~/components/dataset/map-preview.vue'
 import ApiView from '~/components/dataset/api-view.vue'
@@ -125,7 +64,6 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
-    VClamp,
     TablePreview,
     MapPreview,
     ApiView,
@@ -133,7 +71,8 @@ export default {
   },
   props: {
     dataset: { type: Object, default: null },
-    thumbnailApplication: { type: Boolean, default: false }
+    thumbnailApplication: { type: Boolean, default: false },
+    layout: { type: String, default: 'dense' }
   },
   data () {
     return {
@@ -142,7 +81,14 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['dataFairUrl', 'readableTopicColor'])
+    ...mapGetters(['dataFairUrl']),
+    img () {
+      if (this.dataset.image) return this.dataset.thumbnail || this.dataset.image
+      if (this.thumbnailApplication && this.dataset.extras && this.dataset.extras.applications && this.dataset.extras.applications[0]) {
+        return `${this.dataFairUrl}/api/v1/applications/${this.dataset.extras.applications[0].id}/capture?updatedAt=${this.dataset.extras.applications[0].updatedAt}`
+      }
+      return null
+    }
   }
 }
 </script>

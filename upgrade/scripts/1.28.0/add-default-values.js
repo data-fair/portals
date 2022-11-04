@@ -3,7 +3,10 @@ exports.description = 'Add default values to some new properties'
 exports.exec = async (db, debug) => {
   const defaultValues = [
     ['topicsBackgroundColor', 'individual'],
-    ['topicsOptions', ['rounded']]
+    ['topicsOptions', ['rounded']],
+    ['datasetsCardLayout', 'dense'],
+    ['applicationsCardLayout', 'dense'],
+    ['usesCardLayout', 'dense']
   ]
   for (const defaultValue of defaultValues) {
     for (const configKey of ['config', 'configDraft']) {

@@ -872,6 +872,21 @@
               "title": "Nombre de jeux de données",
               "type": "integer",
               "default": 3
+            },
+            "cardLayout": {
+              "type": "string",
+              "title": "Disposition des vignettes de jeux de données",
+              "default": "dense",
+              "oneOf": [{
+                "title": "Dense",
+                "const": "dense"
+              }, {
+                "title": "Horizontal",
+                "const": "horizontal"
+              }, {
+                "title": "Vertical",
+                "const": "vertical"
+              }]
             }
           }
         }]
@@ -899,6 +914,21 @@
               "title": "Nombre de visualisations",
               "type": "integer",
               "default": 3
+            },
+            "cardLayout": {
+              "type": "string",
+              "title": "Disposition des vignettes de visualisations",
+              "default": "dense",
+              "oneOf": [{
+                "title": "Dense",
+                "const": "dense"
+              }, {
+                "title": "Horizontal",
+                "const": "horizontal"
+              }, {
+                "title": "Vertical",
+                "const": "vertical"
+              }]
             }
           }
         }]
@@ -941,6 +971,21 @@
           "const": "dataUpdatedAt"
         }]
       },
+      "datasetsCardLayout": {
+        "type": "string",
+        "title": "Disposition des vignettes de jeux de données",
+        "default": "dense",
+        "oneOf": [{
+          "title": "Dense",
+          "const": "dense"
+        }, {
+          "title": "Horizontal",
+          "const": "horizontal"
+        }, {
+          "title": "Vertical",
+          "const": "vertical"
+        }]
+      },
       "datasetThumbnailApplication": {
         "type": "boolean",
         "x-display": "switch",
@@ -978,6 +1023,21 @@
               "const": "none"
             }
           }
+        }]
+      },
+      "applicationsCardLayout": {
+        "type": "string",
+        "title": "Disposition des vignettes de visualisations",
+        "default": "dense",
+        "oneOf": [{
+          "title": "Dense",
+          "const": "dense"
+        }, {
+          "title": "Horizontal",
+          "const": "horizontal"
+        }, {
+          "title": "Vertical",
+          "const": "vertical"
         }]
       }
     }
@@ -1027,6 +1087,21 @@
               "const": "none"
             }
           }
+        }]
+      },
+      "usesCardLayout": {
+        "type": "string",
+        "title": "Disposition des vignettes des réutilisations",
+        "default": "dense",
+        "oneOf": [{
+          "title": "Dense",
+          "const": "dense"
+        }, {
+          "title": "Horizontal",
+          "const": "horizontal"
+        }, {
+          "title": "Vertical",
+          "const": "vertical"
         }]
       },
       "externalReusesPage": {

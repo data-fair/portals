@@ -89,14 +89,12 @@
         <v-col
           v-for="(use, i) in uses.results"
           :key="i"
-          xl="3"
-          md="4"
-          sm="6"
-          cols="12"
+          v-bind="colProps"
         >
           <use-card
             :use="use"
             :link="true"
+            :layout="config.usesCardLayout"
           />
         </v-col>
       </v-row>
@@ -194,6 +192,10 @@ export default {
     ...mapGetters(['owner']),
     url () {
       return this.publicUrl + '/uses'
+    },
+    colProps () {
+      if (this.config.usesCardLayout === 'horizontal') return { cols: 12 }
+      else return { xl: 3, md: 4, sm: 6, cols: 12 }
     }
   },
   watch: {

@@ -7,11 +7,10 @@
       <v-col
         v-for="(dataset, i) in datasets.results"
         :key="i"
-        :md="small ? 6 : 4"
-        :sm="small ? 12 : 6"
-        :cols="12"
+        v-bind="colProps"
       >
         <dataset-card
+          :layout="config.homeDatasets.cardLayout"
           :dataset="dataset"
           :thumbnail-application="config.datasetThumbnailApplication"
         />
@@ -50,7 +49,12 @@ export default {
   }),
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['hoverInverse'])
+    ...mapGetters(['hoverInverse']),
+    colProps () {
+      if (this.config.homeDatasets.cardLayout === 'horizontal') return { cols: 12 }
+      else if (this.small) return { cols: 12, sm: 12, md: 6 }
+      else return { cols: 12, sm: 6, md: 4 }
+    }
   }
 }
 </script>

@@ -1,32 +1,13 @@
 <template lang="html">
-  <action-card
+  <card-action-card
     :title="application.title"
     :to="{name: 'applications-id', params:{id: application.id}}"
+    :img="`${application.href}/capture?updatedAt=${application.updatedAt}`"
+    :img-aspect-ratio="21/9"
+    :topics="application.topics"
+    :html="application.description"
+    :layout="layout"
   >
-    <div class="pb-2">
-      <v-img
-        :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
-        :alt="application.title"
-        :aspect-ratio="21/9"
-      />
-    </div>
-    <v-row
-      style="min-height:40px;"
-      class="py-1"
-    >
-      <v-col class="pt-0 pb-1">
-        <v-chip
-          v-for="topic of application.topics"
-          :key="topic.id"
-          small
-          dark
-          :color="readableTopicColor(topic)"
-          class="ml-2 mt-1 font-weight-bold"
-        >
-          {{ topic.title }}
-        </v-chip>
-      </v-col>
-    </v-row>
     <template #bottom>
       <v-card-actions class="pa-1">
         <application-view :application="application" />
@@ -41,7 +22,7 @@
         <owner-department :owner="application.owner" />
       </v-card-actions>
     </template>
-  </action-card>
+  </card-action-card>
 </template>
 
 <script>
@@ -53,7 +34,8 @@ export default {
     ApplicationView
   },
   props: {
-    application: { type: Object, default: null }
+    application: { type: Object, default: null },
+    layout: { type: String, default: 'dense' }
   },
   computed: {
     ...mapGetters(['readableTopicColor'])

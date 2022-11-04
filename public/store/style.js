@@ -338,6 +338,33 @@ export default () => ({
       }
       return style
     },
+    gradientDescStyle (state, getters) {
+      return (height) => `
+      .card-gradient-desc${height} {
+        position: relative;
+      }
+      .card-gradient-desc${height}:before {
+        content:'';
+        position:absolute;
+        width:100%;
+        height:${height}px;
+        left:0;
+        top:0;
+        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, ${getters.actionCardBackgroundColor});
+      }
+      .card-gradient-white-desc${height} {
+        position: relative;
+      }
+      .card-gradient-white-desc${height}:before {
+        content:'';
+        position:absolute;
+        width:100%;
+        height:${height}px;
+        left:0;
+        top:0;
+        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, white);
+      }`
+    },
     fullConfigStyle (state, getters, rootState) {
       return (applyFonts, htmlOverflow) => {
         return `
@@ -433,42 +460,10 @@ ${getters.personalNavigationStyle}
 }
 
 /* used to display descriptions in cards with bottom gradient */
-.card-gradient-desc170 {
-  position: relative;
-}
-.card-gradient-desc170:before {
-  content:'';
-  position:absolute;
-  width:100%;
-  height:170px;
-  left:0;
-  top:0;
-  background:linear-gradient(transparent 0, transparent 70%, ${getters.actionCardBackgroundColor});
-}
-.card-gradient-desc130 {
-  position: relative;
-}
-.card-gradient-desc130:before {
-  content:'';
-  position:absolute;
-  width:100%;
-  height:130px;
-  left:0;
-  top:0;
-  background:linear-gradient(transparent 0, transparent 50%, ${getters.actionCardBackgroundColor});
-}
-.card-gradient-white-desc130 {
-  position: relative;
-}
-.card-gradient-white-desc130:before {
-  content:'';
-  position:absolute;
-  width:100%;
-  height:130px;
-  left:0;
-  top:0;
-  background:linear-gradient(transparent 0, transparent 50%, white);
-}
+${getters.gradientDescStyle(170)}
+${getters.gradientDescStyle(130)}
+${getters.gradientDescStyle(90)}
+
 /* footer style */
 ${getters.footerStyle}
 

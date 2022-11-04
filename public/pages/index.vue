@@ -108,7 +108,7 @@
         :options="config.homeTopicsOptions"
       />
 
-      <!-- applications: featured and lasts -->
+      <!-- 2/3 layout when we have a twitter timeline or anything else to display to the right -->
       <v-row v-if="twoThirdsLayout">
         <v-col
           cols="12"
@@ -151,17 +151,19 @@
           <news-last v-if="config.showLastNews" />
         </v-col>
       </v-row>
-      <v-row v-else-if="config.featuredApplication && config.featuredApplication.id">
-        <v-col
-          md="10"
-          offset-md="1"
-          cols="12"
-          class="my-3 grow"
-        >
-          <application-featured :application="config.featuredApplication" />
-        </v-col>
-      </v-row>
-      <template v-if="!(config.twitter && config.showTwitterTimeline !== false) || (config.featuredApplication && config.featuredApplication.id)">
+
+      <!-- vertical layout full width -->
+      <template v-else>
+        <v-row v-if="config.featuredApplication && config.featuredApplication.id">
+          <v-col
+            md="10"
+            offset-md="1"
+            cols="12"
+            class="my-3 grow"
+          >
+            <application-featured :application="config.featuredApplication" />
+          </v-col>
+        </v-row>
         <last-apps
           v-if="showLastApps"
           :applications="applications"

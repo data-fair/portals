@@ -163,13 +163,12 @@
         <v-col
           v-for="(dataset, i) in datasets.results"
           :key="i"
-          md="4"
-          sm="6"
-          cols="12"
+          v-bind="colProps"
         >
           <dataset-card
             :dataset="dataset"
             :thumbnail-application="config.datasetThumbnailApplication"
+            :layout="config.datasetsCardLayout"
           />
         </v-col>
       </v-row>
@@ -298,6 +297,10 @@ export default {
     },
     filterCols () {
       return this.showOwnersFacets ? 3 : 4
+    },
+    colProps () {
+      if (this.config.datasetsCardLayout === 'horizontal') return { cols: 12 }
+      else return { md: 4, sm: 6, cols: 12 }
     }
   },
   watch: {

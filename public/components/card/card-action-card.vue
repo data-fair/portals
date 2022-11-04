@@ -8,17 +8,19 @@
       v-if="to"
       :to="to"
     >
-      <card-title
-        :title="title"
-        :color-class="titleColorClass"
-      />
-      <slot />
+      <card-layout v-bind="{layout, title, img, imgContain, imgAspectRatio, html, topics, titleColorClass}">
+        <template #bottom>
+          <slot name="bottom" />
+        </template>
+      </card-layout>
     </nuxt-link>
     <template v-else>
-      <card-title :title="title" />
-      <slot />
+      <card-layout v-bind="{layout, title, img, imgContain, imgAspectRatio, html, topics, titleColorClass}">
+        <template #bottom>
+          <slot name="bottom" />
+        </template>
+      </card-layout>
     </template>
-    <slot name="bottom" />
   </v-card>
 </template>
 
@@ -26,11 +28,16 @@
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-  components: {},
   props: {
+    layout: { type: String, default: 'dense' },
     loading: { type: Boolean, default: false },
+    to: { type: [String, Object], default: null },
     title: { type: String, default: '' },
-    to: { type: [String, Object], default: null }
+    img: { type: String, default: '' },
+    imgContain: { type: Boolean, default: false },
+    imgAspectRatio: { type: Number, default: null },
+    html: { type: String, default: '' },
+    topics: { type: Array, default: null }
   },
   data () {
     return {
@@ -59,11 +66,14 @@ export default {
       const props = {
         elevation: this.elevation,
         loading: this.loading,
-        minHeight: 260,
         style: `background-color:${this.actionCardBackgroundColor}`
       }
       if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
       else props.class = 'not-outlined'
+
+      if (this.layout === 'dense') {
+        props.minHeight = 260
+      }
 
       if (this.to && this.hovered) {
         if (this.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)

@@ -7,11 +7,12 @@
       <v-col
         v-for="(application, i) in applications.results"
         :key="i"
-        :md="small ? 6 : 4"
-        :sm="small ? 12 : 6"
-        :cols="12"
+        v-bind="colProps"
       >
-        <application-card :application="application" />
+        <application-card
+          :layout="config.homeApplications.cardLayout"
+          :application="application"
+        />
       </v-col>
     </v-row>
     <v-row
@@ -42,7 +43,12 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['hoverInverse'])
+    ...mapGetters(['hoverInverse']),
+    colProps () {
+      if (this.config.homeApplications.cardLayout === 'horizontal') return { cols: 12 }
+      else if (this.small) return { cols: 12, sm: 12, md: 6 }
+      else return { cols: 12, sm: 6, md: 4 }
+    }
   }
 }
 </script>

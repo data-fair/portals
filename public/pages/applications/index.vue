@@ -133,12 +133,12 @@
         <v-col
           v-for="(application, i) in applications.results"
           :key="i"
-          xl="3"
-          md="4"
-          sm="6"
-          cols="12"
+          v-bind="colProps"
         >
-          <application-card :application="application" />
+          <application-card
+            :application="application"
+            :layout="config.applicationsCardLayout"
+          />
         </v-col>
       </v-row>
       <v-row
@@ -252,6 +252,10 @@ export default {
     },
     filterCols () {
       return this.showOwnersFacets ? 3 : 4
+    },
+    colProps () {
+      if (this.config.applicationsCardLayout === 'horizontal') return { cols: 12 }
+      else return { xl: 3, md: 4, sm: 6, cols: 12 }
     }
   },
   watch: {
@@ -286,12 +290,13 @@ export default {
       params.sort = params.sort || 'createdAt:-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,updatedAt,url,topics,-userPermissions'
+      params.select = 'id,title,description,updatedAt,url,topics,-userPermissions'
       if (append) params.count = false
       else params.facets = 'base-application,topics,owner'
       params.owner = query.owner || this.owner
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
+      params.truncate = 600
       if (this.config.authentication === 'none') params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
         if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })

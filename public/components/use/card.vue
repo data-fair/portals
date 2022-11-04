@@ -1,15 +1,12 @@
 <template lang="html">
-  <action-card
+  <card-action-card
     :to="(use.published && link && `/uses/${use.slug}`) || null"
     :title="use.title"
+    :img="use.image && use.image.name && `${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image-thumbnail`"
+    :img-aspect-ratio="21/9"
+    :html="use.description"
+    :layout="layout"
   >
-    <div class="pb-2">
-      <v-img
-        :src="use.image && use.image.name && `${publicUrl}/api/v1/portals/${portal._id}/uses/${use._id}/image-thumbnail`"
-        :alt="use.title"
-        :aspect-ratio="21/9"
-      />
-    </div>
     <template #bottom>
       <v-card-actions
         class="pa-1"
@@ -30,7 +27,7 @@
         </span>
       </v-card-actions>
     </template>
-  </action-card>
+  </card-action-card>
 </template>
 
 <script>
@@ -39,7 +36,8 @@ import { mapState } from 'vuex'
 export default {
   props: {
     use: { type: Object, default: null },
-    link: { type: Boolean, default: false }
+    link: { type: Boolean, default: false },
+    layout: { type: String, default: 'dense' }
   },
   computed: {
     ...mapState(['publicUrl', 'portal'])
