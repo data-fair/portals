@@ -13,6 +13,9 @@
         v-if="config.title"
         :value="{type: 'title', content: config.title}"
       />
+      <p class="text-caption">
+        Publiée le {{ page.publishedAt | date('L') }} par {{ page.created.name }}
+      </p>
       <k-element
         v-if="config.description"
         :value="{type: 'text', content: config.description}"
@@ -76,9 +79,12 @@ import KElement from '~/components/pages/element.vue'
 import { mapGetters } from 'vuex'
 export default {
   components: { KElement },
-  props: ['config', 'images'],
+  props: ['page', 'images'],
   computed: {
-    ...mapGetters(['elevation', 'imagesDatasetUrl'])
+    ...mapGetters(['elevation', 'imagesDatasetUrl']),
+    config () {
+      return this.page.config
+    }
   }
 }
 </script>

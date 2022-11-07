@@ -17,7 +17,7 @@
       />
       <news
         v-if="page.template === 'news'"
-        :config="page.config"
+        :page="page"
         :images="images"
       />
     </template>
