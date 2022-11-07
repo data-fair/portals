@@ -39,6 +39,7 @@ const configDefaults = require('json-schema-defaults')(configSchemaNoAllOf)
 // TODO find a better default lib
 delete configDefaults.homeApplication
 delete configDefaults.featuredApplication
+delete configDefaults.homeLinks
 
 function link (portal, path = '') {
   return portal.host ? `https://${portal.host}${path}` : `${config.publicUrl}${path}?portalId=${portal._id}`
@@ -182,7 +183,9 @@ router.post('', asyncWrap(async (req, res) => {
   if (portal.owner.type === 'organization' && req.user.organization.role !== 'admin') {
     return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
   }
-  if (!validatePortal(portal)) return res.status(400).send(validatePortal.errors)
+  if (!validatePortal(portal)) {
+    return res.status(400).send(validatePortal.errors)
+  }
   const existingPortal = await collection.findOne({ _id: portal._id })
   if (existingPortal) {
     return res.status(409).send('Ce portail existe déjà.')
