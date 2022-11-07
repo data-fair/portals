@@ -1,12 +1,11 @@
 <template>
   <v-card
-    outlined
-    rounded="xl"
+    v-bind="infoCardProps"
   >
     <v-card-title>
       <span
         v-t="newsRes ? newsRes.count + ' ' + (newsRes.count> 1 ? 'actualités' : 'actualité') : '...'"
-        class="text-caption"
+        class="headline grey--text text--darken-3 font-weight-bold"
       />
     </v-card-title>
     <v-card-text>
@@ -19,41 +18,39 @@
         >
           <news-card
             :news="news"
-            :dense="true"
+            layout="list"
           />
-          <v-divider v-if="i < newsRes.count - 1" />
+          <v-divider v-if="i < newsRes.results.length - 1" />
         </v-col>
       </v-row>
       <v-row
-        class="pt-5 pb-0"
+        v-if="loading"
+        class="py-5"
         align="center"
       >
         <v-col class="text-center pa-0">
           <v-progress-circular
-            v-if="loading"
             :size="40"
             :width="5"
             :color="'primary'"
             indeterminate
           />
-          <div
-            v-else
-            style="height: 40px;"
-          />
         </v-col>
       </v-row>
       <v-row
         v-if="newsRes && newsRes.results.length < newsRes.count && !loading"
-        class="pt-5 pb-0"
+        class="py-0"
         align="center"
       >
-        <v-col class="text-center pa-0">
-          <v-btn
-            text
+        <v-col class="text-center">
+          <nuxt-link
+            class="title"
             to="/news"
           >
-            voir toutes les actualités
-          </v-btn>
+            <v-icon color="primary">
+              mdi-open-in-new
+            </v-icon>&nbsp;<span class="underline-link">toutes les actualités</span>
+          </nuxt-link>
         </v-col>
       </v-row>
     </v-card-text>
@@ -61,7 +58,7 @@
 </template>
 
 <script>
-const { mapState } = require('vuex')
+const { mapState, mapGetters } = require('vuex')
 
 export default {
   data: function () {
@@ -84,7 +81,8 @@ export default {
     this.loading = false
   },
   computed: {
-    ...mapState(['portal'])
+    ...mapState(['portal']),
+    ...mapGetters(['infoCardProps'])
   }
 }
 </script>

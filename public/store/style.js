@@ -339,7 +339,7 @@ export default () => ({
       return style
     },
     gradientDescStyle (state, getters) {
-      return (height, horizontal) => `
+      return (height, bgColor) => `
       .card-gradient-desc${height} {
         position: relative;
       }
@@ -350,20 +350,9 @@ export default () => ({
         height:${height}px;
         left:0;
         top:0;
-        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, ${getters.actionCardBackgroundColor(horizontal)});
+        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, ${bgColor});
       }
-      .card-gradient-white-desc${height} {
-        position: relative;
-      }
-      .card-gradient-white-desc${height}:before {
-        content:'';
-        position:absolute;
-        width:100%;
-        height:${height}px;
-        left:0;
-        top:0;
-        background:linear-gradient(transparent 0, transparent ${Math.round(((height - 40) / height) * 100)}%, white);
-      }`
+      `
     },
     fullConfigStyle (state, getters, rootState) {
       return (applyFonts, htmlOverflow) => {
@@ -460,9 +449,10 @@ ${getters.personalNavigationStyle}
 }
 
 /* used to display descriptions in cards with bottom gradient */
-${getters.gradientDescStyle(170)}
-${getters.gradientDescStyle(130)}
-${getters.gradientDescStyle(90, true)}
+${getters.gradientDescStyle(170, getters.actionCardBackgroundColor(false))}
+${getters.gradientDescStyle(130, getters.actionCardBackgroundColor(false))}
+${getters.gradientDescStyle(90, getters.actionCardBackgroundColor(true))}
+${getters.gradientDescStyle(70, getters.infoCardBackgroundColor)}
 
 /* footer style */
 ${getters.footerStyle}

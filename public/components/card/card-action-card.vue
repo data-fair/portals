@@ -27,6 +27,21 @@
       <card-topics :topics="topics" />
       <slot name="bottom" />
     </template>
+
+    <template v-if="layout === 'list'">
+      <optional-link :to="to">
+        <card-title
+          :title="title"
+          :color-class="titleColorClass"
+        />
+      </optional-link>
+      <card-text
+        :html="html"
+        :height="70"
+      />
+      <slot name="bottom" />
+    </template>
+
     <v-row
       v-if="layout==='horizontal'"
       dense
@@ -92,6 +107,11 @@ export default {
     ...mapState(['config']),
     ...mapGetters(['elevation', 'actionCardBackgroundColor']),
     actionCardOptions () {
+      if (this.layout === 'list') {
+        const options = this.config.actionCardHorizontalOptions.filter(o => o !== 'outlined' && o !== 'hoverElevate')
+        options.push('flat')
+        return options
+      }
       return this.layout === 'horizontal' ? this.config.actionCardHorizontalOptions : this.config.actionCardOptions
     },
     titleColorClass () {
@@ -113,7 +133,7 @@ export default {
       const props = {
         elevation: this.elevation,
         loading: this.loading,
-        style: `background-color:${this.actionCardBackgroundColor(this.layout === 'horizontal')}`
+        style: `background-color:${this.layout === 'list' ? 'transparent' : this.actionCardBackgroundColor(this.layout === 'horizontal')}`
       }
       if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
       else props.class = 'not-outlined'

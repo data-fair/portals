@@ -351,6 +351,7 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const sort = findUtils.sort(req.query.sort)
   const pages = req.app.get('db').collection('pages')
   const filter = { 'portal._id': req.params.id }
+  const [skip, size] = findUtils.pagination(req.query)
   if (req.query.template) filter.template = req.query.template
   if (!req.user) filter.public = true
   else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
@@ -358,7 +359,7 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) filter.public = true
   if (filter.public || req.query.published === 'true') filter.published = true
   const [results, count] = await Promise.all([
-    pages.find(filter).limit(1000).project(project).sort(sort).toArray(),
+    pages.find(filter).limit(size).skip(skip).project(project).sort(sort).toArray(),
     pages.countDocuments(filter)
   ])
   results.forEach(page => cleanPage(page, req.query.html === 'true'))

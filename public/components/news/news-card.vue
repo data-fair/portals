@@ -7,16 +7,6 @@
     :layout="layout"
     :img="news.config.mainImage && `${imagesDatasetUrl}/attachments/${news.config.mainImage.attachmentPath}`"
   >
-    <v-row
-      class="pl-7"
-      style="height:35px;"
-    >
-      <span class="text-caption">
-        <template v-if="news.publishedAt">
-          Publiée le {{ news.publishedAt | date('L') }}
-        </template>
-      </span>
-    </v-row>
     <template #bottom>
       <v-card-actions
         class="pa-1"
