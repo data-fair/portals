@@ -125,7 +125,7 @@ export default {
         html: true,
         published: true,
         template: 'news',
-        select: 'id,title,config,publishedAt,published',
+        select: 'id,title,config,publishedAt,published,topics',
         sort: 'publishedAt:-1'
       }
       params.size = this.size

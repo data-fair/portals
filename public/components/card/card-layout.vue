@@ -24,6 +24,7 @@
     <v-row
       v-if="layout==='horizontal'"
       dense
+      style="height:246px;"
     >
       <v-col
         cols="4"
@@ -33,7 +34,7 @@
           v-if="img"
           :src="img"
           :alt="title"
-          height="100%"
+          height="238"
           :contain="imgContain"
           :aspect-ratio="imgAspectRatio"
         />
