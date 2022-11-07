@@ -207,7 +207,6 @@
       "actionCardOptions": {
         "title": "Options des vignettes cliquables (sauf disposition horizontale)",
         "type": "array",
-        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -250,7 +249,6 @@
       "actionCardHorizontalOptions": {
         "title": "Options des vignettes cliquables - disposition horizontale",
         "type": "array",
-        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -293,7 +291,6 @@
       "infoCardOptions": {
         "title": "Options des vignettes d'information",
         "type": "array",
-        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -324,7 +321,6 @@
       "buttonOptions": {
         "title": "Options des boutons et des liens",
         "type": "array",
-        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -358,7 +354,6 @@
       "topicsOptions": {
         "title": "Options des étiquettes de thématiques",
         "type": "array",
-        "x-display": "switch",
         "items": {
           "type": "string",
           "oneOf": [{
@@ -735,7 +730,6 @@
         "type": "array",
         "title": "Options d'affichage des chilffres clés",
         "x-if": "showKpis",
-        "x-display": "switch",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -794,7 +788,6 @@
         "title": "Options du champ de recherche sur la page d'accueil",
         "type": "array",
         "x-if": "homeShowSearch",
-        "x-display": "switch",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -840,7 +833,6 @@
         "title": "Options de l'affichage des thématiques sur la page d'accueil",
         "type": "array",
         "x-if": "homeShowTopics",
-        "x-display": "switch",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
