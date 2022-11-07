@@ -215,9 +215,10 @@ export default {
         params: {
           ...baseFilter,
           size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
-          select: 'id,title,updatedAt,createdAt,-userPermissions',
+          select: 'id,title,description,updatedAt,createdAt,-userPermissions',
           sort: 'createdAt:-1',
-          html: true
+          html: true,
+          truncate: 600
         }
       }),
       this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
