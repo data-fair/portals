@@ -60,17 +60,32 @@ export default () => ({
       return false
     },
     footerColor (state, getters, rootState) {
-      if (rootState.config.footerColor === 'primary') return rootState.config.themeColor
-      if (rootState.config.footerColor === 'secondary') return getters.secondaryColor
-      if (rootState.config.footerColor === 'grey' || !rootState.config.footerColor) return '#424242'
-      if (rootState.config.footerColor === 'lightGrey' || !rootState.config.footerColor) return '#FAFAFA'
-      if (rootState.config.footerColor === 'white') return '#FFFFFF'
-      if (rootState.config.footerColor === 'secondaryBackground') return getters.secondaryBackgroundColor
-      return rootState.config.footerColor
+      const color = rootState.config.footerColor
+      if (color === 'primary') return rootState.config.themeColor
+      if (color === 'secondary') return getters.secondaryColor
+      if (color === 'grey' || !color) return '#424242'
+      if (color === 'lightGrey') return '#FAFAFA'
+      if (color === 'white') return '#FFFFFF'
+      if (color === 'secondaryBackground') return getters.secondaryBackgroundColor
+      return color
     },
     footerColorDark (state, getters, rootState) {
       if (!rootState.config) return
       return Vue.prototype.$color(getters.footerColor).getLuminance() < 0.4
+    },
+    contactFooterColor (state, getters, rootState) {
+      const color = rootState.config.contactFooterColor
+      if (color === 'primary') return rootState.config.themeColor
+      if (color === 'secondary') return getters.secondaryColor
+      if (color === 'grey' || !color) return '#424242'
+      if (color === 'lightGrey') return '#FAFAFA'
+      if (color === 'white') return '#FFFFFF'
+      if (color === 'secondaryBackground') return getters.secondaryBackgroundColor
+      return color
+    },
+    contactFooterColorDark (state, getters, rootState) {
+      if (!rootState.config) return
+      return Vue.prototype.$color(getters.contactFooterColor).getLuminance() < 0.4
     },
     personalNavigationColor (state, getters, rootState) {
       if (rootState.config.personalNavigationColor === 'primary' || !rootState.config.personalNavigationColor) return rootState.config.themeColor
@@ -268,10 +283,10 @@ export default () => ({
       if (rootGetters.footerBackgroundUrl && rootState.config.footerBackgroundImage && rootState.config.footerBackgroundImage !== 'none') {
         const transparentBg = Vue.prototype.$color(getters.footerColor).setAlpha(0.8).toRgbString()
         return `
-        #app .v-footer .container {
+        #app .v-footer.main-footer .container {
           background:linear-gradient(90deg, transparent 0, ${transparentBg} 30% 70%, transparent 100%);
         }
-        #app .v-footer>.v-card {
+        #app .v-footer.main-footer>.v-card {
           background-image: url(${rootGetters.footerBackgroundUrl});
           background-position: bottom ${rootState.config.footerBackgroundImage};
           background-repeat: ${rootState.config.footerBackgroundImage.startsWith('repeat') ? rootState.config.footerBackgroundImage : 'no-repeat'};
@@ -399,6 +414,8 @@ ${getters.linksStyle}
   color: ${getters.readableThemeColorDarker};
 }
 .v-application#app .area--dark a,
+.v-application#app .area--dark a:not(.v-tab):not(.v-list-item):not(.v-card--link),
+.v-application#app .area--dark a:not(.v-tab):not(.v-list-item):not(.v-card--link):hover,
 .v-application#app .area--dark h3,
 .v-application#app .area--dark span {
   color: white;

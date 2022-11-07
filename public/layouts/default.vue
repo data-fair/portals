@@ -12,8 +12,9 @@
 
     <layout-scroll-to-top />
 
+    <layout-contact-footer v-if="config.contactFooter" />
     <v-footer
-      :class="'pa-0 mt-5 ' + (footerColorDark ? 'area--dark' : 'area--light')"
+      :class="'main-footer pa-0 ' + (footerColorDark ? 'area--dark ' : 'area--light ') + (config.contactFooter ? 'mt-0' : 'mt-5')"
       height="auto"
     >
       <v-card

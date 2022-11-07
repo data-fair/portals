@@ -60,12 +60,26 @@
         :lg="3"
       >
         <v-card
-          :elevation="0"
-          outlined
+          v-bind="infoCardProps"
           class="pa-3"
-          style="height:100%"
         >
           <div v-html="config.contactInfos" />
+          <template v-if="config.contactPhone">
+            <v-divider />
+            <h4>
+              <v-icon style="margin-top:-4px">
+                mdi-phone
+              </v-icon>{{ config.contactPhoneLabel }} {{ config.contactPhone }}
+            </h4>
+          </template>
+          <template v-if="config.contactWebsite">
+            <v-divider />
+            <h4>
+              <v-icon style="margin-top:-4px">
+                mdi-web
+              </v-icon><a :href="config.contactWebsite">{{ config.contactWebsiteLabel || config.contactWebsite }}</a>
+            </h4>
+          </template>
           <template v-if="hasSocialLinks">
             <v-divider />
             <h4>
@@ -95,7 +109,7 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal', 'draft']),
-    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse'])
+    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse', 'infoCardProps'])
   },
   async mounted () {
     try {

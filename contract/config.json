@@ -1227,11 +1227,57 @@
         "format": "email",
         "description": "Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail."
       },
+      "contactPhone": {
+        "type": "string",
+        "title": "Téléphone de contact"
+      },
+      "contactPhoneLabel": {
+        "type": "string",
+        "title": "Nom associé au téléphone de contact"
+      },
+      "contactWebsite": {
+        "type": "string",
+        "title": "Site Web de contact"
+      },
+      "contactWebsiteLabel": {
+        "type": "string",
+        "title": "Nom associé au site Web de contact"
+      },
       "contactInfos": {
         "type": "string",
         "title": "Informations de contact",
         "x-display": "custom-markdown",
         "maxLength": 10000
+      },
+      "contactFooter": {
+        "type": "boolean",
+        "title": "Afficher un bandeau de contact en bas des pages",
+        "description": "Le lien contact sera alors enlevé du menu de navigation"
+      },
+      "contactFooterColor": {
+        "type": "string",
+        "default": "grey",
+        "title": "Couleur du bandeau de contact",
+        "x-if": "contactFooter",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }, {
+          "const": "grey",
+          "title": "gris foncé"
+        }, {
+          "const": "lightGrey",
+          "title": "gris clair"
+        }, {
+          "const": "white",
+          "title": "blanc"
+        }, {
+          "const": "secondaryBackground",
+          "title": "couleur d'arrière plan secondaire"
+        }]
       }
     }
   }, {
