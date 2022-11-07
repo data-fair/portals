@@ -44,7 +44,7 @@ export default () => ({
           menuItem.children.push({ title: page.title, to: `/pages/${page.id}` })
         }
       }
-      if (config.contactEmail) {
+      if (config.contactEmail && !config.contactFooter) {
         navigation.push({ title: 'Contact', to: '/contact' })
       }
       return navigation
