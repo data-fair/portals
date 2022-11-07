@@ -83,6 +83,7 @@ export default {
     ...mapState(['config']),
     ...mapGetters(['dataFairUrl']),
     img () {
+      if (!this.dataset) return null
       if (this.dataset.image) return this.dataset.thumbnail || this.dataset.image
       if (this.thumbnailApplication && this.dataset.extras && this.dataset.extras.applications && this.dataset.extras.applications[0]) {
         return `${this.dataFairUrl}/api/v1/applications/${this.dataset.extras.applications[0].id}/capture?updatedAt=${this.dataset.extras.applications[0].updatedAt}`

@@ -16,6 +16,10 @@ export default () => ({
       if (!rootState.config) return
       return Vue.prototype.$readableColor(rootState.config.themeColor)
     },
+    readableThemeColorDarker (state, getters, rootState) {
+      if (!rootState.config) return
+      return Vue.prototype.$readableColor(rootState.config.themeColor, '#E0E0E0')
+    },
     backgroundableThemeColor (state, getters, rootState) {
       if (!rootState.config) return
       return Vue.prototype.$readableColor(rootState.config.themeColor, getters.readableThemeColor)
@@ -316,11 +320,11 @@ export default () => ({
           position: absolute;
           width: 100%;
           transform: scaleX(0);
-          height: 2px;
+          height: 3px;
           bottom: 0;
           left: 0;
           background-color: ${getters.readableThemeColor};
-          transform-origin: bottom right;
+          transform-origin: bottom left;
           transition: transform 0.25s ease-out;
         }
         .page-element a:hover:after,
@@ -329,7 +333,16 @@ export default () => ({
         .underline-link-hover:after {
           transform: scaleX(1);
           transform-origin: bottom left;
-        }`
+          background-color: ${getters.readableThemeColorDarker};
+        }
+        .underline-link.underline-link-partial:after {
+          transform: scaleX(0.2);
+        }
+        .underline-link.underline-link-partial:hover:after,
+        .underline-link-hover.underline-link-partial:after {
+          transform: scaleX(0.4);
+        }
+        `
       } else if (getters.buttonOptions.includes('alwaysUnderline')) {
         style += `
         .underline-link {
@@ -382,6 +395,9 @@ ${getters.linksStyle}
 .v-application#app a:not(.v-tab):not(.v-list-item):not(.v-card--link) {
   color: ${getters.readableThemeColor};
 }
+.v-application#app a:not(.v-tab):not(.v-list-item):not(.v-card--link):hover {
+  color: ${getters.readableThemeColorDarker};
+}
 .v-application#app .area--dark a,
 .v-application#app .area--dark h3,
 .v-application#app .area--dark span {
@@ -407,6 +423,9 @@ ${getters.linksStyle}
 }
 .v-application#app .primary--text {
   color: ${getters.readableThemeColor}!important;
+}
+.v-application#app .primary-darker--text {
+  color: ${getters.readableThemeColorDarker}!important;
 }
 .v-application#app .secondary--text {
   color: ${getters.readableSecondaryColor}!important;

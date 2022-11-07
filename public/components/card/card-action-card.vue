@@ -115,18 +115,16 @@ export default {
       return this.layout === 'horizontal' ? this.config.actionCardHorizontalOptions : this.config.actionCardOptions
     },
     titleColorClass () {
-      let c
-
+      let c = ''
       if (this.to && this.hovered && this.actionCardOptions.includes('hoverColorTitle')) {
-        c += ' primary--text'
+        c += ' primary-darker--text'
       } else {
         c += ' grey--text text--darken-3'
       }
       if (this.actionCardOptions.includes('hoverUnderlineTitle')) {
-        c += ' underline-link'
+        c += ' underline-link underline-link-partial'
         if (this.to && this.hovered) c += ' underline-link-hover'
       }
-
       return c
     },
     cardProps () {
