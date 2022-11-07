@@ -90,6 +90,11 @@
         :options="config.homeTopicsOptions"
         row-class="mt-0 mb-3"
       />
+      <layout-links
+        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length"
+        :links="config.homeLinks"
+        :options="config.homeLinksOptions"
+      />
       <kpi
         v-if="config.showKpis"
         class="mt-4"

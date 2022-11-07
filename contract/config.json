@@ -970,6 +970,67 @@
             }
           }
         }]
+      },
+      "homeShowLinks": {
+        "title": "afficher une liste de liens",
+        "type": "boolean",
+        "x-display": "switch",
+        "default": false,
+        "x-props": {"hideDetails": "auto"}
+      },
+      "homeLinks": {
+        "title": "Liste de liens",
+        "type": "array",
+        "x-if": "homeShowLinks",
+        "items": {
+          "type": "object",
+          "required": ["title", "href"],
+          "properties": {
+            "title": {"type": "string", "title": "Titre"},
+            "href": {"type": "string", "title": "Adresse"},
+            "icon": {
+              "title": "Icône",
+              "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
+              "type": "object",
+              "x-fromUrl": "https://koumoul.com/s/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
+              "x-itemKey": "name",
+              "x-itemTitle": "name",
+              "x-itemIcon": "name",
+              "x-itemsProp": "results",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "svg": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "homeLinksOptions": {
+        "title": "Options de l'affichage des liens sur la page d'accueil",
+        "type": "array",
+        "x-if": "homeShowLinks",
+        "x-props": {"hideDetails": "auto"},
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour"
+          }, {
+            "const": "rounded",
+            "title": "arrondir"
+          }, {
+            "const": "elevate",
+            "title": "élèver (applique l'élévation par défaut de votre configuration)"
+          }, {
+            "const": "reverseColor",
+            "title": "inverser la couleur de fond et de texte"
+          }]
+        },
+        "default": ["outlined", "elevate"]
       }
     }
   }, {
