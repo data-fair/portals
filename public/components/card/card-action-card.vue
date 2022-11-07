@@ -4,23 +4,67 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <nuxt-link
-      v-if="to"
-      :to="to"
-    >
-      <card-layout v-bind="{layout, title, img, imgContain, imgAspectRatio, html, topics, titleColorClass}">
-        <template #bottom>
-          <slot name="bottom" />
-        </template>
-      </card-layout>
-    </nuxt-link>
-    <template v-else>
-      <card-layout v-bind="{layout, title, img, imgContain, imgAspectRatio, html, topics, titleColorClass}">
-        <template #bottom>
-          <slot name="bottom" />
-        </template>
-      </card-layout>
+    <template v-if="layout === 'dense' || layout === 'vertical'">
+      <optional-link :to="to">
+        <card-title
+          :title="title"
+          :color-class="titleColorClass"
+        />
+        <v-img
+          v-if="img"
+          :src="img"
+          :alt="title"
+          :max-height="155"
+          :contain="imgContain"
+          :class="{'mb-2': !img}"
+          :aspect-ratio="imgAspectRatio"
+        />
+      </optional-link>
+      <card-text
+        v-if="!img || layout !== 'dense'"
+        :html="html"
+      />
+      <card-topics :topics="topics" />
+      <slot name="bottom" />
     </template>
+    <v-row
+      v-if="layout==='horizontal'"
+      dense
+      style="height:246px;"
+    >
+      <v-col
+        cols="4"
+        class="pr-0"
+      >
+        <optional-link :to="to">
+          <v-img
+            v-if="img"
+            :src="img"
+            :alt="title"
+            height="238"
+            :contain="imgContain"
+            :aspect-ratio="imgAspectRatio"
+          />
+        </optional-link>
+      </v-col>
+      <v-col
+        cols="8"
+        class="pl-0"
+      >
+        <optional-link :to="to">
+          <card-title
+            :title="title"
+            :color-class="titleColorClass"
+          />
+        </optional-link>
+        <card-text
+          :html="html"
+          :height="90"
+        />
+        <card-topics :topics="topics" />
+        <slot name="bottom" />
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 

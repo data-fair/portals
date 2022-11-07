@@ -390,7 +390,7 @@ ${applyFonts ? getters.fontsStyle : ''}
 ${getters.linksStyle}
 
 /* some police tuning */
-.v-application#app a:not(.v-tab):not(.v-list-item) {
+.v-application#app a:not(.v-tab):not(.v-list-item):not(.v-card--link) {
   color: ${getters.readableThemeColor};
 }
 .v-application#app .area--dark a,
