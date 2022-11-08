@@ -304,19 +304,21 @@
             espace personnel
           </nuxt-link>.
         </p>
-        <v-col
-          v-for="use of uses"
-          :key="use._id"
-          xl="3"
-          md="4"
-          sm="6"
-          cols="12"
-        >
-          <use-card
-            :use="use"
-            :link="true"
-          />
-        </v-col>
+        <v-row>
+          <v-col
+            v-for="use of uses"
+            :key="use._id"
+            xl="3"
+            md="4"
+            sm="6"
+            cols="12"
+          >
+            <use-card
+              :use="use"
+              :link="true"
+            />
+          </v-col>
+        </v-row>
       </template>
 
       <v-row v-if="iframeExternalReuses.length">
