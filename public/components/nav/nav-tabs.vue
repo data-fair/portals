@@ -6,6 +6,7 @@
     :dark="backgroundDark"
     centered
     slider-size="4"
+    :hide-slider="!config.appBarActiveOptions.includes('slider')"
     optional
     background-color="transparent"
   >
@@ -17,8 +18,7 @@
         :to="item.to"
         nuxt
         :exact="item.to === '/'"
-        class="font-weight-bold"
-        :class="{'white--text': backgroundDark, 'grey--text text--darken-3': !backgroundDark && computedActiveTab !== item.to, 'primary--text': !backgroundDark && computedActiveTab === item.to}"
+        :class="tabClass(computedActiveTab === item.to)"
       >
         {{ item.title }}
       </v-tab>
@@ -28,15 +28,23 @@
         offset-y
         nudge-left
       >
-        <template #activator="{ on, attrs }">
+        <template #activator="{ on, attrs, value }">
           <v-tab
             v-bind="attrs"
-            class="font-weight-bold"
-            :class="{'white--text': backgroundDark, 'grey--text text--darken-3': !backgroundDark && computedActiveTab !== item.to, 'primary--text': !backgroundDark && computedActiveTab === i}"
+            :class="tabClass(computedActiveTab === i)"
             v-on="on"
           >
             {{ item.title }}
-            <v-icon right>
+            <v-icon
+              v-if="value"
+              right
+            >
+              mdi-menu-up
+            </v-icon>
+            <v-icon
+              v-else
+              right
+            >
               mdi-menu-down
             </v-icon>
           </v-tab>
@@ -71,7 +79,7 @@ export default {
     activeTab: null
   }),
   computed: {
-    ...mapState(['readableThemeColor']),
+    ...mapState(['readableThemeColor', 'config']),
     homeFullPath () {
       const base = this.$router.options.base
       return base.endsWith('/') ? base : base + '/'
@@ -127,6 +135,34 @@ export default {
         this.$emit('overflowing', true)
         break
       }
+    }
+  },
+  methods: {
+    tabClass (active) {
+      const classes = { 'font-weight-bold': true }
+      if (this.backgroundDark) {
+        classes['white--text'] = true
+      } else if (active && this.config.appBarActiveOptions.includes('color')) {
+        classes['primary--text'] = true
+      } else {
+        classes['grey--text'] = true
+        classes['text--darken-3'] = true
+      }
+
+      if (this.config.appBarActiveOptions.includes('bold')) {
+        if (active) {
+          if (classes['grey--text']) {
+            delete classes['text--darken-3']
+            classes['text--darken-4'] = true
+          }
+          classes['font-weight-black'] = true
+          delete classes['font-weight-bold']
+        } else {
+          classes['text--darken-2'] = true
+          delete classes['text--darken-3']
+        }
+      }
+      return classes
     }
   }
 }

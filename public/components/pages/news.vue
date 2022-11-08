@@ -6,7 +6,6 @@
         :src="(images && images[config.mainImage.assetId]) || `${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
         :alt="config.title"
         max-height="400px"
-        :class="`elevation-${appBarElevation}`"
         style="margin-top: -12px;"
       />
       <k-element

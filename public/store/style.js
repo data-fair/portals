@@ -473,7 +473,10 @@ ${getters.personalNavigationStyle}
   border-bottom-left-radius: 0;
 }
 .v-application#app .v-menu__content {
-  border-radius: ${getters.radius}px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: ${getters.radius}px;
+  border-bottom-right-radius: ${getters.radius}px;
 }
 .v-application#app .v-sheet.v-card.v-sheet--shaped {
   border-top-left-radius: 24px;

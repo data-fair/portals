@@ -424,6 +424,24 @@
         "x-display": "switch",
         "title": "utiliser toute la largeur de l'écran pour le contenu de la barre de navigation",
         "default": true
+      },
+      "appBarActiveOptions": {
+        "title": "Options de l'onglet actif",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "slider",
+            "title": "afficher une barre colorée en dessous"
+          }, {
+            "const": "color",
+            "title": "changer la couleur"
+          }, {
+            "const": "bold",
+            "title": "afficher en gras"
+          }]
+        },
+        "default": ["slider", "color"]
       }
     }
   }, {
