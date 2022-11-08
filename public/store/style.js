@@ -393,11 +393,14 @@ html {
   background: ${getters.backgroundColor};
 }
       
-.v-btn.primary.theme--light {
+.v-btn.primary.theme--light.v-btn--has-bg {
   background: linear-gradient(90deg, ${getters.readableThemeColor} 0%, ${getters.darkReadablePrimary10} 100%);
 }
 .v-application#app.theme--light .v-btn.primary.v-btn--has-bg {
   border: 1px solid ${getters.darkReadablePrimary10} !important;
+}
+.v-btn.secondary.theme--light.v-btn--has-bg {
+  background-color: ${getters.readableSecondaryColor} !important;
 }
 
 /* Apply fonts */

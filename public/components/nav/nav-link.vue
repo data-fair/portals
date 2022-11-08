@@ -1,12 +1,12 @@
 <template>
   <nuxt-link
     v-if="config.navLinkMode.startsWith('link')"
-    class="title"
+    :class="`title ${config.navLinkColor}--text`"
     :to="to"
   >
     <v-icon
       v-if="icon && config.navLinkMode === 'link'"
-      color="primary"
+      :color="config.navLinkColor"
     >
       {{ icon }}
     </v-icon>
@@ -22,7 +22,7 @@
   >
     <v-icon
       v-if="icon && !config.navLinkMode.includes('NoIcon')"
-      :color="isDark ? 'white' : 'primary'"
+      :color="isDark ? 'white' : config.navLinkColor"
     >
       {{ icon }}
     </v-icon>
@@ -54,9 +54,9 @@ export default {
     },
     btnProps () {
       if (this.isDark) {
-        return { depressed: true, color: 'primary', class: 'white--text' }
+        return { depressed: true, color: this.config.navLinkColor, class: 'white--text' }
       } else {
-        return { outlined: true, color: 'primary' }
+        return { outlined: true, color: this.config.navLinkColor }
       }
     }
   }

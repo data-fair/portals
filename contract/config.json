@@ -361,6 +361,19 @@
           "title": "Bouton contouré sans icône"
         }]
       },
+      "navLinkColor": {
+        "title": "Couleur des liens de navigations",
+        "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
+        "type": "string",
+        "default": "primary",
+        "oneOf": [{
+          "const": "primary",
+          "title": "couleur principale"
+        }, {
+          "const": "secondary",
+          "title": "couleur secondaire"
+        }]
+      },
       "topicsBackgroundColor": {
         "title": "Couleur des étiquettes de thématiques",
         "type": "string",
