@@ -4,7 +4,7 @@
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "scripts": {
-    "dev-server": "NODE_ENV=development nodemon server",
+    "dev-server": "NODE_ENV=development DEBUG=upgrade* nodemon server",
     "dev-client": "NODE_ENV=development nuxt -p 3039",
     "dev-deps": "docker-compose --profile dev up -d",
     "test": "NODE_ENV=test mocha --exit --bail test/",

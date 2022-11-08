@@ -5,7 +5,6 @@
       :src="config.banner"
       :alt="config.title"
       max-height="400px"
-      :class="`elevation-${appBarElevation}`"
       style="margin-top: -12px;"
     />
     <v-container>

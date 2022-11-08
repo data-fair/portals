@@ -68,6 +68,12 @@
         "properties": {
           "type": {
             "const": "direct"
+          },
+          "position": {
+            "type": "number",
+            "title": "Position",
+            "default": 10,
+            "description": "Saisissez un nombre pour positionner la page dans les menus de navigation. Les pages standards ont ces valeurs: Accueil=0, Données=1, Visualisation=2, Réutilisations=3, Actualités=4, Contact=100"
           }
         }
       },{
@@ -79,7 +85,16 @@
           },
           "title": {
             "type": "string",
-            "title": "Nom du bloc"
+            "title": "Nom du sous-menu",
+            "x-cols": {"cols": 12, "md": 6},
+            "x-class": "pr-2"
+          },
+          "position": {
+            "type": "number",
+            "title": "Position",
+            "default": 10,
+            "description": "Saisissez un nombre pour positionner la page dans le sous-menu. La position du sous-menu sera déterminée par la valeur de sa 1ère page. Les pages standards ont ces valeurs: Accueil=0, Données=1, Visualisation=2, Réutilisations=3, Actualités=4, Contact=100.",
+            "x-cols": {"cols": 12, "md": 6}
           }
         }
       }],

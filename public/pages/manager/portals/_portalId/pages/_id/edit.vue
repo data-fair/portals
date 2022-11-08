@@ -42,20 +42,20 @@
         </v-form>
       </v-col>
       <v-col
-        v-if="page"
+        v-if="htmlPage"
         :cols="6"
       >
         <blank
           v-if="page.template === 'blank'"
-          :config="pageConfigRender"
+          :config="htmlPage.config"
         />
         <thematic
           v-if="page.template === 'thematic'"
-          :config="pageConfigRender"
+          :config="htmlPage.config"
         />
         <news
           v-if="page.template === 'news'"
-          :config="pageConfigRender"
+          :page="htmlPage"
         />
       </v-col>
     </v-row>
@@ -79,7 +79,7 @@ export default {
   data: () => ({
     page: null,
     pageConfig: null,
-    pageConfigRender: null,
+    htmlPage: null,
     owner: null,
     pageSchema
   }),
@@ -134,14 +134,12 @@ export default {
     delete this.page.config
     if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
 
-    const htmlPage = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, { params: { html: true } })
-    this.pageConfigRender = htmlPage.config
+    this.htmlPage = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, { params: { html: true } })
   },
   methods: {
     async update (patch) {
       try {
-        const htmlPage = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch, { params: { html: true } })
-        this.pageConfigRender = htmlPage.config
+        this.htmlPage = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch, { params: { html: true } })
         // this.$router.push({ name: 'pages' })
       } catch (error) {
         console.error(error)
