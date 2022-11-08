@@ -164,21 +164,13 @@ export default {
     },
     async createUse (use) {
       use.owner = this.portal.owner
-      try {
-        const response = await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, use)
-        await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${response._id}/_submit`)
-        this.$router.push({ name: 'manager-portals-portalId-uses-id-edit', params: { id: response._id, portalId: this.portal._id } })
-      } catch (error) {
-        console.error(error)
-      }
+      const response = await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses`, use)
+      await this.$axios.$post(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${response._id}/_submit`)
+      this.$router.push({ name: 'manager-portals-portalId-uses-id-edit', params: { id: response._id, portalId: this.portal._id } })
     },
-    async removeUse (id) {
-      try {
-        await this.$axios.$delete(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${id}`)
-        this.refresh()
-      } catch (error) {
-        console.error(error)
-      }
+    async deleteUse (use) {
+      await this.$axios.$delete(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${use._id}`)
+      this.refresh()
     },
     useLink (use) {
       const url = new URL(this.portal.link)
