@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal']),
     ...mapState('session', ['initialized']),
-    ...mapGetters(['themeColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColorDark', 'appBarElevation']),
+    ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColorDark', 'appBarElevation']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href

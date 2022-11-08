@@ -13,7 +13,7 @@
           scrolling="yes"
           :iframe-resizer="false"
           :sync-state="true"
-          :query-params-extra="{primary: readableThemeColor, embed: true}"
+          :query-params-extra="{primary: readablePrimaryColor, embed: true}"
           :query-params-exclude="['portalId']"
         />
       </client-only>
@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl']),
     logoUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     },

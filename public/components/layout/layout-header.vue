@@ -48,7 +48,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'draft', 'publicUrl']),
-    ...mapGetters(['themeColorDark', 'headerColor', 'headerColorDark']),
+    ...mapGetters(['primaryColorDark', 'headerColor', 'headerColorDark']),
     titleColor () {
       if (this.headerColorDark) return 'white--text'
       return {

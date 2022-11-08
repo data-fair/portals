@@ -86,7 +86,6 @@ module.exports = {
   plugins: [
     { src: '~plugins/axios-errors' },
     { src: '~plugins/init' },
-    { src: '~plugins/color' },
     { src: '~plugins/theme' },
     { src: '~plugins/typography' },
     { src: '~plugins/filter-bytes' },

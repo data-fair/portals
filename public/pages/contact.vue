@@ -109,7 +109,7 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal', 'draft']),
-    ...mapGetters(['themeColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse', 'infoCardProps'])
+    ...mapGetters(['primaryColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse', 'infoCardProps'])
   },
   async mounted () {
     try {

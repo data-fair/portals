@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'readableThemeColor'])
+    ...mapGetters(['elevation', 'hoverInverse', 'radius', 'readablePrimaryColor'])
   },
   methods: {
     compProps (link, hover) {
@@ -67,10 +67,10 @@ export default {
       return dark
     },
     textColor (hover) {
-      return this.isDark(hover) ? 'white' : this.readableThemeColor
+      return this.isDark(hover) ? 'white' : this.readablePrimaryColor
     },
     style (hover) {
-      const color = this.readableThemeColor
+      const color = this.readablePrimaryColor
       const borderColor = this.options.includes('outlined') ? color : 'transparent'
       if (this.isDark(hover)) {
         return `

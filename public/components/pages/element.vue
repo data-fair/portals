@@ -159,7 +159,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readableThemeColor', 'elevation', 'imagesDatasetUrl']),
+    ...mapGetters(['readablePrimaryColor', 'elevation', 'imagesDatasetUrl']),
     titleClass () {
       if (!this.value || this.value.type !== 'title') return null
       const margins = {
@@ -192,7 +192,7 @@ export default {
       return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
     },
     applicationIframeSrc (application) {
-      return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+      return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     async resolveDataset () {
       this.error = null

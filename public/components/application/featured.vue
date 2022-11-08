@@ -26,7 +26,7 @@
         :src="`${dataFairUrl}/app/${application.id}`"
         :style="iframeStyle"
         :sync-state="true"
-        :query-params-extra="{primary: readableThemeColor, embed: true}"
+        :query-params-extra="{primary: readablePrimaryColor, embed: true}"
         :query-params-exclude="['portalId']"
         @state="s => syncedState = s"
       />
@@ -58,7 +58,7 @@ export default {
     syncedState: null
   }),
   computed: {
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner']),
     syncedStateParams () {
       if (!this.syncedState) return {}
       const url = new URL(this.syncedState.href)

@@ -265,12 +265,12 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'owner', 'appBarElevation']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'appBarElevation']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },
     homeApplicationUrl () {
-      return `${this.dataFairUrl}/app/${this.config.homeApplication.id}?embed=true&primary=${encodeURIComponent(this.readableThemeColor)}`
+      return `${this.dataFairUrl}/app/${this.config.homeApplication.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     showLastApps () {
       return this.config.homeApplications && this.config.homeApplications.type === 'lasts' && this.applications && this.applications.results.length

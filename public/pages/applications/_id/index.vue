@@ -75,7 +75,7 @@
         <v-iframe
           :src="`${dataFairUrl}/app/${$route.params.id}`"
           :sync-state="true"
-          :query-params-extra="{primary: readableThemeColor, embed: true}"
+          :query-params-extra="{primary: readablePrimaryColor, embed: true}"
           :query-params-exclude="['portalId']"
           @state="s => syncedState = s"
         />
@@ -205,7 +205,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readableThemeColor', 'dataFairUrl', 'infoCardProps']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id
     }

@@ -30,7 +30,7 @@
       <client-only>
         <v-iframe
           :id="'application-' + application.id"
-          :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readableThemeColor)}`"
+          :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
         />
       </client-only>
     </v-card>
@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readableThemeColor'])
+    ...mapGetters(['readablePrimaryColor'])
   },
   watch: {
     dialog () {

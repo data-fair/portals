@@ -10,7 +10,7 @@
     optional
     background-color="transparent"
   >
-    <v-tabs-slider :color="backgroundDark ? 'white' : readableThemeColor" />
+    <v-tabs-slider :color="backgroundDark ? 'white' : readablePrimaryColor" />
     <template v-for="(item, i) of navigation">
       <v-tab
         v-if="item.to"
@@ -80,7 +80,7 @@ export default {
     activeTab: null
   }),
   computed: {
-    ...mapState(['readableThemeColor', 'config']),
+    ...mapState(['readablePrimaryColor', 'config']),
     homeFullPath () {
       const base = this.$router.options.base
       return base.endsWith('/') ? base : base + '/'
