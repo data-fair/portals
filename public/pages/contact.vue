@@ -69,7 +69,7 @@
             <h4>
               <v-icon style="margin-top:-4px">
                 mdi-phone
-              </v-icon>{{ config.contactPhoneLabel }} {{ config.contactPhone }}
+              </v-icon><a :href="'tel:' + config.contactPhone">{{ config.contactPhoneLabel }} {{ config.contactPhone }}</a>
             </h4>
           </template>
           <template v-if="config.contactWebsite">

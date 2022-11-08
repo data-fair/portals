@@ -23,7 +23,7 @@
                   :color="contactFooterColorDark ? 'white' : 'default'"
                 >
                   mdi-phone
-                </v-icon>&nbsp;{{ config.contactPhoneLabel }} {{ config.contactPhone }}
+                </v-icon>&nbsp;<a :href="'tel:' + config.contactPhone">{{ config.contactPhoneLabel }} {{ config.contactPhone }}</a>
               </p>
             </template>
             <template v-if="config.contactWebsite">
