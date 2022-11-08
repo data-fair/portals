@@ -127,18 +127,17 @@
               iframe-style="height:90%"
             />
           </template>
-          <template v-else>
-            <last-apps
-              v-if="showLastApps"
-              :applications="applications"
-              small
-            />
-            <last-datasets
-              v-if="showLastDatasets"
-              :datasets="datasets"
-              small
-            />
-          </template>
+
+          <last-apps
+            v-if="showLastApps"
+            :applications="applications"
+            small
+          />
+          <last-datasets
+            v-if="showLastDatasets"
+            :datasets="datasets"
+            small
+          />
         </v-col>
 
         <v-col
