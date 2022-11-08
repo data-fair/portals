@@ -31,6 +31,7 @@
         <template #activator="{ on, attrs, value }">
           <v-tab
             v-bind="attrs"
+            :id="`tab-menu-${i}`"
             :class="tabClass(computedActiveTab === i)"
             v-on="on"
           >
@@ -169,5 +170,7 @@ export default {
 </script>
 
 <style>
-
+#app #tab-menu-0 {
+  margin-left: auto;
+}
 </style>
