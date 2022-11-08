@@ -336,6 +336,31 @@
         },
         "default": []
       },
+      "navLinkMode": {
+        "title": "Type de rendu des liens de navigations",
+        "type": "string",
+        "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
+        "default": "link",
+        "oneOf": [{
+          "const": "link",
+          "title": "Lien"
+        }, {
+          "const": "linkNoIcon",
+          "title": "Lien sans icône"
+        }, {
+          "const": "btn",
+          "title": "Bouton plein"
+        }, {
+          "const": "btnNoIcon",
+          "title": "Bouton plein sans icône"
+        }, {
+          "const": "btnOutlined",
+          "title": "Bouton contouré"
+        }, {
+          "const": "btnOutlinedNoIcon",
+          "title": "Bouton contouré sans icône"
+        }]
+      },
       "topicsBackgroundColor": {
         "title": "Couleur des étiquettes de thématiques",
         "type": "string",

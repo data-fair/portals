@@ -43,14 +43,11 @@
         align="center"
       >
         <v-col class="text-center">
-          <nuxt-link
-            class="title"
+          <nav-link
+            title="toutes les actualités"
             to="/news"
-          >
-            <v-icon color="primary">
-              mdi-open-in-new
-            </v-icon>&nbsp;<span class="underline-link">toutes les actualités</span>
-          </nuxt-link>
+            icon="mdi-open-in-new"
+          />
         </v-col>
       </v-row>
     </v-card-text>

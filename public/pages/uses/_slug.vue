@@ -101,14 +101,11 @@
       class="my-4 text-center"
     >
       <v-col cols="12">
-        <nuxt-link
-          class="title"
+        <nav-link
+          title="retourner à la liste"
           to="/uses"
-        >
-          <v-icon color="primary">
-            mdi-reply
-          </v-icon>&nbsp;<span class="underline-link">retourner à la liste</span>
-        </nuxt-link>
+          icon="mdi-reply"
+        />
       </v-col>
     </v-row>
   </v-container>

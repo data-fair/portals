@@ -11,7 +11,8 @@ exports.exec = async (db, debug) => {
     ['actionCardBackgroundColor', 'white'],
     ['actionCardHorizontalOptions', ['outlined', 'flat', 'hoverColorTitle', 'hoverColorBorder']],
     ['actionCardHorizontalBackgroundColor', 'white'],
-    ['appBarActiveOptions', ['slider', 'color']]
+    ['appBarActiveOptions', ['slider', 'color']],
+    ['navLinkMode', 'link']
   ]
   for (const defaultValue of defaultValues) {
     for (const configKey of ['config', 'configDraft']) {
