@@ -1,5 +1,8 @@
 exports.id = (portal) => {
-  return `portals-images-${portal._id.toLowerCase().replace(/_/g, '-')}`
+  // lowercase and replace of _ are for retro-compatibility,
+  // previous portals ids ware not accepted as ids for datasets
+  // now that we use UUID it should work fine
+  return `portals-images-${portal._id.toLowerCase().replace(/_/g, '')}`
 }
 
 exports.init = (portal) => {
