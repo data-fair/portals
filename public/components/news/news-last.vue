@@ -4,7 +4,7 @@
   >
     <v-card-title>
       <span class="headline grey--text text--darken-3 font-weight-bold">
-        Actualités
+        Dernières actualités
       </span>
     </v-card-title>
     <v-card-text>
