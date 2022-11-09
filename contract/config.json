@@ -387,6 +387,9 @@
         }, {
           "const": "secondary",
           "title": "couleur secondaire"
+        }, {
+          "const": "primarySecondary",
+          "title": "couleur primaire ou secondaire selon le contexte"
         }]
       },
       "topicsOptions": {

@@ -9,7 +9,7 @@
       small
       dark
       :label="!config.topicsOptions.includes('rounded')"
-      :color="readableTopicColor(topic)"
+      :color="readableTopicColor(topic, true)"
       class="ml-2 mt-1 font-weight-bold"
     >
       <v-icon

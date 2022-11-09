@@ -123,14 +123,15 @@ export default () => ({
       return tinycolor(getters.readablePrimaryColor).darken(10).toHexString()
     },
     topicColor (state, getters, rootState) {
-      return (topic) => {
+      return (topic, readonly) => {
         if (rootState.config.topicsBackgroundColor === 'primary') return getters.primaryColor
         if (rootState.config.topicsBackgroundColor === 'secondary') return getters.secondaryColor
+        if (rootState.config.topicsBackgroundColor === 'primarySecondary') return readonly ? getters.secondaryColor : getters.primaryColor
         return topic.color || '#f5f5f5'
       }
     },
     readableTopicColor (state, getters, rootState) {
-      return (topic) => contrastColor(getters.topicColor(topic))
+      return (topic, readonly) => contrastColor(getters.topicColor(topic, readonly))
     },
     elevation (state, getters, rootState) {
       if (!('elevation' in rootState.config)) return 1
