@@ -2,7 +2,7 @@ exports.id = (portal) => {
   // lowercase and replace of _ are for retro-compatibility,
   // previous portals ids ware not accepted as ids for datasets
   // now that we use UUID it should work fine
-  return `portals-images-${portal._id.toLowerCase().replace(/_/g, '')}`
+  return `portals-images-${portal._id.toLowerCase().replace(/_/g, '').replace(/^-/, '').replace(/-$/, '')}`
 }
 
 exports.init = (portal) => {
