@@ -146,7 +146,7 @@ export default () => ({
     actionCardBackgroundColor (state, getters, rootState) {
       return (horizontal = false) => {
         if (!rootState.config) return
-        const bgColor = horizontal ? rootState.config.actionCardHorinzontalBackgroundColor : rootState.config.actionCardBackgroundColor
+        const bgColor = horizontal ? rootState.config.actionCardHorizontalBackgroundColor : rootState.config.actionCardBackgroundColor
         if (bgColor === 'white' || !bgColor) return '#FFFFFF'
         if (bgColor === 'lightGrey') return '#FAFAFA'
         if (bgColor === 'secondaryBackground') return getters.secondaryBackgroundColor
