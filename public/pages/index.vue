@@ -214,7 +214,7 @@ export default {
         params: {
           ...baseFilter,
           size: (this.config.homeApplications && this.config.homeApplications.size) || 3,
-          select: 'id,title,description,updatedAt,createdAt,-userPermissions',
+          select: 'id,title,description,topics,updatedAt,createdAt,-userPermissions',
           sort: 'createdAt:-1',
           html: true,
           truncate: 600
@@ -224,7 +224,7 @@ export default {
         params: {
           ...baseFilter,
           size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
-          select: 'id,title,description,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
+          select: 'id,title,description,topics,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
           sort: (this.config.datasetsDefaultSort || 'createdAt') + ':-1',
           html: true,
           truncate: 600,
