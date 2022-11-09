@@ -3,10 +3,9 @@
     v-bind="infoCardProps"
   >
     <v-card-title>
-      <span
-        v-t="newsRes ? newsRes.count + ' ' + (newsRes.count> 1 ? 'actualités' : 'actualité') : '...'"
-        class="headline grey--text text--darken-3 font-weight-bold"
-      />
+      <span class="headline grey--text text--darken-3 font-weight-bold">
+        Actualités
+      </span>
     </v-card-title>
     <v-card-text>
       <v-row v-if="newsRes">
