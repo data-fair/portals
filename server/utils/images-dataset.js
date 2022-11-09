@@ -1,5 +1,5 @@
 exports.id = (portal) => {
-  return `portals-images-${portal._id.toLowerCase()}`
+  return `portals-images-${portal._id.toLowerCase().replace(/_/g, '-')}`
 }
 
 exports.init = (portal) => {

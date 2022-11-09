@@ -11,6 +11,7 @@ const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
 const marked = require('marked')
 const { nanoid } = require('nanoid')
+const { randomUUID } = require('crypto')
 
 const sanitizeHtml = require('../../shared/sanitize-html')
 const portalSchema = require('../../contract/portal')
@@ -171,7 +172,8 @@ router.post('', asyncWrap(async (req, res) => {
   portal.configDraft = cleanConfig(portal.configDraft || configDefaults)
   if (portal._id) return res.status(400).send('You cannot specify the id of the created portal')
   if (portal.host) return res.status(400).send('You cannot specify the host of the created portal')
-  portal._id = nanoid()
+  // this is better than nanoid to create an id that will be accepted by data-fair for the images dataset
+  portal._id = randomUUID()
   portal.owner = {
     type: req.user.organization ? 'organization' : 'user',
     id: req.user.organization ? req.user.organization.id : req.user.id,
