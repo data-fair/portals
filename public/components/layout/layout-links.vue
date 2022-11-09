@@ -8,6 +8,7 @@
       <v-card
         :style="style(hover)"
         v-bind="compProps(link, hover)"
+        class="layout-link"
       >
         <v-card-title class="justify-center pt-3 pb-1">
           <v-icon
@@ -87,3 +88,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.layout-link {
+  min-width: 90px;
+}
+</style>
