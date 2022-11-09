@@ -3,6 +3,7 @@ module.exports = {
   port: 6200,
   dataDir: './data',
   directoryUrl: 'http://localhost:6200/simple-directory',
+  privateDirectoryUrl: null,
   dataFairUrl: 'http://localhost:6200/data-fair',
   openapiViewerUrl: 'http://localhost:6200/openapi-viewer',
   notifyUrl: null,

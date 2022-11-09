@@ -14,7 +14,8 @@ const prometheus = require('./utils/prometheus')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@koumoul/sd-express')({
-  directoryUrl: config.directoryUrl
+  directoryUrl: config.directoryUrl,
+  privateNotifyUrl: config.privateNotifyUrl
 })
 const debug = require('debug')('main')
 

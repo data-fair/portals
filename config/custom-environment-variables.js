@@ -5,6 +5,7 @@ module.exports = {
   openapiViewerUrl: 'OPENAPIVIEWER_URL',
   sessionDomain: 'SESSION_DOMAIN',
   directoryUrl: 'DIRECTORY_URL',
+  privateDirectoryUrl: 'PRIVATE_DIRECTORY_URL',
   notifyUrl: 'NOTIFY_URL',
   privateNotifyUrl: 'PRIVATE_NOTIFY_URL',
   notifyWSUrl: 'NOTIFY_WS_URL',
