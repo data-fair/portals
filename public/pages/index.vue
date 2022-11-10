@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- title hidden visually but present for screen readers -->
+    <h1 class="d-none">
+      {{ config.title }} - accueil
+    </h1>
     <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
       <client-only v-if="config.homeApplication">
         <v-iframe

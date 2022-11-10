@@ -38,7 +38,7 @@ module.exports = {
     href: 'https://koumoul.com'
   },
   i18n: {
-    locales: 'fr,en',
+    locales: 'fr',
     defaultLocale: 'fr'
   },
   prometheus: {

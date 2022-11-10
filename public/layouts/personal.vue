@@ -27,7 +27,7 @@ export default {
     }
   }),
   head () {
-    return this.portalHead(this.$route, false, 'scroll')
+    return this.portalHead(this.$route, this.$i18n.locale, false, 'scroll')
   },
   computed: {
     ...mapState(['config']),

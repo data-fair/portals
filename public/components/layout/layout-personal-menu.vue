@@ -28,10 +28,15 @@
           text
           :class="{'white--text': backgroundDark}"
           :height="64"
+          title="Ouvrez le menu personnel"
           v-on="on"
         >
           <v-avatar :size="36">
-            <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
+            <img
+              :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`"
+              aria-hidden
+              alt=""
+            >
           </v-avatar>
                   &nbsp;
           <template v-if="!dense">

@@ -3,6 +3,7 @@
     v-model="search"
     style="max-width:360px;"
     placeholder="Saisissez votre recherche"
+    aria-label="Rechercher"
     :append-icon="config.homeSearchOptions.includes('outer-btn') ? '' : 'mdi-magnify'"
     hide-details
     class="nav-home-search mb-2 v-input--is-focused primary--text"

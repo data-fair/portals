@@ -13,7 +13,7 @@ import AcceptCookies from '~/components/accept-cookies'
 export default {
   components: { AcceptCookies },
   head () {
-    return this.$store.getters.portalHead(this.$route)
+    return this.$store.getters.portalHead(this.$route, this.$i18n.locale, true, 'auto')
   }
 }
 

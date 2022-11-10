@@ -41,7 +41,7 @@ const { mapState, mapGetters } = require('vuex')
 
 export default {
   head () {
-    return this.portalHead(this.$route, true, 'scroll')
+    return this.portalHead(this.$route, this.$i18n.locale, true, 'scroll')
   },
   computed: {
     ...mapState(['config']),

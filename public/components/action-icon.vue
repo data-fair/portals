@@ -6,6 +6,7 @@
     <template #activator="{ on: onTooltip }">
       <v-btn
         v-bind="compProps.btn"
+        :aria-label="title"
         @click="e => $emit('click', e)"
         v-on="{...onTooltip}"
         @mouseenter="hovered = true"

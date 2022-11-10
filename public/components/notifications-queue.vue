@@ -11,6 +11,7 @@
         text
         class="px-0"
         v-bind="attrs"
+        title="Ouvrez la liste notifications"
         v-on="on"
       >
         <v-badge

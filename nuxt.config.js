@@ -101,8 +101,8 @@ module.exports = {
     base: config.basePath
   },
   modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', ['@nuxtjs/i18n', {
-    seo: false,
-    locales: ['fr', 'en'],
+    seo: true,
+    locales: [{ code: 'fr', iso: 'fr-FR' }],
     defaultLocale: config.i18n.defaultLocale,
     vueI18nLoader: true,
     strategy: 'no_prefix',
