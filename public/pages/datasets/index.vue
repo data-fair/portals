@@ -274,6 +274,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('session', ['user']),
     ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
@@ -344,7 +345,7 @@ export default {
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
       params.truncate = 600
-      if (this.config.authentication === 'none') params.visibility = 'public'
+      if (this.config.authentication === 'none' || !this.user) params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
         if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })
         this.lastParams = params
@@ -402,7 +403,7 @@ export default {
       if (this.filters.concepts.length) params.concepts = this.filters.concepts.join(',')
       if (this.filters.topics.length) params.topics = this.filters.topics.join(',')
       if (this.filters.owner.length) params.owner = this.filters.owner.join(',')
-      if (this.config.authentication === 'none') params.visibility = 'public'
+      if (this.config.authentication === 'none' || !this.user) params.visibility = 'public'
       try {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
         const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'

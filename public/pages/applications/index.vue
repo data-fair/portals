@@ -233,6 +233,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('session', ['user']),
     ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
@@ -297,7 +298,7 @@ export default {
       params.publicationSites = 'data-fair-portals:' + this.portal._id
       params.html = true
       params.truncate = 600
-      if (this.config.authentication === 'none') params.visibility = 'public'
+      if (this.config.authentication === 'none' || !this.user) params.visibility = 'public'
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
         if (params.q && params.q !== this.lastParams.q && this.$ma) this.$ma.trackEvent({ action: 'search', label: this.search })
         this.lastParams = params

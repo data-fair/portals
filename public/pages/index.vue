@@ -211,7 +211,7 @@ export default {
     const baseFilter = {
       owner: this.owner,
       publicationSites: 'data-fair-portals:' + this.portal._id,
-      visibility: this.config.authentication === 'none' ? 'public' : ''
+      visibility: (this.config.authentication === 'none' || !this.user) ? 'public' : ''
     }
     const [applications, datasets] = await Promise.all([
       this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {
@@ -268,6 +268,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('session', ['user']),
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'appBarElevation']),
     homeUrl () {
