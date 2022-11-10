@@ -211,7 +211,7 @@ export default {
     const baseFilter = {
       owner: this.owner,
       publicationSites: 'data-fair-portals:' + this.portal._id,
-      visibility: (this.config.authentication === 'none' || !this.user) ? 'public' : ''
+      visibility: !this.user ? 'public' : ''
     }
     const [applications, datasets] = await Promise.all([
       this.$axios.$get(this.dataFairUrl + '/api/v1/applications', {

@@ -60,6 +60,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('session', ['user']),
     ...mapState(['config', 'portal', 'publicUrl', 'draft']),
     ...mapGetters(['owner']),
     url () {
@@ -75,7 +76,7 @@ export default {
         publicationSites: 'data-fair-portals:' + this.portal._id,
         select: 'id,title,extras.externalReuses'
       }
-      if (this.config.authentication === 'none') params.visibility = 'public'
+      if (!this.user) params.visibility = 'public'
       this.loading = true
       const datasets = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })
       this.datasets = datasets
