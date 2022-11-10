@@ -298,7 +298,7 @@
         </v-row>
       </template>
 
-      <template v-if="(uses && uses.length) || (user && config.usesManagement && config.usesManagement.type === 'users')">
+      <template v-if="dataset.public && ((uses && uses.length) || (user && config.usesManagement && config.usesManagement.type === 'users'))">
         <section-title
           text="Réutilisations"
         />
