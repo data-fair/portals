@@ -217,7 +217,7 @@
 
 import fileDownload from 'js-file-download'
 import DatasetCard from '~/components/dataset/card.vue'
-const { mapState, mapGetters } = require('vuex')
+const { mapState, mapGetters, mapActions } = require('vuex')
 
 export default {
   components: {
@@ -227,7 +227,6 @@ export default {
   data: function () {
     return {
       datasets: null,
-      concepts: null,
       size: 12,
       page: 1,
       search: '',
@@ -256,12 +255,7 @@ export default {
   },
   async fetch () {
     this.readQueryParams()
-    await this.refresh()
-    this.concepts = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
-      const { identifiers, ...concept } = c
-      concept.id = identifiers.shift()
-      return concept
-    })
+    await Promise.all([this.refresh(), this.fetchVocabulary()])
   },
   head () {
     const title = 'Données - ' + this.config.title
@@ -280,7 +274,7 @@ export default {
   },
   computed: {
     ...mapState('session', ['user']),
-    ...mapState(['config', 'portal', 'publicUrl', 'draft']),
+    ...mapState(['config', 'portal', 'publicUrl', 'draft', 'concepts']),
     ...mapGetters(['owner']),
     url () {
       return this.publicUrl + '/datasets'
@@ -320,6 +314,7 @@ export default {
     if (this.datasets) this.continueFetch()
   },
   methods: {
+    ...mapActions(['fetchVocabulary']),
     readQueryParams () {
       this.search = this.$route.query.q || ''
       this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : this.defaultSort

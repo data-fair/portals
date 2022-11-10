@@ -26,7 +26,8 @@ export default () => {
       publicUrl: '',
       publicBaseUrl: '',
       html: false,
-      inPortal: false
+      inPortal: false,
+      concepts: null
     },
     getters: {
       embed () {
@@ -139,6 +140,15 @@ export default () => {
           console.error('failure to fetch config', err)
           throw err
         }
+      },
+      async fetchVocabulary ({ state, commit, getters }) {
+        if (state.concepts) return
+        const concepts = (await this.$axios.$get(getters.dataFairUrl + '/api/v1/vocabulary')).map(c => {
+          const { identifiers, ...concept } = c
+          concept.id = identifiers.shift()
+          return concept
+        })
+        commit('setAny', { concepts })
       },
       setBreadcrumbs ({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
