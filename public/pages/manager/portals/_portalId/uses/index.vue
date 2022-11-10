@@ -5,7 +5,10 @@
         <client-only>
           <v-iframe :src="notifSubscribeUrl" />
         </client-only>
-        <section-title text="Gérer les réutilisations" />
+        <section-title
+          text="Gérer les réutilisations"
+          tag="h1"
+        />
         <v-switch
           v-model="published"
           label="réutilisations publiées"

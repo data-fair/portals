@@ -15,9 +15,13 @@
         :class="{'pa-0': true, 'white--text': footerColorDark}"
       >
         <client-only>
-          <h5 v-if="!config.footerLogo || windowWidth>600">
+          <span
+            v-if="!config.footerLogo || windowWidth>600"
+            class="text-caption"
+            style="display:block;"
+          >
             Retrouvez-nous sur les réseaux sociaux
-          </h5>
+          </span>
         </client-only>
         <social-links
           :dark="footerColorDark"
@@ -143,7 +147,7 @@ export default {
     ...mapState(['config']),
     ...mapGetters(['footerColor', 'footerColorDark', 'hasSocialLinks']),
     extraLogos () {
-      const logos = [...this.config.footerExtraLogos || []]
+      const logos = [...this.config.footerExtraLogos || []].filter(l => !!l.title && !!l.src)
       const copyright = { ...process.env.copyright }
       if (this.footerColorDark) {
         copyright.src = copyright.src.dark

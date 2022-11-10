@@ -2,7 +2,10 @@
   <v-row>
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
-        <section-title text="Éditer les pages de contenu" />
+        <section-title
+          text="Éditer les pages de contenu"
+          tag="h1"
+        />
         <v-row>
           <v-col
             cols="12"

@@ -1,9 +1,11 @@
 <template>
   <div class="share-network">
+    <!-- share-network component is provided by vue-social-sharing -->
     <share-network
       :url="shareUrl"
       :title="title"
       network="twitter"
+      aria-label="Partager sur Twitter"
     >
       <action-icon
         title="Partager sur Twitter"
@@ -16,6 +18,7 @@
       :url="shareUrl"
       :title="title"
       network="linkedin"
+      aria-label="Partager sur LinkedIn"
     >
       <action-icon
         title="Partager sur LinkedIn"
@@ -27,6 +30,7 @@
       :url="shareUrl"
       :title="title"
       network="reddit"
+      aria-label="Partager sur Reddit"
     >
       <action-icon
         title="Partager sur Reddit"
@@ -38,6 +42,7 @@
       :url="shareUrl"
       :title="title"
       network="facebook"
+      aria-label="Partager sur Facebook"
     >
       <action-icon
         title="Partager sur Facebook"
@@ -51,6 +56,7 @@
         :url="shareUrl"
         :title="title"
         network="whatsapp"
+        aria-label="Partager sur WhatsApp"
       >
         <action-icon
           title="Partager sur WhatsApp"

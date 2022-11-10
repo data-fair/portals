@@ -5,7 +5,10 @@
       :error="$fetchState.error"
     />
     <v-container v-else-if="application">
-      <section-title :text="application.title" />
+      <section-title
+        :text="application.title"
+        tag="h1"
+      />
       <v-row>
         <v-col
           md="7"

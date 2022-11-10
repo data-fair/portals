@@ -18,7 +18,10 @@
       </v-list-item>
     </v-list>
 
-    <section-title :text="'Edition de la page ' + ((page && page.title) || '')" />
+    <section-title
+      :text="'Edition de la page ' + ((page && page.title) || '')"
+      tag="h1"
+    />
 
     <v-form ref="form">
       <lazy-v-jsf

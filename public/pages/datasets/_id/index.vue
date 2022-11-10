@@ -9,7 +9,10 @@
       :error="$fetchState.error"
     />
     <v-container v-else-if="dataset">
-      <section-title :text="dataset.title" />
+      <section-title
+        :text="dataset.title"
+        tag="h1"
+      />
       <v-row>
         <v-col
           :md="7"

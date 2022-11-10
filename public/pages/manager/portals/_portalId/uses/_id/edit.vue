@@ -22,7 +22,10 @@
       </v-list>
     </v-row>
 
-    <section-title :text="'Edition de la réutilisation ' + ((use && use.title) || '')" />
+    <section-title
+      :text="'Edition de la réutilisation ' + ((use && use.title) || '')"
+      tag="h1"
+    />
 
     <v-row class="mx-0">
       <v-form ref="form">

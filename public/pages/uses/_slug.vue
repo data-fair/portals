@@ -8,6 +8,7 @@
       <section-title
         :text="use.title"
         class="mb-0"
+        tag="h1"
       />
       <v-subheader
         class="px-0"

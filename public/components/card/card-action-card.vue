@@ -5,7 +5,10 @@
     @mouseleave="hovered = false"
   >
     <template v-if="layout === 'dense' || layout === 'vertical'">
-      <optional-link :to="to">
+      <optional-link
+        :to="to"
+        :title="title"
+      >
         <card-title
           :title="title"
           :color-class="titleColorClass"
@@ -13,7 +16,7 @@
         <v-img
           v-if="img"
           :src="img"
-          :alt="title"
+          alt=""
           :max-height="170"
           :contain="imgContain"
           :class="{'mb-2': !img}"
@@ -29,7 +32,10 @@
     </template>
 
     <template v-if="layout === 'list'">
-      <optional-link :to="to">
+      <optional-link
+        :to="to"
+        :title="title"
+      >
         <card-title
           :title="title"
           :color-class="titleColorClass"
@@ -51,11 +57,14 @@
         cols="4"
         class="pr-0"
       >
-        <optional-link :to="to">
+        <optional-link
+          :to="to"
+          :title="title"
+        >
           <v-img
             v-if="img"
             :src="img"
-            :alt="title"
+            alt=""
             height="238"
             :contain="imgContain"
             :aspect-ratio="imgAspectRatio"
@@ -66,7 +75,10 @@
         cols="8"
         class="pl-0"
       >
-        <optional-link :to="to">
+        <optional-link
+          :to="to"
+          :title="title"
+        >
           <card-title
             :title="title"
             :color-class="titleColorClass"

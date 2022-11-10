@@ -2,6 +2,7 @@
   <nuxt-link
     v-if="to"
     :to="to"
+    :aria-label="title"
   >
     <slot />
   </nuxt-link>
@@ -12,7 +13,10 @@
 
 <script>
 export default {
-  props: { to: { type: [String, Object], default: null } }
+  props: {
+    to: { type: [String, Object], default: null },
+    title: { type: String, required: true }
+  }
 }
 </script>
 

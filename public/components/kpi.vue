@@ -3,6 +3,10 @@
     class="pb-2"
     justify="center"
   >
+    <!-- hidden but present to improve accessibility -->
+    <h2 class="hide-element">
+      Métriques
+    </h2>
     <v-col
       v-for="metric,i of metrics"
       :key="i"

@@ -9,7 +9,7 @@ Vue.component('PageTitle', {
     }
   },
   render: function (createElement) {
-    return createElement('h1', { class: 'display-1 grey--text text--darken-3 mb-4 mt-3' }, this.text)
+    return createElement('h1', { class: 'text-h4 grey--text text--darken-3 my-3' }, this.text)
   }
 })
 
@@ -18,10 +18,14 @@ Vue.component('SectionTitle', {
     text: {
       type: String,
       required: true
+    },
+    tag: {
+      type: String,
+      default: ('h2')
     }
   },
   render: function (createElement) {
-    return createElement('h2', { class: 'headline grey--text text--darken-3 my-4' }, [this.text, this.$slots.after])
+    return createElement(this.tag, { class: 'text-h5 grey--text text--darken-3 my-4' }, [this.text, this.$slots.after])
   }
 })
 
@@ -33,6 +37,6 @@ Vue.component('SectionSubtitle', {
     }
   },
   render: function (createElement) {
-    return createElement('h3', { class: 'title grey--text text--darken-3 my-3' }, this.text)
+    return createElement('h3', { class: 'text-h6 grey--text text--darken-3 my-3' }, this.text)
   }
 })

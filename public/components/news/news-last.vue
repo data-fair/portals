@@ -3,9 +3,9 @@
     v-bind="infoCardProps"
   >
     <v-card-title>
-      <span class="headline grey--text text--darken-3 font-weight-bold">
+      <h2 class="headline grey--text text--darken-3 font-weight-bold">
         Dernières actualités
-      </span>
+      </h2>
     </v-card-title>
     <v-card-text>
       <v-row v-if="newsRes">

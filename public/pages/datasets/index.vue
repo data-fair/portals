@@ -7,6 +7,7 @@
       <section-title
         v-if="datasets"
         :text="datasets.count + ' ' + (datasets.count> 1 ? 'jeux de données' : 'jeu de données')"
+        tag="h1"
       >
         <template #after>
           <v-tooltip top>
@@ -16,6 +17,7 @@
                 icon
                 target="_blank"
                 class="ml-2"
+                aria-label="Exporter la sélection au format CSV"
                 @click="download(config.title+'.csv')"
                 v-on="on"
               >
@@ -36,6 +38,7 @@
       <section-title
         v-else
         text="..."
+        tag="h1"
       />
       <v-row
         align="center"
@@ -128,6 +131,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Décroissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-descending</v-icon>
@@ -140,6 +144,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Croissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-ascending</v-icon>

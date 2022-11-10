@@ -13,6 +13,7 @@
         class="font-weight-bold"
         :class="{'white--text': backgroundDark}"
         :height="64"
+        title="Menu de navigation"
         v-on="on"
       >
         <v-icon class="mx-1">

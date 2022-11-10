@@ -4,10 +4,12 @@
       <section-title
         v-if="applications"
         :text="applications.count + ' ' + (applications.count> 1 ? 'visualisations' : 'visualisation')"
+        tag="h1"
       />
       <section-title
         v-else
         text="..."
+        tag="h1"
       />
       <v-row align="center">
         <v-col
@@ -98,6 +100,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Décroissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-descending</v-icon>
@@ -110,6 +113,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Croissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-ascending</v-icon>

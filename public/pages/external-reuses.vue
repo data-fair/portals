@@ -1,6 +1,9 @@
 <!-- DEPRECATED -->
 <template>
   <div>
+    <h1 class="hide-element">
+      Réutilisations
+    </h1>
     <!-- <v-container py-0>
       <v-breadcrumbs :items="[{text: 'Les données', to: '/datasets', exact: true}, {text: dataset.title, disabled: true}]"/>
     </v-container>
@@ -46,7 +49,7 @@ export default {
     await this.refresh()
   },
   head () {
-    const title = 'Datasets - ' + this.config.title
+    const title = 'Réutilisations - ' + this.config.title
     const description = 'Parcourez la liste des réutilisations de nos jeux de données.'
     return {
       title,

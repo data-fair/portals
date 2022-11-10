@@ -44,7 +44,7 @@ export default {
   computed: {
     ...mapState(['config', 'publicBaseUrl', 'portal']),
     ...mapGetters(['owner', 'directoryUrl', 'notifyUrl', 'dataFairUrl']),
-    ...mapGetters('session', ['activeAccount']),
+    ...mapGetters('session', ['user', 'activeAccount']),
     notifUrl () {
       if (!this.topics) return
       const portalTitle = this.config.title || new URL(window.location.href).host

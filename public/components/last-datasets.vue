@@ -1,8 +1,8 @@
 <template lang="html">
   <div>
-    <h3 class="headline grey--text text--darken-3 font-weight-bold mb-4 mt-6">
+    <h2 class="headline grey--text text--darken-3 font-weight-bold mb-4 mt-6">
       Derniers jeux de données
-    </h3>
+    </h2>
     <v-row>
       <v-col
         v-for="(dataset, i) in datasets.results"

@@ -1,5 +1,8 @@
 <template lang="html">
   <v-container data-iframe-height>
+    <h1 class="hide-element">
+      Contact
+    </h1>
     <v-row>
       <v-col>
         <v-form
@@ -66,25 +69,31 @@
           <div v-html="config.contactInfos" />
           <template v-if="config.contactPhone">
             <v-divider />
-            <h4>
+            <span>
               <v-icon style="margin-top:-4px">
                 mdi-phone
-              </v-icon><a :href="'tel:' + config.contactPhone">{{ config.contactPhoneLabel }} {{ config.contactPhone }}</a>
-            </h4>
+              </v-icon><a
+                :href="'tel:' + config.contactPhone"
+                aria-label="Contactez nous par téléphone"
+              >{{ config.contactPhoneLabel }} {{ config.contactPhone }}</a>
+            </span>
           </template>
           <template v-if="config.contactWebsite">
             <v-divider />
-            <h4>
+            <span>
               <v-icon style="margin-top:-4px">
                 mdi-web
-              </v-icon><a :href="config.contactWebsite">{{ config.contactWebsiteLabel || config.contactWebsite }}</a>
-            </h4>
+              </v-icon><a
+                :href="config.contactWebsite"
+                aria-label="Retrouvez nous sur ce site"
+              >{{ config.contactWebsiteLabel || config.contactWebsite }}</a>
+            </span>
           </template>
           <template v-if="hasSocialLinks">
             <v-divider />
-            <h4>
+            <span class="text-caption">
               Retrouvez-nous sur les réseaux sociaux
-            </h4>
+            </span>
             <social-links />
           </template>
         </v-card>

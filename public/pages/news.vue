@@ -4,10 +4,12 @@
       <section-title
         v-if="newsRes"
         :text="newsRes.count + ' ' + (newsRes.count> 1 ? 'actualités' : 'actualité')"
+        tag="h1"
       />
       <section-title
         v-else
         text="..."
+        tag="h1"
       />
     </v-container>
     <v-container v-scroll="onScroll">

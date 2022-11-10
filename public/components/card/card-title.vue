@@ -1,11 +1,10 @@
 <template>
   <v-card-title class="pb-2">
     <v-tooltip top>
-      <template #activator="{ on, attrs }">
-        <h3
+      <template #activator="{ on }">
+        <span
           class="title font-weight-bold"
-          :style="`height:${paddingBottom + 3 + (lines * 22)}px;line-height: 1.1;overflow:hidden;width:100%;`"
-          v-bind="attrs"
+          :style="`height:${paddingBottom + 3 + (lines * 22)}px;line-height: 1.1;overflow:hidden;width:100%;display:block;`"
           v-on="on"
         >
           <v-clamp
@@ -16,7 +15,7 @@
           >
             {{ title }}
           </v-clamp>
-        </h3>
+        </span>
       </template>
       <span>{{ title }}</span>
     </v-tooltip>

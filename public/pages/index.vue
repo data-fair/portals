@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- title hidden visually but present for screen readers -->
-    <h1 class="d-none">
+    <h1 class="hide-element">
       {{ config.title }} - accueil
     </h1>
     <template v-if="config.homeImageAsBanner && !config.homeImageHidden">

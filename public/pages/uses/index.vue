@@ -1,13 +1,18 @@
 <template>
   <div>
     <v-container class="py-2">
+      <h1 class="hide-element">
+        Réutilisations
+      </h1>
       <section-title
         v-if="uses"
         :text="uses.count + ' ' + (uses.count> 1 ? 'réutilisations' : 'réutilisation')"
+        tag="h1"
       />
       <section-title
         v-else
         text="..."
+        tag="h1"
       />
       <v-row align="center">
         <v-col
@@ -59,6 +64,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Décroissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-descending</v-icon>
@@ -71,6 +77,7 @@
                     <v-btn
                       text
                       :height="40"
+                      aria-label="Croissant"
                       v-on="on"
                     >
                       <v-icon>mdi-sort-ascending</v-icon>
