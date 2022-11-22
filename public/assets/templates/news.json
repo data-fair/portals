@@ -6,6 +6,9 @@
     "title": {
       "$ref": "#/definitions/title"
     },
+    "summary": {
+      "$ref": "#/definitions/summary"
+    },
     "mainImage": {
       "type": "object",
       "x-display": "custom-df-image",
@@ -53,6 +56,11 @@
     "title": {
       "title": "Titre",
       "type": "string"
+    },
+    "summary": {
+      "title": "Chapô",
+      "type": "string",
+      "x-display": "textarea"
     },
     "description": {
       "title": "Description générale",

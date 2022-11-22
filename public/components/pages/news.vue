@@ -10,8 +10,14 @@
       />
       <k-element
         v-if="config.title"
-        :value="{type: 'title', content: config.title}"
+        :value="{type: 'title', content: config.title, titleSize: 'h4'}"
       />
+      <p
+        v-if="config.summary"
+        class="font-weight-bold text-h6"
+      >
+        {{ config.summary }}
+      </p>
       <p class="text-caption">
         Publiée le {{ page.publishedAt | date('L') }} par {{ page.created.name }}
       </p>
