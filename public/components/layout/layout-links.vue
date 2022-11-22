@@ -77,13 +77,13 @@ export default {
       if (this.isDark(hover)) {
         return `
         border: 2px solid transparent;
-        width: ${maxTitleLength * 12}px;
+        width: ${32 + maxTitleLength * 10}px;
         color: white;
         background-color:${color};`
       } else {
         return `
         border: 2px solid ${borderColor};
-        width: ${maxTitleLength * 12}px;
+        width: ${32 + maxTitleLength * 10}px;
         color: ${color};
         background-color:white;`
       }

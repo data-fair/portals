@@ -10,7 +10,7 @@
       />
       <k-element
         v-if="config.title"
-        :value="{type: 'title', content: config.title, titleSize: 'h4'}"
+        :value="{type: 'title', content: config.title}"
       />
       <p
         v-if="config.summary"
