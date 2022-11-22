@@ -8,6 +8,12 @@
   }
 }
 
+@media only screen and (min-width: 1904px){
+  .main-app-bar:not(.app-bar-fluid) .v-toolbar__extension {
+      max-width:1315px!important;
+  }
+}
+
 iframe {
   background-color: transparent;
   border: none;
@@ -78,5 +84,5 @@ iframe {
   overflow: hidden;
   padding: 0;
   position: absolute;
-  width: 1px; 
-} 
+  width: 1px;
+}
