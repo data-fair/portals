@@ -33,7 +33,8 @@ export default {
     loading: { type: Boolean, default: false },
     color: { type: String, default: 'primary' },
     to: { type: [String, Object], default: null },
-    href: { type: String, default: null }
+    href: { type: String, default: null },
+    target: { type: String, default: null }
   },
   data () {
     return {
@@ -54,6 +55,7 @@ export default {
       }
       if (this.to) btn.to = this.to
       if (this.href) btn.href = this.href
+      if (this.target) btn.target = this.target
       const icon = {
         color: this.dark ? 'white' : this.color
       }
