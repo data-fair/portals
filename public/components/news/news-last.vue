@@ -37,7 +37,7 @@
         </v-col>
       </v-row>
       <v-row
-        v-if="newsRes && newsRes.results.length < newsRes.count && !loading"
+        v-if="newsRes && !loading"
         class="py-0"
         align="center"
       >
