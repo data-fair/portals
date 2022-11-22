@@ -6,6 +6,20 @@
     <layout-app-bar />
 
     <v-main class="mt-3">
+      <v-row
+        v-if="config.homeImageAlwaysVisible && $route.name !== 'index'"
+        justify="center"
+        class="ma-0"
+      >
+        <v-img
+          :src="homeUrl"
+          :alt="config.title"
+          height="200px"
+          max-width="1904px"
+          :class="`elevation-${appBarElevation}`"
+          :style="`margin-top: -11px;`"
+        />
+      </v-row>
       <nuxt-child />
       <client-only><layout-notifications /></client-only>
     </v-main>
@@ -44,11 +58,13 @@ export default {
     return this.portalHead(this.$route, this.$i18n.locale, true, 'scroll')
   },
   computed: {
-    ...mapState(['config']),
-    ...mapGetters(['footerColor', 'footerColorDark', 'portalHead'])
+    ...mapState(['config', 'publicUrl', 'portal', 'draft']),
+    ...mapGetters(['footerColor', 'footerColorDark', 'portalHead', 'appBarElevation']),
+    homeUrl () {
+      return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
+    }
   }
 }
-
 </script>
 
 <style>

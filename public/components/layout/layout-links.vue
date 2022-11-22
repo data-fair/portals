@@ -73,14 +73,17 @@ export default {
     style (hover) {
       const color = this.readablePrimaryColor
       const borderColor = this.options.includes('outlined') ? color : 'transparent'
+      const maxTitleLength = Math.max(...this.links.map(l => (l.title || '').length))
       if (this.isDark(hover)) {
         return `
         border: 2px solid transparent;
+        width: ${maxTitleLength * 12}px;
         color: white;
         background-color:${color};`
       } else {
         return `
         border: 2px solid ${borderColor};
+        width: ${maxTitleLength * 12}px;
         color: ${color};
         background-color:white;`
       }

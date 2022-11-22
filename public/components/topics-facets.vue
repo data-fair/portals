@@ -9,7 +9,7 @@
         <v-btn
           class="mr-3 mb-1 font-weight-bold text-none"
           dark
-          :rounded="config.topicsOptions.includes('rounded')"
+          :rounded="!!config.radius"
           depressed
           :elevation="elevation"
           :style="style(topicItem, hover)"

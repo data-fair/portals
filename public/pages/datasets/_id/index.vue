@@ -127,6 +127,10 @@
                       v-for="(keyword,i) in dataset.keywords"
                       :key="i"
                       class="ma-1"
+                      small
+                      dark
+                      :label="!config.radius"
+                      :color="readableSecondaryColor"
                     >
                       {{ keyword }}
                     </v-chip>
@@ -546,7 +550,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl']),
+    ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
     ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id

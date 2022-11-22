@@ -49,6 +49,9 @@ export default () => ({
     readablePrimaryColor (state, getters, rootState) {
       return contrastColor(getters.primaryColor)
     },
+    readableSecondaryColor (state, getters, rootState) {
+      return contrastColor(getters.secondaryColor)
+    },
     secondaryBackgroundColor (state, getters, rootState) {
       return rootState.config && rootState.config.secondaryBackgroundColor ? getters.backgroundColor(rootState.config.secondaryBackgroundColor, false) : '#FFFFFF'
     },
@@ -363,11 +366,11 @@ export default () => ({
           background-color: ${getters.darkReadablePrimary10};
         }
         .underline-link.underline-link-partial:after {
-          transform: scaleX(0.2);
+          transform: scaleX(0.1);
         }
         .underline-link.underline-link-partial:hover:after,
         .underline-link-hover.underline-link-partial:after {
-          transform: scaleX(0.4);
+          transform: scaleX(0.2);
         }
         `
       } else if (getters.buttonOptions.includes('alwaysUnderline')) {
@@ -400,11 +403,11 @@ export default () => ({
 html {
   overflow-y: ${htmlOverflow} !important;
 }
-      
+
 .v-application#app.theme--light#app {
   background: ${getters.bodyBackgroundColor};
 }
-      
+
 .v-btn.primary.theme--light.v-btn--has-bg {
   background: linear-gradient(90deg, ${getters.readablePrimaryColor} 0%, ${getters.darkReadablePrimary10} 100%);
 }
@@ -412,7 +415,7 @@ html {
   border: 1px solid ${getters.darkReadablePrimary10} !important;
 }
 .v-btn.secondary.theme--light.v-btn--has-bg {
-  background-color: ${contrastColor(getters.secondaryColor)} !important;
+  background-color: ${getters.readableSecondaryColor} !important;
 }
 
 /* Apply fonts */
@@ -460,12 +463,12 @@ ${getters.linksStyle}
   color: ${getters.darkReadablePrimary10}!important;
 }
 .v-application#app .secondary--text {
-  color: ${contrastColor(getters.secondaryColor)}!important;
+  color: ${getters.readableSecondaryColor}!important;
 }
-      
+
 /* style of the main app bar */
 ${getters.appBarStyle}
-     
+
 /* style of the personal navigation bar */
 ${getters.personalNavigationStyle}
 

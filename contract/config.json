@@ -110,6 +110,13 @@
             }
           }
         }
+      },
+      "homeImageAlwaysVisible": {
+        "type": "boolean",
+        "x-display": "switch",
+        "x-class": "no-margin",
+        "default": false,
+        "title": "Afficher l'image principale en bannière sur toutes les pages"
       }
     }
   }, {
@@ -391,18 +398,6 @@
           "const": "primarySecondary",
           "title": "couleur primaire ou secondaire selon le contexte"
         }]
-      },
-      "topicsOptions": {
-        "title": "Options des étiquettes de thématiques",
-        "type": "array",
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "rounded",
-            "title": "arrondir"
-          }]
-        },
-        "default": ["rounded"]
       }
     }
   }, {

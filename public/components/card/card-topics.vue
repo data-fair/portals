@@ -8,7 +8,7 @@
       :key="topic.id"
       small
       dark
-      :label="!config.topicsOptions.includes('rounded')"
+      :label="!config.radius"
       :color="readableTopicColor(topic, true)"
       class="ml-2 mt-1 font-weight-bold"
     >
