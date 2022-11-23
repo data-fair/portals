@@ -404,6 +404,9 @@ router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next)
     name: req.user.name,
     date: new Date().toISOString()
   }
+  if (req.body.published) {
+    req.body.publishedAt = new Date()
+  }
   const valid = validatePage(req.body)
   if (!valid) return res.status(400).send(validatePage.errors)
   let insertOk = false
