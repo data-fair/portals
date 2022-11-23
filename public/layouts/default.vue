@@ -14,7 +14,7 @@
         <v-img
           :src="homeUrl"
           :alt="config.title"
-          height="200px"
+          height="250px"
           max-width="1904px"
           :class="`elevation-${appBarElevation}`"
           :style="`margin-top: ${config.appBarTransparency ? -77 : -12}px;`"

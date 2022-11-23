@@ -190,7 +190,7 @@ export default {
       this.loading = true
       if (append) this.pagination += 1
       else this.pagination = 1
-      const params = { size: 12, page: this.pagination }
+      const params = { size: 12, page: this.pagination, sort: 'created.date:-1' }
       if (this.filters.template) params.template = this.filters.template
       const pages = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
       if (append) pages.results.forEach(r => this.pages.results.push(r))
