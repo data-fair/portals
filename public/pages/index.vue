@@ -9,7 +9,7 @@
         <v-iframe
           :src="homeApplicationUrl"
           :class="`elevation-${appBarElevation}`"
-          style="margin-top: -11px;height: 400px;"
+          style="margin-top: -12px;height: 400px;"
         />
       </client-only>
       <v-row
