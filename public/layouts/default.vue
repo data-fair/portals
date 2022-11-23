@@ -17,7 +17,7 @@
           height="200px"
           max-width="1904px"
           :class="`elevation-${appBarElevation}`"
-          :style="`margin-top: -11px;`"
+          :style="`margin-top: ${config.appBarTransparency ? -77 : -12}px;`"
         />
       </v-row>
       <nuxt-child />

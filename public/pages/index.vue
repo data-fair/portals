@@ -23,7 +23,7 @@
           height="400px"
           max-width="1904px"
           :class="`elevation-${appBarElevation}`"
-          :style="`margin-top: ${config.appBarTransparency ? -76 : -11}px;`"
+          :style="`margin-top: ${config.appBarTransparency ? -77 : -12}px;`"
         />
       </v-row>
       <v-container
