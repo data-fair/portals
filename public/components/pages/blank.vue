@@ -55,6 +55,7 @@
           <v-tabs
             v-model="tabs[i]"
             show-arrows
+            grow
           >
             <v-tab
               v-for="(tab, j) in element.tabs"
