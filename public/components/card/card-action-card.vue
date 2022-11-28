@@ -4,7 +4,7 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <template v-if="layout === 'dense' || layout === 'vertical'">
+    <template v-if="layout === 'dense' || layout === 'vertical' || $vuetify.breakpoint.smAndDown">
       <optional-link
         :to="to"
         :title="title"
@@ -49,7 +49,7 @@
     </template>
 
     <v-row
-      v-if="layout==='horizontal'"
+      v-if="layout==='horizontal' && $vuetify.breakpoint.mdAndUp"
       dense
       style="height:246px;"
     >

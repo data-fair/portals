@@ -348,7 +348,7 @@ export default () => ({
         .underline-link:after {
           content: '';
           position: absolute;
-          width: 100%;
+          width: 45px;
           transform: scaleX(0);
           height: 3px;
           bottom: 0;
@@ -366,11 +366,11 @@ export default () => ({
           background-color: ${getters.darkReadablePrimary10};
         }
         .underline-link.underline-link-partial:after {
-          transform: scaleX(0.1);
+          transform: scaleX(1);
         }
         .underline-link.underline-link-partial:hover:after,
         .underline-link-hover.underline-link-partial:after {
-          transform: scaleX(0.2);
+          transform: scaleX(2);
         }
         `
       } else if (getters.buttonOptions.includes('alwaysUnderline')) {
@@ -409,7 +409,7 @@ html {
 }
 
 .v-btn.primary.theme--light.v-btn--has-bg {
-  background: linear-gradient(90deg, ${getters.readablePrimaryColor} 0%, ${getters.darkReadablePrimary10} 100%);
+  ${getters.elevation ? `background: linear-gradient(90deg, ${getters.readablePrimaryColor} 0%, ${getters.darkReadablePrimary10} 100%);` : `background-color: ${getters.readablePrimaryColor}!important;`}
 }
 .v-application#app.theme--light .v-btn.primary.v-btn--has-bg {
   border: 1px solid ${getters.darkReadablePrimary10} !important;

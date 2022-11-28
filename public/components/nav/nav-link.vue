@@ -20,13 +20,15 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <v-icon
-      v-if="icon && !config.navLinkMode.includes('NoIcon')"
-      :color="isDark ? 'white' : config.navLinkColor"
-    >
-      {{ icon }}
-    </v-icon>
-    &nbsp;<span>{{ title }}</span>
+    <template v-if="icon && !config.navLinkMode.includes('NoIcon')">
+      <v-icon
+        :color="isDark ? 'white' : config.navLinkColor"
+      >
+        {{ icon }}
+      </v-icon>
+    &nbsp;
+    </template>
+    <span>{{ title }}</span>
   </v-btn>
 </template>
 

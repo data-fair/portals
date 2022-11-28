@@ -1,13 +1,6 @@
 <template>
   <div v-if="config">
     <v-container>
-      <v-img
-        v-if="config.mainImage && config.mainImage.attachmentPath"
-        :src="(images && images[config.mainImage.assetId]) || `${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
-        :alt="config.title"
-        max-height="400px"
-        style="margin-top: -12px;"
-      />
       <k-element
         v-if="config.title"
         :value="{type: 'title', content: config.title}"
@@ -21,6 +14,15 @@
       <p class="text-caption">
         Publiée le {{ page.publishedAt | date('L') }} par {{ page.created.name }}
       </p>
+      <v-img
+        v-if="config.mainImage && config.mainImage.attachmentPath"
+        :src="(images && images[config.mainImage.assetId]) || `${imagesDatasetUrl}/attachments/${config.mainImage.attachmentPath}`"
+        :alt="config.title"
+        position=" left center"
+        max-height="300px"
+        class="my-3"
+        contain
+      />
       <k-element
         v-if="config.description"
         :value="{type: 'text', content: config.description}"

@@ -90,3 +90,13 @@ services:
       - DEBUG=capture
       - PUBLIC_URL=http://localhost:6200/capture
       - PROMETHEUS_ACTIVE=false
+
+  thumbor:
+    profiles:
+      - dev
+    image: apsl/thumbor:6.4.2
+    network_mode: host
+    environment:
+      - SECURITY_KEY=thumborkey
+      - STORAGE_EXPIRATION_SECONDS=600
+      - MAX_AGE=600

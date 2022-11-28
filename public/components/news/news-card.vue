@@ -1,9 +1,9 @@
 <template lang="html">
   <card-action-card
     :to="`/pages/${news.id}`"
-    :title="news.title"
+    :title="news.config.title"
     :topics="news.topics"
-    :html="news.config.description"
+    :html="news.config.summary || news.config.description"
     :layout="layout"
     :img="news.config.mainImage && `${imagesDatasetUrl}/attachments/${news.config.mainImage.attachmentPath}`"
   >
