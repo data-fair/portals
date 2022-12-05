@@ -111,6 +111,50 @@
       </v-icon>
       {{ value.label }}
     </v-btn>
+    <v-row
+      v-if="value.type === 'twoColumns'"
+      class="mb-6"
+    >
+      <v-col
+        :cols="12"
+        :md="value.layout === 'left' ? 8 : (value.layout === 'right' ? 4 : 6)"
+      >
+        <k-element
+          v-for="(lElement, li) in value.leftColumn"
+          :key="`l${li}`"
+          :value="lElement"
+          :images="images"
+        />
+      </v-col>
+      <v-col
+        :cols="12"
+        :md="value.layout === 'left' ? 4 : (value.layout === 'right' ? 8 : 6)"
+      >
+        <k-element
+          v-for="(rElement, ri) in value.rightColumn"
+          :key="`r${ri}`"
+          :value="rElement"
+          :images="images"
+        />
+      </v-col>
+    </v-row>
+    <v-row
+      v-else-if="value.type === 'responsiveFlow'"
+      class="mb-6"
+    >
+      <v-col
+        v-for="(lElement, li) in value.items"
+        :key="`l${li}`"
+        :cols="12"
+        :sm="6"
+        :md="4"
+      >
+        <k-element
+          :value="lElement"
+          :images="images"
+        />
+      </v-col>
+    </v-row>
     <client-only v-else>
       <v-iframe
         v-if="value.type === 'datasetForm' && value.dataset"
