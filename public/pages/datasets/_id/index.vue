@@ -104,7 +104,7 @@
                       style="height:26px"
                       class="pa-0"
                     >
-                      licence :
+                      Licence :
                     </v-subheader>
                     <a
                       :href="dataset.license.href"
