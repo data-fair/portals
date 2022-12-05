@@ -42,6 +42,7 @@
             <v-list-item-action>
               <v-btn
                 :href="attachment.url"
+                target="_blank"
                 download
                 icon
                 ripple
