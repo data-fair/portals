@@ -15,11 +15,18 @@
       },
       "readOnly": true
     },
+    "title": {
+      "type": "string",
+      "title": "Titre de la page",
+      "default": "Nouvelle page",
+      "x-cols": {"cols": 12, "md": 6, "lg": 8},
+      "x-class": "pr-2"
+    },
     "published": {
       "type": "boolean",
       "title": "Publiée",
       "default": false,
-      "x-cols": {"cols": 6, "md": 3}
+      "x-cols": {"cols": 6, "md": 3, "lg": 2}
     },
     "publishedAt": {
       "type": "string",
@@ -31,7 +38,26 @@
       "type": "boolean",
       "title": "Publique",
       "default": false,
-      "x-cols": {"cols": 6, "md": 3}
+      "x-cols": {"cols": 6, "md": 3, "lg": 2}
+    },
+    "topics": {
+      "type": "array",
+      "title": "Thématiques",
+      "items": {
+        "title": "Liste de thématiques",
+        "type": "object",
+        "properties": {
+          "color": {"type": "string"},
+          "title": {"type": "string"},
+          "id": {"type": "string"}
+        }
+      },
+      "x-fromUrl": "{context.settingsUrl}",
+      "x-itemsProp": "topics",
+      "x-itemTitle": "title",
+      "x-itemKey": "id",
+      "x-cols": {"cols": 12, "md": 6},
+      "x-class": "pr-2"
     },
     "template": {
       "title": "Modèle de page",
@@ -102,13 +128,6 @@
       "x-cols": {"cols": 6, "md": 3},
       "x-class": "pr-2"
     },
-    "title": {
-      "type": "string",
-      "title": "Titre de la page",
-      "default": "Nouvelle page",
-      "x-cols": {"cols": 12, "md": 6},
-      "x-class": "pr-2"
-    },
     "config": {
       "type": "object",
       "readOnly": true
@@ -116,25 +135,6 @@
     "configDraft": {
       "type": "object",
       "readOnly": true
-    },
-    "topics": {
-      "type": "array",
-      "title": "Thématiques",
-      "items": {
-        "title": "Liste de thématiques",
-        "type": "object",
-        "properties": {
-          "color": {"type": "string"},
-          "title": {"type": "string"},
-          "id": {"type": "string"}
-        }
-      },
-      "x-fromUrl": "{context.settingsUrl}",
-      "x-itemsProp": "topics",
-      "x-itemTitle": "title",
-      "x-itemKey": "id",
-      "x-cols": {"cols": 12, "md": 6},
-      "x-class": "pr-2"
     },
     "created": {
       "type": "object",

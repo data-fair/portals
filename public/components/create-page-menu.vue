@@ -69,13 +69,22 @@
 </template>
 
 <script>
+const schema = require('../../contract/page.json')
 export default {
   data: () => ({
-    schema: require('../../contract/page.json'),
     menu: false,
     valid: false,
     editItem: {}
   }),
+  computed: {
+    schema () {
+      const s = JSON.parse(JSON.stringify(schema))
+      delete s.properties.published
+      delete s.properties.public
+      delete s.properties.title['x-cols']
+      return s
+    }
+  },
   watch: {
     menu () {
       if (!this.menu) {

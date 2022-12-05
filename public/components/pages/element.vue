@@ -127,7 +127,18 @@
         :src="applicationIframeSrc(value.application)"
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
+        <a
+          v-if="value.href && (value.href.startsWith('http://') || value.href.startsWith('https://'))"
+          :href="value.href"
+          target="_blank"
+        >
+          <v-img
+            :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
+            :title="value.title"
+          />
+        </a>
         <v-img
+          v-else
           :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
           :title="value.title"
         />

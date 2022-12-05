@@ -369,6 +369,11 @@
           "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
           "type": "string"
         },
+        "href": {
+          "title": "URL vers une autre page",
+          "description": "L'image devient un lien qui pointe vers l'URL renseignée.",
+          "type": "string"
+        },
         "local": {
           "type": "object",
           "x-display": "custom-df-image",
