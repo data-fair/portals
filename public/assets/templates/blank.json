@@ -525,7 +525,42 @@
                 "x-itemTitle": "type",
                 "x-arrayGroup": "page-element",
                 "items": {
-                  "$ref": "#/definitions/element"
+                  "title": "Element",
+                  "type": "object",
+                  "x-itemKey": "type",
+                  "oneOf": [{
+                    "$ref": "#/definitions/title"
+                  }, {
+                    "$ref": "#/definitions/text"
+                  }, {
+                    "$ref": "#/definitions/alert"
+                  }, {
+                    "$ref": "#/definitions/divider"
+                  }, {
+                    "$ref": "#/definitions/application"
+                  }, {
+                    "$ref": "#/definitions/datasetCard"
+                  }, {
+                    "$ref": "#/definitions/datasetForm"
+                  }, {
+                    "$ref": "#/definitions/datasetTable"
+                  }, {
+                    "$ref": "#/definitions/cardSimple"
+                  }, {
+                    "$ref": "#/definitions/image"
+                  }, {
+                    "$ref": "#/definitions/iframe"
+                  }, {
+                    "$ref": "#/definitions/card"
+                  }, {
+                    "$ref": "#/definitions/twoColumns"
+                  }, {
+                    "$ref": "#/definitions/responsiveFlow"
+                  }],
+                  "default": {
+                    "type": "text",
+                    "content": ""
+                  }
                 }
               }
             }
