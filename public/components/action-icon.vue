@@ -65,6 +65,11 @@ export default {
         btn.color = this.dark ? 'white' : this.color
         icon.color = this.dark ? this.color : 'white'
       }
+      if (this.disabled) {
+        delete btn.color
+        delete icon.color
+        btn.plain = true
+      }
       return { btn, icon }
     }
   }
