@@ -16,18 +16,6 @@
       <v-card-actions>
         <v-row>
           <v-col
-            :cols="6"
-            class="py-0"
-          >
-            <card-topics :topics="dataset && dataset.topics" />
-          </v-col>
-          <v-col
-            :cols="6"
-            class="py-0"
-          >
-            <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}</v-subheader>
-          </v-col>
-          <v-col
             v-if="!dataset.isMetaOnly"
             :cols="6"
             class="py-0"
@@ -140,6 +128,18 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
+          </v-col>
+          <v-col
+            :cols="6"
+            class="py-0"
+          >
+            <card-topics :topics="dataset && dataset.topics" />
+          </v-col>
+          <v-col
+            :cols="6"
+            class="py-0"
+          >
+            <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}</v-subheader>
           </v-col>
         </v-row>
 
