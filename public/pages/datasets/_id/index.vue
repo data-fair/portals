@@ -243,7 +243,7 @@
               />
               <client-only>
                 <notif-edit
-                  v-if="user && notifyUrl"
+                  v-if="canLogin && notifyUrl"
                   :dataset="dataset"
                   :color="'primary'"
                 />
@@ -302,11 +302,11 @@
         </v-row>
       </template>
 
-      <template v-if="dataset.public && ((uses && uses.length) || (user && config.usesManagement && config.usesManagement.type === 'users'))">
+      <template v-if="dataset.public && ((uses && uses.length) || (canLogin && config.usesManagement && config.usesManagement.type === 'users'))">
         <section-title
           text="Réutilisations"
         />
-        <p v-if="user && config.usesManagement && config.usesManagement.type === 'users'">
+        <p v-if="canLogin && config.usesManagement && config.usesManagement.type === 'users'">
           Vous souhaitez faire connaitre une réutilisation de cette donnée ? Rendez vous dans votre <nuxt-link :to="{ name: 'me-uses', query: { dataset: dataset.id } }">
             espace personnel
           </nuxt-link>.
@@ -551,7 +551,6 @@ export default {
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
     ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
-    ...mapState('session', ['user']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.id
     },
@@ -581,6 +580,9 @@ export default {
         continuous: 'en continu',
         irregular: 'irrégulier'
       }
+    },
+    canLogin () {
+      return this.config.authentication !== 'none'
     }
   },
   async mounted () {}

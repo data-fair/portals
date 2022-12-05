@@ -8,6 +8,7 @@
       <action-icon
         title="Notifications"
         icon="mdi-bell"
+        :disabled="!user"
         v-on="onDialog"
       />
     </template>
@@ -52,6 +53,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicBaseUrl']),
+    ...mapState('session', ['user']),
     ...mapGetters(['owner', 'notifyUrl', 'directoryUrl']),
     notifUrl () {
       const keys = [`data-fair:dataset-data-updated:${this.dataset.id}`, `data-fair:dataset-breaking-change:${this.dataset.id}`]

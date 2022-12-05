@@ -14,42 +14,6 @@
     </p>
 
     <h3 class="text-h5">
-      Soumissions précédentes
-    </h3>
-    <v-row
-      v-if="submittedUses && submittedUses.length"
-      class="my-3"
-    >
-      <v-col
-        v-for="use of submittedUses"
-        :key="use._id"
-        md="6"
-        cols="12"
-      >
-        <use-card :use="use" />
-      </v-col>
-    </v-row>
-    <v-row
-      v-else-if="submittedUses"
-      class="my-6"
-    >
-      <v-subheader>Vous n'avez pas encore soumis de réutilisation.</v-subheader>
-    </v-row>
-    <v-row
-      v-else
-      class="my-6"
-    >
-      <v-spacer />
-      <v-progress-circular
-        :size="40"
-        :width="5"
-        :color="'primary'"
-        indeterminate
-      />
-      <v-spacer />
-    </v-row>
-
-    <h3 class="text-h5">
       Brouillons
     </h3>
     <v-row
@@ -154,6 +118,42 @@
         </v-btn>
       </v-row>
     </template>
+
+    <h3 class="text-h5">
+      Soumissions précédentes
+    </h3>
+    <v-row
+      v-if="submittedUses && submittedUses.length"
+      class="my-3"
+    >
+      <v-col
+        v-for="use of submittedUses"
+        :key="use._id"
+        md="6"
+        cols="12"
+      >
+        <use-card :use="use" />
+      </v-col>
+    </v-row>
+    <v-row
+      v-else-if="submittedUses"
+      class="my-6"
+    >
+      <v-subheader>Vous n'avez pas encore soumis de réutilisation.</v-subheader>
+    </v-row>
+    <v-row
+      v-else
+      class="my-6"
+    >
+      <v-spacer />
+      <v-progress-circular
+        :size="40"
+        :width="5"
+        :color="'primary'"
+        indeterminate
+      />
+      <v-spacer />
+    </v-row>
   </v-container>
 </template>
 

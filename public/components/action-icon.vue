@@ -34,7 +34,8 @@ export default {
     color: { type: String, default: 'primary' },
     to: { type: [String, Object], default: null },
     href: { type: String, default: null },
-    target: { type: String, default: null }
+    target: { type: String, default: null },
+    disabled: { type: Boolean, default: false }
   },
   data () {
     return {
@@ -48,6 +49,7 @@ export default {
         fab: true,
         small: true,
         loading: this.loading,
+        disabled: this.disabled,
         color: 'transparent',
         elevation: 0,
         class: 'pa-0',
