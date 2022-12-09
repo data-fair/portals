@@ -138,7 +138,7 @@
         </v-row>
       </v-container>
     </v-col>
-    <layout-navigation-right v-if="$vuetify.breakpoint.lgAndUp">
+    <layout-navigation-right v-if="$vuetify.breakpoint.mdAndUp">
       <v-list
         dense
         class="list-actions mr-2"
