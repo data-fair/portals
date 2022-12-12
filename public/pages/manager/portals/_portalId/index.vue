@@ -241,7 +241,8 @@ export default {
         dataFairUrl: this.$store.getters.dataFairUrl,
         publicUrl: this.$store.state.publicUrl,
         portalUrl: `api/v1/portals/${this.portal._id}`,
-        fonts: this.fonts
+        fonts: this.fonts,
+        featuredVisibilityFilter: (this.configDraft && this.configDraft.authentication !== 'required') ? '&visibility=public' : ''
       }
     },
     iframeHeight () {
