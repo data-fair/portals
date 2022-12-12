@@ -750,7 +750,7 @@
       "homeApplication": {
         "title": "Remplacer l'image principale par une visualisation",
         "type": "object",
-        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000",
+        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
         "x-itemKey": "href",
