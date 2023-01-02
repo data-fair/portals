@@ -45,16 +45,14 @@
         />
         <br>
         <pre>
-&lt;iframe src="{{ previewLink }}" width="100%" height="300px"
+&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="300px"
 style="background-color: transparent; border: none;" &gt;&lt;/iframe&gt;
         </pre>
         <br>
         Résultat:
-        <iframe
+        <v-iframe
           :src="previewLink"
-          width="100%"
-          height="300px"
-          style="background-color: transparent; border: none;"
+          @state="s => iframeState = s"
         />
       </v-card-text>
     </v-card>
@@ -62,12 +60,18 @@ style="background-color: transparent; border: none;" &gt;&lt;/iframe&gt;
 </template>
 
 <script>
+import VIframe from '@koumoul/v-iframe'
+
 export default {
+  components: {
+    VIframe
+  },
   props: ['dataset'],
   data () {
     return {
       embedDialog: null,
-      previewId: 'table'
+      previewId: 'table',
+      iframeState: null
     }
   },
   computed: {
