@@ -44,10 +44,10 @@
           :menu-props="{offsetY: true}"
         />
         <br>
-        <pre>
-&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="300px"
-style="background-color: transparent; border: none;" &gt;&lt;/iframe&gt;
-        </pre>
+        <code
+          class="pa-2 mt-2"
+          style="line-height:1.9rem"
+        >&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
         <br>
         Résultat:
         <v-iframe

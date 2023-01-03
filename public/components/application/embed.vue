@@ -28,7 +28,11 @@
       </v-toolbar>
       <v-card-text>
         Pour intégrer cette application dans un site vous pouvez copier le code suivant dans le contenu HTML de votre site.
-        <code class="pa-2 mt-2">&lt;iframe src="{{ embedUrl }}?embed=true" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
+        <br>
+        <code
+          class="pa-2 mt-2"
+          style="line-height:1.9rem"
+        >&lt;iframe src="{{ embedUrl }}?embed=true" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
       </v-card-text>
     </v-card>
   </v-dialog>
