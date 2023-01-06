@@ -142,7 +142,24 @@ module.exports = {
   css: [
     '@mdi/font/css/materialdesignicons.min.css',
     '@/assets/main.css'
-  ]
+  ],
+  // a way to render sitemap.xml from inside nuxt
+  hooks: {
+    render: {
+      route (url, result, context) {
+        if (url.split('?')[0].endsWith('.xml')) {
+          const match = result.html.match(/<xml(.*?)>(.*)<\/xml>/)
+          if (match) {
+            result.xml = true
+            result.html = match[2]
+          }
+        }
+      },
+      beforeResponse (url, result, context) {
+        if (result.xml) context.res.setHeader('Content-Type', 'application/xml')
+      }
+    }
+  }
 }
 
 /*

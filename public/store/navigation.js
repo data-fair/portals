@@ -1,6 +1,8 @@
 export default () => ({
   state: {
-    pages: null
+    pages: null,
+    datasetsList: null,
+    applicationsList: null
   },
   mutations: {
     setAny (state, params) {
@@ -33,7 +35,7 @@ export default () => ({
       }
       for (const page of state.pages) {
         if (page.navigation && page.navigation.type === 'direct') {
-          navigation.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position })
+          navigation.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position, updatedAt: page.updated.date })
         }
         if (page.navigation && page.navigation.type === 'menu') {
           let menuItem = navigation.find(item => !!item.children && item.title.toLowerCase() === page.navigation.title.toLowerCase())
@@ -41,7 +43,7 @@ export default () => ({
             menuItem = { title: page.navigation.title, children: [] }
             navigation.push(menuItem)
           }
-          menuItem.children.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position })
+          menuItem.children.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position, updatedAt: page.updated.date })
         }
       }
       if (config.contactEmail && !config.contactFooter) {
@@ -66,12 +68,47 @@ export default () => ({
 
       navigation.sort((c1, c2) => c1.position - c2.position)
       return navigation
+    },
+    sitemap (state, getters, rootState) {
+      const pages = []
+      for (const nav of getters.navigation) {
+        if (nav.to) pages.push({ to: nav.to, title: nav.title, updatedAt: nav.updatedAt || rootState.config.updatedAt })
+        for (const child of nav.children || []) {
+          if (child.to) pages.push({ to: child.to, title: child.title, updatedAt: child.updatedAt || rootState.config.updatedAt })
+        }
+      }
+      for (const link of (rootState.config.footerLinks || []).concat(rootState.config.footerImportantLinks || [])) {
+        if (link.type === 'internal' && link.page) {
+          const page = state.pages.find(p => p.id === link.page.id)
+          if (page) {
+            const info = { to: '/pages/' + page.id, title: page.title, updatedAt: page.updatedAt }
+            if (!pages.find(p => p.to === info.to)) pages.push(info)
+          }
+        }
+      }
+      for (const dataset of state.datasetsList || []) {
+        pages.push({ to: '/datasets/' + dataset.id, title: dataset.title, updatedAt: dataset.updatedAt })
+      }
+      for (const application of state.applicationsList || []) {
+        pages.push({ to: '/applications/' + application.id, title: application.title, updatedAt: application.updatedAt })
+      }
+      return pages
     }
   },
   actions: {
     async fetchPages ({ state, commit }) {
-      const pages = (await this.$axios.$get(state.publicUrl + `/api/v1/portals/${state.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation', published: true } })).results
+      const pages = (await this.$axios.$get(state.publicUrl + `/api/v1/portals/${state.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation,updated.date', published: true } })).results
       commit('setAny', { pages })
+    },
+    async fetchDatasetsList ({ state, commit, rootState, rootGetters }) {
+      const params = { size: 10000, count: false, raw: true, select: 'id,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
+      const datasetsList = (await this.$axios.$get(`${rootGetters.dataFairUrl}/api/v1/datasets`, { params })).results
+      commit('setAny', { datasetsList })
+    },
+    async fetchApplicationsList ({ state, commit, rootState, rootGetters }) {
+      const params = { size: 10000, count: false, raw: true, select: 'id,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
+      const applicationsList = (await this.$axios.$get(`${rootGetters.dataFairUrl}/api/v1/applications`, { params })).results
+      commit('setAny', { applicationsList })
     }
   }
 })
