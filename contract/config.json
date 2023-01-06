@@ -612,11 +612,11 @@
       },
       "footerLinksMode": {
         "type": "string",
-        "default": "columns",
+        "default": "lines",
         "title": "Mode d'affichage des liens",
         "oneOf": [
-          {"title": "en colonnes", "const": "columns"},
-          {"title": "en lignes", "const": "lines"}
+          {"title": "en lignes", "const": "lines"},
+          {"title": "en colonnes", "const": "columns"}
         ]
       },
       "footerExtraLogos": {
@@ -730,6 +730,11 @@
           }
         },
         "default": []
+      },
+      "footerSitemap": {
+        "title": "Ajouter un lien vers le plan du site",
+        "type": "boolean",
+        "default": true
       }
     }
   }, {

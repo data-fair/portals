@@ -58,7 +58,7 @@
       class="mx-0 my-2"
     >
       <v-col
-        v-for="link in config.footerLinks"
+        v-for="link in footerLinks"
         :key="link.title"
         cols="10"
         sm="4"
@@ -74,6 +74,12 @@
             {{ link.page.title }}
           </nuxt-link>
         </template>
+        <nuxt-link
+          v-else-if="link.type === 'standard'"
+          :to="link.to"
+        >
+          {{ link.title }}
+        </nuxt-link>
         <a
           v-else
           :href="link.href"
@@ -86,18 +92,28 @@
     >
       <v-col class="py-0">
         <template
-          v-for="(link, i) in config.footerLinks"
+          v-for="(link, i) in footerLinks"
         >
+          <template v-if="link.type === 'internal'">
+            <nuxt-link
+              v-if="link.page"
+              :key="`internal-${i}`"
+              :to="{name: 'pages-id', params: {id: link.page.id}}"
+              class="mx-3"
+            >
+              {{ link.page.title }}
+            </nuxt-link>
+          </template>
           <nuxt-link
-            v-if="link.type === 'internal' && link.page"
-            :key="`internal-${i}`"
-            :to="{name: 'pages-id', params: {id: link.page.id}}"
+            v-else-if="link.type === 'standard'"
+            :key="`standard-${i}`"
+            :to="link.to"
             class="mx-3"
           >
-            {{ link.page.title }}
+            {{ link.title }}
           </nuxt-link>
           <a
-            v-if="link.type !== 'internal'"
+            v-else
             :key="`external-${i}`"
             :href="link.href"
             class="mx-3"
@@ -156,6 +172,11 @@ export default {
       }
       if (this.config.footerCopyrightAsLogo) logos.push(copyright)
       return logos
+    },
+    footerLinks () {
+      const links = [...this.config.footerLinks || []]
+      if (this.config.footerSitemap) links.push({ type: 'standard', title: 'Plan du site', to: '/sitemap' })
+      return links
     }
   }
 }
