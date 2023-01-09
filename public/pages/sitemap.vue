@@ -6,7 +6,7 @@
     </h2>
     <v-list>
       <v-list-item
-        v-for="page in sitemap"
+        v-for="page in sitemapShort"
         :key="page.to"
         :to="page.to"
         class="primary--text"
@@ -23,11 +23,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   middleware: 'portal-required',
   async fetch () {
-    const promises = []
-    if (!this.pages) promises.push(this.$store.dispatch('fetchPages'))
-    if (!this.datasetsList) promises.push(this.$store.dispatch('fetchDatasetsList'))
-    if (!this.applicationsList) promises.push(this.$store.dispatch('fetchApplicationsList'))
-    if (promises.length) await Promise.all(promises)
+    if (!this.pages) await this.$store.dispatch('fetchPages')
   },
   head () {
     const title = 'Plan du site - ' + this.config.title
@@ -42,7 +38,7 @@ export default {
   },
   computed: {
     ...mapState(['publicUrl', 'config', 'pages', 'datasetsList', 'applicationsList']),
-    ...mapGetters(['sitemap'])
+    ...mapGetters(['sitemapShort'])
   }
 }
 </script>

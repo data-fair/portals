@@ -10,7 +10,7 @@
       xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
     >
       <url
-        v-for="page in sitemap"
+        v-for="page in sitemapFull"
         :key="page.to"
       >
         <loc v-text="fullURL(page.to)" />
@@ -36,12 +36,13 @@ export default {
     await Promise.all([
       this.$store.dispatch('fetchPages'),
       this.$store.dispatch('fetchDatasetsList'),
-      this.$store.dispatch('fetchApplicationsList')
+      this.$store.dispatch('fetchApplicationsList'),
+      this.$store.dispatch('fetchUsesList')
     ])
   },
   computed: {
     ...mapState(['publicUrl', 'portal']),
-    ...mapGetters(['sitemap'])
+    ...mapGetters(['sitemapFull'])
   },
   methods: {
     fullURL (to) {

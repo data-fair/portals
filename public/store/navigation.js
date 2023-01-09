@@ -2,7 +2,8 @@ export default () => ({
   state: {
     pages: null,
     datasetsList: null,
-    applicationsList: null
+    applicationsList: null,
+    usesList: null
   },
   mutations: {
     setAny (state, params) {
@@ -69,38 +70,76 @@ export default () => ({
       navigation.sort((c1, c2) => c1.position - c2.position)
       return navigation
     },
-    sitemap (state, getters, rootState) {
+    sitemapShort (state, getters, rootState) {
       const pages = [
         { to: '/', title: 'Accueil', updatedAt: rootState.config.updatedAt, priority: 1 },
         { to: '/sitemap', title: 'Plan du site', priority: 1 }
       ]
       for (const nav of getters.navigation) {
-        if (nav.to) pages.push({ to: nav.to, title: nav.title, updatedAt: nav.updatedAt || rootState.config.updatedAt })
+        if (nav.to && !pages.find(p => p.to === nav.to)) pages.push({ to: nav.to, title: nav.title, updatedAt: nav.updatedAt || rootState.config.updatedAt })
         for (const child of nav.children || []) {
-          if (child.to) pages.push({ to: child.to, title: child.title, updatedAt: child.updatedAt || rootState.config.updatedAt })
+          if (child.to && !pages.find(p => p.to === child.to)) pages.push({ to: child.to, title: child.title, updatedAt: child.updatedAt || rootState.config.updatedAt })
         }
+      }
+      if (rootState.config.contactFooter && !pages.find(p => p.to === '/contact')) {
+        pages.push({ to: '/contact', title: 'Contactez-nous' })
       }
       for (const link of (rootState.config.footerLinks || []).concat(rootState.config.footerImportantLinks || [])) {
         if (link.type === 'internal' && link.page) {
           const page = state.pages.find(p => p.id === link.page.id)
           if (page) {
-            const info = { to: '/pages/' + page.id, title: page.title, updatedAt: page.updatedAt }
+            const info = { to: '/pages/' + page.id, title: page.title, updatedAt: page.updated.date }
             if (!pages.find(p => p.to === info.to)) pages.push(info)
+          }
+        } else if (link.href && link.title) {
+          const to = link.href.replace(state.publicUrl + '/', '/')
+          if (to.startsWith('/')) {
+            if (to.startsWith('/pages/')) {
+              const page = state.pages.find(p => p.id === to.replace('/pages/', ''))
+              if (page) {
+                const info = { to: '/pages/' + page.id, title: page.title, updatedAt: page.updated.date }
+                if (!pages.find(p => p.to === info.to)) pages.push(info)
+              }
+            } else {
+              if (!pages.find(p => p.to === to)) pages.push({ to, title: link.title })
+            }
           }
         }
       }
-      for (const dataset of state.datasetsList || []) {
-        pages.push({ to: '/datasets/' + dataset.id, title: dataset.title, updatedAt: dataset.updatedAt })
+      return pages
+    },
+    sitemapFull (state, getters, rootState) {
+      const pages = [...getters.sitemapShort]
+
+      // add news
+      for (const page of state.pages.filter(p => p.template === 'news')) {
+        const to = '/pages/' + page.id
+        if (!pages.find(p => p.to === to)) pages.push({ to, title: page.title, updatedAt: page.updated.date })
       }
+
+      // add all datasets of catalog
+      for (const dataset of state.datasetsList || []) {
+        const to = '/datasets/' + dataset.id
+        if (!pages.find(p => p.to === to)) pages.push({ to, title: dataset.title, updatedAt: dataset.updatedAt })
+      }
+
+      // add all applications of catalog
       for (const application of state.applicationsList || []) {
-        pages.push({ to: '/applications/' + application.id, title: application.title, updatedAt: application.updatedAt })
+        const to = '/applications/' + application.id
+        if (!pages.find(p => p.to === to)) pages.push({ to, title: application.title, updatedAt: application.updatedAt })
+      }
+
+      // add all uses of catalog
+      for (const use of state.usesList || []) {
+        const to = '/uses/' + use._id
+        if (!pages.find(p => p.to === to)) pages.push({ to, title: use.title, updatedAt: use.updated.date })
       }
       return pages
     }
   },
   actions: {
     async fetchPages ({ state, commit }) {
-      const pages = (await this.$axios.$get(state.publicUrl + `/api/v1/portals/${state.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation,updated.date', published: true } })).results
+      const pages = (await this.$axios.$get(state.publicUrl + `/api/v1/portals/${state.portal._id}/pages`, { params: { size: 1000, select: 'id,title,navigation,template,updated.date', published: true } })).results
       commit('setAny', { pages })
     },
     async fetchDatasetsList ({ state, commit, rootState, rootGetters }) {
@@ -112,6 +151,11 @@ export default () => ({
       const params = { size: 10000, count: false, raw: true, select: 'id,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
       const applicationsList = (await this.$axios.$get(`${rootGetters.dataFairUrl}/api/v1/applications`, { params })).results
       commit('setAny', { applicationsList })
+    },
+    async fetchUsesList ({ state, commit, rootState, rootGetters }) {
+      const params = { size: 10000, select: '_id,title,updated.date' }
+      const usesList = (await this.$axios.$get(`/api/v1/portals/${rootState.portal._id}/uses`, { params })).results
+      commit('setAny', { usesList })
     }
   }
 })
