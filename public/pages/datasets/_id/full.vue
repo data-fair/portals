@@ -86,7 +86,8 @@ export default {
         { property: 'og:type', content: 'article' },
         { property: 'article:author', content: this.dataset.owner.name },
         { property: 'article:modified_time', content: this.dataset.dataUpdatedAt },
-        { property: 'article:published_time', content: this.dataset.createdAt }
+        { property: 'article:published_time', content: this.dataset.createdAt },
+        { name: 'robots', content: 'noindex, nofollow' }
       ]
       if (this.applications && this.applications.count) {
         meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })

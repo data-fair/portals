@@ -53,7 +53,8 @@ export default {
         { hid: 'og:type', property: 'og:type', content: 'article' },
         { property: 'article:author', content: this.application.owner.name },
         { property: 'article:modified_time', content: this.application.updatedAt },
-        { property: 'article:published_time', content: this.application.createdAt }
+        { property: 'article:published_time', content: this.application.createdAt },
+        { name: 'robots', content: 'noindex, nofollow' }
       ],
       __dangerouslyDisableSanitizers: ['script'],
       script: [
