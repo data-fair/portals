@@ -151,7 +151,7 @@ module.exports = {
           const match = result.html.match(/<xml(.*?)>(.*)<\/xml>/)
           if (match) {
             result.xml = true
-            result.html = match[2]
+            result.html = match[2].replace('<!---->')
           }
         }
       },

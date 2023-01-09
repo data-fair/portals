@@ -64,6 +64,16 @@ let httpServer
 exports.start = async () => {
   const nuxtMiddleware = await nuxt()
   // app.use(require('cors')())
+  app.get('/robots.txt', (req, res) => {
+    if (req.publicBaseUrl === config.publicUrl) {
+      return res.status(400).send('robots;txt only served on standalone portals')
+    }
+    res.set('Content-Type', 'text/plain')
+    res.send(`User-agent: *
+Allow: /
+    
+Sitemap: ${req.publicBaseUrl}/sitemap.xml`)
+  })
   app.use(nuxtMiddleware)
 
   const { db, client } = await require('../upgrade')()

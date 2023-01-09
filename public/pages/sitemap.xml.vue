@@ -13,7 +13,7 @@
         v-for="page in sitemap"
         :key="page.to"
       >
-        <loc>{{ publicUrl }}{{ page.to }}</loc>
+        <loc v-text="fullURL(page.to)" />
         <lastmod
           v-if="page.updatedAt"
           v-text="page.updatedAt"
@@ -40,8 +40,17 @@ export default {
     ])
   },
   computed: {
-    ...mapState(['publicUrl']),
+    ...mapState(['publicUrl', 'portal']),
     ...mapGetters(['sitemap'])
+  },
+  methods: {
+    fullURL (to) {
+      let url = this.publicUrl + to
+      if (process.env.mainPublicUrl === this.publicUrl) {
+        url += '?portalId=' + this.portal._id
+      }
+      return url
+    }
   }
 }
 </script>
