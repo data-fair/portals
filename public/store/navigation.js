@@ -70,7 +70,10 @@ export default () => ({
       return navigation
     },
     sitemap (state, getters, rootState) {
-      const pages = []
+      const pages = [
+        { to: '/', title: 'Accueil', updatedAt: rootState.config.updatedAt, priority: 1 },
+        { to: '/sitemap', title: 'Plan du site', priority: 1 }
+      ]
       for (const nav of getters.navigation) {
         if (nav.to) pages.push({ to: nav.to, title: nav.title, updatedAt: nav.updatedAt || rootState.config.updatedAt })
         for (const child of nav.children || []) {

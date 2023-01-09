@@ -18,6 +18,10 @@
           v-if="page.updatedAt"
           v-text="page.updatedAt"
         />
+        <priority
+          v-if="page.priority"
+          v-text="page.priority"
+        />
       </url>
     </urlset>
   </xml>
