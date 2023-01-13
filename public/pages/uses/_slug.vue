@@ -26,7 +26,7 @@
             small
             :href="use.links[linkType.key]"
             color="primary"
-            class="mx-1"
+            class="mx-1 white--text"
             :outlined="hover && hoverInverse"
             :title="linkTitle(linkType.title, use.links[linkType.key])"
             target="_blank"
