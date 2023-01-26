@@ -492,6 +492,11 @@
         "type": {
           "const": "responsiveFlow"
         },
+        "card": {
+          "title": "Elements dans des vignettes",
+          "type": "boolean",
+          "default": false
+        },
         "items": {
           "type": "array",
           "x-itemTitle": "type",

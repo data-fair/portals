@@ -149,7 +149,20 @@
         :sm="6"
         :md="4"
       >
+        <v-card
+          v-if="value.card === true"
+          class="also-outlined"
+          :elevation="elevation"
+        >
+          <v-card-text>
+            <k-element
+              :value="lElement"
+              :images="images"
+            />
+          </v-card-text>
+        </v-card>
         <k-element
+          v-else
           :value="lElement"
           :images="images"
         />
