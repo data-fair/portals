@@ -405,6 +405,11 @@
               "readOnly": true
             }
           }
+        },
+        "height": {
+          "title": "Hauteur (px)",
+          "description": "Fixe la hauteur de l'image",
+          "type": "integer"
         }
       }
     },

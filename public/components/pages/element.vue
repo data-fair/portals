@@ -190,12 +190,14 @@
           target="_blank"
         >
           <v-img
+            :style="value.height ? `height:${value.height}px` : ''"
             :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
             :title="value.title"
           />
         </a>
         <v-img
           v-else
+          :style="value.height ? `height:${value.height}px` : ''"
           :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
           :title="value.title"
         />
