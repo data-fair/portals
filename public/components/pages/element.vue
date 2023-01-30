@@ -191,6 +191,7 @@
         >
           <v-img
             :style="value.height ? `height:${value.height}px` : ''"
+            :contain="!!value.height"
             :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
             :title="value.title"
           />
@@ -198,6 +199,7 @@
         <v-img
           v-else
           :style="value.height ? `height:${value.height}px` : ''"
+          :contain="!!value.height"
           :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
           :title="value.title"
         />
