@@ -1,8 +1,8 @@
 <template>
   <div v-if="config">
     <v-img
-      v-if="config.banner"
-      :src="config.banner"
+      v-if="config.banner || (config.localBanner && config.localBanner.attachmentPath)"
+      :src="config.banner || (images && images[config.localBanner.assetId]) || `${imagesDatasetUrl}/attachments/${config.localBanner.attachmentPath}`"
       :alt="config.title"
       max-height="400px"
       style="margin-top: -12px;"
@@ -77,7 +77,7 @@ export default {
   components: { KElement },
   props: ['config', 'images'],
   computed: {
-    ...mapGetters(['elevation'])
+    ...mapGetters(['elevation', 'imagesDatasetUrl'])
   }
 }
 </script>
