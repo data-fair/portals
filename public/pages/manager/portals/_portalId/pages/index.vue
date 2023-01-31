@@ -71,6 +71,18 @@
               </v-row>
               <v-subheader>Mis à jour le {{ page.updated.date | date('LL') }} par {{ page.updated.name }}</v-subheader>
               <v-card-actions class="py-0">
+                <v-tooltip top>
+                  <template #activator="{on}">
+                    <v-icon
+                      :color="page.public ? 'primary' : 'accent'"
+                      :small="small"
+                      v-on="on"
+                    >
+                      {{ page.public ? 'mdi-lock-open' : 'mdi-lock' }}
+                    </v-icon>
+                  </template>
+                  {{ page.public ? 'Public' : 'Privé' }}
+                </v-tooltip>
                 <v-spacer />
                 <v-btn
                   icon
