@@ -8,6 +8,7 @@
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
+          :title="application.title"
           :src="`${dataFairUrl}/app/${$route.params.id}`"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"

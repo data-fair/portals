@@ -10,6 +10,7 @@
         <client-only>
           <iframe
             v-if="application.fixedHeight"
+            :title="application.title"
             :src="application.link"
             :height="application.height"
             width="100%"
@@ -17,6 +18,7 @@
           />
           <v-iframe
             v-else
+            :title="application.title"
             :src="application.link"
             class="mt-2"
           />

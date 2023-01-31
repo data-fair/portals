@@ -8,6 +8,7 @@
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-id', params: {id: dataset.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
+          :title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="`${dataFairUrl}/embed/dataset/${$route.params.id}${tablePreviewPath}`"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"

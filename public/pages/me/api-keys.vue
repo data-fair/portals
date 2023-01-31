@@ -18,7 +18,10 @@
     >
       Pour la plupart des usages simples sur un jeu de données public une clé n'est pas nécessaire.
     </v-alert>
-    <v-iframe :src="apiKeysUrl" />
+    <v-iframe
+      title="Mes clés d'API"
+      :src="apiKeysUrl"
+    />
   </v-container>
 </template>
 

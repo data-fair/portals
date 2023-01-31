@@ -49,7 +49,10 @@
           cols="12"
         >
           <client-only>
-            <v-iframe :src="use.links.iframe" />
+            <v-iframe
+              :title="use.title"
+              :src="use.links.iframe"
+            />
           </client-only>
         </v-col>
         <v-col

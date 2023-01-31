@@ -27,7 +27,10 @@
         </v-btn>
       </v-toolbar>
       <client-only>
-        <v-iframe :src="iframeSrc" />
+        <v-iframe
+          :title="'Schéma du jeu de données : ' + dataset.title"
+          :src="iframeSrc"
+        />
       </client-only>
     </v-card>
   </v-dialog>

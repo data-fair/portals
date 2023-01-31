@@ -29,6 +29,7 @@
       <v-card-text class="pa-0">
         <client-only>
           <v-iframe
+            :title="'Notifications pour le jeu de données : ' + dataset.title"
             :aspect-ratio="0.1"
             :src="notifUrl"
           />

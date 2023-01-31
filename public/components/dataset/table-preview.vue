@@ -28,6 +28,7 @@
       </v-toolbar>
       <client-only>
         <v-iframe
+          :title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="iframeSrc"
           scrolling="yes"
           :iframe-resizer="false"

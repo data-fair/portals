@@ -10,6 +10,7 @@
         <client-only>
           <iframe
             v-if="reuse.fixedHeight"
+            :title="reuse.title"
             :src="reuse.link"
             :height="reuse.height"
             width="100%"
@@ -17,6 +18,7 @@
           />
           <v-iframe
             v-else
+            :title="reuse.title"
             :src="reuse.link"
             class="mt-2"
           />

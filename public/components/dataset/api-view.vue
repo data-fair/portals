@@ -27,7 +27,10 @@
         </v-btn>
       </v-toolbar>
       <client-only>
-        <v-iframe :src="`${openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`" />
+        <v-iframe
+          :title="'Documentation de l\'API du jeu de données : ' + dataset.title"
+          :src="`${openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${dataFairUrl}/api/v1/datasets/${dataset.id}/api-docs.json`"
+        />
       </client-only>
     </v-card>
   </v-dialog>

@@ -51,6 +51,7 @@
         <br>
         Résultat:
         <v-iframe
+          :title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="previewLink"
           @state="s => iframeState = s"
         />

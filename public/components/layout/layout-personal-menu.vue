@@ -35,7 +35,7 @@
             <img
               :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`"
               aria-hidden
-              alt=""
+              :alt="'Avatar de ' + user.name"
             >
           </v-avatar>
                   &nbsp;

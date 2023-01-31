@@ -1,6 +1,9 @@
 <template lang="html">
   <v-container style="max-width:640px !important;">
-    <v-iframe :src="sdUrl" />
+    <v-iframe
+      title="Mon compte"
+      :src="sdUrl"
+    />
   </v-container>
 </template>
 

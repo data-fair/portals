@@ -76,6 +76,7 @@
 
       <client-only>
         <v-iframe
+          :title="application.title"
           :src="`${dataFairUrl}/app/${$route.params.id}`"
           :sync-state="true"
           :query-params-extra="{primary: readablePrimaryColor, embed: true}"

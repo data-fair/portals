@@ -296,7 +296,10 @@
             :order-md="application.preferLargeDisplay ? 1 : i%2"
           >
             <client-only>
-              <v-iframe :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`" />
+              <v-iframe
+                :title="application.title"
+                :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+              />
             </client-only>
           </v-col>
         </v-row>
@@ -338,6 +341,7 @@
           <client-only>
             <iframe
               v-if="application.fixedHeight"
+              :title="application.title"
               :src="application.link"
               :height="application.height"
               width="100%"
@@ -345,6 +349,7 @@
             />
             <v-iframe
               v-else
+              :title="application.title"
               :src="application.link"
               class="mt-2"
             />

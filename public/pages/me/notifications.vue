@@ -20,6 +20,7 @@
     </v-alert>
     <v-iframe
       v-if="notifUrl"
+      title="Mes notifications"
       :src="notifUrl"
     />
     <!-- TODO: configure this page to perfectly suit our needs

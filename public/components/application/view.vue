@@ -30,6 +30,7 @@
       <client-only>
         <v-iframe
           :id="'application-' + application.id"
+          :title="application.title"
           :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
         />
       </client-only>
