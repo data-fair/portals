@@ -1,19 +1,20 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <template>
   <v-container>
-    <h2 class="headline grey--text text--darken-3 font-weight-bold mt-6 mb-4">
+    <h2 class="headline grey--text text--darken-3 font-weight-bold my-6">
       Plan du site
     </h2>
-    <v-list>
-      <v-list-item
-        v-for="page in sitemapShort"
-        :key="page.to"
+    <p
+      v-for="page in sitemapShort"
+      :key="page.to"
+    >
+      <nuxt-link
         :to="page.to"
-        class="primary--text"
+        class="primary--text underline-link"
       >
         {{ page.title }}
-      </v-list-item>
-    </v-list>
+      </nuxt-link>
+    </p>
   </v-container>
 </template>
 
