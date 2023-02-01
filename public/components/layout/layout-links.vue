@@ -60,6 +60,7 @@ export default {
         if (link.href.startsWith('/')) props.to = link.href
         else props.href = link.href
       }
+      if (link.linkTitle) props.title = link.linkTitle
       return props
     },
     isDark (hover) {

@@ -1064,7 +1064,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "linkTitle": {"type": "string", "title": "Titre long", "description": "un titre plus long qui ne sera pas affiché directement mais visible au survol et utilisé par les outils d'accessibilité"}
           }
         }
       },
