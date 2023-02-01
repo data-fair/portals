@@ -17,7 +17,7 @@
       <v-toolbar-items>
         <client-only>
           <notifications-queue
-            v-if="notifyUrl && config.authentication !== 'none'"
+            v-if="notifyUrl && config.authentication !== 'none' && $vuetify.breakpoint.smAndUp"
             :notify-url="notifyUrl"
             :login-href="loginHref"
             :background-dark="appBarMainColorDark"

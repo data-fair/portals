@@ -20,7 +20,7 @@
           mdi-menu
         </v-icon>
         <span
-          v-if="!$vuetify.breakpoint.xs"
+          v-if="$vuetify.breakpoint.mdAndUp"
           class="ml-1"
         >
           {{ activeItemTitle }}
