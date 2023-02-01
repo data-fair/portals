@@ -26,6 +26,7 @@
       <template #activator="{on}">
         <v-btn
           text
+          v-bind="attrs"
           :class="{'white--text': backgroundDark}"
           :height="64"
           title="Ouvrez le menu personnel"

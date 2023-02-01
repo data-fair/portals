@@ -33,7 +33,8 @@
             v-bind="attrs"
             :id="`tab-menu-${i}`"
             :class="tabClass(computedActiveTab === i)"
-            v-on="on"
+            @click="e => tabMenuClick(e, on.click, value)"
+            @keydown="on.keydown"
           >
             {{ item.title }}
             <v-icon
@@ -164,6 +165,13 @@ export default {
         }
       }
       return classes
+    },
+    tabMenuClick (e, menuOnClick, value) {
+      // prevent tab from catching the Enter event on a tab
+      // item that is also an opened menu
+      // otherwise it breaks keyboard navigation
+      if (e.code === 'Enter' && value) return
+      menuOnClick(e)
     }
   }
 }
