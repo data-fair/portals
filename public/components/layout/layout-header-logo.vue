@@ -19,6 +19,7 @@
       to="/"
       :style="`height:${height}px; display: block;`"
       class="mr-3"
+      :title="$t('homeLink')"
     >
       <img
         :src="logoUrl"
@@ -28,6 +29,13 @@
     </nuxt-link>
   </div>
 </template>
+
+<i18n lang="yaml">
+  fr:
+    homeLink: retour à l'accueil
+  en:
+    homeLink: go to home page
+</i18n>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
