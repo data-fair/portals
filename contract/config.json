@@ -1170,7 +1170,7 @@
             "const": "vertical"
           }
         ],
-        "default": false
+        "default": "columnsLeftLarger"
       }
     }
   }, {
