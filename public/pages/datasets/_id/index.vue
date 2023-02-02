@@ -237,7 +237,7 @@
                 :dataset="dataset"
               />
               <attachments
-                v-if="dataset.attachments && dataset.attachments.length"
+                v-if="dataset.attachments && dataset.attachments.filter(a => a.url !== dataset.image).length"
                 :dataset="dataset"
                 :color="'primary'"
               />

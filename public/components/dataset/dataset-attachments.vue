@@ -29,7 +29,7 @@
       <v-card-text class="pa-0">
         <v-list class="mb-0">
           <v-list-item
-            v-for="(attachment, i) in dataset.attachments"
+            v-for="(attachment, i) in dataset.attachments.filter(a => a.url !== dataset.image)"
             :key="i"
           >
             <v-list-item-content>
