@@ -15,7 +15,7 @@
       />
       <v-row>
         <v-col
-          :md="config.datasetMetaLayout2 === 'vertical' ? 12 : 7"
+          :md="config.datasetMetaLayout === 'vertical' ? 12 : 7"
           :cols="12"
         >
           <img
@@ -28,8 +28,8 @@
           <div v-html="dataset.description" />
         </v-col>
         <v-col
-          :md="config.datasetMetaLayout2 === 'vertical' ? 12 : 4"
-          :offset-md="config.datasetMetaLayout2 === 'vertical' ? 0 : 1"
+          :md="config.datasetMetaLayout === 'vertical' ? 12 : 4"
+          :offset-md="config.datasetMetaLayout === 'vertical' ? 0 : 1"
           :cols="12"
         >
           <v-card
@@ -39,7 +39,7 @@
             <v-row>
               <v-col
                 v-if="!dataset.isMetaOnly"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -79,7 +79,7 @@
               </v-list-item>-->
               <v-col
                 v-if="dataset.origin"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -107,7 +107,7 @@
 
               <v-col
                 v-if="dataset.owner.department"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -128,7 +128,7 @@
 
               <v-col
                 v-if="dataset.license"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -153,7 +153,7 @@
 
               <v-col
                 v-if="dataset.keywords && dataset.keywords.length"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -184,7 +184,7 @@
 
               <v-col
                 v-if="dataset.spatial"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -205,7 +205,7 @@
 
               <v-col
                 v-if="dataset.temporal && dataset.temporal.start"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -231,7 +231,7 @@
 
               <v-col
                 v-if="dataset.frequency"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"
               >
@@ -253,7 +253,7 @@
             <v-divider class="mt-2 mb-3" />
             <v-row>
               <v-col
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="px-5 py-1"
               >
@@ -324,7 +324,7 @@
                 </client-only>
               </v-col>
               <v-col
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-1"
               >
@@ -344,7 +344,7 @@
 
               <v-col
                 v-if="dataset && dataset.public"
-                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-1"
               >
