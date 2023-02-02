@@ -15,7 +15,7 @@
       />
       <v-row>
         <v-col
-          :md="7"
+          :md="config.datasetMetaLayout2 === 'vertical' ? 12 : 7"
           :cols="12"
         >
           <img
@@ -28,28 +28,41 @@
           <div v-html="dataset.description" />
         </v-col>
         <v-col
-          :md="4"
-          :offset-md="1"
+          :md="config.datasetMetaLayout2 === 'vertical' ? 12 : 4"
+          :offset-md="config.datasetMetaLayout2 === 'vertical' ? 0 : 1"
           :cols="12"
         >
           <v-card
-            class="mb-3"
+            class="py-3"
             v-bind="infoCardProps"
           >
-            <v-list style="background-color: transparent;">
-              <v-list-item
+            <v-row>
+              <v-col
                 v-if="!dataset.isMetaOnly"
-                style="min-height: 36px;"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
               >
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title>
-                    {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
-                    <template v-if="dataset.storage && dataset.storage.indexed && dataset.storage.indexed.size">
-                      - {{ dataset.storage.indexed.size | bytes }}
-                    </template>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+                <v-list-item
+                  style="min-height: 36px;"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Taille :
+                      </v-subheader>
+                      {{ (dataset.count || 0).toLocaleString('fr') }} enregistrements
+                      <template v-if="dataset.storage && dataset.storage.indexed && dataset.storage.indexed.size">
+                        - {{ dataset.storage.indexed.size | bytes }}
+                      </template>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
               <!--<v-list-item>
                 <v-list-item-content class="py-0">
                   <v-list-item-title style="white-space:normal;">
@@ -64,202 +77,291 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>-->
-              <v-list-item v-if="dataset.origin">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
-                    Données issues de <a
-                      :href="dataset.origin"
-                      rel="external"
-                      class="underline-link"
-                    >cette source</a>
-                  </v-list-item-title>
-                  <v-list-item-title v-else-if="dataset.origin">
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Données produites par :
-                    </v-subheader>
-                    <strong>{{ dataset.origin }}</strong>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.owner.department">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title>
-                    <v-avatar
-                      :size="28"
-                      class="mr-1"
-                    >
-                      <img :src="`${directoryUrl}/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`">
-                    </v-avatar>
-                    {{ dataset.owner.departmentName || dataset.owner.department }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.license">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title>
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Licence :
-                    </v-subheader>
-                    <a
-                      :href="dataset.license.href"
-                      rel="external"
-                      class="underline-link"
-                    >{{ dataset.license.title }}</a>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.keywords && dataset.keywords.length">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title style="white-space:normal;">
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Mots clés :
-                    </v-subheader>
-                    <v-chip
-                      v-for="(keyword,i) in dataset.keywords"
-                      :key="i"
-                      class="ma-1"
-                      small
-                      dark
-                      :label="!config.radius"
-                      :color="readableSecondaryColor"
-                    >
-                      {{ keyword }}
-                    </v-chip>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.spatial">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title style="white-space:normal;">
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Couverture géographique :
-                    </v-subheader>
-                    {{ dataset.spatial }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.temporal && dataset.temporal.start">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title style="white-space:normal;">
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Couverture temporelle :
-                    </v-subheader>
-                    <template v-if="dataset.temporal.end">
-                      {{ dataset.temporal.start | date('LL') }} - {{ dataset.temporal.end | date('LL') }}
-                    </template>
-                    <template v-else>
-                      à partir du {{ dataset.temporal.start | date('LL') }}
-                    </template>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="dataset.frequency">
-                <v-list-item-content class="pt-0 pb-2">
-                  <v-list-item-title style="white-space:normal;">
-                    <v-subheader
-                      style="height:26px"
-                      class="pa-0"
-                    >
-                      Fréquence de mise à jour :
-                    </v-subheader>
-                    {{ frequencies[dataset.frequency] }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-card-actions class="py-0">
-              <table-preview
-                v-if="!dataset.isMetaOnly"
-                :dataset="dataset"
-                :color="'primary'"
-              />
-              <action-icon
-                v-if="!dataset.isMetaOnly"
-                title="Vue tabulaire en plein écran"
-                icon="mdi-fullscreen"
-                :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
-              />
-              <map-preview
-                v-if="dataset.bbox && dataset.bbox.length"
-                :dataset="dataset"
-                :color="'primary'"
-              />
-              <client-only>
-                <api-view
-                  v-if="!isMobileOnly && !dataset.isMetaOnly"
-                  :dataset="dataset"
-                  color="primary"
-                />
-              </client-only>
-              <action-icon
-                v-if="dataFiles && dataFiles.original"
-                title="Télécharger les données originales"
-                icon=" mdi-download"
-                :href="dataFiles.original.url"
-                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-              />
-              <action-icon
-                v-if="dataFiles && dataFiles.full"
-                title="Télécharger les données enrichies"
-                icon=" mdi-download-multiple"
-                :href="dataFiles.full.url"
-                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-              />
-              <action-icon
-                v-if="dataFiles && dataFiles['export-csv']"
-                :title="`Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') })`"
-                icon="mdi-download"
-                :href="dataFiles['export-csv'].url"
-                @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-              />
-              <schema-view
-                v-if="!dataset.isMetaOnly"
-                :dataset="dataset"
-                :color="'primary'"
-              />
-              <dataset-embed
-                v-if="!dataset.isMetaOnly"
-                :dataset="dataset"
-              />
-              <attachments
-                v-if="dataset.attachments && dataset.attachments.filter(a => a.url !== dataset.image).length"
-                :dataset="dataset"
-                :color="'primary'"
-              />
-              <client-only>
-                <notif-edit
-                  v-if="canLogin && notifyUrl"
+              <v-col
+                v-if="dataset.origin"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="dataset.origin && (dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://'))">
+                      Données issues de <a
+                        :href="dataset.origin"
+                        rel="external"
+                        class="underline-link"
+                      >cette source</a>
+                    </v-list-item-title>
+                    <v-list-item-title v-else-if="dataset.origin">
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Données produites par :
+                      </v-subheader>
+                      <strong>{{ dataset.origin }}</strong>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.owner.department"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <v-avatar
+                        :size="28"
+                        class="mr-1"
+                      >
+                        <img :src="`${directoryUrl}/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`">
+                      </v-avatar>
+                      {{ dataset.owner.departmentName || dataset.owner.department }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.license"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Licence :
+                      </v-subheader>
+                      <a
+                        :href="dataset.license.href"
+                        rel="external"
+                        class="underline-link"
+                      >{{ dataset.license.title }}</a>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.keywords && dataset.keywords.length"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title style="white-space:normal;">
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Mots clés :
+                      </v-subheader>
+                      <v-chip
+                        v-for="(keyword,i) in dataset.keywords"
+                        :key="i"
+                        class="ma-1"
+                        small
+                        dark
+                        :label="!config.radius"
+                        :color="readableSecondaryColor"
+                      >
+                        {{ keyword }}
+                      </v-chip>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.spatial"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title style="white-space:normal;">
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Couverture géographique :
+                      </v-subheader>
+                      {{ dataset.spatial }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.temporal && dataset.temporal.start"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title style="white-space:normal;">
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Couverture temporelle :
+                      </v-subheader>
+                      <template v-if="dataset.temporal.end">
+                        {{ dataset.temporal.start | date('LL') }} - {{ dataset.temporal.end | date('LL') }}
+                      </template>
+                      <template v-else>
+                        à partir du {{ dataset.temporal.start | date('LL') }}
+                      </template>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset.frequency"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-0"
+              >
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title style="white-space:normal;">
+                      <v-subheader
+                        style="height:26px"
+                        class="pa-0"
+                      >
+                        Fréquence de mise à jour :
+                      </v-subheader>
+                      {{ frequencies[dataset.frequency] }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+            </v-row>
+            <v-divider class="mt-2 mb-3" />
+            <v-row>
+              <v-col
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="px-5 py-1"
+              >
+                <table-preview
+                  v-if="!dataset.isMetaOnly"
                   :dataset="dataset"
                   :color="'primary'"
                 />
-              </client-only>
-            </v-card-actions>
-            <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt | date("LL") }}</v-subheader>
+                <action-icon
+                  v-if="!dataset.isMetaOnly"
+                  title="Vue tabulaire en plein écran"
+                  icon="mdi-fullscreen"
+                  :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+                />
+                <map-preview
+                  v-if="dataset.bbox && dataset.bbox.length"
+                  :dataset="dataset"
+                  :color="'primary'"
+                />
+                <client-only>
+                  <api-view
+                    v-if="!isMobileOnly && !dataset.isMetaOnly"
+                    :dataset="dataset"
+                    color="primary"
+                  />
+                </client-only>
+                <action-icon
+                  v-if="dataFiles && dataFiles.original"
+                  title="Télécharger les données originales"
+                  icon=" mdi-download"
+                  :href="dataFiles.original.url"
+                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+                />
+                <action-icon
+                  v-if="dataFiles && dataFiles.full"
+                  title="Télécharger les données enrichies"
+                  icon=" mdi-download-multiple"
+                  :href="dataFiles.full.url"
+                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+                />
+                <action-icon
+                  v-if="dataFiles && dataFiles['export-csv']"
+                  :title="`Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') })`"
+                  icon="mdi-download"
+                  :href="dataFiles['export-csv'].url"
+                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+                />
+                <schema-view
+                  v-if="!dataset.isMetaOnly"
+                  :dataset="dataset"
+                  :color="'primary'"
+                />
+                <dataset-embed
+                  v-if="!dataset.isMetaOnly"
+                  :dataset="dataset"
+                />
+                <attachments
+                  v-if="dataset.attachments && dataset.attachments.filter(a => a.url !== dataset.image).length"
+                  :dataset="dataset"
+                  :color="'primary'"
+                />
+                <client-only>
+                  <notif-edit
+                    v-if="canLogin && notifyUrl"
+                    :dataset="dataset"
+                    :color="'primary'"
+                  />
+                </client-only>
+              </v-col>
+              <v-col
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-1"
+              >
+                <v-list-item style="min-height: 36px;">
+                  <v-list-item-content class="py-1">
+                    <v-list-item-title style="white-space:normal;">
+                      <v-subheader
+                        class="pa-0"
+                        style="height:26px"
+                      >
+                        Mis à jour le {{ dataset.dataUpdatedAt | date("LL") }}
+                      </v-subheader>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-col>
+
+              <v-col
+                v-if="dataset && dataset.public"
+                :md="config.datasetMetaLayout2 === 'vertical' ? 4 : 12"
+                :cols="12"
+                class="py-1"
+              >
+                <v-row
+                  align="center"
+                  class="ma-0"
+                >
+                  <v-subheader
+                    style="height:26px"
+                  >
+                    Partager :
+                  </v-subheader>
+                  <social :title="dataset.title" />
+                </v-row>
+              </v-col>
+            </v-row>
           </v-card>
-          <v-row v-if="dataset && dataset.public">
-            <v-spacer />
-            <v-col cols="auto">
-              <v-subheader :color="'primary'">
-                Partager
-              </v-subheader>
-              <social :title="dataset.title" />
-            </v-col>
-          </v-row>
         </v-col>
       </v-row>
       <template v-if="applications">
