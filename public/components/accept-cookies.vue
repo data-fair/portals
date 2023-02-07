@@ -41,7 +41,6 @@ export default {
   created () {
     if (
       this.config.analytics &&
-        this.config.analytics.active &&
         !this.config.analytics.anonymized &&
         !this.$cookies.get('koumoul_portal_track', '1')
     ) {
