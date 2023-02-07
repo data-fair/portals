@@ -12,18 +12,19 @@
     <p>
       Ce site utilise des cookies pour analyser le traffic de ses utilisateurs.
     </p>
-    <p>
+    <p class="mb-0">
       Si vous continuez à naviguer vous consentez à l'utilisation de ces cookies.
     </p>
-    <div>
+    <template #action="{ attrs }">
       <v-btn
         text
+        v-bind="attrs"
         style="float: right;"
         @click="acceptCookies()"
       >
         Accepter
       </v-btn>
-    </div>
+    </template>
   </v-snackbar>
 </template>
 
@@ -41,15 +42,15 @@ export default {
   created () {
     if (
       this.config.analytics &&
-        !this.config.analytics.anonymized &&
-        !this.$cookies.get('koumoul_portal_track', '1')
+      !this.config.analytics.anonymized &&
+      !this.$cookies.get('df_portal_track')
     ) {
       this.show = true
     }
   },
   methods: {
     acceptCookies () {
-      this.$cookies.set('koumoul_portal_track', '1')
+      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
       this.show = false
     }
   }
