@@ -50,7 +50,7 @@
               outlined
               class="py-0"
             >
-              <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id))">
+              <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id && o.role !== 'user'))">
                 <v-list-item
                   :href="backOfficeUrl"
                   :disabled="embed"
