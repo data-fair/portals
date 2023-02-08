@@ -1,31 +1,36 @@
 <template>
-  <v-snackbar
+  <v-bottom-sheet
     v-model="show"
-    :timeout="-1"
-    top
-    right
-    color="warning"
-    multi-line
-    vertical
-    class="accept-cookies"
+    persistent
+    hide-overlay
   >
-    <p>
-      Ce site utilise des cookies pour analyser le traffic de ses utilisateurs.
-    </p>
-    <p class="mb-0">
-      Si vous continuez à naviguer vous consentez à l'utilisation de ces cookies.
-    </p>
-    <template #action="{ attrs }">
-      <v-btn
-        text
-        v-bind="attrs"
-        style="float: right;"
-        @click="acceptCookies()"
+    <v-sheet
+      color="accent"
+      class="text-center"
+    >
+      <v-row
+        align="center"
+        justify="center"
+        class="ma-0"
       >
-        Accepter
-      </v-btn>
-    </template>
-  </v-snackbar>
+        <p class="my-3">
+          En poursuivant votre navigation sur {{ publicUrl.split('://').pop().replace('/','') }}, vous acceptez l'utilisation des cookies pour réaliser des
+          statistiques de visite.
+          <template v-if="config.analytics.optOutPage">
+            Vous pouvez également <nuxt-link :to="{ name: 'pages-id', params: {id:config.analytics.optOutPage.id} }">
+              personnaliser l'utilisation des cookies
+            </nuxt-link> sur le site.
+          </template>
+        </p>
+        <v-btn
+          text
+          @click="acceptCookies()"
+        >
+          Accepter
+        </v-btn>
+      </v-row>
+    </v-sheet>
+  </v-bottom-sheet>
 </template>
 
 <script>
@@ -37,11 +42,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config', 'publicUrl'])
   },
   created () {
     if (
       this.config.analytics &&
+      this.config.analytics.type !== 'none' &&
       !this.config.analytics.anonymized &&
       !this.$cookies.get('df_portal_track')
     ) {
@@ -57,8 +63,4 @@ export default {
 }
 </script>
 
-<style lang="css">
-.accept-cookies.v-snack--vertical .v-snack__content {
-  height: auto;
-}
-</style>
+<style lang="css"></style>

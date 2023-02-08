@@ -1480,6 +1480,22 @@
               "x-display": "switch",
               "title": "système configuré en mode anonyme",
               "description": "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
+            },
+            "optOutPage": {
+              "title": "Page de désengagement",
+              "type": "object",
+              "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+              "x-itemsProp": "results",
+              "x-itemTitle": "title",
+              "x-itemKey": "id",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                }
+              }
             }
           }
         }, {
