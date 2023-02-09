@@ -15,12 +15,11 @@
       >
         <p class="my-3">
           En poursuivant votre navigation sur {{ publicUrl.split('://').pop().replace('/','') }}, vous acceptez l'utilisation des cookies pour réaliser des
-          statistiques de visite.
-          <template v-if="config.analytics.optOutPage">
-            Vous pouvez également <nuxt-link :to="{ name: 'pages-id', params: {id:config.analytics.optOutPage.id} }">
-              personnaliser l'utilisation des cookies
-            </nuxt-link> sur le site.
-          </template>
+          statistiques de visite. Vous pouvez également
+          <nuxt-link :to="config.analytics.optOutPage ? { name: 'pages-id', params: {id:config.analytics.optOutPage.id} } : {name : 'privacy-policy'}">
+            personnaliser l'utilisation des cookies
+          </nuxt-link>
+          sur le site.
         </p>
         <v-btn
           text
@@ -52,6 +51,8 @@ export default {
       !this.$cookies.get('df_portal_track')
     ) {
       this.show = true
+    } else if (this.$cookies.get('df_portal_track')) {
+      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
     }
   },
   methods: {

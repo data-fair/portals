@@ -1523,7 +1523,7 @@
               }
             },
             "anonymized": {
-              "const": "false",
+              "const": false,
               "title": "Système configuré en mode anonyme"
             }
           }
@@ -1544,7 +1544,7 @@
               }
             },
             "anonymized": {
-              "const": "false",
+              "const": false,
               "title": "Système configuré en mode anonyme"
             }
           }

@@ -17,12 +17,16 @@ export default ({ store, env, app }) => {
     }
     return
   }
-  try {
-    Vue.use(VueMultianalytics, {
-      modules: { [analytics.type]: analytics.params },
-      routing: { vueRouter: app.router, preferredProperty: 'path' }
-    })
-  } catch (err) {
-    console.error(err)
+  if (app.$cookies.get('df_portal_track_opt_out')) {
+    app.$cookies.set('df_portal_track_opt_out', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
+  } else {
+    try {
+      Vue.use(VueMultianalytics, {
+        modules: { [analytics.type]: analytics.params },
+        routing: { vueRouter: app.router, preferredProperty: 'path' }
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
