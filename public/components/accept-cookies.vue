@@ -52,12 +52,12 @@ export default {
     ) {
       this.show = true
     } else if (this.$cookies.get('df_portal_track')) {
-      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
+      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true, path: '/' })
     }
   },
   methods: {
     acceptCookies () {
-      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
+      this.$cookies.set('df_portal_track', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true, path: '/' })
       this.show = false
     }
   }

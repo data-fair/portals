@@ -67,9 +67,9 @@ export default {
   methods: {
     toggle () {
       if (!this.$cookies.get('df_portal_track_opt_out')) {
-        this.$cookies.set('df_portal_track_opt_out', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
+        this.$cookies.set('df_portal_track_opt_out', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true, path: '/' })
       } else {
-        this.$cookies.remove('df_portal_track_opt_out')
+        this.$cookies.remove('df_portal_track_opt_out', { path: '/' })
       }
       this.$router.go()
     }

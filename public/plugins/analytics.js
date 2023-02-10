@@ -18,7 +18,7 @@ export default ({ store, env, app }) => {
     return
   }
   if (app.$cookies.get('df_portal_track_opt_out')) {
-    app.$cookies.set('df_portal_track_opt_out', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true })
+    app.$cookies.set('df_portal_track_opt_out', '1', { maxAge: 60 * 60 * 24 * 365, sameSite: true, path: '/' })
   } else {
     try {
       Vue.use(VueMultianalytics, {
