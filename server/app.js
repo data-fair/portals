@@ -13,7 +13,7 @@ const dbUtils = require('./utils/db')
 const prometheus = require('./utils/prometheus')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
-const session = require('@koumoul/sd-express')({
+const session = require('@data-fair/sd-express')({
   directoryUrl: config.directoryUrl,
   privateNotifyUrl: config.privateNotifyUrl
 })
