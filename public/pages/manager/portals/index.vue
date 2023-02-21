@@ -31,7 +31,7 @@
                       </v-list-item-title>
                       <v-list-item-subtitle>
                         <span>{{ portal.owner.name }}</span>
-                        <span v-if="portal.owner.department"> - {{ portal.owner.department }}</span>
+                        <span v-if="portal.owner.department"> / {{ portal.owner.departmentName || portal.owner.department }}</span>
                       </v-list-item-subtitle>
                     </v-list-item-content>
 
@@ -192,9 +192,7 @@ export default {
   methods: {
     ...mapActions('session', ['login']),
     async refresh () {
-      let owner = this.activeAccount.type + ':' + this.activeAccount.id
-      if (this.activeAccount.department) owner += ':' + this.activeAccount.department
-      this.portals = await this.$axios.$get('api/v1/portals', { params: { owner } })
+      this.portals = await this.$axios.$get('api/v1/portals')
       this.$store.dispatch('setBreadcrumbs', [{
         text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`
       }])

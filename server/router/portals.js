@@ -142,23 +142,15 @@ const router = module.exports = express.Router()
 router.get('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   const filter = {}
-  if (req.query.owner) {
-    const [ownerType, ownerId, ownerDepartment] = req.query.owner.split(':')
-    if (ownerType === 'user' && ownerId !== req.user.id) {
-      return res.status(403).send('Vous n\'êtes pas l\'utilisateur demandé.')
+  if (req.query.showAll && !req.user.adminMode) {
+    return res.status(403).send('Seul un super administrateur peut requêter la liste complète des portails.')
+  }
+  if (!req.query.showAll) {
+    filter['owner.type'] = req.user.activeAccount.type
+    filter['owner.id'] = req.user.activeAccount.id
+    if (req.user.activeAccount.department) {
+      filter['owner.department'] = req.user.activeAccount.department
     }
-    const userOrg = req.user.organizations.find(o => o.id === ownerId)
-    if (ownerType === 'organization' && !userOrg) {
-      return res.status(403).send('Vous n\'appartenez pas à l\'organisation demandée.')
-    }
-    if (ownerType === 'organization' && userOrg && userOrg.department && userOrg.department !== ownerDepartment) {
-      return res.status(403).send('Vous n\'appartenez pas au département demandé.')
-    }
-    filter['owner.type'] = ownerType
-    filter['owner.id'] = ownerId
-    if (ownerDepartment) filter['owner.department'] = ownerDepartment
-  } else if (!req.user.isAdmin) {
-    return res.status(403).send('Seul un super administrateur peut requêter la liste des portails sans filtre sur propriétaire.')
   }
   res.send((await req.app.get('db').collection('portals').find(filter).limit(10000).toArray()).map(cleanPortal))
 }))
@@ -174,17 +166,11 @@ router.post('', asyncWrap(async (req, res) => {
   if (portal.host) return res.status(400).send('You cannot specify the host of the created portal')
   // this is better than nanoid to create an id that will be accepted by data-fair for the images dataset
   portal._id = randomUUID()
-  portal.owner = {
-    type: req.user.organization ? 'organization' : 'user',
-    id: req.user.organization ? req.user.organization.id : req.user.id,
-    name: req.user.organization ? req.user.organization.name : req.user.name
-  }
-  if (req.user.organization && req.user.organization.department) {
-    portal.owner.department = req.user.organization.department
-  }
-  if (portal.owner.type === 'organization' && req.user.organization.role !== 'admin') {
+  if (req.user.accountOwnerRole !== 'admin') {
     return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
   }
+  portal.owner = req.user.accountOwner
+
   if (!validatePortal(portal)) {
     return res.status(400).send(validatePortal.errors)
   }

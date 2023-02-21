@@ -90,6 +90,7 @@ services:
       - DEBUG=capture
       - PUBLIC_URL=http://localhost:6200/capture
       - PROMETHEUS_ACTIVE=false
+      - PUPPETEER_ARGS=["--no-sandbox"]
 
   thumbor:
     profiles:

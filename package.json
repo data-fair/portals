@@ -48,7 +48,7 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "dependencies": {
-    "@data-fair/sd-express": "^1.3.3",
+    "@data-fair/sd-express": "^1.4.0",
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/i18n": "^7.2.2",

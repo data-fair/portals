@@ -21,7 +21,9 @@
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ portal.owner.name }} - {{ portal.title }}
+                    <span>{{ portal.owner.name }}</span>
+                    <span v-if="portal.owner.department"> / {{ portal.owner.departmentName || portal.owner.department }}</span>
+                    <span> - {{ portal.title }}</span>
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     Adresse : <a
@@ -60,7 +62,9 @@
               >
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ portal.owner.name }} - {{ portal.title }}
+                    <span>{{ portal.owner.name }}</span>
+                    <span v-if="portal.owner.department"> / {{ portal.owner.departmentName || portal.owner.department }}</span>
+                    <span> - {{ portal.title }}</span>
                   </v-list-item-title>
                   <v-list-item-subtitle>Adresse : <a :href="portal.link">{{ portal.link }}</a></v-list-item-subtitle>
                 </v-list-item-content>
@@ -224,7 +228,7 @@ export default {
   },
   methods: {
     async refresh () {
-      this.portals = await this.$axios.$get('api/v1/portals', { params: { size: 10000 } })
+      this.portals = await this.$axios.$get('api/v1/portals', { params: { size: 10000, showAll: 'true' } })
     },
     async patchHost () {
       await this.$axios.put(`api/v1/portals/${this.currentPortal._id}/host`, this.newHost,
