@@ -52,8 +52,7 @@
           "id": {"type": "string"}
         }
       },
-      "x-fromUrl": "{context.settingsUrl}",
-      "x-itemsProp": "topics",
+      "x-fromUrl": "{context.topicsUrl}",
       "x-itemTitle": "title",
       "x-itemKey": "id",
       "x-cols": {"cols": 12, "md": 6},

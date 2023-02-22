@@ -95,12 +95,11 @@ export default {
       return this.$store.getters.dataFairUrl
     },
     vjsfOpts () {
-      let settingsUrl = `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}`
-      if (this.config.owner.department) settingsUrl += ':' + this.config.owner.department
+      const topicsUrl = `${this.dataFairUrl}/api/v1/settings/${this.config.owner.type}/${this.config.owner.id}/topics`
       return {
         context: {
           dataFairUrl: this.dataFairUrl,
-          settingsUrl,
+          topicsUrl,
           owner: this.owner,
           page: {
             id: this.$route.params.id,
