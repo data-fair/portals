@@ -10,29 +10,24 @@
         tag="h1"
       >
         <template #after>
-          <v-tooltip top>
-            <template #activator="{ on }">
-              <v-btn
-                :disabled="!!downloading"
-                icon
-                target="_blank"
-                class="ml-2"
-                aria-label="Exporter la sélection au format CSV"
-                @click="download(config.title+'.csv')"
-                v-on="on"
-              >
-                <v-icon v-if="downloading !== config.title+'.csv'">
-                  mdi-file-table
-                </v-icon>
-                <v-progress-circular
-                  v-else
-                  indeterminate
-                  color="primary"
-                />
-              </v-btn>
-            </template>
-            <span>Exporter la sélection au format CSV</span>
-          </v-tooltip>
+          <v-btn
+            :disabled="!!downloading"
+            icon
+            target="_blank"
+            class="ml-2"
+            aria-label="Exporter la sélection au format CSV"
+            title="Exporter la sélection au format CSV"
+            @click="download(config.title+'.csv')"
+          >
+            <v-icon v-if="downloading !== config.title+'.csv'">
+              mdi-file-table
+            </v-icon>
+            <v-progress-circular
+              v-else
+              indeterminate
+              color="primary"
+            />
+          </v-btn>
         </template>
       </section-title>
       <section-title
@@ -126,32 +121,22 @@
                 class="ma-0"
                 @change="refresh()"
               >
-                <v-tooltip top>
-                  <template #activator="{ on }">
-                    <v-btn
-                      text
-                      :height="40"
-                      aria-label="Décroissant"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-sort-descending</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Décroissant</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template #activator="{ on }">
-                    <v-btn
-                      text
-                      :height="40"
-                      aria-label="Croissant"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-sort-ascending</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Croissant</span>
-                </v-tooltip>
+                <v-btn
+                  text
+                  :height="40"
+                  aria-label="Décroissant"
+                  title="Décroissant"
+                >
+                  <v-icon>mdi-sort-descending</v-icon>
+                </v-btn>
+                <v-btn
+                  text
+                  :height="40"
+                  aria-label="Croissant"
+                  title="Croissant"
+                >
+                  <v-icon>mdi-sort-ascending</v-icon>
+                </v-btn>
               </v-btn-toggle>
             </template>
           </v-select>

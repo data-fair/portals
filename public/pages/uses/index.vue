@@ -59,32 +59,22 @@
                 class="ma-0"
                 @change="refresh()"
               >
-                <v-tooltip top>
-                  <template #activator="{ on }">
-                    <v-btn
-                      text
-                      :height="40"
-                      aria-label="Décroissant"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-sort-descending</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Décroissant</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template #activator="{ on }">
-                    <v-btn
-                      text
-                      :height="40"
-                      aria-label="Croissant"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-sort-ascending</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Croissant</span>
-                </v-tooltip>
+                <v-btn
+                  text
+                  :height="40"
+                  aria-label="Décroissant"
+                  title="Décroissant"
+                >
+                  <v-icon>mdi-sort-descending</v-icon>
+                </v-btn>
+                <v-btn
+                  text
+                  :height="40"
+                  aria-label="Croissant"
+                  title="Croissant"
+                >
+                  <v-icon>mdi-sort-ascending</v-icon>
+                </v-btn>
               </v-btn-toggle>
             </template>
           </v-select>

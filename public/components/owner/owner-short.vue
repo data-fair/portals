@@ -1,17 +1,12 @@
 <template>
-  <v-tooltip top>
-    <template #activator="{on}">
-      <span
-        class="body-2"
-        v-on="on"
-      >
-        <v-avatar :size="28">
-          <img :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/avatar.png`">
-        </v-avatar>
-      </span>
-    </template>
-    {{ label }}
-  </v-tooltip>
+  <span
+    :title="label"
+    class="body-2"
+  >
+    <v-avatar :size="28">
+      <img :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/avatar.png`">
+    </v-avatar>
+  </span>
   <!--<span v-if="dataset.owner.type === 'user'"><v-icon>mdi-account</v-icon>&nbsp;{{ dataset.owner.name }}</span>
   <span v-if="dataset.owner.type === 'organization'"><v-icon>mdi-account-group</v-icon>&nbsp;{{ dataset.owner.name }}<span v-if="dataset.owner.role"> ({{ dataset.owner.role }})</span></span>-->
 </template>

@@ -8,7 +8,6 @@
       icon="mdi-twitter"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
 
     <action-icon
@@ -19,7 +18,6 @@
       icon="mdi-facebook"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
 
     <action-icon
@@ -30,7 +28,6 @@
       icon="mdi-youtube"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
 
     <action-icon
@@ -41,7 +38,6 @@
       icon="mdi-vimeo"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
 
     <action-icon
@@ -52,7 +48,6 @@
       icon="mdi-linkedin"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
 
     <action-icon
@@ -63,7 +58,6 @@
       icon="mdi-instagram"
       :color="color"
       :dark="dark"
-      :tooltip-bottom="tooltipBottom"
     />
   </div>
 </template>
@@ -73,8 +67,7 @@ const { mapState } = require('vuex')
 export default {
   props: {
     color: { type: String, default: 'primary' },
-    dark: { type: Boolean, default: false },
-    tooltipBottom: { type: Boolean, default: false }
+    dark: { type: Boolean, default: false }
   },
   computed: {
     ...mapState(['config'])

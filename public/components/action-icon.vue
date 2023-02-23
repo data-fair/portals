@@ -1,24 +1,16 @@
 <template>
-  <v-tooltip
-    :bottom="tooltipBottom"
-    :top="!tooltipBottom"
+  <v-btn
+    v-bind="compProps.btn"
+    :aria-label="title"
+    :title="title"
+    @click="e => $emit('click', e)"
+    @mouseenter="hovered = true"
+    @mouseleave="hovered = false"
   >
-    <template #activator="{ on: onTooltip }">
-      <v-btn
-        v-bind="compProps.btn"
-        :aria-label="title"
-        @click="e => $emit('click', e)"
-        v-on="{...onTooltip}"
-        @mouseenter="hovered = true"
-        @mouseleave="hovered = false"
-      >
-        <v-icon v-bind="compProps.icon">
-          {{ icon }}
-        </v-icon>
-      </v-btn>
-    </template>
-    <span>{{ title }}</span>
-  </v-tooltip>
+    <v-icon v-bind="compProps.icon">
+      {{ icon }}
+    </v-icon>
+  </v-btn>
 </template>
 
 <script>
@@ -29,7 +21,6 @@ export default {
     title: { type: String, required: true },
     icon: { type: String, required: true },
     dark: { type: Boolean, default: false },
-    tooltipBottom: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
     color: { type: String, default: 'primary' },
     to: { type: [String, Object], default: null },
