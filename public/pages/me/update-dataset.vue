@@ -26,7 +26,7 @@ export default {
       const owner = this.config.owner
       let ownerFilter = `${owner.type}:${owner.id}`
       if (owner.department) ownerFilter += `:${owner.department}`
-      return `${this.dataFairUrl}/embed/update-dataset?primary=${encodeURIComponent(this.config.themeColor)}&publicationSite=data-fair-portals:${encodeURIComponent(this.portal._id)}&owner=${ownerFilter}`
+      return `${this.dataFairUrl}/embed/workflow/update-dataset?primary=${encodeURIComponent(this.config.themeColor)}&publicationSite=data-fair-portals:${encodeURIComponent(this.portal._id)}&owner=${ownerFilter}`
     }
   }
 }
