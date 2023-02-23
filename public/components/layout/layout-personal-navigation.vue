@@ -54,6 +54,14 @@
         <v-list-item-action><v-icon>mdi-cloud-circle</v-icon></v-list-item-action>
         <v-list-item-title>Mes clés d'API</v-list-item-title>
       </v-list-item>
+      <v-list-item
+        v-if="datasetsCount.rest || datasetsCount.file"
+        :nuxt="true"
+        :to="`/me/update-dataset`"
+      >
+        <v-list-item-action><v-icon>mdi-upload</v-icon></v-list-item-action>
+        <v-list-item-title>Contribuer</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -62,9 +70,22 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   props: ['navContext'],
+  data () {
+    return {
+      datasetsCount: { file: null, rest: null }
+    }
+  },
   computed: {
-    ...mapState(['config']),
-    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark'])
+    ...mapState(['config', 'portal']),
+    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl'])
+  },
+  async mounted () {
+    const owner = this.config.owner
+    let ownerFilter = `${owner.type}:${owner.id}`
+    if (owner.department) ownerFilter += `:${owner.department}`
+    const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${this.portal._id}` }
+    this.datasetsCount.file = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
+    this.datasetsCount.rest = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
   }
 }
 </script>
