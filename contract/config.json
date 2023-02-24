@@ -1135,13 +1135,16 @@
         "title": "Disposition des vignettes de jeux de données",
         "default": "dense",
         "oneOf": [{
-          "title": "Dense",
+          "title": "Compacte (3 colonnes)",
           "const": "dense"
+        },{
+          "title": "Compacte (2 colonnes)",
+          "const": "medium"
         }, {
-          "title": "Horizontal",
+          "title": "Texte + image horizontal (1 colonne)",
           "const": "horizontal"
         }, {
-          "title": "Vertical",
+          "title": "Texte + image vertical (3 colonnes)",
           "const": "vertical"
         }]
       },

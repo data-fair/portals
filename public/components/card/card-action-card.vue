@@ -4,7 +4,7 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <template v-if="layout === 'dense' || layout === 'vertical' || $vuetify.breakpoint.smAndDown">
+    <template v-if="layout === 'dense' || layout === 'medium' || layout === 'vertical' || $vuetify.breakpoint.smAndDown">
       <optional-link
         :to="to"
         :title="title"
@@ -24,7 +24,7 @@
         />
       </optional-link>
       <card-text
-        v-if="!img || layout !== 'dense'"
+        v-if="!img || (layout !== 'dense' && layout !== 'medium')"
         :html="html"
       />
       <card-topics :topics="topics" />
@@ -148,7 +148,7 @@ export default {
       if (this.actionCardOptions.includes('outlined')) props.class = 'also-outlined'
       else props.class = 'not-outlined'
 
-      if (this.layout === 'dense') props.minHeight = 260
+      if (this.layout === 'dense' || this.layout === 'medium') props.minHeight = 260
 
       if (this.actionCardOptions.includes('flat')) props.elevation = 0
 

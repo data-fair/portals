@@ -285,6 +285,7 @@ export default {
     },
     colProps () {
       if (this.config.datasetsCardLayout === 'horizontal') return { cols: 12 }
+      else if (this.config.datasetsCardLayout === 'medium') return { sm: 6, cols: 12 }
       else return { md: 4, sm: 6, cols: 12 }
     }
   },
