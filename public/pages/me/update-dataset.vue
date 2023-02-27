@@ -2,6 +2,12 @@
   <v-iframe
     title="Contribuer"
     :src="updateDatasetUrl"
+    :query-params-extra="{
+      primary: readablePrimaryColor,
+      publicationSite: `data-fair-portals:${portal._id}`,
+      owner: ownerFilter
+    }"
+    :query-params-exclude="['portalId']"
     :sync-state="true"
   />
 </template>
@@ -20,13 +26,16 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal']),
-    ...mapGetters(['dataFairUrl']),
+    ...mapGetters(['dataFairUrl', 'readablePrimaryColor']),
     ...mapState('session', ['user']),
-    updateDatasetUrl () {
+    ownerFilter () {
       const owner = this.config.owner
       let ownerFilter = `${owner.type}:${owner.id}`
       if (owner.department) ownerFilter += `:${owner.department}`
-      return `${this.dataFairUrl}/embed/workflow/update-dataset?primary=${encodeURIComponent(this.config.themeColor)}&publicationSite=data-fair-portals:${encodeURIComponent(this.portal._id)}&owner=${ownerFilter}`
+      return ownerFilter
+    },
+    updateDatasetUrl () {
+      return `${this.dataFairUrl}/embed/workflow/update-dataset`
     }
   }
 }
