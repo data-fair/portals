@@ -58,7 +58,7 @@ export default {
   watch: {
     dialog () {
       const viewName = this.dialog ? `/applications/${this.application.id}/application-dialog` : this.$route.path
-      this.$ma.trackView({ viewName })
+      if (this.$ma) this.$ma.trackView({ viewName })
     }
   }
 }

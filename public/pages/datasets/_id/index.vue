@@ -273,33 +273,15 @@
                   :dataset="dataset"
                   :color="'primary'"
                 />
-                <client-only>
-                  <api-view
-                    v-if="!isMobileOnly && !dataset.isMetaOnly"
-                    :dataset="dataset"
-                    color="primary"
-                  />
-                </client-only>
-                <action-icon
-                  v-if="dataFiles && dataFiles.original"
-                  title="Télécharger les données originales"
-                  icon=" mdi-download"
-                  :href="dataFiles.original.url"
-                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+                <api-view
+                  v-if="!isMobileOnly && !dataset.isMetaOnly"
+                  :dataset="dataset"
+                  color="primary"
                 />
-                <action-icon
-                  v-if="dataFiles && dataFiles.full"
-                  title="Télécharger les données enrichies"
-                  icon=" mdi-download-multiple"
-                  :href="dataFiles.full.url"
-                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-                />
-                <action-icon
-                  v-if="dataFiles && dataFiles['export-csv']"
-                  :title="`Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') })`"
-                  icon="mdi-download"
-                  :href="dataFiles['export-csv'].url"
-                  @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+                <download
+                  v-if="!dataset.isMetaOnly"
+                  :dataset="dataset"
+                  :color="'primary'"
                 />
                 <schema-view
                   v-if="!dataset.isMetaOnly"
@@ -527,6 +509,7 @@
 import TablePreview from '~/components/dataset/table-preview.vue'
 import MapPreview from '~/components/dataset/map-preview.vue'
 import ApiView from '~/components/dataset/api-view.vue'
+import Download from '~/components/dataset/download.vue'
 import NotifEdit from '~/components/dataset/notif-edit.vue'
 import SchemaView from '~/components/dataset/schema-view.vue'
 import Attachments from '~/components/dataset/dataset-attachments.vue'
@@ -544,6 +527,7 @@ export default {
     TablePreview,
     MapPreview,
     ApiView,
+    Download,
     NotifEdit,
     SchemaView,
     Attachments,
@@ -558,7 +542,6 @@ export default {
     isMobileOnly,
     dataset: null,
     applications: null,
-    dataFiles: null,
     uses: null
   }),
   async fetch () {
@@ -575,9 +558,6 @@ export default {
       applications.results = [...ordered, ...remaining]
     }
     this.applications = applications
-
-    const dataFiles = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}/data-files`)
-    this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
 
     this.uses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, {
       params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: this.$route.params.id }

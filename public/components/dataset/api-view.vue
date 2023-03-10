@@ -54,7 +54,7 @@ export default {
   watch: {
     dialog () {
       const viewName = this.dialog ? `/datasets/${this.dataset.id}/api-dialog` : this.$route.path
-      this.$ma.trackView({ viewName })
+      if (this.$ma) this.$ma.trackView({ viewName })
     }
   }
 }

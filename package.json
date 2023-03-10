@@ -68,6 +68,7 @@
     "google-fonts-complete": "^2.1.1",
     "hasha": "^5.2.2",
     "http-errors": "^2.0.0",
+    "http-link-header": "^1.1.0",
     "json-schema-defaults": "^0.4.0",
     "marked": "^0.6.3",
     "memoizee": "^0.4.15",
@@ -87,7 +88,9 @@
     "sanitize-html": "^2.7.2",
     "sharp": "^0.30.7",
     "slugify": "^1.4.6",
-    "vue-social-sharing": "^3.0.4"
+    "streamsaver": "^2.0.6",
+    "vue-social-sharing": "^3.0.4",
+    "web-streams-polyfill": "^3.2.1"
   },
   "devDependencies": {
     "@data-fair/sd-vue": "2.6.1",

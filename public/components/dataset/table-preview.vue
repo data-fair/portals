@@ -61,13 +61,13 @@ export default {
   watch: {
     dialog () {
       const viewName = this.dialog ? `/datasets/${this.dataset.id}/table-dialog` : this.$route.path
-      this.$ma.trackView({ viewName })
+      if (this.$ma) this.$ma.trackView({ viewName })
     }
   },
   methods: {
     // receiving a message from the iframe
     onMessage (message) {
-      if (message.trackEvent) this.$ma.trackEvent(message.trackEvent)
+      if (message.trackEvent && this.$ma) this.$ma.trackEvent(message.trackEvent)
     }
   }
 }
