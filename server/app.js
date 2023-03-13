@@ -15,7 +15,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@data-fair/sd-express')({
   directoryUrl: config.directoryUrl,
-  privateNotifyUrl: config.privateNotifyUrl
+  privateDirectoryUrl: config.privateDirectoryUrl
 })
 const debug = require('debug')('main')
 

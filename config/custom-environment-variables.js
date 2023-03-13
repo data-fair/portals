@@ -20,7 +20,8 @@ module.exports = {
     }
   },
   secretKeys: {
-    notifications: 'SECRET_NOTIFICATIONS'
+    notifications: 'SECRET_NOTIFICATIONS',
+    sites: 'SECRET_SITES'
   },
   proxyNuxt: {
     __name: 'PROXY_NUXT',

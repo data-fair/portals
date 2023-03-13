@@ -20,17 +20,13 @@ async function ensureIndex (db, collection, key, options = {}) {
 exports.connect = async () => {
   console.log('Connecting to mongodb ' + `${config.mongo.host}:${config.mongo.port}`)
   let client
-  const opts = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
   try {
-    client = await MongoClient.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`, opts)
+    client = await MongoClient.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`)
   } catch (err) {
     // 1 retry after 1s
     // solve the quite common case in docker-compose of the service starting at the same time as the db
     await new Promise(resolve => setTimeout(resolve, 1000))
-    client = await MongoClient.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`, opts)
+    client = await MongoClient.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`)
   }
   const db = client.db()
   return { db, client }

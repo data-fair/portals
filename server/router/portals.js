@@ -105,6 +105,21 @@ async function syncPortalUpdate (portal, cookie) {
     { headers: { cookie } }
   )
 
+  if (portal.config && portal.config.authentication !== 'none' && portal.host && config.secretKeys.sites) {
+    await axios.post(
+      `${config.privateDirectoryUrl || config.directoryUrl}/api/sites`,
+      {
+        _id: 'data-fair-portals:' + portal._id,
+        owner: portal.owner,
+        host: portal.host,
+        theme: {
+          primaryColor: config.themeColor || '#1E88E5'
+        }
+      },
+      { params: { key: config.secretKeys.sites } }
+    )
+  }
+
   await axios.put(
     `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}`,
     imagesDatasetUtils.init(portal),
@@ -299,7 +314,7 @@ router.put('/:id/host', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
   if (!req.user.isAdmin) return res.status(403).send()
   const portal = (await req.app.get('db').collection('portals')
-    .findOneAndUpdate({ _id: req.params.id }, { $set: { host: req.body } }, { returnOriginal: false })).value
+    .findOneAndUpdate({ _id: req.params.id }, { $set: { host: req.body } }, { returnDocument: 'after' })).value
   await syncPortalUpdate(portal, req.headers.cookie)
   res.send()
 }))

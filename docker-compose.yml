@@ -16,6 +16,8 @@ services:
       - NUXT_BUILD_BLOCKING=false
       - NO_UI=${NO_UI}
       - AUTHRATELIMIT_ATTEMPTS=200
+      - SECRET_SITES=secret-sites
+      - MANAGE_SITES=true
     volumes:
       - ./test/resources/users.json:/webapp/data/users.json
       - ./test/resources/organizations.json:/webapp/data/organizations.json
