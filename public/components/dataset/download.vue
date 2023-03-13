@@ -72,7 +72,7 @@
             />
           </v-list-item-action>
         </v-list-item>
-        <template v-if="total <= 1000">
+        <template v-if="total <= 10000">
           <v-list-item
             v-for="format in (dataset.bbox ? ['csv', 'xlsx', 'ods', 'geojson'] : ['csv', 'xlsx', 'ods'])"
             :key="format"
