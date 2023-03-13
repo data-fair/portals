@@ -45,6 +45,11 @@ app.set('session', session)
 app.use('/api/v1', require('./router/root'))
 app.use('/api/v1/portals', require('./router/portals'))
 
+// self hosting of streamsaver man in the middle service worker
+// see https://github.com/jimmywarting/StreamSaver.js/issues/183
+app.use('/streamsaver/mitm.html', express.static('node_modules/streamsaver/mitm.html'))
+app.use('/streamsaver/sw.js', express.static('node_modules/streamsaver/sw.js'))
+
 // set current baseUrl, i.e. the url of the service on the current user's domain
 const publicUrl = new URL(config.publicUrl)
 app.use('/', (req, res, next) => {
