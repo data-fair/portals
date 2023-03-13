@@ -5,8 +5,8 @@ module.exports = {
   notifyWSUrl: 'ws://localhost:8088',
   proxyNuxt: true,
   secretKeys: {
-    notifications: 'secret-notifications',
-    sites: 'secret-sites'
+    notifications: 'secret-notifications'
+    // sites: 'secret-sites'
   }
   // tablePreviewPath: '/table2'
 }
