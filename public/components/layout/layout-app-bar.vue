@@ -55,8 +55,7 @@ export default {
     loginHref () {
       return this.loginUrl(
         this.url,
-        false,
-        { org: this.config.owner.type === 'organization' ? this.config.owner.id : '', primary: this.config.themeColor }
+        false
       )
     },
     appBarProps () {

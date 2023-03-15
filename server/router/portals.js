@@ -112,6 +112,7 @@ async function syncPortalUpdate (portal, cookie) {
         _id: 'data-fair-portals:' + portal._id,
         owner: portal.owner,
         host: portal.host,
+        logo: `https://${portal.host}/api/v1/portals/${portal._id}/assets/logo?hash=${portal.config.assets.logo && portal.config.assets.logo.hash}`,
         theme: {
           primaryColor: config.themeColor || '#1E88E5'
         }
