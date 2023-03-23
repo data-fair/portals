@@ -2,9 +2,18 @@
 
 ## Development environment
 
-Install dependencies and launch service dependencies with docker-compose:
+Install dependencies:
 
     npm install
+
+If you use [tmux](https://github.com/tmux/tmux/wiki) you can replace all the following steps with `npm run dev-tmux`, otherwise follow the next instructions.
+
+Switch to the appropriate nodejs version:
+
+    nvm use
+
+Run the services dependencies:
+
     npm run dev-deps
 
 Run the 2 development servers with these commands in separate shells:
