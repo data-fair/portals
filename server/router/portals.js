@@ -27,6 +27,7 @@ const findUtils = require('../utils/find')
 const usesUtils = require('../utils/uses')
 const notifications = require('../utils/notifications')
 const imagesDatasetUtils = require('../utils/images-dataset')
+const debugSyncPortal = require('debug')('sync-portal')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
 configSchemaNoAllOf.allOf.forEach(a => {
@@ -98,14 +99,18 @@ async function syncPortalUpdate (portal, cookie) {
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
   }
+  debugSyncPortal('sync portal', portal)
+
   const id = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
+  debugSyncPortal(`sync to data-fair ${id}`)
   await axios.post(
     `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${id}/publication-sites`,
     publicationSite,
     { headers: { cookie } }
   )
 
-  if (portal.config && portal.config.authentication !== 'none' && portal.host && config.secretKeys.sites) {
+  if (portal.config && portal.host && config.secretKeys.sites) {
+    debugSyncPortal(`sync to SD ${id}`)
     await axios.post(
       `${config.privateDirectoryUrl || config.directoryUrl}/api/sites`,
       {
@@ -121,6 +126,7 @@ async function syncPortalUpdate (portal, cookie) {
     )
   }
 
+  debugSyncPortal(`sync images dataset ${id}`)
   await axios.put(
     `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}`,
     imagesDatasetUtils.init(portal),

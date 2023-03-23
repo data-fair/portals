@@ -5,7 +5,7 @@ exports.description = 'Sync portals with activated auth to SD sites'
 
 exports.exec = async (db, debug) => {
   for await (const portal of db.collection('portals').find({})) {
-    if (portal.config && portal.config.authentication !== 'none' && portal.host && config.secretKeys.sites) {
+    if (portal.config && portal.host && config.secretKeys.sites) {
       debug('sync portal', portal._id, portal.host)
       try {
         await axios.post(
