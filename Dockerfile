@@ -32,6 +32,7 @@ ADD .gitignore .gitignore
 ADD test test
 RUN npm run lint
 RUN npm run test
+RUN npm audit --omit=dev --audit-level=critical
 
 # Cleanup /webapp/node_modules so it can be copied by next stage
 RUN npm prune --production
