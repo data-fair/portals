@@ -12,7 +12,8 @@
     "build": "nuxt build --standalone",
     "analyze": "nuxt build --analyze",
     "lint": "eslint --ext js,vue --ignore-path .gitignore .",
-    "lint-fix": "eslint --ext js,vue --ignore-path .gitignore --fix ."
+    "lint-fix": "eslint --ext js,vue --ignore-path .gitignore --fix .",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -93,6 +94,8 @@
     "web-streams-polyfill": "^3.2.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.5.0",
+    "@commitlint/config-conventional": "^17.4.4",
     "@data-fair/sd-vue": "2.6.1",
     "@koumoul/v-iframe": "^0.20.1",
     "@koumoul/vjsf": "2.20.3",
@@ -112,6 +115,7 @@
     "eslint-plugin-vue": "^8.5.0",
     "form-data": "^4.0.0",
     "http-proxy-middleware": "^1.0.6",
+    "husky": "^8.0.3",
     "iframe-resizer": "4.0.4",
     "js-file-download": "^0.4.12",
     "mobile-device-detect": "^0.2.3",
