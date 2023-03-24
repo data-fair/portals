@@ -44,7 +44,7 @@ services:
     network_mode: host
     environment:
       - PORT=6201
-      - DEBUG=files
+      - DEBUG=files,workers*
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - OPENAPI_VIEWER_URL=http://localhost:6200/openapi-viewer/
       - NOTIFY_URL=http://localhost:6200/notify
@@ -56,6 +56,9 @@ services:
       - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
       # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/s/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
       - PROMETHEUS_ACTIVE=false
+      # - EXPORT_REST_DATASETS_CRON=* * * * *
+    volumes:
+      - ./data/data-fair:/data
 
   elasticsearch:
     profiles:

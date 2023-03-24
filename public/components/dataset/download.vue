@@ -12,12 +12,15 @@
         v-on="onDialog"
       />
     </template>
-    <v-card v-if="dialog">
+    <v-card
+      v-if="dialog"
+      :loading="!dataFiles"
+    >
       <v-toolbar
         dense
         flat
       >
-        <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
+        <v-toolbar-title>Téléchargement des données - {{ dataset.title }}</v-toolbar-title>
         <v-spacer />
         <v-btn
           icon
@@ -26,123 +29,93 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-list>
-        <v-list-item v-if="dataFiles && dataFiles.original">
+      <v-list v-if="dataFiles">
+        <!-- direct links to data files-->
+        <v-list-item
+          v-for="(dataFile, i) of dataFiles"
+          :key="i"
+        >
           <v-list-item-content>
             <v-list-item-title>
-              Télécharger les données originales - fichier {{ dataFiles.original.name }}
+              {{ dataFile.fullTitle }} ({{ dataFile.size | bytes }})
             </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
             <action-icon
-              title="Télécharger les données originales"
+              :title="dataFile.fullTitle"
               icon=" mdi-download"
-              :href="dataFiles.original.url"
-              @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
+              :href="dataFile.url"
+              @click="$event => { $ma.trackEvent({action: 'download_data_file', label: dataset.id}); menu = false }"
             />
           </v-list-item-action>
         </v-list-item>
-        <v-list-item v-if="dataFiles && dataFiles.full">
-          <v-list-item-content>
-            <v-list-item-title>
-              Télécharger les données enrichies - format csv
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <action-icon
-              title="Télécharger les données enrichies"
-              icon=" mdi-download"
-              :href="dataFiles.full.url"
-              @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-            />
-          </v-list-item-action>
-        </v-list-item>
-        <v-list-item v-if="dataFiles && dataFiles['export-csv']">
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ `Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') }) - format csv` }}
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-action>
-            <action-icon
-              :title="`Télécharger les données (export du ${ $dayjs(dataFiles['export-csv'].updatedAt).format('LL') })`"
-              icon="mdi-download"
-              :href="dataFiles['export-csv'].url"
-              @click="$ma.trackEvent({action: 'download_data_file', label: dataset.id})"
-            />
-          </v-list-item-action>
-        </v-list-item>
-        <template v-if="total <= 10000">
+
+        <!-- download of large CSV in 10000 lines chunks -->
+        <template v-if="total > 10000 && !hasNormalizedCSV">
           <v-list-item
-            v-for="format in (dataset.bbox ? ['csv', 'xlsx', 'ods', 'geojson'] : ['csv', 'xlsx', 'ods'])"
-            :key="format"
+            target="download"
+            :disabled="largeCsvLoading"
           >
             <v-list-item-content>
               <v-list-item-title>
-                {{ `Télécharger un export au format ${format}` }}
+                Export au format csv
               </v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <action-icon
-                :title="`Télécharger un export au format ${format}`"
+                title="Télécharger un export au format csv"
                 icon="mdi-download"
-                :href="downloadUrls[format]"
-                @click="clickDownload(format)"
+                @click="downloadLargeCSV"
               />
             </v-list-item-action>
           </v-list-item>
-        </template>
-        <template v-else>
-          <v-list
-            class="py-0"
-            style="position:relative"
+          <v-btn
+            v-if="largeCsvLoading"
+            icon
+            title="Annuler"
+            color="warning"
+            absolute
+            right
+            style="position:absolute;top:6px;right:8px;"
+            @click="cancelLargeCsv"
           >
-            <v-list-item
-              target="download"
-              :disabled="largeCsvLoading"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  Télécharger un export au format csv
-                </v-list-item-title>
-              <!-- <v-list-item-subtitle>
-                Le jeu de données contient plus de 10 000 enregistrements.<br>
-                Un export dans ce format n'est possible qu'en filtrant des éléments à partir de la vue tableau.
-              </v-list-item-subtitle> -->
-              </v-list-item-content>
-              <v-list-item-action>
-                <action-icon
-                  title="Vue tabulaire en plein écran"
-                  icon="mdi-download"
-                  @click="downloadLargeCSV"
-                />
-              </v-list-item-action>
-            </v-list-item>
-            <v-btn
+            <v-icon>mdi-cancel</v-icon>
+          </v-btn>
+          <div style="height:4px;width:100%;">
+            <v-progress-linear
               v-if="largeCsvLoading"
-              icon
-              title="Annuler"
-              color="warning"
-              absolute
-              right
-              style="position:absolute;top:6px;right:8px;"
-              @click="cancelLargeCsv"
-            >
-              <v-icon>mdi-cancel</v-icon>
-            </v-btn>
-            <div style="height:4px;width:100%;">
-              <v-progress-linear
-                v-if="largeCsvLoading"
-                :buffer-value="largeCsvBufferValue"
-                :value="largeCsvValue"
-                stream
-                height="4"
-                style="margin:0;"
-              />
-            </div>
-          </v-list>
-          <v-alert
+              :buffer-value="largeCsvBufferValue"
+              :value="largeCsvValue"
+              stream
+              height="4"
+              style="margin:0;"
+            />
+          </div>
+        </template>
 
+        <!-- download of formats exported by API when <= 10000 lines -->
+        <v-list-item
+          v-for="format in simpleExports"
+          :key="format"
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ `Export au format ${format}` }}
+            </v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <action-icon
+              :title="`Export au format ${format}`"
+              icon="mdi-download"
+              :href="downloadUrl(format)"
+              @click="clickDownload(format)"
+            />
+          </v-list-item-action>
+        </v-list-item>
+
+        <!-- link to table vue for filtered exports -->
+        <template v-if="total > 10000">
+          <v-alert
             type="warning"
             tile
             dense
@@ -153,18 +126,11 @@
             Le jeu de données contient plus de 10 000 enregistrements.<br>
             Un export dans les formats ci-dessous n'est possible qu'en filtrant des éléments à partir de la vue tableau.
           </v-alert>
-          <v-list-item
-            v-for="format in (dataset.bbox ? ['xlsx', 'ods', 'geojson'] : ['xlsx', 'ods'])"
-            :key="format"
-          >
+          <v-list-item>
             <v-list-item-content>
               <v-list-item-title>
-                {{ `Télécharger un export au format ${format}` }}
+                {{ `Export filtré aux formats ${joinAnd(dataset.bbox ? ['xlsx', 'ods', 'geojson'] : ['xlsx', 'ods'])}` }}
               </v-list-item-title>
-              <!-- <v-list-item-subtitle>
-                Le jeu de données contient plus de 10 000 enregistrements.<br>
-                Un export dans ce format n'est possible qu'en filtrant des éléments à partir de la vue tableau.
-              </v-list-item-subtitle> -->
             </v-list-item-content>
             <v-list-item-action>
               <action-icon
@@ -202,19 +168,42 @@ export default {
   computed: {
     ...mapState(['config', 'publicUrl']),
     ...mapGetters(['dataFairUrl']),
-    downloadUrls () {
-      const params = {
-        size: 10000,
-        page: 1
+    hasNormalizedCSV () {
+      console.log(this.dataFiles)
+      if (!this.dataFiles) return true
+      if (this.dataFilesObj.normalized && this.dataFilesObj.normalized.mimetype === 'text/csv') {
+        return true
       }
-      delete params.truncate
-      const url = `${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/lines`
-      return {
-        csv: buildURL(url, { ...params, format: 'csv' }),
-        xlsx: buildURL(url, { ...params, format: 'xlsx' }),
-        ods: buildURL(url, { ...params, format: 'ods' }),
-        geojson: buildURL(url, { ...params, format: 'geojson' })
+      if (this.dataFilesObj.full && this.dataFilesObj.full.mimetype === 'text/csv') {
+        return true
       }
+      if (this.dataFilesObj['export-csv']) {
+        return true
+      }
+      return false
+    },
+    hasNormalizedGeojson () {
+      console.log(this.dataFiles)
+      if (!this.dataFiles) return true
+      if (this.dataFilesObj.normalized && this.dataFilesObj.normalized.mimetype === 'application/geo+json') {
+        return true
+      }
+      if (this.dataFilesObj.full && this.dataFilesObj.full.mimetype === 'application/geo+json') {
+        return true
+      }
+      if (this.dataFilesObj['export-geojson']) {
+        return true
+      }
+      return false
+    },
+    simpleExports () {
+      if (this.total > 10000 || !this.dataFiles) return []
+      const exports = []
+      if (!this.hasNormalizedCSV) exports.push('csv')
+      exports.push('xlsx')
+      exports.push('ods')
+      if (!this.hasNormalizedGeojson && this.dataset.bbox) exports.push('geojson')
+      return exports
     }
   },
   watch: {
@@ -225,7 +214,12 @@ export default {
   },
   async mounted () {
     const dataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
-    this.dataFiles = dataFiles.reduce((files, file) => { files[file.key] = file; return files }, {})
+    for (const dataFile of dataFiles) {
+      dataFile.fullTitle = dataFile.title
+      if (dataFile.key === 'original') dataFile.fullTitle += ' ' + dataFile.name
+    }
+    this.dataFiles = dataFiles
+    this.dataFilesObj = this.dataFiles.reduce((obj, df) => { obj[df.key] = df; return obj }, {})
     this.total = (await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/lines`, { params: { size: 0 } })).total
   },
   methods: {
@@ -235,7 +229,6 @@ export default {
       try {
         const { WritableStream } = await import('web-streams-polyfill/ponyfill')
         const streamSaver = require('streamsaver')
-        console.log(streamSaver)
         streamSaver.WritableStream = WritableStream
         streamSaver.mitm = `${this.publicUrl}/streamsaver/mitm.html`
         this.fileStream = streamSaver.createWriteStream(`${this.dataset.id}.csv`)
@@ -289,6 +282,29 @@ export default {
     clickDownload (format) {
       if (this.$ma) this.$ma.trackEvent({ action: 'download_filtered', label: `${this.dataset.id} - ${format}` })
       this.menu = false
+    },
+    downloadUrl (format) {
+      const params = {
+        size: 10000,
+        page: 1,
+        format
+      }
+      const url = `${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/lines`
+      return buildURL(url, params)
+    },
+    joinAnd (array, sep = ', ', lastSep = ' et ') {
+      let str = ''
+      for (let i = 0; i < array.length; i++) {
+        str += array[i]
+        if (i === array.length - 1) {
+          // nothing
+        } else if (i === array.length - 2) {
+          str += lastSep
+        } else {
+          str += sep
+        }
+      }
+      return str
     }
   }
 }

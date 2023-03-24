@@ -317,7 +317,7 @@
                         class="pa-0"
                         style="height:26px"
                       >
-                        Mis à jour le {{ dataset.dataUpdatedAt | date("LL") }}
+                        Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}
                       </v-subheader>
                     </v-list-item-title>
                   </v-list-item-content>
