@@ -1,6 +1,6 @@
 ######################################
 # Stage: nodejs dependencies and build
-FROM node:16.13.2-alpine3.14 AS builder
+FROM node:18.15.0-alpine3.17 AS builder
 
 WORKDIR /webapp
 ADD package.json .
@@ -32,6 +32,7 @@ ADD .gitignore .gitignore
 ADD test test
 RUN npm run lint
 RUN npm run test
+RUN npm audit --omit=dev --audit-level=critical
 
 # Cleanup /webapp/node_modules so it can be copied by next stage
 RUN npm prune --production
@@ -39,7 +40,7 @@ RUN rm -rf node_modules/.cache
 
 ##################################
 # Stage: main nodejs service stage
-FROM node:16.13.2-alpine3.14
+FROM node:18.15.0-alpine3.17
 MAINTAINER "contact@koumoul.com"
 
 RUN apk add --no-cache dumb-init
