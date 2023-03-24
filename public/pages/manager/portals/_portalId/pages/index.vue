@@ -73,7 +73,6 @@
               <v-card-actions class="py-0">
                 <v-icon
                   :color="page.public ? 'primary' : 'accent'"
-                  :small="small"
                   :title="page.public ? 'Public' : 'Privé'"
                 >
                   {{ page.public ? 'mdi-lock-open' : 'mdi-lock' }}

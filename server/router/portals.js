@@ -9,7 +9,7 @@ const ajv = new Ajv()
 const { RateLimiterMongo } = require('rate-limiter-flexible')
 const requestIp = require('request-ip')
 const emailValidator = require('email-validator')
-const marked = require('marked')
+const marked = require('marked').parse
 const { nanoid } = require('nanoid')
 const { randomUUID } = require('crypto')
 

@@ -46,7 +46,9 @@ export default {
     return { visible: false }
   },
   methods: {
-    marked,
+    marked (markdown) {
+      return marked.parse(markdown)
+    },
     visibilityChanged (visible) {
       if (visible) this.renderEasyMDE()
     },
