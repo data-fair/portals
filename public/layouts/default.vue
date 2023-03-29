@@ -61,7 +61,6 @@ export default {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['footerColor', 'footerColorDark', 'portalHead', 'appBarElevation']),
     homeUrl () {
-      console.log('portal ?', this.portal)
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     }
   }

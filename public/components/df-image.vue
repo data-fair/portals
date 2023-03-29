@@ -54,12 +54,9 @@ export default {
     ...mapState(['env', 'portal']),
     ...mapGetters(['imagesDatasetUrl'])
   },
-  mounted () {
-    console.log(this.form.getExprNode())
-  },
+  mounted () {},
   methods: {
     async change (event) {
-      console.log('change !', this.file)
       if (!this.file) return
       this.loading = true
       const formData = new FormData()

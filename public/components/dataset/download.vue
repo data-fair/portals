@@ -164,7 +164,6 @@ export default {
     ...mapState(['config', 'publicUrl']),
     ...mapGetters(['dataFairUrl']),
     hasNormalizedCSV () {
-      console.log(this.dataFiles)
       if (!this.dataFiles) return true
       if (this.dataFilesObj.normalized && this.dataFilesObj.normalized.mimetype === 'text/csv') {
         return true
@@ -178,7 +177,6 @@ export default {
       return false
     },
     hasNormalizedGeojson () {
-      console.log(this.dataFiles)
       if (!this.dataFiles) return true
       if (this.dataFilesObj.normalized && this.dataFilesObj.normalized.mimetype === 'application/geo+json') {
         return true
