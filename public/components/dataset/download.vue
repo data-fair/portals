@@ -54,7 +54,6 @@
         <template v-if="total > 10000 && !hasNormalizedCSV">
           <v-list-item
             target="download"
-            :disabled="largeCsvLoading"
           >
             <v-list-item-content>
               <v-list-item-title>
@@ -63,24 +62,20 @@
             </v-list-item-content>
             <v-list-item-action>
               <action-icon
+                v-if="largeCsvLoading"
+                title="Télécharger un export au format csv"
+                color="warning"
+                icon="mdi-cancel"
+                @click="cancelLargeCsv"
+              />
+              <action-icon
+                v-else
                 title="Télécharger un export au format csv"
                 icon="mdi-download"
                 @click="downloadLargeCSV"
               />
             </v-list-item-action>
           </v-list-item>
-          <v-btn
-            v-if="largeCsvLoading"
-            icon
-            title="Annuler"
-            color="warning"
-            absolute
-            right
-            style="position:absolute;top:6px;right:8px;"
-            @click="cancelLargeCsv"
-          >
-            <v-icon>mdi-cancel</v-icon>
-          </v-btn>
           <div style="height:4px;width:100%;">
             <v-progress-linear
               v-if="largeCsvLoading"
@@ -234,7 +229,7 @@ export default {
         this.fileStream = streamSaver.createWriteStream(`${this.dataset.id}.csv`)
         this.writer = this.fileStream.getWriter()
         const nbChunks = Math.ceil(this.total / 10000)
-        let nextUrl = this.downloadUrls.csv
+        let nextUrl = this.downloadUrl('csv')
         for (let chunk = 0; chunk < nbChunks; chunk++) {
           if (this.largeCsvCancelled) break
           this.largeCsvBufferValue = ((chunk + 1) / nbChunks) * 100
@@ -271,7 +266,6 @@ export default {
       this.largeCsvBufferValue = 0
       this.largeCsvValue = 0
     },
-    /* cancel works, but the next download stays in pending state I don't know why */
     async cancelLargeCsv () {
       this.largeCsvCancelled = true
       if (this.writer) {
