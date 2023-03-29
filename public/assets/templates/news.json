@@ -58,12 +58,12 @@
       "type": "string"
     },
     "summary": {
-      "title": "Chapô",
+      "title": "Résumé",
       "type": "string",
       "x-display": "textarea"
     },
     "description": {
-      "title": "Description générale",
+      "title": "Contenu",
       "type": "string",
       "x-display": "custom-markdown"
     },

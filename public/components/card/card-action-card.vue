@@ -19,7 +19,7 @@
           alt=""
           :max-height="170"
           :contain="imgContain"
-          :class="{'mb-2': !img}"
+          :class="{'mb-2': !!img}"
           :aspect-ratio="imgAspectRatio"
         />
       </optional-link>
@@ -31,7 +31,7 @@
       <slot name="bottom" />
     </template>
 
-    <template v-if="layout === 'list'">
+    <template v-if="layout === 'list' && $vuetify.breakpoint.mdAndUp">
       <optional-link
         :to="to"
         :title="title"
