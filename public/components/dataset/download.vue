@@ -37,12 +37,18 @@
         >
           <v-list-item-content>
             <v-list-item-title>
-              {{ dataFile.fullTitle }} ({{ dataFile.size | bytes }})
+              {{ dataFile.title }}
             </v-list-item-title>
+            <v-list-item-subtitle v-if="dataFile.key === 'normalized' || dataFile.key.startsWith('export-')">
+              {{ $t('formatSubtitles.' + dataFile.format) }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle v-else>
+              {{ dataFile.name }} ({{ dataFile.size | bytes }})
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <action-icon
-              :title="dataFile.fullTitle"
+              :title="dataFile.title"
               icon=" mdi-download"
               :href="dataFile.url"
               @click="$event => { $ma.trackEvent({action: 'download_data_file', label: dataset.id}); menu = false }"
@@ -57,20 +63,23 @@
           >
             <v-list-item-content>
               <v-list-item-title>
-                Export au format csv
+                Export CSV
               </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ $t('formatSubtitles.csv') }}
+              </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
               <action-icon
                 v-if="largeCsvLoading"
-                title="Télécharger un export au format csv"
+                title="Annuler le téléchargement"
                 color="warning"
                 icon="mdi-cancel"
                 @click="cancelLargeCsv"
               />
               <action-icon
                 v-else
-                title="Télécharger un export au format csv"
+                title="Export CSV"
                 icon="mdi-download"
                 @click="downloadLargeCSV"
               />
@@ -95,12 +104,15 @@
         >
           <v-list-item-content>
             <v-list-item-title>
-              {{ `Export au format ${format}` }}
+              {{ `Export ${format.toUpperCase()}` }}
             </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ $t('formatSubtitles.' + format) }}
+            </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
             <action-icon
-              :title="`Export au format ${format}`"
+              :title="`Export ${format.toUpperCase()}`"
               icon="mdi-download"
               :href="downloadUrl(format)"
               @click="clickDownload(format)"
@@ -140,6 +152,15 @@
     </v-card>
   </v-dialog>
 </template>
+
+<i18n lang="yaml">
+fr:
+  formatSubtitles:
+    csv: format textuel pour tous logiciels tableurs (séparateur ",")
+    xlsx: format adapté pour Excel
+    ods: format adapté pour Libre Office et autres logiciels tableurs libres
+    geojson: format portable pour données géographiques
+</i18n>
 
 <script>
 import buildURL from 'axios/lib/helpers/buildURL'
@@ -208,8 +229,7 @@ export default {
   async mounted () {
     const dataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
     for (const dataFile of dataFiles) {
-      dataFile.fullTitle = dataFile.title
-      if (dataFile.key === 'original') dataFile.fullTitle += ' ' + dataFile.name
+      dataFile.format = dataFile.mimetype.split('/').pop().replace('+', '')
     }
     this.dataFiles = dataFiles
     this.dataFilesObj = this.dataFiles.reduce((obj, df) => { obj[df.key] = df; return obj }, {})
@@ -287,7 +307,7 @@ export default {
     joinAnd (array, sep = ', ', lastSep = ' et ') {
       let str = ''
       for (let i = 0; i < array.length; i++) {
-        str += array[i]
+        str += array[i].toUpperCase()
         if (i === array.length - 1) {
           // nothing
         } else if (i === array.length - 2) {
