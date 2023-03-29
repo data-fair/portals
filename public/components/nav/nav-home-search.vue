@@ -20,6 +20,7 @@
         color="primary"
         height="56"
         title="Lancer la recherche"
+        @click="$router.push({name: 'datasets', query: {q: search}})"
       >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
