@@ -96,5 +96,6 @@ export default {
 <style>
 .layout-link {
   min-width: 90px;
+  max-width: 250px;
 }
 </style>
