@@ -77,10 +77,6 @@
           />
         </v-col>
       </v-row>
-      <div
-        v-else-if="config.description"
-        v-html="config.description"
-      />
       <v-row
         v-if="config.homeShowSearch && config.homeSearchPosition === 'belowBanner'"
         justify="center"
@@ -95,9 +91,14 @@
         row-class="mt-0 mb-3"
       />
       <layout-links
-        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length"
+        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowBanner'"
         :links="config.homeLinks"
         :options="config.homeLinksOptions"
+      />
+      <div
+        v-if="(config.homeImageAsBanner || config.homeImageHidden) && config.description"
+        class="mt-3 mb-4"
+        v-html="config.description"
       />
       <kpi
         v-if="config.showKpis"
@@ -115,6 +116,11 @@
         v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowKpi'"
         :topics="topics"
         :options="config.homeTopicsOptions"
+      />
+      <layout-links
+        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowKpi'"
+        :links="config.homeLinks"
+        :options="config.homeLinksOptions"
       />
 
       <!-- 2/3 layout when we have a twitter timeline or anything else to display to the right -->

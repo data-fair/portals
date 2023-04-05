@@ -1046,6 +1046,42 @@
         "default": false,
         "x-props": {"hideDetails": "auto"}
       },
+      "homeLinksPosition": {
+        "title": "Position des liens sur la page d'accueil",
+        "x-if": "homeShowLinks",
+        "type": "string",
+        "default": "belowKpi",
+        "oneOf": [{
+          "title": "sous la description et les chiffres clés",
+          "const": "belowKpi"
+        }, {
+          "title": "sous la bannière",
+          "const": "belowBanner"
+        }]
+      },
+      "homeLinksOptions": {
+        "title": "Options de l'affichage des liens sur la page d'accueil",
+        "type": "array",
+        "x-if": "homeShowLinks",
+        "x-props": {"hideDetails": "auto"},
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "outlined",
+            "title": "afficher un contour"
+          }, {
+            "const": "rounded",
+            "title": "arrondir"
+          }, {
+            "const": "elevate",
+            "title": "élèver (applique l'élévation par défaut de votre configuration)"
+          }, {
+            "const": "reverseColor",
+            "title": "inverser la couleur de fond et de texte"
+          }]
+        },
+        "default": ["outlined", "elevate"]
+      },
       "homeLinks": {
         "title": "Liste de liens",
         "type": "array",
@@ -1077,29 +1113,6 @@
             "linkTitle": {"type": "string", "title": "Titre long", "description": "un titre plus long qui ne sera pas affiché directement mais visible au survol et utilisé par les outils d'accessibilité"}
           }
         }
-      },
-      "homeLinksOptions": {
-        "title": "Options de l'affichage des liens sur la page d'accueil",
-        "type": "array",
-        "x-if": "homeShowLinks",
-        "x-props": {"hideDetails": "auto"},
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour"
-          }, {
-            "const": "rounded",
-            "title": "arrondir"
-          }, {
-            "const": "elevate",
-            "title": "élèver (applique l'élévation par défaut de votre configuration)"
-          }, {
-            "const": "reverseColor",
-            "title": "inverser la couleur de fond et de texte"
-          }]
-        },
-        "default": ["outlined", "elevate"]
       }
     }
   }, {

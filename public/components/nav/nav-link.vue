@@ -22,7 +22,7 @@
   >
     <template v-if="icon && !config.navLinkMode.includes('NoIcon')">
       <v-icon
-        :color="textColor"
+        :color="lineColor"
       >
         {{ icon }}
       </v-icon>

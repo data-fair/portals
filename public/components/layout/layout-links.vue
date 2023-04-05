@@ -1,7 +1,7 @@
 <template>
   <v-row
     justify="center"
-    class="my-2"
+    class="mt-2 mb-4"
   >
     <v-hover
       v-for="(link, i) in links"
