@@ -135,6 +135,12 @@
         "title": "Couleur secondaire",
         "x-display": "color-picker"
       },
+      "tertiaryColor": {
+        "type": "string",
+        "default": "#1E88E5",
+        "title": "Couleur tertiaire",
+        "x-display": "color-picker"
+      },
       "secondaryBackgroundColor": {
         "type": "string",
         "default": "#CFD8DC",
@@ -379,6 +385,9 @@
         }, {
           "const": "secondary",
           "title": "couleur secondaire"
+        }, {
+          "const": "tertiary",
+          "title": "couleur tertiaire"
         }]
       },
       "topicsBackgroundColor": {
@@ -396,7 +405,7 @@
           "title": "couleur secondaire"
         }, {
           "const": "primarySecondary",
-          "title": "couleur primaire ou secondaire selon le contexte"
+          "title": "couleur principale ou secondaire selon le contexte"
         }]
       }
     }

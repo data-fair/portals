@@ -46,11 +46,17 @@ export default () => ({
     secondaryColor (state, getters, rootState) {
       return rootState.config && (rootState.config.secondaryColor || getters.primaryColor)
     },
+    tertiaryColor (state, getters, rootState) {
+      return rootState.config && (rootState.config.tertiaryColor || getters.primaryColor)
+    },
     readablePrimaryColor (state, getters, rootState) {
       return contrastColor(getters.primaryColor)
     },
     readableSecondaryColor (state, getters, rootState) {
       return contrastColor(getters.secondaryColor)
+    },
+    readableTertiaryColor (state, getters, rootState) {
+      return contrastColor(getters.tertiaryColor)
     },
     secondaryBackgroundColor (state, getters, rootState) {
       return rootState.config && rootState.config.secondaryBackgroundColor ? getters.backgroundColor(rootState.config.secondaryBackgroundColor, false) : '#FFFFFF'
@@ -68,6 +74,21 @@ export default () => ({
     },
     appBarMainColorDark (state, getters) {
       return isDark(getters.appBarMainColor)
+    },
+    navLinkColorRaw (state, getters, rootState) {
+      const navLinkColor = rootState.config.navLinkColor || 'primary'
+      if (navLinkColor === 'secondary') return getters.secondaryColor
+      if (navLinkColor === 'primary') return getters.primaryColor
+      if (navLinkColor === 'tertiary') return getters.tertiaryColor
+    },
+    navLinkColorDark (state, getters) {
+      return isDark(getters.navLinkColorRaw)
+    },
+    navLinkColor (state, getters, rootState) {
+      return getters.backgroundColor(getters.navLinkColorRaw)
+    },
+    readableNavLinkColor (state, getters, rootState) {
+      return contrastColor(getters.navLinkColorRaw)
     },
     headerColor (state, getters, rootState) {
       if (rootState.config.headerColor === 'page' || !rootState.config.headerColor) return getters.bodyBackgroundColor
@@ -411,11 +432,16 @@ html {
 .v-btn.primary.theme--light.v-btn--has-bg {
   ${getters.elevation ? `background: linear-gradient(90deg, ${getters.readablePrimaryColor} 0%, ${getters.darkReadablePrimary10} 100%);` : `background-color: ${getters.readablePrimaryColor}!important;`}
 }
+
+/* TODO: the next 3 rules should be deprecated and replaced by explicit coloring of buttons in components (as done in nav-link component) */
 .v-application#app.theme--light .v-btn.primary.v-btn--has-bg {
   border: 1px solid ${getters.darkReadablePrimary10} !important;
 }
 .v-btn.secondary.theme--light.v-btn--has-bg {
   background-color: ${getters.readableSecondaryColor} !important;
+}
+.v-btn.tertiary.theme--light.v-btn--has-bg {
+  background-color: ${getters.readableTertiaryColor} !important;
 }
 
 /* Apply fonts */
@@ -464,6 +490,9 @@ ${getters.linksStyle}
 }
 .v-application#app .secondary--text {
   color: ${getters.readableSecondaryColor}!important;
+}
+.v-application#app .tertiary--text {
+  color: ${getters.readableTertiaryColor}!important;
 }
 
 /* style of the main app bar */
