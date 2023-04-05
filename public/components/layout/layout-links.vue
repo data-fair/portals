@@ -78,16 +78,17 @@ export default {
       const color = this.readablePrimaryColor
       const borderColor = this.options.includes('outlined') ? color : 'transparent'
       const maxTitleLength = Math.max(...this.links.map(l => (l.title || '').length))
+      const width = Math.max(90, Math.min(250, 32 + maxTitleLength * 10))
       if (this.isDark(hover)) {
         return `
         border: 2px solid transparent;
-        width: ${32 + maxTitleLength * 10}px;
+        width: ${width}px;
         color: white;
         background-color:${color};`
       } else {
         return `
         border: 2px solid ${borderColor};
-        width: ${32 + maxTitleLength * 10}px;
+        width: ${width}px;
         color: ${color};
         background-color:white;`
       }
@@ -99,6 +100,5 @@ export default {
 <style>
 .layout-link {
   min-width: 90px;
-  max-width: 250px;
 }
 </style>
