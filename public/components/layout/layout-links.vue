@@ -1,34 +1,44 @@
 <template>
-  <v-row justify="center">
-    <v-hover
+  <v-row
+    justify="center"
+    class="mt-2 mb-4"
+    dense
+  >
+    <v-col
       v-for="(link, i) in links"
-      v-slot="{hover}"
       :key="i"
+      cols="6"
+      sm="4"
+      md="3"
+      lg="2"
+      style="display:flex;flex-direction:column;"
     >
-      <v-card
-        :style="style(hover)"
-        v-bind="compProps(link, hover)"
-        class="layout-link"
-      >
-        <v-card-title class="justify-center pt-3 pb-1">
-          <v-icon
-            v-if="link.icon && link.icon.name"
-            left
-            :size="36"
-            :color="textColor(hover)"
-            class="ma-0"
-          >
-            mdi-{{ link.icon.name }}
-          </v-icon>
-        </v-card-title>
-        <v-card-text
-          :style="`color: ${textColor(hover)};`"
-          class="font-weight-bold text-none justify-center text-center pb-3"
+      <v-hover v-slot="{hover}">
+        <v-card
+          :style="style(hover)"
+          v-bind="compProps(link, hover)"
+          class="layout-link flex-grow-1"
         >
-          {{ link.title }}
-        </v-card-text>
-      </v-card>
-    </v-hover>
+          <v-card-title class="justify-center pt-3 pb-1">
+            <v-icon
+              v-if="link.icon && link.icon.name"
+              left
+              :size="36"
+              :color="textColor(hover)"
+              class="ma-0"
+            >
+              mdi-{{ link.icon.name }}
+            </v-icon>
+          </v-card-title>
+          <v-card-text
+            :style="`color: ${textColor(hover)};`"
+            class="font-weight-bold text-none justify-center text-center pb-3"
+          >
+            {{ link.title }}
+          </v-card-text>
+        </v-card>
+      </v-hover>
+    </v-col>
   </v-row>
 </template>
 
@@ -47,7 +57,7 @@ export default {
   methods: {
     compProps (link, hover) {
       const props = {
-        class: 'mx-2 my-1 font-weight-bold text-none',
+        class: 'mx-2 my-2 font-weight-bold text-none',
         outlined: this.options.includes('outlined'),
         elevation: this.options.includes('elevate') ? this.elevation : 0
       }
@@ -74,17 +84,14 @@ export default {
     style (hover) {
       const color = this.readablePrimaryColor
       const borderColor = this.options.includes('outlined') ? color : 'transparent'
-      const maxTitleLength = Math.max(...this.links.map(l => (l.title || '').length))
       if (this.isDark(hover)) {
         return `
         border: 2px solid transparent;
-        width: ${32 + maxTitleLength * 10}px;
         color: white;
         background-color:${color};`
       } else {
         return `
         border: 2px solid ${borderColor};
-        width: ${32 + maxTitleLength * 10}px;
         color: ${color};
         background-color:white;`
       }
@@ -94,7 +101,4 @@ export default {
 </script>
 
 <style>
-.layout-link {
-  min-width: 90px;
-}
 </style>

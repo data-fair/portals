@@ -22,7 +22,7 @@
   >
     <template v-if="icon && !config.navLinkMode.includes('NoIcon')">
       <v-icon
-        :color="isDark ? 'white' : config.navLinkColor"
+        :color="lineColor"
       >
         {{ icon }}
       </v-icon>
@@ -48,17 +48,38 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['buttonOptions']),
-    isDark () {
-      let dark = !this.config.navLinkMode.includes('Outlined')
-      if (this.hovered && this.buttonOptions.includes('hoverInverse')) dark = !dark
-      return dark
+    ...mapGetters(['buttonOptions', 'navLinkColor', 'navLinkColorDark', 'readableNavLinkColor', 'readablePrimaryColor']),
+    isOutlined () {
+      let outlined = this.config.navLinkMode.includes('Outlined')
+      if (this.hovered && this.buttonOptions.includes('hoverInverse')) outlined = !outlined
+      return outlined
+    },
+    btnColor () {
+      if (this.config.navLinkMode.includes('Outlined')) {
+        return this.readableNavLinkColor
+      }
+      return this.navLinkColor
+    },
+    lineColor () {
+      if (this.config.navLinkMode.includes('Outlined')) {
+        return this.isOutlined ? this.readableNavLinkColor : 'white'
+      }
+      if (this.isOutlined) {
+        if (this.navLinkColorDark) return this.navLinkColor
+        return this.readablePrimaryColor
+      }
+      if (this.navLinkColorDark) return 'white'
+      return this.readablePrimaryColor
     },
     btnProps () {
-      if (this.isDark) {
-        return { depressed: true, color: this.config.navLinkColor, class: 'white--text' }
-      } else {
-        return { outlined: true, color: this.config.navLinkColor }
+      return {
+        depressed: !this.isOutlined,
+        outlined: this.isOutlined,
+        color: this.btnColor,
+        style: {
+          color: this.lineColor,
+          'border-color': this.lineColor
+        }
       }
     }
   }
