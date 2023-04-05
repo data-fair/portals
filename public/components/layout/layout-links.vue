@@ -1,5 +1,8 @@
 <template>
-  <v-row justify="center">
+  <v-row
+    justify="center"
+    class="my-2"
+  >
     <v-hover
       v-for="(link, i) in links"
       v-slot="{hover}"
@@ -47,7 +50,7 @@ export default {
   methods: {
     compProps (link, hover) {
       const props = {
-        class: 'mx-2 my-1 font-weight-bold text-none',
+        class: 'mx-2 my-2 font-weight-bold text-none',
         outlined: this.options.includes('outlined'),
         elevation: this.options.includes('elevate') ? this.elevation : 0
       }
