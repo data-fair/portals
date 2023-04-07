@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    v-if="userPartnerOrg"
     v-model="navContext.drawer"
     class="navigation-left"
     color="primary"
@@ -24,10 +25,11 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <v-subheader>Espace partenaire / {{ partner.name }}</v-subheader>
+      <v-subheader>Espace partenaire / {{ userPartnerOrg.name }}</v-subheader>
       <v-list-item
+        v-if="userPartnerOrg.role === 'admin' && !userPartnerOrg.department"
         :nuxt="true"
-        :to="`/partner/${partner.id}/organization`"
+        :to="`/partner/${userPartnerOrg.id}/organization`"
       >
         <v-list-item-action><v-icon>mdi-account-group</v-icon></v-list-item-action>
         <v-list-item-title>Gestion de l'organisation</v-list-item-title>
@@ -42,15 +44,14 @@
       </v-list-item>-->
       <v-list-item
         :nuxt="true"
-        :to="`/partner/${partner.id}/api-keys`"
+        :to="`/partner/${userPartnerOrg.id}/api-keys`"
       >
         <v-list-item-action><v-icon>mdi-cloud-circle</v-icon></v-list-item-action>
         <v-list-item-title>Clés d'API</v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="datasetsCount.rest || datasetsCount.file"
         :nuxt="true"
-        :to="`/partner/${partner.id}/update-dataset`"
+        :to="`/partner/${userPartnerOrg.id}/update-dataset`"
       >
         <v-list-item-action><v-icon>mdi-upload</v-icon></v-list-item-action>
         <v-list-item-title>Contribuer</v-list-item-title>
@@ -72,17 +73,19 @@ export default {
     ...mapState(['config', 'portal']),
     ...mapGetters(['logoUrl', 'directoryUrl', 'partnerNavigationColorDark', 'dataFairUrl']),
     ...mapState('session', ['user']),
-    partner () {
+    userPartnerOrg () {
       return this.user.organizations.find(o => o.id === this.$route.params.id)
     }
   },
   async mounted () {
+    /*
     const owner = this.config.owner
     let ownerFilter = `${owner.type}:${owner.id}`
     if (owner.department) ownerFilter += `:${owner.department}`
     const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${this.portal._id}` }
     this.datasetsCount.file = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
     this.datasetsCount.rest = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
+    */
   }
 }
 </script>

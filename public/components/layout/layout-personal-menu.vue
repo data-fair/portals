@@ -71,9 +71,9 @@
         </v-list-item>
         <template v-if="userPartners && userPartners.length">
           <v-list-item
-            v-for="partner of userPartners"
+            v-for="partner of userPartners.filter(up => up.role === 'admin' || up.role === 'config')"
             :key="partner.id"
-            :to="`/partner/${partner.id}/api-keys`"
+            :to="`/partner/${partner.id}/update-dataset`"
             nuxt
           >
             <v-list-item-action>

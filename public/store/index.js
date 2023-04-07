@@ -154,7 +154,7 @@ export default () => {
       async fetchUserPartners ({ state, commit, getters }) {
         if (!state.session.user) return
         if (state.config.owner.type !== 'organization') return
-        if (!state.userPartners) return
+        if (state.userPartners) return
         try {
           const userPartners = (await this.$axios.$get(`${getters.directoryUrl}/api/organizations/${state.config.owner.id}/partners/_user-partners`))
           commit('setAny', { userPartners })
