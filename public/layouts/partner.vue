@@ -7,7 +7,7 @@
 
     <layout-personal-app-bar :nav-context="navContext" />
 
-    <layout-personal-navigation :nav-context="navContext" />
+    <layout-partner-navigation :nav-context="navContext" />
 
     <v-main>
       <client-only>
@@ -39,7 +39,10 @@ export default {
   },
   mounted () {
     if (!this.user) return this.$router.push('/')
-    this.$store.dispatch('autoSwitchOrganization', {})
+    if (!this.user.organizations.find(o => o.id === this.$route.params.id)) return this.$router.push('/')
+    if (!this.user.organization || this.user.organization.id !== this.$route.params.id) {
+      this.$store.dispatch('session/switchOrganization', this.$route.params.id)
+    }
   }
 }
 

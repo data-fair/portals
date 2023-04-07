@@ -27,7 +27,8 @@ export default () => {
       publicBaseUrl: '',
       html: false,
       inPortal: false,
-      concepts: null
+      concepts: null,
+      userPartners: null
     },
     getters: {
       embed () {
@@ -150,10 +151,47 @@ export default () => {
         })
         commit('setAny', { concepts })
       },
+      async fetchUserPartners ({ state, commit, getters }) {
+        if (!state.session.user) return
+        if (state.config.owner.type !== 'organization') return
+        if (!state.userPartners) return
+        try {
+          const userPartners = (await this.$axios.$get(`${getters.directoryUrl}/api/organizations/${state.config.owner.id}/partners/_user-partners`))
+          commit('setAny', { userPartners })
+        } catch (err) {
+          // errors are none-blocking to tolerate an older SD instance or one with MANGE_PARTNERS != true
+          console.warn('failure to fetch user partners', err)
+        }
+      },
       setBreadcrumbs ({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
         commit('setAny', { breadcrumbs })
         if (global.parent) parent.postMessage({ breadcrumbs }, '*')
+      },
+      autoSwitchOrganization ({ state, dispatch }, { route, redirect }) {
+        // automatic switch to the account that owns this portal if we are a member
+        if (state.session.user) {
+          const user = state.session.user
+          if (
+            user &&
+            state.config.owner.type === 'organization' &&
+            user.organizations.find(o => o.id === state.config.owner.id) &&
+            (!user.organization || user.organization.id !== state.config.owner.id)
+          ) {
+            dispatch('session/switchOrganization', state.config.owner.id)
+            // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
+            if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
+          }
+          if (
+            user &&
+            state.config.owner.type === 'user' &&
+            user.organization
+          ) {
+            dispatch('session/switchOrganization', null)
+            // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
+            if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
+          }
+        }
       },
       // called both on the server and the client by plugins/init.js
       // on the server it is called before nuxtServerInit
@@ -202,29 +240,7 @@ export default () => {
         debug('nuxtServerInit in portal mode ?', !!state.portal)
         // case where we are opening a portal
         if (state.portal) {
-          // automatic switch to the account that owns this portal if we are a member
-          if (state.session.user) {
-            const user = state.session.user
-            if (
-              user &&
-              state.config.owner.type === 'organization' &&
-              user.organizations.find(o => o.id === state.config.owner.id) &&
-              (!user.organization || user.organization.id !== state.config.owner.id)
-            ) {
-              dispatch('session/switchOrganization', state.config.owner.id)
-              // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
-              redirect({ path: route.path, query: { ...route.query, switch: 1 } })
-            }
-            if (
-              user &&
-              state.config.owner.type === 'user' &&
-              user.organization
-            ) {
-              dispatch('session/switchOrganization', null)
-              // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
-              redirect({ path: route.path, query: { ...route.query, switch: 1 } })
-            }
-          }
+          dispatch('autoSwitchOrganization', { route, redirect })
         }
       }
     }

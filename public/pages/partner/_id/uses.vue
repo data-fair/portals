@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  layout: 'personal',
+  layout: 'partner',
   middleware: ['portal-required', 'auth-required']
 }
 </script>

@@ -63,6 +63,10 @@ export default {
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     }
+  },
+  mounted () {
+    console.log('auto switch')
+    this.$store.dispatch('autoSwitchOrganization', {})
   }
 }
 </script>
