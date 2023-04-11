@@ -24,6 +24,10 @@
     "id": "admindep1",
     "role": "admin",
     "department": "dep1"
+  }],
+  "partners": [{
+    "id": "orga2",
+    "name": "Orga 2"
   }]
 }, {
   "id": "orga2",

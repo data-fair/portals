@@ -140,6 +140,16 @@ export default () => ({
     personalNavigationColorDark (state, getters, rootState) {
       return rootState.config && isDark(getters.personalNavigationColor)
     },
+    partnerNavigationColor (state, getters, rootState) {
+      if (rootState.config.partnerNavigationColor === 'primary' || !rootState.config.partnerNavigationColor) return getters.primaryColor
+      if (rootState.config.partnerNavigationColor === 'secondary') return getters.secondaryColor
+      if (rootState.config.partnerNavigationColor === 'grey' || !rootState.config.footerColor) return '#424242'
+      if (rootState.config.partnerNavigationColor === 'white') return '#FFFFFF'
+      return rootState.config.partnerNavigationColor
+    },
+    partnerNavigationColorDark (state, getters, rootState) {
+      return rootState.config && isDark(getters.partnerNavigationColor)
+    },
     secondaryColorDark (state, getters, rootState) {
       return rootState.config && isDark(getters.secondaryColor)
     },
@@ -343,13 +353,29 @@ export default () => ({
         color2 = darkened
       }
       return `
-    .navigation-left {
-    background: linear-gradient(90deg, ${color1} 0%, ${color2} 100%);
-    }
-    .v-application#app.theme--light .navigation-left {
-    border-right: 1px solid ${color1} !important;
-    }
-    `
+      .v-application#app.theme--light.personal-space .navigation-left {
+        border-right: 1px solid ${color1} !important;
+        background: linear-gradient(90deg, ${color1} 0%, ${color2} 100%);
+      }
+      `
+    },
+    partnerNavigationStyle (state, getters, rootState) {
+      const darkened = tinycolor(getters.partnerNavigationColor).darken(10).toHexString()
+      const brightened = tinycolor(getters.partnerNavigationColor).brighten(10).toHexString()
+      let color1, color2
+      if (getters.partnerNavigationColorDark) {
+        color1 = darkened
+        color2 = brightened
+      } else {
+        color1 = brightened
+        color2 = darkened
+      }
+      return `
+      .v-application#app.theme--light.partner-space .navigation-left {
+        border-right: 1px solid ${color1} !important;
+        background: linear-gradient(90deg, ${color1} 0%, ${color2} 100%);
+      }
+      `
     },
     linksStyle (state, getters) {
       let style = `
@@ -498,8 +524,9 @@ ${getters.linksStyle}
 /* style of the main app bar */
 ${getters.appBarStyle}
 
-/* style of the personal navigation bar */
+/* style of the personal and partner navigation bars */
 ${getters.personalNavigationStyle}
+${getters.partnerNavigationStyle}
 
 /* default radius */
 .v-application#app .v-sheet.v-card,
