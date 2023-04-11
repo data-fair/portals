@@ -43,6 +43,7 @@
         <v-list-item-title>Réutilisations</v-list-item-title>
       </v-list-item>-->
       <v-list-item
+        v-if="userPartnerOrg.role === 'admin' && !userPartnerOrg.department"
         :nuxt="true"
         :to="`/partner/${userPartnerOrg.id}/api-keys`"
       >
