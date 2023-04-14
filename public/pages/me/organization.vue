@@ -1,6 +1,7 @@
 <template lang="html">
   <v-container style="max-width:640px !important;">
     <v-iframe
+      v-if="activeAccount.type === 'organization'"
       title="Gestion de l'organisation"
       :src="sdUrl"
     />
@@ -14,7 +15,7 @@ const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: { VIframe },
-  layout: 'partner',
+  layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   data () {
     return { topics: null }
@@ -22,8 +23,9 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['directoryUrl']),
+    ...mapGetters('session', ['activeAccount']),
     sdUrl () {
-      return `${this.directoryUrl}/organization/${this.$route.params.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true`
+      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true`
     }
   }
 }

@@ -170,6 +170,7 @@ export default () => {
       },
       autoSwitchOrganization ({ state, dispatch }, { route, redirect }) {
         // automatic switch to the account that owns this portal if we are a member
+        // or a partner if we are member of a partner available
         if (state.session.user) {
           const user = state.session.user
           if (
@@ -181,8 +182,7 @@ export default () => {
             dispatch('session/switchOrganization', state.config.owner.id)
             // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
             if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
-          }
-          if (
+          } else if (
             user &&
             state.config.owner.type === 'user' &&
             user.organization
@@ -190,6 +190,13 @@ export default () => {
             dispatch('session/switchOrganization', null)
             // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
             if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
+          } else if (
+            state.config.owner.type === 'organization' &&
+            state.userPartners &&
+            state.userPartners.find(p => p.id === state.config.owner.id)
+          ) {
+            const partner = state.userPartners.find(p => p.id === state.config.owner.id)
+            dispatch('session/switchOrganization', partner.id)
           }
         }
       },
@@ -232,6 +239,7 @@ export default () => {
               inPortal: true
             })
             await dispatch('fetchConfig', portalId)
+            await dispatch('fetchUserPartners')
           }
         }
       },
@@ -239,7 +247,7 @@ export default () => {
       async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {
         debug('nuxtServerInit in portal mode ?', !!state.portal)
         // case where we are opening a portal
-        if (state.portal) {
+        if (state.portal && !route.path.startsWith('/me/')) {
           dispatch('autoSwitchOrganization', { route, redirect })
         }
       }

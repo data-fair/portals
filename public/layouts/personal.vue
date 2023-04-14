@@ -39,7 +39,6 @@ export default {
   },
   mounted () {
     if (!this.user) return this.$router.push('/')
-    this.$store.dispatch('autoSwitchOrganization', {})
   }
 }
 

@@ -7,7 +7,7 @@
         style="top: -2px"
       >
         mdi-cloud-circle
-      </v-icon> Mes clés d'API
+      </v-icon> Clés d'API
     </h2>
     <p class="mt-6">
       Les clés d'API sont utiles pour accéder aux données en levant certaines restrictions imposées aux utilisateurs anonymes ou pour exploiter des données privées auxquelles votre compte a accès.
