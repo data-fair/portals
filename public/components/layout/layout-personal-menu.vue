@@ -69,28 +69,6 @@
           <v-list-item-action><v-icon>mdi-account-key</v-icon></v-list-item-action>
           <v-list-item-title>Espace personnel</v-list-item-title>
         </v-list-item>
-        <template v-if="userPartners && userPartners.length">
-          <v-list-item
-            v-for="partner of userPartners.filter(up => up.role === 'admin' || up.role === 'contrib')"
-            :key="partner.id"
-            :to="`/partner/${partner.id}/update-dataset`"
-            nuxt
-          >
-            <v-list-item-action>
-              <v-avatar :size="24">
-                <img
-                  :src="`${directoryUrl}/api/avatars/organization/${partner.id}/avatar.png`"
-                  aria-hidden
-                  :alt="'Avatar de ' + user.name"
-                >
-              </v-avatar>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Espace partenaire</v-list-item-title>
-              <v-list-item-subtitle>{{ partner.name }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
         <v-list-item
           :disabled="embed"
           @click="logout"
