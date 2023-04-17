@@ -102,6 +102,32 @@
         <v-list-item-title>Contribuer</v-list-item-title>
       </v-list-item>
     </v-list>
+
+    <v-footer
+      absolute
+      color="transparent"
+      class="pa-0"
+    >
+      <v-list class="pa-0">
+        <v-list-item
+          :nuxt="true"
+          :href="copyright.href"
+          class="py-0 px-1"
+        >
+          <v-list-item-avatar class="ma-0">
+            <v-avatar :size="28">
+              <img :src="copyright.srcSmall[personalNavigationColorDark ? 'dark' : 'light']">
+            </v-avatar>
+          </v-list-item-avatar>
+          <v-list-item-title
+            style="white-space: normal;"
+            class="text-caption"
+          >
+            {{ copyright.message }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-footer>
   </v-navigation-drawer>
 </template>
 
@@ -115,10 +141,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'portal']),
+    ...mapState(['config', 'portal', 'env']),
     ...mapState('session', ['user']),
     ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl']),
     ...mapGetters('session', ['activeAccount', 'accountRole']),
+    copyright () {
+      return process.env.copyright
+    },
     accountValue () {
       if (this.activeAccount.type === 'user') return null
       if (this.activeAccount.department) return `${this.activeAccount.id}:${this.activeAccount.department}`

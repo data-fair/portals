@@ -35,7 +35,13 @@ module.exports = {
       dark: 'https://koumoul.com/static/logo-title-right-white.png',
       light: 'https://koumoul.com/static/logo-title-right.png'
     },
+    srcSmall: {
+      // dark: 'https://koumoul.com/static/logo-square-white-border_100x100.png',
+      dark: 'https://koumoul.com/static/logo-circle.png',
+      light: 'https://koumoul.com/static/logo-square.png'
+    },
     title: 'Koumoul',
+    message: 'Découvrez Koumoul pour publier vos propres données.',
     href: 'https://koumoul.com'
   },
   i18n: {
