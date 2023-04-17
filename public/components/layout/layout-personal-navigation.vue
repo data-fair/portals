@@ -108,17 +108,22 @@
       color="transparent"
       class="pa-0"
     >
-      <v-list class="pa-0">
+      <v-list
+        dense
+        style="width:100%"
+        class="pa-0"
+      >
         <v-list-item
           :nuxt="true"
           :href="copyright.href"
-          class="py-0 px-1"
+          target="blank"
+          dense
         >
-          <v-list-item-avatar class="ma-0">
+          <!--<v-list-item-avatar class="ma-0">
             <v-avatar :size="28">
               <img :src="copyright.srcSmall[personalNavigationColorDark ? 'dark' : 'light']">
             </v-avatar>
-          </v-list-item-avatar>
+          </v-list-item-avatar>-->
           <v-list-item-title
             style="white-space: normal;"
             class="text-caption"

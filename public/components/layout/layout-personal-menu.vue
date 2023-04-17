@@ -99,11 +99,7 @@ export default {
       return this.config.headerHide || this.$vuetify.breakpoint.smAndDown
     }
   },
-  mounted () {
-    this.fetchUserPartners()
-  },
   methods: {
-    ...mapActions(['fetchUserPartners']),
     ...mapActions('session', ['logout', 'login'])
   }
 }
