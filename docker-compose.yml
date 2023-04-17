@@ -4,7 +4,7 @@ services:
     profiles:
       - dev
       - test
-    image: ghcr.io/data-fair/simple-directory:partners
+    image: ghcr.io/data-fair/simple-directory:partners2
     network_mode: host
     environment:
       - ADMINS=["superadmin@test.com"]

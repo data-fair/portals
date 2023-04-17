@@ -47,12 +47,51 @@
         <v-list-item-action><v-icon>mdi-bell-circle</v-icon></v-list-item-action>
         <v-list-item-title>Mes notifications</v-list-item-title>
       </v-list-item>
+
+      <!-- TODO: account switching -->
+      <v-select
+        v-if="accounts.length > 1"
+        label="Compte actif"
+        :items="accounts"
+        :value="accountValue"
+        dense
+        outlined
+        hide-details
+        class="my-3"
+        @change="v => $store.dispatch('session/switchOrganization', v)"
+      >
+        <template #item="{item, on , attrs}">
+          <v-list-item
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-list-item-action class=" my-0">
+              <v-avatar :size="28">
+                <img :src="item.avatar">
+              </v-avatar>
+            </v-list-item-action>
+            <v-list-item-title>
+              {{ item.text }}
+            </v-list-item-title>
+          </v-list-item>
+        </template>
+      </v-select>
+
       <v-list-item
+        v-if="activeAccount.type === 'organization' && accountRole === 'admin' && !activeAccount.department"
+        :nuxt="true"
+        :to="`/me/organization`"
+      >
+        <v-list-item-action><v-icon>mdi-account-group</v-icon></v-list-item-action>
+        <v-list-item-title>Gestion de l'organisation</v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        v-if="accountRole === 'admin' && !activeAccount.department"
         :nuxt="true"
         :to="`/me/api-keys`"
       >
         <v-list-item-action><v-icon>mdi-cloud-circle</v-icon></v-list-item-action>
-        <v-list-item-title>Mes clés d'API</v-list-item-title>
+        <v-list-item-title>Clés d'API</v-list-item-title>
       </v-list-item>
       <v-list-item
         v-if="datasetsCount.rest || datasetsCount.file"
@@ -63,6 +102,37 @@
         <v-list-item-title>Contribuer</v-list-item-title>
       </v-list-item>
     </v-list>
+
+    <v-footer
+      absolute
+      color="transparent"
+      class="pa-0"
+    >
+      <v-list
+        dense
+        style="width:100%"
+        class="pa-0"
+      >
+        <v-list-item
+          :nuxt="true"
+          :href="copyright.href"
+          target="blank"
+          dense
+        >
+          <!--<v-list-item-avatar class="ma-0">
+            <v-avatar :size="28">
+              <img :src="copyright.srcSmall[personalNavigationColorDark ? 'dark' : 'light']">
+            </v-avatar>
+          </v-list-item-avatar>-->
+          <v-list-item-title
+            style="white-space: normal;"
+            class="text-caption"
+          >
+            {{ copyright.message }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-footer>
   </v-navigation-drawer>
 </template>
 
@@ -76,8 +146,90 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'portal']),
-    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl'])
+    ...mapState(['config', 'portal', 'env']),
+    ...mapState('session', ['user']),
+    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl']),
+    ...mapGetters('session', ['activeAccount', 'accountRole']),
+    copyright () {
+      return process.env.copyright
+    },
+    accountValue () {
+      if (this.activeAccount.type === 'user') return null
+      if (this.activeAccount.department) return `${this.activeAccount.id}:${this.activeAccount.department}`
+      return this.activeAccount.id
+    },
+    accounts () {
+      const accounts = []
+      if (!this.user.ipa) {
+        accounts.push({
+          text: 'Compte personnel',
+          value: null,
+          avatar: `${this.directoryUrl}/api/avatars/user/${this.user.id}/avatar.png`
+        })
+      }
+      for (const org of this.user.organizations) {
+        const account = {
+          text: org.name,
+          value: org.id,
+          avatar: `${this.directoryUrl}/api/avatars/organization/${org.id}/avatar.png`
+        }
+        if (org.department) {
+          account.text += ' / ' + (org.departmentName || org.department)
+          account.value += ':' + org.department
+          account.avatar = `${this.directoryUrl}/api/avatars/organization/${org.id}/${org.department}/avatar.png`
+        }
+        accounts.push(account)
+      }
+      return accounts
+      /*
+<!-- account switching (personal account and organizations), copied from sd-vue -->
+      <template v-if="user.organizations.length > 1 || (user.organizations.length === 1 && (!user.ipa || activeAccount.type === 'user'))">
+        <v-subheader
+          v-t="'switchAccount'"
+          style="height: 24px"
+        />
+        <v-list-item
+          v-if="activeAccount.type !== 'user' && !user.ipa"
+          id="toolbar-menu-switch-user"
+          @click="switchOrganization()"
+        >
+          <v-list-item-action class=" my-0">
+            <v-avatar :size="28">
+              <img :src="`${directoryUrl}/api/avatars/user/${user.id}/avatar.png`">
+            </v-avatar>
+          </v-list-item-action>
+          <v-list-item-title v-t="'personalAccount'" />
+        </v-list-item>
+        <v-list-item
+          v-for="organization in user.organizations.filter(o => activeAccount.type === 'user' || activeAccount.id !== o.id || (activeAccount.department || null) !== (o.department || null))"
+          :id="'toolbar-menu-switch-orga-' + organization.id"
+          :key="organization.id"
+          @click="switchOrganization(organization.id + ':' + (organization.department || ''))"
+        >
+          <v-list-item-action class="my-0">
+            <v-avatar :size="28">
+              <img
+                v-if="organization.department"
+                :src="`${directoryUrl}/api/avatars/organization/${organization.id}/${organization.department}/avatar.png`"
+              >
+              <img
+                v-else
+                :src="`${directoryUrl}/api/avatars/organization/${organization.id}/avatar.png`"
+              >
+            </v-avatar>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ organization.name }}
+            </v-list-item-title>
+            <v-list-item-subtitle v-if="organization.department">
+              {{ organization.departmentName || organization.department }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+      */
+    }
   },
   async mounted () {
     const owner = this.config.owner

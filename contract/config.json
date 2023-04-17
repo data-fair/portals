@@ -1465,29 +1465,6 @@
       }
     }
   }, {
-    "title": "Espace partenaire",
-    "description": "L'espace partenaire sera proposé aux utilisateurs connectés membres d'une organisation partenaire si vous activez l'authentification.",
-    "properties": {
-      "partnerNavigationColor": {
-        "type": "string",
-        "default": "primary",
-        "title": "Couleur de la barre de navigation dans l'espace personnel",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      }
-    }
-  }, {
     "title": "Suivi d'activité",
     "description": "Configurez un système de suivi d'activité des utilisateurs (Web analytics).",
     "properties": {

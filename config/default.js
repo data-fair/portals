@@ -36,6 +36,7 @@ module.exports = {
       light: 'https://koumoul.com/static/logo-title-right.png'
     },
     title: 'Koumoul',
+    message: 'Publiez vos propres données',
     href: 'https://koumoul.com'
   },
   i18n: {

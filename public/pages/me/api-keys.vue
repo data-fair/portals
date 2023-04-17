@@ -7,7 +7,7 @@
         style="top: -2px"
       >
         mdi-cloud-circle
-      </v-icon> Mes clés d'API
+      </v-icon> Clés d'API
     </h2>
     <p class="mt-6">
       Les clés d'API sont utiles pour accéder aux données en levant certaines restrictions imposées aux utilisateurs anonymes ou pour exploiter des données privées auxquelles votre compte a accès.
@@ -40,9 +40,10 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['dataFairUrl']),
+    ...mapGetters('session', ['activeAccount']),
     ...mapState('session', ['user']),
     apiKeysUrl () {
-      return `${this.dataFairUrl}/embed/settings/user/${this.user.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
+      return `${this.dataFairUrl}/embed/settings/${this.activeAccount.type}/${this.activeAccount.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
     }
   }
 }
