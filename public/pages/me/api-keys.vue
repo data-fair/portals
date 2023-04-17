@@ -40,9 +40,10 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['dataFairUrl']),
+    ...mapGetters('session', ['activeAccount']),
     ...mapState('session', ['user']),
     apiKeysUrl () {
-      return `${this.dataFairUrl}/embed/settings/user/${this.user.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
+      return `${this.dataFairUrl}/embed/settings/${this.activeAccount.type}/${this.activeAccount.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
     }
   }
 }
