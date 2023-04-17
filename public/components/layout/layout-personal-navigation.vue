@@ -171,9 +171,9 @@ export default {
         if (org.department) {
           account.text += ' / ' + (org.departmentName || org.department)
           account.value += ':' + org.department
+          account.avatar = `${this.directoryUrl}/api/avatars/organization/${org.id}/${org.department}/avatar.png`
         }
         accounts.push(account)
-        account.avatar = `${this.directoryUrl}/api/avatars/organization/${org.id}/${org.department}/avatar.png`
       }
       return accounts
       /*
