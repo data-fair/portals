@@ -135,6 +135,14 @@
                 label="Titre"
                 @keyup.enter.native="createPortal(); showCreateMenu = false"
               />
+              <v-select
+                v-model="newPortal.owner"
+                :items="owners"
+                return-object
+                dense
+                item-text="label"
+                label="Propriétaire du portail"
+              />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
@@ -173,21 +181,36 @@ export default {
     newPortal: null,
     portals: null,
     currentPortal: null,
-    showDeleteDialog: false
+    showDeleteDialog: false,
+    owners: null
   }),
   computed: {
     ...mapState('session', ['user', 'initialized']),
+    ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount'])
   },
   watch: {
     showCreateMenu () {
       if (this.showCreateMenu) {
-        this.newPortal = { title: '' }
+        this.newPortal = { title: '', owner: this.owners[0] }
       }
     }
   },
   async mounted () {
     await this.refresh()
+    this.owners = [{ type: this.activeAccount.type, id: this.activeAccount.id, name: this.activeAccount.name, label: this.activeAccount.name }]
+    if (this.activeAccount.type === 'organization') {
+      const org = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
+      for (const dep of (org.departments || [])) {
+        this.owners.push({
+          type: 'organization',
+          id: this.activeAccount.id,
+          name: this.activeAccount.name,
+          department: dep.id,
+          label: `${this.activeAccount.name} / ${dep.name || dep.id}`
+        })
+      }
+    }
   },
   methods: {
     ...mapActions('session', ['login']),

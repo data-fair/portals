@@ -52,7 +52,7 @@
       <v-list
         dense
         class="list-actions"
-        style="float:right;width:256px;"
+        style="float:right;width:230px;"
       >
         <v-list-item
           :to="`/manager/portals/${portal._id}/uses`"
@@ -76,6 +76,21 @@
           <v-list-item-title>Gérer les réutilisations</v-list-item-title>
         </v-list-item>
       </v-list>
+      <div
+        v-if="owners && owners.length > 1"
+        style="float:right;width:300px;"
+        class="pt-3 pr-3"
+      >
+        <v-select
+          v-model="owner"
+          :items="owners"
+          return-object
+          dense
+          item-text="label"
+          label="Propriétaire du portail"
+          @change="patch"
+        />
+      </div>
     </v-row>
     <v-row>
       <v-col
@@ -229,11 +244,15 @@ export default {
       showProd: true,
       activeTab: 0,
       error: null,
-      fonts: null
+      fonts: null,
+      owners: null,
+      owner: null
     }
   },
   computed: {
     ...mapState(['portal']),
+    ...mapState('session', ['user']),
+    ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount']),
     context () {
       return {
@@ -258,6 +277,20 @@ export default {
     }])
     await this.fetchConfigDraft()
     await this.fetchFonts()
+    this.owners = [{ type: this.activeAccount.type, id: this.activeAccount.id, name: this.activeAccount.name, label: this.activeAccount.name }]
+    if (this.activeAccount.type === 'organization') {
+      const org = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
+      for (const dep of (org.departments || [])) {
+        this.owners.push({
+          type: 'organization',
+          id: this.activeAccount.id,
+          name: this.activeAccount.name,
+          department: dep.id,
+          label: `${this.activeAccount.name} / ${dep.name || dep.id}`
+        })
+      }
+    }
+    this.owner = this.owners.find(o => o.type === this.portal.owner.type && o.id === this.portal.owner.id && (o.department || null) === (this.portal.owner.department || null))
   },
   methods: {
     async fetchConfigDraft () {
@@ -309,6 +342,16 @@ export default {
           { headers: { 'Content-Type': 'multipart/form-data' } })
       } catch (err) {
         this.error = (err.response && (err.response.data || err.response.status)) || err.message || err
+      }
+    },
+    async patch (evt) {
+      const { label, ...owner } = evt
+      try {
+        await this.$axios.$patch(`api/v1/portals/${this.portal._id}`, { owner })
+        // eventBus.$emit('notification', { type: 'success', msg: 'Le propriétaire du portail a bien été modifié' })
+      } catch (err) {
+        this.error = (err.response && (err.response.data || err.response.status)) || err.message || err
+        // eventBus.$emit('notification', { error, msg: 'Impossible de créer le portail' })
       }
     }
   }

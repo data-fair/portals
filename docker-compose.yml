@@ -18,6 +18,7 @@ services:
       - AUTHRATELIMIT_ATTEMPTS=200
       - SECRET_SITES=secret-sites
       # - MANAGE_SITES=true
+      - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
     volumes:
       - ./test/resources/users.json:/webapp/data/users.json

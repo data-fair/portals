@@ -189,9 +189,16 @@ router.post('', asyncWrap(async (req, res) => {
   // this is better than nanoid to create an id that will be accepted by data-fair for the images dataset
   portal._id = randomUUID()
   if (req.user.accountOwnerRole !== 'admin') {
-    return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
+    return res.status(403).send('Vous devez être administrateur de l\'organisation pour créer le portail.')
   }
-  portal.owner = req.user.accountOwner
+  if (portal.owner) {
+    if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) return res.status(403).send()
+    const userOrg = req.user.organizations.find(o => o.id === portal.owner.id)
+    if (!userOrg) return res.status(403).send()
+    delete portal.owner.label
+  } else {
+    portal.owner = req.user.accountOwner
+  }
 
   if (!validatePortal(portal)) {
     return res.status(400).send(validatePortal.errors)
@@ -214,6 +221,40 @@ router.post('', asyncWrap(async (req, res) => {
     urlTemplate: `${config.dataFairUrl}/extra/portals?p=.%2F${portal._id}%2Fuses%2F{id}%2Fedit`
   })
   res.send(cleanPortal(portal, req.params.html === true))
+}))
+
+// Patch some of the attributes of a page
+router.patch('/:id', asyncWrap(async (req, res, next) => {
+  if (!req.user) return res.status(401).send()
+  const portal = await req.app.get('db')
+    .collection('portals').findOne({ _id: req.params.id })
+  if (!portal) throw createError(404, 'Portail inconnu')
+  if (req.user.accountOwnerRole !== 'admin') {
+    return res.status(403).send('Vous devez être administrateur de l\'organisation pour créer le portail.')
+  }
+  // Restrict the parts of the page that can be edited by API
+  const acceptedParts = ['owner']
+  for (const key in req.body) {
+    if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
+  }
+  const patch = {}
+  for (const key in req.body) {
+    if (!req.body[key]) {
+      patch.$unset = patch.$unset || {}
+      patch.$unset[key] = undefined
+      req.body[key] = undefined
+    } else {
+      patch.$set = patch.$set || {}
+      patch.$set[key] = req.body[key]
+    }
+  }
+  const patchedPortal = Object.assign({}, portal, req.body)
+  const valid = validatePortal(JSON.parse(JSON.stringify(patchedPortal)))
+  if (!valid) return res.status(400).send(validatePortal.errors)
+
+  await req.app.get('db').collection('portals').findOneAndUpdate({ _id: req.params.id }, patch)
+  await syncPortalUpdate(patchedPortal, req.headers.cookie)
+  res.status(200).send(patchedPortal)
 }))
 
 // Read the portal matching a request, check that the user is owner
