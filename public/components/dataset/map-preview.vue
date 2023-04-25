@@ -30,6 +30,7 @@
         <v-iframe
           :title="'Vue carte du jeu de données : ' + dataset.title"
           :src="iframeSrc"
+          :aspect-ratio="$vuetify.breakpoint.smAndDown ? windowWidth / (windowHeight - 48) : undefined"
         />
       </client-only>
     </v-card>
