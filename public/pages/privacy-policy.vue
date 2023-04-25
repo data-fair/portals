@@ -3,15 +3,6 @@
     <page-title text="Politique de confidentialité" />
     <p>Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.</p>
 
-    <iframe
-      v-if="config.analytics && config.analytics.type === 'matomo' && config.analytics.params.trackerBase"
-      :style="`height: ${$vuetify.breakpoint.xsOnly ? 250 : ($vuetify.breakpoint.mdAndUp ? 150 : 200)}px; width: 100%;`"
-      :src="`${config.analytics.params.trackerBase}/index.php?module=CoreAdminHome&action=optOut&language=fr&backgroundColor=&fontColor=&fontSize=&fontFamily=nunito`"
-      scrolling="no"
-      frameborder="0"
-      marginheight="0"
-      marginwidth="0"
-    />
     <v-switch
       v-if="config.analytics && config.analytics.type !== 'matomo'"
       :input-value="!$cookies.get('df_portal_track_opt_out')"
@@ -30,8 +21,6 @@
 
     <p>Vos informations, qu'elles soient publiques ou privées, ne seront pas vendus, échangés, transférés ou remis à une autre société pour quelque raison que ce soit, sans votre consentement, sauf dans le but exprès de livrer le produit ou le service acheté demandé, pour administrer un concours, une promotion, un sondage ou une autre caractéristique du site ou d'envoyer des courriels périodiques.</p>
 
-    <p>L'adresse e-mail que vous fournissez pour l'enregistrement, peut être occasionnellement utilisée pour vous envoyer des informations sur les mises à jour de la plateforme, de nos produit ou divers services.</p>
-
     <section-title text="Comment protégeons-nous vos informations ?" />
     <p>Nous mettons en œuvre plusieurs mesures de sécurité pour maintenir la sécurité de vos informations personnelles lorsque vous ajoutez, modifiez, ou accédez à vos renseignements personnels.</p>
 
@@ -42,7 +31,7 @@
 
     <p>Nous utilisons des cookies pour stocker les sessions utilisateur. Ces cookies sont utilisés uniquement pour les utilisateurs connectés. Nous utilisont également des cookies pour collecter des statistiques de navigation sur notre site, ces cookies sont utilisés pour tous les utilisateurs.</p>
 
-    <p>Si vous préférez, vous pouvez choisir d'être averti par votre odinateur chaque fois qu'un cookie est envoyé, ou vous pouvez choisir de désactiver tous les cookies via les paramètres de votre navigateur, mais vous ne serez alors pas en mesure de vous connecter à la plate-forme.</p>
+    <p>Si vous préférez, vous pouvez choisir d'être averti par votre ordinateur chaque fois qu'un cookie est envoyé, ou vous pouvez choisir de désactiver tous les cookies via les paramètres de votre navigateur, mais vous ne serez alors pas en mesure de vous connecter à la plate-forme.</p>
 
     <section-title text="Politique de confidentialité en ligne seulement" />
     <p>Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors ligne.</p>
