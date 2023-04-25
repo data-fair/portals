@@ -77,7 +77,7 @@
         </v-list-item>
       </v-list>
       <div
-        v-if="owners && owners.length > 1"
+        v-if="!user.department && owners && owners.length > 1"
         style="float:right;width:300px;"
         class="pt-3 pr-3"
       >
