@@ -740,6 +740,11 @@
         },
         "default": []
       },
+      "footerPrivacyPolicy": {
+        "title": "Ajouter un lien vers la politique de confidentialité",
+        "type": "boolean",
+        "default": true
+      },
       "footerSitemap": {
         "title": "Ajouter un lien vers le plan du site",
         "type": "boolean",

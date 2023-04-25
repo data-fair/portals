@@ -175,6 +175,7 @@ export default {
     },
     footerLinks () {
       const links = [...this.config.footerLinks || []]
+      if (this.config.footerPrivacyPolicy) links.push({ type: 'standard', title: 'Politique de confidentialité', to: '/privacy-policy' })
       if (this.config.footerSitemap) links.push({ type: 'standard', title: 'Plan du site', to: '/sitemap' })
       return links
     }
