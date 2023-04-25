@@ -1,6 +1,6 @@
 <template>
   <v-app-bar
-    color="transparent"
+    color="white"
     dense
     flat
     app
