@@ -195,7 +195,6 @@ router.post('', asyncWrap(async (req, res) => {
     if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) return res.status(403).send()
     const userOrg = req.user.organizations.find(o => o.id === portal.owner.id)
     if (!userOrg) return res.status(403).send()
-    delete portal.owner.label
   } else {
     portal.owner = req.user.accountOwner
   }
@@ -223,14 +222,14 @@ router.post('', asyncWrap(async (req, res) => {
   res.send(cleanPortal(portal, req.params.html === true))
 }))
 
-// Patch some of the attributes of a page
+// Patch some of the attributes of a portal
 router.patch('/:id', asyncWrap(async (req, res, next) => {
   if (!req.user) return res.status(401).send()
   const portal = await req.app.get('db')
     .collection('portals').findOne({ _id: req.params.id })
   if (!portal) throw createError(404, 'Portail inconnu')
   if (req.user.accountOwnerRole !== 'admin') {
-    return res.status(403).send('Vous devez être administrateur de l\'organisation pour créer le portail.')
+    return res.status(403).send('Vous devez être administrateur de l\'organisation pour modifier le portail.')
   }
   // Restrict the parts of the page that can be edited by API
   const acceptedParts = ['owner']

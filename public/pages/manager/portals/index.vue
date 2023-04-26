@@ -136,7 +136,7 @@
                 @keyup.enter.native="createPortal(); showCreateMenu = false"
               />
               <v-select
-                v-if="!user.department && owners && owners.length > 1"
+                v-if="(!user.organization || !user.organization.department) && owners && owners.length > 1"
                 v-model="newPortal.owner"
                 :items="owners"
                 return-object
@@ -226,9 +226,11 @@ export default {
       this.refresh()
     },
     async createPortal () {
-      if (this.user.department || this.owners.length < 2) delete this.newPortal.owner
+      const newPortal = JSON.parse(JSON.stringify(this.newPortal))
+      if ((this.user.organization && this.user.organization.department) || this.owners.length < 2) delete newPortal.owner
+      else delete newPortal.owner.label
       try {
-        await this.$axios.$post('api/v1/portals', this.newPortal)
+        await this.$axios.$post('api/v1/portals', newPortal)
         eventBus.$emit('notification', { type: 'success', msg: 'Portail créé' })
       } catch (error) {
         eventBus.$emit('notification', { error, msg: 'Impossible de créer le portail' })
