@@ -4,7 +4,7 @@
     <p>Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.</p>
 
     <v-switch
-      v-if="config.analytics && config.analytics.type !== 'matomo'"
+      v-if="config.analytics && config.analytics.type !== 'none'"
       :input-value="!$cookies.get('df_portal_track_opt_out')"
       :true-value="true"
       label="Autoriser la mesure d'audience"

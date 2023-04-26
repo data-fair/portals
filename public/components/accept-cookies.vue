@@ -20,7 +20,7 @@
           :sm="7"
         >
           <v-switch
-            v-if="config.analytics && config.analytics.type !== 'matomo'"
+            v-if="config.analytics && config.analytics.type !== 'none'"
             :input-value="!$cookies.get('df_portal_track_opt_out')"
             :true-value="true"
             label="Autoriser la mesure d'audience"
