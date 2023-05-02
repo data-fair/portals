@@ -246,39 +246,6 @@ async function setPortal (req, res, next) {
   if (next) next()
 }
 
-// Patch some of the attributes of a portal
-router.patch('/:id', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
-  if (!req.user) return res.status(401).send()
-  // Restrict the parts of the page that can be edited by API
-  const acceptedParts = ['owner']
-  for (const key in req.body) {
-    if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
-  }
-  const patch = {}
-  for (const key in req.body) {
-    if (!req.body[key]) {
-      patch.$unset = patch.$unset || {}
-      patch.$unset[key] = undefined
-      req.body[key] = undefined
-    } else {
-      patch.$set = patch.$set || {}
-      patch.$set[key] = req.body[key]
-    }
-  }
-  const patchedPortal = Object.assign({}, req.portal, req.body)
-  const valid = validatePortal(JSON.parse(JSON.stringify(patchedPortal)))
-  if (!valid) return res.status(400).send(validatePortal.errors)
-
-  if (req.body.owner && (req.body.owner.type !== req.portal.owner.type || req.body.owner.id !== req.portal.owner.id || (req.body.department || null) !== (req.portal.owner.department || null))) {
-    if (!canCreatePortal(req.user, req.body.owner)) return res.status(403).send()
-    await syncPortalDelete(req.portal, req.headers.cookie)
-  }
-
-  await req.app.get('db').collection('portals').findOneAndUpdate({ _id: req.params.id }, patch)
-  await syncPortalUpdate(patchedPortal, req.headers.cookie)
-  res.status(200).send(patchedPortal)
-}))
-
 // Get an existing portal as the owner
 router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
   if (req.query.noConfig === 'true') {
