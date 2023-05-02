@@ -265,13 +265,14 @@ router.patch('/:id', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
       patch.$set[key] = req.body[key]
     }
   }
+  const patchedPortal = Object.assign({}, req.portal, req.body)
+  const valid = validatePortal(JSON.parse(JSON.stringify(patchedPortal)))
+  if (!valid) return res.status(400).send(validatePortal.errors)
+
   if (req.body.owner && (req.body.owner.type !== req.portal.owner.type || req.body.owner.id !== req.portal.owner.id || (req.body.department || null) !== (req.portal.owner.department || null))) {
     if (!canCreatePortal(req.user, req.body.owner)) return res.status(403).send()
     await syncPortalDelete(req.portal, req.headers.cookie)
   }
-  const patchedPortal = Object.assign({}, req.portal, req.body)
-  const valid = validatePortal(JSON.parse(JSON.stringify(patchedPortal)))
-  if (!valid) return res.status(400).send(validatePortal.errors)
 
   await req.app.get('db').collection('portals').findOneAndUpdate({ _id: req.params.id }, patch)
   await syncPortalUpdate(patchedPortal, req.headers.cookie)
