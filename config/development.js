@@ -7,6 +7,6 @@ module.exports = {
   secretKeys: {
     notifications: 'secret-notifications'
     // sites: 'secret-sites'
-  }
-  // tablePreviewPath: '/table2'
+  },
+  whiteLabelOwners: 'user:superadmin'
 }

@@ -28,7 +28,8 @@ export default () => {
       html: false,
       inPortal: false,
       concepts: null,
-      userPartners: null
+      userPartners: null,
+      whiteLabelOwners: []
     },
     getters: {
       embed () {
@@ -43,6 +44,9 @@ export default () => {
         let owner = state.config.owner.type + ':' + state.config.owner.id
         if (state.config.department) owner += ':' + state.config.owner.department
         return owner
+      },
+      whiteLabel (state, getters) {
+        return state.whiteLabelOwners.includes(getters.owner)
       },
       directoryUrl (state) {
         return state.publicBaseUrl + '/simple-directory'
@@ -242,6 +246,8 @@ export default () => {
             await dispatch('fetchUserPartners')
           }
         }
+
+        commit('setAny', { whiteLabelOwners: env.whiteLabelOwners.split(',') })
       },
       // called only on the server, used to prefill the store
       async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {

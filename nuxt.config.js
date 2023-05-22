@@ -130,7 +130,8 @@ module.exports = {
     development: process.env.NODE_ENV === 'development',
     copyright: config.copyright,
     i18n: config.i18n,
-    tablePreviewPath: config.tablePreviewPath
+    tablePreviewPath: config.tablePreviewPath,
+    whiteLabelOwners: config.whiteLabelOwners
   },
   head: {
     title: 'Portail de données',

@@ -47,5 +47,6 @@ module.exports = {
     active: true,
     port: 9090
   },
-  tablePreviewPath: '/table'
+  tablePreviewPath: '/table',
+  whiteLabelOwners: ''
 }

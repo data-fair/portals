@@ -38,7 +38,7 @@
       >
         <layout-footer />
 
-        <template v-if="!config.footerCopyrightAsLogo">
+        <template v-if="!config.footerCopyrightAsLogo && !whiteLabel">
           <v-divider :dark="footerColorDark" />
           <v-container class="text-center py-1">
             <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['footerColor', 'footerColorDark', 'portalHead', 'appBarElevation']),
+    ...mapGetters(['footerColor', 'footerColorDark', 'portalHead', 'appBarElevation', 'whiteLabel']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     }

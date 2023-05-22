@@ -161,7 +161,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['footerColor', 'footerColorDark', 'hasSocialLinks']),
+    ...mapGetters(['footerColor', 'footerColorDark', 'hasSocialLinks', 'whiteLabel']),
     extraLogos () {
       const logos = [...this.config.footerExtraLogos || []].filter(l => !!l.title && !!l.src)
       const copyright = { ...process.env.copyright }
@@ -170,7 +170,7 @@ export default {
       } else {
         copyright.src = copyright.src.light
       }
-      if (this.config.footerCopyrightAsLogo) logos.push(copyright)
+      if (this.config.footerCopyrightAsLogo && !this.whiteLabel) logos.push(copyright)
       return logos
     },
     footerLinks () {
