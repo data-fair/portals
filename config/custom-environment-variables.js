@@ -38,5 +38,5 @@ module.exports = {
     },
     port: 'PROMETHEUS_PORT'
   },
-  whiteLabelOwners: 'whiteLabelOwners'
+  whiteLabelOwners: 'WHITE_LABEL_OWNERS'
 }
