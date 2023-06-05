@@ -21,12 +21,15 @@ export default {
     return { topics: null }
   },
   computed: {
-    ...mapState(['config']),
+    ...mapState(['config', 'publicUrl']),
     ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount']),
     sdUrl () {
-      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true`
+      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl)}`
     }
+  },
+  created () {
+    if (this.activeAccount.type !== 'organization') this.$router.push('/me/api-keys')
   }
 }
 </script>
