@@ -22,10 +22,10 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['directoryUrl']),
+    ...mapGetters(['directoryUrl', 'dataFairUrl']),
     ...mapGetters('session', ['activeAccount']),
     sdUrl () {
-      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl)}`
+      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl + '/me/account')}&main_redirect=${encodeURIComponent(this.dataFairUrl)}`
     }
   },
   created () {
