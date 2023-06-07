@@ -21,7 +21,7 @@
               style="height:40px;display:block;"
             >
               <template v-if="stats">
-                {{ metric.value }}
+                {{ (metric.value || 0).toLocaleString('fr') }}
               </template>
               <v-skeleton-loader
                 v-else
