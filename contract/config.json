@@ -442,6 +442,12 @@
           "title": "blanc"
         }]
       },
+      "appBarFontColorPrimary": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "Utiliser la couleur primaire pour la police de la barre de navigation (si possible)",
+        "default": false
+      },
       "appBarBehavior": {
         "title": "Comportement de la barre de navigation",
         "type": "string",
@@ -1059,6 +1065,9 @@
         "oneOf": [{
           "title": "sous la description et les chiffres clés",
           "const": "belowKpi"
+        }, {
+          "title": "entre la description et les chiffres clés",
+          "const": "betweenDescKpi"
         }, {
           "title": "sous la bannière",
           "const": "belowBanner"

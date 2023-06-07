@@ -144,7 +144,7 @@ export default {
       const classes = { 'font-weight-bold': true }
       if (this.backgroundDark) {
         classes['white--text'] = true
-      } else if (active && this.config.appBarActiveOptions.includes('color')) {
+      } else if ((active || this.config.appBarFontColorPrimary) && this.config.appBarActiveOptions.includes('color')) {
         classes['primary--text'] = true
       } else {
         classes['grey--text'] = true

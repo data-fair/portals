@@ -100,6 +100,11 @@
         class="mt-3 mb-4"
         v-html="config.description"
       />
+      <layout-links
+        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'betweenDescKpi'"
+        :links="config.homeLinks"
+        :options="config.homeLinksOptions"
+      />
       <kpi
         v-if="config.showKpis"
         class="mt-4"
