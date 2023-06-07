@@ -493,6 +493,19 @@
           }]
         },
         "default": ["slider", "color"]
+      },
+      "useHtmlTitle": {
+        "type": "boolean",
+        "x-display": "switch",
+        "title": "Rendu du titre en HTML",
+        "default": false
+      },
+      "htmlTitle": {
+        "title": "Code HTML du titre",
+        "type": "string",
+        "x-display": "custom-markdown",
+        "maxLength": 1000,
+        "x-if": "useHtmlTitle"
       }
     }
   }, {

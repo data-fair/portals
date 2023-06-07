@@ -29,9 +29,17 @@
           v-else
           class="text-center"
         >
-          <h1 :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} ${titleColor} font-weight-bold`">
+          <h1
+            v-if="!config.useHtmlTitle"
+            :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} ${titleColor} font-weight-bold`"
+          >
             {{ config.title }}
           </h1>
+          <h1
+            v-else
+            :class="`${$vuetify.breakpoint.xs ? 'headline' : 'display-1'} font-weight-bold`"
+            v-html="config.htmlTitle"
+          />
         </v-col>
         <layout-header-logo-2
           v-if="!$vuetify.breakpoint.xs"
