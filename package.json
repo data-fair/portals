@@ -7,6 +7,7 @@
     "dev-server": "NODE_ENV=development DEBUG=upgrade* nodemon server",
     "dev-client": "NODE_ENV=development nuxt -p 3039",
     "dev-deps": "docker-compose --profile dev up -d",
+    "stop-dev-deps": "docker compose --profile dev stop",
     "dev-zellij": "zellij --layout .zellij.kdl",
     "test": "NODE_ENV=test mocha --exit --bail test/",
     "test-deps": "docker-compose --profile test up -d",
