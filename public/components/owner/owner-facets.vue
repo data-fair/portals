@@ -9,7 +9,7 @@
     clearable
     outlined
     dense
-    label="Filter par propriétaire"
+    label="Filtrer par propriétaire"
     hide-details
     class="mb-2"
     :menu-props="{offsetY: true}"

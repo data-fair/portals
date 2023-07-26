@@ -73,7 +73,7 @@
             clearable
             outlined
             dense
-            label="Filter par concepts"
+            label="Filtrer par concepts"
             no-data-text="Aucun concept"
             hide-details
             class="mb-2"
