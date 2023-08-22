@@ -124,7 +124,6 @@
     "nock": "^13.2.9",
     "number-abbreviate": "^2.0.0",
     "nuxt": "^2.16.3",
-    "nuxt-webpack-optimisations": "^2.2.8",
     "scrolling-element": "^1.0.2",
     "tinycolor2": "^1.4.2",
     "vue-clamp": "^0.4.0",
