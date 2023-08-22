@@ -14,7 +14,8 @@ module.exports = {
   mongo: {
     host: 'localhost',
     port: 27017,
-    db: 'data-fair-portals-' + (process.env.NODE_ENV || 'development')
+    db: 'data-fair-portals-' + (process.env.NODE_ENV || 'development'),
+    url: null
   },
   mails: {
     // transport is a full configuration object for createTransport of nodemailer
