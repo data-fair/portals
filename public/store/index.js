@@ -25,6 +25,7 @@ export default () => {
       breadcrumbs: null,
       publicUrl: '',
       publicBaseUrl: '',
+      mainPublicUrl: '',
       html: false,
       inPortal: false,
       concepts: null,
@@ -213,10 +214,10 @@ export default () => {
           // portal exposed on an external domain has to be at the root
           const publicUrl = `http${env.development ? '' : 's'}://${req.headers.host}`
           // console.log('portal served on specific domain', publicUrl)
-          commit('setAny', { publicUrl, publicBaseUrl: publicUrl })
+          commit('setAny', { publicUrl, publicBaseUrl: publicUrl, mainPublicUrl: env.mainPublicUrl })
         } else if (!state.publicUrl) {
           // accessing the portal simply as a page of the portals manager
-          const publicUrlInfo = { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin }
+          const publicUrlInfo = { publicUrl: env.mainPublicUrl, publicBaseUrl: new URL(env.mainPublicUrl).origin, mainPublicUrl: env.mainPublicUrl }
           debug('init publicUrlInfo', publicUrlInfo)
           // console.log('portal served on default domain', publicUrlInfo)
           commit('setAny', publicUrlInfo)

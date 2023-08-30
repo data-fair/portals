@@ -21,11 +21,11 @@ export default {
     return { topics: null }
   },
   computed: {
-    ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['directoryUrl', 'dataFairUrl']),
+    ...mapState(['config', 'publicUrl', 'mainPublicUrl']),
+    ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount']),
     sdUrl () {
-      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl + '/me/account')}&main_redirect=${encodeURIComponent(this.dataFairUrl)}`
+      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl + '/me/account')}&main_redirect=${encodeURIComponent(this.mainPublicUrl + '/data-fair')}`
     }
   },
   created () {
