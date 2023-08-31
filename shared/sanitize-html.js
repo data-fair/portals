@@ -18,6 +18,7 @@ const styledSanitizeOpts = {
       // manage absolute and relative positioning
       position: [/^(absolute|relative)$/],
       width: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
+      'max-width': [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
       height: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
       top: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
       right: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],

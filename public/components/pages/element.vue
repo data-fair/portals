@@ -302,4 +302,59 @@ export default {
 .page-element .v-alert__content p:last-child {
   margin-bottom: 0;
 }
+
+table > thead > tr > th {
+  color: rgba(0, 0, 0, 0.6);
+}
+table > thead > tr:last-child > th {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12);
+}
+table > tbody > tr:not(:last-child) > td:not(.v-data-table__mobile-row),
+table > tbody > tr:not(:last-child) > th:not(.v-data-table__mobile-row) {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12);
+}
+table > tbody > tr:not(:last-child) > td:last-child,
+table > tbody > tr:not(:last-child) > th:last-child {
+  border-bottom: thin solid rgba(0, 0, 0, 0.12);
+}
+table > tbody > tr.active {
+  background: #f5f5f5;
+}
+table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+  background: #eeeeee;
+}
+table > tfoot > tr > td:not(.v-data-table__mobile-row),
+table > tfoot > tr > th:not(.v-data-table__mobile-row) {
+  border-top: thin solid rgba(0, 0, 0, 0.12);
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+}
+table > tbody > tr > td,
+table > tbody > tr > th,
+table > thead > tr > td,
+table > thead > tr > th,
+table > tfoot > tr > td,
+table > tfoot > tr > th {
+  padding: 0 16px;
+  transition: height 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+}
+table > tbody > tr > th,
+table > thead > tr > th,
+table > tfoot > tr > th {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  font-size: 0.75rem;
+  height: 48px;
+}
+
+table > tbody > tr > td,
+table > thead > tr > td,
+table > tfoot > tr > td {
+  font-size: 0.875rem;
+  height: 48px;
+}
 </style>
