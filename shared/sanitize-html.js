@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html')
 
 const styledSanitizeOpts = {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe']),
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'iframe', 'h1', 'h2']),
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
     '*': ['style', 'class'],
