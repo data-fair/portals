@@ -1,8 +1,7 @@
 <template>
   <div
     v-if="value"
-    class="page-element"
-    :class="{'fill-height': value.fillHeight}"
+    :class="`page-element page-element-${value.type} ${value.fillHeight ? 'fill-height' : ''}`"
   >
     <v-alert
       v-if="error"
@@ -28,6 +27,7 @@
     <div
       v-else-if="value.type === 'text' && value.content"
       style="overflow-wrap: break-word;"
+      class="pb-6"
       v-html="value.content"
     />
     <v-alert
@@ -68,26 +68,35 @@
       class="d-flex flex-column fill-height"
     >
       <v-row
-        v-if="value.icon"
+        v-if="value.icon && value.centerTitle !== false"
         class="justify-center mt-2"
       >
         <v-icon :class="cardTitleClass">
           mdi-{{ value.icon.name }}
         </v-icon>
       </v-row>
-      <v-card-title :class="cardTitleClass">
+      <v-card-title
+        :class="cardTitleClass"
+        :style="{'text-align': value.centerTitle !== false ? 'center' : 'left'}"
+      >
+        <v-icon
+          v-if="value.icon && value.centerTitle === false"
+          :class="cardTitleClass"
+        >
+          mdi-{{ value.icon.name }}
+        </v-icon>
         {{ value.title }}
       </v-card-title>
       <v-card-text
         v-if="value.content"
-        style="overflow-wrap: break-word;"
-        class="text-body-1 px-8"
+        :style="{'overflow-wrap': 'break-word', 'text-align': value.centerContent ? 'center' : 'left'}"
+        :class="{ 'text-body-1': true, 'px-8': value.centerContent, 'pb-8': value.centerContent}"
         v-html="value.content"
       />
       <v-spacer />
       <v-card-actions
         v-if="value.actions && value.actions.length"
-        class="justify-center mb-2"
+        class="mb-2 justify-center "
       >
         <k-element
           v-for="(action, i) in value.actions"
@@ -245,7 +254,7 @@ export default {
     },
     cardTitleClass () {
       if (!this.value || this.value.type !== 'cardSimple') return
-      return `primary--text justify-center text-${this.value.titleSize || 'h6'}`
+      return `primary--text ${this.value.centerTitle ? 'justify-center' : ''} text-${this.value.titleSize || 'h6'}`
     }
   },
   watch: {
@@ -299,7 +308,7 @@ export default {
 </script>
 
 <style lang="css">
-.page-element .v-alert__content p:last-child {
+.page-element p:last-child {
   margin-bottom: 0;
 }
 </style>

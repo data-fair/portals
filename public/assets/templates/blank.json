@@ -98,9 +98,12 @@
           "title": "Taille du titre",
           "type": "string",
           "oneOf": [
-            {"const": "h6", "title": "normal"},
-            {"const": "h3", "title": "grand"},
-            {"const": "h1", "title": "très grand"}
+            {"const": "h6", "title": "H6"},
+            {"const": "h5", "title": "H5"},
+            {"const": "h4", "title": "H4"},
+            {"const": "h3", "title": "H3"},
+            {"const": "h2", "title": "H2"},
+            {"const": "h1", "title": "H1"}
           ],
           "default": "h3",
           "x-options": { "hideInArrayItem": true }
@@ -325,11 +328,20 @@
           "title": "Taille du titre",
           "type": "string",
           "oneOf": [
-            {"const": "h6", "title": "normal"},
-            {"const": "h3", "title": "grand"},
-            {"const": "h1", "title": "très grand"}
+            {"const": "h6", "title": "H6"},
+            {"const": "h5", "title": "H5"},
+            {"const": "h4", "title": "H4"},
+            {"const": "h3", "title": "H3"},
+            {"const": "h2", "title": "H2"},
+            {"const": "h1", "title": "H1"}
           ],
           "default": "h6",
+          "x-options": { "hideInArrayItem": true }
+        },
+        "centerTitle": {
+          "title": "Centrer le titre",
+          "type": "boolean",
+          "default": true,
           "x-options": { "hideInArrayItem": true }
         },
         "content": {
@@ -339,6 +351,12 @@
         },
         "fillHeight": {
           "title": "Étendre à la verticale",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
+        "centerContent": {
+          "title": "Centrer le contenu",
           "type": "boolean",
           "default": false,
           "x-options": { "hideInArrayItem": true }
