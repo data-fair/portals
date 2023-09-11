@@ -96,7 +96,7 @@
       <v-spacer />
       <v-card-actions
         v-if="value.actions && value.actions.length"
-        class="mb-2 justify-center "
+        class="mb-2 justify-center"
       >
         <k-element
           v-for="(action, i) in value.actions"

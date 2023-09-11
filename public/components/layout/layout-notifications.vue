@@ -11,10 +11,11 @@
     bottom
   >
     <p>{{ notification.msg }}</p>
+    <!-- errorMsg used to be displayed using v-html but this creates a XSS vulnerability and also weird graphical bugs when the error is returned as a full html page -->
     <p
       v-if="notification.errorMsg"
       class="ml-3"
-      v-html="notification.errorMsg"
+      v-text="notification.errorMsg"
     />
 
     <template #action="{ }">
