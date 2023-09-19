@@ -29,7 +29,7 @@ module.exports = async () => {
     nuxtStandaloneConfig.router = { ...nuxtConfig.router, base: '/' }
     nuxtStandaloneConfig.axios = { ...nuxtStandaloneConfig.axios, browserBaseURL: '/' }
     const nuxtStandalone = new Nuxt(nuxtStandaloneConfig)
-    return asyncWrap(async (req, res) => {
+    return asyncWrap(async (req, res, next) => {
       // accept buffering and caching of this response in the reverse proxy
       res.setHeader('X-Accel-Buffering', 'yes')
       if (!req.query.portalId) {
@@ -43,7 +43,7 @@ module.exports = async () => {
 
       // re-apply the prefix that was removed by an optional reverse proxy
       req.url = (nuxtConfig.router.base + req.url).replace('//', '/')
-      return nuxt.render(req, res)
+      return nuxt.render(req, res, next)
     })
   }
 }

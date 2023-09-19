@@ -24,6 +24,7 @@ Run the 2 development servers with these commands in separate shells:
 Run pre-built nuxt like in production but in dev environment:
 
     NODE_ENV=development npm run build
+    mv nuxt-dist nuxt-dist-standalone
     PROXY_NUXT=false npm run dev-server
 
 Run test suite:
