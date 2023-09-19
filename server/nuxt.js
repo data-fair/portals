@@ -1,8 +1,9 @@
 const config = require('config')
 const memoize = require('memoizee')
+const asyncWrap = require('./utils/async-wrap')
 
 const getPortalFromHost = memoize(async (db, host) => {
-  return db.collection('portals').findOne({ host }, { projection: { _id: true } })
+  return db.collection('portals').findOne({ host: { $eq: host } }, { projection: { _id: true } })
 }, {
   normalizer ([db, host]) {
     return host
@@ -28,7 +29,7 @@ module.exports = async () => {
     nuxtStandaloneConfig.router = { ...nuxtConfig.router, base: '/' }
     nuxtStandaloneConfig.axios = { ...nuxtStandaloneConfig.axios, browserBaseURL: '/' }
     const nuxtStandalone = new Nuxt(nuxtStandaloneConfig)
-    return async (req, res, next) => {
+    return asyncWrap(async (req, res) => {
       // accept buffering and caching of this response in the reverse proxy
       res.setHeader('X-Accel-Buffering', 'yes')
       if (!req.query.portalId) {
@@ -43,6 +44,6 @@ module.exports = async () => {
       // re-apply the prefix that was removed by an optional reverse proxy
       req.url = (nuxtConfig.router.base + req.url).replace('//', '/')
       return nuxt.render(req, res)
-    }
+    })
   }
 }

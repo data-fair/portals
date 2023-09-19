@@ -45,6 +45,10 @@ app.set('session', session)
 app.use('/api/v1', require('./router/root'))
 app.use('/api/v1/portals', require('./router/portals'))
 
+app.use('/api/', (req, res) => {
+  return res.status(404).send('unknown api endpoint')
+})
+
 // self hosting of streamsaver man in the middle service worker
 // see https://github.com/jimmywarting/StreamSaver.js/issues/183
 app.use('/streamsaver/mitm.html', express.static('node_modules/streamsaver/mitm.html'))
