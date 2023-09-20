@@ -3,6 +3,59 @@
   "required": ["elements"],
   "additionalProperties": false,
   "properties": {
+     "banner": {
+      "type": "object",
+      "title": "Bannière",
+      "properties": {
+        "title": {
+          "title": "Titre de l'image",
+          "description": "Recommandé pour l'accessibilité et pour afficher une information utile au survol",
+          "type": "string"
+        },
+        "url": {
+          "title": "URL vers l'image",
+          "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
+          "type": "string"
+        },
+        "local": {
+          "type": "object",
+          "x-display": "custom-df-image",
+          "properties": {
+            "assetId": {
+              "readOnly": true
+            },
+            "assetTitle": {
+              "readOnly": true
+            },
+            "pageId": {
+              "type": "string",
+              "readOnly": true
+            },
+            "pageTitle": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_updatedAt": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "attachmentPath": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        },
+        "height": {
+          "title": "Hauteur (px)",
+          "description": "Fixe la hauteur de l'image",
+          "type": "integer"
+        }
+      }
+    },
     "elements":{
       "title": "Éléments",
       "type": "array",
@@ -111,6 +164,12 @@
         "colored" : {
           "type": "boolean",
           "title": "Utiliser la couleur du thème",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
+        "centered" : {
+          "type": "boolean",
+          "title": "Centré",
           "default": false,
           "x-options": { "hideInArrayItem": true }
         },
@@ -312,7 +371,7 @@
     },
     "cardSimple": {
       "type": "object",
-      "title": "Carte",
+      "title": "Vignette",
       "properties": {
         "type": {
           "const": "cardSimple"

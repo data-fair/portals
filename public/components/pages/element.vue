@@ -250,6 +250,7 @@ export default {
       }
       let res = `text-${this.value.titleSize || 'h3'} my-${margins[this.value.titleSize] || '4'}`
       if (this.value.colored) res += ' primary--text'
+      if (this.value.centered) res += ' text-center'
       return res
     },
     cardTitleClass () {
