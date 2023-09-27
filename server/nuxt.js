@@ -32,7 +32,9 @@ module.exports = async () => {
     return asyncWrap(async (req, res, next) => {
       // accept buffering and caching of this response in the reverse proxy
       res.setHeader('X-Accel-Buffering', 'yes')
-      if (!req.query.portalId) {
+      // we have to use x-forwarded-path to distinguish between the exposition of the main portal at the root of the domain
+      // and the exposition of the manager under /data-fair-portals/
+      if (!req.query.portalId && !(req.headers['x-forwarded-path'] && req.headers['x-forwarded-path'].startsWith(nuxtConfig.router.base))) {
         const host = req.headers.host
         const portal = await getPortalFromHost(req.app.get('db'), host)
         if (portal) {
