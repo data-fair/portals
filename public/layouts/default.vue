@@ -65,7 +65,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('autoSwitchOrganization', {})
+    this.$store.dispatch('autoSwitchOrganization', { route: this.$route })
   }
 }
 </script>

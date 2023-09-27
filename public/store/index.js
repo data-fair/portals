@@ -174,6 +174,11 @@ export default () => {
         if (global.parent) parent.postMessage({ breadcrumbs }, '*')
       },
       autoSwitchOrganization ({ state, dispatch }, { route, redirect }) {
+        // case where we are opening a portal
+        if (!state.portal || route.path.startsWith('/me/') || route.path.startsWith('/manager/')) {
+          return
+        }
+        console.log('switch to portal owner account')
         // automatic switch to the account that owns this portal if we are a member
         // or a partner if we are member of a partner available
         if (state.session.user) {
@@ -253,10 +258,7 @@ export default () => {
       // called only on the server, used to prefill the store
       async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {
         debug('nuxtServerInit in portal mode ?', !!state.portal)
-        // case where we are opening a portal
-        if (state.portal && !route.path.startsWith('/me/') && !route.path.startsWith('/manager/')) {
-          dispatch('autoSwitchOrganization', { route, redirect })
-        }
+        dispatch('autoSwitchOrganization', { route, redirect })
       }
     }
   })

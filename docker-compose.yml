@@ -4,7 +4,7 @@ services:
     profiles:
       - dev
       - test
-    image: ghcr.io/data-fair/simple-directory:partners2
+    image: ghcr.io/data-fair/simple-directory:master
     network_mode: host
     environment:
       - ADMINS=["superadmin@test.com"]
@@ -42,7 +42,7 @@ services:
   data-fair:
     profiles:
       - dev
-    image: ghcr.io/data-fair/data-fair:partners
+    image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
     environment:
