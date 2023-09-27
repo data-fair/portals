@@ -254,7 +254,7 @@ export default () => {
       async nuxtServerInit ({ dispatch, state, commit }, { route, req, env, redirect }) {
         debug('nuxtServerInit in portal mode ?', !!state.portal)
         // case where we are opening a portal
-        if (state.portal && !route.path.startsWith('/me/')) {
+        if (state.portal && !route.path.startsWith('/me/') && !route.path.startsWith('/manager/')) {
           dispatch('autoSwitchOrganization', { route, redirect })
         }
       }
