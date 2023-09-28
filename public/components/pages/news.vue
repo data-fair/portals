@@ -263,7 +263,7 @@
           Pas de description
         </v-alert>
       </template>
-      <template v-for="(block, i) in ((pageConfig ? savedConfig.blocks : page.config.blocks) || []).filter(e => e)">
+      <template v-for="(block, i) in (page.config.blocks || []).filter(e => e)">
         <v-form
           v-if="pageConfig && schema && currentEdit === ('element-' + i)"
           :key="i"
@@ -407,7 +407,7 @@
         v-if="pageConfig && currentEdit === null"
         color="primary"
         fab
-        @click="currentEdit = ('element-' + savedConfig.blocks.length); localUpdate = {}; savedConfig.blocks.push({})"
+        @click="$emit('change', { blocks: [...savedConfig.blocks, {}] }); currentEdit = ('element-' + savedConfig.blocks.length); localUpdate = {}"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>

@@ -66,7 +66,7 @@
       </v-alert>
     </template>
     <v-container>
-      <template v-for="(element, i) in ((pageConfig ? savedConfig.elements : page.config.elements) || []).filter(e => e)">
+      <template v-for="(element, i) in (page.config.elements || []).filter(e => e)">
         <v-form
           v-if="pageConfig && schema && currentEdit === ('element-'+i)"
           :key="i"
@@ -213,7 +213,7 @@
         v-if="pageConfig && currentEdit === null"
         color="primary"
         fab
-        @click="currentEdit = ('element-' + savedConfig.elements.length); localUpdate={}; savedConfig.elements.push({})"
+        @click="$emit('change', { elements: [...savedConfig.elements, {}] }); currentEdit = ('element-' + savedConfig.elements.length); localUpdate={}"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
