@@ -18,50 +18,39 @@
       </v-list-item>
     </v-list>
 
-    <section-title
-      :text="'Edition de la page ' + ((page && page.title) || '')"
-      tag="h1"
-    />
-
-    <v-form ref="form">
-      <lazy-v-jsf
-        v-if="page"
-        v-model="page"
-        :schema="pageSchema"
-        :options="vjsfOpts"
-        @change="update(page)"
+    <template v-if="page">
+      <section-title
+        :text="'Edition de la page ' + (page.title || '')"
+        tag="h1"
       />
-    </v-form>
-    <v-row>
-      <v-col :cols="6">
-        <v-form class="page-form">
-          <lazy-v-jsf
-            v-if="pageConfig && template"
-            v-model="pageConfig"
-            :schema="template"
-            :options="vjsfOpts"
-            @change="update({ config: pageConfig })"
-          />
-        </v-form>
-      </v-col>
-      <v-col
-        v-if="htmlPage"
-        :cols="6"
-      >
-        <blank
-          v-if="page.template === 'blank'"
-          :config="htmlPage.config"
+
+      <v-form ref="form">
+        <lazy-v-jsf
+          v-model="page"
+          :schema="pageSchema"
+          :options="vjsfOpts"
+          @change="updatePage(page)"
         />
-        <thematic
-          v-if="page.template === 'thematic'"
-          :config="htmlPage.config"
-        />
-        <news
-          v-if="page.template === 'news'"
-          :page="htmlPage"
-        />
-      </v-col>
-    </v-row>
+      </v-form>
+      <blank
+        v-if="page.template === 'blank'"
+        :page-config="pageConfig"
+        :page="htmlPage"
+        @change="updateConfig"
+      />
+      <thematic
+        v-if="page.template === 'thematic'"
+        :page-config="pageConfig"
+        :page="htmlPage"
+        @change="updateConfig"
+      />
+      <news
+        v-if="page.template === 'news'"
+        :page-config="pageConfig"
+        :page="htmlPage"
+        @change="updateConfig"
+      />
+    </template>
   </v-container>
 </template>
 
@@ -71,7 +60,6 @@ import Thematic from '~/components/pages/thematic.vue'
 import News from '~/components/pages/news.vue'
 const { mapState } = require('vuex')
 
-const context = require.context('../../../../../../assets/templates', true, /\.json$/)
 const pageSchema = require('~/../contract/page.json')
 Object.keys(pageSchema.properties).forEach(p => {
   if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
@@ -88,9 +76,6 @@ export default {
   }),
   computed: {
     ...mapState(['config', 'portal']),
-    template () {
-      return this.page.template && context(`./${this.page.template}.json`)
-    },
     dataFairUrl () {
       return this.$store.getters.dataFairUrl
     },
@@ -137,14 +122,23 @@ export default {
     this.pageConfig = this.page.config || {}
     delete this.page.config
     if (this.config.owner) this.owner = this.config.owner.type + ':' + this.config.owner.id
-
     this.htmlPage = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, { params: { html: true } })
+    this.htmlPage.config = this.htmlPage.config || {}
   },
   methods: {
-    async update (patch) {
+    async updatePage (patch) {
       try {
-        this.htmlPage = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch, { params: { html: true } })
-        // this.$router.push({ name: 'pages' })
+        this.page = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
+        delete this.page.config
+        delete this.page.id
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async updateConfig (config) {
+      this.pageConfig = { ...this.pageConfig, ...config }
+      try {
+        this.htmlPage = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, { config: this.pageConfig }, { params: { html: true } })
       } catch (error) {
         console.error(error)
       }

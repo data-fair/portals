@@ -77,9 +77,6 @@
         "description": {
           "$ref": "#/definitions/description"
         },
-        "alert": {
-          "$ref": "#/definitions/alert"
-        },
         "application": {
           "$ref": "#/definitions/application"
         },

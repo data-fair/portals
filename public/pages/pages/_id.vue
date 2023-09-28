@@ -7,12 +7,12 @@
     <template v-else-if="page">
       <blank
         v-if="page.template === 'blank'"
-        :config="page.config"
+        :page="page"
         :images="images"
       />
       <thematic
         v-if="page.template === 'thematic'"
-        :config="page.config"
+        :page="page"
         :images="images"
       />
       <news

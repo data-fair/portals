@@ -7,39 +7,45 @@
       "$ref": "#/definitions/title"
     },
     "banner": {
-      "title": "URL de l'image de bannière",
-      "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
-      "type": "string"
-    },
-    "localBanner": {
       "type": "object",
-      "x-display": "custom-df-image",
+      "title": "Bannière",
       "properties": {
-        "assetId": {
-          "readOnly": true
+        "url": {
+          "title": "URL vers l'image",
+          "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
+          "type": "string"
         },
-        "assetTitle": {
-          "readOnly": true
-        },
-        "pageId": {
-          "type": "string",
-          "readOnly": true
-        },
-        "pageTitle": {
-          "type": "string",
-          "readOnly": true
-        },
-        "_updatedAt": {
-          "type": "string",
-          "readOnly": true
-        },
-        "_id": {
-          "type": "string",
-          "readOnly": true
-        },
-        "attachmentPath": {
-          "type": "string",
-          "readOnly": true
+        "local": {
+          "type": "object",
+          "x-display": "custom-df-image",
+          "properties": {
+            "assetId": {
+              "readOnly": true
+            },
+            "assetTitle": {
+              "readOnly": true
+            },
+            "pageId": {
+              "type": "string",
+              "readOnly": true
+            },
+            "pageTitle": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_updatedAt": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "attachmentPath": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
         }
       }
     },
