@@ -442,7 +442,7 @@ export default {
         context: {
           dataFairUrl: this.dataFairUrl,
           topicsUrl,
-          owner: this.owner,
+          owner: this.config.owner.type + ':' + this.config.owner.id,
           page: {
             id: this.page.id,
             title: this.page.title

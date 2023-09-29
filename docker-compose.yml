@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   sd:
     profiles:
@@ -57,7 +57,7 @@ services:
       - PUBLIC_URL=http://localhost:6200/data-fair
       - WS_PUBLIC_URL=ws://localhost:6200/data-fair
       - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
-      # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/s/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
+      # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
       - PROMETHEUS_ACTIVE=false
       # - EXPORT_REST_DATASETS_CRON=* * * * *
     volumes:
@@ -92,7 +92,7 @@ services:
       - dev
     image: ghcr.io/data-fair/capture:master
     network_mode: host
-    shm_size: '1gb'
+    shm_size: "1gb"
     environment:
       - PORT=8087
       - DEBUG=capture

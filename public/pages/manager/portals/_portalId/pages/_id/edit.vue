@@ -131,6 +131,10 @@ export default {
         this.page = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
         delete this.page.config
         delete this.page.id
+        delete this.page.portal
+        delete this.page.created
+        delete this.page.updated
+        delete this.page.publishedAt
       } catch (error) {
         console.error(error)
       }
