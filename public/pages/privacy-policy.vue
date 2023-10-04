@@ -2,7 +2,7 @@
   <v-container>
     <page-title text="Politique de confidentialité" />
     <p>Mise à jour le 04/10/2023</p>
-    
+
     <template v-if="config.analytics && config.analytics.type !== 'none'">
       <p>Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.</p>
       <v-switch
