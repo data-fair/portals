@@ -28,6 +28,7 @@
               color="primary"
             />
           </v-btn>
+          <catalog-api-view />
         </template>
       </section-title>
       <section-title
