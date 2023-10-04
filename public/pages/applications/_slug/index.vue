@@ -149,14 +149,20 @@ export default {
     syncedState: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, { params: { html: true } })
+    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id, {
+      params: {
+        html: true,
+        publicationSites: 'data-fair-portals:' + this.portal._id
+      }
+    })
     const config = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.id + '/configuration')
     this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
         select: 'id,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
         size: 1000,
-        html: true
+        html: true,
+        publicationSites: 'data-fair-portals:' + this.portal._id
       }
     })
   },
@@ -208,7 +214,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'publicUrl']),
+    ...mapState(['config', 'publicUrl', 'portal']),
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps', 'directoryUrl']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id

@@ -93,8 +93,8 @@ async function syncPortalUpdate (portal, cookie) {
     id: portal._id,
     title: portal.title,
     url: link(portal),
-    datasetUrlTemplate: link(portal, '/datasets/{id}'),
-    applicationUrlTemplate: link(portal, '/reuses/{id}')
+    datasetUrlTemplate: link(portal, '/datasets/{slug}'),
+    applicationUrlTemplate: link(portal, '/reuses/{slug}')
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
@@ -103,6 +103,7 @@ async function syncPortalUpdate (portal, cookie) {
 
   const id = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
   debugSyncPortal(`sync to data-fair ${id}`)
+
   await axios.post(
     `${config.dataFairUrl}/api/v1/settings/${portal.owner.type}/${id}/publication-sites`,
     publicationSite,

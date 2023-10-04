@@ -266,7 +266,7 @@
                   v-if="!dataset.isMetaOnly"
                   title="Vue tabulaire en plein écran"
                   icon="mdi-fullscreen"
-                  :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+                  :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
                 />
                 <map-preview
                   v-if="dataset.bbox && dataset.bbox.length"
@@ -545,11 +545,16 @@ export default {
     uses: null
   }),
   async fetch () {
-    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`, { params: { html: true } })
+    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.slug}`, {
+      params: {
+        html: true,
+        publicationSites: 'data-fair-portals:' + this.portal._id
+      }
+    })
     this.dataset = dataset
 
     const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
-    params.dataset = this.$route.params.id
+    params.dataset = dataset.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
     if (dataset.extras && dataset.extras.applications) {
@@ -560,7 +565,7 @@ export default {
     this.applications = applications
 
     this.uses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, {
-      params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: this.$route.params.id }
+      params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: dataset.slug }
     })).results
   },
   head () {
@@ -639,7 +644,7 @@ export default {
     ...mapState(['config', 'portal', 'publicUrl']),
     ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
     url () {
-      return this.publicUrl + '/datasets/' + this.$route.params.id
+      return this.publicUrl + '/datasets/' + this.$route.params.slug
     },
     iframeExternalReuses () {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []

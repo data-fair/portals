@@ -1,7 +1,7 @@
 <template>
   <card-action-card
     :loading="!dataset"
-    :to="dataset && `/datasets/${dataset.id}`"
+    :to="dataset && `/datasets/${dataset.slug}`"
     :title="dataset && dataset.title"
     :img="img"
     :img-contain="!!config.datasetThumbnailContain"
@@ -22,7 +22,7 @@
           v-if="!dataset.isMetaOnly"
           title="Vue tabulaire en plein écran"
           icon="mdi-fullscreen"
-          :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+          :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
         />
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"

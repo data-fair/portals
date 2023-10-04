@@ -2,7 +2,7 @@
   <action-icon
     title="Accéder à la visualisation en plein écran"
     icon="mdi-fullscreen"
-    :to="{name: 'applications-id-full', params:{id: application.id}, query: syncedStateParams}"
+    :to="{name: 'applications-slug-full', params:{slug: application.slug}, query: syncedStateParams}"
   />
 </template>
 

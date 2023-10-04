@@ -324,7 +324,7 @@ export default {
       params.sort = params.sort || this.defaultSort + ':-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
+      params.select = 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
       if (append) params.count = false
       else params.facets = 'concepts,topics,owner'
       params.owner = query.owner || this.owner
