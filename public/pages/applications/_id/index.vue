@@ -209,7 +209,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps', 'directoryUrl']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.id
     }
