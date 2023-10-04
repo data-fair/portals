@@ -414,7 +414,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
 
 // Create a page
 router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
-  const baseId = slug(req.body.title, { lower: true })
+  const baseId = slug(req.body.title.slice(0, 100), { lower: true, remove: /[*+~.()'"!:@]/g })
   req.body.id = baseId
   req.body.portal = {
     _id: req.portal._id,
