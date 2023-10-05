@@ -3,7 +3,7 @@ exports.description = 'Update thematic pages to use one banner property'
 exports.exec = async (db, debug) => {
   for await (const page of db.collection('pages').find({ template: 'thematic' })) {
     const config = page.config
-    if (config.banner || config.localBanner) {
+    if (config && (config.banner || config.localBanner)) {
       debug('update page', page._id, page.title, {
         url: config.banner,
         local: config.localBanner
