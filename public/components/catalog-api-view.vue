@@ -24,7 +24,7 @@
         dense
         flat
       >
-        <v-toolbar-title>Documentation de l'API du catalogue</v-toolbar-title>
+        <!--<v-toolbar-title>Documentation de l'API du catalogue</v-toolbar-title>-->
         <v-spacer />
         <v-btn
           icon

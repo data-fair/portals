@@ -17,7 +17,7 @@
         dense
         flat
       >
-        <v-toolbar-title>{{ dataset.title }}</v-toolbar-title>
+        <!--<v-toolbar-title>{{ dataset.title }}</v-toolbar-title>-->
         <v-spacer />
         <v-btn
           icon
@@ -60,3 +60,9 @@ export default {
 }
 
 </script>
+
+<style>
+.dataset-api-view-dialog .v-dialog {
+  min-height: 500px;
+}
+</style>
