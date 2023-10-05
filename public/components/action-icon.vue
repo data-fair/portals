@@ -3,6 +3,7 @@
     v-bind="compProps.btn"
     :aria-label="title"
     :title="title"
+    class="action-icon ml-0"
     @click="e => $emit('click', e)"
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
@@ -68,5 +69,7 @@ export default {
 </script>
 
 <style>
-
+.v-btn.v-btn--fab.action-icon {
+  margin-left: 0;
+}
 </style>

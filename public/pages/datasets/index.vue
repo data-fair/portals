@@ -10,25 +10,19 @@
         tag="h1"
       >
         <template #after>
-          <v-btn
+          <action-icon
             :disabled="!!downloading"
-            icon
-            target="_blank"
-            class="ml-2"
-            aria-label="Exporter la sélection au format CSV"
             title="Exporter la sélection au format CSV"
+            icon="mdi-file-table"
+            class="ml-2"
             @click="download(config.title+'.csv')"
-          >
-            <v-icon v-if="downloading !== config.title+'.csv'">
-              mdi-file-table
-            </v-icon>
-            <v-progress-circular
-              v-else
-              indeterminate
-              color="primary"
-            />
-          </v-btn>
-          <catalog-api-view />
+          />
+          <action-icon
+            v-if="!isMobileOnly"
+            title="Documentation de l'API du catalogue"
+            icon="mdi-cog"
+            :to="{name: 'catalog-api-doc'}"
+          />
         </template>
       </section-title>
       <section-title
