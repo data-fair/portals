@@ -207,16 +207,26 @@
         </a>
         <v-img
           v-else
-          :style="value.height ? `height:${value.height}px` : ''"
+          :style="'cursor:zoom-in;' + (value.height ? `height:${value.height}px` : '')"
           :contain="!!value.height"
           :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
           :title="value.title"
+          @click="overlay= { visible: true, url: value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}` }"
         />
       </template>
       <v-iframe
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
         :src="value.url"
       />
+      <v-overlay
+        :value="overlay.visible"
+        style="cursor:zoom-out"
+        @click="overlay.visible = false"
+      >
+        <v-img
+          :src="overlay.url"
+        />
+      </v-overlay>
     </client-only>
   </div>
 </template>
@@ -235,7 +245,8 @@ export default {
     return {
       loading: false,
       resolvedDataset: null,
-      error: null
+      error: null,
+      overlay: { visible: false, url: null }
     }
   },
   computed: {

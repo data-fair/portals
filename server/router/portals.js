@@ -415,7 +415,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
 
 // Create a page
 router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
-  const baseId = slug(req.body.title, { lower: true })
+  const baseId = slug(req.body.title.slice(0, 100), { lower: true, strict: true })
   req.body.id = baseId
   req.body.portal = {
     _id: req.portal._id,
@@ -596,7 +596,7 @@ router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), usesUtils.upload
   }
   if (req.body.published && !use.published) {
     req.body.publishedAt = use.publishedAt || new Date()
-    const baseSlug = slug(use.title, { lower: true })
+    const baseSlug = slug(use.title, { lower: true, strict: true })
     let useSlug = baseSlug
     let updateOk = false
     let i = 1
