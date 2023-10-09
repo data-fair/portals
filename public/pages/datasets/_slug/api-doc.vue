@@ -52,7 +52,7 @@ export default {
       return this.publicUrl + '/datasets/' + this.$route.params.slug + '/api-doc'
     },
     iframeSrc () {
-      const apiDocUrl = `${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/api-docs.json`
+      const apiDocUrl = `${this.dataFairUrl}/api/v1/datasets/${this.dataset.slug}/api-docs.json`
       return `${this.openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${encodeURIComponent(apiDocUrl)}`
     }
   }
