@@ -15,6 +15,12 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn>
     </v-toolbar-items>
+    <v-breadcrumbs
+      v-if="childBreadcrumbItems && childBreadcrumbsRouteName === $route.name && $vuetify.breakpoint.mdAndUp"
+      :items="childBreadcrumbItems"
+      :large="!$vuetify.breakpoint.mobile"
+      :class="{'pl-1': $vuetify.breakpoint.mobile}"
+    />
     <v-spacer />
     <v-toolbar-items>
       <client-only>
@@ -83,7 +89,7 @@ debug.log = console.log.bind(console)
 export default {
   props: ['navContext'],
   computed: {
-    ...mapState(['config', 'textDark', 'portal']),
+    ...mapState(['config', 'textDark', 'portal', 'childBreadcrumbItems', 'childBreadcrumbsRouteName']),
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
     ...mapGetters('session', ['loginUrl']),

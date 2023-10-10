@@ -107,7 +107,7 @@ export default {
   },
   mounted: async function () {
     this.page = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`)
-    this.$store.dispatch('setBreadcrumbs', [{
+    this.$store.dispatch('setManagerBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals'
     }, {

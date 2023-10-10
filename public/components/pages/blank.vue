@@ -66,10 +66,12 @@
       </v-alert>
     </template>
     <v-container>
-      <template v-for="(element, i) in (page.config.elements || []).filter(e => e)">
+      <div
+        v-for="(element, i) in (page.config.elements || []).filter(e => e)"
+        :key="i"
+      >
         <v-form
           v-if="pageConfig && schema && currentEdit === ('element-'+i)"
-          :key="i"
           class="text-center pa-1"
           style="border:solid 1px"
         >
@@ -195,20 +197,18 @@
           </template>
           <k-element
             v-else-if="element.type"
-            :key="i"
             :value="element"
             :images="images"
           />
           <v-alert
             v-else-if="pageConfig"
-            :key="i"
             class="text-center"
             outlined
           >
             Element non configuré
           </v-alert>
         </template>
-      </template>
+      </div>
       <v-btn
         v-if="pageConfig && currentEdit === null"
         color="primary"

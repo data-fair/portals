@@ -263,10 +263,12 @@
           Pas de description
         </v-alert>
       </template>
-      <template v-for="(block, i) in (page.config.blocks || []).filter(e => e)">
+      <div
+        v-for="(block, i) in (page.config.blocks || []).filter(e => e)"
+        :key="i"
+      >
         <v-form
           v-if="pageConfig && schema && currentEdit === ('element-' + i)"
-          :key="i"
           class="text-center pa-1"
           style="border:solid 1px"
         >
@@ -352,9 +354,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <div
-            :key="i"
-          >
+          <div>
             <v-divider class="my-6" />
             <v-row>
               <v-col
@@ -402,7 +402,7 @@
             </v-row>
           </div>
         </template>
-      </template>
+      </div>
       <v-btn
         v-if="pageConfig && currentEdit === null"
         color="primary"

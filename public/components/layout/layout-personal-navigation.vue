@@ -85,6 +85,7 @@
         <v-list-item-action><v-icon>mdi-account-group</v-icon></v-list-item-action>
         <v-list-item-title>Gestion de l'organisation</v-list-item-title>
       </v-list-item>
+
       <v-list-item
         v-if="accountRole === 'admin' && !activeAccount.department"
         :nuxt="true"
@@ -93,6 +94,7 @@
         <v-list-item-action><v-icon>mdi-cloud-circle</v-icon></v-list-item-action>
         <v-list-item-title>Clés d'API</v-list-item-title>
       </v-list-item>
+
       <v-list-item
         v-if="datasetsCount.rest || datasetsCount.file"
         :nuxt="true"
@@ -100,6 +102,15 @@
       >
         <v-list-item-action><v-icon>mdi-upload</v-icon></v-list-item-action>
         <v-list-item-title>Contribuer</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item
+        v-if="processingsCount"
+        :nuxt="true"
+        :to="`/me/processings`"
+      >
+        <v-list-item-action><v-icon>mdi-cog-transfer-outline</v-icon></v-list-item-action>
+        <v-list-item-title>Traitements</v-list-item-title>
       </v-list-item>
     </v-list>
 
@@ -142,13 +153,14 @@ export default {
   props: ['navContext'],
   data () {
     return {
-      datasetsCount: { file: null, rest: null }
+      datasetsCount: { file: null, rest: null },
+      processingsCount: null
     }
   },
   computed: {
     ...mapState(['config', 'portal', 'env']),
     ...mapState('session', ['user']),
-    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl']),
+    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl', 'processingsUrl']),
     ...mapGetters('session', ['activeAccount', 'accountRole']),
     copyright () {
       return process.env.copyright
@@ -238,6 +250,7 @@ export default {
     const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${this.portal._id}` }
     this.datasetsCount.file = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
     this.datasetsCount.rest = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
+    this.processingsCount = (await this.$axios.$get(this.processingsUrl + '/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
   }
 }
 </script>
