@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     embedUrl () {
-      return this.$store.getters.dataFairUrl + '/app/' + this.application.id
+      return this.$store.getters.dataFairUrl + '/app/' + this.application.slug
     }
   }
 }
