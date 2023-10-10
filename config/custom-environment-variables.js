@@ -9,6 +9,7 @@ module.exports = {
   notifyUrl: 'NOTIFY_URL',
   privateNotifyUrl: 'PRIVATE_NOTIFY_URL',
   notifyWSUrl: 'NOTIFY_WS_URL',
+  processingsUrl: 'PROCESSINGS_URL',
   mongo: {
     host: 'MONGO_HOST',
     db: 'MONGO_DB',

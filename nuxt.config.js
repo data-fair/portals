@@ -126,6 +126,7 @@ module.exports = {
   env: {
     mainPublicUrl: config.publicUrl,
     mainDataFairUrl: config.dataFairUrl,
+    processingsUrl: config.processingsUrl,
     development: process.env.NODE_ENV === 'development',
     copyright: config.copyright,
     i18n: config.i18n,
