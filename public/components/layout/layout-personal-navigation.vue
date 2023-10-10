@@ -250,7 +250,9 @@ export default {
     const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${this.portal._id}` }
     this.datasetsCount.file = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
     this.datasetsCount.rest = (await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
-    this.processingsCount = (await this.$axios.$get(this.processingsUrl + '/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
+    if (this.processingsUrl) {
+      this.processingsCount = (await this.$axios.$get(this.processingsUrl + '/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
+    }
   }
 }
 </script>

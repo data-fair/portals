@@ -9,6 +9,7 @@ module.exports = {
   notifyUrl: null,
   privateNotifyUrl: null,
   notifyWSUrl: null,
+  processingsUrl: null,
   sessionDomain: null,
   proxyNuxt: false,
   mongo: {

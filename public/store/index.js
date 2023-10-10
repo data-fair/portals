@@ -32,7 +32,8 @@ export default () => {
       userPartners: null,
       whiteLabelOwners: [],
       childBreadcrumbsRouteName: null,
-      childBreadcrumbItems: null
+      childBreadcrumbItems: null,
+      processingsBasePath: null
     },
     getters: {
       embed () {
@@ -58,7 +59,8 @@ export default () => {
         return state.publicBaseUrl + '/data-fair'
       },
       processingsUrl (state) {
-        return state.publicBaseUrl + '/processings'
+        if (!state.processingsBasePath) return null
+        return state.publicBaseUrl + state.processingsBasePath
       },
       imagesDatasetUrl (state, getters) {
         return `${getters.dataFairUrl}/api/v1/datasets/portals-images-${state.portal._id.toLowerCase().replace(/_/g, '').replace(/^-/, '').replace(/-$/, '')}`
@@ -234,6 +236,9 @@ export default () => {
           debug('init publicUrlInfo', publicUrlInfo)
           // console.log('portal served on default domain', publicUrlInfo)
           commit('setAny', publicUrlInfo)
+        }
+        if (env.processingsUrl) {
+          commit('setAny', { processingsBasePath: new URL(env.processingsUrl).pathname })
         }
         dispatch('session/init', {
           cookies: this.$cookies,
