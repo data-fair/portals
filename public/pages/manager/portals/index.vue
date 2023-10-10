@@ -217,7 +217,7 @@ export default {
     ...mapActions('session', ['login']),
     async refresh () {
       this.portals = await this.$axios.$get('api/v1/portals')
-      this.$store.dispatch('setBreadcrumbs', [{
+      this.$store.dispatch('setManagerBreadcrumbs', [{
         text: `${this.portals.length} portail${this.portals.length > 1 ? 's' : ''}`
       }])
     },

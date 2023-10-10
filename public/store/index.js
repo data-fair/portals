@@ -30,7 +30,9 @@ export default () => {
       inPortal: false,
       concepts: null,
       userPartners: null,
-      whiteLabelOwners: []
+      whiteLabelOwners: [],
+      childBreadcrumbsRouteName: null,
+      childBreadcrumbItems: null
     },
     getters: {
       embed () {
@@ -54,6 +56,9 @@ export default () => {
       },
       dataFairUrl (state) {
         return state.publicBaseUrl + '/data-fair'
+      },
+      processingsUrl (state) {
+        return state.publicBaseUrl + '/processings'
       },
       imagesDatasetUrl (state, getters) {
         return `${getters.dataFairUrl}/api/v1/datasets/portals-images-${state.portal._id.toLowerCase().replace(/_/g, '').replace(/^-/, '').replace(/-$/, '')}`
@@ -131,6 +136,9 @@ export default () => {
       }
     },
     actions: {
+      childBreadcrumbs ({ commit }, childBreadcrumbItems) {
+        commit('setAny', { childBreadcrumbItems, childBreadcrumbsRouteName: this.$router.currentRoute.name })
+      },
       async fetchPortalInfos ({ state, commit }, portalId) {
         const portal = await this.$axios.$get(`api/v1/portals/${portalId}`, { params: { noConfig: true } })
         commit('setAny', { portal })
@@ -168,7 +176,7 @@ export default () => {
           console.warn('failure to fetch user partners', err)
         }
       },
-      setBreadcrumbs ({ commit }, breadcrumbs) {
+      setManagerBreadcrumbs ({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })
         commit('setAny', { breadcrumbs })
         if (global.parent) parent.postMessage({ breadcrumbs }, '*')

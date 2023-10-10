@@ -250,7 +250,7 @@ export default {
     }
   },
   async mounted () {
-    this.$store.dispatch('setBreadcrumbs', [{
+    this.$store.dispatch('setManagerBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals'
     }, {

@@ -94,7 +94,7 @@ export default {
     this.fullUse = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/uses/${this.$route.params.id}`)
     this.use = { ...this.fullUse }
     this.savedUse = JSON.stringify(this.use)
-    this.$store.dispatch('setBreadcrumbs', [{
+    this.$store.dispatch('setManagerBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals'
     }, {
