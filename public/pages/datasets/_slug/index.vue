@@ -350,7 +350,7 @@
       <template v-if="applications">
         <v-row
           v-for="(application, i) in applications.results"
-          :key="application.id"
+          :key="application.slug"
           class="my-3"
           align="center"
         >
@@ -362,7 +362,7 @@
             :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
-              :to="{name: 'applications-id', params:{id: application.id}}"
+              :to="{name: 'applications-slug', params:{id: application.slug}}"
               class="title"
             >
               <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon color="primary">

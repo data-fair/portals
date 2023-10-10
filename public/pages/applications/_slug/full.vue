@@ -5,7 +5,7 @@
       :error="$fetchState.error"
     />
     <div v-else-if="application">
-      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-id', params: {id: application.id}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
+      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-slug', params: {slug: application.slug}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
           :title="application.title"

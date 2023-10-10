@@ -119,13 +119,13 @@ export default () => ({
 
       // add all datasets of catalog
       for (const dataset of state.datasetsList || []) {
-        const to = '/datasets/' + dataset.id
+        const to = '/datasets/' + dataset.slug
         if (!pages.find(p => p.to === to)) pages.push({ to, title: dataset.title, updatedAt: dataset.updatedAt })
       }
 
       // add all applications of catalog
       for (const application of state.applicationsList || []) {
-        const to = '/applications/' + application.id
+        const to = '/applications/' + application.slug
         if (!pages.find(p => p.to === to)) pages.push({ to, title: application.title, updatedAt: application.updatedAt })
       }
 
@@ -143,12 +143,12 @@ export default () => ({
       commit('setAny', { pages })
     },
     async fetchDatasetsList ({ state, commit, rootState, rootGetters }) {
-      const params = { size: 10000, count: false, raw: true, select: 'id,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
+      const params = { size: 10000, count: false, raw: true, select: 'id,slug,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
       const datasetsList = (await this.$axios.$get(`${rootGetters.dataFairUrl}/api/v1/datasets`, { params })).results
       commit('setAny', { datasetsList })
     },
     async fetchApplicationsList ({ state, commit, rootState, rootGetters }) {
-      const params = { size: 10000, count: false, raw: true, select: 'id,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
+      const params = { size: 10000, count: false, raw: true, select: 'id,slug,title,updatedAt', owner: rootGetters.owner, publicationSites: 'data-fair-portals:' + rootState.portal._id }
       const applicationsList = (await this.$axios.$get(`${rootGetters.dataFairUrl}/api/v1/applications`, { params })).results
       commit('setAny', { applicationsList })
     },

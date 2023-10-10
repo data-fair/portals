@@ -271,9 +271,10 @@
             "href": {"type": "string"},
             "exposedUrl": {"type": "exposedUrl"},
             "title": {"type": "string"},
-            "id": {"type": "string"}
+            "id": {"type": "string"},
+            "slug": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,slug,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -295,9 +296,10 @@
           "properties": {
             "href": {"type": "string"},
             "title": {"type": "string"},
-            "id": {"type": "string"}
+            "id": {"type": "string"},
+            "slug": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -319,9 +321,10 @@
           "properties": {
             "href": {"type": "string"},
             "title": {"type": "string"},
-            "id": {"type": "string"}
+            "id": {"type": "string"},
+            "slug": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -343,9 +346,10 @@
           "properties": {
             "href": {"type": "string"},
             "title": {"type": "string"},
-            "id": {"type": "string"}
+            "id": {"type": "string"},
+            "slug": {"type": "string"}
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"

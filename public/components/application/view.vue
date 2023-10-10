@@ -29,7 +29,7 @@
       </v-toolbar>
       <client-only>
         <v-iframe
-          :id="'application-' + application.id"
+          :id="'application-' + application.slug"
           :title="application.title"
           :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
         />
@@ -57,7 +57,7 @@ export default {
   },
   watch: {
     dialog () {
-      const viewName = this.dialog ? `/applications/${this.application.id}/application-dialog` : this.$route.path
+      const viewName = this.dialog ? `/applications/${this.application.slug}/application-dialog` : this.$route.path
       if (this.$ma) this.$ma.trackView({ viewName })
     }
   }

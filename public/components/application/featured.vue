@@ -2,7 +2,7 @@
   <div>
     <v-row class="ma-0">
       <nuxt-link
-        :to="{path: `/applications/${application.id}`, query: syncedStateParams}"
+        :to="{path: `/applications/${application.slug}`, query: syncedStateParams}"
         class="title"
       >
         <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon :color="'primary'">
@@ -23,7 +23,7 @@
     </v-row>
     <client-only>
       <v-iframe
-        :src="`${dataFairUrl}/app/${application.id}`"
+        :src="`${dataFairUrl}/app/${application.slug}`"
         :title="application.title"
         :style="iframeStyle"
         :sync-state="true"
@@ -71,8 +71,8 @@ export default {
     }
   },
   async mounted () {
-    this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}/base-application`, { params: { html: true } })
-    this.fullApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.id}`, { params: { raw: true, select: '-userPermissions,-owner' } })
+    this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}/base-application`, { params: { html: true } })
+    this.fullApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}`, { params: { raw: true, select: '-userPermissions,-owner' } })
   }
 }
 </script>
