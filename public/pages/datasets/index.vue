@@ -375,7 +375,7 @@ export default {
       this.downloading = name
       const params = {
         size: 10000,
-        select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
+        select: 'id,slug,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
@@ -388,7 +388,7 @@ export default {
       try {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
         const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
-        const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
+        const content = datasets.map(d => `${d.slug},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
         const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
         fileDownload(blob, name)
       } catch (err) { }

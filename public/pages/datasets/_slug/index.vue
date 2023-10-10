@@ -553,7 +553,7 @@ export default {
     })
     this.dataset = dataset
 
-    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
+    const params = { select: 'id,slug,title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
     params.dataset = dataset.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
