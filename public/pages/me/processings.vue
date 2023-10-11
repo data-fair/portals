@@ -32,7 +32,7 @@ export default {
       return ownerFilter
     },
     processingsListUrl () {
-      return `${this.processingsUrl}/processings`
+      return `${this.processingsUrl}/processings/`
     }
   },
   methods: {
@@ -48,8 +48,8 @@ export default {
       }
     },
     getBreadcrumbPath (to) {
-      if (to === '/processings') return undefined
-      if (to.startsWith('/processings')) return to.replace('/processings', './')
+      if (to === '/processings/') return undefined
+      if (to.startsWith('/processings')) return to.replace('/processings/', './')
     }
   }
 }
