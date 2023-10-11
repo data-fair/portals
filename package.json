@@ -99,7 +99,7 @@
     "@commitlint/cli": "^17.5.0",
     "@commitlint/config-conventional": "^17.4.4",
     "@data-fair/sd-vue": "2.6.1",
-    "@koumoul/v-iframe": "^0.20.1",
+    "@koumoul/v-iframe": "^1.1.0",
     "@koumoul/vjsf": "2.22.1",
     "@koumoul/vue-multianalytics": "^1.11.4",
     "@mdi/font": "^7.0.96",
