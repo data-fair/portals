@@ -266,17 +266,18 @@
                   v-if="!dataset.isMetaOnly"
                   title="Vue tabulaire en plein écran"
                   icon="mdi-fullscreen"
-                  :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+                  :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
                 />
                 <map-preview
                   v-if="dataset.bbox && dataset.bbox.length"
                   :dataset="dataset"
                   :color="'primary'"
                 />
-                <api-view
+                <action-icon
                   v-if="!isMobileOnly && !dataset.isMetaOnly"
-                  :dataset="dataset"
-                  color="primary"
+                  title="Documentation d'API"
+                  icon="mdi-cog"
+                  :to="{name: 'datasets-slug-api-doc', params:{slug: dataset.slug}}"
                 />
                 <download
                   v-if="!dataset.isMetaOnly"
@@ -349,7 +350,7 @@
       <template v-if="applications">
         <v-row
           v-for="(application, i) in applications.results"
-          :key="application.id"
+          :key="application.slug"
           class="my-3"
           align="center"
         >
@@ -361,7 +362,7 @@
             :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
-              :to="{name: 'applications-id', params:{id: application.id}}"
+              :to="{name: 'applications-slug', params:{slug: application.slug}}"
               class="title"
             >
               <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon color="primary">
@@ -508,7 +509,6 @@
 // import Disqus from '~/components/disqus.vue'
 import TablePreview from '~/components/dataset/table-preview.vue'
 import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
 import Download from '~/components/dataset/download.vue'
 import NotifEdit from '~/components/dataset/notif-edit.vue'
 import SchemaView from '~/components/dataset/schema-view.vue'
@@ -516,6 +516,7 @@ import Attachments from '~/components/dataset/dataset-attachments.vue'
 import DatasetEmbed from '~/components/dataset/embed.vue'
 import Social from '~/components/social'
 import Error from '~/components/error.vue'
+import { datasetPageHead } from '~/assets/meta-utils'
 import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 import { isMobileOnly } from 'mobile-device-detect'
@@ -526,7 +527,6 @@ export default {
     // Disqus,
     TablePreview,
     MapPreview,
-    ApiView,
     Download,
     NotifEdit,
     SchemaView,
@@ -545,11 +545,16 @@ export default {
     uses: null
   }),
   async fetch () {
-    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.id}`, { params: { html: true } })
+    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.slug}`, {
+      params: {
+        html: true,
+        publicationSites: 'data-fair-portals:' + this.portal._id
+      }
+    })
     this.dataset = dataset
 
-    const params = { select: 'title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
-    params.dataset = this.$route.params.id
+    const params = { select: 'id,slug,title,description,url,bbox,image,preferLargeDisplay', size: 1000, html: true }
+    params.dataset = dataset.id
     params.publicationSites = 'data-fair-portals:' + this.portal._id
     const applications = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications', { params })
     if (dataset.extras && dataset.extras.applications) {
@@ -560,86 +565,17 @@ export default {
     this.applications = applications
 
     this.uses = (await this.$axios.$get(`/api/v1/portals/${this.portal._id}/uses`, {
-      params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: this.$route.params.id }
+      params: { select: 'id,title,author,image,publishedAt,published,slug', size: 100, sort: 'publishedAt:-1', dataset: dataset.slug }
     })).results
   },
   head () {
-    if (this.dataset) {
-      const description = (this.dataset.description || this.dataset.title).split('</p>').shift().replace('<p>', '')
-      const schema = {
-        '@context': 'http://schema.org',
-        '@type': 'Dataset',
-        url: this.url,
-        name: this.dataset.title,
-        description,
-        author: {
-          '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
-          name: this.dataset.owner.name
-        },
-        creator: {
-          '@type': this.dataset.owner.type === 'user' ? 'Person' : 'Organization',
-          name: this.dataset.owner.name
-        },
-        dateCreated: this.dataset.createdAt,
-        dateModified: this.dataset.dataUpdatedAt,
-        sdPublisher: require('~/assets/organization.json'),
-        sdDatePublished: this.dataset.createdAt,
-        encodingFormat: 'application/json',
-        citation: this.dataset.origin
-      }
-      if (this.dataset.bbox) {
-        schema.spatialCoverage = {
-          '@type': 'Place',
-          geo: {
-            '@type': 'GeoShape',
-            box: this.dataset.bbox.slice(0, 2).join(',') + ' ' + this.dataset.bbox.slice(2, 4).join(',')
-          }
-        }
-      }
-      if (this.dataset.license && this.dataset.license.href) schema.license = this.dataset.license.href
-      if (this.applications && this.applications.count) {
-        schema.image = {
-          '@type': 'imageObject',
-          url: this.applications.results[0].href + '/capture'
-        }
-        schema.thumbnailUrl = this.applications.results[0].href + '/capture'
-      }
-      const meta = [
-        { hid: 'description', name: 'description', content: description },
-        { property: 'og:url', content: this.url },
-        { hid: 'og:title', property: 'og:title', content: this.dataset.title },
-        { property: 'og:description', content: description },
-        { property: 'og:type', content: 'article' },
-        { property: 'article:author', content: this.dataset.owner.name },
-        { property: 'article:modified_time', content: this.dataset.dataUpdatedAt },
-        { property: 'article:published_time', content: this.dataset.createdAt }
-      ]
-      if (this.applications && this.applications.count) {
-        meta.push({ hid: 'og:image', property: 'og:image', content: this.applications.results[0].href + '/capture' })
-        meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
-        meta.push({ hid: 'og:image:height', property: 'og:image:height', content: 450 })
-      }
-      return {
-        title: this.dataset.title,
-        meta,
-        __dangerouslyDisableSanitizers: ['script'],
-        script: [
-          {
-            hid: 'schema',
-            innerHTML: JSON.stringify(schema),
-            type: 'application/ld+json'
-          }
-        ]
-      }
-    } else {
-      return { title: 'Page non trouvée' }
-    }
+    return datasetPageHead(this.dataset, this.applications, this.pageUrl)
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
     ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
     url () {
-      return this.publicUrl + '/datasets/' + this.$route.params.id
+      return this.publicUrl + '/datasets/' + this.$route.params.slug
     },
     iframeExternalReuses () {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []

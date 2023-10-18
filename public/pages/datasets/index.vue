@@ -10,24 +10,19 @@
         tag="h1"
       >
         <template #after>
-          <v-btn
+          <action-icon
             :disabled="!!downloading"
-            icon
-            target="_blank"
-            class="ml-2"
-            aria-label="Exporter la sélection au format CSV"
             title="Exporter la sélection au format CSV"
+            icon="mdi-file-table"
+            class="ml-2"
             @click="download(config.title+'.csv')"
-          >
-            <v-icon v-if="downloading !== config.title+'.csv'">
-              mdi-file-table
-            </v-icon>
-            <v-progress-circular
-              v-else
-              indeterminate
-              color="primary"
-            />
-          </v-btn>
+          />
+          <action-icon
+            v-if="!isMobileOnly"
+            title="Documentation de l'API du catalogue"
+            icon="mdi-cog"
+            :to="{name: 'catalog-api-doc'}"
+          />
         </template>
       </section-title>
       <section-title
@@ -324,7 +319,7 @@ export default {
       params.sort = params.sort || this.defaultSort + ':-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
+      params.select = 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
       if (append) params.count = false
       else params.facets = 'concepts,topics,owner'
       params.owner = query.owner || this.owner
@@ -380,7 +375,7 @@ export default {
       this.downloading = name
       const params = {
         size: 10000,
-        select: 'id,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
+        select: 'id,slug,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
@@ -393,7 +388,7 @@ export default {
       try {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
         const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
-        const content = datasets.map(d => `${d.id},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
+        const content = datasets.map(d => `${d.slug},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
         const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
         fileDownload(blob, name)
       } catch (err) { }

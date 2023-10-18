@@ -1,7 +1,7 @@
 <template>
   <card-action-card
     :loading="!dataset"
-    :to="dataset && `/datasets/${dataset.id}`"
+    :to="dataset && `/datasets/${dataset.slug}`"
     :title="dataset && dataset.title"
     :img="img"
     :img-contain="!!config.datasetThumbnailContain"
@@ -22,17 +22,18 @@
           v-if="!dataset.isMetaOnly"
           title="Vue tabulaire en plein écran"
           icon="mdi-fullscreen"
-          :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+          :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
         />
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
           :dataset="dataset"
           :color="'primary'"
         />
-        <api-view
+        <action-icon
           v-if="!isMobileOnly && !dataset.isMetaOnly"
-          :dataset="dataset"
-          :color="'primary'"
+          title="Documentation d'API"
+          icon="mdi-cog"
+          :to="{name: 'datasets-slug-api-doc', params:{slug: dataset.slug}}"
         />
         <schema-view
           v-if="!dataset.isMetaOnly"
@@ -56,7 +57,6 @@
 import { isMobileOnly } from 'mobile-device-detect'
 import TablePreview from '~/components/dataset/table-preview.vue'
 import MapPreview from '~/components/dataset/map-preview.vue'
-import ApiView from '~/components/dataset/api-view.vue'
 import SchemaView from '~/components/dataset/schema-view.vue'
 import { mapState, mapGetters } from 'vuex'
 
@@ -64,7 +64,6 @@ export default {
   components: {
     TablePreview,
     MapPreview,
-    ApiView,
     SchemaView
   },
   props: {

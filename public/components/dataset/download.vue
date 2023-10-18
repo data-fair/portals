@@ -143,7 +143,7 @@
               <action-icon
                 title="Vue tabulaire en plein écran"
                 icon="mdi-table-large"
-                :to="{name: 'datasets-id-full', params:{id: dataset.id}}"
+                :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
               />
             </v-list-item-action>
           </v-list-item>

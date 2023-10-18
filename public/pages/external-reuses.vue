@@ -77,7 +77,7 @@ export default {
         raw: true,
         owner: this.owner,
         publicationSites: 'data-fair-portals:' + this.portal._id,
-        select: 'id,title,extras.externalReuses'
+        select: 'id,slug,title,extras.externalReuses'
       }
       if (!this.user) params.visibility = 'public'
       this.loading = true
