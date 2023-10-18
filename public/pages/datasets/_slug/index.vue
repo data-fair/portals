@@ -362,7 +362,7 @@
             :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
-              :to="{name: 'applications-slug', params:{id: application.slug}}"
+              :to="{name: 'applications-slug', params:{slug: application.slug}}"
               class="title"
             >
               <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon color="primary">
