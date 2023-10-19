@@ -801,6 +801,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "slug": {
+            "type": "string"
           }
         }
       },
@@ -975,6 +978,9 @@
             "type": "string"
           },
           "id": {
+            "type": "string"
+          },
+          "slug": {
             "type": "string"
           }
         }
