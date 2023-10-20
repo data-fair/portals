@@ -221,7 +221,8 @@ export default {
       params.sort = params.sort || 'publishedAt:-1'
       params.size = this.size
       params.page = this.page
-      params.select = 'id,title,author,image,publishedAt,published,slug'
+      params.select = 'id,title,author,image,publishedAt,published,slug,description'
+      params.html = true
       if (append) params.count = false
       params.html = true
       if (JSON.stringify(params) !== JSON.stringify(this.lastParams)) {
