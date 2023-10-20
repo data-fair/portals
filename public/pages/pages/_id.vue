@@ -20,6 +20,11 @@
         :page="page"
         :images="images"
       />
+      <event
+        v-if="page.template === 'event'"
+        :page="page"
+        :images="images"
+      />
     </template>
   </div>
 </template>
@@ -29,6 +34,7 @@ import Error from '~/components/error.vue'
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
 import News from '~/components/pages/news.vue'
+import Event from '~/components/pages/event.vue'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
@@ -36,6 +42,7 @@ export default {
     Blank,
     Thematic,
     News,
+    Event,
     Error
   },
   layout: 'default',

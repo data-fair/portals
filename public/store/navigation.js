@@ -34,6 +34,9 @@ export default () => ({
       if (config.newsPage && config.newsPage.type !== 'none') {
         navigation.push({ title: 'Actualités', to: '/news', position: 4 })
       }
+      if (config.eventsPage && config.eventsPage.type !== 'none') {
+        navigation.push({ title: 'Evènements', to: '/events', position: 5 })
+      }
       for (const page of state.pages) {
         if (page.navigation && page.navigation.type === 'direct') {
           navigation.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position, updatedAt: page.updated.date })

@@ -963,6 +963,12 @@
         "x-display": "switch",
         "default": false
       },
+      "showEvents": {
+        "title": "afficher les évènements à venir",
+        "type": "boolean",
+        "x-display": "switch",
+        "default": false
+      },
       "featuredApplication": {
         "title": "Visualisation mise en avant",
         "type": "object",
@@ -1367,6 +1373,33 @@
       "newsPage": {
         "type": "object",
         "title": "Page des actualités",
+        "default": {
+          "type": "none"
+        },
+        "oneOf": [{
+          "title": "Liste avec scroll infini",
+          "properties": {
+            "type": {
+              "const": "infiniteScroll"
+            }
+          }
+        },{
+          "title": "Ne rien afficher",
+          "properties": {
+            "type": {
+              "const": "none"
+            }
+          }
+        }]
+      }
+    }
+  }, {
+    "title": "Evènements",
+    "description": "Les évènements sont des pages de contenu qui contiennent un formulaire d'inscription.",
+    "properties": {
+      "eventsPage": {
+        "type": "object",
+        "title": "Page des évènements",
         "default": {
           "type": "none"
         },

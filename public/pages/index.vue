@@ -168,6 +168,7 @@
             />
           </client-only>
           <news-last v-if="config.showLastNews" />
+          <events v-if="config.showEvents" />
         </v-col>
       </v-row>
 
@@ -302,7 +303,7 @@ export default {
       return this.config.twitter && this.config.showTwitterTimeline !== false
     },
     twoThirdsLayout () {
-      return this.showTwitterTimeline || this.config.showLastNews
+      return this.showTwitterTimeline || this.config.showLastNews || this.config.showEvents
     }
   }
 }

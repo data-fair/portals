@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { nanoid } from 'nanoid'
 
 export default {
@@ -45,13 +45,11 @@ export default {
   },
   data () {
     return {
-      dialog: false,
       loading: false,
       file: null
     }
   },
   computed: {
-    ...mapState(['env', 'portal']),
     ...mapGetters(['imagesDatasetUrl'])
   },
   mounted () {},

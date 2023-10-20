@@ -65,6 +65,9 @@ export default () => {
       imagesDatasetUrl (state, getters) {
         return `${getters.dataFairUrl}/api/v1/datasets/portals-images-${state.portal._id.toLowerCase().replace(/_/g, '').replace(/^-/, '').replace(/-$/, '')}`
       },
+      eventsDatasetUrl (state, getters) {
+        return `${getters.dataFairUrl}/api/v1/datasets/portals-events-${state.portal._id.toLowerCase().replace(/_/g, '').replace(/^-/, '').replace(/-$/, '')}`
+      },
       openapiViewerUrl (state) {
         return state.publicBaseUrl + '/openapi-viewer'
       },

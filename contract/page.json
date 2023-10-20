@@ -70,6 +70,9 @@
       },{
         "const": "news",
         "title": "Actualité"
+      },{
+        "const": "event",
+        "title": "Évènement"
       }],
       "default": "blank",
       "x-cols": {"cols": 6, "md": 3},

@@ -50,6 +50,12 @@
         :page="htmlPage"
         @change="updateConfig"
       />
+      <event
+        v-if="page.template === 'event'"
+        :page-config="pageConfig"
+        :page="htmlPage"
+        @change="updateConfig"
+      />
     </template>
   </v-container>
 </template>
@@ -58,6 +64,7 @@
 import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
 import News from '~/components/pages/news.vue'
+import Event from '~/components/pages/event.vue'
 const { mapState } = require('vuex')
 
 const pageSchema = require('~/../contract/page.json')
@@ -66,7 +73,7 @@ Object.keys(pageSchema.properties).forEach(p => {
 })
 
 export default {
-  components: { Blank, Thematic, News },
+  components: { Blank, Thematic, News, Event },
   data: () => ({
     page: null,
     pageConfig: null,

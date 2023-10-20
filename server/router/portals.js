@@ -27,6 +27,7 @@ const findUtils = require('../utils/find')
 const usesUtils = require('../utils/uses')
 const notifications = require('../utils/notifications')
 const imagesDatasetUtils = require('../utils/images-dataset')
+const eventsDatasetUtils = require('../utils/events-dataset')
 const debugSyncPortal = require('debug')('sync-portal')
 
 const configSchemaNoAllOf = JSON.parse(JSON.stringify(portalSchema.properties.config))
@@ -143,6 +144,18 @@ async function syncPortalUpdate (portal, cookie) {
     await axios.put(
       `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}/permissions`,
       [{ operations: [], classes: ['read'] }],
+      { headers: { cookie } }
+    )
+  }
+  if (portal.config && (portal.config.showEvents || (portal.config.eventsPage && portal.config.eventsPage.type !== 'none'))) {
+    await axios.put(
+      `${config.dataFairUrl}/api/v1/datasets/${eventsDatasetUtils.id(portal)}`,
+      eventsDatasetUtils.init(portal),
+      { headers: { cookie } }
+    )
+    await axios.put(
+      `${config.dataFairUrl}/api/v1/datasets/${eventsDatasetUtils.id(portal)}/permissions`,
+      [{ type: 'user', id: '*', operations: [], classes: ['manageOwnLines'] }],
       { headers: { cookie } }
     )
   }
@@ -385,6 +398,7 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
   else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) filter.public = true
   if (filter.public || req.query.published === 'true') filter.published = true
+  if (req.query['future-events'] === 'true') filter['config.datetimes.end'] = { $gte: new Date().toISOString() }
   const [results, count] = await Promise.all([
     pages.find(filter).limit(size).skip(skip).project(project).sort(sort).toArray(),
     pages.countDocuments(filter)
