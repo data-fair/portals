@@ -301,7 +301,7 @@
               >
                 <k-element
                   v-if="block.title"
-                  :value="{ type: 'title', content: block.title }"
+                  :value="{ type: 'title', content: block.title, titleSize: 'h4' }"
                 />
                 <k-element
                   v-if="block.description"
