@@ -147,6 +147,14 @@
                 </v-list-item-avatar>
                 <v-list-item-title>Descendre</v-list-item-title>
               </v-list-item>
+              <v-list-item @click="$emit('change', { elements: [...savedConfig.elements.slice(0, i), savedConfig.elements[i], savedConfig.elements[i], ...savedConfig.elements.slice(i + 1)] }); currentEdit = null">
+                <v-list-item-avatar :size="24">
+                  <v-icon color="warning">
+                    mdi-content-copy
+                  </v-icon>
+                </v-list-item-avatar>
+                <v-list-item-title>Dupliquer</v-list-item-title>
+              </v-list-item>
               <v-list-item @click="$emit('change', { elements: [...savedConfig.elements.slice(0, i), ...savedConfig.elements.slice(i + 1)] }); currentEdit = null">
                 <v-list-item-avatar :size="24">
                   <v-icon color="warning">
