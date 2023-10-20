@@ -3,7 +3,27 @@
   "required": ["elements"],
   "additionalProperties": false,
   "properties": {
-     "banner": {
+    "toc": {
+      "title": "Sommaire",
+      "type": "object",
+      "properties": {
+        "display":{
+          "title": "Affichage",
+          "type": "string",
+          "oneOf": [
+            {"const": "none", "title": "Aucun"},
+            {"const": "left", "title": "Gauche"},
+            {"const": "right", "title": "Droite"}
+          ],
+          "default": "none"
+        },
+        "title":{
+          "title": "Titre",
+          "type": "string"
+        }
+      }
+    },
+    "banner": {
       "type": "object",
       "title": "Bannière",
       "properties": {

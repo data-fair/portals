@@ -1,5 +1,8 @@
 <template>
-  <div v-if="page && page.config">
+  <div
+    v-if="page && page.config"
+    ref="page"
+  >
     <v-form
       v-if="pageConfig && schema && currentEdit === 'banner'"
       class="pa-1"
@@ -65,9 +68,76 @@
         Pas de bannière
       </v-alert>
     </template>
+    <v-form
+      v-if="pageConfig && schema && currentEdit === 'toc'"
+      class="pa-1"
+      style="border:solid 1px"
+    >
+      <lazy-v-jsf
+        v-model="localUpdate"
+        :schema="schema.properties.toc"
+        :options="vjsfOpts"
+      />
+      <v-row class="ma-0">
+        <v-spacer />
+        <v-btn
+          color="warning"
+          @click="currentEdit = null"
+        >
+          Annuler
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          color="primary"
+          @click="$emit('change', { toc: localUpdate }); currentEdit = null"
+        >
+          Valider
+        </v-btn>
+        <v-spacer />
+      </v-row>
+    </v-form>
+    <template v-else>
+      <v-btn
+        v-if="pageConfig"
+        color="primary"
+        fab
+        absolute
+        :style="`right:${savedConfig.toc ? 48 : 16}px`"
+        x-small
+        @click="localUpdate = savedConfig.toc; currentEdit = 'toc'"
+      >
+        <v-icon>mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="pageConfig && savedConfig.toc"
+        color="warning"
+        fab
+        absolute
+        right
+        x-small
+        @click="$emit('change', { toc: undefined });"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+      <layout-toc
+        v-if="page.config.toc && page.config.toc.display !== 'none'"
+        :style="`${page.config.toc.display}:16px;position:fixed`"
+        :title="page.config.toc.title && page.config.toc.title.length ? page.config.toc.title : undefined"
+        :sections="page.config.elements.map((e, i) => ({ title: e.type === 'title' && e.content, id: 'element' + i })).filter(e => e.title)"
+      />
+
+      <v-alert
+        v-else-if="pageConfig"
+        class="text-center"
+        outlined
+      >
+        Pas de sommaire
+      </v-alert>
+    </template>
     <v-container>
       <div
         v-for="(element, i) in (page.config.elements || []).filter(e => e)"
+        :id="'element'+i"
         :key="i"
       >
         <v-form
