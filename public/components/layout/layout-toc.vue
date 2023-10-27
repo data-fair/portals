@@ -66,7 +66,7 @@ export default {
       try {
         if (window.self !== window.top) return parent.postMessage({ viframe: true, scroll: e.offsetTop + 20 })
       } catch (e) { }
-      this.$vuetify.goTo(e.offsetTop + 20)
+      this.$vuetify.goTo(e.offsetTop + 25)
     },
     // inspired by https://github.com/vuetifyjs/vuetify/blob/34a37a06fd49e4c70f47b17e46eaa56716250283/packages/docs/src/layouts/default/Toc.vue#L126
     setOffsets () {
