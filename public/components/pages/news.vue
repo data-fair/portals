@@ -447,10 +447,6 @@
                       v-if="block.description"
                       :value="{ type: 'text', content: block.description }"
                     />
-                    <k-element
-                      v-if="block.alert"
-                      :value="{ type: 'alert', ...block.alert }"
-                    />
                   </v-col>
                   <v-col
                     v-if="block.application"
@@ -496,10 +492,6 @@
               <k-element
                 v-if="block.description"
                 :value="{ type: 'text', content: block.description }"
-              />
-              <k-element
-                v-if="block.alert"
-                :value="{ type: 'alert', ...block.alert }"
               />
             </v-col>
             <v-col
