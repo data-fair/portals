@@ -208,12 +208,18 @@
         </a>
         <v-img
           v-else
-          :style="'cursor:zoom-in;' + (value.height ? `height:${value.height}px` : '')"
-          :contain="!!value.height"
+          :style="(value.zoomable ? 'cursor:zoom-in;' : '') + (value.height ? `height:${value.height}px` : '')"
+          contain
           :src="value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}`"
           :title="value.title"
-          @click="overlay= { visible: true, url: value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}` }"
+          @click="value.zoomable ? overlay= { visible: true, url: value.url || (images && images[value.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.local.attachmentPath}` }: undefined"
         />
+        <div
+          v-if="value.legend"
+          class="text-center caption font-italic"
+        >
+          {{ value.legend }}
+        </div>
       </template>
       <v-iframe
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"

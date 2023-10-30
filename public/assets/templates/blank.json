@@ -517,6 +517,16 @@
           "title": "Hauteur (px)",
           "description": "Fixe la hauteur de l'image",
           "type": "integer"
+        },
+        "legend": {
+          "title": "Légende de l'image",
+          "description": "Cette légende sera affichée en italique juste en dessous de l'image",
+          "type": "string"
+        },
+        "zoomable": {
+          "title": "Zoom au clic",
+          "description": "Ne fonctionne que si aucun lien n'est associé à l'image",
+          "type": "boolean"
         }
       }
     },
