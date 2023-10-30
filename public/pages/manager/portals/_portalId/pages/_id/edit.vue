@@ -142,6 +142,7 @@ export default {
         delete this.page.created
         delete this.page.updated
         delete this.page.publishedAt
+        this.htmlPage.width = this.page.width
       } catch (error) {
         console.error(error)
       }

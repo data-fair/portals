@@ -1,6 +1,6 @@
 <template>
   <div v-if="page && page.config">
-    <v-container>
+    <v-container :fluid="page.width === 'full'">
       <template v-if="pageConfig">
         <v-form
           v-if="schema && currentEdit === 'title'"

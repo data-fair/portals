@@ -81,7 +81,7 @@
       max-height="400px"
       style="margin-top: -12px;"
     />
-    <v-container>
+    <v-container :fluid="page.width === 'full'">
       <template v-if="pageConfig">
         <v-form
           v-if="schema && currentEdit === 'title'"

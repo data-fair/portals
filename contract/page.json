@@ -55,7 +55,7 @@
       "x-fromUrl": "{context.topicsUrl}",
       "x-itemTitle": "title",
       "x-itemKey": "id",
-      "x-cols": {"cols": 12, "md": 6},
+      "x-cols": {"cols": 12, "md": 6, "lg": 4},
       "x-class": "pr-2"
     },
     "template": {
@@ -75,7 +75,21 @@
         "title": "Évènement"
       }],
       "default": "blank",
-      "x-cols": {"cols": 6, "md": 3},
+      "x-cols": {"cols": 6, "md": 3, "lg": 2},
+      "x-class": "pr-2"
+    },
+    "width": {
+      "title": "Largeur de page",
+      "type": "string",
+      "oneOf": [{
+        "const": "medium",
+        "title": "Normale"
+      },{
+        "const": "full",
+        "title": "Maximale"
+      }],
+      "default": "medium",
+      "x-cols": {"cols": 6, "md": 3, "lg": 2},
       "x-class": "pr-2"
     },
     "navigation": {

@@ -82,11 +82,11 @@
       :src="page.config.banner.url || (images && images[page.config.banner.local.assetId]) || `${imagesDatasetUrl}/attachments/${page.config.banner.local.attachmentPath}`"
       :title="page.config.banner.title"
     />
-    <template v-if="pageConfig">
+    <template v-if="pageConfig && page.width !== 'full'">
       <v-form
         v-if="schema && currentEdit === 'toc'"
         class="pa-1"
-        :style="`border:solid 1px;width:200px;position:fixed;${page.config.toc && page.config.toc.display === 'right' ? 'right:32px' : ''}`"
+        :style="`border:solid 1px;width:190px;position:fixed;${page.config.toc && page.config.toc.display === 'right' ? 'right:32px' : ''}`"
       >
         <lazy-v-jsf
           v-model="localUpdate"
@@ -117,7 +117,7 @@
         v-else
         v-slot="{ hover }"
       >
-        <div :style="`width:200px;height:0;position:fixed;${page.config.toc && page.config.toc.display === 'right' ? 'right:32px' : ''}`">
+        <div :style="`width:190px;height:0;position:fixed;${page.config.toc && page.config.toc.display === 'right' ? 'right:32px' : ''}`">
           <v-btn
             v-show="hover"
             color="primary"
@@ -160,12 +160,12 @@
     </template>
 
     <layout-toc
-      v-else-if="page.config.toc && page.config.toc.display !== 'none'"
+      v-else-if="page.config.toc && page.config.toc.display !== 'none' && page.width !== 'full'"
       :style="`${page.config.toc.display}:16px;position:fixed`"
       :title="page.config.toc.title && page.config.toc.title.length ? page.config.toc.title : undefined"
       :sections="page.config.elements.map((e, i) => ({ title: e.type === 'title' && e.content, id: 'element' + i })).filter(e => e.title)"
     />
-    <v-container>
+    <v-container :fluid="page.width === 'full'">
       <div
         v-for="(element, i) in (page.config.elements || []).filter(e => e)"
         :id="'element'+i"
