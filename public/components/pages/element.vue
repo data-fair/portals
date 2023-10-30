@@ -64,7 +64,8 @@
     </v-card>
     <v-card
       v-else-if="value.type === 'cardSimple'"
-      outlined
+      :outlined="!value.flat"
+      :flat="value.flat"
       class="d-flex flex-column fill-height"
     >
       <v-row
@@ -96,7 +97,7 @@
       <v-spacer />
       <v-card-actions
         v-if="value.actions && value.actions.length"
-        class="mb-2 justify-center"
+        class="mb-2 justify-space-around"
       >
         <k-element
           v-for="(action, i) in value.actions"

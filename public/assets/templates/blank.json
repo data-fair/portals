@@ -444,6 +444,12 @@
           "default": false,
           "x-options": { "hideInArrayItem": true }
         },
+        "flat": {
+          "title": "Pas de bordure",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
         "actions": {
           "title": "Actions",
           "type": "array",
