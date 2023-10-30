@@ -102,6 +102,7 @@ export default () => ({
       const color = rootState.config.footerColor
       if (color === 'primary') return getters.primaryColor
       if (color === 'secondary') return getters.secondaryColor
+      if (color === 'tertiary') return getters.tertiaryColor
       if (color === 'grey' || !color) return '#424242'
       if (color === 'lightGrey') return '#FAFAFA'
       if (color === 'white') return '#FFFFFF'

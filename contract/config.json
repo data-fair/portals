@@ -585,6 +585,9 @@
           "const": "secondary",
           "title": "couleur secondaire"
         }, {
+          "const": "tertiary",
+          "title": "couleur tertiaire"
+        }, {
           "const": "grey",
           "title": "gris foncé"
         }, {
