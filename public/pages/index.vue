@@ -309,7 +309,7 @@ export default {
   },
   head () {
     const title = this.config.title
-    const description = 'Accédez facilement à nos données et découvrez les au travers de visualisations interactives.'
+    const description = this.config.metaDescription || 'Accédez facilement à nos données et découvrez les au travers de visualisations interactives.'
     return {
       title,
       meta: [

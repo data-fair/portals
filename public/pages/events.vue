@@ -84,8 +84,8 @@ export default {
     await this.refresh()
   },
   head () {
-    const title = 'Actualités - ' + this.config.title
-    const description = 'Découvrez nos actualités.'
+    const title = 'Evènements - ' + this.config.title
+    const description = 'Evènements passés et à venir.'
     return {
       title,
       meta: [

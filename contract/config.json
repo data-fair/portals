@@ -18,6 +18,12 @@
         "title": "Titre du portail",
         "default": "Portail de données"
       },
+      "metaDescription":{
+        "type": "string",
+        "title": "Description pour les moteurs de recherche",
+        "x-display": "textarea",
+        "default": "Accédez facilement à nos données et découvrez les au travers de visualisations interactives."
+      },
       "authentication": {
         "type": "string",
         "x-display": "radio",
