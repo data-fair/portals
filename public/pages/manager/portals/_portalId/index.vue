@@ -98,7 +98,7 @@
           <lazy-v-jsf
             v-model="configDraft"
             :schema="schema"
-            :options="{context}"
+            :options="{context, evalMethod: 'evalExpr'}"
             @change="saveDraft"
           />
 

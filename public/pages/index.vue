@@ -4,196 +4,220 @@
     <h1 class="hide-element">
       {{ config.title }} - accueil
     </h1>
-    <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
-      <client-only v-if="config.homeApplication">
-        <v-iframe
-          :src="homeApplicationUrl"
-          :class="`elevation-${appBarElevation}`"
-          style="margin-top: -12px;height: 400px;"
-        />
-      </client-only>
-      <v-row
-        v-else
-        justify="center"
-        class="ma-0"
-      >
-        <v-img
-          :src="homeUrl"
-          :alt="config.title"
-          height="400px"
-          max-width="1904px"
-          :class="`elevation-${appBarElevation}`"
-          :style="`margin-top: ${config.appBarTransparency ? -77 : -12}px;`"
-        />
-      </v-row>
-      <v-container
-        v-if="config.homeShowSearch && config.homeSearchPosition === 'overBanner'"
-        :style="`position:relative;top: ${config.appBarTransparency ? -230 : -260}px;height:0;`"
-      >
-        <v-row justify="center">
+    <template v-if="config.homeTemplate && config.homeTemplate.type === 'content-page' && page">
+      <pages-blank
+        v-if="page.template === 'blank'"
+        :page="page"
+        :images="images"
+      />
+      <pages-thematic
+        v-if="page.template === 'thematic'"
+        :page="page"
+        :images="images"
+      />
+      <pages-news
+        v-if="page.template === 'news'"
+        :page="page"
+        :images="images"
+      />
+      <pages-event
+        v-if="page.template === 'event'"
+        :page="page"
+        :images="images"
+      />
+    </template>
+    <template v-else-if="!config.homeTemplate || config.homeTemplate.type === 'default'">
+      <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
+        <client-only v-if="config.homeApplication">
+          <v-iframe
+            :src="homeApplicationUrl"
+            :class="`elevation-${appBarElevation}`"
+            style="margin-top: -12px;height: 400px;"
+          />
+        </client-only>
+        <v-row
+          v-else
+          justify="center"
+          class="ma-0"
+        >
+          <v-img
+            :src="homeUrl"
+            :alt="config.title"
+            height="400px"
+            max-width="1904px"
+            :class="`elevation-${appBarElevation}`"
+            :style="`margin-top: ${config.appBarTransparency ? -77 : -12}px;`"
+          />
+        </v-row>
+        <v-container
+          v-if="config.homeShowSearch && config.homeSearchPosition === 'overBanner'"
+          :style="`position:relative;top: ${config.appBarTransparency ? -230 : -260}px;height:0;`"
+        >
+          <v-row justify="center">
+            <nav-home-search />
+          </v-row>
+        </v-container>
+        <v-container
+          v-if="config.homeShowTopics && config.homeTopicsPosition === 'overBanner'"
+          :style="`position:relative;top: ${config.appBarTransparency ? -210 : -240}px;height:0;`"
+        >
+          <topics
+            :topics="topics"
+            :options="config.homeTopicsOptions"
+          />
+        </v-container>
+      </template>
+      <v-container>
+        <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">
+          <v-col
+            cols="12"
+            md="5"
+            offset-md="1"
+          >
+            <client-only v-if="config.homeApplication">
+              <v-iframe
+                :src="homeApplicationUrl"
+                style="height: 600px;"
+              />
+            </client-only>
+            <v-img
+              v-else
+              :src="homeUrl"
+              :alt="config.title"
+              min-height="200"
+              max-height="600"
+              contain
+            />
+          </v-col>
+          <v-col
+            class="pt-2 order-sm-first"
+            cols="12"
+            md="6"
+          >
+            <div
+              v-if="config.description"
+              v-html="config.description"
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="config.homeShowSearch && config.homeSearchPosition === 'belowBanner'"
+          justify="center"
+          class="pt-6 pb-4"
+        >
           <nav-home-search />
         </v-row>
-      </v-container>
-      <v-container
-        v-if="config.homeShowTopics && config.homeTopicsPosition === 'overBanner'"
-        :style="`position:relative;top: ${config.appBarTransparency ? -210 : -240}px;height:0;`"
-      >
         <topics
+          v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowBanner'"
+          :topics="topics"
+          :options="config.homeTopicsOptions"
+          row-class="mt-0 mb-3"
+        />
+        <layout-links
+          v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowBanner'"
+          :links="config.homeLinks"
+          :options="config.homeLinksOptions"
+        />
+        <div
+          v-if="(config.homeImageAsBanner || config.homeImageHidden) && config.description"
+          class="mt-3 mb-4"
+          v-html="config.description"
+        />
+        <layout-links
+          v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'betweenDescKpi'"
+          :links="config.homeLinks"
+          :options="config.homeLinksOptions"
+        />
+        <kpi
+          v-if="config.showKpis"
+          class="mt-4"
+          :stats="stats"
+        />
+        <v-row
+          v-if="config.homeShowSearch && config.homeSearchPosition === 'belowKpi'"
+          justify="center"
+          class="py-4"
+        >
+          <nav-home-search />
+        </v-row>
+        <topics
+          v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowKpi'"
           :topics="topics"
           :options="config.homeTopicsOptions"
         />
-      </v-container>
-    </template>
-    <v-container>
-      <v-row v-if="!config.homeImageAsBanner && !config.homeImageHidden">
-        <v-col
-          cols="12"
-          md="5"
-          offset-md="1"
-        >
-          <client-only v-if="config.homeApplication">
-            <v-iframe
-              :src="homeApplicationUrl"
-              style="height: 600px;"
-            />
-          </client-only>
-          <v-img
-            v-else
-            :src="homeUrl"
-            :alt="config.title"
-            min-height="200"
-            max-height="600"
-            contain
-          />
-        </v-col>
-        <v-col
-          class="pt-2 order-sm-first"
-          cols="12"
-          md="6"
-        >
-          <div
-            v-if="config.description"
-            v-html="config.description"
-          />
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="config.homeShowSearch && config.homeSearchPosition === 'belowBanner'"
-        justify="center"
-        class="pt-6 pb-4"
-      >
-        <nav-home-search />
-      </v-row>
-      <topics
-        v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowBanner'"
-        :topics="topics"
-        :options="config.homeTopicsOptions"
-        row-class="mt-0 mb-3"
-      />
-      <layout-links
-        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowBanner'"
-        :links="config.homeLinks"
-        :options="config.homeLinksOptions"
-      />
-      <div
-        v-if="(config.homeImageAsBanner || config.homeImageHidden) && config.description"
-        class="mt-3 mb-4"
-        v-html="config.description"
-      />
-      <layout-links
-        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'betweenDescKpi'"
-        :links="config.homeLinks"
-        :options="config.homeLinksOptions"
-      />
-      <kpi
-        v-if="config.showKpis"
-        class="mt-4"
-        :stats="stats"
-      />
-      <v-row
-        v-if="config.homeShowSearch && config.homeSearchPosition === 'belowKpi'"
-        justify="center"
-        class="py-4"
-      >
-        <nav-home-search />
-      </v-row>
-      <topics
-        v-if="config.homeShowTopics && config.homeTopicsPosition === 'belowKpi'"
-        :topics="topics"
-        :options="config.homeTopicsOptions"
-      />
-      <layout-links
-        v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowKpi'"
-        :links="config.homeLinks"
-        :options="config.homeLinksOptions"
-      />
+        <layout-links
+          v-if="config.homeShowLinks && config.homeLinks && config.homeLinks.length && config.homeLinksPosition === 'belowKpi'"
+          :links="config.homeLinks"
+          :options="config.homeLinksOptions"
+        />
 
-      <!-- 2/3 layout when we have a twitter timeline or anything else to display to the right -->
-      <v-row v-if="twoThirdsLayout">
-        <v-col
-          cols="12"
-          md="8"
-          sm="6"
-          align-self="stretch"
-        >
-          <template v-if="config.featuredApplication && config.featuredApplication.id">
-            <application-featured
-              :application="config.featuredApplication"
-              iframe-style="height:90%"
-            />
-          </template>
+        <!-- 2/3 layout when we have a twitter timeline or anything else to display to the right -->
+        <v-row v-if="twoThirdsLayout">
+          <v-col
+            cols="12"
+            md="8"
+            sm="6"
+            align-self="stretch"
+          >
+            <template v-if="config.featuredApplication && config.featuredApplication.id">
+              <application-featured
+                :application="config.featuredApplication"
+                iframe-style="height:90%"
+              />
+            </template>
 
+            <last-apps
+              v-if="showLastApps"
+              :applications="applications"
+              small
+            />
+            <last-datasets
+              v-if="showLastDatasets"
+              :datasets="datasets"
+              small
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="4"
+            sm="6"
+          >
+            <client-only v-if="showTwitterTimeline">
+              <timeline
+                :id="config.twitter"
+                :source-type="'profile'"
+                :options="{ tweetLimit }"
+              />
+            </client-only>
+            <news-last v-if="config.showLastNews" />
+            <events v-if="config.showEvents" />
+          </v-col>
+        </v-row>
+
+        <!-- vertical layout full width -->
+        <template v-else>
+          <v-row v-if="config.featuredApplication && config.featuredApplication.id">
+            <v-col
+              md="10"
+              offset-md="1"
+              cols="12"
+              class="my-3 grow"
+            >
+              <application-featured :application="config.featuredApplication" />
+            </v-col>
+          </v-row>
           <last-apps
             v-if="showLastApps"
             :applications="applications"
-            small
           />
           <last-datasets
             v-if="showLastDatasets"
             :datasets="datasets"
-            small
           />
-        </v-col>
-
-        <v-col
-          cols="12"
-          md="4"
-          sm="6"
-        >
-          <client-only v-if="showTwitterTimeline">
-            <timeline
-              :id="config.twitter"
-              :source-type="'profile'"
-              :options="{ tweetLimit }"
-            />
-          </client-only>
-          <news-last v-if="config.showLastNews" />
-          <events v-if="config.showEvents" />
-        </v-col>
-      </v-row>
-
-      <!-- vertical layout full width -->
-      <template v-else>
-        <v-row v-if="config.featuredApplication && config.featuredApplication.id">
-          <v-col
-            md="10"
-            offset-md="1"
-            cols="12"
-            class="my-3 grow"
-          >
-            <application-featured :application="config.featuredApplication" />
-          </v-col>
-        </v-row>
-        <last-apps
-          v-if="showLastApps"
-          :applications="applications"
-        />
-        <last-datasets
-          v-if="showLastDatasets"
-          :datasets="datasets"
-        />
-      </template>
-    </v-container>
+        </template>
+      </v-container>
+    </template>
   </div>
 </template>
 
@@ -217,9 +241,28 @@ export default {
     applications: null,
     datasets: null,
     stats: null,
-    topics: []
+    topics: [],
+    page: null,
+    images: null
   }),
   async fetch () {
+    if (this.config.homeTemplate && this.config.homeTemplate.type === 'content-page') {
+      try {
+        this.page = await this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.config.homeTemplate.page.id, { params: { html: true } })
+        const images = await this.$axios.$get(this.imagesDatasetUrl + '/lines', {
+          params: {
+            select: 'assetId,_attachment_url',
+            qs: `pageId:"${this.config.homeTemplate.page.id}"`,
+            thumbnail: '1785x800' // max width of the vertical layout
+          }
+        })
+        this.images = images.results.reduce((a, image) => { a[image.assetId] = image._thumbnail || image._attachment_url; return a }, {})
+        return
+      } catch (err) {
+        console.log('Error fetching page', err)
+      }
+    }
+
     const baseFilter = {
       owner: this.owner,
       publicationSites: 'data-fair-portals:' + this.portal._id,
@@ -282,7 +325,7 @@ export default {
   computed: {
     ...mapState('session', ['user']),
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'appBarElevation']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'appBarElevation', 'imagesDatasetUrl']),
     homeUrl () {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },

@@ -5,22 +5,22 @@
       :error="$fetchState.error"
     />
     <template v-else-if="page">
-      <blank
+      <pages-blank
         v-if="page.template === 'blank'"
         :page="page"
         :images="images"
       />
-      <thematic
+      <pages-thematic
         v-if="page.template === 'thematic'"
         :page="page"
         :images="images"
       />
-      <news
+      <pages-news
         v-if="page.template === 'news'"
         :page="page"
         :images="images"
       />
-      <event
+      <pages-event
         v-if="page.template === 'event'"
         :page="page"
         :images="images"
@@ -30,21 +30,9 @@
 </template>
 
 <script>
-import Error from '~/components/error.vue'
-import Blank from '~/components/pages/blank.vue'
-import Thematic from '~/components/pages/thematic.vue'
-import News from '~/components/pages/news.vue'
-import Event from '~/components/pages/event.vue'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: {
-    Blank,
-    Thematic,
-    News,
-    Event,
-    Error
-  },
   layout: 'default',
   middleware: 'portal-required',
   data: () => ({

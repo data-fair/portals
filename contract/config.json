@@ -568,7 +568,7 @@
         "type": "string",
         "x-display": "custom-markdown",
         "maxLength": 1000,
-        "x-if": "useHtmlTitle"
+        "x-if": "parent.value.useHtmlTitle"
       }
     }
   }, {
@@ -776,21 +776,64 @@
   }, {
     "title": "Page d'accueil",
     "properties": {
+      "homeTemplate":{
+        "type": "object",
+        "title": "Page à utiliser",
+        "oneOf": [{
+          "title": "Modèle standard",
+          "properties": {
+            "type": {
+              "const": "default"
+            }
+          }
+        }, {
+          "title": "Page de contenu",
+          "required": ["page"],
+          "properties": {
+            "type": {
+              "const": "content-page"
+            },
+            "page":{
+              "title": "Page",
+              "type": "object",
+              "x-fromUrl": "{context.portalUrl}/pages?size=1000&template=blank",
+              "x-itemsProp": "results",
+              "x-itemTitle": "title",
+              "x-itemKey": "id",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }],
+        "default":{
+          "type": "default",
+          "default": true
+        }
+      },
       "homeImageAsBanner": {
         "type": "boolean",
         "x-display": "switch",
         "title": "image principale en bannière",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "default": false
       },
       "homeImageHidden": {
         "type": "boolean",
         "x-display": "switch",
         "title": "image principale masquée",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "default": false
       },
       "homeApplication": {
         "title": "Remplacer l'image principale par une visualisation",
         "type": "object",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
@@ -815,11 +858,13 @@
         "type": "string",
         "x-display": "custom-markdown",
         "maxLength": 50000,
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
       },
       "showKpis": {
         "title": "afficher les chiffres clés",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": true,
         "x-props": {"hideDetails": "auto"}
@@ -827,7 +872,7 @@
       "kpiOptions": {
         "type": "array",
         "title": "Options d'affichage des chilffres clés",
-        "x-if": "showKpis",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -846,7 +891,7 @@
       },
       "kpiBackgroundColor": {
         "title": "Couleur du fond des chiffres clés",
-        "x-if": "showKpis",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
         "type": "string",
         "default": "white",
         "oneOf": [{
@@ -863,12 +908,13 @@
       "homeShowSearch": {
         "title": "afficher un champ de recherche sur la page d'accueil",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": false
       },
       "homeSearchPosition": {
         "title": "Position du champ de recherche sur la page d'accueil",
-        "x-if": "homeShowSearch",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
         "type": "string",
         "default": "belowKpi",
         "oneOf": [{
@@ -885,7 +931,7 @@
       "homeSearchOptions": {
         "title": "Options du champ de recherche sur la page d'accueil",
         "type": "array",
-        "x-if": "homeShowSearch",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -908,12 +954,13 @@
       "homeShowTopics": {
         "title": "afficher les thématiques sur la page d'accueil",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": false
       },
       "homeTopicsPosition": {
         "title": "Position des thématiques sur la page d'accueil",
-        "x-if": "homeShowTopics",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
         "type": "string",
         "default": "belowKpi",
         "oneOf": [{
@@ -930,7 +977,7 @@
       "homeTopicsOptions": {
         "title": "Options de l'affichage des thématiques sur la page d'accueil",
         "type": "array",
-        "x-if": "homeShowTopics",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -957,24 +1004,28 @@
         "title": "afficher la timeline Twitter",
         "description": "Seulement appliqué si le compte Twitter est renseigné dans la section \"Communication & contact\"",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": true
       },
       "showLastNews": {
         "title": "afficher les dernières actualités",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": false
       },
       "showEvents": {
         "title": "afficher les évènements à venir",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": false
       },
       "featuredApplication": {
         "title": "Visualisation mise en avant",
         "type": "object",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
         "x-itemsProp": "results",
         "x-itemTitle": "title",
@@ -997,6 +1048,7 @@
       "homeDatasets": {
         "type": "object",
         "title": "Liste réduite de jeux de données",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "default": {
           "type": "none"
         },
@@ -1039,6 +1091,7 @@
       "homeApplications": {
         "type": "object",
         "title": "Liste réduite de visualisations",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "default": {
           "type": "none"
         },
@@ -1081,13 +1134,14 @@
       "homeShowLinks": {
         "title": "afficher une liste de liens",
         "type": "boolean",
+        "x-if":"parent.value.homeTemplate.type=='default'",
         "x-display": "switch",
         "default": false,
         "x-props": {"hideDetails": "auto"}
       },
       "homeLinksPosition": {
         "title": "Position des liens sur la page d'accueil",
-        "x-if": "homeShowLinks",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
         "type": "string",
         "default": "belowKpi",
         "oneOf": [{
@@ -1104,7 +1158,7 @@
       "homeLinksOptions": {
         "title": "Options de l'affichage des liens sur la page d'accueil",
         "type": "array",
-        "x-if": "homeShowLinks",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
         "x-props": {"hideDetails": "auto"},
         "items": {
           "type": "string",
@@ -1127,7 +1181,7 @@
       "homeLinks": {
         "title": "Liste de liens",
         "type": "array",
-        "x-if": "homeShowLinks",
+        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
         "items": {
           "type": "object",
           "required": ["title", "href"],
@@ -1488,7 +1542,7 @@
         "type": "string",
         "default": "grey",
         "title": "Couleur du bandeau de contact",
-        "x-if": "contactFooter",
+        "x-if": "parent.value.contactFooter",
         "oneOf": [{
           "const": "primary",
           "title": "couleur principale"
