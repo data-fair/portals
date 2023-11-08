@@ -42,7 +42,7 @@
     <v-row
       v-if="newsRes && !loading"
       align="center"
-      class="pt-3 mt-0"
+      class="my-0"
     >
       <v-col class="text-center">
         <nav-link

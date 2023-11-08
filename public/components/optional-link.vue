@@ -6,6 +6,13 @@
   >
     <slot />
   </nuxt-link>
+  <a
+    v-else-if="href"
+    :href="href"
+    :aria-label="title"
+  >
+    <slot />
+  </a>
   <div v-else>
     <slot />
   </div>
@@ -15,6 +22,7 @@
 export default {
   props: {
     to: { type: [String, Object], default: null },
+    href: { type: [String, Object], default: null },
     title: { type: String, required: true }
   }
 }

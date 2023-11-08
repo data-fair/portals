@@ -62,51 +62,79 @@
         />
       </v-card-text>
     </v-card>
-    <v-card
+    <optional-link
       v-else-if="value.type === 'cardSimple'"
-      :outlined="!value.flat"
-      :flat="value.flat"
-      class="d-flex flex-column fill-height"
+      :href="value.href"
+      :title="value.title"
     >
-      <v-row
-        v-if="value.icon && value.centerTitle !== false"
-        class="justify-center mt-2"
+      <v-card
+        :outlined="!value.flat"
+        :flat="value.flat"
+        class="d-flex flex-column fill-height"
       >
-        <v-icon :class="cardTitleClass">
-          mdi-{{ value.icon.name }}
-        </v-icon>
-      </v-row>
-      <v-card-title
-        :class="cardTitleClass"
-        :style="{'text-align': value.centerTitle !== false ? 'center' : 'left'}"
-      >
-        <v-icon
-          v-if="value.icon && value.centerTitle === false"
-          :class="cardTitleClass"
-        >
-          mdi-{{ value.icon.name }}
-        </v-icon>
-        {{ value.title }}
-      </v-card-title>
-      <v-card-text
-        v-if="value.content"
-        :style="{'overflow-wrap': 'break-word', 'text-align': value.centerContent ? 'center' : 'left'}"
-        :class="{ 'text-body-1': true, 'px-8': value.centerContent, 'pb-8': value.centerContent}"
-        v-html="value.content"
-      />
-      <v-spacer />
-      <v-card-actions
-        v-if="value.actions && value.actions.length"
-        class="mb-2 justify-space-around"
-      >
-        <k-element
-          v-for="(action, i) in value.actions"
-          :key="i"
-          :value="action"
-          :images="images"
+        <v-img
+          v-if="value.image && (value.image.url || (value.image.local && value.image.local.assetId)) && value.image.position === 'top'"
+          :style="value.image.height ? `height:${value.image.height}px` : ''"
+          :contain="!!value.image.height"
+          :src="value.image.url || (images && images[value.image.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.image.local.attachmentPath}`"
+          :title="value.title"
         />
-      </v-card-actions>
-    </v-card>
+        <v-row
+          v-if="value.icon && value.centerTitle !== false"
+          class="justify-center mt-2"
+        >
+          <v-icon :class="cardTitleClass">
+            mdi-{{ value.icon.name }}
+          </v-icon>
+        </v-row>
+        <v-card-title
+          :class="cardTitleClass"
+          :style="{'text-align': value.centerTitle !== false ? 'center' : 'left'}"
+        >
+          <template v-if="value.icon && value.centerTitle === false">
+            <v-icon
+              :class="cardTitleClass"
+            >
+              mdi-{{ value.icon.name }}
+            </v-icon>
+          &nbsp;
+          </template>
+          {{ value.title }}
+        </v-card-title>
+        <v-img
+          v-if="value.image && (value.image.url || (value.image.local && value.image.local.assetId)) && value.image.position === 'middle'"
+          :style="value.image.height ? `height:${value.image.height}px` : ''"
+          :contain="!!value.image.height"
+          :src="value.image.url || (images && images[value.image.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.image.local.attachmentPath}`"
+          :title="value.title"
+        />
+        <v-card-text
+          v-if="value.content"
+          :style="{'overflow-wrap': 'break-word', 'text-align': value.centerContent ? 'center' : 'left'}"
+          :class="{ 'text-body-1': true, 'px-8': value.centerContent, 'pb-8': value.centerContent}"
+          v-html="value.content"
+        />
+        <v-img
+          v-if="value.image && (value.image.url || (value.image.local && value.image.local.assetId)) && value.image.position === 'bottom'"
+          :style="value.image.height ? `height:${value.image.height}px` : ''"
+          :contain="!!value.image.height"
+          :src="value.image.url || (images && images[value.image.local.assetId]) || `${imagesDatasetUrl}/attachments/${value.image.local.attachmentPath}`"
+          :title="value.title"
+        />
+        <v-spacer />
+        <v-card-actions
+          v-if="value.actions && value.actions.length"
+          class="mb-2 justify-space-around"
+        >
+          <k-element
+            v-for="(action, i) in value.actions"
+            :key="i"
+            :value="action"
+            :images="images"
+          />
+        </v-card-actions>
+      </v-card>
+    </optional-link>
     <v-btn
       v-else-if="value.type === 'button' && value.href"
       :href="value.href"
@@ -121,6 +149,8 @@
       </v-icon>
       {{ value.label }}
     </v-btn>
+    <news-last v-else-if="value.type === 'news'" />
+    <events v-else-if="value.type === 'events'" />
     <v-row
       v-if="value.type === 'twoColumns'"
       class="mb-6"
@@ -156,8 +186,8 @@
         v-for="(lElement, li) in value.items"
         :key="`l${li}`"
         :cols="12"
-        :sm="6"
-        :md="4"
+        :sm="value.large ? 12 : 6"
+        :md="value.large ? 6 : 4"
       >
         <v-card
           v-if="value.card === true"

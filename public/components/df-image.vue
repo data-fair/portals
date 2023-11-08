@@ -28,6 +28,14 @@
         prepend-icon=""
         @change="change"
       />
+      <v-btn
+        v-if="value && value.attachmentPath"
+        class="mt-1 ml-1"
+        text
+        @click="remove"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </v-row>
   </v-input>
 </template>
@@ -80,6 +88,19 @@ export default {
       this.$emit('change')
       this.loading = false
       this.file = null
+    },
+    async remove (event) {
+      this.loading = true
+      const assetId = this.line.assetId || this.value.assetId
+      try {
+        const response = await this.$axios.$get(`${this.imagesDatasetUrl}/lines?qs=assetId:"${assetId}"`)
+        const id = response.results && response.results[0] && response.results[0]._id
+        if (id) await this.$axios.$delete(`${this.imagesDatasetUrl}/lines/${id}`)
+        this.$emit('input', {})
+      } catch (err) {
+        console.error(err)
+      }
+      this.loading = false
     },
     nanoid () {
       return nanoid()

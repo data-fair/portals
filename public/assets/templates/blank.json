@@ -149,6 +149,10 @@
         "$ref": "#/definitions/image"
       }, {
         "$ref": "#/definitions/iframe"
+      }, {
+        "$ref": "#/definitions/news"
+      }, {
+        "$ref": "#/definitions/events"
       }],
       "default": {
         "type": "text",
@@ -427,6 +431,65 @@
           "default": true,
           "x-options": { "hideInArrayItem": true }
         },
+        "image":{
+          "type": "object",
+          "title": "Image",
+          "properties":{
+            "url": {
+              "title": "URL vers l'image",
+              "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
+              "type": "string"
+            },
+            "local": {
+              "type": "object",
+              "x-display": "custom-df-image",
+              "properties": {
+                "assetId": {
+                  "readOnly": true
+                },
+                "assetTitle": {
+                  "readOnly": true
+                },
+                "pageId": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "pageTitle": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "_updatedAt": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "_id": {
+                  "type": "string",
+                  "readOnly": true
+                },
+                "attachmentPath": {
+                  "type": "string",
+                  "readOnly": true
+                }
+              }
+            },
+            "height": {
+              "title": "Hauteur (px)",
+              "description": "Fixe la hauteur de l'image",
+              "type": "integer"
+            },
+            "position": {
+              "title": "Position",
+              "type": "string",
+              "oneOf": [
+                {"const": "top", "title": "Haut"},
+                {"const": "middle", "title": "Milieu"},
+                {"const": "bottom", "title": "Bas"}
+              ],
+              "default": "top"
+            }
+          },
+          "x-options": { "hideInArrayItem": true }
+        },
         "content": {
           "title": "Contenu",
           "type": "string",
@@ -443,6 +506,11 @@
           "type": "boolean",
           "default": false,
           "x-options": { "hideInArrayItem": true }
+        },
+        "href": {
+          "title": "URL vers une autre page",
+          "description": "La vignette devient un lien qui pointe vers l'URL renseignée.",
+          "type": "string"
         },
         "flat": {
           "title": "Pas de bordure",
@@ -589,7 +657,44 @@
           "x-itemTitle": "type",
           "x-arrayGroup": "page-element",
           "items": {
-            "$ref": "#/definitions/element"
+            "title": "Element",
+            "type": "object",
+            "x-itemKey": "type",
+            "oneOf": [{
+              "$ref": "#/definitions/title"
+            }, {
+              "$ref": "#/definitions/text"
+            }, {
+              "$ref": "#/definitions/alert"
+            }, {
+              "$ref": "#/definitions/divider"
+            }, {
+              "$ref": "#/definitions/application"
+            }, {
+              "$ref": "#/definitions/datasetCard"
+            }, {
+              "$ref": "#/definitions/datasetForm"
+            }, {
+              "$ref": "#/definitions/datasetTable"
+            }, {
+              "$ref": "#/definitions/cardSimple"
+            }, {
+              "$ref": "#/definitions/image"
+            }, {
+              "$ref": "#/definitions/iframe"
+            }, {
+              "$ref": "#/definitions/card"
+            }, {
+              "$ref": "#/definitions/news"
+            }, {
+              "$ref": "#/definitions/events"
+            }, {
+              "$ref": "#/definitions/responsiveFlow"
+            }],
+            "default": {
+              "type": "text",
+              "content": ""
+            }
           },
           "x-cols": {"cols": 12, "md": 6},
           "x-class": "px-1"
@@ -600,7 +705,44 @@
           "x-itemTitle": "type",
           "x-arrayGroup": "page-element",
           "items": {
-            "$ref": "#/definitions/element"
+            "title": "Element",
+            "type": "object",
+            "x-itemKey": "type",
+            "oneOf": [{
+              "$ref": "#/definitions/title"
+            }, {
+              "$ref": "#/definitions/text"
+            }, {
+              "$ref": "#/definitions/alert"
+            }, {
+              "$ref": "#/definitions/divider"
+            }, {
+              "$ref": "#/definitions/application"
+            }, {
+              "$ref": "#/definitions/datasetCard"
+            }, {
+              "$ref": "#/definitions/datasetForm"
+            }, {
+              "$ref": "#/definitions/datasetTable"
+            }, {
+              "$ref": "#/definitions/cardSimple"
+            }, {
+              "$ref": "#/definitions/image"
+            }, {
+              "$ref": "#/definitions/iframe"
+            }, {
+              "$ref": "#/definitions/card"
+            }, {
+              "$ref": "#/definitions/news"
+            }, {
+              "$ref": "#/definitions/events"
+            }, {
+              "$ref": "#/definitions/responsiveFlow"
+            }],
+            "default": {
+              "type": "text",
+              "content": ""
+            }
           },
           "x-cols": {"cols": 12, "md": 6},
           "x-class": "px-1"
@@ -614,10 +756,17 @@
         "type": {
           "const": "responsiveFlow"
         },
+        "large": {
+          "title": "Elements plus larges",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
         "card": {
           "title": "Elements dans des vignettes",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
         },
         "items": {
           "type": "array",
@@ -692,6 +841,24 @@
               }
             }
           }
+        }
+      }
+    },
+    "news":{
+      "type": "object",
+      "title": "Dernières actualités",
+      "properties": {
+        "type": {
+          "const": "news"
+        }
+      }
+    },
+    "events": {
+      "type": "object",
+      "title": "Evènements à venir",
+      "properties": {
+        "type": {
+          "const": "events"
         }
       }
     }
