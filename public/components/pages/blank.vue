@@ -63,6 +63,7 @@
           <v-img
             v-if="page.config.banner && (page.config.banner.url || page.config.banner.local)"
             :style="'margin-top:-12px;' + (page.config.banner.height ? `height:${page.config.banner.height}px` : '')"
+            :class="`elevation-${appBarElevation}`"
             :src="page.config.banner.url || (images && images[page.config.banner.local.assetId]) || `${imagesDatasetUrl}/attachments/${page.config.banner.local.attachmentPath}`"
             :title="page.config.banner.title"
           />
@@ -79,6 +80,7 @@
     <v-img
       v-else-if="page.config.banner && (page.config.banner.url || page.config.banner.local)"
       :style="'margin-top:-12px;' + (page.config.banner.height ? `height:${page.config.banner.height}px` : '')"
+      :class="`elevation-${appBarElevation}`"
       :src="page.config.banner.url || (images && images[page.config.banner.local.assetId]) || `${imagesDatasetUrl}/attachments/${page.config.banner.local.attachmentPath}`"
       :title="page.config.banner.title"
     />
@@ -399,7 +401,7 @@ export default {
   }),
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['imagesDatasetUrl']),
+    ...mapGetters(['imagesDatasetUrl', 'appBarElevation']),
     dataFairUrl () {
       return this.$store.getters.dataFairUrl
     },

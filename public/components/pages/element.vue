@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="value"
-    :class="`page-element page-element-${value.type} ${value.fillHeight ? 'fill-height' : ''}`"
+    :class="`page-element page-element-${value.type}${value.fillHeight ? ' fill-height' : ''}`"
   >
     <v-alert
       v-if="error"
@@ -66,11 +66,12 @@
       v-else-if="value.type === 'cardSimple'"
       :href="value.href"
       :title="value.title"
+      :class="value.fillHeight ? 'fill-height' : ''"
     >
       <v-card
         :outlined="!value.flat"
         :flat="value.flat"
-        class="d-flex flex-column fill-height"
+        :class="`d-flex flex-column${value.fillHeight ? ' fill-height' : ''}`"
       >
         <v-img
           v-if="value.image && (value.image.url || (value.image.local && value.image.local.assetId)) && value.image.position === 'top'"
