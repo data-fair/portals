@@ -165,6 +165,7 @@
           :key="`l${li}`"
           :value="lElement"
           :images="images"
+          class="mb-3"
         />
       </v-col>
       <v-col
@@ -176,6 +177,7 @@
           :key="`r${ri}`"
           :value="rElement"
           :images="images"
+          class="mb-3"
         />
       </v-col>
     </v-row>
