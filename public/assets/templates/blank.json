@@ -302,6 +302,12 @@
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
+        },
+        "syncState": {
+          "title": "Synchroniser les paramètres d'URL",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
         }
       }
     },
@@ -377,6 +383,12 @@
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
+        },
+        "syncState": {
+          "title": "Synchroniser les paramètres d'URL",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
         }
       }
     },

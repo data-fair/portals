@@ -220,10 +220,12 @@
         v-else-if="value.type === 'datasetTable' && value.dataset"
         scrolling="yes"
         :iframe-resizer="false"
+        :sync-state="value.syncState"
         :src="tableIframeSrc(value.dataset)"
       />
       <v-iframe
         v-else-if="value.type === 'application' && value.application"
+        :sync-state="value.syncState"
         :src="applicationIframeSrc(value.application)"
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
