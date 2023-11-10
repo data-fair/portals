@@ -325,7 +325,7 @@ export default {
       return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
     },
     applicationIframeSrc (application) {
-      return `${this.$store.getters.dataFairUrl}/app/${application.slug || application.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
+      return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     async resolveDataset () {
       this.error = null
