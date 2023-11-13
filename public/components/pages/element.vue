@@ -221,12 +221,14 @@
         scrolling="yes"
         :iframe-resizer="false"
         :sync-state="value.syncState"
+        :sync-state-ignore-path="true"
         :src="tableIframeSrc(value.dataset)"
         :query-params-exclude="['primary']"
       />
       <v-iframe
         v-else-if="value.type === 'application' && value.application"
         :sync-state="value.syncState"
+        :sync-state-ignore-path="true"
         :src="applicationIframeSrc(value.application)"
         :query-params-exclude="['primary', 'embed']"
       />
