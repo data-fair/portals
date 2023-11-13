@@ -222,11 +222,13 @@
         :iframe-resizer="false"
         :sync-state="value.syncState"
         :src="tableIframeSrc(value.dataset)"
+        :query-params-exclude="['primary']"
       />
       <v-iframe
         v-else-if="value.type === 'application' && value.application"
         :sync-state="value.syncState"
         :src="applicationIframeSrc(value.application)"
+        :query-params-exclude="['primary', 'embed']"
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
         <a
