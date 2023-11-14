@@ -43,6 +43,9 @@ export default () => {
           return true
         }
       },
+      isPublished (state) {
+        return state.mainPublicUrl !== state.publicUrl
+      },
       owner (state) {
         if (!state.config) return
         let owner = state.config.owner.type + ':' + state.config.owner.id

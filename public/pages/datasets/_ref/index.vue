@@ -266,7 +266,7 @@
                   v-if="!dataset.isMetaOnly"
                   title="Vue tabulaire en plein écran"
                   icon="mdi-fullscreen"
-                  :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
+                  :to="{name: 'datasets-ref-full', params:{ref: $route.params.ref}}"
                 />
                 <map-preview
                   v-if="dataset.bbox && dataset.bbox.length"
@@ -277,7 +277,7 @@
                   v-if="!isMobileOnly && !dataset.isMetaOnly"
                   title="Documentation d'API"
                   icon="mdi-cog"
-                  :to="{name: 'datasets-slug-api-doc', params:{slug: dataset.slug}}"
+                  :to="{name: 'datasets-ref-api-doc', params:{ref: $route.params.ref}}"
                 />
                 <download
                   v-if="!dataset.isMetaOnly"
@@ -350,7 +350,7 @@
       <template v-if="applications">
         <v-row
           v-for="(application, i) in applications.results"
-          :key="application.slug"
+          :key="application.id"
           class="my-3"
           align="center"
         >
@@ -362,7 +362,7 @@
             :order-md="application.preferLargeDisplay ? 0 : 1-i%2"
           >
             <nuxt-link
-              :to="{name: 'applications-slug', params:{slug: application.slug}}"
+              :to="{name: 'applications-ref', params:{ref: isPublished ? application.slug : application.id}}"
               class="title"
             >
               <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon color="primary">
@@ -545,7 +545,7 @@ export default {
     uses: null
   }),
   async fetch () {
-    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.slug}`, {
+    const dataset = await this.$axios.$get(`${this.$store.getters.dataFairUrl}/api/v1/datasets/${this.$route.params.ref}`, {
       params: {
         html: true,
         publicationSites: 'data-fair-portals:' + this.portal._id
@@ -575,7 +575,7 @@ export default {
     ...mapState(['config', 'portal', 'publicUrl']),
     ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
     url () {
-      return this.publicUrl + '/datasets/' + this.$route.params.slug
+      return this.publicUrl + '/datasets/' + this.$route.params.ref
     },
     iframeExternalReuses () {
       return (this.dataset && this.dataset.extras && this.dataset.extras.externalReuses && this.dataset.extras.externalReuses.filter(er => er.type === 'embed')) || []

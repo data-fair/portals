@@ -5,11 +5,11 @@
       :error="$fetchState.error"
     />
     <div v-else-if="application">
-      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-slug', params: {slug: application.slug}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
+      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-ref', params: {ref: route.params.ref}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
         <v-iframe
           :title="application.title"
-          :src="`${dataFairUrl}/app/${$route.params.slug}`"
+          :src="`${dataFairUrl}/app/${$route.params.ref}`"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
@@ -36,7 +36,7 @@ export default {
     application: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.slug, {
+    this.application = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/applications/' + this.$route.params.ref, {
       params: {
         html: true,
         publicationSites: 'data-fair-portals:' + this.portal._id
@@ -97,7 +97,7 @@ export default {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/logo?draft=${this.draft}&hash=${this.config.assets.logo && this.config.assets.logo.hash}`
     },
     pageUrl () {
-      return this.publicUrl + '/applications/' + this.$route.params.slug + '/full'
+      return this.publicUrl + '/applications/' + this.$route.params.ref + '/full'
     }
   }
 }

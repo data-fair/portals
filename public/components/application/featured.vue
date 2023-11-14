@@ -2,7 +2,7 @@
   <div>
     <v-row class="ma-0">
       <nuxt-link
-        :to="{path: `/applications/${application.slug}`, query: syncedStateParams}"
+        :to="{path: `/applications/${applicationRef}`, query: syncedStateParams}"
         class="title"
       >
         <span class="underline-link">{{ application.title }}</span>&nbsp;<v-icon :color="'primary'">
@@ -23,7 +23,7 @@
     </v-row>
     <client-only>
       <v-iframe
-        :src="`${dataFairUrl}/app/${application.slug}`"
+        :src="`${dataFairUrl}/app/${applicationRef}`"
         :title="application.title"
         :style="iframeStyle"
         :sync-state="true"
@@ -59,7 +59,10 @@ export default {
     syncedState: null
   }),
   computed: {
-    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner']),
+    ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'isPublished']),
+    applicationRef () {
+      return this.isPublished ? this.application.slug : this.application.id
+    },
     syncedStateParams () {
       if (!this.syncedState) return {}
       const url = new URL(this.syncedState.href)
@@ -71,8 +74,8 @@ export default {
     }
   },
   async mounted () {
-    this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}/base-application`, { params: { html: true } })
-    this.fullApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}`, { params: { raw: true, select: '-userPermissions,-owner' } })
+    this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.applicationRef}/base-application`, { params: { html: true } })
+    this.fullApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.applicationRef}`, { params: { raw: true, select: '-userPermissions,-owner' } })
   }
 }
 </script>

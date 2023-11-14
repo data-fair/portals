@@ -5,7 +5,7 @@
       :error="$fetchState.error"
     />
     <div v-else-if="dataset">
-      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-slug', params: {slug: dataset.slug}}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
+      <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
       <client-only>
         <v-iframe
           :title="'Documentation de l\'API du jeu de données : ' + dataset.title"
@@ -35,7 +35,7 @@ export default {
     tablePreviewPath: process.env.tablePreviewPath
   }),
   async fetch () {
-    this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.slug, {
+    this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.ref, {
       params: {
         html: true,
         publicationSites: 'data-fair-portals:' + this.portal._id
@@ -49,10 +49,10 @@ export default {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['dataFairUrl', 'openapiViewerUrl']),
     pageUrl () {
-      return this.publicUrl + '/datasets/' + this.$route.params.slug + '/api-doc'
+      return this.publicUrl + '/datasets/' + this.$route.params.ref + '/api-doc'
     },
     iframeSrc () {
-      const apiDocUrl = `${this.dataFairUrl}/api/v1/datasets/${this.dataset.slug}/api-docs.json`
+      const apiDocUrl = `${this.dataFairUrl}/api/v1/datasets/${this.$route.params.ref}/api-docs.json`
       return `${this.openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${encodeURIComponent(apiDocUrl)}`
     }
   }

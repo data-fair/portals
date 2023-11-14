@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: ['application'],
   data () {
@@ -47,8 +48,12 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isPublished']),
+    applicationRef () {
+      return this.isPublished ? this.application.slug : this.application.id
+    },
     embedUrl () {
-      return this.$store.getters.dataFairUrl + '/app/' + this.application.slug
+      return this.$store.getters.dataFairUrl + '/app/' + this.applicationRef
     }
   }
 }

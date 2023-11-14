@@ -42,12 +42,12 @@ export default {
   },
   computed: {
     ...mapState(['publicUrl', 'portal']),
-    ...mapGetters(['sitemapFull'])
+    ...mapGetters(['sitemapFull', 'isPublished'])
   },
   methods: {
     fullURL (to) {
       let url = this.publicUrl + to
-      if (process.env.mainPublicUrl === this.publicUrl) {
+      if (!this.isPublished) {
         url += '?portalId=' + this.portal._id
       }
       return url

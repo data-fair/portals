@@ -143,7 +143,7 @@
               <action-icon
                 title="Vue tabulaire en plein écran"
                 icon="mdi-table-large"
-                :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
+                :to="{name: 'datasets-ref-full', params:{ref: datasetRef}}"
               />
             </v-list-item-action>
           </v-list-item>
@@ -183,7 +183,10 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl']),
-    ...mapGetters(['dataFairUrl']),
+    ...mapGetters(['dataFairUrl', 'isPublished']),
+    datasetRef () {
+      return this.isPublished ? this.dataset.slug : this.dataset.id
+    },
     hasNormalizedCSV () {
       if (!this.dataFiles) return true
       if (this.dataFilesObj.normalized && this.dataFilesObj.normalized.mimetype === 'text/csv') {

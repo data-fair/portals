@@ -31,9 +31,12 @@ export default {
     downloading: false
   }),
   computed: {
-    ...mapGetters(['dataFairUrl']),
+    ...mapGetters(['dataFairUrl', 'isPublished']),
+    applicationRef () {
+      return this.isPublished ? this.application.slug : this.application.id
+    },
     href () {
-      const url = new URL(`${this.dataFairUrl}/api/v1/applications/${this.application.slug}/capture`)
+      const url = new URL(`${this.dataFairUrl}/api/v1/applications/${this.applicationRef}/capture`)
       url.searchParams.set('width', this.meta['df:capture-width'] || '1280')
       url.searchParams.set('height', this.meta['df:capture-height'] || '720')
       url.searchParams.set('updatedAt', this.application.updatedAt)
@@ -53,7 +56,7 @@ export default {
     async download () {
       this.downloading = true
       const res = await this.$axios.get(this.href, { responseType: 'blob' })
-      fileDownload(res.data, this.application.slug + '.' + res.headers['content-type'].split('/').pop())
+      fileDownload(res.data, this.applicationRef + '.' + res.headers['content-type'].split('/').pop())
       this.downloading = false
     }
   }

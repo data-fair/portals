@@ -1,7 +1,7 @@
 <template lang="html">
   <card-action-card
     :title="application.title"
-    :to="{name: 'applications-slug', params:{slug: application.slug}}"
+    :to="{name: 'applications-ref', params:{ref: applicationRef}}"
     :img="`${application.href}/capture?updatedAt=${application.updatedAt}`"
     :img-aspect-ratio="21/9"
     :topics="application.topics"
@@ -38,7 +38,10 @@ export default {
     layout: { type: String, default: 'dense' }
   },
   computed: {
-    ...mapGetters(['readableTopicColor'])
+    ...mapGetters(['readableTopicColor', 'isPublished']),
+    applicationRef () {
+      return this.isPublished ? this.application.slug : this.application.id
+    }
   }
 }
 </script>

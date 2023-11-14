@@ -1,7 +1,7 @@
 <template>
   <card-action-card
     :loading="!dataset"
-    :to="dataset && `/datasets/${dataset.slug}`"
+    :to="dataset && `/datasets/${datasetRef}`"
     :title="dataset && dataset.title"
     :img="img"
     :img-contain="!!config.datasetThumbnailContain"
@@ -22,7 +22,7 @@
           v-if="!dataset.isMetaOnly"
           title="Vue tabulaire en plein écran"
           icon="mdi-fullscreen"
-          :to="{name: 'datasets-slug-full', params:{slug: dataset.slug}}"
+          :to="{name: 'datasets-ref-full', params:{ref: datasetRef}}"
         />
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
@@ -33,7 +33,7 @@
           v-if="!isMobileOnly && !dataset.isMetaOnly"
           title="Documentation d'API"
           icon="mdi-cog"
-          :to="{name: 'datasets-slug-api-doc', params:{slug: dataset.slug}}"
+          :to="{name: 'datasets-ref-api-doc', params:{ref: datasetRef}}"
         />
         <schema-view
           v-if="!dataset.isMetaOnly"
@@ -78,7 +78,10 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['dataFairUrl']),
+    ...mapGetters(['dataFairUrl', 'isPublished']),
+    datasetRef () {
+      return this.isPublished ? this.dataset.slug : this.dataset.id
+    },
     img () {
       if (!this.dataset) return null
       if (this.dataset.image) return this.dataset.thumbnail || this.dataset.image

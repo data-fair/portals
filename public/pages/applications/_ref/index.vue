@@ -77,7 +77,7 @@
       <client-only>
         <v-iframe
           :title="application.title"
-          :src="`${dataFairUrl}/app/${$route.params.slug}`"
+          :src="`${dataFairUrl}/app/${$route.params.ref}`"
           :sync-state="true"
           :query-params-extra="{primary: readablePrimaryColor, embed: true}"
           :query-params-exclude="['portalId']"
@@ -149,13 +149,13 @@ export default {
     syncedState: null
   }),
   async fetch () {
-    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.slug, {
+    this.application = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.ref, {
       params: {
         html: true,
         publicationSites: 'data-fair-portals:' + this.portal._id
       }
     })
-    const config = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.slug + '/configuration')
+    const config = await this.$axios.$get(this.dataFairUrl + '/api/v1/applications/' + this.$route.params.ref + '/configuration')
     this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
@@ -217,16 +217,16 @@ export default {
     ...mapState(['config', 'publicUrl', 'portal']),
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps', 'directoryUrl']),
     pageUrl () {
-      return this.publicUrl + '/applications/' + this.$route.params.slug
+      return this.publicUrl + '/applications/' + this.$route.params.ref
     }
   },
   watch: {
     async application () {
-      if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}/base-application`, { params: { html: true } })
+      if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.$route.params.ref}/base-application`, { params: { html: true } })
     }
   },
   async mounted () {
-    if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.application.slug}/base-application`, { params: { html: true } })
+    if (this.application) this.baseApplication = await this.$axios.$get(this.dataFairUrl + `/api/v1/applications/${this.$route.params.ref}/base-application`, { params: { html: true } })
   }
 }
 </script>

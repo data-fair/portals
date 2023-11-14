@@ -297,7 +297,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readablePrimaryColor', 'elevation', 'imagesDatasetUrl']),
+    ...mapGetters(['readablePrimaryColor', 'elevation', 'imagesDatasetUrl', 'isPublished']),
     titleClass () {
       if (!this.value || this.value.type !== 'title') return null
       const margins = {
@@ -325,20 +325,23 @@ export default {
   },
   methods: {
     tableIframeSrc (dataset) {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
+      const ref = this.isPublished && dataset.slug ? dataset.slug : dataset.id
+      return `${this.$store.getters.dataFairUrl}/embed/dataset/${ref}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
     },
     formIframeSrc (dataset) {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${dataset.id}/form?primary=${encodeURIComponent(this.config.themeColor)}`
+      const ref = this.isPublished && dataset.slug ? dataset.slug : dataset.id
+      return `${this.$store.getters.dataFairUrl}/embed/dataset/${ref}/form?primary=${encodeURIComponent(this.config.themeColor)}`
     },
     applicationIframeSrc (application) {
-      return `${this.$store.getters.dataFairUrl}/app/${application.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
+      const ref = this.isPublished && application.slug ? application.slug : application.id
+      return `${this.$store.getters.dataFairUrl}/app/${ref}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     async resolveDataset () {
       this.error = null
       if (this.value.type === 'datasetCard' && this.value.dataset) {
         this.loading = true
         try {
-          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + (this.value.dataset.slug || this.value.dataset.id), { params: { html: true } })
+          this.resolvedDataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + ((this.isPublished && this.value.dataset.slug) ? this.value.dataset.slug : this.value.dataset.id), { params: { html: true } })
         } catch (err) {
           this.resolvedDataset = null
           this.error = err.message
