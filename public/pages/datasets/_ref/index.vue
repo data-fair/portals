@@ -573,7 +573,7 @@ export default {
   },
   computed: {
     ...mapState(['config', 'portal', 'publicUrl']),
-    ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor']),
+    ...mapGetters(['primaryColorDark', 'readablePrimaryColor', 'infoCardProps', 'dataFairUrl', 'notifyUrl', 'directoryUrl', 'readableSecondaryColor', 'isPublished']),
     url () {
       return this.publicUrl + '/datasets/' + this.$route.params.ref
     },
