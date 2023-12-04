@@ -17,9 +17,6 @@ export default {
   components: { VIframe },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
-  data () {
-    return { topics: null }
-  },
   computed: {
     ...mapState(['config', 'publicUrl', 'mainPublicUrl']),
     ...mapGetters(['directoryUrl']),

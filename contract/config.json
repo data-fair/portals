@@ -1591,6 +1591,66 @@
           "const": "white",
           "title": "blanc"
         }]
+      },
+      "personnalHidePages": {
+        "type": "array",
+        "title": "Cacher des pages dans l'espace personnel",
+        "items": {
+          "type": "string",
+          "oneOf": [{
+            "const": "notify",
+            "title": "Notifications"
+          }, {
+            "const": "api-keys",
+            "title": "Clés d'API"
+          }, {
+            "const": "contribute",
+            "title": "Contribuer"
+          }, {
+            "const": "processings",
+            "title": "Traitements"
+          }]
+        }
+      },
+      "personalAccountPages": {
+        "type": "array",
+        "title": "Pages supplémentaires en iframe dans la section compte actif",
+        "items": {
+          "type": "object",
+          "required":["id", "title", "href", "icon"],
+          "properties": {
+            "id":{
+              "type": "string",
+              "title": "Identifiant de la page"
+            },
+            "title":{
+              "type": "string",
+              "title": "Libellé du lien"
+            },
+            "href":{
+              "type": "string",
+              "title": "Libellé du lien"
+            },
+            "icon": {
+              "title": "Icône",
+              "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
+              "type": "object",
+              "x-fromUrl": "https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
+              "x-itemKey": "name",
+              "x-itemTitle": "name",
+              "x-itemIcon": "name",
+              "x-itemsProp": "results",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "svg": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }, {

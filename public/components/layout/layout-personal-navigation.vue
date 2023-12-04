@@ -41,6 +41,7 @@
         <v-list-item-title>Mes réutilisations</v-list-item-title>
       </v-list-item>
       <v-list-item
+        v-if="!config.personnalHidePages || !config.personnalHidePages.includes('notify')"
         :nuxt="true"
         :to="`/me/notifications`"
       >
@@ -87,7 +88,7 @@
       </v-list-item>
 
       <v-list-item
-        v-if="accountRole === 'admin' && !activeAccount.department"
+        v-if="accountRole === 'admin' && !activeAccount.department && (!config.personnalHidePages || !config.personnalHidePages.includes('api-keys'))"
         :nuxt="true"
         :to="`/me/api-keys`"
       >
@@ -96,7 +97,7 @@
       </v-list-item>
 
       <v-list-item
-        v-if="datasetsCount.rest || datasetsCount.file"
+        v-if="(datasetsCount.rest || datasetsCount.file) && (!config.personnalHidePages || !config.personnalHidePages.includes('contribute'))"
         :nuxt="true"
         :to="`/me/update-dataset`"
       >
@@ -105,12 +106,22 @@
       </v-list-item>
 
       <v-list-item
-        v-if="processingsCount"
+        v-if="processingsCount && (!config.personnalHidePages || !config.personnalHidePages.includes('processings'))"
         :nuxt="true"
         :to="`/me/processings`"
       >
         <v-list-item-action><v-icon>mdi-cog-transfer-outline</v-icon></v-list-item-action>
         <v-list-item-title>Traitements</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item
+        v-for="(page, p) in config.personalAccountPages || []"
+        :key="p"
+        :nuxt="true"
+        :to="`/me/`+page.id"
+      >
+        <v-list-item-action><v-icon>mdi-{{ page.icon.name }}</v-icon></v-list-item-action>
+        <v-list-item-title>{{ page.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
 
