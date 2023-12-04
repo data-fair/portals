@@ -207,7 +207,7 @@
             v-slot="{ hover }"
           >
             <div
-              :style="(hover ? 'border:solid 1px;margin:-1px;' : '') + 'position:relative;min-height:24px'"
+              :style="(hover ? 'background-color:#BBBBBB;' : '') + 'position:relative;min-height:24px'"
             >
               <v-btn
                 v-show="hover"

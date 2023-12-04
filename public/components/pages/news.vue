@@ -35,7 +35,7 @@
           v-slot="{ hover }"
         >
           <div
-            :style="(hover && page.config.title ? 'border:solid 1px;margin:-1px;' : '') + 'position:relative'"
+            :style="(hover && page.config.title ? 'background-color:#BBBBBB;' : '') + 'position:relative'"
           >
             <v-btn
               v-show="hover"
@@ -112,7 +112,7 @@
           v-slot="{ hover }"
         >
           <div
-            :style="(hover && page.config.summary ? 'border:solid 1px;margin:-1px;' : '') + 'position:relative'"
+            :style="(hover && page.config.summary ? 'background-color:#BBBBBB;' : '') + 'position:relative'"
           >
             <v-btn
               v-show="hover"
@@ -283,7 +283,7 @@
           v-slot="{ hover }"
         >
           <div
-            :style="(hover && page.config.description ? 'border:solid 1px;margin:-1px;' : '') + 'position:relative'"
+            :style="(hover && page.config.description ? 'background-color:#BBBBBB;' : '') + 'position:relative'"
           >
             <v-btn
               v-show="hover"
@@ -364,7 +364,7 @@
             v-slot="{ hover }"
           >
             <div
-              :style="(hover ? 'border:solid 1px;margin:-1px;' : '') + 'position:relative'"
+              :style="(hover ? 'background-color:#BBBBBB;' : '') + 'position:relative'"
             >
               <v-btn
                 v-show="hover"
