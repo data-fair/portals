@@ -436,8 +436,17 @@
                 <v-divider class="my-6" />
                 <v-row>
                   <v-col
+                    v-if="block.asset && i%2===1"
                     :cols="12"
-                    :md="block.application ? 6 : 12"
+                    :md="6"
+                  >
+                    <k-element
+                      :value="block.asset"
+                    />
+                  </v-col>
+                  <v-col
+                    :cols="12"
+                    :md="block.asset ? 6 : 12"
                   >
                     <k-element
                       v-if="block.title"
@@ -449,12 +458,12 @@
                     />
                   </v-col>
                   <v-col
-                    v-if="block.application"
+                    v-if="block.asset && i % 2 === 0"
                     :cols="12"
                     :md="6"
                   >
                     <k-element
-                      :value="{ type: 'application', application: block.application }"
+                      :value="block.asset"
                     />
                   </v-col>
                 </v-row>
@@ -482,8 +491,17 @@
           <v-divider class="my-6" />
           <v-row>
             <v-col
+              v-if="block.asset && i%2 === 1"
               :cols="12"
-              :md="block.application ? 6 : 12"
+              :md="6"
+            >
+              <k-element
+                :value="block.asset"
+              />
+            </v-col>
+            <v-col
+              :cols="12"
+              :md="block.asset ? 6 : 12"
             >
               <k-element
                 v-if="block.title"
@@ -495,12 +513,12 @@
               />
             </v-col>
             <v-col
-              v-if="block.application"
+              v-if="block.asset && i % 2 === 0"
               :cols="12"
               :md="6"
             >
               <k-element
-                :value="{ type: 'application', application: block.application }"
+                :value="block.asset"
               />
             </v-col>
           </v-row>

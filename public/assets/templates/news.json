@@ -77,9 +77,20 @@
         "description": {
           "$ref": "#/definitions/description"
         },
-        "application": {
-          "$ref": "#/definitions/application"
-        },
+        "asset":{
+          "type": "object",
+          "title": "Illustration",
+          "oneOf": [{
+            "properties":{
+              "type": { "const": "application" },
+              "application": {
+                "$ref": "#/definitions/application"
+              }
+            }
+          },{
+            "$ref": "#/definitions/image"
+          }]
+        },       
         "datasets": {
           "title": "Jeux de données associés",
           "type": "array",
@@ -137,6 +148,77 @@
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "title": "Image",
+      "properties": {
+        "type": {
+          "const": "image"
+        },
+        "title": {
+          "title": "Titre de l'image",
+          "description": "recommandé pour l'accessibilité et pour afficher une information utile au survol",
+          "type": "string"
+        },
+        "url": {
+          "title": "URL vers l'image",
+          "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
+          "type": "string"
+        },
+        "href": {
+          "title": "URL vers une autre page",
+          "description": "L'image devient un lien qui pointe vers l'URL renseignée.",
+          "type": "string"
+        },
+        "local": {
+          "type": "object",
+          "x-display": "custom-df-image",
+          "properties": {
+            "assetId": {
+              "readOnly": true
+            },
+            "assetTitle": {
+              "readOnly": true
+            },
+            "pageId": {
+              "type": "string",
+              "readOnly": true
+            },
+            "pageTitle": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_updatedAt": {
+              "type": "string",
+              "readOnly": true
+            },
+            "_id": {
+              "type": "string",
+              "readOnly": true
+            },
+            "attachmentPath": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        },
+        "height": {
+          "title": "Hauteur (px)",
+          "description": "Fixe la hauteur de l'image",
+          "type": "integer"
+        },
+        "legend": {
+          "title": "Légende de l'image",
+          "description": "Cette légende sera affichée en italique juste en dessous de l'image",
+          "type": "string"
+        },
+        "zoomable": {
+          "title": "Zoom au clic",
+          "description": "Ne fonctionne que si aucun lien n'est associé à l'image",
+          "type": "boolean"
         }
       }
     }
