@@ -19,26 +19,8 @@
       "type": "string",
       "title": "Titre de la page",
       "default": "Nouvelle page",
-      "x-cols": {"cols": 12, "md": 6, "lg": 8},
+      "x-cols": {"cols": 12, "sm": 9, "lg": 8},
       "x-class": "pr-2"
-    },
-    "published": {
-      "type": "boolean",
-      "title": "Publiée",
-      "default": false,
-      "x-cols": {"cols": 6, "md": 3, "lg": 2}
-    },
-    "publishedAt": {
-      "type": "string",
-      "description": "Creation date of this page",
-      "format": "date-time",
-      "readOnly": true
-    },
-    "public": {
-      "type": "boolean",
-      "title": "Publique",
-      "default": false,
-      "x-cols": {"cols": 6, "md": 3, "lg": 2}
     },
     "topics": {
       "type": "array",
@@ -55,8 +37,7 @@
       "x-fromUrl": "{context.topicsUrl}",
       "x-itemTitle": "title",
       "x-itemKey": "id",
-      "x-cols": {"cols": 12, "md": 6, "lg": 4},
-      "x-class": "pr-2"
+      "x-cols": {"cols": 12, "sm": 3, "lg": 4}
     },
     "template": {
       "title": "Modèle de page",
@@ -75,7 +56,7 @@
         "title": "Évènement"
       }],
       "default": "blank",
-      "x-cols": {"cols": 6, "md": 3, "lg": 2},
+      "x-cols": {"cols": 6, "sm": 4, "md": 3, "lg": 2},
       "x-class": "pr-2"
     },
     "width": {
@@ -89,7 +70,7 @@
         "title": "Maximale"
       }],
       "default": "medium",
-      "x-cols": {"cols": 6, "md": 3, "lg": 2},
+      "x-cols": {"cols": 6, "sm": 4, "md": 3, "lg": 2},
       "x-class": "pr-2"
     },
     "navigation": {
@@ -141,8 +122,27 @@
         }
       }],
       "default":{"type": "none"},
-      "x-cols": {"cols": 6, "md": 3},
+      "x-cols": {"cols": 6, "sm": 4, "md": 3, "lg": 2},
       "x-class": "pr-2"
+    },
+    "public": {
+      "type": "boolean",
+      "title": "Publique",
+      "default": false,
+      "x-cols": {"cols": 6, "md": 3, "lg": 2}
+    },
+    "published": {
+      "type": "boolean",
+      "title": "Publiée",
+      "default": false,
+      "x-cols": {"cols": 6, "md": 3, "lg": 2}
+    },
+    "publishedAt": {
+      "type": "string",
+      "title": "Date de publication",
+      "format": "date",
+      "x-if": "published",
+      "x-cols": {"cols": 6, "md": 3, "lg": 2}
     },
     "config": {
       "type": "object",

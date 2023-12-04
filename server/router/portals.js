@@ -479,8 +479,8 @@ router.patch('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, r
     name: req.user.name,
     date: new Date().toISOString()
   }
-  if (req.body.published && !page.published) {
-    req.body.publishedAt = new Date()
+  if (req.body.published && !req.body.publishedAt) {
+    req.body.publishedAt = new Date().toISOString().substring(0, 10)
   }
 
   const patch = {}

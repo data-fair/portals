@@ -79,9 +79,12 @@ export default {
   computed: {
     schema () {
       const s = JSON.parse(JSON.stringify(schema))
+      delete s.properties.publishedAt
       delete s.properties.published
       delete s.properties.public
-      delete s.properties.title['x-cols']
+      s.properties.template['x-cols'].lg = 4
+      s.properties.width['x-cols'].lg = 4
+      s.properties.navigation['x-cols'].lg = 4
       return s
     }
   },
