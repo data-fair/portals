@@ -537,6 +537,9 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
     query.published = req.query.published === 'true'
   }
   const sort = findUtils.sort(req.query.sort)
+  for (const value in sort) {
+    if (sort[value] !== 1 && sort[value] !== -1) return res.status(400).send('Bad sort syntax, only -1 or 1 is allowed for sort value')
+  }
   const project = findUtils.project(req.query.select)
   const [skip, size] = findUtils.pagination(req.query)
 
