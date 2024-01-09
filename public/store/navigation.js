@@ -42,7 +42,7 @@ export default () => ({
           navigation.push({ title: page.title, to: `/pages/${page.id}`, position: page.navigation.position, updatedAt: page.updated.date })
         }
         if (page.navigation && page.navigation.type === 'menu') {
-          let menuItem = navigation.find(item => !!item.children && item.title.toLowerCase() === page.navigation.title.toLowerCase())
+          let menuItem = navigation.find(item => !!item.children && (item.title || '').toLowerCase() === (page.navigation.title || '').toLowerCase())
           if (!menuItem) {
             menuItem = { title: page.navigation.title, children: [] }
             navigation.push(menuItem)
