@@ -102,6 +102,7 @@
       },{
         "title": "Sous-menu",
         "type": "object",
+        "required": ["title"],
         "properties": {
           "type": {
             "const": "menu"
