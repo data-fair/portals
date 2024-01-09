@@ -867,7 +867,7 @@
     },
     "events": {
       "type": "object",
-      "title": "Evènements à venir",
+      "title": "Évènements à venir",
       "properties": {
         "type": {
           "const": "events"

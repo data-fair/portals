@@ -1457,7 +1457,7 @@
       }
     }
   }, {
-    "title": "Evènements",
+    "title": "Évènements",
     "description": "Les évènements sont des pages de contenu qui contiennent un formulaire d'inscription.",
     "properties": {
       "eventsPage": {

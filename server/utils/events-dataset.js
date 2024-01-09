@@ -7,7 +7,7 @@ exports.id = (portal) => {
 
 exports.init = (portal) => {
   return {
-    title: `Portail - Evènements - ${portal.title}`,
+    title: `Portail - Évènements - ${portal.title}`,
     isRest: true,
     rest: {
       history: true,

@@ -84,8 +84,8 @@ export default {
     await this.refresh()
   },
   head () {
-    const title = 'Evènements - ' + this.config.title
-    const description = 'Evènements passés et à venir.'
+    const title = 'Évènements - ' + this.config.title
+    const description = 'Évènements passés et à venir.'
     return {
       title,
       meta: [

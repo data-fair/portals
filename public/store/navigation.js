@@ -35,7 +35,7 @@ export default () => ({
         navigation.push({ title: 'Actualités', to: '/news', position: 4 })
       }
       if (config.eventsPage && config.eventsPage.type !== 'none') {
-        navigation.push({ title: 'Evènements', to: '/events', position: 5 })
+        navigation.push({ title: 'Évènements', to: '/events', position: 5 })
       }
       for (const page of state.pages) {
         if (page.navigation && page.navigation.type === 'direct') {
