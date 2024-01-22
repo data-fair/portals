@@ -719,13 +719,13 @@ const matchingPortalHost = (portal, req) => {
 
 // Anonymous users can post an email to the registered contact
 const limiterOptions = {
-  keyPrefix: 'data-fair-portals-rate-limiter-contact',
+  keyPrefix: 'rate-limiter-contact',
   points: 1,
   duration: 60
 }
 let _limiter
 const limiter = (req) => {
-  _limiter = _limiter || new RateLimiterMongo({ storeClient: req.app.get('client'), ...limiterOptions })
+  _limiter = _limiter || new RateLimiterMongo({ storeClient: req.app.get('client'), dbName: req.app.get('db').databaseName, ...limiterOptions })
   return _limiter
 }
 router.post('/:id/contact-email', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
@@ -754,7 +754,7 @@ router.post('/:id/contact-email', asyncWrap(setPortalAnonymous), asyncWrap(async
     // 3rd level of anti-spam protection, simple rate limiting based on ip
     await limiter(req).consume(requestIp.getClientIp(req), 1)
   } catch (err) {
-    console.warn('Rate limit error for /mails/contact route', requestIp.getClientIp(req), req.body.email, err)
+    console.warn('Rate limit error for /mails/contact route', requestIp.getClientIp(req), req.body.from, err)
     return res.status(429).send('Trop de messages dans un bref interval. Veuillez patienter avant d\'essayer de nouveau.')
   }
 
