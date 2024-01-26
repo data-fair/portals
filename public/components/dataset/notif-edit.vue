@@ -5,7 +5,20 @@
     :max-width="500"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        :disabled="!user"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-bell
+        </v-icon>&nbsp;Notifications
+      </v-btn>
       <action-icon
+        v-else
         title="Notifications"
         icon="mdi-bell"
         :disabled="!user"

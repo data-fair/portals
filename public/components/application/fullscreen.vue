@@ -1,13 +1,27 @@
 <template>
-  <action-icon
-    title="Accéder à la visualisation en plein écran"
-    icon="mdi-fullscreen"
-    :to="{name: 'applications-ref-full', params:{ref: applicationRef}, query: syncedStateParams}"
-  />
+  <div>
+    <v-btn
+      v-if="config.applicationActionsDisplay === 'button'"
+      text
+      small
+      color="primary"
+      :to="{ name: 'applications-ref-full', params: { ref: applicationRef }, query: syncedStateParams }"
+    >
+      <v-icon>
+        mdi-fullscreen
+      </v-icon>&nbsp;Plein écran
+    </v-btn>
+    <action-icon
+      v-else
+      title="Accéder à la visualisation en plein écran"
+      icon="mdi-fullscreen"
+      :to="{name: 'applications-ref-full', params:{ref: applicationRef}, query: syncedStateParams}"
+    />
+  </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -15,6 +29,7 @@ export default {
     syncedState: { type: Object, default: null }
   },
   computed: {
+    ...mapState(['config']),
     ...mapGetters(['isPublished']),
     applicationRef () {
       return this.isPublished ? this.application.slug : this.application.id

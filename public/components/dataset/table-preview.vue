@@ -6,9 +6,21 @@
     transition="none"
   >
     <template #activator="{ on: onDialog }">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-table-eye
+        </v-icon>&nbsp;Aperçu
+      </v-btn>
       <action-icon
-        title="Voir le tableau"
-        icon="mdi-table-large"
+        v-else
+        title="Aperçu du tableau"
+        icon="mdi-table-eye"
         v-on="onDialog"
       />
     </template>

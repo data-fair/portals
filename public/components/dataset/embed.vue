@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-code-tags
+        </v-icon>&nbsp;Intégrer
+      </v-btn>
       <action-icon
+        v-else
         title="Intégrer dans un site"
         icon="mdi-code-tags"
         v-on="onDialog"
@@ -62,6 +74,7 @@
 
 <script>
 import VIframe from '@koumoul/v-iframe'
+const { mapState } = require('vuex')
 
 export default {
   components: {
@@ -76,6 +89,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     previewLink () {
       return this.dataset && this.dataset.previews.find(p => p.id === this.previewId).href
     }

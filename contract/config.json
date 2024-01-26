@@ -1298,6 +1298,21 @@
           }
         ],
         "default": "columnsLeftLarger"
+      },
+      "datasetActionsDisplay": {
+        "type": "string",
+        "title": "Affichage des actions pour un jeu de données",
+        "oneOf": [
+          {
+            "title": "Icône seule",
+            "const": "icon"
+          },
+          {
+            "title": "Boutton avec icone",
+            "const": "button"
+          }
+        ],
+        "default": "icon"
       }
     }
   }, {
@@ -1340,6 +1355,21 @@
           "title": "Vertical",
           "const": "vertical"
         }]
+      },
+      "applicationActionsDisplay": {
+        "type": "string",
+        "title": "Affichage des actions pour une visualisation",
+        "oneOf": [
+          {
+            "title": "Icône seule",
+            "const": "icon"
+          },
+          {
+            "title": "Boutton avec icone",
+            "const": "button"
+          }
+        ],
+        "default": "icon"
       }
     }
   }, {

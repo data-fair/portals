@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-download
+        </v-icon>&nbsp;Télécharger
+      </v-btn>
       <action-icon
+        v-else
         title="Téléchargement des données"
         icon="mdi-download"
         v-on="onDialog"

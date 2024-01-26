@@ -253,7 +253,7 @@
             <v-divider class="mt-2 mb-3" />
             <v-row>
               <v-col
-                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? (config.datasetActionsDisplay === 'button' ? 7 : 4) : 12"
                 :cols="12"
                 class="px-5 py-1"
               >
@@ -262,23 +262,49 @@
                   :dataset="dataset"
                   :color="'primary'"
                 />
-                <action-icon
-                  v-if="!dataset.isMetaOnly"
-                  title="Vue tabulaire en plein écran"
-                  icon="mdi-fullscreen"
-                  :to="{name: 'datasets-ref-full', params:{ref: $route.params.ref}}"
-                />
+                <template v-if="!dataset.isMetaOnly">
+                  <v-btn
+                    v-if="config.datasetActionsDisplay === 'button'"
+                    text
+                    small
+                    color="primary"
+                    :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
+                  >
+                    <v-icon>
+                      mdi-table-large
+                    </v-icon>&nbsp;Tableau
+                  </v-btn>
+                  <action-icon
+                    v-else
+                    title="Tableau plein écran"
+                    icon="mdi-table-large"
+                    :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
+                  />
+                </template>
                 <map-preview
                   v-if="dataset.bbox && dataset.bbox.length"
                   :dataset="dataset"
                   :color="'primary'"
                 />
-                <action-icon
-                  v-if="!isMobileOnly && !dataset.isMetaOnly"
-                  title="Documentation d'API"
-                  icon="mdi-cog"
-                  :to="{name: 'datasets-ref-api-doc', params:{ref: $route.params.ref}}"
-                />
+                <template v-if="!isMobileOnly && !dataset.isMetaOnly">
+                  <v-btn
+                    v-if="config.datasetActionsDisplay === 'button'"
+                    text
+                    small
+                    color="primary"
+                    :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
+                  >
+                    <v-icon>
+                      mdi-cog
+                    </v-icon>&nbsp;API
+                  </v-btn>
+                  <action-icon
+                    v-else
+                    title="Documentation d'API"
+                    icon="mdi-cog"
+                    :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
+                  />
+                </template>
                 <download
                   v-if="!dataset.isMetaOnly"
                   :dataset="dataset"
@@ -307,7 +333,7 @@
                 </client-only>
               </v-col>
               <v-col
-                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? (config.datasetActionsDisplay === 'button' ? 2 : 4) : 12"
                 :cols="12"
                 class="py-1"
               >
@@ -316,7 +342,7 @@
                     <v-list-item-title style="white-space:normal;">
                       <v-subheader
                         class="pa-0"
-                        style="height:26px"
+                        :style="`height:${config.datasetActionsDisplay === 'button' ? 48 : 26}px`"
                       >
                         Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}
                       </v-subheader>
@@ -327,7 +353,7 @@
 
               <v-col
                 v-if="dataset && dataset.public"
-                :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
+                :md="config.datasetMetaLayout === 'vertical' ? (config.datasetActionsDisplay === 'button' ? 3 : 4) : 12"
                 :cols="12"
                 class="py-1"
               >

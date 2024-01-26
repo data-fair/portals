@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-view-list
+        </v-icon>&nbsp;Schéma
+      </v-btn>
       <action-icon
+        v-else
         title="Description des champs"
         icon="mdi-view-list"
         v-on="onDialog"

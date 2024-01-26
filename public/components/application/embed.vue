@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.applicationActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-code-tags
+        </v-icon>&nbsp;Intégrer
+      </v-btn>
       <action-icon
+        v-else
         title="Intégrer dans un site"
         icon="mdi-code-tags"
         v-on="onDialog"
@@ -39,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   props: ['application'],
   data () {
@@ -48,6 +60,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     ...mapGetters(['isPublished']),
     applicationRef () {
       return this.isPublished ? this.application.slug : this.application.id

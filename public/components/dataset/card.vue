@@ -18,23 +18,49 @@
           v-if="!dataset.isMetaOnly"
           :dataset="dataset"
         />
-        <action-icon
-          v-if="!dataset.isMetaOnly"
-          title="Vue tabulaire en plein écran"
-          icon="mdi-fullscreen"
-          :to="{name: 'datasets-ref-full', params:{ref: datasetRef}}"
-        />
+        <template v-if="!dataset.isMetaOnly">
+          <v-btn
+            v-if="config.datasetActionsDisplay === 'button'"
+            text
+            small
+            color="primary"
+            :to="{ name: 'datasets-ref-full', params: { ref: datasetRef } }"
+          >
+            <v-icon>
+              mdi-table-large
+            </v-icon>&nbsp;Tableau
+          </v-btn>
+          <action-icon
+            v-else
+            title="Tableau plein écran"
+            icon="mdi-table-large"
+            :to="{name: 'datasets-ref-full', params:{ref: datasetRef}}"
+          />
+        </template>
         <map-preview
           v-if="dataset.bbox && dataset.bbox.length"
           :dataset="dataset"
           :color="'primary'"
         />
-        <action-icon
-          v-if="!isMobileOnly && !dataset.isMetaOnly"
-          title="Documentation d'API"
-          icon="mdi-cog"
-          :to="{name: 'datasets-ref-api-doc', params:{ref: datasetRef}}"
-        />
+        <template v-if="!isMobileOnly && !dataset.isMetaOnly">
+          <v-btn
+            v-if="config.datasetActionsDisplay === 'button'"
+            text
+            small
+            color="primary"
+            :to="{ name: 'datasets-ref-api-doc', params: { ref: datasetRef } }"
+          >
+            <v-icon>
+              mdi-cog
+            </v-icon>&nbsp;API
+          </v-btn>
+          <action-icon
+            v-else
+            title="Documentation d'API"
+            icon="mdi-cog"
+            :to="{name: 'datasets-ref-api-doc', params:{ref: datasetRef}}"
+          />
+        </template>
         <schema-view
           v-if="!dataset.isMetaOnly"
           :dataset="dataset"

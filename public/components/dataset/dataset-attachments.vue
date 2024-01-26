@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-attachment
+        </v-icon>&nbsp;Pièces jointes
+      </v-btn>
       <action-icon
+        v-else
         title="Pièces jointes"
         icon="mdi-attachment"
         v-on="onDialog"
@@ -60,10 +72,15 @@
 </template>
 
 <script>
+const { mapState } = require('vuex')
+
 export default {
   props: ['dataset', 'color'],
   data: () => ({
     dialog: null
-  })
+  }),
+  computed: {
+    ...mapState(['config'])
+  }
 }
 </script>

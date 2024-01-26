@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.applicationActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-tooltip-image-outline
+        </v-icon>&nbsp;Aperçu
+      </v-btn>
       <action-icon
+        v-else
         title="Voir la visualisation"
         icon="mdi-tooltip-image-outline"
         v-on="onDialog"

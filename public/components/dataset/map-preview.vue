@@ -6,7 +6,19 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
+      <v-btn
+        v-if="config.datasetActionsDisplay === 'button'"
+        text
+        small
+        color="primary"
+        v-on="onDialog"
+      >
+        <v-icon>
+          mdi-map-marker
+        </v-icon>&nbsp;Carte
+      </v-btn>
       <action-icon
+        v-else
         title="Carte générique"
         icon="mdi-map-marker"
         v-on="onDialog"

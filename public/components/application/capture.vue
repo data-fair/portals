@@ -1,16 +1,30 @@
 <template>
-  <action-icon
-    v-if="meta['df:sync-state']"
-    title="Télécharger une capture"
-    icon="mdi-camera"
-    :loading="downloading"
-    @click="download"
-  />
+  <div v-if="meta['df:sync-state']">
+    <v-btn
+      v-if="config.applicationActionsDisplay === 'button'"
+      text
+      small
+      :loading="downloading"
+      color="primary"
+      @click="download"
+    >
+      <v-icon>
+        mdi-camera
+      </v-icon>&nbsp;Export
+    </v-btn>
+    <action-icon
+      v-else
+      title="Télécharger une capture"
+      icon="mdi-camera"
+      :loading="downloading"
+      @click="download"
+    />
+  </div>
 </template>
 
 <script>
 import fileDownload from 'js-file-download'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -31,6 +45,7 @@ export default {
     downloading: false
   }),
   computed: {
+    ...mapState(['config']),
     ...mapGetters(['dataFairUrl', 'isPublished']),
     applicationRef () {
       return this.isPublished ? this.application.slug : this.application.id
