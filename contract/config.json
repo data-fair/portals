@@ -1488,7 +1488,7 @@
     "properties": {
       "twitter": {
         "type": "string",
-        "title": "Compte Twitter"
+        "title": "Compte X"
       },
       "facebook": {
         "type": "string",

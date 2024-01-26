@@ -8,7 +8,11 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <v-icon v-bind="compProps.icon">
+    <twitter-x v-if="icon === 'mdi-twitter'" />
+    <v-icon
+      v-else
+      v-bind="compProps.icon"
+    >
       {{ icon }}
     </v-icon>
   </v-btn>
