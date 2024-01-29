@@ -1252,6 +1252,9 @@
         }, {
           "title": "Date de mise à jour",
           "const": "dataUpdatedAt"
+        }, {
+          "title": "Ordre alphabétique",
+          "const": "title"
         }]
       },
       "datasetsCardLayout": {
@@ -1339,6 +1342,21 @@
               "const": "none"
             }
           }
+        }]
+      },
+      "applicationsDefaultSort": {
+        "type": "string",
+        "title": "Tri par défaut de la liste des visualisations",
+        "default": "createdAt",
+        "oneOf": [{
+          "title": "Date de création",
+          "const": "createdAt"
+        }, {
+          "title": "Date de mise à jour",
+          "const": "dataUpdatedAt"
+        }, {
+          "title": "Ordre alphabétique",
+          "const": "title"
         }]
       },
       "applicationsCardLayout": {

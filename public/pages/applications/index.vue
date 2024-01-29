@@ -251,6 +251,9 @@ export default {
     colProps () {
       if (this.config.applicationsCardLayout === 'horizontal') return { cols: 12 }
       else return { xl: 3, md: 4, sm: 6, cols: 12 }
+    },
+    defaultSort () {
+      return this.config.applicationsDefaultSort || 'createdAt'
     }
   },
   watch: {
@@ -266,8 +269,8 @@ export default {
   methods: {
     readQueryParams () {
       this.search = this.$route.query.q || ''
-      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : 'createdAt'
-      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
+      this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : this.defaultSort
+      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : (this.defaultSort === 'title' ? 1 : 0)
       this.filters.apps = this.$route.query['base-application'] ? this.$route.query['base-application'].split(',') : []
       this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
       this.filters.owner = this.$route.query.owner ? this.$route.query.owner.split(',') : []
@@ -277,12 +280,12 @@ export default {
       else this.page = 1
       const query = {}
       if (this.search) query.q = this.search
-      if (this.sort !== 'createdAt' || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
+      if (this.sort !== this.defaultSort || this.order !== 0) query.sort = this.sort + ':' + (this.order * 2 - 1)
       if (this.filters.apps.length) query['base-application'] = this.filters.apps.join(',')
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       if (this.filters.owner.length) query.owner = this.filters.owner.join(',')
       const params = { ...query }
-      params.sort = params.sort || 'createdAt:-1'
+      params.sort = params.sort || this.defaultSort + (this.defaultSort === 'title' ? ':1' : ':-1')
       params.size = this.size
       params.page = this.page
       params.select = 'id,slug,title,description,updatedAt,url,topics,-userPermissions'

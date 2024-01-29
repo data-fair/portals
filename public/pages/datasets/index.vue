@@ -301,7 +301,7 @@ export default {
     readQueryParams () {
       this.search = this.$route.query.q || ''
       this.sort = this.$route.query.sort ? this.$route.query.sort.split(':')[0] : this.defaultSort
-      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : 0
+      this.order = this.$route.query.sort ? (Number(this.$route.query.sort.split(':')[1]) + 1) / 2 : (this.defaultSort === 'title' ? 1 : 0)
       this.filters.concepts = this.$route.query.concepts ? this.$route.query.concepts.split(',') : []
       this.filters.topics = this.$route.query.topics ? this.$route.query.topics.split(',') : []
       this.filters.id = this.$route.query.id ? this.$route.query.id.split(',') : []
@@ -318,7 +318,8 @@ export default {
       if (this.filters.topics.length) query.topics = this.filters.topics.join(',')
       if (this.filters.owner.length) query.owner = this.filters.owner.join(',')
       const params = { ...query }
-      params.sort = params.sort || this.defaultSort + ':-1'
+      params.sort = params.sort || this.defaultSort + (this.defaultSort === 'title' ? ':1' : ':-1')
+      console.log(this.defaultSort, params.sort)
       params.size = this.size
       params.page = this.page
       params.select = 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'

@@ -17,7 +17,7 @@
           v-if="img"
           :src="img"
           alt=""
-          :max-height="170"
+          :height="170"
           :contain="imgContain"
           :class="{'mb-2': !!img}"
           :aspect-ratio="imgAspectRatio"
