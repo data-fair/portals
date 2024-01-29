@@ -11,7 +11,7 @@
   >
     <template #bottom>
       <v-card-actions
-        v-if="config.datasetActionsDisplay === 'button' && (!$vuetify.breakpoint.smAndUp || ['dense', 'medium', 'vertical'].includes(config.datasetsCardLayout))"
+        v-if="config.datasetActionsDisplay === 'button' && (!$vuetify.breakpoint.smAndUp || ['dense', 'medium', 'vertical'].includes(layout))"
         style="min-height:36px"
         class="pa-1"
       >
@@ -55,7 +55,7 @@
           :dataset="dataset"
           :color="'primary'"
         />
-        <template v-if="!isMobileOnly && !dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(config.datasetsCardLayout))">
+        <template v-if="!isMobileOnly && !dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(layout))">
           <v-btn
             v-if="config.datasetActionsDisplay === 'button'"
             text
@@ -75,11 +75,11 @@
           />
         </template>
         <schema-view
-          v-if="!dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(config.datasetsCardLayout))"
+          v-if="!dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(layout))"
           :dataset="dataset"
           :color="'primary'"
         />
-        <template v-if="config.datasetActionsDisplay !== 'button' || ($vuetify.breakpoint.smAndUp && !['dense', 'medium', 'vertical'].includes(config.datasetsCardLayout) )">
+        <template v-if="config.datasetActionsDisplay !== 'button' || ($vuetify.breakpoint.smAndUp && !['dense', 'medium', 'vertical'].includes(layout) )">
           <v-spacer />
           <span
             class="text-caption px-1"
