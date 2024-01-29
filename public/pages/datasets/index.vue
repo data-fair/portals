@@ -197,6 +197,7 @@
 
 import fileDownload from 'js-file-download'
 import DatasetCard from '~/components/dataset/card.vue'
+import { isMobileOnly } from 'mobile-device-detect'
 const { mapState, mapGetters, mapActions } = require('vuex')
 
 export default {
@@ -230,7 +231,8 @@ export default {
         value: 'title'
       }],
       downloading: false,
-      lastParams: {}
+      lastParams: {},
+      isMobileOnly
     }
   },
   async fetch () {

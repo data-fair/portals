@@ -9,11 +9,11 @@
       <v-btn
         v-if="config.datasetActionsDisplay === 'button'"
         text
-        small
+        x-small
         color="primary"
         v-on="onDialog"
       >
-        <v-icon>
+        <v-icon small>
           mdi-table-eye
         </v-icon>&nbsp;Aperçu
       </v-btn>

@@ -6,23 +6,27 @@
     transition="none"
   >
     <template #activator="{on: onDialog}">
-      <v-btn
-        v-if="config.applicationActionsDisplay === 'button'"
-        text
-        small
-        color="primary"
+      <div
+        style="min-height:24px"
         v-on="onDialog"
       >
-        <v-icon>
-          mdi-code-tags
-        </v-icon>&nbsp;Intégrer
-      </v-btn>
-      <action-icon
-        v-else
-        title="Intégrer dans un site"
-        icon="mdi-code-tags"
-        v-on="onDialog"
-      />
+        <v-btn
+          v-if="config.applicationActionsDisplay === 'button'"
+          text
+          x-small
+          color="primary"
+        >
+          <v-icon small>
+            mdi-code-tags
+          </v-icon>&nbsp;Intégrer
+        </v-btn>
+        <action-icon
+          v-else
+          title="Intégrer dans un site"
+          icon="mdi-code-tags"
+          v-on="onDialog"
+        />
+      </div>
     </template>
     <v-card>
       <v-toolbar

@@ -11,6 +11,19 @@
   >
     <template #bottom>
       <v-card-actions
+        v-if="config.datasetActionsDisplay === 'button' && (!$vuetify.breakpoint.smAndUp || ['dense', 'medium', 'vertical'].includes(config.datasetsCardLayout))"
+        style="min-height:36px"
+        class="pa-1"
+      >
+        <span
+          class="text-caption px-1"
+          style="line-height:1rem"
+        >
+          Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
+        </span>
+        <owner-department :owner="dataset.owner" />
+      </v-card-actions>
+      <v-card-actions
         v-if="dataset"
         class="pa-1"
       >
@@ -22,11 +35,11 @@
           <v-btn
             v-if="config.datasetActionsDisplay === 'button'"
             text
-            small
+            x-small
             color="primary"
             :to="{ name: 'datasets-ref-full', params: { ref: datasetRef } }"
           >
-            <v-icon>
+            <v-icon small>
               mdi-table-large
             </v-icon>&nbsp;Tableau
           </v-btn>
@@ -42,15 +55,15 @@
           :dataset="dataset"
           :color="'primary'"
         />
-        <template v-if="!isMobileOnly && !dataset.isMetaOnly">
+        <template v-if="!isMobileOnly && !dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(config.datasetsCardLayout))">
           <v-btn
             v-if="config.datasetActionsDisplay === 'button'"
             text
-            small
+            x-small
             color="primary"
             :to="{ name: 'datasets-ref-api-doc', params: { ref: datasetRef } }"
           >
-            <v-icon>
+            <v-icon small>
               mdi-cog
             </v-icon>&nbsp;API
           </v-btn>
@@ -62,18 +75,20 @@
           />
         </template>
         <schema-view
-          v-if="!dataset.isMetaOnly"
+          v-if="!dataset.isMetaOnly && (config.datasetActionsDisplay !== 'button' || !['dense', 'vertical'].includes(config.datasetsCardLayout))"
           :dataset="dataset"
           :color="'primary'"
         />
-        <v-spacer />
-        <span
-          class="text-caption px-1"
-          style="line-height:1rem"
-        >
-          Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
-        </span>
-        <owner-department :owner="dataset.owner" />
+        <template v-if="config.datasetActionsDisplay !== 'button' || ($vuetify.breakpoint.smAndUp && !['dense', 'medium', 'vertical'].includes(config.datasetsCardLayout) )">
+          <v-spacer />
+          <span
+            class="text-caption px-1"
+            style="line-height:1rem"
+          >
+            Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
+          </span>
+          <owner-department :owner="dataset.owner" />
+        </template>
       </v-card-actions>
     </template>
   </card-action-card>

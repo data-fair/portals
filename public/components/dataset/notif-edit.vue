@@ -8,12 +8,12 @@
       <v-btn
         v-if="config.datasetActionsDisplay === 'button'"
         text
-        small
+        x-small
         color="primary"
         :disabled="!user"
         v-on="onDialog"
       >
-        <v-icon>
+        <v-icon small>
           mdi-bell
         </v-icon>&nbsp;Notifications
       </v-btn>

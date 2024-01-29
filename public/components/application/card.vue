@@ -1,19 +1,23 @@
 <template lang="html">
   <card-action-card
     :title="application.title"
-    :to="{name: 'applications-ref', params:{ref: applicationRef}}"
+    :to="{name: 'applications-ref' + (config.applicationsDirectNavigation ? '-full' : ''), params:{ref: applicationRef}}"
     :img="`${application.href}/capture?updatedAt=${application.updatedAt}`"
     :img-aspect-ratio="21/9"
     :topics="application.topics"
     :html="application.description"
     :layout="layout"
   >
-    <template #bottom>
+    <template
+      v-if="!config.applicationsDirectNavigation"
+      #bottom
+    >
       <v-card-actions class="pa-1">
         <application-view :application="application" />
         <application-fullscreen :application="application" />
         <v-spacer />
         <span
+          v-if="config.applicationActionsDisplay !== 'button'"
           class="text-caption px-1"
           style="line-height:1rem"
         >
@@ -27,7 +31,7 @@
 
 <script>
 import ApplicationView from '~/components/application/view.vue'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -38,6 +42,7 @@ export default {
     layout: { type: String, default: 'dense' }
   },
   computed: {
+    ...mapState(['config']),
     ...mapGetters(['readableTopicColor', 'isPublished']),
     applicationRef () {
       return this.isPublished ? this.application.slug : this.application.id

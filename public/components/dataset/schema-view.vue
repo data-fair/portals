@@ -9,11 +9,11 @@
       <v-btn
         v-if="config.datasetActionsDisplay === 'button'"
         text
-        small
+        x-small
         color="primary"
         v-on="onDialog"
       >
-        <v-icon>
+        <v-icon small>
           mdi-view-list
         </v-icon>&nbsp;Schéma
       </v-btn>

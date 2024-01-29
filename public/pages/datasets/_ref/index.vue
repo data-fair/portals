@@ -251,86 +251,136 @@
               </v-col>
             </v-row>
             <v-divider class="mt-2 mb-3" />
-            <v-row>
+            <v-row
+              class="ma-0"
+              align="center"
+            >
               <v-col
                 :md="config.datasetMetaLayout === 'vertical' ? (config.datasetActionsDisplay === 'button' ? 7 : 4) : 12"
                 :cols="12"
                 class="px-5 py-1"
               >
-                <table-preview
-                  v-if="!dataset.isMetaOnly"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-                <template v-if="!dataset.isMetaOnly">
-                  <v-btn
-                    v-if="config.datasetActionsDisplay === 'button'"
-                    text
-                    small
-                    color="primary"
-                    :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
+                <v-row>
+                  <v-col
+                    v-if="!dataset.isMetaOnly"
+                    class="pa-0"
+                    :cols="actionsCols"
                   >
-                    <v-icon>
-                      mdi-table-large
-                    </v-icon>&nbsp;Tableau
-                  </v-btn>
-                  <action-icon
-                    v-else
-                    title="Tableau plein écran"
-                    icon="mdi-table-large"
-                    :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
-                  />
-                </template>
-                <map-preview
-                  v-if="dataset.bbox && dataset.bbox.length"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-                <template v-if="!isMobileOnly && !dataset.isMetaOnly">
-                  <v-btn
-                    v-if="config.datasetActionsDisplay === 'button'"
-                    text
-                    small
-                    color="primary"
-                    :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
+                    <table-preview
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="!dataset.isMetaOnly"
+                    class="pa-0"
+                    :cols="actionsCols"
                   >
-                    <v-icon>
-                      mdi-cog
-                    </v-icon>&nbsp;API
-                  </v-btn>
-                  <action-icon
-                    v-else
-                    title="Documentation d'API"
-                    icon="mdi-cog"
-                    :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
-                  />
-                </template>
-                <download
-                  v-if="!dataset.isMetaOnly"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-                <schema-view
-                  v-if="!dataset.isMetaOnly"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-                <dataset-embed
-                  v-if="!dataset.isMetaOnly"
-                  :dataset="dataset"
-                />
-                <attachments
-                  v-if="dataset.attachments && dataset.attachments.filter(a => a.url !== dataset.image).length"
-                  :dataset="dataset"
-                  :color="'primary'"
-                />
-                <client-only>
-                  <notif-edit
+                    <v-btn
+                      v-if="config.datasetActionsDisplay === 'button'"
+                      text
+                      x-small
+                      color="primary"
+                      :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
+                    >
+                      <v-icon small>
+                        mdi-table-large
+                      </v-icon>&nbsp;Tableau
+                    </v-btn>
+                    <action-icon
+                      v-else
+                      title="Tableau plein écran"
+                      icon="mdi-table-large"
+                      :to="{ name: 'datasets-ref-full', params: { ref: $route.params.ref } }"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="dataset.bbox && dataset.bbox.length"
+
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <map-preview
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="!isMobileOnly && !dataset.isMetaOnly"
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <v-btn
+                      v-if="config.datasetActionsDisplay === 'button'"
+                      text
+                      x-small
+                      color="primary"
+                      :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
+                    >
+                      <v-icon small>
+                        mdi-cog
+                      </v-icon>&nbsp;API
+                    </v-btn>
+                    <action-icon
+                      v-else
+                      title="Documentation d'API"
+                      icon="mdi-cog"
+                      :to="{ name: 'datasets-ref-api-doc', params: { ref: $route.params.ref } }"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="!dataset.isMetaOnly"
+
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <download
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="!dataset.isMetaOnly"
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <schema-view
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="!dataset.isMetaOnly"
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <dataset-embed
+                      :dataset="dataset"
+                    />
+                  </v-col>
+                  <v-col
+                    v-if="dataset.attachments && dataset.attachments.filter(a => a.url !== dataset.image).length"
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <attachments
+                      :dataset="dataset"
+                      :color="'primary'"
+                    />
+                  </v-col>
+                  <v-col
                     v-if="canLogin && notifyUrl"
-                    :dataset="dataset"
-                    :color="'primary'"
-                  />
-                </client-only>
+                    class="pa-0"
+                    :cols="actionsCols"
+                  >
+                    <client-only>
+                      <notif-edit
+                        :dataset="dataset"
+                        :color="'primary'"
+                      />
+                    </client-only>
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col
                 :md="config.datasetMetaLayout === 'vertical' ? (config.datasetActionsDisplay === 'button' ? 2 : 4) : 12"
@@ -632,6 +682,10 @@ export default {
     },
     canLogin () {
       return this.config.authentication !== 'none'
+    },
+    actionsCols () {
+      if (this.config.datasetActionsDisplay !== 'button') return 'auto'
+      else return !this.$vuetify.breakpoint.sm ? 4 : 2
     }
   },
   async mounted () {}

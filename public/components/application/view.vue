@@ -9,11 +9,11 @@
       <v-btn
         v-if="config.applicationActionsDisplay === 'button'"
         text
-        small
+        x-small
         color="primary"
         v-on="onDialog"
       >
-        <v-icon>
+        <v-icon small>
           mdi-tooltip-image-outline
         </v-icon>&nbsp;Aperçu
       </v-btn>

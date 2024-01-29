@@ -3,12 +3,12 @@
     <v-btn
       v-if="config.applicationActionsDisplay === 'button'"
       text
-      small
+      x-small
       :loading="downloading"
       color="primary"
       @click="download"
     >
-      <v-icon>
+      <v-icon small>
         mdi-camera
       </v-icon>&nbsp;Export
     </v-btn>

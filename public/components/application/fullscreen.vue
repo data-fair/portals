@@ -3,11 +3,11 @@
     <v-btn
       v-if="config.applicationActionsDisplay === 'button'"
       text
-      small
+      x-small
       color="primary"
       :to="{ name: 'applications-ref-full', params: { ref: applicationRef }, query: syncedStateParams }"
     >
-      <v-icon>
+      <v-icon small>
         mdi-fullscreen
       </v-icon>&nbsp;Plein écran
     </v-btn>
