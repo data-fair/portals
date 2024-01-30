@@ -543,16 +543,14 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
   const project = findUtils.project(req.query.select)
   const [skip, size] = findUtils.pagination(req.query)
 
-  const countPromise = req.query.count !== 'false' && uses.countDocuments(query)
-  const resultsPromise = size > 0 && uses.find(query).collation({ locale: 'en' }).limit(size).skip(skip).sort(sort).project(project).toArray()
-  const response = {}
-  if (countPromise) response.count = await countPromise
-  if (resultsPromise) response.results = await resultsPromise
-  else response.results = []
-  response.results.forEach(r => {
+  const [count, results] = await Promise.all([
+    uses.countDocuments(query),
+    uses.find(query).collation({ locale: 'en' }).limit(size).skip(skip).sort(sort).project(project).toArray()
+  ])
+  results.forEach(r => {
     cleanUse(r, req.query.html === 'true')
   })
-  res.json(response)
+  res.json({ count, results })
 }))
 
 // Create a use
