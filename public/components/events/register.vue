@@ -10,6 +10,7 @@
       <v-btn
         :href="loginHref"
         small
+        text
       >
         Se connecter / Créer un compte
       </v-btn>

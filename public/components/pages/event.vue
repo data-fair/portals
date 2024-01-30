@@ -238,7 +238,7 @@
         :value="{ type: 'text', content: page.config.description }"
       />
       <events-register
-        v-if="!pageConfig"
+        v-if="!pageConfig && page.config.datetimes && page.config.datetimes.end && page.config.datetimes.end > new Date().toISOString()"
         :page-id="page.id"
         :page-title="page.title"
       />
