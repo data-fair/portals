@@ -42,7 +42,7 @@ services:
   data-fair:
     profiles:
       - dev
-    image: ghcr.io/data-fair/data-fair:catalog-api
+    image: ghcr.io/data-fair/data-fair:3
     restart: on-failure:10
     network_mode: host
     # command: /webapp/node_modules/.bin/nodemon server

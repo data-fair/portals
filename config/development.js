@@ -9,5 +9,8 @@ module.exports = {
     notifications: 'secret-notifications'
     // sites: 'secret-sites'
   },
-  whiteLabelOwners: 'user:superadmin'
+  whiteLabelOwners: 'user:superadmin',
+  prometheus: {
+    port: 9190
+  }
 }

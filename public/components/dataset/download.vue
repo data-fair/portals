@@ -63,7 +63,7 @@
               :title="dataFile.title"
               icon=" mdi-download"
               :href="dataFile.url"
-              @click="$event => { $ma.trackEvent({action: 'download_data_file', label: dataset.id}); menu = false }"
+              @click="$event => { $ma && $ma.trackEvent({action: 'download_data_file', label: dataset.id}); menu = false }"
             />
           </v-list-item-action>
         </v-list-item>
@@ -243,6 +243,16 @@ export default {
   },
   async mounted () {
     const dataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
+    if (this.dataset.virtual && this.dataset.virtual.children) {
+      for (const id of this.dataset.virtual.children) {
+        try {
+          const childrenDataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${id}/data-files`)
+          const source = childrenDataFiles && childrenDataFiles.find(f => f.key === 'original')
+          if (source) dataFiles.push(source)
+        } catch (err) {}
+      }
+    }
+
     for (const dataFile of dataFiles) {
       dataFile.format = dataFile.mimetype.split('/').pop().replace('+', '')
     }
