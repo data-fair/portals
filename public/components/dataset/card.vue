@@ -11,7 +11,7 @@
   >
     <template #bottom>
       <v-card-actions
-        v-if="config.datasetActionsDisplay === 'button' && (!$vuetify.breakpoint.smAndUp || ['dense', 'medium', 'vertical'].includes(layout))"
+        v-if="dataset && config.datasetActionsDisplay === 'button' && (!$vuetify.breakpoint.smAndUp || ['dense', 'medium', 'vertical'].includes(layout))"
         style="min-height:36px"
         class="pa-1"
       >
