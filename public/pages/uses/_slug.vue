@@ -140,7 +140,7 @@ export default {
       params: {
         slugs: (this.use.datasets || []).map(d => d.slug || d.id).join(','),
         publicationSites: `data-fair-portals:${this.portal._id}`,
-        select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
+        select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions,isMetaOnly',
         size: 1000,
         html: true
       }

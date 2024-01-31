@@ -60,7 +60,8 @@ module.exports = {
         properties: {
           href: { type: 'string' },
           title: { type: 'string' },
-          id: { type: 'string' }
+          id: { type: 'string' },
+          slug: { type: 'string' }
         }
       }
     },
