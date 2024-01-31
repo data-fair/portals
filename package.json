@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/portals",
-  "version": "1.54.5",
+  "version": "1.54.6",
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "scripts": {
