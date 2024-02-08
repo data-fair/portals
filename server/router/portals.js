@@ -21,7 +21,7 @@ const validatePage = ajv.compile(pageSchema)
 const useSchema = require('../../contract/use')
 const validateUse = ajv.compile(useSchema)
 const asyncWrap = require('../utils/async-wrap')
-const { downloadAsset, uploadAssets, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
+const { downloadAsset, uploadAsset, prepareFitHashedAsset, fillConfigAssets } = require('../utils/assets')
 const axios = require('../utils/axios')
 const findUtils = require('../utils/find')
 const usesUtils = require('../utils/uses')
@@ -244,7 +244,7 @@ router.post('', asyncWrap(async (req, res) => {
 }))
 
 // Read the portal matching a request, check that the user is owner
-async function setPortal (req, res, next) {
+async function setPortalAdmin (req, res, next) {
   if (!req.user) return res.status(401).send()
   const portal = await req.app.get('db')
     .collection('portals').findOne({ _id: req.params.id })
@@ -261,7 +261,7 @@ async function setPortal (req, res, next) {
 }
 
 // Get an existing portal as the owner
-router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
+router.get('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   if (req.query.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
@@ -277,7 +277,7 @@ router.get('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
 }))
 
 // Delete an existing portal as the owner
-router.delete('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
+router.delete('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`${config.dataDir}/${req.params.id}`)) await fs.remove(`${config.dataDir}/${req.params.id}`)
@@ -286,7 +286,7 @@ router.delete('/:id', asyncWrap(setPortal), asyncWrap(async (req, res) => {
 }))
 
 // Update the draft configuration as the owner
-router.put('/:id/configDraft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
+router.put('/:id/configDraft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await fillConfigAssets(`${config.dataDir}/${req.portal._id}/draft`, req.body)
   await req.app.get('db')
@@ -298,7 +298,7 @@ const googleFonts = require('google-fonts-complete')
 const fonts = Object.entries(googleFonts)
   .filter(entry => entry[1].subsets.includes('latin'))
   .map(([name, info]) => ({ source: 'google-fonts', name, label: name, category: info.category }))
-router.get('/:id/fonts', asyncWrap(setPortal), (req, res, next) => {
+router.get('/:id/fonts', asyncWrap(setPortalAdmin), (req, res, next) => {
   const assetsFonts = []
   if (req.portal.configDraft?.assets?.font1?.name) {
     assetsFonts.push({ source: 'assets', name: 'font1', label: `Police 1 (${req.portal.configDraft.assets.font1.name})` })
@@ -309,7 +309,8 @@ router.get('/:id/fonts', asyncWrap(setPortal), (req, res, next) => {
   res.send([...assetsFonts, ...fonts])
 })
 
-router.post('/:id/assets/:assetId', uploadAssets.any(), asyncWrap(async (req, res) => {
+router.post('/:id/assets/:assetId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+  await uploadAsset(req, res)
   await prepareFitHashedAsset(`${config.dataDir}/${req.params.id}/draft`, req.params.assetId)
   res.send()
 }))
@@ -318,7 +319,7 @@ router.get('/:id/assets/:assetId', asyncWrap(setPortalAnonymous), asyncWrap(down
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
-router.post('/:id/_validate_draft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
+router.post('/:id/_validate_draft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
@@ -334,7 +335,7 @@ router.post('/:id/_validate_draft', asyncWrap(setPortal), asyncWrap(async (req, 
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
-router.post('/:id/_cancel_draft', asyncWrap(setPortal), asyncWrap(async (req, res) => {
+router.post('/:id/_cancel_draft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
   if (await fs.pathExists(`${config.dataDir}/${req.portal._id}/prod`)) {
@@ -428,7 +429,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
 }))
 
 // Create a page
-router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
+router.post('/:id/pages', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
   const baseId = slug(req.body.title.slice(0, 100), { lower: true, strict: true })
   req.body.id = baseId
   req.body.portal = {
@@ -462,7 +463,7 @@ router.post('/:id/pages', asyncWrap(setPortal), asyncWrap(async (req, res, next)
 }))
 
 // Patch some of the attributes of a page
-router.patch('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
+router.patch('/:id/pages/:pageId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
   const filter = { id: req.params.pageId, 'portal._id': req.portal._id }
   const page = await req.app.get('db').collection('pages')
     .findOne(filter, { projection: { _id: 0 } })
@@ -503,7 +504,7 @@ router.patch('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, r
   res.status(200).send(patchedPage)
 }))
 
-router.delete('/:id/pages/:pageId', asyncWrap(setPortal), asyncWrap(async (req, res, next) => {
+router.delete('/:id/pages/:pageId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
   await req.app.get('db').collection('pages').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
   res.status(204).send()
 }))
@@ -533,7 +534,7 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
   } else if (req.query.published) {
     // only owner of portal can filter on published
     // we use setPortal just to check that the user is owner
-    await setPortal(req, res)
+    await setPortalAdmin(req, res)
     query.published = req.query.published === 'true'
   }
   const sort = findUtils.sort(req.query.sort)
@@ -554,8 +555,9 @@ router.get('/:id/uses', setPortalAnonymous, asyncWrap(async (req, res, next) => 
 }))
 
 // Create a use
-router.post('/:id/uses', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.any(), asyncWrap(async (req, res, next) => {
-  await usesUtils.afterUpload(req)
+router.post('/:id/uses', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
+  if (!req.user) return res.status(401).send()
+  await usesUtils.uploadImage(req, res)
   req.body._id = req.body.slug = req.params.useId || nanoid()
   req.body.portal = {
     _id: req.portal._id,
@@ -580,14 +582,14 @@ router.post('/:id/uses', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.an
   res.status(200).send(req.body)
 }))
 
-router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), usesUtils.uploadImage.any(), asyncWrap(async (req, res, next) => {
-  await usesUtils.afterUpload(req)
+router.patch('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
   const db = req.app.get('db')
   const use = await db.collection('uses').findOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   if (!use) return res.status(404).send('use not found')
   if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
-    await setPortal(req, res)
+    await setPortalAdmin(req, res)
   }
+  await usesUtils.uploadImage(req, res)
   const acceptedParts = Object.keys(useSchema.properties).filter(k => !useSchema.properties[k].readOnly)
   for (const key in req.body) {
     if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
@@ -644,7 +646,7 @@ router.get('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async (r
   if (!use) return res.status(404).send('use not found')
   if (!use.published && (use.owner.type !== 'user' || use.owner.id !== req.user.id)) {
     // we use setPortal just to check that the user is owner
-    await setPortal(req, res)
+    await setPortalAdmin(req, res)
   }
   res.send(use)
 }))
@@ -680,7 +682,7 @@ router.delete('/:id/uses/:useId', asyncWrap(setPortalAnonymous), asyncWrap(async
   if (!use) return res.status(404).send('use not found')
   if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
     // we use setPortal just to check that the user is owner
-    await setPortal(req, res)
+    await setPortalAdmin(req, res)
   }
   await req.app.get('db').collection('uses').deleteOne({ _id: req.params.useId, 'portal._id': req.portal._id })
   res.status(204).send()
@@ -692,7 +694,7 @@ router.post('/:id/uses/:useId/_submit', asyncWrap(setPortalAnonymous), asyncWrap
   if (!use) return res.status(404).send('use not found')
   if (use.owner.type !== 'user' || use.owner.id !== req.user.id) {
     // we use setPortal just to check that the user is owner
-    await setPortal(req, res)
+    await setPortalAdmin(req, res)
   }
   await req.app.get('db').collection('uses').updateOne(
     { _id: req.params.useId },

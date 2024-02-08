@@ -3,9 +3,15 @@ const config = require('config')
 const fs = require('fs-extra')
 const multer = require('multer')
 const { nanoid } = require('nanoid')
+const resolvePath = require('resolve-path')
+const promisifyMiddleware = require('./promisify-middleware')
 const sharp = require('sharp')
 
-exports.directory = (portalId, useId) => path.resolve(config.dataDir, portalId, 'prod', 'uses', useId)
+const portalsDir = path.resolve(config.dataDir, 'portals')
+const portalDir = (portalId) => resolvePath(portalsDir, portalId)
+const usesDir = (portalId) => path.join(portalDir(portalId), 'prod', 'uses')
+
+exports.directory = (portalId, useId) => resolvePath(usesDir(portalId), useId)
 
 // Upload draft resources as the owner
 // We upload resources only in a draft folder
@@ -21,11 +27,11 @@ const storage = multer.diskStorage({
     cb(null, 'image')
   }
 })
-exports.uploadImage = multer({ storage })
+const getImage = promisifyMiddleware(multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } }).single('image'), 'file')
 
-exports.afterUpload = async (req) => {
+exports.uploadImage = async (req, res) => {
+  const image = await getImage(req, res)
   if (req.body.body) req.body = JSON.parse(req.body.body)
-  const image = req.files && req.files.find(f => f.fieldname === 'image')
   if (image) {
     req.body.image = {
       name: image.originalname,
