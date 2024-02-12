@@ -112,6 +112,8 @@ export default () => ({
       return pages
     },
     sitemapFull (state, getters, rootState) {
+      if (!rootState.config.updatedAt) return []
+
       const pages = [...getters.sitemapShort]
 
       // add news
