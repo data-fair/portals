@@ -89,13 +89,14 @@ function cleanUse (use, html) {
 
 // portals are synced to settings.publicationSites in data-fair and to a dataset containing images
 async function syncPortalUpdate (portal, cookie) {
+  const refType = portal.host ? 'slug' : 'id'
   const publicationSite = {
     type: 'data-fair-portals',
     id: portal._id,
     title: portal.title,
     url: link(portal),
-    datasetUrlTemplate: link(portal, '/datasets/{slug}'),
-    applicationUrlTemplate: link(portal, '/reuses/{slug}')
+    datasetUrlTemplate: link(portal, `/datasets/{${refType}}`),
+    applicationUrlTemplate: link(portal, `/reuses/{${refType}}`)
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
