@@ -84,6 +84,7 @@ module.exports = {
   },
   loading: { color: '#1e88e5' }, // Customize the progress bar color
   plugins: [
+    { src: '~plugins/axios-agents', mode: 'server' },
     { src: '~plugins/axios-errors' },
     { src: '~plugins/init' },
     { src: '~plugins/theme' },

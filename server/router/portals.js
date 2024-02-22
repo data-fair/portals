@@ -272,7 +272,11 @@ router.get('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
   try {
     await axios.get(`${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(req.portal)}`)
   } catch (err) {
-    await syncPortalUpdate(req.portal, req.headers.cookie)
+    try {
+      await syncPortalUpdate(req.portal, req.headers.cookie)
+    } catch (err) {
+      console.error('failed to auto-sync portal lacking images dataset', err)
+    }
   }
   res.send(cleanPortal(req.portal, req.query.html === 'true'))
 }))

@@ -55,6 +55,7 @@
     "@koumoul/nuxt-config-inject": "^0.4.10",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/i18n": "^7.2.2",
+    "agentkeepalive": "^4.5.0",
     "ajv": "^6.12.6",
     "cacheable-lookup": "^6.0.4",
     "config": "^3.3.3",

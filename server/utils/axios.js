@@ -1,20 +1,9 @@
 // prepare an axios instance with improved error management
 
 const axios = require('axios')
-const http = require('http')
-const https = require('https')
-const CacheableLookup = require('cacheable-lookup')
+const { httpAgent, httpsAgent } = require('../utils/http-agents')
 
-const cacheableLookup = new CacheableLookup()
-const httpAgent = new http.Agent({})
-const httpsAgent = new https.Agent({})
-cacheableLookup.install(httpAgent)
-cacheableLookup.install(httpsAgent)
-
-module.exports = axios.create({
-  httpAgent,
-  httpsAgent
-})
+module.exports = axios.create({ httpAgent, httpsAgent })
 
 module.exports.interceptors.response.use(response => response, error => {
   if (!error.response) return Promise.reject(error)

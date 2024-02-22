@@ -59,7 +59,7 @@ services:
       - WS_PUBLIC_URL=ws://localhost:6200/data-fair
       - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
       # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
-      - PROMETHEUS_ACTIVE=false
+      - OBSERVE_ACTIVE=false
       # - EXPORT_REST_DATASETS_CRON=* * * * *
     volumes:
       - ./data/data-fair:/data
