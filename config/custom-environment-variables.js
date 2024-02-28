@@ -13,7 +13,11 @@ module.exports = {
   mongo: {
     host: 'MONGO_HOST',
     db: 'MONGO_DB',
-    url: 'MONGO_URL'
+    url: 'MONGO_URL',
+    options: {
+      __name: 'MONGO_OPTIONS',
+      __format: 'json'
+    }
   },
   mails: {
     transport: {
