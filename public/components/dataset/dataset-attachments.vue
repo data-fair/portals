@@ -54,13 +54,13 @@
             <v-list-item-action>
               <v-btn
                 :href="attachment.url"
-                target="_blank"
-                download
+                :target="attachmentMode(attachment) === 'open' ? '_blank' : '_self'"
+                :download="attachmentMode(attachment) === 'download' ? attachment.name : null"
                 icon
                 ripple
               >
                 <v-icon color="primary">
-                  mdi-download
+                  {{ attachmentMode(attachment) === 'open' ? 'mdi-open-in-new' : 'mdi-download' }}
                 </v-icon>
               </v-btn>
             </v-list-item-action>
@@ -80,7 +80,13 @@ export default {
     dialog: null
   }),
   computed: {
-    ...mapState(['config'])
+    ...mapState(['config']),
+    attachmentMode () {
+      return attachment => {
+        if (attachment.type === 'url' || attachment.mimetype === 'application/pdf' || attachment.mimetype.startsWith('image/')) return 'open'
+        return 'download'
+      }
+    }
   }
 }
 </script>
