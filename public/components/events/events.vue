@@ -5,7 +5,7 @@
     >
       <v-card-title>
         <h2 class="headline grey--text text--darken-3 font-weight-bold">
-          Evenements à venir
+          Évènements à venir
         </h2>
       </v-card-title>
       <v-card-text>
