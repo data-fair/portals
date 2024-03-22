@@ -27,7 +27,8 @@ module.exports = {
   },
   secretKeys: {
     notifications: 'SECRET_NOTIFICATIONS',
-    sites: 'SECRET_SITES'
+    sites: 'SECRET_SITES',
+    ignoreRateLimiting: 'SECRET_IGNORE_RATE_LIMITING'
   },
   proxyNuxt: {
     __name: 'PROXY_NUXT',
