@@ -5,7 +5,6 @@ export default function ({ $axios }) {
   $axios.defaults.httpsAgent = process.__http_agents.httpsAgent
 
   if (process.env.SECRET_IGNORE_RATE_LIMITING) {
-    console.log('Use secret to ignore rate limiting')
     $axios.defaults.headers.common['x-ignore-rate-limiting'] = process.env.SECRET_IGNORE_RATE_LIMITING
   }
 }
