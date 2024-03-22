@@ -6,6 +6,7 @@
   "scripts": {
     "dev-server": "NODE_ENV=development DEBUG=upgrade* nodemon server",
     "dev-client": "NODE_ENV=development nuxt -p 3039",
+    "dev-built": "NODE_ENV=development npm run build && rm -rf nuxt-dist-standalone && cp -rf nuxt-dist nuxt-dist-standalone && PROXY_NUXT=false npm run dev-server",
     "dev-deps": "docker-compose --profile dev up -d",
     "stop-dev-deps": "docker compose --profile dev stop",
     "dev-zellij": "zellij --layout .zellij.kdl",
