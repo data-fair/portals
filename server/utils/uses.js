@@ -7,8 +7,7 @@ const resolvePath = require('resolve-path')
 const promisifyMiddleware = require('./promisify-middleware')
 const sharp = require('sharp')
 
-const portalsDir = path.resolve(config.dataDir, 'portals')
-const portalDir = (portalId) => resolvePath(portalsDir, portalId)
+const portalDir = (portalId) => resolvePath(config.dataDir, portalId)
 const usesDir = (portalId) => path.join(portalDir(portalId), 'prod', 'uses')
 
 exports.directory = (portalId, useId) => resolvePath(usesDir(portalId), useId)
