@@ -89,6 +89,7 @@ app.use(asyncWrap(async (req, res, next) => {
     const host = req.headers.host
     req.portal = await getPortalFromHost(req.app.get('db'), host)
   }
+  next()
 }))
 
 app.get('/robots.txt', (req, res) => {
