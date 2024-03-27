@@ -57,21 +57,6 @@ app.use('/api/', (req, res) => {
 app.use('/streamsaver/mitm.html', express.static('node_modules/streamsaver/mitm.html'))
 app.use('/streamsaver/sw.js', express.static('node_modules/streamsaver/sw.js'))
 
-// set current baseUrl, i.e. the url of the service on the current user's domain
-const publicUrl = new URL(config.publicUrl)
-app.use('/', (req, res, next) => {
-  const u = originalUrl(req)
-  if (u.hostname === publicUrl.hostname) req.publicBaseUrl = config.publicUrl
-  else req.publicBaseUrl = formatUrl({ protocol: u.protocol, hostname: u.hostname })
-  next()
-})
-
-app.get('/reuses*', (req, res, next) => {
-  const redirectUrl = req.publicBaseUrl + req.originalUrl.replace('/reuses', '/applications')
-  console.log('redirect reuse', req.originalUrl, redirectUrl)
-  res.redirect(redirectUrl)
-})
-
 const getPortalFromHost = memoize(async (db, host) => {
   return db.collection('portals').findOne({ host: { $eq: host } }, { projection: { _id: true } })
 }, {
@@ -88,9 +73,20 @@ app.use(asyncWrap(async (req, res, next) => {
   if (!req.query.portalId && !(req.headers['x-forwarded-path'] && req.headers['x-forwarded-path'].startsWith(nuxtConfig.router.base))) {
     const host = req.headers.host
     req.portal = await getPortalFromHost(req.app.get('db'), host)
+
+    const u = originalUrl(req)
+    req.publicBaseUrl = formatUrl({ protocol: u.protocol, hostname: u.hostname })
   }
   next()
 }))
+
+app.get('/reuses*', (req, res, next) => {
+  if (req.portal) {
+    const redirectUrl = req.publicBaseUrl + req.originalUrl.replace('/reuses', '/applications')
+    console.log('redirect reuse', req.originalUrl, redirectUrl)
+    res.redirect(redirectUrl)
+  }
+})
 
 app.get('/robots.txt', (req, res) => {
   if (!req.portal) {
