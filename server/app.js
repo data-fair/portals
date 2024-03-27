@@ -9,8 +9,10 @@ const nodemailer = require('nodemailer')
 const originalUrl = require('original-url')
 const { format: formatUrl } = require('url')
 const EventEmitter = require('events')
+const memoize = require('memoizee')
 const dbUtils = require('./utils/db')
 const prometheus = require('./utils/prometheus')
+const asyncWrap = require('./utils/async-wrap')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const nuxt = require('./nuxt')
 const session = require('@data-fair/sd-express')({
@@ -70,20 +72,46 @@ app.get('/reuses*', (req, res, next) => {
   res.redirect(redirectUrl)
 })
 
+const getPortalFromHost = memoize(async (db, host) => {
+  return db.collection('portals').findOne({ host: { $eq: host } }, { projection: { _id: true } })
+}, {
+  normalizer ([db, host]) {
+    return host
+  },
+  maxAge: process.env.NODE_ENV === 'development' ? 1000 : 30000
+})
+
+const nuxtConfig = require('../nuxt.config.js')
+app.use(asyncWrap(async (req, res, next) => {
+  // we have to use x-forwarded-path to distinguish between the exposition of the main portal at the root of the domain
+  // and the exposition of the manager under /data-fair-portals/
+  if (!req.query.portalId && !(req.headers['x-forwarded-path'] && req.headers['x-forwarded-path'].startsWith(nuxtConfig.router.base))) {
+    const host = req.headers.host
+    req.portal = await getPortalFromHost(req.app.get('db'), host)
+  }
+}))
+
+app.get('/robots.txt', (req, res) => {
+  if (!req.portal) {
+    return res.status(400).send('robots.txt only served on standalone portals')
+  }
+  if (config.disallowRobots) {
+    res.set('Content-Type', 'text/plain')
+    res.send(`User-agent: *
+Disallow: /`)
+  } else {
+    res.set('Content-Type', 'text/plain')
+    res.send(`User-agent: *
+Allow: /
+  
+Sitemap: ${req.publicBaseUrl}/sitemap.xml`)
+  }
+})
+
 let httpServer
 exports.start = async () => {
   const nuxtMiddleware = await nuxt()
   // app.use(require('cors')())
-  app.get('/robots.txt', (req, res) => {
-    if (req.publicBaseUrl === config.publicUrl) {
-      return res.status(400).send('robots;txt only served on standalone portals')
-    }
-    res.set('Content-Type', 'text/plain')
-    res.send(`User-agent: *
-Allow: /
-    
-Sitemap: ${req.publicBaseUrl}/sitemap.xml`)
-  })
   app.use(nuxtMiddleware)
 
   const { db, client } = await require('../upgrade')()

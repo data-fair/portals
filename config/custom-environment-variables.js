@@ -45,5 +45,9 @@ module.exports = {
     },
     port: 'PROMETHEUS_PORT'
   },
-  whiteLabelOwners: 'WHITE_LABEL_OWNERS'
+  whiteLabelOwners: 'WHITE_LABEL_OWNERS',
+  disallowRobots: {
+    __name: 'DISALLOW_ROBOTS',
+    __format: 'json'
+  }
 }

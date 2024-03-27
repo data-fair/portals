@@ -1,15 +1,6 @@
 const config = require('config')
-const memoize = require('memoizee')
-const asyncWrap = require('./utils/async-wrap')
 
-const getPortalFromHost = memoize(async (db, host) => {
-  return db.collection('portals').findOne({ host: { $eq: host } }, { projection: { _id: true } })
-}, {
-  normalizer ([db, host]) {
-    return host
-  },
-  maxAge: process.env.NODE_ENV === 'development' ? 1000 : 30000
-})
+const asyncWrap = require('./utils/async-wrap')
 
 module.exports = async () => {
   if (config.proxyNuxt) {
@@ -32,15 +23,9 @@ module.exports = async () => {
     return asyncWrap(async (req, res, next) => {
       // accept buffering and caching of this response in the reverse proxy
       res.setHeader('X-Accel-Buffering', 'yes')
-      // we have to use x-forwarded-path to distinguish between the exposition of the main portal at the root of the domain
-      // and the exposition of the manager under /data-fair-portals/
-      if (!req.query.portalId && !(req.headers['x-forwarded-path'] && req.headers['x-forwarded-path'].startsWith(nuxtConfig.router.base))) {
-        const host = req.headers.host
-        const portal = await getPortalFromHost(req.app.get('db'), host)
-        if (portal) {
-          req.headers['x-portal-id'] = portal._id
-          return nuxtStandalone.render(req, res)
-        }
+      if (req.portal) {
+        req.headers['x-portal-id'] = req.portal._id
+        return nuxtStandalone.render(req, res)
       }
 
       // re-apply the prefix that was removed by an optional reverse proxy

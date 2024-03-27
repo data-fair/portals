@@ -52,5 +52,6 @@ module.exports = {
     port: 9090
   },
   tablePreviewPath: '/table',
-  whiteLabelOwners: ''
+  whiteLabelOwners: '',
+  disallowRobots: false
 }
