@@ -49,6 +49,9 @@
               <v-list-item-subtitle v-if="attachment.type === 'file'">
                 <span class="text-caption">{{ attachment.name }} - {{ attachment.size | bytes }} - mis à jour le {{ attachment.updatedAt | date('L') }}</span>
               </v-list-item-subtitle>
+              <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
+                <span class="text-caption">{{ attachment.name }}</span>
+              </v-list-item-subtitle>
               <v-list-item-subtitle v-html="attachment.description" />
             </v-list-item-content>
             <v-list-item-action>
