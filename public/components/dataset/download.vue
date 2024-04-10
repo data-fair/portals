@@ -254,7 +254,7 @@ export default {
     }
 
     for (const dataFile of dataFiles) {
-      dataFile.format = dataFile.mimetype.split('/').pop().replace('+', '')
+      dataFile.format = dataFile.mimetype ? dataFile.mimetype.split('/').pop().replace('+', '') : dataFile.name.split('.').pop()
     }
     this.dataFiles = dataFiles
     this.dataFilesObj = this.dataFiles.reduce((obj, df) => { obj[df.key] = df; return obj }, {})

@@ -83,7 +83,7 @@ export default {
     ...mapState(['config']),
     attachmentMode () {
       return attachment => {
-        if (attachment.type === 'url' || attachment.mimetype === 'application/pdf' || attachment.mimetype.startsWith('image/')) return 'open'
+        if (attachment.type === 'url' || attachment.mimetype === 'application/pdf' || (attachment.mimetype && attachment.mimetype.startsWith('image/'))) return 'open'
         return 'download'
       }
     }
