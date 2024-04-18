@@ -39,6 +39,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import eventBus from '../../event-bus'
 
 export default {
   props: {
@@ -76,11 +77,16 @@ export default {
   },
   methods: {
     async change (event) {
-      if (this.lineId) {
-        if (event === null) await this.$axios.$delete(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`)
-        else await this.$axios.$patch(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`, { register: event })
-      } else {
-        if (event !== null) await this.$axios.$post(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines`, { pageId: this.pageId, pageTitle: this.pageTitle, register: event })
+      try {
+        if (this.lineId) {
+          if (event === null) await this.$axios.$delete(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`)
+          else await this.$axios.$patch(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`, { register: event })
+        } else {
+          if (event !== null) await this.$axios.$post(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines`, { pageId: this.pageId, pageTitle: this.pageTitle, register: event })
+        }
+        eventBus.$emit('notification', { type: 'success', msg: 'Votre choix a bien été enregistré' })
+      } catch (error) {
+        eventBus.$emit('notification', { error })
       }
     }
   }
