@@ -65,12 +65,10 @@ import Blank from '~/components/pages/blank.vue'
 import Thematic from '~/components/pages/thematic.vue'
 import News from '~/components/pages/news.vue'
 import Event from '~/components/pages/event.vue'
-const { mapState } = require('vuex')
-
+const { mapState, mapGetters } = require('vuex')
 const pageSchema = require('~/../contract/page.json')
-Object.keys(pageSchema.properties).forEach(p => {
-  if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
-})
+
+const adminOnlyParts = ['published', 'publishedAt', 'public', 'navigation'] // copied in portals.js
 
 export default {
   components: { Blank, Thematic, News, Event },
@@ -78,11 +76,18 @@ export default {
     page: null,
     pageConfig: null,
     htmlPage: null,
-    owner: null,
-    pageSchema
+    owner: null
   }),
   computed: {
     ...mapState(['config', 'portal']),
+    ...mapGetters(['canAdmin']),
+    pageSchema () {
+      Object.keys(pageSchema.properties).forEach(p => {
+        if (pageSchema.properties[p].readOnly) delete pageSchema.properties[p]
+        else if (!this.canAdmin && adminOnlyParts.includes(p)) pageSchema.properties[p]['x-options'] = { disableAll: true }
+      })
+      return pageSchema
+    },
     dataFairUrl () {
       return this.$store.getters.dataFairUrl
     },
@@ -96,7 +101,8 @@ export default {
           page: {
             id: this.$route.params.id,
             title: this.page.title
-          }
+          },
+          canAdmin: this.canAdmin
         },
         arrayItemCardProps: { outlined: true, tile: true },
         hideReadOnlyEmpty: true,
@@ -119,7 +125,7 @@ export default {
       to: '/manager/portals'
     }, {
       text: this.portal.title,
-      to: `/manager/portals/${this.portal._id}`
+      to: this.canAdmin ? `/manager/portals/${this.portal._id}` : null
     }, {
       text: 'pages',
       to: `/manager/portals/${this.portal._id}/pages`
@@ -137,6 +143,7 @@ export default {
       try {
         this.page = await this.$axios.$patch(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages/${this.$route.params.id}`, patch)
         delete this.page.config
+        delete this.page.configDraft
         delete this.page.id
         delete this.page.portal
         delete this.page.created

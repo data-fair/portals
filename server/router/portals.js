@@ -178,7 +178,7 @@ const router = module.exports = express.Router()
 // List user portals, or all portals for super admin
 router.get('', asyncWrap(async (req, res) => {
   if (!req.user) return res.status(401).send()
-  const filter = {}
+  let filter = {}
   if (req.query.showAll && !req.user.adminMode) {
     return res.status(403).send('Seul un super administrateur peut requêter la liste complète des portails.')
   }
@@ -186,7 +186,12 @@ router.get('', asyncWrap(async (req, res) => {
     filter['owner.type'] = req.user.activeAccount.type
     filter['owner.id'] = req.user.activeAccount.id
     if (req.user.activeAccount.department) {
-      filter['owner.department'] = req.user.activeAccount.department
+      filter = {
+        $or: [
+          { ...filter, 'owner.department': req.user.activeAccount.department },
+          { ...filter, 'owner.department': { $exists: false } }
+        ]
+      }
     }
   }
   res.send((await req.app.get('db').collection('portals').find(filter).limit(10000).toArray()).map(cleanPortal))
@@ -245,24 +250,24 @@ router.post('', asyncWrap(async (req, res) => {
 }))
 
 // Read the portal matching a request, check that the user is owner
-async function setPortalAdmin (req, res, next) {
+const setPortalAdmin = (ignoreDepartment = false) => async (req, res, next) => {
   if (!req.user) return res.status(401).send()
   const portal = await req.app.get('db')
     .collection('portals').findOne({ _id: req.params.id })
   if (!portal) throw createError(404, 'Portail inconnu')
-  if (portal.owner.type === 'organization') {
-    const orga = req.user.organizations.find(o => o.id === portal.owner.id && (!o.department || o.department === portal.owner.department))
-    if (!orga || orga.role !== 'admin') throw createError(403, 'admin only')
+  if (req.user.activeAccount.type !== portal.owner.type || req.user.activeAccount.id !== portal.owner.id) {
+    throw createError(403, 'owner only')
   }
-  if (portal.owner.type === 'user' && req.user.id !== portal.owner.id) {
-    throw createError(403, 'user himself only')
+  if (!ignoreDepartment && req.user.activeAccount.department && req.user.activeAccount.department !== portal.owner.department) {
+    throw createError(403, 'owner department only')
   }
+  if (req.user.activeAccount.role !== 'admin') throw createError(403, 'admin only')
   req.portal = portal
   if (next) next()
 }
 
 // Get an existing portal as the owner
-router.get('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.get('/:id', asyncWrap(setPortalAdmin(true)), asyncWrap(async (req, res) => {
   if (req.query.noConfig === 'true') {
     delete req.portal.config
     delete req.portal.configDraft
@@ -282,7 +287,7 @@ router.get('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
 }))
 
 // Delete an existing portal as the owner
-router.delete('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.delete('/:id', asyncWrap(setPortalAdmin()), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').deleteOne({ _id: req.params.id })
   if (await fs.pathExists(`${config.dataDir}/${req.params.id}`)) await fs.remove(`${config.dataDir}/${req.params.id}`)
@@ -291,7 +296,7 @@ router.delete('/:id', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
 }))
 
 // Update the draft configuration as the owner
-router.put('/:id/configDraft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.put('/:id/configDraft', asyncWrap(setPortalAdmin()), asyncWrap(async (req, res) => {
   req.body.updatedAt = new Date().toISOString()
   await fillConfigAssets(`${config.dataDir}/${req.portal._id}/draft`, req.body)
   await req.app.get('db')
@@ -303,7 +308,7 @@ const googleFonts = require('google-fonts-complete')
 const fonts = Object.entries(googleFonts)
   .filter(entry => entry[1].subsets.includes('latin'))
   .map(([name, info]) => ({ source: 'google-fonts', name, label: name, category: info.category }))
-router.get('/:id/fonts', asyncWrap(setPortalAdmin), (req, res, next) => {
+router.get('/:id/fonts', asyncWrap(setPortalAdmin()), (req, res, next) => {
   const assetsFonts = []
   if (req.portal.configDraft?.assets?.font1?.name) {
     assetsFonts.push({ source: 'assets', name: 'font1', label: `Police 1 (${req.portal.configDraft.assets.font1.name})` })
@@ -314,7 +319,7 @@ router.get('/:id/fonts', asyncWrap(setPortalAdmin), (req, res, next) => {
   res.send([...assetsFonts, ...fonts])
 })
 
-router.post('/:id/assets/:assetId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.post('/:id/assets/:assetId', asyncWrap(setPortalAdmin()), asyncWrap(async (req, res) => {
   await uploadAsset(req, res)
   await prepareFitHashedAsset(`${config.dataDir}/${req.params.id}/draft`, req.params.assetId)
   res.send()
@@ -324,7 +329,7 @@ router.get('/:id/assets/:assetId', asyncWrap(setPortalAnonymous), asyncWrap(down
 
 // Validate the draft as the owner
 // Both configuration and uploaded resources
-router.post('/:id/_validate_draft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.post('/:id/_validate_draft', asyncWrap(setPortalAdmin()), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, {
       $set: {
@@ -340,7 +345,7 @@ router.post('/:id/_validate_draft', asyncWrap(setPortalAdmin), asyncWrap(async (
   await syncPortalUpdate({ ...req.portal, config: req.portal.configDraft }, req.headers.cookie)
   res.send()
 }))
-router.post('/:id/_cancel_draft', asyncWrap(setPortalAdmin), asyncWrap(async (req, res) => {
+router.post('/:id/_cancel_draft', asyncWrap(setPortalAdmin()), asyncWrap(async (req, res) => {
   await req.app.get('db')
     .collection('portals').updateOne({ _id: req.portal._id }, { $set: { configDraft: req.portal.config } })
   if (await fs.pathExists(`${config.dataDir}/${req.portal._id}/prod`)) {
@@ -396,18 +401,26 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   const project = req.query.select ? Object.assign({}, ...req.query.select.split(',').map(f => ({ [f]: 1 }))) : {}
   const sort = findUtils.sort(req.query.sort)
   const pages = req.app.get('db').collection('pages')
-  const filter = { 'portal._id': req.params.id }
+  const filters = [{ 'portal._id': req.params.id }]
   const [skip, size] = findUtils.pagination(req.query)
-  if (req.query.template) filter.template = req.query.template
-  if (!req.user) filter.public = true
-  else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filter.public = true
-  else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filter.public = true
-  else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) filter.public = true
-  if (filter.public || req.query.published === 'true') filter.published = true
-  if (req.query['future-events'] === 'true') filter['config.datetimes.end'] = { $gte: new Date().toISOString() }
+  if (req.query.template) filters.push({ template: req.query.template })
+  const publicFilter = { public: true, published: true }
+  if (!req.user) filters.push(publicFilter)
+  else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filters.push(publicFilter)
+  else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filters.push(publicFilter)
+  else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) {
+    filters.push({
+      $or: [
+        { department: req.user.organization.department },
+        publicFilter
+      ]
+    })
+  }
+  if (req.query.published === 'true') filters.push({ published: true })
+  if (req.query['future-events'] === 'true') filters.push({ 'config.datetimes.end': { $gte: new Date().toISOString() } })
   const [results, count] = await Promise.all([
-    pages.find(filter).limit(size).skip(skip).project(project).sort(sort).toArray(),
-    pages.countDocuments(filter)
+    pages.find({ $and: filters }).limit(size).skip(skip).project(project).sort(sort).toArray(),
+    pages.countDocuments({ $and: filters })
   ])
   results.forEach(page => cleanPage(page, req.query.html === 'true'))
   res.json({ count, results })
@@ -425,7 +438,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
     if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) {
       return res.status(403).send()
     }
-    if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) {
+    if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department && req.user.organization.department !== page.department) {
       return res.status(403).send()
     }
   }
@@ -434,7 +447,7 @@ router.get('/:id/pages/:pageId', asyncWrap(async (req, res, next) => {
 }))
 
 // Create a page
-router.post('/:id/pages', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
+router.post('/:id/pages', asyncWrap(setPortalAdmin(true)), asyncWrap(async (req, res, next) => {
   const baseId = slug(req.body.title.slice(0, 100), { lower: true, strict: true })
   req.body.id = baseId
   req.body.portal = {
@@ -448,6 +461,9 @@ router.post('/:id/pages', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, 
   }
   if (req.body.published) {
     req.body.publishedAt = new Date()
+  }
+  if (req.user.activeAccount.department && req.user.activeAccount.department !== req.portal.owner.department) {
+    req.body.department = req.user.activeAccount.department
   }
   const valid = validatePage(req.body)
   if (!valid) return res.status(400).send(validatePage.errors)
@@ -468,17 +484,27 @@ router.post('/:id/pages', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, 
 }))
 
 // Patch some of the attributes of a page
-router.patch('/:id/pages/:pageId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
+router.patch('/:id/pages/:pageId', asyncWrap(setPortalAdmin(true)), asyncWrap(async (req, res, next) => {
   const filter = { id: req.params.pageId, 'portal._id': req.portal._id }
   const page = await req.app.get('db').collection('pages')
     .findOne(filter, { projection: { _id: 0 } })
   if (!page) return res.status(404).send()
+  if (req.user.activeAccount.department && req.user.activeAccount.department !== req.portal.owner.department && req.user.activeAccount.department !== page.department) {
+    return res.status(403).send()
+  }
   // Restrict the parts of the page that can be edited by API
 
   const acceptedParts = Object.keys(pageSchema.properties).filter(k => !pageSchema.properties[k].readOnly)
-  acceptedParts.push('config')
+  const adminOnlyParts = ['published', 'publishedAt', 'public', 'navigation'] // copied in pages edit.vue
+
   for (const key in req.body) {
-    if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
+    if (JSON.stringify(req.body[key]) === JSON.stringify(page[key] ?? false)) delete req.body[key]
+    else {
+      if (!acceptedParts.includes(key)) return res.status(400).send('Unsupported patch part ' + key)
+      if (page.department && page.department === req.user.activeAccount.department && adminOnlyParts.includes(key)) {
+        return res.status(400).send('Top organization admin only patch part ' + key)
+      }
+    }
   }
   req.body.updated = {
     id: req.user.id,
@@ -509,8 +535,15 @@ router.patch('/:id/pages/:pageId', asyncWrap(setPortalAdmin), asyncWrap(async (r
   res.status(200).send(patchedPage)
 }))
 
-router.delete('/:id/pages/:pageId', asyncWrap(setPortalAdmin), asyncWrap(async (req, res, next) => {
-  await req.app.get('db').collection('pages').deleteOne({ id: req.params.pageId, 'portal._id': req.portal._id })
+router.delete('/:id/pages/:pageId', asyncWrap(setPortalAdmin(true)), asyncWrap(async (req, res, next) => {
+  const filter = { id: req.params.pageId, 'portal._id': req.portal._id }
+  const page = await req.app.get('db').collection('pages')
+    .findOne(filter, { projection: { _id: 0 } })
+  if (!page) return res.status(404).send()
+  if (req.user.activeAccount.department && req.user.activeAccount.department !== req.portal.owner.department && req.user.activeAccount.department !== page.department) {
+    return res.status(403).send()
+  }
+  await req.app.get('db').collection('pages').deleteOne(filter)
   res.status(204).send()
 }))
 

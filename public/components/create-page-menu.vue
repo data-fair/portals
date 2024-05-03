@@ -35,6 +35,16 @@
           ref="form"
           v-model="valid"
         >
+          <v-select
+            v-if="departments && departments.length > 1"
+            v-model="editItem.department"
+            :items="departments"
+            dense
+            clearable
+            item-text="name"
+            item-value="id"
+            label="Département gestionnaire de la page"
+          />
           <slot
             name="form"
             :valid="valid"
@@ -69,14 +79,20 @@
 </template>
 
 <script>
+
+const { mapGetters } = require('vuex')
 const schema = require('../../contract/page.json')
+
 export default {
   data: () => ({
     menu: false,
     valid: false,
-    editItem: {}
+    editItem: { department: null },
+    owners: null
   }),
   computed: {
+    ...mapGetters(['directoryUrl']),
+    ...mapGetters('session', ['activeAccount']),
     schema () {
       const s = JSON.parse(JSON.stringify(schema))
       delete s.properties.publishedAt
@@ -91,13 +107,21 @@ export default {
   watch: {
     menu () {
       if (!this.menu) {
-        this.editItem = {}
+        this.editItem = { department: null }
       }
+    }
+  },
+  async mounted () {
+    if (this.activeAccount.type === 'organization' && !this.activeAccount.department) {
+      const org = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
+      this.departments = org.departments || []
     }
   },
   methods: {
     confirm () {
       if (this.$refs.form.validate()) {
+        const page = { ...this.editItem }
+        if (!page.department) delete page.department
         this.$emit('created', this.editItem)
         this.menu = false
       }

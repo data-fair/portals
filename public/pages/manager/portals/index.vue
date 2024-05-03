@@ -12,86 +12,92 @@
               Dans le second cas vous devez être propriétaire du nom de domaine en question et en capacité de définir ses règles DNS.
             </p>
           </v-row>
-          <v-row class="mt-6">
-            <v-card
-              v-if="portals && portals.length"
-              min-width="500"
-              tile
-              outlined
+          <template v-if="portals && portals.length">
+            <v-row
+              v-for="owner in portalsByOwner.owners"
+              :key="owner.key"
+              class="mt-6"
             >
-              <v-list class="py-0">
-                <template v-for="portal in portals">
-                  <v-list-item :key="portal._id">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        <a
-                          :href="portal.link"
-                          target="_blank"
-                        >{{ portal.title }}</a>
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        <span>{{ portal.owner.name }}</span>
-                        <span v-if="portal.owner.department"> / {{ portal.owner.departmentName || portal.owner.department }}</span>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
+              <v-col>
+                <h2 class="text-h5 mb-2">
+                  {{ owner.fullName }}
+                </h2>
+                <v-card
+                  width="500"
+                  tile
+                  outlined
+                >
+                  <v-list class="py-0">
+                    <template v-for="portal in portalsByOwner.portals[owner.key]">
+                      <v-list-item :key="portal._id">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <a
+                              :href="portal.link"
+                              target="_blank"
+                            >{{ portal.title }}</a>
+                          </v-list-item-title>
+                        </v-list-item-content>
 
-                    <v-list-item-action>
-                      <v-btn
-                        :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
-                        nuxt
-                        icon
-                        color="primary"
-                        title="gérer le portail"
-                      >
-                        <v-icon>mdi-pencil</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                    <v-list-item-action>
-                      <v-btn
-                        :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
-                        nuxt
-                        icon
-                        color="primary"
-                        title="éditer les pages de contenu"
-                      >
-                        <v-icon>mdi-text-box-edit</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                    <v-list-item-action>
-                      <v-btn
-                        :to="{name: 'manager-portals-portalId-uses', params: {portalId: portal._id}}"
-                        nuxt
-                        icon
-                        color="primary"
-                        title="gérer les réutilisations"
-                      >
-                        <v-icon
-                          color="primary"
-                          style="position:relative;top:-4px;"
-                        >
-                          mdi-share
-                        </v-icon>
-                        <v-icon
-                          color="primary"
-                          size="16"
-                          style="position:absolute;bottom:-3px;right:-3px;"
-                        >
-                          mdi-pencil
-                        </v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                    <v-list-item-action>
-                      <remove-confirm
-                        :label="portal.title"
-                        @removed="deletePortal(portal)"
-                      />
-                    </v-list-item-action>
-                  </v-list-item>
-                  <v-divider :key="portal._id + '-divider'" />
-                </template>
-              </v-list>
-            </v-card>
-          </v-row>
+                        <v-list-item-action v-if="owner.canAdmin">
+                          <v-btn
+                            :to="{name: 'manager-portals-portalId', params: {portalId: portal._id}}"
+                            nuxt
+                            icon
+                            color="primary"
+                            title="gérer le portail"
+                          >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </v-list-item-action>
+                        <v-list-item-action>
+                          <v-btn
+                            :to="{name: 'manager-portals-portalId-pages', params: {portalId: portal._id}}"
+                            nuxt
+                            icon
+                            color="primary"
+                            title="éditer les pages de contenu"
+                          >
+                            <v-icon>mdi-text-box-edit</v-icon>
+                          </v-btn>
+                        </v-list-item-action>
+                        <v-list-item-action v-if="owner.canAdmin">
+                          <v-btn
+                            :to="{name: 'manager-portals-portalId-uses', params: {portalId: portal._id}}"
+                            nuxt
+                            icon
+                            color="primary"
+                            title="gérer les réutilisations"
+                          >
+                            <v-icon
+                              color="primary"
+                              style="position:relative;top:-4px;"
+                            >
+                              mdi-share
+                            </v-icon>
+                            <v-icon
+                              color="primary"
+                              size="16"
+                              style="position:absolute;bottom:-3px;right:-3px;"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                          </v-btn>
+                        </v-list-item-action>
+                        <v-list-item-action v-if="owner.canAdmin">
+                          <remove-confirm
+                            :label="portal.title"
+                            @removed="deletePortal(portal)"
+                          />
+                        </v-list-item-action>
+                      </v-list-item>
+                      <v-divider :key="portal._id + '-divider'" />
+                    </template>
+                  </v-list>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
         </v-col>
       </v-container>
     </v-col>
@@ -136,7 +142,7 @@
                 @keyup.enter.native="createPortal(); showCreateMenu = false"
               />
               <v-select
-                v-if="(!user.organization || !user.organization.department) && owners && owners.length > 1"
+                v-if="owners && owners.length > 1"
                 v-model="newPortal.owner"
                 :items="owners"
                 return-object
@@ -188,7 +194,43 @@ export default {
   computed: {
     ...mapState('session', ['user', 'initialized']),
     ...mapGetters(['directoryUrl']),
-    ...mapGetters('session', ['activeAccount'])
+    ...mapGetters('session', ['activeAccount']),
+    portalsByOwner () {
+      if (!this.portals) return
+      const portalsByOwner = { portals: {}, owners: [] }
+      if (this.activeAccount.department) {
+        if (this.portals.some(p => p.owner.department === this.activeAccount.department)) {
+          portalsByOwner.owners.push({
+            ...this.activeAccount,
+            key: `${this.activeAccount.type}/${this.activeAccount.id}/${this.activeAccount.department}`,
+            fullName: `${this.activeAccount.name} / ${this.activeAccount.departmentName || this.activeAccount.department}`,
+            canAdmin: true
+          })
+        }
+      } else {
+        if (this.portals.some(p => !p.department)) {
+          portalsByOwner.owners.push({
+            ...this.activeAccount,
+            key: `${this.activeAccount.type}/${this.activeAccount.id}`,
+            fullName: this.activeAccount.name,
+            canAdmin: true
+          })
+        }
+      }
+      for (const portal of this.portals) {
+        const key = `${portal.owner.type}/${portal.owner.id}${portal.owner.department ? `/${portal.owner.department}` : ''}`
+        if (!portalsByOwner.portals[key]) portalsByOwner.portals[key] = []
+        portalsByOwner.portals[key].push(portal)
+        if (!portalsByOwner.owners.find(o => o.key === key)) {
+          portalsByOwner.owners.push({
+            ...portal.owner,
+            key,
+            fullName: `${portal.owner.name}${portal.owner.department ? ` / ${portal.owner.departmentName || portal.owner.department}` : ''}`
+          })
+        }
+      }
+      return portalsByOwner
+    }
   },
   watch: {
     showCreateMenu () {
@@ -199,8 +241,8 @@ export default {
   },
   async mounted () {
     await this.refresh()
-    this.owners = [{ type: this.activeAccount.type, id: this.activeAccount.id, name: this.activeAccount.name, label: this.activeAccount.name }]
-    if (this.activeAccount.type === 'organization') {
+    if (this.activeAccount.type === 'organization' && !this.activeAccount.department) {
+      this.owners = [{ type: this.activeAccount.type, id: this.activeAccount.id, name: this.activeAccount.name, label: this.activeAccount.name }]
       const org = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
       for (const dep of (org.departments || [])) {
         this.owners.push({

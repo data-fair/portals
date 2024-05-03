@@ -52,6 +52,12 @@ export default () => {
         if (state.config.department) owner += ':' + state.config.owner.department
         return owner
       },
+      canAdmin (state, getters) {
+        if (!state.config) return false
+        const activeAccount = getters['session/activeAccount']
+        if (!activeAccount) return false
+        return getters['session/isAccountAdmin'] && activeAccount.type === state.config.owner.type && activeAccount.id === state.config.owner.id && (!activeAccount.department || activeAccount.department === state.config.owner.department)
+      },
       whiteLabel (state, getters) {
         return state.whiteLabelOwners.includes(getters.owner)
       },

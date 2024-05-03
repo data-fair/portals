@@ -15,6 +15,10 @@
       },
       "readOnly": true
     },
+    "department": {
+      "type": "string",
+      "readOnly": true
+    },
     "title": {
       "type": "string",
       "title": "Titre de la page",

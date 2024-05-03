@@ -77,6 +77,7 @@
                 >
                   {{ page.public ? 'mdi-lock-open' : 'mdi-lock' }}
                 </v-icon>
+                <span class="text-caption">{{ page.department }}</span>
                 <v-spacer />
                 <v-btn
                   icon
@@ -158,7 +159,7 @@
 <script>
 import CreatePageMenu from '~/components/create-page-menu.vue'
 import RemoveConfirm from '~/components/remove-confirm.vue'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 const pageSchema = require('~/../contract/page.json')
 
 export default {
@@ -174,18 +175,20 @@ export default {
   }),
   computed: {
     ...mapState(['portal']),
+    ...mapGetters(['canAdmin']),
     templateNames () {
       return this.pageSchema.properties.template.oneOf.reduce((a, item) => { a[item.const] = item.title; return a }, {})
     }
   },
   mounted: async function () {
+    console.log('mounted', this.portal, this.canAdmin)
     this.$store.dispatch('setManagerBreadcrumbs', [{
       text: 'portails',
       to: '/manager/portals',
       disabled: false
     }, {
       text: this.portal.title,
-      to: `/manager/portals/${this.portal._id}`
+      to: this.canAdmin ? `/manager/portals/${this.portal._id}` : null
     }, {
       text: 'pages'
     }])
@@ -196,7 +199,7 @@ export default {
       this.loading = true
       if (append) this.pagination += 1
       else this.pagination = 1
-      const params = { size: 12, page: this.pagination, sort: 'created.date:-1' }
+      const params = { size: 12, page: this.pagination, sort: 'created.date:-1', edit: true }
       if (this.filters.template) params.template = this.filters.template
       const pages = await this.$axios.$get(this.$store.state.publicUrl + `/api/v1/portals/${this.portal._id}/pages`, { params })
       if (append) pages.results.forEach(r => this.pages.results.push(r))
