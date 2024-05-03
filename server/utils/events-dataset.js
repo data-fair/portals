@@ -8,6 +8,7 @@ exports.id = (portal) => {
 exports.init = (portal) => {
   return {
     title: `Portail - Évènements - ${portal.title}`,
+    owner: portal.owner,
     isRest: true,
     rest: {
       history: true,
