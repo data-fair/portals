@@ -409,12 +409,16 @@ router.get('/:id/pages', asyncWrap(async (req, res, next) => {
   else if (portal.owner.type === 'user' && portal.owner.id !== req.user.id) filters.push(publicFilter)
   else if (portal.owner.type === 'organization' && (!req.user.organization || portal.owner.id !== req.user.organization.id)) filters.push(publicFilter)
   else if (portal.owner.type === 'organization' && req.user.organization && req.user.organization.department && req.user.organization.department !== portal.owner.department) {
-    filters.push({
-      $or: [
-        { department: req.user.organization.department },
-        publicFilter
-      ]
-    })
+    if (req.query.edit === 'true') {
+      filters.push({ department: req.user.organization.department })
+    } else {
+      filters.push({
+        $or: [
+          { department: req.user.organization.department },
+          publicFilter
+        ]
+      })
+    }
   }
   if (req.query.published === 'true') filters.push({ published: true })
   if (req.query['future-events'] === 'true') filters.push({ 'config.datetimes.end': { $gte: new Date().toISOString() } })
