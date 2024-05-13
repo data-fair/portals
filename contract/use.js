@@ -57,6 +57,7 @@ module.exports = {
         title: 'Jeu de données',
         additionalProperties: false,
         required: ['id'],
+        minItems: 1,
         properties: {
           href: { type: 'string' },
           title: { type: 'string' },

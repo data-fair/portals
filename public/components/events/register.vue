@@ -82,7 +82,7 @@ export default {
           if (event === null) await this.$axios.$delete(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`)
           else await this.$axios.$patch(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines/${this.lineId}`, { register: event })
         } else {
-          if (event !== null) await this.$axios.$post(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines`, { pageId: this.pageId, pageTitle: this.pageTitle, register: event })
+          if (event !== null) await this.$axios.$post(`${this.eventsDatasetUrl}/own/user:${this.user.id}/lines`, { pageId: this.pageId, pageTitle: this.pageTitle, register: event, email: this.user.email })
         }
         eventBus.$emit('notification', { type: 'success', msg: 'Votre choix a bien été enregistré' })
       } catch (error) {

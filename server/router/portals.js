@@ -128,8 +128,8 @@ async function syncPortalUpdate (portal, cookie) {
       { params: { key: config.secretKeys.sites } }
     )
   }
-
   debugSyncPortal(`sync images dataset ${id}`)
+  debugSyncPortal(imagesDatasetUtils.init(portal))
   await axios.put(
     `${config.dataFairUrl}/api/v1/datasets/${imagesDatasetUtils.id(portal)}`,
     imagesDatasetUtils.init(portal),
@@ -148,6 +148,7 @@ async function syncPortalUpdate (portal, cookie) {
       { headers: { cookie } }
     )
   }
+  debugSyncPortal(`sync events dataset ${id}`)
   if (portal.config && (portal.config.showEvents || (portal.config.eventsPage && portal.config.eventsPage.type !== 'none'))) {
     await axios.put(
       `${config.dataFairUrl}/api/v1/datasets/${eventsDatasetUtils.id(portal)}`,
@@ -499,6 +500,7 @@ router.patch('/:id/pages/:pageId', asyncWrap(setPortalAdmin(true)), asyncWrap(as
   // Restrict the parts of the page that can be edited by API
 
   const acceptedParts = Object.keys(pageSchema.properties).filter(k => !pageSchema.properties[k].readOnly)
+  acceptedParts.push('config')
   const adminOnlyParts = ['published', 'publishedAt', 'public', 'navigation'] // copied in pages edit.vue
 
   for (const key in req.body) {

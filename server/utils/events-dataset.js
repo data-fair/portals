@@ -49,6 +49,20 @@ exports.init = (portal) => {
         description: ''
       },
       {
+        key: 'email',
+        type: 'string',
+        title: 'Email',
+        icon: 'mdi-text-short',
+        'x-capabilities': {
+          textAgg: false,
+          text: false,
+          insensitive: false,
+          textStandard: false
+        },
+        maxLength: 100,
+        description: ''
+      },
+      {
         key: 'register',
         type: 'boolean',
         title: 'Présent',
