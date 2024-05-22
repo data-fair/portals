@@ -7,1801 +7,2060 @@
       "accordion": true,
       "value": 0
     },
-    "fieldProps": {"hideDetails": "auto", "outlined": true, "dense": true},
-    "radioItemProps": {"dense": true, "hideDetails": true}
+    "fieldProps": { "hideDetails": "auto", "outlined": true, "dense": true },
+    "radioItemProps": { "dense": true, "hideDetails": true }
   },
-  "allOf": [{
-    "title": "Général",
-    "properties": {
-      "title": {
-        "type": "string",
-        "title": "Titre du portail",
-        "default": "Portail de données"
-      },
-      "metaDescription":{
-        "type": "string",
-        "title": "Description pour les moteurs de recherche",
-        "x-display": "textarea",
-        "default": "Accédez facilement à nos données et découvrez les au travers de visualisations interactives."
-      },
-      "authentication": {
-        "type": "string",
-        "x-display": "radio",
-        "oneOf": [{
-          "const": "none",
-          "title": "Aucune"
-        },{
-          "const": "optional",
-          "title": "Optionnelle pour voir les contenus protégés, configurer des notifications, etc"
-        },{
-          "const": "required",
-          "title": "Requise pour accéder au portail"
-        }],
-        "title": "Authentification",
-        "default": "optional"
-      },
-      "assets": {
-        "type": "object",
-        "x-options": {"fieldProps": {"outlined": true, "dense": true, "hideDetails": "auto"}},
-        "properties": {
-          "logo": {
-            "type": "object",
-            "title": "Image du logo",
-            "contentMediaType": "image/*",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "hash": {
-                "type": "string"
-              }
-            }
-          },
-          "home": {
-            "type": "object",
-            "title": "Image principale",
-            "contentMediaType": "image/*",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          },
-          "favicon": {
-            "type": "object",
-            "title": "Favicon",
-            "contentMediaType": "image/*",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          },
-          "footerBackground": {
-            "type": "object",
-            "title": "Arrière plan du pied de page",
-            "contentMediaType": "image/*",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          },
-          "font1": {
-            "type": "object",
-            "title": "Police 1 (formats WOFF ou WOFF2)",
-            "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
-            "contentMediaType": ".woff,.woff2",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          },
-          "font2": {
-            "type": "object",
-            "title": "Police 2 (formats WOFF ou WOFF2)",
-            "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
-            "contentMediaType": ".woff,.woff2",
-            "writeOnly": true,
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "homeImageAlwaysVisible": {
-        "type": "boolean",
-        "x-display": "switch",
-        "x-class": "no-margin",
-        "default": false,
-        "title": "Afficher l'image principale en bannière sur toutes les pages"
-      }
-    }
-  }, {
-    "title": "Style",
-    "required": ["themeColor"],
-    "properties": {
-      "themeColor": {
-        "type": "string",
-        "default": "#1E88E5",
-        "title": "Couleur principale",
-        "x-display": "color-picker"
-      },
-      "secondaryColor": {
-        "type": "string",
-        "default": "#1E88E5",
-        "title": "Couleur secondaire",
-        "x-display": "color-picker"
-      },
-      "tertiaryColor": {
-        "type": "string",
-        "default": "#1E88E5",
-        "title": "Couleur tertiaire",
-        "x-display": "color-picker"
-      },
-      "secondaryBackgroundColor": {
-        "type": "string",
-        "default": "#CFD8DC",
-        "title": "Couleur d'arrière plan secondaire",
-        "description": "Si vous fournissez une couleur trop foncée elle sera automatiquement éclaircie pour préserver le contraste des contenus.",
-        "x-display": "color-picker"
-      },
-      "bodyFont": {
-        "title": "Police principale",
-        "type": "object",
-        "x-fromData": "context.fonts",
-        "x-itemTitle": "label",
-        "x-itemKey": "name",
-        "description": "Ces polices sont issues de Google Fonts. La police par défaut est Nunito."
-      },
-      "headingsFont": {
-        "title": "Police des titres",
-        "type": "object",
-        "x-fromData": "context.fonts",
-        "x-itemTitle": "label",
-        "x-itemKey": "name",
-        "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
-      },
-      "backgroundColor": {
-        "title": "Couleur du fond de la page",
-        "type": "string",
-        "default": "white",
-        "oneOf": [{
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "elevation": {
-        "title": "Élévation / ombres",
-        "description": "Contrôle l'effet d'ombre créé autour de certains éléments et qui ajoute du relief aux pages.",
-        "type": "number",
-        "default": 1,
-        "oneOf": [{
-          "const": 0,
-          "title": "aucune élévation"
-        }, {
-          "const": 1,
-          "title": "légère élévation"
-        }, {
-          "const": 3,
-          "title": "élévation intermédiaire"
-        }, {
-          "const": 6,
-          "title": "élévation importante"
-        }]
-      },
-      "radius": {
-        "title": "Arrondis des angles",
-        "description": "Contrôle l'arrondi appliqué à de multiples cadres et boutons dans les pages.",
-        "type": "number",
-        "default": 4,
-        "oneOf": [{
-          "const": 0,
-          "title": "aucun arrondi"
-        }, {
-          "const": 4,
-          "title": "léger arrondi"
-        }, {
-          "const": 8,
-          "title": "arrondi intermédiaire"
-        }, {
-          "const": 16,
-          "title": "arrondi important"
-        }]
-      },
-      "actionCardOptions": {
-        "title": "Options des vignettes cliquables (sauf disposition horizontale)",
-        "type": "array",
-        "items": {
+  "allOf": [
+    {
+      "title": "Général",
+      "properties": {
+        "title": {
           "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour grisé"
-          }, {
-            "const": "hoverElevate",
-            "title": "élèver le cadre au survol (ajout d'une ombre)"
-          }, {
-            "const": "flat",
-            "title": "ne pas appliquer l'élévation par défaut du style"
-          }, {
-            "const": "hoverColorTitle",
-            "title": "colorer le titre au survol"
-          }, {
-            "const": "hoverUnderlineTitle",
-            "title": "souligner le titre au survol"
-          }, {
-            "const": "hoverColorBorder",
-            "title": "colorer le bord au survol"
-          }]
+          "title": "Titre du portail",
+          "default": "Portail de données"
         },
-        "default": ["outlined", "hoverElevate"]
-      },
-      "actionCardBackgroundColor": {
-        "title": "Couleur du fond des vignettes cliquables (sauf disposition horizontale)",
-        "type": "string",
-        "default": "white",
-        "oneOf": [{
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "actionCardHorizontalOptions": {
-        "title": "Options des vignettes cliquables - disposition horizontale",
-        "type": "array",
-        "items": {
+        "metaDescription": {
           "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour grisé"
-          }, {
-            "const": "hoverElevate",
-            "title": "élèver le cadre au survol (ajout d'une ombre)"
-          }, {
-            "const": "flat",
-            "title": "ne pas appliquer l'élévation par défaut du style"
-          }, {
-            "const": "hoverColorTitle",
-            "title": "colorer le titre au survol"
-          }, {
-            "const": "hoverUnderlineTitle",
-            "title": "souligner le titre au survol"
-          }, {
-            "const": "hoverColorBorder",
-            "title": "colorer le bord au survol"
-          }]
+          "title": "Description pour les moteurs de recherche",
+          "x-display": "textarea",
+          "default": "Accédez facilement à nos données et découvrez les au travers de visualisations interactives."
         },
-        "default": ["outlined", "flat", "hoverColorTitle", "hoverColorBorder"]
-      },
-      "actionCardHorizontalBackgroundColor": {
-        "title": "Couleur du fond des vignettes cliquables - disposition horizontale",
-        "type": "string",
-        "default": "white",
-        "oneOf": [{
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "infoCardOptions": {
-        "title": "Options des vignettes d'information",
-        "type": "array",
-        "items": {
+        "authentication": {
           "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour grisé"
-          }, {
-            "const": "elevate",
-            "title": "élèver (applique l'élévation par défaut de votre configuration)"
-          }]
-        },
-        "default": ["outlined"]
-      },
-      "infoCardBackgroundColor": {
-        "title": "Couleur du fond des vignettes d'information",
-        "type": "string",
-        "default": "white",
-        "oneOf": [{
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "buttonOptions": {
-        "title": "Options des boutons et des liens",
-        "type": "array",
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "hoverInverse",
-            "title": "inverser la couleur des boutons au survol"
-          }, {
-            "const": "hoverUnderline",
-            "title": "souligner les liens au survol"
-          }, {
-            "const": "alwaysUnderline",
-            "title": "toujours souligner les liens"
-          }]
-        },
-        "default": []
-      },
-      "navLinkMode": {
-        "title": "Type de rendu des liens de navigations",
-        "type": "string",
-        "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
-        "default": "link",
-        "oneOf": [{
-          "const": "link",
-          "title": "Lien"
-        }, {
-          "const": "linkNoIcon",
-          "title": "Lien sans icône"
-        }, {
-          "const": "btn",
-          "title": "Bouton plein"
-        }, {
-          "const": "btnNoIcon",
-          "title": "Bouton plein sans icône"
-        }, {
-          "const": "btnOutlined",
-          "title": "Bouton contouré"
-        }, {
-          "const": "btnOutlinedNoIcon",
-          "title": "Bouton contouré sans icône"
-        }]
-      },
-      "navLinkColor": {
-        "title": "Couleur des liens de navigations",
-        "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
-        "type": "string",
-        "default": "primary",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "tertiary",
-          "title": "couleur tertiaire"
-        }]
-      },
-      "topicsBackgroundColor": {
-        "title": "Couleur des étiquettes de thématiques",
-        "type": "string",
-        "default": "individual",
-        "oneOf": [{
-          "const": "individual",
-          "title": "couleur individuelle de la thématique"
-        }, {
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "primarySecondary",
-          "title": "couleur principale ou secondaire selon le contexte"
-        }]
-      }
-    }
-  }, {
-    "title": "Barre de navigation",
-    "properties": {
-      "appBarColor": {
-        "title": "Couleur de la barre de navigation",
-        "type": "string",
-        "default": "primary",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "primaryGradient1",
-          "title": "couleur principale avec dégradé"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "secondaryGradient1",
-          "title": "couleur secondaire avec dégradé"
-        }, {
-          "const": "primarySecondaryGradient",
-          "title": "dégradé couleur principale vers couleur secondaire"
-        }, {
-          "const": "secondaryPrimaryGradient",
-          "title": "dégradé couleur secondaire vers couleur principale"
-        }, {
-          "const": "grey",
-          "title": "gris foncé"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
-      "appBarFontColorPrimary": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "Utiliser la couleur primaire pour la police de la barre de navigation (si possible)",
-        "default": false
-      },
-      "appBarBehavior": {
-        "title": "Comportement de la barre de navigation",
-        "type": "string",
-        "default": "scroll",
-        "x-display": "radio",
-        "oneOf": [{
-          "const": "scroll",
-          "title": "disparait au scroll"
-        }, {
-          "const": "stick",
-          "title": "toujours visible"
-        }, {
-          "const": "stickHome",
-          "title": "toujours visible uniquement sur la page d'accueil"
-        }]
-      },
-      "appBarTransparency": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "appliquer un léger effet de transparence",
-        "default": false
-      },
-      "appBarFluid": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "utiliser toute la largeur de l'écran pour le contenu de la barre de navigation",
-        "default": true
-      },
-      "appBarActiveOptions": {
-        "title": "Options de l'onglet actif",
-        "type": "array",
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "slider",
-            "title": "afficher une barre colorée en dessous"
-          }, {
-            "const": "color",
-            "title": "changer la couleur"
-          }, {
-            "const": "bold",
-            "title": "afficher en gras"
-          }]
-        },
-        "default": ["slider", "color"]
-      }
-    }
-  }, {
-    "title": "Entête",
-    "properties": {
-      "headerHide": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "masquer entièrement l'entête",
-        "description": "le logo sera affiché à gauche de la barre de navigation"
-      },
-      "headerColor": {
-        "title": "Couleur de l'entête",
-        "type": "string",
-        "default": "page",
-        "oneOf": [{
-          "const": "page",
-          "title": "couleur du fond de la page"
-        }, {
-          "const": "appBar",
-          "title": "couleur de la barre de navigation"
-        }]
-      },
-      "website": {
-        "type": "string",
-        "title": "Site web accessible au clic sur le logo"
-      },
-      "headerSocial": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "montrer les liens de réseaux sociaux dans l'entête",
-        "x-class": "no-margin"
-      },
-      "headerNoTitle": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "masquer le titre dans l'entête",
-        "description": "Peut avoir du sens si le logo est très explicite"
-      },
-      "titleColor": {
-        "title": "Couleur du titre",
-        "description": "Si nécessaire une variante foncée de la couleur sera utilisée pour préserver la lisibilité.",
-        "type": "string",
-        "default": "grey",
-        "oneOf": [{
-          "const": "grey",
-          "title": "gris foncé"
-        }, {
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }]
-      },
-      "headerLogo2": {
-        "type": "string",
-        "title": "Logo secondaire (affiché à droite de l'entête)",
-        "description": "copiez l'url d'une image"
-      },
-      "headerLogo2Link": {
-        "type": "string",
-        "title": "Site web accessible au clic sur le logo secondaire"
-      },
-      "useHtmlTitle": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "Rendu du titre en HTML",
-        "default": false
-      },
-      "htmlTitle": {
-        "title": "Code HTML du titre",
-        "type": "string",
-        "x-display": "custom-markdown",
-        "maxLength": 1000,
-        "x-if": "parent.value.useHtmlTitle"
-      }
-    }
-  }, {
-    "title": "Pied de page",
-    "properties": {
-      "footerColor": {
-        "type": "string",
-        "default": "grey",
-        "title": "Couleur du pied de page",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "tertiary",
-          "title": "couleur tertiaire"
-        }, {
-          "const": "grey",
-          "title": "gris foncé"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "footerBackgroundImage": {
-        "type": "string",
-        "default": "none",
-        "title": "Utilisation de l'image d'arrière plan",
-        "oneOf": [{
-          "const": "none",
-          "title": "non affichée"
-        }, {
-          "const": "left",
-          "title": "à gauche"
-        }, {
-          "const": "center",
-          "title": "centrée"
-        }, {
-          "const": "right",
-          "title": "à droite"
-        }, {
-          "const": "repeat-x",
-          "title": "répétée"
-        }]
-      },
-      "footerSocial": {
-        "type": "boolean",
-        "x-display": "switch",
-        "x-class": "no-margin",
-        "default": true,
-        "title": "montrer les liens de réseaux sociaux dans le pied de page"
-      },
-      "footerCopyrightAsLogo": {
-        "type": "boolean",
-        "x-display": "switch",
-        "x-class": "no-margin",
-        "default": false,
-        "title": "masquer le copyright du bas de page et le remplacer par un logo"
-      },
-      "footerLogo": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "afficher le logo principal dans le pied de page"
-      },
-      "footerLinksMode": {
-        "type": "string",
-        "default": "lines",
-        "title": "Mode d'affichage des liens",
-        "oneOf": [
-          {"title": "en lignes", "const": "lines"},
-          {"title": "en colonnes", "const": "columns"}
-        ]
-      },
-      "footerExtraLogos": {
-        "type": "array",
-        "title": "Logos supplémentaires",
-        "items": {
-          "type": "object",
-          "properties": {
-            "src": {"type": "string", "title": "URL de l'image"},
-            "title": {"type": "string", "title": "intitulé"},
-            "href": {"type": "string", "title": "URL du lien"}
-          }
-        }
-      },
-      "footerLinks": {
-        "title": "Liens",
-        "type" : "array",
-        "items": {
-          "type": "object",
-          "oneOf": [{
-            "title": "Page du portail",
-            "properties": {
-              "type": {
-                "const": "internal"
-              },
-              "page":{
-                "title": "Page",
-                "type": "object",
-                "x-fromUrl": "{context.portalUrl}/pages?size=1000",
-                "x-itemsProp": "results",
-                "x-itemTitle": "title",
-                "x-itemKey": "id",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },{
-            "title": "Lien externe",
-            "properties": {
-              "type": {
-                "const": "external"
-              },
-              "title": {
-                "title": "Libellé du lien",
-                "type": "string"
-              },
-              "href": {
-                "title": "URL",
-                "type": "string"
-              }
-            }
-          }],
-          "default": {
-            "type": "internal"
-          }
-        },
-        "default": []
-      },
-      "footerImportantLinks": {
-        "title": "Liens importants",
-        "type" : "array",
-        "items": {
-          "type": "object",
-          "oneOf": [{
-            "title": "Page du portail",
-            "properties": {
-              "type": {
-                "const": "internal"
-              },
-              "page":{
-                "title": "Page",
-                "type": "object",
-                "x-fromUrl": "{context.portalUrl}/pages?size=1000",
-                "x-itemsProp": "results",
-                "x-itemTitle": "title",
-                "x-itemKey": "id",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },{
-            "title": "Lien externe",
-            "properties": {
-              "type": {
-                "const": "external"
-              },
-              "title": {
-                "title": "Libellé du lien",
-                "type": "string"
-              },
-              "href": {
-                "title": "URL",
-                "type": "string"
-              }
-            }
-          }],
-          "default": {
-            "type": "internal"
-          }
-        },
-        "default": []
-      },
-      "footerPrivacyPolicy": {
-        "title": "Ajouter un lien vers la politique de confidentialité",
-        "type": "boolean",
-        "default": true
-      },
-      "footerSitemap": {
-        "title": "Ajouter un lien vers le plan du site",
-        "type": "boolean",
-        "default": true
-      }
-    }
-  }, {
-    "title": "Page d'accueil",
-    "properties": {
-      "homeTemplate":{
-        "type": "object",
-        "title": "Page à utiliser",
-        "oneOf": [{
-          "title": "Modèle standard",
-          "properties": {
-            "type": {
-              "const": "default"
-            }
-          }
-        }, {
-          "title": "Page de contenu",
-          "required": ["page"],
-          "properties": {
-            "type": {
-              "const": "content-page"
+          "x-display": "radio",
+          "oneOf": [
+            {
+              "const": "none",
+              "title": "Aucune"
             },
-            "page":{
-              "title": "Page",
+            {
+              "const": "optional",
+              "title": "Optionnelle pour voir les contenus protégés, configurer des notifications, etc"
+            },
+            {
+              "const": "required",
+              "title": "Requise pour accéder au portail"
+            }
+          ],
+          "title": "Authentification",
+          "default": "optional"
+        },
+        "assets": {
+          "type": "object",
+          "x-options": {
+            "fieldProps": {
+              "outlined": true,
+              "dense": true,
+              "hideDetails": "auto"
+            }
+          },
+          "properties": {
+            "logo": {
               "type": "object",
-              "x-fromUrl": "{context.portalUrl}/pages?size=1000&template=blank",
-              "x-itemsProp": "results",
-              "x-itemTitle": "title",
-              "x-itemKey": "id",
+              "title": "Image du logo",
+              "contentMediaType": "image/*",
+              "writeOnly": true,
               "properties": {
-                "title": {
+                "name": {
                   "type": "string"
                 },
-                "id": {
+                "hash": {
+                  "type": "string"
+                }
+              }
+            },
+            "home": {
+              "type": "object",
+              "title": "Image principale",
+              "contentMediaType": "image/*",
+              "writeOnly": true,
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "favicon": {
+              "type": "object",
+              "title": "Favicon",
+              "contentMediaType": "image/*",
+              "writeOnly": true,
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "footerBackground": {
+              "type": "object",
+              "title": "Arrière plan du pied de page",
+              "contentMediaType": "image/*",
+              "writeOnly": true,
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "font1": {
+              "type": "object",
+              "title": "Police 1 (formats WOFF ou WOFF2)",
+              "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
+              "contentMediaType": ".woff,.woff2",
+              "writeOnly": true,
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "font2": {
+              "type": "object",
+              "title": "Police 2 (formats WOFF ou WOFF2)",
+              "description": "Chargez un fichier de police de catactères ici uniquement si aucune police de Google Fonts ne vous convient.",
+              "contentMediaType": ".woff,.woff2",
+              "writeOnly": true,
+              "properties": {
+                "name": {
                   "type": "string"
                 }
               }
             }
           }
-        }],
-        "default":{
-          "type": "default",
+        },
+        "homeImageAlwaysVisible": {
+          "type": "boolean",
+          "x-display": "switch",
+          "x-class": "no-margin",
+          "default": false,
+          "title": "Afficher l'image principale en bannière sur toutes les pages"
+        }
+      }
+    },
+    {
+      "title": "Style",
+      "required": ["themeColor"],
+      "properties": {
+        "themeColor": {
+          "type": "string",
+          "default": "#1E88E5",
+          "title": "Couleur principale",
+          "x-display": "color-picker"
+        },
+        "secondaryColor": {
+          "type": "string",
+          "default": "#1E88E5",
+          "title": "Couleur secondaire",
+          "x-display": "color-picker"
+        },
+        "tertiaryColor": {
+          "type": "string",
+          "default": "#1E88E5",
+          "title": "Couleur tertiaire",
+          "x-display": "color-picker"
+        },
+        "secondaryBackgroundColor": {
+          "type": "string",
+          "default": "#CFD8DC",
+          "title": "Couleur d'arrière plan secondaire",
+          "description": "Si vous fournissez une couleur trop foncée elle sera automatiquement éclaircie pour préserver le contraste des contenus.",
+          "x-display": "color-picker"
+        },
+        "bodyFont": {
+          "title": "Police principale",
+          "type": "object",
+          "x-fromData": "context.fonts",
+          "x-itemTitle": "label",
+          "x-itemKey": "name",
+          "description": "Ces polices sont issues de Google Fonts. La police par défaut est Nunito."
+        },
+        "headingsFont": {
+          "title": "Police des titres",
+          "type": "object",
+          "x-fromData": "context.fonts",
+          "x-itemTitle": "label",
+          "x-itemKey": "name",
+          "description": "Ces polices sont issues de Google Fonts. Par défaut la police principale est appliquée."
+        },
+        "backgroundColor": {
+          "title": "Couleur du fond de la page",
+          "type": "string",
+          "default": "white",
+          "oneOf": [
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "elevation": {
+          "title": "Élévation / ombres",
+          "description": "Contrôle l'effet d'ombre créé autour de certains éléments et qui ajoute du relief aux pages.",
+          "type": "number",
+          "default": 1,
+          "oneOf": [
+            {
+              "const": 0,
+              "title": "aucune élévation"
+            },
+            {
+              "const": 1,
+              "title": "légère élévation"
+            },
+            {
+              "const": 3,
+              "title": "élévation intermédiaire"
+            },
+            {
+              "const": 6,
+              "title": "élévation importante"
+            }
+          ]
+        },
+        "radius": {
+          "title": "Arrondis des angles",
+          "description": "Contrôle l'arrondi appliqué à de multiples cadres et boutons dans les pages.",
+          "type": "number",
+          "default": 4,
+          "oneOf": [
+            {
+              "const": 0,
+              "title": "aucun arrondi"
+            },
+            {
+              "const": 4,
+              "title": "léger arrondi"
+            },
+            {
+              "const": 8,
+              "title": "arrondi intermédiaire"
+            },
+            {
+              "const": 16,
+              "title": "arrondi important"
+            }
+          ]
+        },
+        "actionCardOptions": {
+          "title": "Options des vignettes cliquables (sauf disposition horizontale)",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour grisé"
+              },
+              {
+                "const": "hoverElevate",
+                "title": "élèver le cadre au survol (ajout d'une ombre)"
+              },
+              {
+                "const": "flat",
+                "title": "ne pas appliquer l'élévation par défaut du style"
+              },
+              {
+                "const": "hoverColorTitle",
+                "title": "colorer le titre au survol"
+              },
+              {
+                "const": "hoverUnderlineTitle",
+                "title": "souligner le titre au survol"
+              },
+              {
+                "const": "hoverColorBorder",
+                "title": "colorer le bord au survol"
+              }
+            ]
+          },
+          "default": ["outlined", "hoverElevate"]
+        },
+        "actionCardBackgroundColor": {
+          "title": "Couleur du fond des vignettes cliquables (sauf disposition horizontale)",
+          "type": "string",
+          "default": "white",
+          "oneOf": [
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "actionCardHorizontalOptions": {
+          "title": "Options des vignettes cliquables - disposition horizontale",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour grisé"
+              },
+              {
+                "const": "hoverElevate",
+                "title": "élèver le cadre au survol (ajout d'une ombre)"
+              },
+              {
+                "const": "flat",
+                "title": "ne pas appliquer l'élévation par défaut du style"
+              },
+              {
+                "const": "hoverColorTitle",
+                "title": "colorer le titre au survol"
+              },
+              {
+                "const": "hoverUnderlineTitle",
+                "title": "souligner le titre au survol"
+              },
+              {
+                "const": "hoverColorBorder",
+                "title": "colorer le bord au survol"
+              }
+            ]
+          },
+          "default": ["outlined", "flat", "hoverColorTitle", "hoverColorBorder"]
+        },
+        "actionCardHorizontalBackgroundColor": {
+          "title": "Couleur du fond des vignettes cliquables - disposition horizontale",
+          "type": "string",
+          "default": "white",
+          "oneOf": [
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "infoCardOptions": {
+          "title": "Options des vignettes d'information",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour grisé"
+              },
+              {
+                "const": "elevate",
+                "title": "élèver (applique l'élévation par défaut de votre configuration)"
+              }
+            ]
+          },
+          "default": ["outlined"]
+        },
+        "infoCardBackgroundColor": {
+          "title": "Couleur du fond des vignettes d'information",
+          "type": "string",
+          "default": "white",
+          "oneOf": [
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "buttonOptions": {
+          "title": "Options des boutons et des liens",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "hoverInverse",
+                "title": "inverser la couleur des boutons au survol"
+              },
+              {
+                "const": "hoverUnderline",
+                "title": "souligner les liens au survol"
+              },
+              {
+                "const": "alwaysUnderline",
+                "title": "toujours souligner les liens"
+              }
+            ]
+          },
+          "default": []
+        },
+        "navLinkMode": {
+          "title": "Type de rendu des liens de navigations",
+          "type": "string",
+          "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
+          "default": "link",
+          "oneOf": [
+            {
+              "const": "link",
+              "title": "Lien"
+            },
+            {
+              "const": "linkNoIcon",
+              "title": "Lien sans icône"
+            },
+            {
+              "const": "btn",
+              "title": "Bouton plein"
+            },
+            {
+              "const": "btnNoIcon",
+              "title": "Bouton plein sans icône"
+            },
+            {
+              "const": "btnOutlined",
+              "title": "Bouton contouré"
+            },
+            {
+              "const": "btnOutlinedNoIcon",
+              "title": "Bouton contouré sans icône"
+            }
+          ]
+        },
+        "navLinkColor": {
+          "title": "Couleur des liens de navigations",
+          "description": "Exemple de lien de navigation: \"toutes les données\", \"revenir à la liste\", etc",
+          "type": "string",
+          "default": "primary",
+          "oneOf": [
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "tertiary",
+              "title": "couleur tertiaire"
+            }
+          ]
+        },
+        "topicsBackgroundColor": {
+          "title": "Couleur des étiquettes de thématiques",
+          "type": "string",
+          "default": "individual",
+          "oneOf": [
+            {
+              "const": "individual",
+              "title": "couleur individuelle de la thématique"
+            },
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "primarySecondary",
+              "title": "couleur principale ou secondaire selon le contexte"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Barre de navigation",
+      "properties": {
+        "appBarColor": {
+          "title": "Couleur de la barre de navigation",
+          "type": "string",
+          "default": "primary",
+          "oneOf": [
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "primaryGradient1",
+              "title": "couleur principale avec dégradé"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "secondaryGradient1",
+              "title": "couleur secondaire avec dégradé"
+            },
+            {
+              "const": "primarySecondaryGradient",
+              "title": "dégradé couleur principale vers couleur secondaire"
+            },
+            {
+              "const": "secondaryPrimaryGradient",
+              "title": "dégradé couleur secondaire vers couleur principale"
+            },
+            {
+              "const": "grey",
+              "title": "gris foncé"
+            },
+            {
+              "const": "white",
+              "title": "blanc"
+            }
+          ]
+        },
+        "appBarFontColorPrimary": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "Utiliser la couleur primaire pour la police de la barre de navigation (si possible)",
+          "default": false
+        },
+        "appBarBehavior": {
+          "title": "Comportement de la barre de navigation",
+          "type": "string",
+          "default": "scroll",
+          "x-display": "radio",
+          "oneOf": [
+            {
+              "const": "scroll",
+              "title": "disparait au scroll"
+            },
+            {
+              "const": "stick",
+              "title": "toujours visible"
+            },
+            {
+              "const": "stickHome",
+              "title": "toujours visible uniquement sur la page d'accueil"
+            }
+          ]
+        },
+        "appBarTransparency": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "appliquer un léger effet de transparence",
+          "default": false
+        },
+        "appBarFluid": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "utiliser toute la largeur de l'écran pour le contenu de la barre de navigation",
+          "default": true
+        },
+        "appBarActiveOptions": {
+          "title": "Options de l'onglet actif",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "slider",
+                "title": "afficher une barre colorée en dessous"
+              },
+              {
+                "const": "color",
+                "title": "changer la couleur"
+              },
+              {
+                "const": "bold",
+                "title": "afficher en gras"
+              }
+            ]
+          },
+          "default": ["slider", "color"]
+        }
+      }
+    },
+    {
+      "title": "Entête",
+      "properties": {
+        "headerHide": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "masquer entièrement l'entête",
+          "description": "le logo sera affiché à gauche de la barre de navigation"
+        },
+        "headerColor": {
+          "title": "Couleur de l'entête",
+          "type": "string",
+          "default": "page",
+          "oneOf": [
+            {
+              "const": "page",
+              "title": "couleur du fond de la page"
+            },
+            {
+              "const": "appBar",
+              "title": "couleur de la barre de navigation"
+            }
+          ]
+        },
+        "website": {
+          "type": "string",
+          "title": "Site web accessible au clic sur le logo"
+        },
+        "headerSocial": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "montrer les liens de réseaux sociaux dans l'entête",
+          "x-class": "no-margin"
+        },
+        "headerNoTitle": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "masquer le titre dans l'entête",
+          "description": "Peut avoir du sens si le logo est très explicite"
+        },
+        "titleColor": {
+          "title": "Couleur du titre",
+          "description": "Si nécessaire une variante foncée de la couleur sera utilisée pour préserver la lisibilité.",
+          "type": "string",
+          "default": "grey",
+          "oneOf": [
+            {
+              "const": "grey",
+              "title": "gris foncé"
+            },
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            }
+          ]
+        },
+        "headerLogo2": {
+          "type": "string",
+          "title": "Logo secondaire (affiché à droite de l'entête)",
+          "description": "copiez l'url d'une image"
+        },
+        "headerLogo2Link": {
+          "type": "string",
+          "title": "Site web accessible au clic sur le logo secondaire"
+        },
+        "useHtmlTitle": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "Rendu du titre en HTML",
+          "default": false
+        },
+        "htmlTitle": {
+          "title": "Code HTML du titre",
+          "type": "string",
+          "x-display": "custom-markdown",
+          "maxLength": 1000,
+          "x-if": "parent.value.useHtmlTitle"
+        }
+      }
+    },
+    {
+      "title": "Pied de page",
+      "properties": {
+        "footerColor": {
+          "type": "string",
+          "default": "grey",
+          "title": "Couleur du pied de page",
+          "oneOf": [
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "tertiary",
+              "title": "couleur tertiaire"
+            },
+            {
+              "const": "grey",
+              "title": "gris foncé"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "footerBackgroundImage": {
+          "type": "string",
+          "default": "none",
+          "title": "Utilisation de l'image d'arrière plan",
+          "oneOf": [
+            {
+              "const": "none",
+              "title": "non affichée"
+            },
+            {
+              "const": "left",
+              "title": "à gauche"
+            },
+            {
+              "const": "center",
+              "title": "centrée"
+            },
+            {
+              "const": "right",
+              "title": "à droite"
+            },
+            {
+              "const": "repeat-x",
+              "title": "répétée"
+            }
+          ]
+        },
+        "footerSocial": {
+          "type": "boolean",
+          "x-display": "switch",
+          "x-class": "no-margin",
+          "default": true,
+          "title": "montrer les liens de réseaux sociaux dans le pied de page"
+        },
+        "footerCopyrightAsLogo": {
+          "type": "boolean",
+          "x-display": "switch",
+          "x-class": "no-margin",
+          "default": false,
+          "title": "masquer le copyright du bas de page et le remplacer par un logo"
+        },
+        "footerLogo": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "afficher le logo principal dans le pied de page"
+        },
+        "footerLinksMode": {
+          "type": "string",
+          "default": "lines",
+          "title": "Mode d'affichage des liens",
+          "oneOf": [
+            { "title": "en lignes", "const": "lines" },
+            { "title": "en colonnes", "const": "columns" }
+          ]
+        },
+        "footerExtraLogos": {
+          "type": "array",
+          "title": "Logos supplémentaires",
+          "items": {
+            "type": "object",
+            "properties": {
+              "src": { "type": "string", "title": "URL de l'image" },
+              "title": { "type": "string", "title": "intitulé" },
+              "href": { "type": "string", "title": "URL du lien" }
+            }
+          }
+        },
+        "footerLinks": {
+          "title": "Liens",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "oneOf": [
+              {
+                "title": "Page du portail",
+                "properties": {
+                  "type": {
+                    "const": "internal"
+                  },
+                  "page": {
+                    "title": "Page",
+                    "type": "object",
+                    "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+                    "x-itemsProp": "results",
+                    "x-itemTitle": "title",
+                    "x-itemKey": "id",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Lien externe",
+                "properties": {
+                  "type": {
+                    "const": "external"
+                  },
+                  "title": {
+                    "title": "Libellé du lien",
+                    "type": "string"
+                  },
+                  "href": {
+                    "title": "URL",
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "default": {
+              "type": "internal"
+            }
+          },
+          "default": []
+        },
+        "footerImportantLinks": {
+          "title": "Liens importants",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "oneOf": [
+              {
+                "title": "Page du portail",
+                "properties": {
+                  "type": {
+                    "const": "internal"
+                  },
+                  "page": {
+                    "title": "Page",
+                    "type": "object",
+                    "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+                    "x-itemsProp": "results",
+                    "x-itemTitle": "title",
+                    "x-itemKey": "id",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "title": "Lien externe",
+                "properties": {
+                  "type": {
+                    "const": "external"
+                  },
+                  "title": {
+                    "title": "Libellé du lien",
+                    "type": "string"
+                  },
+                  "href": {
+                    "title": "URL",
+                    "type": "string"
+                  }
+                }
+              }
+            ],
+            "default": {
+              "type": "internal"
+            }
+          },
+          "default": []
+        },
+        "footerPrivacyPolicy": {
+          "title": "Ajouter un lien vers la politique de confidentialité",
+          "type": "boolean",
+          "default": true
+        },
+        "footerSitemap": {
+          "title": "Ajouter un lien vers le plan du site",
+          "type": "boolean",
           "default": true
         }
-      },
-      "homeImageAsBanner": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "image principale en bannière",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "default": false
-      },
-      "homeImageHidden": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "image principale masquée",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "default": false
-      },
-      "homeApplication": {
-        "title": "Remplacer l'image principale par une visualisation",
-        "type": "object",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
-        "x-itemsProp": "results",
-        "x-itemTitle": "title",
-        "x-itemKey": "href",
-        "properties": {
-          "href": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          }
-        }
-      },
-      "description": {
-        "title": "Message d'accueil",
-        "type": "string",
-        "x-display": "custom-markdown",
-        "maxLength": 50000,
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
-      },
-      "showKpis": {
-        "title": "afficher les chiffres clés",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": true,
-        "x-props": {"hideDetails": "auto"}
-      },
-      "kpiOptions": {
-        "type": "array",
-        "title": "Options d'affichage des chilffres clés",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
-        "x-props": {"hideDetails": "auto"},
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour grisé"
-          }, {
-            "const": "shaped",
-            "title": "2 angles arrondis"
-          }, {
-            "const": "elevate",
-            "title": "élèver (applique l'élévation par défaut de votre configuration)"
-          }]
-        },
-        "default": ["outlined", "shaped"]
-      },
-      "kpiBackgroundColor": {
-        "title": "Couleur du fond des chiffres clés",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
-        "type": "string",
-        "default": "white",
-        "oneOf": [{
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      },
-      "homeShowSearch": {
-        "title": "afficher un champ de recherche sur la page d'accueil",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": false
-      },
-      "homeSearchPosition": {
-        "title": "Position du champ de recherche sur la page d'accueil",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
-        "type": "string",
-        "default": "belowKpi",
-        "oneOf": [{
-          "title": "sous la description et les chiffres clés",
-          "const": "belowKpi"
-        }, {
-          "title": "sur la bannière",
-          "const": "overBanner"
-        }, {
-          "title": "sous la bannière",
-          "const": "belowBanner"
-        }]
-      },
-      "homeSearchOptions": {
-        "title": "Options du champ de recherche sur la page d'accueil",
-        "type": "array",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
-        "x-props": {"hideDetails": "auto"},
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour"
-          }, {
-            "const": "solo",
-            "title": "élever"
-          }, {
-            "const": "rounded",
-            "title": "arrondir"
-          }, {
-            "const": "outer-btn",
-            "title": "afficher un bouton d'action à droite"
-          }]
-        },
-        "default": ["outlined", "rounded"]
-      },
-      "homeShowTopics": {
-        "title": "afficher les thématiques sur la page d'accueil",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": false
-      },
-      "homeTopicsPosition": {
-        "title": "Position des thématiques sur la page d'accueil",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
-        "type": "string",
-        "default": "belowKpi",
-        "oneOf": [{
-          "title": "sous la description et les chiffres clés",
-          "const": "belowKpi"
-        }, {
-          "title": "sur la bannière",
-          "const": "overBanner"
-        }, {
-          "title": "sous la bannière",
-          "const": "belowBanner"
-        }]
-      },
-      "homeTopicsOptions": {
-        "title": "Options de l'affichage des thématiques sur la page d'accueil",
-        "type": "array",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
-        "x-props": {"hideDetails": "auto"},
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour"
-          }, {
-            "const": "rounded",
-            "title": "arrondir"
-          }, {
-            "const": "elevate",
-            "title": "élèver (applique l'élévation par défaut de votre configuration)"
-          }, {
-            "const": "reverseColor",
-            "title": "inverser la couleur de fond et de texte"
-          }, {
-            "const": "card",
-            "title": "rendu vignette plus grand"
-          }]
-        },
-        "default": ["outlined", "rounded", "elevate"]
-      },
-      "showTwitterTimeline": {
-        "title": "afficher la timeline Twitter",
-        "description": "Seulement appliqué si le compte Twitter est renseigné dans la section \"Communication & contact\"",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": true
-      },
-      "showLastNews": {
-        "title": "afficher les dernières actualités",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": false
-      },
-      "showEvents": {
-        "title": "afficher les évènements à venir",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": false
-      },
-      "featuredApplication": {
-        "title": "Visualisation mise en avant",
-        "type": "object",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
-        "x-itemsProp": "results",
-        "x-itemTitle": "title",
-        "x-itemKey": "href",
-        "properties": {
-          "href": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          }
-        }
-      },
-      "homeDatasets": {
-        "type": "object",
-        "title": "Liste réduite de jeux de données",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }, {
-          "title": "Afficher les derniers",
-          "properties": {
-            "type": {
-              "const": "lasts"
-            },
-            "size":{
-              "title": "Nombre de jeux de données",
-              "type": "integer",
-              "default": 3
-            },
-            "cardLayout": {
-              "type": "string",
-              "title": "Disposition des vignettes de jeux de données",
-              "default": "dense",
-              "oneOf": [{
-                "title": "Dense",
-                "const": "dense"
-              }, {
-                "title": "Horizontal",
-                "const": "horizontal"
-              }, {
-                "title": "Vertical",
-                "const": "vertical"
-              }]
-            }
-          }
-        }]
-      },
-      "homeApplications": {
-        "type": "object",
-        "title": "Liste réduite de visualisations",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }, {
-          "title": "Afficher les dernières",
-          "properties": {
-            "type": {
-              "const": "lasts"
-            },
-            "size":{
-              "title": "Nombre de visualisations",
-              "type": "integer",
-              "default": 3
-            },
-            "cardLayout": {
-              "type": "string",
-              "title": "Disposition des vignettes de visualisations",
-              "default": "dense",
-              "oneOf": [{
-                "title": "Dense",
-                "const": "dense"
-              }, {
-                "title": "Horizontal",
-                "const": "horizontal"
-              }, {
-                "title": "Vertical",
-                "const": "vertical"
-              }]
-            }
-          }
-        }]
-      },
-      "homeShowLinks": {
-        "title": "afficher une liste de liens",
-        "type": "boolean",
-        "x-if":"parent.value.homeTemplate.type=='default'",
-        "x-display": "switch",
-        "default": false,
-        "x-props": {"hideDetails": "auto"}
-      },
-      "homeLinksPosition": {
-        "title": "Position des liens sur la page d'accueil",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
-        "type": "string",
-        "default": "belowKpi",
-        "oneOf": [{
-          "title": "sous la description et les chiffres clés",
-          "const": "belowKpi"
-        }, {
-          "title": "entre la description et les chiffres clés",
-          "const": "betweenDescKpi"
-        }, {
-          "title": "sous la bannière",
-          "const": "belowBanner"
-        }]
-      },
-      "homeLinksOptions": {
-        "title": "Options de l'affichage des liens sur la page d'accueil",
-        "type": "array",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
-        "x-props": {"hideDetails": "auto"},
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "outlined",
-            "title": "afficher un contour"
-          }, {
-            "const": "rounded",
-            "title": "arrondir"
-          }, {
-            "const": "elevate",
-            "title": "élèver (applique l'élévation par défaut de votre configuration)"
-          }, {
-            "const": "reverseColor",
-            "title": "inverser la couleur de fond et de texte"
-          }]
-        },
-        "default": ["outlined", "elevate"]
-      },
-      "homeLinks": {
-        "title": "Liste de liens",
-        "type": "array",
-        "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
-        "items": {
+      }
+    },
+    {
+      "title": "Page d'accueil",
+      "properties": {
+        "homeTemplate": {
           "type": "object",
-          "required": ["title", "href"],
-          "properties": {
-            "title": {"type": "string", "title": "Titre"},
-            "href": {"type": "string", "title": "Adresse"},
-            "icon": {
-              "title": "Icône",
-              "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
-              "type": "object",
-              "x-fromUrl": "https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
-              "x-itemKey": "name",
-              "x-itemTitle": "name",
-              "x-itemIcon": "name",
-              "x-itemsProp": "results",
+          "title": "Page à utiliser",
+          "oneOf": [
+            {
+              "title": "Modèle standard",
               "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "svg": {
-                  "type": "string"
+                "type": {
+                  "const": "default"
                 }
               }
             },
-            "linkTitle": {"type": "string", "title": "Titre long", "description": "un titre plus long qui ne sera pas affiché directement mais visible au survol et utilisé par les outils d'accessibilité"}
+            {
+              "title": "Page de contenu",
+              "required": ["page"],
+              "properties": {
+                "type": {
+                  "const": "content-page"
+                },
+                "page": {
+                  "title": "Page",
+                  "type": "object",
+                  "x-fromUrl": "{context.portalUrl}/pages?size=1000&template=blank",
+                  "x-itemsProp": "results",
+                  "x-itemTitle": "title",
+                  "x-itemKey": "id",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "default",
+            "default": true
           }
-        }
-      }
-    }
-  }, {
-    "title": "Jeux de données",
-    "properties": {
-      "datasetsPage": {
-        "type": "object",
-        "title": "Page des jeux de données",
-        "default": {
-          "type": "infiniteScroll"
         },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      },
-      "datasetsDefaultSort": {
-        "type": "string",
-        "title": "Tri par défaut de la liste des jeux de données",
-        "default": "createdAt",
-        "oneOf": [{
-          "title": "Date de création",
-          "const": "createdAt"
-        }, {
-          "title": "Date de mise à jour",
-          "const": "dataUpdatedAt"
-        }, {
-          "title": "Ordre alphabétique",
-          "const": "title"
-        }]
-      },
-      "datasetsCardLayout": {
-        "type": "string",
-        "title": "Disposition des vignettes de jeux de données",
-        "default": "dense",
-        "oneOf": [{
-          "title": "Compacte (3 colonnes)",
-          "const": "dense"
-        },{
-          "title": "Compacte (2 colonnes)",
-          "const": "medium"
-        }, {
-          "title": "Texte + image horizontal (1 colonne)",
-          "const": "horizontal"
-        }, {
-          "title": "Texte + image vertical (3 colonnes)",
-          "const": "vertical"
-        }]
-      },
-      "datasetThumbnailApplication": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "utiliser la vignette de la 1ère application du jeu de données comme image",
-        "default": false
-      },
-      "datasetThumbnailContain": {
-        "type": "boolean",
-        "x-display": "switch",
-        "title": "ne pas recadrer les images dans les vignettes de jeux de données",
-        "default": false
-      },
-      "datasetMetaLayout": {
-        "type": "string",
-        "title": "Affichage des métadonnées sur la page d'un jeu de données",
-        "oneOf": [
-          {
-            "title": "Disposition 2/3 - 1/3",
-            "const": "columnsLeftLarger"
-          },
-          {
-            "title": "Vertical",
-            "const": "vertical"
-          }
-        ],
-        "default": "columnsLeftLarger"
-      },
-      "datasetActionsDisplay": {
-        "type": "string",
-        "title": "Affichage des actions pour un jeu de données",
-        "oneOf": [
-          {
-            "title": "Icône seule",
-            "const": "icon"
-          },
-          {
-            "title": "Boutton avec icone",
-            "const": "button"
-          }
-        ],
-        "default": "icon"
-      }
-    }
-  }, {
-    "title": "Visualisations",
-    "description": "Les visualisations publiées dans le portail sont listées dans une page dédiée. Cette page n'est pas nécessaire : vous pouvez choisir de faire passer les utilisateurs par les pages des jeux de données avant de voir les visualisations.",
-    "properties": {
-      "applicationsPage": {
-        "type": "object",
-        "title": "Page des visualisations",
-        "default": {
-          "type": "infiniteScroll"
+        "homeImageAsBanner": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "image principale en bannière",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "default": false
         },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      },
-      "applicationsDefaultSort": {
-        "type": "string",
-        "title": "Tri par défaut de la liste des visualisations",
-        "default": "createdAt",
-        "oneOf": [{
-          "title": "Date de création",
-          "const": "createdAt"
-        }, {
-          "title": "Date de mise à jour",
-          "const": "dataUpdatedAt"
-        }, {
-          "title": "Ordre alphabétique",
-          "const": "title"
-        }]
-      },
-      "applicationsCardLayout": {
-        "type": "string",
-        "title": "Disposition des vignettes de visualisations",
-        "default": "dense",
-        "oneOf": [{
-          "title": "Dense",
-          "const": "dense"
-        }, {
-          "title": "Horizontal",
-          "const": "horizontal"
-        }, {
-          "title": "Vertical",
-          "const": "vertical"
-        }]
-      },
-      "applicationActionsDisplay": {
-        "type": "string",
-        "title": "Affichage des actions pour une visualisation",
-        "oneOf": [
-          {
-            "title": "Icône seule",
-            "const": "icon"
-          },
-          {
-            "title": "Boutton avec icone",
-            "const": "button"
-          }
-        ],
-        "default": "icon"
-      },
-      "applicationsDirectNavigation": {
-        "type": "boolean",
-        "title": "Pas de boutons d'action sur la liste, navigation directe",
-        "default": false
-      }
-    }
-  }, {
-    "title": "Réutilisations",
-    "description": "Les réutilisations peuvent être soumises par les utilisateurs authentifiés si vous activez la fonctionnalité. Les gestionnaires du portail font un travail de saisie et de modération avant le rendu final dans le portail.",
-    "properties": {
-      "usesManagement": {
-        "type": "object",
-        "title": "Gestion des réutilisations",
-        "default": {
-          "type": "managers"
+        "homeImageHidden": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "image principale masquée",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "default": false
         },
-        "oneOf": [{
-          "title": "Uniquement pour les gestionnaires du portail",
-          "properties": {
-            "type": {
-              "const": "managers"
-            }
-          }
-        }, {
-          "title": "Pour tous les utilisateurs du portail",
-          "properties": {
-            "type": {
-              "const": "users"
-            }
-          }
-        }]
-      },
-      "usesPage": {
-        "type": "object",
-        "title": "Page des réutilisations",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      },
-      "usesCardLayout": {
-        "type": "string",
-        "title": "Disposition des vignettes des réutilisations",
-        "default": "dense",
-        "oneOf": [{
-          "title": "Dense",
-          "const": "dense"
-        }, {
-          "title": "Horizontal",
-          "const": "horizontal"
-        }, {
-          "title": "Vertical",
-          "const": "vertical"
-        }]
-      },
-      "externalReusesPage": {
-        "type": "object",
-        "title": "Page des réutilisations (ancien fonctionnement déprécié)",
-        "description": "Cette page est liée au système déprécié de réutilisations saisies directement sur les jeux de données dans le back-office. À la place utilisez la gestion des réutilisations intégrée au portail, voir les 2 options ci-dessous.",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Liste",
-          "properties": {
-            "type": {
-              "const": "list"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      }
-    }
-  }, {
-    "title": "Actualités",
-    "description": "Les actualités sont des pages de contenu qui peuvent être consultées dans l'ordre de publication.",
-    "properties": {
-      "newsPage": {
-        "type": "object",
-        "title": "Page des actualités",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      }
-    }
-  }, {
-    "title": "Évènements",
-    "description": "Les évènements sont des pages de contenu qui contiennent un formulaire d'inscription.",
-    "properties": {
-      "eventsPage": {
-        "type": "object",
-        "title": "Page des évènements",
-        "default": {
-          "type": "none"
-        },
-        "oneOf": [{
-          "title": "Liste avec scroll infini",
-          "properties": {
-            "type": {
-              "const": "infiniteScroll"
-            }
-          }
-        },{
-          "title": "Ne rien afficher",
-          "properties": {
-            "type": {
-              "const": "none"
-            }
-          }
-        }]
-      }
-    }
-  }, {
-    "title": "Communication & contact",
-    "properties": {
-      "twitter": {
-        "type": "string",
-        "title": "Compte X"
-      },
-      "facebook": {
-        "type": "string",
-        "title": "Compte Facebook"
-      },
-      "linkedin": {
-        "type": "string",
-        "title": "Compte LinkedIn"
-      },
-      "youtube": {
-        "type": "string",
-        "title": "Identifiant Youtube",
-        "description": "Vous pouvez renseigner directement un identifiant d'utilisateur ou bien celui d'une chaine avec \"c/\" en préfixe."
-      },
-      "instagram": {
-        "type": "string",
-        "title": "Compte Instagram"
-      },
-      "vimeo": {
-        "type": "string",
-        "title": "Identifiant chaîne Vimeo"
-      },
-      "contactEmail": {
-        "type": "string",
-        "title": "Email de contact",
-        "format": "email",
-        "description": "Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail."
-      },
-      "contactPhone": {
-        "type": "string",
-        "title": "Téléphone de contact"
-      },
-      "contactPhoneLabel": {
-        "type": "string",
-        "title": "Nom associé au téléphone de contact"
-      },
-      "contactWebsite": {
-        "type": "string",
-        "title": "Site Web de contact"
-      },
-      "contactWebsiteLabel": {
-        "type": "string",
-        "title": "Nom associé au site Web de contact"
-      },
-      "contactInfos": {
-        "type": "string",
-        "title": "Informations de contact",
-        "x-display": "custom-markdown",
-        "maxLength": 10000
-      },
-      "contactFooter": {
-        "type": "boolean",
-        "title": "Afficher un bandeau de contact en bas des pages",
-        "description": "Le lien contact sera alors enlevé du menu de navigation"
-      },
-      "contactFooterColor": {
-        "type": "string",
-        "default": "grey",
-        "title": "Couleur du bandeau de contact",
-        "x-if": "parent.value.contactFooter",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris foncé"
-        }, {
-          "const": "lightGrey",
-          "title": "gris clair"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }, {
-          "const": "secondaryBackground",
-          "title": "couleur d'arrière plan secondaire"
-        }]
-      }
-    }
-  }, {
-    "title": "Espace personnel",
-    "description": "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification.",
-    "properties": {
-      "personalNavigationColor": {
-        "type": "string",
-        "default": "primary",
-        "title": "Couleur de la barre de navigation dans l'espace personnel",
-        "oneOf": [{
-          "const": "primary",
-          "title": "couleur principale"
-        }, {
-          "const": "secondary",
-          "title": "couleur secondaire"
-        }, {
-          "const": "grey",
-          "title": "gris"
-        }, {
-          "const": "white",
-          "title": "blanc"
-        }]
-      },
-      "personnalHidePages": {
-        "type": "array",
-        "title": "Cacher des pages dans l'espace personnel",
-        "items": {
-          "type": "string",
-          "oneOf": [{
-            "const": "notify",
-            "title": "Notifications"
-          }, {
-            "const": "api-keys",
-            "title": "Clés d'API"
-          }, {
-            "const": "contribute",
-            "title": "Contribuer"
-          }, {
-            "const": "processings",
-            "title": "Traitements"
-          }]
-        }
-      },
-      "personalAccountPages": {
-        "type": "array",
-        "title": "Pages supplémentaires en iframe dans la section compte actif",
-        "items": {
+        "homeApplication": {
+          "title": "Remplacer l'image principale par une visualisation",
           "type": "object",
-          "required":["id", "title", "href", "icon"],
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href",
           "properties": {
-            "id":{
-              "type": "string",
-              "title": "Identifiant de la page"
+            "href": {
+              "type": "string"
             },
-            "title":{
-              "type": "string",
-              "title": "Libellé du lien"
+            "title": {
+              "type": "string"
             },
-            "href":{
-              "type": "string",
-              "title": "URL de la page"
+            "id": {
+              "type": "string"
             },
-            "icon": {
-              "title": "Icône",
-              "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
-              "type": "object",
-              "x-fromUrl": "https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
-              "x-itemKey": "name",
-              "x-itemTitle": "name",
-              "x-itemIcon": "name",
-              "x-itemsProp": "results",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "svg": {
-                  "type": "string"
-                }
-              }
+            "slug": {
+              "type": "string"
             }
           }
         },
-        "default": []
-      }
-    }
-  }, {
-    "title": "Suivi d'activité",
-    "description": "Configurez un système de suivi d'activité des utilisateurs (Web analytics).",
-    "properties": {
-      "analytics": {
-        "type": "object",
-        "default": {
-          "type": "none"
+        "description": {
+          "title": "Message d'accueil",
+          "type": "string",
+          "x-display": "custom-markdown",
+          "maxLength": 50000,
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "default": "Bienvenue sur notre portail de données. Vous y trouverez tous les jeux de données que nous avons retravaillé et publiés, ainsi que des visualisations qui permettent de mieux comprendre les données.\n\nLes pages sur les jeux de données et sur les visualisations disposent de moteurs de recherche et de filtres pour trouver plus facilement les données. Les données sont présentées et mises en valeur par des visualisations interactives. On peut également les consulter via un tableau, les télécharger ou les manipuler à l'aide de l'API.\n\nLes visualisations interactives permettent de naviguer dans des données volumineuses, sans avoir besoin de savoir programmer. Il est possible de visualiser des agrégations de millions de lignes dans des graphiques interactifs et d'explorer des cartes qui présentent de gros volumes d'information tout en offrant une navigation très fluide."
         },
-        "oneOf": [{
-          "title": "Aucun suivi",
+        "showKpis": {
+          "title": "afficher les chiffres clés",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": true,
+          "x-props": { "hideDetails": "auto" }
+        },
+        "kpiOptions": {
+          "type": "array",
+          "title": "Options d'affichage des chilffres clés",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
+          "x-props": { "hideDetails": "auto" },
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour grisé"
+              },
+              {
+                "const": "shaped",
+                "title": "2 angles arrondis"
+              },
+              {
+                "const": "elevate",
+                "title": "élèver (applique l'élévation par défaut de votre configuration)"
+              }
+            ]
+          },
+          "default": ["outlined", "shaped"]
+        },
+        "kpiBackgroundColor": {
+          "title": "Couleur du fond des chiffres clés",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.showKpis",
+          "type": "string",
+          "default": "white",
+          "oneOf": [
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        },
+        "homeShowSearch": {
+          "title": "afficher un champ de recherche sur la page d'accueil",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": false
+        },
+        "homeSearchPosition": {
+          "title": "Position du champ de recherche sur la page d'accueil",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
+          "type": "string",
+          "default": "belowKpi",
+          "oneOf": [
+            {
+              "title": "sous la description et les chiffres clés",
+              "const": "belowKpi"
+            },
+            {
+              "title": "sur la bannière",
+              "const": "overBanner"
+            },
+            {
+              "title": "sous la bannière",
+              "const": "belowBanner"
+            }
+          ]
+        },
+        "homeSearchOptions": {
+          "title": "Options du champ de recherche sur la page d'accueil",
+          "type": "array",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowSearch",
+          "x-props": { "hideDetails": "auto" },
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour"
+              },
+              {
+                "const": "solo",
+                "title": "élever"
+              },
+              {
+                "const": "rounded",
+                "title": "arrondir"
+              },
+              {
+                "const": "outer-btn",
+                "title": "afficher un bouton d'action à droite"
+              }
+            ]
+          },
+          "default": ["outlined", "rounded"]
+        },
+        "homeShowTopics": {
+          "title": "afficher les thématiques sur la page d'accueil",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": false
+        },
+        "homeTopicsPosition": {
+          "title": "Position des thématiques sur la page d'accueil",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
+          "type": "string",
+          "default": "belowKpi",
+          "oneOf": [
+            {
+              "title": "sous la description et les chiffres clés",
+              "const": "belowKpi"
+            },
+            {
+              "title": "sur la bannière",
+              "const": "overBanner"
+            },
+            {
+              "title": "sous la bannière",
+              "const": "belowBanner"
+            }
+          ]
+        },
+        "homeTopicsOptions": {
+          "title": "Options de l'affichage des thématiques sur la page d'accueil",
+          "type": "array",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowTopics",
+          "x-props": { "hideDetails": "auto" },
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour"
+              },
+              {
+                "const": "rounded",
+                "title": "arrondir"
+              },
+              {
+                "const": "elevate",
+                "title": "élèver (applique l'élévation par défaut de votre configuration)"
+              },
+              {
+                "const": "reverseColor",
+                "title": "inverser la couleur de fond et de texte"
+              },
+              {
+                "const": "card",
+                "title": "rendu vignette plus grand"
+              }
+            ]
+          },
+          "default": ["outlined", "rounded", "elevate"]
+        },
+        "showTwitterTimeline": {
+          "title": "afficher la timeline Twitter",
+          "description": "Seulement appliqué si le compte Twitter est renseigné dans la section \"Communication & contact\"",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": true
+        },
+        "showLastNews": {
+          "title": "afficher les dernières actualités",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": false
+        },
+        "showEvents": {
+          "title": "afficher les évènements à venir",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": false
+        },
+        "featuredApplication": {
+          "title": "Visualisation mise en avant",
+          "type": "object",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000{context.featuredVisibilityFilter}",
+          "x-itemsProp": "results",
+          "x-itemTitle": "title",
+          "x-itemKey": "href",
           "properties": {
-            "type": {
-              "const": "none"
+            "href": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "slug": {
+              "type": "string"
             }
           }
-        }, {
-          "title": "Matomo (anciennement Piwik)",
-          "properties": {
-            "type": {
-              "const": "matomo",
-              "title": "Type de système"
-            },
-            "params": {
-              "type": "object",
+        },
+        "homeDatasets": {
+          "type": "object",
+          "title": "Liste réduite de jeux de données",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Ne rien afficher",
               "properties": {
-                "trackerBase": {
-                  "type": "string",
-                  "title": "URL du tracker"
-                },
-                "siteId": {
-                  "type": "string",
-                  "title": "Identifiant du site"
+                "type": {
+                  "const": "none"
                 }
               }
             },
-            "anonymized": {
-              "type": "boolean",
-              "x-display": "switch",
-              "title": "système configuré en mode anonyme",
-              "description": "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
-            }
-          }
-        }, {
-          "title": "Google Analytics (ancien mode Universal Analytics)",
-          "properties": {
-            "type": {
-              "const": "ga",
-              "title": "Type de système"
-            },
-            "params": {
-              "type": "object",
+            {
+              "title": "Afficher les derniers",
               "properties": {
-                "trackingId": {
-                  "type": "string",
-                  "title": "Identifiant du tracker"
+                "type": {
+                  "const": "lasts"
                 },
-                "appName": {
-                  "type": "string",
-                  "title": "Nom de l'application"
+                "size": {
+                  "title": "Nombre de jeux de données",
+                  "type": "integer",
+                  "default": 3
                 },
-                "appVersion": {
+                "cardLayout": {
                   "type": "string",
-                  "title": "Version de l'application"
+                  "title": "Disposition des vignettes de jeux de données",
+                  "default": "dense",
+                  "oneOf": [
+                    {
+                      "title": "Dense",
+                      "const": "dense"
+                    },
+                    {
+                      "title": "Horizontal",
+                      "const": "horizontal"
+                    },
+                    {
+                      "title": "Vertical",
+                      "const": "vertical"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "homeApplications": {
+          "type": "object",
+          "title": "Liste réduite de visualisations",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
                 }
               }
             },
-            "anonymized": {
-              "const": false,
-              "title": "Système configuré en mode anonyme"
+            {
+              "title": "Afficher les dernières",
+              "properties": {
+                "type": {
+                  "const": "lasts"
+                },
+                "size": {
+                  "title": "Nombre de visualisations",
+                  "type": "integer",
+                  "default": 3
+                },
+                "cardLayout": {
+                  "type": "string",
+                  "title": "Disposition des vignettes de visualisations",
+                  "default": "dense",
+                  "oneOf": [
+                    {
+                      "title": "Dense",
+                      "const": "dense"
+                    },
+                    {
+                      "title": "Horizontal",
+                      "const": "horizontal"
+                    },
+                    {
+                      "title": "Vertical",
+                      "const": "vertical"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "homeShowLinks": {
+          "title": "afficher une liste de liens",
+          "type": "boolean",
+          "x-if": "parent.value.homeTemplate.type=='default'",
+          "x-display": "switch",
+          "default": false,
+          "x-props": { "hideDetails": "auto" }
+        },
+        "homeLinksPosition": {
+          "title": "Position des liens sur la page d'accueil",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
+          "type": "string",
+          "default": "belowKpi",
+          "oneOf": [
+            {
+              "title": "sous la description et les chiffres clés",
+              "const": "belowKpi"
+            },
+            {
+              "title": "entre la description et les chiffres clés",
+              "const": "betweenDescKpi"
+            },
+            {
+              "title": "sous la bannière",
+              "const": "belowBanner"
+            }
+          ]
+        },
+        "homeLinksOptions": {
+          "title": "Options de l'affichage des liens sur la page d'accueil",
+          "type": "array",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
+          "x-props": { "hideDetails": "auto" },
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "outlined",
+                "title": "afficher un contour"
+              },
+              {
+                "const": "rounded",
+                "title": "arrondir"
+              },
+              {
+                "const": "elevate",
+                "title": "élèver (applique l'élévation par défaut de votre configuration)"
+              },
+              {
+                "const": "reverseColor",
+                "title": "inverser la couleur de fond et de texte"
+              }
+            ]
+          },
+          "default": ["outlined", "elevate"]
+        },
+        "homeLinks": {
+          "title": "Liste de liens",
+          "type": "array",
+          "x-if": "parent.value.homeTemplate.type=='default' and parent.value.homeShowLinks",
+          "items": {
+            "type": "object",
+            "required": ["title", "href"],
+            "properties": {
+              "title": { "type": "string", "title": "Titre" },
+              "href": { "type": "string", "title": "Adresse" },
+              "icon": {
+                "title": "Icône",
+                "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
+                "type": "object",
+                "x-fromUrl": "https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
+                "x-itemKey": "name",
+                "x-itemTitle": "name",
+                "x-itemIcon": "name",
+                "x-itemsProp": "results",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "svg": {
+                    "type": "string"
+                  }
+                }
+              },
+              "linkTitle": {
+                "type": "string",
+                "title": "Titre long",
+                "description": "un titre plus long qui ne sera pas affiché directement mais visible au survol et utilisé par les outils d'accessibilité"
+              }
             }
           }
-        }, {
-          "title": "Google Analytics (nouveau mode Global site tag)",
-          "properties": {
-            "type": {
-              "const": "gtag"
-            },
-            "params": {
-              "type": "object",
+        }
+      }
+    },
+    {
+      "title": "Jeux de données",
+      "properties": {
+        "datasetsPage": {
+          "type": "object",
+          "title": "Page des jeux de données",
+          "default": {
+            "type": "infiniteScroll"
+          },
+          "oneOf": [
+            {
+              "title": "Liste avec scroll infini",
               "properties": {
-                "measurementId": {
-                  "type": "string",
-                  "title": "Identifiant de mesure",
-                  "description": "Trouvez cet identifiant dans l'interface de Google Analytics > Administration > Assistant de configuration > Installation de la balise"
+                "type": {
+                  "const": "infiniteScroll"
                 }
               }
             },
-            "anonymized": {
-              "const": false,
-              "title": "Système configuré en mode anonyme"
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
             }
+          ]
+        },
+        "datasetsDefaultSort": {
+          "type": "string",
+          "title": "Tri par défaut de la liste des jeux de données",
+          "default": "createdAt",
+          "oneOf": [
+            {
+              "title": "Date de création",
+              "const": "createdAt"
+            },
+            {
+              "title": "Date de mise à jour",
+              "const": "dataUpdatedAt"
+            },
+            {
+              "title": "Ordre alphabétique",
+              "const": "title"
+            }
+          ]
+        },
+        "datasetsCardLayout": {
+          "type": "string",
+          "title": "Disposition des vignettes de jeux de données",
+          "default": "dense",
+          "oneOf": [
+            {
+              "title": "Compacte (3 colonnes)",
+              "const": "dense"
+            },
+            {
+              "title": "Compacte (2 colonnes)",
+              "const": "medium"
+            },
+            {
+              "title": "Texte + image horizontal (1 colonne)",
+              "const": "horizontal"
+            },
+            {
+              "title": "Texte + image vertical (3 colonnes)",
+              "const": "vertical"
+            }
+          ]
+        },
+        "datasetThumbnailApplication": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "utiliser la vignette de la 1ère application du jeu de données comme image",
+          "default": false
+        },
+        "datasetThumbnailContain": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "ne pas recadrer les images dans les vignettes de jeux de données",
+          "default": false
+        },
+        "datasetMetaLayout": {
+          "type": "string",
+          "title": "Affichage des métadonnées sur la page d'un jeu de données",
+          "oneOf": [
+            {
+              "title": "Disposition 2/3 - 1/3",
+              "const": "columnsLeftLarger"
+            },
+            {
+              "title": "Vertical",
+              "const": "vertical"
+            }
+          ],
+          "default": "columnsLeftLarger"
+        },
+        "datasetActionsDisplay": {
+          "type": "string",
+          "title": "Affichage des actions pour un jeu de données",
+          "oneOf": [
+            {
+              "title": "Icône seule",
+              "const": "icon"
+            },
+            {
+              "title": "Boutton avec icone",
+              "const": "button"
+            }
+          ],
+          "default": "icon"
+        }
+      }
+    },
+    {
+      "title": "Visualisations",
+      "description": "Les visualisations publiées dans le portail sont listées dans une page dédiée. Cette page n'est pas nécessaire : vous pouvez choisir de faire passer les utilisateurs par les pages des jeux de données avant de voir les visualisations.",
+      "properties": {
+        "applicationsPage": {
+          "type": "object",
+          "title": "Page des visualisations",
+          "default": {
+            "type": "infiniteScroll"
+          },
+          "oneOf": [
+            {
+              "title": "Liste avec scroll infini",
+              "properties": {
+                "type": {
+                  "const": "infiniteScroll"
+                }
+              }
+            },
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            }
+          ]
+        },
+        "applicationsDefaultSort": {
+          "type": "string",
+          "title": "Tri par défaut de la liste des visualisations",
+          "default": "createdAt",
+          "oneOf": [
+            {
+              "title": "Date de création",
+              "const": "createdAt"
+            },
+            {
+              "title": "Date de mise à jour",
+              "const": "dataUpdatedAt"
+            },
+            {
+              "title": "Ordre alphabétique",
+              "const": "title"
+            }
+          ]
+        },
+        "applicationsCardLayout": {
+          "type": "string",
+          "title": "Disposition des vignettes de visualisations",
+          "default": "dense",
+          "oneOf": [
+            {
+              "title": "Dense",
+              "const": "dense"
+            },
+            {
+              "title": "Horizontal",
+              "const": "horizontal"
+            },
+            {
+              "title": "Vertical",
+              "const": "vertical"
+            }
+          ]
+        },
+        "applicationActionsDisplay": {
+          "type": "string",
+          "title": "Affichage des actions pour une visualisation",
+          "oneOf": [
+            {
+              "title": "Icône seule",
+              "const": "icon"
+            },
+            {
+              "title": "Boutton avec icone",
+              "const": "button"
+            }
+          ],
+          "default": "icon"
+        },
+        "applicationsDirectNavigation": {
+          "type": "boolean",
+          "title": "Pas de boutons d'action sur la liste, navigation directe",
+          "default": false
+        }
+      }
+    },
+    {
+      "title": "Réutilisations",
+      "description": "Les réutilisations peuvent être soumises par les utilisateurs authentifiés si vous activez la fonctionnalité. Les gestionnaires du portail font un travail de saisie et de modération avant le rendu final dans le portail.",
+      "properties": {
+        "usesManagement": {
+          "type": "object",
+          "title": "Gestion des réutilisations",
+          "default": {
+            "type": "managers"
+          },
+          "oneOf": [
+            {
+              "title": "Uniquement pour les gestionnaires du portail",
+              "properties": {
+                "type": {
+                  "const": "managers"
+                }
+              }
+            },
+            {
+              "title": "Pour tous les utilisateurs du portail",
+              "properties": {
+                "type": {
+                  "const": "users"
+                }
+              }
+            }
+          ]
+        },
+        "usesPage": {
+          "type": "object",
+          "title": "Page des réutilisations",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Liste avec scroll infini",
+              "properties": {
+                "type": {
+                  "const": "infiniteScroll"
+                }
+              }
+            },
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            }
+          ]
+        },
+        "usesCardLayout": {
+          "type": "string",
+          "title": "Disposition des vignettes des réutilisations",
+          "default": "dense",
+          "oneOf": [
+            {
+              "title": "Dense",
+              "const": "dense"
+            },
+            {
+              "title": "Horizontal",
+              "const": "horizontal"
+            },
+            {
+              "title": "Vertical",
+              "const": "vertical"
+            }
+          ]
+        },
+        "externalReusesPage": {
+          "type": "object",
+          "title": "Page des réutilisations (ancien fonctionnement déprécié)",
+          "description": "Cette page est liée au système déprécié de réutilisations saisies directement sur les jeux de données dans le back-office. À la place utilisez la gestion des réutilisations intégrée au portail, voir les 2 options ci-dessous.",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Liste",
+              "properties": {
+                "type": {
+                  "const": "list"
+                }
+              }
+            },
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Actualités",
+      "description": "Les actualités sont des pages de contenu qui peuvent être consultées dans l'ordre de publication.",
+      "properties": {
+        "newsPage": {
+          "type": "object",
+          "title": "Page des actualités",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Liste avec scroll infini",
+              "properties": {
+                "type": {
+                  "const": "infiniteScroll"
+                }
+              }
+            },
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Évènements",
+      "description": "Les évènements sont des pages de contenu qui contiennent un formulaire d'inscription.",
+      "properties": {
+        "eventsPage": {
+          "type": "object",
+          "title": "Page des évènements",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Liste avec scroll infini",
+              "properties": {
+                "type": {
+                  "const": "infiniteScroll"
+                }
+              }
+            },
+            {
+              "title": "Ne rien afficher",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Communication & contact",
+      "properties": {
+        "twitter": {
+          "type": "string",
+          "title": "Compte X"
+        },
+        "facebook": {
+          "type": "string",
+          "title": "Compte Facebook"
+        },
+        "linkedin": {
+          "type": "string",
+          "title": "Compte LinkedIn"
+        },
+        "youtube": {
+          "type": "string",
+          "title": "Identifiant Youtube",
+          "description": "Vous pouvez renseigner directement un identifiant d'utilisateur ou bien celui d'une chaine avec \"c/\" en préfixe."
+        },
+        "instagram": {
+          "type": "string",
+          "title": "Compte Instagram"
+        },
+        "vimeo": {
+          "type": "string",
+          "title": "Identifiant chaîne Vimeo"
+        },
+        "contactEmail": {
+          "type": "string",
+          "title": "Email de contact",
+          "format": "email",
+          "description": "Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail."
+        },
+        "contactPhone": {
+          "type": "string",
+          "title": "Téléphone de contact"
+        },
+        "contactPhoneLabel": {
+          "type": "string",
+          "title": "Nom associé au téléphone de contact"
+        },
+        "contactWebsite": {
+          "type": "string",
+          "title": "Site Web de contact"
+        },
+        "contactWebsiteLabel": {
+          "type": "string",
+          "title": "Nom associé au site Web de contact"
+        },
+        "contactInfos": {
+          "type": "string",
+          "title": "Informations de contact",
+          "x-display": "custom-markdown",
+          "maxLength": 10000
+        },
+        "contactNote": {
+          "type": "string",
+          "title": "Mention de contact",
+          "x-display": "custom-markdown",
+          "maxLength": 10000
+        },
+        "contactFooter": {
+          "type": "boolean",
+          "title": "Afficher un bandeau de contact en bas des pages",
+          "description": "Le lien contact sera alors enlevé du menu de navigation"
+        },
+        "contactFooterColor": {
+          "type": "string",
+          "default": "grey",
+          "title": "Couleur du bandeau de contact",
+          "x-if": "parent.value.contactFooter",
+          "oneOf": [
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "grey",
+              "title": "gris foncé"
+            },
+            {
+              "const": "lightGrey",
+              "title": "gris clair"
+            },
+            {
+              "const": "white",
+              "title": "blanc"
+            },
+            {
+              "const": "secondaryBackground",
+              "title": "couleur d'arrière plan secondaire"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Espace personnel",
+      "description": "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification.",
+      "properties": {
+        "personalNavigationColor": {
+          "type": "string",
+          "default": "primary",
+          "title": "Couleur de la barre de navigation dans l'espace personnel",
+          "oneOf": [
+            {
+              "const": "primary",
+              "title": "couleur principale"
+            },
+            {
+              "const": "secondary",
+              "title": "couleur secondaire"
+            },
+            {
+              "const": "grey",
+              "title": "gris"
+            },
+            {
+              "const": "white",
+              "title": "blanc"
+            }
+          ]
+        },
+        "personnalHidePages": {
+          "type": "array",
+          "title": "Cacher des pages dans l'espace personnel",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "notify",
+                "title": "Notifications"
+              },
+              {
+                "const": "api-keys",
+                "title": "Clés d'API"
+              },
+              {
+                "const": "contribute",
+                "title": "Contribuer"
+              },
+              {
+                "const": "processings",
+                "title": "Traitements"
+              }
+            ]
           }
-        }]
+        },
+        "personalAccountPages": {
+          "type": "array",
+          "title": "Pages supplémentaires en iframe dans la section compte actif",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "href", "icon"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Identifiant de la page"
+              },
+              "title": {
+                "type": "string",
+                "title": "Libellé du lien"
+              },
+              "href": {
+                "type": "string",
+                "title": "URL de la page"
+              },
+              "icon": {
+                "title": "Icône",
+                "description": "Il est possible de consulter plus facilement la liste des icones disponibles sur <a href=\"https://materialdesignicons.com\" target=\"_blank\">ce site</a>.",
+                "type": "object",
+                "x-fromUrl": "https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}",
+                "x-itemKey": "name",
+                "x-itemTitle": "name",
+                "x-itemIcon": "name",
+                "x-itemsProp": "results",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "svg": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    {
+      "title": "Suivi d'activité",
+      "description": "Configurez un système de suivi d'activité des utilisateurs (Web analytics).",
+      "properties": {
+        "analytics": {
+          "type": "object",
+          "default": {
+            "type": "none"
+          },
+          "oneOf": [
+            {
+              "title": "Aucun suivi",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            },
+            {
+              "title": "Matomo (anciennement Piwik)",
+              "properties": {
+                "type": {
+                  "const": "matomo",
+                  "title": "Type de système"
+                },
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "trackerBase": {
+                      "type": "string",
+                      "title": "URL du tracker"
+                    },
+                    "siteId": {
+                      "type": "string",
+                      "title": "Identifiant du site"
+                    }
+                  }
+                },
+                "anonymized": {
+                  "type": "boolean",
+                  "x-display": "switch",
+                  "title": "système configuré en mode anonyme",
+                  "description": "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
+                }
+              }
+            },
+            {
+              "title": "Google Analytics (ancien mode Universal Analytics)",
+              "properties": {
+                "type": {
+                  "const": "ga",
+                  "title": "Type de système"
+                },
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "trackingId": {
+                      "type": "string",
+                      "title": "Identifiant du tracker"
+                    },
+                    "appName": {
+                      "type": "string",
+                      "title": "Nom de l'application"
+                    },
+                    "appVersion": {
+                      "type": "string",
+                      "title": "Version de l'application"
+                    }
+                  }
+                },
+                "anonymized": {
+                  "const": false,
+                  "title": "Système configuré en mode anonyme"
+                }
+              }
+            },
+            {
+              "title": "Google Analytics (nouveau mode Global site tag)",
+              "properties": {
+                "type": {
+                  "const": "gtag"
+                },
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "measurementId": {
+                      "type": "string",
+                      "title": "Identifiant de mesure",
+                      "description": "Trouvez cet identifiant dans l'interface de Google Analytics > Administration > Assistant de configuration > Installation de la balise"
+                    }
+                  }
+                },
+                "anonymized": {
+                  "const": false,
+                  "title": "Système configuré en mode anonyme"
+                }
+              }
+            }
+          ]
+        }
       }
     }
-  }]
+  ]
 }

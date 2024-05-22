@@ -39,7 +39,7 @@
             outlined
             required
           />
-          <v-row class="mx-0">
+          <v-row class="mx-0 mb-0">
             <v-spacer />
             <v-hover v-slot="{hover}">
               <v-btn
@@ -52,8 +52,15 @@
                 Envoyer
               </v-btn>
             </v-hover>
+            <v-spacer />
           </v-row>
         </v-form>
+        <v-sheet
+          v-if="config.contactNote && config.contactNote.length"
+          color="grey lighten-3"
+          class="pa-3 mt-6 text-body-2"
+          v-html="config.contactNote"
+        />
       </v-col>
       <v-col
         v-if="config.contactInfos && config.contactInfos.length"
@@ -75,7 +82,8 @@
               </v-icon><a
                 :href="'tel:' + config.contactPhone"
                 aria-label="Contactez nous par téléphone"
-              >{{ config.contactPhoneLabel }} {{ config.contactPhone }}</a>
+              >{{
+                config.contactPhoneLabel }} {{ config.contactPhone }}</a>
             </span>
           </template>
           <template v-if="config.contactWebsite">
@@ -86,7 +94,8 @@
               </v-icon><a
                 :href="config.contactWebsite"
                 aria-label="Retrouvez nous sur ce site"
-              >{{ config.contactWebsiteLabel || config.contactWebsite }}</a>
+              >{{
+                config.contactWebsiteLabel || config.contactWebsite }}</a>
             </span>
           </template>
           <template v-if="hasSocialLinks">

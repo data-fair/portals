@@ -64,6 +64,7 @@ function cleanPage (page, html) {
 function cleanConfig (conf, html) {
   if (conf.description && html) conf.description = sanitizeHtml(marked(conf.description))
   if (conf.contactInfos && html) conf.contactInfos = sanitizeHtml(marked(conf.contactInfos))
+  if (conf.contactNote && html) conf.contactNote = sanitizeHtml(marked(conf.contactNote))
   return conf
 }
 
