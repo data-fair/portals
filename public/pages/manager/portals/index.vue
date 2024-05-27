@@ -235,7 +235,11 @@ export default {
   watch: {
     showCreateMenu () {
       if (this.showCreateMenu) {
-        this.newPortal = { title: '', owner: this.owners[0] }
+        const newPortal = { title: '' }
+        if (this.owners) {
+          newPortal.owner = this.owners[0]
+        }
+        this.newPortal = newPortal
       }
     }
   },
@@ -269,8 +273,10 @@ export default {
     },
     async createPortal () {
       const newPortal = JSON.parse(JSON.stringify(this.newPortal))
-      if ((this.user.organization && this.user.organization.department) || this.owners.length < 2) delete newPortal.owner
-      else delete newPortal.owner.label
+      if (newPortal.owner) {
+        if ((this.user.organization && this.user.organization.department) || this.owners.length < 2) delete newPortal.owner
+        else delete newPortal.owner.label
+      }
       try {
         await this.$axios.$post('api/v1/portals', newPortal)
         eventBus.$emit('notification', { type: 'success', msg: 'Portail créé' })
