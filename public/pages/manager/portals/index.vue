@@ -225,7 +225,8 @@ export default {
           portalsByOwner.owners.push({
             ...portal.owner,
             key,
-            fullName: `${portal.owner.name}${portal.owner.department ? ` / ${portal.owner.departmentName || portal.owner.department}` : ''}`
+            fullName: `${portal.owner.name}${portal.owner.department ? ` / ${portal.owner.departmentName || portal.owner.department}` : ''}`,
+            canAdmin: !this.activeAccount.department
           })
         }
       }
