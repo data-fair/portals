@@ -80,7 +80,7 @@
 
 <script>
 
-const { mapGetters } = require('vuex')
+const { mapGetters, mapState } = require('vuex')
 const schema = require('../../contract/page.json')
 
 export default {
@@ -91,6 +91,7 @@ export default {
     owners: null
   }),
   computed: {
+    ...mapState(['portal']),
     ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount']),
     schema () {
@@ -112,7 +113,7 @@ export default {
     }
   },
   async mounted () {
-    if (this.activeAccount.type === 'organization' && !this.activeAccount.department) {
+    if (!this.portal.owner.department && this.activeAccount.type === 'organization' && !this.activeAccount.department) {
       const org = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
       this.departments = org.departments || []
     }
