@@ -200,6 +200,20 @@ import DatasetCard from '~/components/dataset/card.vue'
 import { isMobileOnly } from 'mobile-device-detect'
 const { mapState, mapGetters, mapActions } = require('vuex')
 
+const { Parser } = require('json2csv')
+const fields = [
+  { label: 'Identifiant', value: 'slug' },
+  { label: 'Titre', value: 'title' },
+  { label: 'Description', value: 'description' },
+  { label: 'Themes', value: 'themes' },
+  { label: 'Couverture spatiale', value: 'spatial' },
+  { label: 'Page', value: 'page' },
+  { label: 'Api', value: 'href' },
+  { label: 'Date de création', value: 'createdAt' },
+  { label: 'Date de mise a jour', value: 'dataUpdatedAt' }
+]
+const parser = new Parser({ fields })
+
 export default {
   components: {
     DatasetCard
@@ -390,9 +404,13 @@ export default {
       if (!this.user) params.visibility = 'public'
       try {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
-        const header = 'identifiant,titre,description,themes,couverture spatiale,page,api,date de création,date de mise a jour'
-        const content = datasets.map(d => `${d.slug},"${d.title}","${d.description}","${(d.topics || []).map(t => t.title).join(';')}",${d.bbox ? ('"' + JSON.stringify(d.bbox) + '"') : ''},${this.url + '/' + d.id},${d.href},${d.dataUpdatedAt},${d.createdAt}`).join('\n')
-        const blob = new Blob([header + '\n' + content], { type: 'text/csv' })
+        datasets.forEach(d => {
+          d.themes = (d.topics || []).map(t => t.title).join(';')
+          d.spatial = d.bbox ? JSON.stringify(d.bbox) : ''
+          d.page = this.url + '/' + d.id
+        })
+        const csv = parser.parse(datasets)
+        const blob = new Blob([csv], { type: 'text/csv' })
         fileDownload(blob, name)
       } catch (err) { }
       this.downloading = null
