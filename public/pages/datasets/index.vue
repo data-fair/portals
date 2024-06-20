@@ -206,6 +206,7 @@ const fields = [
   { label: 'Titre', value: 'title' },
   { label: 'Description', value: 'description' },
   { label: 'Themes', value: 'themes' },
+  { label: 'Concepts', value: 'concepts' },
   { label: 'Couverture spatiale', value: 'spatial' },
   { label: 'Page', value: 'page' },
   { label: 'Api', value: 'href' },
@@ -392,7 +393,7 @@ export default {
       this.downloading = name
       const params = {
         size: 10000,
-        select: 'id,slug,title,description,bbox,topics,href,dataUpdatedAt,createdAt,-userPermissions',
+        select: 'id,slug,title,description,bbox,topics,schema,href,dataUpdatedAt,createdAt,-userPermissions',
         publicationSites: 'data-fair-portals:' + this.$store.state.portal._id,
         owner: this.owner,
         sort: this.sort + ':' + (this.order * 2 - 1),
@@ -406,6 +407,7 @@ export default {
         const datasets = (await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets', { params })).results
         datasets.forEach(d => {
           d.themes = (d.topics || []).map(t => t.title).join(';')
+          d.concepts = (d.schema || []).filter(f => f['x-concept']).map(f => f['x-concept'].title).join(';')
           d.spatial = d.bbox ? JSON.stringify(d.bbox) : ''
           d.page = this.url + '/' + d.id
         })
