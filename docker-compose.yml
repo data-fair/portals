@@ -64,18 +64,22 @@ services:
     volumes:
       - ./data/data-fair:/data
 
-  processings:
+  processings-api:
     profiles:
       - dev
-    image: ghcr.io/data-fair/processings:master
+    image: ghcr.io/data-fair/processings/api:master
     network_mode: host
     environment:
       - PORT=8089
-      - PUBLIC_URL=http://localhost:6200/processings
-      - MONGO_URL=mongodb://localhost:27017/data-fair
-      - DIRECTORY_URL=http://localhost:6200/simple-directory
-      - NOTIFY_URL=http://localhost:6200/notify
-      - PROMETHEUS_ACTIVE=false
+      - ORIGIN=http://localhost:6200
+      - PRIVATE_DIRECTORY_URL=http://localhost:6200/simple-directory
+      - OBSERVER_ACTIVE=false
+  processings-ui:
+    profiles:
+      - dev
+    image: ghcr.io/data-fair/processings/ui:master
+    ports:
+      - 8090:8080
 
   elasticsearch:
     profiles:

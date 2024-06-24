@@ -38,7 +38,6 @@ export default {
   methods: {
     // receiving a message from the iframe
     onMessage (message) {
-      console.log('MESSAGE', message)
       // the iframe requests that we display a breadcrumb
       // we mirror its internal paths by using them as a "to" query param for our own current page
       if (message.breadcrumbs) {
@@ -48,7 +47,7 @@ export default {
       }
     },
     getBreadcrumbPath (to) {
-      if (to === '/processings/') return undefined
+      if (to === '/processings/' || to === '/processings') return undefined
       if (to.startsWith('/processings')) return to.replace('/processings/', './')
     }
   }
