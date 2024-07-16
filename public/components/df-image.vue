@@ -21,7 +21,7 @@
         v-model="file"
         type="file"
         class="pt-2"
-        accept="image/png, image/jpeg"
+        accept="image/*"
         placeholder="chargez une image"
         outlined
         dense
