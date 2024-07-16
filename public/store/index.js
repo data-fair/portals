@@ -33,7 +33,8 @@ export default () => {
       whiteLabelOwners: [],
       childBreadcrumbsRouteName: null,
       childBreadcrumbItems: null,
-      processingsBasePath: null
+      processingsBasePath: null,
+      pageImages: {}
     },
     getters: {
       embed () {
@@ -189,6 +190,20 @@ export default () => {
           // errors are none-blocking to tolerate an older SD instance or one with MANGE_PARTNERS != true
           console.warn('failure to fetch user partners', err)
         }
+      },
+      async fetchPageImages ({ state, commit, getters }, pageId) {
+        if (state.pageImages[pageId]) return state.pageImages[pageId]
+        const lines = await this.$axios.$get(getters.imagesDatasetUrl + '/lines', {
+          params: {
+            select: 'assetId,_attachment_url',
+            qs: `pageId:"${pageId}"`,
+            thumbnail: '1785x800' // max width of the vertical layout
+          }
+        })
+        const images = lines.results.reduce((a, image) => { a[image.assetId] = image._thumbnail || image._attachment_url; return a }, {})
+        const pageImages = { ...state.pageImages, [pageId]: images }
+        commit('setAny', { pageImages })
+        return images
       },
       setManagerBreadcrumbs ({ commit }, breadcrumbs) {
         breadcrumbs.forEach(b => { b.exact = true })

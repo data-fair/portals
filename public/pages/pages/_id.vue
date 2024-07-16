@@ -63,15 +63,10 @@ export default {
   },
   methods: {
     async fetchPage () {
-      this.page = await this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } })
-      const images = await this.$axios.$get(this.imagesDatasetUrl + '/lines', {
-        params: {
-          select: 'assetId,_attachment_url',
-          qs: `pageId:"${this.$route.params.id}"`,
-          thumbnail: '1785x800' // max width of the vertical layout
-        }
-      })
-      this.images = images.results.reduce((a, image) => { a[image.assetId] = image._thumbnail || image._attachment_url; return a }, {})
+      [this.page, this.images] = await Promise.all([
+        this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } }),
+        this.$store.dispatch('fetchPageImages', this.$route.params.id)
+      ])
     }
   }
 }
