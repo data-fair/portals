@@ -123,7 +123,7 @@ export default {
       if (this.$refs.form.validate()) {
         const page = { ...this.editItem }
         if (!page.department) delete page.department
-        this.$emit('created', this.editItem)
+        this.$emit('created', page)
         this.menu = false
       }
     }
