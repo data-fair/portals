@@ -159,6 +159,8 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import eventBus from '~/event-bus'
+
 const schema = JSON.parse(JSON.stringify(require('~/../contract/use')))
 schema.properties.published.readOnly = true
 
@@ -225,17 +227,21 @@ export default {
     async save () {
       if (!this.$refs.editForm.validate()) return
       this.saving = true
-      const formData = new FormData()
-      if (this.editItem.image && this.editItem.image.data) formData.append('image', this.editItem.image.data)
-      formData.append('body', JSON.stringify(this.editItem))
-      if (this.fullEditItem && this.fullEditItem._id) {
-        await this.$axios.$patch(`/api/v1/portals/${this.portal._id}/uses/${this.fullEditItem._id}`, formData)
-      } else {
-        await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses`, formData)
+      try {
+        const formData = new FormData()
+        if (this.editItem.image && this.editItem.image.data) formData.append('image', this.editItem.image.data)
+        formData.append('body', JSON.stringify(this.editItem))
+        if (this.fullEditItem && this.fullEditItem._id) {
+          await this.$axios.$patch(`/api/v1/portals/${this.portal._id}/uses/${this.fullEditItem._id}`, formData)
+        } else {
+          await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses`, formData)
+        }
+        await this.fetchDrafts()
+        this.editItem = null
+        this.fullEditItem = null
+      } catch (error) {
+        eventBus.$emit('notification', { error })
       }
-      await this.fetchDrafts()
-      this.editItem = null
-      this.fullEditItem = null
       this.saving = false
     },
     async deleteUse (use) {
@@ -246,8 +252,12 @@ export default {
     },
     async submitUse (use) {
       this.saving = true
-      await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses/${use._id}/_submit`)
-      await Promise.all([this.fetchDrafts(), this.fetchSubmitted()])
+      try {
+        await this.$axios.$post(`/api/v1/portals/${this.portal._id}/uses/${use._id}/_submit`)
+        await Promise.all([this.fetchDrafts(), this.fetchSubmitted()])
+      } catch (error) {
+        eventBus.$emit('notification', { error })
+      }
       this.saving = false
     }
   }
