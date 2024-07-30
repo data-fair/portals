@@ -6,6 +6,8 @@ const hasha = require('hasha')
 const multer = require('multer')
 const mime = require('mime-types')
 const resolvePath = require('resolve-path')
+const createError = require('http-errors')
+const { fsyncFile } = require('./files')
 const promisifyMiddleware = require('./promisify-middleware')
 const debug = require('debug')('assets')
 
@@ -92,17 +94,24 @@ exports.fillConfigAssets = async (dir, conf, force) => {
 // We upload resources only in a draft folder
 // use POST _validate_draft to copy resources to production
 const storage = multer.diskStorage({
-  async destination (req, file, cb) {
-    const dir = resolvePath(config.dataDir, path.join(req.params.id, 'draft'))
-    await fs.ensureDir(dir)
-    cb(null, dir)
+  destination (req, file, cb) {
+    cb(null, req.__uploadDestination)
   },
   filename (req, file, cb) {
-    if (!assets[req.params.assetId]) return cb(new Error('asset inconnu ' + req.params.assetId))
     cb(null, req.params.assetId)
   }
 })
-exports.uploadAsset = promisifyMiddleware(multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } }).single('asset'), 'file')
+const getAsset = promisifyMiddleware(multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } }).single('asset'), 'file')
+
+exports.uploadAsset = async (req, res) => {
+  if (!assets[req.params.assetId]) throw createError(400, 'asset inconnu ' + req.params.assetId)
+  req.__uploadDestination = resolvePath(config.dataDir, path.join(req.params.id, 'draft'))
+  const filePath = path.join(req.__uploadDestination, req.params.assetId)
+  // creating empty file before streaming then fsync after write seems to fix some weird bugs with NFS
+  await fs.ensureFile(filePath)
+  await getAsset(req, res)
+  await fsyncFile(filePath)
+}
 
 exports.downloadAsset = async (req, res) => {
   // accept buffering and caching of this response in the reverse proxy
