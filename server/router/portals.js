@@ -703,7 +703,7 @@ router.get('/:id/uses/:useId/image', asyncWrap(setPortalAnonymous), asyncWrap(as
   if (!use.image) return res.status(404).send('use image not found')
   res.sendFile(path.join(usesUtils.directory(req.params.id, req.params.useId), 'image'), {
     headers: {
-      'content-type': use.image.type,
+      'content-type': use.image.type ?? 'image/png',
       'cache-control': use.published ? 'public' : 'private'
     }
   })

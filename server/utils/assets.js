@@ -128,18 +128,14 @@ exports.downloadAsset = async (req, res) => {
   const filePath = resolvePath(portalDir, req.params.assetId)
   if (req.query.hash && req.query.hash !== 'undefined') {
     const maxAge = draft ? 0 : 31536000
-    return res.sendFile(`${filePath}-${req.query.hash}`, {
-      headers: {
-        'content-type': mime.contentType(req.query.hash) || mime.contentType(asset.name),
-        'cache-control': 'public,max-age=' + maxAge
-      }
-    })
+    const headers = { 'cache-control': 'public,max-age=' + maxAge }
+    const contentType = mime.contentType(req.query.hash) || mime.contentType(asset.name)
+    if (contentType) headers['content-type'] = contentType
+    return res.sendFile(`${filePath}-${req.query.hash}`, { headers })
   } else {
-    return res.sendFile(filePath, {
-      headers: {
-        'content-type': mime.contentType(asset.name),
-        'cache-control': 'public,max-age=0'
-      }
-    })
+    const headers = { 'cache-control': 'public,max-age=0' }
+    const contentType = mime.contentType(asset.name)
+    if (contentType) headers['content-type'] = contentType
+    return res.sendFile(filePath, { headers })
   }
 }
