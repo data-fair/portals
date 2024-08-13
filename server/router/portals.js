@@ -815,6 +815,9 @@ ${req.body.text}`
     subject: req.body.subject,
     text
   }
+
+  console.log('send contact email', mail)
+
   await req.app.get('mailTransport').sendMailAsync(mail)
 
   res.status(200).send(req.body)
