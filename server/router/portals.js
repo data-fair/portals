@@ -776,7 +776,8 @@ const limiter = (req) => {
 router.post('/:id/contact-email', asyncWrap(setPortalAnonymous), asyncWrap(async (req, res, next) => {
   if (!emailValidator.validate(req.body.from)) return res.status(400).send('Adresse mail non renseignée ou malformée.')
   if (!req.body.token) return res.status(401).send()
-  if (!req.config.contactEmail) return res.status(404).send('Adresse mail de contact non configurée')
+  if (!req.config.contactEmail) return res.status(404).send('Adresse mail de réception des contacts non configurée')
+  if (!config.mails.from) return res.status(404).send('Adresse d\'émission des contacts non configurée')
 
   // 1rst level of anti-spam prevention, no cross origin requests on this route
   if (!matchingPortalHost(req.portal, req)) {
@@ -803,11 +804,16 @@ router.post('/:id/contact-email', asyncWrap(setPortalAnonymous), asyncWrap(async
     return res.status(429).send('Trop de messages dans un bref interval. Veuillez patienter avant d\'essayer de nouveau.')
   }
 
+  const text = `Message transmis par le formulaire de contact de ${req.portal.host}
+Adresse mail renseignée par l'utilisateur : ${req.body.from}
+
+${req.body.text}`
+
   const mail = {
-    from: req.body.from,
+    from: config.mails.from,
     to: req.config.contactEmail,
     subject: req.body.subject,
-    text: req.body.text
+    text
   }
   await req.app.get('mailTransport').sendMailAsync(mail)
 

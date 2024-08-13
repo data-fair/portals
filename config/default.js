@@ -20,6 +20,7 @@ module.exports = {
     options: {}
   },
   mails: {
+    from: '',
     // transport is a full configuration object for createTransport of nodemailer
     // cf https://nodemailer.com/smtp/
     transport: {

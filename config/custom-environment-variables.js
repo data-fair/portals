@@ -20,6 +20,7 @@ module.exports = {
     }
   },
   mails: {
+    from: 'MAILS_FROM',
     transport: {
       __name: 'MAILS_TRANSPORT',
       __format: 'json'
