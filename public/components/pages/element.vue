@@ -69,9 +69,9 @@
       :class="value.fillHeight ? 'fill-height' : ''"
     >
       <v-card
-        :outlined="!value.flat"
-        :flat="value.flat"
-        :class="`d-flex flex-column${value.fillHeight ? ' fill-height' : ''}`"
+        v-bind="cardProps"
+        @mouseenter="hovered = true"
+        @mouseleave="hovered = false"
       >
         <v-img
           v-if="value.image && (value.image.url || (value.image.local && value.image.local.assetId)) && value.image.position === 'top'"
@@ -292,12 +292,13 @@ export default {
       loading: false,
       resolvedDataset: null,
       error: null,
-      overlay: { visible: false, url: null }
+      overlay: { visible: false, url: null },
+      hovered: false
     }
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['readablePrimaryColor', 'elevation', 'imagesDatasetUrl', 'isPublished']),
+    ...mapGetters(['readablePrimaryColor', 'elevation', 'imagesDatasetUrl', 'isPublished', 'elevation', 'actionCardBackgroundColor']),
     titleClass () {
       if (!this.value || this.value.type !== 'title') return null
       const margins = {
@@ -312,7 +313,58 @@ export default {
     },
     cardTitleClass () {
       if (!this.value || this.value.type !== 'cardSimple') return
-      return `primary--text ${this.value.centerTitle ? 'justify-center' : ''} text-${this.value.titleSize || 'h6'}`
+      let c = `primary--text text-${this.value.titleSize || 'h6'}`
+      if (this.value.centerTitle) c += ' justify-center'
+
+      // apply global style from action cards
+      if (this.value.href) {
+        if (this.hovered && this.config.actionCardOptions.includes('hoverColorTitle')) {
+          c += ' primary-darker--text'
+        }
+        // TODO: this does not work very well
+        /* if (this.config.actionCardOptions.includes('hoverUnderlineTitle')) {
+          c += ' underline-link underline-link-partial'
+          if (this.hovered) c += ' underline-link-hover'
+        } */
+      }
+      return c
+    },
+    cardProps () {
+      const props = {}
+      props.class = 'd-flex flex-column'
+      if (this.value.fillHeight) {
+        props.class += ' fill-height'
+      }
+
+      // apply global style from action cards
+      if (this.value.href) {
+        let outlinedClass = ''
+
+        if (this.config.actionCardOptions.includes('flat') || this.value.flat) props.elevation = 0
+        else props.elevation = this.elevation
+
+        if (!this.value.flat) {
+          if (this.config.actionCardOptions.includes('outlined')) outlinedClass = 'also-outlined'
+          else outlinedClass = 'not-outlined'
+        }
+
+        if (this.hovered) {
+          if (this.config.actionCardOptions.includes('hoverElevate')) props.elevation = Math.max(this.elevation * 2, 8)
+          if (this.config.actionCardOptions.includes('hoverColorBorder')) outlinedClass = 'primary-outlined'
+        }
+        props.class += ' ' + outlinedClass
+
+        // TODO: what to do abount background ?
+        // style: `background-color:${this.layout === 'list' ? 'transparent' : this.actionCardBackgroundColor(this.layout === 'horizontal')}`
+      } else {
+        if (this.value.flat) {
+          props.flat = true
+        } else {
+          props.outlined = true
+        }
+      }
+
+      return props
     }
   },
   watch: {
