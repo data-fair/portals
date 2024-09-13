@@ -222,7 +222,7 @@
         :iframe-resizer="false"
         :sync-state="value.syncState"
         :sync-state-ignore-path="true"
-        :src="tableIframeSrc(value.dataset)"
+        :src="tableIframeSrc()"
         :query-params-exclude="['primary']"
       />
       <v-iframe
@@ -376,9 +376,14 @@ export default {
     await this.resolveDataset()
   },
   methods: {
-    tableIframeSrc (dataset) {
+    tableIframeSrc () {
+      const dataset = this.value.dataset
       const ref = this.isPublished && dataset.slug ? dataset.slug : dataset.id
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${ref}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
+      let url = `${this.$store.getters.dataFairUrl}/embed/dataset/${ref}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
+      if (this.value.display && this.value.display !== 'auto') {
+        url += `&display=${this.value.display}`
+      }
+      return url
     },
     formIframeSrc (dataset) {
       const ref = this.isPublished && dataset.slug ? dataset.slug : dataset.id

@@ -389,6 +389,17 @@
           "type": "boolean",
           "default": false,
           "x-options": { "hideInArrayItem": true }
+        },
+        "display": {
+          "title": "Type d'affichage",
+          "type": "string",
+          "default": "auto",
+          "oneOf": [
+            {"const": "auto", "title": "automatique en fonction de la largeur disponible" },
+            { "const": "table", "title": "table" },
+            { "const": "table-dense", "title": "table dense" },
+            { "const": "list", "title": "vignettes" }
+          ]
         }
       }
     },
