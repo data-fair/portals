@@ -72,9 +72,10 @@ export default {
     notifUrl () {
       const keys = [`data-fair:dataset-data-updated:${this.dataset.id}`, `data-fair:dataset-breaking-change:${this.dataset.id}`]
       const titles = ['mise à jour des données', 'rupture de compatibilité des données']
-      const icon = `${this.directoryUrl}/api/avatars/${this.config.owner.type}/${this.config.owner.id}/avatar.png`
+      const icon = `${this.directoryUrl}/api/avatars/${this.dataset.owner.type}/${this.dataset.owner.id}/avatar.png`
       const urlTemplate = `${this.publicBaseUrl}/datasets/${this.dataset.id}`
-      const sender = `${this.config.owner.type}:${this.config.owner.id}`
+      let sender = `${this.dataset.owner.type}:${this.dataset.owner.id}`
+      if (this.dataset.owner.department) sender += ':' + this.dataset.owner.department
       return `${this.notifyUrl}/embed/subscribe?primary=${encodeURIComponent(this.config.themeColor)}&key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
     }
   }

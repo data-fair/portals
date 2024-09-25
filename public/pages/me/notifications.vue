@@ -57,7 +57,8 @@ export default {
       }
       const icon = `${this.directoryUrl}/api/avatars/${this.config.owner.type}/${this.config.owner.id}/avatar.png`
       const urlTemplate = `${this.publicBaseUrl}/datasets/{id}`
-      const sender = `${this.config.owner.type}:${this.config.owner.id}`
+      let sender = `${this.config.owner.type}:${this.config.owner.id}`
+      if (this.config.owner.department) sender += ':' + this.config.owner.department
       return `${this.notifyUrl}/embed/subscribe?primary=${encodeURIComponent(this.config.themeColor)}&key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
     }
   },
