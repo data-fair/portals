@@ -15,6 +15,7 @@ const styledSanitizeOpts = {
       'text-align': [/^left$/, /^right$/, /^center$/],
       // Match any number with px, em, or %
       'font-size': [/^\d+(?:px|em|%)$/],
+      'font-weight': [/^normal$/, /^bold$/, /^lighter$/, /^bolder$/, /^\d+$/],
       // manage absolute and relative positioning
       position: [/^(absolute|relative)$/],
       width: [/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)(?:px|em|%)$/],
