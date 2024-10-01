@@ -25,7 +25,7 @@
     <v-toolbar-items>
       <client-only>
         <notifications-queue
-          v-if="notifyUrl && config.authentication !== 'none'"
+          v-if="isPublished && notifyUrl && config.authentication !== 'none'"
           :notify-url="notifyUrl"
           :login-href="loginHref"
         />
@@ -91,7 +91,7 @@ export default {
   computed: {
     ...mapState(['config', 'textDark', 'portal', 'childBreadcrumbItems', 'childBreadcrumbsRouteName']),
     ...mapState('session', ['user', 'initialized']),
-    ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl']),
+    ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'embed', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'isPublished']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href

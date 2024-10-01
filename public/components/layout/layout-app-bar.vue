@@ -17,7 +17,7 @@
       <v-toolbar-items>
         <client-only>
           <notifications-queue
-            v-if="notifyUrl && config.authentication !== 'none' && $vuetify.breakpoint.smAndUp"
+            v-if="isPublished && notifyUrl && config.authentication !== 'none' && $vuetify.breakpoint.smAndUp"
             :notify-url="notifyUrl"
             :login-href="loginHref"
             :background-dark="appBarMainColorDark"
@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal']),
     ...mapState('session', ['initialized']),
-    ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColorDark', 'appBarElevation']),
+    ...mapGetters(['primaryColorDark', 'secondaryColorDark', 'directoryUrl', 'dataFairUrl', 'notifyUrl', 'navigation', 'appBarMainColorDark', 'appBarElevation', 'isPublished']),
     ...mapGetters('session', ['loginUrl']),
     url () {
       return global.location && global.location.href

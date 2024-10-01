@@ -369,7 +369,7 @@
                     />
                   </v-col>
                   <v-col
-                    v-if="canLogin && notifyUrl"
+                    v-if="canLogin && notifyUrl && isPublished"
                     class="pa-0"
                     :cols="actionsCols"
                   >
