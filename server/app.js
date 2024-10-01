@@ -47,6 +47,7 @@ app.use(bodyParser.text())
 app.use(session.auth)
 app.set('session', session)
 app.use('/api/v1', require('./router/root'))
+app.use('/api/v1/admin', require('./router/admin'))
 app.use('/api/v1/portals', require('./router/portals'))
 
 app.use('/api/', (req, res) => {
