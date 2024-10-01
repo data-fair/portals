@@ -41,7 +41,7 @@
         <v-list-item-title>Mes réutilisations</v-list-item-title>
       </v-list-item>
       <v-list-item
-        v-if="!config.personnalHidePages || !config.personnalHidePages.includes('notify')"
+        v-if="isPublished && (!config.personnalHidePages || !config.personnalHidePages.includes('notify'))"
         :nuxt="true"
         :to="`/me/notifications`"
       >
@@ -171,7 +171,7 @@ export default {
   computed: {
     ...mapState(['config', 'portal', 'env']),
     ...mapState('session', ['user']),
-    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl', 'processingsUrl']),
+    ...mapGetters(['logoUrl', 'directoryUrl', 'personalNavigationColorDark', 'dataFairUrl', 'processingsUrl', 'isPublished']),
     ...mapGetters('session', ['activeAccount', 'accountRole']),
     copyright () {
       return process.env.copyright
