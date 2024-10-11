@@ -1,14 +1,13 @@
 <template lang="html">
-  <div ref="page">
+  <div ref="renderedPage">
     <error
       v-if="$fetchState.error"
       :error="$fetchState.error"
     />
     <template v-else-if="page">
       <pages-embed
-        v-if="$refs?.page?.clientHeight"
         :page="page"
-        :height="$refs.page.clientHeight"
+        :height="height"
       />
       <pages-blank
         v-if="page.template === 'blank'"
@@ -42,7 +41,8 @@ export default {
   middleware: 'portal-required',
   data: () => ({
     page: null,
-    images: null
+    images: null,
+    height: 500
   }),
   async fetch () {
     await this.fetchPage()
@@ -65,6 +65,11 @@ export default {
     async '$route.params.id' () {
       await this.fetchPage()
     }
+  },
+  mounted () {
+    setTimeout(() => {
+      if (this.$refs && this.$refs.renderedPage) this.height = this.$refs.renderedPage.clientHeight
+    }, 2000)
   },
   methods: {
     async fetchPage () {

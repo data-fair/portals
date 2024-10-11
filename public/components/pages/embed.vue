@@ -35,6 +35,7 @@
       <v-card-text
         v-if="embedDialog"
         class="pb-0 px-4"
+        style="overflow: auto;"
       >
         Pour intégrer cette page dans un site vous pouvez copier le code suivant ou un code similaire dans le code source HTML.
         <br>
@@ -47,7 +48,7 @@
         <v-iframe
           :title="'Vue embarquée de la page : ' + page.title"
           :src="previewLink"
-          height="height"
+          :style="'height:'+height+'px'"
           @state="s => iframeState = s"
         />
       </v-card-text>
