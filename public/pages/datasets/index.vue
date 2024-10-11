@@ -290,7 +290,7 @@ export default {
       return this.config.datasetsDefaultSort || 'createdAt'
     },
     showOwnersFacets () {
-      return this.datasets && this.datasets.facets.owner.find(o => !!o.value.department)
+      return (!this.config.datasetsOwnerFilter || this.config.datasetsOwnerFilter.type !== 'none') && this.datasets && this.datasets.facets.owner.find(o => !!o.value.department)
     },
     filterCols () {
       return this.showOwnersFacets ? 3 : 4

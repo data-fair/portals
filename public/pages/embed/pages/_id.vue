@@ -1,15 +1,10 @@
 <template lang="html">
-  <div ref="page">
+  <div>
     <error
       v-if="$fetchState.error"
       :error="$fetchState.error"
     />
     <template v-else-if="page">
-      <pages-embed
-        v-if="$refs?.page?.clientHeight"
-        :page="page"
-        :height="$refs.page.clientHeight"
-      />
       <pages-blank
         v-if="page.template === 'blank'"
         :page="page"
@@ -38,8 +33,7 @@
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  layout: 'default',
-  middleware: 'portal-required',
+  layout: 'minimal',
   data: () => ({
     page: null,
     images: null
@@ -58,7 +52,7 @@ export default {
     ...mapState(['portal', 'publicUrl']),
     ...mapGetters(['imagesDatasetUrl']),
     url () {
-      return this.publicUrl + '/pages/' + this.$route.params.id
+      return this.publicUrl + '/embed/pages/' + this.$route.params.id
     }
   },
   watch: {
@@ -68,10 +62,15 @@ export default {
   },
   methods: {
     async fetchPage () {
-      [this.page, this.images] = await Promise.all([
-        this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } }),
-        this.$store.dispatch('fetchPageImages', this.$route.params.id)
-      ])
+      this.page = await this.$axios.$get(this.publicUrl + `/api/v1/portals/${this.portal._id}/pages/` + this.$route.params.id, { params: { html: true } })
+      const images = await this.$axios.$get(this.imagesDatasetUrl + '/lines', {
+        params: {
+          select: 'assetId,_attachment_url',
+          qs: `pageId:"${this.$route.params.id}"`,
+          thumbnail: '1785x800' // max width of the vertical layout
+        }
+      })
+      this.images = images.results.reduce((a, image) => { a[image.assetId] = image._thumbnail || image._attachment_url; return a }, {})
     }
   }
 }

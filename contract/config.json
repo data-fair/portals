@@ -1468,6 +1468,62 @@
             }
           ]
         },
+        "datasetsOwnerFilter": {
+          "type": "object",
+          "title": "Filtre des propriétaires des jeux de données",
+          "oneOf": [
+            {
+              "title": "Standard",
+              "properties": {
+                "type": {
+                  "const": "standard"
+                }
+              }
+            },
+            {
+              "title": "Aucun",
+              "properties": {
+                "type": {
+                  "const": "none"
+                }
+              }
+            },
+            {
+              "title": "Grouper les propriétaires",
+              "properties": {
+                "type": {
+                  "const": "group"
+                },
+                "groups": {
+                  "title": "Groupes",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "title": "Libellé du groupe"
+                      },
+                      "items": {
+                        "type": "array",
+                        "title": "Propriétaires",
+                        "items": {
+                          "type": "string"
+                        },
+                        "x-fromData": "context.owners",
+                        "x-itemKey": "id",
+                        "x-itemTitle": "name"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "default": {
+            "type": "standard"
+          }
+        },
         "datasetThumbnailApplication": {
           "type": "boolean",
           "x-display": "switch",

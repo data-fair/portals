@@ -1,8 +1,8 @@
 <template>
   <v-select
-    :value="value"
+    :value="values"
     :loading="loading"
-    :items="items"
+    :items="owners"
     :item-text="itemText"
     :item-value="itemValue"
     multiple
@@ -13,7 +13,7 @@
     hide-details
     class="mb-2"
     :menu-props="{offsetY: true}"
-    @input="e => $emit('input', e)"
+    @input="e => $emit('input', fromValues(e))"
   >
     <template #item="{item, on , attrs}">
       <v-list-item
@@ -21,7 +21,7 @@
         v-on="on"
       >
         <v-list-item-icon>
-          <v-icon v-if="value.includes(itemValue(item))">
+          <v-icon v-if="values.includes(itemValue(item))">
             mdi-checkbox-marked
           </v-icon>
           <v-icon v-else>
@@ -34,6 +34,7 @@
           </v-list-item-title>
         </v-list-item-content>
         <v-list-item-avatar
+          v-if="item.value.type"
           :height="28"
           :min-width="28"
           :width="28"
@@ -53,6 +54,7 @@
     <template #selection="{item}">
       <div class="v-select__selection v-select__selection--comma">
         <!--{{ itemText(item) }}--><v-avatar
+          v-if="item.value.type"
           :size="24"
         >
           <img
@@ -71,6 +73,7 @@
 </template>
 
 <script>
+const { mapState } = require('vuex')
 
 export default {
   props: {
@@ -79,8 +82,27 @@ export default {
     items: { type: Array, required: true }
   },
   computed: {
+    ...mapState(['config']),
     directoryUrl () {
       return this.$store.getters.directoryUrl
+    },
+    owners () {
+      if (this.config.datasetsOwnerFilter && this.config.datasetsOwnerFilter.type === 'group' && this.config.datasetsOwnerFilter.groups.length) {
+        return this.config.datasetsOwnerFilter.groups.map(g => ({
+          value: { name: g.title, items: g.items },
+          count: this.items.filter(item => {
+            let key = `${item.value.type}:${item.value.id}`
+            if (item.value.department) key += ':' + item.value.department
+            else key += ':-'
+            return g.items.includes(key)
+          }).map(item => item.count).reduce((acc, v) => acc + v, 0)
+        }))
+      } else return this.items
+    },
+    values () {
+      if (this.config.datasetsOwnerFilter && this.config.datasetsOwnerFilter.type === 'group' && this.config.datasetsOwnerFilter.groups.length) {
+        return this.config.datasetsOwnerFilter.groups.filter(g => !g.items.find(item => !this.value.includes(item))).map(g => g.title)
+      } else return this.value
     }
   },
   methods: {
@@ -88,10 +110,18 @@ export default {
       return item.value.departmentName || item.value.department || item.value.name
     },
     itemValue (item) {
-      let key = `${item.value.type}:${item.value.id}`
-      if (item.value.department) key += ':' + item.value.department
-      else key += ':-'
-      return key
+      if (item.value.items) return item.value.name
+      else {
+        let key = `${item.value.type}:${item.value.id}`
+        if (item.value.department) key += ':' + item.value.department
+        else key += ':-'
+        return key
+      }
+    },
+    fromValues (values) {
+      if (this.config.datasetsOwnerFilter && this.config.datasetsOwnerFilter.type === 'group' && this.config.datasetsOwnerFilter.groups.length) {
+        return [].concat(...this.config.datasetsOwnerFilter.groups.filter(g => values.includes(g.title)).map(g => g.items))
+      } else return values
     }
   }
 }

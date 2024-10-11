@@ -229,15 +229,18 @@ export default {
       showProd: true,
       activeTab: 0,
       error: null,
-      fonts: null
+      fonts: null,
+      owners: []
     }
   },
   computed: {
     ...mapState(['portal']),
     ...mapGetters('session', ['activeAccount']),
+    ...mapGetters(['directoryUrl']),
     context () {
       return {
         owner: this.activeAccount.type + ':' + this.activeAccount.id,
+        owners: this.owners,
         dataFairUrl: this.$store.getters.dataFairUrl,
         publicUrl: this.$store.state.publicUrl,
         portalUrl: `api/v1/portals/${this.portal._id}`,
@@ -258,6 +261,8 @@ export default {
     }])
     await this.fetchConfigDraft()
     await this.fetchFonts()
+    const orga = await this.$axios.$get(`${this.directoryUrl}/api/organizations/${this.activeAccount.id}`)
+    this.owners = [{ id: 'organization:' + orga.id + ':-', name: orga.name }].concat((orga.departments || []).map(d => ({ id: 'organization:' + orga.id + ':' + d.id, name: d.name })))
   },
   methods: {
     async fetchConfigDraft () {
