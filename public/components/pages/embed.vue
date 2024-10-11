@@ -10,7 +10,7 @@
         text
         x-small
         color="primary"
-        style="position:absolute;right:12px"
+        style="position:absolute;right:12px;bottom:0px"
         v-on="onDialog"
       >
         <v-icon small>
