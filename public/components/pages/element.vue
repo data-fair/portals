@@ -166,6 +166,7 @@
           :value="lElement"
           :images="images"
           class="mb-3"
+          :style="lElement.fillHeight ? 'height:100%' : ''"
         />
       </v-col>
       <v-col
@@ -178,6 +179,7 @@
           :value="rElement"
           :images="images"
           class="mb-3"
+          :style="rElement.fillHeight ? 'height:100%' : ''"
         />
       </v-col>
     </v-row>
@@ -219,6 +221,7 @@
       <v-iframe
         v-else-if="value.type === 'datasetTable' && value.dataset"
         scrolling="yes"
+        :style="value.fillHeight ? 'height:100%' : ''"
         :iframe-resizer="false"
         :sync-state="value.syncState"
         :sync-state-ignore-path="true"
@@ -227,6 +230,7 @@
       />
       <v-iframe
         v-else-if="value.type === 'application' && value.application"
+        :style="value.fillHeight ? 'height:100%' : ''"
         :sync-state="value.syncState"
         :sync-state-ignore-path="true"
         :src="applicationIframeSrc(value.application)"

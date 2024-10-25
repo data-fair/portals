@@ -7,17 +7,17 @@
       "title": "Sommaire",
       "type": "object",
       "properties": {
-        "display":{
+        "display": {
           "title": "Affichage",
           "type": "string",
           "oneOf": [
-            {"const": "none", "title": "Aucun"},
-            {"const": "left", "title": "Gauche"},
-            {"const": "right", "title": "Droite"}
+            { "const": "none", "title": "Aucun" },
+            { "const": "left", "title": "Gauche" },
+            { "const": "right", "title": "Droite" }
           ],
           "default": "none"
         },
-        "title":{
+        "title": {
           "title": "Titre",
           "type": "string"
         }
@@ -76,7 +76,7 @@
         }
       }
     },
-    "elements":{
+    "elements": {
       "title": "Éléments",
       "type": "array",
       "x-itemTitle": "type",
@@ -84,37 +84,53 @@
       "items": {
         "type": "object",
         "x-itemKey": "type",
-        "oneOf": [{
-          "$ref": "#/definitions/title"
-        }, {
-          "$ref": "#/definitions/text"
-        }, {
-          "$ref": "#/definitions/alert"
-        }, {
-          "$ref": "#/definitions/divider"
-        }, {
-          "$ref": "#/definitions/application"
-        }, {
-          "$ref": "#/definitions/datasetCard"
-        }, {
-          "$ref": "#/definitions/datasetForm"
-        }, {
-          "$ref": "#/definitions/datasetTable"
-        }, {
-          "$ref": "#/definitions/cardSimple"
-        }, {
-          "$ref": "#/definitions/image"
-        }, {
-          "$ref": "#/definitions/iframe"
-        }, {
-          "$ref": "#/definitions/twoColumns"
-        }, {
-          "$ref": "#/definitions/responsiveFlow"
-        }, {
-          "$ref": "#/definitions/tabs"
-        }, {
-          "$ref": "#/definitions/card"
-        }],
+        "oneOf": [
+          {
+            "$ref": "#/definitions/title"
+          },
+          {
+            "$ref": "#/definitions/text"
+          },
+          {
+            "$ref": "#/definitions/alert"
+          },
+          {
+            "$ref": "#/definitions/divider"
+          },
+          {
+            "$ref": "#/definitions/application"
+          },
+          {
+            "$ref": "#/definitions/datasetCard"
+          },
+          {
+            "$ref": "#/definitions/datasetForm"
+          },
+          {
+            "$ref": "#/definitions/datasetTable"
+          },
+          {
+            "$ref": "#/definitions/cardSimple"
+          },
+          {
+            "$ref": "#/definitions/image"
+          },
+          {
+            "$ref": "#/definitions/iframe"
+          },
+          {
+            "$ref": "#/definitions/twoColumns"
+          },
+          {
+            "$ref": "#/definitions/responsiveFlow"
+          },
+          {
+            "$ref": "#/definitions/tabs"
+          },
+          {
+            "$ref": "#/definitions/card"
+          }
+        ],
         "default": {
           "type": "title",
           "content": ""
@@ -123,37 +139,51 @@
     }
   },
   "definitions": {
-    "element":{
+    "element": {
       "title": "Element",
       "type": "object",
       "x-itemKey": "type",
-      "oneOf": [{
-        "$ref": "#/definitions/title"
-      }, {
-        "$ref": "#/definitions/text"
-      }, {
-        "$ref": "#/definitions/alert"
-      }, {
-        "$ref": "#/definitions/divider"
-      }, {
-        "$ref": "#/definitions/application"
-      }, {
-        "$ref": "#/definitions/datasetCard"
-      }, {
-        "$ref": "#/definitions/datasetForm"
-      }, {
-        "$ref": "#/definitions/datasetTable"
-      }, {
-        "$ref": "#/definitions/cardSimple"
-      }, {
-        "$ref": "#/definitions/image"
-      }, {
-        "$ref": "#/definitions/iframe"
-      }, {
-        "$ref": "#/definitions/news"
-      }, {
-        "$ref": "#/definitions/events"
-      }],
+      "oneOf": [
+        {
+          "$ref": "#/definitions/title"
+        },
+        {
+          "$ref": "#/definitions/text"
+        },
+        {
+          "$ref": "#/definitions/alert"
+        },
+        {
+          "$ref": "#/definitions/divider"
+        },
+        {
+          "$ref": "#/definitions/application"
+        },
+        {
+          "$ref": "#/definitions/datasetCard"
+        },
+        {
+          "$ref": "#/definitions/datasetForm"
+        },
+        {
+          "$ref": "#/definitions/datasetTable"
+        },
+        {
+          "$ref": "#/definitions/cardSimple"
+        },
+        {
+          "$ref": "#/definitions/image"
+        },
+        {
+          "$ref": "#/definitions/iframe"
+        },
+        {
+          "$ref": "#/definitions/news"
+        },
+        {
+          "$ref": "#/definitions/events"
+        }
+      ],
       "default": {
         "type": "text",
         "content": ""
@@ -175,23 +205,23 @@
           "title": "Taille du titre",
           "type": "string",
           "oneOf": [
-            {"const": "h6", "title": "H6"},
-            {"const": "h5", "title": "H5"},
-            {"const": "h4", "title": "H4"},
-            {"const": "h3", "title": "H3"},
-            {"const": "h2", "title": "H2"},
-            {"const": "h1", "title": "H1"}
+            { "const": "h6", "title": "H6" },
+            { "const": "h5", "title": "H5" },
+            { "const": "h4", "title": "H4" },
+            { "const": "h3", "title": "H3" },
+            { "const": "h2", "title": "H2" },
+            { "const": "h1", "title": "H1" }
           ],
           "default": "h3",
           "x-options": { "hideInArrayItem": true }
         },
-        "colored" : {
+        "colored": {
           "type": "boolean",
           "title": "Utiliser la couleur du thème",
           "default": false,
           "x-options": { "hideInArrayItem": true }
         },
-        "centered" : {
+        "centered": {
           "type": "boolean",
           "title": "Centré",
           "default": false,
@@ -237,19 +267,24 @@
           "type": "string",
           "title": "Type d'accentuation",
           "default": "info",
-          "oneOf": [{
-            "const": "info",
-            "title": "Information"
-          }, {
-            "const": "success",
-            "title": "Succès"
-          }, {
-            "const": "warning",
-            "title": "Avertissement"
-          }, {
-            "const": "error",
-            "title": "Erreur"
-          }]
+          "oneOf": [
+            {
+              "const": "info",
+              "title": "Information"
+            },
+            {
+              "const": "success",
+              "title": "Succès"
+            },
+            {
+              "const": "warning",
+              "title": "Avertissement"
+            },
+            {
+              "const": "error",
+              "title": "Erreur"
+            }
+          ]
         },
         "content": {
           "title": "Contenu",
@@ -292,19 +327,25 @@
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
-            "href": {"type": "string"},
-            "exposedUrl": {"type": "exposedUrl"},
-            "title": {"type": "string"},
-            "id": {"type": "string"},
-            "slug": {"type": "string"}
+            "href": { "type": "string" },
+            "exposedUrl": { "type": "exposedUrl" },
+            "title": { "type": "string" },
+            "id": { "type": "string" },
+            "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,slug,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
         },
         "syncState": {
           "title": "Synchroniser les paramètres d'URL",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
+        "fillHeight": {
+          "title": "Remplir la hauteur en mode 2 colonnes",
           "type": "boolean",
           "default": false,
           "x-options": { "hideInArrayItem": true }
@@ -324,12 +365,12 @@
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
-            "href": {"type": "string"},
-            "title": {"type": "string"},
-            "id": {"type": "string"},
-            "slug": {"type": "string"}
+            "href": { "type": "string" },
+            "title": { "type": "string" },
+            "id": { "type": "string" },
+            "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -349,12 +390,12 @@
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
-            "href": {"type": "string"},
-            "title": {"type": "string"},
-            "id": {"type": "string"},
-            "slug": {"type": "string"}
+            "href": { "type": "string" },
+            "title": { "type": "string" },
+            "id": { "type": "string" },
+            "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -374,12 +415,12 @@
           "additionalProperties": false,
           "required": ["id"],
           "properties": {
-            "href": {"type": "string"},
-            "title": {"type": "string"},
-            "id": {"type": "string"},
-            "slug": {"type": "string"}
+            "href": { "type": "string" },
+            "title": { "type": "string" },
+            "id": { "type": "string" },
+            "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -390,12 +431,21 @@
           "default": false,
           "x-options": { "hideInArrayItem": true }
         },
+        "fillHeight": {
+          "title": "Remplir la hauteur en mode 2 colonnes",
+          "type": "boolean",
+          "default": false,
+          "x-options": { "hideInArrayItem": true }
+        },
         "display": {
           "title": "Type d'affichage",
           "type": "string",
           "default": "auto",
           "oneOf": [
-            {"const": "auto", "title": "automatique en fonction de la largeur disponible" },
+            {
+              "const": "auto",
+              "title": "automatique en fonction de la largeur disponible"
+            },
             { "const": "table", "title": "table" },
             { "const": "table-dense", "title": "table dense" },
             { "const": "list", "title": "vignettes" }
@@ -438,12 +488,12 @@
           "title": "Taille du titre",
           "type": "string",
           "oneOf": [
-            {"const": "h6", "title": "H6"},
-            {"const": "h5", "title": "H5"},
-            {"const": "h4", "title": "H4"},
-            {"const": "h3", "title": "H3"},
-            {"const": "h2", "title": "H2"},
-            {"const": "h1", "title": "H1"}
+            { "const": "h6", "title": "H6" },
+            { "const": "h5", "title": "H5" },
+            { "const": "h4", "title": "H4" },
+            { "const": "h3", "title": "H3" },
+            { "const": "h2", "title": "H2" },
+            { "const": "h1", "title": "H1" }
           ],
           "default": "h6",
           "x-options": { "hideInArrayItem": true }
@@ -454,10 +504,10 @@
           "default": true,
           "x-options": { "hideInArrayItem": true }
         },
-        "image":{
+        "image": {
           "type": "object",
           "title": "Image",
-          "properties":{
+          "properties": {
             "url": {
               "title": "URL vers l'image",
               "description": "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
@@ -504,9 +554,9 @@
               "title": "Position",
               "type": "string",
               "oneOf": [
-                {"const": "top", "title": "Haut"},
-                {"const": "middle", "title": "Milieu"},
-                {"const": "bottom", "title": "Bas"}
+                { "const": "top", "title": "Haut" },
+                { "const": "middle", "title": "Milieu" },
+                { "const": "bottom", "title": "Bas" }
               ],
               "default": "top"
             }
@@ -663,16 +713,20 @@
           "title": "Disposition",
           "default": "equal",
           "x-options": { "hideInArrayItem": true },
-          "oneOf": [{
-            "const": "equal",
-            "title": "Largeur de même taille"
-          }, {
-            "const": "left",
-            "title": "Colonne gauche large"
-          }, {
-            "const": "right",
-            "title": "Colonne droite large"
-          }]
+          "oneOf": [
+            {
+              "const": "equal",
+              "title": "Largeur de même taille"
+            },
+            {
+              "const": "left",
+              "title": "Colonne gauche large"
+            },
+            {
+              "const": "right",
+              "title": "Colonne droite large"
+            }
+          ]
         },
         "leftColumn": {
           "title": "Colonne de gauche",
@@ -683,43 +737,59 @@
             "title": "Element",
             "type": "object",
             "x-itemKey": "type",
-            "oneOf": [{
-              "$ref": "#/definitions/title"
-            }, {
-              "$ref": "#/definitions/text"
-            }, {
-              "$ref": "#/definitions/alert"
-            }, {
-              "$ref": "#/definitions/divider"
-            }, {
-              "$ref": "#/definitions/application"
-            }, {
-              "$ref": "#/definitions/datasetCard"
-            }, {
-              "$ref": "#/definitions/datasetForm"
-            }, {
-              "$ref": "#/definitions/datasetTable"
-            }, {
-              "$ref": "#/definitions/cardSimple"
-            }, {
-              "$ref": "#/definitions/image"
-            }, {
-              "$ref": "#/definitions/iframe"
-            }, {
-              "$ref": "#/definitions/card"
-            }, {
-              "$ref": "#/definitions/news"
-            }, {
-              "$ref": "#/definitions/events"
-            }, {
-              "$ref": "#/definitions/responsiveFlow"
-            }],
+            "oneOf": [
+              {
+                "$ref": "#/definitions/title"
+              },
+              {
+                "$ref": "#/definitions/text"
+              },
+              {
+                "$ref": "#/definitions/alert"
+              },
+              {
+                "$ref": "#/definitions/divider"
+              },
+              {
+                "$ref": "#/definitions/application"
+              },
+              {
+                "$ref": "#/definitions/datasetCard"
+              },
+              {
+                "$ref": "#/definitions/datasetForm"
+              },
+              {
+                "$ref": "#/definitions/datasetTable"
+              },
+              {
+                "$ref": "#/definitions/cardSimple"
+              },
+              {
+                "$ref": "#/definitions/image"
+              },
+              {
+                "$ref": "#/definitions/iframe"
+              },
+              {
+                "$ref": "#/definitions/card"
+              },
+              {
+                "$ref": "#/definitions/news"
+              },
+              {
+                "$ref": "#/definitions/events"
+              },
+              {
+                "$ref": "#/definitions/responsiveFlow"
+              }
+            ],
             "default": {
               "type": "text",
               "content": ""
             }
           },
-          "x-cols": {"cols": 12, "md": 6},
+          "x-cols": { "cols": 12, "md": 6 },
           "x-class": "px-1"
         },
         "rightColumn": {
@@ -731,43 +801,59 @@
             "title": "Element",
             "type": "object",
             "x-itemKey": "type",
-            "oneOf": [{
-              "$ref": "#/definitions/title"
-            }, {
-              "$ref": "#/definitions/text"
-            }, {
-              "$ref": "#/definitions/alert"
-            }, {
-              "$ref": "#/definitions/divider"
-            }, {
-              "$ref": "#/definitions/application"
-            }, {
-              "$ref": "#/definitions/datasetCard"
-            }, {
-              "$ref": "#/definitions/datasetForm"
-            }, {
-              "$ref": "#/definitions/datasetTable"
-            }, {
-              "$ref": "#/definitions/cardSimple"
-            }, {
-              "$ref": "#/definitions/image"
-            }, {
-              "$ref": "#/definitions/iframe"
-            }, {
-              "$ref": "#/definitions/card"
-            }, {
-              "$ref": "#/definitions/news"
-            }, {
-              "$ref": "#/definitions/events"
-            }, {
-              "$ref": "#/definitions/responsiveFlow"
-            }],
+            "oneOf": [
+              {
+                "$ref": "#/definitions/title"
+              },
+              {
+                "$ref": "#/definitions/text"
+              },
+              {
+                "$ref": "#/definitions/alert"
+              },
+              {
+                "$ref": "#/definitions/divider"
+              },
+              {
+                "$ref": "#/definitions/application"
+              },
+              {
+                "$ref": "#/definitions/datasetCard"
+              },
+              {
+                "$ref": "#/definitions/datasetForm"
+              },
+              {
+                "$ref": "#/definitions/datasetTable"
+              },
+              {
+                "$ref": "#/definitions/cardSimple"
+              },
+              {
+                "$ref": "#/definitions/image"
+              },
+              {
+                "$ref": "#/definitions/iframe"
+              },
+              {
+                "$ref": "#/definitions/card"
+              },
+              {
+                "$ref": "#/definitions/news"
+              },
+              {
+                "$ref": "#/definitions/events"
+              },
+              {
+                "$ref": "#/definitions/responsiveFlow"
+              }
+            ],
             "default": {
               "type": "text",
               "content": ""
             }
           },
-          "x-cols": {"cols": 12, "md": 6},
+          "x-cols": { "cols": 12, "md": 6 },
           "x-class": "px-1"
         }
       }
@@ -808,7 +894,7 @@
         "type": {
           "const": "tabs"
         },
-        "tabs":{
+        "tabs": {
           "type": "array",
           "title": "Onglets",
           "items": {
@@ -827,35 +913,50 @@
                   "title": "Element",
                   "type": "object",
                   "x-itemKey": "type",
-                  "oneOf": [{
-                    "$ref": "#/definitions/title"
-                  }, {
-                    "$ref": "#/definitions/text"
-                  }, {
-                    "$ref": "#/definitions/alert"
-                  }, {
-                    "$ref": "#/definitions/divider"
-                  }, {
-                    "$ref": "#/definitions/application"
-                  }, {
-                    "$ref": "#/definitions/datasetCard"
-                  }, {
-                    "$ref": "#/definitions/datasetForm"
-                  }, {
-                    "$ref": "#/definitions/datasetTable"
-                  }, {
-                    "$ref": "#/definitions/cardSimple"
-                  }, {
-                    "$ref": "#/definitions/image"
-                  }, {
-                    "$ref": "#/definitions/iframe"
-                  }, {
-                    "$ref": "#/definitions/card"
-                  }, {
-                    "$ref": "#/definitions/twoColumns"
-                  }, {
-                    "$ref": "#/definitions/responsiveFlow"
-                  }],
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/title"
+                    },
+                    {
+                      "$ref": "#/definitions/text"
+                    },
+                    {
+                      "$ref": "#/definitions/alert"
+                    },
+                    {
+                      "$ref": "#/definitions/divider"
+                    },
+                    {
+                      "$ref": "#/definitions/application"
+                    },
+                    {
+                      "$ref": "#/definitions/datasetCard"
+                    },
+                    {
+                      "$ref": "#/definitions/datasetForm"
+                    },
+                    {
+                      "$ref": "#/definitions/datasetTable"
+                    },
+                    {
+                      "$ref": "#/definitions/cardSimple"
+                    },
+                    {
+                      "$ref": "#/definitions/image"
+                    },
+                    {
+                      "$ref": "#/definitions/iframe"
+                    },
+                    {
+                      "$ref": "#/definitions/card"
+                    },
+                    {
+                      "$ref": "#/definitions/twoColumns"
+                    },
+                    {
+                      "$ref": "#/definitions/responsiveFlow"
+                    }
+                  ],
                   "default": {
                     "type": "text",
                     "content": ""
@@ -867,7 +968,7 @@
         }
       }
     },
-    "news":{
+    "news": {
       "type": "object",
       "title": "Dernières actualités",
       "properties": {
