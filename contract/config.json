@@ -592,6 +592,29 @@
             ]
           },
           "default": ["slider", "color"]
+        },
+        "appBarAdditionalLinks": {
+          "title": "Liens supplémentaires",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "title": "Libellé du lien",
+                "type": "string"
+              },
+              "href": {
+                "title": "URL",
+                "type": "string"
+              },
+              "position": {
+                "type": "number",
+                "title": "Position",
+                "default": 10,
+                "description": "Saisissez un nombre pour positionner la page dans les menus de navigation. Les pages standards ont ces valeurs: Accueil=0, Données=1, Visualisation=2, Réutilisations=3, Actualités=4, Contact=100"
+              }
+            }
+          }
         }
       }
     },

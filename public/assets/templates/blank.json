@@ -450,6 +450,22 @@
             { "const": "table-dense", "title": "table dense" },
             { "const": "list", "title": "vignettes" }
           ]
+        },
+        "fields": {
+          "title": "Champs à afficher",
+          "description": "Si vide, tous les champs seront affichés",
+          "type": "array",
+          "x-fromUrl": "{parent.value.dataset.href}/schema?calculated=false",
+          "x-itemTitle": "label",
+          "x-itemKey": "key",
+          "items": {
+            "type": "string"
+          }
+        },
+        "noInteractions": {
+          "title": "Désactiver les interactions",
+          "type": "boolean",
+          "default": false
         }
       }
     },

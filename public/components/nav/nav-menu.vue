@@ -30,9 +30,10 @@
     <v-list>
       <template v-for="(item, i) of navigation">
         <v-list-item
-          v-if="item.to"
+          v-if="item.to || item.href"
           :key="`single-item-${i}`"
           :to="item.to"
+          :href="item.href"
           nuxt
           active-class="primary--text"
         >

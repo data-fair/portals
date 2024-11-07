@@ -13,9 +13,10 @@
     <v-tabs-slider :color="backgroundDark ? 'white' : readablePrimaryColor" />
     <template v-for="(item, i) of navigation">
       <v-tab
-        v-if="item.to"
+        v-if="item.to || item.href"
         :key="`tab-${i}`"
         :to="item.to"
+        :href="item.href"
         nuxt
         :exact="item.to === '/'"
         :class="tabClass(computedActiveTab === item.to)"

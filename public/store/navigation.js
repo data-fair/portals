@@ -54,6 +54,12 @@ export default () => ({
         navigation.push({ title: 'Contact', to: '/contact', position: 100 })
       }
 
+      if (config.appBarAdditionalLinks && config.appBarAdditionalLinks.length) {
+        config.appBarAdditionalLinks.forEach(link => {
+          navigation.push(link)
+        })
+      }
+
       // merge standard pages into menu items if there is a name conflict
       for (const standardTitle of [['Données', 'Catalogue des données'], ['Visualisations', 'Catalogue des visualisations'], ['Réutilisations', 'Liste des réutilisations'], ['Actualités', 'Liste des actualités']]) {
         const matchingPage = navigation.find(n => !n.children && n.title === standardTitle[0])

@@ -112,7 +112,7 @@
         <v-card-text
           v-if="value.content"
           :style="{'overflow-wrap': 'break-word', 'text-align': value.centerContent ? 'center' : 'left'}"
-          :class="{ 'text-body-1': true, 'px-8': value.centerContent, 'pb-8': value.centerContent}"
+          :class="{ 'text-body-1': true, 'px-8': value.centerContent, 'pb-8': value.centerContent, 'text--primary': true}"
           v-html="value.content"
         />
         <v-img
@@ -387,6 +387,8 @@ export default {
       if (this.value.display && this.value.display !== 'auto') {
         url += `&display=${this.value.display}`
       }
+      url += `&interaction=${!this.value.noInteractions}`
+      if (this.value.fields && this.value.fields.length) { url += '&cols=' + this.value.fields.join(',') }
       return url
     },
     formIframeSrc (dataset) {
