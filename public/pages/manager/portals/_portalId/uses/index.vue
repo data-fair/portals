@@ -3,7 +3,10 @@
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
         <client-only>
-          <v-iframe :src="notifSubscribeUrl" />
+          <v-iframe
+            :src="notifSubscribeUrl"
+            title="Gestion des notifications"
+          />
         </client-only>
         <section-title
           text="Gérer les réutilisations"

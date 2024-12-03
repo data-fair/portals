@@ -217,6 +217,7 @@
       <v-iframe
         v-if="value.type === 'datasetForm' && value.dataset"
         :src="formIframeSrc(value.dataset)"
+        :title="value.dataset?.title"
       />
       <v-iframe
         v-else-if="value.type === 'datasetTable' && value.dataset"
@@ -227,6 +228,7 @@
         :sync-state-ignore-path="true"
         :src="tableIframeSrc()"
         :query-params-exclude="['primary']"
+        :title="value.dataset?.title"
       />
       <v-iframe
         v-else-if="value.type === 'application' && value.application"
@@ -235,6 +237,7 @@
         :sync-state-ignore-path="true"
         :src="applicationIframeSrc(value.application)"
         :query-params-exclude="['primary', 'embed']"
+        :title="value.application?.title"
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
         <a
@@ -266,6 +269,7 @@
       </template>
       <v-iframe
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
+        :title="'Lien vers la page ' + value.url"
         :src="value.url"
       />
       <v-overlay

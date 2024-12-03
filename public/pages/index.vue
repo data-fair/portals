@@ -31,6 +31,7 @@
         <client-only v-if="config.homeApplication">
           <v-iframe
             :src="homeApplicationUrl"
+            :title="config.homeApplication.title"
             :class="`elevation-${appBarElevation}`"
             style="margin-top: -12px;height: 400px;"
           />
@@ -78,6 +79,7 @@
               <v-iframe
                 :src="homeApplicationUrl"
                 style="height: 600px;"
+                :title="config.homeApplication.title"
               />
             </client-only>
             <v-img
