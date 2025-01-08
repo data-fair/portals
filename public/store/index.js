@@ -34,6 +34,7 @@ export default () => {
       childBreadcrumbsRouteName: null,
       childBreadcrumbItems: null,
       processingsBasePath: null,
+      notifyBasePath: '/notify',
       pageImages: {}
     },
     getters: {
@@ -82,7 +83,7 @@ export default () => {
         return state.publicBaseUrl + '/openapi-viewer'
       },
       notifyUrl (state) {
-        return state.publicBaseUrl + '/notify'
+        return state.publicBaseUrl + state.notifyBasePath
       },
       notifyWSUrl (state, getters) {
         let url = getters.notifyUrl.replace('http://', 'ws://').replace('https://', 'wss://')
@@ -266,6 +267,9 @@ export default () => {
         }
         if (env.processingsUrl) {
           commit('setAny', { processingsBasePath: new URL(env.processingsUrl).pathname })
+        }
+        if (env.notifyUrl) {
+          commit('setAny', { notifyBasePath: new URL(env.notifyUrl).pathname })
         }
         dispatch('session/init', {
           cookies: this.$cookies,
