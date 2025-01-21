@@ -5,6 +5,7 @@
       depressed
       color="transparent"
       :href="loginHref"
+      :title="dense ? 'Se connecter' : ''"
     >
       <v-icon
         v-if="dense"
