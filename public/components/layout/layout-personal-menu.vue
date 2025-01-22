@@ -1,24 +1,32 @@
 <template>
   <client-only>
-    <v-btn
-      v-if="!user"
-      depressed
-      color="transparent"
-      :href="loginHref"
-      :title="dense ? 'Se connecter' : ''"
-    >
-      <v-icon
+    <template v-if="!user">
+      <v-btn
         v-if="dense"
-        large
-        :color="backgroundDark ? 'white' : 'primary'"
-        title="se connecter"
+        depressed
+        color="transparent"
+        :href="loginHref"
+        title="Se connecter"
       >
-        mdi-account-circle
-      </v-icon>
-      <template v-else>
+        <v-icon
+          large
+          :color="backgroundDark ? 'white' : 'primary'"
+          aria-label="symbole de connexion"
+          aria-hidden="false"
+        >
+          mdi-account-circle
+        </v-icon>
+      </v-btn>
+      <v-btn
+        v-else
+        depressed
+        color="transparent"
+        :href="loginHref"
+      >
         Se connecter
-      </template>
-    </v-btn>
+      </v-btn>
+    </template>
+
     <v-menu
       v-else
       offset-y
