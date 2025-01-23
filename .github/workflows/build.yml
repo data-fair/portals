@@ -48,6 +48,9 @@ jobs:
         echo '{"version": "${{github.ref_name}}", "repository": "${{github.server_url}}/${{github.repository}}", "commit": "${{github.sha}}"}' > BUILD.json
         cat BUILD.json
 
+    - name: Check test dependencies
+      run: docker compose ps --all --format 'table {{.Name}}\t{{.Status}}'
+
     - name: Build and push docker images
       id: docker_build
       uses: docker/build-push-action@v3
