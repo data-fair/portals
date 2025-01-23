@@ -21,7 +21,11 @@
           color="pink"
           overlap
         >
-          <v-icon :color="backgroundDark ? 'white' : textDark">
+          <v-icon
+            :color="backgroundDark ? 'white' : textDark"
+            aria-label="symbole de notification"
+            aria-hidden="false"
+          >
             mdi-bell
           </v-icon>
         </v-badge>
