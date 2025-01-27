@@ -29,11 +29,11 @@ if (process.env.NODE_ENV !== 'production' || isBuilding) {
           primary: '#1E88E5', // blue.darken1
           secondary: '#42A5F5', // blue.lighten1,
           accent: '#FF9800', // orange.base
-          error: 'FF5252', // red.accent2
+          error: '#D50000', // red-accent-4
           info: '#2196F3', // blue.base
-          success: '#4CAF50', // green.base
-          warning: '#E91E63', // pink.base
-          admin: '#E53935' // red.darken1
+          success: '#2E7D32', // green-darken-3
+          warning: '#D81B60', // pink-darken-1
+          admin: '#B71C1C' // red-darken-4
         },
         dark: {
           primary: '#42A5F5', // colors.blue.lighten1,

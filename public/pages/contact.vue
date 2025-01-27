@@ -8,7 +8,6 @@
         <v-form
           ref="form"
           v-model="valid"
-          lazy-validation
         >
           <v-text-field
             v-model="message.from"
@@ -119,7 +118,7 @@ const newMessage = { from: '', subject: '', text: '' }
 export default {
   middleware: 'portal-required',
   data: () => ({
-    valid: true,
+    valid: false,
     message: { ...newMessage },
     token: null,
     tokenError: null,
