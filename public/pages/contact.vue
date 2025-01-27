@@ -31,7 +31,6 @@
           />
           <v-textarea
             v-model="message.text"
-            :rules="[v => !!v || '']"
             :disabled="!!tokenError"
             label="Votre demande"
             name="text"

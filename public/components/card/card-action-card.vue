@@ -21,6 +21,7 @@
           :contain="imgContain"
           :class="{'mb-2': !!img}"
           :aspect-ratio="imgAspectRatio"
+          aria-hidden="true"
         />
       </optional-link>
       <card-text
@@ -68,6 +69,7 @@
             height="238"
             :contain="imgContain"
             :aspect-ratio="imgAspectRatio"
+            aria-hidden="true"
           />
         </optional-link>
       </v-col>

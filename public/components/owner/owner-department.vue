@@ -5,7 +5,10 @@
     class="text-body-2"
   >
     <v-avatar :size="28">
-      <img :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/${owner.department}/avatar.png`">
+      <img
+        aria-hidden="true"
+        :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/${owner.department}/avatar.png`"
+      >
     </v-avatar>
   </span>
   <!--<span v-if="dataset.owner.type === 'user'"><v-icon>mdi-account</v-icon>&nbsp;{{ dataset.owner.name }}</span>
