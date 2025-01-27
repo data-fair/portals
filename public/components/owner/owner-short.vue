@@ -6,6 +6,7 @@
     <v-avatar :size="28">
       <img
         aria-hidden="true"
+        alt=""
         :src="`${directoryUrl}/api/avatars/${owner.type}/${owner.id}/avatar.png`"
       >
     </v-avatar>

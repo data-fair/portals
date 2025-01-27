@@ -23,10 +23,9 @@
         >
           <v-icon
             :color="backgroundDark ? 'white' : textDark"
-            aria-label="symbole de notification"
             aria-hidden="false"
           >
-            {{ mdiBell }}
+            mdi-bell
           </v-icon>
         </v-badge>
       </v-btn>
@@ -86,7 +85,6 @@
 <script>
 import { mapState } from 'vuex'
 import eventBus from '~/event-bus'
-import { mdiBell } from '@mdi/js'
 
 /* let sound
 if (!process.server) {
@@ -100,8 +98,7 @@ export default {
     countNew: null,
     notifications: null,
     loading: false,
-    size: 10,
-    mdiBell
+    size: 10
   }),
   computed: {
     ...mapState(['textDark', 'config']),

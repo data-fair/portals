@@ -43,11 +43,13 @@
           <img
             v-if="item.value.department"
             aria-hidden="true"
+            alt=""
             :src="`${directoryUrl}/api/avatars/${item.value.type}/${item.value.id}/${item.value.department}/avatar.png`"
           >
           <img
             v-else
             aria-hidden="true"
+            alt=""
             :src="`${directoryUrl}/api/avatars/${item.value.type}/${item.value.id}/avatar.png`"
           >
         </v-list-item-avatar>
@@ -62,11 +64,13 @@
           <img
             v-if="item.value.department"
             aria-hidden="true"
+            alt=""
             :src="`${directoryUrl}/api/avatars/${item.value.type}/${item.value.id}/${item.value.department}/avatar.png`"
           >
           <img
             v-else
             aria-hidden="true"
+            alt=""
             :src="`${directoryUrl}/api/avatars/${item.value.type}/${item.value.id}/avatar.png`"
           >
         </v-avatar>

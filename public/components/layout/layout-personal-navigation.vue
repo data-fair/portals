@@ -16,7 +16,10 @@
         :to="`/`"
       >
         <v-list-item-avatar>
-          <img :src="`${directoryUrl}/api/avatars/${config.owner.type}/${config.owner.id}/avatar.png`">
+          <img
+            aria-hidden="true"
+            :src="`${directoryUrl}/api/avatars/${config.owner.type}/${config.owner.id}/avatar.png`"
+          >
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>{{ config.title }}</v-list-item-title>
@@ -68,7 +71,10 @@
           >
             <v-list-item-action class=" my-0">
               <v-avatar :size="28">
-                <img :src="item.avatar">
+                <img
+                  aria-hidden="true"
+                  :src="item.avatar"
+                >
               </v-avatar>
             </v-list-item-action>
             <v-list-item-title>
