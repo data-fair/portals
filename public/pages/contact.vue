@@ -125,6 +125,20 @@ export default {
     tokenError: null,
     loading: false
   }),
+  head () {
+    const title = 'Contact - ' + this.config.title
+    const description = 'Contactez nous si vous avez une question ou une remarque.'
+    return {
+      title,
+      meta: [
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:url', property: 'og:url', content: this.url },
+        { hid: 'og:title', property: 'og:title', content: title },
+        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'og:type', property: 'og:type', content: 'website' }
+      ]
+    }
+  },
   computed: {
     ...mapState(['config', 'portal', 'draft']),
     ...mapGetters(['primaryColorDark', 'hasSocialLinks', 'elevation', 'hoverInverse', 'infoCardProps'])

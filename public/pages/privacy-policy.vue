@@ -65,9 +65,17 @@
 import { mapState } from 'vuex'
 export default {
   head () {
+    const title = 'Politique de confidentialité - ' + this.config.title
+    const description = 'Quelles informations sont collectées, à quoi elles servent et ce que nous faisons pour les protéger.'
     return {
-      title: 'Politique de confidentialité - ' + this.config.title,
-      meta: [{ hid: 'description', name: 'description', content: 'Quelles informations sont collectées, à quoi elles servent et ce que nous faisons pour les protéger.' }]
+      title,
+      meta: [
+        { hid: 'description', name: 'description', content: description },
+        { hid: 'og:url', property: 'og:url', content: this.url },
+        { hid: 'og:title', property: 'og:title', content: title },
+        { hid: 'og:description', property: 'og:description', content: description },
+        { hid: 'og:type', property: 'og:type', content: 'website' }
+      ]
     }
   },
   computed: {
