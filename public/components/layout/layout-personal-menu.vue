@@ -14,7 +14,7 @@
           aria-label="symbole de connexion"
           aria-hidden="false"
         >
-          mdi-account-circle
+          {{ mdiAccountCircle }}
         </v-icon>
       </v-btn>
       <v-btn
@@ -92,9 +92,16 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+// better to load svg for semantic icons important for accessbility
+import { mdiAccountCircle } from '@mdi/js'
 
 export default {
   props: ['loginHref', 'backgroundDark'],
+  data () {
+    return {
+      mdiAccountCircle
+    }
+  },
   computed: {
     ...mapState(['config', 'textDark', 'userPartners']),
     ...mapState('session', ['user']),
