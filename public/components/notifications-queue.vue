@@ -86,7 +86,7 @@
 <script>
 import { mapState } from 'vuex'
 import eventBus from '~/event-bus'
-import { mdiBelll } from '@mdi/js'
+import { mdiBell } from '@mdi/js'
 
 /* let sound
 if (!process.server) {
@@ -101,7 +101,7 @@ export default {
     notifications: null,
     loading: false,
     size: 10,
-    mdiBelll
+    mdiBell
   }),
   computed: {
     ...mapState(['textDark', 'config']),
