@@ -7,6 +7,7 @@
         color="transparent"
         :href="loginHref"
         title="Se connecter"
+        aria-label="Se connecter"
       >
         <v-icon
           large
