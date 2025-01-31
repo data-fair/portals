@@ -2,11 +2,8 @@
   <v-iframe
     title="Traitements"
     :src="processingsListUrl"
-    :query-params-extra="{
-      primary: readablePrimaryColor,
-      owner: ownerFilter
-    }"
-    :query-params-exclude="['portalId']"
+    :query-params-extra="queryParamsExtra"
+    :query-params-exclude="queryParamsExclude"
     :sync-state="true"
     @message="onMessage"
   />
@@ -33,6 +30,12 @@ export default {
     },
     processingsListUrl () {
       return `${this.processingsUrl}/processings/`
+    },
+    queryParamsExtra () {
+      return { primary: this.readablePrimaryColor, owner: this.ownerFilter }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   },
   methods: {

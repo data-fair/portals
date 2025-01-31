@@ -14,8 +14,8 @@
           scrolling="yes"
           :iframe-resizer="false"
           :sync-state="true"
-          :query-params-extra="{primary: readablePrimaryColor, embed: true}"
-          :query-params-exclude="['portalId']"
+          :query-params-extra="queryParamsExtra"
+          :query-params-exclude="queryParamsExclude"
         />
       </client-only>
     </div>
@@ -98,6 +98,12 @@ export default {
     },
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.ref + '/full'
+    },
+    queryParamsExtra () {
+      return { primary: this.readablePrimaryColor, embed: true }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   }
 }

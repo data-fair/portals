@@ -14,8 +14,8 @@
           scrolling="yes"
           :iframe-resizer="false"
           :sync-state="true"
-          :query-params-extra="{primary: config.themeColor}"
-          :query-params-exclude="['portalId']"
+          :query-params-extra="queryParamsExtra"
+          :query-params-exclude="queryParamsExclude"
         />
       </client-only>
     </div>
@@ -49,9 +49,15 @@ export default {
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
-    ...mapGetters(['dataFairUrl']),
+    ...mapGetters(['dataFairUrl', 'readablePrimaryColor']),
     pageUrl () {
       return this.publicUrl + '/datasets/' + this.$route.params.ref + '/full'
+    },
+    queryParamsExtra () {
+      return { primary: this.readablePrimaryColor, embed: true }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   }
 }

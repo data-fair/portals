@@ -2,12 +2,8 @@
   <v-iframe
     title="Contribuer"
     :src="updateDatasetUrl"
-    :query-params-extra="{
-      primary: readablePrimaryColor,
-      publicationSite: `data-fair-portals:${portal._id}`,
-      owner: ownerFilter
-    }"
-    :query-params-exclude="['portalId']"
+    :query-params-extra="queryParamsExtra"
+    :query-params-exclude="queryParamsExclude"
     :sync-state="true"
   />
 </template>
@@ -33,6 +29,16 @@ export default {
     },
     updateDatasetUrl () {
       return `${this.dataFairUrl}/embed/workflow/update-dataset`
+    },
+    queryParamsExtra () {
+      return {
+        primary: this.readablePrimaryColor,
+        publicationSite: `data-fair-portals:${this.portal._id}`,
+        owner: this.ownerFilter
+      }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   }
 }

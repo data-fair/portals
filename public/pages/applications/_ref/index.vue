@@ -79,8 +79,8 @@
           :title="application.title"
           :src="`${dataFairUrl}/app/${$route.params.ref}`"
           :sync-state="true"
-          :query-params-extra="{primary: readablePrimaryColor, embed: true}"
-          :query-params-exclude="['portalId']"
+          :query-params-extra="queryParamsExtra"
+          :query-params-exclude="queryParamsExclude"
           @state="s => syncedState = s"
         />
       </client-only>
@@ -218,6 +218,12 @@ export default {
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps', 'directoryUrl']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.ref
+    },
+    queryParamsExtra () {
+      return { primary: this.readablePrimaryColor, embed: true }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   },
   watch: {

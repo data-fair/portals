@@ -27,8 +27,8 @@
         :title="application.title"
         :style="iframeStyle"
         :sync-state="true"
-        :query-params-extra="{primary: readablePrimaryColor, embed: true}"
-        :query-params-exclude="['portalId']"
+        :query-params-extra="queryParamsExtra"
+        :query-params-exclude="queryParamsExclude"
         @state="s => syncedState = s"
       />
     </client-only>
@@ -71,6 +71,12 @@ export default {
         if (key !== 'embed' && key !== 'primary') params[key] = url.searchParams.get(key)
       }
       return params
+    },
+    queryParamsExtra () {
+      return { primary: this.readablePrimaryColor, embed: true }
+    },
+    queryParamsExclude () {
+      return ['portalId']
     }
   },
   async mounted () {
