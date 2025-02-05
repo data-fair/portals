@@ -269,7 +269,7 @@ export default {
         const streamSaver = require('streamsaver')
         streamSaver.WritableStream = WritableStream
         streamSaver.mitm = `${this.publicUrl}/streamsaver/mitm.html`
-        this.fileStream = streamSaver.createWriteStream(`${this.dataset.id}.csv`)
+        this.fileStream = streamSaver.createWriteStream(`${this.dataset.slug}.csv`)
         this.writer = this.fileStream.getWriter()
         const nbChunks = Math.ceil(this.total / 10000)
         let nextUrl = this.downloadUrl('csv')
