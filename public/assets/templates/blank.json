@@ -333,7 +333,7 @@
             "id": { "type": "string" },
             "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/applications?q={q}&owner={context.owner}&size=1000&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -370,7 +370,7 @@
             "id": { "type": "string" },
             "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&size=1000&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -395,7 +395,7 @@
             "id": { "type": "string" },
             "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?rest=true&status=finalized&q={q}&size=1000&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
@@ -420,7 +420,7 @@
             "id": { "type": "string" },
             "slug": { "type": "string" }
           },
-          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
+          "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?status=finalized&q={q}&size=1000&owner={context.owner}&select=id,slug,title&sort=createdAt:-1",
           "x-itemsProp": "results",
           "x-itemTitle": "title",
           "x-itemKey": "href"
