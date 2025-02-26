@@ -55,7 +55,7 @@ export default {
     }
   },
   head () {
-    return datasetPageHead(this.dataset, null, this.pageUrl)
+    return datasetPageHead(this.dataset, null, this.pageUrl, true)
   },
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),

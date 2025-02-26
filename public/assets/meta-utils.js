@@ -1,4 +1,4 @@
-export const datasetPageHead = (dataset, applications, pageUrl) => {
+export const datasetPageHead = (dataset, applications, pageUrl, noindex = false) => {
   if (!dataset) return { title: 'Page non trouvée' }
   const description = (dataset.description || dataset.title).split('</p>').shift().replace('<p>', '')
   const schema = {
@@ -47,9 +47,9 @@ export const datasetPageHead = (dataset, applications, pageUrl) => {
     { property: 'og:type', content: 'article' },
     { property: 'article:author', content: dataset.owner.name },
     { property: 'article:modified_time', content: dataset.dataUpdatedAt },
-    { property: 'article:published_time', content: dataset.createdAt },
-    { name: 'robots', content: 'noindex, nofollow' }
+    { property: 'article:published_time', content: dataset.createdAt }
   ]
+  if (noindex) meta.push({ name: 'robots', content: 'noindex, nofollow' })
   if (applications && applications.count) {
     meta.push({ hid: 'og:image', property: 'og:image', content: applications.results[0].href + '/capture' })
     meta.push({ hid: 'og:image:width', property: 'og:image:width', content: 800 })
