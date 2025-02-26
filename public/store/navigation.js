@@ -130,13 +130,13 @@ export default () => ({
 
       // add all datasets of catalog
       for (const dataset of state.datasetsList || []) {
-        const to = '/datasets/' + getters.isPublished ? dataset.slug : dataset.id
+        const to = '/datasets/' + (getters.isPublished ? dataset.slug : dataset.id)
         if (!pages.find(p => p.to === to)) pages.push({ to, title: dataset.title, updatedAt: dataset.updatedAt })
       }
 
       // add all applications of catalog
       for (const application of state.applicationsList || []) {
-        const to = '/applications/' + getters.isPublished ? application.slug : application.id
+        const to = '/applications/' + (getters.isPublished ? application.slug : application.id)
         if (!pages.find(p => p.to === to)) pages.push({ to, title: application.title, updatedAt: application.updatedAt })
       }
 
