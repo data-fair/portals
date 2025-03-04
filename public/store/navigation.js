@@ -123,7 +123,7 @@ export default () => ({
       const pages = [...getters.sitemapShort]
 
       // add news
-      for (const page of state.pages.filter(p => p.template === 'news')) {
+      for (const page of state.pages) {
         const to = '/pages/' + page.id
         if (!pages.find(p => p.to === to)) pages.push({ to, title: page.title, updatedAt: page.updated.date })
       }

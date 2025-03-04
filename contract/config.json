@@ -822,7 +822,7 @@
                   "page": {
                     "title": "Page",
                     "type": "object",
-                    "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+                    "x-fromUrl": "{context.portalUrl}/pages?size=1000&published=true",
                     "x-itemsProp": "results",
                     "x-itemTitle": "title",
                     "x-itemKey": "id",
@@ -875,7 +875,7 @@
                   "page": {
                     "title": "Page",
                     "type": "object",
-                    "x-fromUrl": "{context.portalUrl}/pages?size=1000",
+                    "x-fromUrl": "{context.portalUrl}/pages?size=1000&published=true",
                     "x-itemsProp": "results",
                     "x-itemTitle": "title",
                     "x-itemKey": "id",
