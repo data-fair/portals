@@ -101,7 +101,11 @@ module.exports = {
   router: {
     base: config.basePath
   },
-  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', 'vue-social-sharing/nuxt', ['@nuxtjs/i18n', {
+  modules: ['@nuxtjs/axios', 'cookie-universal-nuxt', ['vue-social-sharing/nuxt', {
+    networks: {
+      bluesky: 'https://bsky.app/intent/compose?text=@t%20@url'
+    }
+  }], ['@nuxtjs/i18n', {
     seo: true,
     locales: [{ code: 'fr', iso: 'fr-FR' }],
     defaultLocale: config.i18n.defaultLocale,

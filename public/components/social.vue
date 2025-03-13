@@ -1,67 +1,21 @@
 <template>
   <div class="share-network">
     <!-- share-network component is provided by vue-social-sharing -->
-    <share-network
-      :url="shareUrl"
-      :title="title"
-      network="twitter"
-      aria-label="Partager sur Twitter"
+    <client-only
+      v-for="network in networks"
+      :key="network.id"
     >
-      <action-icon
-        title="Partager sur Twitter"
-        icon="mdi-twitter"
-        color="grey darken-2"
-      />
-    </share-network>
-
-    <share-network
-      :url="shareUrl"
-      :title="title"
-      network="linkedin"
-      aria-label="Partager sur LinkedIn"
-    >
-      <action-icon
-        title="Partager sur LinkedIn"
-        icon="mdi-linkedin"
-        color="grey darken-2"
-      />
-    </share-network>
-    <share-network
-      :url="shareUrl"
-      :title="title"
-      network="reddit"
-      aria-label="Partager sur Reddit"
-    >
-      <action-icon
-        title="Partager sur Reddit"
-        icon="mdi-reddit"
-        color="grey darken-2"
-      />
-    </share-network>
-    <share-network
-      :url="shareUrl"
-      :title="title"
-      network="facebook"
-      aria-label="Partager sur Facebook"
-    >
-      <action-icon
-        title="Partager sur Facebook"
-        icon="mdi-facebook"
-        color="grey darken-2"
-      />
-    </share-network>
-    <client-only>
       <share-network
-        v-if="isMobileOnly"
+        v-if="!network.mobileOnly || isMobileOnly"
         :url="shareUrl"
         :title="title"
-        network="whatsapp"
-        aria-label="Partager sur WhatsApp"
+        :network="network.id"
+        :aria-label="network.title"
       >
         <action-icon
-          title="Partager sur WhatsApp"
-          icon="mdi-whatsapp"
-          color="grey darken-2"
+          :title="network.title"
+          :icon="network.icon"
+          color="#606060"
         />
       </share-network>
     </client-only>
@@ -78,9 +32,47 @@ export default {
     isMobileOnly
   }),
   computed: {
-    ...mapState(['publicUrl']),
+    ...mapState(['publicUrl', 'config']),
     shareUrl () {
       return this.url || (this.publicUrl + this.$route.fullPath)
+    },
+    networks () {
+      return [{
+        id: 'twitter',
+        title: 'Partager sur Twitter',
+        icon: 'twitter',
+        mobileOnly: false
+      }, {
+        id: 'bluesky',
+        title: 'Partager sur Bluesky',
+        icon: 'bluesky',
+        mobileOnly: false
+      }, {
+        id: 'linkedin',
+        title: 'Partager sur LinkedIn',
+        icon: 'mdi-linkedin',
+        mobileOnly: false
+      }, {
+        id: 'reddit',
+        title: 'Partager sur Reddit',
+        icon: 'mdi-reddit',
+        mobileOnly: false
+      }, {
+        id: 'facebook',
+        title: 'Partager sur Facebook',
+        icon: 'mdi-facebook',
+        mobileOnly: false
+      }, {
+        id: 'sms',
+        title: 'Partager par SMS',
+        icon: 'mdi-message-processing',
+        mobileOnly: true
+      }, {
+        id: 'whatsapp',
+        title: 'Partager sur WhatsApp',
+        icon: 'mdi-whatsapp',
+        mobileOnly: true
+      }].filter(n => (this.config.networks || ['twitter', 'linkedin', 'reddit', 'facebook', 'whatsapp']).includes(n.id))
     }
   }
 }

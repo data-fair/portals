@@ -1846,6 +1846,10 @@
     {
       "title": "Communication & contact",
       "properties": {
+        "bluesky": {
+          "type": "string",
+          "title": "Compte Bluesky"
+        },
         "twitter": {
           "type": "string",
           "title": "Compte X"
@@ -1870,6 +1874,44 @@
         "vimeo": {
           "type": "string",
           "title": "Identifiant chaîne Vimeo"
+        },
+        "networks": {
+          "title": "Réseaux disponibles pour le partage",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "title": "Twitter",
+                "const": "twitter"
+              },
+              {
+                "title": "Bluesky",
+                "const": "bluesky"
+              },
+              {
+                "title": "LinkedIn",
+                "const": "linkedin"
+              },
+              {
+                "title": "Reddit",
+                "const": "reddit"
+              },
+              {
+                "title": "Facebook",
+                "const": "facebook"
+              },
+              {
+                "title": "SMS",
+                "const": "sms"
+              },
+              {
+                "title": "WhatsApp",
+                "const": "whatsapp"
+              }
+            ]
+          },
+          "default": ["twitter", "linkedin", "reddit", "facebook", "whatsapp"]
         },
         "contactEmail": {
           "type": "string",

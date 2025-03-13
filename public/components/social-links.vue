@@ -4,9 +4,17 @@
       v-if="config.twitter"
       :href="'https://twitter.com/' + config.twitter"
       target="_blank"
-      title="Compte Twitter"
-      icon="mdi-twitter"
-      :color="color"
+      title="Compte X"
+      icon="twitter"
+      :dark="dark"
+    />
+
+    <action-icon
+      v-if="config.bluesky"
+      :href="'https://bsky.app/profile/' + config.bluesky"
+      target="_blank"
+      title="Compte Bluesky"
+      icon="bluesky"
       :dark="dark"
     />
 

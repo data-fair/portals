@@ -8,7 +8,14 @@
     @mouseenter="hovered = true"
     @mouseleave="hovered = false"
   >
-    <twitter-x v-if="icon === 'mdi-twitter'" />
+    <icons-x
+      v-if="icon === 'twitter'"
+      :color="color"
+    />
+    <icons-bluesky
+      v-else-if="icon === 'bluesky'"
+      :color="color"
+    />
     <v-icon
       v-else
       v-bind="compProps.icon"
