@@ -15,13 +15,10 @@
         Utilisation de la clé : <a :href="readApiKeyExample">{{ readApiKeyExample }}</a>
       </p>
       <client-only>
-        <v-iframe
+        <d-frame-wrapper
           :title="'Documentation de l\'API du jeu de données : ' + dataset.title"
           :src="iframeSrc"
-          :style="`height:${windowHeight - 64}px`"
-          scrolling="yes"
-          :iframe-resizer="false"
-          :sync-state="false"
+          :height="`${windowHeight - 64}px`"
         />
       </client-only>
     </div>
@@ -29,13 +26,15 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
 import { datasetPageHead } from '~/assets/meta-utils'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { Error, VIframe },
+  components: {
+    Error,
+    DFrameWrapper: () => process.client ? import('../../../components/d-frame-wrapper.vue') : null
+  },
   layout: 'minimal',
   middleware: 'portal-required',
   data: () => ({
