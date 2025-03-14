@@ -33,7 +33,7 @@ const { mapState, mapGetters } = require('vuex')
 export default {
   components: {
     Error,
-    DFrameWrapper: () => process.client ? import('../../../components/d-frame-wrapper.vue') : null
+    DFrameWrapper: () => process.client ? import('../../../components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'minimal',
   middleware: 'portal-required',
