@@ -63,8 +63,7 @@ export default {
       return this.publicUrl + '/datasets/' + this.$route.params.ref + '/api-doc'
     },
     iframeSrc () {
-      const apiDocUrl = `${this.dataFairUrl}/api/v1/datasets/${this.$route.params.ref}/api-docs.json`
-      return `${this.openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${encodeURIComponent(apiDocUrl)}`
+      return `${this.openapiViewerUrl}/?urlType=dataset&id=${this.$route.params.ref}`
     },
     useReadApiKey () {
       return this.dataset.userPermissions.includes('getReadApiKey') && this.dataset.readApiKey?.active

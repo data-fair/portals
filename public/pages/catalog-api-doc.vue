@@ -3,13 +3,10 @@
     <div>
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
       <client-only>
-        <v-iframe
-          :title="'Documentation du cataloge de jeux de données'"
-          :src="iframeSrc"
-          :style="`height:${windowHeight - 64}px`"
-          scrolling="yes"
-          :iframe-resizer="false"
-          :sync-state="false"
+        <d-frame-wrapper
+          :src="`${openapiViewerUrl}/?urlType=catalog`"
+          :height="`${windowHeight - 64}px`"
+          title="Documentation de l'API du catalogue"
         />
       </client-only>
     </div>
@@ -17,11 +14,12 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('../components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'minimal',
   middleware: 'portal-required',
   head () {
@@ -44,10 +42,6 @@ export default {
     ...mapGetters(['dataFairUrl', 'openapiViewerUrl']),
     pageUrl () {
       return this.publicUrl + '/catalog-api-doc'
-    },
-    iframeSrc () {
-      const apiDocUrl = `${this.dataFairUrl}/api/v1/catalog/api-docs.json`
-      return `${this.openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${encodeURIComponent(apiDocUrl)}`
     }
   }
 }

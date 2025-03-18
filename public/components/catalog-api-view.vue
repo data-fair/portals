@@ -34,9 +34,9 @@
         </v-btn>
       </v-toolbar>
       <client-only>
-        <v-iframe
+        <d-frame-wrapper
+          :src="`${openapiViewerUrl}/?urlType=catalog`"
           title="Documentation de l'API du catalogue"
-          :src="`${openapiViewerUrl}/?proxy=false&hide-toolbar=true&url=${encodeURIComponent(apiDocsUrl)}`"
         />
       </client-only>
     </v-card>
@@ -45,10 +45,11 @@
 
 <script>
 import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import { mapState, mapGetters } from 'vuex'
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('../components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['color'],
   data () {
     return {
@@ -57,10 +58,7 @@ export default {
   },
   computed: {
     ...mapState(['portal']),
-    ...mapGetters(['dataFairUrl', 'openapiViewerUrl']),
-    apiDocsUrl () {
-      return `${this.dataFairUrl}/api/v1/catalog/api-docs.json?publicationSites=${encodeURIComponent(`data-fair-portals:${this.portal._id}`)}`
-    }
+    ...mapGetters(['openapiViewerUrl'])
   },
   watch: {
     dialog () {
