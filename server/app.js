@@ -83,11 +83,9 @@ app.use(asyncWrap(async (req, res, next) => {
 }))
 
 app.get('/reuses*', (req, res, next) => {
-  if (req.portal) {
-    const redirectUrl = req.publicBaseUrl + req.originalUrl.replace('/reuses', '/applications')
-    console.log('redirect reuse', req.originalUrl, redirectUrl)
-    res.redirect(redirectUrl)
-  }
+  const redirectUrl = req.originalUrl.replace('/reuses', '/applications')
+  console.log('redirect reuse', req.originalUrl, redirectUrl)
+  res.redirect(redirectUrl)
 })
 
 app.get('/robots.txt', (req, res) => {
