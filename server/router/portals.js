@@ -97,7 +97,7 @@ async function syncPortalUpdate (portal, cookie) {
     title: portal.title,
     url: link(portal),
     datasetUrlTemplate: link(portal, `/datasets/{${refType}}`),
-    applicationUrlTemplate: link(portal, `/reuses/{${refType}}`)
+    applicationUrlTemplate: link(portal, `/applications/{${refType}}`)
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
