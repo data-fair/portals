@@ -216,7 +216,6 @@ export default () => {
         if (!state.portal || route.path.startsWith('/me/') || route.path.startsWith('/manager/')) {
           return
         }
-        console.log('switch to portal owner account')
         // automatic switch to the account that owns this portal if we are a member
         // or a partner if we are member of a partner available
         if (state.session.user) {
@@ -227,6 +226,7 @@ export default () => {
             user.organizations.find(o => o.id === state.config.owner.id) &&
             (!user.organization || user.organization.id !== state.config.owner.id)
           ) {
+            console.log('switch to portal organization owner account')
             dispatch('session/switchOrganization', state.config.owner.id)
             // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
             if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
@@ -235,6 +235,7 @@ export default () => {
             state.config.owner.type === 'user' &&
             user.organization
           ) {
+            console.log('switch to portal user owner account')
             dispatch('session/switchOrganization', null)
             // the switch param is necessary to actually trigger a redirect, it is removed in plugins/session.js
             if (redirect) redirect({ path: route.path, query: { ...route.query, switch: 1 } })
@@ -243,6 +244,7 @@ export default () => {
             state.userPartners &&
             state.userPartners.find(p => p.id === state.config.owner.id)
           ) {
+            console.log('switch to portal partner account')
             const partner = state.userPartners.find(p => p.id === state.config.owner.id)
             dispatch('session/switchOrganization', partner.id)
           }
