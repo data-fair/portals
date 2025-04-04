@@ -4,7 +4,7 @@ config.basePath = new URL(config.publicUrl + '/').pathname
 
 const isBuilding = process.argv.filter(a => !a.startsWith('--')).slice(-1)[0] === 'build'
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || (process.env.NODE_ENV === 'development' && !config.proxyNuxt)) {
   const nuxtConfigInject = require('@koumoul/nuxt-config-inject')
   if (isBuilding) config = nuxtConfigInject.prepare(config)
   else {
