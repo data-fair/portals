@@ -5,11 +5,11 @@
     :query-params-extra="queryParamsExtra"
     :query-params-exclude="queryParamsExclude"
     :sync-state="true"
+    :style="`height: ${windowHeight - 48}px;`"
   />
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
 import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
