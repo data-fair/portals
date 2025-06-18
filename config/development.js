@@ -12,5 +12,9 @@ module.exports = {
   whiteLabelOwners: 'user:superadmin',
   prometheus: {
     port: 9190
+  },
+  embeds: {
+    table: '/next-ui/embed/dataset/{id}/table',
+    updateDataset: '/next-ui/embed/workflow/update-dataset'
   }
 }

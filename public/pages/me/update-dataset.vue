@@ -28,7 +28,7 @@ export default {
       return ownerFilter
     },
     updateDatasetUrl () {
-      return `${this.dataFairUrl}/embed/workflow/update-dataset`
+      return `${this.dataFairUrl}${process.env.embeds.updateDataset}`
     },
     queryParamsExtra () {
       return {

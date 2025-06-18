@@ -387,7 +387,7 @@ export default {
     tableIframeSrc () {
       const dataset = this.value.dataset
       const ref = this.isPublished && dataset.slug ? dataset.slug : dataset.id
-      let url = `${this.$store.getters.dataFairUrl}/embed/dataset/${ref}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}`
+      let url = `${this.$store.getters.dataFairUrl}${process.env.embeds.table.replace('{id}', ref)}?primary=${encodeURIComponent(this.config.themeColor)}`
       if (this.value.display && this.value.display !== 'auto') {
         url += `&display=${this.value.display}`
       }

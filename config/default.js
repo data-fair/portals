@@ -52,7 +52,10 @@ module.exports = {
     active: true,
     port: 9090
   },
-  tablePreviewPath: '/table',
+  embeds: {
+    table: '/embed/dataset/{id}/table',
+    updateDataset: '/embed/workflow/update-dataset'
+  },
   whiteLabelOwners: '',
   disallowRobots: false
 }

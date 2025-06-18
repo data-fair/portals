@@ -67,7 +67,7 @@ export default {
   computed: {
     ...mapState(['config']),
     iframeSrc () {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}${process.env.tablePreviewPath}?primary=${encodeURIComponent(this.config.themeColor)}&display=${this.$vuetify.breakpoint.smAndDown ? 'list' : 'table'}`
+      return `${this.$store.getters.dataFairUrl}${process.env.embeds.table.replace('{id}', this.dataset.id)}?primary=${encodeURIComponent(this.config.themeColor)}&display=${this.$vuetify.breakpoint.smAndDown ? 'list' : 'table'}`
     }
   },
   watch: {

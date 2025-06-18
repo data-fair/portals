@@ -9,7 +9,7 @@
       <client-only>
         <v-iframe
           :title="'Vue tableau du jeu de données : ' + dataset.title"
-          :src="`${dataFairUrl}/embed/dataset/${$route.params.ref}${tablePreviewPath}`"
+          :src="tablePreview"
           :style="`height:${windowHeight - 64}px`"
           scrolling="yes"
           :iframe-resizer="false"
@@ -33,8 +33,7 @@ export default {
   layout: 'minimal',
   middleware: 'portal-required',
   data: () => ({
-    dataset: null,
-    tablePreviewPath: process.env.tablePreviewPath
+    dataset: null
   }),
   async fetch () {
     this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.ref, {
@@ -50,6 +49,9 @@ export default {
   computed: {
     ...mapState(['config', 'publicUrl', 'portal', 'draft']),
     ...mapGetters(['dataFairUrl', 'readablePrimaryColor']),
+    tablePreview () {
+      return this.dataFairUrl + process.env.embeds.table.replace('{id}', this.$route.params.ref)
+    },
     pageUrl () {
       return this.publicUrl + '/datasets/' + this.$route.params.ref + '/full'
     },

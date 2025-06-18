@@ -50,5 +50,9 @@ module.exports = {
   disallowRobots: {
     __name: 'DISALLOW_ROBOTS',
     __format: 'json'
+  },
+  embeds: {
+    table: 'EMBEDS_TABLE',
+    updateDataset: 'EMBEDS_UPDATE_DATASET'
   }
 }
