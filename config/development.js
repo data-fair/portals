@@ -15,6 +15,7 @@ module.exports = {
   },
   embeds: {
     table: '/next-ui/embed/dataset/{id}/table',
+    map: '/next-ui/embed/dataset/{id}/map',
     updateDataset: '/next-ui/embed/workflow/update-dataset'
   }
 }

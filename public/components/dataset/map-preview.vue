@@ -64,7 +64,7 @@ export default {
   computed: {
     ...mapState(['config']),
     iframeSrc () {
-      return `${this.$store.getters.dataFairUrl}/embed/dataset/${this.dataset.id}/map?primary=${encodeURIComponent(this.config.themeColor)}`
+      return `${this.$store.getters.dataFairUrl}${process.env.embeds.map.replace('{id}', this.dataset.id)}?primary=${encodeURIComponent(this.config.themeColor)}`
     }
   },
   watch: {

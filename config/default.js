@@ -54,6 +54,7 @@ module.exports = {
   },
   embeds: {
     table: '/embed/dataset/{id}/table',
+    map: '/embed/dataset/{id}/map',
     updateDataset: '/embed/workflow/update-dataset'
   },
   whiteLabelOwners: '',

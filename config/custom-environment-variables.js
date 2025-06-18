@@ -53,6 +53,7 @@ module.exports = {
   },
   embeds: {
     table: 'EMBEDS_TABLE',
+    map: 'EMBEDS_MAP',
     updateDataset: 'EMBEDS_UPDATE_DATASET'
   }
 }
