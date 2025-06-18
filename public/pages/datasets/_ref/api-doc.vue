@@ -39,7 +39,6 @@ export default {
   middleware: 'portal-required',
   data: () => ({
     dataset: null,
-    tablePreviewPath: process.env.tablePreviewPath,
     actualReadApiKey: null
   }),
   async fetch () {
