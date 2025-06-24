@@ -7,6 +7,7 @@
     :sync-state="true"
     :style="`height: ${windowHeight - 48}px;`"
     scrolling="auto"
+    :iframe-resizer="false"
   />
 </template>
 
