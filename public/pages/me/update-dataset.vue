@@ -6,6 +6,7 @@
     :query-params-exclude="queryParamsExclude"
     :sync-state="true"
     :style="`height: ${windowHeight - 48}px;`"
+    scrolling="auto"
   />
 </template>
 
