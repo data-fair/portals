@@ -1,12 +1,12 @@
 <template>
   <v-list
-    v-if="sections && sections.length"
     v-scroll="onScroll"
     dense
     class="py-0 pr-2"
   >
     <v-subheader>{{ title }}</v-subheader>
     <v-list-item-group
+      v-if="sections && sections.length"
       v-model="activeIndex"
       style="max-width:180px"
       color="primary"
