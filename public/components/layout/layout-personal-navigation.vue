@@ -189,7 +189,7 @@ export default {
     },
     accounts () {
       const accounts = []
-      if (!this.user.ipa) {
+      if (!this.user.ipa || !this.user.organization) {
         accounts.push({
           text: 'Compte personnel',
           value: null,
