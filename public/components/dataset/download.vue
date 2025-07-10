@@ -242,7 +242,9 @@ export default {
     }
   },
   async mounted () {
-    const dataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
+    const dataFiles = (this.dataset.isVirtual || this.dataset.isRest || this.dataset.isMetaOnly)
+      ? []
+      : await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
     if (this.dataset.virtual && this.dataset.virtual.children) {
       for (const id of this.dataset.virtual.children) {
         try {
