@@ -246,12 +246,18 @@ export default {
       ? []
       : await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${this.dataset.id}/data-files`)
     if (this.dataset.virtual && this.dataset.virtual.children) {
-      for (const id of this.dataset.virtual.children) {
-        try {
-          const childrenDataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${id}/data-files`)
-          const source = childrenDataFiles && childrenDataFiles.find(f => f.key === 'original')
-          if (source) dataFiles.push(source)
-        } catch (err) {}
+      const children = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets`, {
+        params: {
+          id: this.dataset.virtual.children.join(','),
+          select: 'id,isVirtual,isRest,isMetaOnly'
+        }
+      }).then(r => r.results)
+      for (const child of children) {
+        if (!child.userPermissions.includes('listDataFiles')) continue
+        if (child.isVirtual || child.isRest || child.isMetaOnly) continue
+        const childrenDataFiles = await this.$axios.$get(`${this.dataFairUrl}/api/v1/datasets/${child.id}/data-files`)
+        const source = childrenDataFiles && childrenDataFiles.find(f => f.key === 'original')
+        if (source) dataFiles.push(source)
       }
     }
 
