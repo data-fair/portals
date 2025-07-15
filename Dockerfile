@@ -1,5 +1,5 @@
 ##########################
-FROM node:22.9.0-alpine3.19 AS base
+FROM node:24.4.0-alpine3.22 AS base
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -22,9 +22,10 @@ COPY --from=package-strip /app/package.json package.json
 COPY --from=package-strip /app/package-lock.json package-lock.json
 ADD ui/package.json ui/package.json
 ADD api/package.json api/package.json
+ADD portal/package.json portal/package.json
 # full deps install used for types and ui building
 # also used to fill the npm cache for faster install of api deps
-RUN npm ci --omit=dev --omit=optional --omit=peer --no-audit --no-fund
+RUN npm ci --omit=dev --omit=peer --no-audit --no-fund
 
 ##########################
 FROM installer AS types
@@ -49,8 +50,27 @@ FROM installer AS api-installer
 
 # remove other workspaces and reinstall, otherwise we can get rig have some peer dependencies from other workspaces
 RUN npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-audit --no-fund && \
-    npx clean-modules --yes "!ramda/src/test.js"
+    npx clean-modules
 RUN mkdir -p /app/api/node_modules
+
+##########################
+FROM installer AS portal-builder
+
+RUN npm -w portal run build
+
+##########################
+FROM base AS portal
+
+COPY --from=portal-builder /app/portal/.output portal/.output
+ADD package.json README.md LICENSE BUILD.json* ./
+
+ENV PORT=8080
+ENV HOST=0.0.0.0
+
+EXPOSE 8080
+USER node
+WORKDIR /app/portal
+CMD ["node", "/app/portal/.output/index.mjs"]
 
 ##########################
 FROM base AS manager
@@ -63,6 +83,8 @@ COPY --from=types /app/api/config api/config
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist
 ADD package.json README.md LICENSE BUILD.json* ./
+# artificially create a dependency to "portal" target for better caching in github ci
+COPY --from=portal /app/package.json package.json
 EXPOSE 8080
 EXPOSE 9090
 USER node

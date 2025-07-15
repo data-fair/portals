@@ -23,6 +23,7 @@ export default [
   ...neostandard({ ts: true }),
   {
     rules: {
+      'no-unused-expressions': 'off',
       'no-undef': 'off' // typescript takes care of this with autoImport support
     }
   },

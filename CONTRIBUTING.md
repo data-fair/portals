@@ -41,4 +41,5 @@ Build images:
 
 ```
 docker build --progress=plain --target=manager -t data-fair/portals/manager:dev .
+docker build --progress=plain --target=portal -t data-fair/portals/portal:dev .
 ```

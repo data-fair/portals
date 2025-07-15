@@ -49,3 +49,28 @@ jobs:
         labels: ${{ steps.docker_meta_manager.outputs.labels }}
         cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache
         cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache,mode=max
+
+    - name: Prepare docker tags for portal image
+      id: docker_meta_portal
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/portal
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+
+    - name: Build and push portal image
+      id: docker_build_portal
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        target: portal
+        tags: ${{ steps.docker_meta_portal.outputs.tags }}
+        platforms: linux/amd64
+        labels: ${{ steps.docker_meta_portal.outputs.labels }}
+        cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache
+        cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache,mode=max
