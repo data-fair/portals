@@ -40,5 +40,5 @@ npm run build-types
 Build images:
 
 ```
-docker build --progress=plain --target=main -t data-fair/portals:dev .
+docker build --progress=plain --target=manager -t data-fair/portals/manager:dev .
 ```

@@ -53,7 +53,7 @@ RUN npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-a
 RUN mkdir -p /app/api/node_modules
 
 ##########################
-FROM base AS main
+FROM base AS manager
 
 COPY --from=api-installer /app/node_modules node_modules
 ADD /api api
