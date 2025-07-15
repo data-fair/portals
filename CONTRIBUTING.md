@@ -1,57 +1,44 @@
 # Contribution guidelines
 
-## Development environment
+## Prerequisites
 
-Install dependencies:
+  - A Javascript/Typescript IDE with [Vue.js](https://vuejs.org/)  and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) support.
+  - A recent [Docker](https://docs.docker.com/engine/install/) installation.
+  - [Node.js v22+](https://nodejs.org/)
 
-    npm install
+## Install dependencies
 
-If you use [zellij](https://zellij.dev/) you can replace all the following steps with `npm run dev-zellij`, otherwise follow the next instructions.
+Install npm dependencies for all workspaces:
+```
+npm install
+```
 
-Switch to the appropriate nodejs version:
+Pull images at first and then once in a while:
 
-    nvm use
+```bash
+ddocker compose pull
+```
 
-Run the services dependencies:
+## Run the development servers
 
-    npm run dev-deps
-
-Run the 2 development servers with these commands in separate shells:
-
-    npm run dev-server
-    npm run dev-client
-
-Run pre-built nuxt like in production but in dev environment:
-
-    npm run dev-built
-
-Run test suite:
-
-    npm test
-
-## Docker image
-
-Test building the docker image:
-
-    docker build --network=host -t portals-dev .
-    // don't expect the following line to work fully, it will be missing service dependencies, etc.
-    docker run --network=host --env PORT=8081 portals-dev
-
-
-## Git quality checks
-
-This project uses [husky](https://typicode.github.io/husky/) and  to ensure quality of commits. The pre-commit hook runs the docker image build, this way we get linting, testing, and building all checked in 1 step.
-
-The original setup was created like so:
+The recommended way to run the development servers is to use [zellij](https://zellij.dev/):
 
 ```
-npm i -D husky
-npm pkg set scripts.prepare="husky install"
-npm run prepare
-npx husky add .husky/pre-commit "npm run lint"
-npx husky add .husky/pre-push "docker build --network=host -t portals-dev ."
+npm run dev-zellij
+```
 
-npm i -D @commitlint/config-conventional @commitlint/cli
-echo "module.exports = { extends: ['@commitlint/config-conventional'] }" > commitlint.config.js
-npx husky add .husky/commit-msg 'npx --no-install commitlint --edit ""'
+## Working on types
+
+Update the types based on schemas:
+
+```
+npm run build-types
+```
+
+## Building docker images
+
+Build images:
+
+```
+docker build --progress=plain --target=main -t data-fair/portals:dev .
 ```

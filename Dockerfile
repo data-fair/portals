@@ -1,78 +1,70 @@
-######################################
-# Stage: nodejs dependencies and build
-FROM node:18.15.0-alpine3.17 AS builder
+##########################
+FROM node:22.9.0-alpine3.19 AS base
 
-WORKDIR /webapp
-ADD package.json .
-ADD package-lock.json .
-# use clean-modules on the same line as npm ci to be lighter in the cache
-RUN npm ci && \
-    ./node_modules/.bin/clean-modules --yes --exclude exceljs/lib/doc/ --exclude mocha/lib/test.js --exclude "**/*.mustache"
+WORKDIR /app
+ENV NODE_ENV=production
 
-# Adding UI files
-ADD public public
-ADD shared shared
-ADD nuxt.config.js .
-ADD config config
-ADD contract contract
+##########################
+FROM base AS package-strip
 
-# Build UI
-ENV NODE_ENV production
-RUN npm run build && \
-    rm -rf dist
+RUN apk add --no-cache jq moreutils
+ADD package.json package-lock.json ./
+# remove version from manifest for better caching when building a release
+RUN jq '.version="build"' package.json | sponge package.json
+RUN jq '.version="build"' package-lock.json | sponge package-lock.json
 
-# Adding server files
-ADD server server
-ADD shared shared
-ADD upgrade upgrade
-ADD contract contract
+##########################
+FROM base AS installer
 
-# Check quality
-ADD .gitignore .gitignore
-ADD test test
-RUN npm run lint
-RUN npm run test
-RUN npm audit --omit=dev --audit-level=critical
+RUN apk add --no-cache python3 make g++ git jq moreutils
+RUN npm i -g clean-modules@3.0.4
+COPY --from=package-strip /app/package.json package.json
+COPY --from=package-strip /app/package-lock.json package-lock.json
+ADD ui/package.json ui/package.json
+ADD api/package.json api/package.json
+# full deps install used for types and ui building
+# also used to fill the npm cache for faster install of api deps
+RUN npm ci --omit=dev --omit=optional --omit=peer --no-audit --no-fund
 
-# Cleanup /webapp/node_modules so it can be copied by next stage
-RUN npm prune --production
-RUN rm -rf node_modules/.cache
+##########################
+FROM installer AS types
 
-##################################
-# Stage: main nodejs service stage
-FROM node:18.15.0-alpine3.17
-MAINTAINER "contact@koumoul.com"
+ADD api/types api/types
+ADD api/doc api/doc
+ADD api/config api/config
+RUN npm run build-types
 
-RUN apk add --no-cache dumb-init
+##########################
+FROM installer AS ui
 
-WORKDIR /webapp
+RUN npm i --no-save @rollup/rollup-linux-x64-musl
+COPY --from=types /app/api/config api/config
+COPY --from=types /app/api/types api/types
+ADD /api/src/config.ts api/src/config.ts
+ADD /ui ui
+RUN npm -w ui run build
 
-# We could copy /webapp whole, but this is better for layering / efficient cache use
-COPY --from=builder /webapp/node_modules /webapp/node_modules
-COPY --from=builder /webapp/nuxt-dist /webapp/nuxt-dist
-ADD nuxt.config.js nuxt.config.js
-ADD public/static public/static
-ADD server server
-ADD shared shared
-ADD config config
-ADD contract contract
-ADD upgrade upgrade
+##########################
+FROM installer AS api-installer
 
-# Adding licence, manifests, etc.
-ADD package.json .
-ADD README.md BUILD.json* ./
-ADD LICENSE .
-ADD nodemon.json .
+# remove other workspaces and reinstall, otherwise we can get rig have some peer dependencies from other workspaces
+RUN npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-audit --no-fund && \
+    npx clean-modules --yes "!ramda/src/test.js"
+RUN mkdir -p /app/api/node_modules
 
-# configure node webapp environment
-ENV NODE_ENV production
-ENV DEBUG db,upgrade*
-# the following line would be a good practice
-# unfortunately it is a problem to activate now that the service was already deployed
-# with volumes belonging to root
-#USER node
-VOLUME /webapp/data
+##########################
+FROM base AS main
+
+COPY --from=api-installer /app/node_modules node_modules
+ADD /api api
+COPY --from=types /app/api/types api/types
+COPY --from=types /app/api/doc api/doc
+COPY --from=types /app/api/config api/config
+COPY --from=api-installer /app/api/node_modules api/node_modules
+COPY --from=ui /app/ui/dist ui/dist
+ADD package.json README.md LICENSE BUILD.json* ./
 EXPOSE 8080
-
-
-CMD ["dumb-init", "node", "--max-http-header-size", "64000", "server"]
+EXPOSE 9090
+USER node
+WORKDIR /app/api
+CMD ["node", "--max-http-header-size", "64000", "--experimental-strip-types", "index.ts"]

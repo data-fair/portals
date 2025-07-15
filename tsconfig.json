@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true,
+    "paths": {
+      "#shared/*": ["./shared/*"]
+    }
+  },
+  "exclude": ["node_modules", "types", "ui", "portal", "dev"],
+  "types": ["vuetify"]
+}

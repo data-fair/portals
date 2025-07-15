@@ -1,0 +1,59 @@
+{
+  "$id": "https://github.com/data-fair/portals/api/config",
+  "x-exports": [
+    "types",
+    "validate"
+  ],
+  "x-ajv": {
+    "coerceTypes": "array"
+  },
+  "type": "object",
+  "title": "Api config",
+  "additionalProperties": false,
+  "required": [
+    "privateDirectoryUrl",
+    "mongoUrl",
+    "port",
+    "observer",
+    "secretKeys"
+  ],
+  "properties": {
+    "mongoUrl": {
+      "type": "string"
+    },
+    "port": {
+      "type": "number"
+    },
+    "privateDirectoryUrl": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "secretKeys": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identities", "events"],
+      "properties": {
+        "identities": {
+          "type": "string"
+        },
+        "events": {
+          "type": "string"
+        }
+      }
+    },
+    "observer": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "port": {
+          "type": "number"
+        }
+      }
+    },
+    "util": {},
+    "get": {},
+    "has": {}
+  }
+}
