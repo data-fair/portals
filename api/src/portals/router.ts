@@ -4,9 +4,10 @@ import type { Portal } from '#types/portal/index.js'
 
 import { Router } from 'express'
 import mongo from '#mongo'
-import * as postReq from '#doc/portals/post-req/index.ts'
+import * as postReqBody from '#doc/portals/post-req-body/index.ts'
+import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createPortal } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal } from './service.ts'
 
 const router = Router()
 export default router
@@ -45,11 +46,19 @@ router.get('', async (req, res, next) => {
 router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
-  const { body } = postReq.returnValid(req, { name: 'req' })
+  const body = postReqBody.returnValid(req.body, { name: 'body' })
+  const created = {
+    id: session.user.id,
+    name: session.user.name,
+    date: new Date().toISOString()
+  }
   const portal: Portal = {
-    ...body,
     _id: randomUUID(),
-    owner: session.account
+    owner: session.account,
+    created,
+    updated: created,
+    ...body,
+    draftConfig: body.config
   }
   assertAccountRole(session, portal.owner, 'admin')
 
@@ -59,9 +68,25 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
+  res.send(await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id))
+})
+
+router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  const portal = await mongo.portals.findOne({ _id: req.params.id })
-  if (!portal) throw httpError(404, `portal "${req.params.id}" not found`)
-  assertAccountRole(session, portal.owner, 'admin')
-  res.send(portal)
+  const portal = await getPortalAsAdmin(session, req.params.id)
+  const body = patchReqBody.returnValid(req.body, { name: 'body' })
+  await patchPortal(portal, body, session)
+  res.send({ ...portal, body })
+})
+
+router.post('/:id/draft', async (req, res, next) => {
+  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  await validatePortalDraft(portal)
+  res.status(201).send()
+})
+
+router.delete('/:id/draft', async (req, res, next) => {
+  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  await cancelPortalDraft(portal)
+  res.status(201).send()
 })
