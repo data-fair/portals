@@ -1,6 +1,5 @@
 {
   "name": "ui",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -17,6 +16,7 @@
     "@data-fair/lib-vuetify": "^1.10.1",
     "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@koumoul/v-iframe": "^2.4.5",
+    "@koumoul/vjsf": "^3.17.1",
     "@mdi/js": "^7.4.47",
     "@types/config": "^3.3.5",
     "@vitejs/plugin-vue": "^6.0.0",

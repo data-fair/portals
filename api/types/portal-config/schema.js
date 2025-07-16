@@ -1,0 +1,19 @@
+export default {
+  $id: 'https://github.com/data-fair/portals/portal-config',
+  'x-exports': ['types'],
+  title: 'Portal config',
+  type: 'object',
+  unevaluatedProperties: false,
+  allOf: [{
+    title: 'Métadonnées',
+    required: ['title'],
+    properties: {
+      title: {
+        type: 'string'
+      },
+      description: {
+        type: 'string'
+      }
+    }
+  }]
+}

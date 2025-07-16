@@ -59,6 +59,17 @@ FROM installer AS portal-builder
 RUN npm -w portal run build
 
 ##########################
+FROM base AS fonts-builder
+
+ADD /dev/scripts/prepare-fonts.js prepare-fonts.js
+RUN npm pack google-fonts-complete@2.2.3 &&\
+    tar -xzf google-fonts-complete-2.2.3.tgz &&\
+    rm google-fonts-complete-2.2.3.tgz &&\
+    mv package google-fonts-complete
+RUN mkdir -p api/assets/fonts
+RUN node prepare-fonts.js
+
+##########################
 FROM base AS portal
 
 COPY --from=portal-builder /app/portal/.output portal/.output
@@ -75,6 +86,7 @@ CMD ["node", "/app/portal/.output/index.mjs"]
 ##########################
 FROM base AS manager
 
+COPY --from=fonts-builder /app/api/assets api/assets
 COPY --from=api-installer /app/node_modules node_modules
 ADD /api api
 COPY --from=types /app/api/types api/types
@@ -89,4 +101,4 @@ EXPOSE 8080
 EXPOSE 9090
 USER node
 WORKDIR /app/api
-CMD ["node", "--max-http-header-size", "64000", "--experimental-strip-types", "index.ts"]
+CMD ["node", "--max-http-header-size", "64000", "index.ts"]

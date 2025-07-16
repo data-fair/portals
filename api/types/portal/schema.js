@@ -14,25 +14,7 @@ export default {
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
     created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
-    config: { $ref: '#/$defs/config' },
-    draftConfig: { $ref: '#/$defs/config' },
-  },
-  $defs: {
-    config: {
-      type: 'object',
-      title: 'Portal config',
-      allOf: [{
-        title: 'Métadonnées',
-        required: ['title'],
-        properties: {
-          title: {
-            type: 'string'
-          },
-          description: {
-            type: 'string'
-          }
-        }
-      }]
-    }
+    config: { $ref: 'https://github.com/data-fair/portals/portal-config' },
+    draftConfig: { $ref: 'https://github.com/data-fair/portals/portal-config' },
   }
 }
