@@ -59,14 +59,21 @@ for (const [name, info] of entries) {
     continue
   }
 
+  // uncomment to run in dev env with a choice of test fonts
+  /*
+  if (!['Montserrat', 'Noto Sans', 'Nunito', 'Pacifico', 'Roboto'].includes(name)) {
+    continue
+  }
+  */
+
   categories.add(info.category)
 
   console.log('prepare font ' + name)
   const key = name.toLowerCase().replace(/\s/g, '')
 
-  mkdirSync(`api/assets/fonts/${key}`)
+  mkdirSync(`portal/public/fonts/${key}`)
 
-  fonts.push({ source: 'google-fonts', name, category: info.category })
+  fonts.push(name)
 
   let fontFaces = ''
   const urls = new Set()
@@ -87,7 +94,7 @@ for (const [name, info] of entries) {
           if (rangeStart !== weight) weightRange += ' ' + weight
           rangeStart = null
           const fileName = basename(new URL(url).pathname)
-          const localUrl = `/portals-manager/fonts/${encodeURIComponent(key)}/${fileName}`
+          const localUrl = `/fonts/${encodeURIComponent(key)}/${fileName}`
           fontFaces += makeFontFace(subset, info.unicodeRange[subset], fontStyle, weightRange, localUrl)
         }
       }
@@ -95,12 +102,12 @@ for (const [name, info] of entries) {
   }
 
   // writeFileSync(`api/assets/fonts/${name}.css.gz`, await gzip(fontFaces))
-  writeFileSync(`api/assets/fonts/${key}/font-faces.css`, fontFaces)
+  writeFileSync(`api/assets/fonts/${key}.css`, fontFaces)
 
   for (const url of [...urls]) {
     const fileName = basename(new URL(url).pathname)
     const res = await new Promise(resolve => httpGet(url, resolve))
-    await pipeline(res, createWriteStream(`api/assets/fonts/${key}/${fileName}`))
+    await pipeline(res, createWriteStream(`portal/public/fonts/${key}/${fileName}`))
   }
 }
 

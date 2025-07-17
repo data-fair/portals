@@ -54,11 +54,6 @@ RUN npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-a
 RUN mkdir -p /app/api/node_modules
 
 ##########################
-FROM installer AS portal-builder
-
-RUN npm -w portal run build
-
-##########################
 FROM base AS fonts-builder
 
 ADD /dev/scripts/prepare-fonts.js prepare-fonts.js
@@ -67,7 +62,14 @@ RUN npm pack google-fonts-complete@2.2.3 &&\
     rm google-fonts-complete-2.2.3.tgz &&\
     mv package google-fonts-complete
 RUN mkdir -p api/assets/fonts
+RUN mkdir -p portal/public/fonts
 RUN node prepare-fonts.js
+
+##########################
+FROM installer AS portal-builder
+
+COPY --from=fonts-builder /app/portal/public/fonts portal/public/fonts
+RUN npm -w portal run build
 
 ##########################
 FROM base AS portal

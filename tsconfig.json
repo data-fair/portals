@@ -13,6 +13,6 @@
       "#shared/*": ["./shared/*"]
     }
   },
-  "exclude": ["node_modules", "types", "ui", "portal", "dev", "api/assets"],
+  "exclude": ["node_modules", "types", "ui", "portal", "dev", "api/assets", "google-fonts-complete/"],
   "types": ["vuetify"]
 }

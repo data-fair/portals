@@ -17,7 +17,7 @@
     "test-base": "NODE_ENV=test node --test-force-exit --test-concurrency=1 --test",
     "check-types": "tsc && npm -w ui run check-types",
     "prepare": "husky || true",
-    "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.js",
+    "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && rm -rf portal/public/fonts && mkdir portal/public/fonts && node dev/scripts/prepare-fonts.js",
     "quality": "npm run dev-deps && npm run lint && npm run build-types && npm run check-types && npm -w ui run build && npm run test && npm audit --omit=dev --audit-level=critical"
   },
   "workspaces": [
@@ -36,20 +36,19 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.8.2"
+    "@data-fair/lib-types-builder": "^1.8.2",
+    "@types/debug": "^4.1.12"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
     "@data-fair/lib-node": "^2.8.2",
     "@types/config": "^3.3.5",
-    "@types/debug": "^4.1.12",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.14",
     "commitlint": "^19.8.1",
     "eslint": "^9.31.0",
     "eslint-plugin-vue": "^10.3.0",
     "eslint-plugin-vuetify": "^2.5.2",
-    "google-fonts-complete": "^2.2.3",
     "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "tough-cookie": "^5.1.2"

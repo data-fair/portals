@@ -29,6 +29,7 @@ app.use(express.json())
 app.use(createSiteMiddleware('portals-manager'))
 app.use(session.middleware())
 
+app.use('/assets', express.static('api/assets'))
 app.use('/api/portals', portalsRouter)
 app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
