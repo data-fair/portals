@@ -8,6 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    LayoutActionsButton: typeof import('./src/components/layout/layout-actions-button.vue')['default']
+    LayoutNavigationRight: typeof import('./src/components/layout/layout-navigation-right.vue')['default']
+    LayoutNavigationRightT: typeof import('./src/components/layout/layout-navigation-rightT.vue')['default']
+    NavigationRight: typeof import('./src/components/layout/navigation-right.vue')['default']
+    PortalCard: typeof import('./src/components/portal/portal-card.vue')['default']
+    PortalsActions: typeof import('./src/components/portals-actions.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

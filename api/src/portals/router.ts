@@ -18,7 +18,9 @@ router.get('', async (req, res, next) => {
   if (accountRole !== 'admin') throw httpError(403, 'admin only')
 
   // TODO: account filter for super admins ?
-  const query: Filter<Portal> = { 'sender.type': account.type, 'sender.id': account.id }
+  const showAll = req.query.showAll === 'true' || req.query.showAll === '1'
+  if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
+  const query: Filter<Portal> = showAll ? {} : { 'owner.type': account.type, 'owner.id': account.id }
   // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
 
   const project = mongoProjection(req.query.select)
@@ -32,7 +34,7 @@ router.get('', async (req, res, next) => {
     // optional beforeId as a tie-breaker
     if (beforeId) query._id = { $lt: beforeId }
   }
-
+  console.log('query', query)
   const [count, portals] = await Promise.all([
     mongo.portals.countDocuments(query),
     mongo.portals.find(query).project(project).skip(skip).limit(size).sort(sort).toArray()

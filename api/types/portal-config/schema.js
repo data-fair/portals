@@ -4,16 +4,20 @@ export default {
   title: 'Portal config',
   type: 'object',
   unevaluatedProperties: false,
-  allOf: [{
-    title: 'Métadonnées',
-    required: ['title'],
-    properties: {
-      title: {
-        type: 'string'
-      },
-      description: {
-        type: 'string'
-      }
+  layout: {
+    comp: 'vertical-tabs',
+    children: [
+      { title: 'Métadonnées', children: ['title', 'description'] }
+    ]
+  },
+  required: ['title'],
+  properties: {
+    title: {
+      type: 'string'
+    },
+    description: {
+      type: 'string'
     }
-  }]
+  }
+
 }

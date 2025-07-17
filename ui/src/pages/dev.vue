@@ -28,13 +28,8 @@ const session = useSession()
 
 const links = [
   ['/simple-directory', 'User management'],
-  ['/events/embed/events', 'Account events'],
-  ['/events/embed/subscribe?key=topic1,topic2&title=Topic 1,Topic 2&sender=organization:orga1', 'Subscribe to a topic'],
-  ['/events/embed/subscriptions', 'User subscriptions'],
-  ['/events/embed/subscribe-webhooks?key=topic&title=Topic', 'Subscribe webhooks to a topic'],
-  ['/events/embed/notifications', 'User notifications'],
-  ['/events/embed/devices', 'User devices'],
-  ['/built/events/embed/devices', 'Built version']
+  ['/portals-manager/portals', 'Portals'],
+  ['/portals-manager/pages', 'Pages']
 ]
 </script>
 

@@ -7,7 +7,6 @@ module.exports = {
   },
   secretKeys: {
     identities: 'SECRET_IDENTITIES',
-    events: 'SECRET_EVENTS',
-    sendMails: 'SECRET_SENDMAILS'
+    events: 'SECRET_EVENTS'
   }
 }
