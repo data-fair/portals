@@ -2,6 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
+        {{ editConfig }}
         <v-form
           v-if="editConfig"
           v-model="formValid"
@@ -12,7 +13,11 @@
             :schema="configSchema"
             :options="vjsfOptions"
             @update:model-value="saveDraft.execute()"
-          />
+          >
+            <template #page-preview-element="context">
+              <page-preview-element v-bind="context" />
+            </template>
+          </vjsf>
         </v-form>
       </v-col>
       <navigation-right>
@@ -59,21 +64,22 @@ en:
 
 <script lang="ts" setup>
 import Vjsf, { type Options as VjsfOptions } from '@koumoul/vjsf'
-import { type Portal } from '#api/types/portal/index'
-import { type PortalConfig } from '#api/types/portal-config/index'
-import configSchema from '../../../../api/types/portal-config/schema'
+import VjsfMarkdown from '@koumoul/vjsf-markdown'
+import { type Page } from '#api/types/page/index'
+import { type PageConfig } from '#api/types/page-config/index'
+import configSchema from '../../../../api/types/page-config/schema'
 import Debug from 'debug'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace } from '@mdi/js'
 
-const debug = Debug('portal-edit')
+const debug = Debug('page-edit')
 
-const route = useRoute<'/portals/[id]'>()
+const route = useRoute<'/pages/[id]'>()
 
-const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
-const editConfig = ref<PortalConfig>()
-watch(portalFetch.data, () => {
-  if (portalFetch.data.value) editConfig.value = portalFetch.data.value.draftConfig
+const pageFetch = useFetch<Page>($apiPath + '/pages/' + route.params.id)
+const editConfig = ref<PageConfig>()
+watch(pageFetch.data, () => {
+  if (pageFetch.data.value) editConfig.value = pageFetch.data.value.draftConfig
 })
 
 const formValid = ref(false)
@@ -85,31 +91,31 @@ const vjsfOptions = computed<VjsfOptions | null>(() => {
     density: 'comfortable',
     locale: 'fr',
     updateOn: 'blur',
-    initialValidation: 'always'
+    initialValidation: 'always',
+    plugins: [VjsfMarkdown]
   }
 })
 
 const saveDraft = useAsyncAction(async () => {
-  console.log('SAVE DRAFT')
-  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
-  console.log('DONE')
+  if (!formValid.value) return
+  await $fetch(`/pages/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
 })
 
 const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
+  await $fetch(`pages/${route.params.id}/draft`, { method: 'DELETE' })
 })
 
 const validateDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
+  await $fetch(`pages/${route.params.id}/draft`, { method: 'POST' })
 })
 
-watch(portalFetch.data, (portal) => {
-  if (!portal) return
+watch(pageFetch.data, (page) => {
+  if (!page) return
   setBreadcrumbs([{
     text: 'Pages',
-    to: '/portals'
+    to: '/pages'
   }, {
-    text: portal.config.title
+    text: page.config.title
   }])
 })
 

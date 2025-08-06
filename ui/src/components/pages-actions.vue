@@ -4,7 +4,7 @@
     data-iframe-height
   >
     <v-menu
-      v-model="newPortalMenu"
+      v-model="newPageMenu"
       location="start"
       :close-on-content-click="false"
     >
@@ -16,32 +16,32 @@
               :icon="mdiPlusCircle"
             />
           </template>
-          Créer un nouveau portail
+          Créer une nouvelle page
         </v-list-item>
       </template>
       <v-card>
         <v-card-text>
           <v-text-field
-            v-model="newPortalTitle"
+            v-model="newPageTitle"
             variant="outlined"
             hide-details
             density="comfortable"
-            label="titre du nouveau portal"
+            label="titre de la nouvelle page"
             autofocus
           />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn @click="newPortalMenu = false">
+          <v-btn @click="newPageMenu = false">
             Annuler
           </v-btn>
           <v-btn
             color="primary"
-            :disabled="!newPortalTitle || createPortal.loading.value"
+            :disabled="!newPageTitle || createPage.loading.value"
             variant="flat"
-            @click="createPortal.execute()"
+            @click="createPage.execute()"
           >
-            Créer le portail
+            Créer la page
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -65,7 +65,7 @@
         v-model="showAll"
         density="compact"
         color="admin"
-        label="Voir tous les portals"
+        label="Voir toutes les pages"
         hide-details
         class="pl-3 text-admin"
       />
@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 
-import { Portal } from '#api/types/portal'
+import { Page } from '#api/types/page'
 import { mdiMagnify, mdiPlusCircle } from '@mdi/js'
 
 const session = useSessionAuthenticated()
@@ -84,13 +84,13 @@ const router = useRouter()
 const search = defineModel('search', { type: String, default: '' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
 
-const newPortalMenu = ref(false)
-const newPortalTitle = ref('')
-watch(newPortalMenu, () => { newPortalTitle.value = '' })
+const newPageMenu = ref(false)
+const newPageTitle = ref('')
+watch(newPageMenu, () => { newPageTitle.value = '' })
 
-const createPortal = useAsyncAction(async () => {
-  const portal = await $fetch<Portal>('/portals', { method: 'POST', body: { config: { title: newPortalTitle.value } } })
-  await router.replace({ path: `/portals/${portal._id}` })
+const createPage = useAsyncAction(async () => {
+  const page = await $fetch<Page>('/pages', { method: 'POST', body: { config: { title: newPageTitle.value, elements: [] } } })
+  await router.replace({ path: `/pages/${page._id}` })
 })
 
 </script>

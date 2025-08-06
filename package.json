@@ -45,6 +45,7 @@
     "@types/config": "^3.3.5",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.14",
+    "@types/sanitize-html": "^2.16.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.31.0",
     "eslint-plugin-vue": "^10.3.0",

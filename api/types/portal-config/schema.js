@@ -13,10 +13,12 @@ export default {
   required: ['title'],
   properties: {
     title: {
-      type: 'string'
+      type: 'string',
+      title: 'Titre'
     },
     description: {
-      type: 'string'
+      type: 'string',
+      title: 'Description'
     }
   }
 

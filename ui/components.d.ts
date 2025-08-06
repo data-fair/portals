@@ -8,10 +8,19 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    LayoutActionsButton: typeof import('./src/components/layout/layout-actions-button.vue')['default']
-    LayoutNavigationRight: typeof import('./src/components/layout/layout-navigation-right.vue')['default']
-    LayoutNavigationRightT: typeof import('./src/components/layout/layout-navigation-rightT.vue')['default']
-    NavigationRight: typeof import('./src/components/layout/navigation-right.vue')['default']
+    copy: typeof import('./src/components/page/page-preview-element copy.vue')['default']
+    PageCard: typeof import('./src/components/page/page-card.vue')['default']
+    PageElement: typeof import('./src/components/page/page-element.vue')['default']
+    PageElementCard: typeof import('./src/components/page/page-element-card.vue')['default']
+    PageElementPreview: typeof import('./src/components/page/page-element-preview.vue')['default']
+    PageElements: typeof import('./src/components/page/page-elements.vue')['default']
+    PageElementsList: typeof import('./src/components/page/page-elements-list.vue')['default']
+    PageElementText: typeof import('./src/components/page/page-element-text.vue')['default']
+    PageElementTitle: typeof import('./src/components/page/page-element-title.vue')['default']
+    PagePreviewElement: typeof import('./src/components/page/page-preview-element.vue')['default']
+    PagePreviewElementChildren: typeof import('./src/components/page/page-preview-element-children.vue')['default']
+    PageRenderElement: typeof import('./src/components/page/page-render-element.vue')['default']
+    PagesActions: typeof import('./src/components/pages-actions.vue')['default']
     PortalCard: typeof import('./src/components/portal/portal-card.vue')['default']
     PortalsActions: typeof import('./src/components/portals-actions.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

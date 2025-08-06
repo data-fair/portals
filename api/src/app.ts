@@ -4,6 +4,7 @@ import express from 'express'
 import helmet from 'helmet'
 import identitiesRouter from './identities/router.ts'
 import portalsRouter from './portals/router.ts'
+import pagesRouter from './pages/router.ts'
 import adminRouter from './admin/router.ts'
 import { uiConfig } from '#config'
 
@@ -31,6 +32,7 @@ app.use(session.middleware())
 
 app.use('/assets', express.static('api/assets'))
 app.use('/api/portals', portalsRouter)
+app.use('/api/pages', pagesRouter)
 app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))

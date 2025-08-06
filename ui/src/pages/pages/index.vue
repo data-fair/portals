@@ -10,7 +10,7 @@
           class="pa-0"
         >
           <v-row
-            v-if="portalsFetch.loading.value"
+            v-if="pagesFetch.loading.value"
             class="d-flex align-stretch"
           >
             <v-col
@@ -29,31 +29,31 @@
             </v-col>
           </v-row>
           <template v-else>
-            <v-list-subheader v-if="displayPortals.length > 1">
-              {{ displayPortals.length }}/{{ portalsFetch.data.value?.count }} pages affichés
+            <v-list-subheader v-if="displayPages.length > 1">
+              {{ displayPages.length }}/{{ pagesFetch.data.value?.count }} pages affichés
             </v-list-subheader>
             <v-list-subheader v-else>
-              {{ displayPortals.length }}/{{ portalsFetch.data.value?.count }} page affiché
+              {{ displayPages.length }}/{{ pagesFetch.data.value?.count }} page affiché
             </v-list-subheader>
             <v-row class="d-flex align-stretch">
               <v-col
-                v-for="portal in displayPortals"
-                :key="portal._id"
+                v-for="page in displayPages"
+                :key="page._id"
                 md="4"
                 sm="6"
                 cols="12"
               >
-                <portal-card
-                  :portal="portal"
-                  :show-owner="showAll || (portal.owner.department && !session.state.account.department)"
+                <page-card
+                  :page="page"
+                  :show-owner="showAll || (page.owner.department && !session.state.account.department)"
                 />
               </v-col>
             </v-row>
           </template>
         </v-container>
       </v-col>
-      <navigation-right v-if="portalsFetch.data.value">
-        <portals-actions
+      <navigation-right v-if="pagesFetch.data.value">
+        <pages-actions
           v-model:search="search"
           v-model:show-all="showAll"
           :is-small="false"
@@ -69,7 +69,7 @@
 -->
 
 <script lang="ts" setup>
-import type { Portal } from '#api/types/portal/index'
+import type { Page } from '#api/types/page/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const showAll = useBooleanSearchParam('showAll')
@@ -77,7 +77,7 @@ const search = useStringSearchParam('q')
 
 const session = useSessionAuthenticated()
 
-const portalsParams = computed(() => {
+const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: '10000',
     sort: 'updated.date:-1',
@@ -89,12 +89,12 @@ const portalsParams = computed(() => {
   return params
 })
 
-const portalsFetch = useFetch<{ results: Portal[], count: number }>($apiPath + '/portals', { query: portalsParams })
+const pagesFetch = useFetch<{ results: Page[], count: number }>($apiPath + '/pages', { query: pagesParams })
 
-const displayPortals = computed(() => {
-  const portals = (portalsFetch.data.value?.results ?? [])
-  if (!search.value) return portals
-  return portals.filter(portal => portal.config.title.toLowerCase().includes(search.value.toLowerCase()))
+const displayPages = computed(() => {
+  const pages = (pagesFetch.data.value?.results ?? [])
+  if (!search.value) return pages
+  return pages.filter(page => page.config.title.toLowerCase().includes(search.value.toLowerCase()))
 })
 
 </script>

@@ -1,0 +1,16 @@
+<!-- eslint-disable vue/no-v-html -->
+<template>
+  <div
+    style="overflow-wrap: break-word;"
+    class="pb-6"
+    v-html="element.content"
+  />
+</template>
+
+<script setup lang="ts">
+import { Texte } from '#api/types/page-config'
+
+const { element } = defineProps({
+  element: { type: Object as () => Texte, required: true }
+})
+</script>
