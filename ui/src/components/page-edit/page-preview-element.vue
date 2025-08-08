@@ -31,6 +31,6 @@ const renderedElement = computed(() => {
 
 const onElementsUpdate = (elements: PageElement[], childKey: string) => {
   if (!element.value) return
-  element.value[childKey] = elements
+  element.value = { ...element.value, [childKey]: elements }
 }
 </script>

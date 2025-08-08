@@ -53,6 +53,22 @@
         </v-list>
       </navigation-right>
     </v-row>
+    <v-btn
+      v-if="changesStack.canUndo.value"
+      :icon="mdiUndo"
+      title="annuler dernier changement"
+      variant="flat"
+      style="position: absolute; bottom: 16px; right: 70px;z-index:3000;"
+      @click="changesStack.undo()"
+    />
+    <v-btn
+      v-if="changesStack.canRedo.value"
+      :icon="mdiRedo"
+      title="rétablir dernier changement"
+      variant="flat"
+      style="position: absolute; bottom: 16px; right: 16px;z-index:3000;"
+      @click="changesStack.redo()"
+    />
   </v-container>
 </template>
 
@@ -69,7 +85,8 @@ import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import { type Page } from '#api/types/page/index'
 import { type PageConfig } from '#api/types/page-config/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import { mdiFileReplace } from '@mdi/js'
+import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
+import useChangesStack from '~/composables/use-changes-stack'
 
 const route = useRoute<'/pages/[id]'>()
 
@@ -78,6 +95,8 @@ const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {
   if (pageFetch.data.value) editConfig.value = pageFetch.data.value.draftConfig
 })
+
+const changesStack = useChangesStack(editConfig)
 
 const formValid = ref(false)
 
