@@ -8,12 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    copy: typeof import('./src/components/page/page-element-card copy.vue')['default']
     PageCard: typeof import('./src/components/page/page-card.vue')['default']
     PageEditElements: typeof import('./src/components/page-edit/page-edit-elements.vue')['default']
     PageElement: typeof import('./src/components/page/page-element.vue')['default']
+    PageElementAlert: typeof import('./src/components/page/page-element-alert.vue')['default']
     PageElementCard: typeof import('./src/components/page/page-element-card.vue')['default']
+    PageElementDivider: typeof import('./src/components/page/page-element-divider.vue')['default']
     PageElementText: typeof import('./src/components/page/page-element-text.vue')['default']
     PageElementTitle: typeof import('./src/components/page/page-element-title.vue')['default']
+    PageElementTwoColumns: typeof import('./src/components/page/page-element-two-columns.vue')['default']
     PagePreviewElement: typeof import('./src/components/page-edit/page-preview-element.vue')['default']
     PagesActions: typeof import('./src/components/pages-actions.vue')['default']
     PortalCard: typeof import('./src/components/portal/portal-card.vue')['default']

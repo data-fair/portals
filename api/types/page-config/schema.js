@@ -8,7 +8,14 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    title: ''
+    title: '',
+    children: [{
+      title: 'Métadonnées',
+      children: ['title', 'description']
+    }, {
+      title: 'Contenu',
+      children: ['elements']
+    }]
   },
   required: ['title', 'elements'],
   properties: {
@@ -18,7 +25,8 @@ export default {
     },
     description: {
       type: 'string',
-      title: 'Description'
+      title: 'Description',
+      layout: 'textarea'
     },
     elements: {
       type: 'array',

@@ -7,6 +7,14 @@
     v-else-if="element.type === 'text'"
     :element="element"
   />
+  <page-element-alert
+    v-else-if="element.type === 'alert'"
+    :element="element"
+  />
+  <page-element-divider
+    v-else-if="element.type === 'divider'"
+    :element="element"
+  />
   <page-element-card
     v-else-if="element.type === 'card'"
     :element="element"
@@ -25,6 +33,24 @@
       </slot>
     </template>
   </page-element-card>
+  <page-element-two-columns
+    v-else-if="element.type === 'two-columns'"
+    :element="element"
+  >
+    <template #page-elements="{elements, childKey}">
+      <slot
+        name="page-elements"
+        :elements="elements"
+        :child-key="childKey"
+      >
+        <page-element
+          v-for="(child, i) of elements"
+          :key="i"
+          :element="child"
+        />
+      </slot>
+    </template>
+  </page-element-two-columns>
 </template>
 
 <script setup lang="ts">
