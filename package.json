@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build-types": "df-build-types ./",
+    "build-types": "mkdir -p ui/src/components/vjsf && rm -f ui/src/components/vjsf/* && df-build-types . --vjsf-dir ui/src/components/vjsf",
     "dev-api": "npm -w api run dev",
     "dev-deps": "docker compose up -d --wait",
     "stop-dev-deps": "docker compose stop",
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
     "@data-fair/lib-node": "^2.8.2",
+    "@koumoul/vjsf-compiler": "^1.1.0",
     "@types/config": "^3.3.5",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.14",

@@ -7,17 +7,18 @@
           v-if="editConfig"
           v-model="formValid"
         >
-          <vjsf
-            v-if="vjsfOptions"
+          <vjsf-page-config
             v-model="editConfig"
-            :schema="configSchema"
             :options="vjsfOptions"
             @update:model-value="saveDraft.execute()"
           >
-            <template #page-preview-element="context">
-              <page-preview-element v-bind="context" />
+            <template #page-elements="{node, statefulLayout}">
+              <page-edit-elements
+                :model-value="node.data"
+                @update:model-value="(data: any) => statefulLayout.input(node, data)"
+              />
             </template>
-          </vjsf>
+          </vjsf-page-config>
         </v-form>
       </v-col>
       <navigation-right>
@@ -63,16 +64,12 @@ en:
 -->
 
 <script lang="ts" setup>
-import Vjsf, { type Options as VjsfOptions } from '@koumoul/vjsf'
+import { type Options as VjsfOptions } from '@koumoul/vjsf'
 import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import { type Page } from '#api/types/page/index'
 import { type PageConfig } from '#api/types/page-config/index'
-import configSchema from '../../../../api/types/page-config/schema'
-import Debug from 'debug'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace } from '@mdi/js'
-
-const debug = Debug('page-edit')
 
 const route = useRoute<'/pages/[id]'>()
 
@@ -84,17 +81,14 @@ watch(pageFetch.data, () => {
 
 const formValid = ref(false)
 
-const vjsfOptions = computed<VjsfOptions | null>(() => {
-  debug('compute vjsf options')
-  return {
-    titleDepth: 4,
-    density: 'comfortable',
-    locale: 'fr',
-    updateOn: 'blur',
-    initialValidation: 'always',
-    plugins: [VjsfMarkdown]
-  }
-})
+const vjsfOptions: VjsfOptions = {
+  titleDepth: 4,
+  density: 'comfortable',
+  locale: 'fr',
+  updateOn: 'blur',
+  initialValidation: 'always',
+  plugins: [VjsfMarkdown]
+}
 
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
@@ -122,4 +116,7 @@ watch(pageFetch.data, (page) => {
 </script>
 
 <style lang="css">
+.vjsf-node-list>.v-card>.v-list>.v-divider {
+  display: none;
+}
 </style>

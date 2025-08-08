@@ -3,7 +3,7 @@
   <v-card>
     <v-card-text>
       <slot
-        name="elements-list"
+        name="page-elements"
         child-key="children"
         :elements="element.children"
       />

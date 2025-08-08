@@ -27,5 +27,5 @@ export default [
       'no-undef': 'off' // typescript takes care of this with autoImport support
     }
   },
-  { ignores: ['dist/*', 'dts/*'] },
+  { ignores: ['dist/*', 'dts/*', 'src/components/vjsf/*'] },
 ]

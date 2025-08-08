@@ -11,12 +11,18 @@
     v-else-if="element.type === 'card'"
     :element="element"
   >
-    <template #elements-list="{elements, childKey}">
+    <template #page-elements="{elements, childKey}">
       <slot
-        name="elements-list"
+        name="page-elements"
         :elements="elements"
         :child-key="childKey"
-      />
+      >
+        <page-element
+          v-for="(child, i) of elements"
+          :key="i"
+          :element="child"
+        />
+      </slot>
     </template>
   </page-element-card>
 </template>
