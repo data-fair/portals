@@ -13,10 +13,12 @@
             @update:model-value="saveDraft.execute()"
           >
             <template #page-elements="{node, statefulLayout}">
-              <page-edit-elements
-                :model-value="node.data"
-                @update:model-value="(data: any) => statefulLayout.input(node, data)"
-              />
+              <v-defaults-provider :defaults="vjsfDefaults">
+                <page-edit-elements
+                  :model-value="node.data"
+                  @update:model-value="(data: any) => statefulLayout.input(node, data)"
+                />
+              </v-defaults-provider>
             </template>
           </vjsf-page-config>
         </v-form>
@@ -58,7 +60,7 @@
       :icon="mdiUndo"
       title="annuler dernier changement"
       variant="flat"
-      style="position: absolute; bottom: 16px; right: 70px;z-index:3000;"
+      style="position: absolute; bottom: 16px; right: 70px;z-index:2300;"
       @click="changesStack.undo()"
     />
     <v-btn
@@ -66,7 +68,7 @@
       :icon="mdiRedo"
       title="rétablir dernier changement"
       variant="flat"
-      style="position: absolute; bottom: 16px; right: 16px;z-index:3000;"
+      style="position: absolute; bottom: 16px; right: 16px;z-index:2300;"
       @click="changesStack.redo()"
     />
   </v-container>
@@ -97,7 +99,6 @@ watch(pageFetch.data, () => {
 })
 
 const changesStack = useChangesStack(editConfig)
-
 const formValid = ref(false)
 
 const vjsfOptions: VjsfOptions = {
@@ -107,6 +108,14 @@ const vjsfOptions: VjsfOptions = {
   updateOn: 'blur',
   initialValidation: 'always',
   plugins: [VjsfMarkdown]
+}
+const vjsfDefaults = {
+  'VjsfList-Edit-VDialog': {
+    width: '400px',
+    persistent: true,
+    scrim: false,
+    contentClass: 'vjsf-edit-dialog-content'
+  }
 }
 
 const saveDraft = useAsyncAction(async () => {
@@ -137,5 +146,14 @@ watch(pageFetch.data, (page) => {
 <style lang="css">
 .vjsf-node-list>.v-card>.v-list>.v-divider {
   display: none;
+}
+.v-dialog>.vjsf-edit-dialog-content {
+  right: 0;
+  margin: 0;
+  top: 0;
+  bottom: 0;
+  max-height: 100%;
+  height: 100%;
+  width: 500px;
 }
 </style>

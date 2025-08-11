@@ -16,7 +16,7 @@
       <v-btn
         v-for="(action, i) in element.actions"
         :key="i"
-        :heaf="action.href"
+        :href="action.href"
         variant="outlined"
         :color="action.color"
       >

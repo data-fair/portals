@@ -4,7 +4,7 @@
     :element="renderedElement"
   >
     <template #page-elements="{childKey, elements}">
-      <v-defaults-provider :defaults="{'VjsfList-VCard': {border: false}}">
+      <v-defaults-provider :defaults="vjsfDefaults">
         <page-edit-elements
           :model-value="elements"
           @update:model-value="onElementsUpdate($event, childKey)"
@@ -23,11 +23,13 @@ const element = defineModel<PageElement>()
 
 const renderedElement = computed(() => {
   if (!element.value) return
-  if (element.value.type === 'text') {
+  if (element.value.type === 'text' && element.value.content) {
     return { ...element.value, content: sanitizeHtml(marked(element.value.content) as string) }
   }
   return element.value
 })
+
+const vjsfDefaults = { 'VjsfList-VCard': { border: false } }
 
 const onElementsUpdate = (elements: PageElement[], childKey: string) => {
   if (!element.value) return

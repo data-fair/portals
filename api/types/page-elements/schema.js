@@ -45,7 +45,7 @@ export default {
     'element-title': {
       type: 'object',
       title: 'Titre',
-      required: ['type', 'content', 'titleSize'],
+      required: ['type', 'titleSize'],
       properties: {
         type: {
           const: 'title'
@@ -80,7 +80,7 @@ export default {
     'element-text': {
       type: 'object',
       title: 'Texte',
-      required: ['type', 'content'],
+      required: ['type'],
       properties: {
         type: {
           const: 'text'
@@ -95,7 +95,7 @@ export default {
     'element-alert': {
       type: 'object',
       title: 'Texte accentué',
-      required: ['type', 'alertType', 'content'],
+      required: ['type', 'alertType'],
       properties: {
         type: {
           const: 'alert'
@@ -349,7 +349,7 @@ export default {
           },
           items: {
             type: 'object',
-            required: ['title'],
+            required: [],
             properties: {
               title: {
                 title: 'Titre onglet',
@@ -373,7 +373,6 @@ export default {
     icon: {
       type: 'object',
       title: 'Icone',
-      additionalProperties: false,
       required: ['name', 'svg'],
       layout: {
         getItems: {
@@ -396,6 +395,7 @@ export default {
     color: {
       type: 'string',
       title: 'Couleur',
+      default: 'primary',
       oneOf: [
         { const: 'primary', title: 'couleur primaire' },
         { const: 'secondary', title: 'couleur secondaire' },
@@ -408,7 +408,7 @@ export default {
     button: {
       type: 'object',
       title: 'Bouton',
-      required: ['label', 'href', 'color'],
+      required: ['color'],
       default: {
         color: 'primary'
       },

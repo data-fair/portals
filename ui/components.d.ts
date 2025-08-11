@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    copy: typeof import('./src/components/page/page-element-card copy.vue')['default']
     PageCard: typeof import('./src/components/page/page-card.vue')['default']
     PageEditElements: typeof import('./src/components/page-edit/page-edit-elements.vue')['default']
     PageElement: typeof import('./src/components/page/page-element.vue')['default']
