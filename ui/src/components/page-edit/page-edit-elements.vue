@@ -19,12 +19,18 @@ import VjsfMarkdown from '@koumoul/vjsf-markdown'
 
 const elements = defineModel<PageElement[]>()
 
+const { addItemMessage } = defineProps({ addItemMessage: { type: String, required: true } })
+
 const vjsfOptions: VjsfOptions = {
   titleDepth: 4,
-  density: 'comfortable',
+  density: 'compact',
   locale: 'fr',
   updateOn: 'blur',
   initialValidation: 'always',
-  plugins: [VjsfMarkdown]
+  plugins: [VjsfMarkdown],
+  // @ts-ignore
+  messages: {
+    addItem: addItemMessage
+  }
 }
 </script>

@@ -14,6 +14,7 @@ declare module 'vue' {
     PageElementAlert: typeof import('./src/components/page/page-element-alert.vue')['default']
     PageElementCard: typeof import('./src/components/page/page-element-card.vue')['default']
     PageElementDivider: typeof import('./src/components/page/page-element-divider.vue')['default']
+    PageElementTabs: typeof import('./src/components/page/page-element-tabs.vue')['default']
     PageElementText: typeof import('./src/components/page/page-element-text.vue')['default']
     PageElementTitle: typeof import('./src/components/page/page-element-title.vue')['default']
     PageElementTwoColumns: typeof import('./src/components/page/page-element-two-columns.vue')['default']

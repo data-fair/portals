@@ -16,6 +16,7 @@
               <v-defaults-provider :defaults="vjsfDefaults">
                 <page-edit-elements
                   :model-value="node.data"
+                  add-item-message="ajouter un bloc à la page"
                   @update:model-value="(data: any) => statefulLayout.input(node, data)"
                 />
               </v-defaults-provider>
@@ -103,7 +104,7 @@ const formValid = ref(false)
 
 const vjsfOptions: VjsfOptions = {
   titleDepth: 4,
-  density: 'comfortable',
+  density: 'compact',
   locale: 'fr',
   updateOn: 'blur',
   initialValidation: 'always',
@@ -113,7 +114,8 @@ const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
     width: '400px',
     persistent: true,
-    scrim: false,
+    scrollStrategy: 'none',
+    opacity: 0.1,
     contentClass: 'vjsf-edit-dialog-content'
   }
 }

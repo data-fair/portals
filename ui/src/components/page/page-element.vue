@@ -19,38 +19,35 @@
     v-else-if="element.type === 'card'"
     :element="element"
   >
-    <template #page-elements="{elements, childKey}">
+    <template #page-elements="context">
       <slot
         name="page-elements"
-        :elements="elements"
-        :child-key="childKey"
-      >
-        <page-element
-          v-for="(child, i) of elements"
-          :key="i"
-          :element="child"
-        />
-      </slot>
+        v-bind="context"
+      />
     </template>
   </page-element-card>
   <page-element-two-columns
     v-else-if="element.type === 'two-columns'"
     :element="element"
   >
-    <template #page-elements="{elements, childKey}">
+    <template #page-elements="context">
       <slot
         name="page-elements"
-        :elements="elements"
-        :child-key="childKey"
-      >
-        <page-element
-          v-for="(child, i) of elements"
-          :key="i"
-          :element="child"
-        />
-      </slot>
+        v-bind="context"
+      />
     </template>
   </page-element-two-columns>
+  <page-element-tabs
+    v-else-if="element.type === 'tabs'"
+    :element="element"
+  >
+    <template #page-elements="context">
+      <slot
+        name="page-elements"
+        v-bind="context"
+      />
+    </template>
+  </page-element-tabs>
 </template>
 
 <script setup lang="ts">

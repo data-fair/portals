@@ -8,8 +8,9 @@
     <v-card-text>
       <slot
         name="page-elements"
-        child-key="children"
+        :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
         :elements="element.children"
+        add-item-message="ajouter un bloc à la boite"
       />
     </v-card-text>
     <v-card-actions>
@@ -34,7 +35,7 @@
 
 <script setup lang="ts">
 import type { VCard } from 'vuetify/components'
-import { Boite } from '#api/types/page-config'
+import type { PageElement, Boite } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Boite, required: true }

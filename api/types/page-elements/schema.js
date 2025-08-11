@@ -32,8 +32,8 @@ export default {
         propertyName: 'type'
       },
       oneOf: [
-        { $ref: '#/$defs/element-title' },
         { $ref: '#/$defs/element-text' },
+        { $ref: '#/$defs/element-title' },
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-card' },
@@ -307,19 +307,10 @@ export default {
     'element-tabs': {
       title: 'Onglets',
       type: 'object',
-      required: ['type', 'direction', 'align', 'tabs'],
+      required: ['type', 'align', 'tabs'],
       properties: {
         type: {
           const: 'tabs'
-        },
-        direction: {
-          type: 'string',
-          title: 'Orientation',
-          default: 'horizontal',
-          oneOf: [
-            { const: 'horizontal', title: 'horizontale' },
-            { const: 'vertical', title: 'verticale' }
-          ]
         },
         grow: {
           type: 'boolean',
@@ -327,7 +318,7 @@ export default {
         },
         align: {
           layout: {
-            if: '!data.grow'
+            if: '!parent.data.grow'
           },
           type: 'string',
           title: 'Alignement',
@@ -335,8 +326,13 @@ export default {
           oneOf: [
             { const: 'start', title: 'début' },
             { const: 'center', title: 'centre' },
-            { const: 'entre', title: 'fin' }
+            { const: 'end', title: 'fin' }
           ]
+        },
+        border: {
+          title: 'Bordure',
+          type: 'boolean',
+          default: true
         },
         tabs: {
           type: 'array',

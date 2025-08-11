@@ -12,7 +12,9 @@
       <slot
         name="page-elements"
         child-key="children"
+        :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
         :elements="element.children"
+        add-item-message="ajouter un bloc à la colonne"
       />
     </v-col>
     <v-col
@@ -21,15 +23,16 @@
     >
       <slot
         name="page-elements"
-        child-key="children2"
+        :on-update="(newElements: PageElement[]) => ({...element, children2: newElements})"
         :elements="element.children2"
+        add-item-message="ajouter un bloc à la colonne"
       />
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import { Colonnes } from '#api/types/page-config'
+import type { PageElement, Colonnes } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Colonnes, required: true }
