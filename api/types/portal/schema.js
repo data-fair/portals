@@ -16,5 +16,20 @@ export default {
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     config: { $ref: 'https://github.com/data-fair/portals/portal-config' },
     draftConfig: { $ref: 'https://github.com/data-fair/portals/portal-config' },
+    ingress: { $ref: '#/$defs/ingress' }
+  },
+  $defs: {
+    ingress: {
+      type: 'object',
+      required: ['url'],
+      properties: {
+        url: {
+          type: 'string',
+          layout: {
+            placeholder: 'https://test.com'
+          }
+        }
+      }
+    }
   }
 }

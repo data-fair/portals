@@ -9,6 +9,10 @@ module.exports = {
   // secrets that can be used to configure global webhooks for example to update users and organizations
   secretKeys: {
     identities: undefined,
-    events: undefined
-  }
+    events: undefined,
+    sites: undefined,
+    ingress: undefined
+  },
+  draftUrlPattern: undefined,
+  privateIngressManagerUrl: undefined
 }

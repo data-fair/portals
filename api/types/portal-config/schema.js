@@ -7,10 +7,10 @@ export default {
   layout: {
     comp: 'vertical-tabs',
     children: [
-      { title: 'Métadonnées', children: ['title', 'description'] }
+      { title: 'Métadonnées', children: ['title', 'description', 'authentication'] }
     ]
   },
-  required: ['title'],
+  required: ['title', 'authentication'],
   properties: {
     title: {
       type: 'string',
@@ -19,6 +19,25 @@ export default {
     description: {
       type: 'string',
       title: 'Description'
+    },
+    authentication: {
+      type: 'string',
+      oneOf: [
+        {
+          const: 'none',
+          title: 'Aucune'
+        },
+        {
+          const: 'optional',
+          title: 'Optionnelle pour voir les contenus protégés, configurer des notifications, etc'
+        },
+        {
+          const: 'required',
+          title: 'Requise pour accéder au portail'
+        }
+      ],
+      title: 'Authentification',
+      default: 'optional'
     }
   }
 

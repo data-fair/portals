@@ -20,6 +20,10 @@ layout {
         command "bash"
         args "-ic" "nvm use > /dev/null 2>&1 && npm -w api run dev"
       }
+      pane name="mock ingress manager" {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
+      }
     }
     pane size=2 borderless=true {
         command "bash"

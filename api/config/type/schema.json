@@ -15,7 +15,8 @@
     "mongoUrl",
     "port",
     "observer",
-    "secretKeys"
+    "secretKeys",
+    "draftUrlPattern"
   ],
   "properties": {
     "mongoUrl": {
@@ -31,12 +32,18 @@
     "secretKeys": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["identities", "events"],
+      "required": ["identities", "sites"],
       "properties": {
         "identities": {
           "type": "string"
         },
         "events": {
+          "type": "string"
+        },
+        "sites": {
+          "type": "string"
+        },
+        "ingress": {
           "type": "string"
         }
       }
@@ -51,6 +58,12 @@
           "type": "number"
         }
       }
+    },
+    "draftUrlPattern": {
+      "type": "string"
+    },
+    "privateIngressManagerUrl": {
+      "type": "string"
     },
     "util": {},
     "get": {},

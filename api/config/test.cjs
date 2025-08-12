@@ -8,6 +8,8 @@ module.exports = {
   },
   secretKeys: {
     identities: 'SECRET_IDENTITIES',
-    events: 'SECRET_EVENTS'
-  }
+    events: 'SECRET_EVENTS',
+    sites: 'SECRET_SITES'
+  },
+  draftUrlPattern: 'http://{id}.draft.local-portal'
 }

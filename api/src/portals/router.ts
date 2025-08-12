@@ -6,8 +6,9 @@ import { Router } from 'express'
 import mongo from '#mongo'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
-import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal } from './service.ts'
+import * as postIngressReqBody from '#doc/portals/post-ingress-req-body/index.ts'
+import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express/index.js'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
 
 const router = Router()
 export default router
@@ -58,7 +59,7 @@ router.post('', async (req, res, next) => {
   }
   assertAccountRole(session, portal.owner, 'admin')
 
-  await createPortal(portal)
+  await createPortal(portal, reqOrigin(req), req.headers.cookie)
 
   res.status(201).json(portal)
 })
@@ -71,18 +72,37 @@ router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-  await patchPortal(portal, body, session)
-  res.send({ ...portal, body })
+  const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), req.headers.cookie)
+  res.send(updatedPortal)
 })
 
 router.post('/:id/draft', async (req, res, next) => {
-  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
-  await validatePortalDraft(portal)
+  const session = reqSessionAuthenticated(req)
+  const portal = await getPortalAsAdmin(session, req.params.id)
+  await validatePortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
   res.status(201).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const portal = await getPortalAsAdmin(session, req.params.id)
+  await cancelPortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
+  res.status(201).send()
+})
+
+router.post('/:id/ingress', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  assertAdminMode(session)
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
-  await cancelPortalDraft(portal)
+  const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
+  await patchPortal(portal, { ingress }, session, reqOrigin(req), req.headers.cookie)
+  res.status(201).send()
+})
+
+router.delete('/:id/ingress', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  assertAdminMode(session)
+  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  await deletePortal(portal, reqOrigin(req), req.headers.cookie)
   res.status(201).send()
 })

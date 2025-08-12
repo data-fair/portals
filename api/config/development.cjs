@@ -7,6 +7,10 @@ module.exports = {
   },
   secretKeys: {
     identities: 'SECRET_IDENTITIES',
-    events: 'SECRET_EVENTS'
-  }
+    events: 'SECRET_EVENTS',
+    sites: 'SECRET_SITES',
+    ingress: 'SECRET_INGRESS'
+  },
+  draftUrlPattern: 'http://{id}.draft.local-portal',
+  privateIngressManagerUrl: 'http://localhost:5697'
 }

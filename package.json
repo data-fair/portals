@@ -10,6 +10,7 @@
     "dev-deps": "docker compose up -d --wait",
     "stop-dev-deps": "docker compose stop",
     "dev-ui": "npm -w ui run dev",
+    "dev-ingress-manager": "NODE_ENV=development node --watch --experimental-strip-types dev/ingress-manager.ts",
     "dev-zellij": "export DEV_SHELL=$(basename \"$SHELL\") && zellij --layout .zellij.kdl && rm data/zellij-deps-ready",
     "lint": "eslint . && npm -w ui run lint",
     "lint-fix": "eslint --fix . && npm -w ui run lint-fix",
