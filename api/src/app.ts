@@ -6,7 +6,7 @@ import identitiesRouter from './identities/router.ts'
 import portalsRouter from './portals/router.ts'
 import pagesRouter from './pages/router.ts'
 import adminRouter from './admin/router.ts'
-import { uiConfig } from '#config'
+import { uiConfig } from './ui-config.ts'
 
 const app = express()
 export default app

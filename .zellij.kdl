@@ -9,6 +9,10 @@ layout {
         command "bash"
         args "-ic" "npm run dev-deps && watch -n 4 \"docker compose ps --all --format 'table {{.Name}}\t{{.Status}}'\""
       }
+      pane name="mock ingress manager" {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
+      }
     }
     pane {
       split_direction "vertical"
@@ -20,9 +24,9 @@ layout {
         command "bash"
         args "-ic" "nvm use > /dev/null 2>&1 && npm -w api run dev"
       }
-      pane name="mock ingress manager" {
+      pane name="portal" {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm -w portal run dev"
       }
     }
     pane size=2 borderless=true {

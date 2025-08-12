@@ -12,7 +12,3 @@ if (apiConfig.privateIngressManagerUrl && !apiConfig.secretKeys.ingress) {
 }
 
 export default apiConfig as ApiConfig
-
-export type UiConfig = {}
-
-export const uiConfig: UiConfig = {}

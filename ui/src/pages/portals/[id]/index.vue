@@ -43,18 +43,39 @@
             </template>
             Annuler le brouillon
           </v-list-item>
+          <v-divider class="my-4" />
           <v-list-item
             v-if="session.user.value.adminMode"
             :to="`/portals/${route.params.id}/ingress`"
-            color="admin"
           >
             <template #prepend>
               <v-icon
-                color="warning"
+                color="admin"
                 :icon="mdiShieldLinkVariant"
               />
             </template>
             Gérer l'exposition sur un domaine
+          </v-list-item>
+          <v-list-item
+            :href="$uiConfig.draftUrlPattern.replace('{id}', route.params.id)"
+          >
+            <template #prepend>
+              <v-icon
+                :icon="mdiShieldLinkVariant"
+              />
+            </template>
+            Voir le brouillon
+          </v-list-item>
+          <v-list-item
+            v-if="portalFetch.data.value?.ingress"
+            :href="portalFetch.data.value?.ingress.url"
+          >
+            <template #prepend>
+              <v-icon
+                :icon="mdiLink"
+              />
+            </template>
+            Visiter le portail
           </v-list-item>
         </v-list>
       </navigation-right>
@@ -75,7 +96,7 @@ import { type Portal } from '#api/types/portal/index'
 import { type PortalConfig } from '#api/types/portal-config/index'
 import Debug from 'debug'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import { mdiFileReplace, mdiShieldLinkVariant } from '@mdi/js'
+import { mdiFileReplace, mdiLink, mdiShieldLinkVariant } from '@mdi/js'
 import equal from 'fast-deep-equal'
 
 const debug = Debug('portal-edit')

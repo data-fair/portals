@@ -51,7 +51,7 @@ export default defineConfig({
       async transformIndexHtml (html) {
         // in production this injection will be performed by an express middleware
         if (process.env.NODE_ENV !== 'development') return html
-        const { uiConfig } = await import('../api/src/config')
+        const { uiConfig } = await import('../api/src/ui-config')
         return microTemplate(html, { SITE_PATH: '', UI_CONFIG: JSON.stringify(uiConfig) })
       }
     }
