@@ -6,6 +6,9 @@ services:
   #####
 
   nginx:
+    profiles:
+      - test
+      - dev
     image: nginx:1.23.1-alpine
     network_mode: host
     volumes:
@@ -16,6 +19,9 @@ services:
   #####
 
   simple-directory:
+    profiles:
+      - test
+      - dev
     image: ghcr.io/data-fair/simple-directory:8
     network_mode: host
     depends_on:
@@ -33,12 +39,15 @@ services:
       - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
       - MONGO_URL=mongodb://localhost:27017/simple-directory
+      - MANAGE_SITES=true
+      - SECRET_SITES=SECRET_SITES
     volumes:
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
 
   data-fair:
     profiles:
+      - test
       - dev
     image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
@@ -46,19 +55,12 @@ services:
     # command: /webapp/node_modules/.bin/nodemon server
     environment:
       - PORT=6201
-      - DEBUG=files,workers*
       - MONGO_URL=mongodb://localhost:27017/data-fair
-      - OPENAPI_VIEWER_URL=http://localhost:6200/openapi-viewer/
-      - NOTIFY_URL=http://localhost:6200/notify
-      - DIRECTORY_URL=http://localhost:6200/simple-directory
-      - CAPTURE_URL=http://localhost:6200/capture
-      - PRIVATE_URL=http://localhost:8087
-      - PUBLIC_URL=http://localhost:6200/data-fair
-      - WS_PUBLIC_URL=ws://localhost:6200/data-fair
-      - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:6200/manager/portals","icon":"mdi-presentation","title":"Portail de données"}]
-      # - EXTRA_NAV_ITEMS='[{"id": "processings","can":"contrib", "iframe": "https://staging-koumoul.com/data-fair-processings/embed/processings", "icon": "mdi-cog-transfer-outline", "title": "Traitements périodiques"},{"id": "portal","href": "https://data.staging-koumoul.com", "icon": "mdi-presentation", "title": "Portail de données"}]'
+      - PRIVATE_DIRECTORY_URL=http://localhost:8087
+      - PUBLIC_URL=http://localhost:5607/data-fair
+      - WS_PUBLIC_URL=ws://localhost:5607/data-fair
+      - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:5607/portals-manager","icon":"mdi-presentation","title":"Portails de données"}]
       - OBSERVER_ACTIVE=false
-      # - EXPORT_REST_DATASETS_CRON=* * * * *
     volumes:
       - data-fair-data:/data
 
@@ -67,6 +69,9 @@ services:
   #####
 
   mongo:
+    profiles:
+      - test
+      - dev
     image: mongo:4.2
     ports:
       - 27017:27017
@@ -76,7 +81,7 @@ services:
   elasticsearch:
     profiles:
       - dev
-    image: ghcr.io/data-fair/elasticsearch:7.17.1
+    image: ghcr.io/data-fair/elasticsearch:7.x
     ports:
       - 9200:9200
       - 9300:9300

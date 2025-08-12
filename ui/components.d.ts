@@ -26,5 +26,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     VjsfPageConfig: typeof import('./src/components/vjsf/vjsf-page-config.vue')['default']
     VjsfPageElements: typeof import('./src/components/vjsf/vjsf-page-elements.vue')['default']
+    VjsfPortalConfig: typeof import('./src/components/vjsf/vjsf-portal-config.vue')['default']
+    VjsfPortalIngress: typeof import('./src/components/vjsf/vjsf-portal-ingress.vue')['default']
   }
 }

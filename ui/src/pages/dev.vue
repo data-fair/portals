@@ -27,6 +27,7 @@ const session = useSession()
 
 const links = [
   ['/simple-directory', 'User management'],
+  ['/data-fair/', 'Data Fair'],
   ['/portals-manager/portals', 'Portals'],
   ['/portals-manager/pages', 'Pages']
 ]

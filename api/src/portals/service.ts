@@ -142,14 +142,12 @@ async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, 
     if (equal(ingressInfos, previousPortal && getIngressInfos(previousPortal))) {
       debugSyncPortal('nothing new to sync to ingress manager', ingressInfos)
     } else {
-      for (const ingressInfo of ingressInfos) {
-        debugSyncPortal('sync to ingress manager', ingressInfo)
-        await axios.post(
+      debugSyncPortal('sync to ingress manager', ingressInfos)
+      await axios.post(
           `${config.privateIngressManagerUrl}/api/ingress`,
-          ingressInfo,
-          { params: { key: config.secretKeys.ingress } }
-        )
-      }
+          ingressInfos,
+          { headers: { 'x-secret-key': config.secretKeys.ingress } }
+      )
     }
   }
 }

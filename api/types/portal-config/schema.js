@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
-  'x-exports': ['types'],
+  'x-exports': ['types', 'vjsf'],
   title: 'Portal config',
   type: 'object',
   unevaluatedProperties: false,

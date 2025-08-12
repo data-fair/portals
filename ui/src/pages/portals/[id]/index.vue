@@ -6,10 +6,9 @@
           v-if="editConfig"
           v-model="formValid"
         >
-          <vjsf
+          <vjsf-portal-config
             v-if="vjsfOptions"
             v-model="editConfig"
-            :schema="configSchema"
             :options="vjsfOptions"
             @update:model-value="saveDraft.execute()"
           />
@@ -21,7 +20,7 @@
           data-iframe-height
         >
           <v-list-item
-            :disabled="validateDraft.loading.value || saveDraft.loading.value"
+            :disabled="validateDraft.loading.value || saveDraft.loading.value || !hasDraftDiff"
             @click="validateDraft.execute()"
           >
             <template #prepend>
@@ -33,7 +32,7 @@
             Valider le brouillon
           </v-list-item>
           <v-list-item
-            :disabled="cancelDraft.loading.value || saveDraft.loading.value"
+            :disabled="cancelDraft.loading.value || saveDraft.loading.value || !hasDraftDiff"
             @click="cancelDraft.execute()"
           >
             <template #prepend>
@@ -43,6 +42,19 @@
               />
             </template>
             Annuler le brouillon
+          </v-list-item>
+          <v-list-item
+            v-if="session.user.value.adminMode"
+            :to="`/portals/${route.params.id}/ingress`"
+            color="admin"
+          >
+            <template #prepend>
+              <v-icon
+                color="warning"
+                :icon="mdiShieldLinkVariant"
+              />
+            </template>
+            Gérer l'exposition sur un domaine
           </v-list-item>
         </v-list>
       </navigation-right>
@@ -58,22 +70,27 @@ en:
 -->
 
 <script lang="ts" setup>
-import Vjsf, { type Options as VjsfOptions } from '@koumoul/vjsf'
+import { type Options as VjsfOptions } from '@koumoul/vjsf'
 import { type Portal } from '#api/types/portal/index'
 import { type PortalConfig } from '#api/types/portal-config/index'
-import configSchema from '../../../../api/types/portal-config/schema'
 import Debug from 'debug'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import { mdiFileReplace } from '@mdi/js'
+import { mdiFileReplace, mdiShieldLinkVariant } from '@mdi/js'
+import equal from 'fast-deep-equal'
 
 const debug = Debug('portal-edit')
 
-const route = useRoute<'/portals/[id]'>()
+const route = useRoute<'/portals/[id]/'>()
+const session = useSessionAuthenticated()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
 watch(portalFetch.data, () => {
   if (portalFetch.data.value) editConfig.value = portalFetch.data.value.draftConfig
+})
+
+const hasDraftDiff = computed(() => {
+  return !equal(editConfig.value, portalFetch.data.value?.config)
 })
 
 const formValid = ref(false)
@@ -90,23 +107,23 @@ const vjsfOptions = computed<VjsfOptions | null>(() => {
 })
 
 const saveDraft = useAsyncAction(async () => {
-  console.log('SAVE DRAFT')
   await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
-  console.log('DONE')
 })
 
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
+  await portalFetch.refresh()
 })
 
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
+  await portalFetch.refresh()
 })
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return
   setBreadcrumbs([{
-    text: 'Pages',
+    text: 'Portails',
     to: '/portals'
   }, {
     text: portal.config.title

@@ -7,16 +7,20 @@ app.use(express.json())
 
 app.post('/api/ingress', (req, res, next) => {
   assertReqInternalSecret(req, 'SECRET_INGRESS')
-  const body = req.body as IngressManagerIngressInfo
-  const url = new URL(body.url)
-  if (url.port !== '5607') {
-    res.status(400).send('in dev env only 5607 port is allowed')
-    return
+  const body = req.body as IngressManagerIngressInfo[]
+  let hostAliases = ''
+  for (const item of body) {
+    const url = new URL(item.url)
+    if (url.port !== '5607') {
+      res.status(400).send('in dev env only 5607 port is allowed, for example "http://portal1:5607"')
+      return
+    }
+    hostAliases += `127.0.0.1 ${url.host}\n`
   }
-  console.log(`Received ingress definition, make sure the host is aliased in /etc/hosts:
 
-# dev portal ${body._id}
-127.0.0.1 ${url.host}
+  console.log(`
+Received ingress definitions, make sure hosts are aliased in /etc/hosts:
+${hostAliases}
 `)
 
   res.status(201).send()

@@ -89,7 +89,7 @@ const newPortalTitle = ref('')
 watch(newPortalMenu, () => { newPortalTitle.value = '' })
 
 const createPortal = useAsyncAction(async () => {
-  const portal = await $fetch<Portal>('/portals', { method: 'POST', body: { config: { title: newPortalTitle.value } } })
+  const portal = await $fetch<Portal>('/portals', { method: 'POST', body: { config: { title: newPortalTitle.value, authentication: 'optional' } } })
   await router.replace({ path: `/portals/${portal._id}` })
 })
 

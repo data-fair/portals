@@ -11,6 +11,6 @@ module.exports = {
     sites: 'SECRET_SITES',
     ingress: 'SECRET_INGRESS'
   },
-  draftUrlPattern: 'http://{id}.draft.local-portal',
+  draftUrlPattern: 'http://{id}.draft.localhost:5607',
   privateIngressManagerUrl: 'http://localhost:5697'
 }

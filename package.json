@@ -7,7 +7,8 @@
   "scripts": {
     "build-types": "mkdir -p ui/src/components/vjsf && rm -f ui/src/components/vjsf/* && df-build-types . --vjsf-dir ui/src/components/vjsf",
     "dev-api": "npm -w api run dev",
-    "dev-deps": "docker compose up -d --wait",
+    "dev-deps": "docker compose --profile dev up -d --wait",
+    "test-deps": "docker compose --profile test up -d --wait",
     "stop-dev-deps": "docker compose stop",
     "dev-ui": "npm -w ui run dev",
     "dev-ingress-manager": "NODE_ENV=development node --watch --experimental-strip-types dev/ingress-manager.ts",

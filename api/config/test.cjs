@@ -11,5 +11,5 @@ module.exports = {
     events: 'SECRET_EVENTS',
     sites: 'SECRET_SITES'
   },
-  draftUrlPattern: 'http://{id}.draft.local-portal'
+  draftUrlPattern: 'http://{id}.draft.localhost:5607',
 }
