@@ -60,7 +60,10 @@ const vjsfOptions = computed<VjsfOptions | null>(() => {
     density: 'comfortable',
     locale: 'fr',
     updateOn: 'blur',
-    initialValidation: 'always'
+    initialValidation: 'always',
+    context: {
+      ingressControllers: $uiConfig.ingressControllers
+    }
   }
 })
 

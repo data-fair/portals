@@ -101,6 +101,9 @@ const getIngressInfos = (portal: Portal) => {
       url: portal.ingress.url,
       owner: portal.owner,
       _id: portal._id,
+      controller: portal.ingress.controller,
+      redirects: portal.ingress.redirects,
+      blockedIps: portal.ingress.blockedIps
     })
   }
   return ingressInfos

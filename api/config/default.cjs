@@ -14,5 +14,6 @@ module.exports = {
     ingress: undefined
   },
   draftUrlPattern: undefined,
-  privateIngressManagerUrl: undefined
+  privateIngressManagerUrl: undefined,
+  ingressControllers: []
 }

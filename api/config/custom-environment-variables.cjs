@@ -13,5 +13,9 @@ module.exports = {
     port: 'OBSERVER_PORT'
   },
   draftUrlPattern: 'DRAFT_URL_PATTERN',
-  privateIngressManagerUrl: 'PRIVATE_INGRESS_MANAGER_URL'
+  privateIngressManagerUrl: 'PRIVATE_INGRESS_MANAGER_URL',
+  ingressControllers: {
+    __name: 'INGRESS_CONTROLLERS',
+    __format: 'json'
+  }
 }

@@ -14,5 +14,6 @@ module.exports = {
   draftUrlPattern: 'http://{id}.draft.localhost:5607',
   // 5697 for dev/ingress-manager.ts
   // 5603 for the separate project portals-ingress-manager development server
-  privateIngressManagerUrl: 'http://localhost:5697'
+  privateIngressManagerUrl: 'http://localhost:5697',
+  ingressControllers: ['nginx']
 }

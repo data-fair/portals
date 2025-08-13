@@ -16,7 +16,8 @@
     "port",
     "observer",
     "secretKeys",
-    "draftUrlPattern"
+    "draftUrlPattern",
+    "ingressControllers"
   ],
   "properties": {
     "mongoUrl": {
@@ -64,6 +65,12 @@
     },
     "privateIngressManagerUrl": {
       "type": "string"
+    },
+    "ingressControllers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "util": {},
     "get": {},
