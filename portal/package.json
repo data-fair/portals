@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "NUXT_MONGO_URL=mongodb://localhost:27017/data-fair-portals-development NUXT_DRAFT_URL_PATTERN=http://{id}.draft.localhost:5607 nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -12,10 +12,12 @@
     "lint-fix": "eslint --fix ."
   },
   "dependencies": {
-    "@nuxt/eslint": "^1.5.2",
-    "eslint": "^9.31.0",
-    "nuxt": "^3.17.7",
-    "vue": "^3.5.17",
+    "@data-fair/lib-node": "^2.8.2",
+    "@data-fair/lib-utils": "^1.6.1",
+    "@nuxt/eslint": "^1.8.0",
+    "eslint": "^9.33.0",
+    "nuxt": "^4.0.3",
+    "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   }
 }
