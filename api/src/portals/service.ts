@@ -94,13 +94,13 @@ const getIngressInfos = (portal: Portal) => {
   const ingressInfos: IngressManagerIngressInfo[] = [{
     url: config.draftUrlPattern.replace('{id}', portal._id),
     owner: portal.owner,
-    _id: 'data-fair-portals:draft-' + portal._id,
+    _id: portal._id,
   }]
   if (portal.ingress) {
     ingressInfos.push({
       url: portal.ingress.url,
       owner: portal.owner,
-      _id: 'data-fair-portals:draft-' + portal._id,
+      _id: portal._id,
     })
   }
   return ingressInfos
@@ -159,5 +159,10 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
     { headers: { cookie } }
   )
 
-  // TODO: should we propagate deletion to SD and ingress manager or is it too risky ?
+  await axios.delete(
+    `${config.privateIngressManagerUrl}/api/ingress/${portal._id}`,
+    { headers: { 'x-secret-key': config.secretKeys.ingress } }
+  )
+
+  // TODO: should we propagate deletion to SD or is it too risky ?
 }

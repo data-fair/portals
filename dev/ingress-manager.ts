@@ -30,6 +30,15 @@ ${hostAliases}
   res.status(201).send()
 })
 
+app.delete('/api/ingress/:id', async (req, res, next) => {
+  assertReqInternalSecret(req, 'SECRET_INGRESS')
+  console.log(`
+Received request for portal deletion:
+${req.params.id}
+`)
+  res.status(201).send()
+})
+
 app.listen(5697, (err) => {
   if (err) {
     console.error(err)
