@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint'],
+  modules: ['@nuxt/eslint', 'nuxt-security'],
   runtimeConfig: {
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     draftUrlPattern: ''

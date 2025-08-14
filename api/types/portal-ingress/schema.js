@@ -48,6 +48,12 @@ export default {
       items: {
         type: 'string'
       }
+    },
+    waf: {
+      type: 'boolean',
+      title: 'Activation du WAF',
+      default: true,
+      description: '"Web Application Firewall", fortement recommandé, à désactiver uniquement ponctuellement si le WAF créé un blocage.'
     }
   }
 }

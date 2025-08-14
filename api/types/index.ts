@@ -7,5 +7,6 @@ export type IngressManagerIngressInfo = {
   customCert?: string,
   controller?: string,
   blockedIps?: string[],
-  redirects?: [string, string][]
+  redirects?: [string, string][],
+  waf?: boolean
 }
