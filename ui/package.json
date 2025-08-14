@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_CONFIG_DIR=../api/config/ vite --port 6227",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "check-types": "vue-tsc",
     "lint": "eslint .",
