@@ -85,7 +85,7 @@ ENV HOST=0.0.0.0
 EXPOSE 8080
 USER node
 WORKDIR /app/portal
-CMD ["node", "/app/portal/.output/index.mjs"]
+CMD ["node", "/app/portal/.output/server/index.mjs"]
 
 ##########################
 FROM base AS manager
