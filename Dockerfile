@@ -71,6 +71,7 @@ RUN node prepare-fonts.js
 FROM installer AS portal-builder
 
 COPY --from=fonts-builder /app/portal/public/fonts portal/public/fonts
+ADD /portal portal
 RUN npm -w portal run build
 
 ##########################
