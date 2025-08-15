@@ -5,7 +5,7 @@ export default {
   ...jsonSchema(pageSchema)
     .pickProperties(['draftConfig'])
     .schema,
-  $id: 'https://github.com/data-fair/pages/pages/patch-req-body',
+  $id: 'https://github.com/data-fair/portals/pages/patch-req-body',
   title: 'Patch page req body',
   'x-exports': ['validate', 'types'],
 }

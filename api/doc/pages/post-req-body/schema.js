@@ -5,7 +5,7 @@ export default {
   ...jsonSchema(pageSchema)
     .pickProperties(['config'])
     .schema,
-  $id: 'https://github.com/data-fair/pages/pages/post-req-body',
+  $id: 'https://github.com/data-fair/portals/pages/post-req-body',
   title: 'Post page req body',
   'x-exports': ['validate', 'types'],
 }

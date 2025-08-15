@@ -1,5 +1,6 @@
 import type { Portal } from '#types/portal/index.js'
 import type { Page } from '#types/page/index.js'
+import type { Image } from '#types/image/index.js'
 
 import mongo from '@data-fair/lib-node/mongo.js'
 import config from './config.ts'
@@ -21,6 +22,10 @@ export class PortalsMongo {
     return mongo.db.collection<Page>('pages')
   }
 
+  get images () {
+    return mongo.db.collection<Image>('images')
+  }
+
   init = async () => {
     await mongo.connect(config.mongoUrl)
     await mongo.configure({
@@ -29,6 +34,9 @@ export class PortalsMongo {
       },
       pages: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 }
+      },
+      images: {
+        'main-keys': { 'owner.type': 1, 'owner.id': 1, 'resource.type': 1, 'resource._id': 1 }
       }
     })
   }
