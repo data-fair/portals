@@ -14,6 +14,7 @@
     "privateDirectoryUrl",
     "mongoUrl",
     "port",
+    "tmpDir",
     "observer",
     "secretKeys",
     "draftUrlPattern",
@@ -25,6 +26,9 @@
     },
     "port": {
       "type": "number"
+    },
+    "tmpDir": {
+      "type": "string"
     },
     "privateDirectoryUrl": {
       "type": "string",

@@ -35,6 +35,7 @@ export default {
         { $ref: '#/$defs/element-text' },
         { $ref: '#/$defs/element-title' },
         { $ref: '#/$defs/element-alert' },
+        { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
@@ -135,6 +136,17 @@ export default {
         icon: {
           $ref: '#/$defs/icon'
         }
+      }
+    },
+    'element-image': {
+      type: 'object',
+      title: 'Image',
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'image'
+        },
+        imageRef: { $ref: '#/$defs/image-ref' }
       }
     },
     'element-divider': {
@@ -422,6 +434,29 @@ export default {
         },
         color: {
           $ref: '#/$defs/color'
+        }
+      }
+    },
+    'image-ref': {
+      type: 'object',
+      required: ['_id', 'mimeType', 'width', 'height'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 2400 } // max width of v-container
+          }
+        }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        },
+        mobileAlt: {
+          type: 'boolean'
         }
       }
     }

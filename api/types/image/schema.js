@@ -41,6 +41,10 @@ export default {
       type: 'object',
       tsType: 'any',
       description: 'A nodejs buffer containing the actual image file.'
+    },
+    mobileAlt: {
+      type: 'boolean',
+      description: 'If true there is an alternative image version of this image for mobile (max width 1280px)'
     }
   }
 }

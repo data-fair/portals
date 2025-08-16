@@ -127,10 +127,14 @@ const saveDraft = useAsyncAction(async () => {
 
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`pages/${route.params.id}/draft`, { method: 'DELETE' })
+  await pageFetch.refresh()
+  changesStack.reset()
 })
 
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`pages/${route.params.id}/draft`, { method: 'POST' })
+  await pageFetch.refresh()
+  changesStack.reset()
 })
 
 watch(pageFetch.data, (page) => {

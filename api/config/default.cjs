@@ -2,6 +2,7 @@ module.exports = {
   privateDirectoryUrl: 'http://simple-directory:8080',
   mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
   port: 8080,
+  tmpDir: '/app/tmp',
   observer: {
     active: true,
     port: 9090
@@ -15,5 +16,5 @@ module.exports = {
   },
   draftUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
-  ingressControllers: []
+  ingressControllers: [],
 }

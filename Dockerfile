@@ -106,4 +106,7 @@ EXPOSE 8080
 EXPOSE 9090
 USER node
 WORKDIR /app/api
+
+VOLUME /app/tmp
+
 CMD ["node", "--max-http-header-size", "64000", "index.ts"]

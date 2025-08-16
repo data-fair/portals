@@ -38,7 +38,69 @@ export default {
       ],
       title: 'Authentification',
       default: 'optional'
-    }
+    },
+    logo: {
+      type: 'object',
+      title: 'Logo',
+      required: ['_id', 'mimeType', 'width', 'height'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280 }
+          }
+        }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        }
+      }
+    },
+    logoDark: {
+      type: 'object',
+      title: 'Logo - variante pour fond sombre',
+      required: ['_id', 'mimeType', 'width', 'height'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280 }
+          }
+        }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        }
+      }
+    },
+    favicon: {
+      type: 'object',
+      title: 'Favicon',
+      required: ['_id', 'mimeType', 'width', 'height'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 512, height: 512 }
+          }
+        }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        }
+      }
+    },
   }
-
 }

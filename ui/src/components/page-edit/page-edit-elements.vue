@@ -9,6 +9,14 @@
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
+    <template #image-upload="{node, statefulLayout, width, height}">
+      <image-upload
+        :model-value="node.data"
+        :width="width"
+        :height="height"
+        @update:model-value="(data: any) => statefulLayout.input(node, data)"
+      />
+    </template>
   </vjsf-page-elements>
 </template>
 

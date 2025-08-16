@@ -37,11 +37,17 @@ function useChangesStack<Type> (modelValue: Ref<Type>) {
     update()
   }
 
+  const reset = () => {
+    stack = [modelValue.value]
+    index.value = 0
+    size.value = 1
+  }
+
   const summary = computed(() => {
     return `size=${size.value}, index=${index.value}, canUndo=${canUndo.value}, canRedo=${canRedo.value}`
   })
 
-  return { index, size, canUndo, undo, canRedo, redo, summary }
+  return { index, size, canUndo, undo, canRedo, redo, reset, summary }
 }
 
 export default useChangesStack

@@ -48,6 +48,7 @@
     "@koumoul/vjsf-compiler": "^1.1.0",
     "@types/config": "^3.3.5",
     "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.0.14",
     "@types/sanitize-html": "^2.16.0",
     "commitlint": "^19.8.1",

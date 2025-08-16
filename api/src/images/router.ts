@@ -1,16 +1,20 @@
+import config from '#config'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import type { Image } from '#types/image/index.js'
 import { Piscina } from 'piscina'
+import multer from 'multer'
 import type { ResizeInput, ResizeOutput } from './resize-image.ts'
 
-import { Router } from 'express'
+import { type Request, type Response, type NextFunction, Router } from 'express'
 import mongo from '#mongo'
 import * as postReq from '#doc/images/post-req/index.ts'
 import { httpError, reqSessionAuthenticated } from '@data-fair/lib-express/index.js'
 
 const router = Router()
 export default router
+
+const upload = multer({ dest: config.tmpDir })
 
 export const resizePiscina = new Piscina<ResizeInput, ResizeOutput>({
   filename: path.resolve(import.meta.dirname, './resize-image.ts'),
@@ -19,7 +23,17 @@ export const resizePiscina = new Piscina<ResizeInput, ResizeOutput>({
   maxThreads: 1
 })
 
-router.post('', async (req, res, next) => {
+const jsonFromMultiPart = (req: Request, res: Response, next: NextFunction) => {
+  if (typeof req.body.body === 'string') {
+    try {
+      req.body = JSON.parse(req.body.body)
+    } catch (err: any) {
+      throw httpError(400, 'error parsing body: ' + err.message)
+    }
+  }
+}
+
+router.post('', upload.single('image'), jsonFromMultiPart, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const { body, query, file } = postReq.returnValid(req, { name: 'request' })
@@ -39,11 +53,23 @@ router.post('', async (req, res, next) => {
   }
   const image: Image = {
     _id: randomUUID(),
-    owner: session.account,
+    owner: { ...session.account, department: undefined, departmentName: undefined },
     created,
     updated: created,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height }))
+  }
+
+  // prepare mobile variant if necessary
+  const mobileBreakpoint = 1280
+  if (image.width > (mobileBreakpoint * 1.2)) {
+    image.mobileAlt = true
+    const imageMobile = {
+      ...image,
+      _id: image._id + '-mobile',
+      ...(await resizePiscina.run({ filePath: file.path, width: mobileBreakpoint, height: query.height }))
+    }
+    await mongo.images.insertOne(imageMobile)
   }
   await mongo.images.insertOne(image)
 

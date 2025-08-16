@@ -43,12 +43,16 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 
 export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
   debug('validatePortalDraft', portal)
-  return patchPortal(portal, { config: portal.draftConfig }, session, reqOrigin, cookie)
+  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig }, session, reqOrigin, cookie)
+  await cleanUnusedImages(updatedPortal)
+  return updatedPortal
 }
 
 export const cancelPortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
   debug('cancelPortalDraft', portal)
-  return patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, cookie)
+  const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, cookie)
+  await cleanUnusedImages(updatedPortal)
+  return updatedPortal
 }
 
 const getPublicationSite = (portal: Portal) => {
@@ -169,4 +173,22 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
   )
 
   // TODO: should we propagate deletion to SD or is it too risky ?
+}
+
+const cleanUnusedImages = async (portal: Portal) => {
+  const imagesIds = []
+  const imageRefs = [portal.config.logo, portal.config.logoDark, portal.config.favicon, portal.draftConfig.logo, portal.draftConfig.logoDark, portal.draftConfig.favicon]
+  for (const imageRef of imageRefs) {
+    if (!imageRef) continue
+    imagesIds.push(imageRef._id)
+    if (imageRef.mobileAlt) imagesIds.push(imageRef._id + '-mobile')
+  }
+  const deleteFilter = {
+    'owner.type': portal.owner.type,
+    'owner.id': portal.owner.id,
+    'resource.type': 'portal',
+    'resource._id': portal._id,
+    _id: { $nin: imagesIds }
+  }
+  await mongo.images.deleteMany(deleteFilter)
 }
