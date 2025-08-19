@@ -93,6 +93,8 @@ import useChangesStack from '~/composables/use-changes-stack'
 
 const route = useRoute<'/pages/[id]'>()
 
+provide('page-id', route.params.id)
+
 const pageFetch = useFetch<Page>($apiPath + '/pages/' + route.params.id)
 const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {

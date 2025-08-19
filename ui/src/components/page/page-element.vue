@@ -11,6 +11,10 @@
     v-else-if="element.type === 'alert'"
     :element="element"
   />
+  <page-element-image
+    v-else-if="element.type === 'image'"
+    :element="element"
+  />
   <page-element-divider
     v-else-if="element.type === 'divider'"
     :element="element"

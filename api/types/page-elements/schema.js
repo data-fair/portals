@@ -146,7 +146,37 @@ export default {
         type: {
           const: 'image'
         },
-        imageRef: { $ref: '#/$defs/image-ref' }
+        title: {
+          title: "Titre de l'image",
+          description: "recommandé pour l'accessibilité et pour afficher une information utile au survol",
+          type: 'string'
+        },
+        url: {
+          title: "URL vers l'image",
+          description: "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
+          type: 'string'
+        },
+        imageRef: { $ref: '#/$defs/image-ref' },
+        href: {
+          title: 'URL vers une autre page',
+          description: "L'image devient un lien qui pointe vers l'URL renseignée.",
+          type: 'string'
+        },
+        height: {
+          title: 'Hauteur (px)',
+          description: "Fixe la hauteur de l'image",
+          type: 'integer'
+        },
+        legend: {
+          title: "Légende de l'image",
+          description: "Cette légende sera affichée en italique juste en dessous de l'image",
+          type: 'string'
+        },
+        zoomable: {
+          title: 'Zoom au clic',
+          description: "Ne fonctionne que si aucun lien n'est associé à l'image",
+          type: 'boolean'
+        }
       }
     },
     'element-divider': {
@@ -439,17 +469,20 @@ export default {
     },
     'image-ref': {
       type: 'object',
-      required: ['_id', 'mimeType', 'width', 'height'],
+      required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 2400 } // max width of v-container
+            props: { width: 2400, label: 'chargez une image' } // max width of v-container
           }
         }
       },
       properties: {
         _id: {
+          type: 'string'
+        },
+        name: {
           type: 'string'
         },
         mimeType: {

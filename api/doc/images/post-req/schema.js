@@ -3,6 +3,10 @@ import imageSchema from '#types/image/schema.js'
 
 export default {
   type: 'object',
+  $id: 'https://github.com/data-fair/portals/images/post-req',
+  title: 'Post image req',
+  'x-exports': ['validate', 'types'],
+  'x-ajv': { coerceTypes: true },
   required: ['body', 'query', 'file'],
   properties: {
     body: jsonSchema(imageSchema)
@@ -22,16 +26,15 @@ export default {
     },
     file: {
       type: 'object',
-      required: ['path'],
+      required: ['path', 'originalname'],
       properties: {
         path: {
+          type: 'string'
+        },
+        originalname: {
           type: 'string'
         }
       }
     }
   },
-
-  $id: 'https://github.com/data-fair/portals/images/post-req',
-  title: 'Post image req',
-  'x-exports': ['validate', 'types'],
 }

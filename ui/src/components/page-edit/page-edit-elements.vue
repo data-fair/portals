@@ -9,12 +9,14 @@
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
-    <template #image-upload="{node, statefulLayout, width, height}">
+    <template #image-upload="{node, statefulLayout, width, height, label}">
       <image-upload
         :model-value="node.data"
+        :label="label"
         :width="width"
         :height="height"
-        @update:model-value="(data: any) => statefulLayout.input(node, data)"
+        :resource="pageRef"
+        @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
       />
     </template>
   </vjsf-page-elements>
@@ -28,6 +30,8 @@ import VjsfMarkdown from '@koumoul/vjsf-markdown'
 const elements = defineModel<PageElement[]>()
 
 const { addItemMessage } = defineProps({ addItemMessage: { type: String, required: true } })
+
+const pageRef = { type: 'page', _id: inject('page-id') as string }
 
 const vjsfOptions: VjsfOptions = {
   titleDepth: 4,

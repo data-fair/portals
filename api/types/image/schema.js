@@ -4,7 +4,7 @@ export default {
   title: 'Image',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'owner', 'resource', 'created', 'updated', 'width', 'height', 'mimeType'],
+  required: ['_id', 'owner', 'resource', 'created', 'updated', 'name', 'width', 'height', 'mimeType'],
   properties: {
     _id: {
       type: 'string',
@@ -28,6 +28,9 @@ export default {
     },
     created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
+    name: {
+      type: 'string'
+    },
     width: {
       type: 'number'
     },

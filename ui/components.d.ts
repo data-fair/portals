@@ -8,12 +8,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ImageUpload: typeof import('./src/components/image-upload.vue')['default']
     PageCard: typeof import('./src/components/page/page-card.vue')['default']
     PageEditElements: typeof import('./src/components/page-edit/page-edit-elements.vue')['default']
     PageElement: typeof import('./src/components/page/page-element.vue')['default']
     PageElementAlert: typeof import('./src/components/page/page-element-alert.vue')['default']
     PageElementCard: typeof import('./src/components/page/page-element-card.vue')['default']
     PageElementDivider: typeof import('./src/components/page/page-element-divider.vue')['default']
+    PageElementImage: typeof import('./src/components/page/page-element-image.vue')['default']
     PageElementTabs: typeof import('./src/components/page/page-element-tabs.vue')['default']
     PageElementText: typeof import('./src/components/page/page-element-text.vue')['default']
     PageElementTitle: typeof import('./src/components/page/page-element-title.vue')['default']

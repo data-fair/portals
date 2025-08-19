@@ -31,13 +31,20 @@ const jsonFromMultiPart = (req: Request, res: Response, next: NextFunction) => {
       throw httpError(400, 'error parsing body: ' + err.message)
     }
   }
+  next()
 }
 
-router.post('', upload.single('image'), jsonFromMultiPart, async (req, res, next) => {
+const mutableQuery = (req: Request, res: Response, next: NextFunction) => {
+  // just a little trick as we want to coerce type in req.query
+  Object.defineProperty(req, 'query', { ...Object.getOwnPropertyDescriptor(req, 'query'), value: req.query, writable: true })
+  next()
+}
+
+router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const { body, query, file } = postReq.returnValid(req, { name: 'request' })
-  const ownerFilter = { 'owner.type': session.account.type, 'owner.id': session.account.type, 'owner.department': session.account.department }
+  const ownerFilter = { 'owner.type': session.account.type, 'owner.id': session.account.id, 'owner.department': session.account.department }
   if (body.resource.type === 'portal') {
     const hasPortal = !!(await mongo.portals.countDocuments({ ...ownerFilter, _id: body.resource._id }))
     if (!hasPortal) throw httpError(404, 'linked portal not found')
@@ -56,6 +63,7 @@ router.post('', upload.single('image'), jsonFromMultiPart, async (req, res, next
     owner: { ...session.account, department: undefined, departmentName: undefined },
     created,
     updated: created,
+    name: file.originalname,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height }))
   }
@@ -73,14 +81,14 @@ router.post('', upload.single('image'), jsonFromMultiPart, async (req, res, next
   }
   await mongo.images.insertOne(image)
 
-  res.status(201).json({ ...image, data: undefined })
+  res.json({ ...image, data: undefined })
 })
 
 router.get('/:id/data', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
-  const image = await mongo.images.findOne({ _id: req.params.id, 'owner.type': session.account.type, 'owner.id': session.account.type, 'owner.department': session.account.department })
+  const image = await mongo.images.findOne({ _id: req.params.id, 'owner.type': session.account.type, 'owner.id': session.account.id, 'owner.department': session.account.department })
   if (!image) throw httpError(404, 'image not found')
 
-  res.type(image.mimeType).setHeader('Cache-Control', 'private, max-age=604800, immutable').send(image.data)
+  res.type(image.mimeType).setHeader('Cache-Control', 'private, max-age=604800, immutable').send(image.data.buffer)
 })
