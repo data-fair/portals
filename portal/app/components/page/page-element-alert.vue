@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { TexteAccentue } from '#api/types/page-config'
+import type { TexteAccentue } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => TexteAccentue, required: true }

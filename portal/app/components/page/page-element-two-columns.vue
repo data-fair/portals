@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, Colonnes } from '#api/types/page-config'
+import type { PageElement, Colonnes } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Colonnes, required: true }

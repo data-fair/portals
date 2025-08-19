@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import type { VCard } from 'vuetify/components'
-import type { PageElement, Boite } from '#api/types/page-config'
+import type { PageElement, Boite } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Boite, required: true }

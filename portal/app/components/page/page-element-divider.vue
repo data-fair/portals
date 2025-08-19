@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { SeparateurHorizontal } from '#api/types/page-config'
+import type { SeparateurHorizontal } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => SeparateurHorizontal, required: true }

@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Onglets, PageElement } from '#api/types/page-config'
+import type { Onglets, PageElement } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Onglets, required: true }

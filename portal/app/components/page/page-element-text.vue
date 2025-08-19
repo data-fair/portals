@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { Texte } from '#api/types/page-config'
+import type { Texte } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Texte, required: true }

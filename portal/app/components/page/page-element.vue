@@ -55,7 +55,15 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement } from '#api/types/page'
+import type { PageElement } from '~~/../api/types/page'
+import PageElementTitle from './page-element-title.vue'
+import PageElementText from './page-element-text.vue'
+import PageElementAlert from './page-element-alert.vue'
+import PageElementImage from './page-element-image.vue'
+import PageElementDivider from './page-element-divider.vue'
+import PageElementCard from './page-element-card.vue'
+import PageElementTwoColumns from './page-element-two-columns.vue'
+import PageElementTabs from './page-element-tabs.vue'
 
 defineProps({
   element: { type: Object as () => PageElement, required: true }

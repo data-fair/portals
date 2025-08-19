@@ -73,6 +73,7 @@ en:
 <script lang="ts" setup>
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiPencil } from '@mdi/js'
+import PageElements from '../../../../../portal/app/components/page/page-elements.vue'
 
 const route = useRoute<'/pages/[id]/'>()
 

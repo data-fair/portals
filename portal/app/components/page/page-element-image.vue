@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { Image } from '#api/types/page-config'
+import type { Image } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Image, required: true }
