@@ -29,6 +29,12 @@
             label="titre du nouveau portal"
             autofocus
           />
+          <v-checkbox
+            v-model="newPortalStaging"
+            hide-details
+            density="comfortable"
+            label="portail de pré-production"
+          />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -86,10 +92,20 @@ const showAll = defineModel('showAll', { type: Boolean, default: false })
 
 const newPortalMenu = ref(false)
 const newPortalTitle = ref('')
-watch(newPortalMenu, () => { newPortalTitle.value = '' })
+const newPortalStaging = ref(false)
+watch(newPortalMenu, () => {
+  newPortalTitle.value = ''
+  newPortalStaging.value = false
+})
 
 const createPortal = useAsyncAction(async () => {
-  const portal = await $fetch<Portal>('/portals', { method: 'POST', body: { config: { title: newPortalTitle.value, authentication: 'optional' } } })
+  const portal = await $fetch<Portal>('/portals', {
+    method: 'POST',
+    body: {
+      staging: newPortalStaging.value,
+      config: { title: newPortalTitle.value, authentication: 'optional' }
+    }
+  })
   await router.replace({ path: `/portals/${portal._id}` })
 })
 

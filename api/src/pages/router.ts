@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto'
 import type { Filter, Sort } from 'mongodb'
 import type { Page } from '#types/page/index.js'
-
+import slug from 'slugify'
 import { Router } from 'express'
 import mongo from '#mongo'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsAdmin, patchPage } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage } from './service.ts'
 
 const router = Router()
 export default router
@@ -50,11 +50,15 @@ router.post('', async (req, res, next) => {
   }
   const page: Page = {
     _id: randomUUID(),
+    title: body.config.title,
+    slug: slug.default(body.config.title, { lower: true, strict: true }),
     owner: session.account,
     created,
     updated: created,
     ...body,
-    draftConfig: body.config
+    draftConfig: body.config,
+    portals: [],
+    requestedPortals: []
   }
   assertAccountRole(session, page.owner, 'admin')
 
@@ -64,25 +68,28 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-  res.send(await getPageAsAdmin(reqSessionAuthenticated(req), req.params.id))
+  res.send(await getPageAsContrib(reqSessionAuthenticated(req), req.params.id))
 })
 
 router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  const page = await getPageAsAdmin(session, req.params.id)
+  const page = await getPageAsContrib(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
+  if (body.portals) assertAccountRole(session, page.owner, 'admin')
   await patchPage(page, body, session)
   res.send({ ...page, body })
 })
 
 router.post('/:id/draft', async (req, res, next) => {
-  const page = await getPageAsAdmin(reqSessionAuthenticated(req), req.params.id)
-  await validatePageDraft(page)
+  const session = reqSessionAuthenticated(req)
+  const page = await getPageAsContrib(session, req.params.id)
+  await validatePageDraft(page, session)
   res.status(201).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
-  const page = await getPageAsAdmin(reqSessionAuthenticated(req), req.params.id)
-  await cancelPageDraft(page)
+  const session = reqSessionAuthenticated(req)
+  const page = await getPageAsContrib(session, req.params.id)
+  await cancelPageDraft(page, session)
   res.status(201).send()
 })

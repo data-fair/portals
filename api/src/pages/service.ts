@@ -5,10 +5,10 @@ import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@d
 
 const debug = debugModule('pages')
 
-export const getPageAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
+export const getPageAsContrib = async (sessionState: SessionStateAuthenticated, id: string) => {
   const page = await mongo.pages.findOne({ _id: id })
   if (!page) throw httpError(404, `page "${id}" not found`)
-  assertAccountRole(sessionState, page.owner, 'admin')
+  assertAccountRole(sessionState, page.owner, ['admin', 'contrib'])
   return page
 }
 
@@ -18,26 +18,25 @@ export const createPage = async (page: Page) => {
 }
 
 export const patchPage = async (page: Page, patch: Partial<Page>, session: SessionStateAuthenticated) => {
-  await mongo.pages.updateOne({ _id: page._id }, {
-    $set: {
-      ...patch,
-      updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
-    }
-  })
+  const fullPatch = {
+    ...patch,
+    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+  }
+  const updatedPage = { ...page, ...fullPatch }
+  await mongo.pages.updateOne({ _id: page._id }, { $set: fullPatch })
+  return updatedPage
 }
 
-export const validatePageDraft = async (page: Page) => {
+export const validatePageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('validatePageDraft', page)
-  await mongo.pages.updateOne({ _id: page._id }, { $set: { config: page.draftConfig } })
-  const updatedPage = { ...page, config: page.draftConfig }
+  const updatedPage = await patchPage(page, { config: page.draftConfig }, session)
   await cleanUnusedImages(updatedPage)
   return updatedPage
 }
 
-export const cancelPageDraft = async (page: Page) => {
+export const cancelPageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('cancelPageDraft', page)
-  await mongo.pages.updateOne({ _id: page._id }, { $set: { draftConfig: page.config } })
-  const updatedPage = { ...page, draftConfig: page.config }
+  const updatedPage = await patchPage(page, { draftConfig: page.config }, session)
   await cleanUnusedImages(updatedPage)
   return updatedPage
 }

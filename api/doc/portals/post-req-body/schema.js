@@ -3,7 +3,7 @@ import portalSchema from '#types/portal/schema.js'
 
 export default {
   ...jsonSchema(portalSchema)
-    .pickProperties(['config'])
+    .pickProperties(['staging', 'config'])
     .schema,
   $id: 'https://github.com/data-fair/portals/portals/post-req-body',
   title: 'Post portal req body',

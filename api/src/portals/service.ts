@@ -43,7 +43,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 
 export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
   debug('validatePortalDraft', portal)
-  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig }, session, reqOrigin, cookie)
+  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, cookie)
   await cleanUnusedImages(updatedPortal)
   return updatedPortal
 }
