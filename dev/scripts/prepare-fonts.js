@@ -71,7 +71,7 @@ for (const [name, info] of entries) {
   console.log('prepare font ' + name)
   const key = name.toLowerCase().replace(/\s/g, '')
 
-  mkdirSync(`portal/public/fonts/${key}`)
+  mkdirSync(`api/assets/fonts/${key}`)
 
   fonts.push(name)
 
@@ -94,7 +94,7 @@ for (const [name, info] of entries) {
           if (rangeStart !== weight) weightRange += ' ' + weight
           rangeStart = null
           const fileName = basename(new URL(url).pathname)
-          const localUrl = `/fonts/${encodeURIComponent(key)}/${fileName}`
+          const localUrl = `/portals-manager/api/assets/fonts/${encodeURIComponent(key)}/${fileName}`
           fontFaces += makeFontFace(subset, info.unicodeRange[subset], fontStyle, weightRange, localUrl)
         }
       }
@@ -107,7 +107,7 @@ for (const [name, info] of entries) {
   for (const url of [...urls]) {
     const fileName = basename(new URL(url).pathname)
     const res = await new Promise(resolve => httpGet(url, resolve))
-    await pipeline(res, createWriteStream(`portal/public/fonts/${key}/${fileName}`))
+    await pipeline(res, createWriteStream(`api/assets/fonts/${key}/${fileName}`))
   }
 }
 

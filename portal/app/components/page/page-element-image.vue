@@ -37,24 +37,29 @@
 
 <script setup lang="ts">
 import type { Image, ImageRef } from '~~/../api/types/page-config'
+import { useElementSize, useCurrentElement } from '@vueuse/core'
+import { useDisplay } from 'vuetify'
 
 const { element } = defineProps({
   element: { type: Object as () => Image, required: true }
 })
 
+const { width } = useElementSize(useCurrentElement())
+
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const display = useDisplay()
 
 // TODO: use image exposed by portal when opened in a portal
 const src = computed(() => {
   if (element.url) return element.url
   if (!element.imageRef) return
-  return getImageSrc(element.imageRef, true)
+  return getImageSrc(element.imageRef, width.value < 1280)
 })
 
 const zoomedSrc = computed(() => {
   if (element.url) return element.url
   if (!element.imageRef) return
-  return getImageSrc(element.imageRef, false)
+  return getImageSrc(element.imageRef, display.mobile.value)
 })
 
 const zoomed = ref(false)

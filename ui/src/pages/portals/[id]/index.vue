@@ -19,6 +19,21 @@
                 :dark="context.dark"
               />
             </template>
+            <template #font-families-preview="context">
+              <font-families-preview
+                :portal-config="context.node.data"
+              />
+            </template>
+            <template #image-upload="{node, statefulLayout, width, height, label}">
+              <image-upload
+                :model-value="node.data"
+                :label="label"
+                :width="width"
+                :height="height"
+                :resource="portalRef"
+                @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
+              />
+            </template>
           </vjsf-portal-config>
         </v-form>
       </v-col>
@@ -114,6 +129,8 @@ const editConfig = ref<PortalConfig>()
 watch(portalFetch.data, () => {
   if (portalFetch.data.value) editConfig.value = portalFetch.data.value.draftConfig
 })
+
+const portalRef = { type: 'portal', _id: route.params.id }
 
 const hasDraftDiff = computed(() => {
   return !equal(editConfig.value, portalFetch.data.value?.config)

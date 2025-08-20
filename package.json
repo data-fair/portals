@@ -20,7 +20,7 @@
     "test-base": "NODE_ENV=test node --test-force-exit --test-concurrency=1 --test",
     "check-types": "tsc && npm -w ui run check-types",
     "prepare": "husky || true",
-    "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && rm -rf portal/public/fonts && mkdir portal/public/fonts && node dev/scripts/prepare-fonts.js",
+    "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.js",
     "quality": "npm run dev-deps && npm run lint && npm run build-types && npm run check-types && npm -w ui run build && npm run test && npm audit --omit=dev --audit-level=critical"
   },
   "workspaces": [
@@ -50,6 +50,7 @@
     "@types/express": "^5.0.3",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.0.14",
+    "@types/resolve-path": "^1.4.3",
     "@types/sanitize-html": "^2.16.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.31.0",

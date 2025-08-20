@@ -1,4 +1,4 @@
-import 'vuetify/styles'
+import '@data-fair/lib-vuetify/style/global.scss'
 import { createVuetify } from 'vuetify'
 import { fr, en } from 'vuetify/locale'
 

@@ -7,6 +7,10 @@ import axios from '@data-fair/lib-node/axios.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
 import { type IngressManagerIngressInfo } from '#types'
+import { type ImageRef } from '#types/page/index.js'
+import { readFile } from 'node:fs/promises'
+import resolvePath from 'resolve-path'
+import { resolve } from 'node:path'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')
@@ -78,21 +82,40 @@ const getPublicationSite = (portal: Portal) => {
   return publicationSite
 }
 
-const getSDSites = (portal: Portal) => {
+const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
+
+const getFontFamilyCss = async (familyName: string) => {
+  const key = familyName.toLowerCase().replace(/\s/g, '')
+  return await readFile(resolvePath(resolve(import.meta.dirname, '../../assets/fonts'), key + '.css'), 'utf-8')
+}
+
+const getSDSites = async (portal: Portal) => {
   const sites = [{
     _id: 'data-fair-portals:draft-' + portal._id,
     owner: portal.owner,
     host: new URL(config.draftUrlPattern.replace('{id}', portal._id)).host,
-    // logo: `https://${portal.host}/api/v1/portals/${portal._id}/assets/logo`,
-    // theme: {
-    //   primaryColor: portal.config.themeColor || '#1976D2'
-    // }
+    theme: {
+      ...portal.draftConfig.theme,
+      logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
+      bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.draftConfig.bodyFontFamily),
+      headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.draftConfig.headingFontFamily)
+    }
   }]
   if (portal.ingress) {
     sites.push({
       _id: 'data-fair-portals:' + portal._id,
       owner: portal.owner,
-      host: new URL(portal.ingress.url).host
+      host: new URL(portal.ingress.url).host,
+      theme: {
+        ...portal.config.theme,
+        logo: portal.config.logo && getImageSrc(portal.config.logo, true),
+        bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.config.bodyFontFamily),
+        headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.config.headingFontFamily)
+      }
     })
   }
   return sites
@@ -135,7 +158,7 @@ async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, 
     )
   }
 
-  const sdSites = getSDSites(portal)
+  const sdSites = await getSDSites(portal)
   if (equal(sdSites, previousPortal && getSDSites(previousPortal))) {
     debugSyncPortal('nothing new to sync to SD', sdSites)
   } else {

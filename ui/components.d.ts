@@ -9,6 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ColorsPreview: typeof import('./src/components/colors-preview.vue')['default']
+    FontFamiliesPreview: typeof import('./src/components/font-families-preview.vue')['default']
+    FontsPreview: typeof import('./src/components/fonts-preview.vue')['default']
     ImageUpload: typeof import('./src/components/image-upload.vue')['default']
     PageCard: typeof import('./src/components/page/page-card.vue')['default']
     PageEditElements: typeof import('./src/components/page-edit/page-edit-elements.vue')['default']

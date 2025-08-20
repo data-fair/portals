@@ -31,7 +31,8 @@ app.use(express.json())
 app.use(createSiteMiddleware('portals-manager'))
 app.use(session.middleware())
 
-app.use('/assets', express.static('api/assets'))
+// TODO: tune cache headers, fonts files are public and immutable
+app.use('/api/assets', express.static(resolve(import.meta.dirname, '../assets')))
 app.use('/api/portals', portalsRouter)
 app.use('/api/pages', pagesRouter)
 app.use('/api/images', imagesRouter)
