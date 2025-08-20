@@ -1,6 +1,6 @@
 <template>
   <v-defaults-provider :defaults="previewDefaults">
-    <page-element
+    <page-element-comp
       v-if="renderedElement"
       :element="renderedElement"
     >
@@ -13,7 +13,7 @@
           />
         </v-defaults-provider>
       </template>
-    </page-element>
+    </page-element-comp>
   </v-defaults-provider>
 </template>
 
@@ -21,6 +21,7 @@
 import { parse as marked } from 'marked'
 import sanitizeHtml from 'sanitize-html'
 import type { PageElement } from '#api/types/page-config'
+import PageElementComp from '../../../../portal/app/components/page/page-element.vue'
 
 const element = defineModel<PageElement>()
 
