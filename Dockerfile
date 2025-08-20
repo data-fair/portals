@@ -44,6 +44,7 @@ COPY --from=types /app/api/types api/types
 ADD /api/src/config.ts api/src/config.ts
 ADD /api/src/ui-config.ts api/src/ui-config.ts
 ADD /ui ui
+ADD /portal/app/components/page portal/app/components/page
 COPY --from=types /app/ui/src/components/vjsf ui/src/components/vjsf
 RUN npm -w ui run build
 
