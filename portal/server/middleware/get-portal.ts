@@ -6,7 +6,7 @@ const config = useRuntimeConfig()
 
 const draftUrlRegexp = new RegExp('^' + escapeRegExp(config.draftUrlPattern).replace('\\{id\\}', '(.*)') + '$')
 
-export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner'> & { draft: boolean }
+export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
 
 export default defineEventHandler(async (event) => {
   if (!config.draftUrlPattern) throw new Error('config.draftUrlPattern is required')
@@ -17,9 +17,9 @@ export default defineEventHandler(async (event) => {
   const draftMatch = origin.match(draftUrlRegexp)
   const portal = await mongo.portals.findOne(
     draftMatch ? { _id: draftMatch[1] } : { 'ingress.url': origin },
-    { projection: { _id: 1, owner: 1, config: draftMatch ? undefined : 1, draftConfig: draftMatch ? 1 : undefined } }
+    { projection: { _id: 1, owner: 1, staging: 1, config: draftMatch ? undefined : 1, draftConfig: draftMatch ? 1 : undefined } }
   )
   if (!portal) throw createError({ status: 404, message: 'portal not found' })
-  const requestPortal: RequestPortal = { _id: portal._id, owner: portal.owner, config: draftMatch ? portal.draftConfig : portal.config, draft: !!draftMatch }
+  const requestPortal: RequestPortal = { _id: portal._id, owner: portal.owner, staging: portal.staging, config: draftMatch ? portal.draftConfig : portal.config, draft: !!draftMatch }
   event.context.portal = requestPortal
 })

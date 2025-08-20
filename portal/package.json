@@ -18,6 +18,7 @@
     "eslint": "^9.33.0",
     "nuxt": "^4.0.3",
     "nuxt-security": "^2.3.0",
+    "undici": "^7.14.0",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   }
