@@ -11,7 +11,15 @@
             v-model="editConfig"
             :options="vjsfOptions"
             @update:model-value="saveDraft.execute()"
-          />
+          >
+            <template #colors-preview="context">
+              <colors-preview
+                :colors-key="context.colorsKey"
+                :theme="context.node.data"
+                :dark="context.dark"
+              />
+            </template>
+          </vjsf-portal-config>
         </v-form>
       </v-col>
       <navigation-right>
@@ -94,12 +102,9 @@ en:
 import { type Options as VjsfOptions } from '@koumoul/vjsf'
 import { type Portal } from '#api/types/portal/index'
 import { type PortalConfig } from '#api/types/portal-config/index'
-import Debug from 'debug'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiLink, mdiShieldLinkVariant } from '@mdi/js'
 import equal from 'fast-deep-equal'
-
-const debug = Debug('portal-edit')
 
 const route = useRoute<'/portals/[id]/'>()
 const session = useSessionAuthenticated()
@@ -117,13 +122,15 @@ const hasDraftDiff = computed(() => {
 const formValid = ref(false)
 
 const vjsfOptions = computed<VjsfOptions | null>(() => {
-  debug('compute vjsf options')
   return {
     titleDepth: 4,
     density: 'comfortable',
     locale: 'fr',
     updateOn: 'blur',
-    initialValidation: 'always'
+    initialValidation: 'always',
+    context: {
+      simplifiedTheme: true
+    }
   }
 })
 

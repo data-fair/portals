@@ -26,7 +26,7 @@
             variant="outlined"
             hide-details
             density="comfortable"
-            label="titre du nouveau portal"
+            label="titre du nouveau portail"
             autofocus
           />
           <v-checkbox
@@ -103,7 +103,7 @@ const createPortal = useAsyncAction(async () => {
     method: 'POST',
     body: {
       staging: newPortalStaging.value,
-      config: { title: newPortalTitle.value, authentication: 'optional' }
+      config: { title: newPortalTitle.value }
     }
   })
   await router.replace({ path: `/portals/${portal._id}` })

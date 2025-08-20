@@ -7,10 +7,11 @@ export default {
   layout: {
     comp: 'vertical-tabs',
     children: [
-      { title: 'Métadonnées', children: ['title', 'description', 'authentication'] }
+      { title: 'Métadonnées', children: ['title', 'description', 'authentication'] },
+      { title: 'Thème', children: ['theme'] }
     ]
   },
-  required: ['title', 'authentication'],
+  required: ['title', 'authentication', 'theme'],
   properties: {
     title: {
       type: 'string',
@@ -102,5 +103,6 @@ export default {
         }
       }
     },
+    theme: { $ref: 'https://github.com/data-fair/lib/theme' },
   }
 }

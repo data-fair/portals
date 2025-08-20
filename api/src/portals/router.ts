@@ -9,6 +9,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.js'
 import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
+import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 
 const router = Router()
 export default router
@@ -49,14 +50,18 @@ router.post('', async (req, res, next) => {
     name: session.user.name,
     date: new Date().toISOString()
   }
+
+  const initialConfig = { ...body.config, authentication: 'optional' as const, theme: fillTheme(defaultTheme, defaultTheme) }
+
   const portal: Portal = {
     _id: randomUUID(),
-    title: body.config.title,
+    title: initialConfig.title,
     owner: session.account,
     created,
     updated: created,
     ...body,
-    draftConfig: body.config
+    config: initialConfig,
+    draftConfig: initialConfig
   }
   assertAccountRole(session, portal.owner, 'admin')
 

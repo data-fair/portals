@@ -10,10 +10,11 @@ describe('portals management', () => {
   after(stopApiServer)
 
   it('should create a portal', async () => {
-    const portalConfig = { title: 'Portal 1', authentication: 'optional' }
+    const portalConfig = { title: 'Portal 1' }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
     assert.equal(portal.owner.id, 'user1')
-    assert.deepEqual(portal.config, portalConfig)
-    assert.deepEqual(portal.draftConfig, portalConfig)
+    assert.equal(portal.config.authentication, 'optional')
+    assert.equal(portal.config.theme.colors.primary, '#1976D2')
+    assert.deepEqual(portal.config, portal.draftConfig)
   })
 })

@@ -4,6 +4,7 @@ import config from '#config'
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import axios from '@data-fair/lib-node/axios.js'
+import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
 import { type IngressManagerIngressInfo } from '#types'
 
@@ -33,6 +34,9 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+  }
+  if (fullPatch.draftConfig) {
+    fullPatch.draftConfig.theme = fillTheme(fullPatch.draftConfig.theme, defaultTheme)
   }
   const updatedPortal = { ...portal, ...fullPatch }
   // we propagate before storing as it has a greater probability of failing and we prefer a cohesive state

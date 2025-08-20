@@ -39,7 +39,7 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.8.2",
+    "@data-fair/lib-types-builder": "^1.8.3",
     "@types/debug": "^4.1.12"
   },
   "devDependencies": {
