@@ -36,25 +36,25 @@
 </template>
 
 <script setup lang="ts">
-import type { Image } from '~~/../api/types/page-config'
+import type { Image, ImageRef } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Image, required: true }
 })
 
+const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+
 // TODO: use image exposed by portal when opened in a portal
 const src = computed(() => {
   if (element.url) return element.url
   if (!element.imageRef) return
-  let id = element.imageRef._id
-  if (element.imageRef.mobileAlt) id += '-mobile'
-  return $apiPath + '/images/' + id + '/data'
+  return getImageSrc(element.imageRef, true)
 })
 
 const zoomedSrc = computed(() => {
   if (element.url) return element.url
   if (!element.imageRef) return
-  return $apiPath + '/images/' + element.imageRef._id + '/data'
+  return getImageSrc(element.imageRef, false)
 })
 
 const zoomed = ref(false)
