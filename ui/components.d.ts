@@ -8,8 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ColorsPreview: typeof import('./src/components/colors-preview.vue')['default']
-    FontFamiliesPreview: typeof import('./src/components/font-families-preview.vue')['default']
+    ColorsPreview: typeof import('./src/components/portal-edit/colors-preview.vue')['default']
+    FontFamiliesPreview: typeof import('./src/components/portal-edit/font-families-preview.vue')['default']
     ImageUpload: typeof import('./src/components/image-upload.vue')['default']
     PageCard: typeof import('./src/components/page/page-card.vue')['default']
     PageEditElements: typeof import('./src/components/page-edit/page-edit-elements.vue')['default']

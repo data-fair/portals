@@ -5,7 +5,7 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    comp: 'tabs',
+    comp: 'expansion-panels',
     children: [
       { title: 'Métadonnées', children: ['title', 'description', 'authentication'] },
       { title: 'Couleurs', children: ['theme'] },
@@ -16,10 +16,26 @@ export default {
           { cols: 6, name: 'font-families-preview' }
         ]
       },
-      { title: 'Images', children: ['logo', 'logoDark', 'favicon'] }
+      { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
+      { title: 'Entête', children: [{ text: 'TODO' }] },
+      {
+        title: 'Barre de navigation',
+        children: [
+          'appBar',
+          { name: 'app-bar-preview' },
+          'appBarHome',
+          'menu'
+        ]
+      },
+      { title: 'Pied de page', children: [{ text: 'TODO' }] },
+      { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
+      { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
+      { title: 'Réutilisations', children: [{ text: 'TODO' }] },
+      { title: 'Contact', children: [{ text: 'TODO' }] },
+      { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme'],
+  required: ['title', 'authentication', 'theme', 'appBar', 'appBarHome', 'menu'],
   properties: {
     title: {
       type: 'string',
@@ -149,6 +165,167 @@ export default {
           url: '/portals-manager/api/assets/fonts.json'
         }
       }
+    },
+    appBar: {
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['color', 'density'],
+      properties: {
+        color: { $ref: '#/$defs/appBarColor' },
+        density: { $ref: '#/$defs/appBarDensity' }
+      }
+    },
+    appBarHome: {
+      type: 'object',
+      title: 'Options spécifiques pour la page d\'accueil',
+      unevaluatedProperties: false,
+      required: ['color', 'density'],
+      layout: {
+        comp: 'card',
+        switch: [
+          { if: 'data.active', children: ['active', 'color', 'density', { name: 'app-bar-preview', props: { home: true } }] },
+          ['active']
+        ]
+      },
+      properties: {
+        active: {
+          type: 'boolean',
+          title: 'activer un rendu différent sur la page d\'accueil',
+          layout: { props: { color: 'primary' } }
+        },
+        color: { $ref: '#/$defs/appBarColor' },
+        density: { $ref: '#/$defs/appBarDensity' }
+      }
+    },
+    menu: {
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['children'],
+      properties: {
+        children: {
+          type: 'array',
+          title: 'Éléments du menu de navigation',
+          items: { $ref: '#/$defs/menuItem' }
+        }
+      }
+    }
+  },
+  $defs: {
+    appBarColor: {
+      type: 'string',
+      title: 'couleur',
+      default: 'primary',
+      oneOf: [
+        { const: 'primary', title: 'couleur principale' },
+        { const: 'secondary', title: 'couleur secondaire' },
+        { const: 'accent', title: 'couleur accentuée' },
+        { const: 'surface', title: 'couleur des surfaces' }
+      ]
+    },
+    appBarDensity: {
+      type: 'string',
+      title: 'densité',
+      default: 'default',
+      oneOf: [
+        { const: 'default', title: 'normale' },
+        { const: 'prominent', title: 'étendue' },
+        { const: 'comfortable', title: 'un peu plus dense' },
+        { const: 'compact', title: 'très dense' }
+      ]
+    },
+    menuItem: {
+      type: 'object',
+      unevaluatedProperties: false,
+      default: { type: 'custom' },
+      oneOf: [{
+        required: ['title'],
+        title: 'catalogue de jeux de données',
+        properties: {
+          type: {
+            const: 'datasets',
+          },
+          title: {
+            type: 'string',
+            default: 'jeux de données',
+            title: 'libellé'
+          }
+        }
+      }, {
+        required: ['title'],
+        title: 'catalogue de visualisations',
+        properties: {
+          type: {
+            const: 'applications'
+          },
+          title: {
+            type: 'string',
+            default: 'visualisations',
+            title: 'libellé'
+          }
+        }
+      }, {
+        required: ['title'],
+        title: 'page de contact',
+        properties: {
+          type: {
+            const: 'contact'
+          },
+          title: {
+            type: 'string',
+            default: 'contact',
+            title: 'libellé'
+          }
+        }
+      }, {
+        title: 'page éditée',
+        properties: {
+          type: {
+            const: 'custom'
+          },
+          pageRef: {
+            type: 'object',
+            required: ['_id', 'title'],
+            title: 'page',
+            layout: {
+              getItems: {
+                url: '/portals-manager/api/pages?select=_id,title',
+                itemsResults: 'data.results.map(r => ({_id: r._id, title: r.title}))',
+                itemTitle: 'item.title',
+                itemKey: 'item._id'
+              }
+            },
+            properties: {
+              _id: {
+                type: 'string'
+              },
+              title: {
+                type: 'string'
+              }
+            }
+          },
+          title: {
+            type: 'string',
+            title: 'libellé'
+          }
+        }
+      }, {
+        title: 'sous-menu',
+        required: ['children'],
+        properties: {
+          type: {
+            const: 'menu'
+          },
+          title: {
+            type: 'string',
+            title: 'libellé'
+          },
+          children: {
+            type: 'array',
+            title: '',
+            items: { $ref: '#/$defs/menuItem' }
+          }
+        }
+      }]
     }
   }
 }

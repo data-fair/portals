@@ -19,7 +19,9 @@
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
     <v-container fluid>
-      <h2>Aperçu du rendu des couleurs</h2>
+      <h2 class="text-h6">
+        Aperçu du rendu des couleurs
+      </h2>
       <v-card
         title="Un exemple de carte"
         class="my-2"

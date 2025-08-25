@@ -4,5 +4,10 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt([
   ...pluginVuetify.configs['flat/recommended'],
-  ...neostandard({ ts: true })
+  ...neostandard({ ts: true }),
+  {
+    rules: {
+      'vue/no-multiple-template-root': 'off'
+    }
+  }
 ])

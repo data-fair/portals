@@ -24,6 +24,15 @@
                 :portal-config="context.node.data"
               />
             </template>
+            <template #app-bar-preview="context">
+              <v-card>
+                <layout-app-bar
+                  :portal-config="editConfig"
+                  :detached="true"
+                  :home="context.home"
+                />
+              </v-card>
+            </template>
             <template #image-upload="{node, statefulLayout, width, height, label}">
               <image-upload
                 :model-value="node.data"
@@ -120,6 +129,7 @@ import { type PortalConfig } from '#api/types/portal-config/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiLink, mdiShieldLinkVariant } from '@mdi/js'
 import equal from 'fast-deep-equal'
+import LayoutAppBar from '../../../../../portal/app/components/layout/layout-app-bar.vue'
 
 const route = useRoute<'/portals/[id]/'>()
 const session = useSessionAuthenticated()

@@ -45,6 +45,7 @@ ADD /api/src/config.ts api/src/config.ts
 ADD /api/src/ui-config.ts api/src/ui-config.ts
 ADD /ui ui
 ADD /portal/app/components/page portal/app/components/page
+ADD /portal/app/components/layout portal/app/components/layout
 COPY --from=types /app/ui/src/components/vjsf ui/src/components/vjsf
 RUN npm -w ui run build
 
@@ -71,7 +72,6 @@ RUN node prepare-fonts.js
 ##########################
 FROM installer AS portal-builder
 
-COPY --from=fonts-builder /app/portal/public/fonts portal/public/fonts
 ADD /portal portal
 RUN npm -w portal run build
 
