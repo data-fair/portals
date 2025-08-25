@@ -183,7 +183,7 @@ export default {
       layout: {
         comp: 'card',
         switch: [
-          { if: 'data.active', children: ['active', 'color', 'density', { name: 'app-bar-preview', props: { home: true } }] },
+          { if: 'data?.active', children: ['active', 'color', 'density', { name: 'app-bar-preview', props: { home: true } }] },
           ['active']
         ]
       },
