@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { Filter, Sort } from 'mongodb'
-import type { Portal } from '#types/portal/index.js'
+import type { Portal, PortalConfig } from '#types/portal/index.js'
 
 import { Router } from 'express'
 import mongo from '#mongo'
@@ -51,7 +51,20 @@ router.post('', async (req, res, next) => {
     date: new Date().toISOString()
   }
 
-  const initialConfig = { ...body.config, authentication: 'optional' as const, theme: fillTheme(defaultTheme, defaultTheme) }
+  const initialConfig: PortalConfig = {
+    ...body.config,
+    authentication: 'optional' as const,
+    theme: fillTheme(defaultTheme, defaultTheme),
+    appBar: { color: 'primary', density: 'default' },
+    appBarHome: { active: false, color: 'primary', density: 'default' },
+    menu: {
+      children: [
+        { type: 'datasets', title: 'jeux de données' },
+        { type: 'applications', title: 'visualisations' },
+        { type: 'contact', title: 'contact' }
+      ]
+    }
+  }
 
   const portal: Portal = {
     _id: randomUUID(),
