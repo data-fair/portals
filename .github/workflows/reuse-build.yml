@@ -73,4 +73,3 @@ jobs:
         platforms: linux/amd64
         labels: ${{ steps.docker_meta_portal.outputs.labels }}
         cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache
-        cache-to: type=registry,ref=ghcr.io/${{ github.repository }}/buildcache,mode=max
