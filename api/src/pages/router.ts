@@ -83,7 +83,7 @@ router.patch('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await mongo.pages.findOne({ _id: req.params.id })
-  if (!page) throw httpError(404, `page "${eq.params.id}" not found`)
+  if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
   res.status(201).send()
