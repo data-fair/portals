@@ -27,6 +27,16 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   return updatedPage
 }
 
+export const deletePage = async (page: Page) => {
+  await mongo.images.deleteMany({
+    'owner.type': page.owner.type,
+    'owner.id': page.owner.id,
+    'resource.type': 'page',
+    'resource._id': page._id
+  })
+  await mongo.pages.deleteOne({ _id: page._id })
+}
+
 export const validatePageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('validatePageDraft', page)
   const updatedPage = await patchPage(page, { config: page.draftConfig }, session)

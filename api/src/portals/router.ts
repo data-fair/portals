@@ -95,6 +95,12 @@ router.patch('/:id', async (req, res, next) => {
   res.send(updatedPortal)
 })
 
+router.delete('/:id', async (req, res, next) => {
+  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  await deletePortal(portal, reqOrigin(req), req.headers.cookie)
+  res.status(201).send()
+})
+
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
@@ -115,13 +121,5 @@ router.post('/:id/ingress', async (req, res, next) => {
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
   await patchPortal(portal, { ingress }, session, reqOrigin(req), req.headers.cookie)
-  res.status(201).send()
-})
-
-router.delete('/:id/ingress', async (req, res, next) => {
-  const session = reqSessionAuthenticated(req)
-  assertAdminMode(session)
-  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
-  await deletePortal(portal, reqOrigin(req), req.headers.cookie)
   res.status(201).send()
 })

@@ -7,7 +7,7 @@ import mongo from '#mongo'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage } from './service.ts'
 
 const router = Router()
 export default router
@@ -78,6 +78,15 @@ router.patch('/:id', async (req, res, next) => {
   if (body.portals) assertAccountRole(session, page.owner, 'admin')
   await patchPage(page, body, session)
   res.send({ ...page, body })
+})
+
+router.delete('/:id', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const page = await mongo.pages.findOne({ _id: req.params.id })
+  if (!page) throw httpError(404, `page "${eq.params.id}" not found`)
+  assertAccountRole(session, page.owner, 'admin')
+  await deletePage(page)
+  res.status(201).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {

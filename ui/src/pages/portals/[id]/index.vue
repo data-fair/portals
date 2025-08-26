@@ -76,6 +76,51 @@
             Annuler le brouillon
           </v-list-item>
           <v-divider class="my-4" />
+          <v-menu
+            :close-on-content-click="false"
+            max-width="500"
+          >
+            <template #activator="{ props }">
+              <v-list-item v-bind="props">
+                <template #prepend>
+                  <v-icon
+                    color="warning"
+                    :icon="mdiDelete"
+                  />
+                </template>
+                Supprimer le portail
+              </v-list-item>
+            </template>
+            <template #default="{isActive}">
+              <v-card
+                title="Suppression du portal"
+                variant="elevated"
+                :loading="deletePortal.loading.value ? 'warning' : false"
+              >
+                <v-card-text>
+                  Voulez-vous vraiment supprimer le portail "{{ portalFetch.data.value?.title }}" ? La suppression est définitive et les données ne pourront pas être récupérées.
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    :disabled="deletePortal.loading.value"
+                    @click="isActive.value = false"
+                  >
+                    Non
+                  </v-btn>
+                  <v-btn
+                    color="warning"
+                    variant="flat"
+                    :loading="deletePortal.loading.value"
+                    @click="deletePortal.execute()"
+                  >
+                    Oui
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-menu>
+          <v-divider class="my-4" />
           <v-list-item
             v-if="session.user.value.adminMode"
             :to="`/portals/${route.params.id}/ingress`"
@@ -131,6 +176,7 @@ import { mdiFileReplace, mdiLink, mdiShieldLinkVariant } from '@mdi/js'
 import equal from 'fast-deep-equal'
 import LayoutAppBar from '../../../../../portal/app/components/layout/layout-app-bar.vue'
 
+const router = useRouter()
 const route = useRoute<'/portals/[id]/'>()
 const session = useSessionAuthenticated()
 
@@ -173,6 +219,11 @@ const cancelDraft = useAsyncAction(async () => {
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
   await portalFetch.refresh()
+})
+
+const deletePortal = useAsyncAction(async () => {
+  await $fetch(`portals/${route.params.id}`, { method: 'DELETE' })
+  router.push('/portals/')
 })
 
 watch(portalFetch.data, (portal) => {

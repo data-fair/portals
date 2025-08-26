@@ -29,8 +29,14 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
-  debug('createPortal', portal)
+  debug('deletePortal', portal)
   await syncPortalDelete(portal, reqOrigin, cookie)
+  await mongo.images.deleteMany({
+    'owner.type': portal.owner.type,
+    'owner.id': portal.owner.id,
+    'resource.type': 'portal',
+    'resource._id': portal._id
+  })
   await mongo.portals.deleteOne({ _id: portal._id })
 }
 
