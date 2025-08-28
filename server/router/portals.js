@@ -263,7 +263,7 @@ const setPortalAdmin = (ignoreDepartment = false) => async (req, res, next) => {
   if (!ignoreDepartment && req.user.activeAccount.department && req.user.activeAccount.department !== portal.owner.department) {
     throw createError(403, 'owner department only')
   }
-  if (req.user.activeAccount.role !== 'admin') throw createError(403, 'admin only')
+  if (req.user.accountOwnerRole !== 'admin') throw createError(403, 'admin only')
   req.portal = portal
   if (next) next()
 }
