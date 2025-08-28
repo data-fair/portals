@@ -27,17 +27,31 @@ export default defineConfig({
       dts: './dts/typed-router.d.ts',
       exclude: process.env.NODE_ENV === 'development' ? [] : ['src/pages/dev.vue']
     }),
-    Vue(),
+    Vue({ template: { compilerOptions: { isCustomElement: (tag) => ['d-frame'].includes(tag) } } }),
     VueI18nPlugin(),
     Vuetify({ styles: { configFile: settingsPath } }),
     AutoImport({
       dts: './dts/auto-imports.d.ts',
       vueTemplate: true,
       imports: [
-        ...(autoImports as any),
+        ...autoImports,
         {
           '~/context': ['$uiConfig', '$sitePath', '$cspNonce', '$apiPath', '$fetch'],
-          '@mdi/js': ['mdiBell', 'mdiRefresh', 'mdiSend', 'mdiDelete', 'mdiDevices', 'mdiEmail', 'mdiRss', 'mdiDotsVertical', 'mdiCheckCircle', 'mdiCancel', 'mdiAlertCircle', 'mdiCellphone', 'mdiWeb']
+          '@mdi/js': [
+            'mdiBell',
+            'mdiRefresh',
+            'mdiSend',
+            'mdiDelete',
+            'mdiDevices',
+            'mdiEmail',
+            'mdiRss',
+            'mdiDotsVertical',
+            'mdiCheckCircle',
+            'mdiCancel',
+            'mdiAlertCircle',
+            'mdiCellphone',
+            'mdiWeb'
+          ]
         }
       ],
       dirs: [
@@ -45,7 +59,7 @@ export default defineConfig({
         'src/composables'
       ]
     }),
-    Components(),
+    Components({ dts: './dts/components.d.ts' }),
     {
       name: 'inject-site-context',
       async transformIndexHtml (html) {

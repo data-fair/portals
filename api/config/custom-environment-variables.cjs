@@ -17,5 +17,6 @@ module.exports = {
   ingressControllers: {
     __name: 'INGRESS_CONTROLLERS',
     __format: 'json'
-  }
+  },
+  serveUi: 'SERVE_UI',
 }

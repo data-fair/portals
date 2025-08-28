@@ -63,12 +63,7 @@
   </v-container>
 </template>
 
-<!--
-<i18n lang="yaml">
-</i18n>
--->
-
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { Portal } from '#api/types/portal/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
@@ -98,3 +93,13 @@ const displayPortals = computed(() => {
 })
 
 </script>
+
+<!--
+<i18n lang="yaml">
+</i18n>
+-->
+
+<!--
+<style scoped>
+</style>
+-->

@@ -8,6 +8,7 @@ import pagesRouter from './pages/router.ts'
 import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
 import { uiConfig } from './ui-config.ts'
+import config from '#config'
 
 const app = express()
 export default app
@@ -40,8 +41,10 @@ app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
-app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
-  csp: { nonce: true, header: true }
-}))
+if (config.serveUi) {
+  app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
+    csp: { nonce: true, header: true }
+  }))
+}
 
 app.use(errorHandler)

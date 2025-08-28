@@ -66,7 +66,6 @@ RUN npm pack google-fonts-complete@2.2.3 &&\
     rm google-fonts-complete-2.2.3.tgz &&\
     mv package google-fonts-complete
 RUN mkdir -p api/assets/fonts
-RUN mkdir -p portal/public/fonts
 RUN node prepare-fonts.js
 
 ##########################

@@ -16,5 +16,6 @@ module.exports = {
   // 5697 for dev/ingress-manager.ts
   // 5603 for the separate project portals-ingress-manager development server
   privateIngressManagerUrl: 'http://localhost:5697',
-  ingressControllers: ['nginx']
+  ingressControllers: ['nginx'],
+  serveUi: false
 }

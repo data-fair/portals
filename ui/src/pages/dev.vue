@@ -1,18 +1,39 @@
 <template>
   <div>
-    <v-app-bar density="comfortable">
+    <v-app-bar flat>
+      <v-toolbar-items>
+        <v-btn
+          variant="text"
+          href="/portals-manager/pages"
+        >
+          Pages
+        </v-btn>
+        <v-btn
+          variant="text"
+          href="/portals-manager/portals"
+        >
+          Portals
+        </v-btn>
+        <v-btn
+          variant="text"
+          target="_blank"
+          href="/simple-directory"
+          color="primary"
+        >
+          Simple Directory
+        </v-btn>
+        <v-btn
+          variant="text"
+          href="/data-fair/extra/catalogs"
+          color="primary"
+        >
+          Data Fair
+        </v-btn>
+      </v-toolbar-items>
       <v-spacer />
-      <personal-menu dark-mode-switch />
+      <personal-menu />
     </v-app-bar>
 
-    <ul>
-      <li
-        v-for="(link,i) in links"
-        :key="i"
-      >
-        <a :href="link[0]">{{ link[1] }}</a>
-      </li>
-    </ul>
     <p>
       Session :
     </p>
@@ -24,15 +45,7 @@
 import personalMenu from '@data-fair/lib-vuetify/personal-menu.vue'
 
 const session = useSession()
-
-const links = [
-  ['/simple-directory', 'User management'],
-  ['/data-fair/', 'Data Fair'],
-  ['/portals-manager/portals', 'Portals'],
-  ['/portals-manager/pages', 'Pages']
-]
 </script>
 
-  <style>
-
-  </style>
+<style scoped>
+</style>

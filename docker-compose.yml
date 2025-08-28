@@ -1,4 +1,3 @@
-version: '3'
 services:
 
   #####
@@ -28,19 +27,18 @@ services:
       - mongo
     environment:
       - PORT=8087
-      - DEBUG=session
       - ADMINS=["superadmin@test.com"]
-      - PUBLIC_URL=http://localhost:5607/simple-directory
-      - MAILDEV_ACTIVE=true
-      - STORAGE_TYPE=file
-      - ROLES_DEFAULTS=["admin", "contrib", "user"]
-      - OBSERVER_ACTIVE=false
-      - AUTHRATELIMIT_ATTEMPTS=1000
       - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
       - MONGO_URL=mongodb://localhost:27017/simple-directory
       - MANAGE_SITES=true
+      - OBSERVER_ACTIVE=false
+      - PUBLIC_URL=http://localhost:5607/simple-directory
+      - STORAGE_TYPE=file
       - SECRET_SITES=SECRET_SITES
+      # When we test permissions, we need to authenticate many users from the same IP.
+      - AUTHRATELIMIT_ATTEMPTS=500
+      - AUTHRATELIMIT_DURATION=30
     volumes:
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
@@ -56,11 +54,12 @@ services:
     environment:
       - PORT=6201
       - MONGO_URL=mongodb://localhost:27017/data-fair
+      - DIRECTORY_URL=http://localhost:5607/simple-directory
       - PRIVATE_DIRECTORY_URL=http://localhost:8087
       - PUBLIC_URL=http://localhost:5607/data-fair
       - WS_PUBLIC_URL=ws://localhost:5607/data-fair
-      - EXTRA_NAV_ITEMS=[{"id":"portals","iframe":"http://localhost:5607/portals-manager","icon":"mdi-presentation","title":"Portails de données"}]
       - OBSERVER_ACTIVE=false
+      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:6227
     volumes:
       - data-fair-data:/data
 

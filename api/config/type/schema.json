@@ -18,7 +18,8 @@
     "observer",
     "secretKeys",
     "draftUrlPattern",
-    "ingressControllers"
+    "ingressControllers",
+    "serveUi"
   ],
   "properties": {
     "mongoUrl": {
@@ -75,6 +76,9 @@
       "items": {
         "type": "string"
       }
+    },
+    "serveUi": {
+      "type": "boolean"
     },
     "util": {},
     "get": {},
