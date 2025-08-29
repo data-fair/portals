@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '~~/../api/types/page'
+import type { Page } from '#api/types/page'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 defineProps({

@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { PageElement } from '#api/types/page-config'
+import type { PageElement } from '#api/types/page-config'
 import { type Options as VjsfOptions } from '@koumoul/vjsf'
 import VjsfMarkdown from '@koumoul/vjsf-markdown'
 

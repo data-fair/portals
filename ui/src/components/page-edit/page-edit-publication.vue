@@ -98,7 +98,7 @@ en:
 </i18n>
 
 <script setup lang="ts">
-import { Portal } from '#api/types/portal'
+import type { Portal } from '#api/types/portal'
 import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()

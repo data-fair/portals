@@ -25,8 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type Options as VjsfOptions } from '@koumoul/vjsf'
-import { type PortalIngress, type Portal } from '#api/types/portal/index'
+import type { Options as VjsfOptions } from '@koumoul/vjsf'
+import type { Portal, PortalIngress } from '#api/types/portal'
 import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
@@ -70,8 +70,7 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   initialValidation: 'always',
   locale: session.lang.value,
   titleDepth: 4,
-  updateOn: 'blur',
-  xI18n: true
+  updateOn: 'blur'
 }))
 
 </script>

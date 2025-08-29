@@ -1,5 +1,6 @@
 import '@data-fair/lib-vuetify/style/global.scss'
 import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { fr, en } from 'vuetify/locale'
 
 export default defineNuxtPlugin((app) => {
@@ -40,6 +41,7 @@ export default defineNuxtPlugin((app) => {
         }
       }
     },
+    icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
     defaults: {
       VCard: {
         // white card with light grey border by default

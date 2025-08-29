@@ -18,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
+import type { PageElement } from '#api/types/page-config'
+
 import { parse as marked } from 'marked'
 import sanitizeHtml from 'sanitize-html'
-import type { PageElement } from '#api/types/page-config'
-import PageElementComp from '../../../../portal/app/components/page/page-element.vue'
+import PageElementComp from '#portal/app/components/page/page-element.vue'
 
 const element = defineModel<PageElement>()
 

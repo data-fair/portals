@@ -1,4 +1,4 @@
-import { type Page } from '#api/types/page/index'
+import type { Page } from '#api/types/page/index'
 
 // we do not use SSR, so we can use a simple module level singleton
 export type PageStore = ReturnType<typeof createPageStore>

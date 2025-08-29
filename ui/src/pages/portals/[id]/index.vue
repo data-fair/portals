@@ -18,18 +18,20 @@
           />
         </template>
         <template #font-families-preview="context">
-          <font-families-preview
-            :portal-config="context.node.data"
-          />
+          <v-theme-provider theme="preview-colors">
+            <font-families-preview :portal-config="context.node.data" />
+          </v-theme-provider>
         </template>
         <template #app-bar-preview="context">
-          <v-card>
-            <layout-app-bar
-              :portal-config="editConfig"
-              :detached="true"
-              :home="context.home"
-            />
-          </v-card>
+          <v-theme-provider theme="preview-colors">
+            <v-card>
+              <LayoutAppBar
+                :portal-config="editConfig"
+                :detached="true"
+                :home="context.home"
+              />
+            </v-card>
+          </v-theme-provider>
         </template>
         <template #image-upload="{node, statefulLayout, width, height, label}">
           <image-upload
@@ -57,16 +59,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { Portal } from '#api/types/portal'
-import type { PortalConfig } from '#api/types/portal-config'
+import type { Portal, PortalConfig } from '#api/types/portal'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import LayoutAppBar from '#portal/app/components/layout/layout-app-bar.vue'
 import equal from 'fast-deep-equal'
-import LayoutAppBar from '../../../../../portal/app/components/layout/layout-app-bar.vue'
 
 const { t } = useI18n()
 const route = useRoute<'/portals/[id]/'>()
+const session = useSessionAuthenticated()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
@@ -95,18 +97,16 @@ watch(portalFetch.data, (portal) => {
   }])
 })
 
-const vjsfOptions = computed<VjsfOptions | null>(() => {
-  return {
-    titleDepth: 4,
-    density: 'comfortable',
-    locale: 'fr',
-    updateOn: 'blur',
-    initialValidation: 'always',
-    context: {
-      simplifiedTheme: true
-    }
-  }
-})
+const vjsfOptions = computed<VjsfOptions | null>(() => ({
+  context: {
+    simplifiedTheme: true
+  },
+  density: 'comfortable',
+  initialValidation: 'always',
+  locale: session.lang.value,
+  titleDepth: 4,
+  updateOn: 'blur'
+}))
 
 </script>
 

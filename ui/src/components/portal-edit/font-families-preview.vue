@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { PortalConfig } from '#api/types/portal'
+import type { PortalConfig } from '#api/types/portal'
 import microTemplate from '@data-fair/lib-utils/micro-template.js'
 
 const { portalConfig } = defineProps({

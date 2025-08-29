@@ -16,6 +16,7 @@ export default defineConfig({
   optimizeDeps: { include: ['debug', 'easymde', ...commonjsDeps] },
   resolve: {
     alias: {
+      '#portal': path.resolve(__dirname, '../portal'),
       '~': path.resolve(__dirname, 'src/')
     },
   },
@@ -59,7 +60,13 @@ export default defineConfig({
         'src/composables'
       ]
     }),
-    Components({ dts: './dts/components.d.ts' }),
+    Components({
+      dts: './dts/components.d.ts',
+      dirs: [
+        'src/components',
+        '../portal/app/components'
+      ]
+    }),
     {
       name: 'inject-site-context',
       async transformIndexHtml (html) {

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   alias: {
-    '#api/types': '../api/types'
+    '#api/types': '../../api/types'
   },
   runtimeConfig: {
     privateDirectoryUrl: 'http://simple-directory:8080',

@@ -3,8 +3,21 @@
     :is="detached ? VToolbar : VAppBar"
     :color="mergedOptions.color"
     :density="mergedOptions.density"
+    :extension-height="64"
+    :height="portalConfig.header.hidden ? 0 : 128"
+    :scroll-behavior="mergedOptions.scrollBehavior"
   >
-    {{ portalConfig.title }} - {{ home }}
+    <!-- Header (128px)-->
+    <layout-header v-if="!portalConfig.header.hidden" />
+
+    <!-- Navigation Bar (64px) -->
+    <template #extension>
+      <layout-header-logo v-if="portalConfig.header.hidden"/>
+
+      <nav-tabs-or-menu :menu="portalConfig.menu" />
+
+      <div>Compte</div>
+    </template>
   </component>
 </template>
 

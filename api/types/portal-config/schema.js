@@ -2,13 +2,10 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
   'x-exports': ['types', 'vjsf'],
   title: 'Portal Config',
-  'x-i18n-title': {
-    en: 'Portal Configuration',
-    fr: 'Configuration du portail'
-  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
+    title: null,
     comp: 'expansion-panels',
     children: [
       { title: 'Métadonnées', children: ['title', 'description', 'authentication'] },
@@ -21,7 +18,7 @@ export default {
         ]
       },
       { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
-      { title: 'Entête', children: [{ text: 'TODO' }] },
+      { title: 'Entête', children: ['header'] },
       {
         title: 'Barre de navigation',
         children: [
@@ -39,7 +36,7 @@ export default {
       { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'appBar', 'appBarHome', 'menu'],
+  required: ['title', 'authentication', 'theme', 'header', 'appBar', 'appBarHome', 'menu'],
   properties: {
     title: {
       type: 'string',
@@ -170,6 +167,7 @@ export default {
         }
       }
     },
+    header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     appBar: {
       type: 'object',
       unevaluatedProperties: false,

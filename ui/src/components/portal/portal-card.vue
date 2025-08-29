@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { Portal } from '#api/types/portal'
+import type { Portal } from '#api/types/portal'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 defineProps({

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Image } from '#api/types/image'
+import type { Image } from '#api/types/image'
 
 type ImageRef = {
   _id: string,
