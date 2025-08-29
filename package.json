@@ -13,7 +13,7 @@
     "test-deps": "docker compose --profile test up -d --wait",
     "stop-test-deps": "docker compose --profile test stop",
     "dev-ui": "npm -w ui run dev",
-    "dev-ingress-manager": "NODE_ENV=development node --watch dev/ingress-manager.ts",
+    "dev-ingress-manager": "NODE_ENV=development node --disable-warning=ExperimentalWarning --watch dev/ingress-manager.ts",
     "dev-zellij": "export DEV_SHELL=$(basename \"$SHELL\") && zellij --layout .zellij.kdl && rm data/zellij-deps-ready",
     "lint": "eslint . && npm -w ui run lint",
     "lint-fix": "eslint --fix . && npm -w ui run lint-fix",

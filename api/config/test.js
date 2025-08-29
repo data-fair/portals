@@ -1,11 +1,11 @@
-module.exports = {
+export default {
   port: 8097,
   privateDirectoryUrl: 'http://localhost:8087',
   mongoUrl: 'mongodb://localhost:27017/data-fair-portals-test',
   tmpDir: './tmp',
   observer: {
-    port: 9097,
-    active: false
+    active: false,
+    port: 9097
   },
   secretKeys: {
     identities: 'SECRET_IDENTITIES',

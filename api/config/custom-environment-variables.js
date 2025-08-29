@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   mongoUrl: 'MONGO_URL',
   port: 'PORT',
   privateDirectoryUrl: 'PRIVATE_DIRECTORY_URL',

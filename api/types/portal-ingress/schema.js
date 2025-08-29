@@ -18,7 +18,7 @@ export default {
       type: 'string',
       title: 'Certificat custom',
       layout: {
-        placeholder: 'laissez vide pour utiliser un certificat auto-géré'
+        placeholder: 'Laissez vide pour utiliser un certificat auto-géré'
       }
     },
     controller: {
@@ -37,8 +37,8 @@ export default {
         minItems: 2,
         maxItems: 2,
         items: [
-          { type: 'string', title: 'origine', layout: { cols: 6, placeholder: 'par exemple /pages/accueil/' } },
-          { type: 'string', title: 'destination', layout: { cols: 6, placeholder: 'par exemple /' } }
+          { type: 'string', title: 'Origine', layout: { cols: 6, placeholder: 'Par exemple /pages/accueil/' } },
+          { type: 'string', title: 'Destination', layout: { cols: 6, placeholder: 'Par exemple /' } }
         ]
       }
     },

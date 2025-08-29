@@ -1,198 +1,99 @@
 <template>
   <v-container data-iframe-height>
-    <v-row>
-      <v-col>
-        <v-form
-          v-if="editConfig"
-          v-model="formValid"
-        >
-          <vjsf-portal-config
-            v-if="vjsfOptions"
-            v-model="editConfig"
-            :options="vjsfOptions"
-            @update:model-value="saveDraft.execute()"
-          >
-            <template #colors-preview="context">
-              <colors-preview
-                :colors-key="context.colorsKey"
-                :theme="context.node.data"
-                :dark="context.dark"
-              />
-            </template>
-            <template #font-families-preview="context">
-              <font-families-preview
-                :portal-config="context.node.data"
-              />
-            </template>
-            <template #app-bar-preview="context">
-              <v-card>
-                <layout-app-bar
-                  :portal-config="editConfig"
-                  :detached="true"
-                  :home="context.home"
-                />
-              </v-card>
-            </template>
-            <template #image-upload="{node, statefulLayout, width, height, label}">
-              <image-upload
-                :model-value="node.data"
-                :label="label"
-                :width="width"
-                :height="height"
-                :resource="portalRef"
-                @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
-              />
-            </template>
-          </vjsf-portal-config>
-        </v-form>
-      </v-col>
-      <navigation-right>
-        <v-list
-          density="compact"
-          data-iframe-height
-        >
-          <v-list-item
-            :disabled="validateDraft.loading.value || saveDraft.loading.value || !hasDraftDiff"
-            @click="validateDraft.execute()"
-          >
-            <template #prepend>
-              <v-icon
-                color="primary"
-                :icon="mdiFileReplace"
-              />
-            </template>
-            Valider le brouillon
-          </v-list-item>
-          <v-list-item
-            :disabled="cancelDraft.loading.value || saveDraft.loading.value || !hasDraftDiff"
-            @click="cancelDraft.execute()"
-          >
-            <template #prepend>
-              <v-icon
-                color="warning"
-                :icon="mdiCancel"
-              />
-            </template>
-            Annuler le brouillon
-          </v-list-item>
-          <v-divider class="my-4" />
-          <v-menu
-            :close-on-content-click="false"
-            max-width="500"
-          >
-            <template #activator="{ props }">
-              <v-list-item v-bind="props">
-                <template #prepend>
-                  <v-icon
-                    color="warning"
-                    :icon="mdiDelete"
-                  />
-                </template>
-                Supprimer le portail
-              </v-list-item>
-            </template>
-            <template #default="{isActive}">
-              <v-card
-                title="Suppression du portal"
-                variant="elevated"
-                :loading="deletePortal.loading.value ? 'warning' : false"
-              >
-                <v-card-text>
-                  Voulez-vous vraiment supprimer le portail "{{ portalFetch.data.value?.title }}" ? La suppression est définitive et les données ne pourront pas être récupérées.
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer />
-                  <v-btn
-                    :disabled="deletePortal.loading.value"
-                    @click="isActive.value = false"
-                  >
-                    Non
-                  </v-btn>
-                  <v-btn
-                    color="warning"
-                    variant="flat"
-                    :loading="deletePortal.loading.value"
-                    @click="deletePortal.execute()"
-                  >
-                    Oui
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </template>
-          </v-menu>
-          <v-divider class="my-4" />
-          <v-list-item
-            v-if="session.user.value.adminMode"
-            :to="`/portals/${route.params.id}/ingress`"
-          >
-            <template #prepend>
-              <v-icon
-                color="admin"
-                :icon="mdiShieldLinkVariant"
-              />
-            </template>
-            Gérer l'exposition sur un domaine
-          </v-list-item>
-          <v-list-item
-            :href="$uiConfig.draftUrlPattern.replace('{id}', route.params.id)"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiShieldLinkVariant"
-              />
-            </template>
-            Voir le brouillon
-          </v-list-item>
-          <v-list-item
-            v-if="portalFetch.data.value?.ingress"
-            :href="portalFetch.data.value?.ingress.url"
-          >
-            <template #prepend>
-              <v-icon
-                :icon="mdiLink"
-              />
-            </template>
-            Visiter le portail
-          </v-list-item>
-        </v-list>
-      </navigation-right>
-    </v-row>
+    <v-form
+      v-if="editConfig"
+      v-model="formValid"
+    >
+      <vjsf-portal-config
+        v-if="vjsfOptions"
+        v-model="editConfig"
+        :options="vjsfOptions"
+        @update:model-value="saveDraft.execute()"
+      >
+        <template #colors-preview="context">
+          <colors-preview
+            :colors-key="context.colorsKey"
+            :theme="context.node.data"
+            :dark="context.dark"
+          />
+        </template>
+        <template #font-families-preview="context">
+          <font-families-preview
+            :portal-config="context.node.data"
+          />
+        </template>
+        <template #app-bar-preview="context">
+          <v-card>
+            <layout-app-bar
+              :portal-config="editConfig"
+              :detached="true"
+              :home="context.home"
+            />
+          </v-card>
+        </template>
+        <template #image-upload="{node, statefulLayout, width, height, label}">
+          <image-upload
+            :model-value="node.data"
+            :label="label"
+            :width="width"
+            :height="height"
+            :resource="portalRef"
+            @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
+          />
+        </template>
+      </vjsf-portal-config>
+    </v-form>
+
+    <navigation-right v-if="portalFetch.data.value">
+      <portal-actions
+        :has-draft-diff="hasDraftDiff"
+        :is-saving-draft="saveDraft.loading.value"
+        :portal-title="portalFetch.data.value.config.title"
+        :portal-url="portalFetch.data.value.ingress?.url"
+        @refresh-portal="portalFetch.refresh()"
+      />
+    </navigation-right>
   </v-container>
 </template>
 
-<!--
-<i18n lang="yaml">
-fr:
-en:
-</i18n>
--->
-
 <script lang="ts" setup>
-import { type Options as VjsfOptions } from '@koumoul/vjsf'
-import { type Portal } from '#api/types/portal/index'
-import { type PortalConfig } from '#api/types/portal-config/index'
+import type { Portal } from '#api/types/portal'
+import type { PortalConfig } from '#api/types/portal-config'
+import type { Options as VjsfOptions } from '@koumoul/vjsf'
+
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import { mdiFileReplace, mdiLink, mdiShieldLinkVariant } from '@mdi/js'
 import equal from 'fast-deep-equal'
 import LayoutAppBar from '../../../../../portal/app/components/layout/layout-app-bar.vue'
 
-const router = useRouter()
+const { t } = useI18n()
 const route = useRoute<'/portals/[id]/'>()
-const session = useSessionAuthenticated()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
+const formValid = ref(false)
 watch(portalFetch.data, () => {
   if (portalFetch.data.value) editConfig.value = portalFetch.data.value.draftConfig
 })
 
-const portalRef = { type: 'portal', _id: route.params.id }
+const portalRef = { type: 'portal' as const, _id: route.params.id }
+
+const saveDraft = useAsyncAction(async () => {
+  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+})
 
 const hasDraftDiff = computed(() => {
   return !equal(editConfig.value, portalFetch.data.value?.config)
 })
 
-const formValid = ref(false)
+watch(portalFetch.data, (portal) => {
+  if (!portal) return
+  setBreadcrumbs([{
+    text: t('portals'),
+    to: '/portals'
+  }, {
+    text: portal.config.title
+  }])
+})
 
 const vjsfOptions = computed<VjsfOptions | null>(() => {
   return {
@@ -207,36 +108,18 @@ const vjsfOptions = computed<VjsfOptions | null>(() => {
   }
 })
 
-const saveDraft = useAsyncAction(async () => {
-  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
-})
-
-const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
-  await portalFetch.refresh()
-})
-
-const validateDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
-  await portalFetch.refresh()
-})
-
-const deletePortal = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}`, { method: 'DELETE' })
-  router.push('/portals/')
-})
-
-watch(portalFetch.data, (portal) => {
-  if (!portal) return
-  setBreadcrumbs([{
-    text: 'Portails',
-    to: '/portals'
-  }, {
-    text: portal.config.title
-  }])
-})
-
 </script>
 
-<style lang="css">
+<i18n lang="yaml">
+  en:
+    portals: Portals
+
+  fr:
+    portals: Portails
+
+</i18n>
+
+<!--
+<style scoped>
 </style>
+-->

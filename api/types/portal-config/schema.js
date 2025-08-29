@@ -1,7 +1,11 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
   'x-exports': ['types', 'vjsf'],
-  title: 'Portal config',
+  title: 'Portal Config',
+  'x-i18n-title': {
+    en: 'Portal Configuration',
+    fr: 'Configuration du portail'
+  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -183,14 +187,22 @@ export default {
       layout: {
         comp: 'card',
         switch: [
-          { if: 'data?.active', children: ['active', 'color', 'density', { name: 'app-bar-preview', props: { home: true } }] },
+          {
+            if: 'data?.active',
+            children: [
+              'active',
+              'color',
+              'density',
+              { name: 'app-bar-preview', props: { home: true } }
+            ]
+          },
           ['active']
         ]
       },
       properties: {
         active: {
           type: 'boolean',
-          title: 'activer un rendu différent sur la page d\'accueil',
+          title: 'Utiliser un rendu différent sur la page d\'accueil',
           layout: { props: { color: 'primary' } }
         },
         color: { $ref: '#/$defs/appBarColor' },
@@ -213,24 +225,24 @@ export default {
   $defs: {
     appBarColor: {
       type: 'string',
-      title: 'couleur',
+      title: 'Couleur',
       default: 'primary',
       oneOf: [
-        { const: 'primary', title: 'couleur principale' },
-        { const: 'secondary', title: 'couleur secondaire' },
-        { const: 'accent', title: 'couleur accentuée' },
-        { const: 'surface', title: 'couleur des surfaces' }
+        { const: 'primary', title: 'Couleur principale' },
+        { const: 'secondary', title: 'Couleur secondaire' },
+        { const: 'accent', title: 'Couleur accentuée' },
+        { const: 'surface', title: 'Couleur des surfaces' }
       ]
     },
     appBarDensity: {
       type: 'string',
-      title: 'densité',
+      title: 'Densité',
       default: 'default',
       oneOf: [
-        { const: 'default', title: 'normale' },
-        { const: 'prominent', title: 'étendue' },
-        { const: 'comfortable', title: 'un peu plus dense' },
-        { const: 'compact', title: 'très dense' }
+        { const: 'default', title: 'Normale' },
+        { const: 'prominent', title: 'Étendue' },
+        { const: 'comfortable', title: 'Un peu plus dense' },
+        { const: 'compact', title: 'Très dense' }
       ]
     },
     menuItem: {
@@ -239,53 +251,46 @@ export default {
       default: { type: 'custom' },
       oneOf: [{
         required: ['title'],
-        title: 'catalogue de jeux de données',
+        title: 'Catalogue des jeux de données',
         properties: {
-          type: {
-            const: 'datasets',
-          },
+          type: { const: 'datasets' },
           title: {
             type: 'string',
-            default: 'jeux de données',
-            title: 'libellé'
+            default: 'Jeux de données',
+            title: 'Libellé'
           }
         }
       }, {
         required: ['title'],
-        title: 'catalogue de visualisations',
+        title: 'Catalogue des visualisations',
         properties: {
-          type: {
-            const: 'applications'
-          },
+          type: { const: 'applications' },
           title: {
             type: 'string',
-            default: 'visualisations',
-            title: 'libellé'
+            default: 'Visualisations',
+            title: 'Libellé'
           }
         }
       }, {
         required: ['title'],
-        title: 'page de contact',
+        title: 'Page de contact',
         properties: {
-          type: {
-            const: 'contact'
-          },
+          type: { const: 'contact' },
           title: {
             type: 'string',
-            default: 'contact',
-            title: 'libellé'
+            default: 'Contact',
+            title: 'Libellé'
           }
         }
       }, {
-        title: 'page éditée',
+        required: ['title'],
+        title: 'Page personnalisée',
         properties: {
-          type: {
-            const: 'custom'
-          },
+          type: { const: 'custom' },
           pageRef: {
             type: 'object',
             required: ['_id', 'title'],
-            title: 'page',
+            title: 'Page',
             layout: {
               getItems: {
                 url: '/portals-manager/api/pages?select=_id,title',
@@ -295,29 +300,23 @@ export default {
               }
             },
             properties: {
-              _id: {
-                type: 'string'
-              },
-              title: {
-                type: 'string'
-              }
+              _id: { type: 'string' },
+              title: { type: 'string' }
             }
           },
           title: {
             type: 'string',
-            title: 'libellé'
+            title: 'Libellé'
           }
         }
       }, {
-        title: 'sous-menu',
+        title: 'Sous-menu',
         required: ['children'],
         properties: {
-          type: {
-            const: 'menu'
-          },
+          type: { const: 'menu' },
           title: {
             type: 'string',
-            title: 'libellé'
+            title: 'Libellé'
           },
           children: {
             type: 'array',

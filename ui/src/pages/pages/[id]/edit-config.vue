@@ -1,60 +1,52 @@
 <template>
   <v-container data-iframe-height>
-    <v-row>
-      <v-col>
-        <v-form
-          v-if="editConfig"
-          v-model="formValid"
-        >
-          <vjsf-page-config
-            v-model="editConfig"
-            :options="vjsfOptions"
-            @update:model-value="saveDraft.execute()"
-          >
-            <template #page-elements="{node, statefulLayout}">
-              <v-defaults-provider :defaults="vjsfDefaults">
-                <page-edit-elements
-                  :model-value="node.data"
-                  add-item-message="ajouter un bloc à la page"
-                  @update:model-value="(data: any) => statefulLayout.input(node, data)"
-                />
-              </v-defaults-provider>
-            </template>
-          </vjsf-page-config>
-        </v-form>
-      </v-col>
-      <navigation-right>
-        <v-list
-          density="compact"
-          data-iframe-height
-        >
-          <v-list-item
-            :disabled="validateDraft.loading.value || saveDraft.loading.value"
-            @click="validateDraft.execute()"
-          >
-            <template #prepend>
-              <v-icon
-                color="primary"
-                :icon="mdiFileReplace"
-              />
-            </template>
-            Valider le brouillon
-          </v-list-item>
-          <v-list-item
-            :disabled="cancelDraft.loading.value || saveDraft.loading.value"
-            @click="cancelDraft.execute()"
-          >
-            <template #prepend>
-              <v-icon
-                color="warning"
-                :icon="mdiCancel"
-              />
-            </template>
-            Annuler le brouillon
-          </v-list-item>
-        </v-list>
-      </navigation-right>
-    </v-row>
+    <v-form
+      v-if="editConfig"
+      v-model="formValid"
+    >
+      <vjsf-page-config
+        v-model="editConfig"
+        :options="vjsfOptions"
+        @update:model-value="saveDraft.execute()"
+      >
+        <template #page-elements="{node, statefulLayout}">
+          <v-defaults-provider :defaults="vjsfDefaults">
+            <page-edit-elements
+              :model-value="node.data"
+              add-item-message="ajouter un bloc à la page"
+              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+            />
+          </v-defaults-provider>
+        </template>
+      </vjsf-page-config>
+    </v-form>
+    <navigation-right>
+      <!-- Validate draft -->
+      <v-list-item
+        :disabled="validateDraft.loading.value || saveDraft.loading.value"
+        @click="validateDraft.execute()"
+      >
+        <template #prepend>
+          <v-icon
+            color="primary"
+            :icon="mdiFileReplace"
+          />
+        </template>
+        Valider le brouillon
+      </v-list-item>
+      <v-list-item
+        :disabled="cancelDraft.loading.value || saveDraft.loading.value"
+        @click="cancelDraft.execute()"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiCancel"
+          />
+        </template>
+        Annuler le brouillon
+      </v-list-item>
+    </navigation-right>
     <v-btn
       v-if="changesStack.canUndo.value"
       :icon="mdiUndo"
@@ -82,9 +74,10 @@ en:
 -->
 
 <script lang="ts" setup>
-import { type Options as VjsfOptions } from '@koumoul/vjsf'
+import type { Options as VjsfOptions } from '@koumoul/vjsf'
+import type { PageConfig } from '#api/types/page-config/index'
+
 import VjsfMarkdown from '@koumoul/vjsf-markdown'
-import { type PageConfig } from '#api/types/page-config/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
 import useChangesStack from '~/composables/use-changes-stack'

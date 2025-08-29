@@ -1,89 +1,94 @@
 <template>
-  <v-list
-    density="compact"
-    data-iframe-height
+  <!-- Create new portal -->
+  <v-menu
+    v-model="newPortalMenu"
+    location="start"
+    :close-on-content-click="false"
   >
-    <v-menu
-      v-model="newPortalMenu"
-      location="start"
-      :close-on-content-click="false"
-    >
-      <template #activator="{props}">
-        <v-list-item v-bind="props">
-          <template #prepend>
-            <v-icon
-              color="primary"
-              :icon="mdiPlusCircle"
-            />
-          </template>
-          Créer un nouveau portail
-        </v-list-item>
-      </template>
-      <v-card>
-        <v-card-text>
-          <v-text-field
-            v-model="newPortalTitle"
-            variant="outlined"
-            hide-details
-            density="comfortable"
-            label="titre du nouveau portail"
-            autofocus
-          />
-          <v-checkbox
-            v-model="newPortalStaging"
-            hide-details
-            density="comfortable"
-            label="portail de pré-production"
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="newPortalMenu = false">
-            Annuler
-          </v-btn>
-          <v-btn
+    <template #activator="{props}">
+      <v-list-item v-bind="props">
+        <template #prepend>
+          <v-icon
             color="primary"
-            :disabled="!newPortalTitle || createPortal.loading.value"
-            variant="flat"
-            @click="createPortal.execute()"
-          >
-            Créer le portail
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-menu>
-    <v-list-item>
-      <v-text-field
-        v-model="search"
-        :append-inner-icon="mdiMagnify"
-        clearable
-        color="primary"
-        density="compact"
-        hide-details
-        hide-selected
-        placeholder="rechercher"
-        style="max-width:400px;"
-        variant="outlined"
-      />
-    </v-list-item>
-    <v-list-item v-if="session.user.value.adminMode">
-      <v-switch
-        v-model="showAll"
-        density="compact"
-        color="admin"
-        label="Voir tous les portals"
-        hide-details
-        class="pl-3 text-admin"
-      />
-    </v-list-item>
-  </v-list>
+            :icon="mdiPlusCircle"
+          />
+        </template>
+        {{ t('createNewPortal') }}
+      </v-list-item>
+    </template>
+    <v-card
+      data-iframe-height
+      min-width="300"
+      rounded="lg"
+      :loading="createPortal.loading.value ? 'primary' : false"
+    >
+      <v-card-text class="pb-0">
+        <v-text-field
+          v-model="newPortalTitle"
+          density="comfortable"
+          variant="outlined"
+          :label="t('newPortalTitle')"
+          autofocus
+          hide-details
+        />
+        <v-checkbox
+          v-model="newPortalStaging"
+          density="comfortable"
+          :label="t('newPortalStaging')"
+          hide-details
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          :disabled="createPortal.loading.value"
+          @click="newPortalMenu = false"
+        >
+          {{ t('cancel') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          :disabled="!newPortalTitle"
+          :loading="createPortal.loading.value ? 'primary' : false"
+          @click="createPortal.execute()"
+        >
+          {{ t('create') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+
+  <!-- Search field -->
+  <v-text-field
+    v-model="search"
+    :append-inner-icon="mdiMagnify"
+    :label="t('search')"
+    class="mt-4 mx-4"
+    color="primary"
+    density="compact"
+    variant="outlined"
+    autofocus
+    hide-details
+    clearable
+  />
+
+  <!-- Show all switch (admin only) -->
+  <v-switch
+    v-if="session.user.value.adminMode"
+    v-model="showAll"
+    color="admin"
+    class="mx-4 text-admin"
+    :label="t('showAllPortals')"
+    hide-details
+  />
 </template>
 
 <script setup lang="ts">
-
-import { Portal } from '#api/types/portal'
+import type { Portal } from '#api/types/portal'
 import { mdiMagnify, mdiPlusCircle } from '@mdi/js'
 
+const { t } = useI18n()
 const session = useSessionAuthenticated()
 const router = useRouter()
 
@@ -106,10 +111,33 @@ const createPortal = useAsyncAction(async () => {
       config: { title: newPortalTitle.value }
     }
   })
-  await router.replace({ path: `/portals/${portal._id}` })
+  await router.push({ path: `/portals/${portal._id}` })
 })
 
 </script>
 
+<i18n lang="yaml">
+  en:
+    cancel: Cancel
+    create: Create
+    createNewPortal: Create a new portal
+    newPortalTitle: New Portal Title
+    newPortalStaging: New Portal Staging
+    search: Search...
+    showAllPortals: Show all portals
+
+  fr:
+    cancel: Annuler
+    create: Créer
+    createNewPortal: Créer un nouveau portail
+    newPortalTitle: Titre du nouveau portail
+    newPortalStaging: Portail de pré-production
+    search: Rechercher...
+    showAllPortals: Voir tous les portails
+
+</i18n>
+
+<!--
 <style scoped>
 </style>
+-->
