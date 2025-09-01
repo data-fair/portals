@@ -9,6 +9,7 @@
   <nav-tabs
     v-else
     :menu="menu"
+    :density="density"
   />
 </template>
 
@@ -16,5 +17,6 @@
 import type { PortalConfig } from '#api/types/portal'
 defineProps<{
   menu: PortalConfig['menu']
+  density: PortalConfig['header']['density']
 }>()
 </script>

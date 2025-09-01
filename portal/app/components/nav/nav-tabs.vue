@@ -1,9 +1,9 @@
 <template>
+  <v-spacer />
   <v-tabs
     v-model="activeTab"
-    align-tabs="center"
+    :density="density"
   >
-
     <v-tab value="datasets">Jeux de données</v-tab>
 
     <v-menu open-on-hover>
@@ -29,7 +29,14 @@ import type { PortalConfig } from '#api/types/portal'
 
 defineProps<{
   menu: PortalConfig['menu']
+  density: PortalConfig['header']['density']
 }>()
 
 const activeTab = ref('datasets')
 </script>
+
+<style scoped lang="css">
+:deep(.v-tab__slider) {
+  height: 4px !important;
+}
+</style>

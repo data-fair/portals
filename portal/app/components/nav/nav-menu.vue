@@ -3,12 +3,10 @@
     <template #activator="{props}">
       <v-btn
         v-bind="props"
-        title="Menu de navigation"
+        title="Ouvrir le menu de navigation"
         variant="text"
-        tile
         :icon="mdiMenu"
-        :height="64"
-        :width="64"
+        tile
       />
     </template>
     <v-list>

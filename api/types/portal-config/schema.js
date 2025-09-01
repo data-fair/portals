@@ -18,13 +18,14 @@ export default {
         ]
       },
       { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
-      { title: 'Entête', children: ['header'] },
       {
-        title: 'Barre de navigation',
+        title: 'Entête & Barre de navigation',
         children: [
-          'appBar',
-          { name: 'app-bar-preview' },
-          'appBarHome',
+          'header',
+          {
+            name: 'app-bar-preview',
+          },
+          'headerHome',
           'menu'
         ]
       },
@@ -36,7 +37,7 @@ export default {
       { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'appBar', 'appBarHome', 'menu'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu'],
   properties: {
     title: {
       type: 'string',
@@ -168,20 +169,10 @@ export default {
       }
     },
     header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
-    appBar: {
-      type: 'object',
-      unevaluatedProperties: false,
-      required: ['color', 'density'],
-      properties: {
-        color: { $ref: '#/$defs/appBarColor' },
-        density: { $ref: '#/$defs/appBarDensity' }
-      }
-    },
-    appBarHome: {
+    headerHome: {
       type: 'object',
       title: 'Options spécifiques pour la page d\'accueil',
       unevaluatedProperties: false,
-      required: ['color', 'density'],
       layout: {
         comp: 'card',
         switch: [
@@ -189,22 +180,22 @@ export default {
             if: 'data?.active',
             children: [
               'active',
-              'color',
-              'density',
+              'header',
               { name: 'app-bar-preview', props: { home: true } }
             ]
           },
           ['active']
         ]
       },
+      required: ['active'],
       properties: {
         active: {
           type: 'boolean',
           title: 'Utiliser un rendu différent sur la page d\'accueil',
-          layout: { props: { color: 'primary' } }
+          layout: { props: { color: 'primary' }, comp: 'switch' },
+          default: false
         },
-        color: { $ref: '#/$defs/appBarColor' },
-        density: { $ref: '#/$defs/appBarDensity' }
+        header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' }
       }
     },
     menu: {
@@ -221,28 +212,6 @@ export default {
     }
   },
   $defs: {
-    appBarColor: {
-      type: 'string',
-      title: 'Couleur',
-      default: 'primary',
-      oneOf: [
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' }
-      ]
-    },
-    appBarDensity: {
-      type: 'string',
-      title: 'Densité',
-      default: 'default',
-      oneOf: [
-        { const: 'default', title: 'Normale' },
-        { const: 'prominent', title: 'Étendue' },
-        { const: 'comfortable', title: 'Un peu plus dense' },
-        { const: 'compact', title: 'Très dense' }
-      ]
-    },
     menuItem: {
       type: 'object',
       unevaluatedProperties: false,

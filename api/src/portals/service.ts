@@ -210,7 +210,17 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
 
 const cleanUnusedImages = async (portal: Portal) => {
   const imagesIds = []
-  const imageRefs = [portal.config.logo, portal.config.logoDark, portal.config.favicon, portal.draftConfig.logo, portal.draftConfig.logoDark, portal.draftConfig.favicon]
+  const imageRefs = [
+    portal.config.logo,
+    portal.config.logoDark,
+    portal.config.favicon,
+    portal.config.header.logoSecondary,
+    portal.draftConfig.logo,
+    portal.draftConfig.logoDark,
+    portal.draftConfig.favicon,
+    portal.config.header.logoSecondary
+  ]
+
   for (const imageRef of imageRefs) {
     if (!imageRef) continue
     imagesIds.push(imageRef._id)
