@@ -33,11 +33,11 @@ export default {
       { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
-      { title: 'Contact', children: [{ text: 'TODO' }] },
+      { title: 'Contact & Réseaux sociaux', children: [{ text: 'TODO' }, 'socialLinks'] },
       { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'socialLinks'],
   properties: {
     title: {
       type: 'string',
@@ -209,7 +209,8 @@ export default {
           items: { $ref: '#/$defs/menuItem' }
         }
       }
-    }
+    },
+    socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' }
   },
   $defs: {
     menuItem: {

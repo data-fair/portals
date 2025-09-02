@@ -6,13 +6,18 @@ export default {
   layout: {
     title: null
   },
-  required: ['hidden', 'logoPrimaryType', 'navBarColor', 'density'],
+  required: ['show', 'logoPrimaryType', 'navBarColor', 'density'],
   properties: {
-    hidden: {
+    show: {
       type: 'boolean',
-      layout: 'switch',
-      title: 'Masquer l\'entête',
-      default: false
+      layout: {
+        comp: 'switch',
+        props: {
+          color: 'primary'
+        }
+      },
+      title: 'Afficher l\'entête',
+      default: true
     },
     logoPrimaryType: {
       type: 'string',
@@ -54,7 +59,12 @@ export default {
       }
     },
     logoLink: {
-      layout: { if: 'parent.data?.logoPrimaryType !== "hidden"' },
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        props: {
+          clearable: true
+        }
+      },
       type: 'string',
       title: 'Lien au clic sur le logo principal',
       description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.'
@@ -64,7 +74,7 @@ export default {
       title: 'Logo secondaire',
       required: ['_id', 'name', 'mimeType'],
       layout: {
-        if: '!parent.data?.hidden',
+        if: '!parent.data?.show',
         slots: {
           component: {
             name: 'image-upload',
@@ -89,13 +99,26 @@ export default {
       }
     },
     logoSecondaryLink: {
-      layout: { if: '!parent.data?.hidden' },
+      layout: {
+        if: '!parent.data?.show',
+        props: {
+          clearable: true
+        }
+      },
       type: 'string',
       title: 'Lien au clic sur le logo secondaire',
       description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo secondaire.'
     },
+    social: {
+      type: 'boolean',
+      title: 'Afficher les liens de réseaux sociaux',
+      layout: {
+        if: '!parent.data?.show',
+        comp: 'switch'
+      }
+    },
     headerColor: {
-      layout: { if: '!parent.data?.hidden' },
+      layout: { if: '!parent.data?.show' },
       type: 'string',
       title: 'Couleur de l\'entête',
       default: 'navBar',

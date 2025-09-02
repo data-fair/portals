@@ -4,13 +4,16 @@
     :color="headerConfig.navBarColor"
     :density="headerConfig.density"
     :extension-height="headerConfig.density === 'default' ? 64 : undefined"
-    :height="headerConfig.hidden ? 0 : 128"
+    :height="headerConfig.show ? 128 : 0"
     scroll-behavior="hide"
   >
     <!-- Header (128px)-->
     <layout-header
-      v-if="!headerConfig.hidden"
-      :portal-config="portalConfig"
+      v-if="headerConfig.show"
+      :header-config="headerConfig"
+      :portal-logo="portalConfig.logo"
+      :portal-title="portalConfig.title"
+      :social-links="portalConfig.socialLinks"
     />
 
     <!-- Navigation Bar (64px) -->
@@ -20,25 +23,12 @@
         fluid
       >
         <v-row align="center">
-          <template
-            v-if="
-              headerConfig.logoPrimaryType !== 'hidden'
-              && (headerConfig.hidden || $vuetify.display.xs)
-            "
-          >
-            <layout-header-logo
-              v-if="headerConfig.logoPrimaryType === 'local' && headerConfig.logoPrimary"
-              :logo="headerConfig.logoPrimary"
-              :link="portalConfig.header.logoLink"
-              :height="56"
-            />
-            <layout-header-logo
-              v-else-if="portalConfig.logo"
-              :logo="portalConfig.logo"
-              :link="portalConfig.header.logoLink"
-              :height="56"
-            />
-          </template>
+          <layout-header-logo
+            v-if="logo && (!headerConfig.show || $vuetify.display.xs)"
+            :logo="logo"
+            :link="portalConfig.header.logoLink"
+            :height="56"
+          />
 
           <nav-tabs-or-menu
             :menu="portalConfig.menu"
@@ -49,14 +39,9 @@
           <v-toolbar-items>
             <v-btn
               title="Ouvrir la liste des notifications"
-              variant="text"
               :icon="mdiBell"
-              tile
             />
-            <v-btn
-              variant="text"
-              tile
-            >
+            <v-btn>
               Se connecter
             </v-btn>
           </v-toolbar-items>
@@ -80,6 +65,15 @@ const { portalConfig, home } = defineProps({
 const headerConfig = computed(() => {
   if (!home || !portalConfig.headerHome?.active) return portalConfig.header
   return { ...portalConfig.header, ...portalConfig.headerHome.header }
+})
+
+const logo = computed(() => {
+  if (headerConfig.value.logoPrimaryType === 'local' && headerConfig.value.logoPrimary) {
+    return headerConfig.value.logoPrimary
+  } else if (headerConfig.value.logoPrimaryType === 'default' && portalConfig.logo) {
+    return portalConfig.logo
+  }
+  return null
 })
 
 </script>
