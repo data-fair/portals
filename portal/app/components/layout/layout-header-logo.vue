@@ -8,7 +8,7 @@
     title="Ouvrir le lien"
   >
     <v-img
-      :src="getImageSrc(logo, true)"
+      :src="getImageSrc(logo, false)"
       :height="height || 80"
       :max-width="$vuetify.display.width / 2"
       :position="isSecondary ? 'right' : 'left'"
@@ -23,25 +23,17 @@
     to="/"
     title="Aller à l'accueil"
   >
-    <v-img
-      :src="getImageSrc(logo, true)"
+    <img
+      :src="getImageSrc(logo, false)"
       :height="height || 80"
-      :max-width="$vuetify.display.width / 2"
-      :position="isSecondary ? 'right' : 'left'"
-      width="auto"
-      inline
-    />
+    >
   </NuxtLink>
 
-  <v-img
+  <img
     v-else
-    :src="getImageSrc(logo, true)"
+    :src="getImageSrc(logo, false)"
     :height="height || 80"
-    :max-width="$vuetify.display.width / 2"
-    :position="isSecondary ? 'right' : 'left'"
-    width="auto"
-    inline
-  />
+  >
 </template>
 
 <script setup lang="ts">

@@ -5,4 +5,6 @@
       <slot />
     </v-container>
   </v-main>
+  <LayoutFooter :home="true" :portal-config="$portalConfig" />
+  <LayoutScrollToTop />
 </template>

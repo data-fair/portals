@@ -1,53 +1,73 @@
 <template>
   <v-container data-iframe-height>
-    <v-form
-      v-if="editConfig"
-      v-model="formValid"
+    <v-defaults-provider
+      :defaults="{
+        global: {
+          hideDetails: 'auto'
+        }
+      }"
     >
-      <vjsf-portal-config
-        v-if="vjsfOptions"
-        v-model="editConfig"
-        :options="vjsfOptions"
-        @update:model-value="saveDraft.execute()"
+      <v-form
+        v-if="editConfig"
+        v-model="formValid"
       >
-        <template #colors-preview="context">
-          <colors-preview
-            :colors-key="context.colorsKey"
-            :theme="context.node.data"
-            :dark="context.dark"
-          />
-        </template>
-        <template #font-families-preview="context">
-          <v-theme-provider theme="preview-colors">
-            <font-families-preview :portal-config="context.node.data" />
-          </v-theme-provider>
-        </template>
-        <template #app-bar-preview="context">
-          <v-theme-provider theme="preview-colors">
-            <v-card>
-              <LayoutAppBar
-                :portal-config="editConfig"
-                :detached="true"
-                :home="context.home"
-              />
-            </v-card>
-          </v-theme-provider>
-        </template>
-        <template #image-upload="{node, statefulLayout, width, height, label}">
-          <image-upload
-            :model-value="node.data"
-            :label="label"
-            :width="width"
-            :height="height"
-            :resource="portalRef"
-            @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
-          />
-        </template>
-      </vjsf-portal-config>
-    </v-form>
+        <vjsf-portal-config
+          v-if="vjsfOptions"
+          v-model="editConfig"
+          :options="vjsfOptions"
+          @update:model-value="saveDraft.execute()"
+        >
+          <template #colors-preview="context">
+            <colors-preview
+              :colors-key="context.colorsKey"
+              :theme="context.node.data"
+              :dark="context.dark"
+            />
+          </template>
+          <template #font-families-preview="context">
+            <v-theme-provider theme="preview-colors">
+              <font-families-preview :portal-config="context.node.data" />
+            </v-theme-provider>
+          </template>
+          <template #app-bar-preview="context">
+            <v-theme-provider theme="preview-colors">
+              <v-card>
+                <LayoutAppBar
+                  :portal-config="editConfig"
+                  :detached="true"
+                  :home="context.home"
+                />
+              </v-card>
+            </v-theme-provider>
+          </template>
+          <template #footer-preview="context">
+            <v-theme-provider theme="preview-colors">
+              <v-card>
+                <LayoutFooter
+                  :portal-config="editConfig"
+                  :detached="true"
+                  :home="context.home"
+                />
+              </v-card>
+            </v-theme-provider>
+          </template>
+          <template #image-upload="{node, statefulLayout, width, height, label}">
+            <image-upload
+              :model-value="node.data"
+              :label="label"
+              :width="width"
+              :height="height"
+              :resource="portalRef"
+              @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
+            />
+          </template>
+        </vjsf-portal-config>
+      </v-form>
+    </v-defaults-provider>
 
     <navigation-right v-if="portalFetch.data.value">
       <portal-actions
+        :is-valid-draft="formValid"
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
         :portal-title="portalFetch.data.value.config.title"

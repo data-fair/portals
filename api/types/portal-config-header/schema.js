@@ -67,7 +67,7 @@ export default {
       },
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.'
+      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.'
     },
     logoSecondary: {
       type: 'object',

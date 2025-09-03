@@ -1,78 +1,73 @@
 <template>
   <v-btn
-    v-if="links.bluesky"
-    :href="`https://bsky.app/profile/${links.bluesky}`"
+    v-for="[key, platform] in filteredSocialPlatforms"
+    :key="key"
+    :title="platform.title"
+    :href="platform.url(links[key] as string)"
     target="_blank"
     rel="noopener noreferrer"
-    title="Ouvrir le profil Bluesky"
     density="comfortable"
+    variant="text"
     icon
   >
-    <icon-bluesky />
+    <icon-bluesky v-if="key === 'bluesky'" />
+    <icon-x v-else-if="key === 'x'" />
+    <v-icon v-else :icon="platform.icon" />
   </v-btn>
-  <v-btn
-    v-if="links.x"
-    :href="`https://x.com/${links.x}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil X"
-    density="comfortable"
-    icon
-  >
-    <icon-x />
-  </v-btn>
-  <v-btn
-    v-if="links.facebook"
-    :icon="mdiFacebook"
-    :href="`https://facebook.com/${links.facebook}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil Facebook"
-    density="comfortable"
-  />
-  <v-btn
-    v-if="links.linkedin"
-    :icon="mdiLinkedin"
-    :href="`https://linkedin.com/company/${links.linkedin}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil LinkedIn"
-    density="comfortable"
-  />
-  <v-btn
-    v-if="links.instagram"
-    :icon="mdiInstagram"
-    :href="`https://instagram.com/${links.instagram}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil Instagram"
-    density="comfortable"
-  />
-  <v-btn
-    v-if="links.youtube"
-    :icon="mdiYoutube"
-    :href="`https://youtube.com/${links.youtube}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil YouTube"
-    density="comfortable"
-  />
-  <v-btn
-    v-if="links.vimeo"
-    :icon="mdiVimeo"
-    :href="`https://vimeo.com/${links.vimeo}`"
-    target="_blank"
-    rel="noopener noreferrer"
-    title="Ouvrir le profil Vimeo"
-    density="comfortable"
-  />
 </template>
 
 <script setup lang="ts">
 import type { SocialLinks } from '#api/types/portal'
 import { mdiFacebook, mdiInstagram, mdiLinkedin, mdiVimeo, mdiYoutube } from '@mdi/js'
 
-defineProps<{
+const props = defineProps<{
   links: SocialLinks
 }>()
+
+const filteredSocialPlatforms = computed(() => {
+  return Object.entries(socialPlatforms).filter(([key]) => props.links[key])
+})
+
+const socialPlatforms: Record<
+  keyof SocialLinks,
+  {
+    url: (handle: string) => string
+    title: string
+    icon?: string
+  }
+> = {
+  bluesky: {
+    url: (handle) => `https://bsky.app/profile/${handle}`,
+    title: 'Ouvrir le profil Bluesky'
+  },
+  x: {
+    url: (handle) => `https://x.com/${handle}`,
+    title: 'Ouvrir le profil X'
+  },
+  facebook: {
+    url: (handle) => `https://facebook.com/${handle}`,
+    title: 'Ouvrir le profil Facebook',
+    icon: mdiFacebook,
+  },
+  linkedin: {
+    url: (handle) => `https://linkedin.com/company/${handle}`,
+    title: 'Ouvrir le profil LinkedIn',
+    icon: mdiLinkedin,
+  },
+  instagram: {
+    url: (handle) => `https://instagram.com/${handle}`,
+    title: 'Ouvrir le profil Instagram',
+    icon: mdiInstagram,
+  },
+  youtube: {
+    url: (handle) => `https://youtube.com/${handle}`,
+    title: 'Ouvrir le profil YouTube',
+    icon: mdiYoutube,
+  },
+  vimeo: {
+    url: (handle) => `https://vimeo.com/${handle}`,
+    title: 'Ouvrir le profil Vimeo',
+    icon: mdiVimeo
+  }
+}
 </script>

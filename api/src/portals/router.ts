@@ -55,14 +55,39 @@ router.post('', async (req, res, next) => {
     ...body.config,
     authentication: 'optional' as const,
     theme: fillTheme(defaultTheme, defaultTheme),
-    appBar: { color: 'primary', density: 'default' },
-    appBarHome: { active: false, color: 'primary', density: 'default' },
     menu: {
       children: [
         { type: 'datasets', title: 'jeux de données' },
         { type: 'applications', title: 'visualisations' },
         { type: 'contact', title: 'contact' }
       ]
+    },
+    header: {
+      show: false,
+      logoPrimaryType: 'default',
+      headerColor: 'navBar',
+      navBarColor: 'primary',
+      density: 'default'
+    },
+    headerHome: { active: false },
+    footer: {
+      color: 'primary',
+      showSocial: false,
+      copyright: 'text',
+      logoPrimaryType: 'default',
+      extraLogos: [],
+      linksMode: 'lines',
+      links: [{ type: 'sitemap' }, { type: 'privacy-policy' }],
+      importantLinks: []
+    },
+    socialLinks: {
+      bluesky: undefined,
+      x: undefined,
+      facebook: undefined,
+      linkedin: undefined,
+      instagram: undefined,
+      youtube: undefined,
+      vimeo: undefined
     }
   }
 

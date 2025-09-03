@@ -22,14 +22,12 @@ export default {
         title: 'Entête & Barre de navigation',
         children: [
           'header',
-          {
-            name: 'app-bar-preview',
-          },
+          { name: 'app-bar-preview' },
           'headerHome',
           'menu'
         ]
       },
-      { title: 'Pied de page', children: [{ text: 'TODO' }] },
+      { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
       { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
@@ -37,7 +35,7 @@ export default {
       { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'socialLinks'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'socialLinks'],
   properties: {
     title: {
       type: 'string',
@@ -210,6 +208,7 @@ export default {
         }
       }
     },
+    footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' }
   },
   $defs: {
@@ -252,7 +251,7 @@ export default {
         }
       }, {
         required: ['title'],
-        title: 'Page personnalisée',
+        title: 'Page éditée',
         properties: {
           type: { const: 'custom' },
           pageRef: {

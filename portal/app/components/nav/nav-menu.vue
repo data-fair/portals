@@ -10,12 +10,12 @@
       />
     </template>
     <v-list>
-        <v-list-item
-          v-for="(item, i) of menu.children"
-          :key="`item-${i}`"
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+      <v-list-item
+        v-for="(item, i) of menu.children"
+        :key="`item-${i}`"
+      >
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>

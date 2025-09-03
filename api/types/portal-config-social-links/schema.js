@@ -6,6 +6,7 @@ export default {
   layout: {
     title: null
   },
+  unevaluatedProperties: false,
   properties: {
     bluesky: {
       type: 'string',
