@@ -4,9 +4,28 @@ export default {
   title: 'Footer',
   type: 'object',
   layout: {
-    title: null
+    title: null,
+    children: [
+      'color',
+      'showSocial',
+      'showContactInformations',
+      'copyright',
+      'backgroundImage',
+      'backgroundImagePosition',
+      'logoPrimaryType',
+      'logoPrimary',
+      'logoPrimaryLink',
+      {
+        comp: 'tabs',
+        children: [
+          { title: 'Liste de logos', children: ['extraLogos'] },
+          { title: 'Liens', children: ['linksMode', 'links'] },
+          { title: 'Liens importants', children: ['importantLinks'] }
+        ]
+      }
+    ]
   },
-  required: ['color', 'showSocial', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks', 'showPrivacyPolicyLink', 'showSitemapLink'],
+  required: ['color', 'showSocial', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
   properties: {
     color: {
       type: 'string',
@@ -23,17 +42,22 @@ export default {
     showSocial: {
       type: 'boolean',
       title: 'Afficher les liens de réseaux sociaux',
-      layout: 'switch'
+      layout: { props: { color: 'primary' }, comp: 'switch' }
+    },
+    showContactInformations: {
+      type: 'boolean',
+      title: 'Afficher les informations de contact',
+      layout: { props: { color: 'primary' }, comp: 'switch' }
     },
     copyright: {
       type: 'string',
       title: 'Affichage du copyright',
-      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **2025 © Koumoul** en bas du pied de page.\n- Afficher le logo de l\'entreprise parmis la liste des logos du pied de page.',
+      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l\'entreprise parmis la liste des logos du pied de page.',
       default: 'text',
       oneOf: [
         {
           const: 'text',
-          title: 'Afficher en bas du pied de page',
+          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
         },
         {
           const: 'logo',
@@ -41,13 +65,50 @@ export default {
         }
       ]
     },
+    backgroundImage: {
+      type: 'object',
+      title: 'Image de fond du pied de page',
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1920, label: 'Image de fond' }
+          }
+        },
+        cols: { md: 8 }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        }
+      }
+    },
+    backgroundImagePosition: {
+      type: 'string',
+      title: "Position de l'image de fond",
+      default: 'right',
+      layout: { cols: { md: 4 } },
+      oneOf: [
+        { const: 'left', title: 'Gauche' },
+        { const: 'center', title: 'Centre' },
+        { const: 'right', title: 'Droite' },
+        { const: 'repeat', title: 'Répétée' }
+      ]
+    },
     logoPrimaryType: {
       type: 'string',
-      title: 'Logo principal',
+      title: 'Logo principal du pied de page',
       default: 'default',
       oneOf: [
-        { const: 'default', title: 'Utiliser l\'image globale' },
-        { const: 'header', title: 'Utiliser l\'image de l\'entête' },
+        { const: 'default', title: 'Utiliser le logo global' },
+        { const: 'header', title: 'Utiliser le logo principal de l\'entête' },
         { const: 'local', title: 'Charger une image' },
         { const: 'hidden', title: 'Ne pas afficher de logo' }
       ]
@@ -155,12 +216,12 @@ export default {
       title: 'Liens',
       layout: { messages: { addItem: 'Ajouter un lien' } },
       items: { $ref: '#/$defs/linkItem' },
-      default: []
+      default: [],
     },
     importantLinks: {
       type: 'array',
       title: 'Liens importants',
-      description: 'Ces liens sont affichés sous forme de boutons, ils sont donc mieux mis en avant.',
+      description: 'Les liens importants sont affichés sous forme de boutons, ils sont plus visibles que les simples liens.',
       layout: { messages: { addItem: 'Ajouter un lien' } },
       items: { $ref: '#/$defs/linkItem' },
       default: []
@@ -171,6 +232,9 @@ export default {
       type: 'object',
       unevaluatedProperties: false,
       default: { type: 'custom' },
+      oneOfLayout: {
+        emptyData: true,
+      },
       oneOf: [{
         required: ['title'],
         title: 'Catalogue des jeux de données',

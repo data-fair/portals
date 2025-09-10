@@ -2,21 +2,21 @@
   <!-- Smaller screens: navigation in menu -->
   <nav-menu
     v-if="$vuetify.display.smAndDown"
-    :menu="menu"
+    :navigation="navigation"
   />
 
   <!-- Larger screens: navigation in tabs -->
   <nav-tabs
     v-else
-    :menu="menu"
+    :navigation="navigation"
     :density="density"
   />
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
+import type { PortalConfig, MenuItem } from '#api/types/portal'
 defineProps<{
-  menu: PortalConfig['menu']
+  navigation: MenuItem[]
   density: PortalConfig['header']['density']
 }>()
 </script>

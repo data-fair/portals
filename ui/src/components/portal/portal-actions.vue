@@ -1,6 +1,6 @@
 <template>
   <v-list-item
-    :disabled="isSavingDraft || !hasDraftDiff || !isValidDraft"
+    :disabled="isSavingDraft || !hasDraftDiff"
     :loading="validateDraft.loading.value"
     @click="validateDraft.execute()"
   >
@@ -128,7 +128,6 @@ const showDeleteMenu = ref(false)
 
 const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
 defineProps<{
-  isValidDraft: boolean
   hasDraftDiff: boolean
   isSavingDraft: boolean
   portalTitle: string

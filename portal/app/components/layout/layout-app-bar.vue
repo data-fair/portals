@@ -24,14 +24,14 @@
       >
         <v-row align="center">
           <layout-header-logo
-            v-if="logo && (!headerConfig.show || $vuetify.display.xs)"
+            v-if="logo && !headerConfig.show"
             :logo="logo"
             :link="portalConfig.header.logoLink"
             :height="56"
           />
 
           <nav-tabs-or-menu
-            :menu="portalConfig.menu"
+            :navigation="portalConfig.menu.children"
             :density="headerConfig.density"
           />
 

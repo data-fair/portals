@@ -11,7 +11,7 @@
     </template>
     <v-list>
       <v-list-item
-        v-for="(item, i) of menu.children"
+        v-for="(item, i) of navigation"
         :key="`item-${i}`"
       >
         <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal'
 import { mdiMenu } from '@mdi/js'
 
 defineProps<{
-  menu: PortalConfig['menu']
+  navigation: MenuItem[]
 }>()
 
 </script>

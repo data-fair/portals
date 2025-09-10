@@ -57,6 +57,7 @@ router.post('', async (req, res, next) => {
     theme: fillTheme(defaultTheme, defaultTheme),
     menu: {
       children: [
+        { type: 'home', title: 'accueil' },
         { type: 'datasets', title: 'jeux de données' },
         { type: 'applications', title: 'visualisations' },
         { type: 'contact', title: 'contact' }
@@ -80,15 +81,8 @@ router.post('', async (req, res, next) => {
       links: [{ type: 'sitemap' }, { type: 'privacy-policy' }],
       importantLinks: []
     },
-    socialLinks: {
-      bluesky: undefined,
-      x: undefined,
-      facebook: undefined,
-      linkedin: undefined,
-      instagram: undefined,
-      youtube: undefined,
-      vimeo: undefined
-    }
+    socialLinks: {},
+    contactInformations: {}
   }
 
   const portal: Portal = {

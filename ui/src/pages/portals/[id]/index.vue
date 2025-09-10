@@ -33,9 +33,10 @@
             <v-theme-provider theme="preview-colors">
               <v-card>
                 <LayoutAppBar
-                  :portal-config="editConfig"
+                  v-if="formValid"
                   :detached="true"
                   :home="context.home"
+                  :portal-config="editConfig"
                 />
               </v-card>
             </v-theme-provider>
@@ -44,9 +45,10 @@
             <v-theme-provider theme="preview-colors">
               <v-card>
                 <LayoutFooter
-                  :portal-config="editConfig"
+                  v-if="formValid"
                   :detached="true"
                   :home="context.home"
+                  :portal-config="editConfig"
                 />
               </v-card>
             </v-theme-provider>
@@ -67,7 +69,6 @@
 
     <navigation-right v-if="portalFetch.data.value">
       <portal-actions
-        :is-valid-draft="formValid"
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
         :portal-title="portalFetch.data.value.config.title"
@@ -81,6 +82,7 @@
 <script lang="ts" setup>
 import type { Portal, PortalConfig } from '#api/types/portal'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
+import VjsfMarkdown from '@koumoul/vjsf-markdown'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import LayoutAppBar from '#portal/app/components/layout/layout-app-bar.vue'
@@ -100,6 +102,7 @@ watch(portalFetch.data, () => {
 const portalRef = { type: 'portal' as const, _id: route.params.id }
 
 const saveDraft = useAsyncAction(async () => {
+  if (!formValid.value) return
   await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
 })
 
@@ -124,6 +127,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   density: 'comfortable',
   initialValidation: 'always',
   locale: session.lang.value,
+  plugins: [VjsfMarkdown],
   titleDepth: 4,
   updateOn: 'blur'
 }))

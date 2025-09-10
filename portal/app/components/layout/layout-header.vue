@@ -14,7 +14,7 @@
     </v-row>
     <v-row align="center" class="ma-0">
       <layout-header-logo
-        v-if="logo && !$vuetify.display.xs"
+        v-if="logo"
         :logo="logo"
         :link="headerConfig.logoLink"
       />

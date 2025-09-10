@@ -7,14 +7,10 @@
     rel="noopener noreferrer"
     title="Ouvrir le lien"
   >
-    <v-img
+    <img
       :src="getImageSrc(logo, false)"
       :height="height || 80"
-      :max-width="$vuetify.display.width / 2"
-      :position="isSecondary ? 'right' : 'left'"
-      width="auto"
-      inline
-    />
+    >
   </a>
 
   <!-- Lien vers l'accueil -->

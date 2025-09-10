@@ -1,6 +1,10 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
   'x-exports': ['types', 'vjsf'],
+  'x-vjsf': {
+    pluginsImports: ['@koumoul/vjsf-markdown'],
+  },
+  'x-jstt': { additionalProperties: false },
   title: 'Portal Config',
   type: 'object',
   unevaluatedProperties: false,
@@ -31,11 +35,11 @@ export default {
       { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
-      { title: 'Contact & Réseaux sociaux', children: [{ text: 'TODO' }, 'socialLinks'] },
+      { title: 'Contact & Réseaux sociaux', children: ['contactInformations', 'socialLinks'] },
       { title: 'Espace personnel', children: [{ text: 'TODO' }] }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'socialLinks'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'contactInformations', 'socialLinks'],
   properties: {
     title: {
       type: 'string',
@@ -209,6 +213,7 @@ export default {
       }
     },
     footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
+    contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' }
   },
   $defs: {
@@ -218,13 +223,24 @@ export default {
       default: { type: 'custom' },
       oneOf: [{
         required: ['title'],
+        title: 'Page d\'accueil',
+        properties: {
+          type: { const: 'home' },
+          title: {
+            type: 'string',
+            title: 'Libellé',
+            default: 'Accueil'
+          }
+        }
+      }, {
+        required: ['title'],
         title: 'Catalogue des jeux de données',
         properties: {
           type: { const: 'datasets' },
           title: {
             type: 'string',
-            default: 'Jeux de données',
-            title: 'Libellé'
+            title: 'Libellé',
+            default: 'Jeux de données'
           }
         }
       }, {
@@ -234,8 +250,8 @@ export default {
           type: { const: 'applications' },
           title: {
             type: 'string',
-            default: 'Visualisations',
-            title: 'Libellé'
+            title: 'Libellé',
+            default: 'Visualisations'
           }
         }
       }, {
@@ -245,8 +261,8 @@ export default {
           type: { const: 'contact' },
           title: {
             type: 'string',
-            default: 'Contact',
-            title: 'Libellé'
+            title: 'Libellé',
+            default: 'Contact'
           }
         }
       }, {
@@ -280,7 +296,7 @@ export default {
         title: 'Sous-menu',
         required: ['children'],
         properties: {
-          type: { const: 'menu' },
+          type: { const: 'submenu' },
           title: {
             type: 'string',
             title: 'Libellé'
@@ -289,6 +305,20 @@ export default {
             type: 'array',
             title: '',
             items: { $ref: '#/$defs/menuItem' }
+          }
+        }
+      }, {
+        title: 'Lien externe',
+        required: ['title', 'href'],
+        properties: {
+          type: { const: 'external' },
+          title: {
+            type: 'string',
+            title: 'Libellé'
+          },
+          href: {
+            title: 'URL',
+            type: 'string'
           }
         }
       }]

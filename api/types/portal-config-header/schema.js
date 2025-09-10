@@ -10,22 +10,17 @@ export default {
   properties: {
     show: {
       type: 'boolean',
-      layout: {
-        comp: 'switch',
-        props: {
-          color: 'primary'
-        }
-      },
+      layout: { props: { color: 'primary' }, comp: 'switch' },
       title: 'Afficher l\'entête',
       default: true
     },
     logoPrimaryType: {
       type: 'string',
-      title: 'Logo principal',
+      title: 'Logo principal de l\'entête',
       description: 'Il s\'affiche dans l\'entête ou à gauche de la barre de navigation si l\'entête est masqué ou en vue mobile.',
       default: 'default',
       oneOf: [
-        { const: 'default', title: 'Utiliser l\'image globale' },
+        { const: 'default', title: 'Utiliser le logo principal' },
         { const: 'local', title: 'Charger une image' },
         { const: 'hidden', title: 'Ne pas afficher de logo' }
       ]
@@ -71,10 +66,10 @@ export default {
     },
     logoSecondary: {
       type: 'object',
-      title: 'Logo secondaire',
+      title: 'Logo secondaire de l\'entête',
       required: ['_id', 'name', 'mimeType'],
       layout: {
-        if: '!parent.data?.show',
+        if: 'parent.data?.show',
         slots: {
           component: {
             name: 'image-upload',
@@ -100,7 +95,7 @@ export default {
     },
     logoSecondaryLink: {
       layout: {
-        if: '!parent.data?.show',
+        if: 'parent.data?.show',
         props: {
           clearable: true
         }
@@ -113,12 +108,13 @@ export default {
       type: 'boolean',
       title: 'Afficher les liens de réseaux sociaux',
       layout: {
-        if: '!parent.data?.show',
+        if: 'parent.data?.show',
+        props: { color: 'primary' },
         comp: 'switch'
       }
     },
     headerColor: {
-      layout: { if: '!parent.data?.show' },
+      layout: { if: 'parent.data?.show' },
       type: 'string',
       title: 'Couleur de l\'entête',
       default: 'navBar',

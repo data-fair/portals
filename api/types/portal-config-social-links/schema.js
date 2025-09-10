@@ -3,9 +3,7 @@ export default {
   'x-exports': [],
   title: 'SocialLinks',
   type: 'object',
-  layout: {
-    title: null
-  },
+  layout: { title: 'Réseaux sociaux' },
   unevaluatedProperties: false,
   properties: {
     bluesky: {

@@ -21,6 +21,7 @@ declare module 'vue' {
     LayoutSocialLinks: typeof import('./../../portal/app/components/layout/layout-social-links.vue')['default']
     NavMenu: typeof import('./../../portal/app/components/nav/nav-menu.vue')['default']
     NavTabs: typeof import('./../../portal/app/components/nav/nav-tabs.vue')['default']
+    NavTabsMenuItem: typeof import('./../../portal/app/components/nav/nav-tabs-menu-item.vue')['default']
     NavTabsOrMenu: typeof import('./../../portal/app/components/nav/nav-tabs-or-menu.vue')['default']
     NuxtLink: typeof import('./../src/components/nuxt-link.vue')['default']
     PageCard: typeof import('./../src/components/page/page-card.vue')['default']
