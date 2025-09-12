@@ -20,6 +20,22 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify']
   },
+  imports: {
+    presets: [
+      {
+        from: '@data-fair/lib-vue/session.js',
+        imports: ['useSession', 'useSessionAuthenticated']
+      },
+      {
+        from: '@data-fair/lib-vue/locale-dayjs.js',
+        imports: ['useLocaleDayjs']
+      },
+      {
+        from: 'vue-i18n',
+        imports: ['useI18n']
+      }
+    ]
+  },
   modules: [
     '@nuxt/eslint', 'nuxt-security',
     (_options, nuxt) => {

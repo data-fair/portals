@@ -15,12 +15,15 @@
     "#api/types/*": "../api/types/*"
   },
   "dependencies": {
+    "@data-fair/frame": "^0.12.1",
     "@data-fair/lib-node": "^2.8.2",
     "@data-fair/lib-utils": "^1.6.1",
+    "@data-fair/lib-vue": "^1.23.1",
     "@mdi/js": "^7.4.47",
     "@nuxt/eslint": "^1.8.0",
+    "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
-    "nuxt": "^4.0.3",
+    "nuxt": "^4.1.1",
     "nuxt-security": "^2.3.0",
     "undici": "^7.14.0",
     "vite-plugin-vuetify": "^2.1.2",

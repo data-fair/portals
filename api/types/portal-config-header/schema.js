@@ -134,6 +134,18 @@ export default {
         { const: 'surface', title: 'Couleur des surfaces' }
       ]
     },
+    loginColor: {
+      type: 'string',
+      title: 'Couleur du bouton de connexion',
+      default: 'navBar',
+      oneOf: [
+        { const: 'navBar', title: 'Couleur de la barre de navigation' },
+        { const: 'primary', title: 'Couleur principale' },
+        { const: 'secondary', title: 'Couleur secondaire' },
+        { const: 'accent', title: 'Couleur accentuée' },
+        { const: 'surface', title: 'Couleur des surfaces' }
+      ]
+    },
     density: {
       type: 'string',
       title: 'Densité',

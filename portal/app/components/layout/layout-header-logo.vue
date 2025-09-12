@@ -6,6 +6,7 @@
     target="_blank"
     rel="noopener noreferrer"
     title="Ouvrir le lien"
+    class="d-flex align-center"
   >
     <img
       :src="getImageSrc(logo, false)"
@@ -18,6 +19,7 @@
     v-else-if="!isSecondary"
     to="/"
     title="Aller à l'accueil"
+    class="d-flex align-center"
   >
     <img
       :src="getImageSrc(logo, false)"

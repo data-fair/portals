@@ -30,7 +30,6 @@ import type { Portal, PortalIngress } from '#api/types/portal'
 import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
-const session = useSessionAuthenticated()
 const route = useRoute<'/portals/[id]/ingress'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
@@ -68,7 +67,6 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   },
   density: 'comfortable',
   initialValidation: 'always',
-  locale: session.lang.value,
   titleDepth: 4,
   updateOn: 'blur'
 }))

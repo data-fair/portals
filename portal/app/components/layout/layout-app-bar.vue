@@ -37,13 +37,11 @@
 
           <v-spacer />
           <v-toolbar-items>
-            <v-btn
-              title="Ouvrir la liste des notifications"
-              :icon="mdiBell"
+            <notification-queue />
+            <layout-personal-menu
+              :show-header="headerConfig.show"
+              :login-color="headerConfig.loginColor === 'navBar' ? headerConfig.navBarColor : headerConfig.loginColor"
             />
-            <v-btn>
-              Se connecter
-            </v-btn>
           </v-toolbar-items>
         </v-row>
       </v-container>
@@ -54,7 +52,6 @@
 <script setup lang="ts">
 import type { PortalConfig } from '#api/types/portal'
 import { VToolbar, VAppBar } from 'vuetify/components'
-import { mdiBell } from '@mdi/js'
 
 const { portalConfig, home } = defineProps({
   portalConfig: { type: Object as () => PortalConfig, required: true },

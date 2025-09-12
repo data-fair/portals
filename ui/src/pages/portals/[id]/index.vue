@@ -90,7 +90,6 @@ import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
 const route = useRoute<'/portals/[id]/'>()
-const session = useSessionAuthenticated()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
@@ -126,7 +125,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   },
   density: 'comfortable',
   initialValidation: 'always',
-  locale: session.lang.value,
   plugins: [VjsfMarkdown],
   titleDepth: 4,
   updateOn: 'blur'
