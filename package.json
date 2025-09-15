@@ -140,6 +140,9 @@
     "vuetify": "^2.6.14"
   },
   "overrides": {
-    "postcss": "8"
+    "postcss": "8",
+    "@nuxtjs/axios": {
+      "axios": "^0.30.1"
+    }
   }
 }
