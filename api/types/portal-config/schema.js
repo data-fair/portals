@@ -35,11 +35,15 @@ export default {
       { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
-      { title: 'Contact & Réseaux sociaux', children: ['contactInformations', 'socialLinks'] },
-      { title: 'Espace personnel', children: [{ text: 'TODO' }] }
+      { title: 'Informations de contact', children: ['contactInformations'] },
+      { title: 'Réseaux sociaux', children: ['socialLinks'] },
+      {
+        title: 'Espace personnel',
+        children: ['personal']
+      }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'contactInformations', 'socialLinks'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'contactInformations', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -214,7 +218,8 @@ export default {
     },
     footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
-    socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' }
+    socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
+    personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' }
   },
   $defs: {
     menuItem: {

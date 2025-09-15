@@ -57,11 +57,9 @@
           :cols="logo ? 6 : 12"
         >
           <div>
-            Retrouvez-nous sur les réseaux sociaux
+            {{ t('socialMedia') }}
           </div>
-          <layout-social-links
-            :links="portalConfig.socialLinks"
-          />
+          <layout-social-links :links="portalConfig.socialLinks" />
         </v-col>
       </v-row>
 
@@ -95,7 +93,11 @@
             style="height:40px;"
           >
         </v-col>
-        <v-col cols="auto">
+        <!-- Copyright Logo -->
+        <v-col
+          v-if="portalConfig.footer.copyright === 'logo'"
+          cols="auto"
+        >
           <a
             href="https://koumoul.com"
             title="Koumoul"
@@ -203,7 +205,7 @@
     <template v-if="portalConfig.footer.copyright === 'text'">
       <v-divider />
       <div class="text-center my-2">
-        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com">Koumoul</a></strong>
+        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com" target="_blank" rel="noopener noreferrer">Koumoul</a></strong>
       </div>
     </template>
   </v-footer>
@@ -214,6 +216,7 @@ import type { ImageRef } from '#api/types/page-elements'
 import type { PortalConfig, Footer } from '#api/types/portal'
 import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
+const { t } = useI18n()
 const { portalConfig } = defineProps({
   portalConfig: { type: Object as () => PortalConfig, required: true },
   home: { type: Boolean, default: false },
@@ -251,10 +254,23 @@ const resolveHref = (link: Footer['links'][number]) => {
 
 const resolveTitle = (link: Footer['links'][number]) => {
   switch (link.type) {
-    case 'sitemap': return 'Plan du site'
-    case 'privacy-policy': return 'Politique de confidentialité'
+    case 'sitemap': return t('sitemap')
+    case 'privacy-policy': return t('privacyPolicy')
     default: return link.title
   }
 }
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    socialMedia: 'Find us on social media'
+    sitemap: 'Sitemap'
+    privacyPolicy: 'Privacy Policy'
+
+  fr:
+    socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
+    sitemap: 'Plan du site'
+    privacyPolicy: 'Politique de confidentialité'
+
+</i18n>

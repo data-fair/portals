@@ -1,10 +1,10 @@
 <template>
-  <template v-if="!session.user.value">
+  <template v-if="!session.user.value || detached">
     <v-btn
       v-if="!showHeader || $vuetify.display.smAndDown"
-      title="Se connecter"
+      :title="t('login')"
       stacked
-      @click="session.login()"
+      @click="!detached ? session.login() : null"
     >
       <v-icon size="x-large" :icon="mdiAccountCircle" />
     </v-btn>
@@ -12,57 +12,54 @@
       v-else
       :class="`bg-${loginColor}`"
       stacked
-      @click="session.login()"
+      @click="!detached ? session.login() : null"
     >
-      Se connecter
+      {{ t('login') }}
     </v-btn>
   </template>
 
-  <v-menu
-    v-else
-    :close-on-content-click="false"
-  >
-    <template #activator="{ props }">
-      <v-btn
-        v-bind="props"
-        title="Ouvrez le menu personnel"
-        :append-icon="personal ? mdiMenuDown : undefined"
-      >
-        <v-avatar :image="avatarUrl" />
-        <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
-          <p class="ml-2">{{ session.user.value.name }}</p>
-        </template>
-      </v-btn>
-    </template>
-
-    <v-list>
-      <v-list-subheader v-if="(!showHeader || $vuetify.display.smAndDown) && !personal">
-        {{ session.user.value.name }}
-      </v-list-subheader>
-      <!-- TODO: Check if the user is owner of the portal ? -->
-      <!-- TODO: Redirect to the true back-office -->
-      <!-- <template v-if="(config.owner.type === 'user' && config.owner.id === user.id) || (config.owner.type === 'organization' && user.organizations.find(o => o.id === config.owner.id && o.role !== 'user'))"> -->
-      <template v-if="true">
-        <v-list-item
-          :prepend-icon="mdiWrench"
-          href="/data-fair"
-          title="Back-office"
-        />
-        <v-divider />
+  <ClientOnly v-else>
+    <v-menu :close-on-content-click="false">
+      <template #activator="{ props }">
+        <v-btn
+          v-bind="props"
+          :title="t('openPersonalMenu')"
+          :append-icon="personal ? mdiMenuDown : undefined"
+        >
+          <v-avatar :image="avatarUrl" />
+          <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
+            <p class="ml-2">{{ session.user.value.name }}</p>
+          </template>
+        </v-btn>
       </template>
-      <v-list-item
-        v-if="!personal"
-        to="/me/account"
-        :prepend-icon="mdiAccountKey"
-        title="Espace personnel"
-      />
-      <v-list-item
-        :prepend-icon="mdiLogout"
-        title="Se déconnecter"
-        @click="session.logout(); $router.push('/')"
-      />
-    </v-list>
-  </v-menu>
+
+      <v-list>
+        <v-list-subheader v-if="(!showHeader || $vuetify.display.smAndDown) && !personal">
+          {{ session.user.value.name }}
+        </v-list-subheader>
+        <!-- TODO: Redirect to the true back-office -->
+        <template v-if="isPortalOwner">
+          <v-list-item
+            :prepend-icon="mdiWrench"
+            href="/data-fair"
+            title="Back-office"
+          />
+          <v-divider />
+        </template>
+        <v-list-item
+          v-if="!personal"
+          to="/me/account"
+          :prepend-icon="mdiAccountKey"
+          :title="t('personalSpace')"
+        />
+        <v-list-item
+          :prepend-icon="mdiLogout"
+          :title="t('logout')"
+          @click="session.logout(); $router.push('/')"
+        />
+      </v-list>
+    </v-menu>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -74,17 +71,42 @@ defineProps<{
   loginColor?: string
   personal?: boolean
   showHeader?: boolean
+  detached?: boolean
 }>()
 
-// TODO Always show user avatar ?
-// const avatarUrl = computed(() => {
-//   if (!session.state.account) return
-//   if (session.state.account.department) return `/simple-directory/api/avatars/${session.state.account.type}/${session.state.account.id}/${session.state.account.department}/avatar.png`
-//   else return `/simple-directory/api/avatars/${session.state.account.type}/${session.state.account.id}/avatar.png`
-// })
+const { t } = useI18n()
+const { $portal } = useNuxtApp()
+
 const avatarUrl = computed(() => {
   if (!session.user.value) return
   return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
 })
 
+const isPortalOwner = computed(() => {
+  const user = session.user.value
+  if (!user) return false
+  return (
+    ($portal.owner.type === 'user' && $portal.owner.id === user.id) ||
+    (
+      $portal.owner.type === 'organization' &&
+      user.organizations.find(o => o.id === $portal.owner.id && o.role !== 'user')
+    )
+  )
+})
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    login: 'Log in'
+    logout: 'Log out'
+    personalSpace: 'Personal Space'
+    openPersonalMenu: 'Open personal menu'
+
+  fr:
+    login: 'Se connecter'
+    logout: 'Se déconnecter'
+    personalSpace: 'Espace personnel'
+    openPersonalMenu: "Ouvrir l'espace personnel"
+
+</i18n>

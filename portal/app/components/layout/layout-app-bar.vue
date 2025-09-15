@@ -37,10 +37,11 @@
 
           <v-spacer />
           <v-toolbar-items>
-            <notification-queue />
+            <notification-queue :detached="detached" />
             <layout-personal-menu
               :show-header="headerConfig.show"
               :login-color="headerConfig.loginColor === 'navBar' ? headerConfig.navBarColor : headerConfig.loginColor"
+              :detached="detached"
             />
           </v-toolbar-items>
         </v-row>

@@ -1,10 +1,12 @@
 <template>
-  <LayoutPersonalNavigationDrawer :home="true" :portal-config="$portalConfig" />
-  <LayoutPersonalAppBar :home="true" :portal-config="$portalConfig" />
-  <v-main>
-    <v-container>
-      <slot />
-    </v-container>
-  </v-main>
-  <LayoutScrollToTop />
+  <ClientOnly>
+    <LayoutPersonalNavigation :home="true" :portal-config="$portalConfig" />
+    <LayoutPersonalAppBar :home="true" :portal-config="$portalConfig" />
+    <v-main>
+      <v-container fluid class="pa-0 h-100">
+        <slot />
+      </v-container>
+    </v-main>
+    <LayoutScrollToTop />
+  </ClientOnly>
 </template>

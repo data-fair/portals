@@ -1,5 +1,19 @@
 <template>
+  <v-btn
+    v-if="detached"
+    :title="t('openNotificationList')"
+    stacked
+  >
+    <v-badge
+      content="3"
+      color="warning"
+    >
+      <v-icon :icon="mdiBell" />
+    </v-badge>
+  </v-btn>
+
   <v-menu
+    v-else
     max-height="400"
     max-width="500"
     width="100%"
@@ -8,24 +22,23 @@
     <template #activator="{ props }">
       <v-btn
         v-bind="props"
-        title="Ouvrir la liste des notifications"
+        :title="t('openNotificationList')"
         stacked
         @click="fetchNotifications.refresh()"
       >
         <v-badge
-          v-if="fetchNotifications.data.value?.countNew"
-          :content="fetchNotifications.data.value.countNew"
+          :model-value="!!fetchNotifications.data.value?.countNew"
+          :content="fetchNotifications.data.value?.countNew"
           color="warning"
         >
           <v-icon :icon="mdiBell" />
         </v-badge>
-        <v-icon v-else :icon="mdiBell" />
       </v-btn>
     </template>
 
     <v-list>
       <v-list-item v-if="!session.state.user">
-        Vous devez vous <a href="https://koumoul.com">connecter</a> pour recevoir des notifications.
+        Vous devez vous <a :href="session.loginUrl()">connecter</a> pour recevoir des notifications.
       </v-list-item>
       <v-list-item v-if="!fetchNotifications.data.value || !fetchNotifications.data.value.results.length">
         Vous n'avez pas encore reçu de notification.
@@ -60,6 +73,11 @@ import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const session = useSession()
 const { dayjs } = useLocaleDayjs()
+const { t } = useI18n()
+
+defineProps({
+  detached: { type: Boolean, default: false }
+})
 
 const fetchNotifications = useLocalFetch<{
   count: number
@@ -76,3 +94,10 @@ const fetchNotifications = useLocalFetch<{
 }>('/events/api/notifications', { query: { size: 10 } })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    openNotificationList: Open notification list
+  fr:
+    openNotificationList: Ouvrir la liste des notifications
+</i18n>

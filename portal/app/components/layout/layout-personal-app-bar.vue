@@ -2,6 +2,7 @@
   <component
     :is="detached ? VToolbar : VAppBar"
     density="comfortable"
+    flat
   >
     <!-- If drawer, show menu to open navigation drawer -->
     <!-- TODO: Show breadcrumbs -->

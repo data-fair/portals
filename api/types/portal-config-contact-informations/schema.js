@@ -3,7 +3,7 @@ export default {
   'x-exports': [],
   title: 'Contact Informations',
   type: 'object',
-  layout: { title: 'Informations de contact' },
+  layout: { title: null },
   unevaluatedProperties: false,
   properties: {
     email: {

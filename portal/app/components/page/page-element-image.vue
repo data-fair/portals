@@ -5,6 +5,7 @@
       v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
       target="_blank"
+      rel="noopener noreferrer"
     >
       <img
         ref="img"

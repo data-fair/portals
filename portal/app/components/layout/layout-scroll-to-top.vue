@@ -5,13 +5,13 @@
     <v-btn
       v-show="showButton"
       v-scroll="onScroll"
-      title="Remonter au début de la page"
+      :title="t('scrollToTop')"
+      :icon="mdiChevronUp"
       position="fixed"
       location="bottom right"
       color="primary"
       class="ma-4"
       size="large"
-      :icon="mdiChevronUp"
       @click="scrollToTop"
     />
   </v-fab-transition>
@@ -24,6 +24,7 @@ import { useGoTo } from 'vuetify'
 const route = useRoute()
 const router = useRouter()
 const goTo = useGoTo()
+const { t } = useI18n()
 
 const showButton = ref(false)
 const scrollThreshold = 200
@@ -38,3 +39,11 @@ const onScroll = () => {
   showButton.value = top > scrollThreshold
 }
 </script>
+
+<i18n lang="yaml">
+  en:
+    scrollToTop: 'Scroll to top of the page'
+
+  fr:
+    scrollToTop: 'Revenir en haut de la page'
+</i18n>

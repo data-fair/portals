@@ -20,16 +20,13 @@
     </component>
     <v-container fluid>
       <h2 class="text-h6">
-        Aperçu du rendu des couleurs
+        {{ t('colorPreview') }}
       </h2>
       <v-card
-        title="Un exemple de carte"
+        :title="t('cardExample.title')"
+        :text="t('cardExample.text')"
         class="my-2"
-      >
-        <v-card-text>
-          Elle utilise la couleur des "surfaces".
-        </v-card-text>
-      </v-card>
+      />
       <template
         v-for="color of colorKeys"
         :key="color"
@@ -65,6 +62,7 @@ import type { Colors, Theme } from '@data-fair/lib-common-types/theme/index.js'
 import { mdiEmoticonKissOutline } from '@mdi/js'
 import { defaultTheme, fillTheme, getTextColorsCss, getColorsWarnings, readableOptions, hcReadableOptions } from '@data-fair/lib-common-types/theme/index.js'
 
+const { t } = useI18n()
 const vuetifyTheme = useTheme()
 const { colorsKey, theme, dark } = defineProps({
   colorsKey: { type: String as () => 'colors' | 'darkColors' | 'hcColors' | 'hcDarkColors', required: true },
@@ -106,3 +104,18 @@ const colorsWarnings = computed(() => {
   return getColorsWarnings('fr', colors.value, themeNames[colorsKey], colorsKey.startsWith('hc') ? hcReadableOptions : readableOptions)
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    colorPreview: Color rendering preview
+    cardExample:
+      title: A card example
+      text: This is a card example using the "surface" color.
+
+  fr:
+    colorPreview: Aperçu du rendu des couleurs
+    cardExample:
+      title: Un exemple de carte
+      text: Ceci est un exemple de carte utilisant la couleur des "surfaces".
+
+</i18n>

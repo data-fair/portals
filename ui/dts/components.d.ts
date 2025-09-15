@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ColorsPreview: typeof import('./../src/components/portal-edit/colors-preview.vue')['default']
+    'DFrame.client': typeof import('./../../portal/app/components/d-frame.client.vue')['default']
     FontFamiliesPreview: typeof import('./../src/components/portal-edit/font-families-preview.vue')['default']
     IconBluesky: typeof import('./../../portal/app/components/icon/icon-bluesky.vue')['default']
     IconX: typeof import('./../../portal/app/components/icon/icon-x.vue')['default']
@@ -19,6 +20,7 @@ declare module 'vue' {
     LayoutHeaderLogo: typeof import('./../../portal/app/components/layout/layout-header-logo.vue')['default']
     LayoutPersonalAppBar: typeof import('./../../portal/app/components/layout/layout-personal-app-bar.vue')['default']
     LayoutPersonalMenu: typeof import('./../../portal/app/components/layout/layout-personal-menu.vue')['default']
+    LayoutPersonalNavigation: typeof import('./../../portal/app/components/layout/layout-personal-navigation.vue')['default']
     LayoutPersonalNavigationDrawer: typeof import('./../../portal/app/components/layout/layout-personal-navigation-drawer.vue')['default']
     LayoutScrollToTop: typeof import('./../../portal/app/components/layout/layout-scroll-to-top.vue')['default']
     LayoutSocialLinks: typeof import('./../../portal/app/components/layout/layout-social-links.vue')['default']

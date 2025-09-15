@@ -1,25 +1,29 @@
 <template>
   <v-navigation-drawer
+    :color="$portalConfig.personal.navigationColor"
     permanent
   >
     <v-list
+      :bg-color="$portalConfig.personal.navigationColor"
       class="pa-1"
       nav
     >
-      <!-- TODO: Image of the owner of the portal-->
       <v-list-item
         :title="portalConfig.title"
-        prepend-avatar="https://cdn.vuetifyjs.com/images/john.png"
-        subtitle="Revenir au portail"
+        :prepend-avatar="ownerAvatar"
+        :subtitle="t('backToPortal')"
         to="/"
       />
-      <v-divider />
-      <v-list-subheader title="Espace personnel" />
+      <v-divider :style="navigationTextStyle" />
+      <v-list-subheader
+        :title="t('personalSpace')"
+        :style="navigationTextStyle"
+      />
 
       <v-list-item
         :prepend-icon="mdiAccount"
+        :title="t('myAccount')"
         to="/me/account"
-        title="Mon compte"
       />
       <!-- TODO: Add reuses -->
       <!-- <v-list-item
@@ -28,8 +32,9 @@
         title="Mes réutilisations"
       /> -->
       <v-list-item
+        v-if="!portalConfig.personal.hidePages.includes('notifications')"
         :prepend-icon="mdiBell"
-        title="Mes notifications"
+        :title="t('myNotifications')"
         to="/me/notifications"
       />
 
@@ -37,12 +42,12 @@
       <v-select
         v-if="accounts.length > 1"
         :model-value="accountValue"
-        label="Compte actif"
+        :label="t('activeAccount')"
+        :items="accounts"
         class="my-2"
         variant="outlined"
         density="compact"
         hide-details
-        :items="accounts"
         @update:model-value="(val) => {
           const [org, dep] = (val || '').split(':')
           session.switchOrganization(org || null, dep)
@@ -52,27 +57,37 @@
       <v-list-item
         v-if="session.account.value.type === 'organization' && !session.account.value.department && session.accountRole.value === 'admin'"
         :prepend-icon="mdiAccountGroup"
-        title="Gestion de l'organisation"
+        :title="t('organizationManagement')"
         to="/me/organization"
       />
 
       <v-list-item
-        v-if="!session.account.value.department && session.accountRole.value === 'admin'"
-        :prepend-icon="mdiKeyChain"
-        title="Clés d'API"
+        v-if="!session.account.value.department && session.accountRole.value === 'admin' && !portalConfig.personal.hidePages.includes('api-keys')"
+        :prepend-icon="mdiCloudKey"
+        :title="t('apiKeys')"
         to="/me/api-keys"
       />
 
       <v-list-item
+        v-if="!portalConfig.personal.hidePages.includes('contribute')"
         :prepend-icon="mdiUpload"
-        title="Contribuer"
+        :title="t('contribute')"
         to="/me/update-dataset"
       />
 
       <v-list-item
+        v-if="!portalConfig.personal.hidePages.includes('processings')"
         :prepend-icon="mdiCogTransferOutline"
-        title="Traitements"
+        :title="t('processings')"
         to="/me/processings"
+      />
+
+      <v-list-item
+        v-for="(page, p) in portalConfig.personal.accountPages"
+        :key="p"
+        :to="'/me/' + page.id"
+        :prepend-icon="page.icon.svgPath"
+        :title="page.title"
       />
     </v-list>
 
@@ -82,7 +97,7 @@
         href="https://koumoul.com"
         target="_blank"
       >
-        <span class="text-caption">Publiez vos propres données</span>
+        <span class="text-caption">{{ t('publishYourData') }}</span>
       </v-list-item>
     </template>
 
@@ -91,16 +106,19 @@
 
 <script setup lang="ts">
 import type { PortalConfig } from '#api/types/portal'
-import { mdiAccount, mdiBell, mdiAccountGroup, mdiKeyChain, mdiUpload, mdiCogTransferOutline } from '@mdi/js'
+import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline } from '@mdi/js'
 
+const { $portal } = useNuxtApp()
+const { t } = useI18n()
 const session = useSessionAuthenticated()
+
 const accountValue = computed(() => {
   if (session.state.account.type === 'user') return null
   if (session.state.account.department) return session.state.account.id + ':' + session.state.account.department
   else return session.state.account.id
 })
 
-defineProps({
+const { portalConfig } = defineProps({
   portalConfig: { type: Object as () => PortalConfig, required: true }
 })
 
@@ -131,4 +149,39 @@ const accounts = computed(() => {
   return accounts
 })
 
+const ownerAvatar = computed(() => {
+  if ($portal.owner.department) return `/simple-directory/api/avatars/${$portal.owner.type}/${$portal.owner.id}/${$portal.owner.department}/avatar.png`
+  else return `/simple-directory/api/avatars/${$portal.owner.type}/${$portal.owner.id}/avatar.png`
+})
+
+const navigationTextStyle = computed(() => {
+  return `color: rgba(var(--v-theme-on-${portalConfig.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
+})
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    backToPortal: Back to portal
+    personalSpace: Personal Space
+    myAccount: My Account
+    myNotifications: My Notifications
+    activeAccount: Active Account
+    organizationManagement: Organization Management
+    apiKeys: API Keys
+    contribute: Contribute
+    processings: Processings
+    publishYourData: Publish your own data
+
+  fr:
+    backToPortal: Retour au portail
+    personalSpace: Espace personnel
+    myAccount: Mon compte
+    myNotifications: Mes notifications
+    activeAccount: Compte actif
+    organizationManagement: Gestion de l'organisation
+    apiKeys: Clés d'API
+    contribute: Contribuer
+    processings: Traitements
+    publishYourData: Publiez vos propres données
+</i18n>

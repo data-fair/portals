@@ -13,7 +13,7 @@
           <v-defaults-provider :defaults="vjsfDefaults">
             <page-edit-elements
               :model-value="node.data"
-              add-item-message="ajouter un bloc à la page"
+              :add-item-message="t('addItemMessage')"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </v-defaults-provider>
@@ -24,6 +24,7 @@
       <!-- Validate draft -->
       <v-list-item
         :disabled="validateDraft.loading.value || saveDraft.loading.value"
+        :title="t('validateDraft')"
         @click="validateDraft.execute()"
       >
         <template #prepend>
@@ -32,10 +33,10 @@
             :icon="mdiFileReplace"
           />
         </template>
-        Valider le brouillon
       </v-list-item>
       <v-list-item
         :disabled="cancelDraft.loading.value || saveDraft.loading.value"
+        :title="t('cancelDraft')"
         @click="cancelDraft.execute()"
       >
         <template #prepend>
@@ -44,13 +45,12 @@
             :icon="mdiCancel"
           />
         </template>
-        Annuler le brouillon
       </v-list-item>
     </navigation-right>
     <v-btn
       v-if="changesStack.canUndo.value"
       :icon="mdiUndo"
-      title="annuler dernier changement"
+      :title="t('undoLastChange')"
       variant="flat"
       style="position: absolute; bottom: 16px; right: 70px;z-index:2300;"
       @click="changesStack.undo()"
@@ -58,20 +58,13 @@
     <v-btn
       v-if="changesStack.canRedo.value"
       :icon="mdiRedo"
-      title="rétablir dernier changement"
+      :title="t('redoLastChange')"
       variant="flat"
       style="position: absolute; bottom: 16px; right: 16px;z-index:2300;"
       @click="changesStack.redo()"
     />
   </v-container>
 </template>
-
-<!--
-<i18n lang="yaml">
-fr:
-en:
-</i18n>
--->
 
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
@@ -82,6 +75,7 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
 import useChangesStack from '~/composables/use-changes-stack'
 
+const { t } = useI18n()
 const route = useRoute<'/pages/[id]/'>()
 
 const { pageFetch, patchPage } = usePageStore()
@@ -142,6 +136,23 @@ watch(pageFetch.data, (page) => {
 })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addItemMessage: Add a block to the page
+    validateDraft: Validate draft
+    cancelDraft: Cancel draft
+    undoLastChange: Undo last change
+    redoLastChange: Redo last change
+
+  fr:
+    addItemMessage: Ajouter un bloc à la page
+    validateDraft: Valider le brouillon
+    cancelDraft: Annuler le brouillon
+    undoLastChange: Annuler le dernier changement
+    redoLastChange: Rétablir le dernier changement
+
+</i18n>
 
 <style lang="css">
 .vjsf-node-list>.v-card>.v-list>.v-divider {

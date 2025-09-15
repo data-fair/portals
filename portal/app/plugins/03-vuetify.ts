@@ -3,7 +3,7 @@ import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { fr, en } from 'vuetify/locale'
 
-export default defineNuxtPlugin((app) => {
+export default defineNuxtPlugin(({ vueApp }) => {
   const theme = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
   const lang = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
   const portalConfig = useNuxtApp().$portalConfig!
@@ -50,5 +50,5 @@ export default defineNuxtPlugin((app) => {
       }
     }
   })
-  app.vueApp.use(vuetify)
+  vueApp.use(vuetify)
 })

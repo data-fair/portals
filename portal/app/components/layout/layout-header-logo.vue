@@ -1,11 +1,11 @@
 <template>
-  <!-- Lien externe -->
+  <!-- External Link -->
   <a
     v-if="link"
     :href="link"
+    :title="t('openInNewTab')"
     target="_blank"
     rel="noopener noreferrer"
-    title="Ouvrir le lien"
     class="d-flex align-center"
   >
     <img
@@ -14,11 +14,11 @@
     >
   </a>
 
-  <!-- Lien vers l'accueil -->
+  <!-- Link to Home -->
   <NuxtLink
     v-else-if="!isSecondary"
+    :title="t('home')"
     to="/"
-    title="Aller à l'accueil"
     class="d-flex align-center"
   >
     <img
@@ -44,6 +44,19 @@ defineProps<{
   isSecondary?: boolean
 }>()
 
+const { t } = useI18n()
+
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    home: 'Go to Home'
+    openInNewTab: 'Open in a new tab'
+
+  fr:
+    home: "Aller à l'accueil"
+    openInNewTab: 'Ouvrir dans un nouvel onglet'
+
+</i18n>

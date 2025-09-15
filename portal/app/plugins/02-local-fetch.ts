@@ -4,7 +4,7 @@
 import { getRequestHeader, getRequestURL } from 'h3'
 import type { Dispatcher } from 'undici'
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin(async () => {
   let _ssrDispatcher: Dispatcher
 
   if (import.meta.server) {
@@ -33,9 +33,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       }
     }
   })
-  return {
-    provide: {
-      localFetch,
-    },
-  }
+  return { provide: { localFetch } }
 })

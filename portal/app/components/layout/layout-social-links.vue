@@ -2,7 +2,7 @@
   <v-btn
     v-for="[key, platform] in filteredSocialPlatforms"
     :key="key"
-    :title="platform.title"
+    :title="t('openAccount', { account: platform.title })"
     :href="platform.url(links[key] as string)"
     target="_blank"
     rel="noopener noreferrer"
@@ -10,8 +10,7 @@
     variant="text"
     icon
   >
-    <icon-bluesky v-if="key === 'bluesky'" />
-    <icon-x v-else-if="key === 'x'" />
+    <component :is="platform.component" v-if="platform.component" />
     <v-icon v-else :icon="platform.icon" />
   </v-btn>
 </template>
@@ -24,6 +23,8 @@ const props = defineProps<{
   links: SocialLinks
 }>()
 
+const { t } = useI18n()
+
 const filteredSocialPlatforms = computed(() => {
   return Object.entries(socialPlatforms).filter(([key]) => props.links[key])
 })
@@ -34,40 +35,54 @@ const socialPlatforms: Record<
     url: (handle: string) => string
     title: string
     icon?: string
+    component?: string
   }
 > = {
   bluesky: {
     url: (handle) => `https://bsky.app/profile/${handle}`,
-    title: 'Ouvrir le profil Bluesky'
+    title: 'Bluesky',
+    component: 'icon-bluesky'
   },
   x: {
     url: (handle) => `https://x.com/${handle}`,
-    title: 'Ouvrir le profil X'
+    title: 'X',
+    component: 'icon-x'
   },
   facebook: {
     url: (handle) => `https://facebook.com/${handle}`,
-    title: 'Ouvrir le profil Facebook',
+    title: 'Facebook',
     icon: mdiFacebook,
   },
   linkedin: {
     url: (handle) => `https://linkedin.com/company/${handle}`,
-    title: 'Ouvrir le profil LinkedIn',
+    title: 'LinkedIn',
     icon: mdiLinkedin,
   },
   instagram: {
     url: (handle) => `https://instagram.com/${handle}`,
-    title: 'Ouvrir le profil Instagram',
+    title: 'Instagram',
     icon: mdiInstagram,
   },
   youtube: {
     url: (handle) => `https://youtube.com/${handle}`,
-    title: 'Ouvrir le profil YouTube',
+    title: 'YouTube',
     icon: mdiYoutube,
   },
   vimeo: {
     url: (handle) => `https://vimeo.com/${handle}`,
-    title: 'Ouvrir le profil Vimeo',
+    title: 'Vimeo',
     icon: mdiVimeo
   }
 }
 </script>
+
+<!-- TODO check that bluesky icon is correctly shown -->
+
+<i18n lang="yaml">
+  en:
+    openAccount: 'Open {account} profile'
+
+  fr:
+    openAccount: 'Ouvrir le profil {account}'
+
+</i18n>
