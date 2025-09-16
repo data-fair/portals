@@ -1,7 +1,7 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-personal',
   'x-exports': [],
-  title: 'Contact Informations',
+  title: 'Personal Space',
   type: 'object',
   layout: { title: 'L\'espace personnel sera proposé aux utilisateurs connectés si vous activez l\'authentification.' },
   unevaluatedProperties: false,
@@ -55,17 +55,12 @@ export default {
           id: {
             type: 'string',
             title: 'Identifiant de la page',
-            layout: { cols: { md: 6 } }
+            layout: { cols: { md: 4 } }
           },
           title: {
             type: 'string',
             title: 'Libellé du lien',
-            layout: { cols: { md: 6 } }
-          },
-          href: {
-            type: 'string',
-            title: 'URL de la page',
-            layout: { cols: { md: 8 } }
+            layout: { cols: { md: 4 } }
           },
           icon: {
             title: 'Icône',
@@ -86,6 +81,10 @@ export default {
               svg: { type: 'string' },
               svgPath: { type: 'string' }
             }
+          },
+          href: {
+            type: 'string',
+            title: 'URL de la page',
           }
         }
       },

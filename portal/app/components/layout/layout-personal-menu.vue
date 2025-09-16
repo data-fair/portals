@@ -63,19 +63,26 @@
 </template>
 
 <script setup lang="ts">
+import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } from '@mdi/js'
 
 const session = useSession()
 
-defineProps<{
-  loginColor?: string
-  personal?: boolean
-  showHeader?: boolean
-  detached?: boolean
-}>()
+const { detached } = defineProps({
+  loginColor: { type: String, default: undefined },
+  personal: { type: Boolean, default: false },
+  showHeader: { type: Boolean, default: false },
+  detached: { type: Boolean, default: false }
+})
 
 const { t } = useI18n()
-const { $portal } = useNuxtApp()
+
+let portalOwner: Account | undefined
+
+if (!detached && session.user.value) {
+  const { $portal } = useNuxtApp()
+  portalOwner = $portal.owner
+}
 
 const avatarUrl = computed(() => {
   if (!session.user.value) return
@@ -84,12 +91,12 @@ const avatarUrl = computed(() => {
 
 const isPortalOwner = computed(() => {
   const user = session.user.value
-  if (!user) return false
+  if (!user || !portalOwner) return false
   return (
-    ($portal.owner.type === 'user' && $portal.owner.id === user.id) ||
+    (portalOwner.type === 'user' && portalOwner.id === user.id) ||
     (
-      $portal.owner.type === 'organization' &&
-      user.organizations.find(o => o.id === $portal.owner.id && o.role !== 'user')
+      portalOwner.type === 'organization' &&
+      user.organizations.find(o => o.id === portalOwner.id && o.role !== 'user')
     )
   )
 })

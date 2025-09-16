@@ -4,8 +4,11 @@
     density="comfortable"
     flat
   >
-    <!-- If drawer, show menu to open navigation drawer -->
-    <!-- TODO: Show breadcrumbs -->
+    <!-- If mobile, show menu to open navigation drawer -->
+    <v-breadcrumbs
+      v-if="showBreadcrumbs"
+      :items="breadcrumbs"
+    />
 
     <v-spacer />
     <v-toolbar-items>
@@ -26,5 +29,7 @@ defineProps({
   home: { type: Boolean, default: false },
   detached: { type: Boolean, default: false }
 })
+
+const { breadcrumbs, showBreadcrumbs } = useNavigationStore()
 
 </script>

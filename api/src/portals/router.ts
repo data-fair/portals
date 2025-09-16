@@ -82,7 +82,12 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     socialLinks: {},
-    contactInformations: {}
+    contactInformations: {},
+    personal: {
+      navigationColor: 'primary',
+      hidePages: [],
+      accountPages: []
+    }
   }
 
   const portal: Portal = {

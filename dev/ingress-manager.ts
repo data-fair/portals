@@ -6,7 +6,7 @@ const app = express()
 app.use(express.json())
 
 app.post('/api/ingress', (req, res, next) => {
-  assertReqInternalSecret(req, 'SECRET_INGRESS')
+  assertReqInternalSecret(req, 'secret-ingress')
   const body = req.body as IngressManagerIngressInfo[]
   let hostAliases = ''
   for (const item of body) {
@@ -31,7 +31,7 @@ ${hostAliases}
 })
 
 app.delete('/api/ingress/:id', async (req, res, next) => {
-  assertReqInternalSecret(req, 'SECRET_INGRESS')
+  assertReqInternalSecret(req, 'secret-ingress')
   console.log(`
 Received request for portal deletion:
 ${req.params.id}

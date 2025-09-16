@@ -15,7 +15,7 @@
     "#api/types/*": "../api/types/*"
   },
   "dependencies": {
-    "@data-fair/frame": "^0.12.1",
+    "@data-fair/frame": "^0.13.3",
     "@data-fair/lib-node": "^2.8.2",
     "@data-fair/lib-utils": "^1.6.1",
     "@data-fair/lib-vue": "^1.23.1",

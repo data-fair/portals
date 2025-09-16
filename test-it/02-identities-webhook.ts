@@ -2,7 +2,7 @@ import { strict as assert } from 'node:assert'
 import { describe, it, before, beforeEach, after } from 'node:test'
 import { axios, axiosAuth, clean, startApiServer, stopApiServer } from './utils/index.ts'
 
-const axIdentities = axios({ params: { key: 'SECRET_IDENTITIES' }, baseURL: 'http://localhost:8097/portals-manager' })
+const axIdentities = axios({ params: { key: 'secret-identities' }, baseURL: 'http://localhost:8097/portals-manager' })
 const user1 = await axiosAuth('user1@test.com')
 
 describe('identities webhooks', () => {

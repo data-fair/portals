@@ -3,8 +3,8 @@
     <template #activator="{props}">
       <v-btn
         v-bind="props"
-        title="Ouvrir le menu de navigation"
         variant="text"
+        :title="t('openNavigationMenu')"
         :icon="mdiMenu"
         tile
       />
@@ -28,4 +28,13 @@ defineProps<{
   navigation: MenuItem[]
 }>()
 
+const { t } = useI18n()
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    openNavigationMenu: "Open navigation menu"
+  fr:
+    openNavigationMenu: "Ouvrir le menu de navigation"
+</i18n>

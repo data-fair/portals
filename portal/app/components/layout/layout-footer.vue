@@ -17,9 +17,7 @@
           </p>
           <p v-if="portalConfig.contactInformations.email">
             <v-icon :icon="mdiEmail" />
-            <NuxtLink to="/contact">
-              Contactez-nous
-            </NuxtLink>
+            <NuxtLink to="/contact">{{ t('contactUs') }}</NuxtLink>
           </p>
         </v-col>
         <v-col cols="6">
@@ -264,11 +262,13 @@ const resolveTitle = (link: Footer['links'][number]) => {
 
 <i18n lang="yaml">
   en:
+    contactUs: 'Contact Us'
     socialMedia: 'Find us on social media'
     sitemap: 'Sitemap'
     privacyPolicy: 'Privacy Policy'
 
   fr:
+    contactUs: 'Contactez-nous'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
     sitemap: 'Plan du site'
     privacyPolicy: 'Politique de confidentialité'

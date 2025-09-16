@@ -1,19 +1,5 @@
 <template>
-  <v-btn
-    v-if="detached"
-    :title="t('openNotificationList')"
-    stacked
-  >
-    <v-badge
-      content="3"
-      color="warning"
-    >
-      <v-icon :icon="mdiBell" />
-    </v-badge>
-  </v-btn>
-
   <v-menu
-    v-else
     max-height="400"
     max-width="500"
     width="100%"
@@ -21,14 +7,14 @@
   >
     <template #activator="{ props }">
       <v-btn
-        v-bind="props"
+        v-bind="detached ? undefined : props"
         :title="t('openNotificationList')"
         stacked
-        @click="fetchNotifications.refresh()"
+        @click="fetchNotifications?.refresh()"
       >
         <v-badge
-          :model-value="!!fetchNotifications.data.value?.countNew"
-          :content="fetchNotifications.data.value?.countNew"
+          :model-value="!!fetchNotifications?.data.value?.countNew || detached"
+          :content="detached ? 3 : fetchNotifications?.data.value?.countNew"
           color="warning"
         >
           <v-icon :icon="mdiBell" />
@@ -37,14 +23,14 @@
     </template>
 
     <v-list>
-      <v-list-item v-if="!session.state.user">
-        Vous devez vous <a :href="session.loginUrl()">connecter</a> pour recevoir des notifications.
+      <v-list-item v-if="!session.user.value">
+        {{ t('loginRequired.part1') }} <a :href="session.loginUrl()">{{ t('loginRequired.part2') }}</a> {{ t('loginRequired.part3') }}
       </v-list-item>
-      <v-list-item v-if="!fetchNotifications.data.value || !fetchNotifications.data.value.results.length">
-        Vous n'avez pas encore reçu de notification.
+      <v-list-item v-else-if="!fetchNotifications?.data.value || !fetchNotifications.data.value.results.length">
+        {{ t('noNotifications') }}
       </v-list-item>
       <v-list-item
-        v-for="notif in fetchNotifications.data.value?.results"
+        v-for="notif in fetchNotifications?.data.value?.results"
         v-else
         :key="notif._id"
         :href="notif.url"
@@ -75,11 +61,11 @@ const session = useSession()
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 
-defineProps({
+const { detached } = defineProps({
   detached: { type: Boolean, default: false }
 })
 
-const fetchNotifications = useLocalFetch<{
+type Notification = {
   count: number
   countNew: number
   results: {
@@ -91,13 +77,29 @@ const fetchNotifications = useLocalFetch<{
     new?: boolean
     sender?: Emitter
   }[]
-}>('/events/api/notifications', { query: { size: 10 } })
+}
+
+let fetchNotifications: ReturnType<typeof useLocalFetch<Notification>> | undefined
+
+if (!detached && session.user.value) {
+  fetchNotifications = useLocalFetch<Notification>('/events/api/notifications', { query: { size: 10 } })
+}
 
 </script>
 
 <i18n lang="yaml">
   en:
     openNotificationList: Open notification list
+    noNotifications: You have not received any notifications yet.
+    loginRequired:
+      part1: You must
+      part2: log in
+      part3: to receive notifications.
   fr:
     openNotificationList: Ouvrir la liste des notifications
+    noNotifications: Vous n'avez pas encore reçu de notification.
+    loginRequired:
+      part1: Vous devez vous
+      part2: connecter
+      part3: pour recevoir des notifications.
 </i18n>

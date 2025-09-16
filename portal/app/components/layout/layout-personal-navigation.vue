@@ -126,7 +126,7 @@ const accounts = computed(() => {
   const accounts = []
   if (!session.state.user.ipa || !session.state.user.organizations.length) {
     accounts.push({
-      title: 'Compte personnel',
+      title: t('personalAccount'),
       value: null,
       prependAvatar: `/simple-directory/api/avatars/user/${session.state.user.id}/avatar.png`
     })
@@ -164,6 +164,7 @@ const navigationTextStyle = computed(() => {
   en:
     backToPortal: Back to portal
     personalSpace: Personal Space
+    personalAccount: Personal Account
     myAccount: My Account
     myNotifications: My Notifications
     activeAccount: Active Account
@@ -176,6 +177,7 @@ const navigationTextStyle = computed(() => {
   fr:
     backToPortal: Retour au portail
     personalSpace: Espace personnel
+    personalAccount: Compte personnel
     myAccount: Mon compte
     myNotifications: Mes notifications
     activeAccount: Compte actif

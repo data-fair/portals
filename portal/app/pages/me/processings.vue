@@ -1,18 +1,41 @@
 <template>
-  <d-frame :src="`/processings/processings?owner=${portalOwner}`"/>
+  <d-frame
+    id='processings'
+    :src="`/processings/processings/?owner=${portalOwner}`"
+    :adapter.prop="stateChangeAdapter"
+    sync-path="/me/processings/"
+    sync-params
+    emit-iframe-messages
+    @iframe-message="(message: any) => onMessage(message.detail)"
+    @message="(message: any) => onMessage(message.detail)"
+  />
 </template>
 
 <script setup lang="ts">
+import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter'
 
 definePageMeta({ layout: 'personal' })
 
 const { $portal } = useNuxtApp()
+const { setBreadcrumbs } = useNavigationStore()
+const route = useRoute()
 const portalOwner = computed(() => {
   let owner = `${$portal.owner.type}:${$portal.owner.id}`
   if ($portal.owner.department) owner += `:${$portal.owner.department}`
   return owner
 })
 
-// TODO breadcrumbs
+// Handle navigation from the iframe to the parent app
+const stateChangeAdapter = createStateChangeAdapter(useRouter())
+
+const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) => {
+  if (!message.breadcrumbs) return
+  console.log('Breadcrumbs from iframe:', message.breadcrumbs)
+
+  const formattedBreadcrumbs = message.breadcrumbs
+    .map(b => ({ title: b.text, to: b.to && '/me' + b.to }))
+
+  setBreadcrumbs(formattedBreadcrumbs, route.name as string)
+}
 
 </script>

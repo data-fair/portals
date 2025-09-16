@@ -14,7 +14,7 @@ services:
       - ./dev/resources/nginx.conf:/etc/nginx/nginx.conf:ro
 
   #####
-  # related services from the data-fair stack
+  # required services from the data-fair stack
   #####
 
   simple-directory:
@@ -26,16 +26,16 @@ services:
     depends_on:
       - mongo
     environment:
-      - PORT=8087
+      - PORT=8081
       - ADMINS=["superadmin@test.com"]
       - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
-      - MONGO_URL=mongodb://localhost:27017/simple-directory
       - MANAGE_SITES=true
+      - MONGO_URL=mongodb://localhost:27017/simple-directory
       - OBSERVER_ACTIVE=false
       - PUBLIC_URL=http://localhost:5607/simple-directory
       - STORAGE_TYPE=file
-      - SECRET_SITES=SECRET_SITES
+      - SECRET_SITES=secret-sites
       # When we test permissions, we need to authenticate many users from the same IP.
       - AUTHRATELIMIT_ATTEMPTS=500
       - AUTHRATELIMIT_DURATION=30
@@ -50,18 +50,61 @@ services:
     image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
-    # command: /webapp/node_modules/.bin/nodemon server
+    depends_on:
+      mongo:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
     environment:
-      - PORT=6201
+      - PORT=8082
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - DIRECTORY_URL=http://localhost:5607/simple-directory
-      - PRIVATE_DIRECTORY_URL=http://localhost:8087
+      - NOTIFY_URL=http://localhost:5600/events
+      - PRIVATE_DIRECTORY_URL=http://localhost:8081
       - PUBLIC_URL=http://localhost:5607/data-fair
       - WS_PUBLIC_URL=ws://localhost:5607/data-fair
       - OBSERVER_ACTIVE=false
-      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:6227
+      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:8097
     volumes:
       - data-fair-data:/data
+
+  #####
+  # optional services from the data-fair stack
+  #####
+
+  events:
+    profiles:
+      - dev
+    image: ghcr.io/data-fair/events:main
+    network_mode: host
+    depends_on:
+      - mongo
+    environment:
+      - PORT=8083
+      - PRIVATE_DIRECTORY_URL=http://localhost:5607/simple-directory
+      - SECRET_IDENTITIES=secret-identities
+      - SECRET_EVENTS=secret-events
+      - SECRET_SENDMAILS=secret-sendmails
+      - OBSERVER_ACTIVE=false
+
+  processings:
+    profiles:
+      - dev
+    image: ghcr.io/data-fair/processings:chore-add-dframecontent
+    network_mode: host
+    depends_on:
+      - mongo
+    environment:
+      - PORT=8084
+      - CIPHER_PASSWORD=test
+      - IGNORE_ASSERT_REQ_INTERNAL=true
+      - OBSERVER_ACTIVE=false
+      - PRIVATE_DIRECTORY_URL=http://localhost:8081
+      - PRIVATE_EVENTS_URL=http://localhost:8083
+      - SECRET_EVENTS=secret-events
+      - SECRET_IDENTITIES=secret-identities
+    volumes:
+      - ./data/processings:/app/data
 
   #####
   # db and search engine

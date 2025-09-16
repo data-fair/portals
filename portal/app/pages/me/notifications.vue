@@ -7,17 +7,16 @@
         style="top:-2px"
         :icon="mdiBellCircle"
     />
-      Mes notifications
+      {{ t('notifications') }}
     </h2>
     <p class="my-4">
-      Vous pouvez configurer ici des notifications globales sur ce portail de données.
+      {{ t('notificationsInfo') }}
     </p>
     <v-alert
       type="info"
       variant="outlined"
-    >
-      Pour des notifications ciblées sur des jeux de données visitez leurs pages individuelles et cliquez sur la cloche.
-    </v-alert>
+      :text="t('notificationsAlert')"
+    />
     <d-frame :src="notifyUrl" />
   </v-container>
 </template>
@@ -28,6 +27,7 @@ import { mdiBellCircle } from '@mdi/js'
 definePageMeta({ layout: 'personal' })
 
 const { $portal } = useNuxtApp()
+const { t } = useI18n()
 
 const notifyUrl = computed(() => {
   if (!topics.value) return
@@ -57,3 +57,14 @@ const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics
   })
 const topics = computed(() => topicsFetch.data.value?.facets.topics || [])
 </script>
+
+<i18n lang="yaml">
+  en:
+    notifications: Notifications
+    notificationsInfo: You can configure here global notifications on this data portal.
+    notificationsAlert: For targeted notifications on datasets visit their individual pages and click the bell.
+  fr:
+    notifications: Notifications
+    notificationsInfo: Vous pouvez configurer ici des notifications globales sur ce portail de données.
+    notificationsAlert: Pour des notifications ciblées sur des jeux de données visitez leurs pages individuelles et cliquez sur la cloche.
+</i18n>
