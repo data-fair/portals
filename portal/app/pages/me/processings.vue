@@ -30,11 +30,8 @@ const stateChangeAdapter = createStateChangeAdapter(useRouter())
 
 const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) => {
   if (!message.breadcrumbs) return
-  console.log('Breadcrumbs from iframe:', message.breadcrumbs)
-
   const formattedBreadcrumbs = message.breadcrumbs
     .map(b => ({ title: b.text, to: b.to && '/me' + b.to }))
-
   setBreadcrumbs(formattedBreadcrumbs, route.name as string)
 }
 

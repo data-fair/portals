@@ -5,7 +5,8 @@
     :density="headerConfig.density"
     :extension-height="headerConfig.density === 'default' ? 64 : undefined"
     :height="headerConfig.show ? 128 : 0"
-    scroll-behavior="hide"
+    :class="headerConfig.transparent ? 'opacity-90' : undefined"
+    :scroll-behavior="(headerConfig.scrollBehavior === 'hide' && !headerConfig.show ? 'default' : headerConfig.scrollBehavior) + ' elevate'"
   >
     <!-- Header (128px)-->
     <layout-header
@@ -19,7 +20,7 @@
     <!-- Navigation Bar (64px) -->
     <template #extension>
       <v-container
-        class="px-6"
+        class="mx-2"
         fluid
       >
         <v-row align="center">
@@ -36,7 +37,7 @@
           />
 
           <v-spacer />
-          <v-toolbar-items>
+          <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
             <notification-queue :detached="detached" />
             <layout-personal-menu
               :show-header="headerConfig.show"

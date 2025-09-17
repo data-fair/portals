@@ -6,7 +6,7 @@ export default {
   layout: {
     title: null
   },
-  required: ['show', 'logoPrimaryType', 'navBarColor', 'density'],
+  required: ['show', 'logoPrimaryType', 'navBarColor', 'density', 'scrollBehavior'],
   properties: {
     show: {
       type: 'boolean',
@@ -145,6 +145,22 @@ export default {
         { const: 'secondary', title: 'Couleur secondaire' },
         { const: 'accent', title: 'Couleur accentuée' },
         { const: 'surface', title: 'Couleur des surfaces' }
+      ]
+    },
+    transparent: {
+      type: 'boolean',
+      title: 'Appliquer un effet de transparence',
+      layout: { props: { color: 'primary' }, comp: 'switch' },
+      default: false
+    },
+    scrollBehavior: {
+      type: 'string',
+      title: 'Comportement au scroll',
+      default: 'hide',
+      oneOf: [
+        { const: 'hide', title: 'Masquer l\'entête' },
+        { const: 'fully-hide', title: 'Masquer l\'entête et la barre de navigation' },
+        { const: 'default', title: 'Ne rien masquer' }
       ]
     },
     density: {

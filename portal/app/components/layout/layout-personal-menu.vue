@@ -25,6 +25,7 @@
           v-bind="props"
           :title="t('openPersonalMenu')"
           :append-icon="personal ? mdiMenuDown : undefined"
+          :class="`bg-${loginColor}`"
         >
           <v-avatar :image="avatarUrl" />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">

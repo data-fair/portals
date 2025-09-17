@@ -68,7 +68,8 @@ router.post('', async (req, res, next) => {
       logoPrimaryType: 'default',
       headerColor: 'navBar',
       navBarColor: 'primary',
-      density: 'default'
+      density: 'default',
+      scrollBehavior: 'hide'
     },
     headerHome: { active: false },
     footer: {
