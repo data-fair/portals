@@ -31,6 +31,7 @@
     <v-overlay
       v-if="element.zoomable && zoomedSrc"
       :model-value="zoomed"
+      class="align-center justify-center"
       style="cursor:zoom-out"
       @click="zoomed = false"
     >

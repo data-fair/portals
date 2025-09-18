@@ -1,10 +1,10 @@
 <template>
   <v-navigation-drawer
-    :color="$portalConfig.personal.navigationColor"
+    :color="portalConfig.personal.navigationColor"
     permanent
   >
     <v-list
-      :bg-color="$portalConfig.personal.navigationColor"
+      :bg-color="portalConfig.personal.navigationColor"
       class="pa-1"
       nav
     >
@@ -105,21 +105,16 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
 import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline } from '@mdi/js'
 
-const { $portal } = useNuxtApp()
 const { t } = useI18n()
 const session = useSessionAuthenticated()
+const { portal, portalConfig } = usePortalStore()
 
 const accountValue = computed(() => {
   if (session.state.account.type === 'user') return null
   if (session.state.account.department) return session.state.account.id + ':' + session.state.account.department
   else return session.state.account.id
-})
-
-const { portalConfig } = defineProps({
-  portalConfig: { type: Object as () => PortalConfig, required: true }
 })
 
 const accounts = computed(() => {
@@ -150,12 +145,12 @@ const accounts = computed(() => {
 })
 
 const ownerAvatar = computed(() => {
-  if ($portal.owner.department) return `/simple-directory/api/avatars/${$portal.owner.type}/${$portal.owner.id}/${$portal.owner.department}/avatar.png`
-  else return `/simple-directory/api/avatars/${$portal.owner.type}/${$portal.owner.id}/avatar.png`
+  if (portal.value.owner.department) return `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/${portal.value.owner.department}/avatar.png`
+  else return `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/avatar.png`
 })
 
 const navigationTextStyle = computed(() => {
-  return `color: rgba(var(--v-theme-on-${portalConfig.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
+  return `color: rgba(var(--v-theme-on-${portalConfig.value.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
 })
 
 </script>

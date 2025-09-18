@@ -12,7 +12,7 @@
 definePageMeta({ layout: 'personal' })
 
 const route = useRoute()
-const { $portalConfig } = useNuxtApp()
-const page = computed(() => $portalConfig.personal.accountPages.find(p => p.id === route.params.id))
+const { portalConfig } = usePortalStore()
+const page = computed(() => portalConfig.value.personal.accountPages.find(p => p.id === route.params.id))
 
 </script>

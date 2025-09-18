@@ -1,6 +1,6 @@
+import type { Page } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
-import type { Page } from '~~/../api/types/page'
 
 export default defineEventHandler(async (event) => {
   // TODO: check visibility of content based on event.context.portal ?

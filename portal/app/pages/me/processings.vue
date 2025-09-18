@@ -16,12 +16,12 @@ import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-chan
 
 definePageMeta({ layout: 'personal' })
 
-const { $portal } = useNuxtApp()
+const { portal } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
 const portalOwner = computed(() => {
-  let owner = `${$portal.owner.type}:${$portal.owner.id}`
-  if ($portal.owner.department) owner += `:${$portal.owner.department}`
+  let owner = `${portal.value.owner.type}:${portal.value.owner.id}`
+  if (portal.value.owner.department) owner += `:${portal.value.owner.department}`
   return owner
 })
 

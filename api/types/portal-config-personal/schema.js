@@ -64,7 +64,7 @@ export default {
           },
           icon: {
             title: 'Icône',
-            description: 'Il est possible de consulter plus facilement la liste des icones disponibles sur <a href="https://pictogrammers.com/library/mdi/" target="_blank">ce site</a>.',
+            description: 'Il est possible de consulter plus facilement la liste des icônes disponibles sur <a href="https://pictogrammers.com/library/mdi/" target="_blank">ce site</a>.',
             type: 'object',
             layout: {
               cols: { md: 4 },

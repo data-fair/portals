@@ -26,22 +26,22 @@ import { mdiBellCircle } from '@mdi/js'
 
 definePageMeta({ layout: 'personal' })
 
-const { $portal } = useNuxtApp()
+const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 
 const notifyUrl = computed(() => {
   if (!topics.value) return
-  const portalTitle = $portal.config.title || new URL(window.location.href).host
-  const keys = [`data-fair:dataset-published:data-fair-portals:${$portal._id}`]
+  const portalTitle = portalConfig.value.title || new URL(window.location.href).host
+  const keys = [`data-fair:dataset-published:data-fair-portals:${portal.value._id}`]
   const titles = ['Nouveau jeu de données sur ' + portalTitle]
   for (const topic of topics.value) {
-    keys.push(`data-fair:dataset-published-topic:data-fair-portals:${$portal._id}:${topic.id}`)
+    keys.push(`data-fair:dataset-published-topic:data-fair-portals:${portal.value._id}:${topic.id}`)
     titles.push(`Nouveau jeu de données dans la thématique ${topic.title} sur ${portalTitle}`)
   }
-  const icon = `/simple-directory/api/avatars/${$portal.owner.type}/${$portal.owner.id}/avatar.png`
+  const icon = `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/avatar.png`
   const urlTemplate = '/datasets/{id}'
-  let sender = `${$portal.owner.type}:${$portal.owner.id}`
-  if ($portal.owner.department) sender += ':' + $portal.owner.department
+  let sender = `${portal.value.owner.type}:${portal.value.owner.id}`
+  if (portal.value.owner.department) sender += ':' + portal.value.owner.department
   return `/events/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&sender=${encodeURIComponent(sender)}&outputs=auto`
 })
 
@@ -51,7 +51,7 @@ const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics
     query: {
       facets: 'topics',
       mine: true,
-      publicationSites: 'data-fair-portals:' + $portal._id,
+      publicationSites: 'data-fair-portals:' + portal.value._id,
       size: 0
     }
   })

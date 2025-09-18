@@ -123,7 +123,7 @@ const createPortal = useAsyncAction(async () => {
     createNewPortal: Create a new portal
     newPortalTitle: New Portal Title
     newPortalStaging: New Portal Staging
-    search: Search...
+    search: Search
     showAllPortals: Show all portals
 
   fr:
@@ -132,7 +132,7 @@ const createPortal = useAsyncAction(async () => {
     createNewPortal: Créer un nouveau portail
     newPortalTitle: Titre du nouveau portail
     newPortalStaging: Portail de pré-production
-    search: Rechercher...
+    search: Rechercher
     showAllPortals: Voir tous les portails
 
 </i18n>

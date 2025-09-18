@@ -26,31 +26,33 @@
           </template>
           <template #font-families-preview="context">
             <v-theme-provider theme="preview-colors">
-              <font-families-preview :portal-config="context.node.data" />
+              <portal-preview-provider :portal-config="context.node.data">
+                <font-families-preview />
+              </portal-preview-provider>
             </v-theme-provider>
           </template>
           <template #app-bar-preview="context">
             <v-theme-provider theme="preview-colors">
-              <v-card>
-                <LayoutAppBar
-                  v-if="formValid"
-                  :detached="true"
-                  :home="context.home"
-                  :portal-config="editConfig"
-                />
-              </v-card>
+              <portal-preview-provider :portal-config="context.node.data">
+                <v-card>
+                  <LayoutAppBar
+                    v-if="formValid"
+                    :home="context.home"
+                  />
+                </v-card>
+              </portal-preview-provider>
             </v-theme-provider>
           </template>
           <template #footer-preview="context">
             <v-theme-provider theme="preview-colors">
-              <v-card>
-                <LayoutFooter
-                  v-if="formValid"
-                  :detached="true"
-                  :home="context.home"
-                  :portal-config="editConfig"
-                />
-              </v-card>
+              <portal-preview-provider :portal-config="context.node.data">
+                <v-card>
+                  <LayoutFooter
+                    v-if="formValid"
+                    :home="context.home"
+                  />
+                </v-card>
+              </portal-preview-provider>
             </v-theme-provider>
           </template>
           <template #image-upload="{node, statefulLayout, width, height, label}">

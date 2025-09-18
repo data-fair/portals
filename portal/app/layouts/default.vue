@@ -1,10 +1,10 @@
 <template>
-  <LayoutAppBar :portal-config="$portalConfig" />
+  <LayoutAppBar />
   <v-main>
     <v-container>
       <slot />
     </v-container>
   </v-main>
-  <LayoutFooter :portal-config="$portalConfig" />
+  <LayoutFooter />
   <LayoutScrollToTop />
 </template>

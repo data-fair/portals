@@ -10,7 +10,7 @@ export default {
       type: 'string',
       title: 'Email de contact',
       format: 'email',
-      description: 'Cet email ne sera pas directement exposé aux utilisateurs, mais un formulaire de contact sera disponible dans le portail.'
+      description: 'Cet email n\'est pas visible pour les utilisateurs. Les messages envoyés via des blocs de contact seront transmis à cette adresse email.'
     },
     phone: {
       type: 'string',
@@ -35,11 +35,6 @@ export default {
     infos: {
       type: 'string',
       title: 'Informations de contact',
-      layout: 'markdown'
-    },
-    note: {
-      type: 'string',
-      title: 'Mention de contact',
       layout: 'markdown'
     }
   }

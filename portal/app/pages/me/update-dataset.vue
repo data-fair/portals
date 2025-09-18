@@ -1,15 +1,15 @@
 <template>
-  <d-frame :src="`/data-fair/next-ui/embed/workflow/update-dataset?publicationSite=data-fair-portals:${$portal._id}&owner=${portalOwner}`"/>
+  <d-frame :src="`/data-fair/next-ui/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"/>
 </template>
 
 <script setup lang="ts">
 
 definePageMeta({ layout: 'personal' })
 
-const { $portal } = useNuxtApp()
+const { portal } = usePortalStore()
 const portalOwner = computed(() => {
-  let owner = `${$portal.owner.type}:${$portal.owner.id}`
-  if ($portal.owner.department) owner += `:${$portal.owner.department}`
+  let owner = `${portal.value.owner.type}:${portal.value.owner.id}`
+  if (portal.value.owner.department) owner += `:${portal.value.owner.department}`
   return owner
 })
 

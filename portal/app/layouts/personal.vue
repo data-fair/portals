@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
-    <LayoutPersonalNavigation :home="true" :portal-config="$portalConfig" />
-    <LayoutPersonalAppBar :home="true" :portal-config="$portalConfig" />
+    <LayoutPersonalNavigation />
+    <LayoutPersonalAppBar />
     <v-main>
       <v-container fluid class="pa-0 h-100">
         <slot />

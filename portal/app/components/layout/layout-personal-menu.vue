@@ -1,10 +1,10 @@
 <template>
-  <template v-if="!session.user.value || detached">
+  <template v-if="!session.user.value || preview">
     <v-btn
       v-if="!showHeader || $vuetify.display.smAndDown"
       :title="t('login')"
       stacked
-      @click="!detached ? session.login() : null"
+      @click="!preview ? session.login() : null"
     >
       <v-icon size="x-large" :icon="mdiAccountCircle" />
     </v-btn>
@@ -12,7 +12,7 @@
       v-else
       :class="`bg-${loginColor}`"
       stacked
-      @click="!detached ? session.login() : null"
+      @click="!preview ? session.login() : null"
     >
       {{ t('login') }}
     </v-btn>
@@ -64,26 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } from '@mdi/js'
 
+defineProps<{
+  loginColor?: string
+  personal?: boolean
+  showHeader?: boolean
+}>()
+
 const session = useSession()
-
-const { detached } = defineProps({
-  loginColor: { type: String, default: undefined },
-  personal: { type: Boolean, default: false },
-  showHeader: { type: Boolean, default: false },
-  detached: { type: Boolean, default: false }
-})
-
 const { t } = useI18n()
-
-let portalOwner: Account | undefined
-
-if (!detached && session.user.value) {
-  const { $portal } = useNuxtApp()
-  portalOwner = $portal.owner
-}
+const { portal, preview } = usePortalStore()
 
 const avatarUrl = computed(() => {
   if (!session.user.value) return
@@ -92,12 +83,12 @@ const avatarUrl = computed(() => {
 
 const isPortalOwner = computed(() => {
   const user = session.user.value
-  if (!user || !portalOwner) return false
+  if (!user || !portal.value.owner) return false
   return (
-    (portalOwner.type === 'user' && portalOwner.id === user.id) ||
+    (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
     (
-      portalOwner.type === 'organization' &&
-      user.organizations.find(o => o.id === portalOwner.id && o.role !== 'user')
+      portal.value.owner.type === 'organization' &&
+      user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
     )
   )
 })

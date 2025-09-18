@@ -1,10 +1,10 @@
 <template>
   <v-defaults-provider :defaults="previewDefaults">
-    <page-element-comp
+    <page-element
       v-if="renderedElement"
       :element="renderedElement"
     >
-      <template #page-elements="{elements, onUpdate, addItemMessage}">
+      <template #page-elements="{ elements, onUpdate, addItemMessage }">
         <v-defaults-provider :defaults="vjsfDefaults">
           <page-edit-elements
             :model-value="elements"
@@ -13,7 +13,7 @@
           />
         </v-defaults-provider>
       </template>
-    </page-element-comp>
+    </page-element>
   </v-defaults-provider>
 </template>
 
@@ -22,7 +22,6 @@ import type { PageElement } from '#api/types/page-config'
 
 import { parse as marked } from 'marked'
 import sanitizeHtml from 'sanitize-html'
-import PageElementComp from '#portal/app/components/page/page-element.vue'
 
 const element = defineModel<PageElement>()
 

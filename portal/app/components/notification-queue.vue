@@ -7,14 +7,14 @@
   >
     <template #activator="{ props }">
       <v-btn
-        v-bind="detached ? undefined : props"
+        v-bind="!preview ? props : undefined"
         :title="t('openNotificationList')"
         stacked
         @click="fetchNotifications?.refresh()"
       >
         <v-badge
-          :model-value="!!fetchNotifications?.data.value?.countNew || detached"
-          :content="detached ? 3 : fetchNotifications?.data.value?.countNew"
+          :model-value="!!fetchNotifications?.data.value?.countNew || preview"
+          :content="preview ? 3 : fetchNotifications?.data.value?.countNew"
           color="warning"
         >
           <v-icon :icon="mdiBell" />
@@ -61,9 +61,7 @@ const session = useSession()
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 
-const { detached } = defineProps({
-  detached: { type: Boolean, default: false }
-})
+const { preview } = usePortalStore()
 
 type Notification = {
   count: number
@@ -81,7 +79,7 @@ type Notification = {
 
 let fetchNotifications: ReturnType<typeof useLocalFetch<Notification>> | undefined
 
-if (!detached && session.user.value) {
+if (!preview && session.user.value) {
   fetchNotifications = useLocalFetch<Notification>('/events/api/notifications', { query: { size: 10 } })
 }
 

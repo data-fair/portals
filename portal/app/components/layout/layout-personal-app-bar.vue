@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="detached ? VToolbar : VAppBar"
+    :is="preview ? VToolbar : VAppBar"
     density="comfortable"
     flat
   >
@@ -21,15 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
 import { VToolbar, VAppBar } from 'vuetify/components'
 
-defineProps({
-  portalConfig: { type: Object as () => PortalConfig, required: true },
-  home: { type: Boolean, default: false },
-  detached: { type: Boolean, default: false }
-})
-
+const { preview } = usePortalStore()
 const { breadcrumbs, showBreadcrumbs } = useNavigationStore()
 
 </script>

@@ -106,7 +106,7 @@ const createPage = useAsyncAction(async () => {
     createNewPage: Create a new page
     newPageTitle: New Page Title
     newPageStaging: New Page Staging
-    search: Search...
+    search: Search
     showAllPages: Show all pages
 
   fr:
@@ -115,7 +115,7 @@ const createPage = useAsyncAction(async () => {
     createNewPage: Créer une nouvelle page
     newPageTitle: Titre de la nouvelle page
     newPageStaging: Page de pré-production
-    search: Rechercher...
+    search: Rechercher
     showAllPages: Voir toutes les pages
 
 </i18n>

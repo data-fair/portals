@@ -6,7 +6,7 @@ import { fr, en } from 'vuetify/locale'
 export default defineNuxtPlugin(({ vueApp }) => {
   const theme = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
   const lang = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
-  const portalConfig = useNuxtApp().$portalConfig!
+  const portalConfig = useNuxtApp().$portal.config
   let colors = portalConfig.theme.colors
   let dark = false
   if (theme.value === 'hc' && portalConfig.theme.hcColors) {

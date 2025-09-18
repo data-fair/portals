@@ -1,7 +1,7 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
-// we do not use SSR, so we can use a simple module level singleton
+
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
 

@@ -277,19 +277,20 @@ export default {
           type: { const: 'custom' },
           pageRef: {
             type: 'object',
-            required: ['_id', 'title'],
+            required: ['_id', 'title', 'slug'],
             title: 'Page',
             layout: {
               getItems: {
-                url: '/portals-manager/api/pages?select=_id,title',
-                itemsResults: 'data.results.map(r => ({_id: r._id, title: r.title}))',
+                url: '/portals-manager/api/pages?select=_id,title,slug',
+                itemsResults: 'data.results',
                 itemTitle: 'item.title',
                 itemKey: 'item._id'
               }
             },
             properties: {
               _id: { type: 'string' },
-              title: { type: 'string' }
+              title: { type: 'string' },
+              slug: { type: 'string' }
             }
           },
           title: {

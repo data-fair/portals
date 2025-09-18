@@ -37,6 +37,7 @@ export default {
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-divider' },
+        { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
@@ -55,26 +56,26 @@ export default {
           title: 'Contenu',
           type: 'string'
         },
+        icon: {
+          $ref: '#/$defs/icon'
+        },
         titleSize: {
           title: 'Taille du titre',
           type: 'string',
           oneOf: [
-            { const: 'h6', title: 'H6' },
-            { const: 'h5', title: 'H5' },
-            { const: 'h4', title: 'H4' },
-            { const: 'h3', title: 'H3' },
+            { const: 'h1', title: 'H1' },
             { const: 'h2', title: 'H2' },
-            { const: 'h1', title: 'H1' }
+            { const: 'h3', title: 'H3' },
+            { const: 'h4', title: 'H4' },
+            { const: 'h5', title: 'H5' },
+            { const: 'h6', title: 'H6' }
           ],
           default: 'h3',
         },
         centered: {
           type: 'boolean',
-          title: 'Centré',
+          title: 'Centrer le titre',
           default: false,
-        },
-        icon: {
-          $ref: '#/$defs/icon'
         }
       }
     },
@@ -115,12 +116,16 @@ export default {
               title: 'Succès'
             },
             {
+              const: 'error',
+              title: 'Erreur'
+            },
+            {
               const: 'warning',
               title: 'Avertissement'
             },
             {
-              const: 'error',
-              title: 'Erreur'
+              const: 'none',
+              title: 'Sans accentuation'
             }
           ]
         },
@@ -135,6 +140,9 @@ export default {
         },
         icon: {
           $ref: '#/$defs/icon'
+        },
+        color: {
+          $ref: '#/$defs/color'
         }
       }
     },
@@ -209,6 +217,26 @@ export default {
           default: 1,
           minimum: 1,
           maximum: 10
+        }
+      }
+    },
+    'element-contact': {
+      title: 'Contact',
+      type: 'object',
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'contact'
+        },
+        showInfo: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les informations de contact'
+        },
+        showSocial: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les liens de réseaux sociaux'
         }
       }
     },
@@ -408,65 +436,6 @@ export default {
         }
       }
     },
-    icon: {
-      type: 'object',
-      title: 'Icone',
-      required: ['name', 'svg'],
-      layout: {
-        getItems: {
-          url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}',
-          itemKey: 'data.name',
-          itemTitle: 'data.name',
-          itemIcon: 'data.svg',
-          itemsResults: 'data.results'
-        }
-      },
-      properties: {
-        name: {
-          type: 'string'
-        },
-        svg: {
-          type: 'string'
-        }
-      }
-    },
-    color: {
-      type: 'string',
-      title: 'Couleur',
-      default: 'primary',
-      oneOf: [
-        { const: 'primary', title: 'couleur primaire' },
-        { const: 'secondary', title: 'couleur secondaire' },
-        { const: 'error', title: 'erreur' },
-        { const: 'warning', title: 'avertissement' },
-        { const: 'info', title: 'information' },
-        { const: 'success', title: 'succès' },
-      ]
-    },
-    button: {
-      type: 'object',
-      title: 'Bouton',
-      required: ['color'],
-      default: {
-        color: 'primary'
-      },
-      properties: {
-        label: {
-          type: 'string',
-          title: 'Libellé'
-        },
-        href: {
-          type: 'string',
-          title: 'URL'
-        },
-        icon: {
-          $ref: '#/$defs/icon'
-        },
-        color: {
-          $ref: '#/$defs/color'
-        }
-      }
-    },
     'image-ref': {
       type: 'object',
       required: ['_id', 'name', 'mimeType'],
@@ -490,6 +459,62 @@ export default {
         },
         mobileAlt: {
           type: 'boolean'
+        }
+      }
+    },
+    icon: {
+      type: 'object',
+      title: 'Icône',
+      required: ['name', 'svg'],
+      layout: {
+        getItems: {
+          url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
+          itemKey: 'data.name',
+          itemTitle: 'data.name',
+          itemIcon: 'data.svg',
+          itemsResults: 'data.results'
+        }
+      },
+      properties: {
+        name: { type: 'string' },
+        svg: { type: 'string' },
+        svgPath: { type: 'string' }
+      }
+    },
+    color: {
+      type: 'string',
+      title: 'Couleur',
+      oneOf: [
+        { const: 'primary', title: 'Couleur primaire' },
+        { const: 'secondary', title: 'Couleur secondaire' },
+        { const: 'accent', title: 'Couleur accentuée' },
+        { const: 'info', title: 'Information' },
+        { const: 'success', title: 'Succès' },
+        { const: 'error', title: 'Erreur' },
+        { const: 'warning', title: 'Avertissement' }
+      ]
+    },
+    button: {
+      type: 'object',
+      title: 'Bouton',
+      required: ['color'],
+      default: {
+        color: 'primary'
+      },
+      properties: {
+        label: {
+          type: 'string',
+          title: 'Libellé'
+        },
+        href: {
+          type: 'string',
+          title: 'URL'
+        },
+        icon: {
+          $ref: '#/$defs/icon'
+        },
+        color: {
+          $ref: '#/$defs/color'
         }
       }
     }

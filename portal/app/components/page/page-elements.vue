@@ -3,24 +3,32 @@
     v-if="!elements?.length"
     type="warning"
     variant="outlined"
-  >
-    Aucun contenu
-  </v-alert>
-  <page-element-comp
+    :text="t('noContent')"
+  />
+  <page-element
     v-for="(element, i) of elements"
     :key="i"
     :element="element"
   >
-    <template #page-elements="{elements: childrenElements}">
+    <template #page-elements="{ elements: childrenElements }">
       <page-elements :model-value="childrenElements" />
     </template>
-  </page-element-comp>
+  </page-element>
 </template>
 
 <script setup lang="ts">
 import type { PageElement } from '~~/../api/types/page-config'
-import PageElementComp from './page-element.vue'
 
 const elements = defineModel<PageElement[]>()
 
+const { t } = useI18n()
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    noContent: 'No content'
+
+  fr:
+    noContent: 'Aucun contenu'
+</i18n>

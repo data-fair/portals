@@ -26,6 +26,7 @@
       </v-row>
     </v-container>
   </v-container>
+
   <v-footer
     :color="portalConfig.footer.color"
     :style="portalConfig.footer.backgroundImage ? {
@@ -38,7 +39,7 @@
     <v-container>
       <!-- Logo and/or Social Links -->
       <v-row
-        v-if="logo || portalConfig.footer.social"
+        v-if="logo || portalConfig.footer.showSocial"
         align="center"
         justify="center"
       >
@@ -50,13 +51,11 @@
           <layout-header-logo :logo="logo" />
         </v-col>
         <v-col
-          v-if="portalConfig.footer.showSocial && portalConfig.socialLinks.length"
+          v-if="portalConfig.footer.showSocial && Object.keys(portalConfig.socialLinks).length"
           class="text-center text-caption"
           :cols="logo ? 6 : 12"
         >
-          <div>
-            {{ t('socialMedia') }}
-          </div>
+          <div>{{ t('socialMedia') }}</div>
           <layout-social-links :links="portalConfig.socialLinks" />
         </v-col>
       </v-row>
@@ -211,18 +210,15 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/page-elements'
-import type { PortalConfig, Footer } from '#api/types/portal'
+import type { Footer } from '#api/types/portal'
 import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
 const { t } = useI18n()
-const { portalConfig } = defineProps({
-  portalConfig: { type: Object as () => PortalConfig, required: true },
-  home: { type: Boolean, default: false },
-  detached: { type: Boolean, default: false }
-})
+defineProps<{ home?: boolean }>()
+const { portalConfig } = usePortalStore()
 
 const logo = computed(() => {
-  const { footer, header, logo: defaultLogo } = portalConfig
+  const { footer, header, logo: defaultLogo } = portalConfig.value
 
   switch (footer.logoPrimaryType) {
     case 'default': return defaultLogo
@@ -240,7 +236,7 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 const resolveHref = (link: Footer['links'][number]) => {
   switch (link.type) {
     case 'external': return link.href
-    case 'custom': return link.pageRef ? `/page/${link.pageRef._id}` : undefined
+    case 'custom': return link.pageRef ? `/pages/${link.pageRef.slug}` : undefined
     case 'datasets': return '/datasets'
     case 'applications': return '/applications'
     case 'contact': return '/contact'

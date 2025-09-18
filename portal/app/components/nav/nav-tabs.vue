@@ -50,7 +50,7 @@ const activeTab = ref('datasets')
 const resolveHref = (link: MenuItem) => {
   switch (link.type) {
     case 'external': return link.href
-    case 'custom': return link.pageRef ? `/page/${link.pageRef._id}` : undefined
+    case 'custom': return link.pageRef ? `/pages/${link.pageRef.slug}` : undefined
     case 'datasets': return '/datasets'
     case 'applications': return '/applications'
     case 'contact': return '/contact'

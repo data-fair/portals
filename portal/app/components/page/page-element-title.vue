@@ -1,18 +1,23 @@
 <template>
   <component
-    :is="element.titleSize"
-    :class="cssClass"
+  :is="element.titleSize"
+  :class="cssClass"
   >
+    <v-icon
+      v-if="element.icon"
+      size="small"
+      style="top:-2px"
+      start
+      :icon="element.icon?.svgPath"
+    />
     {{ element.content }}
   </component>
 </template>
 
 <script setup lang="ts">
-import type { Titre1 } from '~~/../api/types/page-config'
+import type { Titre1 } from '#api/types/page-config'
 
-const { element } = defineProps({
-  element: { type: Object as () => Titre1, required: true }
-})
+const { element } = defineProps<{ element: Titre1 }>()
 
 const cssClass = computed(() => {
   const margins = {

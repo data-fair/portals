@@ -1,68 +1,70 @@
 <template>
   <v-container data-iframe-height>
-    <v-form
-      v-if="editConfig"
-      v-model="formValid"
-    >
-      <vjsf-page-config
-        v-model="editConfig"
-        :options="vjsfOptions"
-        @update:model-value="saveDraft.execute()"
+    <portal-preview-provider :portal-config="portalConfigDefault">
+      <v-form
+        v-if="editConfig"
+        v-model="formValid"
       >
-        <template #page-elements="{node, statefulLayout}">
-          <v-defaults-provider :defaults="vjsfDefaults">
-            <page-edit-elements
-              :model-value="node.data"
-              :add-item-message="t('addItemMessage')"
-              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+        <vjsf-page-config
+          v-model="editConfig"
+          :options="vjsfOptions"
+          @update:model-value="saveDraft.execute()"
+        >
+          <template #page-elements="{node, statefulLayout}">
+            <v-defaults-provider :defaults="vjsfDefaults">
+              <page-edit-elements
+                :model-value="node.data"
+                :add-item-message="t('addItemMessage')"
+                @update:model-value="(data: any) => statefulLayout.input(node, data)"
+              />
+            </v-defaults-provider>
+          </template>
+        </vjsf-page-config>
+      </v-form>
+      <navigation-right>
+        <!-- Validate draft -->
+        <v-list-item
+          :disabled="validateDraft.loading.value || saveDraft.loading.value"
+          :title="t('validateDraft')"
+          @click="validateDraft.execute()"
+        >
+          <template #prepend>
+            <v-icon
+              color="primary"
+              :icon="mdiFileReplace"
             />
-          </v-defaults-provider>
-        </template>
-      </vjsf-page-config>
-    </v-form>
-    <navigation-right>
-      <!-- Validate draft -->
-      <v-list-item
-        :disabled="validateDraft.loading.value || saveDraft.loading.value"
-        :title="t('validateDraft')"
-        @click="validateDraft.execute()"
-      >
-        <template #prepend>
-          <v-icon
-            color="primary"
-            :icon="mdiFileReplace"
-          />
-        </template>
-      </v-list-item>
-      <v-list-item
-        :disabled="cancelDraft.loading.value || saveDraft.loading.value"
-        :title="t('cancelDraft')"
-        @click="cancelDraft.execute()"
-      >
-        <template #prepend>
-          <v-icon
-            color="warning"
-            :icon="mdiCancel"
-          />
-        </template>
-      </v-list-item>
-    </navigation-right>
-    <v-btn
-      v-if="changesStack.canUndo.value"
-      :icon="mdiUndo"
-      :title="t('undoLastChange')"
-      variant="flat"
-      style="position: absolute; bottom: 16px; right: 70px;z-index:2300;"
-      @click="changesStack.undo()"
-    />
-    <v-btn
-      v-if="changesStack.canRedo.value"
-      :icon="mdiRedo"
-      :title="t('redoLastChange')"
-      variant="flat"
-      style="position: absolute; bottom: 16px; right: 16px;z-index:2300;"
-      @click="changesStack.redo()"
-    />
+          </template>
+        </v-list-item>
+        <v-list-item
+          :disabled="cancelDraft.loading.value || saveDraft.loading.value"
+          :title="t('cancelDraft')"
+          @click="cancelDraft.execute()"
+        >
+          <template #prepend>
+            <v-icon
+              color="warning"
+              :icon="mdiCancel"
+            />
+          </template>
+        </v-list-item>
+      </navigation-right>
+      <v-btn
+        v-if="changesStack.canUndo.value"
+        :icon="mdiUndo"
+        :title="t('undoLastChange')"
+        variant="flat"
+        style="position: absolute; bottom: 16px; right: 70px;z-index:2300;"
+        @click="changesStack.undo()"
+      />
+      <v-btn
+        v-if="changesStack.canRedo.value"
+        :icon="mdiRedo"
+        :title="t('redoLastChange')"
+        variant="flat"
+        style="position: absolute; bottom: 16px; right: 16px;z-index:2300;"
+        @click="changesStack.redo()"
+      />
+    </portal-preview-provider>
   </v-container>
 </template>
 
@@ -74,6 +76,7 @@ import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
 import useChangesStack from '~/composables/use-changes-stack'
+import { PortalConfig } from '#api/types/portal/index.js'
 
 const { t } = useI18n()
 const route = useRoute<'/pages/[id]/'>()
@@ -103,6 +106,21 @@ const vjsfDefaults = {
     scrollStrategy: 'none',
     opacity: 0.1,
     contentClass: 'vjsf-edit-dialog-content'
+  }
+}
+
+// Default config for preview
+const portalConfigDefault: PortalConfig = {
+  contactInformations: {
+    info: t('contactInfoExample'),
+    phone: '0123456789',
+    phoneLabel: 'Phone',
+    website: 'https://example.com',
+    websiteLabel: 'Website'
+  },
+  socialLinks: {
+    bluesky: 'example',
+    linkedin: 'example'
   }
 }
 
@@ -139,6 +157,7 @@ watch(pageFetch.data, (page) => {
 
 <i18n lang="yaml">
   en:
+    contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
     addItemMessage: Add a block to the page
     validateDraft: Validate draft
     cancelDraft: Cancel draft
@@ -146,6 +165,7 @@ watch(pageFetch.data, (page) => {
     redoLastChange: Redo last change
 
   fr:
+    contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
     addItemMessage: Ajouter un bloc à la page
     validateDraft: Valider le brouillon
     cancelDraft: Annuler le brouillon

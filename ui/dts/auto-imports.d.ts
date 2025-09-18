@@ -74,6 +74,7 @@ declare global {
   const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
   const provide: typeof import('vue')['provide']
   const providePageStore: typeof import('../src/composables/use-page-store')['providePageStore']
+  const providePortalStore: typeof import('../src/composables/use-portal-store')['providePortalStore']
   const reactive: typeof import('vue')['reactive']
   const readonly: typeof import('vue')['readonly']
   const ref: typeof import('vue')['ref']
@@ -103,6 +104,7 @@ declare global {
   const useModel: typeof import('vue')['useModel']
   const useNumberSearchParam: typeof import('@data-fair/lib-vue/reactive-search-params.js')['useNumberSearchParam']
   const usePageStore: typeof import('../src/composables/use-page-store')['usePageStore']
+  const usePortalStore: typeof import('../src/composables/use-portal-store')['usePortalStore']
   const useReactiveSearchParams: typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
@@ -129,6 +131,9 @@ declare global {
   // @ts-ignore
   export type { PageStore } from '../src/composables/use-page-store'
   import('../src/composables/use-page-store')
+  // @ts-ignore
+  export type { PortalStore } from '../src/composables/use-portal-store'
+  import('../src/composables/use-portal-store')
 }
 
 // for vue template auto import
@@ -204,6 +209,7 @@ declare module 'vue' {
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly providePageStore: UnwrapRef<typeof import('../src/composables/use-page-store')['providePageStore']>
+    readonly providePortalStore: UnwrapRef<typeof import('../src/composables/use-portal-store')['providePortalStore']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
@@ -233,6 +239,7 @@ declare module 'vue' {
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNumberSearchParam: UnwrapRef<typeof import('@data-fair/lib-vue/reactive-search-params.js')['useNumberSearchParam']>
     readonly usePageStore: UnwrapRef<typeof import('../src/composables/use-page-store')['usePageStore']>
+    readonly usePortalStore: UnwrapRef<typeof import('../src/composables/use-portal-store')['usePortalStore']>
     readonly useReactiveSearchParams: UnwrapRef<typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>

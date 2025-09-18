@@ -1,12 +1,15 @@
 <template>
-  <v-container v-if="pageConfigFetch.data.value">
-  HELLO {{ pageConfigFetch.data }}
-  <page-elements :model-value="pageConfigFetch.data.value.elements" />
-  </v-container>
+  <page-elements
+    v-if="pageConfigFetch.data.value"
+    :model-value="pageConfigFetch.data.value.elements"
+  />
+
+  <h2 class="text-h4">Page config</h2>
+  <pre>{{ pageConfigFetch.data.value }}</pre>
 </template>
 
 <script setup lang="ts">
-import type { ImageRef, PageConfig } from '~~/../api/types/page'
+import type { ImageRef, PageConfig } from '#api/types/page'
 
 const route = useRoute()
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/' + route.params.slug, { watch: false })

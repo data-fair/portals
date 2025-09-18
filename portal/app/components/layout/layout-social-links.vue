@@ -35,18 +35,18 @@ const socialPlatforms: Record<
     url: (handle: string) => string
     title: string
     icon?: string
-    component?: string
+    component?: ReturnType<typeof resolveComponent>
   }
 > = {
   bluesky: {
     url: (handle) => `https://bsky.app/profile/${handle}`,
     title: 'Bluesky',
-    component: 'icon-bluesky'
+    component: resolveComponent('IconBluesky')
   },
   x: {
     url: (handle) => `https://x.com/${handle}`,
     title: 'X',
-    component: 'icon-x'
+    component: resolveComponent('IconX')
   },
   facebook: {
     url: (handle) => `https://facebook.com/${handle}`,

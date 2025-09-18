@@ -1,10 +1,11 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <v-alert
-    :type="element.alertType"
+    :type="element.alertType !== 'none' ? element.alertType : undefined"
     :title="element.title"
+    :icon="element.icon?.svgPath"
+    :color="element.color"
     class="pb-6"
-    :icon="element.icon?.svg"
   >
     <div v-html="element.content" />
   </v-alert>

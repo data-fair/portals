@@ -1,11 +1,11 @@
 <template>
   <component
-    :is="detached ? VToolbar : VAppBar"
+    :is="preview ? VToolbar : VAppBar"
     :color="headerConfig.navBarColor"
+    :class="headerConfig.transparent ? 'opacity-90' : undefined"
     :density="headerConfig.density"
     :extension-height="headerConfig.density === 'default' ? 64 : undefined"
     :height="headerConfig.show ? 128 : 0"
-    :class="headerConfig.transparent ? 'opacity-90' : undefined"
     :scroll-behavior="(headerConfig.scrollBehavior === 'hide' && !headerConfig.show ? 'default' : headerConfig.scrollBehavior) + ' elevate'"
   >
     <!-- Header (128px)-->
@@ -26,9 +26,9 @@
         <v-row align="center">
           <layout-header-logo
             v-if="logo && !headerConfig.show"
-            :logo="logo"
-            :link="portalConfig.header.logoLink"
             :height="56"
+            :link="portalConfig.header.logoLink"
+            :logo="logo"
           />
 
           <nav-tabs-or-menu
@@ -38,11 +38,10 @@
 
           <v-spacer />
           <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
-            <notification-queue :detached="detached" />
+            <notification-queue />
             <layout-personal-menu
               :show-header="headerConfig.show"
               :login-color="headerConfig.loginColor === 'navBar' ? headerConfig.navBarColor : headerConfig.loginColor"
-              :detached="detached"
             />
           </v-toolbar-items>
         </v-row>
@@ -52,25 +51,21 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
 import { VToolbar, VAppBar } from 'vuetify/components'
 
-const { portalConfig, home } = defineProps({
-  portalConfig: { type: Object as () => PortalConfig, required: true },
-  home: { type: Boolean, default: false },
-  detached: { type: Boolean, default: false }
-})
+const { home } = defineProps<{ home?: boolean }>()
+const { portalConfig, preview } = usePortalStore()
 
 const headerConfig = computed(() => {
-  if (!home || !portalConfig.headerHome?.active) return portalConfig.header
-  return { ...portalConfig.header, ...portalConfig.headerHome.header }
+  if (!home || !portalConfig.value.headerHome?.active) return portalConfig.value.header
+  return { ...portalConfig.value.header, ...portalConfig.value.headerHome.header }
 })
 
 const logo = computed(() => {
   if (headerConfig.value.logoPrimaryType === 'local' && headerConfig.value.logoPrimary) {
     return headerConfig.value.logoPrimary
-  } else if (headerConfig.value.logoPrimaryType === 'default' && portalConfig.logo) {
-    return portalConfig.logo
+  } else if (headerConfig.value.logoPrimaryType === 'default' && portalConfig.value.logo) {
+    return portalConfig.value.logo
   }
   return null
 })

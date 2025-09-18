@@ -27,15 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
 import microTemplate from '@data-fair/lib-utils/micro-template.js'
 
-const { portalConfig } = defineProps({
-  portalConfig: { type: Object as () => PortalConfig, required: true },
-})
+const { portal } = usePortalStore()
 
-const bodyFontFamilyCssFetch = useFetch<string>(() => portalConfig.bodyFontFamily && ($apiPath + `/assets/fonts/${portalConfig.bodyFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
-const headingFontFamilyCssFetch = useFetch<string>(() => portalConfig.headingFontFamily && ($apiPath + `/assets/fonts/${portalConfig.headingFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
+const bodyFontFamilyCssFetch = useFetch<string>(() => portal.value.config.bodyFontFamily && ($apiPath + `/assets/fonts/${portal.value.config.bodyFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
+const headingFontFamilyCssFetch = useFetch<string>(() => portal.value.config.headingFontFamily && ($apiPath + `/assets/fonts/${portal.value.config.headingFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
 
 const fontFamiliesCss = computed(() => {
   let css = ''
