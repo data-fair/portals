@@ -9,7 +9,8 @@ export default [
   ...pluginVuetify.configs['flat/recommended'],
   {
     rules: {
-      'vue/multi-word-component-names': 'off'
+      'vue/multi-word-component-names': 'off',
+      'vue/require-default-prop': 'off'
     }
   },
   {

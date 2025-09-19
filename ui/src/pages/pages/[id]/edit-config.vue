@@ -1,6 +1,6 @@
 <template>
   <v-container data-iframe-height>
-    <portal-preview-provider :portal-config="portalConfigDefault">
+    <portal-preview-provider>
       <v-form
         v-if="editConfig"
         v-model="formValid"
@@ -76,7 +76,6 @@ import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
 import useChangesStack from '~/composables/use-changes-stack'
-import { PortalConfig } from '#api/types/portal/index.js'
 
 const { t } = useI18n()
 const route = useRoute<'/pages/[id]/'>()
@@ -106,21 +105,6 @@ const vjsfDefaults = {
     scrollStrategy: 'none',
     opacity: 0.1,
     contentClass: 'vjsf-edit-dialog-content'
-  }
-}
-
-// Default config for preview
-const portalConfigDefault: PortalConfig = {
-  contactInformations: {
-    info: t('contactInfoExample'),
-    phone: '0123456789',
-    phoneLabel: 'Phone',
-    website: 'https://example.com',
-    websiteLabel: 'Website'
-  },
-  socialLinks: {
-    bluesky: 'example',
-    linkedin: 'example'
   }
 }
 

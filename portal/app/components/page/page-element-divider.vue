@@ -4,6 +4,7 @@
     :thickness="element.thickness"
     :opacity="element.opacity"
     :color="element.color"
+    class="my-4"
   />
 </template>
 

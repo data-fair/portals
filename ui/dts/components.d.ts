@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ColorsPreview: typeof import('./../src/components/portal-edit/colors-preview.vue')['default']
+    DatasetCard: typeof import('./../../portal/app/components/dataset/dataset-card.vue')['default']
     'DFrame.client': typeof import('./../../portal/app/components/d-frame.client.vue')['default']
     FontFamiliesPreview: typeof import('./../src/components/portal-edit/font-families-preview.vue')['default']
     IconBluesky: typeof import('./../../portal/app/components/icon/icon-bluesky.vue')['default']

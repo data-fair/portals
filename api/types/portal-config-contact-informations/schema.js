@@ -5,6 +5,7 @@ export default {
   type: 'object',
   layout: { title: null },
   unevaluatedProperties: false,
+  additionalProperties: false,
   properties: {
     email: {
       type: 'string',

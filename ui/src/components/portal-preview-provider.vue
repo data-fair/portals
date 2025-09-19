@@ -6,9 +6,34 @@
 import type { PortalConfig } from '#api/types/portal-config'
 
 const { portalConfig } = defineProps<{
-  portalConfig: PortalConfig
+  portalConfig?: PortalConfig
 }>()
 
-providePortalStore(portalConfig)
+const { t } = useI18n()
+
+const portalConfigDefault: PortalConfig = {
+  contactInformations: {
+    infos: t('contactInfoExample'),
+    phone: '0123456789',
+    phoneLabel: 'Phone',
+    website: 'https://example.com',
+    websiteLabel: 'Website'
+  },
+  socialLinks: {
+    bluesky: 'example',
+    linkedin: 'example'
+  }
+}
+
+providePortalStore(portalConfig || portalConfigDefault)
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
+
+  fr:
+    contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
+
+</i18n>

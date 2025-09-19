@@ -32,7 +32,7 @@ export default {
         ]
       },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
-      { title: 'Catalogue de données', children: [{ text: 'TODO' }] },
+      { title: 'Catalogue de données', children: ['datasets'] },
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
       { title: 'Informations de contact', children: ['contactInformations'] },
@@ -43,7 +43,7 @@ export default {
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'contactInformations', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'datasets', 'contactInformations', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -217,6 +217,7 @@ export default {
       }
     },
     footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
+    datasets: { $ref: 'https://github.com/data-fair/portals/portal-config-datasets' },
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' }

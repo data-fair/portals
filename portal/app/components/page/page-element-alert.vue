@@ -5,7 +5,7 @@
     :title="element.title"
     :icon="element.icon?.svgPath"
     :color="element.color"
-    class="pb-6"
+    class="my-4"
   >
     <div v-html="element.content" />
   </v-alert>

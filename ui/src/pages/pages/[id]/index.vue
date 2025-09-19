@@ -15,23 +15,25 @@
       />
 
       <v-card-text>
-        <v-tabs-window v-model="tab">
-          <v-tabs-window-item value="preview">
-            <page-elements :model-value="pageFetch.data.value?.config.elements" />
-          </v-tabs-window-item>
+        <portal-preview-provider>
+          <v-tabs-window v-model="tab">
+            <v-tabs-window-item value="preview">
+              <page-elements :model-value="pageFetch.data.value?.config.elements" />
+            </v-tabs-window-item>
 
-          <v-tabs-window-item value="preview-draft">
-            <page-elements :model-value="pageFetch.data.value?.draftConfig.elements" />
-          </v-tabs-window-item>
+            <v-tabs-window-item value="preview-draft">
+              <page-elements :model-value="pageFetch.data.value?.draftConfig.elements" />
+            </v-tabs-window-item>
 
-          <v-tabs-window-item value="permissions">
-            TODO
-          </v-tabs-window-item>
+            <v-tabs-window-item value="permissions">
+              TODO
+            </v-tabs-window-item>
 
-          <v-tabs-window-item value="publications">
-            <page-edit-publication />
-          </v-tabs-window-item>
-        </v-tabs-window>
+            <v-tabs-window-item value="publications">
+              <page-edit-publication />
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </portal-preview-provider>
       </v-card-text>
     </v-card>
     <navigation-right>

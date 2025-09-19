@@ -98,15 +98,30 @@ export default {
       type: 'object',
       title: 'Texte accentué',
       required: ['type', 'alertType'],
+      layout: {
+        switch: [
+          {
+            if: 'data?.alertType === "none"',
+            children: [
+              'alertType', 'icon', 'color', 'title', 'content'
+            ]
+          },
+          ['alertType', 'title', 'content']
+        ]
+      },
       properties: {
         type: {
           const: 'alert'
         },
         alertType: {
           type: 'string',
-          title: "Type d'accentuation",
+          title: 'Type prédéfini',
           default: 'info',
           oneOf: [
+            {
+              const: 'none',
+              title: 'Aucun'
+            },
             {
               const: 'info',
               title: 'Information'
@@ -122,12 +137,14 @@ export default {
             {
               const: 'warning',
               title: 'Avertissement'
-            },
-            {
-              const: 'none',
-              title: 'Sans accentuation'
             }
           ]
+        },
+        icon: {
+          $ref: '#/$defs/icon'
+        },
+        color: {
+          $ref: '#/$defs/color'
         },
         title: {
           title: 'Titre',
@@ -137,12 +154,6 @@ export default {
           title: 'Contenu',
           type: 'string',
           layout: 'markdown'
-        },
-        icon: {
-          $ref: '#/$defs/icon'
-        },
-        color: {
-          $ref: '#/$defs/color'
         }
       }
     },
@@ -485,9 +496,9 @@ export default {
       type: 'string',
       title: 'Couleur',
       oneOf: [
-        { const: 'primary', title: 'Couleur primaire' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
+        { const: 'primary', title: 'Primaire' },
+        { const: 'secondary', title: 'secondaire' },
+        { const: 'accent', title: 'Accentuée' },
         { const: 'info', title: 'Information' },
         { const: 'success', title: 'Succès' },
         { const: 'error', title: 'Erreur' },

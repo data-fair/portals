@@ -17,6 +17,14 @@ export default defineNuxtConfig({
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     draftUrlPattern: ''
   },
+  security: {
+    headers: {
+      contentSecurityPolicy: {
+        // allow images from self, data URLs and HTTPS sources
+        'img-src': ["'self'", 'data:', 'https:']
+      }
+    }
+  },
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
   build: {
     transpile: ['vuetify']
@@ -30,6 +38,10 @@ export default defineNuxtConfig({
       {
         from: '@data-fair/lib-vue/locale-dayjs.js',
         imports: ['useLocaleDayjs']
+      },
+      {
+        from: '@data-fair/lib-vue/reactive-search-params.js',
+        imports: ['useStringSearchParam', 'useNumberSearchParam', 'useBooleanSearchParam', 'useStringsArraySearchParam']
       },
       {
         from: 'vue-i18n',
