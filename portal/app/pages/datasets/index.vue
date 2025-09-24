@@ -2,7 +2,7 @@
   <!-- Page Title -->
   <h4 class="text-h4 mb-4">
     {{ t('datasetsCount', { count: datasetsFetch.data.value?.count || 0 }) }}
-    <!-- TODO: export filtered catalog -->
+    <!-- TODO: Export filtered catalog -->
     <v-btn
       :icon="mdiFileTable"
       :loading="false"
@@ -48,7 +48,7 @@
       multiple
       hide-details
     />
-    <!-- TODO: owner filter -->
+    <!-- TODO: Add owner filter -->
 <!--
     <owner-facets
       v-if="datasets && datasets.facets.owner.find(o => !!o.value.department)"
@@ -89,23 +89,24 @@
     :topics="topicsItems"
   />
 
-  <!-- TODO: infinite scroll -->
+  <!-- TODO: Add infinite scroll -->
   <v-row class="d-flex align-stretch mt-2">
     <v-col
       v-for="(dataset, i) in datasetsFetch.data.value?.results"
       :key="i"
       :sm="portalConfig.datasets.cardsLayout !== 'horizontal' ? 6 : 12"
-      :md="portalConfig.datasets.cardsLayout === 'compact' ? 4 : 12"
+      :md="portalConfig.datasets.cardsLayout !== 'horizontal' ? 4 : 12"
       cols="12"
     >
       <dataset-card :dataset="dataset" />
     </v-col>
   </v-row>
 
-  <!-- TODO: show loading spinner -->
+  <!-- TODO: Show loading spinner -->
 </template>
 
 <script setup lang="ts">
+import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiFileTable, mdiMagnify, mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
 type DatasetFetch = {
@@ -122,6 +123,7 @@ type DatasetFetch = {
     description: string
     dataUpdatedAt: string
     updatedAt: string
+    owner: Account
     extras: {
       applications?: { id: string; updatedAt: string }[]
     },

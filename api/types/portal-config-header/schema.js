@@ -6,11 +6,11 @@ export default {
   layout: {
     title: null
   },
-  required: ['show', 'logoPrimaryType', 'navBarColor', 'density', 'scrollBehavior'],
+  required: ['show', 'logoPrimaryType', 'showTitle', 'navBarColor', 'density', 'scrollBehavior'],
   properties: {
     show: {
       type: 'boolean',
-      layout: { props: { color: 'primary' }, comp: 'switch' },
+      layout: { comp: 'switch' },
       title: 'Afficher l\'entête',
       default: true
     },
@@ -104,12 +104,20 @@ export default {
       title: 'Lien au clic sur le logo secondaire',
       description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo secondaire.'
     },
-    social: {
+    showTitle: {
+      type: 'boolean',
+      title: 'Afficher le titre du portail',
+      layout: {
+        if: 'parent.data?.show',
+        comp: 'switch'
+      },
+      default: true
+    },
+    showSocial: {
       type: 'boolean',
       title: 'Afficher les liens de réseaux sociaux',
       layout: {
         if: 'parent.data?.show',
-        props: { color: 'primary' },
         comp: 'switch'
       }
     },
@@ -150,7 +158,7 @@ export default {
     transparent: {
       type: 'boolean',
       title: 'Appliquer un effet de transparence',
-      layout: { props: { color: 'primary' }, comp: 'switch' },
+      layout: { comp: 'switch' },
       default: false
     },
     scrollBehavior: {

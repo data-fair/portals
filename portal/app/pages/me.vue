@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth-required'
+  middleware: 'auth-required',
+  layout: 'personal'
 })
 onMounted(() => {
   const route = useRoute()

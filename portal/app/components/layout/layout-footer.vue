@@ -56,7 +56,7 @@
           :cols="logo ? 6 : 12"
         >
           <div>{{ t('socialMedia') }}</div>
-          <layout-social-links :links="portalConfig.socialLinks" />
+          <social-links :links="portalConfig.socialLinks" />
         </v-col>
       </v-row>
 

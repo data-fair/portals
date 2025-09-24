@@ -209,9 +209,18 @@ export default {
         color: {
           $ref: '#/$defs/color'
         },
+        content: {
+          title: 'Contenu',
+          type: 'string',
+          description: 'Texte à afficher au centre du séparateur'
+        },
         inset: {
           type: 'boolean',
           title: 'Ajouter une indentation'
+        },
+        rounded: {
+          type: 'boolean',
+          title: 'Bords arrondis'
         },
         opacity: {
           type: 'number',

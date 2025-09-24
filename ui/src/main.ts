@@ -5,18 +5,18 @@ import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { vuetifySessionOptions } from '@data-fair/lib-vuetify'
 import '@data-fair/lib-vuetify/style/global.scss'
+import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
 import { createReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { createLocaleDayjs } from '@data-fair/lib-vue/locale-dayjs.js'
 import { createSession } from '@data-fair/lib-vue/session.js'
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'
-// TODO: remove v-iframe and iframe-resizer when d-frame is fully integrated
-import '@koumoul/v-iframe/content-window'
-import 'iframe-resizer/js/iframeResizer.contentWindow.js'
-import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
 
-(window as any).iFrameResizer = { heightCalculationMethod: 'taggedElement' };
+// TODO: remove v-iframe and iframe-resizer when d-frame is fully integrated
+// import '@koumoul/v-iframe/content-window'
+// import 'iframe-resizer/js/iframeResizer.contentWindow.js'
+// (window as any).iFrameResizer = { heightCalculationMethod: 'taggedElement' };
 
 (async function () {
   const router = createRouter({ history: createWebHistory($sitePath + '/portals-manager/'), routes })
@@ -29,9 +29,8 @@ import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
     ...vuetifySessionOptions(session, $cspNonce),
     icons: { defaultSet: 'mdi', aliases, sets: { mdi, } }
   })
-  const i18n = createI18n({ locale: session.state.lang });
-
-  (window as any).vIframeOptions = { router }
+  const i18n = createI18n({ locale: session.state.lang })
+  // (window as any).vIframeOptions = { router }
 
   createApp(App)
     .use(router)

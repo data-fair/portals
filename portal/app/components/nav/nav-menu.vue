@@ -1,6 +1,6 @@
 <template>
   <v-menu>
-    <template #activator="{props}">
+    <template #activator="{ props }">
       <v-btn
         v-bind="props"
         variant="text"

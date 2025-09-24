@@ -36,14 +36,14 @@ export default {
       { title: 'Catalogue de visualisations', children: [{ text: 'TODO' }] },
       { title: 'Réutilisations', children: [{ text: 'TODO' }] },
       { title: 'Informations de contact', children: ['contactInformations'] },
-      { title: 'Réseaux sociaux', children: ['socialLinks'] },
+      { title: 'Réseaux sociaux', children: ['socialShares', 'socialLinks'] },
       {
         title: 'Espace personnel',
         children: ['personal']
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'datasets', 'contactInformations', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'datasets', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -198,7 +198,7 @@ export default {
         active: {
           type: 'boolean',
           title: 'Utiliser un rendu différent sur la page d\'accueil',
-          layout: { props: { color: 'primary' }, comp: 'switch' },
+          layout: { comp: 'switch' },
           default: false
         },
         header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' }
@@ -219,6 +219,7 @@ export default {
     footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
     datasets: { $ref: 'https://github.com/data-fair/portals/portal-config-datasets' },
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
+    socialShares: { $ref: 'https://github.com/data-fair/portals/portal-config-social-shares' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' }
   },

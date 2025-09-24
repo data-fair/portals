@@ -6,11 +6,11 @@
     ]"
   >
     <v-row
-      v-if="headerConfig.social"
+      v-if="headerConfig.showSocial"
       class="ma-0"
     >
       <v-spacer />
-      <layout-social-links :links="socialLinks" />
+      <social-links :links="socialLinks" />
     </v-row>
     <v-row align="center" class="ma-0">
       <layout-header-logo
@@ -18,11 +18,8 @@
         :logo="logo"
         :link="headerConfig.logoLink"
       />
-      <v-spacer v-if="headerConfig.noTitle" />
-      <v-col
-        v-else
-        class="text-center"
-      >
+      <v-spacer v-if="!headerConfig.showTitle" />
+      <v-col v-else class="text-center">
         <h1 :class="`${$vuetify.display.smAndDown ? 'text-h5' : 'text-h4'} font-weight-bold`">
           {{ portalTitle }}
         </h1>

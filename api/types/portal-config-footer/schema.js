@@ -42,12 +42,12 @@ export default {
     showSocial: {
       type: 'boolean',
       title: 'Afficher les liens de réseaux sociaux',
-      layout: { props: { color: 'primary' }, comp: 'switch' }
+      layout: { comp: 'switch' }
     },
     showContactInformations: {
       type: 'boolean',
       title: 'Afficher les informations de contact',
-      layout: { props: { color: 'primary' }, comp: 'switch' }
+      layout: { comp: 'switch' }
     },
     copyright: {
       type: 'string',

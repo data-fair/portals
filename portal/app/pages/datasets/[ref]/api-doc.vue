@@ -1,5 +1,5 @@
 <template>
-    <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
+    <!-- <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
     <p
       v-if="useReadApiKey && actualReadApiKey"
       class="my-0 mx-2"
@@ -7,15 +7,13 @@
       Cette API peut être utilisée sans authentification grâce à une clé que vous pouvez renseigner dans le paramètre de requête "apiKey". La clé est régulièrement renouvellée, elle expirera le {{ $d(new Date(dataset.readApiKey.expiresAt)) }}.
       <br>
       Utilisation de la clé : <a :href="readApiKeyExample">{{ readApiKeyExample }}</a>
-    </p>
-    <client-only>
-      <d-frame-wrapper
-        :title="'Documentation de l\'API du jeu de données : ' + dataset.title"
-        :src="iframeSrc"
-        :height="`${windowHeight - 64}px`"
-      />
-    </client-only>
+    </p> -->
+    <d-frame :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`" />
 </template>
+
+<script setup lang="ts">
+definePageMeta({ layout: 'full' })
+</script>
 
 <!-- <script setup lang="ts">
 

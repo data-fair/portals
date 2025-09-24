@@ -1,6 +1,5 @@
 <template>
   <d-frame
-    id='processings'
     :src="`/processings/processings/?owner=${portalOwner}`"
     :adapter.prop="stateChangeAdapter"
     sync-path="/me/processings/"
@@ -13,8 +12,6 @@
 
 <script setup lang="ts">
 import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter'
-
-definePageMeta({ layout: 'personal' })
 
 const { portal } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()

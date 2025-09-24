@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { mdiCloudKey } from '@mdi/js'
 
-definePageMeta({ layout: 'personal' })
 const session = useSessionAuthenticated()
 const { t } = useI18n()
 

@@ -3,16 +3,43 @@ export default {
   'x-exports': [],
   title: 'Catalogue de données',
   type: 'object',
-  layout: { title: null },
+  layout: {
+    title: null,
+    children: [
+      {
+        title: 'Page du catalogue de données',
+        children: [
+          'cardsLayout',
+          'filtersLayout',
+          'defaultSort',
+          'useApplicationThumbnail',
+          'cropThumbnails'
+        ]
+      },
+      {
+        title: 'Page d\'un jeu de données',
+        children: [
+          'metadataPosition',
+          'showImage'
+        ]
+      },
+      {
+        title: 'Éléments communs',
+        children: [
+          'actionsStyle'
+        ]
+      }
+    ]
+  },
   unevaluatedProperties: false,
   additionalProperties: false,
-  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'cropThumbnails', 'datasetMetadataPosition', 'actionsStyle'],
+  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'cropThumbnails', 'metadataPosition', 'showImage', 'actionsStyle'],
   properties: {
-    // Datasets page
+    // Dataset List page
     cardsLayout: {
       type: 'string',
       title: 'Disposition des vignettes',
-      default: 'horizontal',
+      default: 'medium',
       oneOf: [
         { const: 'horizontal', title: 'Horizontale' },
         { const: 'medium', title: 'Verticale (2 colonnes)' },
@@ -62,25 +89,38 @@ export default {
       description: 'Si désactivé, l\'image gardera son ratio d\'origine',
       default: true
     },
-    // Dataset page
-    datasetMetadataPosition: {
+    // Single Dataset page
+    metadataPosition: {
       type: 'string',
       title: 'Position des métadonnées sur la page d\'un jeu de données',
+      default: 'right',
       oneOf: [
         {
-          title: 'En haut',
+          title: 'Sous le titre',
           const: 'top'
+        },
+        {
+          title: 'Entre la description et les applications',
+          const: 'bottom'
         },
         {
           title: 'À droite',
           const: 'right'
         }
-      ],
-      default: 'right'
+      ]
     },
+    showImage: {
+      type: 'boolean',
+      layout: 'switch',
+      title: 'Afficher l\'image sur la page du jeu de données',
+      description: 'L\'image sera affichée au dessus de la description du jeu de données.',
+      default: true
+    },
+    // Common to both pages
     actionsStyle: {
       type: 'string',
       title: 'Style des boutons d\'actions',
+      default: 'full',
       oneOf: [
         {
           title: 'Icône seulement',
@@ -94,8 +134,7 @@ export default {
           title: 'Texte seulement',
           const: 'text'
         }
-      ],
-      default: 'full'
+      ]
     }
   }
 }

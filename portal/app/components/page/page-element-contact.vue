@@ -56,7 +56,7 @@
           <template v-if="element.showSocial && Object.keys(portalConfig.socialLinks).length">
             <v-divider v-if="portalConfig.contactInformations.phone || portalConfig.contactInformations.website" class="my-2" />
             <p class="text-caption">{{ t('socialMedia') }}</p>
-            <layout-social-links :links="portalConfig.socialLinks" />
+            <social-links :links="portalConfig.socialLinks" />
           </template>
         </v-card-text>
       </v-card>
@@ -87,7 +87,7 @@ const sendMessage = {
     console.log('Send message')
   }
 }
-// TODO: send the message
+// TODO: Send email
 // const sendMessage = useAsyncAction(async () => {
 //   if (!valid.value || tokenFetch?.error.value) return
 //   message.value = { ...newMessage }

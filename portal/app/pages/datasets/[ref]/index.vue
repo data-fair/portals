@@ -1,6 +1,178 @@
 <template>
-  un dataset
+  <template v-if="dataset">
+    <h4 class="text-h4 mb-4">
+      {{ dataset.title }}
+    </h4>
+
+    <v-row>
+      <!-- Dataset image and description -->
+      <v-col
+        :md="portalConfig.datasets.metadataPosition === 'right' ? 8 : 12"
+        cols="12"
+      >
+        <img
+          v-if="portalConfig.datasets.showImage && dataset.image"
+          :src="dataset.image"
+          :alt="dataset.title"
+          class="mb-4"
+          style="max-height:300px"
+        >
+        <div v-html="dataset.description" />
+      </v-col>
+
+      <!-- Metadata -->
+      <v-col
+        :md="portalConfig.datasets.metadataPosition === 'right' ? 4 : 12"
+        :order-md="portalConfig.datasets.metadataPosition === 'top' ? 'first' : 1"
+        cols="12"
+      >
+        <dataset-metadata :dataset="dataset" />
+      </v-col>
+    </v-row>
+
+    <!-- Applications -->
+    <template v-if="orderedApplications.length">
+      <v-row
+        v-for="app in orderedApplications"
+        :key="app.id"
+        align="center"
+      >
+        <v-col
+          :md="app.preferLargeDisplay ? 12 : 6"
+          cols="12"
+        >
+          <NuxtLink :to="`/applications/${app.slug}`">
+            {{ app.title }} <v-icon :icon="mdiOpenInNew" color="primary" />
+          </NuxtLink>
+          <div class="mt-2" v-html="app.description" />
+        </v-col>
+        <v-col
+          :md="app.preferLargeDisplay ? 12 : 6"
+          cols="12"
+          :order-md="!app.preferLargeDisplay ? 'first' : 1"
+        >
+          <d-frame
+            :title="app.title"
+            :src="app.exposedUrl + `?embed=true&d-frame=true`"
+          />
+        </v-col>
+      </v-row>
+    </template>
+
+    <v-row class="my-4" justify="center">
+      <nav-link
+        :to="`/datasets`"
+        :icon="mdiReply"
+        :text="t('backToDatasets')"
+      />
+    </v-row>
+  </template>
 </template>
 
 <script setup lang="ts">
+import { mdiOpenInNew, mdiReply } from '@mdi/js'
+
+type Application = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  exposedUrl: string
+  preferLargeDisplay: boolean
+}
+
+type Dataset = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  dataUpdatedAt: string
+  updatedAt: string
+  owner: {
+    id: string
+    name: string
+    department?: string
+    departmentName?: string
+    type: string
+  }
+  count?: number
+  storage?: {
+    indexed?: {
+      size?: number
+    }
+  }
+  origin?: string
+  license?: {
+    title: string
+    href: string
+  }
+  keywords?: string[]
+  spatial?: string
+  temporal?: {
+    start: string
+    end?: string
+  }
+  frequency?: string
+  attachments: {
+    url: string
+    title: string
+    name: string
+    type: 'file' | 'remoteFile'
+    description: string
+    size: string
+    updatedAt: string
+  }[]
+  image?: string
+  thumbnail?: string
+  isMetaOnly: boolean
+  isRest: boolean
+  isVirtual: boolean
+  extras: {
+    applications?: { id: string; slug: string; updatedAt: string }[]
+  }
+  bbox?: number[]
+  public: boolean
+  userPermissions: string[]
+}
+
+const { t } = useI18n()
+const { portal, portalConfig } = usePortalStore()
+const route = useRoute()
+
+const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
+  params: {
+    html: true,
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  }
+})
+
+const dataset = computed(() => datasetFetch.data.value)
+
+const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>('/data-fair/api/v1/applications', {
+  params: {
+    select: 'id,slug,title,description,url,preferLargeDisplay',
+    size: 1000,
+    html: true,
+    dataset: dataset.value?.id,
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  }
+})
+
+const orderedApplications = computed(() => {
+  const datasetApplications = datasetFetch.data.value?.extras?.applications || []
+  const applications = applicationsFetch.data.value?.results || []
+  if (!datasetApplications.length || !applications.length) return []
+
+  const ordered = datasetApplications.map(app => applications.find(a => a.id === app.id)).filter(Boolean)
+  const remaining = applications.filter(a => !ordered.find(app => app.id === a.id))
+  return [...ordered, ...remaining]
+})
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    backToDatasets: Back to datasets list
+  fr:
+    backToDatasets: Retour à la liste des jeux de données
+</i18n>

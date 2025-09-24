@@ -8,8 +8,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ActionBtn: typeof import('./../../portal/app/components/action-btn.vue')['default']
     ColorsPreview: typeof import('./../src/components/portal-edit/colors-preview.vue')['default']
+    DatasetAttachments: typeof import('./../../portal/app/components/dataset/dataset-attachments.vue')['default']
     DatasetCard: typeof import('./../../portal/app/components/dataset/dataset-card.vue')['default']
+    DatasetDownload: typeof import('./../../portal/app/components/dataset/dataset-download.vue')['default']
+    DatasetMapPreview: typeof import('./../../portal/app/components/dataset/dataset-map-preview.vue')['default']
+    DatasetMetadata: typeof import('./../../portal/app/components/dataset/dataset-metadata.vue')['default']
+    DatasetSchema: typeof import('./../../portal/app/components/dataset/dataset-schema.vue')['default']
+    DatasetTablePreview: typeof import('./../../portal/app/components/dataset/dataset-table-preview.vue')['default']
     'DFrame.client': typeof import('./../../portal/app/components/d-frame.client.vue')['default']
     FontFamiliesPreview: typeof import('./../src/components/portal-edit/font-families-preview.vue')['default']
     IconBluesky: typeof import('./../../portal/app/components/icon/icon-bluesky.vue')['default']
@@ -24,6 +31,7 @@ declare module 'vue' {
     LayoutPersonalNavigation: typeof import('./../../portal/app/components/layout/layout-personal-navigation.vue')['default']
     LayoutScrollToTop: typeof import('./../../portal/app/components/layout/layout-scroll-to-top.vue')['default']
     LayoutSocialLinks: typeof import('./../../portal/app/components/layout/layout-social-links.vue')['default']
+    NavLink: typeof import('./../../portal/app/components/nav/nav-link.vue')['default']
     NavMenu: typeof import('./../../portal/app/components/nav/nav-menu.vue')['default']
     NavTabs: typeof import('./../../portal/app/components/nav/nav-tabs.vue')['default']
     NavTabsMenuItem: typeof import('./../../portal/app/components/nav/nav-tabs-menu-item.vue')['default']
@@ -54,6 +62,9 @@ declare module 'vue' {
     PortalsActions: typeof import('./../src/components/portals-actions.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SocialLinks: typeof import('./../../portal/app/components/social-links.vue')['default']
+    SocialShare: typeof import('./../../portal/app/components/social-share.vue')['default']
+    TopicsFacets: typeof import('./../../portal/app/components/topics-facets.vue')['default']
     VjsfPageConfig: typeof import('./../src/components/vjsf/vjsf-page-config.vue')['default']
     VjsfPageElements: typeof import('./../src/components/vjsf/vjsf-page-elements.vue')['default']
     VjsfPortalConfig: typeof import('./../src/components/vjsf/vjsf-portal-config.vue')['default']

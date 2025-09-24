@@ -1,73 +1,118 @@
 <template>
   <v-card
-    :to="`/datasets/${isPublished ? dataset.slug : dataset.id}`"
-    :title="dataset.title"
+    :to="`/datasets/${dataset.slug}`"
     class="h-100 d-flex flex-column"
   >
-    <v-img
-      v-if="thumbnailUrl"
-      :src="thumbnailUrl"
-      :cover="portalConfig.datasets.cropThumbnails"
-      height="170"
-    />
-    <v-card-text v-else>
-      {{ dataset.description }}
-    </v-card-text>
+    <!-- Vertical layout -->
+    <template v-if="portalConfig.datasets.cardsLayout !== 'horizontal' || $vuetify.display.xs">
+      <v-card-title>{{ dataset.title }}</v-card-title>
 
-    <template v-if="portalConfig.datasets.actionsStyle !== 'icon'">
-      <span class="text-caption ml-4">
-        {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-      </span>
-      <!-- TODO: show department avatar -->
-      <!-- <owner-department :owner="dataset.owner" /> -->
-    </template>
+      <v-img
+        v-if="thumbnailUrl"
+        :src="thumbnailUrl"
+        :cover="portalConfig.datasets.cropThumbnails"
+        height="170"
+      />
+      <v-card-text v-else>{{ dataset.description }}</v-card-text>
 
-    <v-divider />
-    <v-card-actions
-      class="py-0 cursor-default ga-0"
-      style="min-height: auto"
-      @click.prevent
-    >
-      <template v-if="!dataset.isMetaOnly">
-        <!-- <table-preview :dataset="dataset" /> -->
-        <v-btn
-          :to="`/datasets/${isPublished ? dataset.slug : dataset.id}/full`"
-          :icon="portalConfig.datasets.actionsStyle === 'icon' ? mdiTableLarge : undefined"
-          :prepend-icon="portalConfig.datasets.actionsStyle === 'full' ? mdiTableLarge : undefined"
-          :title="portalConfig.datasets.actionsStyle === 'icon' ? t('text.table') : undefined"
-          :text="portalConfig.datasets.actionsStyle !== 'icon' ? t('shortText.table') : undefined"
-          :density="portalConfig.datasets.actionsStyle === 'icon' ? 'comfortable' : undefined"
-          :size="portalConfig.datasets.actionsStyle !== 'icon' ? 'x-small' : undefined"
-          variant="text"
-        />
-      </template>
-      <!-- <map-preview v-if="dataset.bbox && dataset.bbox.length" :dataset="dataset" /> -->
-      <!-- <v-btn
-        v-if="!$vuetify.display.smAndDown && !dataset.isMetaOnly"
-        :to="`/datasets/${isPublished ? dataset.slug : dataset.id}/api-doc`"
-        :icon="portalConfig.datasets.actionsStyle === 'icon' ? mdiCog : undefined"
-        :prepend-icon="portalConfig.datasets.actionsStyle === 'full' ? mdiCog : undefined"
-        :title="portalConfig.datasets.actionsStyle === 'icon' ? t('text.api') : undefined"
-        :text="portalConfig.datasets.actionsStyle !== 'icon' ? t('shortText.api') : undefined"
-        :density="portalConfig.datasets.actionsStyle === 'icon' ? 'comfortable' : undefined"
-        :size="portalConfig.datasets.actionsStyle !== 'icon' ? 'x-small' : undefined"
-        variant="text"
-      /> -->
-
-      <template v-if="portalConfig.datasets.actionsStyle === 'icon'">
-        <v-spacer />
-        <span class="text-caption">
+      <v-list-item v-if="portalConfig.datasets.actionsStyle !== 'icon'">
+        <owner-avatar :owner="dataset.owner" />
+        <span class="text-caption ml-2">
           {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
         </span>
-        <!-- TODO: show department avatar -->
-        <!-- <owner-department :owner="dataset.owner" /> -->
-      </template>
-    </v-card-actions>
+      </v-list-item>
+
+      <v-divider />
+      <v-card-actions
+        class="py-2 ga-0 cursor-default"
+        style="min-height: auto"
+        @click.prevent
+      >
+        <template v-if="!dataset.isMetaOnly && !$vuetify.display.smAndDown">
+          <dataset-table-preview :dataset="dataset" />
+          <action-btn
+            :to="`/datasets/${dataset.slug}/full`"
+            :icon="mdiTableLarge"
+            :text="t('text.table')"
+            :short-text="t('shortText.table')"
+          />
+          <dataset-map-preview v-if="dataset.bbox?.length" :dataset="dataset" />
+          <action-btn
+            :to="`/datasets/${dataset.slug}/api-doc`"
+            :icon="mdiCog"
+            :text="t('text.api')"
+            :short-text="t('shortText.api')"
+          />
+        </template>
+
+        <template v-if="portalConfig.datasets.actionsStyle === 'icon'">
+          <v-spacer />
+          <span class="text-caption mr-2">
+            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+          </span>
+          <owner-avatar :owner="dataset.owner" />
+        </template>
+      </v-card-actions>
+    </template>
+
+    <!-- Horizontal layout -->
+    <v-row
+      v-else
+      style="height:246px;"
+      no-gutters
+    >
+      <v-col cols="4">
+        <v-img
+          v-if="thumbnailUrl"
+          :src="thumbnailUrl"
+          :cover="portalConfig.datasets.cropThumbnails"
+          class="h-100"
+        />
+      </v-col>
+      <v-divider vertical />
+      <v-col class="d-flex flex-column">
+        <v-card-title>{{ dataset.title }}</v-card-title>
+        <v-card-text>{{ dataset.description }}</v-card-text>
+
+        <v-spacer />
+        <v-divider />
+        <v-card-actions
+          class="py-2 ga-0 cursor-default"
+          style="min-height: auto"
+          @click.prevent
+        >
+          <template v-if="!dataset.isMetaOnly && !$vuetify.display.smAndDown">
+            <dataset-table-preview :dataset="dataset" />
+            <action-btn
+              :to="`/datasets/${dataset.slug}/full`"
+              :icon="mdiTableLarge"
+              :text="t('text.table')"
+              :short-text="t('shortText.table')"
+            />
+            <dataset-map-preview v-if="dataset.bbox?.length" :dataset="dataset" />
+            <action-btn
+              :to="`/datasets/${dataset.slug}/api-doc`"
+              :icon="mdiCog"
+              :text="t('text.api')"
+              :short-text="t('shortText.api')"
+            />
+          </template>
+
+          <v-spacer />
+          <span class="text-caption mr-2">
+            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+          </span>
+          <owner-avatar :owner="dataset.owner" />
+        </v-card-actions>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { mdiTableLarge } from '@mdi/js'
+import type { Account } from '@data-fair/lib-common-types/account'
+import { mdiCog, mdiTableLarge } from '@mdi/js'
+import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { dataset } = defineProps<{
   dataset: {
@@ -77,6 +122,7 @@ const { dataset } = defineProps<{
     description: string
     dataUpdatedAt: string
     updatedAt: string
+    owner: Account
     extras: {
       applications?: { id: string; updatedAt: string }[]
     }
@@ -90,8 +136,6 @@ const { dataset } = defineProps<{
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-
-const isPublished = ref(false) // TODO: get if dataset is published
 
 const thumbnailUrl = computed(() => {
   if (dataset.image) return dataset.image

@@ -82,19 +82,19 @@
 fr:
   noPortal: Vous n'avez pas configuré de portail sur lequel publier cette page.
   publishThisPage: Publiez cette page sur un ou plusieurs de vos portails
-  published: publié
-  publicationRequested: publication demandée par un contributeur
+  published: Publié
+  publicationRequested: Publication demandée par un contributeur
   warning:
-    description: description non renseignée
-    content: le contenu de la page est vide
+    description: Description non renseignée
+    content: Le contenu de la page est vide
 en:
   noPortal: You haven't configured a portal to publish this page on.
   publishThisPage: Publish this page on one or more of your portals.
-  published: published
-  publicationRequested: publication requested by a contributor
+  published: Published
+  publicationRequested: Publication requested by a contributor
   warning:
-    description: description not filled
-    content: the page is empty
+    description: Description not filled
+    content: The page is empty
 </i18n>
 
 <script setup lang="ts">

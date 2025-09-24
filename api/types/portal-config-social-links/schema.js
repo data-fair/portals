@@ -3,7 +3,7 @@ export default {
   'x-exports': [],
   title: 'SocialLinks',
   type: 'object',
-  layout: { title: null },
+  layout: { title: 'Vos réseaux' },
   unevaluatedProperties: false,
   properties: {
     bluesky: {
@@ -12,7 +12,7 @@ export default {
     },
     x: {
       type: 'string',
-      title: 'Compte X'
+      title: 'Compte X (ex Twitter)'
     },
     facebook: {
       type: 'string',

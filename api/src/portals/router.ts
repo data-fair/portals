@@ -66,6 +66,7 @@ router.post('', async (req, res, next) => {
     header: {
       show: false,
       logoPrimaryType: 'default',
+      showTitle: true,
       headerColor: 'navBar',
       navBarColor: 'primary',
       density: 'default',
@@ -82,6 +83,16 @@ router.post('', async (req, res, next) => {
       links: [{ type: 'sitemap' }, { type: 'privacy-policy' }],
       importantLinks: []
     },
+    datasets: {
+      cardsLayout: 'medium',
+      filtersLayout: 'top',
+      defaultSort: 'createdAt',
+      cropThumbnails: true,
+      metadataPosition: 'right',
+      showImage: true,
+      actionsStyle: 'full'
+    },
+    socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
     socialLinks: {},
     contactInformations: {},
     personal: {

@@ -24,8 +24,6 @@
 <script setup lang="ts">
 import { mdiBellCircle } from '@mdi/js'
 
-definePageMeta({ layout: 'personal' })
-
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 

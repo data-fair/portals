@@ -9,8 +9,6 @@
 
 <script setup lang="ts">
 
-definePageMeta({ layout: 'personal' })
-
 const route = useRoute()
 const { portalConfig } = usePortalStore()
 const page = computed(() => portalConfig.value.personal.accountPages.find(p => p.id === route.params.id))

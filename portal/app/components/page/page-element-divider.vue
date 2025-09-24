@@ -4,8 +4,15 @@
     :thickness="element.thickness"
     :opacity="element.opacity"
     :color="element.color"
-    class="my-4"
-  />
+    :class="[
+      'my-4',
+      element.rounded ? 'rounded' : ''
+    ]"
+  >
+    <template v-if="element.content" #default>
+      {{ element.content }}
+    </template>
+  </v-divider>
 </template>
 
 <script setup lang="ts">

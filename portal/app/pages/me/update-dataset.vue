@@ -4,8 +4,6 @@
 
 <script setup lang="ts">
 
-definePageMeta({ layout: 'personal' })
-
 const { portal } = usePortalStore()
 const portalOwner = computed(() => {
   let owner = `${portal.value.owner.type}:${portal.value.owner.id}`

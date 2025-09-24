@@ -2,7 +2,7 @@
   <h2 class="text-h2">Politique de confidentialité</h2>
   <p class="mb-4"><i>Mise à jour le 04/10/2023</i></p>
 
-  <!-- TODO: Ajouter les cookies -->
+  <!-- TODO: Add Cookies validation -->
   <!-- <template v-if="portalConfig.analytics.type !== 'none'">
     <p class="mb-2">Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.</p>
     <v-switch label="Autoriser la mesure d'audience" />
