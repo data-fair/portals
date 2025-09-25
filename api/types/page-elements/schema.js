@@ -167,7 +167,7 @@ export default {
         },
         title: {
           title: "Titre de l'image",
-          description: "recommandé pour l'accessibilité et pour afficher une information utile au survol",
+          description: "Recommandé pour l'accessibilité et pour afficher une information utile au survol",
           type: 'string'
         },
         url: {

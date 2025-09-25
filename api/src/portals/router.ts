@@ -87,9 +87,20 @@ router.post('', async (req, res, next) => {
       cardsLayout: 'medium',
       filtersLayout: 'top',
       defaultSort: 'createdAt',
+      showActions: true,
       cropThumbnails: true,
       metadataPosition: 'right',
       showImage: true,
+      actionsStyle: 'full'
+    },
+    applications: {
+      cardsLayout: 'vertical',
+      filtersLayout: 'top',
+      defaultSort: 'createdAt',
+      showActions: true,
+      cropThumbnails: true,
+      metadataPosition: 'right',
+      showImage: false,
       actionsStyle: 'full'
     },
     socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],

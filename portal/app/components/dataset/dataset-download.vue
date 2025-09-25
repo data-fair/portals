@@ -1,135 +1,116 @@
 <template>
-  <v-dialog max-width="1200">
-    <template #activator="{ props }">
-      <action-btn
-        v-bind="props"
-        :icon="mdiDownload"
-        :text="t('preview')"
-        :short-text="t('previewShort')"
-      />
-    </template>
-    <template #default="{ isActive }">
-      <v-card :loading="!files.length" class="pb-2">
-        <v-toolbar
-          :title="t('preview') + ' - ' + dataset.title"
-          density="compact"
-          color="surface"
+  <layout-preview
+    :icon="mdiDownload"
+    :text="t('preview')"
+    :short-text="t('previewShort')"
+    :title="t('preview') + ' - ' + dataset.title"
+  >
+    <!-- direct links to files-->
+    <v-list-item
+      v-for="(file, i) of files"
+      :key="i"
+      :title="file.title"
+    >
+      <v-list-item-subtitle v-if="file.key === 'normalized' || file.key.startsWith('export-')">
+        {{ $t('formatSubtitles.' + file.format) }}
+      </v-list-item-subtitle>
+      <v-list-item-subtitle v-else>
+        {{ file.name }} ({{ file.size }})
+      </v-list-item-subtitle>
+      <template #append>
+        <v-btn
+          :icon="mdiDownload"
+          :href="file.url"
+          variant="text"
         >
-          <v-spacer />
+          {{ file.title }}
+        </v-btn>
+      </template>
+    </v-list-item>
+
+    <!-- download of large CSV in 10000 lines chunks -->
+    <!--
+    <template v-if="count > 10000 && !hasNormalizedCSV">
+      <v-list-item
+        :title="t('export', { format: 'CSV' })"
+        :subtitle="t('formatSubtitle.csv')"
+      >
+        <template #append>
           <v-btn
-            :icon="mdiClose"
-            @click="isActive.value = false"
-          />
-        </v-toolbar>
-
-        <!-- direct links to files-->
-        <v-list-item
-          v-for="(file, i) of files"
-          :key="i"
-          :title="file.title"
-        >
-          <v-list-item-subtitle v-if="file.key === 'normalized' || file.key.startsWith('export-')">
-            {{ $t('formatSubtitles.' + file.format) }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle v-else>
-            {{ file.name }} ({{ file.size }})
-          </v-list-item-subtitle>
-          <template #append>
-            <v-btn
-              :icon="mdiDownload"
-              :href="file.url"
-              variant="text"
-            >
-              {{ file.title }}
-            </v-btn>
-          </template>
-        </v-list-item>
-
-        <!-- download of large CSV in 10000 lines chunks -->
-        <!--
-        <template v-if="count > 10000 && !hasNormalizedCSV">
-          <v-list-item
-            :title="t('export', { format: 'CSV' })"
-            :subtitle="t('formatSubtitle.csv')"
+            v-if="!largeCsvLoading"
+            :icon="mdiDownload"
+            variant="text"
+            @click="downloadLargeCSV"
           >
-            <template #append>
-              <v-btn
-                v-if="!largeCsvLoading"
-                :icon="mdiDownload"
-                variant="text"
-                @click="downloadLargeCSV"
-              >
-                {{ t('export', { format: 'CSV' }) }}
-              </v-btn>
-              <v-btn
-                v-else
-                :icon="mdiClose"
-                variant="text"
-                color="warning"
-                @click="cancelLargeCsv"
-              >
-                {{ t('cancelDownload')  }}
-              </v-btn>
-            </template>
-          </v-list-item>
-          <div style="height:4px;width:100%;">
-            <v-progress-linear
-              v-if="largeCsvLoading"
-              :buffer-value="largeCsvBufferValue"
-              :value="largeCsvValue"
-              stream
-              height="4"
-              style="margin:0;"
-            />
-          </div>
+            {{ t('export', { format: 'CSV' }) }}
+          </v-btn>
+          <v-btn
+            v-else
+            :icon="mdiClose"
+            variant="text"
+            color="warning"
+            @click="cancelLargeCsv"
+          >
+            {{ t('cancelDownload')  }}
+          </v-btn>
         </template>
-        -->
+      </v-list-item>
+      <div style="height:4px;width:100%;">
+        <v-progress-linear
+          v-if="largeCsvLoading"
+          :buffer-value="largeCsvBufferValue"
+          :value="largeCsvValue"
+          stream
+          height="4"
+          style="margin:0;"
+        />
+      </div>
+    </template>
+    -->
 
-        <!-- download of formats exported by API when <= 10000 lines -->
+    <!-- download of formats exported by API when <= 10000 lines -->
+    <v-list-item
+      v-for="format in simpleExports"
+      :key="format"
+      :title="t('export', { format: format.toUpperCase()})"
+      :subtitle="t('formatSubtitle.' + format)"
+    >
+      <template #append>
+        <v-btn
+          :icon="mdiDownload"
+          :href="`/data-fair/api/v1/datasets/${dataset.id}/lines?size=10000&page=1&format=${format}`"
+          variant="text"
+        >
+          {{ t('export', { format: format.toUpperCase()}) }}
+        </v-btn>
+      </template>
+    </v-list-item>
+
+    <!-- link to table vue for filtered exports -->
+    <template v-if="count > 10000">
+      <v-alert color="warning" tile>
+        {{ t('dataTooLargeAlert1') }}<br>
+        {{ t('dataTooLargeAlert2') }}
+      </v-alert>
         <v-list-item
-          v-for="format in simpleExports"
-          :key="format"
-          :title="t('export', { format: format.toUpperCase()})"
-          :subtitle="t('formatSubtitle.' + format)"
+          :title="`Export filtré aux formats ${join(['XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`"
         >
           <template #append>
             <v-btn
-              :icon="mdiDownload"
-              :href="`/data-fair/api/v1/datasets/${dataset.id}/lines?size=10000&page=1&format=${format}`"
+              :to="`/datasets/${dataset.slug}/full`"
+              :icon="mdiTableLarge"
               variant="text"
             >
-              {{ t('export', { format: format.toUpperCase()}) }}
+              {{ t('table') }}
             </v-btn>
           </template>
         </v-list-item>
-
-        <!-- link to table vue for filtered exports -->
-        <template v-if="count > 10000">
-          <v-alert color="warning" tile>
-            {{ t('dataTooLargeAlert1') }}<br>
-            {{ t('dataTooLargeAlert2') }}
-          </v-alert>
-            <v-list-item
-              :title="`Export filtré aux formats ${join(['XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`"
-            >
-              <template #append>
-                <v-btn
-                  :to="`/datasets/${dataset.slug}/full`"
-                  :icon="mdiTableLarge"
-                  variant="text"
-                >
-                  {{ t('table') }}
-                </v-btn>
-              </template>
-            </v-list-item>
-          </template>
-      </v-card>
-    </template>
-  </v-dialog>
+      </template>
+  </layout-preview>
 </template>
 
 <script setup lang="ts">
-import { mdiClose, mdiDownload, mdiTableLarge } from '@mdi/js'
+import { mdiDownload, mdiTableLarge } from '@mdi/js'
 
 type Dataset = {
   id: string

@@ -1,24 +1,23 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-datasets',
+  $id: 'https://github.com/data-fair/portals/portal-config-applications',
   'x-exports': [],
-  title: 'Catalogue de données',
+  title: 'Catalogue de visualisations',
   type: 'object',
   layout: {
     title: null,
     children: [
       {
-        title: 'Page du catalogue de données',
+        title: 'Page du catalogue de visualisations',
         children: [
           'cardsLayout',
           'filtersLayout',
           'defaultSort',
           'showActions',
-          'useApplicationThumbnail',
           'cropThumbnails'
         ]
       },
       {
-        title: 'Page d\'un jeu de données',
+        title: 'Page d\'une visualisation',
         children: [
           'metadataPosition',
           'showImage'
@@ -36,15 +35,14 @@ export default {
   additionalProperties: false,
   required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'showActions', 'cropThumbnails', 'metadataPosition', 'showImage', 'actionsStyle'],
   properties: {
-    // Dataset List page
+    // Application List page
     cardsLayout: {
       type: 'string',
       title: 'Disposition des vignettes',
-      default: 'medium',
+      default: 'vertical',
       oneOf: [
         { const: 'horizontal', title: 'Horizontale' },
-        { const: 'medium', title: 'Verticale (2 colonnes)' },
-        { const: 'compact', title: 'Verticale (3 colonnes)' },
+        { const: 'vertical', title: 'Verticale (Multi-colonnes)' },
       ]
     },
     filtersLayout: {
@@ -83,13 +81,6 @@ export default {
       description: 'Affiche les boutons d\'actions sur les vignettes des applications.',
       default: true
     },
-    useApplicationThumbnail: {
-      type: 'boolean',
-      layout: 'switch',
-      title: 'Utiliser les vignettes d\'application',
-      description: 'Utiliser l\'image de la première application comme vignette si aucune image n\'est définie pour le jeu de données. Si le jeu de données n\'a pas d\'image ni d\'application, sa description sera affichée.',
-      default: false
-    },
     cropThumbnails: {
       type: 'boolean',
       layout: 'switch',
@@ -97,10 +88,10 @@ export default {
       description: 'Si désactivé, l\'image gardera son ratio d\'origine',
       default: true
     },
-    // Single Dataset page
+    // Single Application page
     metadataPosition: {
       type: 'string',
-      title: 'Position des métadonnées sur la page d\'un jeu de données',
+      title: 'Position des métadonnées sur la page d\'une visualisation',
       default: 'right',
       oneOf: [
         {
@@ -120,9 +111,9 @@ export default {
     showImage: {
       type: 'boolean',
       layout: 'switch',
-      title: 'Afficher l\'image sur la page d\'un jeu de données',
+      title: 'Afficher l\'image sur la page d\'une visualisation',
       description: 'L\'image sera affichée au dessus de la description.',
-      default: true
+      default: false
     },
     // Common to both pages
     actionsStyle: {

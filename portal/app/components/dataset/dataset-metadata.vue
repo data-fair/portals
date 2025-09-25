@@ -127,15 +127,18 @@
         {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('LL') }}
       </v-col>
 
-      <v-col v-if="dataset.public">
-        {{ t('share') }}
-        <social-share :title="dataset.title"/>
-      </v-col>
+      <ClientOnly>
+        <v-col v-if="dataset.public">
+          {{ t('share') }}
+          <social-share :title="dataset.title"/>
+        </v-col>
+      </ClientOnly>
     </v-row>
   </v-card>
 </template>
 
 <script setup lang="ts">
+import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
 
 type Dataset = {
@@ -145,13 +148,7 @@ type Dataset = {
   description: string
   dataUpdatedAt: string
   updatedAt: string
-  owner: {
-    id: string
-    name: string
-    department?: string
-    departmentName?: string
-    type: string
-  }
+  owner: Account
   count?: number
   storage?: {
     indexed?: {
@@ -288,5 +285,5 @@ const avatarUrl = computed(() => {
       table: Tableau plein écran
     thisSource: 'cette source'
     updateFrequency: 'Fréquence de mise à jour :'
-    updatedAt: Mis à jours le
+    updatedAt: Mis à jour le
 </i18n>

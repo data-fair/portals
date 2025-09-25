@@ -28,7 +28,7 @@
         style="min-height: auto"
         @click.prevent
       >
-        <template v-if="!dataset.isMetaOnly && !$vuetify.display.smAndDown">
+        <template v-if="portalConfig.datasets.showActions && !dataset.isMetaOnly && !$vuetify.display.smAndDown">
           <dataset-table-preview :dataset="dataset" />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
@@ -81,7 +81,7 @@
           style="min-height: auto"
           @click.prevent
         >
-          <template v-if="!dataset.isMetaOnly && !$vuetify.display.smAndDown">
+          <template v-if="portalConfig.datasets.showActions && !dataset.isMetaOnly && !$vuetify.display.smAndDown">
             <dataset-table-preview :dataset="dataset" />
             <action-btn
               :to="`/datasets/${dataset.slug}/full`"

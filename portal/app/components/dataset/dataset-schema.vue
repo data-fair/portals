@@ -1,44 +1,26 @@
 <template>
-  <v-dialog max-width="1200">
-    <template #activator="{ props }">
-      <action-btn
-        v-bind="props"
-        :icon="mdiViewList"
-        :text="t('preview')"
-        :short-text="t('previewShort')"
-      />
-    </template>
-    <template #default="{ isActive }">
-      <v-card>
-        <v-toolbar
-          :title="t('preview') + ' - ' + dataset.title"
-          density="compact"
-          color="surface"
-        >
-          <v-spacer />
-          <v-btn
-            :icon="mdiClose"
-            @click="isActive.value = false"
-          />
-        </v-toolbar>
-        <d-frame
-          :title="t('preview') + ' - ' + dataset.title"
-          :src="`/data-fair/next-ui/embed/dataset/${dataset.id}/fields`"
-        />
-      </v-card>
-    </template>
-  </v-dialog>
+  <layout-preview
+    :icon="mdiViewList"
+    :text="t('preview')"
+    :short-text="t('previewShort')"
+    :title="t('preview') + ' - ' + dataset.title"
+  >
+    <d-frame
+      :title="t('preview') + ' - ' + dataset.title"
+      :src="`/data-fair/next-ui/embed/dataset/${dataset.id}/fields`"
+    />
+  </layout-preview>
 </template>
 
 <script setup lang="ts">
-import { mdiClose, mdiViewList } from '@mdi/js'
+import { mdiViewList } from '@mdi/js'
 
-type Dataset = {
-  id: string
-  title: string
-}
-
-const { dataset } = defineProps<{ dataset: Dataset }>()
+const { dataset } = defineProps<{
+  dataset: {
+    id: string
+    title: string
+  }
+}>()
 const { t } = useI18n()
 
 </script>

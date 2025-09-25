@@ -12,9 +12,6 @@
     <layout-header
       v-if="headerConfig.show"
       :header-config="headerConfig"
-      :portal-logo="portalConfig.logo"
-      :portal-title="portalConfig.title"
-      :social-links="portalConfig.socialLinks"
     />
 
     <!-- Navigation Bar (64px) -->

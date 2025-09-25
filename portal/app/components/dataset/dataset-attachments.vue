@@ -1,55 +1,36 @@
 <template>
-  <v-dialog max-width="1200">
-    <template #activator="{ props }">
-      <action-btn
-        v-bind="props"
-        :icon="mdiAttachment"
-        :text="t('preview')"
-      />
-    </template>
-    <template #default="{ isActive }">
-      <v-card>
-        <v-toolbar
-          :title="t('preview') + ' - ' + dataset.title"
-          density="compact"
-          color="surface"
-        >
-          <v-spacer />
-          <v-btn
-            :icon="mdiClose"
-            @click="isActive.value = false"
-          />
-        </v-toolbar>
-
-        <v-list-item
-          v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
-          :key="i"
-          :title="attachment.title"
-        >
-          <v-list-item-subtitle v-if="attachment.type === 'file'">
-            {{ attachment.name }} - {{ attachment.size }} - mis à jour le {{ dayjs(attachment.updatedAt).format('LL') }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
-            {{ attachment.name }}
-          </v-list-item-subtitle>
-          <div v-html="attachment.description" />
-          <template #append>
-            <v-btn
-              :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
-              :href="attachment.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="text"
-            />
-          </template>
-        </v-list-item>
-      </v-card>
-    </template>
-  </v-dialog>
+  <layout-preview
+    :icon="mdiAttachment"
+    :text="t('preview')"
+    :title="t('preview') + ' - ' + dataset.title"
+  >
+    <v-list-item
+      v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
+      :key="i"
+      :title="attachment.title"
+    >
+      <v-list-item-subtitle v-if="attachment.type === 'file'">
+        {{ attachment.name }} - {{ attachment.size }} - mis à jour le {{ dayjs(attachment.updatedAt).format('LL') }}
+      </v-list-item-subtitle>
+      <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
+        {{ attachment.name }}
+      </v-list-item-subtitle>
+      <div v-html="attachment.description" />
+      <template #append>
+        <v-btn
+          :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
+          :href="attachment.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="text"
+        />
+      </template>
+    </v-list-item>
+  </layout-preview>
 </template>
 
 <script setup lang="ts">
-import { mdiClose, mdiAttachment, mdiDownload, mdiOpenInNew } from '@mdi/js'
+import { mdiAttachment, mdiDownload, mdiOpenInNew } from '@mdi/js'
 
 type Dataset = {
   title: string

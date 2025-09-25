@@ -70,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiOpenInNew, mdiReply } from '@mdi/js'
 
 type Application = {
@@ -88,13 +89,7 @@ type Dataset = {
   description: string
   dataUpdatedAt: string
   updatedAt: string
-  owner: {
-    id: string
-    name: string
-    department?: string
-    departmentName?: string
-    type: string
-  }
+  owner: Account
   count?: number
   storage?: {
     indexed?: {
@@ -163,7 +158,7 @@ const orderedApplications = computed(() => {
   const applications = applicationsFetch.data.value?.results || []
   if (!datasetApplications.length || !applications.length) return []
 
-  const ordered = datasetApplications.map(app => applications.find(a => a.id === app.id)).filter(Boolean)
+  const ordered = datasetApplications.map(app => applications.find(a => a.id === app.id)).filter(a => a !== undefined) as Application[]
   const remaining = applications.filter(a => !ordered.find(app => app.id === a.id))
   return [...ordered, ...remaining]
 })

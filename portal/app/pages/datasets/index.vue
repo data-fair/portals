@@ -49,15 +49,8 @@
       hide-details
     />
     <!-- TODO: Add owner filter -->
-<!--
-    <owner-facets
-      v-if="datasets && datasets.facets.owner.find(o => !!o.value.department)"
-      v-model="filters.owner"
-      :loading="loading"
-      :items="datasets.facets.owner"
-    />
--->
 
+    <!-- Order -->
     <v-select
       v-model="sort"
       :items="sortItems"
@@ -94,8 +87,8 @@
     <v-col
       v-for="(dataset, i) in datasetsFetch.data.value?.results"
       :key="i"
-      :sm="portalConfig.datasets.cardsLayout !== 'horizontal' ? 6 : 12"
-      :md="portalConfig.datasets.cardsLayout !== 'horizontal' ? 4 : 12"
+      :sm="portalConfig.datasets.cardsLayout !== 'horizontal' ? 6 : undefined"
+      :md="portalConfig.datasets.cardsLayout === 'compact' ? 4 : undefined"
       cols="12"
     >
       <dataset-card :dataset="dataset" />
@@ -160,7 +153,7 @@ const datasetsQuery = computed(() => {
     select: 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
     facets: 'concepts,topics,owner',
     publicationSites: 'data-fair-portals:' + portal.value._id,
-    truncate: '250',
+    truncate: '250'
   }
   if (search.value) query.q = search.value
   if (sort.value !== portalConfig.value.datasets.defaultSort || order.value !== 0) query.sort = sort.value + ':' + (order.value * 2 - 1)

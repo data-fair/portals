@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import type { SocialShares } from '#api/types/portal'
 import { ShareNetwork } from 'vue3-social-sharing'
 import { mdiFacebook, mdiLinkedin, mdiMessageProcessing, mdiReddit, mdiWhatsapp } from '@mdi/js'
 import { useDisplay } from 'vuetify'
@@ -38,32 +37,22 @@ const url = useRequestURL()
  * and filter out mobile-only platforms when not on a small screen.
  */
 const filteredSocialPlatforms = computed(() =>
-  portalConfig.value.socialShares
-    .map(key => {
-      const platform = socialPlatforms[key]
-      if (!platform) return null
-      if (platform.mobileOnly && !display.smAndDown.value) return null
-      return { key, ...platform }
-    })
-    .filter(p => p !== null)
+  socialPlatforms.filter(
+    p =>
+      portalConfig.value.socialShares.includes(p.key) &&
+      (!p.mobileOnly || display.smAndDown.value)
+  )
 )
 
-const socialPlatforms: Record<
-  SocialShares[number],
-  {
-    mobileOnly?: boolean
-    icon?: string
-    component?: ReturnType<typeof resolveComponent>
-  }
-> = {
-  bluesky: { component: resolveComponent('IconBluesky') },
-  x: { component: resolveComponent('IconX') },
-  facebook: { icon: mdiFacebook },
-  linkedin: { icon: mdiLinkedin },
-  reddit: { icon: mdiReddit },
-  sms: { icon: mdiMessageProcessing, mobileOnly: true },
-  whatsapp: { icon: mdiWhatsapp, mobileOnly: true }
-}
+const socialPlatforms = [
+  { key: 'bluesky' as const, component: resolveComponent('IconBluesky') },
+  { key: 'x' as const, component: resolveComponent('IconX') },
+  { key: 'facebook' as const, icon: mdiFacebook },
+  { key: 'linkedin' as const, icon: mdiLinkedin },
+  { key: 'reddit' as const, icon: mdiReddit },
+  { key: 'sms' as const, icon: mdiMessageProcessing, mobileOnly: true },
+  { key: 'whatsapp' as const, icon: mdiWhatsapp, mobileOnly: true },
+]
 </script>
 
 <i18n lang="yaml">
