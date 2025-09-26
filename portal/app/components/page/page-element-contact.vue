@@ -43,6 +43,8 @@
               :prepend-icon="mdiPhone"
               :title="portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone"
               :href="`tel:${portalConfig.contactInformations.phone}`"
+              target="_blank"
+              rel="noopener"
             />
             <v-list-item
               v-if="portalConfig.contactInformations.website"
@@ -50,6 +52,7 @@
               :title="portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website"
               :href="portalConfig.contactInformations.website"
               target="_blank"
+              rel="noopener"
             />
           </template>
 

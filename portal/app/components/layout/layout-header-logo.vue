@@ -2,13 +2,14 @@
   <!-- External Link -->
   <a
     v-if="link"
-    :href="link"
     :title="t('openInNewTab')"
+    :class="['d-flex align-center', $attrs.class]"
+    :href="link"
     target="_blank"
-    rel="noopener noreferrer"
-    class="d-flex align-center"
+    rel="noopener"
   >
     <img
+      :alt="isSecondary ? t('imageAltSecondary') : t('imageAlt')"
       :src="getImageSrc(logo, false)"
       :height="height || 80"
     >
@@ -19,9 +20,10 @@
     v-else-if="!isSecondary"
     :title="t('home')"
     to="/"
-    class="d-flex align-center"
+    :class="['d-flex align-center', $attrs.class]"
   >
     <img
+      :alt="t('imageAlt')"
       :src="getImageSrc(logo, false)"
       :height="height || 80"
     >
@@ -29,8 +31,10 @@
 
   <img
     v-else
+    :alt="isSecondary ? t('imageAltSecondary') : t('imageAlt')"
     :src="getImageSrc(logo, false)"
     :height="height || 80"
+    :class="$attrs.class"
   >
 </template>
 
@@ -52,11 +56,15 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 
 <i18n lang="yaml">
   en:
-    home: 'Go to Home'
-    openInNewTab: 'Open in a new tab'
+    home: Go to Home
+    openInNewTab: Open in a new tab
+    imageAlt: Main logo of the site
+    imageAltSecondary: Secondary logo of the site
 
   fr:
-    home: "Aller à l'accueil"
-    openInNewTab: 'Ouvrir dans un nouvel onglet'
+    home: Aller à l'accueil
+    openInNewTab: Ouvrir dans un nouvel onglet
+    imageAlt: Logo principal du site
+    imageAltSecondary: Logo secondaire du site
 
 </i18n>

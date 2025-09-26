@@ -119,8 +119,3 @@ const createPage = useAsyncAction(async () => {
     showAllPages: Voir toutes les pages
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

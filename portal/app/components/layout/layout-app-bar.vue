@@ -1,6 +1,7 @@
 <template>
   <component
     :is="preview ? VToolbar : VAppBar"
+    ref="appBarRef"
     :color="headerConfig.navBarColor"
     :class="headerConfig.transparent ? 'opacity-90' : undefined"
     :density="headerConfig.density"
@@ -16,16 +17,14 @@
 
     <!-- Navigation Bar (64px) -->
     <template #extension>
-      <v-container
-        class="mx-2"
-        fluid
-      >
-        <v-row align="center">
+      <v-container fluid class="pa-0 h-100">
+        <v-row align="center" no-gutters class="h-100">
           <layout-header-logo
             v-if="logo && !headerConfig.show"
-            :height="56"
+            :height="(appBarHeight || 64) - 10"
             :link="portalConfig.header.logoLink"
             :logo="logo"
+            class="pl-4"
           />
 
           <nav-tabs-or-menu
@@ -49,9 +48,13 @@
 
 <script setup lang="ts">
 import { VToolbar, VAppBar } from 'vuetify/components'
+import { useElementSize } from '@vueuse/core'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
+
+const appBarRef = ref()
+const { height: appBarHeight } = useElementSize(appBarRef)
 
 const headerConfig = computed(() => {
   if (!home || !portalConfig.value.headerHome?.active) return portalConfig.value.header

@@ -9,14 +9,34 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/page-elements'
+import { useTheme } from 'vuetify'
 
 const { $portal } = useNuxtApp()
+const session = useSession()
+const theme = useTheme()
 
-provideNavigationStore()
-providePortalStore($portal)
-provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
+const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/images/${id}`
+}
+const link = [
+  $portal.config.favicon
+    ? { rel: 'icon', type: 'image/png', href: getImageSrc($portal.config.favicon, false) }
+    : undefined,
+].filter(Boolean)
+
+provideNavigationStore()
+providePortalStore($portal)
+provide('get-image-src', getImageSrc)
+
+useHead({
+  title: $portal.config.title,
+  htmlAttrs: { lang: session.state.lang },
+  meta: [
+    { name: 'theme-color', content: theme.current.value.colors.primary },
+    { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
+  ],
+  link
 })
 </script>

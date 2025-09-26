@@ -1,6 +1,6 @@
 <template>
   <!-- Page Title -->
-  <h4 class="text-h4 mb-4">
+  <h1 class="text-h4 mb-4">
     {{ t('datasetsCount', { count: datasetsFetch.data.value?.count || 0 }) }}
     <!-- TODO: Export filtered catalog -->
     <v-btn
@@ -20,7 +20,7 @@
       density="comfortable"
       variant="text"
     />
-  </h4>
+  </h1>
 
   <!-- Filters -->
   <div class="d-flex align-center ga-4 flex-wrap">
@@ -203,34 +203,34 @@ const sortItems = [
 
 <i18n lang="yaml">
   en:
+    ascending: Ascending order
     catalogApiDoc: Catalog API Documentation
     datasetsCount: '{count} dataset | {count} datasets'
+    descending: Descending order
     export: Export filtered data as CSV
+    filters:
+      concepts: Concepts
+      noConcepts: No concepts available
     search: Search
     sort:
       by: Sort by
       createdAt: Creation date
       dataUpdatedAt: Data update date
       title: Alphabetical order
-    descending: Descending order
-    ascending: Ascending order
-    filters:
-      concepts: Concepts
-      noConcepts: No concepts available
 
   fr:
+    ascending: Ordre croissant
     catalogApiDoc: Documentation de l'API du catalogue
     datasetsCount: '{count} jeu de données | {count} jeux de données'
+    descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV
+    filters:
+      concepts: Concepts
+      noConcepts: Aucun concept disponible
     search: Rechercher
     sort:
       by: Trier par
       createdAt: Date de création
       dataUpdatedAt: Date de mise à jour des données
       title: Ordre alphabétique
-    descending: Ordre décroissant
-    ascending: Ordre croissant
-    filters:
-      concepts: Concepts
-      noConcepts: Aucun concept disponible
 </i18n>

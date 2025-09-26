@@ -9,6 +9,7 @@
 
       <v-img
         v-if="thumbnailUrl"
+        :alt="t('imageAlt', { title: dataset.title })"
         :src="thumbnailUrl"
         :cover="portalConfig.datasets.cropThumbnails"
         height="170"
@@ -64,6 +65,7 @@
       <v-col cols="4">
         <v-img
           v-if="thumbnailUrl"
+          :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="portalConfig.datasets.cropThumbnails"
           class="h-100"
@@ -149,6 +151,7 @@ const thumbnailUrl = computed(() => {
 
 <i18n lang="yaml">
   en:
+    imageAlt: 'Thumbnail image for {title}'
     updatedAt: Updated at
     text:
       table: Full table
@@ -157,6 +160,7 @@ const thumbnailUrl = computed(() => {
       table: Table
       api: API
   fr:
+    imageAlt: 'Image de couverture pour le jeu de données {title}'
     updatedAt: Mis à jour le
     text:
       table: Tableau plein écran

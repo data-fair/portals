@@ -1,6 +1,6 @@
 <template>
   <v-container max-width="600">
-    <h2 class="text-h4 mt-4">
+    <h1 class="text-h4 mt-4">
       <v-icon
         size="large"
         color="primary"
@@ -8,7 +8,7 @@
         :icon="mdiBellCircle"
     />
       {{ t('notifications') }}
-    </h2>
+    </h1>
     <p class="my-4">
       {{ t('notificationsInfo') }}
     </p>
@@ -17,7 +17,10 @@
       variant="outlined"
       :text="t('notificationsAlert')"
     />
-    <d-frame :src="notifyUrl" />
+    <d-frame-wrapper
+      :iframe-title="t('notifications')"
+      :src="notifyUrl"
+    />
   </v-container>
 </template>
 
@@ -54,6 +57,8 @@ const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics
     }
   })
 const topics = computed(() => topicsFetch.data.value?.facets.topics || [])
+
+useHead({ title: t('notifications') })
 </script>
 
 <i18n lang="yaml">

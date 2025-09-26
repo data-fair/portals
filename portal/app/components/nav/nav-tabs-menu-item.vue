@@ -8,7 +8,7 @@
       :to="link.type !== 'external' && link.type !== 'submenu' ? resolveHref(link) : undefined"
       :href="link.type === 'external' ? resolveHref(link) : undefined"
       :target="link.type === 'external' ? '_blank' : undefined"
-      :rel="link.type === 'external' ? 'noopener noreferrer' : undefined"
+      :rel="link.type === 'external' ? 'noopener' : undefined"
     >
       <v-menu
         v-if="link.type === 'submenu' && link.children?.length"

@@ -106,18 +106,13 @@ watch(
 
 <i18n lang="yaml">
   en:
-    portalDisplayed: No portals | {displayed}/{count} portal displayed | {displayed}/{count} portals displayed
     noPortalsCreated: You haven't created any portals yet.
     noPortalsDisplayed: No results match the search criteria.
+    portalDisplayed: No portals | {displayed}/{count} portal displayed | {displayed}/{count} portals displayed
 
   fr:
-    portalDisplayed: Aucun portail | {displayed}/{count} portail affiché | {displayed}/{count} portails affichés
     noPortalsCreated: Vous n'avez pas encore créé de portail.
     noPortalsDisplayed: Aucun résultat ne correspond aux critères de recherche.
+    portalDisplayed: Aucun portail | {displayed}/{count} portail affiché | {displayed}/{count} portails affichés
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

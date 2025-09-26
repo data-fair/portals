@@ -96,6 +96,7 @@
       <v-list-item
         href="https://koumoul.com"
         target="_blank"
+        rel="noopener"
       >
         <span class="text-caption">{{ t('publishYourData') }}</span>
       </v-list-item>
@@ -157,28 +158,28 @@ const navigationTextStyle = computed(() => {
 
 <i18n lang="yaml">
   en:
+    activeAccount: Active Account
+    apiKeys: API Keys
     backToPortal: Back to portal
-    personalSpace: Personal Space
-    personalAccount: Personal Account
+    contribute: Contribute
     myAccount: My Account
     myNotifications: My Notifications
-    activeAccount: Active Account
     organizationManagement: Organization Management
-    apiKeys: API Keys
-    contribute: Contribute
+    personalAccount: Personal Account
+    personalSpace: Personal Space
     processings: Processings
     publishYourData: Publish your own data
 
   fr:
+    activeAccount: Compte actif
+    apiKeys: Clés d'API
     backToPortal: Retour au portail
-    personalSpace: Espace personnel
-    personalAccount: Compte personnel
+    contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
-    activeAccount: Compte actif
     organizationManagement: Gestion de l'organisation
-    apiKeys: Clés d'API
-    contribute: Contribuer
+    personalAccount: Compte personnel
+    personalSpace: Espace personnel
     processings: Traitements
     publishYourData: Publiez vos propres données
 </i18n>

@@ -8,12 +8,38 @@
       <br>
       Utilisation de la clé : <a :href="readApiKeyExample">{{ readApiKeyExample }}</a>
     </p> -->
-    <d-frame :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`" />
+    <d-frame-wrapper
+      :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('apiDoc')}`"
+      :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`"
+    />
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
+
+const { setBreadcrumbs } = useNavigationStore()
+const { t } = useI18n()
+const route = useRoute()
+
+const datasetFetch = useLocalFetch<{ title: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+
+watch(datasetFetch.data, () => {
+  setBreadcrumbs([
+    { title: t('datasets', 1), href: '/datasets' },
+    { title: datasetFetch.data.value?.title || '', href: '/datasets/' + route.params.ref },
+    { title: t('apiDoc') }
+  ], route.name as string)
+}, { immediate: true })
 </script>
+
+<i18n lang="yaml">
+  en:
+    datasets: Dataset | Datasets
+    apiDoc: API Documentation
+  fr:
+    datasets: Jeu de données | Jeux de données
+    apiDoc: Documentation de l'API
+</i18n>
 
 <!-- <script setup lang="ts">
 

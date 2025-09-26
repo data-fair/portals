@@ -92,6 +92,7 @@
   <v-list-item
     :href="$uiConfig.draftUrlPattern.replace('{id}', route.params.id)"
     target="_blank"
+    rel="noopener"
   >
     <template #prepend>
       <v-icon
@@ -106,6 +107,7 @@
     v-if="portalUrl"
     :href="portalUrl"
     target="_blank"
+    rel="noopener"
   >
     <template #prepend>
       <v-icon

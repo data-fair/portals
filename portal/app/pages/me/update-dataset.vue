@@ -1,9 +1,13 @@
 <template>
-  <d-frame :src="`/data-fair/next-ui/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"/>
+  <d-frame-wrapper
+    :iframe-title="t('contribute')"
+    :src="`/data-fair/next-ui/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"
+  />
 </template>
 
 <script setup lang="ts">
 
+const { t } = useI18n()
 const { portal } = usePortalStore()
 const portalOwner = computed(() => {
   let owner = `${portal.value.owner.type}:${portal.value.owner.id}`
@@ -11,4 +15,12 @@ const portalOwner = computed(() => {
   return owner
 })
 
+useHead({ title: t('contribute') })
 </script>
+
+<i18n lang="yaml">
+  en:
+    contribute: Contribute
+  fr:
+    contribute: Contribuer
+</i18n>

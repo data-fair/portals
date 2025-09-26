@@ -79,22 +79,23 @@
 </template>
 
 <i18n lang="yaml">
-fr:
-  noPortal: Vous n'avez pas configuré de portail sur lequel publier cette page.
-  publishThisPage: Publiez cette page sur un ou plusieurs de vos portails
-  published: Publié
-  publicationRequested: Publication demandée par un contributeur
-  warning:
-    description: Description non renseignée
-    content: Le contenu de la page est vide
-en:
-  noPortal: You haven't configured a portal to publish this page on.
-  publishThisPage: Publish this page on one or more of your portals.
-  published: Published
-  publicationRequested: Publication requested by a contributor
-  warning:
-    description: Description not filled
-    content: The page is empty
+  en:
+    noPortal: You haven't configured a portal to publish this page on.
+    publicationRequested: Publication requested by a contributor
+    published: Published
+    publishThisPage: Publish this page on one or more of your portals.
+    warning:
+      content: The page is empty
+      description: Description not filled
+
+  fr:
+    noPortal: Vous n'avez pas configuré de portail sur lequel publier cette page.
+    publicationRequested: Publication demandée par un contributeur
+    published: Publié
+    publishThisPage: Publiez cette page sur un ou plusieurs de vos portails
+    warning:
+      content: Le contenu de la page est vide
+      description: Description non renseignée
 </i18n>
 
 <script setup lang="ts">

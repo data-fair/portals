@@ -20,7 +20,7 @@
           {{ t('dataFrom') }}
           <a
             :href="dataset.origin"
-            rel="noopener noreferrer"
+            rel="noopener"
             target="_blank"
           >
             {{ t('thisSource') }}
@@ -49,7 +49,7 @@
         <div class="text-caption text-medium-emphasis"> {{ t('license') }}</div>
         <a
           :href="dataset.license.href"
-          rel="noopener noreferrer"
+          rel="noopener"
           target="_blank"
         >
           {{ dataset.license.title }}

@@ -87,17 +87,18 @@ if (!preview && session.user.value) {
 
 <i18n lang="yaml">
   en:
-    openNotificationList: Open notification list
-    noNotifications: You have not received any notifications yet.
     loginRequired:
       part1: You must
       part2: log in
       part3: to receive notifications.
+    noNotifications: You have not received any notifications yet.
+    openNotificationList: Open notification list
+
   fr:
-    openNotificationList: Ouvrir la liste des notifications
-    noNotifications: Vous n'avez pas encore reçu de notification.
     loginRequired:
       part1: Vous devez vous
       part2: connecter
       part3: pour recevoir des notifications.
+    noNotifications: Vous n'avez pas encore reçu de notification.
+    openNotificationList: Ouvrir la liste des notifications
 </i18n>

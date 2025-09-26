@@ -87,24 +87,24 @@ services:
       - SECRET_SENDMAILS=secret-sendmails
       - OBSERVER_ACTIVE=false
 
-  processings:
-    profiles:
-      - dev
-    image: ghcr.io/data-fair/processings:chore-add-dframecontent
-    network_mode: host
-    depends_on:
-      - mongo
-    environment:
-      - PORT=8084
-      - CIPHER_PASSWORD=test
-      - IGNORE_ASSERT_REQ_INTERNAL=true
-      - OBSERVER_ACTIVE=false
-      - PRIVATE_DIRECTORY_URL=http://localhost:8081
-      - PRIVATE_EVENTS_URL=http://localhost:8083
-      - SECRET_EVENTS=secret-events
-      - SECRET_IDENTITIES=secret-identities
-    volumes:
-      - ./data/processings:/app/data
+  # processings:
+  #   profiles:
+  #     - dev
+  #   image: ghcr.io/data-fair/processings:chore-add-dframecontent
+  #   network_mode: host
+  #   depends_on:
+  #     - mongo
+  #   environment:
+  #     - PORT=8084
+  #     - CIPHER_PASSWORD=test
+  #     - IGNORE_ASSERT_REQ_INTERNAL=true
+  #     - OBSERVER_ACTIVE=false
+  #     - PRIVATE_DIRECTORY_URL=http://localhost:8081
+  #     - PRIVATE_EVENTS_URL=http://localhost:8083
+  #     - SECRET_EVENTS=secret-events
+  #     - SECRET_IDENTITIES=secret-identities
+  #   volumes:
+  #     - ./data/processings:/app/data
 
   #####
   # db and search engine

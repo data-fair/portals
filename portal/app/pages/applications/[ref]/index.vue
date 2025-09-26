@@ -1,8 +1,8 @@
 <template>
   <template v-if="application">
-    <h4 class="text-h4 mb-4">
+    <h1 class="text-h4 mb-4">
       {{ application.title }}
-    </h4>
+    </h1>
 
     <v-row>
       <!-- Application image and description -->
@@ -12,8 +12,8 @@
       >
         <img
           v-if="portalConfig.applications.showImage && application.image"
-          :src="application.image"
           :alt="application.title"
+          :src="application.image"
           class="mb-4"
           style="max-height:300px"
         >
@@ -29,7 +29,8 @@
         <application-metadata :application="application" />
       </v-col>
     </v-row>
-    <d-frame
+    <d-frame-wrapper
+      :iframe-title="`${t('application')} - ${application.title}`"
       :src="`/data-fair/app/${$route.params.ref}`"
     />
 
@@ -125,9 +126,11 @@ const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>('/dat
 
 <i18n lang="yaml">
   en:
+    application: Application
     backToApplications: Back to applications list
     datasetsUsed: Dataset used | Datasets used
   fr:
+    application: Visualisation
     backToApplications: Retour à la liste des visualisations
     datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

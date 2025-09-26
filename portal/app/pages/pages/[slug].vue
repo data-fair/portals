@@ -4,7 +4,7 @@
     :model-value="pageConfigFetch.data.value.elements"
   />
 
-  <h2 class="text-h4">Page config</h2>
+  <h1 class="text-h4">Page config</h1>
   <pre>{{ pageConfigFetch.data.value }}</pre>
 </template>
 

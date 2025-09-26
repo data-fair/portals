@@ -106,18 +106,13 @@ watch(
 
 <i18n lang="yaml">
   en:
-    pagesDisplayed: No pages | {displayed}/{count} page displayed | {displayed}/{count} pages displayed
     noPagesCreated: You haven't created any pages yet.
     noPagesDisplayed: No results match the search criteria.
+    pagesDisplayed: No pages | {displayed}/{count} page displayed | {displayed}/{count} pages displayed
 
   fr:
-    pagesDisplayed: Aucune page | {displayed}/{count} page affichée | {displayed}/{count} pages affichées
     noPagesCreated: Vous n'avez pas encore créé de page.
     noPagesDisplayed: Aucun résultat ne correspond aux critères de recherche.
+    pagesDisplayed: Aucune page | {displayed}/{count} page affichée | {displayed}/{count} pages affichées
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

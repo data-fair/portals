@@ -11,4 +11,13 @@ definePageMeta({ layout: 'home' })
 const { portalConfig } = usePortalStore()
 
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+
+useSeoMeta({
+  title: portalConfig.value.title,
+  description: portalConfig.value.description,
+  ogTitle: portalConfig.value.title,
+  ogDescription: portalConfig.value.description,
+  ogType: 'website',
+})
+
 </script>

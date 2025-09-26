@@ -75,18 +75,13 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
 
 <i18n lang="yaml">
   en:
-    save: Save
-    portals: Portals
     manageDomainExposure: Manage domain exposure
+    portals: Portals
+    save: Save
 
   fr:
-    save: Enregistrer
-    portals: Portails
     manageDomainExposure: Gérer l'exposition sur un domaine
+    portals: Portails
+    save: Enregistrer
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

@@ -10,6 +10,7 @@
       <v-img
         :src="thumbnailUrl"
         :cover="portalConfig.applications.cropThumbnails"
+        :alt="t('imageAlt', { title: application.title })"
         height="170"
       />
 
@@ -54,6 +55,7 @@
     >
       <v-col cols="4">
         <v-img
+          :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
           :cover="portalConfig.applications.cropThumbnails"
           class="h-100"
@@ -126,12 +128,14 @@ const thumbnailUrl = computed(() => {
 
 <i18n lang="yaml">
   en:
+    imageAlt: 'Thumbnail image for {title}'
     updatedAt: Updated at
     text:
       full: Fullscreen application
     shortText:
       full: Fullscreen
   fr:
+    imageAlt: 'Image de couverture pour la visualisation {title}'
     updatedAt: Mise à jour le
     text:
       full: Visualisation plein écran

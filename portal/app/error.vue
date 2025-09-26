@@ -1,14 +1,12 @@
 <template>
-  <v-main>
-    <v-container>
-      <v-alert
-        v-if="error.statusCode !== 401"
-        type="error"
-      >
-        {{ error.message }}
-      </v-alert>
-    </v-container>
-  </v-main>
+  <v-container>
+    <v-alert
+      v-if="error.statusCode !== 401"
+      type="error"
+    >
+      {{ error.message }}
+    </v-alert>
+  </v-container>
 </template>
 
 <script setup lang="ts">

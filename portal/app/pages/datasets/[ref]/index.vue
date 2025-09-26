@@ -1,8 +1,8 @@
 <template>
   <template v-if="dataset">
-    <h4 class="text-h4 mb-4">
+    <h1 class="text-h4 mb-4">
       {{ dataset.title }}
-    </h4>
+    </h1>
 
     <v-row>
       <!-- Dataset image and description -->
@@ -12,8 +12,8 @@
       >
         <img
           v-if="portalConfig.datasets.showImage && dataset.image"
-          :src="dataset.image"
           :alt="dataset.title"
+          :src="dataset.image"
           class="mb-4"
           style="max-height:300px"
         >
@@ -51,8 +51,8 @@
           cols="12"
           :order-md="!app.preferLargeDisplay ? 'first' : 1"
         >
-          <d-frame
-            :title="app.title"
+          <d-frame-wrapper
+            :iframe-title="`${t('application')} - ${app.title}`"
             :src="app.exposedUrl + `?embed=true&d-frame=true`"
           />
         </v-col>
@@ -167,7 +167,9 @@ const orderedApplications = computed(() => {
 
 <i18n lang="yaml">
   en:
+    application: Application
     backToDatasets: Back to datasets list
   fr:
+    application: Visualisation
     backToDatasets: Retour à la liste des jeux de données
 </i18n>

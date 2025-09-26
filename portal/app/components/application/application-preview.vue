@@ -5,8 +5,8 @@
     :short-text="t('previewShort')"
     :title="t('preview') + ' - ' + application.title"
   >
-    <d-frame
-      :title="t('preview') + ' - ' + application.title"
+    <d-frame-wrapper
+      :iframe-title="t('preview') + ' - ' + application.title"
       :src="application.exposedUrl"
     />
   </layout-preview>

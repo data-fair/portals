@@ -136,8 +136,3 @@ const createPortal = useAsyncAction(async () => {
     showAllPortals: Voir tous les portails
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

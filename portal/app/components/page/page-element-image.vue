@@ -1,25 +1,24 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <template v-if="src">
     <a
       v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
     >
       <img
         ref="img"
+        :alt="element.title"
         :style="element.height ? `height:${element.height}px` : ''"
         :src="src"
-        :title="element.title"
       >
     </a>
     <img
       v-else
       ref="img"
+      :alt="element.title"
       :style="((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '') + (element.height ? `height:${element.height}px` : '')"
       :src="src"
-      :title="element.title"
       @click="element.zoomable ? zoomed = true : undefined"
     >
     <div
@@ -35,10 +34,12 @@
       style="cursor:zoom-out"
       @click="zoomed = false"
     >
-      <img :src="zoomedSrc">
+      <img
+        :alt="element.title"
+        :src="zoomedSrc"
+      >
     </v-overlay>
   </template>
-
 </template>
 
 <script setup lang="ts">

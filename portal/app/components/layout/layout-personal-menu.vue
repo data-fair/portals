@@ -3,6 +3,7 @@
     <v-btn
       v-if="!showHeader || $vuetify.display.smAndDown"
       :title="t('login')"
+      :class="`bg-${loginColor}`"
       stacked
       @click="!preview ? session.login() : null"
     >
@@ -27,7 +28,10 @@
           :append-icon="personal ? mdiMenuDown : undefined"
           :class="`bg-${loginColor}`"
         >
-          <v-avatar :image="avatarUrl" />
+          <v-avatar
+            :image="avatarUrl"
+            :size="density === 'default' ? 40 : 32"
+          />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
             <p class="ml-2">{{ session.user.value.name }}</p>
           </template>
@@ -70,6 +74,7 @@ defineProps<{
   loginColor?: string
   personal?: boolean
   showHeader?: boolean
+  density?: 'compact' | 'comfortable' | 'default'
 }>()
 
 const session = useSession()

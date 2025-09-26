@@ -1,6 +1,6 @@
 <template>
   <v-container max-width="600">
-    <h2 class="text-h4 mt-4">
+    <h1 class="text-h4 mt-4">
       <v-icon
         size="large"
         color="primary"
@@ -8,7 +8,7 @@
         :icon="mdiCloudKey"
       />
       {{ t('apiKeys') }}
-    </h2>
+    </h1>
     <p class="my-4">
       {{ t('apiKeysInfo') }}
     </p>
@@ -17,16 +17,18 @@
       variant="outlined"
       :text="t('apiKeysAlert')"
     />
-    <d-frame :src="`/data-fair/next-ui/embed/settings/${session.state.account.type}/${session.state.account.id}/api-keys?scopes=datasets`" />
+    <d-frame-wrapper
+      :iframe-title="t('apiKeys')"
+      :src="`/data-fair/next-ui/embed/settings/${session.state.account.type}/${session.state.account.id}/api-keys?scopes=datasets`"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { mdiCloudKey } from '@mdi/js'
-
 const session = useSessionAuthenticated()
 const { t } = useI18n()
-
+useHead({ title: t('apiKeys') })
 </script>
 
 <i18n lang="yaml">

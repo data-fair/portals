@@ -5,7 +5,7 @@
     :title="t('openAccount', { account: key })"
     :href="platform.url(links[key] as string)"
     target="_blank"
-    rel="noopener noreferrer"
+    rel="noopener"
     density="comfortable"
     variant="text"
     icon

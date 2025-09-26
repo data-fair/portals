@@ -21,7 +21,7 @@
           :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
           :href="attachment.url"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           variant="text"
         />
       </template>

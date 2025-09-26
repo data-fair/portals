@@ -75,18 +75,18 @@
             :href="extraLogo.link"
             :title="extraLogo.label"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
           >
             <img
-              :src="getImageSrc(extraLogo.logo, false)"
               :alt="extraLogo.label"
+              :src="getImageSrc(extraLogo.logo, false)"
               style="height:40px;"
             >
           </a>
           <img
             v-else
-            :src="getImageSrc(extraLogo.logo, false)"
             :alt="extraLogo.label"
+            :src="getImageSrc(extraLogo.logo, false)"
             style="height:40px;"
           >
         </v-col>
@@ -99,11 +99,11 @@
             href="https://koumoul.com"
             title="Koumoul"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
           >
             <img
+              alt="Koumoul Logo"
               src="https://koumoul.com/static/logo-title-right.png"
-              alt="Koumoul"
               style="height:40px;"
             >
           </a>
@@ -131,7 +131,7 @@
             v-else
             :href="resolveHref(link)"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
           >
             {{ resolveTitle(link) }}
           </a>
@@ -161,7 +161,7 @@
             v-else
             :href="resolveHref(link)"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
           >
             {{ resolveTitle(link) }}
           </a>
@@ -186,7 +186,7 @@
                   v-else
                   :href="resolveHref(link)"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                   variant="text"
                 >
                   {{ resolveTitle(link) }}
@@ -202,7 +202,7 @@
     <template v-if="portalConfig.footer.copyright === 'text'">
       <v-divider />
       <div class="text-center my-2">
-        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com" target="_blank" rel="noopener noreferrer">Koumoul</a></strong>
+        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com" target="_blank" rel="noopener">Koumoul</a></strong>
       </div>
     </template>
   </v-footer>

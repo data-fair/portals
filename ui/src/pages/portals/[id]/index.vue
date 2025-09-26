@@ -24,35 +24,29 @@
               :dark="context.dark"
             />
           </template>
-          <template #font-families-preview="context">
+          <template #font-families-preview>
             <v-theme-provider theme="preview-colors">
-              <portal-preview-provider :portal-config="context.node.data">
-                <font-families-preview />
-              </portal-preview-provider>
+              <font-families-preview />
             </v-theme-provider>
           </template>
           <template #app-bar-preview="context">
             <v-theme-provider theme="preview-colors">
-              <portal-preview-provider :portal-config="context.node.data">
-                <v-card>
-                  <LayoutAppBar
-                    v-if="formValid"
-                    :home="context.home"
-                  />
-                </v-card>
-              </portal-preview-provider>
+              <v-card>
+                <LayoutAppBar
+                  v-if="formValid"
+                  :home="context.home"
+                />
+              </v-card>
             </v-theme-provider>
           </template>
           <template #footer-preview="context">
             <v-theme-provider theme="preview-colors">
-              <portal-preview-provider :portal-config="context.node.data">
-                <v-card>
-                  <LayoutFooter
-                    v-if="formValid"
-                    :home="context.home"
-                  />
-                </v-card>
-              </portal-preview-provider>
+              <v-card>
+                <LayoutFooter
+                  v-if="formValid"
+                  :home="context.home"
+                />
+              </v-card>
             </v-theme-provider>
           </template>
           <template #image-upload="{node, statefulLayout, width, height, label}">
@@ -96,8 +90,17 @@ const route = useRoute<'/portals/[id]/'>()
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
 const formValid = ref(false)
+const { portalConfig } = providePortalStore()
+
+// Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {
-  if (portalFetch.data.value) editConfig.value = portalFetch.data.value.draftConfig
+  if (!portalFetch.data.value) return
+  editConfig.value = portalFetch.data.value.draftConfig
+  portalConfig.value = editConfig.value
+})
+// Synchronize editConfig changes back to portalConfig
+watch(editConfig, (newConfig) => {
+  if (newConfig) portalConfig.value = newConfig
 })
 
 const portalRef = { type: 'portal' as const, _id: route.params.id }
@@ -142,8 +145,3 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     portals: Portails
 
 </i18n>
-
-<!--
-<style scoped>
-</style>
--->

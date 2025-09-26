@@ -128,12 +128,12 @@ const validateDraft = useAsyncAction(async () => {
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([{
-    text: 'Pages',
+    text: t('pages'),
     to: '/pages'
   }, {
     text: page.config.title
   }, {
-    text: 'Édition'
+    text: t('edit')
   }])
 })
 
@@ -141,20 +141,24 @@ watch(pageFetch.data, (page) => {
 
 <i18n lang="yaml">
   en:
-    contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
     addItemMessage: Add a block to the page
-    validateDraft: Validate draft
     cancelDraft: Cancel draft
-    undoLastChange: Undo last change
+    contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
+    edit: Edit
+    pages: Pages
     redoLastChange: Redo last change
+    undoLastChange: Undo last change
+    validateDraft: Validate draft
 
   fr:
-    contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
     addItemMessage: Ajouter un bloc à la page
-    validateDraft: Valider le brouillon
     cancelDraft: Annuler le brouillon
-    undoLastChange: Annuler le dernier changement
+    contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
+    edit: Édition
+    pages: Pages
     redoLastChange: Rétablir le dernier changement
+    undoLastChange: Annuler le dernier changement
+    validateDraft: Valider le brouillon
 
 </i18n>
 

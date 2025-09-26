@@ -1,5 +1,6 @@
 <template>
-  <d-frame
+  <d-frame-wrapper
+    :iframe-title="t('processings')"
     :src="`/processings/processings/?owner=${portalOwner}`"
     :adapter.prop="stateChangeAdapter"
     sync-path="/me/processings/"
@@ -13,6 +14,7 @@
 <script setup lang="ts">
 import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter'
 
+const { t } = useI18n()
 const { portal } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
@@ -32,4 +34,12 @@ const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) =
   setBreadcrumbs(formattedBreadcrumbs, route.name as string)
 }
 
+useHead({ title: t('processings') })
 </script>
+
+<i18n lang="yaml">
+  en:
+    processings: My processings
+  fr:
+    processings: Mes traitements
+</i18n>

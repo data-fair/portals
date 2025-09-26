@@ -16,7 +16,6 @@
         </v-btn>
         <v-btn
           variant="text"
-          target="_blank"
           href="/simple-directory"
           color="primary"
         >
@@ -46,6 +45,3 @@ import personalMenu from '@data-fair/lib-vuetify/personal-menu.vue'
 
 const session = useSession()
 </script>
-
-<style scoped>
-</style>

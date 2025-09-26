@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-h2">Politique de confidentialité</h2>
+  <h1 class="text-h4">Politique de confidentialité</h1>
   <p class="mb-4"><i>Mise à jour le 04/10/2023</i></p>
 
   <!-- TODO: Add Cookies validation -->

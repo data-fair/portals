@@ -70,6 +70,8 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      title: 'Open Data Portal', // default fallback title
+      charset: 'utf-8', // overrides default 'utf-16' for smaller size
       link: [{ rel: 'stylesheet', href: '/simple-directory/api/sites/_theme.css', blocking: 'render' }]
     }
   }

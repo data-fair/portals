@@ -25,7 +25,7 @@
         :text="link.title"
         :href="resolveHref(link)"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener"
       />
       <v-tab
         v-else

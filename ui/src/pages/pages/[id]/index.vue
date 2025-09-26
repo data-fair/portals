@@ -118,7 +118,7 @@ const deletePage = useAsyncAction(async () => {
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([{
-    text: 'Pages',
+    text: t('pages'),
     to: '/pages'
   }, {
     text: page.config.title
@@ -129,30 +129,32 @@ watch(pageFetch.data, (page) => {
 
 <i18n lang="yaml">
   en:
-    tabs:
-      preview: Preview
-      previewDraft: Preview (draft)
-      permissions: Permissions
-      publications: Publications
-    editPage: Edit page
+    confirmDeletePage: Are you sure you want to delete the page "{title}"? This action is irreversible and data cannot be recovered.
     deletePage: Delete page
     deletingPage: Deleting page
-    confirmDeletePage: Are you sure you want to delete the page "{title}"? This action is irreversible and data cannot be recovered.
-    yes: Yes
+    editPage: Edit page
     no: No
+    pages: Pages
+    tabs:
+      permissions: Permissions
+      preview: Preview
+      previewDraft: Preview (draft)
+      publications: Publications
+    yes: Yes
 
   fr:
-    tabs:
-      preview: Aperçu
-      previewDraft: Aperçu (brouillon)
-      permissions: Permissions
-      publications: Publications
-    editPage: Éditer la page
+    confirmDeletePage: Êtes-vous sûr de vouloir supprimer la page "{title}" ? Cette action est définitive et les données ne pourront pas être récupérées.
     deletePage: Supprimer la page
     deletingPage: Suppression de la page
-    confirmDeletePage: Êtes-vous sûr de vouloir supprimer la page "{title}" ? Cette action est définitive et les données ne pourront pas être récupérées.
-    yes: Oui
+    editPage: Éditer la page
     no: Non
+    pages: Pages
+    tabs:
+      permissions: Permissions
+      preview: Aperçu
+      previewDraft: Aperçu (brouillon)
+      publications: Publications
+    yes: Oui
 
 </i18n>
 

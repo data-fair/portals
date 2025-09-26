@@ -5,8 +5,8 @@
     :short-text="t('previewShort')"
     :title="t('preview') + ' - ' + dataset.title"
   >
-    <d-frame
-      :title="t('previewShort') + ' - ' + dataset.title"
+    <d-frame-wrapper
+      :iframe-title="t('previewShort') + ' - ' + dataset.title"
       :src="`/data-fair/next-ui/embed/dataset/${dataset.id}/map`"
     />
   </layout-preview>

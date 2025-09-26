@@ -6,21 +6,24 @@ type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { dr
 export type PortalStore = ReturnType<typeof createPortalStore>
 const portalStoreKey = Symbol('portal-store')
 
-const createPortalStore = (config: PortalConfig) => {
+const createPortalStore = (config?: PortalConfig) => {
   const session = useSessionAuthenticated()
   const portal = ref<RequestPortal>({
     _id: '',
-    config,
+    config: config || {} as PortalConfig,
     owner: session.account.value,
     staging: false,
     draft: true
   })
-  const portalConfig = computed(() => portal.value.config)
+  const portalConfig = computed({
+    get: () => portal.value.config,
+    set: (newConfig: PortalConfig) => { portal.value.config = newConfig }
+  })
 
   return { portal, portalConfig, preview: true }
 }
 
-export const providePortalStore = (config: PortalConfig) => {
+export const providePortalStore = (config?: PortalConfig) => {
   const store = createPortalStore(config)
   provide(portalStoreKey, store)
   return store

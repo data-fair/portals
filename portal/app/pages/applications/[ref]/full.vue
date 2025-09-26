@@ -1,5 +1,6 @@
 <template>
-  <d-frame
+  <d-frame-wrapper
+    :iframe-title="`${t('applications', 0)} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/app/${$route.params.ref}`"
     class="fill-height"
   />
@@ -7,4 +8,27 @@
 
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
+
+const { setBreadcrumbs } = useNavigationStore()
+const { t } = useI18n()
+const route = useRoute()
+
+const applicationFetch = useLocalFetch<{ title: string }>(`/data-fair/api/v1/applications/${route.params.ref}`)
+
+watch(applicationFetch.data, () => {
+  setBreadcrumbs([
+    { title: t('applications', 1), href: '/applications' },
+    { title: applicationFetch.data.value?.title || '', href: '/applications/' + route.params.ref },
+    { title: t('fullscreen') }
+  ], route.name as string)
+}, { immediate: true })
 </script>
+
+<i18n lang="yaml">
+  en:
+    applications: Application | Applications
+    fullscreen: Fullscreen
+  fr:
+    applications: Visualisation | Visualisations
+    fullscreen: Plein écran
+</i18n>

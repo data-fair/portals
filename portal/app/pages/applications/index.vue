@@ -1,8 +1,8 @@
 <template>
   <!-- Page Title -->
-  <h4 class="text-h4 mb-4">
+  <h1 class="text-h4 mb-4">
     {{ t('applicationsCount', { count: applicationsFetch.data.value?.count || 0 }) }}
-  </h4>
+  </h1>
 
   <!-- Filters -->
   <div class="d-flex align-center ga-4 flex-wrap">
@@ -157,29 +157,29 @@ const cardBreakpoints = computed(() =>
 <i18n lang="yaml">
   en:
     applicationsCount: '{count} application | {count} applications'
+    ascending: Ascending order
+    descending: Descending order
+    filters:
+      baseApplications: Application
+      noBaseApplications: No applications available
     search: Search
     sort:
       by: Sort by
       createdAt: Creation date
       dataUpdatedAt: Data update date
       title: Alphabetical order
-    descending: Descending order
-    ascending: Ascending order
-    filters:
-      baseApplications: Application
-      noBaseApplications: No applications available
 
   fr:
     applicationsCount: '{count} application | {count} applications'
+    ascending: Ordre croissant
+    descending: Ordre décroissant
+    filters:
+      baseApplications: Application
+      noBaseApplications: Aucune application disponible
     search: Rechercher
     sort:
       by: Trier par
       createdAt: Date de création
       dataUpdatedAt: Date de mise à jour des données
       title: Ordre alphabétique
-    descending: Ordre décroissant
-    ascending: Ordre croissant
-    filters:
-      baseApplications: Application
-      noBaseApplications: Aucune application disponible
 </i18n>
