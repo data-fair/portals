@@ -31,7 +31,9 @@
     </v-row>
     <d-frame-wrapper
       :iframe-title="`${t('application')} - ${application.title}`"
-      :src="`/data-fair/app/${$route.params.ref}`"
+      :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+      class="mt-2"
+      aspect-ratio
     />
 
     <!-- Datasets Source -->
@@ -50,7 +52,10 @@
       </v-row>
     </template>
 
-    <v-row class="my-4" justify="center">
+    <v-row
+      class="my-4"
+      justify="center"
+    >
       <nav-link
         :to="`/datasets`"
         :icon="mdiReply"

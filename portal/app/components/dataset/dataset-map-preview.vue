@@ -8,6 +8,7 @@
     <d-frame-wrapper
       :iframe-title="t('previewShort') + ' - ' + dataset.title"
       :src="`/data-fair/next-ui/embed/dataset/${dataset.id}/map`"
+      aspect-ratio
     />
   </layout-preview>
 </template>

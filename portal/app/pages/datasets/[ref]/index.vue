@@ -53,7 +53,8 @@
         >
           <d-frame-wrapper
             :iframe-title="`${t('application')} - ${app.title}`"
-            :src="app.exposedUrl + `?embed=true&d-frame=true`"
+            :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+            aspect-ratio
           />
         </v-col>
       </v-row>

@@ -18,7 +18,7 @@ export default defineConfig({
     alias: {
       '#portal': path.resolve(__dirname, '../portal'),
       '~': path.resolve(__dirname, 'src/')
-    },
+    }
   },
   html: {
     cspNonce: '{CSP_NONCE}'

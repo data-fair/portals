@@ -1,8 +1,9 @@
 <template>
   <d-frame-wrapper
     :iframe-title="`${t('applications', 0)} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
-    :src="`/data-fair/app/${$route.params.ref}`"
+    :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     class="fill-height"
+    sync-params
   />
 </template>
 

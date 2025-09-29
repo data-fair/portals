@@ -19,12 +19,11 @@
       </v-list-item-subtitle>
       <template #append>
         <v-btn
+          :title="file.title"
           :icon="mdiDownload"
           :href="file.url"
           variant="text"
-        >
-          {{ file.title }}
-        </v-btn>
+        />
       </template>
     </v-list-item>
 
@@ -39,20 +38,18 @@
           <v-btn
             v-if="!largeCsvLoading"
             :icon="mdiDownload"
+            :title="t('export', { format: 'CSV' })"
             variant="text"
             @click="downloadLargeCSV"
-          >
-            {{ t('export', { format: 'CSV' }) }}
-          </v-btn>
+          />
           <v-btn
             v-else
             :icon="mdiClose"
+            :title="t('cancelDownload')"
             variant="text"
             color="warning"
             @click="cancelLargeCsv"
-          >
-            {{ t('cancelDownload')  }}
-          </v-btn>
+          />
         </template>
       </v-list-item>
       <div style="height:4px;width:100%;">
@@ -77,35 +74,34 @@
     >
       <template #append>
         <v-btn
+          :title="t('export', { format: format.toUpperCase() })"
           :icon="mdiDownload"
           :href="`/data-fair/api/v1/datasets/${dataset.id}/lines?size=10000&page=1&format=${format}`"
           variant="text"
-        >
-          {{ t('export', { format: format.toUpperCase()}) }}
-        </v-btn>
+        />
       </template>
     </v-list-item>
 
     <!-- link to table vue for filtered exports -->
     <template v-if="count > 10000">
-      <v-alert color="warning" tile>
+      <v-alert
+        color="warning"
+        tile
+      >
         {{ t('dataTooLargeAlert1') }}<br>
         {{ t('dataTooLargeAlert2') }}
       </v-alert>
-        <v-list-item
-          :title="`Export filtré aux formats ${join(['XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`"
-        >
-          <template #append>
-            <v-btn
-              :to="`/datasets/${dataset.slug}/full`"
-              :icon="mdiTableLarge"
-              variant="text"
-            >
-              {{ t('table') }}
-            </v-btn>
-          </template>
-        </v-list-item>
-      </template>
+      <v-list-item :title="`Export filtré aux formats ${join(['XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`">
+        <template #append>
+          <v-btn
+            :to="`/datasets/${dataset.slug}/full`"
+            :title="t('table')"
+            :icon="mdiTableLarge"
+            variant="text"
+          />
+        </template>
+      </v-list-item>
+    </template>
   </layout-preview>
 </template>
 

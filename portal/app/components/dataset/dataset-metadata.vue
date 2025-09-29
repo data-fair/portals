@@ -11,7 +11,7 @@
       <!-- Records count / Size -->
       <v-col v-bind="metadataColProps">
         <div class="text-caption text-medium-emphasis">{{ t('size') }}</div>
-        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' + dataset.storage.indexed.size : '' }}
+        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' + formatBytes(dataset.storage.indexed.size) : '' }}
       </v-col>
 
       <!-- Origin (Link to source or producer label) -->
@@ -140,6 +140,7 @@
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
+import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 type Dataset = {
   id: string

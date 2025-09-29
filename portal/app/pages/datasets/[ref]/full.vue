@@ -3,6 +3,8 @@
     :iframe-title="`${t('datasets', 0)} - ${datasetFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/next-ui/embed/dataset/${$route.params.ref}/table`"
     class="fill-height"
+    scrolling="no"
+    sync-params
   />
 </template>
 

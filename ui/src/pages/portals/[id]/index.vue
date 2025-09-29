@@ -1,12 +1,6 @@
 <template>
   <v-container data-iframe-height>
-    <v-defaults-provider
-      :defaults="{
-        global: {
-          hideDetails: 'auto'
-        }
-      }"
-    >
+    <v-defaults-provider :defaults="{ global: { hideDetails: 'auto' } }">
       <v-form
         v-if="editConfig"
         v-model="formValid"
@@ -32,7 +26,7 @@
           <template #app-bar-preview="context">
             <v-theme-provider theme="preview-colors">
               <v-card>
-                <LayoutAppBar
+                <layout-app-bar
                   v-if="formValid"
                   :home="context.home"
                 />
@@ -42,21 +36,21 @@
           <template #footer-preview="context">
             <v-theme-provider theme="preview-colors">
               <v-card>
-                <LayoutFooter
+                <layout-footer
                   v-if="formValid"
                   :home="context.home"
                 />
               </v-card>
             </v-theme-provider>
           </template>
-          <template #image-upload="{node, statefulLayout, width, height, label}">
+          <template #image-upload="{ node, statefulLayout, width, height, label }">
             <image-upload
               :model-value="node.data"
               :label="label"
               :width="width"
               :height="height"
               :resource="portalRef"
-              @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
+              @update:model-value="(data: any) => { console.log('input data', data); statefulLayout.input(node, data) }"
             />
           </template>
         </vjsf-portal-config>
@@ -81,7 +75,6 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import VjsfMarkdown from '@koumoul/vjsf-markdown'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import LayoutAppBar from '#portal/app/components/layout/layout-app-bar.vue'
 import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
@@ -140,8 +133,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
 <i18n lang="yaml">
   en:
     portals: Portals
-
   fr:
     portals: Portails
-
 </i18n>

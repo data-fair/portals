@@ -11,6 +11,7 @@
     <d-frame-wrapper
       :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('apiDoc')}`"
       :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`"
+      sync-params
     />
 </template>
 
@@ -25,7 +26,7 @@ const datasetFetch = useLocalFetch<{ title: string }>(`/data-fair/api/v1/dataset
 
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
-    { title: t('datasets', 1), href: '/datasets' },
+    { title: t('dataset', 1), href: '/datasets' },
     { title: datasetFetch.data.value?.title || '', href: '/datasets/' + route.params.ref },
     { title: t('apiDoc') }
   ], route.name as string)
@@ -34,10 +35,10 @@ watch(datasetFetch.data, () => {
 
 <i18n lang="yaml">
   en:
-    datasets: Dataset | Datasets
+    dataset: Dataset | Datasets
     apiDoc: API Documentation
   fr:
-    datasets: Jeu de données | Jeux de données
+    dataset: Jeu de données | Jeux de données
     apiDoc: Documentation de l'API
 </i18n>
 

@@ -7,7 +7,8 @@
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"
-      :src="application.exposedUrl"
+      :src="`${application.exposedUrl}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+      aspect-ratio
     />
   </layout-preview>
 </template>

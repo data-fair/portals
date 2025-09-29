@@ -152,6 +152,14 @@ const cardBreakpoints = computed(() =>
     : {}
 )
 
+useSeoMeta({
+  title: t('seo.title', { title: portalConfig.value.title }),
+  description: t('seo.description'),
+  ogTitle: t('seo.title', { title: portalConfig.value.title }),
+  ogDescription: t('seo.description'),
+  ogType: 'website'
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -163,6 +171,9 @@ const cardBreakpoints = computed(() =>
       baseApplications: Application
       noBaseApplications: No applications available
     search: Search
+    seo:
+      title: 'Applications - {title}'
+      description: 'Explore our open data visualizations: interactive maps, charts, and tables to analyze and understand data.'
     sort:
       by: Sort by
       createdAt: Creation date
@@ -177,6 +188,9 @@ const cardBreakpoints = computed(() =>
       baseApplications: Application
       noBaseApplications: Aucune application disponible
     search: Rechercher
+    seo:
+      title: 'Visualisations - {title}'
+      description: 'Explorez nos visualisations de données ouvertes : cartes interactives, graphiques et tableaux pour analyser et comprendre les données.'
     sort:
       by: Trier par
       createdAt: Date de création

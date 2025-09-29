@@ -17,7 +17,7 @@ useSeoMeta({
   description: portalConfig.value.description,
   ogTitle: portalConfig.value.title,
   ogDescription: portalConfig.value.description,
-  ogType: 'website',
+  ogType: 'website'
 })
 
 </script>

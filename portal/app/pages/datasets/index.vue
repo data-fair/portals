@@ -199,6 +199,14 @@ const sortItems = [
   { title: t('sort.title'), value: 'title' }
 ]
 
+useSeoMeta({
+  title: t('seo.title', { title: portalConfig.value.title }),
+  description: t('seo.description'),
+  ogTitle: t('seo.title', { title: portalConfig.value.title }),
+  ogDescription: t('seo.description'),
+  ogType: 'website'
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -212,6 +220,9 @@ const sortItems = [
       concepts: Concepts
       noConcepts: No concepts available
     search: Search
+    seo:
+      title: 'Datasets - {title}'
+      description: 'Browse and search open datasets available on {title}. Find data by topics, concepts, and more.'
     sort:
       by: Sort by
       createdAt: Creation date
@@ -228,6 +239,9 @@ const sortItems = [
       concepts: Concepts
       noConcepts: Aucun concept disponible
     search: Rechercher
+    seo:
+      title: 'Données - {title}'
+      description: 'Explorez nos jeux de données. Trouvez des données par thèmes, concepts, et plus encore.'
     sort:
       by: Trier par
       createdAt: Date de création

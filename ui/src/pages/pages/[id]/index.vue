@@ -100,7 +100,6 @@
 <script lang="ts" setup>
 import { mdiPencil } from '@mdi/js'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import PageElements from '#portal/app/components/page/page-elements.vue'
 
 const { t } = useI18n()
 const router = useRouter()
