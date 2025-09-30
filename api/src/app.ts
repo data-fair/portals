@@ -3,6 +3,7 @@ import { session, errorHandler, createSiteMiddleware, createSpaMiddleware } from
 import express from 'express'
 import helmet from 'helmet'
 import identitiesRouter from './identities/router.ts'
+import groupRouter from './groups/router.ts'
 import portalsRouter from './portals/router.ts'
 import pagesRouter from './pages/router.ts'
 import adminRouter from './admin/router.ts'
@@ -34,6 +35,7 @@ app.use(session.middleware())
 
 // TODO: tune cache headers, fonts files are public and immutable
 app.use('/api/assets', express.static(resolve(import.meta.dirname, '../assets')))
+app.use('/api/groups', groupRouter)
 app.use('/api/portals', portalsRouter)
 app.use('/api/pages', pagesRouter)
 app.use('/api/images', imagesRouter)

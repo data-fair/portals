@@ -20,9 +20,10 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '/dev': RouteRecordInfo<'/dev', '/dev', Record<never, never>, Record<never, never>>,
     '/pages/': RouteRecordInfo<'/pages/', '/pages', Record<never, never>, Record<never, never>>,
-    '/pages/[id]': RouteRecordInfo<'/pages/[id]', '/pages/:id', { id: ParamValue<true> }, { id: ParamValue<false> }, '/pages/[id]/' | '/pages/[id]/edit-config'>,
-    '/pages/[id]/': RouteRecordInfo<'/pages/[id]/', '/pages/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    '/pages/[id]/edit-config': RouteRecordInfo<'/pages/[id]/edit-config', '/pages/:id/edit-config', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/pages/[groupId]/': RouteRecordInfo<'/pages/[groupId]/', '/pages/:groupId', { groupId: ParamValue<true> }, { groupId: ParamValue<false> }>,
+    '/pages/[groupId]/[pageId]': RouteRecordInfo<'/pages/[groupId]/[pageId]', '/pages/:groupId/:pageId', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }, '/pages/[groupId]/[pageId]/' | '/pages/[groupId]/[pageId]/edit-config'>,
+    '/pages/[groupId]/[pageId]/': RouteRecordInfo<'/pages/[groupId]/[pageId]/', '/pages/:groupId/:pageId', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }>,
+    '/pages/[groupId]/[pageId]/edit-config': RouteRecordInfo<'/pages/[groupId]/[pageId]/edit-config', '/pages/:groupId/:pageId/edit-config', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }>,
     '/portals/': RouteRecordInfo<'/portals/', '/portals', Record<never, never>, Record<never, never>>,
     '/portals/[id]/': RouteRecordInfo<'/portals/[id]/', '/portals/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/portals/[id]/ingress': RouteRecordInfo<'/portals/[id]/ingress', '/portals/:id/ingress', { id: ParamValue<true> }, { id: ParamValue<false> }>,

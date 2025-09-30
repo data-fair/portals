@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="h-100"
-    :to="`/pages/${page._id}`"
+    :to="`/pages/${page.group.id}/${page._id}`"
   >
     <v-card-item>
       <template #append>

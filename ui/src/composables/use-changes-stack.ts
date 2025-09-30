@@ -1,5 +1,6 @@
-import { watchIgnorable } from '@vueuse/core'
 import type { Ref } from 'vue'
+import { watchIgnorable } from '@vueuse/core'
+import { useHotkey } from 'vuetify'
 import equal from 'fast-deep-equal'
 
 function useChangesStack<Type> (modelValue: Ref<Type>) {
@@ -46,6 +47,9 @@ function useChangesStack<Type> (modelValue: Ref<Type>) {
   const summary = computed(() => {
     return `size=${size.value}, index=${index.value}, canUndo=${canUndo.value}, canRedo=${canRedo.value}`
   })
+
+  useHotkey('cmd+z', () => undo())
+  useHotkey('cmd+shift+z', () => redo())
 
   return { index, size, canUndo, undo, canRedo, redo, reset, summary }
 }

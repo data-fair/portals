@@ -22,6 +22,7 @@ router.get('', async (req, res, next) => {
   if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
   const query: Filter<Page> = showAll ? {} : { 'owner.type': account.type, 'owner.id': account.id }
   // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
+  if (req.query.groupId && typeof req.query.groupId === 'string') query['group.id'] = req.query.groupId
 
   const project = mongoProjection(req.query.select)
 

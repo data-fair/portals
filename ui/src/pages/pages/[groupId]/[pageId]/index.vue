@@ -37,92 +37,39 @@
       </v-card-text>
     </v-card>
     <navigation-right>
-      <v-list-item
-        :to="`/pages/${route.params.id}/edit-config`"
-        :title="t('editPage')"
-      >
-        <template #prepend>
-          <v-icon
-            color="primary"
-            :icon="mdiPencil"
-          />
-        </template>
-      </v-list-item>
-      <v-divider class="my-2" />
-      <v-menu
-        :close-on-content-click="false"
-        max-width="500"
-      >
-        <template #activator="{ props }">
-          <v-list-item
-            v-bind="props"
-            :title="t('deletePage')"
-          >
-            <template #prepend>
-              <v-icon
-                color="warning"
-                :icon="mdiDelete"
-              />
-            </template>
-          </v-list-item>
-        </template>
-        <template #default="{isActive}">
-          <v-card
-            variant="elevated"
-            :title="t('deletingPage')"
-            :text="t('confirmDeletePage', { title: pageFetch.data.value?.title })"
-            :loading="deletePage.loading.value ? 'warning' : undefined"
-          >
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                :disabled="deletePage.loading.value"
-                @click="isActive.value = false"
-              >
-                {{ t('no') }}
-              </v-btn>
-              <v-btn
-                color="warning"
-                variant="flat"
-                :loading="deletePage.loading.value"
-                @click="deletePage.execute()"
-              >
-                {{ t('yes') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </template>
-      </v-menu>
+      <page-actions
+        :group-id="route.params.groupId"
+        :page-id="route.params.pageId"
+
+      />
     </navigation-right>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import { mdiPencil } from '@mdi/js'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
-const router = useRouter()
-const route = useRoute<'/pages/[id]/'>()
+const route = useRoute<'/pages/[groupId]/[pageId]'>()
 
 const { pageFetch } = usePageStore()
 
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
-const deletePage = useAsyncAction(async () => {
-  await $fetch(`pages/${route.params.id}`, { method: 'DELETE' })
-  router.push('/pages/')
+const groupTitle = computed(() => {
+  if (!pageFetch.data.value) return ''
+  if (['standard', 'event', 'news', 'default'].includes(pageFetch.data.value.group.id)) return t('groupTitle.' + pageFetch.data.value.group.id)
+  return pageFetch.data.value.group.title
 })
 
 watch(pageFetch.data, (page) => {
   if (!page) return
-  setBreadcrumbs([{
-    text: t('pages'),
-    to: '/pages'
-  }, {
-    text: page.config.title
-  }])
-})
+  setBreadcrumbs([
+    { text: t('pages'), to: '/pages' },
+    { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
+    { text: page.title }
+  ])
+}, { immediate: true })
 
 </script>
 
@@ -132,6 +79,11 @@ watch(pageFetch.data, (page) => {
     deletePage: Delete page
     deletingPage: Deleting page
     editPage: Edit page
+    groupTitle:
+      standard: Standard pages
+      event: Events
+      news: News
+      default: Other pages
     no: No
     pages: Pages
     tabs:
@@ -146,6 +98,11 @@ watch(pageFetch.data, (page) => {
     deletePage: Supprimer la page
     deletingPage: Suppression de la page
     editPage: Éditer la page
+    groupTitle:
+      standard: Pages standard
+      event: Événements
+      news: Actualitées
+      default: Autres pages
     no: Non
     pages: Pages
     tabs:
@@ -156,18 +113,3 @@ watch(pageFetch.data, (page) => {
     yes: Oui
 
 </i18n>
-
-<style lang="css">
-.vjsf-node-list>.v-card>.v-list>.v-divider {
-  display: none;
-}
-.v-dialog>.vjsf-edit-dialog-content {
-  right: 0;
-  margin: 0;
-  top: 0;
-  bottom: 0;
-  max-height: 100%;
-  height: 100%;
-  width: 500px;
-}
-</style>

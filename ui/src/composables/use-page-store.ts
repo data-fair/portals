@@ -1,4 +1,5 @@
 import type { Page } from '#api/types/page/index'
+import equal from 'fast-deep-equal'
 
 // we do not use SSR, so we can use a simple module level singleton
 export type PageStore = ReturnType<typeof createPageStore>
@@ -17,7 +18,12 @@ const createPageStore = (id: string) => {
     if (page.value) page.value = { ...page.value, ...patch }
   })
 
-  return { pageFetch, page, patchPage }
+  const hasDraftDiff = computed(() => {
+    if (!page.value) return false
+    return !equal(page.value.draftConfig, page.value.config)
+  })
+
+  return { pageFetch, page, patchPage, hasDraftDiff }
 }
 
 export const providePageStore = (id: string) => {

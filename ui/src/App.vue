@@ -17,3 +17,8 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portals-manager/api/images/${id}/data`
 })
 </script>
+
+<style>
+/* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
+html { overflow-y: auto; }
+</style>

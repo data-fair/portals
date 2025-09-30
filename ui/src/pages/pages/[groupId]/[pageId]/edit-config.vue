@@ -22,48 +22,8 @@
         </vjsf-page-config>
       </v-form>
       <navigation-right>
-        <!-- Validate draft -->
-        <v-list-item
-          :disabled="validateDraft.loading.value || saveDraft.loading.value"
-          :title="t('validateDraft')"
-          @click="validateDraft.execute()"
-        >
-          <template #prepend>
-            <v-icon
-              color="primary"
-              :icon="mdiFileReplace"
-            />
-          </template>
-        </v-list-item>
-        <v-list-item
-          :disabled="cancelDraft.loading.value || saveDraft.loading.value"
-          :title="t('cancelDraft')"
-          @click="cancelDraft.execute()"
-        >
-          <template #prepend>
-            <v-icon
-              color="warning"
-              :icon="mdiCancel"
-            />
-          </template>
-        </v-list-item>
+        <page-edit-actions :changes-stack="changesStack" />
       </navigation-right>
-      <v-btn
-        v-if="changesStack.canUndo.value"
-        :icon="mdiUndo"
-        :title="t('undoLastChange')"
-        variant="flat"
-        style="position: absolute; bottom: 16px; right: 70px;z-index:2300;"
-        @click="changesStack.undo()"
-      />
-      <v-btn
-        v-if="changesStack.canRedo.value"
-        :icon="mdiRedo"
-        :title="t('redoLastChange')"
-        variant="flat"
-        style="position: absolute; bottom: 16px; right: 16px;z-index:2300;"
-        @click="changesStack.redo()"
-      />
     </portal-preview-provider>
   </v-container>
 </template>
@@ -74,11 +34,9 @@ import type { PageConfig } from '#api/types/page-config/index'
 
 import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
-import { mdiFileReplace, mdiUndo, mdiRedo } from '@mdi/js'
-import useChangesStack from '~/composables/use-changes-stack'
 
 const { t } = useI18n()
-const route = useRoute<'/pages/[id]/'>()
+const route = useRoute<'/pages/[groupId]/[pageId]/edit-config'>()
 
 const { pageFetch, patchPage } = usePageStore()
 
@@ -100,11 +58,12 @@ const vjsfOptions: VjsfOptions = {
 }
 const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
-    width: '400px',
-    persistent: true,
-    scrollStrategy: 'none',
+    minHeight: '100%',
     opacity: 0.1,
-    contentClass: 'vjsf-edit-dialog-content'
+    contentClass: 'right-0 ma-0'
+  },
+  'VjsfList-Edit-VDialog-VSheet': {
+    rounded: 's-lg e-0' // larger radius on left side, no radius on right side
   }
 }
 
@@ -113,29 +72,21 @@ const saveDraft = useAsyncAction(async () => {
   await patchPage.execute({ draftConfig: editConfig.value })
 })
 
-const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`pages/${route.params.id}/draft`, { method: 'DELETE' })
-  await pageFetch.refresh()
-  changesStack.reset()
-})
-
-const validateDraft = useAsyncAction(async () => {
-  await $fetch(`pages/${route.params.id}/draft`, { method: 'POST' })
-  await pageFetch.refresh()
-  changesStack.reset()
+const groupTitle = computed(() => {
+  if (!pageFetch.data.value) return ''
+  if (['standard', 'event', 'news', 'default'].includes(pageFetch.data.value.group.id)) return t('groupTitle.' + pageFetch.data.value.group.id)
+  return pageFetch.data.value.group.title
 })
 
 watch(pageFetch.data, (page) => {
   if (!page) return
-  setBreadcrumbs([{
-    text: t('pages'),
-    to: '/pages'
-  }, {
-    text: page.config.title
-  }, {
-    text: t('edit')
-  }])
-})
+  setBreadcrumbs([
+    { text: t('pages'), to: '/pages' },
+    { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
+    { text: page.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
+    { text: t('edit') }
+  ])
+}, { immediate: true })
 
 </script>
 
@@ -144,7 +95,12 @@ watch(pageFetch.data, (page) => {
     addItemMessage: Add a block to the page
     cancelDraft: Cancel draft
     contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
-    edit: Edit
+    edit: Editing draft
+    groupTitle:
+      standard: Standard pages
+      event: Events
+      news: News
+      default: Other pages
     pages: Pages
     redoLastChange: Redo last change
     undoLastChange: Undo last change
@@ -154,7 +110,12 @@ watch(pageFetch.data, (page) => {
     addItemMessage: Ajouter un bloc à la page
     cancelDraft: Annuler le brouillon
     contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
-    edit: Édition
+    edit: Édition du brouillon
+    groupTitle:
+      standard: Pages standard
+      event: Événements
+      news: Actualitées
+      default: Autres pages
     pages: Pages
     redoLastChange: Rétablir le dernier changement
     undoLastChange: Annuler le dernier changement
@@ -163,16 +124,8 @@ watch(pageFetch.data, (page) => {
 </i18n>
 
 <style lang="css">
+/* Hide dividers in vjsf node list */
 .vjsf-node-list>.v-card>.v-list>.v-divider {
   display: none;
-}
-.v-dialog>.vjsf-edit-dialog-content {
-  right: 0;
-  margin: 0;
-  top: 0;
-  bottom: 0;
-  max-height: 100%;
-  height: 100%;
-  width: 500px;
 }
 </style>

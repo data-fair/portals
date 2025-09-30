@@ -1,4 +1,5 @@
-import type { Portal } from '#types/portal/index.js'
+import type { Group } from '#types/group/index.ts'
+import type { Portal } from '#types/portal/index.ts'
 import type { Page } from '#types/page/index.js'
 import type { Image } from '#types/image/index.js'
 
@@ -12,6 +13,10 @@ export class PortalsMongo {
 
   get db () {
     return mongo.db
+  }
+
+  get groups () {
+    return mongo.db.collection<Group>('groups')
   }
 
   get portals () {

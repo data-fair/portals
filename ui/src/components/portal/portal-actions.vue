@@ -136,13 +136,13 @@ defineProps<{
   portalUrl: string | undefined
 }>()
 
-const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
+const validateDraft = useAsyncAction(async () => {
+  await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
   emit('refresh-portal')
 })
 
-const validateDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
+const cancelDraft = useAsyncAction(async () => {
+  await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
   emit('refresh-portal')
 })
 

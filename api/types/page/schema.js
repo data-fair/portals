@@ -4,7 +4,7 @@ export default {
   title: 'Page',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'title', 'slug', 'owner', 'created', 'updated', 'config', 'draftConfig', 'portals', 'requestedPortals'],
+  required: ['_id', 'title', 'slug', 'owner', 'created', 'updated', 'config', 'draftConfig', 'group', 'portals', 'requestedPortals'],
   properties: {
     _id: {
       type: 'string',
@@ -25,6 +25,15 @@ export default {
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     config: { $ref: 'https://github.com/data-fair/portals/page-config' },
     draftConfig: { $ref: 'https://github.com/data-fair/portals/page-config' },
+    group: {
+      type: 'object',
+      required: ['id', 'title', 'slug'],
+      properties: {
+        id: { type: 'string' },
+        title: { type: 'string' },
+        slug: { type: 'string' }
+      }
+    },
     portals: {
       type: 'array',
       items: { type: 'string' }
