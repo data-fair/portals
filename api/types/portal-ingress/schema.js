@@ -1,6 +1,8 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-ingress',
   'x-exports': ['types', 'validate', 'vjsf'],
+  'x-vjsf': { xI18n: true },
+  'x-vjsf-locales': ['en', 'fr'],
   title: 'Portal ingress',
   layout: { title: null },
   type: 'object',

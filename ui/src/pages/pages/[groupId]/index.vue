@@ -60,7 +60,7 @@
       >
         <page-card
           :page="page"
-          :show-owner="showAll || !!(page.owner.department && !session.state.account.department)"
+          :group="group"
         />
       </v-col>
     </v-row>
@@ -78,10 +78,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
+import type { Page } from '#api/types/page/index.ts'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
-const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
 
@@ -93,9 +92,23 @@ const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
     sort: 'updated.date:-1',
-    select: '_id,config.title,owner,group',
-    groupId: route.params.groupId
+    select: '_id,config.title'
   }
+
+  // Base groups: filter by type
+  if (route.params.groupId === 'standard') {
+    params.type = 'home,contact,privacy-policy'
+  } else if (route.params.groupId === 'event') {
+    params.type = 'event'
+  } else if (route.params.groupId === 'news') {
+    params.type = 'news'
+  } else if (route.params.groupId === 'default') {
+    params.type = 'generic'
+  } else { // Custom groups: generic pages with specific groupId
+    params.type = 'generic'
+    params.groupId = route.params.groupId
+  }
+
   if (showAll.value) params.showAll = 'true'
   return params
 })

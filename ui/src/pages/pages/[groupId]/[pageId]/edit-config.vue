@@ -7,6 +7,7 @@
       >
         <vjsf-page-config
           v-model="editConfig"
+          :locale="locale"
           :options="vjsfOptions"
           @update:model-value="saveDraft.execute()"
         >
@@ -30,12 +31,11 @@
 
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
-import type { PageConfig } from '#api/types/page-config/index'
+import type { PageConfig } from '#api/types/page-config'
 
-import VjsfMarkdown from '@koumoul/vjsf-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute<'/pages/[groupId]/[pageId]/edit-config'>()
 
 const { pageFetch, patchPage } = usePageStore()
@@ -51,10 +51,8 @@ const formValid = ref(false)
 const vjsfOptions: VjsfOptions = {
   titleDepth: 4,
   density: 'compact',
-  locale: 'fr',
   updateOn: 'blur',
-  initialValidation: 'always',
-  plugins: [VjsfMarkdown]
+  initialValidation: 'always'
 }
 const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
@@ -73,9 +71,10 @@ const saveDraft = useAsyncAction(async () => {
 })
 
 const groupTitle = computed(() => {
-  if (!pageFetch.data.value) return ''
-  if (['standard', 'event', 'news', 'default'].includes(pageFetch.data.value.group.id)) return t('groupTitle.' + pageFetch.data.value.group.id)
-  return pageFetch.data.value.group.title
+  const page = pageFetch.data.value
+  if (!page) return ''
+  if (page.type === 'generic' && page.config.group) return page.config.group.title
+  return t('groupTitle.' + route.params.groupId)
 })
 
 watch(pageFetch.data, (page) => {
@@ -83,7 +82,7 @@ watch(pageFetch.data, (page) => {
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
     { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
-    { text: page.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
+    { text: page.config.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
     { text: t('edit') }
   ])
 }, { immediate: true })

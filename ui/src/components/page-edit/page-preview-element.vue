@@ -9,7 +9,7 @@
           <page-edit-elements
             :model-value="elements"
             :add-item-message="addItemMessage"
-            @update:model-value="(newElements: PageElement[]) => element = onUpdate(newElements)"
+            @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
           />
         </v-defaults-provider>
       </template>

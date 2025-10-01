@@ -1,12 +1,12 @@
 <template>
   <v-card
     class="h-100"
-    :to="`/pages/${page.group.id}/${page._id}`"
+    :to="`/pages/${group._id}/${page._id}`"
   >
     <v-card-item>
       <template #append>
         <owner-avatar
-          v-if="showOwner"
+          v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
           :owner="page.owner"
         />
       </template>
@@ -16,7 +16,7 @@
           {{ page.config.title }}
         </span>
         <v-tooltip
-          v-if="page.config.title.length > 15"
+          v-if="page.config.title.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"
@@ -38,13 +38,15 @@
 
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
+import type { Group } from '#api/types/group'
+
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
-defineProps({
-  page: {
-    type: Object as () => Page,
-    default: null
-  },
-  showOwner: Boolean
-})
+const session = useSessionAuthenticated()
+const showAll = useBooleanSearchParam('showAll')
+
+defineProps<{
+  page: Page
+  group: Pick<Group, '_id' | 'title'> & Partial<Pick<Group, 'owner'>>
+}>()
 </script>

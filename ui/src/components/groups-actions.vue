@@ -87,7 +87,10 @@ const showAll = defineModel('showAll', { type: Boolean, default: false })
 const newGroupMenu = ref(false)
 const newGroupTitle = ref('')
 const newGroupDescription = ref('')
-watch(newGroupMenu, () => { newGroupTitle.value = '' })
+watch(newGroupMenu, () => {
+  newGroupTitle.value = ''
+  newGroupDescription.value = ''
+})
 
 const createGroup = useAsyncAction(async () => {
   const group = await $fetch<Group>('/groups', {

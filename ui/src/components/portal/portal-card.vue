@@ -16,7 +16,7 @@
           {{ portal.config.title }}
         </span>
         <v-tooltip
-          v-if="portal.config.title.length > 15"
+          v-if="portal.config.title.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"

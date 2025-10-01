@@ -8,6 +8,7 @@
         <vjsf-portal-config
           v-if="vjsfOptions"
           v-model="editConfig"
+          :locale="locale"
           :options="vjsfOptions"
           @update:model-value="saveDraft.execute()"
         >
@@ -72,12 +73,11 @@
 <script lang="ts" setup>
 import type { Portal, PortalConfig } from '#api/types/portal'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
-import VjsfMarkdown from '@koumoul/vjsf-markdown'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
@@ -118,12 +118,8 @@ watch(portalFetch.data, (portal) => {
 })
 
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
-  context: {
-    simplifiedTheme: true
-  },
   density: 'comfortable',
   initialValidation: 'always',
-  plugins: [VjsfMarkdown],
   titleDepth: 4,
   updateOn: 'blur'
 }))

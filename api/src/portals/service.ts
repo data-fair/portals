@@ -1,16 +1,17 @@
-import type { Portal } from '#types/portal/index.js'
-import mongo from '#mongo'
-import config from '#config'
-import debugModule from 'debug'
-import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
-import axios from '@data-fair/lib-node/axios.js'
-import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
-import equal from 'fast-deep-equal'
-import { type IngressManagerIngressInfo } from '#types'
-import { type ImageRef } from '#types/page/index.js'
+import type { Portal } from '#types/portal/index.ts'
+import type { IngressManagerIngressInfo } from '#types'
+import type { ImageRef } from '#types/page/index.ts'
+
 import { readFile } from 'node:fs/promises'
 import resolvePath from 'resolve-path'
 import { resolve } from 'node:path'
+import debugModule from 'debug'
+import equal from 'fast-deep-equal'
+import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import axios from '@data-fair/lib-node/axios.js'
+import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
+import mongo from '#mongo'
+import config from '#config'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')

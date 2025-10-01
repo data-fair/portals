@@ -1,4 +1,4 @@
-import type { ImageRef, Page, PageElement } from '#types/page/index.js'
+import type { ImageRef, Page, PageElement } from '#types/page/index.ts'
 import mongo from '#mongo'
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'

@@ -40,7 +40,6 @@
       <page-actions
         :group-id="route.params.groupId"
         :page-id="route.params.pageId"
-
       />
     </navigation-right>
   </v-container>
@@ -57,9 +56,10 @@ const { pageFetch } = usePageStore()
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 const groupTitle = computed(() => {
-  if (!pageFetch.data.value) return ''
-  if (['standard', 'event', 'news', 'default'].includes(pageFetch.data.value.group.id)) return t('groupTitle.' + pageFetch.data.value.group.id)
-  return pageFetch.data.value.group.title
+  const page = pageFetch.data.value
+  if (!page) return ''
+  if (page.type === 'generic' && page.config.group) return page.config.group.title
+  return t('groupTitle.' + route.params.groupId)
 })
 
 watch(pageFetch.data, (page) => {
@@ -67,7 +67,7 @@ watch(pageFetch.data, (page) => {
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
     { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
-    { text: page.title }
+    { text: page.config.title }
   ])
 }, { immediate: true })
 

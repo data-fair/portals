@@ -1,43 +1,39 @@
+import type { Page } from '#types/page/index.ts'
 import { randomUUID } from 'node:crypto'
-import type { Filter, Sort } from 'mongodb'
-import type { Page } from '#types/page/index.js'
 import slug from 'slugify'
 import { Router } from 'express'
 import mongo from '#mongo'
+import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
-import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
+import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage } from './service.ts'
 
 const router = Router()
 export default router
 
 router.get('', async (req, res, next) => {
-  const sessionState = reqSessionAuthenticated(req)
-  const { account, accountRole } = sessionState
-  if (accountRole !== 'admin') throw httpError(403, 'admin only')
+  const session = reqSessionAuthenticated(req)
+  assertAccountRole(session, session.account, 'admin')
+
+  const params = req.query as Record<string, string>
+  const sort = findUtils.sort(params.sort || 'updated.date:-1')
+  const { skip, size } = findUtils.pagination(params)
+  const project = findUtils.project(params.select)
+  const filters = findUtils.query(params, { type: 'type', groupId: 'config.group._id' })
+
+  // If isReference=true, we get all references pages, without owner filter
+  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
+  const queryWithFilters = Object.assign(filters, query)
 
   // TODO: account filter for super admins ?
-  const showAll = req.query.showAll === 'true' || req.query.showAll === '1'
-  if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
-  const query: Filter<Page> = showAll ? {} : { 'owner.type': account.type, 'owner.id': account.id }
-  // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
-  if (req.query.groupId && typeof req.query.groupId === 'string') query['group.id'] = req.query.groupId
 
-  const project = mongoProjection(req.query.select)
-
-  // implement a special pagination based on the fact that we always sort by date
-  const sort: Sort = { _id: -1 }
-  const { skip, size } = mongoPagination(req.query, 20)
-
-  const [count, pages] = await Promise.all([
-    mongo.pages.countDocuments(query),
-    mongo.pages.find(query).project(project).skip(skip).limit(size).sort(sort).toArray()
+  const [count, results] = await Promise.all([
+    mongo.pages.countDocuments(queryWithFilters),
+    mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
   ])
 
-  const response: any = { count, results: pages }
-
-  res.json(response)
+  res.json({ results, count })
 })
 
 router.post('', async (req, res, next) => {
@@ -51,12 +47,12 @@ router.post('', async (req, res, next) => {
   }
   const page: Page = {
     _id: randomUUID(),
-    title: body.config.title,
     slug: slug.default(body.config.title, { lower: true, strict: true }),
-    owner: session.account,
+    type: body.type,
+    owner: body.owner ?? session.account,
     created,
     updated: created,
-    ...body,
+    config: body.config,
     draftConfig: body.config,
     portals: [],
     requestedPortals: []

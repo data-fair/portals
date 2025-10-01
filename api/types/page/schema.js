@@ -4,36 +4,33 @@ export default {
   title: 'Page',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'title', 'slug', 'owner', 'created', 'updated', 'config', 'draftConfig', 'group', 'portals', 'requestedPortals'],
+  required: ['_id', 'slug', 'type', 'owner', 'created', 'updated', 'config', 'draftConfig', 'portals', 'requestedPortals'],
   properties: {
     _id: {
       type: 'string',
       title: 'Identifiant',
       readOnly: true
     },
-    title: {
-      type: 'string',
-      title: 'Titre',
-      readOnly: true
-    },
     slug: {
       type: 'string',
       title: 'Slug'
+    },
+    type: {
+      type: 'string',
+      enum: ['home', 'event', 'news', 'contact', 'privacy-policy', 'generic'],
+      default: 'generic',
+      readOnly: true
+    },
+    isReference: { // superadmin can set a page as reference page
+      type: 'boolean',
+      title: 'Page de référence',
+      readOnly: true
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
     created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     config: { $ref: 'https://github.com/data-fair/portals/page-config' },
     draftConfig: { $ref: 'https://github.com/data-fair/portals/page-config' },
-    group: {
-      type: 'object',
-      required: ['id', 'title', 'slug'],
-      properties: {
-        id: { type: 'string' },
-        title: { type: 'string' },
-        slug: { type: 'string' }
-      }
-    },
     portals: {
       type: 'array',
       items: { type: 'string' }

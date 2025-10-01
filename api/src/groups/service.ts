@@ -1,4 +1,4 @@
-import type { Group } from '#types/group/index.js'
+import type { Group } from '#types/group/index.ts'
 import type { SessionStateAuthenticated } from '@data-fair/lib-express'
 import Debug from 'debug'
 import mongo from '#mongo'

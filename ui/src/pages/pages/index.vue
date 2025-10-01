@@ -3,41 +3,34 @@
     data-iframe-height
     style="min-height:500px"
   >
-    <!-- Skeleton loader-->
-    <v-row
-      v-if="groupsFetch.loading.value"
-      class="d-flex align-stretch"
-    >
-      <v-col
-        v-for="i in 9"
-        :key="i"
-        md="4"
-        sm="6"
-        cols="12"
-        class="d-flex"
-      >
-        <v-skeleton-loader
-          :class="$vuetify.theme.current.dark ? 'w-100' : 'w-100 skeleton'"
-          height="200"
-          type="article"
-        />
-      </v-col>
-    </v-row>
-
     <!-- List of groups -->
     <v-row class="d-flex align-stretch">
       <v-col
         v-for="group in displayGroups"
-        :key="group.slug"
+        :key="group._id"
         md="4"
         sm="6"
         cols="12"
       >
-        <group-card
-          :group="group"
-          :show-owner="showAll || !!(group.owner?.department && !session.state.account.department)"
-        />
+        <group-card :group="group" />
       </v-col>
+
+      <!-- Skeleton loaders for loading groups -->
+      <template v-if="groupsFetch.loading.value">
+        <v-col
+          v-for="i in 5"
+          :key="i"
+          md="4"
+          sm="6"
+          cols="12"
+        >
+          <v-skeleton-loader
+            :class="$vuetify.theme.current.dark ? 'w-100' : 'w-100 skeleton'"
+            height="200"
+            type="article"
+          />
+        </v-col>
+      </template>
     </v-row>
 
     <!-- Actions -->
@@ -51,9 +44,8 @@
 import type { Group } from '#api/types/group'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
-const session = useSessionAuthenticated()
-const showAll = useBooleanSearchParam('showAll')
 const { t } = useI18n()
+const showAll = useBooleanSearchParam('showAll')
 
 const groupsParams = computed(() => {
   const params: Record<string, any> = {
@@ -63,8 +55,9 @@ const groupsParams = computed(() => {
   if (showAll.value) params.showAll = 'true'
   return params
 })
-
 const groupsFetch = useFetch<{ results: Group[], count: number }>($apiPath + '/groups', { query: groupsParams })
+
+// Add base groups : standard (home, contact, privacy policy pages), event, news, default (generic pages without group)
 const displayGroups = computed(() => {
   const groups: (Pick<Group, '_id' | 'title' | 'description'> & Partial<Pick<Group, 'owner'>>)[] = [
     { _id: 'standard', title: t('groupTitle.standard'), description: t('groupDesc.standard') },

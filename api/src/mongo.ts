@@ -1,6 +1,6 @@
 import type { Group } from '#types/group/index.ts'
 import type { Portal } from '#types/portal/index.ts'
-import type { Page } from '#types/page/index.js'
+import type { Page } from '#types/page/index.ts'
 import type { Image } from '#types/image/index.js'
 
 import mongo from '@data-fair/lib-node/mongo.js'

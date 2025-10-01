@@ -1,4 +1,4 @@
-import type { Page } from '#api/types/page/index'
+import type { Page } from '#api/types/page'
 import equal from 'fast-deep-equal'
 
 // we do not use SSR, so we can use a simple module level singleton

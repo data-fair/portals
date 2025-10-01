@@ -1,6 +1,7 @@
 <template>
   <vjsf-page-elements
     v-model="elements"
+    :locale="session.lang.value"
     :options="vjsfOptions"
   >
     <template #page-preview-element="{node, statefulLayout}">
@@ -25,21 +26,17 @@
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page-config'
 import { type Options as VjsfOptions } from '@koumoul/vjsf'
-import VjsfMarkdown from '@koumoul/vjsf-markdown'
 
 const elements = defineModel<PageElement[]>()
-
 const { addItemMessage } = defineProps({ addItemMessage: { type: String, required: true } })
-
-const pageRef = { type: 'page', _id: inject('page-id') as string }
+const session = useSession()
+const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
 const vjsfOptions: VjsfOptions = {
   titleDepth: 4,
   density: 'compact',
-  locale: 'fr',
   updateOn: 'blur',
   initialValidation: 'always',
-  plugins: [VjsfMarkdown],
   // @ts-ignore
   messages: {
     addItem: addItemMessage

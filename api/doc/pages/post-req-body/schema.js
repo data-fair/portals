@@ -3,7 +3,7 @@ import pageSchema from '#types/page/schema.js'
 
 export default {
   ...jsonSchema(pageSchema)
-    .pickProperties(['config', 'group'])
+    .pickProperties(['type', 'config', 'owner'])
     .schema,
   $id: 'https://github.com/data-fair/portals/pages/post-req-body',
   title: 'Post page req body',

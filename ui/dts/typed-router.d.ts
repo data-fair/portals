@@ -24,6 +24,7 @@ declare module 'vue-router/auto-routes' {
     '/pages/[groupId]/[pageId]': RouteRecordInfo<'/pages/[groupId]/[pageId]', '/pages/:groupId/:pageId', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }, '/pages/[groupId]/[pageId]/' | '/pages/[groupId]/[pageId]/edit-config'>,
     '/pages/[groupId]/[pageId]/': RouteRecordInfo<'/pages/[groupId]/[pageId]/', '/pages/:groupId/:pageId', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }>,
     '/pages/[groupId]/[pageId]/edit-config': RouteRecordInfo<'/pages/[groupId]/[pageId]/edit-config', '/pages/:groupId/:pageId/edit-config', { groupId: ParamValue<true>, pageId: ParamValue<true> }, { groupId: ParamValue<false>, pageId: ParamValue<false> }>,
+    '/pages/[groupId]/new': RouteRecordInfo<'/pages/[groupId]/new', '/pages/:groupId/new', { groupId: ParamValue<true> }, { groupId: ParamValue<false> }>,
     '/portals/': RouteRecordInfo<'/portals/', '/portals', Record<never, never>, Record<never, never>>,
     '/portals/[id]/': RouteRecordInfo<'/portals/[id]/', '/portals/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/portals/[id]/ingress': RouteRecordInfo<'/portals/[id]/ingress', '/portals/:id/ingress', { id: ParamValue<true> }, { id: ParamValue<false> }>,

@@ -1,15 +1,15 @@
-import { randomUUID } from 'node:crypto'
 import type { Filter, Sort } from 'mongodb'
-import type { Portal, PortalConfig } from '#types/portal/index.js'
+import type { Portal, PortalConfig } from '#types/portal/index.ts'
 
+import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import mongo from '#mongo'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
 
 const router = Router()
 export default router

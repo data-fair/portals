@@ -1,4 +1,4 @@
-import type { Portal } from '#api/types/portal/index'
+import type { Portal } from '#api/types/portal'
 
 type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
 

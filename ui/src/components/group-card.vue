@@ -10,7 +10,7 @@
           {{ group.title }}
         </span>
         <v-tooltip
-          v-if="group.title.length > 15"
+          v-if="group.title.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"
@@ -21,7 +21,7 @@
       <!-- Owner -->
       <template #append>
         <owner-avatar
-          v-if="showOwner"
+          v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
           :owner="group.owner"
         />
       </template>
@@ -38,8 +38,10 @@
 import type { Group } from '#api/types/group'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
+const session = useSessionAuthenticated()
+const showAll = useBooleanSearchParam('showAll')
+
 defineProps<{
-  showOwner: boolean
   group: Pick<Group, '_id' | 'title' | 'description'> & Partial<Pick<Group, 'owner'>>
 }>()
 </script>

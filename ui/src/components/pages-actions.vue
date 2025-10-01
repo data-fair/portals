@@ -1,56 +1,15 @@
 <template>
-  <v-menu
-    v-model="newPageMenu"
-    location="start"
-    :close-on-content-click="false"
+  <v-list-item
+    :to="`/pages/${route.params.groupId}/new`"
   >
-    <template #activator="{props}">
-      <v-list-item v-bind="props">
-        <template #prepend>
-          <v-icon
-            color="primary"
-            :icon="mdiPlusCircle"
-          />
-        </template>
-        {{ t('createNewPage') }}
-      </v-list-item>
+    <template #prepend>
+      <v-icon
+        color="primary"
+        :icon="mdiPlusCircle"
+      />
     </template>
-    <v-card
-      data-iframe-height
-      min-width="300"
-      rounded="lg"
-      :loading="createPage.loading.value ? 'primary' : false"
-    >
-      <v-card-text>
-        <v-text-field
-          v-model="newPageTitle"
-          variant="outlined"
-          density="comfortable"
-          :label="t('newPageTitle')"
-          autofocus
-          hide-details
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          :disabled="createPage.loading.value"
-          @click="newPageMenu = false"
-        >
-          {{ t('cancel') }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
-          :disabled="!newPageTitle"
-          :loading="createPage.loading.value ? 'primary' : false"
-          @click="createPage.execute()"
-        >
-          {{ t('create') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
+    {{ t('createNewPage') }}
+  </v-list-item>
 
   <!-- Group management menu -->
   <v-menu
@@ -192,20 +151,18 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
 import { mdiMagnify, mdiPlusCircle, mdiPencil, mdiDelete } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const router = useRouter()
+const route = useRoute<'/pages/[groupId]/new'>()
 
 const search = defineModel('search', { type: String, default: '' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
 const { group } = defineProps < { group: { _id: string, slug: string, title: string, description?: string } }>()
 const emit = defineEmits<{ (e: 'refresh-group'): void }>()
 
-const newPageMenu = ref(false)
-const newPageTitle = ref('')
 const editGroupMenu = ref(false)
 const editGroupTitle = ref(group.title)
 const editGroupDescription = ref(group.description || '')
@@ -213,28 +170,9 @@ const deleteGroupMenu = ref(false)
 
 const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(group._id)
 
-watch(newPageMenu, () => { newPageTitle.value = '' })
 watch(editGroupMenu, () => {
   editGroupTitle.value = group.title
   editGroupDescription.value = group.description || ''
-})
-
-const createPage = useAsyncAction(async () => {
-  const page = await $fetch<Page>('/pages', {
-    method: 'POST',
-    body: {
-      config: {
-        title: newPageTitle.value,
-        elements: []
-      },
-      group: {
-        id: group._id,
-        title: group.title,
-        slug: group.slug
-      }
-    }
-  })
-  await router.push({ path: `/pages/${page.group.id}/${page._id}` })
 })
 
 const editGroup = useAsyncAction(async () => {
