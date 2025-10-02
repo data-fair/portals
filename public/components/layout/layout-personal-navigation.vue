@@ -83,7 +83,6 @@
           </v-list-item>
         </template>
       </v-select>
-
       <v-list-item
         v-if="activeAccount.type === 'organization' && accountRole === 'admin' && !activeAccount.department"
         :nuxt="true"

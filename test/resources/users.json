@@ -1,39 +1,47 @@
-[  {
+[
+  {
     "id": "superadmin",
     "firstName": "Super",
     "lastName": "Admin",
     "email": "superadmin@test.com",
+    "ignorePersonalAccount": true,
     "password": {
       "clear": "superpasswd"
     }
-  }, {
+  },
+  {
     "id": "user1",
     "email": "user1@test.com",
     "password": {
       "clear": "passwd"
     }
-}, {
+  },
+  {
     "id": "admin1",
     "email": "admin1@test.com",
     "password": {
       "clear": "passwd"
     }
-}, {
+  },
+  {
     "id": "admin2",
     "email": "admin2@test.com",
     "password": {
       "clear": "passwd"
     }
-}, {
+  },
+  {
     "id": "manager1",
     "email": "manager1@test.com",
     "password": {
       "clear": "passwd"
     }
-}, {
-  "id": "admindep1",
-  "email": "admindep1@test.com",
+  },
+  {
+    "id": "admindep1",
+    "email": "admindep1@test.com",
     "password": {
       "clear": "passwd"
     }
-}]
+  }
+]
