@@ -812,6 +812,7 @@ ${req.body.text}`
   const mail = {
     from: config.mails.from,
     to: req.config.contactEmail,
+    replyTo: req.body.from,
     subject: req.body.subject,
     text
   }
