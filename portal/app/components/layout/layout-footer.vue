@@ -117,24 +117,25 @@
         justify="center"
       >
         <v-col
-          v-for="(link, key) in portalConfig.footer.links" :key="key"
+          v-for="(link, key) in portalConfig.footer.links"
+          :key="key"
           cols="auto"
           class="text-center"
         >
-          <NuxtLink
-            v-if="link.type !== 'external'"
-            :to="resolveHref(link)"
-          >
-            {{ resolveTitle(link) }}
-          </NuxtLink>
           <a
-            v-else
-            :href="resolveHref(link)"
+            v-if="link.type === 'external'"
+            :href="link.href"
             target="_blank"
             rel="noopener"
           >
-            {{ resolveTitle(link) }}
+            {{ link.title }}
           </a>
+          <NuxtLink
+            v-else
+            :to="useResolveLink(link)"
+          >
+            {{ link.title }}
+          </NuxtLink>
         </v-col>
       </v-row>
 
@@ -144,56 +145,62 @@
         class="my-2"
       >
         <v-col
-          v-for="(link, key) in portalConfig.footer.links" :key="key"
+          v-for="(link, key) in portalConfig.footer.links"
+          :key="key"
           cols="10"
           sm="4"
           offset="2"
           offset-sm="2"
           class="pa-0"
         >
-          <NuxtLink
-            v-if="link.type !== 'external'"
-            :to="resolveHref(link)"
-          >
-            {{ resolveTitle(link) }}
-          </NuxtLink>
           <a
-            v-else
-            :href="resolveHref(link)"
+            v-if="link.type === 'external'"
+            :href="link.href"
             target="_blank"
             rel="noopener"
           >
-            {{ resolveTitle(link) }}
+            {{ link.title }}
           </a>
+          <NuxtLink
+            v-else
+            :to="useResolveLink(link)"
+          >
+            {{ link.title }}
+          </NuxtLink>
         </v-col>
       </v-row>
 
       <!-- Important Links-->
       <template v-if="portalConfig.footer.importantLinks.length">
         <v-divider class="my-2" />
-          <v-row>
-            <v-col cols="12" class="text-center">
-              <template v-for="(link, index) in portalConfig.footer.importantLinks" :key="index">
-                <v-btn
-                  v-if="link.type !== 'external'"
-                  :to="resolveHref(link)"
-                  variant="text"
-                >
-                  {{ resolveTitle(link) }}
-                </v-btn>
-
-                <v-btn
-                  v-else
-                  :href="resolveHref(link)"
-                  target="_blank"
-                  rel="noopener"
-                  variant="text"
-                >
-                  {{ resolveTitle(link) }}
-                </v-btn>
-              </template>
-            </v-col>
-          </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            class="text-center"
+          >
+            <template
+              v-for="(link, index) in portalConfig.footer.importantLinks"
+              :key="index"
+            >
+              <v-btn
+                v-if="link.type === 'external'"
+                :href="link.href"
+                target="_blank"
+                rel="noopener"
+                variant="text"
+              >
+                {{ link.title }}
+              </v-btn>
+              <v-btn
+                v-else
+                :to="useResolveLink(link)"
+                variant="text"
+              >
+                {{ link.title }}
+              </v-btn>
+            </template>
+          </v-col>
+        </v-row>
         <v-divider class="my-2" />
       </template>
     </v-container>
@@ -202,7 +209,11 @@
     <template v-if="portalConfig.footer.copyright === 'text'">
       <v-divider />
       <div class="text-center my-2">
-        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a href="https://koumoul.com" target="_blank" rel="noopener">Koumoul</a></strong>
+        <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a
+            href="https://koumoul.com"
+            target="_blank"
+            rel="noopener"
+          >Koumoul</a></strong>
       </div>
     </template>
   </v-footer>
@@ -210,7 +221,6 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/page-elements'
-import type { Footer } from '#api/types/portal'
 import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
 const { t } = useI18n()
@@ -233,40 +243,15 @@ const logo = computed(() => {
 
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
-const resolveHref = (link: Footer['links'][number]) => {
-  switch (link.type) {
-    case 'external': return link.href
-    case 'custom': return link.pageRef ? `/pages/${link.pageRef.slug}` : undefined
-    case 'datasets': return '/datasets'
-    case 'applications': return '/applications'
-    case 'contact': return '/contact'
-    case 'sitemap': return '/sitemap'
-    case 'privacy-policy': return '/privacy-policy'
-    default: return undefined
-  }
-}
-
-const resolveTitle = (link: Footer['links'][number]) => {
-  switch (link.type) {
-    case 'sitemap': return t('sitemap')
-    case 'privacy-policy': return t('privacyPolicy')
-    default: return link.title
-  }
-}
-
 </script>
 
 <i18n lang="yaml">
   en:
     contactUs: 'Contact Us'
     socialMedia: 'Find us on social media'
-    sitemap: 'Sitemap'
-    privacyPolicy: 'Privacy Policy'
 
   fr:
     contactUs: 'Contactez-nous'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
-    sitemap: 'Plan du site'
-    privacyPolicy: 'Politique de confidentialité'
 
 </i18n>

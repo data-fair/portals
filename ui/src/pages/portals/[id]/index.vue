@@ -72,6 +72,7 @@
 
 <script lang="ts" setup>
 import type { Portal, PortalConfig } from '#api/types/portal'
+import type { Page, Groupe } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
@@ -117,7 +118,54 @@ watch(portalFetch.data, (portal) => {
   }])
 })
 
+const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
+  query: {
+    portal: route.params.id,
+    type: 'event,news,generic',
+    select: '_id,type,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
+    limit: 1000,
+    sort: 'config.title'
+  }
+})
+
+const pages = computed(() => {
+  const results = pagesFetch.data.value?.results ?? []
+  if (!results.length) return { event: [], news: [], generic: [] }
+
+  const result = { event: [], news: [], generic: [] } as Record<'event' | 'news' | 'generic', any[]>
+  const genericByGroup: Record<string, { title: string, pages: any[] }> = {} // store each group of generic pages
+
+  results.forEach(page => {
+    const metaKey = page.type + 'Metadata' // 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
+    const metadata = page.config[metaKey] as Page['config']['eventMetadata'] | Page['config']['newsMetadata'] | Page['config']['genericMetadata']
+    if (!metadata) return
+
+    const item = {
+      key: page._id,
+      slug: metadata.slug,
+      title: page.config.title,
+      group: metadata.group as Groupe | undefined,
+    }
+
+    if (page.type === 'generic') {
+      const groupId = item.group?._id ?? 'no-group'
+      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId].pages.push(item)
+    } else {
+      result[page.type as 'event' | 'news'].push(item)
+    }
+  })
+
+  // insert headers for generic pages
+  Object.values(genericByGroup).forEach(({ title, pages }) => {
+    result.generic.push({ title, header: true }, ...pages)
+  })
+
+  return result
+})
+
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
+  context: { pages: pages.value },
   density: 'comfortable',
   initialValidation: 'always',
   titleDepth: 4,

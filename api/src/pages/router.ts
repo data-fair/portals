@@ -20,7 +20,10 @@ router.get('', async (req, res, next) => {
   const sort = findUtils.sort(params.sort || 'updated.date:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
-  const filters = findUtils.query(params, { type: 'type', groupId: 'config.group._id' })
+  const filters = findUtils.query(params, { portal: 'portals', type: 'type', groupId: 'config.genericMetadata.group._id' })
+
+  // If groupId is not specified, exclude documents that have one
+  if (params.groupId === 'default') filters['config.genericMetadata.group._id'] = { $exists: false }
 
   // If isReference=true, we get all references pages, without owner filter
   const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
@@ -45,16 +48,21 @@ router.post('', async (req, res, next) => {
     name: session.user.name,
     date: new Date().toISOString()
   }
+  const config = { ...body.config }
+  if (['event', 'news', 'generic'].includes(body.type)) {
+    config[body.type + 'Metadata'] = {
+      slug: slug.default(body.config.title, { lower: true, strict: true })
+    }
+  }
   const page: Page = {
     _id: randomUUID(),
-    slug: slug.default(body.config.title, { lower: true, strict: true }),
     type: body.type,
     owner: body.owner ?? session.account,
     created,
     updated: created,
-    config: body.config,
-    draftConfig: body.config,
-    portals: [],
+    config,
+    draftConfig: config,
+    portals: body.portals || [],
     requestedPortals: []
   }
   assertAccountRole(session, page.owner, 'admin')

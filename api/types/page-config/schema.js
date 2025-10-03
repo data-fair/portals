@@ -13,7 +13,7 @@ export default {
     title: '',
     children: [{
       title: 'Métadonnées',
-      children: ['title', 'description', 'group']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata']
     }, {
       title: 'Contenu',
       children: ['elements']
@@ -30,26 +30,53 @@ export default {
       title: 'Description',
       layout: 'textarea'
     },
-    // TODO: Group is required when page.type is 'generic'.
-    group: {
+    eventMetadata: {
       type: 'object',
-      title: 'Groupe',
-      required: ['_id', 'title', 'slug'],
+      required: ['slug'],
+      default: {},
+      layout: { if: 'context.pageType === "event"' },
       properties: {
-        _id: { type: 'string' },
-        title: { type: 'string' },
-        slug: { type: 'string' }
-      },
-      layout: {
-        getItems: {
-          url: '/portals-manager/api/groups?select=_id,title,slug',
-          itemsResults: 'data.results',
-          itemTitle: 'item.title',
-          itemKey: 'item._id'
+        slug: { $ref: '#/$defs/slug' }
+        // TODO: add a start and end date
+      }
+    },
+    newsMetadata: {
+      type: 'object',
+      required: ['slug'],
+      default: {},
+      layout: { if: 'context.pageType === "news"' },
+      properties: {
+        slug: { $ref: '#/$defs/slug' }
+        // TODO: add a date
+      }
+    },
+    genericMetadata: {
+      type: 'object',
+      required: ['slug'],
+      default: {},
+      layout: { if: 'context.pageType === "generic"' },
+      properties: {
+        slug: { $ref: '#/$defs/slug' },
+        group: {
+          type: 'object',
+          title: 'Groupe',
+          required: ['_id', 'title', 'slug'],
+          properties: {
+            _id: { type: 'string' },
+            title: { type: 'string' },
+            slug: { type: 'string' }
+          },
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/groups?select=_id,title,slug',
+              itemsResults: 'data.results',
+              itemTitle: 'item.title',
+              itemKey: 'item._id'
+            }
+          }
         }
       }
     },
-    // TODO: add events and news metadata
     elements: {
       type: 'array',
       layout: {
@@ -60,6 +87,16 @@ export default {
       items: {
         $ref: 'https://github.com/data-fair/portals/page-elements#/$defs/element'
       }
+    }
+  },
+  $defs: {
+    slug: {
+      type: 'string',
+      title: 'Slug',
+      // This pattern is only a client-side validation.
+      // The actual check is done on the API, which compares the input
+      // with the result of slugify and returns an error if they differ.
+      pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
     }
   }
 }

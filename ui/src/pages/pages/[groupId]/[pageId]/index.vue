@@ -58,7 +58,7 @@ const tab = useStringSearchParam('tab', { default: 'preview' })
 const groupTitle = computed(() => {
   const page = pageFetch.data.value
   if (!page) return ''
-  if (page.type === 'generic' && page.config.group) return page.config.group.title
+  if (page.type === 'generic' && page.config.genericMetadata?.group) return page.config.genericMetadata.group.title
   return t('groupTitle.' + route.params.groupId)
 })
 

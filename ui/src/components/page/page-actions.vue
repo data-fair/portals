@@ -67,7 +67,7 @@
       <v-card
         variant="elevated"
         :title="t('deletingPage')"
-        :text="t('confirmDeletePage', { title: pageFetch.data.value?.title })"
+        :text="t('confirmDeletePage', { title: pageFetch.data.value?.config.title })"
         :loading="deletePage.loading.value ? 'warning' : undefined"
       >
         <v-card-actions>

@@ -59,7 +59,7 @@ services:
       - PORT=8082
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - DIRECTORY_URL=http://localhost:5607/simple-directory
-      - NOTIFY_URL=http://localhost:5600/events
+      - NOTIFY_URL=http://localhost:5607/events
       - PRIVATE_DIRECTORY_URL=http://localhost:8081
       - PUBLIC_URL=http://localhost:5607/data-fair
       - WS_PUBLIC_URL=ws://localhost:5607/data-fair

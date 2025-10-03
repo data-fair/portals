@@ -2,6 +2,7 @@ import type { ImageRef, Page, PageElement } from '#types/page/index.ts'
 import mongo from '#mongo'
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import slug from 'slugify'
 
 const debug = debugModule('pages')
 
@@ -18,12 +19,59 @@ export const createPage = async (page: Page) => {
 }
 
 export const patchPage = async (page: Page, patch: Partial<Page>, session: SessionStateAuthenticated) => {
+  // Validate metadata for pages that require it
+  if (['event', 'news', 'generic'].includes(page.type) && patch.draftConfig) {
+    const metadataKey = `${page.type}Metadata` as 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
+    const metadata = patch.draftConfig[metadataKey]
+
+    // Check if metadata exists
+    if (!metadata) throw httpError(400, `Pages of type "${page.type}" must have ${metadataKey}`)
+
+    // Validate slug format
+    const validSlug = slug.default(metadata.slug, { lower: true, strict: true })
+    if (metadata.slug !== validSlug) throw httpError(400, `Invalid slug "${metadata.slug}". An accepted format is: "${validSlug}"`)
+  }
+
+  // Check if trying to unpublish a home page
+  if (patch.portals && page.type === 'home') {
+    const removedPortals = page.portals.filter(portalId => !patch.portals!.includes(portalId))
+    if (removedPortals.length > 0) {
+      throw httpError(400, 'You cannot unpublish home page')
+    }
+  }
+
+  // Handle standard page type publication: auto-switch pages of same type on the same portal
+  if (patch.portals && ['home', 'contact', 'privacy-policy'].includes(page.type)) {
+    const addedPortals = patch.portals.filter(portalId => !page.portals.includes(portalId))
+    if (addedPortals.length > 0) {
+      await switchStandardPages(page, addedPortals, session)
+    }
+  }
+
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
   }
   const updatedPage = { ...page, ...fullPatch }
-  await mongo.pages.updateOne({ _id: page._id }, { $set: fullPatch })
+
+  try {
+    await mongo.pages.updateOne({ _id: page._id }, { $set: fullPatch })
+  } catch (err: any) {
+    // Throw a 409 error with a user-friendly message when a slug already exists
+    if (err.code === 11000) {
+      const indexMatch = err.message.match(/index: ([^\s]+)/)
+      const indexName = indexMatch ? indexMatch[1] : ''
+      if (indexName.includes('event-slug')) {
+        throw httpError(409, 'An event page with this slug already exists for this owner')
+      } else if (indexName.includes('news-slug')) {
+        throw httpError(409, 'A news page with this slug already exists for this owner')
+      } else if (indexName.includes('generic-slug')) {
+        throw httpError(409, 'A generic page with this slug already exists for this owner')
+      }
+    }
+    throw err
+  }
+
   return updatedPage
 }
 
@@ -100,5 +148,29 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
       await traversePageElements(element.children, callback)
       await traversePageElements(element.children2, callback)
     }
+  }
+}
+
+const switchStandardPages = async (page: Page, addedPortals: string[], session: SessionStateAuthenticated) => {
+  // Find other pages of the same type already published on these portals
+  const conflictingPages = await mongo.pages.find({
+    _id: { $ne: page._id },
+    type: page.type,
+    portals: { $in: addedPortals }
+  }).toArray()
+
+  // Unpublish conflicting pages from the added portals
+  for (const conflictingPage of conflictingPages) {
+    const newPortals = conflictingPage.portals.filter(portalId => !addedPortals.includes(portalId))
+    await mongo.pages.updateOne(
+      { _id: conflictingPage._id },
+      {
+        $set: {
+          portals: newPortals,
+          updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+        }
+      }
+    )
+    debug(`Unpublished ${page.type} page "${conflictingPage._id}" from portals:`, addedPortals)
   }
 }

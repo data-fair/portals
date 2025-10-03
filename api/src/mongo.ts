@@ -38,7 +38,10 @@ export class PortalsMongo {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 }
       },
       pages: {
-        'main-keys': { 'owner.type': 1, 'owner.id': 1 }
+        'main-keys': { 'owner.type': 1, 'owner.id': 1 },
+        'unique-event-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.eventMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.eventMetadata.slug': { $exists: true } } }],
+        'unique-news-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.newsMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.newsMetadata.slug': { $exists: true } } }],
+        'unique-generic-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.genericMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.genericMetadata.slug': { $exists: true } } }]
       },
       images: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, 'resource.type': 1, 'resource._id': 1 }

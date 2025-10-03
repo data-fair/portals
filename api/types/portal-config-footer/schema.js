@@ -231,73 +231,111 @@ export default {
     linkItem: {
       type: 'object',
       unevaluatedProperties: false,
-      default: { type: 'custom' },
       oneOfLayout: {
         emptyData: true,
       },
       oneOf: [{
-        required: ['title'],
-        title: 'Catalogue des jeux de données',
+        title: 'Page standard',
+        required: ['type', 'subtype', 'title'],
         properties: {
-          type: { const: 'datasets' },
+          type: {
+            const: 'standard'
+          },
+          subtype: {
+            type: 'string',
+            title: 'Type de page',
+            default: 'home',
+            oneOf: [{ const: 'home', title: 'Accueil' },
+              { const: 'contact', title: 'Contact' },
+              { const: 'privacy-policy', title: 'Politique de confidentialité' },
+              { const: 'datasets', title: 'Catalogue de données' },
+              { const: 'applications', title: 'Catalogue de visualisation' },
+              { const: 'event', title: 'Liste des événements' },
+              { const: 'news', title: 'Liste des actualités' },
+              { const: 'sitemap', title: 'Plan du site' }
+            ],
+            layout: { cols: { md: 6 } }
+          },
           title: {
             type: 'string',
-            default: 'Jeux de données',
-            title: 'Libellé'
+            title: 'Libellé',
+            layout: { cols: { md: 6 } }
           }
         }
       }, {
-        required: ['title'],
-        title: 'Catalogue des visualisations',
+        title: 'Page d\'événements',
+        required: ['type', 'title', 'pageRef'],
         properties: {
-          type: { const: 'applications' },
-          title: {
-            type: 'string',
-            default: 'Visualisations',
-            title: 'Libellé'
-          }
-        }
-      }, {
-        required: ['title'],
-        title: 'Page de contact',
-        properties: {
-          type: { const: 'contact' },
-          title: {
-            type: 'string',
-            default: 'Contact',
-            title: 'Libellé'
-          }
-        }
-      }, {
-        title: 'Plan du site',
-        properties: {
-          type: { const: 'sitemap' }
-        }
-      }, {
-        title: 'Politique de confidentialité',
-        properties: {
-          type: { const: 'privacy-policy' }
-        }
-      }, {
-        required: ['title'],
-        title: 'Page éditée',
-        properties: {
-          type: { const: 'custom' },
+          type: { const: 'event' },
           pageRef: {
             type: 'object',
-            required: ['_id', 'title'],
+            required: ['slug', 'title'],
             title: 'Page',
             layout: {
-              getItems: {
-                url: '/portals-manager/api/pages?select=_id,title',
-                itemsResults: 'data.results.map(r => ({_id: r._id, title: r.title}))',
-                itemTitle: 'item.title',
-                itemKey: 'item._id'
-              }
+              getItems: 'options.context.pages.event',
+              cols: { md: 6 }
             },
             properties: {
-              _id: { type: 'string' },
+              slug: { type: 'string' },
               title: { type: 'string' }
+            }
+          },
+          title: {
+            type: 'string',
+            title: 'Libellé',
+            default: 'Événements',
+            layout: { cols: { md: 6 } }
+          }
+        }
+      }, {
+        title: 'Page d\'actualités',
+        required: ['type', 'title', 'pageRef'],
+        properties: {
+          type: { const: 'news' },
+          pageRef: {
+            type: 'object',
+            required: ['slug', 'title'],
+            title: 'Page',
+            layout: {
+              getItems: 'options.context.pages.news',
+              cols: { md: 6 }
+            },
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          title: {
+            type: 'string',
+            title: 'Libellé',
+            default: 'Actualités',
+            layout: { cols: { md: 6 } }
+          }
+        }
+      }, {
+        title: 'Page éditée',
+        required: ['type', 'title', 'pageRef'],
+        properties: {
+          type: { const: 'generic' },
+          pageRef: {
+            type: 'object',
+            required: ['slug', 'title'],
+            title: 'Page',
+            layout: {
+              getItems: 'options.context.pages.generic',
+              cols: { md: 6 }
+            },
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' },
+              group: {
+                type: 'object',
+                properties: {
+                  _id: { type: 'string' },
+                  title: { type: 'string' },
+                  slug: { type: 'string' }
+                }
+              }
             }
           },
           title: {
@@ -307,7 +345,7 @@ export default {
         }
       }, {
         title: 'Lien externe',
-        required: ['title', 'href'],
+        required: ['type', 'title', 'href'],
         properties: {
           type: { const: 'external' },
           title: {

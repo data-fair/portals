@@ -167,7 +167,7 @@ onMounted(async () => {
     for (const child of childrenFetch.data.value?.results || []) {
       if (!child.userPermissions.includes('listDataFiles')) continue
       if (child.isVirtual || child.isRest || child.isMetaOnly) continue
-      const childrenFiles = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${child.id}/data-files`)).data.value || []
+      const childrenFiles: File[] = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${child.id}/data-files`)).data.value || []
       const file = childrenFiles?.find(f => f.key === 'original')
       if (file) filesRes.push(file)
     }

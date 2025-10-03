@@ -12,16 +12,14 @@ const route = useRoute()
 const slug = route.params.slug as string
 
 const { portalConfig } = usePortalStore()
-
-// Les pages génériques sans groupe (type='generic', pas de config.group)
-const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${slug}`, {
+const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/news/${slug}`, {
   watch: false
 })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/generic/${slug}/images/${id}`
+  return `/portal/api/pages/news/${slug}/images/${id}`
 })
 
 useSeoMeta({
@@ -31,6 +29,6 @@ useSeoMeta({
   description: pageConfigFetch.data.value?.description || portalConfig.value.description,
   ogTitle: pageConfigFetch.data.value?.title || portalConfig.value.title,
   ogDescription: pageConfigFetch.data.value?.description || portalConfig.value.description,
-  ogType: 'website'
+  ogType: 'article'
 })
 </script>

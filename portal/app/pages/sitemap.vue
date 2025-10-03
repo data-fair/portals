@@ -1,6 +1,6 @@
 <template>
   <div>
-    Contact
+    Sitemap
   </div>
 </template>
 

@@ -8,6 +8,7 @@
         v-if="vjsfOptions"
         v-model="editIngress"
         :options="vjsfOptions"
+        :locale="locale"
       />
 
       <v-row class="mx-0">
@@ -29,7 +30,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Portal, PortalIngress } from '#api/types/portal'
 import equal from 'fast-deep-equal'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute<'/portals/[id]/ingress'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)

@@ -57,10 +57,10 @@ router.post('', async (req, res, next) => {
     theme: fillTheme(defaultTheme, defaultTheme),
     menu: {
       children: [
-        { type: 'home', title: 'accueil' },
-        { type: 'datasets', title: 'jeux de données' },
-        { type: 'applications', title: 'visualisations' },
-        { type: 'contact', title: 'contact' }
+        { type: 'standard', subtype: 'home', title: 'accueil' },
+        { type: 'standard', subtype: 'datasets', title: 'jeux de données' },
+        { type: 'standard', subtype: 'applications', title: 'visualisations' },
+        { type: 'standard', subtype: 'contact', title: 'contact' }
       ]
     },
     header: {
@@ -80,7 +80,7 @@ router.post('', async (req, res, next) => {
       logoPrimaryType: 'default',
       extraLogos: [],
       linksMode: 'lines',
-      links: [{ type: 'sitemap' }, { type: 'privacy-policy' }],
+      links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }, { type: 'standard', subtype: 'privacy-policy', title: 'Politique de confidentialité' }],
       importantLinks: []
     },
     datasets: {

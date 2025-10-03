@@ -4,16 +4,12 @@ export default {
   title: 'Page',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'slug', 'type', 'owner', 'created', 'updated', 'config', 'draftConfig', 'portals', 'requestedPortals'],
+  required: ['_id', 'type', 'owner', 'created', 'updated', 'config', 'draftConfig', 'portals', 'requestedPortals'],
   properties: {
     _id: {
       type: 'string',
       title: 'Identifiant',
       readOnly: true
-    },
-    slug: {
-      type: 'string',
-      title: 'Slug'
     },
     type: {
       type: 'string',

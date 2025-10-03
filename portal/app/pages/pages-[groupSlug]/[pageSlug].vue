@@ -8,20 +8,15 @@
 <script setup lang="ts">
 import type { ImageRef, PageConfig } from '#api/types/page'
 
-const route = useRoute()
-const slug = route.params.slug as string
+const route = useRoute<'/pages/pages-[groupSlug]/[pageSlug]'>()
 
 const { portalConfig } = usePortalStore()
-
-// Les pages génériques sans groupe (type='generic', pas de config.group)
-const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${slug}`, {
-  watch: false
-})
+const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${route.params.pageSlug}`, { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/generic/${slug}/images/${id}`
+  return `/portal/api/pages/generic/${route.params.pageSlug}/images/${id}`
 })
 
 useSeoMeta({

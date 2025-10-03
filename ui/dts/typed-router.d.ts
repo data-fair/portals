@@ -28,5 +28,6 @@ declare module 'vue-router/auto-routes' {
     '/portals/': RouteRecordInfo<'/portals/', '/portals', Record<never, never>, Record<never, never>>,
     '/portals/[id]/': RouteRecordInfo<'/portals/[id]/', '/portals/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/portals/[id]/ingress': RouteRecordInfo<'/portals/[id]/ingress', '/portals/:id/ingress', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/portals/new': RouteRecordInfo<'/portals/new', '/portals/new', Record<never, never>, Record<never, never>>,
   }
 }

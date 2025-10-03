@@ -75,6 +75,26 @@ export default {
       title: 'Authentification',
       default: 'optional'
     },
+    theme: { $ref: 'https://github.com/data-fair/lib/theme' },
+    bodyFontFamily: {
+      type: 'string',
+      title: 'Police principale',
+      layout: {
+        getItems: {
+          url: '/portals-manager/api/assets/fonts.json'
+        }
+      }
+    },
+    headingFontFamily: {
+      type: 'string',
+      title: 'Police des titres',
+      hint: 'laissez vide pour utiliser la police principale',
+      layout: {
+        getItems: {
+          url: '/portals-manager/api/assets/fonts.json'
+        }
+      }
+    },
     logo: {
       type: 'object',
       title: 'Logo',
@@ -156,26 +176,6 @@ export default {
         }
       }
     },
-    theme: { $ref: 'https://github.com/data-fair/lib/theme' },
-    bodyFontFamily: {
-      type: 'string',
-      title: 'Police principale',
-      layout: {
-        getItems: {
-          url: '/portals-manager/api/assets/fonts.json'
-        }
-      }
-    },
-    headingFontFamily: {
-      type: 'string',
-      title: 'Police des titres',
-      hint: 'laissez vide pour utiliser la police principale',
-      layout: {
-        getItems: {
-          url: '/portals-manager/api/assets/fonts.json'
-        }
-      }
-    },
     header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     headerHome: {
       type: 'object',
@@ -230,72 +230,111 @@ export default {
     menuItem: {
       type: 'object',
       unevaluatedProperties: false,
-      default: { type: 'custom' },
+      oneOfLayout: {
+        emptyData: true,
+      },
       oneOf: [{
-        required: ['title'],
-        title: 'Page d\'accueil',
+        title: 'Page standard',
+        required: ['type', 'subtype', 'title'],
         properties: {
-          type: { const: 'home' },
+          type: {
+            const: 'standard'
+          },
+          subtype: {
+            type: 'string',
+            title: 'Type de page',
+            default: 'home',
+            oneOf: [{ const: 'home', title: 'Accueil' },
+              { const: 'contact', title: 'Contact' },
+              { const: 'privacy-policy', title: 'Politique de confidentialité' },
+              { const: 'datasets', title: 'Catalogue de données' },
+              { const: 'applications', title: 'Catalogue de visualisation' },
+              { const: 'event', title: 'Liste des événements' },
+              { const: 'news', title: 'Liste des actualités' },
+              { const: 'sitemap', title: 'Plan du site' }
+            ],
+            layout: { cols: { md: 6 } }
+          },
           title: {
             type: 'string',
             title: 'Libellé',
-            default: 'Accueil'
+            layout: { cols: { md: 6 } }
           }
         }
       }, {
-        required: ['title'],
-        title: 'Catalogue des jeux de données',
+        title: 'Page d\'événements',
+        required: ['type', 'title', 'pageRef'],
         properties: {
-          type: { const: 'datasets' },
-          title: {
-            type: 'string',
-            title: 'Libellé',
-            default: 'Jeux de données'
-          }
-        }
-      }, {
-        required: ['title'],
-        title: 'Catalogue des visualisations',
-        properties: {
-          type: { const: 'applications' },
-          title: {
-            type: 'string',
-            title: 'Libellé',
-            default: 'Visualisations'
-          }
-        }
-      }, {
-        required: ['title'],
-        title: 'Page de contact',
-        properties: {
-          type: { const: 'contact' },
-          title: {
-            type: 'string',
-            title: 'Libellé',
-            default: 'Contact'
-          }
-        }
-      }, {
-        required: ['title'],
-        title: 'Page éditée',
-        properties: {
-          type: { const: 'custom' },
+          type: { const: 'event' },
           pageRef: {
             type: 'object',
-            required: ['_id', 'title', 'slug'],
+            required: ['slug', 'title'],
             title: 'Page',
             layout: {
-              getItems: {
-                url: '/portals-manager/api/pages?select=_id,title,slug',
-                itemsResults: 'data.results',
-                itemTitle: 'item.title',
-                itemKey: 'item._id'
-              }
+              getItems: 'options.context.pages.event',
+              cols: { md: 6 }
             },
             properties: {
-              _id: { type: 'string' },
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          title: {
+            type: 'string',
+            title: 'Libellé',
+            default: 'Événements',
+            layout: { cols: { md: 6 } }
+          }
+        }
+      }, {
+        title: 'Page d\'actualités',
+        required: ['type', 'title', 'pageRef'],
+        properties: {
+          type: { const: 'news' },
+          pageRef: {
+            type: 'object',
+            required: ['slug', 'title'],
+            title: 'Page',
+            layout: {
+              getItems: 'options.context.pages.news',
+              cols: { md: 6 }
+            },
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          title: {
+            type: 'string',
+            title: 'Libellé',
+            default: 'Actualités',
+            layout: { cols: { md: 6 } }
+          }
+        }
+      }, {
+        title: 'Page éditée',
+        required: ['type', 'title', 'pageRef'],
+        properties: {
+          type: { const: 'generic' },
+          pageRef: {
+            type: 'object',
+            required: ['slug', 'title'],
+            title: 'Page',
+            layout: {
+              getItems: 'options.context.pages.generic',
+              cols: { md: 6 }
+            },
+            properties: {
+              slug: { type: 'string' },
               title: { type: 'string' },
-              slug: { type: 'string' }
+              group: {
+                type: 'object',
+                properties: {
+                  _id: { type: 'string' },
+                  title: { type: 'string' },
+                  slug: { type: 'string' }
+                }
+              }
             }
           },
           title: {
@@ -305,7 +344,7 @@ export default {
         }
       }, {
         title: 'Sous-menu',
-        required: ['children'],
+        required: ['type', 'title', 'children'],
         properties: {
           type: { const: 'submenu' },
           title: {
@@ -320,7 +359,7 @@ export default {
         }
       }, {
         title: 'Lien externe',
-        required: ['title', 'href'],
+        required: ['type', 'title', 'href'],
         properties: {
           type: { const: 'external' },
           title: {

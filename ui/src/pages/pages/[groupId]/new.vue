@@ -357,7 +357,10 @@ const createPage = useAsyncAction(
     }
 
     // Use selected pageType for standard group, otherwise use groupId
-    const type = isStandardGroup ? pageType.value : route.params.groupId
+    let type: string
+    if (route.params.groupId === 'standard' && pageType.value) type = pageType.value
+    else if (route.params.groupId === 'event' || route.params.groupId === 'news') type = route.params.groupId
+    else type = 'generic'
 
     const page = await $fetch($apiPath + '/pages', {
       method: 'POST',

@@ -104,6 +104,7 @@ const pagesParams = computed(() => {
     params.type = 'news'
   } else if (route.params.groupId === 'default') {
     params.type = 'generic'
+    params.groupId = 'default' // Special value to get generic pages without group
   } else { // Custom groups: generic pages with specific groupId
     params.type = 'generic'
     params.groupId = route.params.groupId

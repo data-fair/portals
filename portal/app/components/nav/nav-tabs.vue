@@ -23,14 +23,14 @@
       <v-tab
         v-else-if="link?.type === 'external'"
         :text="link.title"
-        :href="resolveHref(link)"
+        :href="link.href"
         target="_blank"
         rel="noopener"
       />
       <v-tab
         v-else
         :text="link?.title"
-        :to="resolveHref(link)"
+        :to="useResolveLink(link)"
       />
     </template>
   </v-tabs>
@@ -47,21 +47,10 @@ defineProps<{
 
 const activeTab = ref('datasets')
 
-const resolveHref = (link: MenuItem) => {
-  switch (link.type) {
-    case 'external': return link.href
-    case 'custom': return link.pageRef ? `/pages/${link.pageRef.slug}` : undefined
-    case 'datasets': return '/datasets'
-    case 'applications': return '/applications'
-    case 'contact': return '/contact'
-    case 'home': return '/'
-    default: return undefined
-  }
-}
-
 </script>
 
 <style scoped lang="css">
+/* Increase the height of the tab slider */
 :deep(.v-tab__slider) {
   height: 4px !important;
 }

@@ -48,12 +48,15 @@ watch(pageFetch.data, () => {
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
 
-const vjsfOptions: VjsfOptions = {
+const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
-  initialValidation: 'always'
-}
+  initialValidation: 'always',
+  context: {
+    pageType: pageFetch.data.value?.type
+  }
+}))
 const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
     minHeight: '100%',
@@ -73,7 +76,7 @@ const saveDraft = useAsyncAction(async () => {
 const groupTitle = computed(() => {
   const page = pageFetch.data.value
   if (!page) return ''
-  if (page.type === 'generic' && page.config.group) return page.config.group.title
+  if (page.type === 'generic' && page.config.genericMetadata?.group) return page.config.genericMetadata.group.title
   return t('groupTitle.' + route.params.groupId)
 })
 
