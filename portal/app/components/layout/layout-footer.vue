@@ -132,7 +132,7 @@
           </a>
           <NuxtLink
             v-else
-            :to="useResolveLink(link)"
+            :to="resolveLink(link)"
           >
             {{ link.title }}
           </NuxtLink>
@@ -163,7 +163,7 @@
           </a>
           <NuxtLink
             v-else
-            :to="useResolveLink(link)"
+            :to="resolveLink(link)"
           >
             {{ link.title }}
           </NuxtLink>
@@ -193,7 +193,7 @@
               </v-btn>
               <v-btn
                 v-else
-                :to="useResolveLink(link)"
+                :to="resolveLink(link)"
                 variant="text"
               >
                 {{ link.title }}
@@ -226,6 +226,7 @@ import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 const { t } = useI18n()
 defineProps<{ home?: boolean }>()
 const { portalConfig } = usePortalStore()
+const { resolveLink } = useNavigationStore()
 
 const logo = computed(() => {
   const { footer, header, logo: defaultLogo } = portalConfig.value

@@ -354,6 +354,7 @@ export default {
           children: {
             type: 'array',
             title: '',
+            layout: { listEditMode: 'inline' },
             items: { $ref: '#/$defs/menuItem' }
           }
         }

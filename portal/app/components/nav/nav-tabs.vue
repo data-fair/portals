@@ -19,7 +19,10 @@
             :value="i"
           />
         </template>
-        <nav-tabs-menu-item :children="link.children"/>
+        <nav-tabs-menu-item
+          :children="link.children"
+          :density="density"
+        />
       </v-menu>
       <v-tab
         v-else-if="link?.type === 'external'"
@@ -32,7 +35,7 @@
       <v-tab
         v-else
         :text="link?.title"
-        :to="useResolveLink(link)"
+        :to="resolveLink(link)"
         :value="i"
       />
     </template>
@@ -49,27 +52,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-
-/** Check if a menu item (or any of its children) matches the current route */
-function isMenuItemActive (item: MenuItem, currentPath: string): boolean {
-  if (item.type === 'external') return false
-
-  // Check if any child of the submenu matches the route
-  if (item.type === 'submenu' && item.children) {
-    return item.children.some(child => isMenuItemActive(child, currentPath))
-  }
-
-  // Resolve the link to compare with the current route
-  const resolvedLink = useResolveLink(item)
-  if (!resolvedLink) return false
-
-  // Exact match for the homepage
-  if (resolvedLink === '/' && currentPath === '/') return true
-  // Check if the current path starts with the resolved link, but avoid matching '/' with everything
-  if (resolvedLink !== '/' && currentPath.startsWith(resolvedLink)) return true
-
-  return false
-}
+const { isMenuItemActive, resolveLink } = useNavigationStore()
 
 /** Get the active tab index based on the current route */
 const computedActiveTab = computed(() => {

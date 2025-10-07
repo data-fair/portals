@@ -1,9 +1,6 @@
 <template>
-  <!-- Smaller screens: navigation in menu -->
-  <nav-menu
-    v-if="$vuetify.display.smAndDown"
-    :navigation="navigation"
-  />
+  <!-- Smaller screens: navigation in drawer -->
+  <nav-drawer-activator v-if="$vuetify.display.smAndDown" />
 
   <!-- Larger screens: navigation in tabs -->
   <nav-tabs

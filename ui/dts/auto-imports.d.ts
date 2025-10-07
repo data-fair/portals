@@ -106,7 +106,6 @@ declare global {
   const usePageStore: typeof import('../src/composables/use-page-store')['usePageStore']
   const usePortalStore: typeof import('../src/composables/use-portal-store')['usePortalStore']
   const useReactiveSearchParams: typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']
-  const useResolveLink: typeof import('../src/composables/use-resolve-link')['useResolveLink']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useSession: typeof import('@data-fair/lib-vue/session.js')['useSession']
@@ -242,7 +241,6 @@ declare module 'vue' {
     readonly usePageStore: UnwrapRef<typeof import('../src/composables/use-page-store')['usePageStore']>
     readonly usePortalStore: UnwrapRef<typeof import('../src/composables/use-portal-store')['usePortalStore']>
     readonly useReactiveSearchParams: UnwrapRef<typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']>
-    readonly useResolveLink: UnwrapRef<typeof import('../src/composables/use-resolve-link')['useResolveLink']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSession: UnwrapRef<typeof import('@data-fair/lib-vue/session.js')['useSession']>

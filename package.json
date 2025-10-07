@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "build-types": "mkdir -p ui/src/components/vjsf && rm -f ui/src/components/vjsf/* && df-build-types . --vjsf-dir ui/src/components/vjsf",
-    "check-types": "tsc && npm -w ui run check-types",
+    "check-types": "tsc && npm -w portal run check-types && npm -w ui run check-types",
     "dev-api": "npm -w api run dev",
     "dev-deps": "docker compose --profile dev up -d --wait",
-    "stop-dev-deps": "docker compose stop",
+    "stop-dev-deps": "docker compose --profile dev --profile test stop",
     "test-deps": "docker compose --profile test up -d --wait",
     "dev-ui": "npm -w ui run dev",
     "dev-ingress-manager": "NODE_ENV=development node --disable-warning=ExperimentalWarning --watch dev/ingress-manager.ts",

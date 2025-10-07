@@ -17,8 +17,15 @@
 
     <!-- Navigation Bar (64px) -->
     <template #extension>
-      <v-container fluid class="pa-0 h-100">
-        <v-row align="center" no-gutters class="h-100">
+      <v-container
+        fluid
+        class="pa-0 h-100"
+      >
+        <v-row
+          align="center"
+          no-gutters
+          class="h-100"
+        >
           <layout-header-logo
             v-if="logo && !headerConfig.show"
             :height="(appBarHeight || 64) - 10"
@@ -27,7 +34,7 @@
             class="pl-4"
           />
 
-          <nav-tabs-or-menu
+          <nav-tabs-or-drawer
             :navigation="portalConfig.menu.children"
             :density="headerConfig.density"
           />
@@ -44,6 +51,10 @@
       </v-container>
     </template>
   </component>
+  <nav-drawer
+    :navigation="portalConfig.menu.children"
+    :density="headerConfig.density"
+  />
 </template>
 
 <script setup lang="ts">

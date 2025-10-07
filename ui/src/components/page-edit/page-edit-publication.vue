@@ -54,11 +54,11 @@
           <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
         </v-list-item-subtitle>
         <v-list-item-subtitle
-          v-if="portal.ingress && page.portals.includes(portal._id)"
+          v-if="portal.ingress && page.portals.includes(portal._id) && getPageUrl(page)"
           class="mb-2"
         >
-          <a :href="portal.ingress.url + '/pages/' + page.slug">
-            {{ portal.ingress.url + '/pages/' + page.slug }}
+          <a :href="portal.ingress.url + getPageUrl(page)">
+            {{ portal.ingress.url + getPageUrl(page) }}
           </a>
         </v-list-item-subtitle>
         <v-list-item-subtitle>
@@ -179,6 +179,22 @@ const toggleRequestedPortals = (id: string) => {
   if (!page.value) return
   const requestedPortals = page.value.requestedPortals.includes(id) ? page.value.requestedPortals.filter(i => i !== id) : [...page.value.requestedPortals, id]
   patchPage.execute({ requestedPortals })
+}
+
+const getPageUrl = (pageData: Page): string | undefined => {
+  switch (pageData.type) {
+    case 'home': return '/'
+    case 'contact': return '/contact'
+    case 'privacy-policy': return '/privacy-policy'
+    case 'event': return pageData.config.eventMetadata?.slug ? `/event/${pageData.config.eventMetadata.slug}` : undefined
+    case 'news': return pageData.config.newsMetadata?.slug ? `/news/${pageData.config.newsMetadata.slug}` : undefined
+    case 'generic': {
+      const metadata = pageData.config.genericMetadata
+      if (!metadata?.slug) return undefined
+      return `/pages${metadata.group ? `-${metadata.group.slug}` : ''}/${metadata.slug}`
+    }
+    default: return undefined
+  }
 }
 
 </script>

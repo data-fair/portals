@@ -4,12 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "check-types": "nuxt typecheck",
     "dev": "NUXT_MONGO_URL=mongodb://localhost:27017/data-fair-portals-development NUXT_DRAFT_URL_PATTERN=http://{id}.draft.localhost:5607 nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint-fix": "eslint --fix ."
+    "lint-fix": "eslint --fix .",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "imports": {
     "#api/types/*": "../api/types/*"
