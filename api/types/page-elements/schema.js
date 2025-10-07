@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 export default {
   $id: 'https://github.com/data-fair/portals/page-elements',
   'x-exports': ['types', 'vjsf'],
@@ -38,8 +39,13 @@ export default {
         { $ref: '#/$defs/element-title' },
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-image' },
+        { $ref: '#/$defs/element-iframe' },
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-contact' },
+        { $ref: '#/$defs/element-dataset-card' },
+        { $ref: '#/$defs/element-dataset-table' },
+        { $ref: '#/$defs/element-dataset-form' },
+        { $ref: '#/$defs/element-application' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
@@ -200,6 +206,26 @@ export default {
         }
       }
     },
+    'element-iframe': {
+      type: 'object',
+      title: 'IFrame',
+      required: ['type', 'url'],
+      properties: {
+        type: {
+          const: 'iframe'
+        },
+        title: {
+          title: "Titre de l'iframe",
+          description: "Recommandé pour l'accessibilité.",
+          type: 'string'
+        },
+        url: {
+          title: "URL de l'iframe",
+          description: "URL de la page web à afficher dans l'iframe.",
+          type: 'string'
+        }
+      }
+    },
     'element-divider': {
       type: 'object',
       title: 'Séparateur horizontal',
@@ -259,6 +285,254 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: 'Afficher les liens de réseaux sociaux'
+        }
+      }
+    },
+    'element-dataset-card': {
+      type: 'object',
+      title: 'Dataset card',
+      'x-i18n-title': {
+        fr: 'Vignette d\'un jeu de données'
+      },
+      required: ['type', 'dataset', 'cardsLayout', 'showActions', 'cropThumbnails', 'actionsStyle'],
+      properties: {
+        type: {
+          const: 'dataset-card'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            }
+          }
+        },
+        cardsLayout: {
+          type: 'string',
+          title: 'Disposition de la vignettes',
+          default: 'medium',
+          oneOf: [
+            { const: 'horizontal', title: 'Horizontale' },
+            { const: 'medium', title: 'Verticale' }
+          ]
+        },
+        useApplicationThumbnail: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Utiliser les vignettes d\'application',
+          description: 'Utiliser l\'image de la première application comme vignette si aucune image n\'est définie pour le jeu de données. Si le jeu de données n\'a pas d\'image ni d\'application, sa description sera affichée.',
+          default: false
+        },
+        cropThumbnails: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Recadrer automatiquement les vignettes pour un rendu uniforme',
+          description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+          default: true
+        },
+        showActions: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les boutons d\'actions',
+          description: 'Affiche les boutons d\'actions sur les vignettes des applications.',
+          default: true
+        },
+        actionsStyle: {
+          type: 'string',
+          title: 'Style des boutons d\'actions',
+          default: 'full',
+          oneOf: [
+            {
+              title: 'Icône seulement',
+              const: 'icon'
+            },
+            {
+              title: 'Icône et texte',
+              const: 'full'
+            },
+            {
+              title: 'Texte seulement',
+              const: 'text'
+            }
+          ]
+        }
+      }
+    },
+    'element-dataset-table': {
+      type: 'object',
+      title: 'Dataset table',
+      'x-i18n-title': {
+        fr: 'Tableau d\'un jeu de données'
+      },
+      required: ['type', 'dataset', 'interactions'],
+      properties: {
+        type: {
+          const: 'dataset-table'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            href: { type: 'string' }
+          }
+        },
+        syncParams: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Synchroniser les paramètres d\'URL',
+          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
+          default: true
+        },
+        display: {
+          type: 'string',
+          title: 'Mode d\'affichage par défaut',
+          description: 'L\'utilisateur final peut modifier le mode d\'affichage sauf si les interactions sont désactivées.',
+          oneOf: [
+            {
+              title: 'Table',
+              const: 'table'
+            },
+            {
+              title: 'Table dense',
+              const: 'table-dense'
+            },
+            {
+              title: 'Liste de vignettes',
+              const: 'list'
+            }
+          ]
+        },
+        cols: {
+          title: 'Colonnes visibles par défaut',
+          description: 'Si aucune colonne n\'est sélectionnée, toutes les colonnes seront affichées par défaut. L\'utilisateur final peut modifier les colonnes visibles sauf si les interactions sont désactivées.',
+          type: 'array',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets/${parent.data.dataset.id}/schema?calculated=false',
+              itemTitle: 'item.label',
+              itemValue: 'item.key'
+            }
+          },
+          items: { type: 'string' }
+        },
+        interactions: {
+          title: 'Autoriser les interactions',
+          description: 'Autorise le tri, la recherche, les filtres,...',
+          type: 'boolean',
+          default: true
+        }
+      }
+    },
+    'element-dataset-form': {
+      type: 'object',
+      title: 'Dataset form',
+      'x-i18n-title': {
+        fr: 'Formulaire d\'un jeu de données'
+      },
+      required: ['type', 'dataset'],
+      properties: {
+        type: {
+          const: 'dataset-form'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            }
+          }
+        }
+      }
+    },
+    'element-application': {
+      type: 'object',
+      title: 'Application',
+      'x-i18n-title': {
+        fr: 'Visualisation'
+      },
+      required: ['type', 'application'],
+      properties: {
+        type: {
+          const: 'application'
+        },
+        application: {
+          type: 'object',
+          title: 'Application',
+          'x-i18n-title': {
+            fr: 'Visualisations'
+          },
+          additionalProperties: false,
+          required: ['id', 'title', 'exposedUrl'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,exposedUrl',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            },
+            exposedUrl: {
+              type: 'string'
+            }
+          }
+        },
+        syncParams: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Synchroniser les paramètres d\'URL',
+          description: 'Si activé, les paramètres de la page seront transmis à l\'application. Utile pour partager la page avec une vue spécifique de l\'application.',
+          default: true
         }
       }
     },

@@ -1,7 +1,10 @@
 <template>
-  <span style="cursor: pointer">
+  <a
+    href="#"
+    @click.prevent
+  >
     <slot />
-  </span>
+  </a>
 </template>
 
 <script setup lang="ts">

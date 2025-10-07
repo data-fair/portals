@@ -17,7 +17,9 @@
       <v-card-text v-else>{{ dataset.description }}</v-card-text>
 
       <v-list-item v-if="portalConfig.datasets.actionsStyle !== 'icon'">
-        <owner-avatar :owner="dataset.owner" />
+        <template #prepend>
+          <owner-avatar :owner="dataset.owner" />
+        </template>
         <span class="text-caption ml-2">
           {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
         </span>

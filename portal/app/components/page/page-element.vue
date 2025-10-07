@@ -15,12 +15,32 @@
     v-else-if="element.type === 'image'"
     :element="element"
   />
+  <page-element-iframe
+    v-else-if="element.type === 'iframe'"
+    :element="element"
+  />
   <page-element-divider
     v-else-if="element.type === 'divider'"
     :element="element"
   />
   <page-element-contact
     v-else-if="element.type === 'contact'"
+    :element="element"
+  />
+  <page-element-dataset-card
+    v-else-if="element.type === 'dataset-card'"
+    :element="element"
+  />
+  <page-element-dataset-table
+    v-else-if="element.type === 'dataset-table'"
+    :element="element"
+  />
+  <page-element-dataset-form
+    v-else-if="element.type === 'dataset-form'"
+    :element="element"
+  />
+  <page-element-application
+    v-else-if="element.type === 'application'"
     :element="element"
   />
   <page-element-card

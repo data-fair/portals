@@ -10,7 +10,7 @@ export function useResolveLink (link: LinkItem | MenuItem) {
         case 'datasets': return '/datasets'
         case 'applications': return '/applications'
         case 'news': return '/news'
-        case 'event': return '/events'
+        case 'event': return '/event'
         default: return undefined
       }
     }
