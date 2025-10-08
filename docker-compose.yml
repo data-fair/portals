@@ -69,7 +69,7 @@ services:
       - data-fair-data:/data
 
   #####
-  # optional services from the data-fair stack
+  # optional services
   #####
 
   events:
@@ -106,6 +106,15 @@ services:
   #   volumes:
   #     - ./data/processings:/app/data
 
+  # maildev:
+  #   profiles:
+  #     - dev
+  #     - test
+  #   image: maildev/maildev:2.2.1
+  #   ports:
+  #     - 1080:1080
+  #     - 1025:1025
+  
   #####
   # db and search engine
   #####

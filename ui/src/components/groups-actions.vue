@@ -34,7 +34,7 @@
         <v-textarea
           v-model="newGroupDescription"
           :label="t('newGroupDescription')"
-          :rules="[(v: string) => v.length <= 100 || t('maxCharacters')]"
+          :rules="[rules.maxLength(100)]"
           :counter="100"
           class="mt-4"
           density="comfortable"
@@ -77,9 +77,11 @@
 
 <script setup lang="ts">
 import type { Group } from '#api/types/group'
+import { useRules } from 'vuetify/labs/rules'
 import { mdiPlusCircle } from '@mdi/js'
 
 const { t } = useI18n()
+const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const router = useRouter()
 const session = useSessionAuthenticated()
 const showAll = defineModel('showAll', { type: Boolean, default: false })
@@ -113,7 +115,6 @@ const createGroup = useAsyncAction(async () => {
     newGroupDescription: Description
     search: Search
     showAllGroups: Show all groups
-    maxCharacters: Maximum 100 characters
 
   fr:
     cancel: Annuler
@@ -123,6 +124,5 @@ const createGroup = useAsyncAction(async () => {
     newGroupDescription: Description
     search: Rechercher
     showAllGroups: Voir tous les groupes
-    maxCharacters: Maximum 100 caractères
 
 </i18n>

@@ -1,7 +1,5 @@
 <template>
-  <v-list-item
-    :to="`/pages/${route.params.groupId}/new`"
-  >
+  <v-list-item :to="`/pages/${route.params.groupId}/new`">
     <template #prepend>
       <v-icon
         color="primary"
@@ -48,7 +46,7 @@
         <v-textarea
           v-model="editGroupDescription"
           :label="t('editGroupDescription')"
-          :rules="[(v: string) => v.length <= 100 || t('maxCharacters')]"
+          :rules="[rules.maxLength(100)]"
           :counter="100"
           class="mt-4"
           density="comfortable"
@@ -151,12 +149,14 @@
 </template>
 
 <script setup lang="ts">
+import { useRules } from 'vuetify/labs/rules'
 import { mdiMagnify, mdiPlusCircle, mdiPencil, mdiDelete } from '@mdi/js'
 
 const { t } = useI18n()
-const session = useSessionAuthenticated()
+const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const router = useRouter()
 const route = useRoute<'/pages/[groupId]/new'>()
+const session = useSessionAuthenticated()
 
 const search = defineModel('search', { type: String, default: '' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })

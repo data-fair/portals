@@ -4,22 +4,26 @@
       <v-form v-model="valid">
         <v-text-field
           v-model="message.from"
-          :rules="[v => !!v || '']"
           :label="t('email')"
+          :rules="[rules.required(), rules.email()]"
         />
         <v-text-field
           v-model="message.subject"
-          :rules="[v => !!v || '']"
           :label="t('subject')"
+          :rules="[rules.required(), rules.minLength(10), rules.maxLength(150)]"
+          :counter="150"
         />
         <v-textarea
           v-model="message.text"
           :label="t('message')"
+          :rules="[rules.required(), rules.minLength(50), rules.maxLength(3000)]"
+          :counter="3000"
         />
         <div class="d-flex justify-center">
           <v-btn
             :disabled="!valid"
             :loading="sendMessage.loading.value"
+            color="primary"
             @click="sendMessage.execute()"
           >
             {{ t('send') }}
@@ -33,10 +37,16 @@
       :md="4"
     >
       <v-card>
-          <v-card-text>
+        <v-card-text>
           <template v-if="element.showInfo">
-            <div v-if="portalConfig.contactInformations.infos" v-html="portalConfig.contactInformations.infos" />
-            <v-divider v-if="portalConfig.contactInformations.infos" class="my-2"/>
+            <div
+              v-if="portalConfig.contactInformations.infos"
+              v-html="portalConfig.contactInformations.infos"
+            />
+            <v-divider
+              v-if="portalConfig.contactInformations.infos"
+              class="my-2"
+            />
 
             <v-list-item
               v-if="portalConfig.contactInformations.phone"
@@ -57,7 +67,10 @@
           </template>
 
           <template v-if="element.showSocial && Object.keys(portalConfig.socialLinks).length">
-            <v-divider v-if="portalConfig.contactInformations.phone || portalConfig.contactInformations.website" class="my-2" />
+            <v-divider
+              v-if="portalConfig.contactInformations.phone || portalConfig.contactInformations.website"
+              class="my-2"
+            />
             <p class="text-caption">{{ t('socialMedia') }}</p>
             <social-links :links="portalConfig.socialLinks" />
           </template>
@@ -69,9 +82,12 @@
 
 <script setup lang="ts">
 import type { Contact } from '#api/types/page-config'
+import { useRules } from 'vuetify/labs/rules'
+import { useAsyncAction } from '@data-fair/lib-vue/async-action.js'
 import { mdiPhone, mdiWeb } from '@mdi/js'
 
 const { element } = defineProps<{ element: Contact }>()
+const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
 
@@ -84,19 +100,23 @@ if (!preview) {
   tokenFetch = useLocalFetch('/simple-directory/api/auth/anonymous-action', { watch: false })
 }
 
-const sendMessage = {
-  loading: ref(false),
-  async execute () {
-    console.log('Send message')
-  }
-}
-// TODO: Send email
-// const sendMessage = useAsyncAction(async () => {
-//   if (!valid.value || tokenFetch?.error.value) return
-//   message.value = { ...newMessage }
-// }, {
-//   success: t('messageSent'),
-// })
+const sendMessage = useAsyncAction(async () => {
+  if (!valid.value || tokenFetch?.error.value || !tokenFetch?.data.value) return
+
+  await $fetch('/simple-directory/api/mails/contact', {
+    method: 'POST',
+    body: {
+      token: tokenFetch.data.value,
+      from: message.value.from,
+      subject: message.value.subject,
+      text: message.value.text
+    },
+  })
+
+  message.value = { ...newMessage } // Reset form
+}, {
+  success: t('messageSent'),
+})
 
 </script>
 

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
 import { createVuetify } from 'vuetify'
+import { createRulesPlugin } from 'vuetify/labs/rules'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { vuetifySessionOptions } from '@data-fair/lib-vuetify'
 import '@data-fair/lib-vuetify/style/global.scss'
@@ -29,6 +30,8 @@ import App from './App.vue'
     ...vuetifySessionOptions(session, $cspNonce),
     icons: { defaultSet: 'mdi', aliases, sets: { mdi, } }
   })
+  const vuetifyRules = createRulesPlugin({ }, vuetify.locale)
+
   const i18n = createI18n({ locale: session.state.lang })
   // (window as any).vIframeOptions = { router }
 
@@ -39,6 +42,7 @@ import App from './App.vue'
     .use(localeDayjs)
     .use(uiNotif)
     .use(vuetify)
+    .use(vuetifyRules)
     .use(i18n)
     .mount('#app')
 })()

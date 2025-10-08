@@ -1,6 +1,6 @@
 <template>
   <layout-preview
-    :icon="mdiImageSizeSelectLarge"
+    :icon="mdiFlipToFront"
     :text="t('preview')"
     :short-text="t('previewShort')"
     :title="t('preview') + ' - ' + application.title"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiImageSizeSelectLarge } from '@mdi/js'
+import { mdiFlipToFront } from '@mdi/js'
 
 const { application } = defineProps<{
   application: {

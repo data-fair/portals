@@ -3,12 +3,16 @@
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
+      <ClientOnly>
+        <UiNotif />
+      </ClientOnly>
     </NuxtLayout>
   </v-app>
 </template>
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/page-elements'
+import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { useTheme } from 'vuetify'
 
 const { $portal } = useNuxtApp()

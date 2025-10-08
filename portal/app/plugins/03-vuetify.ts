@@ -1,5 +1,8 @@
 import '@data-fair/lib-vuetify/style/global.scss'
+import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
+
 import { createVuetify } from 'vuetify'
+import { createRulesPlugin } from 'vuetify/labs/rules'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { fr, en } from 'vuetify/locale'
 
@@ -50,5 +53,9 @@ export default defineNuxtPlugin(({ vueApp }) => {
       }
     }
   })
+  const uiNotif = createUiNotif()
+
+  vueApp.use(createRulesPlugin({ }, vuetify.locale))
   vueApp.use(vuetify)
+  vueApp.use(uiNotif)
 })
