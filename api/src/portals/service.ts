@@ -110,7 +110,8 @@ const getSDSites = async (portal: Portal) => {
       logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
       bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.draftConfig.bodyFontFamily),
       headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.draftConfig.headingFontFamily)
-    }
+    },
+    contact: portal.draftConfig.contactInformations.email
   }]
   if (portal.ingress) {
     sites.push({
@@ -122,7 +123,8 @@ const getSDSites = async (portal: Portal) => {
         logo: portal.config.logo && getImageSrc(portal.config.logo, true),
         bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.config.bodyFontFamily),
         headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.config.headingFontFamily)
-      }
+      },
+      contact: portal.config.contactInformations.email
     })
   }
   return sites
@@ -215,12 +217,21 @@ const cleanUnusedImages = async (portal: Portal) => {
     portal.config.logo,
     portal.config.logoDark,
     portal.config.favicon,
+    portal.config.footer.logoPrimary,
+    portal.config.footer.backgroundImage,
+    portal.config.header.logoPrimary,
+    portal.config.header.logoPrimaryMobile,
     portal.config.header.logoSecondary,
     portal.draftConfig.logo,
     portal.draftConfig.logoDark,
-    portal.draftConfig.favicon,
-    portal.config.header.logoSecondary
+    portal.draftConfig.favicon
   ]
+  // List of footer extra logos
+  if (portal.config.footer.extraLogos) {
+    for (const extraLogo of portal.config.footer.extraLogos) {
+      imageRefs.push(extraLogo.logo)
+    }
+  }
 
   for (const imageRef of imageRefs) {
     if (!imageRef) continue

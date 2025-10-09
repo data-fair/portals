@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO: Redirect to the true back-office -->
+  <!-- TODO: Add main redirect ? -->
   <d-frame-wrapper
     :iframe-title="t('organization')"
     :src="`/simple-directory/organization/${session.account.value.id}?redirect=${encodeURIComponent(url.origin + '/me/account')}&main_redirect=${encodeURIComponent(url.origin + '/data-fair')}`"

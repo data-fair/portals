@@ -50,7 +50,7 @@
     />
     <!-- TODO: Add owner filter -->
 
-    <!-- Order -->
+    <!-- Sort/Order -->
     <v-select
       v-model="sort"
       :items="sortItems"
@@ -58,6 +58,7 @@
       density="comfortable"
       variant="outlined"
       hide-details
+      clearable
     >
       <template #append>
         <v-btn-toggle
@@ -140,7 +141,7 @@ type Concept = {
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const search = useStringSearchParam('q')
-const sort = useStringSearchParam('sort', { default: portalConfig.value.datasets.defaultSort })
+const sort = useStringSearchParam('sort')
 const filters = {
   concepts: useStringsArraySearchParam('concept'),
   topics: useStringsArraySearchParam('topic'),
@@ -156,7 +157,14 @@ const datasetsQuery = computed(() => {
     truncate: '250'
   }
   if (search.value) query.q = search.value
-  if (sort.value !== portalConfig.value.datasets.defaultSort || order.value !== 0) query.sort = sort.value + ':' + (order.value * 2 - 1)
+
+  if (sort.value) {
+    query.sort = sort.value + ':' + (order.value * 2 - 1)
+  } else if (!search.value) {
+    query.sort = portalConfig.value.datasets.defaultSort + ':' + (order.value * 2 - 1)
+  }
+  // Otherwise (active search without user-defined sort) => no sort parameter, use relevance order returned by MongoDB
+
   if (filters.concepts.value?.length) query.concepts = filters.concepts.value.join(',')
   if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
   if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')

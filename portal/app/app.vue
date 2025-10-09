@@ -39,7 +39,7 @@ useHead({
   htmlAttrs: { lang: session.state.lang },
   meta: [
     { name: 'theme-color', content: theme.current.value.colors.primary },
-    { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
+    // { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
   ],
   link
 })

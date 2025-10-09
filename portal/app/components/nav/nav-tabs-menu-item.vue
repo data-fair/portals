@@ -12,6 +12,7 @@
       :target="link.type === 'external' ? '_blank' : undefined"
       :rel="link.type === 'external' ? 'noopener' : undefined"
       color="primary"
+      link
     >
       <v-menu
         v-if="link.type === 'submenu' && link.children?.length"

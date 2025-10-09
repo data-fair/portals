@@ -43,6 +43,7 @@
       density="comfortable"
       variant="outlined"
       hide-details
+      clearable
     >
       <template #append>
         <v-btn-toggle

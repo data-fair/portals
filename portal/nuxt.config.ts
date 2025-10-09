@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 
 export default defineNuxtConfig({
   devServer: {
@@ -13,6 +12,7 @@ export default defineNuxtConfig({
     '#api/types': '../../api/types'
   },
   runtimeConfig: {
+    mainPublicUrl: 'http://localhost:5607',
     privateDirectoryUrl: 'http://simple-directory:8080',
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     draftUrlPattern: ''
@@ -42,15 +42,13 @@ export default defineNuxtConfig({
       {
         from: '@data-fair/lib-vue/reactive-search-params.js',
         imports: ['useStringSearchParam', 'useNumberSearchParam', 'useBooleanSearchParam', 'useStringsArraySearchParam']
-      },
-      {
-        from: 'vue-i18n',
-        imports: ['useI18n']
       }
     ]
   },
   modules: [
-    '@nuxt/eslint', 'nuxt-security',
+    '@nuxtjs/i18n',
+    '@nuxt/eslint',
+    'nuxt-security',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         config.plugins!.push(vuetify({ autoImport: true }))
@@ -58,15 +56,22 @@ export default defineNuxtConfig({
     },
     // ...
   ],
+  i18n: {
+    locales: ['fr', 'en'],
+    defaultLocale: 'fr',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_lang',
+      redirectOn: 'root'
+    }
+  },
   vite: {
     vue: {
       template: {
         transformAssetUrls,
       },
-    },
-    plugins: [
-      VueI18nPlugin(),
-    ],
+    }
   },
   app: {
     head: {

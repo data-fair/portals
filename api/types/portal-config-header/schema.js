@@ -53,6 +53,34 @@ export default {
         }
       }
     },
+    logoPrimaryMobile: {
+      type: 'object',
+      title: 'Logo principal - Alternative mobile',
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280, label: 'Logo principal - Alternative mobile' }
+          }
+        }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        },
+        mobileAlt: {
+          type: 'boolean'
+        }
+      }
+    },
     logoLink: {
       layout: {
         if: 'parent.data?.logoPrimaryType !== "hidden"',

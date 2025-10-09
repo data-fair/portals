@@ -45,7 +45,6 @@ const { element } = defineProps({
 const activeTab = ref(0)
 
 const onTabsChildrenUpdate = (newElements: PageElement[], i: number) => {
-  console.log('onTabsChildrenUpdate', newElements, i, element)
   return {
     ...element,
     tabs: [

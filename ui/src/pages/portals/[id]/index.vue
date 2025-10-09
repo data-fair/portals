@@ -85,6 +85,7 @@ const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
 const formValid = ref(false)
 const { portalConfig } = providePortalStore()
+provideNavigationStore()
 
 // Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {

@@ -7,7 +7,10 @@
       stacked
       @click="!preview ? session.login() : null"
     >
-      <v-icon size="x-large" :icon="mdiAccountCircle" />
+      <v-icon
+        size="x-large"
+        :icon="mdiAccountCircle"
+      />
     </v-btn>
     <v-btn
       v-else
@@ -26,7 +29,7 @@
           v-bind="props"
           :title="t('openPersonalMenu')"
           :append-icon="personal ? mdiMenuDown : undefined"
-          :class="`bg-${loginColor}`"
+          :class="loginColor !== 'primary' ? 'bg-' + loginColor : undefined"
         >
           <v-avatar
             :image="avatarUrl"
@@ -42,11 +45,10 @@
         <v-list-subheader v-if="(!showHeader || $vuetify.display.smAndDown) && !personal">
           {{ session.user.value.name }}
         </v-list-subheader>
-        <!-- TODO: Redirect to the true back-office -->
         <template v-if="isPortalOwner">
           <v-list-item
             :prepend-icon="mdiWrench"
-            href="/data-fair"
+            :href="backOfficeUrl"
             title="Back-office"
           />
           <v-divider />
@@ -77,9 +79,10 @@ defineProps<{
   density?: 'compact' | 'comfortable' | 'default'
 }>()
 
-const session = useSession()
 const { t } = useI18n()
 const { portal, preview } = usePortalStore()
+const config = useRuntimeConfig()
+const session = useSession()
 
 const avatarUrl = computed(() => {
   if (!session.user.value) return
@@ -96,6 +99,14 @@ const isPortalOwner = computed(() => {
       user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
     )
   )
+})
+
+const backOfficeUrl = computed(() => {
+  const site = session.site.value
+  if (!site) return '/data-fair'
+  if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
+  if (!site.isAccountMain && site.authMode === 'onlyOtherSite') return site.authOnlyOtherSite
+  return '/data-fair'
 })
 
 </script>

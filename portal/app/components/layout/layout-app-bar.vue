@@ -8,6 +8,7 @@
     :extension-height="headerConfig.density === 'default' ? 64 : undefined"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="(headerConfig.scrollBehavior === 'hide' && !headerConfig.show ? 'default' : headerConfig.scrollBehavior) + ' elevate'"
+    scroll-threshold="10"
   >
     <!-- Header (128px)-->
     <layout-header
@@ -58,11 +59,13 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from 'vuetify'
 import { VToolbar, VAppBar } from 'vuetify/components'
 import { useElementSize } from '@vueuse/core'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
+const display = useDisplay()
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
@@ -73,7 +76,10 @@ const headerConfig = computed(() => {
 })
 
 const logo = computed(() => {
-  if (headerConfig.value.logoPrimaryType === 'local' && headerConfig.value.logoPrimary) {
+  if (headerConfig.value.logoPrimaryType !== 'hidden' && display.xs.value) {
+    if (headerConfig.value.logoPrimaryMobile) return headerConfig.value.logoPrimaryMobile
+    else return null
+  } else if (headerConfig.value.logoPrimaryType === 'local' && headerConfig.value.logoPrimary) {
     return headerConfig.value.logoPrimary
   } else if (headerConfig.value.logoPrimaryType === 'default' && portalConfig.value.logo) {
     return portalConfig.value.logo
