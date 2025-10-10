@@ -3,14 +3,13 @@
   <v-tabs
     :model-value="computedActiveTab"
     :density="density"
+    show-arrows
   >
     <template
       v-for="(link, i) of navigation"
       :key="i"
     >
-      <v-menu
-        v-if="link?.type === 'submenu' && link.children.length"
-      >
+      <v-menu v-if="link?.type === 'submenu' && link.children.length">
         <template #activator="{ props: menuProps }">
           <v-tab
             v-bind="menuProps"

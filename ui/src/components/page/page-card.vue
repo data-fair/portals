@@ -13,14 +13,14 @@
 
       <template #title>
         <span class="font-weight-bold text-primary">
-          {{ page.config.title }}
+          {{ page.title }}
         </span>
         <v-tooltip
-          v-if="page.config.title.length > 20"
+          v-if="page.title.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"
-          :text="page.config.title"
+          :text="page.title"
         />
       </template>
     </v-card-item>

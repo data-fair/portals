@@ -6,7 +6,7 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
+import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage } from './service.ts'
 
 const router = Router()
@@ -56,6 +56,7 @@ router.post('', async (req, res, next) => {
   }
   const page: Page = {
     _id: randomUUID(),
+    title: body.config.title,
     type: body.type,
     owner: body.owner ?? session.account,
     created,
@@ -80,6 +81,7 @@ router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
+  if (body.isReference !== undefined) assertAdminMode(session)
   if (body.portals) assertAccountRole(session, page.owner, 'admin')
   await patchPage(page, body, session)
   res.send({ ...page, body })

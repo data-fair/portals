@@ -85,7 +85,7 @@ watch(pageFetch.data, (page) => {
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
     { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
-    { text: page.config.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
+    { text: page.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
     { text: t('edit') }
   ])
 }, { immediate: true })

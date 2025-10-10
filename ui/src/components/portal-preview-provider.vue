@@ -14,7 +14,7 @@ const { t } = useI18n()
 const portalConfigDefault: PortalConfig = {
   datasets: {
     cardsLayout: 'medium',
-    filtersLayout: 'top',
+    filtersLocation: 'top',
     defaultSort: 'createdAt',
     showActions: true,
     cropThumbnails: true,
@@ -24,7 +24,7 @@ const portalConfigDefault: PortalConfig = {
   },
   applications: {
     cardsLayout: 'vertical',
-    filtersLayout: 'top',
+    filtersLocation: 'top',
     defaultSort: 'createdAt',
     showActions: true,
     cropThumbnails: true,

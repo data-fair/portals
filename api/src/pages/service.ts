@@ -48,6 +48,14 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
     }
   }
 
+  // If title is empty string, sync with config title
+  if (patch.title === '') {
+    patch.title = patch.config?.title || page.config.title
+  } else if (patch.config?.title && page.title === page.config.title) {
+    // If current page title matches current config title, sync them
+    patch.title = patch.config.title
+  }
+
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }

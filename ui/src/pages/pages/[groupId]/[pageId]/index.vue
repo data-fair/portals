@@ -10,7 +10,8 @@
           { text: t('tabs.preview'), value: 'preview' },
           { text: t('tabs.previewDraft'), value: 'preview-draft' },
           { text: t('tabs.permissions'), value: 'permissions' },
-          { text: t('tabs.publications'), value: 'publications' }
+          { text: t('tabs.publications'), value: 'publications' },
+          { text: t('tabs.metadata'), value: 'metadata' }
         ]"
       />
 
@@ -31,6 +32,10 @@
 
             <v-tabs-window-item value="publications">
               <page-edit-publication />
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="metadata">
+              <page-activity />
             </v-tabs-window-item>
           </v-tabs-window>
         </portal-preview-provider>
@@ -67,7 +72,7 @@ watch(pageFetch.data, (page) => {
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
     { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
-    { text: page.config.title }
+    { text: page.title }
   ])
 }, { immediate: true })
 
@@ -91,6 +96,7 @@ watch(pageFetch.data, (page) => {
       preview: Preview
       previewDraft: Preview (draft)
       publications: Publications
+      metadata: Metadata
     yes: Yes
 
   fr:
@@ -110,6 +116,7 @@ watch(pageFetch.data, (page) => {
       preview: Aperçu
       previewDraft: Aperçu (brouillon)
       publications: Publications
+      metadata: Métadonnées
     yes: Oui
 
 </i18n>

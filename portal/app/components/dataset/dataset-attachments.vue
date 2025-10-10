@@ -1,8 +1,9 @@
 <template>
   <layout-preview
+    :title="t('preview') + ' - ' + dataset.title"
+    :action-style="portalConfig.datasets.actionsStyle"
     :icon="mdiAttachment"
     :text="t('preview')"
-    :title="t('preview') + ' - ' + dataset.title"
   >
     <v-list-item
       v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
@@ -48,6 +49,7 @@ type Dataset = {
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 const { dayjs } = useLocaleDayjs()
 
 const attachmentMode = (attachment: { type: string; mimetype?: string }) => {

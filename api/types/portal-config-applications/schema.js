@@ -10,7 +10,7 @@ export default {
         title: 'Page du catalogue de visualisations',
         children: [
           'cardsLayout',
-          'filtersLayout',
+          'filtersLocation',
           'defaultSort',
           'actionsLocation',
           'cropThumbnails'
@@ -34,7 +34,7 @@ export default {
   },
   unevaluatedProperties: false,
   additionalProperties: false,
-  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'actionsLocation', 'cropThumbnails', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
+  required: ['cardsLayout', 'filtersLocation', 'defaultSort', 'actionsLocation', 'cropThumbnails', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Application List page
     cardsLayout: {
@@ -47,7 +47,7 @@ export default {
         { const: 'vertical', title: 'Verticale' },
       ]
     },
-    filtersLayout: {
+    filtersLocation: {
       type: 'string',
       title: 'Position des filtres de recherche',
       default: 'top',

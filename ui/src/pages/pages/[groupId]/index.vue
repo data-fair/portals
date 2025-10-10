@@ -118,7 +118,7 @@ const pagesFetch = useFetch<{ results: Page[], count: number }>($apiPath + '/pag
 const displayPages = computed(() => {
   const pages = (pagesFetch.data.value?.results ?? [])
   if (!search.value) return pages
-  return pages.filter(page => page.config.title.toLowerCase().includes(search.value.toLowerCase()))
+  return pages.filter(page => page.title.toLowerCase().includes(search.value.toLowerCase()))
 })
 
 const groupFetch = useFetch<{ _id: string, title: string, slug: string }>(

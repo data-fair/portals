@@ -1,9 +1,10 @@
 <template>
   <layout-preview
+    :title="t('preview') + ' - ' + dataset.title"
+    :action-style="portalConfig.datasets.actionsStyle"
     :icon="mdiDownload"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :title="t('preview') + ' - ' + dataset.title"
   >
     <!-- direct links to files-->
     <v-list-item
@@ -133,6 +134,7 @@ type File = {
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 
 const files = ref<File[]>([])
 const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { params: { size: 0 } })

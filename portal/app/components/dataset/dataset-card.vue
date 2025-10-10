@@ -9,14 +9,14 @@
     >
       <!-- Image column -->
       <v-col
-        v-if="portalConfig.datasets.thumbnailLocation === 'left'"
+        v-if="cardConfig.thumbnailLocation === 'left'"
         cols="4"
       >
         <v-img
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
-          :cover="portalConfig.datasets.cropThumbnails"
+          :cover="cardConfig.cropThumbnails"
           class="h-100"
         />
         <v-divider vertical />
@@ -26,14 +26,14 @@
       <v-col class="d-flex flex-column">
         <v-card-title>{{ dataset.title }}</v-card-title>
         <v-img
-          v-if="portalConfig.datasets.thumbnailLocation === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnailLocation === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
-          :cover="portalConfig.datasets.cropThumbnails"
+          :cover="cardConfig.cropThumbnails"
           height="170"
         />
         <v-card-text
-          v-if="portalConfig.datasets.showSummary && dataset.summary?.length"
+          v-if="cardConfig.showSummary && dataset.summary?.length"
           class="pb-0"
         >
           {{ dataset.summary }}
@@ -43,19 +43,19 @@
         <v-list-item>
           <template #prepend>
             <owner-avatar
-              v-if="dataset.owner.department && portalConfig.datasets.showDepartment"
+              v-if="dataset.owner.department && cardConfig.showDepartment"
               :owner="dataset.owner"
             />
           </template>
           <span
-            :class="['text-caption', dataset.owner.department && portalConfig.datasets.showDepartment ? 'ml-2' : '']"
+            :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']"
           >
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
           </span>
         </v-list-item>
 
         <template
-          v-if="(portalConfig.datasets.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown"
+          v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown"
         >
           <v-divider />
           <v-card-actions
@@ -66,6 +66,7 @@
             <dataset-table-preview :dataset="dataset" />
             <action-btn
               :to="`/datasets/${dataset.slug}/full`"
+              :action-style="cardConfig.actionsStyle"
               :icon="mdiTableLarge"
               :text="t('text.table')"
               :short-text="t('shortText.table')"
@@ -76,6 +77,7 @@
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
+              :action-style="cardConfig.actionsStyle"
               :icon="mdiCog"
               :text="t('text.api')"
               :short-text="t('shortText.api')"
@@ -85,16 +87,17 @@
       </v-col>
 
       <!-- Actions column -->
-      <template v-if="portalConfig.datasets.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
         <v-divider vertical />
         <v-col
-          :cols="portalConfig.datasets.actionsStyle === 'icon' ? 1 : 3"
+          :cols="cardConfig.actionsStyle === 'icon' ? 1 : 3"
           class="pa-2 cursor-default"
           @click.prevent
         >
           <dataset-table-preview :dataset="dataset" />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
+            :action-style="cardConfig.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
             :short-text="t('shortText.table')"
@@ -105,6 +108,7 @@
           />
           <action-btn
             :to="`/datasets/${dataset.slug}/api-doc`"
+            :action-style="cardConfig.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
@@ -117,10 +121,11 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
+import type { PortalConfig } from '#api/types/portal/index.js'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
-const { dataset } = defineProps<{
+const { dataset, cardConfig } = defineProps<{
   dataset: {
     id: string
     slug: string
@@ -136,16 +141,24 @@ const { dataset } = defineProps<{
     topics: { id: string; title: string }[]
     image?: string
     isMetaOnly: boolean
+  },
+  cardConfig: {
+    thumbnailLocation: PortalConfig['datasets']['thumbnailLocation']
+    useApplicationThumbnail?: PortalConfig['datasets']['useApplicationThumbnail']
+    cropThumbnails: PortalConfig['datasets']['cropThumbnails']
+    showSummary: PortalConfig['datasets']['showSummary']
+    actionsLocation: PortalConfig['datasets']['actionsLocation']
+    showDepartment: PortalConfig['datasets']['showDepartment']
+    actionsStyle: PortalConfig['datasets']['actionsStyle']
   }
 }>()
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 
 const thumbnailUrl = computed(() => {
   if (dataset.image) return dataset.image
-  if (portalConfig.value.datasets.useApplicationThumbnail && dataset.extras?.applications?.[0]) {
+  if (cardConfig.useApplicationThumbnail && dataset.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
   return undefined

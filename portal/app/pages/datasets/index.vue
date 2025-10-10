@@ -23,65 +23,112 @@
   </h1>
 
   <!-- Filters -->
-  <div class="d-flex align-center ga-4 flex-wrap">
-    <v-text-field
-      v-model="search"
-      :append-inner-icon="mdiMagnify"
-      :label="t('search')"
-      density="comfortable"
-      variant="outlined"
-      autofocus
-      clearable
-      hide-details
-    />
-    <v-autocomplete
-      v-model="filters.concepts.value"
-      :loading="false"
-      :items="conceptsItems"
-      :label="t('filters.concepts')"
-      :no-data-text="t('filters.noConcepts')"
-      density="comfortable"
-      variant="outlined"
-      chips
-      clearable
-      closable-chips
-      multiple
-      hide-details
-    />
+  <v-row>
+    <!-- Search -->
+    <v-col
+      cols="12"
+      md="4"
+    >
+      <v-text-field
+        v-model="search"
+        :append-inner-icon="mdiMagnify"
+        :label="t('search')"
+        density="comfortable"
+        variant="outlined"
+        autofocus
+        clearable
+        hide-details
+      />
+    </v-col>
+
+    <!-- Concepts filter -->
+    <v-col
+      cols="12"
+      md="4"
+    >
+      <v-autocomplete
+        v-model="filters.concepts.value"
+        :items="conceptsItems"
+        :label="t('filters.concepts')"
+        :no-data-text="t('filters.noConcepts')"
+        density="comfortable"
+        variant="outlined"
+        chips
+        clearable
+        closable-chips
+        multiple
+        hide-details
+      />
+    </v-col>
+
+    <!-- Topics filters (mobile view)-->
+    <v-col
+      v-if="$vuetify.display.smAndDown"
+      cols="12"
+    >
+      <v-autocomplete
+        v-model="filters.topics.value"
+        :label="t('filters.topics')"
+        :no-data-text="t('filters.noTopics')"
+        :items="topicsItems"
+        :item-title="(item) => `${item.title} (${item.count})`"
+        item-value="id"
+        density="comfortable"
+        variant="outlined"
+        chips
+        clearable
+        closable-chips
+        multiple
+        hide-details
+      />
+    </v-col>
+
     <!-- TODO: Add owner filter -->
 
-    <!-- Sort/Order -->
-    <v-select
-      v-model="sort"
-      :items="sortItems"
-      :label="t('sort.by')"
-      density="comfortable"
-      variant="outlined"
-      hide-details
-      clearable
+    <!-- Sort -->
+    <v-col
+      cols="12"
+      md="4"
     >
-      <template #append>
-        <v-btn-toggle
-          v-model="order"
-          variant="outlined"
-          mandatory
-        >
-          <v-btn
-            :icon="mdiSortDescending"
-            :title="t('descending')"
-          />
-          <v-btn
-            :icon="mdiSortAscending"
-            :title="t('ascending')"
-          />
-        </v-btn-toggle>
-      </template>
-    </v-select>
-  </div>
-  <topics-facets
-    v-model="filters.topics.value"
-    :topics="topicsItems"
-  />
+      <v-select
+        v-model="sort"
+        :items="sortItems"
+        :label="t('sort.by')"
+        density="comfortable"
+        variant="outlined"
+        hide-details
+        clearable
+      >
+        <template #append>
+          <v-btn-toggle
+            v-model="order"
+            variant="outlined"
+            mandatory
+          >
+            <v-btn
+              :icon="mdiSortDescending"
+              :title="t('descending')"
+            />
+            <v-btn
+              :icon="mdiSortAscending"
+              :title="t('ascending')"
+            />
+          </v-btn-toggle>
+        </template>
+      </v-select>
+    </v-col>
+
+    <!-- Topics filter (desktop view)-->
+    <v-col
+      v-if="!$vuetify.display.smAndDown"
+      cols="12"
+    >
+      <topics-filter
+        v-model="filters.topics.value"
+        :topics="topicsItems"
+      />
+    </v-col>
+  </v-row>
 
   <!-- TODO: Add infinite scroll -->
   <v-row class="d-flex align-stretch mt-2">
@@ -89,8 +136,12 @@
       v-for="(dataset, i) in datasetsFetch.data.value?.results"
       :key="i"
       :md="12 / portalConfig.datasets.columns"
+      cols="12"
     >
-      <dataset-card :dataset="dataset" />
+      <dataset-card
+        :dataset="dataset"
+        :card-config="portalConfig.datasets"
+      />
     </v-col>
   </v-row>
 
@@ -225,6 +276,8 @@ useSeoMeta({
     filters:
       concepts: Concepts
       noConcepts: No concepts available
+      topics: Topics
+      noTopics: No topics available
     search: Search
     seo:
       title: 'Datasets - {title}'
@@ -244,6 +297,8 @@ useSeoMeta({
     filters:
       concepts: Concepts
       noConcepts: Aucun concept disponible
+      topics: Thématiques
+      noTopics: Aucune thématique disponible
     search: Rechercher
     seo:
       title: 'Données - {title}'

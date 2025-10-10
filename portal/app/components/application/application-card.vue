@@ -36,6 +36,7 @@
           <application-preview :application="application" />
           <action-btn
             :to="`/applications/${application.slug}/full`"
+            :action-style="portalConfig.applications.actionsStyle"
             :icon="mdiFullscreen"
             :text="t('text.full')"
             :short-text="t('shortText.full')"
@@ -85,6 +86,7 @@
             <application-preview :application="application" />
             <action-btn
               :to="`/applications/${application.slug}/full`"
+              :action-style="portalConfig.applications.actionsStyle"
               :icon="mdiFullscreen"
               :text="t('text.full')"
               :short-text="t('shortText.full')"

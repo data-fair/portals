@@ -292,9 +292,9 @@ export default {
       type: 'object',
       title: 'Dataset card',
       'x-i18n-title': {
-        fr: 'Vignette d\'un jeu de données'
+        fr: 'Carte d\'un jeu de données'
       },
-      required: ['type', 'dataset', 'cardsLayout', 'actionsLocation', 'cropThumbnails', 'showDepartment', 'actionsStyle'],
+      required: ['type', 'dataset', 'cardConfig'],
       properties: {
         type: {
           const: 'dataset-card'
@@ -322,65 +322,84 @@ export default {
             }
           }
         },
-        cardsLayout: {
-          type: 'string',
-          title: 'Disposition de la vignettes',
-          default: 'medium',
-          oneOf: [
-            { const: 'horizontal', title: 'Horizontale' },
-            { const: 'vertical', title: 'Verticale' }
-          ]
-        },
-        useApplicationThumbnail: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Utiliser les vignettes d\'application',
-          description: 'Utiliser l\'image de la première application comme vignette si aucune image n\'est définie pour le jeu de données. Si le jeu de données n\'a pas d\'image ni d\'application, sa description sera affichée.',
-          default: false
-        },
-        cropThumbnails: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Recadrer automatiquement les vignettes pour un rendu uniforme',
-          description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-          default: true
-        },
-        actionsLocation: {
-          type: 'string',
-          title: 'Position des boutons d\'actions sur la vignette',
-          description: 'La position "à droite" n\'est disponible que pour la disposition horizontale. Si sélectionnée pour la disposition verticale, la position sera "en bas".',
-          default: 'bottom',
-          oneOf: [
-            { const: 'right', title: 'À droite (seulement pour la disposition horizontale)' },
-            { const: 'bottom', title: 'En bas' },
-            { const: 'none', title: 'Aucun' }
-          ]
-        },
-        showDepartment: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher le département du propriétaire',
-          description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
-          default: true
-        },
-        actionsStyle: {
-          type: 'string',
-          title: 'Style des boutons d\'actions',
-          default: 'full',
-          oneOf: [
-            {
-              title: 'Icône seulement',
-              const: 'icon'
+        cardConfig: {
+          type: 'object',
+          title: 'Configuration de la carte',
+          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
+          properties: {
+            thumbnailLocation: {
+              type: 'string',
+              title: 'Position de l\'image sur la carte',
+              default: 'center',
+              oneOf: [
+                { const: 'left', title: 'À gauche' },
+                { const: 'center', title: 'Sous le titre' },
+                { const: 'none', title: 'Ne pas afficher' }
+              ]
             },
-            {
-              title: 'Icône et texte',
-              const: 'full'
+            useApplicationThumbnail: {
+              type: 'boolean',
+              title: 'Utiliser l\'image de l\'application',
+              description: 'Permet d\'utiliser l\'image de la première application qui utilise ce jeu de données si aucune image n\'est définie pour le jeu de données.',
+              layout: {
+                comp: 'switch',
+                cols: { md: 6 }
+              },
+              default: false
             },
-            {
-              title: 'Texte seulement',
-              const: 'text'
+            cropThumbnails: {
+              type: 'boolean',
+              title: 'Recadrer l\'image pour un rendu uniforme',
+              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+              layout: {
+                comp: 'switch',
+                cols: { md: 6 }
+              },
+              default: true
+            },
+            showSummary: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le résumé sur la carte',
+              default: true
+            },
+            actionsLocation: {
+              type: 'string',
+              title: 'Position des boutons d\'actions sur la carte',
+              default: 'bottom',
+              oneOf: [
+                { const: 'right', title: 'À droite' },
+                { const: 'bottom', title: 'En bas' },
+                { const: 'none', title: 'Aucun' }
+              ]
+            },
+            showDepartment: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le département du propriétaire',
+              description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
+              default: true
+            },
+            actionsStyle: {
+              type: 'string',
+              title: 'Style des boutons d\'actions',
+              default: 'full',
+              oneOf: [
+                {
+                  title: 'Icône seulement',
+                  const: 'icon'
+                },
+                {
+                  title: 'Icône et texte',
+                  const: 'full'
+                },
+                {
+                  title: 'Texte seulement',
+                  const: 'text'
+                }
+              ]
             }
-          ]
+          }
         }
       }
     },

@@ -41,6 +41,7 @@
       <v-col v-bind="metadataColProps">
         <action-btn
           :to="`/applications/${application.slug}/full`"
+          :action-style="portalConfig.applications.actionsStyle"
           :icon="mdiFullscreen"
           :text="t('text.full')"
           :short-text="t('shortText.full')"
@@ -49,6 +50,7 @@
         <!-- <action-btn
           v-if="!$vuetify.display.smAndDown"
           :to="`/applications/${application.slug}/api-doc`"
+          :action-style="portalConfig.applications.actionsStyle"
           :icon="mdiCog"
           :text="t('text.api')"
           :short-text="t('shortText.api')"

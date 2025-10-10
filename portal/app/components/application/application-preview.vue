@@ -1,9 +1,10 @@
 <template>
   <layout-preview
+    :title="t('preview') + ' - ' + application.title"
+    :action-style="portalConfig.applications.actionsStyle"
     :icon="mdiFlipToFront"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :title="t('preview') + ' - ' + application.title"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"
@@ -23,6 +24,7 @@ const { application } = defineProps<{
   }
 }>()
 const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 
 </script>
 

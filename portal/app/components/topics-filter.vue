@@ -1,5 +1,5 @@
 <template>
-  <v-row class="mt-2">
+  <v-row>
     <v-col
       v-for="topic in topics"
       :key="topic.id"

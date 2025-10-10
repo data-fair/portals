@@ -1,9 +1,10 @@
 <template>
   <layout-preview
+    :title="t('preview') + ' - ' + dataset.title"
+    :action-style="portalConfig.datasets.actionsStyle"
     :icon="mdiMapMarker"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :title="t('preview') + ' - ' + dataset.title"
   >
     <d-frame-wrapper
       :iframe-title="t('previewShort') + ' - ' + dataset.title"
@@ -23,6 +24,7 @@ const { dataset } = defineProps<{
   }
 }>()
 const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 
 </script>
 

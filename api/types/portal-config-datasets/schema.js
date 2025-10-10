@@ -15,7 +15,7 @@ export default {
           fr: 'Page du catalogue de données'
         },
         children: [
-          'filtersLayout',
+          'filtersLocation',
           'defaultSort',
           'columns'
         ]
@@ -56,18 +56,17 @@ export default {
     ]
   },
   unevaluatedProperties: false,
-  required: ['filtersLayout', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
+  required: ['filtersLocation', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Dataset List page
-    filtersLayout: {
+    filtersLocation: {
       type: 'string',
       title: 'Position des filtres de recherche',
       default: 'top',
       layout: { cols: { md: 6 } },
       oneOf: [
         { const: 'top', title: 'En haut de la page' },
-        { const: 'left', title: 'À gauche des résultats' },
-        { const: 'right', title: 'À droite des résultats' },
+        { const: 'left', title: 'À gauche des résultats' }
       ]
     },
     defaultSort: {

@@ -1,25 +1,30 @@
 <template>
   <v-btn
     :to="to"
-    :icon="portalConfig.datasets.actionsStyle === 'icon' ? icon : undefined"
-    :prepend-icon="portalConfig.datasets.actionsStyle === 'full' ? icon : undefined"
-    :title="portalConfig.datasets.actionsStyle === 'icon' ? text : undefined"
-    :text="portalConfig.datasets.actionsStyle !== 'icon' ? shortText || text : undefined"
-    :density="portalConfig.datasets.actionsStyle === 'icon' ? 'comfortable' : undefined"
-    :size="portalConfig.datasets.actionsStyle !== 'icon' ? 'small' : undefined"
+    :icon="actionStyle === 'icon' ? icon : undefined"
+    :prepend-icon="actionStyle === 'full' ? icon : undefined"
+    :title="actionStyle === 'icon' ? text : undefined"
+    :text="actionStyle !== 'icon' ? shortText || text : undefined"
+    :density="actionStyle === 'icon' ? 'comfortable' : undefined"
+    :size="actionStyle !== 'icon' ? 'small' : undefined"
     variant="text"
   />
 </template>
 
 <script setup lang="ts">
+import type { PortalConfig } from '#api/types/portal/index.js'
 
 defineProps<{
+  /** Button destination */
   to?: string
+  /** Button style */
+  actionStyle: PortalConfig['datasets']['actionStyle']
+  /** Button icon */
   icon: string
+  /** Button text */
   text: string
+  /** Button short text */
   shortText?: string
 }>()
-
-const { portalConfig } = usePortalStore()
 
 </script>

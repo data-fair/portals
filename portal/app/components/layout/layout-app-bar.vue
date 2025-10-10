@@ -25,7 +25,7 @@
         <v-row
           align="center"
           no-gutters
-          class="h-100"
+          class="h-100 flex-nowrap"
         >
           <layout-header-logo
             v-if="logo && !headerConfig.show"

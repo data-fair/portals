@@ -84,20 +84,21 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      cardsLayout: 'vertical',
-      columns: 3,
-      filtersLayout: 'top',
-      defaultSort: 'createdAt',
+      filtersLocation: 'top',
+      defaultSort: 'dataUpdatedAt',
+      columns: 0,
+      thumbnailLocation: 'center',
+      cropThumbnails: false,
+      showSummary: false,
       actionsLocation: 'bottom',
-      cropThumbnails: true,
       metadataPosition: 'right',
-      showImage: true,
-      showDepartment: true,
-      actionsStyle: 'full'
+      showImage: false,
+      showDepartment: false,
+      actionsStyle: 'text'
     },
     applications: {
       cardsLayout: 'vertical',
-      filtersLayout: 'top',
+      filtersLocation: 'top',
       defaultSort: 'createdAt',
       actionsLocation: 'bottom',
       cropThumbnails: true,

@@ -101,6 +101,7 @@
           <dataset-table-preview v-if="!$vuetify.display.smAndDown" :dataset="dataset" />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
+            :action-style="portalConfig.datasets.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
             :short-text="t('shortText.table')"
@@ -109,6 +110,7 @@
           <action-btn
             v-if="!$vuetify.display.smAndDown"
             :to="`/datasets/${dataset.slug}/api-doc`"
+            :action-style="portalConfig.datasets.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"

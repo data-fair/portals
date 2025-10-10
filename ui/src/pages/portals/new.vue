@@ -125,7 +125,7 @@
               >
                 <template #title>
                   <span :class="selectedPageId !== page._id ? 'text-primary' : ''">
-                    {{ page.config.title }}
+                    {{ page.title }}
                   </span>
                 </template>
                 <v-card-text v-if="page.config.description">
