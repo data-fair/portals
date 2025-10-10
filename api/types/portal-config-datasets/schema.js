@@ -1,56 +1,69 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-datasets',
   'x-exports': [],
-  title: 'Catalogue de données',
+  title: 'Datasets Catalog',
+  'x-i18n-title': {
+    fr: 'Catalogue de données'
+  },
   type: 'object',
   layout: {
     title: null,
     children: [
       {
-        title: 'Page du catalogue de données',
+        title: 'Datasets catalog page',
+        'x-i18n-title': {
+          fr: 'Page du catalogue de données'
+        },
         children: [
-          'cardsLayout',
           'filtersLayout',
           'defaultSort',
-          'showActions',
-          'useApplicationThumbnail',
-          'cropThumbnails'
+          'columns'
         ]
       },
       {
-        title: 'Page d\'un jeu de données',
+        title: 'Dataset card',
+        'x-i18n-title': {
+          fr: 'Carte d\'un jeu de données'
+        },
+        children: [
+          'thumbnailLocation',
+          'useApplicationThumbnail',
+          'cropThumbnails',
+          'showSummary',
+          'actionsLocation'
+        ]
+      },
+      {
+        title: 'Dataset page',
+        'x-i18n-title': {
+          fr: 'Page d\'un jeu de données'
+        },
         children: [
           'metadataPosition',
           'showImage'
         ]
       },
       {
-        title: 'Éléments communs',
+        title: 'Common elements',
+        'x-i18n-title': {
+          fr: 'Éléments communs'
+        },
         children: [
+          'showDepartment',
           'actionsStyle'
         ]
       }
     ]
   },
   unevaluatedProperties: false,
-  additionalProperties: false,
-  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'showActions', 'cropThumbnails', 'metadataPosition', 'showImage', 'actionsStyle'],
+  required: ['filtersLayout', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Dataset List page
-    cardsLayout: {
-      type: 'string',
-      title: 'Disposition des vignettes',
-      default: 'medium',
-      oneOf: [
-        { const: 'horizontal', title: 'Horizontale' },
-        { const: 'medium', title: 'Verticale (2 colonnes)' },
-        { const: 'compact', title: 'Verticale (3 colonnes)' },
-      ]
-    },
     filtersLayout: {
       type: 'string',
       title: 'Position des filtres de recherche',
       default: 'top',
+      layout: { cols: { md: 6 } },
       oneOf: [
         { const: 'top', title: 'En haut de la page' },
         { const: 'left', title: 'À gauche des résultats' },
@@ -60,6 +73,7 @@ export default {
     defaultSort: {
       type: 'string',
       title: 'Tri par défaut',
+      layout: { cols: { md: 6 } },
       default: 'createdAt',
       oneOf: [
         {
@@ -76,26 +90,60 @@ export default {
         }
       ]
     },
-    showActions: {
-      type: 'boolean',
-      layout: 'switch',
-      title: 'Afficher les boutons d\'actions',
-      description: 'Affiche les boutons d\'actions sur les vignettes des applications.',
-      default: true
+    columns: {
+      type: 'integer',
+      title: 'Nombre de colonnes',
+      description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+      default: 2,
+      minimum: 1,
+      maximum: 3
+    },
+    // Dataset Card
+    thumbnailLocation: {
+      type: 'string',
+      title: 'Position de l\'image sur la carte',
+      default: 'center',
+      oneOf: [
+        { const: 'left', title: 'À gauche' },
+        { const: 'center', title: 'Sous le titre' },
+        { const: 'none', title: 'Ne pas afficher' }
+      ]
     },
     useApplicationThumbnail: {
       type: 'boolean',
-      layout: 'switch',
-      title: 'Utiliser les vignettes d\'application',
-      description: 'Utiliser l\'image de la première application comme vignette si aucune image n\'est définie pour le jeu de données. Si le jeu de données n\'a pas d\'image ni d\'application, sa description sera affichée.',
+      title: 'Utiliser l\'image de l\'application',
+      description: 'Permet d\'utiliser l\'image de la première application qui utilise ce jeu de données si aucune image n\'est définie pour le jeu de données.',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      },
       default: false
     },
     cropThumbnails: {
       type: 'boolean',
-      layout: 'switch',
-      title: 'Recadrer automatiquement les vignettes pour un rendu uniforme',
+      title: 'Recadrer l\'image pour un rendu uniforme',
       description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      },
       default: true
+    },
+    showSummary: {
+      type: 'boolean',
+      layout: 'switch',
+      title: 'Afficher le résumé sur la carte',
+      default: true
+    },
+    actionsLocation: {
+      type: 'string',
+      title: 'Position des boutons d\'actions sur la carte',
+      default: 'bottom',
+      oneOf: [
+        { const: 'right', title: 'À droite' },
+        { const: 'bottom', title: 'En bas' },
+        { const: 'none', title: 'Aucun' }
+      ]
     },
     // Single Dataset page
     metadataPosition: {
@@ -125,6 +173,13 @@ export default {
       default: true
     },
     // Common to both pages
+    showDepartment: {
+      type: 'boolean',
+      layout: 'switch',
+      title: 'Afficher le département du propriétaire',
+      description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
+      default: true
+    },
     actionsStyle: {
       type: 'string',
       title: 'Style des boutons d\'actions',

@@ -84,23 +84,26 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      cardsLayout: 'medium',
+      cardsLayout: 'vertical',
+      columns: 3,
       filtersLayout: 'top',
       defaultSort: 'createdAt',
-      showActions: true,
+      actionsLocation: 'bottom',
       cropThumbnails: true,
       metadataPosition: 'right',
       showImage: true,
+      showDepartment: true,
       actionsStyle: 'full'
     },
     applications: {
       cardsLayout: 'vertical',
       filtersLayout: 'top',
       defaultSort: 'createdAt',
-      showActions: true,
+      actionsLocation: 'bottom',
       cropThumbnails: true,
       metadataPosition: 'right',
       showImage: false,
+      showDepartment: true,
       actionsStyle: 'full'
     },
     socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],

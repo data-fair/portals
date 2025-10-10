@@ -88,9 +88,7 @@
     <v-col
       v-for="(dataset, i) in datasetsFetch.data.value?.results"
       :key="i"
-      :sm="portalConfig.datasets.cardsLayout !== 'horizontal' ? 6 : undefined"
-      :md="portalConfig.datasets.cardsLayout === 'compact' ? 4 : undefined"
-      cols="12"
+      :md="12 / portalConfig.datasets.columns"
     >
       <dataset-card :dataset="dataset" />
     </v-col>
@@ -114,7 +112,7 @@ type DatasetFetch = {
     id: string
     slug: string
     title: string
-    description: string
+    summary: string
     dataUpdatedAt: string
     updatedAt: string
     owner: Account
@@ -151,7 +149,7 @@ const order = ref(0) // 0 = desc, 1 = asc
 
 const datasetsQuery = computed(() => {
   const query: Record<string, string> = {
-    select: 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
+    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
     facets: 'concepts,topics,owner',
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: '250'

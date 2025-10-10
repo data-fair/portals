@@ -4,7 +4,7 @@
     class="h-100 d-flex flex-column"
   >
     <!-- Vertical layout -->
-    <template v-if="portalConfig.applications.cardsLayout !== 'horizontal' || $vuetify.display.xs">
+    <template v-if="portalConfig.applications.cardsLayout === 'vertical' || $vuetify.display.xs">
       <v-card-title>{{ application.title }}</v-card-title>
 
       <v-img
@@ -15,8 +15,13 @@
       />
 
       <v-list-item v-if="portalConfig.applications.actionsStyle !== 'icon'">
-        <owner-avatar :owner="application.owner" />
-        <span class="text-caption ml-2">
+        <template #prepend>
+          <owner-avatar
+            v-if="application.owner.department && portalConfig.applications.showDepartment"
+            :owner="application.owner"
+          />
+        </template>
+        <span :class="['text-caption', application.owner.department && portalConfig.applications.showDepartment ? 'ml-2' : '']">
           {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
         </span>
       </v-list-item>
@@ -27,7 +32,7 @@
         style="min-height: auto"
         @click.prevent
       >
-        <template v-if="portalConfig.applications.showActions && !$vuetify.display.smAndDown">
+        <template v-if="portalConfig.applications.actionsLocation !== 'none' && !$vuetify.display.smAndDown">
           <application-preview :application="application" />
           <action-btn
             :to="`/applications/${application.slug}/full`"
@@ -42,7 +47,10 @@
           <span class="text-caption mr-2">
             {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
           </span>
-          <owner-avatar :owner="application.owner" />
+          <owner-avatar
+            v-if="application.owner.department && portalConfig.applications.showDepartment"
+            :owner="application.owner"
+          />
         </template>
       </v-card-actions>
     </template>
@@ -73,7 +81,7 @@
           style="min-height: auto"
           @click.prevent
         >
-          <template v-if="portalConfig.applications.showActions && !$vuetify.display.smAndDown">
+          <template v-if="portalConfig.applications.actionsLocation !== 'none' && !$vuetify.display.smAndDown">
             <application-preview :application="application" />
             <action-btn
               :to="`/applications/${application.slug}/full`"
@@ -87,7 +95,10 @@
           <span class="text-caption mr-2">
             {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
           </span>
-          <owner-avatar :owner="application.owner" />
+          <owner-avatar
+            v-if="application.owner.department && portalConfig.applications.showDepartment"
+            :owner="application.owner"
+          />
         </v-card-actions>
       </v-col>
     </v-row>

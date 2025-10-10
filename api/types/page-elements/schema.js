@@ -294,7 +294,7 @@ export default {
       'x-i18n-title': {
         fr: 'Vignette d\'un jeu de données'
       },
-      required: ['type', 'dataset', 'cardsLayout', 'showActions', 'cropThumbnails', 'actionsStyle'],
+      required: ['type', 'dataset', 'cardsLayout', 'actionsLocation', 'cropThumbnails', 'showDepartment', 'actionsStyle'],
       properties: {
         type: {
           const: 'dataset-card'
@@ -328,7 +328,7 @@ export default {
           default: 'medium',
           oneOf: [
             { const: 'horizontal', title: 'Horizontale' },
-            { const: 'medium', title: 'Verticale' }
+            { const: 'vertical', title: 'Verticale' }
           ]
         },
         useApplicationThumbnail: {
@@ -345,11 +345,22 @@ export default {
           description: 'Si désactivé, l\'image gardera son ratio d\'origine',
           default: true
         },
-        showActions: {
+        actionsLocation: {
+          type: 'string',
+          title: 'Position des boutons d\'actions sur la vignette',
+          description: 'La position "à droite" n\'est disponible que pour la disposition horizontale. Si sélectionnée pour la disposition verticale, la position sera "en bas".',
+          default: 'bottom',
+          oneOf: [
+            { const: 'right', title: 'À droite (seulement pour la disposition horizontale)' },
+            { const: 'bottom', title: 'En bas' },
+            { const: 'none', title: 'Aucun' }
+          ]
+        },
+        showDepartment: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Afficher les boutons d\'actions',
-          description: 'Affiche les boutons d\'actions sur les vignettes des applications.',
+          title: 'Afficher le département du propriétaire',
+          description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
           default: true
         },
         actionsStyle: {

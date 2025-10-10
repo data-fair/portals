@@ -3,68 +3,15 @@
     :to="`/datasets/${dataset.slug}`"
     class="h-100 d-flex flex-column"
   >
-    <!-- Vertical layout -->
-    <template v-if="portalConfig.datasets.cardsLayout !== 'horizontal' || $vuetify.display.xs">
-      <v-card-title>{{ dataset.title }}</v-card-title>
-
-      <v-img
-        v-if="thumbnailUrl"
-        :alt="t('imageAlt', { title: dataset.title })"
-        :src="thumbnailUrl"
-        :cover="portalConfig.datasets.cropThumbnails"
-        height="170"
-      />
-      <v-card-text v-else>{{ dataset.description }}</v-card-text>
-
-      <v-list-item v-if="portalConfig.datasets.actionsStyle !== 'icon'">
-        <template #prepend>
-          <owner-avatar :owner="dataset.owner" />
-        </template>
-        <span class="text-caption ml-2">
-          {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-        </span>
-      </v-list-item>
-
-      <v-divider />
-      <v-card-actions
-        class="py-2 ga-0 cursor-default"
-        style="min-height: auto"
-        @click.prevent
-      >
-        <template v-if="portalConfig.datasets.showActions && !dataset.isMetaOnly && !$vuetify.display.smAndDown">
-          <dataset-table-preview :dataset="dataset" />
-          <action-btn
-            :to="`/datasets/${dataset.slug}/full`"
-            :icon="mdiTableLarge"
-            :text="t('text.table')"
-            :short-text="t('shortText.table')"
-          />
-          <dataset-map-preview v-if="dataset.bbox?.length" :dataset="dataset" />
-          <action-btn
-            :to="`/datasets/${dataset.slug}/api-doc`"
-            :icon="mdiCog"
-            :text="t('text.api')"
-            :short-text="t('shortText.api')"
-          />
-        </template>
-
-        <template v-if="portalConfig.datasets.actionsStyle === 'icon'">
-          <v-spacer />
-          <span class="text-caption mr-2">
-            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-          </span>
-          <owner-avatar :owner="dataset.owner" />
-        </template>
-      </v-card-actions>
-    </template>
-
-    <!-- Horizontal layout -->
     <v-row
-      v-else
-      style="height:246px;"
+      class="flex-nowrap"
       no-gutters
     >
-      <v-col cols="4">
+      <!-- Image column -->
+      <v-col
+        v-if="portalConfig.datasets.thumbnailLocation === 'left'"
+        cols="4"
+      >
         <v-img
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
@@ -72,20 +19,50 @@
           :cover="portalConfig.datasets.cropThumbnails"
           class="h-100"
         />
+        <v-divider vertical />
       </v-col>
-      <v-divider vertical />
+
+      <!-- Center column -->
       <v-col class="d-flex flex-column">
         <v-card-title>{{ dataset.title }}</v-card-title>
-        <v-card-text>{{ dataset.description }}</v-card-text>
+        <v-img
+          v-if="portalConfig.datasets.thumbnailLocation === 'center' && thumbnailUrl"
+          :alt="t('imageAlt', { title: dataset.title })"
+          :src="thumbnailUrl"
+          :cover="portalConfig.datasets.cropThumbnails"
+          height="170"
+        />
+        <v-card-text
+          v-if="portalConfig.datasets.showSummary && dataset.summary?.length"
+          class="pb-0"
+        >
+          {{ dataset.summary }}
+        </v-card-text>
 
         <v-spacer />
-        <v-divider />
-        <v-card-actions
-          class="py-2 ga-0 cursor-default"
-          style="min-height: auto"
-          @click.prevent
+        <v-list-item>
+          <template #prepend>
+            <owner-avatar
+              v-if="dataset.owner.department && portalConfig.datasets.showDepartment"
+              :owner="dataset.owner"
+            />
+          </template>
+          <span
+            :class="['text-caption', dataset.owner.department && portalConfig.datasets.showDepartment ? 'ml-2' : '']"
+          >
+            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+          </span>
+        </v-list-item>
+
+        <template
+          v-if="(portalConfig.datasets.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown"
         >
-          <template v-if="portalConfig.datasets.showActions && !dataset.isMetaOnly && !$vuetify.display.smAndDown">
+          <v-divider />
+          <v-card-actions
+            class="py-2 ga-0 cursor-default"
+            style="min-height: auto"
+            @click.prevent
+          >
             <dataset-table-preview :dataset="dataset" />
             <action-btn
               :to="`/datasets/${dataset.slug}/full`"
@@ -93,22 +70,47 @@
               :text="t('text.table')"
               :short-text="t('shortText.table')"
             />
-            <dataset-map-preview v-if="dataset.bbox?.length" :dataset="dataset" />
+            <dataset-map-preview
+              v-if="dataset.bbox?.length"
+              :dataset="dataset"
+            />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
               :icon="mdiCog"
               :text="t('text.api')"
               :short-text="t('shortText.api')"
             />
-          </template>
-
-          <v-spacer />
-          <span class="text-caption mr-2">
-            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-          </span>
-          <owner-avatar :owner="dataset.owner" />
-        </v-card-actions>
+          </v-card-actions>
+        </template>
       </v-col>
+
+      <!-- Actions column -->
+      <template v-if="portalConfig.datasets.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+        <v-divider vertical />
+        <v-col
+          :cols="portalConfig.datasets.actionsStyle === 'icon' ? 1 : 3"
+          class="pa-2 cursor-default"
+          @click.prevent
+        >
+          <dataset-table-preview :dataset="dataset" />
+          <action-btn
+            :to="`/datasets/${dataset.slug}/full`"
+            :icon="mdiTableLarge"
+            :text="t('text.table')"
+            :short-text="t('shortText.table')"
+          />
+          <dataset-map-preview
+            v-if="dataset.bbox?.length"
+            :dataset="dataset"
+          />
+          <action-btn
+            :to="`/datasets/${dataset.slug}/api-doc`"
+            :icon="mdiCog"
+            :text="t('text.api')"
+            :short-text="t('shortText.api')"
+          />
+        </v-col>
+      </template>
     </v-row>
   </v-card>
 </template>
@@ -123,7 +125,7 @@ const { dataset } = defineProps<{
     id: string
     slug: string
     title: string
-    description: string
+    summary?: string
     dataUpdatedAt: string
     updatedAt: string
     owner: Account

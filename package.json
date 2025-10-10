@@ -42,7 +42,7 @@
     "node": "v24"
   },
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.10.0"
+    "@data-fair/lib-types-builder": "^1.10.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",

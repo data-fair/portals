@@ -21,7 +21,7 @@ services:
     profiles:
       - test
       - dev
-    image: ghcr.io/data-fair/simple-directory:8
+    image: ghcr.io/data-fair/simple-directory:master
     network_mode: host
     depends_on:
       - mongo

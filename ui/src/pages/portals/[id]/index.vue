@@ -51,7 +51,7 @@
               :width="width"
               :height="height"
               :resource="portalRef"
-              @update:model-value="(data: any) => { console.log('input data', data); statefulLayout.input(node, data) }"
+              @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </template>
         </vjsf-portal-config>

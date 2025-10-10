@@ -12,7 +12,7 @@ export default {
           'cardsLayout',
           'filtersLayout',
           'defaultSort',
-          'showActions',
+          'actionsLocation',
           'cropThumbnails'
         ]
       },
@@ -26,6 +26,7 @@ export default {
       {
         title: 'Éléments communs',
         children: [
+          'showDepartment',
           'actionsStyle'
         ]
       }
@@ -33,16 +34,17 @@ export default {
   },
   unevaluatedProperties: false,
   additionalProperties: false,
-  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'showActions', 'cropThumbnails', 'metadataPosition', 'showImage', 'actionsStyle'],
+  required: ['cardsLayout', 'filtersLayout', 'defaultSort', 'actionsLocation', 'cropThumbnails', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Application List page
     cardsLayout: {
       type: 'string',
       title: 'Disposition des vignettes',
+      description: 'En vue mobile, la disposition sera toujours verticale sur une colonne.',
       default: 'vertical',
       oneOf: [
         { const: 'horizontal', title: 'Horizontale' },
-        { const: 'vertical', title: 'Verticale (Multi-colonnes)' },
+        { const: 'vertical', title: 'Verticale' },
       ]
     },
     filtersLayout: {
@@ -74,12 +76,16 @@ export default {
         }
       ]
     },
-    showActions: {
-      type: 'boolean',
-      layout: 'switch',
-      title: 'Afficher les boutons d\'actions',
-      description: 'Affiche les boutons d\'actions sur les vignettes des applications.',
-      default: true
+    actionsLocation: {
+      type: 'string',
+      title: 'Position des boutons d\'actions sur les vignettes',
+      description: 'La position "à droite" n\'est disponible que pour la disposition horizontale. Si sélectionnée pour la disposition verticale, la position sera "en bas".',
+      default: 'bottom',
+      oneOf: [
+        { const: 'right', title: 'À droite (seulement pour la disposition horizontale)' },
+        { const: 'bottom', title: 'En bas' },
+        { const: 'none', title: 'Aucun' }
+      ]
     },
     cropThumbnails: {
       type: 'boolean',
@@ -116,6 +122,13 @@ export default {
       default: false
     },
     // Common to both pages
+    showDepartment: {
+      type: 'boolean',
+      layout: 'switch',
+      title: 'Afficher le département du propriétaire',
+      description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
+      default: true
+    },
     actionsStyle: {
       type: 'string',
       title: 'Style des boutons d\'actions',

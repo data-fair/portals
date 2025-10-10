@@ -15,7 +15,10 @@
       </v-col>
 
       <!-- Owner -->
-      <v-col v-bind="metadataColProps">
+      <v-col
+        v-if="application.owner.department && portalConfig.applications.showDepartment"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
@@ -31,7 +34,10 @@
     <v-divider />
 
     <!-- Actions, update date and share -->
-    <v-row class="ma-0" align="center">
+    <v-row
+      class="ma-0"
+      align="center"
+    >
       <v-col v-bind="metadataColProps">
         <action-btn
           :to="`/applications/${application.slug}/full`"
@@ -63,7 +69,7 @@
       <ClientOnly>
         <v-col v-if="application.public">
           {{ t('share') }}
-          <social-share :title="application.title"/>
+          <social-share :title="application.title" />
         </v-col>
       </ClientOnly>
     </v-row>

@@ -17,7 +17,7 @@
         :width="width"
         :height="height"
         :resource="pageRef"
-        @update:model-value="(data: any) => {console.log('input data', data); statefulLayout.input(node, data)}"
+        @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
   </vjsf-page-elements>

@@ -33,7 +33,10 @@
       </v-col>
 
       <!-- Owner -->
-      <v-col v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.owner.department && portalConfig.datasets.showDepartment"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar

@@ -1,3 +1,5 @@
+import type { LinkItem, MenuItem } from '#api/types/portal'
+
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
 
@@ -8,13 +10,22 @@ const createNavigationStore = () => {
 
   const clearBreadcrumbs = () => {}
 
-  const showBreadcrumbs = computed(() => {})
+  const showBreadcrumbs = computed(() => {
+    console.warn('showBreadcrumbs is used in portals-manager')
+    return true
+  })
 
   /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (): boolean => { return false }
+  const isMenuItemActive = (): boolean => {
+    console.warn('isMenuItemActive is used in portals-manager')
+    return false
+  }
 
   /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = () => { return undefined }
+  const resolveLink = (_link: LinkItem | MenuItem) => {
+    console.warn('resolveLink is used in portals-manager')
+    return undefined
+  }
 
   return {
     breadcrumbs: ref([]),

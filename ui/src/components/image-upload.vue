@@ -2,6 +2,7 @@
   <v-file-input
     :label="label"
     :model-value="pseudoFile"
+    :prepend-icon="previewSrc ? '' : undefined"
     accept="image/*"
     @update:model-value="file => loadFile.execute(file as File)"
   >
@@ -9,6 +10,8 @@
       <v-img
         v-if="previewSrc"
         :src="previewSrc"
+        width="40"
+        height="40"
       />
     </template>
   </v-file-input>
