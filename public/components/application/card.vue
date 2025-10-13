@@ -23,7 +23,7 @@
         >
           Mis à jour le {{ application.updatedAt | date('L') }}
         </span>
-        <owner-department :owner="application.owner" />
+        <owner-department v-if="!config.applicationHideDepartment" :owner="application.owner" />
       </v-card-actions>
     </template>
   </card-action-card>

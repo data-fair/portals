@@ -106,7 +106,7 @@
               </v-col>
 
               <v-col
-                v-if="dataset.owner.department"
+                v-if="dataset.owner.department && !config.datasetHideDepartment"
                 :md="config.datasetMetaLayout === 'vertical' ? 4 : 12"
                 :cols="12"
                 class="py-0"

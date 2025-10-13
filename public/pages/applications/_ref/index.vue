@@ -33,7 +33,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="application.owner.department">
+              <v-list-item v-if="application.owner.department && !config.applicationHideDepartment">
                 <v-list-item-content class="pt-0 pb-2">
                   <v-list-item-title>
                     <v-avatar

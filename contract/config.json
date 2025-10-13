@@ -1588,6 +1588,12 @@
             }
           ],
           "default": "icon"
+        },
+        "datasetHideDepartment": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "Masquer le département",
+          "default": false
         }
       }
     },
@@ -1676,6 +1682,12 @@
         "applicationsDirectNavigation": {
           "type": "boolean",
           "title": "Pas de boutons d'action sur la liste, navigation directe",
+          "default": false
+        },
+        "applicationHideDepartment": {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "Masquer le département",
           "default": false
         }
       }
