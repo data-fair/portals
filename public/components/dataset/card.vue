@@ -21,7 +21,7 @@
         >
           Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
         </span>
-        <owner-department :owner="dataset.owner" />
+        <owner-department v-if="!config.datasetHideDepartment" :owner="dataset.owner" />
       </v-card-actions>
       <v-card-actions
         v-if="dataset"
@@ -87,7 +87,7 @@
           >
             Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
           </span>
-          <owner-department :owner="dataset.owner" />
+          <owner-department v-if="!config.datasetHideDepartment" :owner="dataset.owner" />
         </template>
       </v-card-actions>
     </template>
