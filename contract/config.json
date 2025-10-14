@@ -1852,6 +1852,13 @@
               }
             }
           ]
+        },
+        "eventsHideSubscribe" : {
+          "type": "boolean",
+          "x-display": "switch",
+          "title": "Masquer l'inscription aux évènements",
+          "description": "Masque le bouton `Participerez-vous à cet évènement ?` sur les pages des évènements.",
+          "default": false
         }
       }
     },
