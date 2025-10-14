@@ -15,6 +15,7 @@ declare module 'vue' {
     ClientOnly: typeof import('./../src/components/nuxt/client-only.vue')['default']
     ColorsPreview: typeof import('./../src/components/portal-edit/colors-preview.vue')['default']
     DatasetAttachments: typeof import('./../../portal/app/components/dataset/dataset-attachments.vue')['default']
+    DatasetAttachmentsPreview: typeof import('./../../portal/app/components/dataset/dataset-attachments-preview.vue')['default']
     DatasetCard: typeof import('./../../portal/app/components/dataset/dataset-card.vue')['default']
     DatasetDownload: typeof import('./../../portal/app/components/dataset/dataset-download.vue')['default']
     DatasetMapPreview: typeof import('./../../portal/app/components/dataset/dataset-map-preview.vue')['default']
