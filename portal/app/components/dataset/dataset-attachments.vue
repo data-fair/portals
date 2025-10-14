@@ -1,37 +1,31 @@
 <template>
-  <layout-preview
-    :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.actionsStyle"
-    :icon="mdiAttachment"
-    :text="t('preview')"
+  <v-list-item
+    v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
+    :key="i"
+    :title="attachment.title"
   >
-    <v-list-item
-      v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
-      :key="i"
-      :title="attachment.title"
-    >
-      <v-list-item-subtitle v-if="attachment.type === 'file'">
-        {{ attachment.name }} - {{ attachment.size }} - mis à jour le {{ dayjs(attachment.updatedAt).format('LL') }}
-      </v-list-item-subtitle>
-      <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
-        {{ attachment.name }}
-      </v-list-item-subtitle>
-      <div v-html="attachment.description" />
-      <template #append>
-        <v-btn
-          :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
-          :href="attachment.url"
-          target="_blank"
-          rel="noopener"
-          variant="text"
-        />
-      </template>
-    </v-list-item>
-  </layout-preview>
+    <v-list-item-subtitle v-if="attachment.type === 'file'">
+      {{ attachment.name }} - {{ formatBytes(attachment.size) }} - {{ t('updatedAt') }} {{ dayjs(attachment.updatedAt).format('LL') }}
+    </v-list-item-subtitle>
+    <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
+      {{ attachment.name }}
+    </v-list-item-subtitle>
+    <div v-html="attachment.description" />
+    <template #append>
+      <v-btn
+        :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
+        :href="attachment.url"
+        target="_blank"
+        rel="noopener"
+        variant="text"
+      />
+    </template>
+  </v-list-item>
 </template>
 
 <script setup lang="ts">
-import { mdiAttachment, mdiDownload, mdiOpenInNew } from '@mdi/js'
+import { mdiDownload, mdiOpenInNew } from '@mdi/js'
+import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 type Dataset = {
   title: string
@@ -49,7 +43,6 @@ type Dataset = {
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 const { dayjs } = useLocaleDayjs()
 
 const attachmentMode = (attachment: { type: string; mimetype?: string }) => {
@@ -61,7 +54,7 @@ const attachmentMode = (attachment: { type: string; mimetype?: string }) => {
 
 <i18n lang="yaml">
   en:
-    preview: Attachments
+    updatedAt: Updated at
   fr:
-    preview: Pièces jointes
+    updatedAt: Mis à jour le
 </i18n>

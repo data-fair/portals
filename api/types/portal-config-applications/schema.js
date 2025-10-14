@@ -7,24 +7,43 @@ export default {
     title: null,
     children: [
       {
-        title: 'Page du catalogue de visualisations',
+        title: 'Applications catalog page',
+        'x-i18n-title': {
+          fr: 'Page du catalogue de visualisations'
+        },
         children: [
-          'cardsLayout',
           'filtersLocation',
           'defaultSort',
-          'actionsLocation',
-          'cropThumbnails'
+          'columns'
         ]
       },
       {
-        title: 'Page d\'une visualisation',
+        title: 'Application card',
+        'x-i18n-title': {
+          fr: 'Carte d\'une visualisation'
+        },
         children: [
-          'metadataPosition',
+          'thumbnailLocation',
+          'cropThumbnails',
+          'showSummary',
+          'actionsLocation'
+        ]
+      },
+      {
+        title: 'Application page',
+        'x-i18n-title': {
+          fr: 'Page d\'une visualisation'
+        },
+        children: [
+          'metadataLocation',
           'showImage'
         ]
       },
       {
-        title: 'Éléments communs',
+        title: 'Common elements',
+        'x-i18n-title': {
+          fr: 'Éléments communs'
+        },
         children: [
           'showDepartment',
           'actionsStyle'
@@ -33,33 +52,24 @@ export default {
     ]
   },
   unevaluatedProperties: false,
-  additionalProperties: false,
-  required: ['cardsLayout', 'filtersLocation', 'defaultSort', 'actionsLocation', 'cropThumbnails', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
+  required: ['filtersLocation', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataLocation', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Application List page
-    cardsLayout: {
-      type: 'string',
-      title: 'Disposition des vignettes',
-      description: 'En vue mobile, la disposition sera toujours verticale sur une colonne.',
-      default: 'vertical',
-      oneOf: [
-        { const: 'horizontal', title: 'Horizontale' },
-        { const: 'vertical', title: 'Verticale' },
-      ]
-    },
     filtersLocation: {
       type: 'string',
       title: 'Position des filtres de recherche',
       default: 'top',
+      layout: { cols: { md: 6 } },
       oneOf: [
         { const: 'top', title: 'En haut de la page' },
-        { const: 'left', title: 'À gauche des résultats' },
-        { const: 'right', title: 'À droite des résultats' },
+        { const: 'left', title: 'À gauche des résultats' }
       ]
     },
     defaultSort: {
       type: 'string',
       title: 'Tri par défaut',
+      description: 'Ce tri sera appliqué par défaut lorsque l\'utilisateur arrive sur la page. Lorsqu\'il commence une recherche, le tri par pertinence sera appliqué.',
+      layout: { cols: { md: 6 } },
       default: 'createdAt',
       oneOf: [
         {
@@ -68,7 +78,7 @@ export default {
         },
         {
           title: 'Date de mise à jour',
-          const: 'dataUpdatedAt'
+          const: 'updatedAt'
         },
         {
           title: 'Ordre alphabétique',
@@ -76,26 +86,56 @@ export default {
         }
       ]
     },
-    actionsLocation: {
+    columns: {
+      type: 'integer',
+      title: 'Nombre de colonnes',
+      description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+      default: 2,
+      minimum: 1,
+      maximum: 4
+    },
+    // Application Card
+    thumbnailLocation: {
       type: 'string',
-      title: 'Position des boutons d\'actions sur les vignettes',
-      description: 'La position "à droite" n\'est disponible que pour la disposition horizontale. Si sélectionnée pour la disposition verticale, la position sera "en bas".',
-      default: 'bottom',
+      title: 'Position de l\'image sur la carte',
+      default: 'center',
       oneOf: [
-        { const: 'right', title: 'À droite (seulement pour la disposition horizontale)' },
-        { const: 'bottom', title: 'En bas' },
-        { const: 'none', title: 'Aucun' }
+        { const: 'left', title: 'À gauche' },
+        { const: 'center', title: 'Sous le titre' },
+        { const: 'none', title: 'Ne pas afficher' }
       ]
     },
     cropThumbnails: {
       type: 'boolean',
-      layout: 'switch',
-      title: 'Recadrer automatiquement les vignettes pour un rendu uniforme',
+      title: 'Recadrer l\'image pour un rendu uniforme',
       description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      },
       default: true
     },
+    showSummary: {
+      type: 'boolean',
+      title: 'Afficher le résumé sur la carte',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      },
+      default: true
+    },
+    actionsLocation: {
+      type: 'string',
+      title: 'Position des boutons d\'actions sur la carte',
+      default: 'bottom',
+      oneOf: [
+        { const: 'right', title: 'À droite' },
+        { const: 'bottom', title: 'En bas' },
+        { const: 'none', title: 'Aucun' }
+      ]
+    },
     // Single Application page
-    metadataPosition: {
+    metadataLocation: {
       type: 'string',
       title: 'Position des métadonnées sur la page d\'une visualisation',
       default: 'right',
@@ -119,7 +159,7 @@ export default {
       layout: 'switch',
       title: 'Afficher l\'image sur la page d\'une visualisation',
       description: 'L\'image sera affichée au dessus de la description.',
-      default: false
+      default: true
     },
     // Common to both pages
     showDepartment: {

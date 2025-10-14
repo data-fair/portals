@@ -5,78 +5,129 @@
   </h1>
 
   <!-- Filters -->
-  <div class="d-flex align-center ga-4 flex-wrap">
-    <v-text-field
-      v-model="search"
-      :append-inner-icon="mdiMagnify"
-      :label="t('search')"
-      density="comfortable"
-      variant="outlined"
-      autofocus
-      clearable
-      hide-details
-    />
-    <v-autocomplete
-      v-model="filters.baseApplications.value"
-      :loading="false"
-      :items="applicationsFetch.data.value?.facets?.['base-application'] ?? []"
-      :label="t('filters.baseApplications')"
-      :no-data-text="t('filters.noBaseApplications')"
-      item-title="value.title"
-      item-value="value.url"
-      density="comfortable"
-      variant="outlined"
-      chips
-      clearable
-      closable-chips
-      multiple
-      hide-details
-    />
+  <v-row>
+    <!-- Search -->
+    <v-col
+      cols="12"
+      md="4"
+    >
+      <v-text-field
+        v-model="search"
+        :append-inner-icon="mdiMagnify"
+        :label="t('search')"
+        density="comfortable"
+        variant="outlined"
+        autofocus
+        clearable
+        hide-details
+      />
+    </v-col>
+
+    <!-- Base applications filter -->
+    <v-col
+      cols="12"
+      md="4"
+    >
+      <v-autocomplete
+        v-model="filters.baseApplications.value"
+        :loading="false"
+        :items="applicationsFetch.data.value?.facets?.['base-application'] ?? []"
+        :label="t('filters.baseApplications')"
+        :no-data-text="t('filters.noBaseApplications')"
+        item-title="value.title"
+        item-value="value.url"
+        density="comfortable"
+        variant="outlined"
+        chips
+        clearable
+        closable-chips
+        multiple
+        hide-details
+      />
+    </v-col>
+
+    <!-- Topics filters (mobile view)-->
+    <v-col
+      v-if="$vuetify.display.smAndDown"
+      cols="12"
+    >
+      <v-autocomplete
+        v-model="filters.topics.value"
+        :label="t('filters.topics')"
+        :no-data-text="t('filters.noTopics')"
+        :items="topicsItems"
+        :item-title="(item) => `${item.title} (${item.count})`"
+        item-value="id"
+        density="comfortable"
+        variant="outlined"
+        chips
+        clearable
+        closable-chips
+        multiple
+        hide-details
+      />
+    </v-col>
 
     <!-- TODO: Add owner filter -->
 
-    <!-- Order -->
-    <v-select
-      v-model="sort"
-      :items="sortItems"
-      :label="t('sort.by')"
-      density="comfortable"
-      variant="outlined"
-      hide-details
-      clearable
+    <!-- Sort/Order -->
+    <v-col
+      cols="12"
+      md="4"
     >
-      <template #append>
-        <v-btn-toggle
-          v-model="order"
-          variant="outlined"
-          mandatory
-        >
-          <v-btn
-            :icon="mdiSortDescending"
-            :title="t('descending')"
-          />
-          <v-btn
-            :icon="mdiSortAscending"
-            :title="t('ascending')"
-          />
-        </v-btn-toggle>
-      </template>
-    </v-select>
-  </div>
-  <topics-facets
-    v-model="filters.topics.value"
-    :topics="topicsItems"
-  />
+      <v-select
+        v-model="sort"
+        :items="sortItems"
+        :label="t('sort.by')"
+        density="comfortable"
+        variant="outlined"
+        hide-details
+        clearable
+      >
+        <template #append>
+          <!-- Order toggle -->
+          <v-btn-toggle
+            v-model="order"
+            variant="outlined"
+            mandatory
+          >
+            <v-btn
+              :icon="mdiSortDescending"
+              :title="t('descending')"
+            />
+            <v-btn
+              :icon="mdiSortAscending"
+              :title="t('ascending')"
+            />
+          </v-btn-toggle>
+        </template>
+      </v-select>
+    </v-col>
+
+    <!-- Topics filter (desktop view)-->
+    <v-col
+      v-if="!$vuetify.display.smAndDown"
+      cols="12"
+    >
+      <topics-filter
+        v-model="filters.topics.value"
+        :topics="topicsItems"
+      />
+    </v-col>
+  </v-row>
 
   <!-- TODO: Add infinite scroll -->
   <v-row class="d-flex align-stretch mt-2">
     <v-col
       v-for="(application, i) in applicationsFetch.data.value?.results"
       :key="i"
-      v-bind="cardBreakpoints"
+      :md="12 / portalConfig.datasets.columns"
       cols="12"
     >
-      <application-card :application="application" />
+      <application-card
+        :application="application"
+        :card-config="portalConfig.applications"
+      />
     </v-col>
   </v-row>
 
@@ -147,12 +198,6 @@ const sortItems = [
   { title: t('sort.title'), value: 'title' }
 ]
 
-const cardBreakpoints = computed(() =>
-  portalConfig.value.applications.cardsLayout !== 'horizontal'
-    ? { sm: 6, md: 4, lg: 3 }
-    : {}
-)
-
 useSeoMeta({
   title: t('seo.title', { title: portalConfig.value.title }),
   description: t('seo.description'),
@@ -171,6 +216,8 @@ useSeoMeta({
     filters:
       baseApplications: Application
       noBaseApplications: No applications available
+      topics: Topics
+      noTopics: No topics available
     search: Search
     seo:
       title: 'Applications - {title}'

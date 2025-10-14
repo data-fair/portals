@@ -7,7 +7,7 @@
     <v-row>
       <!-- Dataset image and description -->
       <v-col
-        :md="portalConfig.datasets.metadataPosition === 'right' ? 8 : 12"
+        :md="portalConfig.datasets.metadataLocation === 'right' ? 8 : 12"
         cols="12"
       >
         <img
@@ -22,8 +22,8 @@
 
       <!-- Metadata -->
       <v-col
-        :md="portalConfig.datasets.metadataPosition === 'right' ? 4 : 12"
-        :order-md="portalConfig.datasets.metadataPosition === 'top' ? 'first' : 1"
+        :md="portalConfig.datasets.metadataLocation === 'right' ? 4 : 12"
+        :order-md="portalConfig.datasets.metadataLocation === 'top' ? 'first' : 1"
         cols="12"
       >
         <dataset-metadata :dataset="dataset" />

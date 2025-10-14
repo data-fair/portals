@@ -11,7 +11,7 @@ export default {
       'showContactInformations',
       'copyright',
       'backgroundImage',
-      'backgroundImagePosition',
+      'backgroundImageLocation',
       'logoPrimaryType',
       'logoPrimary',
       'logoPrimaryLink',
@@ -42,12 +42,18 @@ export default {
     showSocial: {
       type: 'boolean',
       title: 'Afficher les liens de réseaux sociaux',
-      layout: { comp: 'switch' }
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
     },
     showContactInformations: {
       type: 'boolean',
       title: 'Afficher les informations de contact',
-      layout: { comp: 'switch' }
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
     },
     copyright: {
       type: 'string',
@@ -90,7 +96,7 @@ export default {
         }
       }
     },
-    backgroundImagePosition: {
+    backgroundImageLocation: {
       type: 'string',
       title: "Position de l'image de fond",
       default: 'right',
@@ -105,6 +111,14 @@ export default {
     logoPrimaryType: {
       type: 'string',
       title: 'Logo principal du pied de page',
+      layout: {
+        switch: [
+          {
+            if: 'data === "local" ',
+            cols: { md: 6 }
+          }
+        ]
+      },
       default: 'default',
       oneOf: [
         { const: 'default', title: 'Utiliser le logo global' },
@@ -124,7 +138,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo principal' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -340,7 +355,8 @@ export default {
           },
           title: {
             type: 'string',
-            title: 'Libellé'
+            title: 'Libellé',
+            layout: { cols: { md: 6 } }
           }
         }
       }, {

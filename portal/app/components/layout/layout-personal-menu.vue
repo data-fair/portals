@@ -81,33 +81,37 @@ defineProps<{
 
 const { t } = useI18n()
 const { portal, preview } = usePortalStore()
-const config = useRuntimeConfig()
 const session = useSession()
 
-const avatarUrl = computed(() => {
-  if (!session.user.value) return
-  return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
-})
+let avatarUrl, isPortalOwner, backOfficeUrl
+if (!preview) {
+  const config = useRuntimeConfig()
 
-const isPortalOwner = computed(() => {
-  const user = session.user.value
-  if (!user || !portal.value.owner) return false
-  return (
-    (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
-    (
-      portal.value.owner.type === 'organization' &&
-      user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
+  avatarUrl = computed(() => {
+    if (!session.user.value) return
+    return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
+  })
+
+  isPortalOwner = computed(() => {
+    const user = session.user.value
+    if (!user || !portal.value.owner) return false
+    return (
+      (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
+      (
+        portal.value.owner.type === 'organization' &&
+        user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
+      )
     )
-  )
-})
+  })
 
-const backOfficeUrl = computed(() => {
-  const site = session.site.value
-  if (!site) return '/data-fair'
-  if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
-  if (!site.isAccountMain && site.authMode === 'onlyOtherSite') return site.authOnlyOtherSite
-  return '/data-fair'
-})
+  backOfficeUrl = computed(() => {
+    const site = session.site.value
+    if (!site) return '/data-fair'
+    if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
+    if (!site.isAccountMain && site.authMode === 'onlyOtherSite') return site.authOnlyOtherSite
+    return '/data-fair'
+  })
+}
 
 </script>
 

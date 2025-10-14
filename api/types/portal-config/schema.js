@@ -105,7 +105,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -132,7 +133,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo - variante pour fond sombre' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       properties: {
         _id: {

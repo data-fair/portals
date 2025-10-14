@@ -39,7 +39,8 @@ export default {
           fr: 'Page d\'un jeu de données'
         },
         children: [
-          'metadataPosition',
+          'metadataLocation',
+          'attachmentsLocation',
           'showImage'
         ]
       },
@@ -56,7 +57,7 @@ export default {
     ]
   },
   unevaluatedProperties: false,
-  required: ['filtersLocation', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataPosition', 'showImage', 'showDepartment', 'actionsStyle'],
+  required: ['filtersLocation', 'defaultSort', 'columns', 'thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'metadataLocation', 'attachmentsLocation', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     // Dataset List page
     filtersLocation: {
@@ -72,6 +73,7 @@ export default {
     defaultSort: {
       type: 'string',
       title: 'Tri par défaut',
+      description: 'Ce tri sera appliqué par défaut lorsque l\'utilisateur arrive sur la page. Lorsqu\'il commence une recherche, le tri par pertinence sera appliqué.',
       layout: { cols: { md: 6 } },
       default: 'createdAt',
       oneOf: [
@@ -145,9 +147,10 @@ export default {
       ]
     },
     // Single Dataset page
-    metadataPosition: {
+    metadataLocation: {
       type: 'string',
       title: 'Position des métadonnées sur la page d\'un jeu de données',
+      layout: { cols: { md: 6 } },
       default: 'right',
       oneOf: [
         {
@@ -164,11 +167,27 @@ export default {
         }
       ]
     },
+    attachmentsLocation: {
+      type: 'string',
+      title: 'Position des pièces jointes sur la page d\'un jeu de données',
+      layout: { cols: { md: 6 } },
+      default: 'action',
+      oneOf: [
+        {
+          title: 'Dans un bouton d\'action',
+          const: 'action'
+        },
+        {
+          title: 'Dans les métadonnées',
+          const: 'full'
+        }
+      ]
+    },
     showImage: {
       type: 'boolean',
-      layout: 'switch',
       title: 'Afficher l\'image sur la page d\'un jeu de données',
       description: 'L\'image sera affichée au dessus de la description.',
+      layout: 'switch',
       default: true
     },
     // Common to both pages

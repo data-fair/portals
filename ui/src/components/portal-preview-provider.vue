@@ -18,7 +18,7 @@ const portalConfigDefault: PortalConfig = {
     defaultSort: 'createdAt',
     showActions: true,
     cropThumbnails: true,
-    metadataPosition: 'right',
+    metadataLocation: 'right',
     showImage: true,
     actionsStyle: 'full'
   },
@@ -28,7 +28,7 @@ const portalConfigDefault: PortalConfig = {
     defaultSort: 'createdAt',
     showActions: true,
     cropThumbnails: true,
-    metadataPosition: 'right',
+    metadataLocation: 'right',
     showImage: false,
     actionsStyle: 'full'
   },

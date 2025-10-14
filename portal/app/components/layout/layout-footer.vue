@@ -31,8 +31,8 @@
     :color="portalConfig.footer.color"
     :style="portalConfig.footer.backgroundImage ? {
       backgroundImage: `url(${getImageSrc(portalConfig.footer.backgroundImage, false)})`,
-      backgroundPosition: `bottom ${portalConfig.footer.backgroundImagePosition}`,
-      backgroundRepeat: portalConfig.footer.backgroundImagePosition === 'repeat' ? 'repeat' : 'no-repeat'
+      backgroundPosition: `bottom ${portalConfig.footer.backgroundImageLocation}`,
+      backgroundRepeat: portalConfig.footer.backgroundImageLocation === 'repeat' ? 'repeat' : 'no-repeat'
     } : {}"
     class="pa-0 d-flex justify-center flex-wrap"
   >

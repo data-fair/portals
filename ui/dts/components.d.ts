@@ -20,6 +20,7 @@ declare module 'vue' {
     DatasetMapPreview: typeof import('./../../portal/app/components/dataset/dataset-map-preview.vue')['default']
     DatasetMetadata: typeof import('./../../portal/app/components/dataset/dataset-metadata.vue')['default']
     DatasetSchema: typeof import('./../../portal/app/components/dataset/dataset-schema.vue')['default']
+    DatasetsFilters: typeof import('./../../portal/app/components/datasets-filters.vue')['default']
     DatasetTablePreview: typeof import('./../../portal/app/components/dataset/dataset-table-preview.vue')['default']
     DFrameWrapper: typeof import('./../src/components/nuxt/d-frame-wrapper.vue')['default']
     'DFrameWrapper.client': typeof import('./../../portal/app/components/d-frame-wrapper.client.vue')['default']

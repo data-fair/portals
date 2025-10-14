@@ -4,7 +4,7 @@
     <v-row class="ma-0">
       <!--
         All fields are wrapped in v-cols for responsive grid layout
-        that adapts to screen size and metadataPosition setting
+        that adapts to screen size and metadataLocation setting
         (full width or single column)
       -->
 
@@ -109,7 +109,7 @@ const baseApplicationFetch = useLocalFetch<{
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.applications.metadataPosition !== 'right' ? 4 : 12
+  md: portalConfig.value.applications.metadataLocation !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {

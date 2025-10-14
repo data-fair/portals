@@ -36,7 +36,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo principal' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -64,7 +65,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo principal - Alternative mobile' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -82,15 +84,22 @@ export default {
       }
     },
     logoLink: {
-      layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"',
-        props: {
-          clearable: true
-        }
-      },
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.'
+      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.',
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        switch: [
+          {
+            if: 'parent.data?.logoPrimaryType === "default" ',
+            props: { clearable: true },
+            cols: { md: 6 }
+          },
+          {
+            props: { clearable: true }
+          }
+        ]
+      }
     },
     logoSecondary: {
       type: 'object',
@@ -103,7 +112,8 @@ export default {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo secondaire' }
           }
-        }
+        },
+        cols: { md: 6 }
       },
       description: 'Logo affiché à droite de l\'entête',
       properties: {
@@ -122,22 +132,24 @@ export default {
       }
     },
     logoSecondaryLink: {
+      type: 'string',
+      title: 'Lien au clic sur le logo secondaire',
+      description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo secondaire.',
       layout: {
         if: 'parent.data?.show',
         props: {
           clearable: true
-        }
-      },
-      type: 'string',
-      title: 'Lien au clic sur le logo secondaire',
-      description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo secondaire.'
+        },
+        cols: { md: 6 }
+      }
     },
     showTitle: {
       type: 'boolean',
       title: 'Afficher le titre du portail',
       layout: {
         if: 'parent.data?.show',
-        comp: 'switch'
+        comp: 'switch',
+        cols: { md: 6 }
       },
       default: true
     },
@@ -146,7 +158,8 @@ export default {
       title: 'Afficher les liens de réseaux sociaux',
       layout: {
         if: 'parent.data?.show',
-        comp: 'switch'
+        comp: 'switch',
+        cols: { md: 6 }
       }
     },
     headerColor: {

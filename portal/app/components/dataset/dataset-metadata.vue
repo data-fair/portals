@@ -4,18 +4,22 @@
     <v-row class="ma-0">
       <!--
         All fields are wrapped in v-cols for responsive grid layout
-        that adapts to screen size and metadataPosition setting
+        that adapts to screen size and metadataLocation setting
         (full width or single column)
       -->
 
       <!-- Records count / Size -->
       <v-col v-bind="metadataColProps">
         <div class="text-caption text-medium-emphasis">{{ t('size') }}</div>
-        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' + formatBytes(dataset.storage.indexed.size) : '' }}
+        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' +
+        formatBytes(dataset.storage.indexed.size) : '' }}
       </v-col>
 
       <!-- Origin (Link to source or producer label) -->
-      <v-col v-if="dataset.origin" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.origin"
+        v-bind="metadataColProps"
+      >
         <template v-if="dataset.origin.startsWith('http://') || dataset.origin.startsWith('https://')">
           {{ t('dataFrom') }}
           <a
@@ -48,7 +52,10 @@
         </div>
       </v-col>
 
-      <v-col v-if="dataset.license" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.license"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis"> {{ t('license') }}</div>
         <a
           :href="dataset.license.href"
@@ -59,7 +66,10 @@
         </a>
       </v-col>
 
-      <v-col v-if="dataset.keywords?.length" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.keywords?.length"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis"> {{ t('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
@@ -71,12 +81,18 @@
         />
       </v-col>
 
-      <v-col v-if="dataset.spatial" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.spatial"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis"> {{ t('spatialCoverage') }}</div>
         {{ dataset.spatial }}
       </v-col>
 
-      <v-col v-if="dataset.temporal?.start" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.temporal?.start"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis"> {{ t('temporalCoverage') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
@@ -86,19 +102,36 @@
         </template>
       </v-col>
 
-      <v-col v-if="dataset.frequency" v-bind="metadataColProps">
+      <v-col
+        v-if="dataset.frequency"
+        v-bind="metadataColProps"
+      >
         <div class="text-caption text-medium-emphasis"> {{ t('updateFrequency') }}</div>
         {{ t('frequency.' + dataset.frequency) }}
+      </v-col>
+
+      <v-col
+        v-if="portalConfig.datasets.attachmentsLocation === 'full' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-bind="metadataColProps"
+      >
+        <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
+        <dataset-attachments :dataset="dataset" />
       </v-col>
     </v-row>
 
     <v-divider />
 
     <!-- Actions, update date and share -->
-    <v-row class="ma-0" align="center">
+    <v-row
+      class="ma-0"
+      align="center"
+    >
       <v-col v-bind="metadataColProps">
         <template v-if="!dataset.isMetaOnly">
-          <dataset-table-preview v-if="!$vuetify.display.smAndDown" :dataset="dataset" />
+          <dataset-table-preview
+            v-if="!$vuetify.display.smAndDown"
+            :dataset="dataset"
+          />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
             :action-style="portalConfig.datasets.actionsStyle"
@@ -106,7 +139,10 @@
             :text="t('text.table')"
             :short-text="t('shortText.table')"
           />
-          <dataset-map-preview v-if="!$vuetify.display.smAndDown && dataset.bbox?.length" :dataset="dataset" />
+          <dataset-map-preview
+            v-if="!$vuetify.display.smAndDown && dataset.bbox?.length"
+            :dataset="dataset"
+          />
           <action-btn
             v-if="!$vuetify.display.smAndDown"
             :to="`/datasets/${dataset.slug}/api-doc`"
@@ -118,14 +154,14 @@
 
           <dataset-download :dataset="dataset" />
           <dataset-schema :dataset="dataset" />
-          <!-- <dataset-embed :dataset="dataset" /> -->
+          <!-- TODO: <dataset-embed :dataset="dataset" /> -->
         </template>
 
-        <dataset-attachments
-          v-if="dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        <dataset-attachments-preview
+          v-if="portalConfig.datasets.attachmentsLocation === 'action' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
           :dataset="dataset"
         />
-        <!-- <notif-edit v-if="canLogin && notifyUrl" :dataset="dataset" /> -->
+        <!-- TODO: <notif-edit v-if="canLogin && notifyUrl" :dataset="dataset" /> -->
       </v-col>
 
       <v-col v-bind="metadataColProps">
@@ -135,7 +171,7 @@
       <ClientOnly>
         <v-col v-if="dataset.public">
           {{ t('share') }}
-          <social-share :title="dataset.title"/>
+          <social-share :title="dataset.title" />
         </v-col>
       </ClientOnly>
     </v-row>
@@ -203,7 +239,7 @@ const { dayjs } = useLocaleDayjs()
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.datasets.metadataPosition !== 'right' ? 4 : 12
+  md: portalConfig.value.datasets.metadataLocation !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {
@@ -215,6 +251,7 @@ const avatarUrl = computed(() => {
 
 <i18n lang="yaml">
   en:
+    attachments: 'Attachments:'
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
     records: '{count} record | {count} records'
@@ -254,6 +291,7 @@ const avatarUrl = computed(() => {
     updateFrequency: 'Update frequency:'
     updatedAt: Updated at
   fr:
+    attachments: 'Pièces jointes :'
     dataFrom: 'Données issues de'
     dataProducedBy: 'Données produites par :'
     records: '{count} enregistrement | {count} enregistrements'

@@ -16,16 +16,10 @@ const createNavigationStore = () => {
   })
 
   /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (): boolean => {
-    console.warn('isMenuItemActive is used in portals-manager')
-    return false
-  }
+  const isMenuItemActive = (): boolean => { return false }
 
   /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = (_link: LinkItem | MenuItem) => {
-    console.warn('resolveLink is used in portals-manager')
-    return undefined
-  }
+  const resolveLink = (_link: LinkItem | MenuItem) => { return undefined }
 
   return {
     breadcrumbs: ref([]),

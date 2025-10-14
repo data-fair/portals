@@ -6,7 +6,7 @@ export default {
     fr: 'Réseaux sociaux proposés pour le partage'
   },
   type: 'array',
-  description: 'Ces réseaux sociaux seront proposés aux utilisateurs pour le partage de jeux de données et applications publiques.',
+  description: 'Ces réseaux sociaux seront proposés aux utilisateurs pour le partage de jeux de données et applications qui sont publiques.',
   default: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   items: {
     type: 'string',

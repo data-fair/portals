@@ -7,7 +7,7 @@
     <v-row>
       <!-- Application image and description -->
       <v-col
-        :md="portalConfig.applications.metadataPosition === 'right' ? 8 : 12"
+        :md="portalConfig.applications.metadataLocation === 'right' ? 8 : 12"
         cols="12"
       >
         <img
@@ -22,8 +22,8 @@
 
       <!-- Metadata -->
       <v-col
-        :md="portalConfig.applications.metadataPosition === 'right' ? 4 : 12"
-        :order-md="portalConfig.applications.metadataPosition === 'top' ? 'first' : 1"
+        :md="portalConfig.applications.metadataLocation === 'right' ? 4 : 12"
+        :order-md="portalConfig.applications.metadataLocation === 'top' ? 'first' : 1"
         cols="12"
       >
         <application-metadata :application="application" />
@@ -39,15 +39,17 @@
     <!-- Datasets Source -->
     <template v-if="datasetsFetch.data.value?.results.length">
       <h5 class="text-h5 my-4">{{ t('datasetsUsed', datasetsFetch.data.value?.results.length) }}</h5>
-      <v-row align="center">
+      <v-row class="d-flex align-stretch mt-2">
         <v-col
-          v-for="dataset in datasetsFetch.data.value?.results"
-          :key="dataset.id"
-          sm="6"
-          md="4"
+          v-for="(dataset, i) in datasetsFetch.data.value?.results"
+          :key="i"
+          :md="12 / portalConfig.datasets.columns"
           cols="12"
         >
-          <dataset-card :dataset="dataset" />
+          <dataset-card
+            :dataset="dataset"
+            :card-config="portalConfig.datasets"
+          />
         </v-col>
       </v-row>
     </template>
@@ -88,7 +90,7 @@ type Dataset = {
   id: string
   slug: string
   title: string
-  description: string
+  summary: string
   dataUpdatedAt: string
   updatedAt: string
   owner: Account
