@@ -101,6 +101,7 @@ declare global {
   const useI18n: typeof import('vue-i18n')['useI18n']
   const useId: typeof import('vue')['useId']
   const useLink: typeof import('vue-router')['useLink']
+  const useLocalFetch: typeof import('../src/composables/use-local-fetch')['default']
   const useLocaleDayjs: typeof import('@data-fair/lib-vue/locale-dayjs.js')['useLocaleDayjs']
   const useModel: typeof import('vue')['useModel']
   const useNavigationStore: typeof import('../src/composables/use-navigation-store')['useNavigationStore']
@@ -241,6 +242,7 @@ declare module 'vue' {
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
+    readonly useLocalFetch: UnwrapRef<typeof import('../src/composables/use-local-fetch')['default']>
     readonly useLocaleDayjs: UnwrapRef<typeof import('@data-fair/lib-vue/locale-dayjs.js')['useLocaleDayjs']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNavigationStore: UnwrapRef<typeof import('../src/composables/use-navigation-store')['useNavigationStore']>
