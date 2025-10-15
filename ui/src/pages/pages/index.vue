@@ -92,7 +92,7 @@ setBreadcrumbs([{ text: t('pages') }])
     groupTitle:
       standard: Pages standard
       event: Événements
-      news: Actualitées
+      news: Actualités
       default: Autres pages
     groupDesc:
       standard: Pages d'accueil, de contact, de politique de confidentialité, etc.

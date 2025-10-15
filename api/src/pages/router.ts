@@ -17,7 +17,7 @@ router.get('', async (req, res, next) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'updated.date:-1')
+  const sort = findUtils.sort(params.sort || 'created.date:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals', type: 'type', groupId: 'config.genericMetadata.group._id' })

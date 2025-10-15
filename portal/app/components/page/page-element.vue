@@ -43,6 +43,17 @@
     v-else-if="element.type === 'application'"
     :element="element"
   />
+  <page-element-banner
+    v-else-if="element.type === 'banner'"
+    :element="element"
+  >
+    <template #page-elements="context">
+      <slot
+        name="page-elements"
+        v-bind="context"
+      />
+    </template>
+  </page-element-banner>
   <page-element-card
     v-else-if="element.type === 'card'"
     :element="element"

@@ -16,7 +16,7 @@
           {{ page.title }}
         </span>
         <v-tooltip
-          v-if="page.title.length > 20"
+          v-if="page.title?.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"

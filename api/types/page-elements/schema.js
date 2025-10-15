@@ -46,6 +46,7 @@ export default {
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
         { $ref: '#/$defs/element-application' },
+        { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
@@ -80,6 +81,7 @@ export default {
           ],
           default: 'h3',
         },
+        color: { $ref: '#/$defs/color' },
         centered: {
           type: 'boolean',
           title: 'Centrer le titre',
@@ -566,6 +568,55 @@ export default {
         }
       }
     },
+    'element-banner': {
+      type: 'object',
+      title: 'Banner',
+      'x-i18n-title': {
+        fr: 'Bannière'
+      },
+      required: ['type', 'children'],
+      properties: {
+        type: {
+          const: 'banner'
+        },
+        backgroundColor: {
+          $ref: '#/$defs/color'
+        },
+        backgroundImage: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 5152, label: 'chargez une image' } // TODO: allow larger images
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        children: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        }
+      }
+    },
     'element-card': {
       type: 'object',
       title: 'Boite',
@@ -812,7 +863,7 @@ export default {
       title: 'Couleur',
       oneOf: [
         { const: 'primary', title: 'Primaire' },
-        { const: 'secondary', title: 'secondaire' },
+        { const: 'secondary', title: 'Secondaire' },
         { const: 'accent', title: 'Accentuée' },
         { const: 'info', title: 'Information' },
         { const: 'success', title: 'Succès' },

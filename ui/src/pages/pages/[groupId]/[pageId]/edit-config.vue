@@ -116,7 +116,7 @@ watch(pageFetch.data, (page) => {
     groupTitle:
       standard: Pages standard
       event: Événements
-      news: Actualitées
+      news: Actualités
       default: Autres pages
     pages: Pages
     redoLastChange: Rétablir le dernier changement

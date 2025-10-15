@@ -17,7 +17,7 @@ router.get('', async (req, res) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'updated.date:-1')
+  const sort = findUtils.sort(params.sort || 'created.date:-1')
   const { skip, size } = findUtils.pagination(params, 1000)
   const query = findUtils.filterPermissions(params, session)
 

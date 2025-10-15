@@ -19,7 +19,7 @@ describe('images management', () => {
   })
 
   it('should load an image on a page', async () => {
-    const page = (await user1.post('/api/pages', { config: { title: 'My page', elements: [] } })).data
+    const page = (await user1.post('/api/pages', { type: 'home', config: { title: 'My page', elements: [] } })).data
 
     const form = new FormData()
     form.append('body', JSON.stringify({ resource: { type: 'page', _id: page._id } }))

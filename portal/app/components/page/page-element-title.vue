@@ -5,10 +5,11 @@
   >
     <v-icon
       v-if="element.icon"
+      :icon="element.icon?.svgPath"
+      :color="element.color"
       size="small"
       style="top:-2px"
       start
-      :icon="element.icon?.svgPath"
     />
     {{ element.content }}
   </component>
@@ -30,6 +31,7 @@ const cssClass = computed(() => {
   }
   let res = `text-${element.titleSize || 'h3'} my-${margins[element.titleSize] || '4'}`
   if (element.centered) res += ' text-center'
+  if (element.color) res += ` text-${element.color}`
   return res
 })
 </script>

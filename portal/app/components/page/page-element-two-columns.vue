@@ -14,7 +14,7 @@
         child-key="children"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
         :elements="element.children"
-        add-item-message="ajouter un bloc à la colonne"
+        add-item-message="Ajouter un bloc à la colonne"
       />
     </v-col>
     <v-col
@@ -25,7 +25,7 @@
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children2: newElements})"
         :elements="element.children2"
-        add-item-message="ajouter un bloc à la colonne"
+        add-item-message="Ajouter un bloc à la colonne"
       />
     </v-col>
   </v-row>

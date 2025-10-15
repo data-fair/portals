@@ -1,13 +1,14 @@
-import type { Filter, Sort } from 'mongodb'
+import type { Filter } from 'mongodb'
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import mongo from '#mongo'
+import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
-import { mongoPagination, mongoProjection, httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
+import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
 
@@ -25,11 +26,9 @@ router.get('', async (req, res, next) => {
   const query: Filter<Portal> = showAll ? {} : { 'owner.type': account.type, 'owner.id': account.id }
   // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
 
-  const project = mongoProjection(req.query.select)
-
-  // implement a special pagination based on the fact that we always sort by date
-  const sort: Sort = { _id: -1 }
-  const { skip, size } = mongoPagination(req.query, 20)
+  const project = findUtils.project(req.query.select)
+  const sort = findUtils.sort(req.query.sort || 'created.date:-1')
+  const { skip, size } = findUtils.pagination(req.query)
 
   const [count, portals] = await Promise.all([
     mongo.portals.countDocuments(query),

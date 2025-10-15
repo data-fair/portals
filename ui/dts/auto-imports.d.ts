@@ -73,7 +73,6 @@ declare global {
   const onUpdated: typeof import('vue')['onUpdated']
   const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
   const provide: typeof import('vue')['provide']
-  const provideNavigationStore: typeof import('../src/composables/use-navigation-store')['provideNavigationStore']
   const providePageStore: typeof import('../src/composables/use-page-store')['providePageStore']
   const providePortalStore: typeof import('../src/composables/use-portal-store')['providePortalStore']
   const reactive: typeof import('vue')['reactive']
@@ -101,7 +100,7 @@ declare global {
   const useI18n: typeof import('vue-i18n')['useI18n']
   const useId: typeof import('vue')['useId']
   const useLink: typeof import('vue-router')['useLink']
-  const useLocalFetch: typeof import('../src/composables/use-local-fetch')['default']
+  const useLocalFetch: typeof import('../src/composables/nuxt-composables')['useLocalFetch']
   const useLocaleDayjs: typeof import('@data-fair/lib-vue/locale-dayjs.js')['useLocaleDayjs']
   const useModel: typeof import('vue')['useModel']
   const useNavigationStore: typeof import('../src/composables/use-navigation-store')['useNavigationStore']
@@ -109,8 +108,10 @@ declare global {
   const usePageStore: typeof import('../src/composables/use-page-store')['usePageStore']
   const usePortalStore: typeof import('../src/composables/use-portal-store')['usePortalStore']
   const useReactiveSearchParams: typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']
+  const useRequestURL: typeof import('../src/composables/nuxt-composables')['useRequestURL']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
+  const useRuntimeConfig: typeof import('../src/composables/nuxt-composables')['useRuntimeConfig']
   const useSession: typeof import('@data-fair/lib-vue/session.js')['useSession']
   const useSessionAuthenticated: typeof import('@data-fair/lib-vue/session.js')['useSessionAuthenticated']
   const useSlots: typeof import('vue')['useSlots']
@@ -131,9 +132,6 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
-  // @ts-ignore
-  export type { NavigationStore } from '../src/composables/use-navigation-store'
-  import('../src/composables/use-navigation-store')
   // @ts-ignore
   export type { PageStore } from '../src/composables/use-page-store'
   import('../src/composables/use-page-store')
@@ -214,7 +212,6 @@ declare module 'vue' {
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
-    readonly provideNavigationStore: UnwrapRef<typeof import('../src/composables/use-navigation-store')['provideNavigationStore']>
     readonly providePageStore: UnwrapRef<typeof import('../src/composables/use-page-store')['providePageStore']>
     readonly providePortalStore: UnwrapRef<typeof import('../src/composables/use-portal-store')['providePortalStore']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
@@ -242,7 +239,7 @@ declare module 'vue' {
     readonly useI18n: UnwrapRef<typeof import('vue-i18n')['useI18n']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
-    readonly useLocalFetch: UnwrapRef<typeof import('../src/composables/use-local-fetch')['default']>
+    readonly useLocalFetch: UnwrapRef<typeof import('../src/composables/nuxt-composables')['useLocalFetch']>
     readonly useLocaleDayjs: UnwrapRef<typeof import('@data-fair/lib-vue/locale-dayjs.js')['useLocaleDayjs']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNavigationStore: UnwrapRef<typeof import('../src/composables/use-navigation-store')['useNavigationStore']>
@@ -250,8 +247,10 @@ declare module 'vue' {
     readonly usePageStore: UnwrapRef<typeof import('../src/composables/use-page-store')['usePageStore']>
     readonly usePortalStore: UnwrapRef<typeof import('../src/composables/use-portal-store')['usePortalStore']>
     readonly useReactiveSearchParams: UnwrapRef<typeof import('@data-fair/lib-vue/reactive-search-params.js')['useReactiveSearchParams']>
+    readonly useRequestURL: UnwrapRef<typeof import('../src/composables/nuxt-composables')['useRequestURL']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
+    readonly useRuntimeConfig: UnwrapRef<typeof import('../src/composables/nuxt-composables')['useRuntimeConfig']>
     readonly useSession: UnwrapRef<typeof import('@data-fair/lib-vue/session.js')['useSession']>
     readonly useSessionAuthenticated: UnwrapRef<typeof import('@data-fair/lib-vue/session.js')['useSessionAuthenticated']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>

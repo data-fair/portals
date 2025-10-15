@@ -11,7 +11,7 @@ describe('pages management', () => {
 
   it('should create a page', async () => {
     const pageConfig = { title: 'My page', elements: [] }
-    const page = (await user1.post('/api/pages', { config: pageConfig })).data
+    const page = (await user1.post('/api/pages', { type: 'home', config: pageConfig })).data
     assert.equal(page.owner.id, 'user1')
     assert.deepEqual(page.config, pageConfig)
     assert.deepEqual(page.draftConfig, pageConfig)

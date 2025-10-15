@@ -1,26 +1,15 @@
-import type { LinkItem, MenuItem } from '#api/types/portal'
+const drawer = ref(false)
+const setBreadcrumbs = () => {}
+const clearBreadcrumbs = () => {}
+const showBreadcrumbs = computed(() => {
+  console.warn('showBreadcrumbs is used in portals-manager')
+  return true
+})
 
-export type NavigationStore = ReturnType<typeof createNavigationStore>
-const navigationStoreKey = Symbol('navigation-store')
+const isMenuItemActive = (_item: any, _currentPath: string): boolean => { return false }
+const resolveLink = (_link: any | any) => { return undefined }
 
-const createNavigationStore = () => {
-  const drawer = ref(false) // Simple boolean shared between navigations components
-
-  const setBreadcrumbs = () => {}
-
-  const clearBreadcrumbs = () => {}
-
-  const showBreadcrumbs = computed(() => {
-    console.warn('showBreadcrumbs is used in portals-manager')
-    return true
-  })
-
-  /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (): boolean => { return false }
-
-  /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = (_link: LinkItem | MenuItem) => { return undefined }
-
+export const useNavigationStore = () => {
   return {
     breadcrumbs: ref([]),
     showBreadcrumbs,
@@ -30,16 +19,4 @@ const createNavigationStore = () => {
     resolveLink,
     drawer
   }
-}
-
-export const provideNavigationStore = () => {
-  const store = createNavigationStore()
-  provide(navigationStoreKey, store)
-  return store
-}
-
-export const useNavigationStore = () => {
-  const store = inject(navigationStoreKey) as NavigationStore | undefined
-  if (!store) throw new Error('breadcrumbs store was not initialized')
-  return store
 }

@@ -59,6 +59,7 @@ declare module 'vue' {
     PageElement: typeof import('./../../portal/app/components/page/page-element.vue')['default']
     PageElementAlert: typeof import('./../../portal/app/components/page/page-element-alert.vue')['default']
     PageElementApplication: typeof import('./../../portal/app/components/page/page-element-application.vue')['default']
+    PageElementBanner: typeof import('./../../portal/app/components/page/page-element-banner.vue')['default']
     PageElementCard: typeof import('./../../portal/app/components/page/page-element-card.vue')['default']
     PageElementContact: typeof import('./../../portal/app/components/page/page-element-contact.vue')['default']
     PageElementDatasetCard: typeof import('./../../portal/app/components/page/page-element-dataset-card.vue')['default']

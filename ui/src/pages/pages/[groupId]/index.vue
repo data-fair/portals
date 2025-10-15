@@ -92,7 +92,7 @@ const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
     sort: 'updated.date:-1',
-    select: '_id,config.title'
+    select: '_id,title'
   }
 
   // Base groups: filter by type
@@ -157,7 +157,7 @@ watch(group, () => {
     groupTitle:
       standard: Pages standard
       event: Événements
-      news: Actualitées
+      news: Actualités
       default: Autres pages
       unknown: Groupe inconnu
     noPagesCreated: Vous n'avez pas encore créé de page.

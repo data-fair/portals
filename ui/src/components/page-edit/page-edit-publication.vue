@@ -209,7 +209,7 @@ const getPageUrl = (pageData: Page): string | undefined => {
     warning:
       title: Cannot publish until these warnings are fixed
       content: The page is empty
-      description: The description is missing
+      description: The description is missing in the page configuration.
     standardPage:
       cannotUnpublishHome: You cannot unpublish a home page. You can only replace it with another home page.
       willReplace: 'Publishing this {pageType} on this portal will replace the page "{pageTitle}" with this one.'
@@ -227,7 +227,7 @@ const getPageUrl = (pageData: Page): string | undefined => {
     warning:
       title: Publication impossible tant que ces avertissements ne sont pas corrigés
       content: Le contenu de la page est vide
-      description: La description n'est pas renseignée
+      description: La description n'est pas renseignée dans la configuration de la page.
     standardPage:
       cannotUnpublishHome: Vous ne pouvez pas dépublier une page d'accueil. Vous pouvez seulement la remplacer par une autre page d'accueil.
       willReplace: 'Publier cette {pageType} sur ce portail remplacera la page "{pageTitle}" par celle-ci.'

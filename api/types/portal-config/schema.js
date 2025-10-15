@@ -341,7 +341,8 @@ export default {
           },
           title: {
             type: 'string',
-            title: 'Libellé'
+            title: 'Libellé',
+            layout: { cols: { md: 6 } }
           }
         }
       }, {

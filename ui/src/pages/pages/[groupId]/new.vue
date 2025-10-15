@@ -283,7 +283,7 @@ const userPagesFetch = useFetch<{ results: Page[] }>(
 /** `True` if the active account isn't in a department and his organization has departments */
 const hasDepartments = computedAsync(async (): Promise<boolean> => {
   if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath }) // Fetch the organization departments
+  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath }) // Fetch the organization departments
   return !!org.departments?.length // Check if the organization has departments
 }, false)
 
@@ -362,7 +362,7 @@ const createPage = useAsyncAction(
     else if (route.params.groupId === 'event' || route.params.groupId === 'news') type = route.params.groupId
     else type = 'generic'
 
-    const page = await $fetch($apiPath + '/pages', {
+    const page = await $fetch<{ _id: string }>($apiPath + '/pages', {
       method: 'POST',
       body: {
         owner: newOwner.value,
@@ -454,7 +454,7 @@ watch(group, () => {
     groupTitle:
       standard: Pages standard
       event: Événements
-      news: Actualitées
+      news: Actualités
       default: Autres pages
       unknown: Groupe inconnu
     information: Informations

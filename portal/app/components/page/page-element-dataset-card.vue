@@ -1,7 +1,7 @@
 <template>
   <dataset-card
-    v-if="datasetFetch.data.value"
-    :dataset="datasetFetch.data.value"
+    v-if="datasetFetch.data?.value"
+    :dataset="datasetFetch.data?.value"
     :card-config="element.cardConfig"
   />
 </template>
@@ -31,6 +31,10 @@ const { element } = defineProps<{ element: DatasetCard }>()
 const { preview } = usePortalStore()
 
 const fetch = preview ? useFetch<Dataset> : useLocalFetch<Dataset>
-const datasetFetch = fetch('/data-fair/api/v1/datasets/' + element.dataset.id)
+const datasetFetch = fetch('/data-fair/api/v1/datasets/' + element.dataset?.id, { immediate: false })
+
+watch(() => element.dataset?.id, (id) => {
+  if (id) datasetFetch.refresh()
+}, { immediate: true })
 
 </script>

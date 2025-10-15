@@ -11,7 +11,7 @@
           { text: t('tabs.previewDraft'), value: 'preview-draft' },
           { text: t('tabs.permissions'), value: 'permissions' },
           { text: t('tabs.publications'), value: 'publications' },
-          { text: t('tabs.metadata'), value: 'metadata' }
+          { text: t('tabs.informations'), value: 'informations' }
         ]"
       />
 
@@ -34,7 +34,7 @@
               <page-edit-publication />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="metadata">
+            <v-tabs-window-item value="informations">
               <page-activity />
             </v-tabs-window-item>
           </v-tabs-window>
@@ -96,7 +96,7 @@ watch(pageFetch.data, (page) => {
       preview: Preview
       previewDraft: Preview (draft)
       publications: Publications
-      metadata: Metadata
+      informations: Informations
     yes: Yes
 
   fr:
@@ -107,7 +107,7 @@ watch(pageFetch.data, (page) => {
     groupTitle:
       standard: Pages standard
       event: Événements
-      news: Actualitées
+      news: Actualités
       default: Autres pages
     no: Non
     pages: Pages
@@ -116,7 +116,7 @@ watch(pageFetch.data, (page) => {
       preview: Aperçu
       previewDraft: Aperçu (brouillon)
       publications: Publications
-      metadata: Métadonnées
+      informations: Informations
     yes: Oui
 
 </i18n>

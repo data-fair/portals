@@ -10,7 +10,7 @@
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
         :elements="element.children"
-        add-item-message="ajouter un bloc à la boite"
+        add-item-message="Ajouter un bloc à la boite"
       />
     </v-card-text>
     <v-card-actions>

@@ -27,7 +27,7 @@
             name="page-elements"
             :on-update="(newElements: PageElement[]) => onTabsChildrenUpdate(newElements, i)"
             :elements="tab.children!"
-            add-item-message="ajouter un bloc à l'onglet"
+            add-item-message="Ajouter un bloc à l'onglet"
           />
         </v-tabs-window-item>
       </v-tabs-window>

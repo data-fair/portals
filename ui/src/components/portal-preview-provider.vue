@@ -11,25 +11,33 @@ const { portalConfig } = defineProps<{
 
 const { t } = useI18n()
 
+// @ts-ignore
 const portalConfigDefault: PortalConfig = {
   datasets: {
-    cardsLayout: 'medium',
-    filtersLocation: 'top',
-    defaultSort: 'createdAt',
-    showActions: true,
-    cropThumbnails: true,
+    filtersLocation: 'left',
+    defaultSort: 'title',
+    columns: 0,
+    thumbnailLocation: 'none',
+    cropThumbnails: false,
+    showSummary: false,
+    actionsLocation: 'none',
     metadataLocation: 'right',
-    showImage: true,
-    actionsStyle: 'full'
+    attachmentsLocation: 'action',
+    showImage: false,
+    showDepartment: false,
+    actionsStyle: 'text'
   },
   applications: {
-    cardsLayout: 'vertical',
-    filtersLocation: 'top',
-    defaultSort: 'createdAt',
-    showActions: true,
-    cropThumbnails: true,
-    metadataLocation: 'right',
+    filtersLocation: 'left',
+    defaultSort: 'title',
+    columns: 0,
+    thumbnailLocation: 'left',
+    cropThumbnails: false,
+    showSummary: false,
+    actionsLocation: 'none',
+    metadataLocation: 'top',
     showImage: false,
+    showDepartment: false,
     actionsStyle: 'full'
   },
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
