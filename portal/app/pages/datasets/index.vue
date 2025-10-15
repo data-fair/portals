@@ -40,11 +40,11 @@
     <datasets-filters v-model:order="order" />
   </v-row>
 
-  <!-- TODO: Add infinite scroll -->
+  <!-- Datasets with infinite scroll -->
   <v-row class="d-flex align-stretch mt-2">
     <v-col
-      v-for="(dataset, i) in datasetsFetch.data.value?.results"
-      :key="i"
+      v-for="dataset in displayedDatasets"
+      :key="dataset.id"
       :md="12 / portalConfig.datasets.columns"
       cols="12"
     >
@@ -55,7 +55,22 @@
     </v-col>
   </v-row>
 
-  <!-- TODO: Show loading spinner -->
+  <!-- Loading spinner -->
+  <div
+    v-if="loading"
+    class="d-flex justify-center my-4"
+  >
+    <v-progress-circular
+      indeterminate
+      color="primary"
+    />
+  </div>
+
+  <!-- Intersection observer trigger for infinite scroll -->
+  <div
+    v-if="hasMore"
+    v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
+  />
 </template>
 
 <script setup lang="ts">
@@ -99,12 +114,19 @@ const order = ref<0 | 1>(0) // 0 = desc, 1 = asc
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 
+// Infinite scroll state
+const currentPage = ref(0)
+const displayedDatasets = ref<DatasetFetch['results']>([])
+const loading = ref(false)
+
 const datasetsQuery = computed(() => {
-  const query: Record<string, string> = {
+  const query: Record<string, string | number> = {
     select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
     facets: 'concepts,topics,owner',
     publicationSites: 'data-fair-portals:' + portal.value._id,
-    truncate: '250'
+    truncate: 250,
+    size: 20,
+    page: currentPage.value + 1
   }
   if (search.value) query.q = search.value
 
@@ -120,7 +142,45 @@ const datasetsQuery = computed(() => {
   if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
   return query
 })
-const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery })
+const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery, watch: false })
+
+// Computed property to check if there are more datasets to load
+const hasMore = computed(() => displayedDatasets.value.length < (datasetsFetch.data.value?.count || 0))
+
+// Function to load more datasets
+const loadMore = async () => {
+  if (loading.value || !hasMore.value) return
+
+  loading.value = true
+  try {
+    currentPage.value++
+    await datasetsFetch.refresh()
+
+    if (datasetsFetch.data.value?.results) {
+      displayedDatasets.value.push(...datasetsFetch.data.value.results)
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// Initialize datasets on mount
+onMounted(async () => {
+  await datasetsFetch.refresh()
+  if (datasetsFetch.data.value?.results) {
+    displayedDatasets.value = [...datasetsFetch.data.value.results]
+  }
+})
+
+// Reset datasets when filters change
+watch([search, sort, order, filters.concepts, filters.topics, filters.owners], async () => {
+  currentPage.value = 0
+  displayedDatasets.value = []
+  await datasetsFetch.refresh()
+  if (datasetsFetch.data.value?.results) {
+    displayedDatasets.value = [...datasetsFetch.data.value.results]
+  }
+})
 
 useSeoMeta({
   title: t('seo.title', { title: portalConfig.value.title }),

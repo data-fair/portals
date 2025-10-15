@@ -116,12 +116,12 @@
     </v-col>
   </v-row>
 
-  <!-- TODO: Add infinite scroll -->
+  <!-- Applications with infinite scroll -->
   <v-row class="d-flex align-stretch mt-2">
     <v-col
-      v-for="(application, i) in applicationsFetch.data.value?.results"
-      :key="i"
-      :md="12 / portalConfig.datasets.columns"
+      v-for="application in displayedApplications"
+      :key="application.id"
+      :md="12 / portalConfig.applications.columns"
       cols="12"
     >
       <application-card
@@ -131,7 +131,22 @@
     </v-col>
   </v-row>
 
-  <!-- TODO: Show loading spinner -->
+  <!-- Loading spinner -->
+  <div
+    v-if="loading"
+    class="d-flex justify-center my-4"
+  >
+    <v-progress-circular
+      indeterminate
+      color="primary"
+    />
+  </div>
+
+  <!-- Intersection observer trigger for infinite scroll -->
+  <div
+    v-if="hasMore"
+    v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
+  />
 </template>
 
 <script setup lang="ts">
@@ -149,7 +164,7 @@ type ApplicationFetch = {
     id: string
     slug: string
     title: string
-    description: string
+    summary: string
     updatedAt: string
     image?: string
     url: string
@@ -171,12 +186,19 @@ const filters = {
 }
 const order = ref(0) // 0 = desc, 1 = asc
 
+// Infinite scroll state
+const currentPage = ref(0)
+const displayedApplications = ref<ApplicationFetch['results']>([])
+const loading = ref(false)
+
 const applicationsQuery = computed(() => {
-  const query: Record<string, string> = {
-    select: 'id,slug,title,description,updatedAt,image,url,topics,-userPermissions',
+  const query: Record<string, string | number> = {
+    select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
     facets: 'base-application,topics,owner',
     publicationSites: 'data-fair-portals:' + portal.value._id,
-    truncate: '250'
+    truncate: 250,
+    size: 20,
+    page: currentPage.value + 1
   }
   if (search.value) query.q = search.value
   if (sort.value !== portalConfig.value.applications.defaultSort || order.value !== 0) query.sort = sort.value + ':' + (order.value * 2 - 1)
@@ -185,7 +207,45 @@ const applicationsQuery = computed(() => {
   if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
   return query
 })
-const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
+const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery, watch: false })
+
+// Computed property to check if there are more applications to load
+const hasMore = computed(() => displayedApplications.value.length < (applicationsFetch.data.value?.count || 0))
+
+// Function to load more applications
+const loadMore = async () => {
+  if (loading.value || !hasMore.value) return
+
+  loading.value = true
+  try {
+    currentPage.value++
+    await applicationsFetch.refresh()
+
+    if (applicationsFetch.data.value?.results) {
+      displayedApplications.value.push(...applicationsFetch.data.value.results)
+    }
+  } finally {
+    loading.value = false
+  }
+}
+
+// Initialize applications on mount
+onMounted(async () => {
+  await applicationsFetch.refresh()
+  if (applicationsFetch.data.value?.results) {
+    displayedApplications.value = [...applicationsFetch.data.value.results]
+  }
+})
+
+// Reset applications when filters change
+watch([search, sort, order, filters.baseApplications, filters.topics, filters.owners], async () => {
+  currentPage.value = 0
+  displayedApplications.value = []
+  await applicationsFetch.refresh()
+  if (applicationsFetch.data.value?.results) {
+    displayedApplications.value = [...applicationsFetch.data.value.results]
+  }
+})
 
 const topicsItems = computed(() => {
   const facets = applicationsFetch.data.value?.facets?.topics ?? []

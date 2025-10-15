@@ -3,86 +3,67 @@
     :to="`/applications/${application.slug}`"
     class="h-100 d-flex flex-column"
   >
-    <!-- Vertical layout -->
-    <template v-if="portalConfig.applications.cardsLayout === 'vertical' || $vuetify.display.xs">
-      <v-card-title>{{ application.title }}</v-card-title>
-
-      <v-img
-        :src="thumbnailUrl"
-        :cover="portalConfig.applications.cropThumbnails"
-        :alt="t('imageAlt', { title: application.title })"
-        height="170"
-      />
-
-      <v-list-item v-if="portalConfig.applications.actionsStyle !== 'icon'">
-        <template #prepend>
-          <owner-avatar
-            v-if="application.owner.department && portalConfig.applications.showDepartment"
-            :owner="application.owner"
-          />
-        </template>
-        <span :class="['text-caption', application.owner.department && portalConfig.applications.showDepartment ? 'ml-2' : '']">
-          {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-        </span>
-      </v-list-item>
-
-      <v-divider />
-      <v-card-actions
-        class="py-2 ga-0 cursor-default"
-        style="min-height: auto"
-        @click.prevent
-      >
-        <template v-if="portalConfig.applications.actionsLocation !== 'none' && !$vuetify.display.smAndDown">
-          <application-preview :application="application" />
-          <action-btn
-            :to="`/applications/${application.slug}/full`"
-            :action-style="portalConfig.applications.actionsStyle"
-            :icon="mdiFullscreen"
-            :text="t('text.full')"
-            :short-text="t('shortText.full')"
-          />
-        </template>
-
-        <template v-if="portalConfig.applications.actionsStyle === 'icon'">
-          <v-spacer />
-          <span class="text-caption mr-2">
-            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-          </span>
-          <owner-avatar
-            v-if="application.owner.department && portalConfig.applications.showDepartment"
-            :owner="application.owner"
-          />
-        </template>
-      </v-card-actions>
-    </template>
-
-    <!-- Horizontal layout -->
     <v-row
-      v-else
-      style="height:246px;"
+      class="flex-nowrap"
       no-gutters
     >
-      <v-col cols="4">
+      <!-- Image column -->
+      <v-col
+        v-if="portalConfig.applications.thumbnailLocation === 'left'"
+        cols="4"
+      >
         <v-img
+          v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
           :cover="portalConfig.applications.cropThumbnails"
           class="h-100"
         />
+        <v-divider vertical />
       </v-col>
-      <v-divider vertical />
+
+      <!-- Center column -->
       <v-col class="d-flex flex-column">
         <v-card-title>{{ application.title }}</v-card-title>
-        <v-card-text>{{ application.description }}</v-card-text>
+        <v-img
+          v-if="portalConfig.applications.thumbnailLocation === 'center' && thumbnailUrl"
+          :alt="t('imageAlt', { title: application.title })"
+          :src="thumbnailUrl"
+          :cover="portalConfig.applications.cropThumbnails"
+          height="170"
+        />
+        <v-card-text
+          v-if="portalConfig.applications.showSummary && application.summary?.length"
+          class="pb-0"
+        >
+          {{ application.summary }}
+        </v-card-text>
 
         <v-spacer />
-        <v-divider />
-        <v-card-actions
-          class="py-2 ga-0 cursor-default"
-          style="min-height: auto"
-          @click.prevent
+        <v-list-item>
+          <template #prepend>
+            <owner-avatar
+              v-if="application.owner.department && portalConfig.applications.showDepartment"
+              :owner="application.owner"
+            />
+          </template>
+          <span
+            :class="['text-caption', application.owner.department && portalConfig.applications.showDepartment ? 'ml-2' : '']"
+          >
+            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+          </span>
+        </v-list-item>
+
+        <!-- Actions (Bottom Location) -->
+        <template
+          v-if="portalConfig.applications.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
         >
-          <template v-if="portalConfig.applications.actionsLocation !== 'none' && !$vuetify.display.smAndDown">
+          <v-divider />
+          <v-card-actions
+            class="py-2 ga-0 cursor-default"
+            style="min-height: auto"
+            @click.prevent
+          >
             <application-preview :application="application" />
             <action-btn
               :to="`/applications/${application.slug}/full`"
@@ -91,18 +72,28 @@
               :text="t('text.full')"
               :short-text="t('shortText.full')"
             />
-          </template>
-
-          <v-spacer />
-          <span class="text-caption mr-2">
-            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-          </span>
-          <owner-avatar
-            v-if="application.owner.department && portalConfig.applications.showDepartment"
-            :owner="application.owner"
-          />
-        </v-card-actions>
+          </v-card-actions>
+        </template>
       </v-col>
+
+      <!-- Actions (Right Location) -->
+      <template v-if="portalConfig.applications.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+        <v-divider vertical />
+        <v-col
+          cols="auto"
+          class="pa-2 cursor-default d-flex flex-column ga-2"
+          @click.prevent
+        >
+          <application-preview :application="application" />
+          <action-btn
+            :to="`/applications/${application.slug}/full`"
+            :action-style="portalConfig.applications.actionsStyle"
+            :icon="mdiFullscreen"
+            :text="t('text.full')"
+            :short-text="t('shortText.full')"
+          />
+        </v-col>
+      </template>
     </v-row>
   </v-card>
 </template>
@@ -117,7 +108,7 @@ const { application } = defineProps<{
     id: string
     slug: string
     title: string
-    description: string
+    summary?: string
     updatedAt: string
     image?: string
     url: string

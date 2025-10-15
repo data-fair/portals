@@ -113,7 +113,7 @@ export default {
     useApplicationThumbnail: {
       type: 'boolean',
       title: 'Utiliser l\'image de l\'application',
-      description: 'Permet d\'utiliser l\'image de la première application qui utilise ce jeu de données si aucune image n\'est définie pour le jeu de données.',
+      description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
       layout: {
         comp: 'switch',
         cols: { md: 6 }

@@ -54,6 +54,7 @@
           </span>
         </v-list-item>
 
+        <!-- Actions (Bottom Location) -->
         <template
           v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown"
         >
@@ -86,12 +87,12 @@
         </template>
       </v-col>
 
-      <!-- Actions column -->
+      <!-- Actions (Right Location) -->
       <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
         <v-divider vertical />
         <v-col
-          :cols="cardConfig.actionsStyle === 'icon' ? 1 : 3"
-          class="pa-2 cursor-default"
+          cols="auto"
+          class="pa-2 cursor-default d-flex flex-column ga-2"
           @click.prevent
         >
           <dataset-table-preview :dataset="dataset" />
