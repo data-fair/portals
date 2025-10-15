@@ -7,7 +7,7 @@
     :color="element.color"
     class="my-4"
   >
-    <div v-html="element.content" />
+    <div v-html="element._html" />
   </v-alert>
 </template>
 

@@ -19,16 +19,14 @@
 
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page-config'
-
-import { parse as marked } from 'marked'
-import sanitizeHtml from 'sanitize-html'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 
 const element = defineModel<PageElement>()
 
 const renderedElement = computed(() => {
   if (!element.value) return
   if (element.value.type === 'text' && element.value.content) {
-    return { ...element.value, content: sanitizeHtml(marked(element.value.content) as string) }
+    return { ...element.value, _html: renderMarkdown(element.value.content ?? '') }
   }
   return element.value
 })

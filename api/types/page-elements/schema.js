@@ -101,7 +101,8 @@ export default {
           title: 'Contenu',
           type: 'string',
           layout: 'markdown'
-        }
+        },
+        _html: { $ref: '#/$defs/rendered-html' }
       }
     },
     'element-alert': {
@@ -164,7 +165,8 @@ export default {
           title: 'Contenu',
           type: 'string',
           layout: 'markdown'
-        }
+        },
+        _html: { $ref: '#/$defs/rendered-html' }
       }
     },
     'element-image': {
@@ -894,6 +896,12 @@ export default {
           $ref: '#/$defs/color'
         }
       }
+    },
+    'rendered-html': {
+      title: 'Contenu rendu en HTML',
+      type: 'string',
+      readOnly: true,
+      layout: 'none'
     }
   }
 }

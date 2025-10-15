@@ -26,7 +26,8 @@
   "workspaces": [
     "api",
     "ui",
-    "portal"
+    "portal",
+    "shared/markdown"
   ],
   "repository": {
     "type": "git",

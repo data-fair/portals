@@ -1,8 +1,9 @@
-import type { ImageRef, Page, PageElement } from '#types/page/index.ts'
+import type { ImageRef, Page, PageElement, PageConfig } from '#types/page/index.ts'
 import mongo from '#mongo'
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import slug from 'slugify'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 
 const debug = debugModule('pages')
 
@@ -95,6 +96,7 @@ export const deletePage = async (page: Page) => {
 
 export const validatePageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('validatePageDraft', page)
+  await renderMarkdownElements(page.draftConfig)
   const updatedPage = await patchPage(page, { config: page.draftConfig }, session)
   await cleanUnusedImages(updatedPage)
   return updatedPage
@@ -122,6 +124,14 @@ const cleanUnusedImages = async (page: Page) => {
     _id: { $nin: imagesIds }
   }
   await mongo.images.deleteMany(deleteFilter)
+}
+
+const renderMarkdownElements = async (pageConfig: PageConfig) => {
+  await traversePageElements(pageConfig.elements, async pageElement => {
+    if (pageElement.type === 'text' || pageElement.type === 'alert') {
+      pageElement._html = pageElement.content && renderMarkdown(pageElement.content)
+    }
+  })
 }
 
 const getPageImageRefs = async (page: Page) => {

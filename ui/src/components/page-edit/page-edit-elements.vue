@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page-config'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { type Options as VjsfOptions } from '@koumoul/vjsf'
 
 const elements = defineModel<PageElement[]>()
@@ -40,6 +41,13 @@ const vjsfOptions: VjsfOptions = {
   // @ts-ignore
   messages: {
     addItem: addItemMessage
+  },
+  pluginsOptions: {
+    markdown: {
+      easyMDEOptions: {
+        previewRender: renderMarkdown
+      }
+    }
   }
 }
 </script>
