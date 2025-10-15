@@ -51,9 +51,12 @@ RUN npm -w ui run build
 ##########################
 FROM installer AS api-installer
 
-# remove other workspaces and reinstall, otherwise we can get rig have some peer dependencies from other workspaces
-RUN npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-audit --no-fund && \
-    npx clean-modules
+RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
+    cp -rf node_modules/@img/sharp-libvips-linuxmusl-x64 /tmp/sharp-libvips-linuxmusl-x64 && \
+    npm ci -w api --prefer-offline --omit=dev --omit=optional --omit=peer --no-audit --no-fund && \
+    npx clean-modules && \
+    cp -rf /tmp/sharp-linuxmusl-x64 node_modules/@img/sharp-linuxmusl-x64 && \
+    cp -rf /tmp/sharp-libvips-linuxmusl-x64 node_modules/@img/sharp-libvips-linuxmusl-x64
 RUN mkdir -p /app/api/node_modules
 
 ##########################
