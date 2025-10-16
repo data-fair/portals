@@ -86,15 +86,11 @@ type Application = {
   id: string
   slug: string
   title: string
-  description: string
   updatedAt: string
   image?: string
   url: string
-  href: string
-  exposedUrl: string
   public: boolean
   owner: Account
-  topics: { id: string; title: string }[]
 }
 
 const { application } = defineProps<{ application: Application }>()

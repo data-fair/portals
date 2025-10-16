@@ -161,24 +161,23 @@ const externalLinks = computed(() => {
   return links
 })
 
-useSeoMeta({
+usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,
-  description: portalConfig.value.description,
-  ogTitle: t('sitemap') + ' - ' + portalConfig.value.title,
-  ogDescription: portalConfig.value.description,
-  ogType: 'website'
+  description: t('description')
 })
 </script>
 
 <i18n lang="yaml">
   en:
     sitemap: Sitemap
+    description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
     externalLinks: External Links
   fr:
     sitemap: Plan du site
+    description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité

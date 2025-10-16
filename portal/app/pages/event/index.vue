@@ -52,6 +52,9 @@
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
 
+const { t } = useI18n()
+const { portalConfig } = usePortalStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -83,8 +86,20 @@ const goToPage = (page: number) => {
   router.push({ query: { page } })
 }
 
-useSeoMeta({
-  title: 'Événements',
-  description: 'Liste des événements'
+usePageSeo({
+  title: t('seo.title', { title: portalConfig.value.title }),
+  description: t('seo.description')
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    seo:
+      title: 'Events - {title}'
+      description: 'Browse and discover events. Find information about upcoming and past events.'
+
+  fr:
+    seo:
+      title: 'Événements - {title}'
+      description: 'Parcourez et découvrez les événements. Trouvez des informations sur les événements à venir et passés.'
+</i18n>

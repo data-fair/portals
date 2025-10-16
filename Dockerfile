@@ -31,7 +31,8 @@ ADD api/package.json api/package.json
 ADD portal/package.json portal/package.json
 # full deps install used for types and ui building
 # also used to fill the npm cache for faster install of api deps
-RUN npm ci --omit=dev --omit=peer --no-audit --no-fund
+# Note: --omit=peer can break nuxt's dependency resolution during postinstall
+RUN npm ci --omit=dev --no-audit --no-fund
 
 # =============================
 # Build Types

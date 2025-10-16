@@ -11,10 +11,11 @@
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs } = useNavigationStore()
+const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 
-const applicationFetch = useLocalFetch<{ title: string }>(`/data-fair/api/v1/applications/${route.params.ref}`)
+const applicationFetch = useLocalFetch<{ title: string, summary?: string, description?: string, image?: string }>(`/data-fair/api/v1/applications/${route.params.ref}`)
 
 watch(applicationFetch.data, () => {
   setBreadcrumbs([
@@ -23,6 +24,12 @@ watch(applicationFetch.data, () => {
     { title: t('fullscreen') }
   ], route.name as string)
 }, { immediate: true })
+
+usePageSeo({
+  title: () => applicationFetch.data.value?.title || t('applications', 0),
+  description: () => applicationFetch.data.value?.summary || applicationFetch.data.value?.description || portalConfig.value.description,
+  ogImage: () => applicationFetch.data.value?.image
+})
 </script>
 
 <i18n lang="yaml">

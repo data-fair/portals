@@ -11,9 +11,9 @@
         cols="12"
       >
         <img
-          v-if="portalConfig.datasets.showImage && dataset.image"
+          v-if="portalConfig.datasets.showImage && thumbnailUrl"
           :alt="dataset.title"
-          :src="dataset.image"
+          :src="thumbnailUrl"
           class="mb-4"
           style="max-height:300px"
         >
@@ -87,7 +87,8 @@ type Dataset = {
   id: string
   slug: string
   title: string
-  description: string
+  summary?: string
+  description?: string
   dataUpdatedAt: string
   updatedAt: string
   owner: Account
@@ -144,6 +145,15 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 
 const dataset = computed(() => datasetFetch.data.value)
 
+const thumbnailUrl = computed(() => {
+  if (dataset.value?.image) return dataset.value.image
+  if (portalConfig.value.datasets.useApplicationThumbnail && dataset.value?.extras?.applications?.[0]) {
+    const { origin } = useRequestURL()
+    return `${origin}/data-fair/api/v1/applications/${dataset.value.extras.applications[0].id}/capture?updatedAt=${dataset.value.extras.applications[0].updatedAt}`
+  }
+  return undefined
+})
+
 const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>('/data-fair/api/v1/applications', {
   params: {
     select: 'id,slug,title,description,url,preferLargeDisplay',
@@ -164,13 +174,22 @@ const orderedApplications = computed(() => {
   return [...ordered, ...remaining]
 })
 
+usePageSeo({
+  title: () => dataset.value?.title || t('dataset'),
+  description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
+  ogImage: () => thumbnailUrl.value,
+  ogType: 'article'
+})
+
 </script>
 
 <i18n lang="yaml">
   en:
     application: Application
     backToDatasets: Back to datasets list
+    dataset: Dataset
   fr:
     application: Visualisation
     backToDatasets: Retour à la liste des jeux de données
+    dataset: Jeu de données
 </i18n>

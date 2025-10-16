@@ -11,6 +11,7 @@ import type { ImageRef, PageConfig } from '#api/types/page'
 const route = useRoute()
 const slug = route.params.slug as string
 
+const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/news/${slug}`, {
   watch: false
@@ -22,13 +23,16 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/news/${slug}/images/${id}`
 })
 
-useSeoMeta({
-  title: pageConfigFetch.data.value?.title
-    ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
-    : portalConfig.value.title,
-  description: pageConfigFetch.data.value?.description || portalConfig.value.description,
-  ogTitle: pageConfigFetch.data.value?.title || portalConfig.value.title,
-  ogDescription: pageConfigFetch.data.value?.description || portalConfig.value.description,
+usePageSeo({
+  title: () => (pageConfigFetch.data.value?.title || t('news')) + ' - ' + portalConfig.value.title,
+  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description,
   ogType: 'article'
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    news: News
+  fr:
+    news: Actualité
+</i18n>

@@ -75,7 +75,8 @@ type Application = {
   id: string
   slug: string
   title: string
-  description: string
+  summary?: string
+  description?: string
   updatedAt: string
   image?: string
   url: string
@@ -127,6 +128,13 @@ const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>('/dat
     ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(',') || '',
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
+})
+
+usePageSeo({
+  title: () => application.value?.title || t('application'),
+  description: () => application.value?.summary || application.value?.description || portalConfig.value.description,
+  ogImage: () => application.value?.image,
+  ogType: 'article'
 })
 
 </script>

@@ -24,13 +24,10 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/generic/${slug}/images/${id}`
 })
 
-useSeoMeta({
-  title: pageConfigFetch.data.value?.title
+usePageSeo({
+  title: () => pageConfigFetch.data.value?.title
     ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
     : portalConfig.value.title,
-  description: pageConfigFetch.data.value?.description || portalConfig.value.description,
-  ogTitle: pageConfigFetch.data.value?.title || portalConfig.value.title,
-  ogDescription: pageConfigFetch.data.value?.description || portalConfig.value.description,
-  ogType: 'website'
+  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
 })
 </script>

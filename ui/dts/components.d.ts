@@ -81,6 +81,7 @@ declare module 'vue' {
     PortalsActions: typeof import('./../src/components/portals-actions.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SitemapMenuItem: typeof import('./../../portal/app/components/sitemap-menu-item.vue')['default']
     SocialLinks: typeof import('./../../portal/app/components/social-links.vue')['default']
     SocialShare: typeof import('./../../portal/app/components/social-share.vue')['default']
     TopicsFilter: typeof import('./../../portal/app/components/topics-filter.vue')['default']

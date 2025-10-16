@@ -42,8 +42,8 @@ const onScroll = () => {
 
 <i18n lang="yaml">
   en:
-    scrollToTop: 'Scroll to top of the page'
+    scrollToTop: 'Scroll to top'
 
   fr:
-    scrollToTop: 'Revenir en haut de la page'
+    scrollToTop: 'Remonter au début de la page'
 </i18n>

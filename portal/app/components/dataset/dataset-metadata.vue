@@ -187,7 +187,8 @@ type Dataset = {
   id: string
   slug: string
   title: string
-  description: string
+  summary?: string
+  description?: string
   dataUpdatedAt: string
   updatedAt: string
   owner: Account

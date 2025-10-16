@@ -182,12 +182,9 @@ watch([search, sort, order, filters.concepts, filters.topics, filters.owners], a
   }
 })
 
-useSeoMeta({
+usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),
-  description: t('seo.description'),
-  ogTitle: t('seo.title', { title: portalConfig.value.title }),
-  ogDescription: t('seo.description'),
-  ogType: 'website'
+  description: t('seo.description')
 })
 
 </script>

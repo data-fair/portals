@@ -19,10 +19,11 @@
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs } = useNavigationStore()
+const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 
-const datasetFetch = useLocalFetch<{ title: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+const datasetFetch = useLocalFetch<{ title: string, summary: string, description: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
 
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
@@ -31,6 +32,11 @@ watch(datasetFetch.data, () => {
     { title: t('apiDoc') }
   ], route.name as string)
 }, { immediate: true })
+
+usePageSeo({
+  title: () => t('apiDoc') + (datasetFetch.data.value?.title || t('datasets', 0)),
+  description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description
+})
 </script>
 
 <i18n lang="yaml">

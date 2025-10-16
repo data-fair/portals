@@ -19,12 +19,9 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
 })
 
 // Meta from portal config, not home page config
-useSeoMeta({
+usePageSeo({
   title: portalConfig.value.title,
-  description: portalConfig.value.description,
-  ogTitle: portalConfig.value.title,
-  ogDescription: portalConfig.value.description,
-  ogType: 'website'
+  description: portalConfig.value.description
 })
 
 </script>

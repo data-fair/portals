@@ -52,6 +52,9 @@
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
 
+const { t } = useI18n()
+const { portalConfig } = usePortalStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -77,8 +80,20 @@ const goToPage = (page: number) => {
   router.push({ query: { page } })
 }
 
-useSeoMeta({
-  title: 'Actualités',
-  description: 'Liste des actualités'
+usePageSeo({
+  title: t('seo.title', { title: portalConfig.value.title }),
+  description: t('seo.description')
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    seo:
+      title: 'News - {title}'
+      description: 'Browse and discover the latest news. Stay informed about recent updates and announcements.'
+
+  fr:
+    seo:
+      title: 'Actualités - {title}'
+      description: 'Parcourez et découvrez les dernières actualités. Restez informé des mises à jour et annonces récentes.'
+</i18n>

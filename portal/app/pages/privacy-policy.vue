@@ -20,12 +20,9 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
 
 const title = computed(() => (pageConfigFetch.data.value?.title || t('privacyPolicy')) + ' - ' + portalConfig.value.title)
 const description = computed(() => pageConfigFetch.data.value?.description || portalConfig.value.description)
-useSeoMeta({
+usePageSeo({
   title: title.value,
-  description: description.value,
-  ogTitle: title.value,
-  ogDescription: description.value,
-  ogType: 'website'
+  description: description.value
 })
 </script>
 
