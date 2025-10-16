@@ -28,6 +28,12 @@ export default {
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
     created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
     updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
+    configUpdatedAt: {
+      type: 'string',
+      format: 'date-time',
+      title: 'Date de mise à jour de la configuration',
+      readOnly: true
+    },
     config: { $ref: 'https://github.com/data-fair/portals/page-config' },
     draftConfig: { $ref: 'https://github.com/data-fair/portals/page-config' },
     portals: {

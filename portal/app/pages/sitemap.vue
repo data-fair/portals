@@ -1,24 +1,186 @@
 <template>
-  <div>
-    Sitemap
-  </div>
+  <v-container>
+    <h1 class="text-h3 mb-6">
+      {{ t('sitemap') }}
+    </h1>
+
+    <ul style="list-style: none;">
+      <!-- Home always first -->
+      <li v-if="!allInternalPaths.has('/')" class="mb-2">
+        <NuxtLink to="/">{{ t('home') }}</NuxtLink>
+      </li>
+
+      <!-- Navigation menu items -->
+      <sitemap-menu-item
+        v-for="(item, i) in internalNavigationItems"
+        :key="`nav-${i}`"
+        :item="item"
+      />
+
+      <!-- Footer links -->
+      <sitemap-menu-item
+        v-for="(item, i) in internalFooterLinks"
+        :key="`footer-${i}`"
+        :item="item"
+      />
+
+      <!-- Footer important links -->
+      <sitemap-menu-item
+        v-for="(item, i) in internalFooterImportantLinks"
+        :key="`footer-important-${i}`"
+        :item="item"
+      />
+
+      <!-- Contact and Privacy Policy in last -->
+      <li v-if="contactExists && !allInternalPaths.has('/contact')">
+        <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
+      </li>
+      <li v-if="privacyPolicyExists && !allInternalPaths.has('/privacy-policy')">
+        <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+      </li>
+    </ul>
+
+    <v-divider class="my-4" />
+
+    <!-- External links -->
+    <section
+      v-if="externalLinks.length"
+    >
+      <h2 class="text-h5 mb-4">
+        {{ t('externalLinks') }}
+      </h2>
+      <ul style="list-style: none;">
+        <li
+          v-for="(link, i) in externalLinks"
+          :key="`external-${i}`"
+          class="mb-2"
+        >
+          <a
+            :href="link.href"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ link.title }}
+          </a>
+        </li>
+      </ul>
+    </section>
+  </v-container>
 </template>
 
 <script setup lang="ts">
+import type { PageConfig } from '#api/types/page'
+import type { MenuItem, LinkItem } from '#api/types/portal'
 
-// Best practices for sitemap
-/*
-C'est une page dédiée aux humains et pour l'accessibilité.
+const { t } = useI18n()
+const { portalConfig } = usePortalStore()
+const { resolveLink } = useNavigationStore()
 
-On y met :
+// Check if contact / privacy policy page exists
+const contactFetch = await useLocalFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
+const contactExists = computed(() => !!contactFetch.data.value && !contactFetch.error.value)
+const privacyPolicyFetch = await useLocalFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
+const privacyPolicyExists = computed(() => !!privacyPolicyFetch.data.value && !privacyPolicyFetch.error.value)
 
-Un accès rapide à toutes les rubriques principales.
-Les pages secondaires importantes (par ex. les pages du menu de navigation).
+// Collect all internal paths recursively
+const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
+  const paths = new Set<string>()
 
-Les pages légales et contact.
+  const processItem = (item: MenuItem | LinkItem) => {
+    if (item.type === 'submenu' && 'children' in item && item.children) {
+      item.children.forEach(processItem)
+    } else if (item.type !== 'external') {
+      const path = resolveLink(item)
+      if (path) paths.add(path)
+    }
+  }
 
-Idéalement, cette page suit une structure hiérarchique (titres <h2>/<h3>),
-et les liens sont regroupés par thématique pour être compréhensibles par les lecteurs d'écran.
-*/
+  items.forEach(processItem)
+  return paths
+}
 
+// Filter to get only internal items
+const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkItem)[] => {
+  return items.filter(item => {
+    if (item.type === 'submenu' && 'children' in item && item.children) {
+      return filterInternalItems(item.children).length > 0
+    }
+    return item.type !== 'external'
+  }).map(item => {
+    if (item.type === 'submenu' && 'children' in item && item.children) {
+      return { ...item, children: filterInternalItems(item.children) }
+    }
+    return item
+  })
+}
+
+// Filter to get only external items
+const filterExternalItems = (items: (MenuItem | LinkItem)[]): Array<{ title: string, href?: string }> => {
+  const externalItems: Array<{ title: string, href?: string }> = []
+
+  const processItem = (item: MenuItem | LinkItem) => {
+    if (item.type === 'submenu' && 'children' in item && item.children) {
+      item.children.forEach(processItem)
+    } else if (item.type === 'external' && 'href' in item) {
+      externalItems.push({ title: item.title, href: item.href })
+    }
+  }
+
+  items.forEach(processItem)
+  return externalItems
+}
+
+const internalNavigationItems = computed(() => filterInternalItems(portalConfig.value.menu.children))
+const internalFooterLinks = computed(() => filterInternalItems(portalConfig.value.footer.links || []))
+const internalFooterImportantLinks = computed(() => filterInternalItems(portalConfig.value.footer.importantLinks || []))
+
+// All internal paths (to avoid duplicates)
+const allInternalPaths = computed(() => {
+  const paths = new Set<string>()
+  paths.add('/') // Always add home
+  collectInternalPaths(portalConfig.value.menu.children).forEach(p => paths.add(p))
+  if (portalConfig.value.footer.links) {
+    collectInternalPaths(portalConfig.value.footer.links).forEach(p => paths.add(p))
+  }
+  if (portalConfig.value.footer.importantLinks) {
+    collectInternalPaths(portalConfig.value.footer.importantLinks).forEach(p => paths.add(p))
+  }
+  return paths
+})
+
+// All external links
+const externalLinks = computed(() => {
+  const links: Array<{ title: string, href?: string }> = []
+  links.push(...filterExternalItems(portalConfig.value.menu.children))
+  if (portalConfig.value.footer.links) {
+    links.push(...filterExternalItems(portalConfig.value.footer.links))
+  }
+  if (portalConfig.value.footer.importantLinks) {
+    links.push(...filterExternalItems(portalConfig.value.footer.importantLinks))
+  }
+  return links
+})
+
+useSeoMeta({
+  title: t('sitemap') + ' - ' + portalConfig.value.title,
+  description: portalConfig.value.description,
+  ogTitle: t('sitemap') + ' - ' + portalConfig.value.title,
+  ogDescription: portalConfig.value.description,
+  ogType: 'website'
+})
 </script>
+
+<i18n lang="yaml">
+  en:
+    sitemap: Sitemap
+    home: Home
+    contact: Contact
+    privacyPolicy: Privacy Policy
+    externalLinks: External Links
+  fr:
+    sitemap: Plan du site
+    home: Accueil
+    contact: Contact
+    privacyPolicy: Politique de confidentialité
+    externalLinks: Liens externes
+</i18n>

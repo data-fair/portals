@@ -10,7 +10,7 @@ import type { ImageRef, PageConfig } from '#api/types/page'
 
 definePageMeta({ layout: 'home' })
 const { portalConfig } = usePortalStore()
-const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/home/home', { watch: false })
+const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/home/home', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
@@ -18,6 +18,7 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/home/home/images/${id}`
 })
 
+// Meta from portal config, not home page config
 useSeoMeta({
   title: portalConfig.value.title,
   description: portalConfig.value.description,

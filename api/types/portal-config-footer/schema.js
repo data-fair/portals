@@ -205,7 +205,7 @@ export default {
           label: {
             type: 'string',
             title: 'Libellé',
-            description: 'Texte affiché au survol du logo, pour l’accessibilité.',
+            description: "Texte affiché au survol du logo, pour l'accessibilité.",
             layout: { cols: { md: 6 } }
           },
           link: {

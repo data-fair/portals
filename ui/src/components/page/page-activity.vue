@@ -12,14 +12,13 @@
   <v-alert
     v-if="page && session.state.user.adminMode"
     variant="outlined"
-    type="warning"
+    density="compact"
     color="admin"
-    title="This page is a reference page. Only superadmins can modify it."
     class="mb-4"
   >
     <v-checkbox
       :model-value="page.isReference"
-      :label="t('This is a reference page. Only superadmins can modify it.')"
+      :label="t('referenceCheckbox')"
       density="compact"
       hide-details
       @click="patchPage.execute({ isReference: !page.isReference })"
@@ -84,6 +83,7 @@ const avatarUrl = computed(() => {
       contact: Contact
       privacy-policy: Privacy policy
       generic: Custom content
+    referenceCheckbox: Set as reference page (Only editable by superadmins)
   fr:
     changeTitle:
       label: Titre affiché dans le back-office (non visible sur le portail).
@@ -98,4 +98,5 @@ const avatarUrl = computed(() => {
       contact: Contact
       privacy-policy: Politique de confidentialité
       generic: Contenu libre
+    referenceCheckbox: Définir cette page comme page de référence
 </i18n>

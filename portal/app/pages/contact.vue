@@ -9,7 +9,7 @@
 import type { ImageRef, PageConfig } from '#api/types/page'
 
 const { portalConfig } = usePortalStore()
-const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
+const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
@@ -17,11 +17,14 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/contact/contact/images/${id}`
 })
 
+const title = computed(() => (pageConfigFetch.data.value?.title || 'Contact') + ' - ' + portalConfig.value.title)
+const description = computed(() => pageConfigFetch.data.value?.description || portalConfig.value.description)
 useSeoMeta({
-  title: `Contact - ${portalConfig.value.title}`,
-  description: portalConfig.value.description,
-  ogTitle: `Contact - ${portalConfig.value.title}`,
-  ogDescription: portalConfig.value.description,
+  title: title.value,
+  description: description.value,
+  ogTitle: title.value,
+  ogDescription: description.value,
   ogType: 'website'
 })
+
 </script>

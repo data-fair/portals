@@ -1,10 +1,14 @@
-##########################
+# =============================
+# Base Node image
+# =============================
 FROM node:24.10.0-alpine3.22 AS base
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-##########################
+# =============================
+# Package preparation (stripping version for caching)
+# =============================
 FROM base AS package-strip
 
 RUN apk add --no-cache jq moreutils
@@ -13,7 +17,9 @@ ADD package.json package-lock.json ./
 RUN jq '.version="build"' package.json | sponge package.json
 RUN jq '.version="build"' package-lock.json | sponge package-lock.json
 
-##########################
+# =============================
+# Full dependencies installation (for types and building)
+# =============================
 FROM base AS installer
 
 RUN apk add --no-cache python3 make g++ git jq moreutils
@@ -27,15 +33,19 @@ ADD portal/package.json portal/package.json
 # also used to fill the npm cache for faster install of api deps
 RUN npm ci --omit=dev --omit=peer --no-audit --no-fund
 
-##########################
+# =============================
+# Build Types
+# =============================
 FROM installer AS types
 
+ADD api/config api/config
 ADD api/types api/types
 ADD api/doc api/doc
-ADD api/config api/config
 RUN npm run build-types
 
-##########################
+# =============================
+# Build UI with Vite
+# =============================
 FROM installer AS ui
 
 RUN npm i --no-save @rollup/rollup-linux-x64-musl
@@ -44,11 +54,14 @@ COPY --from=types /app/api/types api/types
 ADD /api/src/config.ts api/src/config.ts
 ADD /api/src/ui-config.ts api/src/ui-config.ts
 ADD /ui ui
+ADD /shared/markdown shared/markdown
 ADD /portal/app/components portal/app/components
 COPY --from=types /app/ui/src/components/vjsf ui/src/components/vjsf
 RUN npm -w ui run build
 
-##########################
+# =============================
+# Install production dependencies for API
+# =============================
 FROM installer AS api-installer
 
 RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
@@ -57,6 +70,7 @@ RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
     npx clean-modules && \
     cp -rf /tmp/sharp-linuxmusl-x64 node_modules/@img/sharp-linuxmusl-x64 && \
     cp -rf /tmp/sharp-libvips-linuxmusl-x64 node_modules/@img/sharp-libvips-linuxmusl-x64
+RUN mkdir -p /app/shared/node_modules
 RUN mkdir -p /app/api/node_modules
 
 ##########################
@@ -90,15 +104,19 @@ USER node
 WORKDIR /app/portal
 CMD ["node", "/app/portal/.output/server/index.mjs"]
 
-##########################
+# =============================
+# Final API Image
+# =============================
 FROM base AS manager
 
 COPY --from=fonts-builder /app/api/assets api/assets
 COPY --from=api-installer /app/node_modules node_modules
+ADD /shared shared
 ADD /api api
 COPY --from=types /app/api/types api/types
 COPY --from=types /app/api/doc api/doc
 COPY --from=types /app/api/config api/config
+COPY --from=api-installer /app/shared/node_modules shared/node_modules
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist
 ADD package.json README.md LICENSE BUILD.json* ./

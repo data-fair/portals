@@ -97,7 +97,7 @@ export const deletePage = async (page: Page) => {
 export const validatePageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('validatePageDraft', page)
   await renderMarkdownElements(page.draftConfig)
-  const updatedPage = await patchPage(page, { config: page.draftConfig }, session)
+  const updatedPage = await patchPage(page, { config: page.draftConfig, configUpdatedAt: new Date().toISOString() }, session)
   await cleanUnusedImages(updatedPage)
   return updatedPage
 }
