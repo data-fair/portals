@@ -678,26 +678,26 @@ export default {
           oneOf: [
             {
               const: 'equal',
-              title: 'largeur de même taille'
+              title: 'Largeur de même taille'
             },
             {
               const: 'left',
-              title: 'colonne gauche large'
+              title: 'Colonne gauche large'
             },
             {
               const: 'right',
-              title: 'colonne droite large'
+              title: 'Colonne droite large'
             }
           ]
         },
         gutter: {
           type: 'string',
-          title: 'Espacement',
+          title: 'Espacement entre les colonnes',
           default: 'default',
           oneOf: [
-            { const: 'none', title: 'aucun' },
-            { const: 'dense', title: 'petit' },
-            { const: 'default', title: 'normal' }
+            { const: 'none', title: 'Aucun espacement' },
+            { const: 'dense', title: 'Petit espacement' },
+            { const: 'default', title: 'Espacement normal' }
           ]
         },
         children: {

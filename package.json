@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
-    "@data-fair/lib-node": "^2.9.0",
     "@koumoul/vjsf-compiler": "^1.1.0",
     "@types/config": "^3.3.5",
     "@types/debug": "^4.1.12",

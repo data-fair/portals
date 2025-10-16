@@ -56,10 +56,10 @@ router.post('', async (req, res, next) => {
     theme: fillTheme(defaultTheme, defaultTheme),
     menu: {
       children: [
-        { type: 'standard', subtype: 'home', title: 'accueil' },
-        { type: 'standard', subtype: 'datasets', title: 'jeux de données' },
-        { type: 'standard', subtype: 'applications', title: 'visualisations' },
-        { type: 'standard', subtype: 'contact', title: 'contact' }
+        { type: 'standard', subtype: 'home', title: 'Accueil' },
+        { type: 'standard', subtype: 'datasets', title: 'Jeux de données' },
+        { type: 'standard', subtype: 'applications', title: 'Visualisations' },
+        { type: 'standard', subtype: 'contact', title: 'Contact' }
       ]
     },
     header: {
