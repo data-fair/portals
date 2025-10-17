@@ -31,6 +31,10 @@
     v-else-if="element.type === 'topics'"
     :element="element"
   />
+  <page-element-datasets-list
+    v-else-if="element.type === 'datasets-list'"
+    :element="element"
+  />
   <page-element-dataset-card
     v-else-if="element.type === 'dataset-card'"
     :element="element"
@@ -41,6 +45,10 @@
   />
   <page-element-dataset-form
     v-else-if="element.type === 'dataset-form'"
+    :element="element"
+  />
+  <page-element-applications-list
+    v-else-if="element.type === 'applications-list'"
     :element="element"
   />
   <page-element-application

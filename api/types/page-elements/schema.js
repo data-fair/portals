@@ -43,9 +43,11 @@ export default {
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-topics' },
+        { $ref: '#/$defs/element-datasets-list' },
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
+        { $ref: '#/$defs/element-applications-list' },
         { $ref: '#/$defs/element-application' },
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
@@ -300,8 +302,6 @@ export default {
         en: 'Topics list',
         fr: 'Liste des thématiques'
       },
-      // TODO add a description
-      // -> Affiche les topics uniquement des datasets publiés sur ce portail
       required: ['type'],
       properties: {
         type: {
@@ -321,7 +321,7 @@ export default {
         density: {
           type: 'string',
           title: 'Densité',
-          default: 'default',
+          default: 'comfortable',
           oneOf: [
             { const: 'default', title: 'Normale' },
             { const: 'comfortable', title: 'Confortable' },
@@ -338,6 +338,114 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
+        }
+      }
+    },
+    'element-datasets-list': {
+      type: 'object',
+      title: 'Datasets list',
+      'x-i18n-title': {
+        fr: 'Liste de jeux de données'
+      },
+      required: ['type', 'columns', 'limit', 'cardConfig'],
+      properties: {
+        type: {
+          const: 'datasets-list'
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de jeux de données',
+          description: 'Nombre total de jeux de données à afficher.',
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        cardConfig: {
+          type: 'object',
+          title: 'Configuration des cartes',
+          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
+          properties: {
+            thumbnailLocation: {
+              type: 'string',
+              title: 'Position de l\'image sur la carte',
+              default: 'center',
+              oneOf: [
+                { const: 'left', title: 'À gauche' },
+                { const: 'center', title: 'Sous le titre' },
+                { const: 'none', title: 'Ne pas afficher' }
+              ]
+            },
+            useApplicationThumbnail: {
+              type: 'boolean',
+              title: 'Utiliser l\'image de l\'application',
+              description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
+              layout: {
+                comp: 'switch',
+                cols: { md: 6 }
+              },
+              default: false
+            },
+            cropThumbnails: {
+              type: 'boolean',
+              title: 'Recadrer l\'image pour un rendu uniforme',
+              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+              layout: {
+                comp: 'switch',
+                cols: { md: 6 }
+              },
+              default: true
+            },
+            showSummary: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le résumé sur la carte',
+              default: true
+            },
+            actionsLocation: {
+              type: 'string',
+              title: 'Position des boutons d\'actions sur la carte',
+              default: 'bottom',
+              oneOf: [
+                { const: 'right', title: 'À droite' },
+                { const: 'bottom', title: 'En bas' },
+                { const: 'none', title: 'Aucun' }
+              ]
+            },
+            showDepartment: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le département du propriétaire',
+              description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
+              default: true
+            },
+            actionsStyle: {
+              type: 'string',
+              title: 'Style des boutons d\'actions',
+              default: 'full',
+              oneOf: [
+                {
+                  title: 'Icône seulement',
+                  const: 'icon'
+                },
+                {
+                  title: 'Icône et texte',
+                  const: 'full'
+                },
+                {
+                  title: 'Texte seulement',
+                  const: 'text'
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -565,6 +673,104 @@ export default {
             },
             title: {
               type: 'string'
+            }
+          }
+        }
+      }
+    },
+    'element-applications-list': {
+      type: 'object',
+      title: 'Applications list',
+      'x-i18n-title': {
+        fr: 'Liste de visualisations'
+      },
+      required: ['type', 'columns', 'limit', 'cardConfig'],
+      properties: {
+        type: {
+          const: 'applications-list'
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de visualisations',
+          description: 'Nombre total de visualisations à afficher.',
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        cardConfig: {
+          type: 'object',
+          title: 'Configuration des cartes',
+          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
+          properties: {
+            thumbnailLocation: {
+              type: 'string',
+              title: 'Position de l\'image sur la carte',
+              default: 'center',
+              oneOf: [
+                { const: 'left', title: 'À gauche' },
+                { const: 'center', title: 'Sous le titre' },
+                { const: 'none', title: 'Ne pas afficher' }
+              ]
+            },
+            cropThumbnails: {
+              type: 'boolean',
+              title: 'Recadrer l\'image pour un rendu uniforme',
+              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+              layout: {
+                comp: 'switch',
+                cols: { md: 6 }
+              },
+              default: true
+            },
+            showSummary: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le résumé sur la carte',
+              default: true
+            },
+            actionsLocation: {
+              type: 'string',
+              title: 'Position des boutons d\'actions sur la carte',
+              default: 'bottom',
+              oneOf: [
+                { const: 'right', title: 'À droite' },
+                { const: 'bottom', title: 'En bas' },
+                { const: 'none', title: 'Aucun' }
+              ]
+            },
+            showDepartment: {
+              type: 'boolean',
+              layout: 'switch',
+              title: 'Afficher le département du propriétaire',
+              description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
+              default: true
+            },
+            actionsStyle: {
+              type: 'string',
+              title: 'Style des boutons d\'actions',
+              default: 'full',
+              oneOf: [
+                {
+                  title: 'Icône seulement',
+                  const: 'icon'
+                },
+                {
+                  title: 'Icône et texte',
+                  const: 'full'
+                },
+                {
+                  title: 'Texte seulement',
+                  const: 'text'
+                }
+              ]
             }
           }
         }

@@ -9,14 +9,14 @@
     >
       <!-- Image column -->
       <v-col
-        v-if="portalConfig.applications.thumbnailLocation === 'left'"
+        v-if="cardConfig.thumbnailLocation === 'left'"
         cols="4"
       >
         <v-img
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="portalConfig.applications.cropThumbnails"
+          :cover="cardConfig.cropThumbnails"
           class="h-100"
         />
         <v-divider vertical />
@@ -26,14 +26,14 @@
       <v-col class="d-flex flex-column">
         <v-card-title>{{ application.title }}</v-card-title>
         <v-img
-          v-if="portalConfig.applications.thumbnailLocation === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnailLocation === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="portalConfig.applications.cropThumbnails"
+          :cover="cardConfig.cropThumbnails"
           height="170"
         />
         <v-card-text
-          v-if="portalConfig.applications.showSummary && application.summary?.length"
+          v-if="cardConfig.showSummary && application.summary?.length"
           class="pb-0"
         >
           {{ application.summary }}
@@ -43,12 +43,12 @@
         <v-list-item>
           <template #prepend>
             <owner-avatar
-              v-if="application.owner.department && portalConfig.applications.showDepartment"
+              v-if="application.owner.department && cardConfig.showDepartment"
               :owner="application.owner"
             />
           </template>
           <span
-            :class="['text-caption', application.owner.department && portalConfig.applications.showDepartment ? 'ml-2' : '']"
+            :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']"
           >
             {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
           </span>
@@ -56,7 +56,7 @@
 
         <!-- Actions (Bottom Location) -->
         <template
-          v-if="portalConfig.applications.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
+          v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
         >
           <v-divider />
           <v-card-actions
@@ -67,7 +67,7 @@
             <application-preview :application="application" />
             <action-btn
               :to="`/applications/${application.slug}/full`"
-              :action-style="portalConfig.applications.actionsStyle"
+              :action-style="cardConfig.actionsStyle"
               :icon="mdiFullscreen"
               :text="t('text.full')"
               :short-text="t('shortText.full')"
@@ -77,7 +77,7 @@
       </v-col>
 
       <!-- Actions (Right Location) -->
-      <template v-if="portalConfig.applications.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
         <v-divider vertical />
         <v-col
           cols="auto"
@@ -87,7 +87,7 @@
           <application-preview :application="application" />
           <action-btn
             :to="`/applications/${application.slug}/full`"
-            :action-style="portalConfig.applications.actionsStyle"
+            :action-style="cardConfig.actionsStyle"
             :icon="mdiFullscreen"
             :text="t('text.full')"
             :short-text="t('shortText.full')"
@@ -103,7 +103,7 @@ import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
-const { application } = defineProps<{
+const { application, cardConfig } = defineProps<{
   application: {
     id: string
     slug: string
@@ -117,11 +117,18 @@ const { application } = defineProps<{
     owner: Account
     topics: { id: string; title: string }[]
   }
+  cardConfig: {
+    thumbnailLocation: 'left' | 'center' | 'none'
+    cropThumbnails: boolean
+    showSummary: boolean
+    actionsLocation: 'right' | 'bottom' | 'none'
+    showDepartment: boolean
+    actionsStyle: 'icon' | 'full' | 'text'
+  }
 }>()
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 
 const thumbnailUrl = computed(() => {
   if (application.image) return application.image
