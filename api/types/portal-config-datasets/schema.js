@@ -17,6 +17,7 @@ export default {
         children: [
           'filtersLocation',
           'defaultSort',
+          'topicsFilters',
           'columns'
         ]
       },
@@ -90,6 +91,46 @@ export default {
           const: 'title'
         }
       ]
+    },
+    topicsFilters: {
+      type: 'object',
+      properties: {
+        elevation: {
+          type: 'integer',
+          title: 'Élévation des boutons de thématiques',
+          layout: { cols: { md: 4 } },
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité des boutons de thématiques',
+          layout: { cols: { md: 4 } },
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi des boutons de thématiques',
+          layout: { cols: { md: 4 } },
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        }
+      }
     },
     columns: {
       type: 'integer',

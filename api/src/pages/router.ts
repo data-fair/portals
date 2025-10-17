@@ -1,13 +1,12 @@
 import type { Page } from '#types/page/index.ts'
 import { randomUUID } from 'node:crypto'
-import slug from 'slugify'
 import { Router } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug } from './service.ts'
 
 const router = Router()
 export default router
@@ -42,6 +41,22 @@ router.get('', async (req, res, next) => {
 router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
+  // Auto-generate slug if not provided, before validation
+  if (['event', 'news', 'generic'].includes(req.body.type)) {
+    const metadataKey = req.body.type + 'Metadata'
+    const metadata = req.body.config?.[metadataKey] || {}
+
+    if (!metadata.slug) { // Generate unique slug from title if not provided
+      const owner = req.body.owner ?? session.account
+      metadata.slug = await generateUniqueSlug(
+        req.body.config?.title || '',
+        req.body.type as 'event' | 'news' | 'generic',
+        owner
+      )
+      req.body.config = { ...req.body.config, [metadataKey]: metadata }
+    }
+  }
+
   const body = postReqBody.returnValid(req.body, { name: 'body' })
   const created = {
     id: session.user.id,
@@ -49,11 +64,6 @@ router.post('', async (req, res, next) => {
     date: new Date().toISOString()
   }
   const config = { ...body.config }
-  if (['event', 'news', 'generic'].includes(body.type)) {
-    config[body.type + 'Metadata'] = {
-      slug: slug.default(body.config.title, { lower: true, strict: true })
-    }
-  }
   const page: Page = {
     _id: randomUUID(),
     title: body.config.title,

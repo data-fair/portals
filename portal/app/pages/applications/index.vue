@@ -109,9 +109,11 @@
       v-if="!$vuetify.display.smAndDown"
       cols="12"
     >
-      <topics-filter
+      <topics-list
         v-model="filters.topics.value"
         :topics="topicsItems"
+        :config="portalConfig.applications.topicsFilters"
+        filters
       />
     </v-col>
   </v-row>

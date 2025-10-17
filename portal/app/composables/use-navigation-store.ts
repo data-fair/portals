@@ -55,6 +55,7 @@ const createNavigationStore = () => {
           case 'applications': return '/applications'
           case 'news': return '/news'
           case 'event': return '/event'
+          case 'sitemap': return '/sitemap'
           default: return undefined
         }
       }

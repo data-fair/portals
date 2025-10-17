@@ -14,24 +14,36 @@ export const getPageAsContrib = async (sessionState: SessionStateAuthenticated, 
   return page
 }
 
+export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 'news' | 'generic', owner: { type: string, id: string }) => {
+  const metadataKey = pageType + 'Metadata'
+  const baseSlug = slug.default(baseTitle, { lower: true, strict: true })
+  let uniqueSlug = baseSlug
+  let counter = 1
+
+  // Check if slug already exists for this owner
+  while (true) {
+    const query = {
+      'owner.type': owner.type,
+      'owner.id': owner.id,
+      [`config.${metadataKey}.slug`]: uniqueSlug
+    }
+    const existing = await mongo.pages.findOne(query)
+    if (!existing) break
+    uniqueSlug = `${baseSlug}-${counter}`
+    counter++
+  }
+
+  return uniqueSlug
+}
+
 export const createPage = async (page: Page) => {
   debug('createPage', page)
+  validateMetadata(page)
   await mongo.pages.insertOne(page)
 }
 
 export const patchPage = async (page: Page, patch: Partial<Page>, session: SessionStateAuthenticated) => {
-  // Validate metadata for pages that require it
-  if (['event', 'news', 'generic'].includes(page.type) && patch.draftConfig) {
-    const metadataKey = `${page.type}Metadata` as 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
-    const metadata = patch.draftConfig[metadataKey]
-
-    // Check if metadata exists
-    if (!metadata) throw httpError(400, `Pages of type "${page.type}" must have ${metadataKey}`)
-
-    // Validate slug format
-    const validSlug = slug.default(metadata.slug, { lower: true, strict: true })
-    if (metadata.slug !== validSlug) throw httpError(400, `Invalid slug "${metadata.slug}". An accepted format is: "${validSlug}"`)
-  }
+  validateMetadata(page, patch)
 
   // Check if trying to unpublish a home page
   if (patch.portals && page.type === 'home') {
@@ -168,6 +180,20 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
       await traversePageElements(element.children, callback)
       await traversePageElements(element.children2, callback)
     }
+  }
+}
+
+const validateMetadata = (page: Page, patch?: Partial<Page>) => {
+  if (['event', 'news', 'generic'].includes(page.type) && (patch ?? page).draftConfig) {
+    const metadataKey = `${page.type}Metadata` as 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
+    const metadata = (patch?.draftConfig ?? page.config)[metadataKey]
+
+    // Check if metadata exists
+    if (!metadata) throw httpError(400, `Pages of type "${page.type}" must have ${metadataKey}`)
+
+    // Validate slug format
+    const validSlug = slug.default(metadata.slug, { lower: true, strict: true })
+    if (metadata.slug !== validSlug) throw httpError(400, `Invalid slug "${metadata.slug}". An accepted format is: "${validSlug}"`)
   }
 }
 

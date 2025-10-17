@@ -27,6 +27,10 @@
     v-else-if="element.type === 'contact'"
     :element="element"
   />
+  <page-element-topics
+    v-else-if="element.type === 'topics'"
+    :element="element"
+  />
   <page-element-dataset-card
     v-else-if="element.type === 'dataset-card'"
     :element="element"

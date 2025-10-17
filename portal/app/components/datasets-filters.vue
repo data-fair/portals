@@ -121,9 +121,11 @@
     v-if="!$vuetify.display.smAndDown"
     cols="12"
   >
-    <topics-filter
+    <topics-list
       v-model="filters.topics.value"
       :topics="topicsItems"
+      :config="portalConfig.datasets.topicsFilters"
+      filters
     />
   </v-col>
 </template>
@@ -142,6 +144,7 @@ type Concept = {
 }
 
 const { t } = useI18n()
+const { portal, portalConfig } = usePortalStore()
 
 defineProps<{
   drawer?: boolean
@@ -162,7 +165,13 @@ type Facets = {
   owner: { value: { id: string; name: string; department?: string }; count: number }[]
 }
 
-const datasetsFetch = useLocalFetch<{ facets: Facets }>('/data-fair/api/v1/datasets', { query: { facets: 'concepts,topics,owner', size: 0 } })
+const datasetsFetch = useLocalFetch<{ facets: Facets }>('/data-fair/api/v1/datasets', {
+  query: {
+    facets: 'concepts,topics,owner',
+    size: 0,
+    publicationSites: 'data-fair-portals:' + portal.value._id,
+  }
+})
 const conceptsFetch = useLocalFetch<Concept[]>('/data-fair/api/v1/vocabulary')
 const facets = computed(() => datasetsFetch.data.value?.facets ?? { concepts: [], topics: [], owner: [] })
 

@@ -1,5 +1,5 @@
 <template>
-  <template v-if="src">
+  <div v-if="src" class="d-flex flex-column align-center">
     <a
       v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
@@ -27,19 +27,19 @@
     >
       {{ element.legend }}
     </div>
-    <v-overlay
-      v-if="element.zoomable && zoomedSrc"
-      :model-value="zoomed"
-      class="align-center justify-center"
-      style="cursor:zoom-out"
-      @click="zoomed = false"
+  </div>
+  <v-overlay
+    v-if="element.zoomable && zoomedSrc"
+    :model-value="zoomed"
+    class="align-center justify-center"
+    style="cursor:zoom-out"
+    @click="zoomed = false"
+  >
+    <img
+      :alt="element.title"
+      :src="zoomedSrc"
     >
-      <img
-        :alt="element.title"
-        :src="zoomedSrc"
-      >
-    </v-overlay>
-  </template>
+  </v-overlay>
 </template>
 
 <script setup lang="ts">

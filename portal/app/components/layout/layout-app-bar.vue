@@ -8,7 +8,7 @@
     :extension-height="headerConfig.density === 'default' ? 64 : undefined"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="(headerConfig.scrollBehavior === 'hide' && !headerConfig.show ? 'default' : headerConfig.scrollBehavior) + ' elevate'"
-    scroll-threshold="310"
+    scroll-threshold="10"
   >
     <!-- Header (128px)-->
     <layout-header

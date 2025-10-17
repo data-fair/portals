@@ -2,7 +2,7 @@
   <v-container
     :class="[
       headerConfig.headerColor === 'background' && 'bg-background',
-      'h-100 d-flex flex-column justify-center pb-0 header-container',
+      'h-100 d-flex flex-column justify-center pb-0 container',
     ]"
   >
     <v-row
@@ -81,14 +81,6 @@ This way, the correct styles are applied server-side from the start.
 <style lang="scss">
 @use 'sass:map';
 @use 'vuetify/settings' as v;
-
-// When the screen is exactly 1280px (xl threshold), keep the lg width
-.header-container {
-  $xl-threshold: map.get(v.$grid-breakpoints, 'xl') + 1px;
-  @media (max-width: #{$xl-threshold}) {
-    max-width: map.get(v.$grid-breakpoints, 'lg') !important;
-  }
-}
 
 // Responsive font size for portal title based on Vuetify typography settings
 .portal-title {

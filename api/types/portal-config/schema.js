@@ -314,7 +314,7 @@ export default {
           }
         }
       }, {
-        title: 'Page éditée',
+        title: 'Autre page',
         required: ['type', 'title', 'pageRef'],
         properties: {
           type: { const: 'generic' },

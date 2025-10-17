@@ -42,6 +42,7 @@ export default {
         { $ref: '#/$defs/element-iframe' },
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-contact' },
+        { $ref: '#/$defs/element-topics' },
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
@@ -292,6 +293,54 @@ export default {
         }
       }
     },
+    'element-topics': {
+      type: 'object',
+      title: 'Topics',
+      'x-i18n-title': {
+        en: 'Topics list',
+        fr: 'Liste des thématiques'
+      },
+      // TODO add a description
+      // -> Affiche les topics uniquement des datasets publiés sur ce portail
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'topics'
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          default: 'default',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        }
+      }
+    },
     'element-dataset-card': {
       type: 'object',
       title: 'Dataset card',
@@ -451,16 +500,16 @@ export default {
           description: 'L\'utilisateur final peut modifier le mode d\'affichage sauf si les interactions sont désactivées.',
           oneOf: [
             {
-              title: 'Table',
-              const: 'table'
+              const: 'table',
+              title: 'Table'
             },
             {
-              title: 'Table dense',
-              const: 'table-dense'
+              const: 'table-dense',
+              title: 'Table dense'
             },
             {
-              title: 'Liste de vignettes',
-              const: 'list'
+              const: 'list',
+              title: 'Liste de vignettes'
             }
           ]
         },

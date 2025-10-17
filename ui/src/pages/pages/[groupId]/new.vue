@@ -369,7 +369,16 @@ const createPage = useAsyncAction(
         type,
         config: {
           title: newTitle.value,
-          elements: sourceElements
+          elements: sourceElements,
+          genericMetadata: type === 'generic' && route.params.groupId !== 'default'
+            ? {
+                group: {
+                  _id: group.value._id,
+                  slug: group.value.slug,
+                  title: group.value.title
+                }
+              }
+            : undefined
         }
       }
     })

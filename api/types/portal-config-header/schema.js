@@ -219,8 +219,8 @@ export default {
       oneOf: [
         { const: 'default', title: 'Normale' },
         // { const: 'prominent', title: 'Étendue' },
-        { const: 'comfortable', title: 'Un peu plus dense' },
-        { const: 'compact', title: 'Très dense' }
+        { const: 'comfortable', title: 'Confortable' },
+        { const: 'compact', title: 'Compacte' }
       ]
     }
   }

@@ -55,59 +55,6 @@ export default {
         cols: { md: 6 }
       }
     },
-    copyright: {
-      type: 'string',
-      title: 'Affichage du copyright',
-      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l\'entreprise parmis la liste des logos du pied de page.',
-      default: 'text',
-      oneOf: [
-        {
-          const: 'text',
-          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
-        },
-        {
-          const: 'logo',
-          title: 'Afficher le logo Koumoul',
-        }
-      ]
-    },
-    backgroundImage: {
-      type: 'object',
-      title: 'Image de fond du pied de page',
-      required: ['_id', 'name', 'mimeType'],
-      layout: {
-        slots: {
-          component: {
-            name: 'image-upload',
-            props: { width: 1920, label: 'Image de fond' }
-          }
-        },
-        cols: { md: 8 }
-      },
-      properties: {
-        _id: {
-          type: 'string'
-        },
-        name: {
-          type: 'string'
-        },
-        mimeType: {
-          type: 'string'
-        }
-      }
-    },
-    backgroundImageLocation: {
-      type: 'string',
-      title: "Position de l'image de fond",
-      default: 'right',
-      layout: { cols: { md: 4 } },
-      oneOf: [
-        { const: 'left', title: 'Gauche' },
-        { const: 'center', title: 'Centre' },
-        { const: 'right', title: 'Droite' },
-        { const: 'repeat', title: 'Répétée' }
-      ]
-    },
     logoPrimaryType: {
       type: 'string',
       title: 'Logo principal du pied de page',
@@ -216,6 +163,59 @@ export default {
           }
         }
       }
+    },
+    copyright: {
+      type: 'string',
+      title: 'Affichage du copyright',
+      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l\'entreprise parmis la liste des logos du pied de page.',
+      default: 'text',
+      oneOf: [
+        {
+          const: 'text',
+          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
+        },
+        {
+          const: 'logo',
+          title: 'Afficher le logo Koumoul',
+        }
+      ]
+    },
+    backgroundImage: {
+      type: 'object',
+      title: 'Image de fond du pied de page',
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1920, label: 'Image de fond' }
+          }
+        },
+        cols: { md: 8 }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        }
+      }
+    },
+    backgroundImageLocation: {
+      type: 'string',
+      title: "Position de l'image de fond",
+      default: 'right',
+      layout: { cols: { md: 4 } },
+      oneOf: [
+        { const: 'left', title: 'Gauche' },
+        { const: 'center', title: 'Centre' },
+        { const: 'right', title: 'Droite' },
+        { const: 'repeat', title: 'Répétée' }
+      ]
     },
     linksMode: {
       type: 'string',
@@ -328,7 +328,7 @@ export default {
           }
         }
       }, {
-        title: 'Page éditée',
+        title: 'Autre page',
         required: ['type', 'title', 'pageRef'],
         properties: {
           type: { const: 'generic' },
