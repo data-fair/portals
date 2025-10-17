@@ -71,6 +71,7 @@ declare module 'vue' {
     PageElementIframe: typeof import('./../../portal/app/components/page/page-element-iframe.vue')['default']
     PageElementImage: typeof import('./../../portal/app/components/page/page-element-image.vue')['default']
     PageElements: typeof import('./../../portal/app/components/page/page-elements.vue')['default']
+    PageElementSearch: typeof import('./../../portal/app/components/page/page-element-search.vue')['default']
     PageElementTabs: typeof import('./../../portal/app/components/page/page-element-tabs.vue')['default']
     PageElementText: typeof import('./../../portal/app/components/page/page-element-text.vue')['default']
     PageElementTitle: typeof import('./../../portal/app/components/page/page-element-title.vue')['default']

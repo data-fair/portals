@@ -41,8 +41,9 @@ export default {
         { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-iframe' },
         { $ref: '#/$defs/element-divider' },
-        { $ref: '#/$defs/element-contact' },
+        { $ref: '#/$defs/element-search' },
         { $ref: '#/$defs/element-topics' },
+        { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-datasets-list' },
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
@@ -275,23 +276,48 @@ export default {
         }
       }
     },
-    'element-contact': {
-      title: 'Contact',
+    'element-search': {
       type: 'object',
+      title: 'Search',
+      'x-i18n-title': {
+        fr: 'Recherche'
+      },
       required: ['type'],
       properties: {
         type: {
-          const: 'contact'
+          const: 'search'
         },
-        showInfo: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les informations de contact'
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
         },
-        showSocial: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les liens de réseaux sociaux'
+        density: {
+          type: 'string',
+          title: 'Densité',
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
         }
       }
     },
@@ -338,6 +364,26 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
+        }
+      }
+    },
+    'element-contact': {
+      title: 'Contact',
+      type: 'object',
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'contact'
+        },
+        showInfo: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les informations de contact'
+        },
+        showSocial: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les liens de réseaux sociaux'
         }
       }
     },

@@ -23,12 +23,16 @@
     v-else-if="element.type === 'divider'"
     :element="element"
   />
-  <page-element-contact
-    v-else-if="element.type === 'contact'"
+  <page-element-search
+    v-else-if="element.type === 'search'"
     :element="element"
   />
   <page-element-topics
     v-else-if="element.type === 'topics'"
+    :element="element"
+  />
+  <page-element-contact
+    v-else-if="element.type === 'contact'"
     :element="element"
   />
   <page-element-datasets-list
