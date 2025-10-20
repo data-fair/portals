@@ -88,7 +88,6 @@ declare module 'vue' {
     SitemapMenuItem: typeof import('./../../portal/app/components/sitemap-menu-item.vue')['default']
     SocialLinks: typeof import('./../../portal/app/components/social-links.vue')['default']
     SocialShare: typeof import('./../../portal/app/components/social-share.vue')['default']
-    TopicsFilter: typeof import('./../../portal/app/components/topics-filter.vue')['default']
     TopicsList: typeof import('./../../portal/app/components/topics-list.vue')['default']
     VjsfPageConfig: typeof import('./../src/components/vjsf/vjsf-page-config.vue')['default']
     VjsfPageConfigEn: typeof import('./../src/components/vjsf/vjsf-page-config-en.vue')['default']
