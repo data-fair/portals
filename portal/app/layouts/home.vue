@@ -1,6 +1,6 @@
 <template>
   <LayoutAppBar :home="true" />
-  <v-main>
+  <v-main style="position: relative">
     <v-container class="container">
       <slot />
     </v-container>

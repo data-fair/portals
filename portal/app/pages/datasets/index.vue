@@ -24,18 +24,16 @@
 
   <!-- Filters -->
   <!-- TODO : Navigation drawer only in desktop -->
-  <v-card
+
+  <v-navigation-drawer
     v-if="portalConfig.datasets.filtersLocation === 'left'"
-    variant="text"
-    border="false"
+    style="position: absolute; top: 64px; bottom: 0;"
   >
-    <v-navigation-drawer>
-      <datasets-filters
-        v-model:order="order"
-        drawer
-      />
-    </v-navigation-drawer>
-  </v-card>
+    <datasets-filters
+      v-model:order="order"
+      drawer
+    />
+  </v-navigation-drawer>
   <v-row v-else>
     <datasets-filters v-model:order="order" />
   </v-row>
@@ -112,6 +110,7 @@ const filters = {
 const order = ref<0 | 1>(0) // 0 = desc, 1 = asc
 
 const { t } = useI18n()
+
 const { portal, portalConfig } = usePortalStore()
 
 // Infinite scroll state
