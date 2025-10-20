@@ -44,6 +44,9 @@ export const createPage = async (page: Page) => {
 
 export const patchPage = async (page: Page, patch: Partial<Page>, session: SessionStateAuthenticated) => {
   validateMetadata(page, patch)
+  if (patch.draftConfig) {
+    await renderMarkdownElements(patch.draftConfig)
+  }
 
   // Check if trying to unpublish a home page
   if (patch.portals && page.type === 'home') {
@@ -108,7 +111,6 @@ export const deletePage = async (page: Page) => {
 
 export const validatePageDraft = async (page: Page, session: SessionStateAuthenticated) => {
   debug('validatePageDraft', page)
-  await renderMarkdownElements(page.draftConfig)
   const updatedPage = await patchPage(page, { config: page.draftConfig, configUpdatedAt: new Date().toISOString() }, session)
   await cleanUnusedImages(updatedPage)
   return updatedPage
