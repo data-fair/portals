@@ -34,7 +34,7 @@
       backgroundPosition: `bottom ${portalConfig.footer.backgroundImageLocation}`,
       backgroundRepeat: portalConfig.footer.backgroundImageLocation === 'repeat' ? 'repeat' : 'no-repeat'
     } : {}"
-    class="pa-0 d-flex justify-center flex-wrap"
+    class="pa-0 d-flex justify-center flex-wrap flex-grow-0"
   >
     <v-container>
       <!-- Logo and/or Social Links -->
