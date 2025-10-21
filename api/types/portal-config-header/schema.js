@@ -176,20 +176,6 @@ export default {
         comp: 'switch',
         cols: { md: 6 }
       }
-    },
-    density: {
-      type: 'string',
-      title: 'Densité',
-      layout: {
-        if: 'parent.data?.show',
-        cols: { md: 6 }
-      },
-      default: 'default',
-      oneOf: [
-        { const: 'default', title: 'Normale' },
-        { const: 'comfortable', title: 'Confortable' },
-        { const: 'compact', title: 'Compacte' }
-      ]
     }
   }
 }

@@ -16,10 +16,7 @@
         class="pl-4"
       />
 
-      <nav-tabs-or-drawer
-        :navigation="portalConfig.menu.children"
-        :density="navBarConfig.density"
-      />
+      <nav-tabs-or-drawer :navigation="portalConfig.menu.children" />
 
       <v-spacer />
 

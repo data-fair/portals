@@ -6,14 +6,10 @@
   <nav-tabs
     v-else
     :navigation="navigation"
-    :density="density"
   />
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig, MenuItem } from '#api/types/portal'
-defineProps<{
-  navigation: MenuItem[]
-  density: PortalConfig['header']['density']
-}>()
+import type { MenuItem } from '#api/types/portal'
+defineProps<{ navigation: MenuItem[] }>()
 </script>

@@ -33,7 +33,7 @@
         >
           <v-avatar
             :image="avatarUrl"
-            :size="density === 'default' ? 40 : 32"
+            :size="40"
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
             <p class="ml-2">{{ session.user.value.name }}</p>
@@ -76,7 +76,6 @@ defineProps<{
   loginColor?: string
   personal?: boolean
   showHeader?: boolean
-  density?: 'compact' | 'comfortable' | 'default'
 }>()
 
 const { t } = useI18n()
@@ -108,12 +107,12 @@ if (!preview) {
 
   backOfficeUrl = computed(() => {
     const site = session.site.value
-    if (!site) return '/data-fair'
+    if (!site) return '/data-fair/'
     if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
     if (!site.isAccountMain && site.authMode === 'onlyOtherSite') {
-      return `${requestUrl.protocol}//${site.authOnlyOtherSite}`
+      return `${requestUrl.protocol}//${site.authOnlyOtherSite}/data-fair/`
     }
-    return '/data-fair'
+    return '/data-fair/'
   })
 }
 

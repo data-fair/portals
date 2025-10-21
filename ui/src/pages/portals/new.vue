@@ -283,7 +283,7 @@ const createPortal = useAsyncAction(
         type: 'home',
         portals: [portal._id],
         config: {
-          title: newPortalTitle.value,
+          title: t('home') + ' - ' + newPortalTitle.value,
           elements: sourceElements
         }
       }
@@ -316,6 +316,7 @@ setBreadcrumbs([
     create: Create
     createPortal: Create a portal
     errorCreatingPortal: Error while creating the portal
+    home: Home
     portalInformation: Portal information
     next: Next
     portalTitle: Portal title
@@ -337,6 +338,7 @@ setBreadcrumbs([
     create: Créer
     createPortal: Créer un portail
     errorCreatingPortal: Erreur lors de la création du portail
+    home: Accueil
     portalInformation: Informations du portail
     next: Suivant
     portalTitle: Titre du portail

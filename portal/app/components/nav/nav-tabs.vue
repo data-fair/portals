@@ -2,7 +2,6 @@
   <v-spacer />
   <v-tabs
     :model-value="computedActiveTab"
-    :density="density"
     show-arrows
   >
     <template
@@ -18,10 +17,7 @@
             :value="i"
           />
         </template>
-        <nav-tabs-menu-item
-          :children="link.children"
-          :density="density"
-        />
+        <nav-tabs-menu-item :children="link.children" />
       </v-menu>
       <v-tab
         v-else-if="link?.type === 'external'"
@@ -42,13 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig, MenuItem } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal'
 import { mdiChevronDown } from '@mdi/js'
 
-const props = defineProps<{
-  navigation: MenuItem[]
-  density: PortalConfig['header']['density']
-}>()
+const props = defineProps<{ navigation: MenuItem[] }>()
 
 const route = useRoute()
 const { locale } = useI18n()

@@ -6,7 +6,6 @@
       :title="resolveLinkTitle(link, locale)"
       :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
       :active="isItemActive(link)"
-      :density="density"
       :to="link.type !== 'external' && link.type !== 'submenu' ? resolveLink(link) : undefined"
       :href="link.type === 'external' ? link.href : undefined"
       :target="link.type === 'external' ? '_blank' : undefined"
@@ -21,23 +20,17 @@
         open-on-hover
         submenu
       >
-        <nav-tabs-menu-item
-          :children="link.children"
-          :density="density"
-        />
+        <nav-tabs-menu-item :children="link.children" />
       </v-menu>
     </v-list-item>
   </v-list>
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig, MenuItem } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal'
 import { mdiChevronRight } from '@mdi/js'
 
-defineProps<{
-  children: MenuItem[]
-  density: PortalConfig['header']['density']
-}>()
+defineProps<{ children: MenuItem[] }>()
 
 const route = useRoute()
 const { locale } = useI18n()

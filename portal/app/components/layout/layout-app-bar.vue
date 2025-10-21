@@ -4,8 +4,7 @@
     ref="appBarRef"
     :color="navBarConfig.color"
     :class="navBarConfig.transparent ? 'opacity-90' : undefined"
-    :density="headerConfig.density"
-    :extension-height="navBarConfig.density === 'default' ? 64 : undefined"
+    :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
     scroll-threshold="10"
@@ -21,10 +20,7 @@
       <layout-nav-bar :nav-bar-config="navBarConfig" />
     </template>
   </component>
-  <nav-drawer
-    :navigation="portalConfig.menu.children"
-    :density="navBarConfig.density"
-  />
+  <nav-drawer :navigation="portalConfig.menu.children" />
 </template>
 
 <script setup lang="ts">
@@ -47,9 +43,9 @@ const navBarConfig = computed(() => {
 
 const scrollBehavior = computed(() => {
   if (headerConfig.value.show && !headerConfig.value.keepOnScroll && !navBarConfig.value.keepOnScroll) {
-    return 'full-hide'
+    return 'fully-hide'
   }
-  if (!navBarConfig.value.keepOnScroll && !headerConfig.value.show) {
+  if (navBarConfig.value.keepOnScroll && headerConfig.value.show) {
     return 'hide'
   }
   return 'default'

@@ -18,7 +18,6 @@
     <nav-drawer-item
       v-for="(child, i) of item.children"
       :key="`child-${i}`"
-      :density="density"
       :item="child"
       :level="2"
     />
@@ -53,7 +52,6 @@
       <nav-drawer-item
         v-for="(child, i) of item.children"
         :key="`child-${i}`"
-        :density="density"
         :item="child"
         :level="level + 1"
       />
@@ -62,10 +60,9 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig, MenuItem } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal'
 
 const props = defineProps<{
-  density: PortalConfig['header']['density']
   item: MenuItem
   level: number
 }>()
