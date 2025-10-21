@@ -137,7 +137,7 @@ router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-  const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), req.headers.cookie)
+  const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), [], req.headers.cookie)
   res.send(updatedPortal)
 })
 
@@ -166,6 +166,6 @@ router.post('/:id/ingress', async (req, res, next) => {
   assertAdminMode(session)
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
-  await patchPortal(portal, { ingress }, session, reqOrigin(req), req.headers.cookie)
+  await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], req.headers.cookie)
   res.status(201).send()
 })

@@ -25,7 +25,7 @@ export const getPortalAsAdmin = async (sessionState: SessionStateAuthenticated, 
 
 export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
   debug('createPortal', portal)
-  await syncPortalUpdate(portal, null, reqOrigin, cookie)
+  await syncPortalUpdate(portal, null, reqOrigin, [], cookie)
   await mongo.portals.insertOne(portal)
 }
 
@@ -41,7 +41,7 @@ export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: s
   await mongo.portals.deleteOne({ _id: portal._id })
 }
 
-export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
+export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
@@ -51,21 +51,21 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   }
   const updatedPortal = { ...portal, ...fullPatch }
   // we propagate before storing as it has a greater probability of failing and we prefer a cohesive state
-  await syncPortalUpdate(updatedPortal, portal, reqOrigin, cookie)
+  await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, cookie)
   await mongo.portals.updateOne({ _id: portal._id }, { $set: fullPatch })
   return updatedPortal
 }
 
 export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
   debug('validatePortalDraft', portal)
-  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, cookie)
+  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
   return updatedPortal
 }
 
 export const cancelPortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
   debug('cancelPortalDraft', portal)
-  const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, cookie)
+  const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
   return updatedPortal
 }
@@ -150,12 +150,14 @@ const getIngressInfos = (portal: Portal) => {
   return ingressInfos
 }
 
+type SyncPart = 'ingress' | 'sd' | 'df'
+
 // portals are synced to settings.publicationSites in data-fair and to a dataset containing images
-async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, cookie?: string) {
+async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], cookie?: string) {
   debugSyncPortal('sync portal update', portal)
 
   const publicationSite = getPublicationSite(portal)
-  if (equal(publicationSite, previousPortal && getPublicationSite(previousPortal))) {
+  if (!forceSync.includes('df') && equal(publicationSite, previousPortal && getPublicationSite(previousPortal))) {
     debugSyncPortal('nothing new to sync to data-fair', publicationSite)
   } else {
     debugSyncPortal('sync to data-fair', publicationSite)
@@ -168,7 +170,7 @@ async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, 
   }
 
   const sdSites = await getSDSites(portal)
-  if (equal(sdSites, previousPortal && getSDSites(previousPortal))) {
+  if (!forceSync.includes('sd') && equal(sdSites, previousPortal && getSDSites(previousPortal))) {
     debugSyncPortal('nothing new to sync to SD', sdSites)
   } else {
     for (const site of sdSites) {
@@ -183,7 +185,7 @@ async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, 
 
   if (config.privateIngressManagerUrl) {
     const ingressInfos = getIngressInfos(portal)
-    if (equal(ingressInfos, previousPortal && getIngressInfos(previousPortal))) {
+    if (!forceSync.includes('ingress') && equal(ingressInfos, previousPortal && getIngressInfos(previousPortal))) {
       debugSyncPortal('nothing new to sync to ingress manager', ingressInfos)
     } else {
       debugSyncPortal('sync to ingress manager', ingressInfos)

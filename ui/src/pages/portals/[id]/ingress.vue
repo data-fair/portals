@@ -15,7 +15,7 @@
         <v-spacer />
         <v-btn
           color="primary"
-          :disabled="!hasDiff || !formValid"
+          :disabled="!formValid"
           @click="saveIngress.execute()"
         >
           {{ t('save') }}
@@ -28,7 +28,6 @@
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Portal, PortalIngress } from '#api/types/portal'
-import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/portals/[id]/ingress'>()
@@ -38,10 +37,6 @@ const editIngress = ref<PortalIngress>()
 const formValid = ref(false)
 watch(portalFetch.data, () => {
   if (portalFetch.data.value) editIngress.value = portalFetch.data.value.ingress ?? { url: '' }
-})
-
-const hasDiff = computed(() => {
-  return !equal(editIngress.value, portalFetch.data.value?.ingress)
 })
 
 const saveIngress = useAsyncAction(async () => {
