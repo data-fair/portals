@@ -174,7 +174,11 @@ const pages = computed(() => {
 })
 
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
-  context: { pages: pages.value },
+  context: {
+    pages: pages.value,
+    // used by schema https://github.com/data-fair/lib/theme to hide some parts
+    simplifiedTheme: true
+  },
   density: 'comfortable',
   initialValidation: 'always',
   titleDepth: 4,
