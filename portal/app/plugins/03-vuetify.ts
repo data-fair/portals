@@ -36,8 +36,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
           dark,
           colors,
           variables: {
-          // deactivate automatic partial transparencies
-          // best to control colors precisely and ensure sufficient contrast for readability
+            // deactivate automatic partial transparencies
+            // best to control colors precisely and ensure sufficient contrast for readability
             'high-emphasis-opacity': 1,
             'medium-emphasis-opacity': 0.87
           }

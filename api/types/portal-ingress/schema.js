@@ -7,7 +7,7 @@ export default {
   layout: { title: null },
   type: 'object',
   unevaluatedProperties: false,
-  required: ['url'],
+  required: ['url', 'waf'],
   properties: {
     url: {
       type: 'string',

@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import { defaultNonceCSPDirectives } from '@data-fair/lib-express/serve-spa'
+
+// cf https://nuxt-security.vercel.app/headers/csp
+const contentSecurityPolicy: Record<string, string[]> = {}
+for (const [name, value] of Object.entries(defaultNonceCSPDirectives)) {
+  contentSecurityPolicy[name] = value.replace('{NONCE}', '{{nonce}}').split(' ')
+}
 
 export default defineNuxtConfig({
   devServer: {
@@ -18,11 +25,9 @@ export default defineNuxtConfig({
     draftUrlPattern: ''
   },
   security: {
+    nonce: true,
     headers: {
-      contentSecurityPolicy: {
-        // allow images from self, data URLs and HTTPS sources
-        'img-src': ["'self'", 'data:', 'https:']
-      }
+      contentSecurityPolicy
     }
   },
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
