@@ -24,7 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, Banner, ImageRef } from '#api/types/page-config'
+import type { PageElement, ImageRef } from '#api/types/page-config'
+
+// TODO: replace with import from types when available
+type Banner = {
+  type: 'banner'
+  backgroundColor?: string
+  backgroundImage?: ImageRef
+  children: PageElement[]
+}
 
 const { element } = defineProps({
   element: { type: Object as () => Banner, required: true }

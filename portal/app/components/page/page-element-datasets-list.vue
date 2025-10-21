@@ -8,7 +8,7 @@
     >
       <dataset-card
         :dataset="dataset"
-        :card-config="element.cardConfig"
+        :card-config="element.useCatalogConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
       />
     </v-col>
   </v-row>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import type { DatasetsList } from '#api/types/page-elements'
+import type { DatasetsListElement } from '#api/types/page-elements'
 
 type Dataset = {
   id: string
@@ -40,8 +40,8 @@ type DatasetFetch = {
   results: Dataset[]
 }
 
-const { element } = defineProps<{ element: DatasetsList }>()
-const { portal, preview } = usePortalStore()
+const { element } = defineProps<{ element: DatasetsListElement }>()
+const { portal, portalConfig, preview } = usePortalStore()
 
 let datasets: Dataset[] | ComputedRef<Dataset[]>
 

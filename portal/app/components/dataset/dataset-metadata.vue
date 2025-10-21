@@ -38,7 +38,7 @@
 
       <!-- Owner -->
       <v-col
-        v-if="dataset.owner.department && portalConfig.datasets.showDepartment"
+        v-if="dataset.owner.department && portalConfig.datasets.page.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
@@ -111,7 +111,7 @@
       </v-col>
 
       <v-col
-        v-if="portalConfig.datasets.attachmentsLocation === 'full' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-if="portalConfig.datasets.page.attachmentsLocation === 'full' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
@@ -131,10 +131,11 @@
           <dataset-table-preview
             v-if="!$vuetify.display.smAndDown"
             :dataset="dataset"
+            :action-style="portalConfig.datasets.page.actionsStyle"
           />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
-            :action-style="portalConfig.datasets.actionsStyle"
+            :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
             :short-text="t('shortText.table')"
@@ -142,11 +143,12 @@
           <dataset-map-preview
             v-if="!$vuetify.display.smAndDown && dataset.bbox?.length"
             :dataset="dataset"
+            :action-style="portalConfig.datasets.page.actionsStyle"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown"
             :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="portalConfig.datasets.actionsStyle"
+            :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
@@ -158,7 +160,7 @@
         </template>
 
         <dataset-attachments-preview
-          v-if="portalConfig.datasets.attachmentsLocation === 'action' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+          v-if="portalConfig.datasets.page.attachmentsLocation === 'action' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
           :dataset="dataset"
         />
         <!-- TODO: <notif-edit v-if="canLogin && notifyUrl" :dataset="dataset" /> -->
@@ -240,7 +242,7 @@ const { dayjs } = useLocaleDayjs()
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.datasets.metadataLocation !== 'right' ? 4 : 12
+  md: portalConfig.value.datasets.page.metadataLocation !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {

@@ -14,31 +14,33 @@ const { t } = useI18n()
 // @ts-ignore
 const portalConfigDefault: PortalConfig = {
   datasets: {
-    filtersLocation: 'left',
-    defaultSort: 'title',
-    columns: 0,
-    thumbnailLocation: 'none',
-    cropThumbnails: false,
-    showSummary: false,
-    actionsLocation: 'none',
-    metadataLocation: 'right',
-    attachmentsLocation: 'action',
-    showImage: false,
-    showDepartment: false,
-    actionsStyle: 'text'
+    list: {
+      filtersLocation: 'left',
+      defaultSort: 'title',
+      columns: 0,
+      topicsFilters: undefined
+    },
+    card: {
+      actionsLocation: 'none',
+      actionsStyle: 'full',
+      thumbnailLocation: 'left',
+      useApplicationThumbnail: undefined,
+      cropThumbnails: false,
+      showSummary: false,
+      showDepartment: false
+    },
+    page: {
+      metadataLocation: 'top',
+      attachmentsLocation: 'full',
+      showImage: false,
+      showDepartment: false,
+      actionsStyle: 'full'
+    }
   },
   applications: {
-    filtersLocation: 'left',
-    defaultSort: 'title',
-    columns: 0,
-    thumbnailLocation: 'left',
-    cropThumbnails: false,
-    showSummary: false,
-    actionsLocation: 'none',
-    metadataLocation: 'top',
-    showImage: false,
-    showDepartment: false,
-    actionsStyle: 'full'
+    list: {},
+    card: {},
+    page: {}
   },
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   contactInformations: {

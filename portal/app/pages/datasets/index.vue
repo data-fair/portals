@@ -26,7 +26,7 @@
   <!-- TODO : Navigation drawer only in desktop -->
 
   <v-navigation-drawer
-    v-if="portalConfig.datasets.filtersLocation === 'left'"
+    v-if="portalConfig.datasets.list.filtersLocation === 'left'"
     style="position: absolute; top: 64px; bottom: 0;"
   >
     <datasets-filters
@@ -43,12 +43,12 @@
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
-      :md="12 / portalConfig.datasets.columns"
+      :md="12 / portalConfig.datasets.list.columns"
       cols="12"
     >
       <dataset-card
         :dataset="dataset"
-        :card-config="portalConfig.datasets"
+        :card-config="portalConfig.datasets.card"
       />
     </v-col>
   </v-row>
@@ -132,7 +132,7 @@ const datasetsQuery = computed(() => {
   if (sort.value) {
     query.sort = sort.value + ':' + (((order.value ?? 0) * 2 - 1))
   } else if (!search.value) {
-    query.sort = portalConfig.value.datasets.defaultSort + ':' + ((order.value ?? 0) * 2 - 1)
+    query.sort = portalConfig.value.datasets.list.defaultSort + ':' + ((order.value ?? 0) * 2 - 1)
   }
   // Otherwise (active search without user-defined sort) => no sort parameter, use relevance order returned by MongoDB
 

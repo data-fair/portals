@@ -7,11 +7,11 @@
     <v-row>
       <!-- Application image and description -->
       <v-col
-        :md="portalConfig.applications.metadataLocation === 'right' ? 8 : 12"
+        :md="metadataLocation === 'right' ? 8 : 12"
         cols="12"
       >
         <img
-          v-if="portalConfig.applications.showImage && application.image"
+          v-if="portalConfig.applications.page.showImage && application.image"
           :alt="application.title"
           :src="application.image"
           class="mb-4"
@@ -22,8 +22,8 @@
 
       <!-- Metadata -->
       <v-col
-        :md="portalConfig.applications.metadataLocation === 'right' ? 4 : 12"
-        :order-md="portalConfig.applications.metadataLocation === 'top' ? 'first' : 1"
+        :md="metadataLocation === 'right' ? 4 : 12"
+        :order-md="metadataLocation === 'top' ? 'first' : 1"
         cols="12"
       >
         <application-metadata :application="application" />
@@ -43,12 +43,12 @@
         <v-col
           v-for="(dataset, i) in datasetsFetch.data.value?.results"
           :key="i"
-          :md="12 / portalConfig.datasets.columns"
+          :md="12 / portalConfig.datasets.list.columns"
           cols="12"
         >
           <dataset-card
             :dataset="dataset"
-            :card-config="portalConfig.datasets"
+            :card-config="portalConfig.datasets.card"
           />
         </v-col>
       </v-row>
@@ -115,6 +115,7 @@ const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applicati
   }
 })
 const application = computed(() => applicationFetch.data.value)
+const metadataLocation = computed(() => portalConfig.value.applications.page.metadataLocation || 'right')
 
 const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] }>(
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'

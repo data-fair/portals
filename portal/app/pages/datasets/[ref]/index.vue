@@ -7,13 +7,13 @@
     <v-row>
       <!-- Dataset image and description -->
       <v-col
-        :md="portalConfig.datasets.metadataLocation === 'right' ? 8 : 12"
+        :md="portalConfig.datasets.page.metadataLocation === 'right' ? 8 : 12"
         cols="12"
       >
         <img
-          v-if="portalConfig.datasets.showImage && thumbnailUrl"
+          v-if="portalConfig.datasets.page.showImage && dataset.image"
           :alt="dataset.title"
-          :src="thumbnailUrl"
+          :src="dataset.image"
           class="mb-4"
           style="max-height:300px"
         >
@@ -22,8 +22,8 @@
 
       <!-- Metadata -->
       <v-col
-        :md="portalConfig.datasets.metadataLocation === 'right' ? 4 : 12"
-        :order-md="portalConfig.datasets.metadataLocation === 'top' ? 'first' : 1"
+        :md="portalConfig.datasets.page.metadataLocation === 'right' ? 4 : 12"
+        :order-md="portalConfig.datasets.page.metadataLocation === 'top' ? 'first' : 1"
         cols="12"
       >
         <dataset-metadata :dataset="dataset" />
@@ -145,15 +145,6 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 
 const dataset = computed(() => datasetFetch.data.value)
 
-const thumbnailUrl = computed(() => {
-  if (dataset.value?.image) return dataset.value.image
-  if (portalConfig.value.datasets.useApplicationThumbnail && dataset.value?.extras?.applications?.[0]) {
-    const { origin } = useRequestURL()
-    return `${origin}/data-fair/api/v1/applications/${dataset.value.extras.applications[0].id}/capture?updatedAt=${dataset.value.extras.applications[0].updatedAt}`
-  }
-  return undefined
-})
-
 const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>('/data-fair/api/v1/applications', {
   params: {
     select: 'id,slug,title,description,url,preferLargeDisplay',
@@ -177,7 +168,7 @@ const orderedApplications = computed(() => {
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
   description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
-  ogImage: () => thumbnailUrl.value,
+  ogImage: () => dataset.value?.image,
   ogType: 'article'
 })
 

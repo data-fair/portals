@@ -16,7 +16,7 @@
 
       <!-- Owner -->
       <v-col
-        v-if="application.owner.department && portalConfig.applications.showDepartment"
+        v-if="application.owner.department && portalConfig.applications.page.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
@@ -41,7 +41,7 @@
       <v-col v-bind="metadataColProps">
         <action-btn
           :to="`/applications/${application.slug}/full`"
-          :action-style="portalConfig.applications.actionsStyle"
+          :action-style="portalConfig.applications.page.actionsStyle"
           :icon="mdiFullscreen"
           :text="t('text.full')"
           :short-text="t('shortText.full')"
@@ -105,7 +105,7 @@ const baseApplicationFetch = useLocalFetch<{
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.applications.metadataLocation !== 'right' ? 4 : 12
+  md: portalConfig.value.applications.page.metadataLocation !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {

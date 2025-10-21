@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + application.title"
-    :action-style="portalConfig.applications.actionsStyle"
+    :action-style="portalConfig.applications.card.actionsStyle"
     :icon="mdiFlipToFront"
     :text="t('preview')"
     :short-text="t('previewShort')"

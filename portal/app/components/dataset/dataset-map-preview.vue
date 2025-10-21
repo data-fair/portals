@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.actionsStyle"
+    :action-style="actionStyle"
     :icon="mdiMapMarker"
     :text="t('preview')"
     :short-text="t('previewShort')"
@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiMapMarker } from '@mdi/js'
 
 const { dataset } = defineProps<{
@@ -22,9 +23,9 @@ const { dataset } = defineProps<{
     id: string
     title: string
   }
+  actionStyle: DatasetCard['actionsStyle']
 }>()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 
 </script>
 

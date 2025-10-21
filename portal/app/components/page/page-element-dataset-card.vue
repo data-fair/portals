@@ -2,13 +2,13 @@
   <dataset-card
     v-if="datasetFetch.data?.value"
     :dataset="datasetFetch.data?.value"
-    :card-config="element.cardConfig"
+    :card-config="element.useCatalogConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
   />
 </template>
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import type { DatasetCard } from '#api/types/page-config'
+import type { DatasetCardElement } from '#api/types/page-config'
 
 type Dataset = {
   id: string
@@ -27,8 +27,8 @@ type Dataset = {
   isMetaOnly: boolean
 }
 
-const { element } = defineProps<{ element: DatasetCard }>()
-const { preview } = usePortalStore()
+const { element } = defineProps<{ element: DatasetCardElement }>()
+const { preview, portalConfig } = usePortalStore()
 
 const fetch = preview ? useFetch<Dataset> : useLocalFetch<Dataset>
 const datasetFetch = fetch('/data-fair/api/v1/datasets/' + element.dataset?.id, { immediate: false })

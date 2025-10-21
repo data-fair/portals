@@ -83,31 +83,33 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      filtersLocation: 'top',
-      defaultSort: 'title',
-      columns: 0,
-      thumbnailLocation: 'left',
-      cropThumbnails: false,
-      showSummary: false,
-      actionsLocation: 'bottom',
-      metadataLocation: 'top',
-      attachmentsLocation: 'full',
-      showImage: false,
-      showDepartment: false,
-      actionsStyle: 'text'
+      list: {
+        filtersLocation: 'top',
+        defaultSort: 'title',
+        columns: 0,
+        topicsFilters: undefined
+      },
+      card: {
+        actionsLocation: 'none',
+        actionsStyle: 'text',
+        thumbnailLocation: 'left',
+        useApplicationThumbnail: undefined,
+        cropThumbnails: false,
+        showSummary: false,
+        showDepartment: false
+      },
+      page: {
+        metadataLocation: 'top',
+        attachmentsLocation: 'full',
+        showImage: false,
+        showDepartment: false,
+        actionsStyle: 'text'
+      }
     },
     applications: {
-      filtersLocation: 'top',
-      defaultSort: 'title',
-      columns: 0,
-      thumbnailLocation: 'left',
-      cropThumbnails: false,
-      showSummary: false,
-      actionsLocation: 'none',
-      metadataLocation: 'top',
-      showImage: false,
-      showDepartment: false,
-      actionsStyle: 'text'
+      list: {},
+      card: {},
+      page: {}
     },
     socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
     socialLinks: {},

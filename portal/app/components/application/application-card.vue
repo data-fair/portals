@@ -16,7 +16,7 @@
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails"
+          :cover="cardConfig.cropThumbnails || true"
           class="h-100"
         />
         <v-divider vertical />
@@ -29,7 +29,7 @@
           v-if="cardConfig.thumbnailLocation === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails"
+          :cover="cardConfig.cropThumbnails || true"
           height="170"
         />
         <v-card-text
@@ -56,7 +56,7 @@
 
         <!-- Actions (Bottom Location) -->
         <template
-          v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
+          v-if="cardConfig.actionsLocation === 'bottom' || !cardConfig.actionsLocation || $vuetify.display.smAndDown"
         >
           <v-divider />
           <v-card-actions
@@ -100,6 +100,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
+import type { ApplicationCard } from '#api/types/portal-config'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
@@ -117,14 +118,7 @@ const { application, cardConfig } = defineProps<{
     owner: Account
     topics: { id: string; title: string }[]
   }
-  cardConfig: {
-    thumbnailLocation: 'left' | 'center' | 'none'
-    cropThumbnails: boolean
-    showSummary: boolean
-    actionsLocation: 'right' | 'bottom' | 'none'
-    showDepartment: boolean
-    actionsStyle: 'icon' | 'full' | 'text'
-  }
+  cardConfig: ApplicationCard
 }>()
 
 const { dayjs } = useLocaleDayjs()

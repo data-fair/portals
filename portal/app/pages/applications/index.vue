@@ -112,7 +112,7 @@
       <topics-list
         v-model="filters.topics.value"
         :topics="topicsItems"
-        :config="portalConfig.applications.topicsFilters"
+        :config="portalConfig.applications.list.topicsFilters"
         filters
       />
     </v-col>
@@ -123,12 +123,12 @@
     <v-col
       v-for="application in displayedApplications"
       :key="application.id"
-      :md="12 / portalConfig.applications.columns"
+      :md="12 / (portalConfig.applications.list.columns || 2)"
       cols="12"
     >
       <application-card
         :application="application"
-        :card-config="portalConfig.applications"
+        :card-config="portalConfig.applications.card"
       />
     </v-col>
   </v-row>
@@ -180,7 +180,7 @@ type ApplicationFetch = {
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const search = useStringSearchParam('q')
-const sort = useStringSearchParam('sort', { default: portalConfig.value.applications.defaultSort })
+const sort = useStringSearchParam('sort', { default: portalConfig.value.applications.list.defaultSort || 'createdAt' })
 const filters = {
   baseApplications: useStringsArraySearchParam('base-application'),
   topics: useStringsArraySearchParam('topic'),
@@ -203,7 +203,7 @@ const applicationsQuery = computed(() => {
     page: currentPage.value + 1
   }
   if (search.value) query.q = search.value
-  if (sort.value !== portalConfig.value.applications.defaultSort || order.value !== 0) query.sort = sort.value + ':' + (order.value * 2 - 1)
+  if (sort.value !== (portalConfig.value.applications.list.defaultSort || 'createdAt') || order.value !== 0) query.sort = sort.value + ':' + (order.value * 2 - 1)
   if (filters.baseApplications.value?.length) query['base-application'] = filters.baseApplications.value.join(',')
   if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
   if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')

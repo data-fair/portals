@@ -32,8 +32,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Search } from '#api/types/page-elements'
+// import type { Search } from '#api/types/page-elements'
 import { mdiMagnify } from '@mdi/js'
+
+// TODO: replace with import from types when available
+type Search = {
+  type: 'search'
+  density?: 'comfortable' | 'compact' | 'default'
+  rounded?: boolean | string
+  elevation?: number
+}
 
 const { element } = defineProps<{ element: Search }>()
 

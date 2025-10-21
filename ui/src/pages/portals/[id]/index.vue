@@ -1,6 +1,15 @@
 <template>
   <v-container data-iframe-height>
-    <v-defaults-provider :defaults="{ global: { hideDetails: 'auto' } }">
+    <v-defaults-provider
+      :defaults="{
+        global: {
+          hideDetails: 'auto'
+        },
+        VSwitch: {
+          color: 'primary'
+        }
+      }"
+    >
       <v-form
         v-if="editConfig"
         v-model="formValid"
@@ -20,18 +29,22 @@
             />
           </template>
           <template #font-families-preview>
-            <v-theme-provider theme="preview-colors">
-              <font-families-preview />
-            </v-theme-provider>
+            <font-families-preview />
           </template>
           <template #app-bar-preview="context">
-            <v-theme-provider theme="preview-colors">
-              <v-card>
+            <v-theme-provider
+              theme="preview-colors"
+              with-background
+            >
+              <v-container fluid>
+                <h2 class="text-h6">
+                  {{ t('appBarPreview') }}
+                </h2>
                 <layout-app-bar
                   v-if="formValid"
                   :home="context.home"
                 />
-              </v-card>
+              </v-container>
             </v-theme-provider>
           </template>
           <template #footer-preview="context">
@@ -43,6 +56,9 @@
                 />
               </v-card>
             </v-theme-provider>
+          </template>
+          <template #link-item-summary="{ node }">
+            <link-item-summary :item="node.data" />
           </template>
           <template #image-upload="{ node, statefulLayout, width, height, label }">
             <image-upload
@@ -177,6 +193,8 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
 <i18n lang="yaml">
   en:
     portals: Portals
+    appBarPreview: App Bar Preview
   fr:
     portals: Portails
+    appBarPreview: Aperçu du header et de la barre de navigation
 </i18n>

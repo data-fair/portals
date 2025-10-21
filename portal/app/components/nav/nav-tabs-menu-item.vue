@@ -3,7 +3,7 @@
     <v-list-item
       v-for="(link, j) of children"
       :key="j"
-      :title="link.title"
+      :title="resolveLinkTitle(link, locale)"
       :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
       :active="isItemActive(link)"
       :density="density"
@@ -40,7 +40,8 @@ defineProps<{
 }>()
 
 const route = useRoute()
-const { isMenuItemActive, resolveLink } = useNavigationStore()
+const { locale } = useI18n()
+const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {

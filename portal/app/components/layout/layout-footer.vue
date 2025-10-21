@@ -134,7 +134,7 @@
             v-else
             :to="resolveLink(link)"
           >
-            {{ link.title }}
+            {{ resolveLinkTitle(link, locale) }}
           </NuxtLink>
         </v-col>
       </v-row>
@@ -165,7 +165,7 @@
             v-else
             :to="resolveLink(link)"
           >
-            {{ link.title }}
+            {{ resolveLinkTitle(link, locale) }}
           </NuxtLink>
         </v-col>
       </v-row>
@@ -196,7 +196,7 @@
                 :to="resolveLink(link)"
                 variant="text"
               >
-                {{ link.title }}
+                {{ resolveLinkTitle(link, locale) }}
               </v-btn>
             </template>
           </v-col>
@@ -223,10 +223,10 @@
 import type { ImageRef } from '#api/types/page-elements'
 import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 defineProps<{ home?: boolean }>()
 const { portalConfig } = usePortalStore()
-const { resolveLink } = useNavigationStore()
+const { resolveLink, resolveLinkTitle } = useNavigationStore()
 
 const logo = computed(() => {
   const { footer, header, logo: defaultLogo } = portalConfig.value

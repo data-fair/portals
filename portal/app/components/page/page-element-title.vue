@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Titre1 } from '#api/types/page-config'
+import type { TitleElement } from '#api/types/page-config'
 
-const { element } = defineProps<{ element: Titre1 }>()
+const { element } = defineProps<{ element: TitleElement }>()
 
 const cssClass = computed(() => {
   const margins = {

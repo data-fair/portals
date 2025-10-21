@@ -65,6 +65,9 @@ const vjsfDefaults = {
   },
   'VjsfList-Edit-VDialog-VSheet': {
     rounded: 's-lg e-0' // larger radius on left side, no radius on right side
+  },
+  VSwitch: {
+    color: 'primary'
   }
 }
 

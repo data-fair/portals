@@ -2,7 +2,7 @@
   <!-- Level 1: direct link -->
   <template v-if="level === 1 && item.type !== 'submenu'">
     <v-list-item
-      :title="item.title"
+      :title="resolveLinkTitle(item, locale)"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
@@ -28,7 +28,7 @@
   <!-- Level 2+: direct link -->
   <template v-else-if="level >= 2 && item.type !== 'submenu'">
     <v-list-item
-      :title="item.title"
+      :title="resolveLinkTitle(item, locale)"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
@@ -71,7 +71,8 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const { isMenuItemActive, resolveLink } = useNavigationStore()
+const { locale } = useI18n()
+const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {

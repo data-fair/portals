@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.actionsStyle"
+    :action-style="portalConfig.datasets.card.actionsStyle"
     :icon="mdiAttachment"
     :text="t('preview')"
   >

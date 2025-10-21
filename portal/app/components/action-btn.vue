@@ -12,13 +12,13 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal/index.js'
+import type { DatasetCard } from '#api/types/portal/index.js'
 
 defineProps<{
   /** Button destination */
   to?: string
   /** Button style */
-  actionStyle: PortalConfig['datasets']['actionStyle']
+  actionStyle: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
   /** Button text */

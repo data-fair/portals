@@ -33,7 +33,7 @@ const datasetFetch = useLocalFetch<{
 
 const thumbnailUrl = computed(() => {
   if (datasetFetch.data.value?.image) return datasetFetch.data.value.image
-  if (portalConfig.value.datasets.useApplicationThumbnail && datasetFetch.data.value?.extras?.applications?.[0]) {
+  if (portalConfig.value.datasets.card.useApplicationThumbnail && datasetFetch.data.value?.extras?.applications?.[0]) {
     const { origin } = useRequestURL()
     return `${origin}/data-fair/api/v1/applications/${datasetFetch.data.value.extras.applications[0].id}/capture?updatedAt=${datasetFetch.data.value.extras.applications[0].updatedAt}`
   }

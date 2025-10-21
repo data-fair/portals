@@ -2,7 +2,6 @@
   <d-frame-wrapper
     :iframe-title="`${t('datasetForm')} - ${element.dataset.title}`"
     :src="`/data-fair/next-ui/embed/dataset/${element.dataset.id}/form`"
-    :sync-params="element.syncParams ? '*:' + element.dataset.id + '-form_' : undefined"
     scrolling="no"
     aspect-ratio
   />

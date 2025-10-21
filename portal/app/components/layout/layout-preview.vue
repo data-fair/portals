@@ -30,14 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal/index.js'
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiClose } from '@mdi/js'
 
 defineProps<{
   /** Dialog title */
   title?: string
   /** Button action style */
-  actionStyle: PortalConfig['datasets']['actionsStyle']
+  actionStyle: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
   /** Button text */

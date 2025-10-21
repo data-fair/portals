@@ -1,6 +1,7 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal',
   'x-exports': ['types', 'validate'],
+  'x-jstt': { additionalProperties: false },
   title: 'Portal',
   type: 'object',
   additionalProperties: false,

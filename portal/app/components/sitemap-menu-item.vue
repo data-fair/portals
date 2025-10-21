@@ -1,7 +1,7 @@
 <template>
   <!-- Direct link items -->
   <li v-if="item.type !== 'submenu'" class="mb-2 d-flex align-center">
-    <NuxtLink :to="resolveLink(item)">{{ item.title }}</NuxtLink>
+    <NuxtLink :to="resolveLink(item)">{{ resolveLinkTitle(item, locale) }}</NuxtLink>
   </li>
 
   <!-- Submenu items -->
@@ -26,5 +26,6 @@ defineProps<{
   item: MenuItem | LinkItem
 }>()
 
-const { resolveLink } = useNavigationStore()
+const { locale } = useI18n()
+const { resolveLink, resolveLinkTitle } = useNavigationStore()
 </script>

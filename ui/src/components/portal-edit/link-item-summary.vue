@@ -1,0 +1,91 @@
+<template>
+  <span v-if="item.type === 'standard'">
+    {{ t(standardPageLabel) }}<template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+  </span>
+  <span v-else-if="item.type === 'event'">
+    {{ t('event') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+  </span>
+  <span v-else-if="item.type === 'news'">
+    {{ t('news') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+  </span>
+  <span v-else-if="item.type === 'generic'">
+    {{ t('customPage') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+  </span>
+  <span v-else-if="item.type === 'external'">
+    {{ t('externalLink') }} - {{ t('label') }} : {{ item.title }} - {{ t('url') }} : {{ item.href }}
+  </span>
+  <span v-else-if="item.type === 'submenu'">
+    {{ t('submenu') }} - {{ t('label') }} : {{ item.title }}
+  </span>
+  <span v-else>
+    {{ t('notConfigured') }}
+  </span>
+</template>
+
+<script lang="ts" setup>
+import type { MenuItem, LinkItem } from '#api/types/portal'
+
+const props = defineProps<{
+  item: MenuItem | LinkItem
+}>()
+
+const { t } = useI18n()
+
+const standardPageLabel = computed(() => {
+  if (props.item.type !== 'standard' || !props.item.subtype) return 'standardPage'
+
+  const labelKeys: Record<string, string> = {
+    home: 'homePage',
+    contact: 'contactPage',
+    'privacy-policy': 'privacyPolicyPage',
+    datasets: 'datasetsCatalog',
+    applications: 'applicationsCatalog',
+    event: 'eventsList',
+    news: 'newsList',
+    sitemap: 'sitemap'
+  }
+
+  return labelKeys[props.item.subtype] || 'standardPage'
+})
+</script>
+
+<i18n lang="yaml">
+  en:
+    label: Label
+    url: URL
+    homePage: Home page
+    contactPage: Contact page
+    privacyPolicyPage: Privacy policy page
+    datasetsCatalog: Datasets catalog
+    applicationsCatalog: Applications catalog
+    eventsList: Events list
+    newsList: News list
+    sitemap: Sitemap
+    standardPage: Standard page
+    event: Event
+    news: News
+    customPage: Custom page
+    externalLink: External link
+    submenu: Submenu
+    notConfigured: Link not configured
+
+  fr:
+    label: Libellé
+    url: URL
+    homePage: Page d'accueil
+    contactPage: Page de contact
+    privacyPolicyPage: Page de politique de confidentialité
+    datasetsCatalog: Catalogue de données
+    applicationsCatalog: Catalogue de visualisation
+    eventsList: Liste des évènements
+    newsList: Liste des actualités
+    sitemap: Plan du site
+    standardPage: Page standard
+    event: Événement
+    news: Actualité
+    customPage: Page éditée
+    externalLink: Lien externe
+    submenu: Sous-menu
+    notConfigured: Lien non configuré
+
+</i18n>

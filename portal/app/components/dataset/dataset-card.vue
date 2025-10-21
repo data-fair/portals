@@ -47,24 +47,23 @@
               :owner="dataset.owner"
             />
           </template>
-          <span
-            :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']"
-          >
+          <span :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
           </span>
         </v-list-item>
 
         <!-- Actions (Bottom Location) -->
-        <template
-          v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown"
-        >
+        <template v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown">
           <v-divider />
           <v-card-actions
             class="py-2 ga-0 cursor-default"
             style="min-height: auto"
             @click.prevent
           >
-            <dataset-table-preview :dataset="dataset" />
+            <dataset-table-preview
+              :dataset="dataset"
+              :action-style="cardConfig.actionsStyle"
+            />
             <action-btn
               :to="`/datasets/${dataset.slug}/full`"
               :action-style="cardConfig.actionsStyle"
@@ -75,6 +74,7 @@
             <dataset-map-preview
               v-if="dataset.bbox?.length"
               :dataset="dataset"
+              :action-style="cardConfig.actionsStyle"
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
@@ -95,7 +95,10 @@
           class="pa-2 cursor-default d-flex flex-column ga-2"
           @click.prevent
         >
-          <dataset-table-preview :dataset="dataset" />
+          <dataset-table-preview
+            :dataset="dataset"
+            :action-style="cardConfig.actionsStyle"
+          />
           <action-btn
             :to="`/datasets/${dataset.slug}/full`"
             :action-style="cardConfig.actionsStyle"
@@ -106,6 +109,7 @@
           <dataset-map-preview
             v-if="dataset.bbox?.length"
             :dataset="dataset"
+            :action-style="cardConfig.actionsStyle"
           />
           <action-btn
             :to="`/datasets/${dataset.slug}/api-doc`"
@@ -122,7 +126,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import type { PortalConfig } from '#api/types/portal/index.js'
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
@@ -143,15 +147,7 @@ const { dataset, cardConfig } = defineProps<{
     image?: string
     isMetaOnly: boolean
   },
-  cardConfig: {
-    thumbnailLocation: PortalConfig['datasets']['thumbnailLocation']
-    useApplicationThumbnail?: PortalConfig['datasets']['useApplicationThumbnail']
-    cropThumbnails: PortalConfig['datasets']['cropThumbnails']
-    showSummary: PortalConfig['datasets']['showSummary']
-    actionsLocation: PortalConfig['datasets']['actionsLocation']
-    showDepartment: PortalConfig['datasets']['showDepartment']
-    actionsStyle: PortalConfig['datasets']['actionsStyle']
-  }
+  cardConfig: DatasetCard
 }>()
 
 const { dayjs } = useLocaleDayjs()

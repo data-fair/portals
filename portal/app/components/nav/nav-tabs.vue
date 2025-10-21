@@ -33,7 +33,7 @@
       />
       <v-tab
         v-else
-        :text="link?.title"
+        :text="resolveLinkTitle(link, locale)"
         :to="resolveLink(link)"
         :value="i"
       />
@@ -51,7 +51,8 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const { isMenuItemActive, resolveLink } = useNavigationStore()
+const { locale } = useI18n()
+const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 /** Get the active tab index based on the current route */
 const computedActiveTab = computed(() => {

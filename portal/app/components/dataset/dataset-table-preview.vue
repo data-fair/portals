@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.actionsStyle"
+    :action-style="actionStyle"
     :icon="mdiTableEye"
     :text="t('preview')"
     :short-text="t('previewShort')"
@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiTableEye } from '@mdi/js'
 
 const { dataset } = defineProps<{
@@ -23,9 +24,9 @@ const { dataset } = defineProps<{
     id: string
     title: string
   }
+  actionStyle: DatasetCard['actionsStyle']
 }>()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 
 </script>
 

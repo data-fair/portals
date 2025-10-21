@@ -23,10 +23,11 @@
     v-else-if="element.type === 'divider'"
     :element="element"
   />
-  <page-element-search
+  <!-- TODO: add it when available in types -->
+  <!-- <page-element-search
     v-else-if="element.type === 'search'"
     :element="element"
-  />
+  /> -->
   <page-element-topics
     v-else-if="element.type === 'topics'"
     :element="element"
@@ -59,7 +60,8 @@
     v-else-if="element.type === 'application'"
     :element="element"
   />
-  <page-element-banner
+  <!-- TODO: add it when available in types -->
+  <!-- <page-element-banner
     v-else-if="element.type === 'banner'"
     :element="element"
   >
@@ -69,7 +71,7 @@
         v-bind="context"
       />
     </template>
-  </page-element-banner>
+  </page-element-banner> -->
   <page-element-card
     v-else-if="element.type === 'card'"
     :element="element"

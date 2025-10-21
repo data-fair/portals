@@ -2,6 +2,7 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-elements',
   'x-exports': ['types', 'vjsf'],
+  'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true
@@ -31,9 +32,6 @@ export default {
         type: 'text',
         content: ''
       },
-      discriminator: {
-        propertyName: 'type'
-      },
       oneOf: [
         { $ref: '#/$defs/element-text' },
         { $ref: '#/$defs/element-title' },
@@ -41,7 +39,7 @@ export default {
         { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-iframe' },
         { $ref: '#/$defs/element-divider' },
-        { $ref: '#/$defs/element-search' },
+        // { $ref: '#/$defs/element-search' }, // TODO
         { $ref: '#/$defs/element-topics' },
         { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-datasets-list' },
@@ -50,7 +48,7 @@ export default {
         { $ref: '#/$defs/element-dataset-form' },
         { $ref: '#/$defs/element-applications-list' },
         { $ref: '#/$defs/element-application' },
-        { $ref: '#/$defs/element-banner' },
+        // { $ref: '#/$defs/element-banner' }, // TODO
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
@@ -59,7 +57,11 @@ export default {
     },
     'element-title': {
       type: 'object',
-      title: 'Titre',
+      title: 'Title Element',
+      'x-i18n-title': {
+        en: 'Title',
+        fr: 'Titre'
+      },
       required: ['type', 'titleSize'],
       properties: {
         type: {
@@ -118,10 +120,10 @@ export default {
           {
             if: 'data?.alertType === "none"',
             children: [
-              'alertType', 'icon', 'color', 'title', 'content'
+              'type', 'alertType', 'icon', 'color', 'title', 'content'
             ]
           },
-          ['alertType', 'title', 'content']
+          ['type', 'alertType', 'title', 'content']
         ]
       },
       properties: {
@@ -389,11 +391,33 @@ export default {
     },
     'element-datasets-list': {
       type: 'object',
-      title: 'Datasets list',
+      title: 'Datasets List Element',
       'x-i18n-title': {
+        en: 'Datasets list',
         fr: 'Liste de jeux de données'
       },
-      required: ['type', 'columns', 'limit', 'cardConfig'],
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'limit',
+          {
+            title: 'Dataset Card',
+            'x-i18n-title': {
+              fr: 'Carte d\'un jeu de données'
+            },
+            comp: 'card',
+            children: [
+              'useCatalogConfig',
+              {
+                if: '!data?.useCatalogConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit', 'useCatalogConfig'],
       properties: {
         type: {
           const: 'datasets-list'
@@ -409,99 +433,47 @@ export default {
         limit: {
           type: 'integer',
           title: 'Nombre de jeux de données',
-          description: 'Nombre total de jeux de données à afficher.',
           default: 3,
           minimum: 1,
           maximum: 12
         },
-        cardConfig: {
-          type: 'object',
-          title: 'Configuration des cartes',
-          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
-          properties: {
-            thumbnailLocation: {
-              type: 'string',
-              title: 'Position de l\'image sur la carte',
-              default: 'center',
-              oneOf: [
-                { const: 'left', title: 'À gauche' },
-                { const: 'center', title: 'Sous le titre' },
-                { const: 'none', title: 'Ne pas afficher' }
-              ]
-            },
-            useApplicationThumbnail: {
-              type: 'boolean',
-              title: 'Utiliser l\'image de l\'application',
-              description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-              layout: {
-                comp: 'switch',
-                cols: { md: 6 }
-              },
-              default: false
-            },
-            cropThumbnails: {
-              type: 'boolean',
-              title: 'Recadrer l\'image pour un rendu uniforme',
-              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-              layout: {
-                comp: 'switch',
-                cols: { md: 6 }
-              },
-              default: true
-            },
-            showSummary: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le résumé sur la carte',
-              default: true
-            },
-            actionsLocation: {
-              type: 'string',
-              title: 'Position des boutons d\'actions sur la carte',
-              default: 'bottom',
-              oneOf: [
-                { const: 'right', title: 'À droite' },
-                { const: 'bottom', title: 'En bas' },
-                { const: 'none', title: 'Aucun' }
-              ]
-            },
-            showDepartment: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le département du propriétaire',
-              description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
-              default: true
-            },
-            actionsStyle: {
-              type: 'string',
-              title: 'Style des boutons d\'actions',
-              default: 'full',
-              oneOf: [
-                {
-                  title: 'Icône seulement',
-                  const: 'icon'
-                },
-                {
-                  title: 'Icône et texte',
-                  const: 'full'
-                },
-                {
-                  title: 'Texte seulement',
-                  const: 'text'
-                }
-              ]
-            }
-          }
-        }
+        useCatalogConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du catalogue',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' }
       }
     },
     'element-dataset-card': {
       type: 'object',
-      title: 'Dataset card',
+      title: 'Dataset Card Element',
       'x-i18n-title': {
+        en: 'Dataset card',
         fr: 'Carte d\'un jeu de données'
       },
-      required: ['type', 'dataset', 'cardConfig'],
+      layout: {
+        children: [
+          'type',
+          'dataset',
+          {
+            title: 'Dataset Card',
+            'x-i18n-title': {
+              fr: 'Carte d\'un jeu de données'
+            },
+            comp: 'card',
+            children: [
+              'useCatalogConfig',
+              {
+                if: '!data?.useCatalogConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'dataset', 'useCatalogConfig'],
       properties: {
         type: {
           const: 'dataset-card'
@@ -529,85 +501,13 @@ export default {
             }
           }
         },
-        cardConfig: {
-          type: 'object',
-          title: 'Configuration de la carte',
-          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
-          properties: {
-            thumbnailLocation: {
-              type: 'string',
-              title: 'Position de l\'image sur la carte',
-              default: 'center',
-              oneOf: [
-                { const: 'left', title: 'À gauche' },
-                { const: 'center', title: 'Sous le titre' },
-                { const: 'none', title: 'Ne pas afficher' }
-              ]
-            },
-            useApplicationThumbnail: {
-              type: 'boolean',
-              title: 'Utiliser l\'image de l\'application',
-              description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-              layout: {
-                comp: 'switch',
-                cols: { md: 6 }
-              },
-              default: false
-            },
-            cropThumbnails: {
-              type: 'boolean',
-              title: 'Recadrer l\'image pour un rendu uniforme',
-              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-              layout: {
-                comp: 'switch',
-                cols: { md: 6 }
-              },
-              default: true
-            },
-            showSummary: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le résumé sur la carte',
-              default: true
-            },
-            actionsLocation: {
-              type: 'string',
-              title: 'Position des boutons d\'actions sur la carte',
-              default: 'bottom',
-              oneOf: [
-                { const: 'right', title: 'À droite' },
-                { const: 'bottom', title: 'En bas' },
-                { const: 'none', title: 'Aucun' }
-              ]
-            },
-            showDepartment: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le département du propriétaire',
-              description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
-              default: true
-            },
-            actionsStyle: {
-              type: 'string',
-              title: 'Style des boutons d\'actions',
-              default: 'full',
-              oneOf: [
-                {
-                  title: 'Icône seulement',
-                  const: 'icon'
-                },
-                {
-                  title: 'Icône et texte',
-                  const: 'full'
-                },
-                {
-                  title: 'Texte seulement',
-                  const: 'text'
-                }
-              ]
-            }
-          }
-        }
+        useCatalogConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du catalogue',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' }
       }
     },
     'element-dataset-table': {
@@ -726,9 +626,31 @@ export default {
     },
     'element-applications-list': {
       type: 'object',
-      title: 'Applications list',
+      title: 'Applications List Element',
       'x-i18n-title': {
+        en: 'Applications list',
         fr: 'Liste de visualisations'
+      },
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'limit',
+          {
+            title: 'Application Card',
+            'x-i18n-title': {
+              fr: 'Carte d\'une visualisation'
+            },
+            comp: 'card',
+            children: [
+              'useCatalogConfig',
+              {
+                if: '!data?.useCatalogConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
       },
       required: ['type', 'columns', 'limit', 'cardConfig'],
       properties: {
@@ -751,75 +673,13 @@ export default {
           minimum: 1,
           maximum: 12
         },
-        cardConfig: {
-          type: 'object',
-          title: 'Configuration des cartes',
-          required: ['thumbnailLocation', 'cropThumbnails', 'showSummary', 'actionsLocation', 'showDepartment', 'actionsStyle'],
-          properties: {
-            thumbnailLocation: {
-              type: 'string',
-              title: 'Position de l\'image sur la carte',
-              default: 'center',
-              oneOf: [
-                { const: 'left', title: 'À gauche' },
-                { const: 'center', title: 'Sous le titre' },
-                { const: 'none', title: 'Ne pas afficher' }
-              ]
-            },
-            cropThumbnails: {
-              type: 'boolean',
-              title: 'Recadrer l\'image pour un rendu uniforme',
-              description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-              layout: {
-                comp: 'switch',
-                cols: { md: 6 }
-              },
-              default: true
-            },
-            showSummary: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le résumé sur la carte',
-              default: true
-            },
-            actionsLocation: {
-              type: 'string',
-              title: 'Position des boutons d\'actions sur la carte',
-              default: 'bottom',
-              oneOf: [
-                { const: 'right', title: 'À droite' },
-                { const: 'bottom', title: 'En bas' },
-                { const: 'none', title: 'Aucun' }
-              ]
-            },
-            showDepartment: {
-              type: 'boolean',
-              layout: 'switch',
-              title: 'Afficher le département du propriétaire',
-              description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
-              default: true
-            },
-            actionsStyle: {
-              type: 'string',
-              title: 'Style des boutons d\'actions',
-              default: 'full',
-              oneOf: [
-                {
-                  title: 'Icône seulement',
-                  const: 'icon'
-                },
-                {
-                  title: 'Icône et texte',
-                  const: 'full'
-                },
-                {
-                  title: 'Texte seulement',
-                  const: 'text'
-                }
-              ]
-            }
-          }
-        }
+        useCatalogConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du catalogue',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' }
       }
     },
     'element-application': {

@@ -8,7 +8,7 @@
     >
       <application-card
         :application="application"
-        :card-config="element.cardConfig"
+        :card-config="element.useCatalogConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
       />
     </v-col>
   </v-row>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import type { ApplicationsList } from '#api/types/page-elements'
+import type { ApplicationsListElement } from '#api/types/page-elements'
 
 type Application = {
   id: string
@@ -37,8 +37,8 @@ type ApplicationFetch = {
   results: Application[]
 }
 
-const { element } = defineProps<{ element: ApplicationsList }>()
-const { portal, preview } = usePortalStore()
+const { element } = defineProps<{ element: ApplicationsListElement }>()
+const { portal, preview, portalConfig } = usePortalStore()
 
 let applications: Application[] | ComputedRef<Application[]>
 

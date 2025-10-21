@@ -1,38 +1,45 @@
 <template>
-  <component
-    :is="'style'"
-  >
+  <component :is="'style'">
     {{ fontFamiliesCss }}
   </component>
-  <v-container fluid>
-    <p
-      class="text-h3 mb-4"
-      :style="`font-family: ${headingFontFamilyCssFetch.data ? 'preview-heading-font-family' : 'preview-body-font-family'}`"
-    >
-      Lorem ipsum
-    </p>
-    <p
-      style="font-family: preview-body-font-family;"
-      class="mb-4"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
-    <v-btn
-      style="font-family: preview-body-font-family;"
-      color="primary"
-    >
-      lorem
-    </v-btn>
-  </v-container>
+  <v-theme-provider
+    theme="preview-colors"
+    with-background
+  >
+    <v-container fluid>
+      <h2 class="text-h6">
+        {{ t('fontFamiliesPreview') }}
+      </h2>
+      <p
+        class="text-h3 mb-4"
+        :style="`font-family: ${headingFontFamilyCssFetch.data ? 'preview-heading-font-family' : 'preview-body-font-family'}`"
+      >
+        {{ t('titleExample') }}
+      </p>
+      <p
+        style="font-family: preview-body-font-family;"
+        class="mb-4"
+      >
+        {{ t('paragraphExample') }}
+      </p>
+      <v-btn
+        style="font-family: preview-body-font-family;"
+        color="primary"
+      >
+        {{ t('buttonExample') }}
+      </v-btn>
+    </v-container>
+  </v-theme-provider>
 </template>
 
 <script setup lang="ts">
 import microTemplate from '@data-fair/lib-utils/micro-template.js'
 
-const { portal } = usePortalStore()
+const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 
-const bodyFontFamilyCssFetch = useFetch<string>(() => portal.value.config.bodyFontFamily && ($apiPath + `/assets/fonts/${portal.value.config.bodyFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
-const headingFontFamilyCssFetch = useFetch<string>(() => portal.value.config.headingFontFamily && ($apiPath + `/assets/fonts/${portal.value.config.headingFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
+const bodyFontFamilyCssFetch = useFetch<string>(() => portalConfig.value.bodyFontFamily && ($apiPath + `/assets/fonts/${portalConfig.value.bodyFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
+const headingFontFamilyCssFetch = useFetch<string>(() => portalConfig.value.headingFontFamily && ($apiPath + `/assets/fonts/${portalConfig.value.headingFontFamily.toLowerCase().replace(/\s/g, '')}.css`))
 
 const fontFamiliesCss = computed(() => {
   let css = ''
@@ -45,3 +52,18 @@ const fontFamiliesCss = computed(() => {
   return css
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    fontFamiliesPreview: Font families preview
+    titleExample: Title example
+    paragraphExample: This is a paragraph example using the "body" font family.
+    buttonExample: Button example
+
+  fr:
+    fontFamiliesPreview: Aperçu des polices de caractères
+    titleExample: Exemple de titre
+    paragraphExample: Ceci est un exemple de paragraphe utilisant la police "body".
+    buttonExample: Exemple de bouton
+
+</i18n>

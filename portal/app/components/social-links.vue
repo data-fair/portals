@@ -3,7 +3,7 @@
     v-for="[key, platform] in filteredSocialPlatforms"
     :key="key"
     :title="t('openAccount', { account: key })"
-    :href="platform.url(links[key] as string)"
+    :href="platform.url(links[key as keyof SocialLinks] ?? '')"
     target="_blank"
     rel="noopener"
     density="comfortable"
@@ -19,14 +19,11 @@
 import type { SocialLinks } from '#api/types/portal'
 import { mdiFacebook, mdiInstagram, mdiLinkedin, mdiVimeo, mdiYoutube } from '@mdi/js'
 
-const props = defineProps<{
-  links: SocialLinks
-}>()
-
+const { links } = defineProps<{ links: SocialLinks }>()
 const { t } = useI18n()
 
 const filteredSocialPlatforms = computed(() => {
-  return Object.entries(socialPlatforms).filter(([key]) => props.links[key])
+  return Object.entries(socialPlatforms).filter(([key]) => links[key as keyof SocialLinks])
 })
 
 const socialPlatforms: Record<
