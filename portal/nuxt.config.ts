@@ -27,12 +27,12 @@ export default defineNuxtConfig({
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     draftUrlPattern: ''
   },
-  security: {
+  /* security: {
     nonce: true,
     headers: {
       contentSecurityPolicy
     }
-  },
+  }, */
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
   build: {
     transpile: ['vuetify']
