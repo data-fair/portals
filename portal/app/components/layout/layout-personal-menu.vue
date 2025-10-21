@@ -104,11 +104,15 @@ if (!preview) {
     )
   })
 
+  const requestUrl = useRequestURL()
+
   backOfficeUrl = computed(() => {
     const site = session.site.value
     if (!site) return '/data-fair'
     if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
-    if (!site.isAccountMain && site.authMode === 'onlyOtherSite') return site.authOnlyOtherSite
+    if (!site.isAccountMain && site.authMode === 'onlyOtherSite') {
+      return `${requestUrl.protocol}//${site.authOnlyOtherSite}`
+    }
     return '/data-fair'
   })
 }

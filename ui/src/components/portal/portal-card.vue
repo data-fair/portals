@@ -30,7 +30,7 @@
         density="compact"
         style="background-color: inherit;"
       >
-        <!-- TODO -->
+        <!-- TODO: Add a content -->
       </v-list>
     </v-card-text>
   </v-card>

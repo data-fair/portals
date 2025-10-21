@@ -57,9 +57,10 @@
               </v-card>
             </v-theme-provider>
           </template>
-          <template #link-item-summary="{ node }">
+          <!-- TODO: fix vjsf bug -->
+          <!-- <template #link-item-summary="{ node }">
             <link-item-summary :item="node.data" />
-          </template>
+          </template> -->
           <template #image-upload="{ node, statefulLayout, width, height, label }">
             <image-upload
               :model-value="node.data"

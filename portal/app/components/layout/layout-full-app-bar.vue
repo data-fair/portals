@@ -1,7 +1,6 @@
 <template>
   <v-app-bar
     ref="appBarRef"
-    :density="headerConfig.density"
     flat
   >
     <v-container
@@ -11,10 +10,9 @@
       <v-row align="center">
         <!-- Logo -->
         <layout-header-logo
-          v-if="logo"
+          v-if="portalConfig.logo"
           :height="(appBarHeight || 64) - 10"
-          :link="portalConfig.header.logoLink"
-          :logo="logo"
+          :logo="portalConfig.logo"
         />
 
         <!-- Breadcrumbs -->
@@ -42,15 +40,6 @@ const { t } = useI18n()
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
 
-const headerConfig = computed(() => portalConfig.value.header)
-const logo = computed(() => {
-  if (headerConfig.value.logoPrimaryType === 'local' && headerConfig.value.logoPrimary) {
-    return headerConfig.value.logoPrimary
-  } else if (headerConfig.value.logoPrimaryType === 'default' && portalConfig.value.logo) {
-    return portalConfig.value.logo
-  }
-  return null
-})
 </script>
 
 <i18n lang="yaml">

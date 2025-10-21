@@ -83,10 +83,10 @@ const createNavigationStore = () => {
           default: return i18n[locale]['standardPage']
         }
       }
-      case 'event': return link.pageRef.title || i18n[locale]['eventPage']
-      case 'news': return link.pageRef.title || i18n[locale]['newsPage']
-      case 'generic': return link.pageRef.title || i18n[locale]['customPage']
-      case 'external': return link.title || i18n[locale]['externalLink']
+      case 'event': return link.pageRef.title
+      case 'news': return link.pageRef.title
+      case 'generic': return link.pageRef.title
+      case 'external': return link.title
       default: return i18n[locale]['link']
     }
   }
@@ -117,31 +117,27 @@ export const useNavigationStore = () => {
 
 const i18n = {
   en: {
-    homePage: 'Home Page',
-    contactPage: 'Contact Page',
-    privacyPolicyPage: 'Privacy Policy Page',
-    datasetsPage: 'Datasets Page',
-    applicationsPage: 'Applications Page',
-    newsPage: 'News Page',
-    eventPage: 'Event Page',
-    sitemapPage: 'Sitemap Page',
+    homePage: 'Home',
+    contactPage: 'Contact',
+    privacyPolicyPage: 'Privacy Policy',
+    datasetsPage: 'Datasets',
+    applicationsPage: 'Applications',
+    newsPage: 'News',
+    eventPage: 'Event',
+    sitemapPage: 'Sitemap',
     standardPage: 'Standard Page',
-    customPage: 'Custom Page',
-    externalLink: 'External Link',
     link: 'Link'
   },
   fr: {
-    homePage: 'Page d\'accueil',
-    contactPage: 'Page de contact',
-    privacyPolicyPage: 'Page de politique de confidentialité',
-    datasetsPage: 'Page des jeux de données',
-    applicationsPage: 'Page des applications',
-    newsPage: 'Page des actualités',
+    homePage: 'Accueil',
+    contactPage: 'Contact',
+    privacyPolicyPage: 'Politique de confidentialité',
+    datasetsPage: 'Catalogue de données',
+    applicationsPage: 'Catalogue de visualisations',
+    newsPage: 'Actualités',
     eventPage: 'Page d\'événement',
-    sitemapPage: 'Page du plan du site',
+    sitemapPage: 'Plan du site',
     standardPage: 'Page standard',
-    customPage: 'Page personnalisée',
-    externalLink: 'Lien externe',
     link: 'Lien'
   }
 }

@@ -26,9 +26,9 @@
               <page-elements :model-value="pageFetch.data.value?.draftConfig.elements" />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="permissions">
-              TODO
-            </v-tabs-window-item>
+            <!-- <v-tabs-window-item value="permissions">
+              TODO: add permissions management
+            </v-tabs-window-item> -->
 
             <v-tabs-window-item value="publications">
               <page-edit-publication />

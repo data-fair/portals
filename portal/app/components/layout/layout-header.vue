@@ -1,7 +1,7 @@
 <template>
   <v-container
     :class="[
-      headerConfig.headerColor === 'background' && 'bg-background',
+      headerConfig.color === 'background' && 'bg-background',
       'h-100 d-flex flex-column justify-center pb-0 container',
     ]"
   >
@@ -19,7 +19,7 @@
       <layout-header-logo
         v-if="logo"
         :logo="logo"
-        :link="headerConfig.logoLink"
+        :link="headerConfig.logoPrimaryLink"
       />
       <v-spacer v-if="!headerConfig.showTitle" />
       <v-col
@@ -41,12 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import type { PortalConfig } from '#api/types/portal'
+import type { Header } from '#api/types/portal-config'
 import { useDisplay } from 'vuetify'
 
-const { headerConfig } = defineProps<{
-  headerConfig: PortalConfig['header']
-}>()
+const { headerConfig } = defineProps<{ headerConfig: Header }>()
 
 const { portalConfig } = usePortalStore()
 const display = useDisplay()

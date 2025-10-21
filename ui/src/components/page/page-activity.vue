@@ -44,8 +44,6 @@
     :title="t('pageType.title')"
     :subtitle="t('pageType.' + (page?.type || 'generic')) + (page?.config.genericMetadata?.group?.title ? ' ' + t('pageGroup', { groupTitle: page.config.genericMetadata.group.title }) : '')"
   />
-
-  <!-- TODO: Can set isReference page for superadmins -->
 </template>
 
 <script setup lang="ts">

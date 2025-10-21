@@ -58,20 +58,11 @@ router.post('', async (req, res, next) => {
       children: [
         { type: 'standard', subtype: 'home', title: 'Accueil' },
         { type: 'standard', subtype: 'datasets', title: 'Jeux de données' },
-        { type: 'standard', subtype: 'applications', title: 'Visualisations' },
-        { type: 'standard', subtype: 'contact', title: 'Contact' }
+        { type: 'standard', subtype: 'applications', title: 'Visualisations' }
       ]
     },
-    header: {
-      show: false,
-      logoPrimaryType: 'default',
-      showTitle: true,
-      headerColor: 'navBar',
-      navBarColor: 'primary',
-      density: 'default',
-      scrollBehavior: 'hide'
-    },
-    headerHome: { active: false },
+    header: {},
+    navBar: {},
     footer: {
       color: 'primary',
       showSocial: false,
@@ -79,7 +70,7 @@ router.post('', async (req, res, next) => {
       logoPrimaryType: 'default',
       extraLogos: [],
       linksMode: 'lines',
-      links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }, { type: 'standard', subtype: 'privacy-policy', title: 'Politique de confidentialité' }],
+      links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
       importantLinks: []
     },
     datasets: {

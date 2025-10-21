@@ -222,9 +222,18 @@ const cleanUnusedImages = async (portal: Portal) => {
     portal.config.header.logoPrimary,
     portal.config.header.logoPrimaryMobile,
     portal.config.header.logoSecondary,
+    portal.config.navBar.logo,
+    portal.config.navBar.logoMobile,
     portal.draftConfig.logo,
     portal.draftConfig.logoDark,
-    portal.draftConfig.favicon
+    portal.draftConfig.favicon,
+    portal.draftConfig.footer.logoPrimary,
+    portal.draftConfig.footer.backgroundImage,
+    portal.draftConfig.header.logoPrimary,
+    portal.draftConfig.header.logoPrimaryMobile,
+    portal.draftConfig.header.logoSecondary,
+    portal.draftConfig.navBar.logo,
+    portal.draftConfig.navBar.logoMobile
   ]
   // List of footer extra logos
   if (portal.config.footer.extraLogos) {

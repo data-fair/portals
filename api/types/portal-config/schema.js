@@ -25,12 +25,79 @@ export default {
       },
       { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
       {
-        title: 'Entête & Barre de navigation',
+        title: 'Entête',
         children: [
-          'header',
-          { name: 'app-bar-preview' },
-          'headerHome',
-          'menu'
+          {
+            if: 'data?.headerHomeActive',
+            children: [
+              'headerHomeActive',
+              {
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options générales',
+                children: [
+                  'header',
+                  { name: 'app-bar-preview' }
+                ]
+              },
+              {
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options spécifiques pour la page d\'accueil',
+                children: [
+                  'headerHome',
+                  { name: 'app-bar-preview', props: { home: true } }
+                ]
+              }
+            ]
+          },
+          {
+            if: '!data?.headerHomeActive',
+            children: [
+              'headerHomeActive',
+              'header',
+              { name: 'app-bar-preview' }
+            ]
+          }
+        ]
+      },
+      {
+        title: 'Barre de navigation',
+        children: [
+          {
+            if: 'data?.navBarHomeActive',
+            children: [
+              'navBarHomeActive',
+              {
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options générales',
+                children: [
+                  'navBar',
+                  { name: 'nav-bar-preview' }
+                ]
+              },
+              {
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options spécifiques pour la page d\'accueil',
+                children: [
+                  'navBarHome',
+                  { name: 'app-bar-preview', props: { home: true } }
+                ]
+              },
+              'menu'
+            ]
+          },
+          {
+            if: '!data?.navBarHomeActive',
+            children: [
+              'navBarHomeActive',
+              'navBar',
+              { name: 'app-bar-preview' },
+              'menu'
+            ]
+          }
         ]
       },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
@@ -45,7 +112,7 @@ export default {
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'headerHome', 'menu', 'footer', 'datasets', 'applications', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'footer', 'datasets', 'applications', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -178,36 +245,20 @@ export default {
         }
       }
     },
-    header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
-    headerHome: {
-      type: 'object',
-      title: 'Options spécifiques pour la page d\'accueil',
-      unevaluatedProperties: false,
-      layout: {
-        comp: 'card',
-        switch: [
-          {
-            if: 'data?.active',
-            children: [
-              'active',
-              'header',
-              { name: 'app-bar-preview', props: { home: true } }
-            ]
-          },
-          ['active']
-        ]
-      },
-      required: ['active'],
-      properties: {
-        active: {
-          type: 'boolean',
-          title: 'Utiliser un rendu différent sur la page d\'accueil',
-          layout: { comp: 'switch' },
-          default: false
-        },
-        header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' }
-      }
+    headerHomeActive: {
+      type: 'boolean',
+      title: 'Utiliser un rendu différent sur la page d\'accueil',
+      layout: { comp: 'switch' }
     },
+    header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
+    headerHome: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
+    navBarHomeActive: {
+      type: 'boolean',
+      title: 'Utiliser un rendu différent sur la page d\'accueil',
+      layout: { comp: 'switch' }
+    },
+    navBar: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },
+    navBarHome: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },
     menu: {
       type: 'object',
       unevaluatedProperties: false,
@@ -216,6 +267,11 @@ export default {
         children: {
           type: 'array',
           title: 'Éléments du menu de navigation',
+          layout: {
+            // eslint-disable-next-line no-template-curly-in-string
+            itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+            messages: { addItem: 'Ajouter un lien' }
+          },
           items: { $ref: '#/$defs/menuItem' }
         }
       }
@@ -234,7 +290,8 @@ export default {
       unevaluatedProperties: false,
       oneOfLayout: { emptyData: true },
       discriminator: { propertyName: 'type' },
-      layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
@@ -252,7 +309,11 @@ export default {
             children: {
               type: 'array',
               title: '',
-              layout: { listEditMode: 'inline' },
+              layout: {
+                // eslint-disable-next-line no-template-curly-in-string
+                itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+                messages: { addItem: 'Ajouter un lien' }
+              },
               items: { $ref: '#/$defs/menuItem' }
             }
           }

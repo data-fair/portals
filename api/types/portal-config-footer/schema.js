@@ -237,6 +237,8 @@ export default {
       title: 'Links',
       layout: {
         title: '',
+        // eslint-disable-next-line no-template-curly-in-string
+        itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
         messages: { addItem: 'Ajouter un lien' }
       },
       items: { $ref: '#/$defs/linkItem' },
@@ -248,6 +250,8 @@ export default {
       description: 'Les liens importants sont affichés sous forme de boutons, ils sont plus visibles que les simples liens.',
       layout: {
         title: '',
+        // eslint-disable-next-line no-template-curly-in-string
+        itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
         messages: { addItem: 'Ajouter un lien' }
       },
       items: { $ref: '#/$defs/linkItem' },
@@ -260,7 +264,8 @@ export default {
       unevaluatedProperties: false,
       oneOfLayout: { emptyData: true },
       discriminator: { propertyName: 'type' },
-      layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
