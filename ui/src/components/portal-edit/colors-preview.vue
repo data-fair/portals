@@ -8,51 +8,44 @@
   >
     {{ warning }}
   </v-alert>
-  <v-theme-provider
-    :theme="'preview-' + colorsKey"
-    with-background
-  >
+  <preview :colors-key="colorsKey">
     <component
       :is="'style'"
       v-if="colors"
     >
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
-    <v-container fluid>
-      <h2 class="text-h6">
-        {{ t('colorPreview') }}
-      </h2>
-      <v-card
-        :title="t('cardExample.title')"
-        :text="t('cardExample.text')"
-        class="my-2"
-      />
-      <template
-        v-for="color of colorKeys"
-        :key="color"
-      >
-        <v-row class="ma-0">
-          <template
-            v-for="variant of buttonVariants"
-            :key="variant"
-          >
-            <v-btn
-              :color="color"
-              :variant="variant"
-              class="ma-2"
-            >
-              {{ color }}
-            </v-btn>
-          </template>
-          <v-icon
-            :icon="mdiEmoticonKissOutline"
+
+    <v-card
+      :title="t('cardExample.title')"
+      :text="t('cardExample.text')"
+      class="my-2"
+    />
+    <template
+      v-for="color of colorKeys"
+      :key="color"
+    >
+      <v-row class="ma-0">
+        <template
+          v-for="variant of buttonVariants"
+          :key="variant"
+        >
+          <v-btn
             :color="color"
+            :variant="variant"
             class="ma-2"
-          />
-        </v-row>
-      </template>
-    </v-container>
-  </v-theme-provider>
+          >
+            {{ color }}
+          </v-btn>
+        </template>
+        <v-icon
+          :icon="mdiEmoticonKissOutline"
+          :color="color"
+          class="ma-2"
+        />
+      </v-row>
+    </template>
+  </preview>
 </template>
 
 <script setup lang="ts">
@@ -107,13 +100,11 @@ const colorsWarnings = computed(() => {
 
 <i18n lang="yaml">
   en:
-    colorPreview: Color rendering preview
     cardExample:
       title: A card example
       text: This is a card example using the "surface" color.
 
   fr:
-    colorPreview: Aperçu du rendu des couleurs
     cardExample:
       title: Un exemple de carte
       text: Ceci est un exemple de carte utilisant la couleur des "surfaces".

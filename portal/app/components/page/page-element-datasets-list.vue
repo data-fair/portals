@@ -8,7 +8,7 @@
     >
       <dataset-card
         :dataset="dataset"
-        :card-config="element.useCatalogConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
+        :card-config="element.usePortalConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
       />
     </v-col>
   </v-row>

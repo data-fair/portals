@@ -85,6 +85,7 @@ declare module 'vue' {
     PortalCard: typeof import('./../src/components/portal/portal-card.vue')['default']
     PortalPreviewProvider: typeof import('./../src/components/portal-preview-provider.vue')['default']
     PortalsActions: typeof import('./../src/components/portals-actions.vue')['default']
+    Preview: typeof import('./../src/components/portal-edit/preview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SitemapMenuItem: typeof import('./../../portal/app/components/sitemap-menu-item.vue')['default']

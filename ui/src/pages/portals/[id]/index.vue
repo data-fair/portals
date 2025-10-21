@@ -29,33 +29,25 @@
             />
           </template>
           <template #font-families-preview>
-            <font-families-preview />
+            <preview>
+              <font-families-preview />
+            </preview>
           </template>
           <template #app-bar-preview="context">
-            <v-theme-provider
-              theme="preview-colors"
-              with-background
-            >
-              <v-container fluid>
-                <h2 class="text-h6">
-                  {{ t('appBarPreview') }}
-                </h2>
-                <layout-app-bar
-                  v-if="formValid"
-                  :home="context.home"
-                />
-              </v-container>
-            </v-theme-provider>
+            <preview>
+              <layout-app-bar
+                v-if="formValid"
+                :home="context.home"
+              />
+            </preview>
           </template>
           <template #footer-preview="context">
-            <v-theme-provider theme="preview-colors">
-              <v-card>
-                <layout-footer
-                  v-if="formValid"
-                  :home="context.home"
-                />
-              </v-card>
-            </v-theme-provider>
+            <preview>
+              <layout-footer
+                v-if="formValid"
+                :home="context.home"
+              />
+            </preview>
           </template>
           <!-- TODO: fix vjsf bug -->
           <!-- <template #link-item-summary="{ node }">

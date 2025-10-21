@@ -408,16 +408,16 @@ export default {
             },
             comp: 'card',
             children: [
-              'useCatalogConfig',
+              'usePortalConfig',
               {
-                if: '!data?.useCatalogConfig',
+                if: '!data?.usePortalConfig',
                 children: ['cardConfig']
               }
             ]
           }
         ]
       },
-      required: ['type', 'columns', 'limit', 'useCatalogConfig'],
+      required: ['type', 'columns', 'limit', 'usePortalConfig'],
       properties: {
         type: {
           const: 'datasets-list'
@@ -437,9 +437,9 @@ export default {
           minimum: 1,
           maximum: 12
         },
-        useCatalogConfig: {
+        usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du catalogue',
+          title: 'Utiliser la configuration du portail',
           layout: 'switch',
           default: true
         },
@@ -464,16 +464,16 @@ export default {
             },
             comp: 'card',
             children: [
-              'useCatalogConfig',
+              'usePortalConfig',
               {
-                if: '!data?.useCatalogConfig',
+                if: '!data?.usePortalConfig',
                 children: ['cardConfig']
               }
             ]
           }
         ]
       },
-      required: ['type', 'dataset', 'useCatalogConfig'],
+      required: ['type', 'dataset', 'usePortalConfig'],
       properties: {
         type: {
           const: 'dataset-card'
@@ -501,9 +501,9 @@ export default {
             }
           }
         },
-        useCatalogConfig: {
+        usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du catalogue',
+          title: 'Utiliser la configuration du portail',
           layout: 'switch',
           default: true
         },
@@ -643,9 +643,9 @@ export default {
             },
             comp: 'card',
             children: [
-              'useCatalogConfig',
+              'usePortalConfig',
               {
-                if: '!data?.useCatalogConfig',
+                if: '!data?.usePortalConfig',
                 children: ['cardConfig']
               }
             ]
@@ -673,9 +673,9 @@ export default {
           minimum: 1,
           maximum: 12
         },
-        useCatalogConfig: {
+        usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du catalogue',
+          title: 'Utiliser la configuration du portail',
           layout: 'switch',
           default: true
         },

@@ -2,34 +2,24 @@
   <component :is="'style'">
     {{ fontFamiliesCss }}
   </component>
-  <v-theme-provider
-    theme="preview-colors"
-    with-background
+  <p
+    class="text-h3 mb-4"
+    :style="`font-family: ${headingFontFamilyCssFetch.data ? 'preview-heading-font-family' : 'preview-body-font-family'}`"
   >
-    <v-container fluid>
-      <h2 class="text-h6">
-        {{ t('fontFamiliesPreview') }}
-      </h2>
-      <p
-        class="text-h3 mb-4"
-        :style="`font-family: ${headingFontFamilyCssFetch.data ? 'preview-heading-font-family' : 'preview-body-font-family'}`"
-      >
-        {{ t('titleExample') }}
-      </p>
-      <p
-        style="font-family: preview-body-font-family;"
-        class="mb-4"
-      >
-        {{ t('paragraphExample') }}
-      </p>
-      <v-btn
-        style="font-family: preview-body-font-family;"
-        color="primary"
-      >
-        {{ t('buttonExample') }}
-      </v-btn>
-    </v-container>
-  </v-theme-provider>
+    {{ t('titleExample') }}
+  </p>
+  <p
+    style="font-family: preview-body-font-family;"
+    class="mb-4"
+  >
+    {{ t('paragraphExample') }}
+  </p>
+  <v-btn
+    style="font-family: preview-body-font-family;"
+    color="primary"
+  >
+    {{ t('buttonExample') }}
+  </v-btn>
 </template>
 
 <script setup lang="ts">
@@ -55,13 +45,11 @@ const fontFamiliesCss = computed(() => {
 
 <i18n lang="yaml">
   en:
-    fontFamiliesPreview: Font families preview
     titleExample: Title example
     paragraphExample: This is a paragraph example using the "body" font family.
     buttonExample: Button example
 
   fr:
-    fontFamiliesPreview: Aperçu des polices de caractères
     titleExample: Exemple de titre
     paragraphExample: Ceci est un exemple de paragraphe utilisant la police "body".
     buttonExample: Exemple de bouton
