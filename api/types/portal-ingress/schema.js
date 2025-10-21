@@ -52,9 +52,14 @@ export default {
       }
     },
     waf: {
-      type: 'boolean',
+      type: 'string',
       title: 'Activation du WAF',
-      default: true,
+      default: 'on',
+      oneOf: [
+        { title: 'actif', const: 'on' },
+        { title: 'inactif', const: 'off' },
+        { title: 'actif non bloquant', const: 'detectionOnly' }
+      ],
       description: '"Web Application Firewall", fortement recommandé, à désactiver uniquement ponctuellement si le WAF créé un blocage.'
     }
   }

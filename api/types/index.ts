@@ -8,5 +8,5 @@ export type IngressManagerIngressInfo = {
   controller?: string,
   blockedIps?: string[],
   redirects?: [string, string][],
-  waf?: boolean
+  waf?: 'on' | 'off' | 'detectionOnly'
 }
