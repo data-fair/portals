@@ -47,7 +47,7 @@ npm run stop-dev-deps
 ## Building the Docker images
 
 ```sh
-docker build --progress=plain --target=portals-manager -t data-fair/portals/manager:dev .
+docker build --progress=plain --target=manager -t data-fair/portals/manager:dev .
 docker build --progress=plain --target=portal -t data-fair/portals/portal:dev .
 ```
 
