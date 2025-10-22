@@ -8,23 +8,14 @@ const navigationStoreKey = Symbol('navigation-store')
 
 const createNavigationStore = () => {
   const _breadcrumbs = ref<BreadcrumbItems>([])
-  const _breadcrumbsRouteName = ref<string | null>(null)
   const drawer = ref(false) // Simple boolean shared between navigations components
 
-  const setBreadcrumbs = (breadcrumbItems: BreadcrumbItems, routeName?: string) => {
+  const setBreadcrumbs = (breadcrumbItems: BreadcrumbItems) => {
     _breadcrumbs.value = breadcrumbItems
-    _breadcrumbsRouteName.value = routeName || null
   }
 
-  const clearBreadcrumbs = () => {
-    _breadcrumbs.value = []
-    _breadcrumbsRouteName.value = null
-  }
-
-  const showBreadcrumbs = computed(() => {
-    const { name } = useRoute()
-    return _breadcrumbs.value.length > 0 && _breadcrumbsRouteName.value === name
-  })
+  const clearBreadcrumbs = () => { _breadcrumbs.value = [] }
+  const showBreadcrumbs = computed(() => _breadcrumbs.value.length > 0)
 
   /** Check if a menu item (or any of its children) matches the current route */
   const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {

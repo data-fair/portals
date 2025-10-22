@@ -3,6 +3,8 @@
     :iframe-title="t('processings')"
     :src="`/processings/processings/?owner=${portalOwner}`"
     :adapter.prop="stateChangeAdapter"
+    class="fill-height"
+    resize="no"
     sync-path="/me/processings/"
     sync-params
     emit-iframe-messages
@@ -16,8 +18,8 @@ import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-chan
 
 const { t } = useI18n()
 const { portal } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
-const route = useRoute()
+const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
+
 const portalOwner = computed(() => {
   let owner = `${portal.value.owner.type}:${portal.value.owner.id}`
   if (portal.value.owner.department) owner += `:${portal.value.owner.department}`
@@ -31,9 +33,10 @@ const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) =
   if (!message.breadcrumbs) return
   const formattedBreadcrumbs = message.breadcrumbs
     .map(b => ({ title: b.text, to: b.to && '/me' + b.to }))
-  setBreadcrumbs(formattedBreadcrumbs, route.name as string)
+  setBreadcrumbs(formattedBreadcrumbs)
 }
 
+onUnmounted(() => clearBreadcrumbs())
 useHead({ title: t('processings') })
 </script>
 

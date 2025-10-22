@@ -11,7 +11,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -45,8 +45,9 @@ watch(datasetFetch.data, () => {
     { title: t('datasets', 1), href: '/datasets' },
     { title: datasetFetch.data.value?.title || '', href: '/datasets/' + route.params.ref },
     { title: t('fullscreen') }
-  ], route.name as string)
+  ])
 }, { immediate: true })
+onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('datasets', 0),

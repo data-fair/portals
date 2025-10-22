@@ -10,7 +10,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -22,8 +22,9 @@ watch(applicationFetch.data, () => {
     { title: t('applications', 1), href: '/applications' },
     { title: applicationFetch.data.value?.title || '', href: '/applications/' + route.params.ref },
     { title: t('fullscreen') }
-  ], route.name as string)
+  ])
 }, { immediate: true })
+onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
   title: () => applicationFetch.data.value?.title || t('applications', 0),
