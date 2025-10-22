@@ -27,12 +27,14 @@ export default defineNuxtConfig({
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     draftUrlPattern: ''
   },
-  /* security: {
+  security: {
     nonce: true,
     headers: {
-      contentSecurityPolicy
+      // referrerPolicy: 'strict-origin-when-cross-origin',
+      // contentSecurityPolicy
+      contentSecurityPolicy: false
     }
-  }, */
+  },
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
   build: {
     transpile: ['vuetify']
@@ -56,7 +58,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/eslint',
-    // 'nuxt-security',
+    'nuxt-security',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         config.plugins!.push(vuetify({ autoImport: true }))
