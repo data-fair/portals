@@ -1,5 +1,8 @@
 <template>
-  <v-row :justify="!filters ? 'center' : undefined">
+  <v-row
+    v-if="topics.length"
+    :justify="!filters ? 'center' : undefined"
+  >
     <v-col
       v-for="topic in topics"
       :key="topic.id"

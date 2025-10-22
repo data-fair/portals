@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-center">
+  <div :class="['d-flex justify-center', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
     <v-text-field
       v-model="searchQuery"
       :label="t('searchLabel')"
@@ -41,6 +41,7 @@ type Search = {
   density?: 'comfortable' | 'compact' | 'default'
   rounded?: boolean | string
   elevation?: number
+  mb?: number
 }
 
 const { element } = defineProps<{ element: Search }>()

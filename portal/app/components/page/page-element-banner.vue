@@ -2,8 +2,11 @@
 <template>
   <v-sheet
     :class="[
-      'banner-fluid',
-      element.backgroundColor ? 'bg-' + element.backgroundColor : undefined
+      preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',
+      element.backgroundColor && 'bg-' + element.backgroundColor,
+      element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
+      element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
+      element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
     :style="src ? {
       backgroundImage: `url(${src})`,
@@ -24,19 +27,18 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, ImageRef } from '#api/types/page-config'
+import type { PageElement, ImageRef, Banner } from '#api/types/page-config'
 
-// TODO: replace with import from types when available
-type Banner = {
-  type: 'banner'
-  backgroundColor?: string
-  backgroundImage?: ImageRef
-  children: PageElement[]
-}
+const { element } = defineProps<{
+  element: Banner
+  context: {
+    isRoot: boolean
+    index: number
+    parentLength: number
+  }
+}>()
 
-const { element } = defineProps({
-  element: { type: Object as () => Banner, required: true }
-})
+const { preview } = usePortalStore()
 
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const src = computed(() => {
@@ -50,5 +52,9 @@ const src = computed(() => {
 .banner-fluid {
   width: 100vw;
   margin-left: calc(50% - 50vw);
+}
+
+.banner-contained {
+  width: 100%;
 }
 </style>

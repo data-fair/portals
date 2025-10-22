@@ -1,10 +1,14 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <topics-list
-    v-if="topicsItems"
-    :topics="topicsItems"
-    :config="element"
-  />
+  <div
+    v-if="topicsItems.length"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  >
+    <topics-list
+      :config="element"
+      :topics="topicsItems"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

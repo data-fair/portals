@@ -16,6 +16,7 @@
               <page-edit-elements
                 :model-value="node.data"
                 :add-item-message="t('addItemMessage')"
+                root
                 @update:model-value="(data: any) => statefulLayout.input(node, data)"
               />
             </v-defaults-provider>

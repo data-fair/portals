@@ -3,6 +3,7 @@
     <page-element
       v-if="renderedElement"
       :element="renderedElement"
+      :context="context"
     >
       <template #page-elements="{ elements, onUpdate, addItemMessage }">
         <v-defaults-provider :defaults="vjsfDefaults">
@@ -22,6 +23,7 @@ import type { PageElement } from '#api/types/page-config'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 
 const element = defineModel<PageElement>()
+defineProps<{ context: { isRoot: boolean, index: number, parentLength: number } }>()
 
 const renderedElement = computed(() => {
   if (!element.value) return

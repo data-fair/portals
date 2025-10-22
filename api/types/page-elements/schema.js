@@ -48,7 +48,7 @@ export default {
         { $ref: '#/$defs/element-dataset-form' },
         { $ref: '#/$defs/element-applications-list' },
         { $ref: '#/$defs/element-application' },
-        // { $ref: '#/$defs/element-banner' }, // TODO
+        { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
@@ -108,12 +108,17 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
+        mb: { $ref: '#/$defs/margin-bottom' },
         _html: { $ref: '#/$defs/rendered-html' }
       }
     },
     'element-alert': {
       type: 'object',
-      title: 'Texte accentué',
+      title: 'AlertElement',
+      'x-i18n-title': {
+        en: 'Accented text',
+        fr: 'Texte accentué'
+      },
       required: ['type', 'alertType'],
       layout: {
         switch: [
@@ -172,6 +177,7 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
+        mb: { $ref: '#/$defs/margin-bottom' },
         _html: { $ref: '#/$defs/rendered-html' }
       }
     },
@@ -213,7 +219,8 @@ export default {
           title: 'Zoom au clic',
           description: "Ne fonctionne que si aucun lien n'est associé à l'image",
           type: 'boolean'
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-iframe': {
@@ -233,7 +240,8 @@ export default {
           title: "URL de l'iframe",
           description: "URL de la page web à afficher dans l'iframe.",
           type: 'string'
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-divider': {
@@ -250,7 +258,7 @@ export default {
         content: {
           title: 'Contenu',
           type: 'string',
-          description: 'Texte à afficher au centre du séparateur'
+          description: 'Texte affiché au centre du séparateur'
         },
         inset: {
           type: 'boolean',
@@ -258,7 +266,8 @@ export default {
         },
         rounded: {
           type: 'boolean',
-          title: 'Bords arrondis'
+          title: 'Bords arrondis',
+          default: true
         },
         opacity: {
           type: 'number',
@@ -320,7 +329,8 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-topics': {
@@ -366,7 +376,8 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-contact': {
@@ -386,7 +397,8 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: 'Afficher les liens de réseaux sociaux'
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-datasets-list': {
@@ -401,6 +413,7 @@ export default {
           'type',
           'columns',
           'limit',
+          'mb',
           {
             title: 'Dataset Card',
             'x-i18n-title': {
@@ -426,7 +439,7 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          default: 2,
+          default: 3,
           minimum: 1,
           maximum: 3
         },
@@ -443,7 +456,8 @@ export default {
           layout: 'switch',
           default: true
         },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' }
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-dataset-card': {
@@ -457,6 +471,7 @@ export default {
         children: [
           'type',
           'dataset',
+          'mb',
           {
             title: 'Dataset Card',
             'x-i18n-title': {
@@ -507,7 +522,8 @@ export default {
           layout: 'switch',
           default: true
         },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' }
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-dataset-table': {
@@ -585,7 +601,8 @@ export default {
           description: 'Autorise le tri, la recherche, les filtres,...',
           type: 'boolean',
           default: true
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-dataset-form': {
@@ -621,7 +638,8 @@ export default {
               type: 'string'
             }
           }
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-applications-list': {
@@ -636,6 +654,7 @@ export default {
           'type',
           'columns',
           'limit',
+          'mb',
           {
             title: 'Application Card',
             'x-i18n-title': {
@@ -661,7 +680,7 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          default: 2,
+          default: 3,
           minimum: 1,
           maximum: 3
         },
@@ -679,7 +698,8 @@ export default {
           layout: 'switch',
           default: true
         },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' }
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-application': {
@@ -728,7 +748,8 @@ export default {
           title: 'Synchroniser les paramètres d\'URL',
           description: 'Si activé, les paramètres de la page seront transmis à l\'application. Utile pour partager la page avec une vue spécifique de l\'application.',
           default: true
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-banner': {
@@ -752,7 +773,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 5152, label: 'chargez une image' } // TODO: allow larger images
+                props: { width: 2560, label: 'Chargez une image de fond' }
               }
             }
           },
@@ -771,13 +792,26 @@ export default {
             }
           }
         },
+        height: {
+          title: 'Hauteur (px)',
+          description: "Fixe la hauteur de l'image",
+          type: 'integer',
+          minimum: 0
+        },
         children: {
           type: 'array',
           layout: 'none',
           items: {
             $ref: '#/$defs/element'
           }
-        }
+        },
+        sticky: {
+          type: 'boolean',
+          title: 'Coller à la barre de navigation ou au pied de page',
+          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
+          layout: 'switch'
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-card': {
@@ -821,7 +855,8 @@ export default {
           items: {
             $ref: '#/$defs/element'
           }
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-two-columns': {
@@ -874,7 +909,8 @@ export default {
           items: {
             $ref: '#/$defs/element'
           }
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-responsive-flow': {
@@ -911,7 +947,8 @@ export default {
               }
             }
           }
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-tabs': {
@@ -973,7 +1010,8 @@ export default {
               }
             }
           }
-        }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'image-ref': {
@@ -983,7 +1021,7 @@ export default {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 2400, label: 'chargez une image' } // max width of v-container
+            props: { width: 2400, label: 'Chargez une image' } // max width of v-container
           }
         }
       },
@@ -1057,6 +1095,12 @@ export default {
           $ref: '#/$defs/color'
         }
       }
+    },
+    'margin-bottom': {
+      title: 'Espacement inférieur',
+      type: 'integer',
+      minimum: 0,
+      maximum: 16
     },
     'rendered-html': {
       title: 'Contenu rendu en HTML',

@@ -1,5 +1,5 @@
 <template>
-  <v-row class="d-flex align-stretch">
+  <v-row :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
     <v-col
       v-for="dataset in datasets"
       :key="dataset.id"

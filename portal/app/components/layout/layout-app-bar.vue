@@ -3,7 +3,7 @@
     :is="preview ? VToolbar : VAppBar"
     ref="appBarRef"
     :color="navBarConfig.color"
-    :class="navBarConfig.transparent ? 'opacity-90' : undefined"
+    :class="navBarConfig.transparent && 'opacity-90'"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
@@ -28,7 +28,6 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
-
 const appBarRef = ref()
 
 const headerConfig = computed(() => {

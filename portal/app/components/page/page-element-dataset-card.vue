@@ -1,6 +1,7 @@
 <template>
   <dataset-card
     v-if="datasetFetch.data?.value"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :dataset="datasetFetch.data?.value"
     :card-config="element.usePortalConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
   />

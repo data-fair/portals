@@ -1,5 +1,6 @@
 <template>
   <d-frame-wrapper
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('datasetTable')} - ${element.dataset.title}`"
     :src="url"
     :sync-params="element.syncParams ? '*:' + element.dataset.id + '-table_' : undefined"

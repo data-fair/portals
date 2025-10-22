@@ -2,6 +2,7 @@
 <template>
   <v-card
     :border="element.border"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :href="element.href"
     :title="element.title"
   >

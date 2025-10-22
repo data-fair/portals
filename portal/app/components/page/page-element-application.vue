@@ -1,5 +1,6 @@
 <template>
   <d-frame-wrapper
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('application')} - ${element.application.title}`"
     :src="element.application.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     :sync-params="element.syncParams ? '*:' + element.application.id + '-app_' : undefined"

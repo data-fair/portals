@@ -1,5 +1,6 @@
 <template>
   <d-frame-wrapper
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="element.title ? t('iframeTitle', { title: element.title }) : t('iframeNoTitle', { url: element.url })"
     :src="element.url"
     scrolling="no"

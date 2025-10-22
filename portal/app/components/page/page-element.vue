@@ -27,6 +27,7 @@
   <!-- <page-element-search
     v-else-if="element.type === 'search'"
     :element="element"
+    :parent="parent"
   /> -->
   <page-element-topics
     v-else-if="element.type === 'topics'"
@@ -60,26 +61,26 @@
     v-else-if="element.type === 'application'"
     :element="element"
   />
-  <!-- TODO: add it when available in types -->
-  <!-- <page-element-banner
+  <page-element-banner
     v-else-if="element.type === 'banner'"
     :element="element"
+    :context="context"
   >
-    <template #page-elements="context">
+    <template #page-elements="vjsfContext">
       <slot
         name="page-elements"
-        v-bind="context"
+        v-bind="vjsfContext"
       />
     </template>
-  </page-element-banner> -->
+  </page-element-banner>
   <page-element-card
     v-else-if="element.type === 'card'"
     :element="element"
   >
-    <template #page-elements="context">
+    <template #page-elements="vjsfContext">
       <slot
         name="page-elements"
-        v-bind="context"
+        v-bind="vjsfContext"
       />
     </template>
   </page-element-card>
@@ -87,10 +88,10 @@
     v-else-if="element.type === 'two-columns'"
     :element="element"
   >
-    <template #page-elements="context">
+    <template #page-elements="vjsfContext">
       <slot
         name="page-elements"
-        v-bind="context"
+        v-bind="vjsfContext"
       />
     </template>
   </page-element-two-columns>
@@ -98,10 +99,10 @@
     v-else-if="element.type === 'tabs'"
     :element="element"
   >
-    <template #page-elements="context">
+    <template #page-elements="vjsfContext">
       <slot
         name="page-elements"
-        v-bind="context"
+        v-bind="vjsfContext"
       />
     </template>
   </page-element-tabs>
@@ -110,5 +111,12 @@
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page'
 
-defineProps<{ element: PageElement }>()
+defineProps<{
+  element: PageElement
+  context: {
+    isRoot: boolean
+    index: number
+    parentLength: number
+  }
+}>()
 </script>

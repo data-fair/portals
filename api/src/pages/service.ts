@@ -152,7 +152,7 @@ const getPageImageRefs = async (page: Page) => {
   const imageRefs: ImageRef[] = []
   await traversePage(page, (pageElement) => {
     if (pageElement.type === 'image' && pageElement.imageRef) imageRefs.push(pageElement.imageRef)
-    // if (pageElement.type === 'banner' && pageElement.backgroundImage) imageRefs.push(pageElement.backgroundImage) // TODO: readd it when banners are back
+    if (pageElement.type === 'banner' && pageElement.backgroundImage) imageRefs.push(pageElement.backgroundImage)
   })
   return imageRefs
 }
@@ -167,7 +167,7 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
   for (const element of pageElements) {
     await callback(element)
     if (element.type === 'card') await traversePageElements(element.children, callback)
-    // if (element.type === 'banner') await traversePageElements(element.children, callback) // TODO: readd it when banners are back
+    if (element.type === 'banner') await traversePageElements(element.children, callback)
     if (element.type === 'responsive-flow') {
       for (const block of element.blocks) {
         await traversePageElements(block.children, callback)

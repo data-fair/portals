@@ -1,5 +1,5 @@
 <template>
-  <div v-if="src" class="d-flex flex-column align-center">
+  <div v-if="src" :class="['d-flex flex-column align-center', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
     <a
       v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"

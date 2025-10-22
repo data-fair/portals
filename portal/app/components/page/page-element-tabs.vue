@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <v-card :border="element.border">
+  <v-card
+    :border="element.border"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  >
     <v-tabs
       v-model="activeTab"
       color="primary"

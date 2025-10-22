@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     style="overflow-wrap: break-word;"
     v-html="element._html"
   />

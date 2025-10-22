@@ -7,6 +7,11 @@
     <template #page-preview-element="{node, statefulLayout}">
       <page-preview-element
         :model-value="node.data"
+        :context="{
+          isRoot: root || false,
+          index: node.key,
+          parentLength: elements?.length || 0
+        }"
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
@@ -17,6 +22,7 @@
         :width="width"
         :height="height"
         :resource="pageRef"
+        hide-details="auto"
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
@@ -29,7 +35,7 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { type Options as VjsfOptions } from '@koumoul/vjsf'
 
 const elements = defineModel<PageElement[]>()
-const { addItemMessage } = defineProps({ addItemMessage: { type: String, required: true } })
+const { addItemMessage } = defineProps<{ addItemMessage: string, root?: boolean }>()
 const session = useSession()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 

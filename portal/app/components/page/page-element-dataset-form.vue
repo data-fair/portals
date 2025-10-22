@@ -1,5 +1,6 @@
 <template>
   <d-frame-wrapper
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('datasetForm')} - ${element.dataset.title}`"
     :src="`/data-fair/next-ui/embed/dataset/${element.dataset.id}/form`"
     scrolling="no"
