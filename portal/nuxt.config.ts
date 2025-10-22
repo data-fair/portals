@@ -30,14 +30,9 @@ export default defineNuxtConfig({
   security: {
     nonce: true,
     headers: {
-      // crossOriginResourcePolicy: false,
-      // crossOriginOpenerPolicy: false,
+      // this blocks iframes starting with a / is better covered by CSP anyway
       crossOriginEmbedderPolicy: false,
-      originAgentCluster: false,
-      referrerPolicy: 'strict-origin-when-cross-origin',
-      strictTransportSecurity: false,
-      // contentSecurityPolicy
-      contentSecurityPolicy: false
+      contentSecurityPolicy
     }
   },
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
