@@ -18,7 +18,7 @@
     "lint-fix": "eslint --fix . && npm -w ui run lint-fix",
     "prepare": "husky || true",
     "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.js",
-    "quality": "npm run dev-deps && npm run lint && npm run build-types && npm run check-types && npm -w ui run build && npm run test && npm audit --omit=dev --audit-level=critical",
+    "quality": "npm run dev-deps && npm run lint && npm run build-types && npm -w ui run build && npm run check-types && npm run test && npm audit --omit=dev --audit-level=critical",
     "test": "npm run test-base test-it/*.ts",
     "test-base": "NODE_ENV=test EVENTS_LOG_LEVEL=alert node --disable-warning=ExperimentalWarning --test-force-exit --test-concurrency=1 --test",
     "test-only": "npm run test-base -- --test-only test-it/*.ts"
