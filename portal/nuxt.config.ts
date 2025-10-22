@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     headers: {
       // crossOriginResourcePolicy: false,
       // crossOriginOpenerPolicy: false,
-      // crossOriginEmbedderPolicy: false,
+      crossOriginEmbedderPolicy: false,
       originAgentCluster: false,
       referrerPolicy: 'strict-origin-when-cross-origin',
       strictTransportSecurity: false,
