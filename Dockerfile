@@ -85,9 +85,12 @@ RUN npm pack google-fonts-complete@2.2.3 &&\
 RUN mkdir -p api/assets/fonts
 RUN node prepare-fonts.js
 
-##########################
+# =============================
+# Build Portal with Nuxt
+# =============================
 FROM installer AS portal-builder
 
+ADD /shared/markdown shared/markdown
 ADD /portal portal
 RUN npm -w portal run build
 
