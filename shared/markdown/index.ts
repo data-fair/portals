@@ -33,7 +33,7 @@ marked.use({
       return '<hr class="v-divider v-theme--light" aria-orientation="horizontal" role="separator">'
     },
     paragraph ({ tokens }: Tokens.Paragraph) {
-      return `<p class="mb-4">${this.parser.parseInline(tokens)}</p>\n`
+      return `<p class="markdown-paragraph">${this.parser.parseInline(tokens)}</p>\n`
     },
     table (token: Tokens.Table) {
       let header = ''

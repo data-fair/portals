@@ -4,3 +4,4 @@ api/config/local-*
 /google-fonts-complete
 ui/src/components/vjsf
 tmp/
+data/

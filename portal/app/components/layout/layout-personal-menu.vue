@@ -75,7 +75,7 @@ import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } fr
 defineProps<{
   loginColor?: string
   personal?: boolean
-  showHeader?: boolean
+  showHeader?: boolean // TODO: it's never passed !
 }>()
 
 const { t } = useI18n()

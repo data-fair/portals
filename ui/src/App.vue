@@ -19,6 +19,8 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
 </script>
 
 <style>
+@import '../../shared/markdown/style.css';
+
 /* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
 html { overflow-y: auto; }
 </style>

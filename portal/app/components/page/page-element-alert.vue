@@ -5,14 +5,15 @@
     :title="element.title"
     :icon="element.icon?.svgPath"
     :color="element.color"
-    class="my-4"
   >
-    <div v-html="element._html" />
+    <template #text>
+      <div v-html="element._html" />
+    </template>
   </v-alert>
 </template>
 
 <script setup lang="ts">
-import type { TexteAccentue } from '~~/../api/types/page-config'
+import type { TexteAccentue } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => TexteAccentue, required: true }

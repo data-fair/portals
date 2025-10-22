@@ -2,7 +2,6 @@
 <template>
   <div
     style="overflow-wrap: break-word;"
-    class="pb-6"
     v-html="element._html"
   />
 </template>
