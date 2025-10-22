@@ -56,7 +56,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/eslint',
-    'nuxt-security',
+    // 'nuxt-security',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         config.plugins!.push(vuetify({ autoImport: true }))
