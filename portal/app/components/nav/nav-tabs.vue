@@ -1,19 +1,23 @@
 <template>
   <v-spacer />
   <v-tabs
-    :model-value="computedActiveTab"
+    v-model="computedActiveTab"
     show-arrows
   >
     <template
       v-for="(link, i) of navigation"
       :key="i"
     >
-      <v-menu v-if="link?.type === 'submenu' && link.children.length">
+      <v-menu
+        v-if="link?.type === 'submenu' && link.children.length"
+        content-class="rounded-t-0"
+      >
         <template #activator="{ props: menuProps }">
           <v-tab
             v-bind="menuProps"
             :text="link.title"
             :append-icon="mdiChevronDown"
+            :prepend-icon="link.icon?.svgPath"
             :value="i"
           />
         </template>
@@ -22,6 +26,7 @@
       <v-tab
         v-else-if="link?.type === 'external'"
         :text="link.title"
+        :prepend-icon="link.icon?.svgPath"
         :href="link.href"
         target="_blank"
         rel="noopener"
@@ -30,6 +35,7 @@
       <v-tab
         v-else
         :text="resolveLinkTitle(link, locale)"
+        :prepend-icon="link.icon?.svgPath"
         :to="resolveLink(link)"
         :value="i"
       />

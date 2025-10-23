@@ -3,6 +3,7 @@
   <template v-if="level === 1 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
+      :prepend-icon="item.icon?.svgPath"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
@@ -14,7 +15,16 @@
   <!-- Level 1: group with subtitle -->
   <template v-else-if="level === 1 && item.type === 'submenu' && item.children?.length">
     <v-divider />
-    <v-list-subheader>{{ item.title }}</v-list-subheader>
+    <v-list-subheader>
+      <span class="d-flex align-center">
+        <v-icon
+          v-if="item.icon"
+          :icon="item.icon.svgPath"
+          class="mr-2"
+        />
+        {{ item.title }}
+      </span>
+    </v-list-subheader>
     <nav-drawer-item
       v-for="(child, i) of item.children"
       :key="`child-${i}`"
@@ -28,6 +38,7 @@
   <template v-else-if="level >= 2 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
+      :prepend-icon="item.icon?.svgPath"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
@@ -46,6 +57,7 @@
         <v-list-item
           v-bind="activatorProps"
           :title="item.title"
+          :prepend-icon="item.icon?.svgPath"
           :active="isItemActive(item)"
         />
       </template>

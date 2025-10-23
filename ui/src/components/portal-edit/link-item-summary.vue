@@ -1,4 +1,10 @@
 <template>
+  <v-icon
+    v-if="item.icon"
+    :icon="item.icon.svgPath"
+    size="small"
+    class="mr-1"
+  />
   <span v-if="item.type === 'standard'">
     {{ t(standardPageLabel) }}<template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
   </span>

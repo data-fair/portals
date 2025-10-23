@@ -5,6 +5,7 @@
       :key="j"
       :title="resolveLinkTitle(link, locale)"
       :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
+      :prepend-icon="link.icon?.svgPath"
       :active="isItemActive(link)"
       :to="link.type !== 'external' && link.type !== 'submenu' ? resolveLink(link) : undefined"
       :href="link.type === 'external' ? link.href : undefined"

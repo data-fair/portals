@@ -3,15 +3,15 @@
     <v-btn
       variant="text"
       :title="t('openNavigationMenu')"
-      :icon="mdiMenu"
+      :icon="drawer ? mdiMenuOpen : mdiMenu"
       stacked
-      @click="drawer = true"
+      @click="drawer = !drawer"
     />
   </v-toolbar-items>
 </template>
 
 <script setup lang="ts">
-import { mdiMenu } from '@mdi/js'
+import { mdiMenu, mdiMenuOpen } from '@mdi/js'
 
 const { t } = useI18n()
 const { drawer } = useNavigationStore()

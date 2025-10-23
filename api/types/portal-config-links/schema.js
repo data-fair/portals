@@ -28,7 +28,8 @@ export default {
           type: 'string',
           title: 'Libellé',
           layout: { cols: { md: 6 } }
-        }
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
       }
     },
     eventPage: {
@@ -54,7 +55,8 @@ export default {
           title: 'Libellé',
           default: 'Événements',
           layout: { cols: { md: 6 } }
-        }
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
       }
     },
     newsPage: {
@@ -80,7 +82,8 @@ export default {
           title: 'Libellé',
           default: 'Actualités',
           layout: { cols: { md: 6 } }
-        }
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
       }
     },
     genericPage: {
@@ -113,7 +116,8 @@ export default {
           type: 'string',
           title: 'Libellé',
           layout: { cols: { md: 6 } }
-        }
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
       }
     },
     externalLink: {
@@ -128,8 +132,28 @@ export default {
         href: {
           title: 'URL',
           type: 'string'
-        }
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
       }
-    }
+    },
+    icon: {
+      type: 'object',
+      title: 'Icône',
+      required: ['name', 'svg'],
+      layout: {
+        getItems: {
+          url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
+          itemKey: 'data.name',
+          itemTitle: 'data.name',
+          itemIcon: 'data.svg',
+          itemsResults: 'data.results'
+        }
+      },
+      properties: {
+        name: { type: 'string' },
+        svg: { type: 'string' },
+        svgPath: { type: 'string' }
+      }
+    },
   }
 }

@@ -19,15 +19,10 @@
         v-for="(action, i) in element.actions"
         :key="i"
         :href="action.href"
-        variant="outlined"
         :color="action.color"
+        :prepend-icon="action.icon && action.icon.svgPath"
+        variant="outlined"
       >
-        <v-icon
-          v-if="action.icon"
-          start
-        >
-          {{ action.icon.svg }}
-        </v-icon>
         {{ action.label }}
       </v-btn>
     </v-card-actions>

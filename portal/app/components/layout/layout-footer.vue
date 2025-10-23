@@ -128,12 +128,24 @@
             target="_blank"
             rel="noopener"
           >
+            <v-icon
+              v-if="link.icon"
+              :icon="link.icon.svgPath"
+              size="small"
+              class="mr-1"
+            />
             {{ link.title }}
           </a>
           <NuxtLink
             v-else
             :to="resolveLink(link)"
           >
+            <v-icon
+              v-if="link.icon"
+              :icon="link.icon.svgPath"
+              size="small"
+              class="mr-1"
+            />
             {{ resolveLinkTitle(link, locale) }}
           </NuxtLink>
         </v-col>
@@ -159,13 +171,27 @@
             target="_blank"
             rel="noopener"
           >
+            <v-icon
+              v-if="link.icon"
+              :icon="link.icon.svgPath"
+              size="small"
+              class="mr-1"
+            />
             {{ link.title }}
           </a>
           <NuxtLink
             v-else
             :to="resolveLink(link)"
           >
-            {{ resolveLinkTitle(link, locale) }}
+            <span class="d-flex align-center">
+              <v-icon
+                v-if="link.icon"
+                :icon="link.icon.svgPath"
+                size="small"
+                class="mr-1"
+              />
+              {{ resolveLinkTitle(link, locale) }}
+            </span>
           </NuxtLink>
         </v-col>
       </v-row>
@@ -184,6 +210,7 @@
             >
               <v-btn
                 v-if="link.type === 'external'"
+                :prepend-icon="link.icon?.svgPath"
                 :href="link.href"
                 target="_blank"
                 rel="noopener"
@@ -193,6 +220,7 @@
               </v-btn>
               <v-btn
                 v-else
+                :prepend-icon="link.icon?.svgPath"
                 :to="resolveLink(link)"
                 variant="text"
               >

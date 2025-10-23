@@ -39,32 +39,6 @@
         <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
       </li>
     </ul>
-
-    <v-divider class="my-4" />
-
-    <!-- External links -->
-    <section
-      v-if="externalLinks.length"
-    >
-      <h2 class="text-h5 mb-4">
-        {{ t('externalLinks') }}
-      </h2>
-      <ul style="list-style: none;">
-        <li
-          v-for="(link, i) in externalLinks"
-          :key="`external-${i}`"
-          class="mb-2"
-        >
-          <a
-            :href="link.href"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ link.title }}
-          </a>
-        </li>
-      </ul>
-    </section>
   </v-container>
 </template>
 
@@ -114,22 +88,6 @@ const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkIt
   })
 }
 
-// Filter to get only external items
-const filterExternalItems = (items: (MenuItem | LinkItem)[]): Array<{ title: string, href?: string }> => {
-  const externalItems: Array<{ title: string, href?: string }> = []
-
-  const processItem = (item: MenuItem | LinkItem) => {
-    if (item.type === 'submenu' && 'children' in item && item.children) {
-      item.children.forEach(processItem)
-    } else if (item.type === 'external' && 'href' in item) {
-      externalItems.push({ title: item.title, href: item.href })
-    }
-  }
-
-  items.forEach(processItem)
-  return externalItems
-}
-
 const internalNavigationItems = computed(() => filterInternalItems(portalConfig.value.menu.children))
 const internalFooterLinks = computed(() => filterInternalItems(portalConfig.value.footer.links || []))
 const internalFooterImportantLinks = computed(() => filterInternalItems(portalConfig.value.footer.importantLinks || []))
@@ -148,19 +106,6 @@ const allInternalPaths = computed(() => {
   return paths
 })
 
-// All external links
-const externalLinks = computed(() => {
-  const links: Array<{ title: string, href?: string }> = []
-  links.push(...filterExternalItems(portalConfig.value.menu.children))
-  if (portalConfig.value.footer.links) {
-    links.push(...filterExternalItems(portalConfig.value.footer.links))
-  }
-  if (portalConfig.value.footer.importantLinks) {
-    links.push(...filterExternalItems(portalConfig.value.footer.importantLinks))
-  }
-  return links
-})
-
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,
   description: t('description')
@@ -174,12 +119,10 @@ usePageSeo({
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
-    externalLinks: External Links
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité
-    externalLinks: Liens externes
 </i18n>
