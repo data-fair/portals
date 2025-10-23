@@ -145,7 +145,7 @@ const getIngressInfos = (portal: Portal) => {
       controller: portal.ingress.controller,
       redirects: portal.ingress.redirects,
       blockedIps: portal.ingress.blockedIps,
-      waf: portal.ingress.waf
+      waf: portal.ingress.waf ?? 'off'
     })
   }
   return ingressInfos

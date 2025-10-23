@@ -54,7 +54,7 @@ export default {
     waf: {
       type: 'string',
       title: 'Activation du WAF',
-      default: 'on',
+      default: 'off',
       oneOf: [
         { title: 'actif', const: 'on' },
         { title: 'inactif', const: 'off' },
