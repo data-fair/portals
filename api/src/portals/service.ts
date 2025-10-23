@@ -171,7 +171,7 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   }
 
   const sdSites = await getSDSites(portal)
-  if (!forceSync.includes('sd') && equal(sdSites, previousPortal && getSDSites(previousPortal))) {
+  if (!forceSync.includes('sd') && equal(sdSites, previousPortal && await getSDSites(previousPortal))) {
     debugSyncPortal('nothing new to sync to SD', sdSites)
   } else {
     for (const site of sdSites) {
