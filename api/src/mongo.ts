@@ -31,8 +31,12 @@ export class PortalsMongo {
     return mongo.db.collection<Image>('images')
   }
 
-  init = async () => {
+  async connect () {
     await mongo.connect(config.mongoUrl)
+  }
+
+  async init () {
+    await this.connect()
     await mongo.configure({
       portals: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 }
