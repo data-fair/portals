@@ -92,7 +92,7 @@ export default {
     color: {
       type: 'string',
       title: 'Couleur de la barre de navigation',
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'primary',
       oneOf: [
         { const: 'primary', title: 'Couleur principale' },
@@ -105,10 +105,23 @@ export default {
     loginColor: {
       type: 'string',
       title: 'Couleur du bouton de connexion',
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'navBar',
       oneOf: [
         { const: 'navBar', title: 'Couleur de la barre de navigation' },
+        { const: 'primary', title: 'Couleur principale' },
+        { const: 'secondary', title: 'Couleur secondaire' },
+        { const: 'accent', title: 'Couleur accentuée' },
+        { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'background', title: 'Couleur du fond de page' }
+      ]
+    },
+    sliderColor: {
+      type: 'string',
+      title: "Couleur de l'indicateur de l'élément actif",
+      layout: { cols: { md: 4 } },
+      oneOf: [
+        { const: 'default', title: 'Couleur par défaut' },
         { const: 'primary', title: 'Couleur principale' },
         { const: 'secondary', title: 'Couleur secondaire' },
         { const: 'accent', title: 'Couleur accentuée' },

@@ -4,8 +4,8 @@
     :class="[
       preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',
       element.backgroundColor && 'bg-' + element.backgroundColor,
-      element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
-      element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
+      !preview && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
+      !preview && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
     fluid

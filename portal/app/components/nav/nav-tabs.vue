@@ -1,7 +1,8 @@
 <template>
   <v-spacer />
   <v-tabs
-    v-model="computedActiveTab"
+    v-model="modelTab"
+    :slider-color="navBarConfig.sliderColor"
     show-arrows
   >
     <template
@@ -44,22 +45,32 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from '#api/types/portal'
+import type { MenuItem, NavBar } from '#api/types/portal'
 import { mdiChevronDown } from '@mdi/js'
 
-const props = defineProps<{ navigation: MenuItem[] }>()
+const { navigation } = defineProps<{
+  navigation: MenuItem[]
+  navBarConfig: NavBar
+}>()
 
 const route = useRoute()
 const { locale } = useI18n()
 const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { preview } = usePortalStore()
 
 /** Get the active tab index based on the current route */
 const computedActiveTab = computed(() => {
-  for (const [i, item] of props.navigation.entries()) {
+  for (const [i, item] of navigation.entries()) {
     if (isMenuItemActive(item, route.path)) return i
   }
   return undefined // No match found, no active tab and slider
 })
+
+/** For preview mode */
+const activeTab = ref<number | undefined>()
+
+/** Writable model for v-model: uses activeTab when previewing, otherwise reads computedActiveTab */
+const modelTab = preview ? activeTab : computedActiveTab
 
 </script>
 

@@ -16,7 +16,10 @@
         class="pl-4"
       />
 
-      <nav-tabs-or-drawer :navigation="portalConfig.menu.children" />
+      <nav-tabs-or-drawer
+        :navigation="portalConfig.menu.children"
+        :nav-bar-config="navBarConfig"
+      />
 
       <v-spacer />
 

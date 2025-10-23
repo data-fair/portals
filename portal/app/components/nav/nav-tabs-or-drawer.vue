@@ -6,10 +6,15 @@
   <nav-tabs
     v-else
     :navigation="navigation"
+    :nav-bar-config="navBarConfig"
   />
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from '#api/types/portal'
-defineProps<{ navigation: MenuItem[] }>()
+import type { MenuItem, NavBar } from '#api/types/portal-config'
+
+defineProps<{
+  navigation: MenuItem[]
+  navBarConfig: NavBar
+}>()
 </script>

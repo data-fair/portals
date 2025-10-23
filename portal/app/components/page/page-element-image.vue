@@ -4,8 +4,8 @@
     :class="[
       'd-flex flex-column align-center',
       element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
-      element.banner && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
-      element.banner && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
+      !preview && element.banner && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
+      !preview && element.banner && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
   >
