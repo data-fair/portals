@@ -154,7 +154,7 @@ const getIngressInfos = (portal: Portal) => {
 type SyncPart = 'ingress' | 'sd' | 'df'
 
 // portals are synced to settings.publicationSites in data-fair and to a dataset containing images
-async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], cookie?: string) {
+export async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], cookie?: string) {
   debugSyncPortal('sync portal update', portal)
 
   const publicationSite = getPublicationSite(portal)
