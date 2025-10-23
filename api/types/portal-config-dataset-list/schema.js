@@ -3,7 +3,7 @@ export default {
   'x-exports': [],
   title: 'Datasets List',
   'x-i18n-title': {
-    fr: 'Liste des jeux de données'
+    fr: 'Catalogue de données'
   },
   type: 'object',
   layout: { comp: 'card' },

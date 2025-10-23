@@ -1,4 +1,5 @@
-import type { ImageRef, Page, PageElement, PageConfig } from '#types/page/index.ts'
+import type { ImageRef } from '#types/image-ref/index.ts'
+import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
 import mongo from '#mongo'
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
@@ -151,8 +152,9 @@ const renderMarkdownElements = async (pageConfig: PageConfig) => {
 const getPageImageRefs = async (page: Page) => {
   const imageRefs: ImageRef[] = []
   await traversePage(page, (pageElement) => {
-    if (pageElement.type === 'image' && pageElement.imageRef) imageRefs.push(pageElement.imageRef)
-    if (pageElement.type === 'banner' && pageElement.backgroundImage) imageRefs.push(pageElement.backgroundImage)
+    if (pageElement.type === 'image' && pageElement.image) imageRefs.push(pageElement.image)
+    if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
+    if (pageElement.type === 'search' && pageElement.backgroundImage) imageRefs.push(pageElement.backgroundImage)
   })
   return imageRefs
 }

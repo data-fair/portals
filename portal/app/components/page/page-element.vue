@@ -14,6 +14,7 @@
   <page-element-image
     v-else-if="element.type === 'image'"
     :element="element"
+    :context="context"
   />
   <page-element-iframe
     v-else-if="element.type === 'iframe'"
@@ -23,12 +24,11 @@
     v-else-if="element.type === 'divider'"
     :element="element"
   />
-  <!-- TODO: add it when available in types -->
-  <!-- <page-element-search
+  <page-element-search
     v-else-if="element.type === 'search'"
     :element="element"
-    :parent="parent"
-  /> -->
+    :context="context"
+  />
   <page-element-topics
     v-else-if="element.type === 'topics'"
     :element="element"

@@ -13,7 +13,7 @@ export default {
       {
         title: 'Application card',
         'x-i18n-title': {
-          fr: 'Carte d\'une visualisation'
+          fr: 'Vignette d\'une visualisation'
         },
         comp: 'card',
         children: ['card']

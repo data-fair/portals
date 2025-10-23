@@ -31,6 +31,7 @@
         style="background-color: inherit;"
       >
         <!-- TODO: Add a content -->
+        {{ portal.config.description }}
       </v-list>
     </v-card-text>
   </v-card>

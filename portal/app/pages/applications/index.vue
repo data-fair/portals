@@ -288,7 +288,7 @@ usePageSeo({
       title: Alphabetical order
 
   fr:
-    applicationsCount: '{count} application | {count} applications'
+    applicationsCount: '{count} visualisation | {count} visualisations'
     ascending: Ordre croissant
     descending: Ordre décroissant
     filters:

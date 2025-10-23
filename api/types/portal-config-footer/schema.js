@@ -138,7 +138,7 @@ export default {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1920, label: 'Image de fond' }
+            props: { width: 2560, label: 'Chargez une image de fond' }
           }
         },
         cols: { md: 8 }

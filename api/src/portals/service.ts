@@ -1,6 +1,6 @@
 import type { Portal } from '#types/portal/index.ts'
+import type { ImageRef } from '#types/image-ref/index.ts'
 import type { IngressManagerIngressInfo } from '#types'
-import type { ImageRef } from '#types/page/index.ts'
 
 import { readFile } from 'node:fs/promises'
 import resolvePath from 'resolve-path'

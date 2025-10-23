@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/page-elements'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import uiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {

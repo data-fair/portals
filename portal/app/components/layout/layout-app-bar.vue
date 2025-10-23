@@ -3,11 +3,11 @@
     :is="preview ? VToolbar : VAppBar"
     ref="appBarRef"
     :color="navBarConfig.color"
-    :class="navBarConfig.transparent && 'opacity-90'"
+    :class="navBarConfig.transparent && isScrolled && 'opacity-90'"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
-    scroll-threshold="10"
+    scroll-threshold="150"
   >
     <!-- Header (128px)-->
     <layout-header
@@ -29,6 +29,19 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
 const appBarRef = ref()
+const isScrolled = ref(false)
+
+onMounted(() => {
+  if (!preview) {
+    const updateScrollState = () => {
+      isScrolled.value = window.scrollY > 150
+    }
+    window.addEventListener('scroll', updateScrollState)
+    onBeforeUnmount(() => {
+      window.removeEventListener('scroll', updateScrollState)
+    })
+  }
+})
 
 const headerConfig = computed(() => {
   if (!home || !portalConfig.value.headerHomeActive) return portalConfig.value.header
@@ -51,3 +64,9 @@ const scrollBehavior = computed(() => {
 })
 
 </script>
+
+<style>
+.v-app-bar {
+  transition-property: all !important;
+}
+</style>

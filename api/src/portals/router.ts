@@ -77,14 +77,12 @@ router.post('', async (req, res, next) => {
       list: {
         filtersLocation: 'top',
         defaultSort: 'title',
-        columns: 0,
-        topicsFilters: undefined
+        columns: 2
       },
       card: {
         actionsLocation: 'none',
         actionsStyle: 'text',
         thumbnailLocation: 'left',
-        useApplicationThumbnail: undefined,
         cropThumbnails: false,
         showSummary: false,
         showDepartment: false

@@ -39,7 +39,7 @@ export default {
         { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-iframe' },
         { $ref: '#/$defs/element-divider' },
-        // { $ref: '#/$defs/element-search' }, // TODO
+        { $ref: '#/$defs/element-search' },
         { $ref: '#/$defs/element-topics' },
         { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-datasets-list' },
@@ -199,26 +199,95 @@ export default {
           description: "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
           type: 'string'
         },
-        imageRef: { $ref: '#/$defs/image-ref' },
+        image: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            if: '!parent.data?.banner',
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2400, label: 'Chargez une image' } // max width of v-container
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        wideImage: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            if: 'parent.data?.banner',
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2560, label: 'Chargez une image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
         href: {
           title: 'URL vers une autre page',
           description: "L'image devient un lien qui pointe vers l'URL renseignée.",
           type: 'string'
         },
         height: {
-          title: 'Hauteur (px)',
-          description: "Fixe la hauteur de l'image",
-          type: 'integer'
+          title: 'Hauteur fixe (px)',
+          type: 'integer',
+          minimum: 0
+        },
+        banner: {
+          type: 'boolean',
+          title: 'Rendu pleine largeur',
+          layout: 'switch'
+        },
+        sticky: {
+          type: 'boolean',
+          title: 'Coller à la barre de navigation ou au pied de page',
+          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
+          layout: {
+            if: 'parent.data?.banner',
+            comp: 'switch'
+          }
         },
         legend: {
+          type: 'string',
           title: "Légende de l'image",
           description: "Cette légende sera affichée en italique juste en dessous de l'image",
-          type: 'string'
+          layout: { if: '!parent.data?.banner' }
         },
         zoomable: {
+          type: 'boolean',
           title: 'Zoom au clic',
           description: "Ne fonctionne que si aucun lien n'est associé à l'image",
-          type: 'boolean'
+          layout: { if: '!parent.data?.banner' }
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -289,11 +358,36 @@ export default {
     },
     'element-search': {
       type: 'object',
-      title: 'Search',
+      title: 'Search Element',
       'x-i18n-title': {
-        fr: 'Recherche'
+        en: 'Search datasets',
+        fr: 'Recherche de jeux de données'
       },
       required: ['type'],
+      layout: {
+        children: [
+          'type',
+          'elevation',
+          'density',
+          'rounded',
+          {
+            title: 'Image de fond',
+            comp: 'card',
+            children: [
+              'banner',
+              {
+                if: 'data?.banner',
+                children: [
+                  'backgroundImage',
+                  'height',
+                  'sticky'
+                ]
+              }
+            ]
+          },
+          'mb'
+        ]
+      },
       properties: {
         type: {
           const: 'search'
@@ -329,6 +423,48 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
+        },
+        banner: {
+          type: 'boolean',
+          title: 'Rendu pleine largeur',
+          layout: 'switch'
+        },
+        backgroundImage: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2560, label: 'Chargez une image de fond' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        height: {
+          title: 'Hauteur fixe (px)',
+          type: 'integer',
+          minimum: 60 // Minimum height of text-field component
+        },
+        sticky: {
+          type: 'boolean',
+          title: 'Coller à la barre de navigation ou au pied de page',
+          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
+          layout: 'switch'
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -417,7 +553,7 @@ export default {
           {
             title: 'Dataset Card',
             'x-i18n-title': {
-              fr: 'Carte d\'un jeu de données'
+              fr: 'Vignette d\'un jeu de données'
             },
             comp: 'card',
             children: [
@@ -465,7 +601,7 @@ export default {
       title: 'Dataset Card Element',
       'x-i18n-title': {
         en: 'Dataset card',
-        fr: 'Carte d\'un jeu de données'
+        fr: 'Vignette d\'un jeu de données'
       },
       layout: {
         children: [
@@ -475,7 +611,7 @@ export default {
           {
             title: 'Dataset Card',
             'x-i18n-title': {
-              fr: 'Carte d\'un jeu de données'
+              fr: 'Vignette d\'un jeu de données'
             },
             comp: 'card',
             children: [
@@ -658,7 +794,7 @@ export default {
           {
             title: 'Application Card',
             'x-i18n-title': {
-              fr: 'Carte d\'une visualisation'
+              fr: 'Vignette d\'une visualisation'
             },
             comp: 'card',
             children: [
@@ -754,49 +890,15 @@ export default {
     },
     'element-banner': {
       type: 'object',
-      title: 'Banner',
+      title: 'Banner Element',
       'x-i18n-title': {
-        fr: 'Bannière'
+        en: 'Colored background section',
+        fr: 'Section sur fond coloré'
       },
       required: ['type', 'children'],
       properties: {
         type: {
           const: 'banner'
-        },
-        backgroundColor: {
-          $ref: '#/$defs/color'
-        },
-        backgroundImage: {
-          type: 'object',
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image de fond' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
-        },
-        height: {
-          title: 'Hauteur (px)',
-          description: "Fixe la hauteur de l'image",
-          type: 'integer',
-          minimum: 0
         },
         children: {
           type: 'array',
@@ -804,6 +906,9 @@ export default {
           items: {
             $ref: '#/$defs/element'
           }
+        },
+        backgroundColor: {
+          $ref: '#/$defs/color'
         },
         sticky: {
           type: 'boolean',
@@ -1012,32 +1117,6 @@ export default {
           }
         },
         mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'image-ref': {
-      type: 'object',
-      required: ['_id', 'name', 'mimeType'],
-      layout: {
-        slots: {
-          component: {
-            name: 'image-upload',
-            props: { width: 2400, label: 'Chargez une image' } // max width of v-container
-          }
-        }
-      },
-      properties: {
-        _id: {
-          type: 'string'
-        },
-        name: {
-          type: 'string'
-        },
-        mimeType: {
-          type: 'string'
-        },
-        mobileAlt: {
-          type: 'boolean'
-        }
       }
     },
     icon: {

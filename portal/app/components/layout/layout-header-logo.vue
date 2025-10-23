@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/page-elements'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 defineProps<{
   logo: ImageRef

@@ -1,5 +1,14 @@
 <template>
-  <div v-if="src" :class="['d-flex flex-column align-center', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
+  <div
+    v-if="src"
+    :class="[
+      'd-flex flex-column align-center',
+      element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
+      element.banner && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
+      element.banner && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
+      element.mb !== 0 && `mb-${element.mb ?? 4}`
+    ]"
+  >
     <a
       v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
@@ -17,12 +26,12 @@
       v-else
       ref="img"
       :alt="element.title"
-      :style="((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '') + (element.height ? `height:${element.height}px` : '')"
+      :style="((!element.banner && element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '') + (element.height ? `height:${element.height}px;width:100%;object-fit:cover;object-position:center` : '')"
       :src="src"
-      @click="element.zoomable ? zoomed = true : undefined"
+      @click="!element.banner && element.zoomable ? zoomed = true : undefined"
     >
     <div
-      v-if="element.legend"
+      v-if="!element.banner && element.legend"
       class="text-center text-caption font-italic"
     >
       {{ element.legend }}
@@ -43,31 +52,55 @@
 </template>
 
 <script setup lang="ts">
-import type { Image, ImageRef } from '~~/../api/types/page-config'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
+import type { Image } from '#api/types/page-elements'
 import { useElementSize } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
 
-const { element } = defineProps({
-  element: { type: Object as () => Image, required: true }
-})
+const { element } = defineProps<{
+  element: Image
+  context: {
+    isRoot: boolean
+    index: number
+    parentLength: number
+  }
+}>()
 
 const imgEl = useTemplateRef('img')
 const { width } = useElementSize(imgEl)
+const { preview } = usePortalStore()
 
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const display = useDisplay()
 
+const image = computed(() => {
+  if (element.banner && element.wideImage) return element.wideImage
+  if (!element.image) return
+  return element.image
+})
+
 const src = computed(() => {
   if (element.url) return element.url
-  if (!element.imageRef) return
-  return getImageSrc(element.imageRef, width.value < 1280)
+  if (!image.value) return
+  return getImageSrc(image.value, width.value < 1280)
 })
 
 const zoomedSrc = computed(() => {
   if (element.url) return element.url
-  if (!element.imageRef) return
-  return getImageSrc(element.imageRef, display.mobile.value)
+  if (!image.value) return
+  return getImageSrc(image.value, display.mobile.value)
 })
 
 const zoomed = ref(false)
 </script>
+
+<style scoped>
+.banner-fluid {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+.banner-contained {
+  width: 100%;
+}
+</style>

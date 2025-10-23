@@ -6,7 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef, PageConfig } from '#api/types/page'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
+import type { PageConfig } from '#api/types/page'
 
 definePageMeta({ layout: 'home' })
 const { portalConfig } = usePortalStore()

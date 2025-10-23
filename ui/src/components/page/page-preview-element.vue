@@ -38,7 +38,14 @@ const previewDefaults = {
   global: { density: 'default' }
 }
 
-const vjsfDefaults = { 'VjsfList-VCard': { border: false } }
+const vjsfDefaults = {
+  'VjsfList-VCard': {
+    border: false
+  },
+  VSwitch: {
+    color: 'primary'
+  }
+}
 
 /* const onElementsUpdate = (elements: PageElement[], childKey: string, ) => {
   if (!element.value) return

@@ -13,7 +13,7 @@ export default {
       {
         title: 'Dataset card',
         'x-i18n-title': {
-          fr: 'Carte d\'un jeu de données'
+          fr: 'Vignette d\'un jeu de données'
         },
         comp: 'card',
         children: ['card']

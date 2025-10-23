@@ -6,7 +6,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef, PageConfig } from '#api/types/page'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
+import type { PageConfig } from '#api/types/page'
 
 const route = useRoute<'/pages/pages-[groupSlug]/[pageSlug]'>()
 

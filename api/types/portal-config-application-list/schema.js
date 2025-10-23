@@ -3,7 +3,7 @@ export default {
   'x-exports': [],
   title: 'Applications List',
   'x-i18n-title': {
-    fr: 'Liste des visualisations'
+    fr: 'Catalogue de visualisations'
   },
   type: 'object',
   layout: { comp: 'card' },

@@ -18,14 +18,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { Image } from '#api/types/image'
-
-type ImageRef = {
-  _id: string,
-  name: string,
-  mimeType: string,
-  mobileAlt?: boolean
-}
 
 const imageRef = defineModel<ImageRef>()
 
