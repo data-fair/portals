@@ -277,6 +277,14 @@ export default {
             comp: 'switch'
           }
         },
+        cover: {
+          type: 'boolean',
+          title: 'Recadrer l\'image pour remplir l\'espace',
+          layout: {
+            if: '!parent.data?.banner',
+            comp: 'switch'
+          }
+        },
         legend: {
           type: 'string',
           title: "Légende de l'image",

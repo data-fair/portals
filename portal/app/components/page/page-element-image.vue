@@ -2,7 +2,7 @@
   <div
     v-if="src"
     :class="[
-      'd-flex flex-column align-center',
+      'd-flex flex-column align-center overflow-hidden',
       element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
       !preview && element.banner && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
       !preview && element.banner && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
@@ -18,7 +18,7 @@
       <img
         ref="img"
         :alt="element.title"
-        :style="element.height ? `height:${element.height}px` : ''"
+        :style="imgStyle"
         :src="src"
       >
     </a>
@@ -26,7 +26,7 @@
       v-else
       ref="img"
       :alt="element.title"
-      :style="((!element.banner && element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '') + (element.height ? `height:${element.height}px;width:100%;object-fit:cover;object-position:center` : '')"
+      :style="imgStyle + ((!element.banner && element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
       @click="!element.banner && element.zoomable ? zoomed = true : undefined"
     >
@@ -92,6 +92,15 @@ const zoomedSrc = computed(() => {
 })
 
 const zoomed = ref(false)
+
+const imgStyle = computed(() => {
+  const isCover = element.cover || element.banner
+  const fit = `object-fit:${isCover ? 'cover' : 'contain'};`
+  const dims = isCover
+    ? `width:100%;height:${element.height ? `${element.height}px` : '100%'};`
+    : (element.height ? `height:${element.height}px;` : '')
+  return `${fit}${dims}`
+})
 </script>
 
 <style scoped>
