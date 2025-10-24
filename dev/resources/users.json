@@ -1,26 +1,81 @@
-[{
-  "id": "superadmin",
-  "email": "superadmin@test.com",
-  "isAdmin": true,
-  "password": {
+[
+  {
+    "id": "superadmin",
+    "firstName": "Super",
+    "lastName": "Admin",
+    "email": "superadmin@test.com",
+    "password": {
       "clear": "superpasswd"
-  }
-}, {
-  "id": "user1",
-  "email": "user1@test.com",
-  "password": {
+    }
+  },
+  {
+    "id": "adminOrga",
+    "email": "admin@test.com",
+    "password": {
       "clear": "passwd"
-  }
-}, {
-  "id": "user2",
-  "email": "user2@test.com",
-  "password": {
+    }
+  },
+  {
+    "id": "contribOrga",
+    "firstName": "Contrib Organization",
+    "lastName": "",
+    "email": "contrib@test.com",
+    "password": {
       "clear": "passwd"
-  }
-}, {
-  "id": "admin1",
-  "email": "admin1@test.com",
-  "password": {
+    }
+  },
+  {
+    "id": "adminDep",
+    "firstName": "Admin Department",
+    "lastName": "",
+    "email": "admin.dep@test.com",
+    "password": {
       "clear": "passwd"
+    }
+  },
+  {
+    "id": "contribDep",
+    "firstName": "Contrib Department",
+    "lastName": "",
+    "email": "contrib.dep@test.com",
+    "password": {
+      "clear": "passwd"
+    }
+  },
+  {
+    "id": "userOrga",
+    "firstName": "User Organization",
+    "lastName": "",
+    "email": "user@test.com",
+    "password": {
+      "clear": "passwd"
+    }
+  },
+  {
+    "id": "dmeadus",
+    "firstName": "Danna",
+    "lastName": "Meadus",
+    "email": "dmeadus@answers.com",
+    "password": {
+      "clear": "passwd"
+    }
+  },
+  {
+    "id": "alone",
+    "firstName": "I am",
+    "lastName": "Alone",
+    "email": "alone@no.org",
+    "password": {
+      "clear": "passwd"
+    }
+  },
+  {
+    "id": "albanm",
+    "firstName": "Alban",
+    "lastName": "Mouton",
+    "email": "alban.mouton@koumoul.com",
+    "password": {
+      "clear": "passwd"
+    }
   }
-}]
+]

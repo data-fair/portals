@@ -1,22 +1,16 @@
 import jsonSchema from '@data-fair/lib-utils/json-schema.js'
 import portalSchema from '#types/portal/schema.js'
+import portalConfigSchema from '#types/portal-config/schema.js'
 
-const configSchema = {
-  type: 'object',
-  required: ['title'],
-  additionalProperties: false,
-  properties: {
-    title: {
-      type: 'string'
-    }
-  }
-}
-
-const schema = jsonSchema(portalSchema)
-  .pickProperties(['staging', 'config'])
+const configSchema = jsonSchema(portalConfigSchema)
+  .pickProperties(['title'])
   .schema
 
-schema.properties.config = configSchema
+const schema = jsonSchema(portalSchema)
+  .pickProperties(['staging', 'owner', 'config'])
+  .removeFromRequired(['owner'])
+  .addProperty('config', configSchema)
+  .schema
 
 export default {
   ...schema,

@@ -1,28 +1,90 @@
-[{
-  "id": "orga1",
-  "name": "Orga 1",
-  "members": [{
-    "id": "superadmin",
-    "role": "admin"
-  }, {
-    "id": "admin1",
-    "role": "admin"
-  }, {
-    "id": "user1",
-    "role": "user"
-  }]
-},
-{
-  "id": "orga2",
-  "name": "Orga 2",
-  "members": [{
-    "id": "user1",
-    "role": "user",
-    "department": "dep1"
-  }, {
-    "id": "user2",
-    "role": "user",
-    "department": "dep2"
-  }]
-}
+[
+  {
+    "id": "KWqAGZ4mG",
+    "name": "Fivechat",
+    "departments": [
+      {
+        "id": "dep1",
+        "name": "Department 1"
+      },
+      {
+        "id": "dep2",
+        "name": "Department 2"
+      }
+    ],
+    "members": [
+      {
+        "id": "adminOrga",
+        "role": "admin"
+      },
+      {
+        "id": "contribOrga",
+        "role": "contrib"
+      },
+      {
+        "id": "userOrga",
+        "role": "user"
+      },
+      {
+        "id": "adminDep",
+        "role": "admin",
+        "department": "dep1"
+      },
+      {
+        "id": "contribDep",
+        "role": "contrib",
+        "department": "dep1"
+      }
+    ]
+  },
+  {
+    "id": "EnTgB2UbH",
+    "name": "Livefish",
+    "members": [
+      {
+        "id": "dmeadus",
+        "role": "admin"
+      },
+      {
+        "id": "albanm",
+        "role": "contrib"
+      },
+      {
+        "id": "superadmin",
+        "role": "user"
+      }
+    ]
+  },
+  {
+    "id": "koumoul",
+    "name": "Koumoul",
+    "members": [
+      {
+        "id": "superadmin",
+        "role": "admin"
+      },
+      {
+        "id": "albanm",
+        "role": "admin"
+      },
+      {
+        "id": "adminOrg",
+        "role": "admin"
+      },
+      {
+        "id": "userOrg",
+        "role": "user"
+      },
+      {
+        "id": "contribOrg",
+        "role": "contrib"
+      }
+    ],
+    "partners": [
+      {
+        "id": "KWqAGZ4mG",
+        "name": "Fivechat"
+      }
+    ]
+  }
 ]

@@ -4,7 +4,7 @@ import { createReadStream } from 'node:fs'
 import FormData from 'form-data'
 import { clean, startApiServer, stopApiServer, axiosAuth } from './utils/index.ts'
 
-const user1 = await axiosAuth('user1@test.com')
+const user1 = await axiosAuth('admin@test.com')
 
 describe('images management', () => {
   before(startApiServer)

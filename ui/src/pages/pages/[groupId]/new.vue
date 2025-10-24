@@ -434,7 +434,7 @@ watch(group, () => {
     pageTitle: Page title
     pageTitleRequired: Page title is required
     previous: Previous
-    selectAction: Choose an option
+    selectAction: Choose a source
     selectPageType: Page type
     selectReference: Select a reference template
     selectPageToDuplicate: Select a page to duplicate
@@ -471,7 +471,7 @@ watch(group, () => {
     pageTitle: Titre de la page
     pageTitleRequired: Le titre de la page est requis
     previous: Précédent
-    selectAction: Choisir une option
+    selectAction: Choisir une source
     selectPageType: Type de page
     selectReference: Sélectionner un modèle de référence
     selectPageToDuplicate: Sélectionner une page à dupliquer

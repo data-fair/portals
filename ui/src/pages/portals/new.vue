@@ -30,6 +30,16 @@
             :icon="mdiFile"
           />
         </template>
+        <template v-if="hasDepartments">
+          <v-divider />
+          <v-stepper-item
+            value="owner"
+            :title="t('selectOwner')"
+            :color="step === 'owner' ? 'primary' : ''"
+            :editable="actionType === 'blank' || selectedPageId !== undefined"
+            :icon="mdiAccount"
+          />
+        </template>
         <v-divider />
         <v-stepper-item
           value="information"
@@ -136,7 +146,15 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 3: Portal information -->
+        <!-- Step 3: Select owner (optional) -->
+        <v-stepper-window-item value="owner">
+          <owner-pick
+            v-model="newOwner"
+            v-model:ready="ownersReady"
+          />
+        </v-stepper-window-item>
+
+        <!-- Step 4: Portal information -->
         <v-stepper-window-item value="information">
           <v-form v-model="valid">
             <v-text-field
@@ -179,20 +197,25 @@
 </template>
 
 <script setup lang="ts">
-import type { Portal } from '#api/types/portal'
+import type { Portal } from '#api/types/portal/index.ts'
 import type { Page } from '#api/types/page/index.ts'
+import type { Account } from '@data-fair/lib-common-types/session/index.js'
 
-import { mdiFile, mdiPlaylistEdit, mdiTextBox } from '@mdi/js'
+import { mdiAccount, mdiFile, mdiPlaylistEdit, mdiTextBox } from '@mdi/js'
+import { computedAsync } from '@vueuse/core'
+import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
 const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
 
-const step = ref<'action' | 'source' | 'information'>('action')
+const step = ref<'action' | 'source' | 'owner' | 'information'>('action')
 const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
 const selectedPageId = ref<string | undefined>(undefined)
 const newPortalTitle = ref<string>('')
 const newPortalStaging = ref<boolean>(false)
+const newOwner = ref<Account | undefined>(session.state.account)
+const ownersReady = ref(false)
 const valid = ref(false)
 
 // Fetch reference home pages (isReference: true, type: home)
@@ -220,13 +243,20 @@ const isNextButtonDisabled = computed(() => {
   return false
 })
 
+/** `True` if the active account isn't in a department and his organization has departments */
+const hasDepartments = computedAsync(async (): Promise<boolean> => {
+  if (session.state.account.department || session.state.account.type === 'user') return false
+  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
+  return !!org.departments?.length
+}, false)
+
 const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
   actionType.value = type
   selectedPageId.value = undefined
 
   if (type === 'blank') {
-    // Skip source step, go directly to information
-    step.value = 'information'
+    // Skip source step, go directly to owner or information
+    step.value = hasDepartments.value ? 'owner' : 'information'
   } else {
     // Go to source step to select a page
     step.value = 'source'
@@ -235,21 +265,26 @@ const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
 
 const selectPage = (pageId: string) => {
   selectedPageId.value = pageId
-  step.value = 'information' // Go to information step
+  step.value = hasDepartments.value ? 'owner' : 'information' // Go to next step (owner or information)
 }
 
 const goToPreviousStep = () => {
   if (step.value === 'source') {
     step.value = 'action'
-  } else if (step.value === 'information') {
+  } else if (step.value === 'owner') {
     if (actionType.value === 'blank') step.value = 'action'
+    else step.value = 'source'
+  } else if (step.value === 'information') {
+    if (hasDepartments.value) step.value = 'owner'
+    else if (actionType.value === 'blank') step.value = 'action'
     else step.value = 'source'
   }
 }
 
 const goToNextStep = () => {
   if (step.value === 'information') createPortal.execute()
-  else if (step.value === 'source') step.value = 'information'
+  else if (step.value === 'source') step.value = hasDepartments.value ? 'owner' : 'information'
+  else if (step.value === 'owner') step.value = 'information'
 }
 
 const createPortal = useAsyncAction(
@@ -260,6 +295,7 @@ const createPortal = useAsyncAction(
     const portal = await $fetch<Portal>($apiPath + '/portals', {
       method: 'POST',
       body: {
+        owner: newOwner.value,
         staging: newPortalStaging.value,
         config: { title: newPortalTitle.value }
       }
@@ -279,7 +315,7 @@ const createPortal = useAsyncAction(
     await $fetch($apiPath + '/pages', {
       method: 'POST',
       body: {
-        owner: session.state.account,
+        owner: newOwner.value,
         type: 'home',
         portals: [portal._id],
         config: {
@@ -326,6 +362,7 @@ setBreadcrumbs([
     selectAction: Choose home page option
     selectReference: Select a reference template
     selectPageToDuplicate: Select a page to duplicate
+    selectOwner: Select owner
 
   fr:
     portals: Portails
@@ -348,5 +385,6 @@ setBreadcrumbs([
     selectAction: Choisir une option de page d'accueil
     selectReference: Sélectionner un modèle de référence
     selectPageToDuplicate: Sélectionner une page à dupliquer
+    selectOwner: Sélection du propriétaire
 
 </i18n>

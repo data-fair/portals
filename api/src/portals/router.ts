@@ -113,7 +113,7 @@ router.post('', async (req, res, next) => {
   const portal: Portal = {
     _id: randomUUID(),
     title: initialConfig.title,
-    owner: session.account,
+    owner: body.owner || session.account,
     created,
     updated: created,
     ...body,
