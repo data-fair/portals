@@ -903,25 +903,112 @@ export default {
         en: 'Colored background section',
         fr: 'Section sur fond coloré'
       },
-      required: ['type', 'children'],
+      required: ['type', 'childrenMain'],
       properties: {
         type: {
           const: 'banner'
         },
-        children: {
+        childrenMain: {
           type: 'array',
           layout: 'none',
           items: {
             $ref: '#/$defs/element'
           }
         },
-        backgroundColor: {
-          $ref: '#/$defs/color'
+        childrenOverflowTop: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        childrenOverflowBottom: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        background: {
+          type: 'object',
+          title: 'Background configuration',
+          'x-i18n-title': {
+            fr: 'Configuration du fond'
+          },
+          layout: 'card',
+          properties: {
+            fullWidth: {
+              type: 'boolean',
+              title: 'Pleine largeur',
+              description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. ",
+              layout: 'switch'
+            },
+            color: {
+              $ref: '#/$defs/color'
+            },
+            image: {
+              type: 'object',
+              required: ['_id', 'name', 'mimeType'],
+              layout: {
+                slots: {
+                  component: {
+                    name: 'image-upload',
+                    props: { width: 2560, label: 'Chargez une image' }
+                  }
+                }
+              },
+              properties: {
+                _id: {
+                  type: 'string'
+                },
+                name: {
+                  type: 'string'
+                },
+                mimeType: {
+                  type: 'string'
+                },
+                mobileAlt: {
+                  type: 'boolean'
+                }
+              }
+            },
+            overlayStrength: {
+              type: 'number',
+              title: 'Intensité de la teinte',
+              description: "Contrôle l'intensité de la teinte de couleur sur l'image de fond. Cette option n'a aucun effet si aucune image n'est définie.",
+              layout: 'slider',
+              minimum: 0,
+              maximum: 100,
+              default: 80
+            }
+          }
+        },
+        height: {
+          type: 'integer',
+          title: 'Hauteur fixe (px)',
+          description: "Si le contenu principal est plus grand que cette hauteur, la section s'ajustera pour éviter qu'il soit coupé.",
+          minimum: 0
+        },
+        mobileHeight: {
+          type: 'integer',
+          title: 'Hauteur fixe mobile (px)',
+          description: "Si le contenu principal est plus grand que cette hauteur, la section s'ajustera pour éviter qu'il soit coupé.",
+          minimum: 0
+        },
+        mainContentAlignment: {
+          type: 'string',
+          title: 'Alignement vertical du contenu principal',
+          default: 'center',
+          oneOf: [
+            { const: 'top', title: 'En haut' },
+            { const: 'center', title: 'Au centre' },
+            { const: 'bottom', title: 'En bandes' }
+          ]
         },
         sticky: {
           type: 'boolean',
           title: 'Coller à la barre de navigation ou au pied de page',
-          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
+          description: "Permet à la section d'être collée à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
           layout: 'switch'
         },
         mb: { $ref: '#/$defs/margin-bottom' }

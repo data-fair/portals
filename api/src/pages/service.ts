@@ -155,6 +155,7 @@ const getPageImageRefs = async (page: Page) => {
     if (pageElement.type === 'image' && pageElement.image) imageRefs.push(pageElement.image)
     if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'search' && pageElement.backgroundImage) imageRefs.push(pageElement.backgroundImage)
+    // TODO: Add banner image
   })
   return imageRefs
 }
@@ -169,7 +170,7 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
   for (const element of pageElements) {
     await callback(element)
     if (element.type === 'card') await traversePageElements(element.children, callback)
-    if (element.type === 'banner') await traversePageElements(element.children, callback)
+    if (element.type === 'banner') await traversePageElements(element.childrenMain, callback) // TODO
     if (element.type === 'responsive-flow') {
       for (const block of element.blocks) {
         await traversePageElements(block.children, callback)
