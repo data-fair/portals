@@ -2,21 +2,8 @@
   <div
     :class="[
       'd-flex justify-center align-center',
-      element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
-      !preview && element.banner && element.sticky && context.isRoot && context.index === 0 && 'mt-n4',
-      !preview && element.banner && element.sticky && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
-    :style="{
-      ...(src && {
-        backgroundImage: `url(${src})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }),
-      ...(element.height && {
-        minHeight: `${element.height}px`
-      })
-    }"
   >
     <v-text-field
       v-model="searchQuery"
@@ -50,7 +37,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { SearchElement } from '#api/types/page-elements'
 import { mdiMagnify } from '@mdi/js'
 
@@ -65,7 +51,6 @@ const { element } = defineProps<{
 
 const { t } = useI18n()
 const router = useRouter()
-const { preview } = usePortalStore()
 
 const searchQuery = ref('')
 
@@ -78,12 +63,6 @@ const onSearch = () => {
   }
 }
 
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
-const src = computed(() => {
-  if (!element.backgroundImage) return
-  return getImageSrc(element.backgroundImage, false)
-})
-
 </script>
 
 <i18n lang="yaml">
@@ -95,14 +74,3 @@ const src = computed(() => {
     searchLabel: Saisissez votre recherche
     searchBtn: Rechercher
 </i18n>
-
-<style scoped>
-.banner-fluid {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-}
-
-.banner-contained {
-  width: 100%;
-}
-</style>

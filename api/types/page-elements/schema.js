@@ -226,33 +226,6 @@ export default {
             }
           }
         },
-        wideImage: {
-          type: 'object',
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            if: 'parent.data?.banner',
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
-        },
         href: {
           title: 'URL vers une autre page',
           description: "L'image devient un lien qui pointe vers l'URL renseignée.",
@@ -262,20 +235,6 @@ export default {
           title: 'Hauteur fixe (px)',
           type: 'integer',
           minimum: 0
-        },
-        banner: {
-          type: 'boolean',
-          title: 'Rendu pleine largeur',
-          layout: 'switch'
-        },
-        sticky: {
-          type: 'boolean',
-          title: 'Coller à la barre de navigation ou au pied de page',
-          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
-          layout: {
-            if: 'parent.data?.banner',
-            comp: 'switch'
-          }
         },
         cover: {
           type: 'boolean',
@@ -288,7 +247,7 @@ export default {
         legend: {
           type: 'string',
           title: "Légende de l'image",
-          description: "Cette légende sera affichée en italique juste en dessous de l'image",
+          description: "Légende affichée en italique en dessous de l'image",
           layout: { if: '!parent.data?.banner' }
         },
         zoomable: {
@@ -378,21 +337,6 @@ export default {
           'elevation',
           'density',
           'rounded',
-          {
-            title: 'Image de fond',
-            comp: 'card',
-            children: [
-              'banner',
-              {
-                if: 'data?.banner',
-                children: [
-                  'backgroundImage',
-                  'height',
-                  'sticky'
-                ]
-              }
-            ]
-          },
           'mb'
         ]
       },
@@ -431,48 +375,6 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
-        },
-        banner: {
-          type: 'boolean',
-          title: 'Rendu pleine largeur',
-          layout: 'switch'
-        },
-        backgroundImage: {
-          type: 'object',
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image de fond' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
-        },
-        height: {
-          title: 'Hauteur fixe (px)',
-          type: 'integer',
-          minimum: 60 // Minimum height of text-field component
-        },
-        sticky: {
-          type: 'boolean',
-          title: 'Coller à la barre de navigation ou au pied de page',
-          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
-          layout: 'switch'
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -915,16 +817,85 @@ export default {
             $ref: '#/$defs/element'
           }
         },
-        backgroundColor: {
-          $ref: '#/$defs/color'
-        },
-        sticky: {
+        fullWidth: {
           type: 'boolean',
-          title: 'Coller à la barre de navigation ou au pied de page',
-          description: "Permet à la bannière de se coller à la barre de navigation ou au pied de page selon sa position, en supprimant l'espacement supérieur ou inférieur de la page.",
+          title: 'Pleine largeur',
+          description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
           layout: 'switch'
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        color: {
+          $ref: '#/$defs/color'
+        },
+        image: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2560, label: 'Chargez une image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        overlayStrength: {
+          type: 'number',
+          title: 'Intensité de la teinte',
+          description: "Contrôle l'intensité de la teinte de couleur sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+          layout: 'slider',
+          minimum: 0,
+          maximum: 100,
+          default: 80
+        },
+        pt: {
+          type: 'integer',
+          title: 'Marge supérieur',
+          layout: { cols: { xs: 6 } },
+          minimum: 4,
+          maximum: 16
+        },
+        pb: {
+          type: 'integer',
+          title: 'Marge supérieur',
+          layout: { cols: { xs: 6 } },
+          minimum: 4,
+          maximum: 16
+        },
+        overflowTop: {
+          type: 'boolean',
+          title: 'Débordement supérieur',
+          description: "Permet au fond de la section de déborder sur l'élément précédent.",
+          layout: 'switch'
+        },
+        overflowBottom: {
+          type: 'boolean',
+          title: 'Débordement inférieur',
+          description: "Permet au fond de la section de déborder sur l'élément suivant.",
+          layout: 'switch'
+        },
+        mb: {
+          title: 'Espacement inférieur',
+          layout: {
+            if: '!parent.data?.overflowBottom'
+          },
+          type: 'integer',
+          minimum: 0,
+          maximum: 16
+        },
       }
     },
     'element-card': {
