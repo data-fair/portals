@@ -1,38 +1,40 @@
-import '@data-fair/lib-vuetify/style/global.scss'
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
-
-import { createVuetify } from 'vuetify'
-import { createRulesPlugin } from 'vuetify/labs/rules'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { fr, en } from 'vuetify/locale'
+import { createRulesPlugin } from 'vuetify/labs/rules'
 
-export default defineNuxtPlugin(({ vueApp }) => {
-  const theme = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
-  const lang = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
+export default defineNuxtPlugin((nuxtApp) => {
+  const themeCookie = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
+  const langCookie = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
+
   const portalConfig = useNuxtApp().$portal.config
   let colors = portalConfig.theme.colors
   let dark = false
-  if (theme.value === 'hc' && portalConfig.theme.hcColors) {
+
+  if (themeCookie.value === 'hc' && portalConfig.theme.hcColors) {
     colors = portalConfig.theme.hcColors
   }
-  if (theme.value === 'dark' && portalConfig.theme.darkColors) {
+  if (themeCookie.value === 'dark' && portalConfig.theme.darkColors) {
     colors = portalConfig.theme.darkColors
     dark = true
   }
-  if (theme.value === 'hc-dark' && portalConfig.theme.hcDarkColors) {
+  if (themeCookie.value === 'hc-dark' && portalConfig.theme.hcDarkColors) {
     colors = portalConfig.theme.hcDarkColors
     dark = true
   }
-  const vuetify = createVuetify({
-    locale: {
-      locale: lang.value,
+
+  // https://nuxt.vuetifyjs.com/guide/nuxt-runtime-hooks.html
+
+  nuxtApp.hook('vuetify:before-create', ({ vuetifyOptions }) => {
+    vuetifyOptions.locale = {
+      locale: langCookie.value,
+      fallback: 'en',
       messages: { fr, en }
-    },
-    theme: {
+    }
+    vuetifyOptions.theme = {
       // TODO: cspNonce
-      defaultTheme: theme.value,
+      defaultTheme: themeCookie.value,
       themes: {
-        [theme.value]: {
+        [themeCookie.value]: {
           dark,
           colors,
           variables: {
@@ -43,19 +45,11 @@ export default defineNuxtPlugin(({ vueApp }) => {
           }
         }
       }
-    },
-    icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
-    defaults: {
-      VCard: {
-        // white card with light grey border by default
-        variant: 'flat',
-        border: 'sm'
-      }
     }
   })
-  const uiNotif = createUiNotif()
 
-  vueApp.use(createRulesPlugin({ }, vuetify.locale))
-  vueApp.use(vuetify)
-  vueApp.use(uiNotif)
+  nuxtApp.hook('vuetify:ready', (vuetify) => {
+    nuxtApp.vueApp.use(createRulesPlugin({ }, vuetify.locale))
+    nuxtApp.vueApp.use(createUiNotif())
+  })
 })

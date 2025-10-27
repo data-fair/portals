@@ -118,7 +118,7 @@
 
   <!-- Topics filter (desktop view)-->
   <v-col
-    v-if="!$vuetify.display.smAndDown"
+    v-if="!$vuetify.display.smAndDown && !drawer"
     cols="12"
   >
     <topics-list

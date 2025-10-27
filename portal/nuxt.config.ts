@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { defaultNonceCSPDirectives } from '@data-fair/lib-express/serve-spa'
 
 // cf https://nuxt-security.vercel.app/headers/csp
@@ -59,12 +58,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/eslint',
     'nuxt-security',
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
-        config.plugins!.push(vuetify({ autoImport: true }))
-      })
-    },
-    // ...
+    'vuetify-nuxt-module'
   ],
   i18n: {
     locales: ['fr', 'en'],
@@ -76,18 +70,34 @@ export default defineNuxtConfig({
       redirectOn: 'root'
     }
   },
-  vite: {
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    }
-  },
   app: {
     head: {
       title: 'Open Data Portal', // default fallback title
       charset: 'utf-8', // overrides default 'utf-16' for smaller size
       link: [{ rel: 'stylesheet', href: '/simple-directory/api/sites/_theme.css', blocking: 'render' }]
+    }
+  },
+  css: [
+    '@data-fair/lib-vuetify/style/global.scss',
+    '@data-fair/portals-shared-markdown/style.css'
+  ],
+  vuetify: {
+    moduleOptions: {
+      ssrClientHints: {
+        reloadOnFirstRequest: true,
+        viewportSize: true
+      }
+    },
+    vuetifyOptions: {
+      directives: true,
+      icons: { defaultSet: 'mdi-svg' },
+      defaults: {
+        VCard: {
+          // white card with light grey border by default
+          variant: 'flat',
+          border: 'sm'
+        }
+      }
     }
   }
 })
