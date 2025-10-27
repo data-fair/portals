@@ -26,8 +26,8 @@
   <!-- TODO : Navigation drawer only in desktop -->
 
   <v-navigation-drawer
-    v-if="portalConfig.datasets.list.filtersLocation === 'left'"
-    style="position: absolute; top: 64px; bottom: 0;"
+    v-if="portalConfig.datasets.list.filtersLocation === 'left' && !$vuetify.display.smAndDown"
+    style="position: absolute;"
   >
     <datasets-filters
       v-model:order="order"
@@ -174,7 +174,6 @@ onMounted(async () => {
 // Reset datasets when filters change
 watch([search, sort, order, filters.concepts, filters.topics, filters.owners], async () => {
   currentPage.value = 0
-  displayedDatasets.value = []
   await datasetsFetch.refresh()
   if (datasetsFetch.data.value?.results) {
     displayedDatasets.value = [...datasetsFetch.data.value.results]

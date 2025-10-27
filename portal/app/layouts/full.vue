@@ -7,3 +7,8 @@
   </v-main>
   <LayoutScrollToTop />
 </template>
+
+<style>
+/* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
+html { overflow-y: auto; }
+</style>
