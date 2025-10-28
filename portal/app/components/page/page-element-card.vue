@@ -32,7 +32,7 @@
       >
         <template #prepend>
           <v-icon
-            v-if="action.icon"
+            v-if="action.icon && (action.icon.mdi?.svgPath || action.icon.custom)"
             :icon="action.icon.mdi?.svgPath || action.icon.custom"
             :color="action.icon.color"
           />

@@ -7,7 +7,7 @@
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
   >
     <template
-      v-if="element.alertType === 'none' && element.icon"
+      v-if="element.alertType === 'none' && element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
       #prepend
     >
       <v-icon

@@ -86,9 +86,16 @@
         v-for="(page, p) in portalConfig.personal.accountPages"
         :key="p"
         :to="'/me/' + page.id"
-        :prepend-icon="page.icon.svgPath"
         :title="page.title"
-      />
+      >
+        <template #prepend>
+          <v-icon
+            v-if="page.icon && (page.icon.mdi?.svgPath || page.icon.custom)"
+            :icon="page.icon.mdi?.svgPath || page.icon.custom"
+            :color="page.icon.color"
+          />
+        </template>
+      </v-list-item>
     </v-list>
 
     <!-- Copyright -->

@@ -18,28 +18,49 @@
             v-bind="menuProps"
             :text="link.title"
             :append-icon="mdiChevronDown"
-            :prepend-icon="link.icon?.svgPath"
             :value="i"
-          />
+          >
+            <template #prepend>
+              <v-icon
+                v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                :color="link.icon.color"
+              />
+            </template>
+          </v-tab>
         </template>
         <nav-tabs-menu-item :children="link.children" />
       </v-menu>
       <v-tab
         v-else-if="link?.type === 'external'"
         :text="link.title"
-        :prepend-icon="link.icon?.svgPath"
         :href="link.href"
         target="_blank"
         rel="noopener"
         :value="i"
-      />
+      >
+        <template #prepend>
+          <v-icon
+            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+            :icon="link.icon.mdi?.svgPath || link.icon.custom"
+            :color="link.icon.color"
+          />
+        </template>
+      </v-tab>
       <v-tab
         v-else
         :text="resolveLinkTitle(link, locale)"
-        :prepend-icon="link.icon?.svgPath"
         :to="resolveLink(link)"
         :value="i"
-      />
+      >
+        <template #prepend>
+          <v-icon
+            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+            :icon="link.icon.mdi?.svgPath || link.icon.custom"
+            :color="link.icon.color"
+          />
+        </template>
+      </v-tab>
     </template>
   </v-tabs>
 </template>

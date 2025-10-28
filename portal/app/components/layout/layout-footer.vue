@@ -48,7 +48,10 @@
           class="text-center"
           :cols="portalConfig.footer.showSocial ? 6 : 12"
         >
-          <layout-header-logo :logo="logo" class="justify-center" />
+          <layout-header-logo
+            :logo="logo"
+            class="justify-center"
+          />
         </v-col>
         <v-col
           v-if="portalConfig.footer.showSocial && Object.keys(portalConfig.socialLinks).length"
@@ -129,8 +132,9 @@
             rel="noopener"
           >
             <v-icon
-              v-if="link.icon"
-              :icon="link.icon.svgPath"
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              :icon="link.icon.mdi?.svgPath || link.icon.custom"
+              :color="link.icon.color"
               size="small"
               class="mr-1"
             />
@@ -141,8 +145,9 @@
             :to="resolveLink(link)"
           >
             <v-icon
-              v-if="link.icon"
-              :icon="link.icon.svgPath"
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              :icon="link.icon.mdi?.svgPath || link.icon.custom"
+              :color="link.icon.color"
               size="small"
               class="mr-1"
             />
@@ -172,8 +177,9 @@
             rel="noopener"
           >
             <v-icon
-              v-if="link.icon"
-              :icon="link.icon.svgPath"
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              :icon="link.icon.mdi?.svgPath || link.icon.custom"
+              :color="link.icon.color"
               size="small"
               class="mr-1"
             />
@@ -185,8 +191,9 @@
           >
             <span class="d-flex align-center">
               <v-icon
-                v-if="link.icon"
-                :icon="link.icon.svgPath"
+                v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                :color="link.icon.color"
                 size="small"
                 class="mr-1"
               />
@@ -210,20 +217,32 @@
             >
               <v-btn
                 v-if="link.type === 'external'"
-                :prepend-icon="link.icon?.svgPath"
                 :href="link.href"
                 target="_blank"
                 rel="noopener"
                 variant="text"
               >
+                <template #prepend>
+                  <v-icon
+                    v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                    :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                    :color="link.icon.color"
+                  />
+                </template>
                 {{ link.title }}
               </v-btn>
               <v-btn
                 v-else
-                :prepend-icon="link.icon?.svgPath"
                 :to="resolveLink(link)"
                 variant="text"
               >
+                <template #prepend>
+                  <v-icon
+                    v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                    :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                    :color="link.icon.color"
+                  />
+                </template>
                 {{ resolveLinkTitle(link, locale) }}
               </v-btn>
             </template>

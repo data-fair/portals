@@ -17,7 +17,7 @@
       >
         <template #prepend>
           <v-icon
-            v-if="tab.icon"
+            v-if="tab.icon && (tab.icon.mdi?.svgPath || tab.icon.custom)"
             :icon="tab.icon.mdi?.svgPath || tab.icon.custom"
             :color="tab.icon.color"
           />

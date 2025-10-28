@@ -29,7 +29,7 @@ export default {
           title: 'Libellé',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+        icon: { $ref: '#/$defs/icon' },
       }
     },
     eventPage: {
@@ -56,7 +56,7 @@ export default {
           default: 'Événements',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+        icon: { $ref: '#/$defs/icon' },
       }
     },
     newsPage: {
@@ -83,7 +83,7 @@ export default {
           default: 'Actualités',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+        icon: { $ref: '#/$defs/icon' },
       }
     },
     genericPage: {
@@ -117,7 +117,7 @@ export default {
           title: 'Libellé',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+        icon: { $ref: '#/$defs/icon' },
       }
     },
     externalLink: {
@@ -133,27 +133,56 @@ export default {
           title: 'URL',
           type: 'string'
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+        icon: { $ref: '#/$defs/icon' },
       }
     },
     icon: {
       type: 'object',
-      title: 'Icône',
-      required: ['name', 'svg'],
-      layout: {
-        getItems: {
-          url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
-          itemKey: 'data.name',
-          itemTitle: 'data.name',
-          itemIcon: 'data.svg',
-          itemsResults: 'data.results'
-        }
-      },
+      title: 'Configuration de l\'icône',
+      layout: 'card',
       properties: {
-        name: { type: 'string' },
-        svg: { type: 'string' },
-        svgPath: { type: 'string' }
+        mdi: {
+          type: 'object',
+          title: 'Icône MDI',
+          required: ['name', 'svg', 'svgPath'],
+          layout: {
+            getItems: {
+              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
+              itemKey: 'data.name',
+              itemTitle: 'data.name',
+              itemIcon: 'data.svg',
+              itemsResults: 'data.results'
+            },
+            cols: { md: 4 }
+          },
+          properties: {
+            name: { type: 'string' },
+            svg: { type: 'string' },
+            svgPath: { type: 'string' }
+          }
+        },
+        custom: {
+          type: 'string',
+          title: 'Icône personnalisée',
+          description: 'Seul les SVG Path sont supportés.',
+          layout: { cols: { md: 4 } }
+        },
+        color: { $ref: '#/$defs/color' }
       }
     },
+    color: {
+      type: 'string',
+      title: 'Couleur',
+      layout: { cols: { md: 4 } },
+      oneOf: [
+        { const: 'primary', title: 'Primaire' },
+        { const: 'secondary', title: 'Secondaire' },
+        { const: 'accent', title: 'Accentuée' },
+        { const: 'info', title: 'Information' },
+        { const: 'success', title: 'Succès' },
+        { const: 'error', title: 'Erreur' },
+        { const: 'warning', title: 'Avertissement' }
+      ]
+    }
   }
 }

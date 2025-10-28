@@ -1,7 +1,7 @@
 <template>
   <v-icon
-    v-if="item.icon"
-    :icon="item.icon.svgPath"
+    v-if="item.icon && (item.icon.mdi?.svgPath || item.icon.custom)"
+    :icon="item.icon.mdi?.svgPath || item.icon.custom"
     size="small"
     class="mr-1"
   />
@@ -9,13 +9,19 @@
     {{ t(standardPageLabel) }}<template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
   </span>
   <span v-else-if="item.type === 'event'">
-    {{ t('event') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+    {{ t('event') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template
+      v-if="item.title"
+    > - {{ t('label') }} : {{ item.title }}</template>
   </span>
   <span v-else-if="item.type === 'news'">
-    {{ t('news') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+    {{ t('news') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template
+      v-if="item.title"
+    > - {{ t('label') }} : {{ item.title }}</template>
   </span>
   <span v-else-if="item.type === 'generic'">
-    {{ t('customPage') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template v-if="item.title"> - {{ t('label') }} : {{ item.title }}</template>
+    {{ t('customPage') }}<template v-if="item.pageRef?.title"> - {{ item.pageRef.title }}</template><template
+      v-if="item.title"
+    > - {{ t('label') }} : {{ item.title }}</template>
   </span>
   <span v-else-if="item.type === 'external'">
     {{ t('externalLink') }} - {{ t('label') }} : {{ item.title }} - {{ t('url') }} : {{ item.href }}

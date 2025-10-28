@@ -16,7 +16,7 @@
         class="border-opacity-100 mr-4"
       />
       <v-icon
-        v-if="element.icon"
+        v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
         :icon="element.icon.mdi?.svgPath || element.icon.custom"
         :color="element.icon.color"
         size="small"

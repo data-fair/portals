@@ -3,13 +3,20 @@
   <template v-if="level === 1 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
-      :prepend-icon="item.icon?.svgPath"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
       :rel="item.type === 'external' ? 'noopener' : undefined"
       :active="isItemActive(item)"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          v-if="item.icon && (item.icon.mdi?.svgPath || item.icon.custom)"
+          :icon="item.icon.mdi?.svgPath || item.icon.custom"
+          :color="item.icon.color"
+        />
+      </template>
+    </v-list-item>
   </template>
 
   <!-- Level 1: group with subtitle -->
@@ -19,7 +26,8 @@
       <span class="d-flex align-center">
         <v-icon
           v-if="item.icon"
-          :icon="item.icon.svgPath"
+          :icon="item.icon.mdi?.svgPath || item.icon.custom"
+          :color="item.icon.color"
           class="mr-2"
         />
         {{ item.title }}
@@ -38,13 +46,20 @@
   <template v-else-if="level >= 2 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
-      :prepend-icon="item.icon?.svgPath"
       :to="item.type !== 'external' ? resolveLink(item) : undefined"
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
       :rel="item.type === 'external' ? 'noopener' : undefined"
       :active="isItemActive(item)"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          v-if="item.icon && (item.icon.mdi?.svgPath || item.icon.custom)"
+          :icon="item.icon.mdi?.svgPath || item.icon.custom"
+          :color="item.icon.color"
+        />
+      </template>
+    </v-list-item>
   </template>
 
   <!-- Level 2+: collapsible/expandable group -->
@@ -57,9 +72,16 @@
         <v-list-item
           v-bind="activatorProps"
           :title="item.title"
-          :prepend-icon="item.icon?.svgPath"
           :active="isItemActive(item)"
-        />
+        >
+          <template #prepend>
+            <v-icon
+              v-if="item.icon && (item.icon.mdi?.svgPath || item.icon.custom)"
+              :icon="item.icon.mdi?.svgPath || item.icon.custom"
+              :color="item.icon.color"
+            />
+          </template>
+        </v-list-item>
       </template>
       <nav-drawer-item
         v-for="(child, i) of item.children"

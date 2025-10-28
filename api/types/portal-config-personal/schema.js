@@ -62,26 +62,7 @@ export default {
             title: 'Libellé du lien',
             layout: { cols: { md: 4 } }
           },
-          icon: {
-            title: 'Icône',
-            description: 'Il est possible de consulter plus facilement la liste des icônes disponibles sur <a href="https://pictogrammers.com/library/mdi/" target="_blank">ce site</a>.',
-            type: 'object',
-            layout: {
-              cols: { md: 4 },
-              getItems: {
-                url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath&size=25',
-                itemsResults: 'data.results',
-                itemTitle: 'item.name',
-                itemIcon: 'item.svg',
-                itemKey: 'item.name'
-              }
-            },
-            properties: {
-              name: { type: 'string' },
-              svg: { type: 'string' },
-              svgPath: { type: 'string' }
-            }
-          },
+          icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
           href: {
             type: 'string',
             title: 'URL de la page',

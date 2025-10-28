@@ -5,7 +5,6 @@
       :key="j"
       :title="resolveLinkTitle(link, locale)"
       :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
-      :prepend-icon="link.icon?.svgPath"
       :active="isItemActive(link)"
       :to="link.type !== 'external' && link.type !== 'submenu' ? resolveLink(link) : undefined"
       :href="link.type === 'external' ? link.href : undefined"
@@ -14,6 +13,13 @@
       color="primary"
       link
     >
+      <template #prepend>
+        <v-icon
+          v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+          :icon="link.icon.mdi?.svgPath || link.icon.custom"
+          :color="link.icon.color"
+        />
+      </template>
       <v-menu
         v-if="link.type === 'submenu' && link.children?.length"
         :open-on-focus="false"
