@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      'd-flex justify-center align-center',
-      element.mb !== 0 && `mb-${element.mb ?? 4}`
+      element.mb !== 0 && `mb-${element.mb ?? 4}`,
+      element.centered ? 'd-flex justify-center' : undefined
     ]"
   >
     <v-text-field
@@ -10,18 +10,19 @@
       :label="t('searchLabel')"
       :density="element.density"
       :rounded="element.rounded"
-      color="primary"
-      base-color="primary"
+      :color="element.color || 'primary'"
+      :base-color="element.color || 'primary'"
       bg-color="surface"
       max-width="400"
-      variant="outlined"
+      variant="solo"
       autofocus
+      flat
       hide-details
       @keyup.enter="onSearch"
     >
       <template #append>
         <v-btn
-          color="primary"
+          :color="element.color || 'primary'"
           stacked
           :title="t('searchBtn')"
           :density="element.density"
@@ -63,6 +64,12 @@ const onSearch = () => {
   }
 }
 
+// TODO Remove
+// applyTint: {
+//   type: 'boolean',
+//   title: "Appliquer une teinte colorée sur l'image",
+//   description: "Applique une teinte de la couleur sélectionnée sur l'image de fond pour améliorer la lisibilité du contenu. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+// }
 </script>
 
 <i18n lang="yaml">
@@ -74,3 +81,9 @@ const onSearch = () => {
     searchLabel: Saisissez votre recherche
     searchBtn: Rechercher
 </i18n>
+
+<style scoped>
+:deep(.v-input--horizontal .v-input__append) {
+  margin-inline-start: 0 !important;
+}
+</style>

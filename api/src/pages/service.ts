@@ -153,7 +153,8 @@ const getPageImageRefs = async (page: Page) => {
   const imageRefs: ImageRef[] = []
   await traversePage(page, (pageElement) => {
     if (pageElement.type === 'image' && pageElement.image) imageRefs.push(pageElement.image)
-    if (pageElement.type === 'banner' && pageElement.image) imageRefs.push(pageElement.image)
+    if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
+    if (pageElement.type === 'card' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
   })
   return imageRefs
 }

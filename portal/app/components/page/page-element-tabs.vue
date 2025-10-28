@@ -13,9 +13,15 @@
       <v-tab
         v-for="(tab, i) of element.tabs"
         :key="i"
-        :prepend-icon="tab.icon?.svg"
         :value="i"
       >
+        <template #prepend>
+          <v-icon
+            v-if="tab.icon"
+            :icon="tab.icon.mdi?.svgPath || tab.icon.custom"
+            :color="tab.icon.color"
+          />
+        </template>
         {{ tab.title }}
       </v-tab>
     </v-tabs>

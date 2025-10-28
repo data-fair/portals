@@ -5,7 +5,6 @@
       :class="[
         'd-flex align-center',
         element.centered ? 'justify-center' : undefined,
-        element.color ? `text-${element.color}` : undefined,
         `text-${element.titleSize || 'h3'}`
       ]"
     >
@@ -15,16 +14,15 @@
         thickness="4"
         :color="element.line?.color"
         class="border-opacity-100 mr-4"
-        style="color: inherit"
       />
       <v-icon
         v-if="element.icon"
-        :icon="element.icon?.svgPath"
-        :color="element.color"
+        :icon="element.icon.mdi?.svgPath || element.icon.custom"
+        :color="element.icon.color"
         size="small"
         class="mr-4"
       />
-      <div>
+      <div :class="element.color ? `text-${element.color}` : undefined">
         {{ element.content }}
         <v-divider
           v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"

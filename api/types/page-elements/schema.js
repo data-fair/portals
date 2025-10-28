@@ -71,9 +71,6 @@ export default {
           title: 'Contenu',
           type: 'string'
         },
-        icon: {
-          $ref: '#/$defs/icon'
-        },
         titleSize: {
           title: 'Taille du titre',
           type: 'string',
@@ -93,9 +90,11 @@ export default {
           title: 'Centrer le titre',
           default: false,
         },
+        icon: { $ref: '#/$defs/icon' },
         line: {
           type: 'object',
           title: 'Configuration du trait',
+          layout: 'card',
           properties: {
             position: {
               type: 'string',
@@ -126,6 +125,11 @@ export default {
           title: 'Contenu',
           type: 'string',
           layout: 'markdown'
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer le contenu',
+          default: false,
         },
         mb: { $ref: '#/$defs/margin-bottom' },
         _html: { $ref: '#/$defs/rendered-html' }
@@ -181,12 +185,8 @@ export default {
             }
           ]
         },
-        icon: {
-          $ref: '#/$defs/icon'
-        },
-        color: {
-          $ref: '#/$defs/color'
-        },
+        icon: { $ref: '#/$defs/icon' },
+        color: { $ref: '#/$defs/color' },
         title: {
           title: 'Titre',
           type: 'string',
@@ -350,15 +350,6 @@ export default {
         fr: 'Recherche de jeux de données'
       },
       required: ['type'],
-      layout: {
-        children: [
-          'type',
-          'elevation',
-          'density',
-          'rounded',
-          'mb'
-        ]
-      },
       properties: {
         type: {
           const: 'search'
@@ -394,6 +385,11 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
+        },
+        color: { $ref: '#/$defs/color' },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer le champ de recherche'
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -842,57 +838,7 @@ export default {
           description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
           layout: 'switch'
         },
-        color: {
-          $ref: '#/$defs/color'
-        },
-        image: {
-          type: 'object',
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
-        },
-        applyTint: {
-          type: 'boolean',
-          title: "Appliquer une teinte colorée sur l'image",
-          description: "Applique une teinte de la couleur sélectionnée sur l'image de fond pour améliorer la lisibilité du contenu. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
-          default: true,
-        },
-        tintStrength: {
-          type: 'number',
-          title: 'Intensité de la teinte',
-          description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
-          layout: {
-            if: 'parent.data?.applyTint',
-            comp: 'slider',
-            props: {
-              step: 0.1,
-              showTicks: 'always'
-            }
-          },
-          minimum: 0,
-          maximum: 1,
-          default: 0.8
-        },
+        background: { $ref: '#/$defs/background' },
         pt: {
           type: 'integer',
           title: 'Marge supérieur',
@@ -938,6 +884,13 @@ export default {
         type: {
           const: 'card'
         },
+        children: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
         title: {
           title: 'Titre',
           type: 'string',
@@ -965,13 +918,7 @@ export default {
             $ref: '#/$defs/button'
           }
         },
-        children: {
-          type: 'array',
-          layout: 'none',
-          items: {
-            $ref: '#/$defs/element'
-          }
-        },
+        background: { $ref: '#/$defs/background' },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
@@ -1114,9 +1061,7 @@ export default {
                 title: 'Titre onglet',
                 type: 'string'
               },
-              icon: {
-                $ref: '#/$defs/icon'
-              },
+              icon: { $ref: '#/$defs/icon' },
               children: {
                 type: 'array',
                 layout: 'none',
@@ -1132,21 +1077,86 @@ export default {
     },
     icon: {
       type: 'object',
-      title: 'Icône',
-      required: ['name', 'svg'],
-      layout: {
-        getItems: {
-          url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
-          itemKey: 'data.name',
-          itemTitle: 'data.name',
-          itemIcon: 'data.svg',
-          itemsResults: 'data.results'
-        }
-      },
+      title: 'Configuration de l\'icône',
+      layout: 'card',
       properties: {
-        name: { type: 'string' },
-        svg: { type: 'string' },
-        svgPath: { type: 'string' }
+        mdi: {
+          type: 'object',
+          title: 'Icône MDI',
+          required: ['name', 'svg', 'svgPath'],
+          layout: {
+            getItems: {
+              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
+              itemKey: 'data.name',
+              itemTitle: 'data.name',
+              itemIcon: 'data.svg',
+              itemsResults: 'data.results'
+            },
+            cols: { md: 6 }
+          },
+          properties: {
+            name: { type: 'string' },
+            svg: { type: 'string' },
+            svgPath: { type: 'string' }
+          }
+        },
+        custom: {
+          type: 'string',
+          title: 'Icône personnalisée',
+          description: 'Seul les SVG Path sont supportés.',
+          layout: { cols: { md: 6 } }
+        },
+        color: { $ref: '#/$defs/color' }
+      }
+    },
+    background: {
+      title: 'Configuration du fond',
+      layout: 'card',
+      properties: {
+        color: { $ref: '#/$defs/color-background' },
+        image: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2560, label: 'Chargez une image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        tintStrength: {
+          type: 'number',
+          title: 'Intensité de la teinte',
+          description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+          layout: {
+            if: 'parent.data?.color && parent.data?.image',
+            comp: 'slider',
+            props: {
+              step: 0.1,
+              thumbLabel: true,
+              showTicks: 'always'
+            }
+          },
+          minimum: 0,
+          maximum: 1,
+          default: 0.8
+        },
       }
     },
     color: {
@@ -1160,6 +1170,21 @@ export default {
         { const: 'success', title: 'Succès' },
         { const: 'error', title: 'Erreur' },
         { const: 'warning', title: 'Avertissement' }
+      ]
+    },
+    'color-background': {
+      type: 'string',
+      title: 'Couleur',
+      oneOf: [
+        { const: 'primary', title: 'Primaire' },
+        { const: 'secondary', title: 'Secondaire' },
+        { const: 'accent', title: 'Accentuée' },
+        { const: 'info', title: 'Information' },
+        { const: 'success', title: 'Succès' },
+        { const: 'error', title: 'Erreur' },
+        { const: 'warning', title: 'Avertissement' },
+        { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
     button: {
@@ -1189,6 +1214,14 @@ export default {
     'margin-bottom': {
       title: 'Espacement inférieur',
       type: 'integer',
+      layout: {
+        comp: 'slider',
+        props: {
+          step: 1,
+          thumbLabel: true,
+          showTicks: 'always'
+        }
+      },
       minimum: 0,
       maximum: 16
     },

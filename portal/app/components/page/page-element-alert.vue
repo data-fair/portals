@@ -3,10 +3,18 @@
   <v-alert
     :type="element.alertType !== 'none' ? element.alertType : undefined"
     :title="element.title"
-    :icon="element.icon?.svgPath"
-    :color="element.color"
+    :color="element.alertType === 'none' ? element.color : undefined"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
   >
+    <template
+      v-if="element.alertType === 'none' && element.icon"
+      #prepend
+    >
+      <v-icon
+        :icon="element.icon.mdi?.svgPath || element.icon.custom"
+        :color="element.icon.color"
+      />
+    </template>
     <template #text>
       <div v-html="element._html" />
     </template>
