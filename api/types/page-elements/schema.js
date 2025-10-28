@@ -92,6 +92,25 @@ export default {
           type: 'boolean',
           title: 'Centrer le titre',
           default: false,
+        },
+        line: {
+          type: 'object',
+          title: 'Configuration du trait',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Afficher un trait',
+              oneOf: [
+                { const: 'none', title: 'Aucun trait' },
+                { const: 'left', title: 'Trait à gauche du titre' },
+                { const: 'bottom-small', title: 'Petit trait sous le titre' },
+                { const: 'bottom-medium', title: 'Trait sous le titre (largeur du texte)' },
+                { const: 'bottom-large', title: 'Trait pleine largeur sous le titre' }
+              ],
+              default: 'none'
+            },
+            color: { $ref: '#/$defs/color' }
+          }
         }
       }
     },
@@ -852,14 +871,27 @@ export default {
             }
           }
         },
-        overlayStrength: {
+        applyTint: {
+          type: 'boolean',
+          title: "Appliquer une teinte colorée sur l'image",
+          description: "Applique une teinte de la couleur sélectionnée sur l'image de fond pour améliorer la lisibilité du contenu. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+          default: true,
+        },
+        tintStrength: {
           type: 'number',
           title: 'Intensité de la teinte',
-          description: "Contrôle l'intensité de la teinte de couleur sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
-          layout: 'slider',
+          description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+          layout: {
+            if: 'parent.data?.applyTint',
+            comp: 'slider',
+            props: {
+              step: 0.1,
+              showTicks: 'always'
+            }
+          },
           minimum: 0,
-          maximum: 100,
-          default: 80
+          maximum: 1,
+          default: 0.8
         },
         pt: {
           type: 'integer',

@@ -7,15 +7,15 @@
       !preview && context.isRoot && context.index === 0 && 'mt-n4',
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`,
-      element.overflowTop && `mt-n${element.pt ?? 4}`,
-  element.overflowBottom && `mb-n${element.pb ?? 4}`
+      !preview &&element.overflowTop && `mt-n${element.pt ?? 4}`,
+      !preview &&element.overflowBottom && `mb-n${element.pb ?? 4}`
     ]"
     :style="element.image ? {
       backgroundImage: `url(${getImageSrc(element.image, false)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundColor: element.color ? `rgba(var(--v-theme-${element.color}), ${(element.overlayStrength || 40) / 100}) !important` : undefined,
-      backgroundBlendMode: 'multiply'
+      backgroundColor: element.color && element.applyTint ? `rgba(var(--v-theme-${element.color}), ${element.tintStrength ?? 40}) !important` : undefined,
+      backgroundBlendMode: element.applyTint ? 'overlay' : undefined
     } : undefined"
   >
     <v-container
@@ -57,11 +57,5 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 
 .banner-contained {
   width: 100%;
-}
-
-.banner-overlay {
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
 }
 </style>
