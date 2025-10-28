@@ -18,16 +18,29 @@ describe('images management', () => {
     await assert.rejects(user1.post('/api/images', form), { status: 404 })
   })
 
-  it('should load an image on a page', async () => {
+  it('should load a PNG and resize it', async () => {
+    const page = (await user1.post('/api/pages', { type: 'home', config: { title: 'My page', elements: [] } })).data
+
+    const form = new FormData()
+    form.append('body', JSON.stringify({ resource: { type: 'page', _id: page._id } }))
+    form.append('image', createReadStream('test-it/resources/logo.png'))
+    const image = await user1.post('/api/images', form).then(r => r.data)
+    assert.equal(image.width, 200)
+    assert.equal(image.height, 200)
+    assert.equal(image.name, 'logo.png')
+    assert.equal(image.mimeType, 'image/png')
+  })
+
+  it('should load a SVG and not resize it', async () => {
     const page = (await user1.post('/api/pages', { type: 'home', config: { title: 'My page', elements: [] } })).data
 
     const form = new FormData()
     form.append('body', JSON.stringify({ resource: { type: 'page', _id: page._id } }))
     form.append('image', createReadStream('test-it/resources/logo.svg'))
     const image = await user1.post('/api/images', form).then(r => r.data)
-    assert.equal(image.width, 200)
-    assert.equal(image.height, 200)
+    assert.equal(image.width, 0)
+    assert.equal(image.height, 0)
     assert.equal(image.name, 'logo.svg')
-    assert.equal(image.mimeType, 'image/png')
+    assert.equal(image.mimeType, 'image/svg+xml')
   })
 })

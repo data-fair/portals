@@ -74,7 +74,7 @@ export default {
                 title: 'Options générales',
                 children: [
                   'navBar',
-                  { name: 'nav-bar-preview' }
+                  { name: 'app-bar-preview' }
                 ]
               },
               {

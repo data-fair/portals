@@ -15,6 +15,7 @@
         thickness="4"
         :color="element.line?.color"
         class="border-opacity-100 mr-4"
+        style="color: inherit"
       />
       <v-icon
         v-if="element.icon"

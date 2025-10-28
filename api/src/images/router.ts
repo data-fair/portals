@@ -68,7 +68,7 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
     updated: created,
     name: file.originalname,
     ...body,
-    ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height }))
+    ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))
   }
 
   // prepare mobile variant if necessary

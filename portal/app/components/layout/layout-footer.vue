@@ -1,7 +1,7 @@
 <template>
   <v-container
     v-if="portalConfig.footer.showContactInformations"
-    :class="[`bg-${portalConfig.footer.color}`, 'pa-0 footer-image']"
+    :class="[`bg-${portalConfig.footer.color}`, 'pa-0']"
     fluid
   >
     <v-container>
@@ -48,7 +48,7 @@
           class="text-center"
           :cols="portalConfig.footer.showSocial ? 6 : 12"
         >
-          <layout-header-logo :logo="logo" />
+          <layout-header-logo :logo="logo" class="justify-center" />
         </v-col>
         <v-col
           v-if="portalConfig.footer.showSocial && Object.keys(portalConfig.socialLinks).length"
