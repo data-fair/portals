@@ -54,6 +54,16 @@ const vjsfOptions: VjsfOptions = {
         previewRender: renderMarkdown
       }
     }
+  },
+  icons: {
+    close: '$tableGroupExpand'
   }
 }
 </script>
+
+<style lang="css">
+.vjsf-list-dialog .vjsf-list-dialog-toolbar .v-spacer {
+  flex-grow: 0;
+  width: 8px;
+}
+</style>

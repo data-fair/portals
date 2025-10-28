@@ -62,10 +62,12 @@ const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
     minHeight: '100%',
     opacity: 0.1,
-    contentClass: 'right-0 ma-0'
+    contentClass: 'right-0 ma-0',
+    transition: 'slide-x',
+    persistent: false
   },
   'VjsfList-Edit-VDialog-VSheet': {
-    rounded: 's-lg e-0' // larger radius on left side, no radius on right side
+    rounded: '0'
   },
   VSwitch: {
     color: 'primary'
