@@ -99,6 +99,7 @@ export default {
         { const: 'secondary', title: 'Couleur secondaire' },
         { const: 'accent', title: 'Couleur accentuée' },
         { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
@@ -113,6 +114,7 @@ export default {
         { const: 'secondary', title: 'Couleur secondaire' },
         { const: 'accent', title: 'Couleur accentuée' },
         { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
@@ -126,6 +128,7 @@ export default {
         { const: 'secondary', title: 'Couleur secondaire' },
         { const: 'accent', title: 'Couleur accentuée' },
         { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },

@@ -1,8 +1,9 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
+  <!-- flex-grow-1 is used with two columns stretch-->
   <v-card
     :border="element.border"
-    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'flex-grow-1']"
     :color="element.background?.color"
     :href="!preview ? element.href : undefined"
     :title="element.title"
@@ -22,7 +23,7 @@
         add-item-message="Ajouter un bloc à la boite"
       />
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions v-if="element.actions.length">
       <v-btn
         v-for="(action, i) in element.actions"
         :key="i"
@@ -45,7 +46,7 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/image-ref/index.ts'
-import type { PageElement, Boite } from '~~/../api/types/page-config'
+import type { PageElement, Boite } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => Boite, required: true }

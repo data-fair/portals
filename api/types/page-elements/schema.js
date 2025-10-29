@@ -845,6 +845,19 @@ export default {
         fr: 'Section sur fond coloré'
       },
       required: ['type', 'children'],
+      layout: {
+        children: [
+          'type',
+          'children',
+          'fullWidth',
+          'background',
+          'pt',
+          'pb',
+          'overflowTop',
+          'overflowBottom',
+          { if: '!parent.data?.overflowBottom', children: ['mb'] }
+        ]
+      },
       properties: {
         type: {
           const: 'banner'
@@ -889,15 +902,7 @@ export default {
           description: "Permet au fond de la section de déborder sur l'élément suivant.",
           layout: 'switch'
         },
-        mb: {
-          title: 'Espacement inférieur',
-          layout: {
-            if: '!parent.data?.overflowBottom'
-          },
-          type: 'integer',
-          minimum: 0,
-          maximum: 16
-        },
+        mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
     'element-card': {
@@ -948,7 +953,11 @@ export default {
     },
     'element-two-columns': {
       type: 'object',
-      title: '2 colonnes',
+      title: 'Two Columns Element',
+      'x-i18n-title': {
+        en: '2 Columns',
+        fr: '2 Colonnes'
+      },
       required: ['type', 'disposition', 'gutter', 'children', 'children2'],
       properties: {
         type: {
@@ -972,6 +981,34 @@ export default {
               title: 'Colonne droite large'
             }
           ]
+        },
+        align: {
+          type: 'object',
+          title: 'Alignement des éléments',
+          properties: {
+            left: {
+              type: 'string',
+              title: 'Colonne 1',
+              layout: { cols: { xs: 6 } },
+              oneOf: [
+                { const: 'start', title: 'Aligné en haut' },
+                { const: 'center', title: 'Aligné au centre' },
+                { const: 'end', title: 'Aligné en bas' },
+                { const: 'stretch', title: 'Étendre les éléments' }
+              ]
+            },
+            right: {
+              type: 'string',
+              title: 'Colonne 2',
+              layout: { cols: { xs: 6 } },
+              oneOf: [
+                { const: 'start', title: 'Aligné en haut' },
+                { const: 'center', title: 'Aligné au centre' },
+                { const: 'end', title: 'Aligné en bas' },
+                { const: 'stretch', title: 'Étendre les éléments' }
+              ]
+            }
+          }
         },
         gutter: {
           type: 'string',
@@ -1058,9 +1095,9 @@ export default {
           title: 'Alignement',
           default: 'start',
           oneOf: [
-            { const: 'start', title: 'début' },
-            { const: 'center', title: 'centre' },
-            { const: 'end', title: 'fin' }
+            { const: 'start', title: 'Début' },
+            { const: 'center', title: 'Centre' },
+            { const: 'end', title: 'Fin' }
           ]
         },
         border: {
@@ -1208,6 +1245,7 @@ export default {
         { const: 'error', title: 'Erreur' },
         { const: 'warning', title: 'Avertissement' },
         { const: 'surface', title: 'Couleur des surfaces' },
+        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
@@ -1246,6 +1284,7 @@ export default {
           showTicks: 'always'
         }
       },
+      default: 4,
       minimum: 0,
       maximum: 16
     },

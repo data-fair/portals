@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page-config'
+import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
-import { type Options as VjsfOptions } from '@koumoul/vjsf'
 
 const elements = defineModel<PageElement[]>()
 const { addItemMessage } = defineProps<{ addItemMessage: string, root?: boolean }>()

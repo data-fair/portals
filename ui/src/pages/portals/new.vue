@@ -326,7 +326,7 @@ const createPortal = useAsyncAction(
     })
 
     // Redirect to the portal page
-    await router.push({ path: `/portals/${portal._id}` })
+    await router.replace({ path: `/portals/${portal._id}` })
   },
   {
     error: t('errorCreatingPortal')

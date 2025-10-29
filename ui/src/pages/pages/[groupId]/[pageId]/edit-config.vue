@@ -63,7 +63,7 @@ const vjsfDefaults = {
     minHeight: '100%',
     opacity: 0.1,
     contentClass: 'right-0 ma-0',
-    transition: 'slide-x',
+    transition: 'slide-x-reverse-transition',
     persistent: false
   },
   'VjsfList-Edit-VDialog-VSheet': {

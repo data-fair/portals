@@ -115,12 +115,12 @@ const colorsWarnings = computed(() => {
     cardExample:
       title: Card example
       text: Surface color.
-      textInverse: Surface with inversed contrast.
+      textInverse: Inverse surface color.
 
   fr:
     cardExample:
-      title: Exemple de carte
+      title: Une carte
       text: Couleur des surfaces.
-      textInverse: Couleur des surfaces avec contraste inversé.
+      textInverse: Couleur inversée des surfaces.
 
 </i18n>
