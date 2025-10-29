@@ -43,6 +43,17 @@ export default {
     topicsFilters: {
       type: 'object',
       properties: {
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          default: 'default',
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
         elevation: {
           type: 'integer',
           title: 'Élévation des boutons de thématiques',

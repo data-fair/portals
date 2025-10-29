@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      element.mb !== 0 && `mb-${element.mb ?? 4}`,
-      element.centered ? 'd-flex justify-center' : undefined
+      element.centered ? 'd-flex justify-center' : undefined,
+      element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
   >
     <v-text-field
@@ -13,7 +13,7 @@
       :color="element.color || 'primary'"
       :base-color="element.color || 'primary'"
       bg-color="surface"
-      max-width="400"
+      :max-width="!element.fullWidth ? '400' : undefined"
       variant="solo"
       autofocus
       flat
@@ -52,11 +52,12 @@ const { element } = defineProps<{
 
 const { t } = useI18n()
 const router = useRouter()
+const { preview } = usePortalStore()
 
 const searchQuery = ref('')
 
 const onSearch = () => {
-  if (searchQuery.value?.trim()) {
+  if (!preview && searchQuery.value?.trim()) {
     router.push({
       path: '/datasets',
       query: { q: searchQuery.value.trim() }
@@ -64,12 +65,6 @@ const onSearch = () => {
   }
 }
 
-// TODO Remove
-// applyTint: {
-//   type: 'boolean',
-//   title: "Appliquer une teinte colorée sur l'image",
-//   description: "Applique une teinte de la couleur sélectionnée sur l'image de fond pour améliorer la lisibilité du contenu. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
-// }
 </script>
 
 <i18n lang="yaml">

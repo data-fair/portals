@@ -1,7 +1,7 @@
 <template>
   <v-row
     v-if="topics.length"
-    :justify="!filters ? 'center' : undefined"
+    :justify="config?.centered ? 'center' : undefined"
   >
     <v-col
       v-for="topic in topics"
@@ -11,7 +11,7 @@
       <v-btn
         :prepend-icon="topic.icon?.svgPath"
         :variant="!filters || !selected.includes(topic.id) ? 'outlined' : undefined"
-        :color="topic.color"
+        :color="(config?.color && config.color !== 'default') ? config.color : topic.color"
         :density="config?.density"
         :elevation="config?.elevation"
         :rounded="config?.rounded"
@@ -45,7 +45,8 @@ const { topics, filters } = defineProps<{
     }
   }[]
   filters?: boolean
-  config?: Pick<Topics, 'elevation' | 'density' | 'rounded'>
+  centered?: boolean
+  config?: Pick<Topics, 'elevation' | 'density' | 'rounded' | 'centered' | 'color'>
 }>()
 
 const toggle = (id: string) => {

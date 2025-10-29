@@ -387,9 +387,18 @@ export default {
           ]
         },
         color: { $ref: '#/$defs/color' },
+        fullWidth: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          description: 'Le champ de recherche s\'étendra sur toute la largeur de son conteneur parent.',
+          layout: 'switch'
+        },
         centered: {
           type: 'boolean',
-          title: 'Centrer le champ de recherche'
+          title: 'Centrer le champ de recherche',
+          layout: {
+            if: '!parent.data?.fullWidth'
+          }
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -405,6 +414,17 @@ export default {
       properties: {
         type: {
           const: 'topics'
+        },
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          default: 'default',
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
         },
         elevation: {
           type: 'integer',
@@ -437,6 +457,10 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer les thématiques'
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
