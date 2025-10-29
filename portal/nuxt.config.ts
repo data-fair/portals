@@ -84,7 +84,8 @@ export default defineNuxtConfig({
   vuetify: {
     moduleOptions: {
       ssrClientHints: {
-        reloadOnFirstRequest: true,
+        // disabled because broken with Brave unfortunately
+        // reloadOnFirstRequest: false,
         viewportSize: true
       }
     },
