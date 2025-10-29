@@ -16,11 +16,23 @@
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
 
-    <v-card
-      :title="t('cardExample.title')"
-      :text="t('cardExample.text')"
-      class="my-2"
-    />
+    <v-row dense>
+      <v-col>
+        <v-card
+          :title="t('cardExample.title')"
+          :text="t('cardExample.text')"
+          class="my-2"
+        />
+      </v-col>
+      <v-col>
+        <v-card
+          :title="t('cardExample.title')"
+          :text="t('cardExample.textInverse')"
+          class="my-2"
+          color="surface-inverse"
+        />
+      </v-col>
+    </v-row>
     <template
       v-for="color of colorKeys"
       :key="color"
@@ -101,12 +113,14 @@ const colorsWarnings = computed(() => {
 <i18n lang="yaml">
   en:
     cardExample:
-      title: A card example
-      text: This is a card example using the "surface" color.
+      title: Card example
+      text: Surface color.
+      textInverse: Surface with inversed contrast.
 
   fr:
     cardExample:
-      title: Un exemple de carte
-      text: Ceci est un exemple de carte utilisant la couleur des "surfaces".
+      title: Exemple de carte
+      text: Couleur des surfaces.
+      textInverse: Couleur des surfaces avec contraste inversé.
 
 </i18n>
