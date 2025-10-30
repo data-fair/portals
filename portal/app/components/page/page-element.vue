@@ -33,6 +33,10 @@
     v-else-if="element.type === 'topics'"
     :element="element"
   />
+  <page-element-metrics
+    v-else-if="element.type === 'metrics'"
+    :element="element"
+  />
   <page-element-contact
     v-else-if="element.type === 'contact'"
     :element="element"

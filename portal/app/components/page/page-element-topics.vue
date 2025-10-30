@@ -12,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Topics } from '#api/types/page-config'
+import type { TopicsElement } from '#api/types/page-config'
 
 const { element } = defineProps({
-  element: { type: Object as () => Topics, required: true }
+  element: { type: Object as () => TopicsElement, required: true }
 })
 
 const { portal, preview } = usePortalStore()
@@ -36,14 +36,7 @@ if (!preview) {
   const datasetsFetch = useLocalFetch<{
     facets: {
       topics: {
-        value: {
-          id: string
-          title: string
-          color: string
-          icon?: {
-            svgPath: string
-          }
-        },
+        value: Omit<TopicItem, 'count'>,
         count: number
       }[]
     }

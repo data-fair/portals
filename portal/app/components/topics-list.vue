@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Topics } from '#api/types/page-config'
+import type { TopicsElement } from '#api/types/page-config'
 
 const { preview } = usePortalStore()
 
@@ -46,7 +46,7 @@ const { topics, filters } = defineProps<{
   }[]
   filters?: boolean
   centered?: boolean
-  config?: Pick<Topics, 'elevation' | 'density' | 'rounded' | 'centered' | 'color'>
+  config?: Pick<TopicsElement, 'elevation' | 'density' | 'rounded' | 'centered' | 'color'>
 }>()
 
 const toggle = (id: string) => {

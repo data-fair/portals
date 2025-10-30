@@ -41,6 +41,7 @@ export default {
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-search' },
         { $ref: '#/$defs/element-topics' },
+        { $ref: '#/$defs/element-metrics' },
         { $ref: '#/$defs/element-contact' },
         { $ref: '#/$defs/element-datasets-list' },
         { $ref: '#/$defs/element-dataset-card' },
@@ -405,7 +406,7 @@ export default {
     },
     'element-topics': {
       type: 'object',
-      title: 'Topics',
+      title: 'Topics Element',
       'x-i18n-title': {
         en: 'Topics list',
         fr: 'Liste des thématiques'
@@ -461,6 +462,69 @@ export default {
         centered: {
           type: 'boolean',
           title: 'Centrer les thématiques'
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-metrics': {
+      type: 'object',
+      title: 'Metrics Element',
+      'x-i18n-title': {
+        en: 'Key metrics',
+        fr: 'Chiffres clés'
+      },
+      required: ['type', 'metrics'],
+      properties: {
+        type: {
+          const: 'metrics'
+        },
+        metrics: {
+          type: 'array',
+          title: 'Chiffres à afficher',
+          description: 'Sélectionnez les chiffres clés à afficher.',
+          default: ['datasets', 'records', 'applications'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'datasets', title: 'Jeux de données' },
+              { const: 'records', title: 'Enregistrements' },
+              { const: 'applications', title: 'Visualisations' }
+            ]
+          }
+        },
+        color: { $ref: '#/$defs/color' },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        fullWidth: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          description: "Les boîtes s'étendront pour remplir la ligne.",
+          layout: 'switch'
+        },
+        border: {
+          type: 'boolean',
+          title: 'Bordure',
+          default: true
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -875,7 +939,56 @@ export default {
           description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
           layout: 'switch'
         },
-        background: { $ref: '#/$defs/background' },
+        background: {
+          title: 'Configuration du fond',
+          layout: 'card',
+          properties: {
+            color: { $ref: '#/$defs/color-background' },
+            image: {
+              type: 'object',
+              required: ['_id', 'name', 'mimeType'],
+              layout: {
+                slots: {
+                  component: {
+                    name: 'image-upload',
+                    props: { width: 2560, label: 'Chargez une image' }
+                  }
+                }
+              },
+              properties: {
+                _id: {
+                  type: 'string'
+                },
+                name: {
+                  type: 'string'
+                },
+                mimeType: {
+                  type: 'string'
+                },
+                mobileAlt: {
+                  type: 'boolean'
+                }
+              }
+            },
+            tintStrength: {
+              type: 'number',
+              title: 'Intensité de la teinte',
+              description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+              layout: {
+                if: 'parent.data?.color && parent.data?.image',
+                comp: 'slider',
+                props: {
+                  step: 0.1,
+                  thumbLabel: true,
+                  showTicks: 'always'
+                }
+              },
+              minimum: 0,
+              maximum: 1,
+              default: 0.8
+            }
+          }
+        },
         pt: {
           type: 'integer',
           title: 'Marge supérieur',
@@ -907,7 +1020,11 @@ export default {
     },
     'element-card': {
       type: 'object',
-      title: 'Boite',
+      title: 'Card Element',
+      'x-i18n-title': {
+        en: 'Card',
+        fr: 'Boite'
+      },
       required: ['type', 'children', 'actions'],
       properties: {
         type: {
@@ -929,6 +1046,38 @@ export default {
           description: "La vignette devient un lien qui pointe vers l'URL renseignée.",
           type: 'string'
         },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        // density: {
+        //   type: 'string',
+        //   title: 'Densité',
+        //   default: 'comfortable',
+        //   oneOf: [
+        //     { const: 'default', title: 'Normale' },
+        //     { const: 'comfortable', title: 'Confortable' },
+        //     { const: 'compact', title: 'Compacte' }
+        //   ]
+        // },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
         border: {
           title: 'Bordure',
           type: 'boolean',
@@ -947,7 +1096,61 @@ export default {
             $ref: '#/$defs/button'
           }
         },
-        background: { $ref: '#/$defs/background' },
+        background: {
+          title: 'Configuration du fond',
+          layout: 'card',
+          properties: {
+            color: { $ref: '#/$defs/color-background' },
+            image: {
+              type: 'object',
+              required: ['_id', 'name', 'mimeType'],
+              layout: {
+                slots: {
+                  component: {
+                    name: 'image-upload',
+                    props: { width: 2400, label: 'Chargez une image' }
+                  }
+                }
+              },
+              properties: {
+                _id: {
+                  type: 'string'
+                },
+                name: {
+                  type: 'string'
+                },
+                mimeType: {
+                  type: 'string'
+                },
+                mobileAlt: {
+                  type: 'boolean'
+                }
+              }
+            },
+            tintStrength: {
+              type: 'number',
+              title: 'Intensité de la teinte',
+              description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
+              layout: {
+                if: 'parent.data?.color && parent.data?.image',
+                comp: 'slider',
+                props: {
+                  step: 0.1,
+                  thumbLabel: true,
+                  showTicks: 'always'
+                }
+              },
+              minimum: 0,
+              maximum: 1,
+              default: 0.8
+            },
+            tonal: {
+              type: 'boolean',
+              title: 'Utiliser une variante tonale de la couleur de fond',
+              layout: { if: 'parent.data?.color && !parent.data?.image' }
+            }
+          }
+        },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
@@ -1168,56 +1371,6 @@ export default {
           layout: { cols: { md: 6 } }
         },
         color: { $ref: '#/$defs/color' }
-      }
-    },
-    background: {
-      title: 'Configuration du fond',
-      layout: 'card',
-      properties: {
-        color: { $ref: '#/$defs/color-background' },
-        image: {
-          type: 'object',
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
-        },
-        tintStrength: {
-          type: 'number',
-          title: 'Intensité de la teinte',
-          description: "Contrôle l'intensité de la teinte sur l'image de fond. Cette option n'a aucun effet si l'image ou la couleur n'est pas définie.",
-          layout: {
-            if: 'parent.data?.color && parent.data?.image',
-            comp: 'slider',
-            props: {
-              step: 0.1,
-              thumbLabel: true,
-              showTicks: 'always'
-            }
-          },
-          minimum: 0,
-          maximum: 1,
-          default: 0.8
-        },
       }
     },
     color: {

@@ -3,6 +3,9 @@
   <!-- flex-grow-1 is used with two columns stretch-->
   <v-card
     :border="element.border"
+    :elevation="element.elevation"
+    :rounded="element.rounded"
+    :variant="element.background?.tonal ? 'tonal' : undefined"
     :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'flex-grow-1']"
     :color="element.background?.color"
     :href="!preview ? element.href : undefined"
@@ -46,10 +49,10 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/image-ref/index.ts'
-import type { PageElement, Boite } from '#api/types/page-config'
+import type { PageElement, CardElement } from '#api/types/page-config'
 
 const { element } = defineProps({
-  element: { type: Object as () => Boite, required: true }
+  element: { type: Object as () => CardElement, required: true }
 })
 
 const { preview } = usePortalStore()
