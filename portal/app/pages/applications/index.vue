@@ -106,7 +106,7 @@
 
     <!-- Topics filter (desktop view)-->
     <v-col
-      v-if="!$vuetify.display.smAndDown"
+      v-if="!$vuetify.display.smAndDown && topicsItems.length"
       cols="12"
     >
       <topics-list

@@ -8,18 +8,21 @@
       :key="topic.id"
       cols="auto"
     >
-      <v-btn
-        :prepend-icon="topic.icon?.svgPath"
-        :variant="!filters || !selected.includes(topic.id) ? 'outlined' : undefined"
-        :color="(config?.color && config.color !== 'default') ? config.color : topic.color"
-        :density="config?.density"
-        :elevation="config?.elevation"
-        :rounded="config?.rounded"
-        :to="!filters && !preview ? `/datasets?topics=${topic.id}` : undefined"
-        @click="filters ? toggle(topic.id) : undefined"
-      >
-        {{ topic.title }} ({{ topic.count }})
-      </v-btn>
+      <div class="bg-surface">
+        <v-btn
+          class="text-none"
+          :prepend-icon="topic.icon?.svgPath"
+          :variant="(!filters || !selected.includes(topic.id)) ? 'outlined' : undefined"
+          :color="(config?.color && config.color !== 'default') ? config.color : topic.color"
+          :density="config?.density"
+          :elevation="config?.elevation"
+          :rounded="config?.rounded"
+          :to="!filters && !preview ? `/datasets?topics=${topic.id}` : undefined"
+          @click="filters ? toggle(topic.id) : undefined"
+        >
+          {{ topic.title }} ({{ topic.count }})
+        </v-btn>
+      </div>
     </v-col>
   </v-row>
 </template>
