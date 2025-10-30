@@ -46,6 +46,7 @@ export default {
         color: {
           type: 'string',
           title: 'Couleur',
+          layout: { cols: { md: 6 } },
           default: 'default',
           oneOf: [
             { const: 'default', title: 'Couleur de la thématique' },
@@ -57,7 +58,7 @@ export default {
         elevation: {
           type: 'integer',
           title: 'Élévation des boutons de thématiques',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 0,
           oneOf: [
             { const: 0, title: 'Aucune' },
@@ -69,7 +70,7 @@ export default {
         density: {
           type: 'string',
           title: 'Densité des boutons de thématiques',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'comfortable',
           oneOf: [
             { const: 'default', title: 'Normale' },
@@ -80,7 +81,7 @@ export default {
         rounded: {
           type: 'string',
           title: 'Arrondi des boutons de thématiques',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'default',
           oneOf: [
             { const: '0', title: 'Aucun' },

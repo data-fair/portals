@@ -137,7 +137,7 @@ export default {
       title: 'Appliquer un effet de transparence',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       }
     },
     keepOnScroll: {
@@ -145,7 +145,16 @@ export default {
       title: 'Garder la barre de navigation affichée au scroll',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
+      }
+    },
+    uppercaseTitle: {
+      type: 'boolean',
+      title: 'Afficher les titres des onglets en majuscules',
+      default: true,
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
       }
     }
   }
