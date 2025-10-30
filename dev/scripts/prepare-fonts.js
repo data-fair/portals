@@ -60,10 +60,11 @@ for (const [name, info] of entries) {
   }
 
   // uncomment to run in dev env with a choice of test fonts
-
+  /*
   if (!['Montserrat', 'Noto Sans', 'Nunito', 'Pacifico', 'Roboto'].includes(name)) {
     continue
   }
+  */
 
   categories.add(info.category)
 
