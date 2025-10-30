@@ -3,7 +3,8 @@
     v-if="datasetFetch.data?.value"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :dataset="datasetFetch.data?.value"
-    :card-config="element.usePortalConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
+    :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.datasets.card"
+    :is-portal-config="element.usePortalConfig"
   />
 </template>
 
@@ -23,7 +24,8 @@ type Dataset = {
     applications?: { id: string; updatedAt: string }[]
   }
   bbox?: number[]
-  topics: { id: string; title: string }[]
+  topics: { id: string; title: string; color: string }[]
+  keywords?: string[]
   image?: string
   isMetaOnly: boolean
 }

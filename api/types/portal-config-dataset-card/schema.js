@@ -9,7 +9,7 @@ export default {
     actionsLocation: {
       type: 'string',
       title: 'Position des boutons d\'actions sur la carte',
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 6 } },
       default: 'bottom',
       oneOf: [
         { const: 'right', title: 'À droite' },
@@ -20,44 +20,13 @@ export default {
     actionsStyle: {
       type: 'string',
       title: 'Style des boutons d\'actions',
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 6 } },
       default: 'full',
       oneOf: [
         { const: 'icon', title: 'Icône seulement' },
         { const: 'full', title: 'Icône et texte' },
         { const: 'text', title: 'Texte seulement' }
       ]
-    },
-    thumbnailLocation: {
-      type: 'string',
-      title: 'Position de l\'image sur la carte',
-      layout: { cols: { md: 4 } },
-      default: 'center',
-      oneOf: [
-        { const: 'left', title: 'À gauche' },
-        { const: 'center', title: 'Sous le titre' },
-        { const: 'none', title: 'Ne pas afficher' }
-      ]
-    },
-    useApplicationThumbnail: {
-      type: 'boolean',
-      title: 'Utiliser l\'image de l\'application',
-      description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      },
-      default: false
-    },
-    cropThumbnails: {
-      type: 'boolean',
-      title: 'Recadrer l\'image pour un rendu uniforme',
-      description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      },
-      default: true
     },
     showSummary: {
       type: 'boolean',
@@ -77,6 +46,266 @@ export default {
         cols: { md: 6 }
       },
       default: true
+    },
+    thumbnail: {
+      type: 'object',
+      title: "Configuration de l'image",
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              'location',
+              'default',
+              'useApplication',
+              'crop'
+            ]
+          },
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher l\'image',
+          layout: 'switch',
+          default: true
+        },
+        location: {
+          type: 'string',
+          title: 'Position de l\'image sur la carte',
+          layout: { cols: { md: 6 } },
+          default: 'center',
+          oneOf: [
+            { const: 'left', title: 'À gauche' },
+            { const: 'top', title: 'En haut' },
+            { const: 'center', title: 'Sous le titre' }
+          ]
+        },
+        default: {
+          type: 'object',
+          title: 'Image par défaut',
+          description: 'Image à afficher si le jeu de données n\'a pas d\'image définie.',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 1280, label: 'Image par défaut' }
+              }
+            },
+            cols: { md: 6 }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
+        },
+        useApplication: {
+          type: 'boolean',
+          title: "Utiliser l'image de l'application",
+          description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: false
+        },
+        crop: {
+          type: 'boolean',
+          title: 'Recadrer l\'image pour un rendu uniforme',
+          description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        }
+      }
+    },
+    topics: {
+      type: 'object',
+      title: 'Configuration des thématiques',
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              'color',
+              'elevation',
+              'density',
+              'rounded',
+              'showIcon',
+              'iconColor'
+            ]
+          }
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher les thématiques',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          layout: { cols: { md: 6 } },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          layout: { cols: { md: 6 } },
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          layout: { cols: { md: 6 } },
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          layout: { cols: { md: 6 } },
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher les icônes',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        iconColor: {
+          type: 'string',
+          title: 'Couleur des icônes',
+          layout: {
+            if: 'parent.data?.showIcon === true',
+            cols: { md: 6 }
+          },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        }
+      }
+    },
+    keywords: {
+      type: 'object',
+      title: 'Configuration des mots-clés',
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              'color',
+              'elevation',
+              'density',
+              'rounded'
+            ]
+          }
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher les mots-clés',
+          layout: 'switch',
+          default: true
+        },
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          layout: { cols: { md: 6 } },
+          oneOf: [
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          layout: { cols: { md: 6 } },
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          layout: { cols: { md: 6 } },
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          layout: { cols: { md: 6 } },
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        }
+      }
     }
   }
 }

@@ -113,7 +113,7 @@
         v-model="filters.topics.value"
         :topics="topicsItems"
         :config="portalConfig.applications.list.topicsFilters"
-        filters
+        is-filters
       />
     </v-col>
   </v-row>

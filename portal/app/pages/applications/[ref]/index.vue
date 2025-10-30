@@ -99,7 +99,8 @@ type Dataset = {
     applications?: { id: string; updatedAt: string }[]
   }
   bbox?: number[]
-  topics: { id: string; title: string }[]
+  topics: { id: string; title: string; color: string }[]
+  keywords?: string[]
   image?: string
   isMetaOnly: boolean
 }
@@ -123,7 +124,7 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
 
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
   params: {
-    select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
+    select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 1000,
     html: true,
     ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(',') || '',

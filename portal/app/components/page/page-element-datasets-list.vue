@@ -8,7 +8,8 @@
     >
       <dataset-card
         :dataset="dataset"
-        :card-config="element.usePortalConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
+        :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.datasets.card"
+        :is-portal-config="element.usePortalConfig"
       />
     </v-col>
   </v-row>
@@ -30,7 +31,8 @@ type Dataset = {
     applications?: { id: string; updatedAt: string }[]
   }
   bbox?: number[]
-  topics: { id: string; title: string }[]
+  topics: { id: string; title: string; color: string }[]
+  keywords?: string[]
   image?: string
   isMetaOnly: boolean
 }
@@ -47,7 +49,7 @@ let datasets: Dataset[] | ComputedRef<Dataset[]>
 
 if (!preview) {
   const datasetsQuery = computed(() => ({
-    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
+    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,
     size: element.limit,
@@ -67,7 +69,7 @@ if (!preview) {
     updatedAt: new Date().toISOString(),
     owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
     extras: {},
-    topics: [{ id: 'topic-1', title: 'Topic exemple' }],
+    topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }],
     isMetaOnly: false
   }))
 }

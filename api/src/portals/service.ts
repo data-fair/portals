@@ -231,6 +231,7 @@ const cleanUnusedImages = async (portal: Portal) => {
     portal.config.header.logoSecondary,
     portal.config.navBar.logo,
     portal.config.navBar.logoMobile,
+    portal.config.datasets.card.thumbnail?.default,
     portal.draftConfig.logo,
     portal.draftConfig.logoDark,
     portal.draftConfig.favicon,
@@ -240,7 +241,8 @@ const cleanUnusedImages = async (portal: Portal) => {
     portal.draftConfig.header.logoPrimaryMobile,
     portal.draftConfig.header.logoSecondary,
     portal.draftConfig.navBar.logo,
-    portal.draftConfig.navBar.logoMobile
+    portal.draftConfig.navBar.logoMobile,
+    portal.draftConfig.datasets.card.thumbnail?.default
   ]
   // List of footer extra logos
   if (portal.config.footer.extraLogos) {

@@ -7,6 +7,7 @@
     <topics-list
       :config="element"
       :topics="topicsItems"
+      is-links
     />
   </div>
 </template>

@@ -94,7 +94,8 @@ type DatasetFetch = {
       applications?: { id: string; updatedAt: string }[]
     },
     bbox?: number[]
-    topics: { id: string; title: string }[]
+    topics: { id: string; title: string; color: string }[]
+    keywords?: string[]
     image?: string
     isMetaOnly: boolean
   }[]
@@ -120,7 +121,7 @@ const loading = ref(false)
 
 const datasetsQuery = computed(() => {
   const query: Record<string, string | number> = {
-    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions',
+    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
     facets: 'concepts,topics,owner',
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,

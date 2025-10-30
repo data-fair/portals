@@ -9,14 +9,14 @@
     >
       <!-- Image column -->
       <v-col
-        v-if="cardConfig.thumbnailLocation === 'left'"
+        v-if="cardConfig.thumbnail?.location === 'left'"
         cols="4"
       >
         <v-img
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails"
+          :cover="cardConfig.thumbnail.crop"
           class="h-100"
         />
         <v-divider vertical />
@@ -24,12 +24,19 @@
 
       <!-- Center column -->
       <v-col class="d-flex flex-column">
-        <v-card-title>{{ dataset.title }}</v-card-title>
         <v-img
-          v-if="cardConfig.thumbnailLocation === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.location === 'top' && thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails"
+          :cover="cardConfig.thumbnail.crop"
+          height="170"
+        />
+        <v-card-title>{{ dataset.title }}</v-card-title>
+        <v-img
+          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          :alt="t('imageAlt', { title: dataset.title })"
+          :src="thumbnailUrl"
+          :cover="cardConfig.thumbnail.crop"
           height="170"
         />
         <v-card-text
@@ -51,6 +58,22 @@
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
           </span>
         </v-list-item>
+
+        <!-- Topics List -->
+        <topics-list
+          v-if="cardConfig.topics?.show && dataset.topics?.length"
+          :config="cardConfig.topics"
+          :topics="dataset.topics"
+          class="px-4 pb-2"
+        />
+
+        <!-- keywords list -->
+        <keywords-list
+          v-if="cardConfig.keywords?.show && dataset.keywords?.length"
+          :config="cardConfig.keywords"
+          :keywords="dataset.keywords"
+          class="px-4 pb-2"
+        />
 
         <!-- Actions (Bottom Location) -->
         <template v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown">
@@ -126,11 +149,12 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
-const { dataset, cardConfig } = defineProps<{
+const { dataset, cardConfig, isPortalConfig } = defineProps<{
   dataset: {
     id: string
     slug: string
@@ -143,21 +167,34 @@ const { dataset, cardConfig } = defineProps<{
       applications?: { id: string; updatedAt: string }[]
     }
     bbox?: number[]
-    topics: { id: string; title: string }[]
+    topics: { id: string; title: string; color: string }[]
+    keywords?: string[]
     image?: string
     isMetaOnly: boolean
   },
-  cardConfig: DatasetCard
+  cardConfig: DatasetCard,
+  isPortalConfig?: boolean
 }>()
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 
+let getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+if (isPortalConfig) {
+  getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+    let id = imageRef._id
+    if (mobile && imageRef.mobileAlt) id += '-mobile'
+    return `/portal/api/images/${id}`
+  }
+}
+
 const thumbnailUrl = computed(() => {
+  if (!cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
-  if (cardConfig.useApplicationThumbnail && dataset.extras?.applications?.[0]) {
+  if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
+  if (cardConfig.thumbnail?.default) return getImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
 

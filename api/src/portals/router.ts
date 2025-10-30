@@ -79,14 +79,7 @@ router.post('', async (req, res, next) => {
         defaultSort: 'title',
         columns: 2
       },
-      card: {
-        actionsLocation: 'none',
-        actionsStyle: 'text',
-        thumbnailLocation: 'left',
-        cropThumbnails: false,
-        showSummary: false,
-        showDepartment: false
-      },
+      card: {},
       page: {
         metadataLocation: 'top',
         attachmentsLocation: 'full',

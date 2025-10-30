@@ -6,6 +6,18 @@ export default {
   layout: { title: null },
   unevaluatedProperties: false,
   properties: {
+    thumbnailLocation: {
+      type: 'string',
+      title: 'Position de l\'image sur la carte',
+      layout: { cols: { md: 4 } },
+      default: 'center',
+      oneOf: [
+        { const: 'left', title: 'À gauche' },
+        { const: 'top', title: 'En haut' },
+        { const: 'center', title: 'Sous le titre' },
+        { const: 'none', title: 'Ne pas afficher' }
+      ]
+    },
     actionsLocation: {
       type: 'string',
       title: 'Position des boutons d\'actions sur la carte',
@@ -26,17 +38,6 @@ export default {
         { const: 'icon', title: 'Icône seulement' },
         { const: 'full', title: 'Icône et texte' },
         { const: 'text', title: 'Texte seulement' }
-      ]
-    },
-    thumbnailLocation: {
-      type: 'string',
-      title: 'Position de l\'image sur la carte',
-      layout: { cols: { md: 4 } },
-      default: 'center',
-      oneOf: [
-        { const: 'left', title: 'À gauche' },
-        { const: 'center', title: 'Sous le titre' },
-        { const: 'none', title: 'Ne pas afficher' }
       ]
     },
     cropThumbnails: {
@@ -67,6 +68,107 @@ export default {
         cols: { md: 6 }
       },
       default: true
+    },
+    topics: {
+      type: 'object',
+      title: 'Configuration des thématiques',
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              'color',
+              'elevation',
+              'density',
+              'rounded',
+              'showIcon',
+              'iconColor'
+            ]
+          }
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher les thématiques',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          layout: { cols: { md: 6 } },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation des boutons de thématiques',
+          layout: { cols: { md: 6 } },
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité des boutons de thématiques',
+          layout: { cols: { md: 6 } },
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi des boutons de thématiques',
+          layout: { cols: { md: 6 } },
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher les icônes des thématiques',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        iconColor: {
+          type: 'string',
+          title: 'Couleur des icônes des thématiques',
+          layout: {
+            if: 'parent.data?.showIcon === true',
+            cols: { md: 6 }
+          },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        }
+      }
     }
   }
 }

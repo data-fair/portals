@@ -8,6 +8,7 @@ export default {
   type: 'object',
   layout: {
     title: null,
+    comp: 'expansion-panels',
     children: [
       'list',
       {
@@ -15,7 +16,6 @@ export default {
         'x-i18n-title': {
           fr: 'Vignette d\'un jeu de données'
         },
-        comp: 'card',
         children: ['card']
       },
       'page'

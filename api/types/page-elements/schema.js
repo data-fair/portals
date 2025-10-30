@@ -419,7 +419,6 @@ export default {
         color: {
           type: 'string',
           title: 'Couleur',
-          default: 'default',
           oneOf: [
             { const: 'default', title: 'Couleur de la thématique' },
             { const: 'primary', title: 'Primaire' },
@@ -457,6 +456,25 @@ export default {
             { const: 'default', title: 'Normal' },
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
+          ]
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher les icônes des thématiques',
+          layout: 'switch',
+          default: true
+        },
+        iconColor: {
+          type: 'string',
+          title: 'Couleur des icônes des thématiques',
+          layout: {
+            if: 'parent.data?.showIcon === true'
+          },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
           ]
         },
         centered: {

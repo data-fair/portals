@@ -125,7 +125,7 @@
       v-model="filters.topics.value"
       :topics="topicsItems"
       :config="portalConfig.datasets.list.topicsFilters"
-      filters
+      is-filters
     />
   </v-col>
 </template>

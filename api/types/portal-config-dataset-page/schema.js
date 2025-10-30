@@ -6,7 +6,6 @@ export default {
     fr: 'Page d\'un jeu de données'
   },
   type: 'object',
-  layout: { comp: 'card' },
   unevaluatedProperties: false,
   required: ['metadataLocation', 'attachmentsLocation', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {

@@ -11,16 +11,33 @@
       <div class="bg-surface">
         <v-btn
           class="text-none"
-          :prepend-icon="topic.icon?.svgPath"
-          :variant="(!filters || !selected.includes(topic.id)) ? 'outlined' : undefined"
-          :color="(config?.color && config.color !== 'default') ? config.color : topic.color"
+          :variant="!selected.includes(topic.id) ? 'outlined' : undefined"
+          :color="config?.color === 'default' ? topic.color
+            : config?.color ? config.color
+            : undefined
+          "
           :density="config?.density"
           :elevation="config?.elevation"
           :rounded="config?.rounded"
-          :to="!filters && !preview ? `/datasets?topics=${topic.id}` : undefined"
-          @click="filters ? toggle(topic.id) : undefined"
+          :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
+          @click="isFilters ? toggle(topic.id) : undefined"
         >
-          {{ topic.title }} ({{ topic.count }})
+          <template
+            v-if="config?.showIcon && topic.icon?.svgPath"
+            #prepend
+          >
+            <v-icon
+              :color="!selected.includes(topic.id) ? (config?.iconColor === 'default' ? topic.color
+                  : config?.iconColor ? config.iconColor
+                  : config?.color === 'default' ? topic.color
+                  : config?.color ? config.color
+                  : undefined
+                ) : undefined
+              "
+              :icon="topic.icon?.svgPath"
+            />
+          </template>
+          {{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}
         </v-btn>
       </div>
     </v-col>
@@ -37,19 +54,20 @@ const selected = defineModel({
   default: () => []
 })
 
-const { topics, filters } = defineProps<{
+const { topics } = defineProps<{
   topics: {
     id: string
     title: string
-    count: number
+    count?: number
     color: string
     icon?: {
       svgPath: string
     }
   }[]
-  filters?: boolean
+  isLinks?: boolean
+  isFilters?: boolean
   centered?: boolean
-  config?: Pick<TopicsElement, 'elevation' | 'density' | 'rounded' | 'centered' | 'color'>
+  config?: Pick < TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'>
 }>()
 
 const toggle = (id: string) => {

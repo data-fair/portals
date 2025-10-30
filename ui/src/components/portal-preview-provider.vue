@@ -16,19 +16,10 @@ const portalConfigDefault: PortalConfig = {
   datasets: {
     list: {
       filtersLocation: 'left',
-      defaultSort: 'title',
-      columns: 0,
-      topicsFilters: undefined
+      defaultSort: 'createdAt',
+      columns: 0
     },
-    card: {
-      actionsLocation: 'none',
-      actionsStyle: 'full',
-      thumbnailLocation: 'left',
-      useApplicationThumbnail: undefined,
-      cropThumbnails: false,
-      showSummary: false,
-      showDepartment: false
-    },
+    card: {},
     page: {
       metadataLocation: 'top',
       attachmentsLocation: 'full',

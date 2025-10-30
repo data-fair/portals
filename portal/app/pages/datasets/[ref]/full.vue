@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ImageRef } from '#api/types/image-ref/index.ts'
+
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
@@ -31,15 +33,6 @@ const datasetFetch = useLocalFetch<{
   }
 })
 
-const thumbnailUrl = computed(() => {
-  if (datasetFetch.data.value?.image) return datasetFetch.data.value.image
-  if (portalConfig.value.datasets.card.useApplicationThumbnail && datasetFetch.data.value?.extras?.applications?.[0]) {
-    const { origin } = useRequestURL()
-    return `${origin}/data-fair/api/v1/applications/${datasetFetch.data.value.extras.applications[0].id}/capture?updatedAt=${datasetFetch.data.value.extras.applications[0].updatedAt}`
-  }
-  return undefined
-})
-
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
     { title: t('datasets', 1), href: '/datasets' },
@@ -48,6 +41,21 @@ watch(datasetFetch.data, () => {
   ])
 }, { immediate: true })
 onUnmounted(() => clearBreadcrumbs())
+
+const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+
+const thumbnailUrl = computed(() => {
+  const cardConfig = portalConfig.value.datasets.card
+  const dataset = datasetFetch.data.value
+  if (!dataset || !cardConfig.thumbnail?.show) return undefined
+  if (dataset.image) return dataset.image
+  if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
+    const { origin } = useRequestURL()
+    return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
+  }
+  if (cardConfig.thumbnail?.default) return origin + getImageSrc(cardConfig.thumbnail.default, false)
+  return undefined
+})
 
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('datasets', 0),

@@ -101,7 +101,7 @@ export default {
         ]
       },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
-      { title: 'Jeu de données', children: ['datasets'] },
+      { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       // { title: 'Réutilisations', children: [] }, // TODO: add reuses
       { title: 'Informations de contact', children: ['contactInformations'] },

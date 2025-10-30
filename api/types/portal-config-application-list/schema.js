@@ -42,12 +42,13 @@ export default {
     },
     topicsFilters: {
       type: 'object',
+      title: 'Configuration des filtres de thématiques',
+      layout: 'card',
       properties: {
         color: {
           type: 'string',
           title: 'Couleur',
           layout: { cols: { md: 6 } },
-          default: 'default',
           oneOf: [
             { const: 'default', title: 'Couleur de la thématique' },
             { const: 'primary', title: 'Primaire' },
@@ -57,7 +58,7 @@ export default {
         },
         elevation: {
           type: 'integer',
-          title: 'Élévation des boutons de thématiques',
+          title: 'Élévation',
           layout: { cols: { md: 6 } },
           default: 0,
           oneOf: [
@@ -69,7 +70,7 @@ export default {
         },
         density: {
           type: 'string',
-          title: 'Densité des boutons de thématiques',
+          title: 'Densité',
           layout: { cols: { md: 6 } },
           default: 'comfortable',
           oneOf: [
@@ -80,7 +81,7 @@ export default {
         },
         rounded: {
           type: 'string',
-          title: 'Arrondi des boutons de thématiques',
+          title: 'Arrondi',
           layout: { cols: { md: 6 } },
           default: 'default',
           oneOf: [
@@ -89,7 +90,30 @@ export default {
             { const: 'lg', title: 'Moyen' },
             { const: 'xl', title: 'Grand' }
           ]
-        }
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher les icônes',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        iconColor: {
+          type: 'string',
+          title: 'Couleur des icônes',
+          layout: {
+            if: 'parent.data?.showIcon === true',
+            cols: { md: 6 }
+          },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
       }
     }
   }
