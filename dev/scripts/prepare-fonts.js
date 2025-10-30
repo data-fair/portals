@@ -11,10 +11,10 @@ const googleFonts = JSON.parse(readFileSync('google-fonts-complete/google-fonts.
 
 const fonts = []
 
-const makeFontFace = (subset, unicodeRange, fontStyle, fontWeight, woff2Url) => `
+const makeFontFace = (name, subset, unicodeRange, fontStyle, fontWeight, woff2Url) => `
 /* ${subset} */
 @font-face {
-  font-family: {FONT_FAMILY};
+  font-family: ${name};
   font-style: ${fontStyle};
   font-weight: ${fontWeight};
   font-display: swap;
@@ -60,11 +60,10 @@ for (const [name, info] of entries) {
   }
 
   // uncomment to run in dev env with a choice of test fonts
-  /*
+
   if (!['Montserrat', 'Noto Sans', 'Nunito', 'Pacifico', 'Roboto'].includes(name)) {
     continue
   }
-  */
 
   categories.add(info.category)
 
@@ -95,7 +94,7 @@ for (const [name, info] of entries) {
           rangeStart = null
           const fileName = basename(new URL(url).pathname)
           const localUrl = `/portals-manager/api/assets/fonts/${encodeURIComponent(key)}/${fileName}`
-          fontFaces += makeFontFace(subset, info.unicodeRange[subset], fontStyle, weightRange, localUrl)
+          fontFaces += makeFontFace(name, subset, info.unicodeRange[subset], fontStyle, weightRange, localUrl)
         }
       }
     }
