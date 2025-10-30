@@ -108,7 +108,9 @@ const getSDSites = async (portal: Portal) => {
     theme: {
       ...portal.draftConfig.theme,
       logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
+      bodyFontFamily: portal.draftConfig.bodyFontFamily,
       bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.draftConfig.bodyFontFamily),
+      headingFontFamily: portal.draftConfig.headingFontFamily,
       headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.draftConfig.headingFontFamily)
     },
     contact: portal.draftConfig.contactInformations.email
