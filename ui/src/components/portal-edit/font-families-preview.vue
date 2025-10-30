@@ -1,5 +1,8 @@
 <template>
-  <component :is="'style'">
+  <component
+    :is="'style'"
+    :nonce="$cspNonce"
+  >
     {{ fontFamiliesCss }}
   </component>
   <div :style="fontFamiliesVariables">
