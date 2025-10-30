@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
+  <!-- d-flex align-center flex-grow-1 is used with two columns stretch-->
   <v-sheet
     :class="[
       preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',
@@ -8,7 +9,8 @@
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`,
       !preview && element.overflowTop && `mt-n${element.pt ?? 4}`,
-      !preview && element.overflowBottom && `mb-n${element.pb ?? 4}`
+      !preview && element.overflowBottom && `mb-n${element.pb ?? 4}`,
+      'd-flex align-center flex-grow-1'
     ]"
     :style="element.background && element.background.image ? {
       backgroundImage: element.background.tintStrength
@@ -18,9 +20,7 @@
       backgroundPosition: 'center',
     } : undefined"
   >
-    <v-container
-      :class="['container', 'pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4)]"
-    >
+    <v-container :class="['container', 'pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4), 'pl-' + (element.pl ?? 4), 'pr-' + (element.pr ?? 4)]">
       <slot
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"

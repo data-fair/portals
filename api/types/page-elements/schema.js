@@ -512,7 +512,8 @@ export default {
             { const: '0', title: 'Aucun' },
             { const: 'default', title: 'Normal' },
             { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
+            { const: 'xl', title: 'Grand' },
+            { const: 'shaped', title: 'Coins opposés' }
           ]
         },
         fullWidth: {
@@ -917,6 +918,8 @@ export default {
           'background',
           'pt',
           'pb',
+          'pl',
+          'pr',
           'overflowTop',
           'overflowBottom',
           { if: '!parent.data?.overflowBottom', children: ['mb'] }
@@ -998,7 +1001,21 @@ export default {
         },
         pb: {
           type: 'integer',
-          title: 'Marge supérieur',
+          title: 'Marge inférieur',
+          layout: { cols: { xs: 6 } },
+          minimum: 4,
+          maximum: 16
+        },
+        pl: {
+          type: 'integer',
+          title: 'Marge gauche',
+          layout: { cols: { xs: 6 } },
+          minimum: 4,
+          maximum: 16
+        },
+        pr: {
+          type: 'integer',
+          title: 'Marge droite',
           layout: { cols: { xs: 6 } },
           minimum: 4,
           maximum: 16
@@ -1007,13 +1024,19 @@ export default {
           type: 'boolean',
           title: 'Débordement supérieur',
           description: "Permet au fond de la section de déborder sur l'élément précédent.",
-          layout: 'switch'
+          layout: {
+            comp: 'switch',
+            cols: { xs: 6 }
+          }
         },
         overflowBottom: {
           type: 'boolean',
           title: 'Débordement inférieur',
           description: "Permet au fond de la section de déborder sur l'élément suivant.",
-          layout: 'switch'
+          layout: {
+            comp: 'switch',
+            cols: { xs: 6 }
+          }
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }

@@ -1,12 +1,12 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <!-- flex-grow-1 is used with two columns stretch-->
+  <!-- d-flex align-center flex-grow-1 is used with two columns stretch-->
   <v-card
     :border="element.border"
     :elevation="element.elevation"
     :rounded="element.rounded"
     :variant="element.background?.tonal ? 'tonal' : undefined"
-    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'flex-grow-1']"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex align-center flex-grow-1']"
     :color="element.background?.color"
     :href="!preview ? element.href : undefined"
     :title="element.title"
