@@ -21,6 +21,7 @@
           </p>
         </v-col>
         <v-col cols="6">
+          <!--eslint-disable-next-line vue/no-v-html -->
           <div v-html="portalConfig.contactInformations.infos" />
         </v-col>
       </v-row>

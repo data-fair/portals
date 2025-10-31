@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-row class="justify-center align-center">
     <v-col

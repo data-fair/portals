@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch-->
   <v-card

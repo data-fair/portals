@@ -17,6 +17,7 @@
           class="mb-4"
           style="max-height:300px"
         >
+        <!--eslint-disable-next-line vue/no-v-html -->
         <div v-html="dataset.description" />
       </v-col>
 
@@ -42,9 +43,15 @@
           cols="12"
         >
           <NuxtLink :to="`/applications/${app.slug}`">
-            {{ app.title }} <v-icon :icon="mdiOpenInNew" color="primary" />
+            {{ app.title }} <v-icon
+              :icon="mdiOpenInNew"
+              color="primary"
+            />
           </NuxtLink>
-          <div class="mt-2" v-html="app.description" />
+          <div
+            class="mt-2"
+            v-html="app.description"
+          />
         </v-col>
         <v-col
           :md="app.preferLargeDisplay ? 12 : 6"
@@ -60,7 +67,10 @@
       </v-row>
     </template>
 
-    <v-row class="my-4" justify="center">
+    <v-row
+      class="my-4"
+      justify="center"
+    >
       <nav-link
         :to="`/datasets`"
         :icon="mdiReply"

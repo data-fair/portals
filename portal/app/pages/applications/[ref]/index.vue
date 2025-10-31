@@ -17,6 +17,7 @@
           class="mb-4"
           style="max-height:300px"
         >
+        <!--eslint-disable-next-line vue/no-v-html -->
         <div v-html="application.description" />
       </v-col>
 

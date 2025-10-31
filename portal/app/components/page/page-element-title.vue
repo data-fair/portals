@@ -10,10 +10,10 @@
     >
       <v-divider
         v-if="element.line?.position === 'left'"
-        vertical
-        thickness="4"
-        :color="element.line?.color"
+        :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
         class="border-opacity-100 mr-4"
+        thickness="4"
+        vertical
       />
       <v-icon
         v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
@@ -26,11 +26,11 @@
         {{ element.content }}
         <v-divider
           v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
+          :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
           :class="[
             'border-opacity-100 mt-2',
             element.centered ? 'mx-auto' : undefined
           ]"
-          :color="element.line?.color"
           :length="element.line?.position === 'bottom-small' ? '80px' : '100%'"
           thickness="4"
         />
@@ -39,9 +39,9 @@
 
     <v-divider
       v-if="element.line?.position === 'bottom-large'"
-      :color="element.line?.color"
-      thickness="4"
+      :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
       class="border-opacity-100 mt-2"
+      thickness="4"
       length="100%"
     />
   </div>

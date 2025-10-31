@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-card
     :border="element.border"

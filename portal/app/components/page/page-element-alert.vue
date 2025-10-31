@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-alert
     :type="element.alertType !== 'none' ? element.alertType : undefined"
@@ -16,6 +15,7 @@
       />
     </template>
     <template #text>
+      <!--eslint-disable-next-line vue/no-v-html -->
       <div v-html="element._html" />
     </template>
   </v-alert>

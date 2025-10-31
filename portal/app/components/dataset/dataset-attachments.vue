@@ -5,11 +5,13 @@
     :title="attachment.title"
   >
     <v-list-item-subtitle v-if="attachment.type === 'file'">
-      {{ attachment.name }} - {{ formatBytes(attachment.size) }} - {{ t('updatedAt') }} {{ dayjs(attachment.updatedAt).format('LL') }}
+      {{ attachment.name }} - {{ formatBytes(attachment.size) }} - {{ t('updatedAt') }} {{
+      dayjs(attachment.updatedAt).format('LL') }}
     </v-list-item-subtitle>
     <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
       {{ attachment.name }}
     </v-list-item-subtitle>
+    <!--eslint-disable-next-line vue/no-v-html -->
     <div v-html="attachment.description" />
     <template #append>
       <v-btn
