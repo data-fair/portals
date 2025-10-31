@@ -173,7 +173,7 @@ type ApplicationFetch = {
     href: string
     exposedUrl: string
     owner: Account
-    topics: { id: string; title: string }[]
+    topics: { id: string; title: string; color: string }[]
   }[]
 }
 

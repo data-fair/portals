@@ -29,7 +29,7 @@ type Application = {
   href: string
   exposedUrl: string
   owner: Account
-  topics: { id: string; title: string }[]
+  topics: { id: string; title: string; color: string }[]
 }
 
 type ApplicationFetch = {
@@ -64,7 +64,7 @@ if (!preview) {
     href: `/applications/application-${i + 1}`,
     exposedUrl: `https://example.com/app-${i + 1}`,
     owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
-    topics: [{ id: 'topic-1', title: 'Topic exemple' }]
+    topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
   }))
 }
 

@@ -6,7 +6,6 @@ export default {
     fr: 'Page d\'un jeu de données'
   },
   type: 'object',
-  layout: { comp: 'card' },
   unevaluatedProperties: false,
   properties: {
     metadataLocation: {
@@ -31,7 +30,7 @@ export default {
     },
     showImage: {
       type: 'boolean',
-      title: 'Afficher l\'image sur la page d\'une visualisation',
+      title: 'Afficher l\'image',
       description: 'L\'image sera affichée au dessus de la description.',
       layout: {
         comp: 'switch',

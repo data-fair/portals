@@ -9,14 +9,14 @@
     >
       <!-- Image column -->
       <v-col
-        v-if="cardConfig.thumbnailLocation === 'left'"
+        v-if="cardConfig.thumbnail?.location === 'left'"
         cols="4"
       >
         <v-img
           v-if="thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails || true"
+          :cover="cardConfig.thumbnail.crop"
           class="h-100"
         />
         <v-divider vertical />
@@ -24,12 +24,19 @@
 
       <!-- Center column -->
       <v-col class="d-flex flex-column">
-        <v-card-title>{{ application.title }}</v-card-title>
         <v-img
-          v-if="cardConfig.thumbnailLocation === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.location === 'top' && thumbnailUrl"
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
-          :cover="cardConfig.cropThumbnails || true"
+          :cover="cardConfig.thumbnail.crop"
+          height="170"
+        />
+        <v-card-title>{{ application.title }}</v-card-title>
+        <v-img
+          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          :alt="t('imageAlt', { title: application.title })"
+          :src="thumbnailUrl"
+          :cover="cardConfig.thumbnail.crop"
           height="170"
         />
         <v-card-text
@@ -47,17 +54,21 @@
               :owner="application.owner"
             />
           </template>
-          <span
-            :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']"
-          >
+          <span :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
             {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
           </span>
         </v-list-item>
 
+        <!-- Topics List -->
+        <topics-list
+          v-if="cardConfig.topics?.show && application.topics?.length"
+          :config="cardConfig.topics"
+          :topics="application.topics"
+          class="px-4 pb-2"
+        />
+
         <!-- Actions (Bottom Location) -->
-        <template
-          v-if="cardConfig.actionsLocation === 'bottom' || !cardConfig.actionsLocation || $vuetify.display.smAndDown"
-        >
+        <template v-if="cardConfig.actionsLocation === 'bottom' || !cardConfig.actionsLocation || $vuetify.display.smAndDown">
           <v-divider />
           <v-card-actions
             class="py-2 ga-0 cursor-default"
@@ -116,7 +127,7 @@ const { application, cardConfig } = defineProps<{
     href: string
     exposedUrl: string
     owner: Account
-    topics: { id: string; title: string }[]
+    topics: { id: string; title: string; color: string }[]
   }
   cardConfig: ApplicationCard
 }>()
@@ -125,8 +136,9 @@ const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 
 const thumbnailUrl = computed(() => {
+  if (!cardConfig.thumbnail?.show) return undefined
   if (application.image) return application.image
-  else return `${application.href}/capture?updatedAt=${application.updatedAt}`
+  return `${application.href}/capture?updatedAt=${application.updatedAt}`
 })
 
 </script>

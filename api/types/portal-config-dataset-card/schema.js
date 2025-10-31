@@ -158,11 +158,7 @@ export default {
         show: {
           type: 'boolean',
           title: 'Afficher les thématiques',
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
-          default: true
+          layout: 'switch',
         },
         color: {
           type: 'string',
@@ -257,8 +253,7 @@ export default {
         show: {
           type: 'boolean',
           title: 'Afficher les mots-clés',
-          layout: 'switch',
-          default: true
+          layout: 'switch'
         },
         color: {
           type: 'string',

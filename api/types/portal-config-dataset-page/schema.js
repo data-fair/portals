@@ -7,7 +7,6 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
-  required: ['metadataLocation', 'attachmentsLocation', 'showImage', 'showDepartment', 'actionsStyle'],
   properties: {
     metadataLocation: {
       type: 'string',
@@ -60,6 +59,6 @@ export default {
         { const: 'full', title: 'Icône et texte' },
         { const: 'text', title: 'Texte seulement' }
       ]
-    },
+    }
   }
 }

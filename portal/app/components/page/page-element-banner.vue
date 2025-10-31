@@ -47,12 +47,24 @@ const { element } = defineProps<{
 const { preview } = usePortalStore()
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
+// Calculate scrollbar width to adjust full width banners
+// By default 100vw includes scrollbar width
+if (typeof window !== 'undefined') {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+  document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`)
+}
+
 </script>
 
 <style scoped>
+
+:root {
+  --scrollbar-width: 0px;
+}
+
 .banner-fluid {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: calc(100vw - var(--scrollbar-width, 0px));
+  margin-left: calc(50% - 50vw + var(--scrollbar-width, 0px) / 2);
 }
 
 .banner-contained {

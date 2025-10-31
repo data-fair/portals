@@ -6,7 +6,6 @@ export default {
     fr: 'Catalogue de visualisations'
   },
   type: 'object',
-  layout: { comp: 'card' },
   unevaluatedProperties: false,
   properties: {
     filtersLocation: {
@@ -113,7 +112,7 @@ export default {
             { const: 'secondary', title: 'Secondaire' },
             { const: 'accent', title: 'Accentuée' }
           ]
-        },
+        }
       }
     }
   }

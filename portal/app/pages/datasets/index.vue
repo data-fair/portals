@@ -43,7 +43,7 @@
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
-      :md="12 / portalConfig.datasets.list.columns"
+      :md="12 / (portalConfig.datasets.list.columns || 2)"
       cols="12"
     >
       <dataset-card

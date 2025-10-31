@@ -7,7 +7,6 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
-  required: ['filtersLocation', 'defaultSort', 'columns'],
   properties: {
     filtersLocation: {
       type: 'string',

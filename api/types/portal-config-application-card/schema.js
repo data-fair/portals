@@ -6,22 +6,10 @@ export default {
   layout: { title: null },
   unevaluatedProperties: false,
   properties: {
-    thumbnailLocation: {
-      type: 'string',
-      title: 'Position de l\'image sur la carte',
-      layout: { cols: { md: 4 } },
-      default: 'center',
-      oneOf: [
-        { const: 'left', title: 'À gauche' },
-        { const: 'top', title: 'En haut' },
-        { const: 'center', title: 'Sous le titre' },
-        { const: 'none', title: 'Ne pas afficher' }
-      ]
-    },
     actionsLocation: {
       type: 'string',
       title: 'Position des boutons d\'actions sur la carte',
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 6 } },
       default: 'bottom',
       oneOf: [
         { const: 'right', title: 'À droite' },
@@ -32,23 +20,13 @@ export default {
     actionsStyle: {
       type: 'string',
       title: 'Style des boutons d\'actions',
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 6 } },
       default: 'full',
       oneOf: [
         { const: 'icon', title: 'Icône seulement' },
         { const: 'full', title: 'Icône et texte' },
         { const: 'text', title: 'Texte seulement' }
       ]
-    },
-    cropThumbnails: {
-      type: 'boolean',
-      title: 'Recadrer l\'image pour un rendu uniforme',
-      description: 'Si désactivé, l\'image gardera son ratio d\'origine',
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      },
-      default: true
     },
     showSummary: {
       type: 'boolean',
@@ -68,6 +46,52 @@ export default {
         cols: { md: 6 }
       },
       default: true
+    },
+    thumbnail: {
+      type: 'object',
+      title: "Configuration de l'image",
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              'location',
+              'crop'
+            ]
+          },
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher l\'image',
+          layout: 'switch',
+          default: true
+        },
+        location: {
+          type: 'string',
+          title: 'Position de l\'image sur la carte',
+          layout: { cols: { md: 6 } },
+          default: 'center',
+          oneOf: [
+            { const: 'left', title: 'À gauche' },
+            { const: 'top', title: 'En haut' },
+            { const: 'center', title: 'Sous le titre' }
+          ]
+        },
+        crop: {
+          type: 'boolean',
+          title: 'Recadrer l\'image pour un rendu uniforme',
+          description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        }
+      }
     },
     topics: {
       type: 'object',
@@ -93,11 +117,7 @@ export default {
         show: {
           type: 'boolean',
           title: 'Afficher les thématiques',
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
-          default: true
+          layout: 'switch',
         },
         color: {
           type: 'string',
@@ -112,7 +132,7 @@ export default {
         },
         elevation: {
           type: 'integer',
-          title: 'Élévation des boutons de thématiques',
+          title: 'Élévation',
           layout: { cols: { md: 6 } },
           default: 0,
           oneOf: [
@@ -124,7 +144,7 @@ export default {
         },
         density: {
           type: 'string',
-          title: 'Densité des boutons de thématiques',
+          title: 'Densité',
           layout: { cols: { md: 6 } },
           default: 'comfortable',
           oneOf: [
@@ -135,7 +155,7 @@ export default {
         },
         rounded: {
           type: 'string',
-          title: 'Arrondi des boutons de thématiques',
+          title: 'Arrondi',
           layout: { cols: { md: 6 } },
           default: 'default',
           oneOf: [
@@ -147,7 +167,7 @@ export default {
         },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes des thématiques',
+          title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -156,7 +176,7 @@ export default {
         },
         iconColor: {
           type: 'string',
-          title: 'Couleur des icônes des thématiques',
+          title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
             cols: { md: 6 }

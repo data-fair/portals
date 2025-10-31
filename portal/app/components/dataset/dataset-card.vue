@@ -172,7 +172,7 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
     image?: string
     isMetaOnly: boolean
   },
-  cardConfig: DatasetCard,
+  cardConfig: DatasetCard
   isPortalConfig?: boolean
 }>()
 
@@ -210,6 +210,7 @@ const thumbnailUrl = computed(() => {
     shortText:
       table: Table
       api: API
+
   fr:
     imageAlt: 'Image de couverture pour le jeu de données {title}'
     updatedAt: Mis à jour le
@@ -219,4 +220,5 @@ const thumbnailUrl = computed(() => {
     shortText:
       table: Tableau
       api: API
+
 </i18n>
