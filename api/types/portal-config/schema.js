@@ -14,7 +14,7 @@ export default {
     title: null,
     comp: 'expansion-panels',
     children: [
-      { title: 'Métadonnées', children: ['title', 'description', 'authentication'] },
+      { title: 'Métadonnées', children: ['title', 'description', 'allowRobots', 'authentication'] },
       { title: 'Couleurs', children: ['theme'] },
       {
         title: 'Polices de caractères',
@@ -122,6 +122,12 @@ export default {
       type: 'string',
       title: 'Description',
       layout: 'textarea'
+    },
+    allowRobots: {
+      type: 'boolean',
+      title: 'Rendre le portail visible sur les moteurs de recherche',
+      description: "Permettre à Google et aux autres moteurs de recherche d'indexer ce portail pour qu'il soit visible dans les résultats de recherche.",
+      layout: 'switch'
     },
     authentication: {
       type: 'string',

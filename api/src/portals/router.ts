@@ -52,6 +52,7 @@ router.post('', async (req, res, next) => {
 
   const initialConfig: PortalConfig = {
     ...body.config,
+    allowRobots: !body.staging, // By default, allow robots if not a staging portal
     authentication: 'optional' as const,
     theme: fillTheme(defaultTheme, defaultTheme),
     menu: {
@@ -74,19 +75,9 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      list: {
-        filtersLocation: 'top',
-        defaultSort: 'title',
-        columns: 2
-      },
+      list: {},
       card: {},
-      page: {
-        metadataLocation: 'top',
-        attachmentsLocation: 'full',
-        showImage: false,
-        showDepartment: false,
-        actionsStyle: 'text'
-      }
+      page: {}
     },
     applications: {
       list: {},
