@@ -1,9 +1,9 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-application-page',
   'x-exports': [],
-  title: 'Dataset Page',
+  title: 'Application Page',
   'x-i18n-title': {
-    fr: 'Page d\'un jeu de données'
+    fr: 'Page d\'une visualisation'
   },
   type: 'object',
   unevaluatedProperties: false,
