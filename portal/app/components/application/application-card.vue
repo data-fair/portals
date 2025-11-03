@@ -29,6 +29,7 @@
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
+          class="flex-grow-0"
           height="170"
         />
         <v-card-title>{{ application.title }}</v-card-title>
@@ -37,16 +38,26 @@
           :alt="t('imageAlt', { title: application.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
+          class="flex-grow-0"
           height="170"
         />
         <v-card-text
           v-if="cardConfig.showSummary && application.summary?.length"
           class="pb-0"
         >
-          {{ application.summary }}
+          {{ application.summary.length > 250 ? application.summary.slice(0, 250) + '...' : application.summary }}
         </v-card-text>
 
         <v-spacer />
+
+        <!-- Topics List -->
+        <topics-list
+          v-if="cardConfig.topics?.show && application.topics?.length"
+          :config="cardConfig.topics"
+          :topics="application.topics"
+          class="px-4 mt-2"
+        />
+
         <v-list-item>
           <template #prepend>
             <owner-avatar
@@ -59,16 +70,10 @@
           </span>
         </v-list-item>
 
-        <!-- Topics List -->
-        <topics-list
-          v-if="cardConfig.topics?.show && application.topics?.length"
-          :config="cardConfig.topics"
-          :topics="application.topics"
-          class="px-4 pb-2"
-        />
-
         <!-- Actions (Bottom Location) -->
-        <template v-if="cardConfig.actionsLocation === 'bottom' || !cardConfig.actionsLocation || $vuetify.display.smAndDown">
+        <template
+          v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
+        >
           <v-divider />
           <v-card-actions
             class="py-2 ga-0 cursor-default"

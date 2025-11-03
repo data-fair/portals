@@ -24,23 +24,22 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/images/${id}`
 }
-const link = [
-  $portal.config.favicon
-    ? { rel: 'icon', type: 'image/png', href: getImageSrc($portal.config.favicon, false) }
-    : undefined,
-].filter(Boolean)
 
 provideNavigationStore()
 providePortalStore($portal)
 provide('get-image-src', getImageSrc)
 
+const meta = [
+  { name: 'theme-color', content: theme.current.value.colors.primary },
+  { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
+]
+if ($portal.draft || !$portal.config.allowRobots) meta.push({ name: 'robots', content: 'noindex' })
+const link = $portal.config.favicon ? [{ rel: 'icon', type: 'image/png', href: getImageSrc($portal.config.favicon, false) }] : []
+
 useHead({
   title: $portal.config.title,
   htmlAttrs: { lang: session.state.lang },
-  meta: [
-    { name: 'theme-color', content: theme.current.value.colors.primary },
-    { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
-  ],
+  meta,
   link
 })
 </script>

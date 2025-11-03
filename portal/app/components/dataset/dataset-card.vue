@@ -29,6 +29,7 @@
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
+          class="flex-grow-0"
           height="170"
         />
         <v-card-title>{{ dataset.title }}</v-card-title>
@@ -37,16 +38,35 @@
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
+          class="flex-grow-0"
           height="170"
         />
         <v-card-text
           v-if="cardConfig.showSummary && dataset.summary?.length"
           class="pb-0"
         >
-          {{ dataset.summary }}
+          {{ dataset.summary.length > 250 ? dataset.summary.slice(0, 250) + '...' : dataset.summary }}
         </v-card-text>
 
         <v-spacer />
+
+        <!-- Topics List -->
+        <topics-list
+          v-if="cardConfig.topics?.show && dataset.topics?.length"
+          :config="cardConfig.topics"
+          :topics="dataset.topics"
+          class="mx-4 mt-2"
+        />
+
+        <!-- keywords list -->
+        <keywords-list
+          v-if="cardConfig.keywords?.show && dataset.keywords?.length"
+          :config="cardConfig.keywords"
+          :keywords="dataset.keywords"
+          class="px-4 mt-2"
+        />
+
+        <!-- Department / Updated At -->
         <v-list-item>
           <template #prepend>
             <owner-avatar
@@ -58,22 +78,6 @@
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
           </span>
         </v-list-item>
-
-        <!-- Topics List -->
-        <topics-list
-          v-if="cardConfig.topics?.show && dataset.topics?.length"
-          :config="cardConfig.topics"
-          :topics="dataset.topics"
-          class="px-4 pb-2"
-        />
-
-        <!-- keywords list -->
-        <keywords-list
-          v-if="cardConfig.keywords?.show && dataset.keywords?.length"
-          :config="cardConfig.keywords"
-          :keywords="dataset.keywords"
-          class="px-4 pb-2"
-        />
 
         <!-- Actions (Bottom Location) -->
         <template v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown">
