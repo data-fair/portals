@@ -4,6 +4,8 @@ import { writeFileSync, readFileSync, createWriteStream, mkdirSync } from 'node:
 import { get as httpGet } from 'node:https'
 import { pipeline } from 'node:stream/promises'
 import { basename } from 'node:path'
+import type { Font } from '../../api/types/font/index.js'
+import type { IncomingMessage } from 'node:http'
 
 // const gzip = promisify(gzipCallback)
 
@@ -11,19 +13,7 @@ const googleFonts = JSON.parse(readFileSync('google-fonts-complete/google-fonts.
 
 const fonts = []
 
-const makeFontFace = (name, subset, unicodeRange, fontStyle, fontWeight, woff2Url) => `
-/* ${subset} */
-@font-face {
-  font-family: ${name};
-  font-style: ${fontStyle};
-  font-weight: ${fontWeight};
-  font-display: swap;
-  src: url(${woff2Url}) format('woff2');
-  unicode-range: ${unicodeRange};
-}
-`
-
-const entries = Object.entries(googleFonts)
+const entries = Object.entries(googleFonts) as [string, any][]
 console.log('initial entries: ' + entries.length)
 
 const fontStyles = new Set()
@@ -75,38 +65,47 @@ for (const [name, info] of entries) {
 
   fonts.push(name)
 
-  let fontFaces = ''
-  const urls = new Set()
-  for (const subset of info.subsets.filter(s => s.startsWith('latin'))) {
-    for (const fontStyle of Object.keys(info.variants)) {
-      fontStyles.add(fontStyle)
-      const weights = Object.keys(info.variants[fontStyle]).filter(w => w >= '300' && w <= '700')
+  const urls = new Set<string>()
+  const font: Font = {
+    name,
+    key,
+    variants: []
+  }
+  for (const subset of info.subsets.filter((s: string) => s.startsWith('latin'))) {
+    for (const style of Object.keys(info.variants)) {
+      fontStyles.add(style)
+      const weights = Object.keys(info.variants[style]).filter(w => w >= '300' && w <= '700')
       let rangeStart = null
       for (let i = 0; i < weights.length; i++) {
         const weight = weights[i]
         if (rangeStart === null) rangeStart = weight
         const nextWeight = weights[i + 1]
-        const url = info.variants[fontStyle][weight].url.woff2.trim()
+        const url = info.variants[style][weight].url.woff2.trim()
         urls.add(url)
-        const nextUrl = nextWeight && info.variants[fontStyle][nextWeight].url.woff2.trim()
+        const nextUrl = nextWeight && info.variants[style][nextWeight].url.woff2.trim()
         if (url !== nextUrl) {
           let weightRange = rangeStart
           if (rangeStart !== weight) weightRange += ' ' + weight
           rangeStart = null
           const fileName = basename(new URL(url).pathname)
-          const localUrl = `/portals-manager/api/assets/fonts/${encodeURIComponent(key)}/${fileName}`
-          fontFaces += makeFontFace(name, subset, info.unicodeRange[subset], fontStyle, weightRange, localUrl)
+          const woff2Url = `/portals-manager/api/assets/fonts/${encodeURIComponent(key)}/${fileName}`
+          font.variants.push({
+            subset,
+            weightRange,
+            style,
+            woff2Url
+          })
         }
       }
     }
   }
 
   // writeFileSync(`api/assets/fonts/${name}.css.gz`, await gzip(fontFaces))
-  writeFileSync(`api/assets/fonts/${key}.css`, fontFaces)
+  writeFileSync(`api/assets/fonts/${key}.json`, JSON.stringify(font, null, 2))
 
   for (const url of [...urls]) {
     const fileName = basename(new URL(url).pathname)
-    const res = await new Promise(resolve => httpGet(url, resolve))
+    const res = await new Promise<IncomingMessage>(resolve => httpGet(url, resolve))
     await pipeline(res, createWriteStream(`api/assets/fonts/${key}/${fileName}`))
   }
 }

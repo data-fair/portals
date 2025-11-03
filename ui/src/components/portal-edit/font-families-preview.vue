@@ -32,8 +32,8 @@ const { portalConfig } = usePortalStore()
 const bodyFontFamily = computed(() => portalConfig.value.bodyFontFamily ?? 'Nunito')
 const headingFontFamily = computed(() => portalConfig.value.headingFontFamily ?? bodyFontFamily.value ?? 'Nunito')
 
-const bodyFontFamilyCssFetch = useFetch<string>(() => $apiPath + `/assets/fonts/${bodyFontFamily.value.toLowerCase().replace(/\s/g, '')}.css`)
-const headingFontFamilyCssFetch = useFetch<string>(() => $apiPath + `/assets/fonts/${headingFontFamily.value.toLowerCase().replace(/\s/g, '')}.css`)
+const bodyFontFamilyCssFetch = useFetch<string>(() => $apiPath + `/fonts/${encodeURIComponent(bodyFontFamily.value)}/css`)
+const headingFontFamilyCssFetch = useFetch<string>(() => $apiPath + `/fonts/${encodeURIComponent(headingFontFamily.value)}/css`)
 
 const fontFamiliesVariables = computed(() => {
   return `--d-body-font-family: ${bodyFontFamily.value} !important;--d-heading-font-family: ${headingFontFamily.value} !important;`

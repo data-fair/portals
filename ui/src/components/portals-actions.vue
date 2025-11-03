@@ -10,6 +10,17 @@
     {{ t('createNewPortal') }}
   </v-list-item>
 
+  <!-- Manage fonts -->
+  <v-list-item :to="'/portals/font-assets'">
+    <template #prepend>
+      <v-icon
+        color="primary"
+        :icon="mdiFormatFont"
+      />
+    </template>
+    {{ t('manageFontAssets') }}
+  </v-list-item>
+
   <!-- Search field -->
   <v-text-field
     v-model="search"
@@ -36,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiMagnify, mdiPlusCircle } from '@mdi/js'
+import { mdiFormatFont, mdiMagnify, mdiPlusCircle } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -51,10 +62,12 @@ const showAll = defineModel('showAll', { type: Boolean, default: false })
     createNewPortal: Create a new portal
     search: Search
     showAllPortals: Show all portals
+    manageFontAssets: Manage fonts
 
   fr:
     createNewPortal: Créer un nouveau portail
     search: Rechercher
     showAllPortals: Voir tous les portails
+    manageFontAssets: Gérer les polices de caractères
 
 </i18n>

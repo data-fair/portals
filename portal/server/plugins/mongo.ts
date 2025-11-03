@@ -1,6 +1,7 @@
 import type { Portal } from '../../../api/types/portal'
 import type { Page } from '../../../api/types/page'
 import type { Image } from '../../../api/types/image'
+import type { FontAsset } from '../../../api/types/font-asset'
 import mongo from '@data-fair/lib-node/mongo.js'
 
 export class PortalMongo {
@@ -22,6 +23,10 @@ export class PortalMongo {
 
   get images () {
     return mongo.db.collection<Image>('images')
+  }
+
+  get fontAssets () {
+    return mongo.db.collection<FontAsset>('font-assets')
   }
 }
 

@@ -1,0 +1,102 @@
+{
+  "name": "Roboto",
+  "key": "roboto",
+  "variants": [
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51TjASc6CsQ.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOkCnqEu92Fr1Mu51xIIzI.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51S7ACc6CsQ.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51TzBic6CsQ.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOmCnqEu92Fr1Mu4mxK.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmWUlfBBc4.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51TjASc6CsQ.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOkCnqEu92Fr1Mu51xIIzI.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51S7ACc6CsQ.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOjCnqEu92Fr1Mu51TzBic6CsQ.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOmCnqEu92Fr1Mu4mxK.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/roboto/KFOlCnqEu92Fr1MmWUlfBBc4.woff2"
+    }
+  ]
+}

@@ -154,7 +154,7 @@ export default {
       title: 'Police principale',
       layout: {
         getItems: {
-          url: '/portals-manager/api/assets/fonts.json'
+          url: '/portals-manager/api/fonts'
         }
       }
     },
@@ -164,7 +164,7 @@ export default {
       hint: 'laissez vide pour utiliser la police principale',
       layout: {
         getItems: {
-          url: '/portals-manager/api/assets/fonts.json'
+          url: '/portals-manager/api/fonts'
         }
       }
     },

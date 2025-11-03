@@ -2,6 +2,7 @@ import type { Group } from '#types/group/index.ts'
 import type { Portal } from '#types/portal/index.ts'
 import type { Page } from '#types/page/index.ts'
 import type { Image } from '#types/image/index.js'
+import type { FontAsset } from '#types/font-asset/index.js'
 
 import mongo from '@data-fair/lib-node/mongo.js'
 import config from './config.ts'
@@ -31,6 +32,10 @@ export class PortalsMongo {
     return mongo.db.collection<Image>('images')
   }
 
+  get fontAssets () {
+    return mongo.db.collection<FontAsset>('font-assets')
+  }
+
   async connect () {
     await mongo.connect(config.mongoUrl)
   }
@@ -49,6 +54,9 @@ export class PortalsMongo {
       },
       images: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, 'resource.type': 1, 'resource._id': 1 }
+      },
+      'font-assets': {
+        'main-keys': { 'owner.type': 1, 'owner.id': 1, key: 1 }
       }
     })
   }

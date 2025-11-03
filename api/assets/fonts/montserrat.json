@@ -1,0 +1,126 @@
+{
+  "name": "Montserrat",
+  "key": "montserrat",
+  "variants": [
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq_p9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq6R9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq5Z9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq3p6WXh0pg.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq0N6WXh0pg.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCs16Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCu173w5aXo.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCuM73w5aXo.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq_p9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq6R9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq5Z9WXh0pg.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq3p6WXh0pg.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUFjIg1_i6t8kCHKm459Wx7xQYXK0vOoz6jq0N6WXh0pg.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCs16Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw5aXo.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCu173w5aXo.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/montserrat/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCuM73w5aXo.woff2"
+    }
+  ]
+}

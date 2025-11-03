@@ -1,0 +1,18 @@
+{
+  "name": "Pacifico",
+  "key": "pacifico",
+  "variants": [
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/pacifico/FwZY7-Qmy14u9lezJ-6H6Mk.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/pacifico/FwZY7-Qmy14u9lezJ-6H6Mk.woff2"
+    }
+  ]
+}

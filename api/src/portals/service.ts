@@ -2,9 +2,6 @@ import type { Portal } from '#types/portal/index.ts'
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { IngressManagerIngressInfo } from '#types'
 
-import { readFile } from 'node:fs/promises'
-import resolvePath from 'resolve-path'
-import { resolve } from 'node:path'
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
@@ -12,6 +9,7 @@ import axios from '@data-fair/lib-node/axios.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import mongo from '#mongo'
 import config from '#config'
+import { getFontFamilyCss } from '../fonts/service.ts'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')
@@ -95,11 +93,6 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/images/${id}`
 }
 
-const getFontFamilyCss = async (familyName: string) => {
-  const key = familyName.toLowerCase().replace(/\s/g, '')
-  return await readFile(resolvePath(resolve(import.meta.dirname, '../../assets/fonts'), key + '.css'), 'utf-8')
-}
-
 const getSDSites = async (portal: Portal) => {
   const sites = [{
     _id: 'data-fair-portals:draft-' + portal._id,
@@ -109,9 +102,9 @@ const getSDSites = async (portal: Portal) => {
       ...portal.draftConfig.theme,
       logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
       bodyFontFamily: portal.draftConfig.bodyFontFamily,
-      bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.draftConfig.bodyFontFamily),
+      bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.draftConfig.bodyFontFamily),
       headingFontFamily: portal.draftConfig.headingFontFamily,
-      headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.draftConfig.headingFontFamily)
+      headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.owner, portal.draftConfig.headingFontFamily)
     },
     contact: portal.draftConfig.contactInformations.email
   }]
@@ -124,9 +117,9 @@ const getSDSites = async (portal: Portal) => {
         ...portal.config.theme,
         logo: portal.config.logo && getImageSrc(portal.config.logo, true),
         bodyFontFamily: portal.config.bodyFontFamily,
-        bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.config.bodyFontFamily),
+        bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.config.bodyFontFamily),
         headingFontFamily: portal.config.headingFontFamily,
-        headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.config.headingFontFamily)
+        headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.owner, portal.config.headingFontFamily)
       },
       contact: portal.config.contactInformations.email
     })

@@ -1,11 +1,9 @@
-import config from '#config'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import type { Image } from '#types/image/index.js'
 import { Piscina } from 'piscina'
-import multer from 'multer'
 import type { ResizeInput, ResizeOutput } from './resize-image.ts'
-
+import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { type Request, type Response, type NextFunction, Router } from 'express'
 import mongo from '#mongo'
 import * as postReq from '#doc/images/post-req/index.ts'
@@ -13,8 +11,6 @@ import { httpError, reqSessionAuthenticated } from '@data-fair/lib-express/index
 
 const router = Router()
 export default router
-
-const upload = multer({ dest: config.tmpDir })
 
 const resizeImageWorkerPath = path.resolve(import.meta.dirname, './resize-image.ts')
 console.log('resizeImageWorkerPath', resizeImageWorkerPath)
@@ -25,17 +21,6 @@ export const resizePiscina = new Piscina<ResizeInput, ResizeOutput>({
   idleTimeout: 60 * 60 * 1000,
   maxThreads: 1
 })
-
-const jsonFromMultiPart = (req: Request, res: Response, next: NextFunction) => {
-  if (typeof req.body.body === 'string') {
-    try {
-      req.body = JSON.parse(req.body.body)
-    } catch (err: any) {
-      throw httpError(400, 'error parsing body: ' + err.message)
-    }
-  }
-  next()
-}
 
 const mutableQuery = (req: Request, res: Response, next: NextFunction) => {
   // just a little trick as we want to coerce type in req.query
@@ -65,7 +50,6 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
     created,
-    updated: created,
     name: file.originalname,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))

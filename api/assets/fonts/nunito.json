@@ -1,0 +1,126 @@
+{
+  "name": "Nunito",
+  "key": "nunito",
+  "variants": [
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNi83AHjaba.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNirXAHjaba.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNin3AHjaba.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNic3cHjaba.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNiSncHjaba.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDOUhdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDIkhdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDGUmdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDFwmdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNi83AHjaba.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNirXAHjaba.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNin3AHjaba.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNic3cHjaba.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXK3I6Li01BKofIMPyPbj8d7IEAGXNiSncHjaba.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDOUhdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDIkhdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDGUmdTQ3jw.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/nunito/XRXI3I6Li01BKofiOc5wtlZ2di8HDFwmdTQ3jw.woff2"
+    }
+  ]
+}

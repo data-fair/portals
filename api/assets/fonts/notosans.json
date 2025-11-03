@@ -1,0 +1,126 @@
+{
+  "name": "Noto Sans",
+  "key": "notosans",
+  "variants": [
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AzpYeyDzW0.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0OIpQlx3QUlC5A4PNr4ARCQ_k.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AyxYOyDzW0.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AydZ-yDzW0.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4Az5ZuyDzW0.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjThZVZNyB.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0IIpQlx3QUlC5A4PNr5TRA.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjFhdVZNyB.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjOhBVZNyB.woff2"
+    },
+    {
+      "subset": "latin",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjXhFVZNyB.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AzpYeyDzW0.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0OIpQlx3QUlC5A4PNr4ARCQ_k.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AyxYOyDzW0.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4AydZ-yDzW0.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "italic",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0TIpQlx3QUlC5A4PNr4Az5ZuyDzW0.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "300",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjThZVZNyB.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "400",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0IIpQlx3QUlC5A4PNr5TRA.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "500",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjFhdVZNyB.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "600",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjOhBVZNyB.woff2"
+    },
+    {
+      "subset": "latin-ext",
+      "weightRange": "700",
+      "style": "normal",
+      "woff2Url": "/portals-manager/api/assets/fonts/notosans/o-0NIpQlx3QUlC5A4PNjXhFVZNyB.woff2"
+    }
+  ]
+}
