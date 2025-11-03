@@ -56,7 +56,7 @@
         <v-list-item
           v-for="fontAsset in fontAssetsFetch.data.value?.results"
           :key="fontAsset._id"
-          :title="`${fontAsset.name} - ${fontAsset.subset} - ${fontAsset.weightRange} - ${fontAsset.style}`"
+          :title="`${fontAsset.name} - ${fontAsset.file.name} - ${fontAsset.subset} - ${fontAsset.weightRange} - ${fontAsset.style}`"
         >
           <template #append>
             <v-list-item-action>
