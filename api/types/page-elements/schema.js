@@ -556,6 +556,105 @@ export default {
         type: {
           const: 'contact'
         },
+        additionalFields: {
+          type: 'array',
+          title: 'Champs additionnels',
+          description: 'Ajoutez des champs supplémentaires au formulaire de contact.',
+          layout: {
+            messages: {
+              addItem: 'Ajouter un champ',
+            },
+            listEditMode: 'inline'
+          },
+          items: {
+            type: 'object',
+            default: { type: 'text' },
+            oneOf: [
+              {
+                title: 'Champ de texte',
+                description: "Permet à l'utilisateur de saisir une valeur libre (texte, nom, etc.).",
+                required: ['type'],
+                properties: {
+                  type: { const: 'text' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante personnalisée',
+                description: "Propose à l'utilisateur de choisir parmi une liste de valeurs que vous définissez.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'select' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  options: {
+                    type: 'array',
+                    title: 'Options disponibles',
+                    description: 'Liste des valeurs proposées dans le menu déroulant.',
+                    items: {
+                      type: 'string',
+                      title: 'Option'
+                    }
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  },
+                  multiple: {
+                    type: 'boolean',
+                    title: 'Choix multiple autorisé',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante de jeux de données',
+                description: "Permet à l'utilisateur de sélectionner un jeu de données publié sur votre portail.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'dataset' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante de visualisations',
+                description: "Permet à l'utilisateur de choisir une visualisation publiée sur votre portail.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'application' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              }
+            ]
+          }
+        },
         showInfo: {
           type: 'boolean',
           layout: 'switch',

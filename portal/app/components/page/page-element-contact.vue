@@ -8,6 +8,61 @@
             :label="t('email')"
             :rules="[rules.required(), rules.email()]"
           />
+
+          <!-- Additional fields -->
+          <template v-if="element.additionalFields && element.additionalFields.length">
+            <template
+              v-for="(field, index) in element.additionalFields"
+              :key="index"
+            >
+              <!-- Text field -->
+              <v-text-field
+                v-if="field.type === 'text'"
+                v-model="additionalData[index]"
+                :label="field.label"
+                :rules="field.required ? [rules.required()] : []"
+                :clearable="!field.required"
+              />
+
+              <!-- Select field -->
+              <v-select
+                v-else-if="field.type === 'select'"
+                v-model="additionalData[index]"
+                :label="field.label"
+                :items="field.options || []"
+                :rules="field.required ? [rules.required()] : []"
+                :multiple="field.multiple"
+                :clearable="!field.required"
+              />
+
+              <!-- Dataset select -->
+              <v-autocomplete
+                v-else-if="field.type === 'dataset'"
+                v-model="additionalData[index]"
+                :label="field.label || t('dataset')"
+                :items="datasetsFetch?.data.value?.results ?? []"
+                :loading="datasetsFetch?.status.value === 'pending'"
+                :rules="field.required ? [rules.required()] : []"
+                item-title="title"
+                item-value="id"
+                :clearable="!field.required"
+              />
+
+              <!-- Application select -->
+              <v-autocomplete
+                v-else-if="field.type === 'application'"
+                v-model="additionalData[index]"
+                :label="field.label || t('application')"
+                :items="applicationsFetch?.data.value?.results ?? []"
+                :loading="applicationsFetch?.status.value === 'pending'"
+                :rules="field.required ? [rules.required()] : []"
+                item-title="title"
+                item-value="id"
+                :clearable="!field.required"
+              />
+            </template>
+          </template>
+
           <v-text-field
             v-model="message.subject"
             :label="t('subject')"
@@ -20,6 +75,7 @@
             :rules="[rules.required(), rules.minLength(50), rules.maxLength(3000)]"
             :counter="3000"
           />
+
           <div class="d-flex justify-center">
             <v-btn
               :disabled="!valid"
@@ -97,6 +153,35 @@ const newMessage = { from: '', subject: '', text: '' }
 const valid = ref(false)
 const message = ref({ ...newMessage })
 
+// Additional fields data
+const additionalData = ref<Record<number, string | string[] | undefined>>({})
+
+// Fetch datasets if needed
+type DatasetsFetchResult = { results: { id: string, title: string }[] }
+let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetsFetchResult>> | undefined
+if (element.additionalFields?.some(field => field.type === 'dataset') && !preview) {
+  datasetsFetch = useLocalFetch<DatasetsFetchResult>(
+    '/data-fair/api/v1/datasets',
+    {
+      query: { select: 'id,title', size: 1000 },
+      watch: false
+    }
+  )
+}
+
+// Fetch applications if needed
+type ApplicationsFetchResult = { results: { id: string, title: string }[] }
+let applicationsFetch: ReturnType<typeof useLocalFetch<ApplicationsFetchResult>> | undefined
+if (element.additionalFields?.some(field => field.type === 'application') && !preview) {
+  applicationsFetch = useLocalFetch<ApplicationsFetchResult>(
+    '/data-fair/api/v1/applications',
+    {
+      query: { select: 'id,title', size: 1000 },
+      watch: false
+    }
+  )
+}
+
 let tokenFetch: ReturnType<typeof useLocalFetch> | undefined
 if (!preview) {
   tokenFetch = useLocalFetch('/simple-directory/api/auth/anonymous-action', { watch: false })
@@ -105,17 +190,39 @@ if (!preview) {
 const sendMessage = useAsyncAction(async () => {
   if (!valid.value || tokenFetch?.error.value || !tokenFetch?.data.value) return
 
+  // Prepare additional fields text
+  let additionalFieldsText = ''
+  if (element.additionalFields) {
+    element.additionalFields.forEach((field, index) => {
+      const value = additionalData.value[index]
+      if (value !== undefined && value !== null && value !== '') {
+        let label = field.label
+        if (!label) {
+          if (field.type === 'dataset') label = t('dataset')
+          else if (field.type === 'application') label = t('application')
+          else label = `field_${index}`
+        }
+        const formattedValue = Array.isArray(value) ? value.join(', ') : value
+        additionalFieldsText += `<strong>${label}</strong> : ${formattedValue}\n`
+      }
+    })
+  }
+
+  // Combine additional fields with message text
+  const fullText = additionalFieldsText ? `${additionalFieldsText}\n${message.value.text}` : message.value.text
+
   await $fetch('/simple-directory/api/mails/contact', {
     method: 'POST',
     body: {
       token: tokenFetch.data.value,
       from: message.value.from,
       subject: message.value.subject,
-      text: message.value.text
+      text: fullText,
     },
   })
 
   message.value = { ...newMessage } // Reset form
+  additionalData.value = {} // Reset additional fields
 }, {
   success: t('messageSent'),
 })
@@ -124,6 +231,8 @@ const sendMessage = useAsyncAction(async () => {
 
 <i18n lang="yaml">
   en:
+    applications: 'Application'
+    dataset: 'Dataset'
     email: 'Email'
     message: 'Message'
     messageSent: 'Message sent!'
@@ -132,6 +241,8 @@ const sendMessage = useAsyncAction(async () => {
     subject: 'Subject'
 
   fr:
+    applications: 'Visualisation'
+    dataset: 'Jeu de données'
     email: 'Email'
     message: 'Message'
     messageSent: 'Message envoyé !'

@@ -19,7 +19,7 @@
           :density="config?.density"
           :elevation="config?.elevation"
           :rounded="config?.rounded"
-          :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
+          :to="isLinks && !preview ? `/datasets?topic=${topic.id}` : undefined"
           @click="isFilters ? toggle(topic.id) : undefined"
         >
           <template
