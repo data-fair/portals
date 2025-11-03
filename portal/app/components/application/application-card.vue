@@ -32,64 +32,62 @@
           class="flex-grow-0"
           height="170"
         />
-        <v-card-title>{{ application.title }}</v-card-title>
-        <v-img
-          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          :alt="t('imageAlt', { title: application.title })"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="flex-grow-0"
-          height="170"
-        />
-        <v-card-text
-          v-if="cardConfig.showSummary && application.summary?.length"
-          class="pb-0"
-        >
-          {{ application.summary.length > 250 ? application.summary.slice(0, 250) + '...' : application.summary }}
-        </v-card-text>
-
-        <v-spacer />
-
-        <!-- Topics List -->
-        <topics-list
-          v-if="cardConfig.topics?.show && application.topics?.length"
-          :config="cardConfig.topics"
-          :topics="application.topics"
-          class="px-4 mt-2"
-        />
-
-        <v-list-item>
-          <template #prepend>
-            <owner-avatar
-              v-if="application.owner.department && cardConfig.showDepartment"
-              :owner="application.owner"
-            />
-          </template>
-          <span :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
-            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-          </span>
-        </v-list-item>
-
-        <!-- Actions (Bottom Location) -->
-        <template
-          v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown"
-        >
-          <v-divider />
-          <v-card-actions
-            class="py-2 ga-0 cursor-default"
-            style="min-height: auto"
-            @click.prevent
+        <v-card-title style="white-space: unset;">{{ application.title }}</v-card-title>
+          <v-img
+            v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            :alt="t('imageAlt', { title: application.title })"
+            :src="thumbnailUrl"
+            :cover="cardConfig.thumbnail.crop"
+            class="flex-grow-0"
+            height="170"
+          />
+          <v-card-text
+            v-if="cardConfig.showSummary && application.summary?.length"
+            class="pb-0"
           >
-            <application-preview :application="application" />
-            <action-btn
-              :to="`/applications/${application.slug}/full`"
-              :action-style="cardConfig.actionsStyle"
-              :icon="mdiFullscreen"
-              :text="t('text.full')"
-              :short-text="t('shortText.full')"
-            />
-          </v-card-actions>
-        </template>
+            {{ application.summary }}
+          </v-card-text>
+
+          <v-spacer />
+
+          <!-- Topics List -->
+          <topics-list
+            v-if="cardConfig.topics?.show && application.topics?.length"
+            :config="cardConfig.topics"
+            :topics="application.topics"
+            class="px-4 mt-2"
+          />
+
+          <v-list-item>
+            <template #prepend>
+              <owner-avatar
+                v-if="application.owner.department && cardConfig.showDepartment"
+                :owner="application.owner"
+              />
+            </template>
+            <span :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
+              {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+            </span>
+          </v-list-item>
+
+          <!-- Actions (Bottom Location) -->
+          <template v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown">
+            <v-divider />
+            <v-card-actions
+              class="py-2 ga-0 cursor-default"
+              style="min-height: auto"
+              @click.prevent
+            >
+              <application-preview :application="application" />
+              <action-btn
+                :to="`/applications/${application.slug}/full`"
+                :action-style="cardConfig.actionsStyle"
+                :icon="mdiFullscreen"
+                :text="t('text.full')"
+                :short-text="t('shortText.full')"
+              />
+            </v-card-actions>
+          </template>
       </v-col>
 
       <!-- Actions (Right Location) -->
