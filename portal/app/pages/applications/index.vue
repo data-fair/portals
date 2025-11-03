@@ -183,7 +183,7 @@ const search = useStringSearchParam('q')
 const sort = useStringSearchParam('sort', { default: portalConfig.value.applications.list.defaultSort || 'createdAt' })
 const filters = {
   baseApplications: useStringsArraySearchParam('base-application'),
-  topics: useStringsArraySearchParam('topic'),
+  topics: useStringsArraySearchParam('topics'),
   owners: useStringsArraySearchParam('owner')
 }
 const order = ref(0) // 0 = desc, 1 = asc

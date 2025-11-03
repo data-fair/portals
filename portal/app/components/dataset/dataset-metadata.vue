@@ -154,7 +154,10 @@
             :short-text="t('shortText.api')"
           />
 
-          <dataset-download :dataset="dataset" />
+          <dataset-download
+            :dataset="dataset"
+            :action-style="portalConfig.datasets.page.actionsStyle"
+          />
           <dataset-schema :dataset="dataset" />
           <!-- TODO: <dataset-embed :dataset="dataset" /> -->
         </template>

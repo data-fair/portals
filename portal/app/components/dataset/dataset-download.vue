@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.card.actionsStyle"
+    :action-style="actionStyle"
     :icon="mdiDownload"
     :text="t('preview')"
     :short-text="t('previewShort')"
@@ -107,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiDownload, mdiTableLarge } from '@mdi/js'
 
 type Dataset = {
@@ -132,9 +133,11 @@ type File = {
   format: string
 }
 
-const { dataset } = defineProps<{ dataset: Dataset }>()
+const { dataset } = defineProps<{
+  dataset: Dataset
+  actionStyle: DatasetCard['actionsStyle']
+}>()
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
 
 const files = ref<File[]>([])
 const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { params: { size: 0 } })

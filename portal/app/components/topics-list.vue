@@ -2,6 +2,7 @@
   <v-row
     v-if="topics.length"
     :justify="config?.centered ? 'center' : undefined"
+    dense
   >
     <v-col
       v-for="topic in topics"
@@ -19,7 +20,7 @@
           :density="config?.density"
           :elevation="config?.elevation"
           :rounded="config?.rounded"
-          :to="isLinks && !preview ? `/datasets?topic=${topic.id}` : undefined"
+          :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
           @click="isFilters ? toggle(topic.id) : undefined"
         >
           <template
