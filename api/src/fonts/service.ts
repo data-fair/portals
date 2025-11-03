@@ -52,7 +52,7 @@ export const getFontFamilyCss = async (owner: AccountKeys, familyName: string, m
     return makeFontCss(font)
   }
   const assets = (await mongo.fontAssets.find({ 'owner.type': owner.type, 'owner.id': owner.id, name: familyName })
-    .project({ _id: 1, subset: 1, weightRange: 1 }).toArray()) as any[] as Pick<FontAsset, '_id' | 'subset' | 'weightRange' | 'style'>[]
+    .project({ _id: 1, subset: 1, weightRange: 1, style: 1 }).toArray()) as any[] as Pick<FontAsset, '_id' | 'subset' | 'weightRange' | 'style'>[]
   const font: Font = {
     name: familyName,
     variants: assets.map(asset => ({ ...asset, woff2Url: managerUrl ? `/portals-manager/api/font-assets/${asset._id}/data` : `/portal/api/font-assets/${asset._id}` }))
