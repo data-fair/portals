@@ -55,7 +55,7 @@
           v-if="cardConfig.topics?.show && dataset.topics?.length"
           :config="cardConfig.topics"
           :topics="dataset.topics"
-          class="mx-4 mt-2"
+          class="mx-4 mt-2 flex-grow-0"
         />
 
         <!-- keywords list -->
@@ -63,7 +63,7 @@
           v-if="cardConfig.keywords?.show && dataset.keywords?.length"
           :config="cardConfig.keywords"
           :keywords="dataset.keywords"
-          class="px-4 mt-2"
+          class="px-4 mt-2 flex-grow-0"
         />
 
         <!-- Department / Updated At -->

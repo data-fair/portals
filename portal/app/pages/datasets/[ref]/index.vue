@@ -73,7 +73,7 @@
     >
       <nav-link
         :to="`/datasets`"
-        :icon="mdiReply"
+        :icon="mdiChevronLeft"
         :text="t('backToDatasets')"
       />
     </v-row>
@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import { mdiOpenInNew, mdiReply } from '@mdi/js'
+import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
 
 type Application = {
   id: string

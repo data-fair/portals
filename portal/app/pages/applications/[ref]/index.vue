@@ -61,7 +61,7 @@
     >
       <nav-link
         :to="`/datasets`"
-        :icon="mdiReply"
+        :icon="mdiChevronLeft"
         :text="t('backToApplications')"
       />
     </v-row>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiReply } from '@mdi/js'
+import { mdiChevronLeft } from '@mdi/js'
 import type { Account } from '@data-fair/lib-common-types/account'
 
 type Application = {
