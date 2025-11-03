@@ -77,13 +77,13 @@ RUN mkdir -p /app/api/node_modules
 ##########################
 FROM base AS fonts-builder
 
-ADD /dev/scripts/prepare-fonts.js prepare-fonts.js
+ADD /dev/scripts/prepare-fonts.ts prepare-fonts.ts
 RUN npm pack google-fonts-complete@2.2.3 &&\
     tar -xzf google-fonts-complete-2.2.3.tgz &&\
     rm google-fonts-complete-2.2.3.tgz &&\
     mv package google-fonts-complete
 RUN mkdir -p api/assets/fonts
-RUN node prepare-fonts.js
+RUN node prepare-fonts.ts
 
 # =============================
 # Build Portal with Nuxt
