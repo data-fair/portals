@@ -242,7 +242,6 @@ onMounted(async () => {
 // Reset applications when filters change
 watch([search, sort, order, filters.baseApplications, filters.topics, filters.owners], async () => {
   currentPage.value = 0
-  displayedApplications.value = []
   await applicationsFetch.refresh()
   if (applicationsFetch.data.value?.results) {
     displayedApplications.value = [...applicationsFetch.data.value.results]
