@@ -18,6 +18,18 @@ export default {
         { const: 'left', title: 'À gauche des résultats' }
       ]
     },
+    filtersList: {
+      type: 'array',
+      title: 'Filtres à afficher',
+      layout: { cols: { md: 4 } },
+      items: {
+        type: 'string',
+        oneOf: [
+          { const: 'base-application', title: 'Filtres par applications' },
+          { const: 'topics', title: 'Filtres par thématiques' }
+        ]
+      }
+    },
     defaultSort: {
       type: 'string',
       title: 'Tri par défaut',

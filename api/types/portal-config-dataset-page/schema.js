@@ -11,7 +11,7 @@ export default {
     metadataLocation: {
       type: 'string',
       title: 'Position des métadonnées',
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'right',
       oneOf: [
         { const: 'top', title: 'Sous le titre' },
@@ -22,11 +22,22 @@ export default {
     attachmentsLocation: {
       type: 'string',
       title: 'Position des pièces jointes',
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'action',
       oneOf: [
         { const: 'action', title: 'Dans un bouton d\'action' },
         { const: 'full', title: 'Dans les métadonnées' }
+      ]
+    },
+    actionsStyle: {
+      type: 'string',
+      title: 'Style des boutons d\'actions',
+      layout: { cols: { md: 4 } },
+      default: 'full',
+      oneOf: [
+        { const: 'icon', title: 'Icône seulement' },
+        { const: 'full', title: 'Icône et texte' },
+        { const: 'text', title: 'Texte seulement' }
       ]
     },
     showImage: {
@@ -35,7 +46,7 @@ export default {
       description: 'L\'image sera affichée au dessus de la description.',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
     },
@@ -45,20 +56,9 @@ export default {
       description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
-    },
-    actionsStyle: {
-      type: 'string',
-      title: 'Style des boutons d\'actions',
-      layout: { cols: { md: 6 } },
-      default: 'full',
-      oneOf: [
-        { const: 'icon', title: 'Icône seulement' },
-        { const: 'full', title: 'Icône et texte' },
-        { const: 'text', title: 'Texte seulement' }
-      ]
     }
   }
 }

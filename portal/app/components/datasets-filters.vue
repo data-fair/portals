@@ -2,7 +2,7 @@
   <!-- Search -->
   <v-col
     cols="12"
-    :md="drawer ? 12 : 4"
+    :md="drawer ? 12 : (showConceptsFilter ? 4 : 6)"
   >
     <v-text-field
       v-model="search"
@@ -18,6 +18,7 @@
 
   <!-- Concepts filter -->
   <v-col
+    v-if="showConceptsFilter"
     cols="12"
     :md="drawer ? 12 : 4"
   >
@@ -38,7 +39,7 @@
 
   <!-- Topics filters (mobile view or drawer)-->
   <v-col
-    v-if="$vuetify.display.smAndDown || drawer"
+    v-if="showTopicsFilter && ($vuetify.display.smAndDown || drawer)"
     cols="12"
   >
     <v-autocomplete
@@ -63,7 +64,7 @@
   <!-- Sort/Order -->
   <v-col
     cols="12"
-    :md="drawer ? 12 : 4"
+    :md="drawer ? 12 : (showConceptsFilter ? 4 : 6)"
   >
     <v-select
       v-model="sort"
@@ -118,7 +119,7 @@
 
   <!-- Topics filter (desktop view)-->
   <v-col
-    v-if="!$vuetify.display.smAndDown && !drawer && topicsItems.length"
+    v-if="showTopicsFilter && !$vuetify.display.smAndDown && !drawer && topicsItems.length"
     cols="12"
   >
     <topics-list
@@ -158,6 +159,10 @@ const filters = {
   owners: useStringsArraySearchParam('owner')
 }
 const order = defineModel<number>('order', { default: 0 }) // 0 = desc, 1 = asc
+
+// Check which filters should be displayed based on filtersList config
+const showConceptsFilter = computed(() => (portalConfig.value.datasets?.list?.filtersList ?? []).includes('concepts'))
+const showTopicsFilter = computed(() => (portalConfig.value.datasets?.list?.filtersList ?? []).includes('topics'))
 
 type Facets = {
   concepts: { value: string; count: number }[]

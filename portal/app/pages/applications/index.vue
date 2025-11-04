@@ -9,7 +9,7 @@
     <!-- Search -->
     <v-col
       cols="12"
-      md="4"
+      :md="showBaseApplicationFilter ? 4 : 6"
     >
       <v-text-field
         v-model="search"
@@ -25,6 +25,7 @@
 
     <!-- Base applications filter -->
     <v-col
+      v-if="showBaseApplicationFilter"
       cols="12"
       md="4"
     >
@@ -48,7 +49,7 @@
 
     <!-- Topics filters (mobile view)-->
     <v-col
-      v-if="$vuetify.display.smAndDown"
+      v-if="showTopicsFilter && $vuetify.display.smAndDown"
       cols="12"
     >
       <v-autocomplete
@@ -73,7 +74,7 @@
     <!-- Sort/Order -->
     <v-col
       cols="12"
-      md="4"
+      :md="showBaseApplicationFilter ? 4 : 6"
     >
       <v-select
         v-model="sort"
@@ -106,7 +107,7 @@
 
     <!-- Topics filter (desktop view)-->
     <v-col
-      v-if="!$vuetify.display.smAndDown && topicsItems.length"
+      v-if="showTopicsFilter && !$vuetify.display.smAndDown && topicsItems.length"
       cols="12"
     >
       <topics-list
@@ -187,6 +188,10 @@ const filters = {
   owners: useStringsArraySearchParam('owner')
 }
 const order = ref(0) // 0 = desc, 1 = asc
+
+// Check which filters should be displayed based on filtersList config
+const showBaseApplicationFilter = computed(() => (portalConfig.value.applications?.list?.filtersList ?? []).includes('base-application'))
+const showTopicsFilter = computed(() => (portalConfig.value.applications?.list?.filtersList ?? []).includes('topics'))
 
 // Infinite scroll state
 const currentPage = ref(0)
