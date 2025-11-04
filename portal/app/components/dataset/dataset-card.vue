@@ -32,7 +32,12 @@
           class="flex-grow-0"
           height="170"
         />
-        <v-card-title style="white-space: unset;">{{ dataset.title }}</v-card-title>
+        <v-card-title
+          class="font-weight-bold"
+          style="white-space: unset;"
+        >
+          {{ dataset.title }}
+        </v-card-title>
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"

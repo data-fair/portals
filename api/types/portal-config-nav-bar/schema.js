@@ -132,6 +132,18 @@ export default {
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
+    tabsStyle: {
+      type: 'array',
+      title: 'Style des titres des onglets',
+      items: {
+        type: 'string',
+        oneOf: [
+          { const: 'uppercaseTitle', title: 'Afficher en majuscules' },
+          { const: 'largerFont', title: 'Police plus grande' }
+        ]
+      },
+      layout: { cols: { md: 4 } }
+    },
     transparent: {
       type: 'boolean',
       title: 'Appliquer un effet de transparence',
@@ -143,15 +155,6 @@ export default {
     keepOnScroll: {
       type: 'boolean',
       title: 'Garder la barre de navigation affichée au scroll',
-      layout: {
-        comp: 'switch',
-        cols: { md: 4 }
-      }
-    },
-    uppercaseTitle: {
-      type: 'boolean',
-      title: 'Afficher les titres des onglets en majuscules',
-      default: true,
       layout: {
         comp: 'switch',
         cols: { md: 4 }
