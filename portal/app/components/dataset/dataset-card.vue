@@ -186,24 +186,27 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
 }>()
 
 const { dayjs } = useLocaleDayjs()
+const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 
-let getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
-if (isPortalConfig) {
-  getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-    let id = imageRef._id
-    if (mobile && imageRef.mobileAlt) id += '-mobile'
-    return `/portal/api/images/${id}`
-  }
+const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
 }
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
+  if (cardConfig.thumbnail.useTopic && dataset.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
-  if (cardConfig.thumbnail?.default) return getImageSrc(cardConfig.thumbnail.default, false)
+  if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
 })
 

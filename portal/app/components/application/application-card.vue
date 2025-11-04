@@ -120,6 +120,7 @@
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
 import type { ApplicationCard } from '#api/types/portal-config'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
@@ -141,11 +142,22 @@ const { application, cardConfig } = defineProps<{
 }>()
 
 const { dayjs } = useLocaleDayjs()
+const { portalConfig } = usePortalStore()
 const { t } = useI18n()
+
+const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
   if (application.image) return application.image
+  if (cardConfig.thumbnail.useTopic && application.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
   return `${application.href}/capture?updatedAt=${application.updatedAt}`
 })
 

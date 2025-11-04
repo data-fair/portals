@@ -58,6 +58,7 @@ export default {
             if: 'data?.show === true',
             children: [
               'location',
+              'useTopic',
               'crop'
             ]
           },
@@ -80,6 +81,16 @@ export default {
             { const: 'top', title: 'En haut' },
             { const: 'center', title: 'Sous le titre' }
           ]
+        },
+        useTopic: {
+          type: 'boolean',
+          title: "Utiliser l'image de la première thématique",
+          description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: false
         },
         crop: {
           type: 'boolean',

@@ -59,6 +59,7 @@ export default {
             children: [
               'location',
               'default',
+              'useTopic',
               'useApplication',
               'crop'
             ]
@@ -112,9 +113,19 @@ export default {
             }
           }
         },
+        useTopic: {
+          type: 'boolean',
+          title: "Utiliser l'image de la première thématique",
+          description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: false
+        },
         useApplication: {
           type: 'boolean',
-          title: "Utiliser l'image de l'application",
+          title: "Utiliser l'image de la première application",
           description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
           layout: {
             comp: 'switch',

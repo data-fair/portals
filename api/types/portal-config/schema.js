@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
   'x-exports': ['types', 'vjsf'],
@@ -104,6 +105,7 @@ export default {
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       // { title: 'Réutilisations', children: [] }, // TODO: add reuses
+      { title: 'Thématiques', children: ['topics'] },
       { title: 'Informations de contact', children: ['contactInformations'] },
       { title: 'Réseaux sociaux', children: ['socialShares', 'socialLinks'] },
       {
@@ -274,7 +276,6 @@ export default {
           type: 'array',
           title: 'Éléments du menu de navigation',
           layout: {
-            // eslint-disable-next-line no-template-curly-in-string
             itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
             messages: { addItem: 'Ajouter un lien' }
           },
@@ -288,7 +289,53 @@ export default {
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialShares: { $ref: 'https://github.com/data-fair/portals/portal-config-social-shares' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
-    personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' }
+    personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
+    topics: {
+      type: 'array',
+      title: '',
+      layout: {
+        comp: 'list',
+        listEditMode: 'inline',
+        density: 'compact',
+        getItems: {
+          url: '/data-fair/api/v1/settings/user/superadmin/topics',
+          // url: '/data-fair/api/v1/settings/${context.owner.type}/${context.owner.id}/topics',
+          itemsResults: 'data',
+          itemKey: 'item.id',
+          itemTitle: '`Thématique : ${item.title}`',
+          itemIcon: 'item.icon?.svg'
+        }
+      },
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string', layout: 'none' },
+          title: { type: 'string', layout: 'none' },
+          description: {
+            type: 'string',
+            title: 'Ajouter une description',
+            layout: 'textarea'
+          },
+          thumbnail: {
+            type: 'object',
+            required: ['_id', 'name', 'mimeType'],
+            layout: {
+              slots: {
+                component: {
+                  name: 'image-upload',
+                  props: { width: 1280, label: 'Chargez une image' }
+                }
+              }
+            },
+            properties: {
+              _id: { type: 'string' },
+              name: { type: 'string' },
+              mimeType: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
   },
   $defs: {
     menuItem: {
@@ -317,7 +364,6 @@ export default {
               type: 'array',
               title: '',
               layout: {
-                // eslint-disable-next-line no-template-curly-in-string
                 itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
                 messages: { addItem: 'Ajouter un lien' }
               },
