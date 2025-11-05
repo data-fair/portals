@@ -2,16 +2,16 @@
   <d-frame-wrapper
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('application')} - ${element.application.title}`"
-    :src="element.application.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+    :src="element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     :sync-params="element.syncParams ? '*:' + element.application.id + '-app_' : undefined"
     aspect-ratio
   />
 </template>
 
 <script setup lang="ts">
-import type { Application } from '#api/types/page-config'
+import type { ApplicationElement } from '#api/types/page-config'
 
-const { element } = defineProps<{ element: Application }>()
+const { element } = defineProps<{ element: ApplicationElement }>()
 const { t } = useI18n()
 
 </script>

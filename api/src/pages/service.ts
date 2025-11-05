@@ -153,6 +153,7 @@ const getPageImageRefs = async (page: Page) => {
   const imageRefs: ImageRef[] = []
   await traversePage(page, (pageElement) => {
     if (pageElement.type === 'image' && pageElement.image) imageRefs.push(pageElement.image)
+    if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
     if (pageElement.type === 'card' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)

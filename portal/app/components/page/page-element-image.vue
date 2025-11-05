@@ -3,6 +3,9 @@
     v-if="src"
     :class="[
       'd-flex flex-column align-center overflow-hidden',
+      element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
+      !preview && element.banner && context.isRoot && context.index === 0 && 'mt-n4',
+      !preview && element.banner && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
   >
@@ -65,29 +68,43 @@ const { element } = defineProps<{
 
 const imgEl = useTemplateRef('img')
 const { width } = useElementSize(imgEl)
+const { preview } = usePortalStore()
 
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const display = useDisplay()
 
+const image = computed(() => {
+  if (element.banner && element.wideImage) return element.wideImage
+  if (!element.image) return
+  return element.image
+})
+
 const src = computed(() => {
   if (element.url) return element.url
-  if (!element.image) return
-  return getImageSrc(element.image, width.value < 1280)
+  if (!image.value) return
+  return getImageSrc(image.value, width.value < 1280)
 })
 
 const zoomedSrc = computed(() => {
   if (element.url) return element.url
-  if (!element.image) return
-  return getImageSrc(element.image, display.mobile.value)
+  if (!image.value) return
+  return getImageSrc(image.value, display.mobile.value)
 })
 
 const zoomed = ref(false)
 
 const imgStyle = computed(() => {
-  const fit = `object-fit:${element.cover ? 'cover' : 'contain'};`
-  const dims = element.cover
+  const fit = `object-fit:${(element.cover || element.banner) ? 'cover' : 'contain'};`
+  const dims = (element.cover || element.banner)
     ? `width:100%;height:${element.height ? `${element.height}px` : '100%'};`
     : (element.height ? `height:${element.height}px;` : '')
   return `${fit}${dims}`
 })
 </script>
+
+<style scoped>
+.banner-fluid {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+</style>

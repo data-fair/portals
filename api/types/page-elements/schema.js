@@ -149,10 +149,10 @@ export default {
           {
             if: 'data?.alertType === "none"',
             children: [
-              'type', 'alertType', 'icon', 'color', 'title', 'content'
+              'type', 'alertType', 'icon', 'color', 'title', 'content', 'mb'
             ]
           },
-          ['type', 'alertType', 'title', 'content']
+          ['type', 'alertType', 'title', 'content', 'mb']
         ]
       },
       properties: {
@@ -209,6 +209,11 @@ export default {
         type: {
           const: 'image'
         },
+        banner: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          layout: 'switch'
+        },
         title: {
           title: "Titre de l'image",
           description: "Recommandé pour l'accessibilité et pour afficher une information utile au survol",
@@ -246,10 +251,32 @@ export default {
             }
           }
         },
-        href: {
-          title: 'URL vers une autre page',
-          description: "L'image devient un lien qui pointe vers l'URL renseignée.",
-          type: 'string'
+        wideImage: {
+          type: 'object',
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            if: 'parent.data?.banner',
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 2560, label: 'Chargez une image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
         },
         height: {
           title: 'Hauteur fixe (px)',
@@ -264,11 +291,15 @@ export default {
             comp: 'switch'
           }
         },
+        href: {
+          title: 'URL vers une autre page',
+          description: "L'image devient un lien qui pointe vers l'URL renseignée.",
+          type: 'string'
+        },
         legend: {
           type: 'string',
           title: "Légende de l'image",
           description: "Légende affichée en italique en dessous de l'image",
-          layout: { if: '!parent.data?.banner' }
         },
         zoomable: {
           type: 'boolean',
@@ -971,8 +1002,9 @@ export default {
     },
     'element-application': {
       type: 'object',
-      title: 'Application',
+      title: 'Application Element',
       'x-i18n-title': {
+        en: 'Application',
         fr: 'Visualisation'
       },
       required: ['type', 'application'],
@@ -990,7 +1022,7 @@ export default {
           required: ['id', 'title', 'exposedUrl'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&select=id,title,exposedUrl',
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -1004,7 +1036,7 @@ export default {
             title: {
               type: 'string'
             },
-            exposedUrl: {
+            slug: {
               type: 'string'
             }
           }
