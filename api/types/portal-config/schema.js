@@ -298,8 +298,7 @@ export default {
         listEditMode: 'inline',
         density: 'compact',
         getItems: {
-          url: '/data-fair/api/v1/settings/user/superadmin/topics',
-          // url: '/data-fair/api/v1/settings/${context.owner.type}/${context.owner.id}/topics',
+          url: '/data-fair/api/v1/settings/${context.owner.type}/${context.owner.id}/topics',
           itemsResults: 'data',
           itemKey: 'item.id',
           itemTitle: '`Thématique : ${item.title}`',

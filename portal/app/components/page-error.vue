@@ -10,7 +10,7 @@
       <template v-else>
         <error-server style="max-height: 300px" />
       </template>
-      <div class="text-h5 mb-2">
+      <div class="text-h5 my-4">
         {{ title }}
       </div>
       <nav-link

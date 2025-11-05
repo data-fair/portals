@@ -88,6 +88,7 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
+const session = useSession()
 const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
@@ -176,6 +177,7 @@ const pages = computed(() => {
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
   context: {
     pages: pages.value,
+    owner: session.account.value,
     // used by schema https://github.com/data-fair/lib/theme to hide some parts
     simplifiedTheme: true
   },

@@ -13,7 +13,6 @@ const router = Router()
 export default router
 
 const resizeImageWorkerPath = path.resolve(import.meta.dirname, './resize-image.ts')
-console.log('resizeImageWorkerPath', resizeImageWorkerPath)
 
 export const resizePiscina = new Piscina<ResizeInput, ResizeOutput>({
   filename: resizeImageWorkerPath,
