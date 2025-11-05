@@ -1,5 +1,14 @@
 <template>
-  <template v-if="dataset">
+  <!-- Error state -->
+  <page-error
+    v-if="datasetFetch.error.value"
+    :status-code="datasetFetch.error.value.statusCode || 500"
+    :title="errorTitle"
+    :back-title="t('backToDatasets')"
+    back-url="/datasets"
+  />
+
+  <template v-else-if="dataset">
     <h1 class="text-h4 mb-4">
       {{ dataset.title }}
     </h1>
@@ -175,6 +184,13 @@ const orderedApplications = computed(() => {
   return [...ordered, ...remaining]
 })
 
+const errorTitle = computed(() => {
+  const code = datasetFetch.error.value?.statusCode
+  if (code === 401 || code === 403) return undefined
+  if (code === 404) return t('datasetNotFound')
+  return t('datasetError')
+})
+
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
   description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
@@ -189,8 +205,13 @@ usePageSeo({
     application: Application
     backToDatasets: Back to datasets list
     dataset: Dataset
+    datasetNotFound: The requested dataset was not found
+    datasetError: An error occurred while loading the dataset
+
   fr:
     application: Visualisation
     backToDatasets: Retour à la liste des jeux de données
     dataset: Jeu de données
+    datasetNotFound: Le jeu de données demandé n'a pas été trouvé
+    datasetError: Une erreur est survenue lors du chargement du jeu de données
 </i18n>

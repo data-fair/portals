@@ -154,8 +154,8 @@ defineProps<{
 const search = useStringSearchParam('q')
 const sort = useStringSearchParam('sort')
 const filters = {
-  concepts: useStringsArraySearchParam('concept'),
-  topics: useStringsArraySearchParam('topic'),
+  concepts: useStringsArraySearchParam('concepts'),
+  topics: useStringsArraySearchParam('topics'),
   owners: useStringsArraySearchParam('owner')
 }
 const order = defineModel<number>('order', { default: 0 }) // 0 = desc, 1 = asc

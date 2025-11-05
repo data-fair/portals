@@ -1,6 +1,12 @@
 <template>
+  <!-- Error state -->
+  <page-error
+    v-if="pageConfigFetch.error.value"
+    :status-code="pageConfigFetch.error.value.statusCode || 500"
+  />
+
   <page-elements
-    v-if="pageConfigFetch.data.value"
+    v-else-if="pageConfigFetch.data.value"
     :model-value="pageConfigFetch.data.value.elements"
   />
 </template>

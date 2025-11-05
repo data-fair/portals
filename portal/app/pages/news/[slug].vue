@@ -1,6 +1,15 @@
 <template>
+  <!-- Error state -->
+  <page-error
+    v-if="pageConfigFetch.error.value"
+    :status-code="pageConfigFetch.error.value.statusCode || 500"
+    :title="errorTitle"
+    :back-title="t('backToNews')"
+    back-url="/news"
+  />
+
   <page-elements
-    v-if="pageConfigFetch.data.value"
+    v-else-if="pageConfigFetch.data.value"
     :model-value="pageConfigFetch.data.value.elements"
   />
 </template>
@@ -18,6 +27,13 @@ const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/news/${slu
   watch: false
 })
 
+const errorTitle = computed(() => {
+  const code = pageConfigFetch.error.value?.statusCode
+  if (code === 401 || code === 403) return undefined
+  if (code === 404) return t('newsNotFound')
+  return t('newsError')
+})
+
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
@@ -33,7 +49,13 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
+    backToNews: Back to News List
     news: News
+    newsNotFound: The requested news article was not found
+    newsError: An error occurred while loading the news article
   fr:
+    backToNews: Retourner à la liste des actualités
     news: Actualité
+    newsNotFound: L'actualité demandée n'a pas été trouvée
+    newsError: Une erreur est survenue lors du chargement de l'actualité
 </i18n>

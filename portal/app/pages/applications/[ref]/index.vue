@@ -1,5 +1,14 @@
 <template>
-  <template v-if="application">
+  <!-- Error state -->
+  <page-error
+    v-if="applicationFetch.error.value"
+    :status-code="applicationFetch.error.value.statusCode || 500"
+    :title="errorTitle"
+    :back-title="t('backToApplications')"
+    back-url="/applications"
+  />
+
+  <template v-else-if="application">
     <h1 class="text-h4 mb-4">
       {{ application.title }}
     </h1>
@@ -119,6 +128,13 @@ const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applicati
 const application = computed(() => applicationFetch.data.value)
 const metadataLocation = computed(() => portalConfig.value.applications.page.metadataLocation || 'right')
 
+const errorTitle = computed(() => {
+  const code = applicationFetch.error.value?.statusCode
+  if (code === 401 || code === 403) return undefined
+  if (code === 404) return t('applicationNotFound')
+  return t('applicationError')
+})
+
 const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] }>(
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
 )
@@ -145,10 +161,14 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     application: Application
+    applicationNotFound: The requested application was not found
+    applicationError: An error occurred while loading the application
     backToApplications: Back to applications list
     datasetsUsed: Dataset used | Datasets used
   fr:
     application: Visualisation
+    applicationNotFound: La visualisation demandée n'a pas été trouvée
+    applicationError: Une erreur est survenue lors du chargement de la visualisation
     backToApplications: Retour à la liste des visualisations
     datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

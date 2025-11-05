@@ -1,6 +1,15 @@
 <template>
+  <!-- Error state -->
+  <page-error
+    v-if="pageConfigFetch.error.value"
+    :status-code="pageConfigFetch.error.value.statusCode || 500"
+    :title="errorTitle"
+    :back-title="t('backToEvents')"
+    back-url="/events"
+  />
+
   <page-elements
-    v-if="pageConfigFetch.data.value"
+    v-else-if="pageConfigFetch.data.value"
     :model-value="pageConfigFetch.data.value.elements"
   />
 </template>
@@ -18,6 +27,13 @@ const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${sl
   watch: false
 })
 
+const errorTitle = computed(() => {
+  const code = pageConfigFetch.error.value?.statusCode
+  if (code === 401 || code === 403) return undefined
+  if (code === 404) return t('eventNotFound')
+  return t('eventError')
+})
+
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
@@ -33,7 +49,13 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
+    backToEvents: Back to Events List
     event: Event
+    eventNotFound: The requested event was not found
+    eventError: An error occurred while loading the event
   fr:
+    backToEvents: Retourner à la liste des événements
     event: Événement
+    eventNotFound: L'événement demandé n'a pas été trouvé
+    eventError: Une erreur est survenue lors du chargement de l'événement
 </i18n>

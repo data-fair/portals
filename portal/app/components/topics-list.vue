@@ -10,8 +10,7 @@
       cols="auto"
     >
       <div class="bg-surface">
-        <v-btn
-          class="text-none"
+        <v-chip
           :variant="!selected.includes(topic.id) ? 'outlined' : undefined"
           :color="config?.color === 'default' ? topic.color
             : config?.color ? config.color
@@ -23,23 +22,20 @@
           :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
           @click="isFilters ? toggle(topic.id) : undefined"
         >
-          <template
+          <v-icon
             v-if="config?.showIcon && topic.icon?.svgPath"
-            #prepend
-          >
-            <v-icon
-              :color="!selected.includes(topic.id) ? (config?.iconColor === 'default' ? topic.color
-                  : config?.iconColor ? config.iconColor
-                  : config?.color === 'default' ? topic.color
-                  : config?.color ? config.color
-                  : undefined
-                ) : undefined
-              "
-              :icon="topic.icon?.svgPath"
-            />
-          </template>
+            :color="!selected.includes(topic.id) ? (config?.iconColor === 'default' ? topic.color
+                : config?.iconColor ? config.iconColor
+                : config?.color === 'default' ? topic.color
+                : config?.color ? config.color
+                : undefined
+              ) : undefined
+            "
+            :icon="topic.icon?.svgPath"
+            start
+          />
           {{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}
-        </v-btn>
+        </v-chip>
       </div>
     </v-col>
   </v-row>
