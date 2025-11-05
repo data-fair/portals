@@ -969,7 +969,7 @@ export default {
           }
         ]
       },
-      required: ['type', 'columns', 'limit', 'cardConfig'],
+      required: ['type', 'columns', 'limit'],
       properties: {
         type: {
           const: 'applications-list'
@@ -1019,7 +1019,7 @@ export default {
             fr: 'Visualisations'
           },
           additionalProperties: false,
-          required: ['id', 'title', 'exposedUrl'],
+          required: ['id', 'title', 'slug'],
           layout: {
             getItems: {
               url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',

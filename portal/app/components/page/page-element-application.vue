@@ -1,8 +1,9 @@
 <template>
   <d-frame-wrapper
+    v-if="element.application?.slug"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('application')} - ${element.application.title}`"
-    :src="element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+    :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     :sync-params="element.syncParams ? '*:' + element.application.id + '-app_' : undefined"
     aspect-ratio
   />
