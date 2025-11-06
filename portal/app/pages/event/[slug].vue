@@ -4,8 +4,11 @@
     v-if="pageConfigFetch.error.value"
     :status-code="pageConfigFetch.error.value.statusCode || 500"
     :title="errorTitle"
-    :back-title="t('backToEvents')"
-    back-url="/events"
+    :link="{
+      type: 'standard',
+      subtype: 'event',
+      title: t('backToEvents')
+    }"
   />
 
   <page-elements

@@ -4,8 +4,11 @@
     v-if="applicationFetch.error.value"
     :status-code="applicationFetch.error.value.statusCode || 500"
     :title="errorTitle"
-    :back-title="t('backToApplications')"
-    back-url="/applications"
+    :link="{
+      type: 'standard',
+      subtype: 'applications',
+      title: t('backToApplications')
+    }"
   />
 
   <template v-else-if="application">
@@ -69,9 +72,13 @@
       justify="center"
     >
       <nav-link
-        :to="`/datasets`"
-        :icon="mdiChevronLeft"
-        :text="t('backToApplications')"
+        :link="{
+          type: 'standard',
+          subtype: 'applications',
+          title: t('backToApplications'),
+          icon: { custom: mdiChevronLeft }
+        }"
+        :config="portalConfig.navLinksConfig"
       />
     </v-row>
   </template>

@@ -8,7 +8,7 @@
     >
       <application-card
         :application="application"
-        :card-config="element.usePortalConfig ? portalConfig.datasets.card : { ...portalConfig.datasets.card, ...element.cardConfig }"
+        :card-config="element.usePortalConfig ? portalConfig.applications.card : { ...portalConfig.applications.card, ...element.cardConfig }"
       />
     </v-col>
   </v-row>

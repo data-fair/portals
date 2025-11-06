@@ -24,6 +24,19 @@ export default {
           { cols: 6, name: 'font-families-preview' }
         ]
       },
+      {
+        title: 'Styles',
+        children: [
+          {
+            title: 'Liens de navigation',
+            comp: 'card',
+            children: [
+              'navLinksConfig',
+              { name: 'nav-link-preview' }
+            ]
+          }
+        ]
+      },
       { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
       {
         title: 'Entête',
@@ -170,6 +183,7 @@ export default {
         }
       }
     },
+    navLinksConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
     logo: {
       type: 'object',
       title: 'Logo',

@@ -33,6 +33,12 @@
               <font-families-preview />
             </preview>
           </template>
+          <template #nav-link-preview="{ node }">
+            <nav-link-preview
+              v-if="formValid"
+              :config="node.data.navLinksConfig"
+            />
+          </template>
           <template #app-bar-preview="context">
             <preview>
               <layout-app-bar
@@ -41,12 +47,9 @@
               />
             </preview>
           </template>
-          <template #footer-preview="context">
+          <template #footer-preview>
             <preview>
-              <layout-footer
-                v-if="formValid"
-                :home="context.home"
-              />
+              <layout-footer v-if="formValid" />
             </preview>
           </template>
           <!-- TODO: fix vjsf bug -->

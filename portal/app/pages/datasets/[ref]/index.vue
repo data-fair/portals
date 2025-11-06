@@ -4,8 +4,11 @@
     v-if="datasetFetch.error.value"
     :status-code="datasetFetch.error.value.statusCode || 500"
     :title="errorTitle"
-    :back-title="t('backToDatasets')"
-    back-url="/datasets"
+    :link="{
+      type: 'standard',
+      subtype: 'datasets',
+      title: t('backToDatasets')
+    }"
   />
 
   <template v-else-if="dataset">
@@ -81,9 +84,13 @@
       justify="center"
     >
       <nav-link
-        :to="`/datasets`"
-        :icon="mdiChevronLeft"
-        :text="t('backToDatasets')"
+        :link="{
+          type: 'standard',
+          subtype: 'datasets',
+          title: t('backToDatasets'),
+          icon: { custom: mdiChevronLeft }
+        }"
+        :config="portalConfig.navLinksConfig"
       />
     </v-row>
   </template>

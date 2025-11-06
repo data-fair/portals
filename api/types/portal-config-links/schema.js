@@ -2,6 +2,86 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-links',
   'x-exports': [],
   $defs: {
+    linkConfig: {
+      type: 'object',
+      properties: {
+        color: { $ref: '#/$defs/color' },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          layout: { cols: { md: 4 } },
+          default: 1,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          layout: { cols: { md: 4 } },
+          default: 'default',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          layout: { cols: { md: 4 } },
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        variant: {
+          type: 'string',
+          title: 'Variante',
+          layout: { cols: { md: 4 } },
+          default: 'default',
+          oneOf: [
+            { const: 'default', title: 'Par défaut' },
+            { const: 'outlined', title: 'Avec bordure' },
+            { const: 'tonal', title: 'Tonale' }
+          ]
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher l\'icône',
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        }
+      }
+    },
+
+    // Link item present in footer or button element
+    linkItem: {
+      type: 'object',
+      unevaluatedProperties: false,
+      oneOfLayout: { emptyData: true, label: 'Type de page' },
+      discriminator: { propertyName: 'type' },
+      // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      layout: { switch: [{ if: 'summary', children: [] }] },
+      oneOf: [
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
+      ]
+    },
+
+    // Definitions of link item types
     standardPage: {
       title: 'Page standard',
       required: ['type', 'subtype'],
@@ -136,6 +216,8 @@ export default {
         icon: { $ref: '#/$defs/icon' },
       }
     },
+
+    // Other definitions
     icon: {
       type: 'object',
       title: 'Configuration de l\'icône',

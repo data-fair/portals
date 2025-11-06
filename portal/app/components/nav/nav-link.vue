@@ -1,40 +1,37 @@
 <template>
-  <NuxtLink
-    v-if="portalConfig.style.navLinkMode.startsWith('link')"
-    :to="to"
-  >
-    <v-icon
-      v-if="icon && portalConfig.style.navLinkIcon"
-      :icon="icon"
-      :color="portalConfig.style.navLinkColor"
-    />
-    {{ text }}
-  </NuxtLink>
   <v-btn
-    v-else-if="portalConfig.style.navLinkMode.startsWith('btn')"
-    :to="to"
-    :text="text"
-    :variant="portalConfig.style.navLinkMode === 'btn-outlined' ? 'outlined' : undefined"
-    :prepend-icon="icon && portalConfig.style.navLinkIcon ? icon : undefined"
-    color="primary"
-  />
+    :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
+    :href="(!preview && link.type === 'external') ? link.href : undefined"
+    :target="link.type === 'external' ? '_blank' : undefined"
+    :rel="link.type === 'external' ? 'noopener' : undefined"
+    :color="config?.color"
+    :density="config?.density"
+    :elevation="config?.elevation"
+    :rounded="config?.rounded"
+    :variant="config?.variant !== 'default' ? config?.variant : undefined"
+  >
+    <template #prepend>
+      <v-icon
+        v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+        :icon="link.icon.mdi?.svgPath || link.icon.custom"
+        :color="link.icon.color"
+      />
+    </template>
+    {{ resolveLinkTitle(link, locale) }}
+  </v-btn>
 </template>
 
 <script setup lang="ts">
+import type { LinkItem, LinkConfig } from '#api/types/page-elements/index.js'
+
 defineProps<{
-  to: string
-  text: string
-  icon?: string
+  link: LinkItem
+  config?: LinkConfig
 }>()
 
-// const { portalConfig } = usePortalStore()
-// TODO: Use a global style config
-const portalConfig = {
-  style: {
-    navLinkMode: 'btn-outlined',
-    navLinkIcon: true,
-    navLinkColor: 'primary',
-  }
-}
+const { locale } = useI18n()
+
+const { preview } = usePortalStore()
+const { resolveLink, resolveLinkTitle } = useNavigationStore()
 
 </script>

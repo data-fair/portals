@@ -1,4 +1,5 @@
 <template>
+  <!-- Basic elements -->
   <page-element-title
     v-if="element.type === 'title'"
     :element="element"
@@ -16,14 +17,20 @@
     :element="element"
     :context="context"
   />
-  <page-element-iframe
-    v-else-if="element.type === 'iframe'"
+  <page-element-button
+    v-else-if="element.type === 'button'"
     :element="element"
   />
   <page-element-divider
     v-else-if="element.type === 'divider'"
     :element="element"
   />
+  <page-element-iframe
+    v-else-if="element.type === 'iframe'"
+    :element="element"
+  />
+
+  <!-- Functional blocks -->
   <page-element-search
     v-else-if="element.type === 'search'"
     :element="element"
@@ -41,6 +48,8 @@
     v-else-if="element.type === 'contact'"
     :element="element"
   />
+
+  <!-- Datasets -->
   <page-element-datasets-list
     v-else-if="element.type === 'datasets-list'"
     :element="element"
@@ -57,6 +66,8 @@
     v-else-if="element.type === 'dataset-form'"
     :element="element"
   />
+
+  <!-- Applications -->
   <page-element-applications-list
     v-else-if="element.type === 'applications-list'"
     :element="element"
@@ -65,6 +76,8 @@
     v-else-if="element.type === 'application'"
     :element="element"
   />
+
+  <!-- Layout & structure -->
   <page-element-banner
     v-else-if="element.type === 'banner'"
     :element="element"

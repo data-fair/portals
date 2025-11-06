@@ -33,29 +33,41 @@ export default {
         content: ''
       },
       oneOf: [
-        { $ref: '#/$defs/element-text' },
+        // Basic elements - Elements de base
         { $ref: '#/$defs/element-title' },
+        { $ref: '#/$defs/element-text' },
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-image' },
-        { $ref: '#/$defs/element-iframe' },
+        { $ref: '#/$defs/element-button' },
         { $ref: '#/$defs/element-divider' },
-        { $ref: '#/$defs/element-search' },
-        { $ref: '#/$defs/element-topics' },
-        { $ref: '#/$defs/element-metrics' },
-        { $ref: '#/$defs/element-contact' },
-        { $ref: '#/$defs/element-datasets-list' },
-        { $ref: '#/$defs/element-dataset-card' },
-        { $ref: '#/$defs/element-dataset-table' },
-        { $ref: '#/$defs/element-dataset-form' },
-        { $ref: '#/$defs/element-applications-list' },
-        { $ref: '#/$defs/element-application' },
+        { $ref: '#/$defs/element-iframe' },
+
+        // Layout & structure - Mise en page & structure
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
         { $ref: '#/$defs/element-tabs' },
+
+        // Functional blocks - Blocs fonctionnels
+        { $ref: '#/$defs/element-search' },
+        { $ref: '#/$defs/element-topics' },
+        { $ref: '#/$defs/element-metrics' },
+        { $ref: '#/$defs/element-contact' },
+
+        // Datasets - Jeux de données
+        { $ref: '#/$defs/element-datasets-list' },
+        { $ref: '#/$defs/element-dataset-card' },
+        { $ref: '#/$defs/element-dataset-table' },
+        { $ref: '#/$defs/element-dataset-form' },
+
+        // Applications - Visualisations
+        { $ref: '#/$defs/element-applications-list' },
+        { $ref: '#/$defs/element-application' }
       ]
     },
+
+    // Basic elements
     'element-title': {
       type: 'object',
       title: 'Title Element',
@@ -310,23 +322,47 @@ export default {
         mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
-    'element-iframe': {
+    'element-button': {
       type: 'object',
-      title: 'IFrame',
-      required: ['type', 'url'],
+      title: 'ButtonElement',
+      'x-i18n-title': {
+        en: 'Navigation button',
+        fr: 'Bouton de navigation'
+      },
+      layout: {
+        children: [
+          'type',
+          'link',
+          {
+            title: 'Configuration du bouton',
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!parent.data?.usePortalConfig',
+                children: ['config']
+              }
+            ]
+          },
+          'centered',
+          'mb'
+        ]
+      },
+      required: ['type'],
       properties: {
-        type: {
-          const: 'iframe'
+        type: { const: 'button' },
+        link: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: { comp: 'switch' },
+          default: true
         },
-        title: {
-          title: "Titre de l'iframe",
-          description: "Recommandé pour l'accessibilité.",
-          type: 'string'
-        },
-        url: {
-          title: "URL de l'iframe",
-          description: "URL de la page web à afficher dans l'iframe.",
-          type: 'string'
+        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        centered: {
+          type: 'boolean',
+          title: 'Centré',
+          default: true
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
@@ -374,683 +410,29 @@ export default {
         }
       }
     },
-    'element-search': {
+    'element-iframe': {
       type: 'object',
-      title: 'Search Element',
-      'x-i18n-title': {
-        en: 'Search datasets',
-        fr: 'Recherche de jeux de données'
-      },
-      required: ['type'],
+      title: 'IFrame',
+      required: ['type', 'url'],
       properties: {
         type: {
-          const: 'search'
+          const: 'iframe'
         },
-        elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+        title: {
+          title: "Titre de l'iframe",
+          description: "Recommandé pour l'accessibilité.",
+          type: 'string'
         },
-        density: {
-          type: 'string',
-          title: 'Densité',
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
-        },
-        rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
-        },
-        color: { $ref: '#/$defs/color' },
-        fullWidth: {
-          type: 'boolean',
-          title: 'Pleine largeur',
-          description: 'Le champ de recherche s\'étendra sur toute la largeur de son conteneur parent.',
-          layout: 'switch'
-        },
-        centered: {
-          type: 'boolean',
-          title: 'Centrer le champ de recherche',
-          layout: {
-            if: '!parent.data?.fullWidth'
-          }
+        url: {
+          title: "URL de l'iframe",
+          description: "URL de la page web à afficher dans l'iframe.",
+          type: 'string'
         },
         mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
-    'element-topics': {
-      type: 'object',
-      title: 'Topics Element',
-      'x-i18n-title': {
-        en: 'Topics list',
-        fr: 'Liste des thématiques'
-      },
-      required: ['type'],
-      properties: {
-        type: {
-          const: 'topics'
-        },
-        color: {
-          type: 'string',
-          title: 'Couleur',
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
-        },
-        elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
-        },
-        density: {
-          type: 'string',
-          title: 'Densité',
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
-        },
-        rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
-        },
-        showIcon: {
-          type: 'boolean',
-          title: 'Afficher les icônes des thématiques',
-          layout: 'switch',
-          default: true
-        },
-        iconColor: {
-          type: 'string',
-          title: 'Couleur des icônes des thématiques',
-          layout: {
-            if: 'parent.data?.showIcon === true'
-          },
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
-        },
-        centered: {
-          type: 'boolean',
-          title: 'Centrer les thématiques'
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-metrics': {
-      type: 'object',
-      title: 'Metrics Element',
-      'x-i18n-title': {
-        en: 'Key metrics',
-        fr: 'Chiffres clés'
-      },
-      required: ['type', 'metrics'],
-      properties: {
-        type: {
-          const: 'metrics'
-        },
-        metrics: {
-          type: 'array',
-          title: 'Chiffres à afficher',
-          description: 'Sélectionnez les chiffres clés à afficher.',
-          default: ['datasets', 'records', 'applications'],
-          items: {
-            type: 'string',
-            oneOf: [
-              { const: 'datasets', title: 'Jeux de données' },
-              { const: 'records', title: 'Enregistrements' },
-              { const: 'applications', title: 'Visualisations' }
-            ]
-          }
-        },
-        color: { $ref: '#/$defs/color' },
-        elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
-        },
-        rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' },
-            { const: 'shaped', title: 'Coins opposés' }
-          ]
-        },
-        fullWidth: {
-          type: 'boolean',
-          title: 'Pleine largeur',
-          description: "Les boîtes s'étendront pour remplir la ligne.",
-          layout: 'switch'
-        },
-        border: {
-          type: 'boolean',
-          title: 'Bordure',
-          default: true
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-contact': {
-      title: 'Contact',
-      type: 'object',
-      required: ['type'],
-      properties: {
-        type: {
-          const: 'contact'
-        },
-        additionalFields: {
-          type: 'array',
-          title: 'Champs additionnels',
-          description: 'Ajoutez des champs supplémentaires au formulaire de contact.',
-          layout: {
-            messages: {
-              addItem: 'Ajouter un champ',
-            },
-            listEditMode: 'inline'
-          },
-          items: {
-            type: 'object',
-            default: { type: 'text' },
-            oneOf: [
-              {
-                title: 'Champ de texte',
-                description: "Permet à l'utilisateur de saisir une valeur libre (texte, nom, etc.).",
-                required: ['type'],
-                properties: {
-                  type: { const: 'text' },
-                  label: {
-                    type: 'string',
-                    title: 'Libellé du champ'
-                  },
-                  required: {
-                    type: 'boolean',
-                    title: 'Champ obligatoire',
-                    layout: 'switch'
-                  }
-                }
-              },
-              {
-                title: 'Liste déroulante personnalisée',
-                description: "Propose à l'utilisateur de choisir parmi une liste de valeurs que vous définissez.",
-                required: ['type'],
-                properties: {
-                  type: { const: 'select' },
-                  label: {
-                    type: 'string',
-                    title: 'Libellé du champ'
-                  },
-                  options: {
-                    type: 'array',
-                    title: 'Options disponibles',
-                    description: 'Liste des valeurs proposées dans le menu déroulant.',
-                    items: {
-                      type: 'string',
-                      title: 'Option'
-                    }
-                  },
-                  required: {
-                    type: 'boolean',
-                    title: 'Champ obligatoire',
-                    layout: 'switch'
-                  },
-                  multiple: {
-                    type: 'boolean',
-                    title: 'Choix multiple autorisé',
-                    layout: 'switch'
-                  }
-                }
-              },
-              {
-                title: 'Liste déroulante de jeux de données',
-                description: "Permet à l'utilisateur de sélectionner un jeu de données publié sur votre portail.",
-                required: ['type'],
-                properties: {
-                  type: { const: 'dataset' },
-                  label: {
-                    type: 'string',
-                    title: 'Libellé du champ'
-                  },
-                  required: {
-                    type: 'boolean',
-                    title: 'Champ obligatoire',
-                    layout: 'switch'
-                  }
-                }
-              },
-              {
-                title: 'Liste déroulante de visualisations',
-                description: "Permet à l'utilisateur de choisir une visualisation publiée sur votre portail.",
-                required: ['type'],
-                properties: {
-                  type: { const: 'application' },
-                  label: {
-                    type: 'string',
-                    title: 'Libellé du champ'
-                  },
-                  required: {
-                    type: 'boolean',
-                    title: 'Champ obligatoire',
-                    layout: 'switch'
-                  }
-                }
-              }
-            ]
-          }
-        },
-        showInfo: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les informations de contact'
-        },
-        showSocial: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les liens de réseaux sociaux'
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-datasets-list': {
-      type: 'object',
-      title: 'Datasets List Element',
-      'x-i18n-title': {
-        en: 'Datasets list',
-        fr: 'Liste de jeux de données'
-      },
-      layout: {
-        children: [
-          'type',
-          'columns',
-          'limit',
-          'mb',
-          {
-            title: 'Dataset Card',
-            'x-i18n-title': {
-              fr: 'Vignette d\'un jeu de données'
-            },
-            comp: 'card',
-            children: [
-              'usePortalConfig',
-              {
-                if: '!data?.usePortalConfig',
-                children: ['cardConfig']
-              }
-            ]
-          }
-        ]
-      },
-      required: ['type', 'columns', 'limit', 'usePortalConfig'],
-      properties: {
-        type: {
-          const: 'datasets-list'
-        },
-        columns: {
-          type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          default: 3,
-          minimum: 1,
-          maximum: 3
-        },
-        limit: {
-          type: 'integer',
-          title: 'Nombre de jeux de données',
-          default: 3,
-          minimum: 1,
-          maximum: 12
-        },
-        usePortalConfig: {
-          type: 'boolean',
-          title: 'Utiliser la configuration du portail',
-          layout: 'switch',
-          default: true
-        },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-dataset-card': {
-      type: 'object',
-      title: 'Dataset Card Element',
-      'x-i18n-title': {
-        en: 'Dataset card',
-        fr: 'Vignette d\'un jeu de données'
-      },
-      layout: {
-        children: [
-          'type',
-          'dataset',
-          'mb',
-          {
-            title: 'Dataset Card',
-            'x-i18n-title': {
-              fr: 'Vignette d\'un jeu de données'
-            },
-            comp: 'card',
-            children: [
-              'usePortalConfig',
-              {
-                if: '!data?.usePortalConfig',
-                children: ['cardConfig']
-              }
-            ]
-          }
-        ]
-      },
-      required: ['type', 'dataset', 'usePortalConfig'],
-      properties: {
-        type: {
-          const: 'dataset-card'
-        },
-        dataset: {
-          type: 'object',
-          title: 'Jeu de données',
-          additionalProperties: false,
-          required: ['id'],
-          layout: {
-            getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
-              qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.id})`',
-              itemKey: 'item.id'
-            }
-          },
-          properties: {
-            id: {
-              type: 'string'
-            },
-            title: {
-              type: 'string'
-            }
-          }
-        },
-        usePortalConfig: {
-          type: 'boolean',
-          title: 'Utiliser la configuration du portail',
-          layout: 'switch',
-          default: true
-        },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-dataset-table': {
-      type: 'object',
-      title: 'Dataset table',
-      'x-i18n-title': {
-        fr: 'Tableau d\'un jeu de données'
-      },
-      required: ['type', 'dataset', 'interactions'],
-      properties: {
-        type: {
-          const: 'dataset-table'
-        },
-        dataset: {
-          type: 'object',
-          title: 'Jeu de données',
-          additionalProperties: false,
-          required: ['id'],
-          layout: {
-            getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
-              qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.id})`',
-              itemKey: 'item.id'
-            }
-          },
-          properties: {
-            id: { type: 'string' },
-            title: { type: 'string' },
-            href: { type: 'string' }
-          }
-        },
-        syncParams: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Synchroniser les paramètres d\'URL',
-          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
-          default: true
-        },
-        display: {
-          type: 'string',
-          title: 'Mode d\'affichage par défaut',
-          description: 'L\'utilisateur final peut modifier le mode d\'affichage sauf si les interactions sont désactivées.',
-          oneOf: [
-            {
-              const: 'table',
-              title: 'Table'
-            },
-            {
-              const: 'table-dense',
-              title: 'Table dense'
-            },
-            {
-              const: 'list',
-              title: 'Liste de vignettes'
-            }
-          ]
-        },
-        cols: {
-          title: 'Colonnes visibles par défaut',
-          description: 'Si aucune colonne n\'est sélectionnée, toutes les colonnes seront affichées par défaut. L\'utilisateur final peut modifier les colonnes visibles sauf si les interactions sont désactivées.',
-          type: 'array',
-          layout: {
-            getItems: {
-              url: '/data-fair/api/v1/datasets/${parent.data.dataset.id}/schema?calculated=false',
-              itemTitle: 'item.label',
-              itemValue: 'item.key'
-            }
-          },
-          items: { type: 'string' }
-        },
-        interactions: {
-          title: 'Autoriser les interactions',
-          description: 'Autorise le tri, la recherche, les filtres,...',
-          type: 'boolean',
-          default: true
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-dataset-form': {
-      type: 'object',
-      title: 'Dataset form',
-      'x-i18n-title': {
-        fr: 'Formulaire d\'un jeu de données'
-      },
-      required: ['type', 'dataset'],
-      properties: {
-        type: {
-          const: 'dataset-form'
-        },
-        dataset: {
-          type: 'object',
-          title: 'Jeu de données',
-          additionalProperties: false,
-          required: ['id'],
-          layout: {
-            getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title',
-              qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.id})`',
-              itemKey: 'item.id'
-            }
-          },
-          properties: {
-            id: {
-              type: 'string'
-            },
-            title: {
-              type: 'string'
-            }
-          }
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-applications-list': {
-      type: 'object',
-      title: 'Applications List Element',
-      'x-i18n-title': {
-        en: 'Applications list',
-        fr: 'Liste de visualisations'
-      },
-      layout: {
-        children: [
-          'type',
-          'columns',
-          'limit',
-          'mb',
-          {
-            title: 'Application Card',
-            'x-i18n-title': {
-              fr: 'Vignette d\'une visualisation'
-            },
-            comp: 'card',
-            children: [
-              'usePortalConfig',
-              {
-                if: '!data?.usePortalConfig',
-                children: ['cardConfig']
-              }
-            ]
-          }
-        ]
-      },
-      required: ['type', 'columns', 'limit'],
-      properties: {
-        type: {
-          const: 'applications-list'
-        },
-        columns: {
-          type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          default: 3,
-          minimum: 1,
-          maximum: 3
-        },
-        limit: {
-          type: 'integer',
-          title: 'Nombre de visualisations',
-          description: 'Nombre total de visualisations à afficher.',
-          default: 3,
-          minimum: 1,
-          maximum: 12
-        },
-        usePortalConfig: {
-          type: 'boolean',
-          title: 'Utiliser la configuration du portail',
-          layout: 'switch',
-          default: true
-        },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
-    'element-application': {
-      type: 'object',
-      title: 'Application Element',
-      'x-i18n-title': {
-        en: 'Application',
-        fr: 'Visualisation'
-      },
-      required: ['type', 'application'],
-      properties: {
-        type: {
-          const: 'application'
-        },
-        application: {
-          type: 'object',
-          title: 'Application',
-          'x-i18n-title': {
-            fr: 'Visualisations'
-          },
-          additionalProperties: false,
-          required: ['id', 'title', 'slug'],
-          layout: {
-            getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',
-              qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.id})`',
-              itemKey: 'item.id'
-            }
-          },
-          properties: {
-            id: {
-              type: 'string'
-            },
-            title: {
-              type: 'string'
-            },
-            slug: {
-              type: 'string'
-            }
-          }
-        },
-        syncParams: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Synchroniser les paramètres d\'URL',
-          description: 'Si activé, les paramètres de la page seront transmis à l\'application. Utile pour partager la page avec une vue spécifique de l\'application.',
-          default: true
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
-      }
-    },
+
+    // Layout & structure elements
     'element-banner': {
       type: 'object',
       title: 'Banner Element',
@@ -1511,6 +893,695 @@ export default {
         mb: { $ref: '#/$defs/margin-bottom' }
       }
     },
+
+    // Functional blocks
+    'element-search': {
+      type: 'object',
+      title: 'Search Element',
+      'x-i18n-title': {
+        en: 'Search datasets',
+        fr: 'Recherche de jeux de données'
+      },
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'search'
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        color: { $ref: '#/$defs/color' },
+        fullWidth: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          description: 'Le champ de recherche s\'étendra sur toute la largeur de son conteneur parent.',
+          layout: 'switch'
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer le champ de recherche',
+          layout: {
+            if: '!parent.data?.fullWidth'
+          }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-topics': {
+      type: 'object',
+      title: 'Topics Element',
+      'x-i18n-title': {
+        en: 'Topics list',
+        fr: 'Liste des thématiques'
+      },
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'topics'
+        },
+        color: {
+          type: 'string',
+          title: 'Couleur',
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        density: {
+          type: 'string',
+          title: 'Densité',
+          default: 'comfortable',
+          oneOf: [
+            { const: 'default', title: 'Normale' },
+            { const: 'comfortable', title: 'Confortable' },
+            { const: 'compact', title: 'Compacte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' }
+          ]
+        },
+        showIcon: {
+          type: 'boolean',
+          title: 'Afficher les icônes des thématiques',
+          layout: 'switch',
+          default: true
+        },
+        iconColor: {
+          type: 'string',
+          title: 'Couleur des icônes des thématiques',
+          layout: {
+            if: 'parent.data?.showIcon === true'
+          },
+          oneOf: [
+            { const: 'default', title: 'Couleur de la thématique' },
+            { const: 'primary', title: 'Primaire' },
+            { const: 'secondary', title: 'Secondaire' },
+            { const: 'accent', title: 'Accentuée' }
+          ]
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer les thématiques'
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-metrics': {
+      type: 'object',
+      title: 'Metrics Element',
+      'x-i18n-title': {
+        en: 'Key metrics',
+        fr: 'Chiffres clés'
+      },
+      required: ['type', 'metrics'],
+      properties: {
+        type: {
+          const: 'metrics'
+        },
+        metrics: {
+          type: 'array',
+          title: 'Chiffres à afficher',
+          description: 'Sélectionnez les chiffres clés à afficher.',
+          default: ['datasets', 'records', 'applications'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'datasets', title: 'Jeux de données' },
+              { const: 'records', title: 'Enregistrements' },
+              { const: 'applications', title: 'Visualisations' }
+            ]
+          }
+        },
+        color: { $ref: '#/$defs/color' },
+        elevation: {
+          type: 'integer',
+          title: 'Élévation',
+          default: 0,
+          oneOf: [
+            { const: 0, title: 'Aucune' },
+            { const: 1, title: 'Légère' },
+            { const: 2, title: 'Modérée' },
+            { const: 3, title: 'Forte' }
+          ]
+        },
+        rounded: {
+          type: 'string',
+          title: 'Arrondi',
+          default: 'default',
+          oneOf: [
+            { const: '0', title: 'Aucun' },
+            { const: 'default', title: 'Normal' },
+            { const: 'lg', title: 'Moyen' },
+            { const: 'xl', title: 'Grand' },
+            { const: 'shaped', title: 'Coins opposés' }
+          ]
+        },
+        fullWidth: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          description: "Les boîtes s'étendront pour remplir la ligne.",
+          layout: 'switch'
+        },
+        border: {
+          type: 'boolean',
+          title: 'Bordure',
+          default: true
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-contact': {
+      type: 'object',
+      title: 'ContactElement',
+      'x-i18n-title': {
+        en: 'Contact form',
+        fr: 'Formulaire de contact'
+      },
+      required: ['type'],
+      properties: {
+        type: {
+          const: 'contact'
+        },
+        additionalFields: {
+          type: 'array',
+          title: 'Champs additionnels',
+          description: 'Ajoutez des champs supplémentaires au formulaire de contact.',
+          layout: {
+            messages: {
+              addItem: 'Ajouter un champ',
+            },
+            listEditMode: 'inline'
+          },
+          items: {
+            type: 'object',
+            default: { type: 'text' },
+            oneOf: [
+              {
+                title: 'Champ de texte',
+                description: "Permet à l'utilisateur de saisir une valeur libre (texte, nom, etc.).",
+                required: ['type'],
+                properties: {
+                  type: { const: 'text' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante personnalisée',
+                description: "Propose à l'utilisateur de choisir parmi une liste de valeurs que vous définissez.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'select' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  options: {
+                    type: 'array',
+                    title: 'Options disponibles',
+                    description: 'Liste des valeurs proposées dans le menu déroulant.',
+                    items: {
+                      type: 'string',
+                      title: 'Option'
+                    }
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  },
+                  multiple: {
+                    type: 'boolean',
+                    title: 'Choix multiple autorisé',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante de jeux de données',
+                description: "Permet à l'utilisateur de sélectionner un jeu de données publié sur votre portail.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'dataset' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              },
+              {
+                title: 'Liste déroulante de visualisations',
+                description: "Permet à l'utilisateur de choisir une visualisation publiée sur votre portail.",
+                required: ['type'],
+                properties: {
+                  type: { const: 'application' },
+                  label: {
+                    type: 'string',
+                    title: 'Libellé du champ'
+                  },
+                  required: {
+                    type: 'boolean',
+                    title: 'Champ obligatoire',
+                    layout: 'switch'
+                  }
+                }
+              }
+            ]
+          }
+        },
+        showInfo: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les informations de contact'
+        },
+        showSocial: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les liens de réseaux sociaux'
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+
+    // Datasets
+    'element-datasets-list': {
+      type: 'object',
+      title: 'Datasets List Element',
+      'x-i18n-title': {
+        en: 'Datasets list',
+        fr: 'Liste de jeux de données'
+      },
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'limit',
+          'mb',
+          {
+            title: 'Dataset Card',
+            'x-i18n-title': {
+              fr: 'Configuration des vignettes'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit', 'usePortalConfig'],
+      properties: {
+        type: {
+          const: 'datasets-list'
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 3,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de jeux de données',
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-dataset-card': {
+      type: 'object',
+      title: 'Dataset Card Element',
+      'x-i18n-title': {
+        en: 'Dataset card',
+        fr: 'Vignette d\'un jeu de données'
+      },
+      layout: {
+        children: [
+          'type',
+          'dataset',
+          'mb',
+          {
+            title: 'Dataset Card',
+            'x-i18n-title': {
+              fr: 'Configuration de la vignette'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'dataset', 'usePortalConfig'],
+      properties: {
+        type: {
+          const: 'dataset-card'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            }
+          }
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-dataset-table': {
+      type: 'object',
+      title: 'Dataset table',
+      'x-i18n-title': {
+        fr: 'Tableau d\'un jeu de données'
+      },
+      required: ['type', 'dataset', 'interactions'],
+      properties: {
+        type: {
+          const: 'dataset-table'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            href: { type: 'string' }
+          }
+        },
+        syncParams: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Synchroniser les paramètres d\'URL',
+          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
+          default: true
+        },
+        display: {
+          type: 'string',
+          title: 'Mode d\'affichage par défaut',
+          description: 'L\'utilisateur final peut modifier le mode d\'affichage sauf si les interactions sont désactivées.',
+          oneOf: [
+            {
+              const: 'table',
+              title: 'Table'
+            },
+            {
+              const: 'table-dense',
+              title: 'Table dense'
+            },
+            {
+              const: 'list',
+              title: 'Liste de vignettes'
+            }
+          ]
+        },
+        cols: {
+          title: 'Colonnes visibles par défaut',
+          description: 'Si aucune colonne n\'est sélectionnée, toutes les colonnes seront affichées par défaut. L\'utilisateur final peut modifier les colonnes visibles sauf si les interactions sont désactivées.',
+          type: 'array',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets/${parent.data.dataset.id}/schema?calculated=false',
+              itemTitle: 'item.label',
+              itemValue: 'item.key'
+            }
+          },
+          items: { type: 'string' }
+        },
+        interactions: {
+          title: 'Autoriser les interactions',
+          description: 'Autorise le tri, la recherche, les filtres,...',
+          type: 'boolean',
+          default: true
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-dataset-form': {
+      type: 'object',
+      title: 'Dataset form',
+      'x-i18n-title': {
+        fr: 'Formulaire d\'un jeu de données'
+      },
+      required: ['type', 'dataset'],
+      properties: {
+        type: {
+          const: 'dataset-form'
+        },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            }
+          }
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+
+    // Applications
+    'element-applications-list': {
+      type: 'object',
+      title: 'Applications List Element',
+      'x-i18n-title': {
+        en: 'Applications list',
+        fr: 'Liste de visualisations'
+      },
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'limit',
+          'mb',
+          {
+            title: 'Application Card',
+            'x-i18n-title': {
+              fr: 'Vignette d\'une visualisation'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit'],
+      properties: {
+        type: {
+          const: 'applications-list'
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 3,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de visualisations',
+          description: 'Nombre total de visualisations à afficher.',
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-application': {
+      type: 'object',
+      title: 'Application Element',
+      'x-i18n-title': {
+        en: 'Application',
+        fr: 'Visualisation'
+      },
+      required: ['type', 'application'],
+      properties: {
+        type: {
+          const: 'application'
+        },
+        application: {
+          type: 'object',
+          title: 'Application',
+          'x-i18n-title': {
+            fr: 'Visualisations'
+          },
+          additionalProperties: false,
+          required: ['id', 'title', 'slug'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: {
+              type: 'string'
+            },
+            title: {
+              type: 'string'
+            },
+            slug: {
+              type: 'string'
+            }
+          }
+        },
+        syncParams: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Synchroniser les paramètres d\'URL',
+          description: 'Si activé, les paramètres de la page seront transmis à l\'application. Utile pour partager la page avec une vue spécifique de l\'application.',
+          default: true
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+
+    // Reusable definitions
     icon: {
       type: 'object',
       title: 'Configuration de l\'icône',

@@ -272,7 +272,6 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
 const { t, locale } = useI18n()
-defineProps<{ home?: boolean }>()
 const { portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 

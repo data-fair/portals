@@ -139,12 +139,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Contact } from '#api/types/page-config'
+import type { ContactElement } from '#api/types/page-config'
 import { useRules } from 'vuetify/labs/rules'
 import { useAsyncAction } from '@data-fair/lib-vue/async-action.js'
 import { mdiPhone, mdiWeb } from '@mdi/js'
 
-const { element } = defineProps<{ element: Contact }>()
+const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()

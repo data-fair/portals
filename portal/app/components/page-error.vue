@@ -14,15 +14,19 @@
         {{ title }}
       </div>
       <nav-link
-        :to="backUrl || `/`"
-        :icon="mdiChevronLeft"
-        :text="backTitle || t('goToHome')"
+        :link="{
+          ...(link ? link : { type: 'standard', subtype: 'home' }),
+          title: link?.title ?? t('goToHome'),
+          icon: { custom: mdiChevronLeft }
+        }"
+        :config="portalConfig.navLinksConfig"
       />
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
+import type { LinkItem } from '#api/types/portal/index.js'
 import { mdiChevronLeft } from '@mdi/js'
 
 const { t } = useI18n()
@@ -30,9 +34,10 @@ const { t } = useI18n()
 const props = defineProps<{
   statusCode: number
   title?: string
-  backUrl?: string
-  backTitle?: string
+  link?: LinkItem
 }>()
+
+const { portalConfig } = usePortalStore()
 
 const defaultTitles: Record<number, string> = {
   404: t('notFound'),
