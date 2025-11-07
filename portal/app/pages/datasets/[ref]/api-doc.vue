@@ -1,6 +1,5 @@
 <template>
-    <!-- <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
-    <p
+    <!-- <p
       v-if="useReadApiKey && actualReadApiKey"
       class="my-0 mx-2"
     >
@@ -35,7 +34,7 @@ watch(datasetFetch.data, () => {
 onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
-  title: () => t('apiDoc') + (datasetFetch.data.value?.title || t('datasets', 0)),
+  title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('datasets', 0)),
   description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description
 })
 </script>
