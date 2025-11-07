@@ -131,7 +131,7 @@ const getIngressInfos = (portal: Portal) => {
   const ingressInfos: IngressManagerIngressInfo[] = [{
     url: config.draftUrlPattern.replace('{id}', portal._id),
     owner: portal.owner,
-    _id: portal._id,
+    _id: portal._id + '--draft',
     waf: 'off'
   }]
   if (portal.ingress) {
