@@ -774,8 +774,8 @@ export default {
       type: 'object',
       title: 'Two Columns Element',
       'x-i18n-title': {
-        en: '2 columns',
-        fr: '2 colonnes'
+        en: 'Two columns',
+        fr: 'Deux colonnes'
       },
       required: ['type', 'disposition', 'gutter', 'children', 'children2'],
       properties: {
@@ -1302,8 +1302,16 @@ export default {
       layout: {
         children: [
           'type',
+          'mode',
+          {
+            if: 'data?.mode !== "custom"',
+            children: ['limit']
+          },
+          {
+            if: 'data?.mode === "custom"',
+            children: ['datasets']
+          },
           'columns',
-          'limit',
           'mb',
           {
             title: 'Dataset Card',
@@ -1326,13 +1334,15 @@ export default {
         type: {
           const: 'datasets-list'
         },
-        columns: {
-          type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          default: 3,
-          minimum: 1,
-          maximum: 3
+        mode: {
+          type: 'string',
+          title: 'Type de liste',
+          default: 'lastUpdated',
+          oneOf: [
+            { const: 'lastUpdated', title: 'Last updated', 'x-i18n-title': { fr: 'Les derniers modifiés' } },
+            { const: 'lastCreated', title: 'Last created', 'x-i18n-title': { fr: 'Les derniers créés' } },
+            { const: 'custom', title: 'Custom list', 'x-i18n-title': { fr: 'Liste libre' } }
+          ]
         },
         limit: {
           type: 'integer',
@@ -1340,6 +1350,43 @@ export default {
           default: 3,
           minimum: 1,
           maximum: 12
+        },
+        datasets: {
+          type: 'array',
+          title: 'Liste de jeux de données',
+          description: 'Sélectionnez manuellement les jeux de données à afficher.',
+          items: {
+            type: 'object',
+            title: 'Jeu de données',
+            additionalProperties: false,
+            required: ['id'],
+            layout: {
+              getItems: {
+                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+                qSearchParam: 'q',
+                itemsResults: 'data.results',
+                itemTitle: '`${item.title} (${item.id})`',
+                itemKey: 'item.id'
+              }
+            },
+            properties: {
+              id: {
+                type: 'string'
+              },
+              title: {
+                type: 'string'
+              }
+            }
+          },
+          maxItems: 100
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 3,
+          minimum: 1,
+          maximum: 3
         },
         usePortalConfig: {
           type: 'boolean',

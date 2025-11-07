@@ -5,7 +5,7 @@
       <slot />
     </v-container>
   </v-main>
-  <LayoutFooter :home="true" />
+  <LayoutFooter />
   <LayoutScrollToTop />
 </template>
 
