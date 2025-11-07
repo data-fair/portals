@@ -28,12 +28,74 @@ export default {
           { if: 'summary', slots: { component: 'page-preview-element' } }
         ]
       },
+      oneOfLayout: {
+        label: 'Type d\'élément',
+        oneOfItems: [
+          {
+            header: true,
+            title: 'Basic elements',
+            'x-i18n-title': {
+              fr: 'Éléments de base'
+            }
+          },
+          'Titre',
+          'Text',
+          'Text accentué',
+          'Image',
+          'Bouton de navigation',
+          'Séparateur horizontal',
+          'Iframe',
+          {
+            header: true,
+            title: 'Layout & structure',
+            'x-i18n-title': {
+              fr: 'Mise en page & structure'
+            }
+          },
+          'Section sur fond coloré',
+          'Boite',
+          'Deux colonnes',
+          // 'Flux responsive', // TODO: Create the element-responsive-flow
+          'Onglets',
+          {
+            header: true,
+            title: 'Functional blocks',
+            'x-i18n-title': {
+              fr: 'Blocs fonctionnels'
+            }
+          },
+          'Barre de recherche',
+          'Liste des thématiques',
+          'Chiffres clés',
+          'Formulaire de contact',
+          {
+            header: true,
+            title: 'Datasets',
+            'x-i18n-title': {
+              fr: 'Jeux de données'
+            }
+          },
+          'Liste de jeux de données',
+          "Vignette d'un jeu de données",
+          "Tableau d'un jeu de données",
+          "Formulaire d'un jeu de données",
+          {
+            header: true,
+            title: 'Applications',
+            'x-i18n-title': {
+              fr: 'Visualisations'
+            }
+          },
+          'Liste de visualisations',
+          'Visualisation'
+        ]
+      },
       default: {
         type: 'text',
         content: ''
       },
       oneOf: [
-        // Basic elements - Elements de base
+        // Basic elements
         { $ref: '#/$defs/element-title' },
         { $ref: '#/$defs/element-text' },
         { $ref: '#/$defs/element-alert' },
@@ -42,26 +104,26 @@ export default {
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-iframe' },
 
-        // Layout & structure - Mise en page & structure
+        // Layout & structure
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-flow' },
         { $ref: '#/$defs/element-tabs' },
 
-        // Functional blocks - Blocs fonctionnels
+        // Functional blocks
         { $ref: '#/$defs/element-search' },
         { $ref: '#/$defs/element-topics' },
         { $ref: '#/$defs/element-metrics' },
         { $ref: '#/$defs/element-contact' },
 
-        // Datasets - Jeux de données
+        // Datasets
         { $ref: '#/$defs/element-datasets-list' },
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
 
-        // Applications - Visualisations
+        // Applications
         { $ref: '#/$defs/element-applications-list' },
         { $ref: '#/$defs/element-application' }
       ]
@@ -712,8 +774,8 @@ export default {
       type: 'object',
       title: 'Two Columns Element',
       'x-i18n-title': {
-        en: '2 Columns',
-        fr: '2 Colonnes'
+        en: '2 columns',
+        fr: '2 colonnes'
       },
       required: ['type', 'disposition', 'gutter', 'children', 'children2'],
       properties: {
@@ -795,8 +857,12 @@ export default {
       }
     },
     'element-responsive-flow': {
-      title: 'Flux responsive',
       type: 'object',
+      title: 'Responsive Flux Element',
+      'x-i18n-title': {
+        en: 'Responsive Flux',
+        fr: 'Flux responsive'
+      },
       required: ['type', 'blocks'],
       properties: {
         type: {
@@ -899,8 +965,8 @@ export default {
       type: 'object',
       title: 'Search Element',
       'x-i18n-title': {
-        en: 'Search datasets',
-        fr: 'Recherche de jeux de données'
+        en: 'Search',
+        fr: 'Barre de recherche'
       },
       required: ['type'],
       properties: {
