@@ -54,8 +54,12 @@
           :md="app.preferLargeDisplay ? 12 : 6"
           cols="12"
         >
-          <NuxtLink :to="`/applications/${app.slug}`">
-            {{ app.title }} <v-icon
+          <NuxtLink
+            class="simple-link"
+            :to="`/applications/${app.slug}`"
+          >
+            {{ app.title }}
+            <v-icon
               :icon="mdiOpenInNew"
               color="primary"
             />

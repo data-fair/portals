@@ -26,6 +26,7 @@
             :href="dataset.origin"
             rel="noopener"
             target="_blank"
+            class="simple-link"
           >
             {{ t('thisSource') }}
           </a>
@@ -61,6 +62,7 @@
           :href="dataset.license.href"
           rel="noopener"
           target="_blank"
+          class="simple-link"
         >
           {{ dataset.license.title }}
         </a>

@@ -131,6 +131,7 @@
             :href="link.href"
             target="_blank"
             rel="noopener"
+            class="simple-link"
           >
             <v-icon
               v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
@@ -144,6 +145,7 @@
           <NuxtLink
             v-else
             :to="resolveLink(link)"
+            class="simple-link"
           >
             <v-icon
               v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
@@ -176,6 +178,7 @@
             :href="link.href"
             target="_blank"
             rel="noopener"
+            class="simple-link"
           >
             <v-icon
               v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
@@ -189,6 +192,7 @@
           <NuxtLink
             v-else
             :to="resolveLink(link)"
+            class="simple-link"
           >
             <span class="d-flex align-center">
               <v-icon
@@ -261,6 +265,7 @@
             href="https://koumoul.com"
             target="_blank"
             rel="noopener"
+            class="simple-link"
           >Koumoul</a></strong>
       </div>
     </template>

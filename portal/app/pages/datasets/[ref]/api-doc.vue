@@ -1,17 +1,17 @@
 <template>
-    <!-- <p
-      v-if="useReadApiKey && actualReadApiKey"
-      class="my-0 mx-2"
-    >
-      Cette API peut être utilisée sans authentification grâce à une clé que vous pouvez renseigner dans le paramètre de requête "apiKey". La clé est régulièrement renouvellée, elle expirera le {{ $d(new Date(dataset.readApiKey.expiresAt)) }}.
-      <br>
-      Utilisation de la clé : <a :href="readApiKeyExample">{{ readApiKeyExample }}</a>
-    </p> -->
-    <d-frame-wrapper
-      :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('apiDoc')}`"
-      :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`"
-      sync-params
-    />
+  <!-- <p
+    v-if="useReadApiKey && actualReadApiKey"
+    class="my-0 mx-2"
+  >
+    Cette API peut être utilisée sans authentification grâce à une clé que vous pouvez renseigner dans le paramètre de requête "apiKey". La clé est régulièrement renouvellée, elle expirera le {{ $d(new Date(dataset.readApiKey.expiresAt)) }}.
+    <br>
+    Utilisation de la clé : <a class="simple-link" :href="readApiKeyExample">{{ readApiKeyExample }}</a>
+  </p> -->
+  <d-frame-wrapper
+    :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('apiDoc')}`"
+    :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`"
+    sync-params
+  />
 </template>
 
 <script setup lang="ts">

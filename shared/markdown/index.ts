@@ -13,6 +13,46 @@ const sanitizeOpts: SanitizeOptions = {
 
 const sanitize = (html: string) => sanitizeHtml(html, sanitizeOpts)
 
+const REGEX = {
+  escapeTest: /[&<>"']/,
+  escapeReplace: /[&<>"']/g,
+  escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,
+  escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g,
+  percentDecode: /%25/g,
+}
+
+const escapeReplacements: { [index: string]: string } = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+}
+const getEscapeReplacement = (ch: string) => escapeReplacements[ch]
+
+export function escape (html: string, encode?: boolean) {
+  if (encode) {
+    if (REGEX.escapeTest.test(html)) {
+      return html.replace(REGEX.escapeReplace, getEscapeReplacement)
+    }
+  } else {
+    if (REGEX.escapeTestNoEncode.test(html)) {
+      return html.replace(REGEX.escapeReplaceNoEncode, getEscapeReplacement)
+    }
+  }
+
+  return html
+}
+
+function cleanUrl (href: string) {
+  try {
+    href = encodeURI(href).replace(REGEX.percentDecode, '%')
+  } catch {
+    return null
+  }
+  return href
+}
+
 const headingClasses: Record<number, string> = {
   1: 'text-h2 text-primary mt-12 mb-8',
   2: 'text-h4 mt-10 mb-6',
@@ -82,6 +122,15 @@ marked.use({
       const type = ordered ? 'ol' : 'ul'
       const startAttr = (ordered && start !== 1) ? (' start="' + start + '"') : ''
       return '<' + type + startAttr + ' class="ml-6 mb-6">\n' + body + '</' + type + '>\n'
+    },
+    link ({ href, title, tokens }: Tokens.Link) {
+      const text = this.parser.parseInline(tokens)
+      const cleanHref = cleanUrl(href)
+      if (cleanHref === null) return text
+      let out = '<a href="' + cleanHref + '" class="simple-link"'
+      if (title) out += ' title="' + (escape(title)) + '"'
+      out += '>' + text + '</a>'
+      return out
     }
   }
 })
