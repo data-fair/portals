@@ -19,7 +19,7 @@
     />
     <d-frame-wrapper
       :iframe-title="t('apiKeys')"
-      :src="`/data-fair/next-ui/embed/settings/${session.state.account.type}/${session.state.account.id}/api-keys?scopes=datasets`"
+      :src="`/data-fair/embed/settings/${session.state.account.type}/${session.state.account.id}/api-keys?scopes=datasets`"
     />
   </v-container>
 </template>

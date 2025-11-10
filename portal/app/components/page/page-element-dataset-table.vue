@@ -16,7 +16,7 @@ const { element } = defineProps<{ element: DatasetTable }>()
 const { t } = useI18n()
 
 const url = computed(() => {
-  let ret = `/data-fair/next-ui/embed/dataset/${element.dataset.id}/table?interaction=${element.interactions}`
+  let ret = `/data-fair/embed/dataset/${element.dataset.id}/table?interaction=${element.interactions}`
   if (element.display) ret += `&display=${element.display}`
   if (element.cols && element.cols.length) ret += `&cols=${element.cols.join(',')}`
   return ret
