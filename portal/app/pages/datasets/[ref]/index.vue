@@ -103,6 +103,7 @@
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
+import { withQuery } from 'ufo'
 
 type Application = {
   id: string
@@ -174,16 +175,15 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 })
 
 const dataset = computed(() => datasetFetch.data.value)
+const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
+  select: 'id,slug,title,description,url,preferLargeDisplay',
+  size: 1000,
+  html: true,
+  dataset: datasetFetch.data.value?.id,
+  publicationSites: 'data-fair-portals:' + portal.value._id
+}))
 
-const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>('/data-fair/api/v1/applications', {
-  params: {
-    select: 'id,slug,title,description,url,preferLargeDisplay',
-    size: 1000,
-    html: true,
-    dataset: dataset.value?.id,
-    publicationSites: 'data-fair-portals:' + portal.value._id
-  }
-})
+const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>(applicationsUrl)
 
 const orderedApplications = computed(() => {
   const datasetApplications = datasetFetch.data.value?.extras?.applications || []
