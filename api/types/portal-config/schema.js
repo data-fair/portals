@@ -57,7 +57,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options spécifiques pour la page d\'accueil',
+                title: "Options spécifiques pour la page d'accueil",
                 children: [
                   'headerHome',
                   { name: 'app-bar-preview', props: { home: true } }
@@ -94,7 +94,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options spécifiques pour la page d\'accueil',
+                title: "Options spécifiques pour la page d'accueil",
                 children: [
                   'navBarHome',
                   { name: 'app-bar-preview', props: { home: true } }
@@ -269,14 +269,14 @@ export default {
     },
     headerHomeActive: {
       type: 'boolean',
-      title: 'Utiliser un rendu différent sur la page d\'accueil',
+      title: "Utiliser un rendu différent sur la page d'accueil",
       layout: { comp: 'switch' }
     },
     header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     headerHome: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     navBarHomeActive: {
       type: 'boolean',
-      title: 'Utiliser un rendu différent sur la page d\'accueil',
+      title: "Utiliser un rendu différent sur la page d'accueil",
       layout: { comp: 'switch' }
     },
     navBar: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },

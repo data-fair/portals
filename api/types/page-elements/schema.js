@@ -29,7 +29,10 @@ export default {
         ]
       },
       oneOfLayout: {
-        label: 'Type d\'élément',
+        label: 'Type of element',
+        'x-i18n-label': {
+          fr: "Type d'élément"
+        },
         oneOfItems: [
           {
             header: true,
@@ -38,13 +41,13 @@ export default {
               fr: 'Éléments de base'
             }
           },
-          'Titre',
-          'Text',
-          'Text accentué',
-          'Image',
-          'Bouton de navigation',
-          'Séparateur horizontal',
-          'Iframe',
+          { title: 'Title', 'x-i18n-title': { fr: 'Titre' } },
+          { title: 'Text', 'x-i18n-title': { fr: 'Texte' } },
+          { title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
+          { title: 'Image', 'x-i18n-title': { fr: 'Image' } },
+          { title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
+          { title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
+          { title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
           {
             header: true,
             title: 'Layout & structure',
@@ -52,11 +55,11 @@ export default {
               fr: 'Mise en page & structure'
             }
           },
-          'Section sur fond coloré',
-          'Boite',
-          'Deux colonnes',
-          // 'Flux responsive', // TODO: Create the element-responsive-flow
-          'Onglets',
+          { title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
+          { title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
+          { title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
+          // { title: 'Responsive Flow', 'x-i18n-title': { fr: 'Flux responsive' } }, // TODO: Create the element-responsive-flow
+          { title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
           {
             header: true,
             title: 'Functional blocks',
@@ -64,10 +67,10 @@ export default {
               fr: 'Blocs fonctionnels'
             }
           },
-          'Barre de recherche',
-          'Liste des thématiques',
-          'Chiffres clés',
-          'Formulaire de contact',
+          { title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
+          { title: 'Topics list', 'x-i18n-title': { fr: 'Liste des thématiques' } },
+          { title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } },
+          { title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
           {
             header: true,
             title: 'Datasets',
@@ -75,10 +78,10 @@ export default {
               fr: 'Jeux de données'
             }
           },
-          'Liste de jeux de données',
-          "Vignette d'un jeu de données",
-          "Tableau d'un jeu de données",
-          "Formulaire d'un jeu de données",
+          { title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
           {
             header: true,
             title: 'Applications',
@@ -86,8 +89,8 @@ export default {
               fr: 'Visualisations'
             }
           },
-          'Liste de visualisations',
-          'Visualisation'
+          { title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
         ]
       },
       default: {
@@ -132,22 +135,26 @@ export default {
     // Basic elements
     'element-title': {
       type: 'object',
-      title: 'Title Element',
+      title: 'TitleElement',
       'x-i18n-title': {
         en: 'Title',
         fr: 'Titre'
       },
       required: ['type', 'titleSize'],
       properties: {
-        type: {
-          const: 'title'
-        },
+        type: { const: 'title' },
         content: {
-          title: 'Contenu',
+          title: 'Content',
+          'x-i18n-title': {
+            fr: 'Contenu'
+          },
           type: 'string'
         },
         titleSize: {
-          title: 'Taille du titre',
+          title: 'Title size',
+          'x-i18n-title': {
+            fr: 'Taille du titre'
+          },
           type: 'string',
           oneOf: [
             { const: 'h1', title: 'H1' },
@@ -162,18 +169,27 @@ export default {
         color: { $ref: '#/$defs/color' },
         centered: {
           type: 'boolean',
-          title: 'Centrer le titre',
+          title: 'Center the title',
+          'x-i18n-title': {
+            fr: 'Centrer le titre'
+          },
           default: false,
         },
         icon: { $ref: '#/$defs/icon' },
         line: {
           type: 'object',
-          title: 'Configuration du trait',
+          title: 'Line configuration',
+          'x-i18n-title': {
+            fr: 'Configuration du trait'
+          },
           layout: 'card',
           properties: {
             position: {
               type: 'string',
-              title: 'Afficher un trait',
+              title: 'Display a line',
+              'x-i18n-title': {
+                fr: 'Afficher un trait'
+              },
               oneOf: [
                 { const: 'none', title: 'Aucun trait' },
                 { const: 'left', title: 'Trait à gauche du titre' },
@@ -359,7 +375,7 @@ export default {
         },
         cover: {
           type: 'boolean',
-          title: 'Recadrer l\'image pour remplir l\'espace',
+          title: "Recadrer l'image pour remplir l'espace",
           layout: {
             if: '!parent.data?.banner',
             comp: 'switch'
@@ -431,7 +447,11 @@ export default {
     },
     'element-divider': {
       type: 'object',
-      title: 'Séparateur horizontal',
+      title: 'DividerElement',
+      'x-i18n-title': {
+        en: 'Divider',
+        fr: 'Séparateur horizontal'
+      },
       required: ['type', 'opacity', 'thickness'],
       properties: {
         type: {
@@ -457,15 +477,29 @@ export default {
         opacity: {
           type: 'number',
           title: 'Opacité',
-          layout: 'slider',
-          default: 0.12,
-          minimum: 0.12,
+          layout: {
+            comp: 'slider',
+            props: {
+              step: 0.1,
+              thumbLabel: true,
+              showTicks: 'always'
+            }
+          },
+          default: 0.10,
+          minimum: 0.10,
           maximum: 1
         },
         thickness: {
           type: 'integer',
           title: 'Épaisseur',
-          layout: 'slider',
+          layout: {
+            comp: 'slider',
+            props: {
+              step: 1,
+              thumbLabel: true,
+              showTicks: 'always'
+            }
+          },
           default: 1,
           minimum: 1,
           maximum: 10
@@ -497,7 +531,7 @@ export default {
     // Layout & structure elements
     'element-banner': {
       type: 'object',
-      title: 'Banner Element',
+      title: 'BannerElement',
       'x-i18n-title': {
         en: 'Colored background section',
         fr: 'Section sur fond coloré'
@@ -636,7 +670,7 @@ export default {
     },
     'element-card': {
       type: 'object',
-      title: 'Card Element',
+      title: 'CardElement',
       'x-i18n-title': {
         en: 'Card',
         fr: 'Boite'
@@ -704,7 +738,7 @@ export default {
           type: 'array',
           layout: {
             messages: {
-              addItem: 'Ajouter un bouton d\'action'
+              addItem: "Ajouter un bouton d'action"
             },
             listEditMode: 'inline'
           },
@@ -772,7 +806,7 @@ export default {
     },
     'element-two-columns': {
       type: 'object',
-      title: 'Two Columns Element',
+      title: 'TwoColumnsElement',
       'x-i18n-title': {
         en: 'Two columns',
         fr: 'Deux colonnes'
@@ -858,9 +892,9 @@ export default {
     },
     'element-responsive-flow': {
       type: 'object',
-      title: 'Responsive Flux Element',
+      title: 'ResponsiveFlowElement',
       'x-i18n-title': {
-        en: 'Responsive Flux',
+        en: 'Responsive Flow',
         fr: 'Flux responsive'
       },
       required: ['type', 'blocks'],
@@ -899,7 +933,11 @@ export default {
       }
     },
     'element-tabs': {
-      title: 'Onglets',
+      title: 'TabsElement',
+      'x-i18n-title': {
+        en: 'tabs',
+        fr: 'Onglets'
+      },
       type: 'object',
       required: ['type', 'align', 'tabs'],
       properties: {
@@ -963,7 +1001,7 @@ export default {
     // Functional blocks
     'element-search': {
       type: 'object',
-      title: 'Search Element',
+      title: 'SearchElement',
       'x-i18n-title': {
         en: 'Search',
         fr: 'Barre de recherche'
@@ -1009,7 +1047,7 @@ export default {
         fullWidth: {
           type: 'boolean',
           title: 'Pleine largeur',
-          description: 'Le champ de recherche s\'étendra sur toute la largeur de son conteneur parent.',
+          description: "Le champ de recherche s'étendra sur toute la largeur de son conteneur parent.",
           layout: 'switch'
         },
         centered: {
@@ -1024,7 +1062,7 @@ export default {
     },
     'element-topics': {
       type: 'object',
-      title: 'Topics Element',
+      title: 'TopicsElement',
       'x-i18n-title': {
         en: 'Topics list',
         fr: 'Liste des thématiques'
@@ -1104,7 +1142,7 @@ export default {
     },
     'element-metrics': {
       type: 'object',
-      title: 'Metrics Element',
+      title: 'MetricsElement',
       'x-i18n-title': {
         en: 'Key metrics',
         fr: 'Chiffres clés'
@@ -1294,7 +1332,7 @@ export default {
     // Datasets
     'element-datasets-list': {
       type: 'object',
-      title: 'Datasets List Element',
+      title: 'DatasetsListElement',
       'x-i18n-title': {
         en: 'Datasets list',
         fr: 'Liste de jeux de données'
@@ -1400,10 +1438,10 @@ export default {
     },
     'element-dataset-card': {
       type: 'object',
-      title: 'Dataset Card Element',
+      title: 'DatasetCardElement',
       'x-i18n-title': {
         en: 'Dataset card',
-        fr: 'Vignette d\'un jeu de données'
+        fr: "Vignette d'un jeu de données"
       },
       layout: {
         children: [
@@ -1468,7 +1506,7 @@ export default {
       type: 'object',
       title: 'Dataset table',
       'x-i18n-title': {
-        fr: 'Tableau d\'un jeu de données'
+        fr: "Tableau d'un jeu de données"
       },
       required: ['type', 'dataset', 'interactions'],
       properties: {
@@ -1498,14 +1536,14 @@ export default {
         syncParams: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Synchroniser les paramètres d\'URL',
+          title: "Synchroniser les paramètres d'URL",
           description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
           default: true
         },
         display: {
           type: 'string',
-          title: 'Mode d\'affichage par défaut',
-          description: 'L\'utilisateur final peut modifier le mode d\'affichage sauf si les interactions sont désactivées.',
+          title: "Mode d'affichage par défaut",
+          description: "L'utilisateur final peut modifier le mode d'affichage sauf si les interactions sont désactivées.",
           oneOf: [
             {
               const: 'table',
@@ -1523,7 +1561,7 @@ export default {
         },
         cols: {
           title: 'Colonnes visibles par défaut',
-          description: 'Si aucune colonne n\'est sélectionnée, toutes les colonnes seront affichées par défaut. L\'utilisateur final peut modifier les colonnes visibles sauf si les interactions sont désactivées.',
+          description: "Si aucune colonne n'est sélectionnée, toutes les colonnes seront affichées par défaut. L'utilisateur final peut modifier les colonnes visibles sauf si les interactions sont désactivées.",
           type: 'array',
           layout: {
             getItems: {
@@ -1547,7 +1585,7 @@ export default {
       type: 'object',
       title: 'Dataset form',
       'x-i18n-title': {
-        fr: 'Formulaire d\'un jeu de données'
+        fr: "Formulaire d'un jeu de données"
       },
       required: ['type', 'dataset'],
       properties: {
@@ -1584,7 +1622,7 @@ export default {
     // Applications
     'element-applications-list': {
       type: 'object',
-      title: 'Applications List Element',
+      title: 'ApplicationsListElement',
       'x-i18n-title': {
         en: 'Applications list',
         fr: 'Liste de visualisations'
@@ -1598,7 +1636,7 @@ export default {
           {
             title: 'Application Card',
             'x-i18n-title': {
-              fr: 'Vignette d\'une visualisation'
+              fr: "Vignette d'une visualisation"
             },
             comp: 'card',
             children: [
@@ -1644,7 +1682,7 @@ export default {
     },
     'element-application': {
       type: 'object',
-      title: 'Application Element',
+      title: 'ApplicationElement',
       'x-i18n-title': {
         en: 'Application',
         fr: 'Visualisation'
@@ -1686,8 +1724,8 @@ export default {
         syncParams: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Synchroniser les paramètres d\'URL',
-          description: 'Si activé, les paramètres de la page seront transmis à l\'application. Utile pour partager la page avec une vue spécifique de l\'application.',
+          title: "Synchroniser les paramètres d'URL",
+          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application.",
           default: true
         },
         mb: { $ref: '#/$defs/margin-bottom' }
@@ -1697,7 +1735,7 @@ export default {
     // Reusable definitions
     icon: {
       type: 'object',
-      title: 'Configuration de l\'icône',
+      title: "Configuration de l'icône",
       layout: 'card',
       properties: {
         mdi: {

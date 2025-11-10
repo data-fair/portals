@@ -82,7 +82,7 @@ export default {
     logoLink: {
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.',
+      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d'accueil.",
       layout: {
         if: 'parent.data?.logoType !== "hidden"',
         props: { clearable: true },

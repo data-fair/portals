@@ -3,13 +3,13 @@ export default {
   'x-exports': [],
   title: 'Personal Space',
   type: 'object',
-  layout: { title: 'L\'espace personnel sera proposé aux utilisateurs connectés si vous activez l\'authentification.' },
+  layout: { title: "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification." },
   unevaluatedProperties: false,
   required: ['navigationColor', 'hidePages', 'accountPages'],
   properties: {
     navigationColor: {
       type: 'string',
-      title: 'Couleur de la barre de navigation de l\'espace personnel',
+      title: "Couleur de la barre de navigation de l'espace personnel",
       default: 'primary',
       oneOf: [
         { const: 'primary', title: 'Couleur principale' },

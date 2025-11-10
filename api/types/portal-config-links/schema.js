@@ -54,7 +54,7 @@ export default {
         },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher l\'icône',
+          title: "Afficher l'icône",
           layout: {
             comp: 'switch',
             cols: { md: 4 }
@@ -113,7 +113,7 @@ export default {
       }
     },
     eventPage: {
-      title: 'Page d\'événements',
+      title: "Page d'événements",
       required: ['type', 'pageRef'],
       properties: {
         type: { const: 'event' },
@@ -140,7 +140,7 @@ export default {
       }
     },
     newsPage: {
-      title: 'Page d\'actualités',
+      title: "Page d'actualités",
       required: ['type', 'pageRef'],
       properties: {
         type: { const: 'news' },
@@ -220,7 +220,7 @@ export default {
     // Other definitions
     icon: {
       type: 'object',
-      title: 'Configuration de l\'icône',
+      title: "Configuration de l'icône",
       layout: 'card',
       properties: {
         mdi: {

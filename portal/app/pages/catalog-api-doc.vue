@@ -2,6 +2,7 @@
   <d-frame-wrapper
     :iframe-title="`${t('apiDoc')}`"
     :src="`/openapi-viewer/?urlType=catalog`"
+    class="fill-height"
     sync-params
   />
 </template>

@@ -8,7 +8,7 @@ export default {
     show: {
       type: 'boolean',
       layout: { comp: 'switch' },
-      title: 'Afficher l\'entête',
+      title: "Afficher l'entête",
       default: true
     },
     logoPrimaryType: {
@@ -89,7 +89,7 @@ export default {
     logoPrimaryLink: {
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d\'accueil.',
+      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d'accueil.",
       layout: {
         if: 'parent.data?.show && parent.data?.logoPrimaryType !== "hidden"',
         props: { clearable: true },
@@ -110,7 +110,7 @@ export default {
         },
         cols: { md: 6 }
       },
-      description: 'Logo affiché à droite de l\'entête',
+      description: "Logo affiché à droite de l'entête",
       properties: {
         _id: {
           type: 'string'
@@ -129,7 +129,7 @@ export default {
     logoSecondaryLink: {
       type: 'string',
       title: 'Lien au clic sur le logo secondaire',
-      description: 'Lien vers lequel sera redirigé l\'utilisateur lors du clic sur le logo secondaire.',
+      description: "Lien vers lequel sera redirigé l'utilisateur lors du clic sur le logo secondaire.",
       layout: {
         if: 'parent.data?.show',
         props: { clearable: true },
@@ -157,7 +157,7 @@ export default {
     },
     color: {
       type: 'string',
-      title: 'Couleur de l\'entête',
+      title: "Couleur de l'entête",
       layout: {
         if: 'parent.data?.show',
         cols: { md: 6 }
@@ -170,7 +170,7 @@ export default {
     },
     keepOnScroll: {
       type: 'boolean',
-      title: 'Garder l\'entête affiché au scroll',
+      title: "Garder l'entête affiché au scroll",
       layout: {
         if: 'parent.data?.show',
         comp: 'switch',

@@ -13,10 +13,16 @@ export default {
   layout: {
     title: null,
     children: [{
-      title: 'Métadonnées',
+      title: 'Metadata',
+      'x-i18n-title': {
+        fr: 'Métadonnées'
+      },
       children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata']
     }, {
-      title: 'Contenu',
+      title: 'Content',
+      'x-i18n-title': {
+        fr: 'Contenu'
+      },
       children: ['elements']
     }]
   },
@@ -24,21 +30,42 @@ export default {
   properties: {
     title: {
       type: 'string',
-      title: 'Titre'
+      title: 'Title',
+      'x-i18n-title': {
+        fr: 'Titre'
+      }
     },
     description: {
       type: 'string',
       title: 'Description',
+      'x-i18n-title': {
+        fr: 'Description'
+      },
       layout: 'textarea'
     },
     eventMetadata: {
       type: 'object',
-      required: ['slug'],
+      required: ['slug', 'startDate'],
       default: {},
       layout: { if: 'context.pageType === "event"' },
       properties: {
-        slug: { $ref: '#/$defs/slug' }
-        // TODO: add a start and end date
+        slug: { $ref: '#/$defs/slug' },
+        startDate: {
+          type: 'string',
+          format: 'date-time',
+          title: 'Start Date',
+          'x-i18n-title': {
+            fr: "Date de l'évènement"
+          }
+        },
+        endDate: {
+          type: 'string',
+          format: 'date-time',
+          title: 'End Date',
+          'x-i18n-title': {
+            fr: 'Date de fin'
+          }
+        }
       }
     },
     newsMetadata: {
@@ -47,8 +74,12 @@ export default {
       default: {},
       layout: { if: 'context.pageType === "news"' },
       properties: {
-        slug: { $ref: '#/$defs/slug' }
-        // TODO: add a date
+        slug: { $ref: '#/$defs/slug' },
+        date: {
+          type: 'string',
+          format: 'date-time',
+          title: 'Date'
+        }
       }
     },
     genericMetadata: {
@@ -60,13 +91,11 @@ export default {
         slug: { $ref: '#/$defs/slug' },
         group: {
           type: 'object',
-          title: 'Groupe',
-          required: ['_id', 'title', 'slug'],
-          properties: {
-            _id: { type: 'string' },
-            title: { type: 'string' },
-            slug: { type: 'string' }
+          title: 'Group',
+          'x-i18n-title': {
+            fr: 'Groupe'
           },
+          required: ['_id', 'title', 'slug'],
           layout: {
             getItems: {
               url: '/portals-manager/api/groups?select=_id,title,slug',
@@ -74,6 +103,11 @@ export default {
               itemTitle: 'item.title',
               itemKey: 'item._id'
             }
+          },
+          properties: {
+            _id: { type: 'string' },
+            title: { type: 'string' },
+            slug: { type: 'string' }
           }
         }
       }
@@ -81,9 +115,7 @@ export default {
     elements: {
       type: 'array',
       layout: {
-        slots: {
-          component: 'page-elements'
-        }
+        slots: { component: 'page-elements' }
       },
       items: {
         $ref: 'https://github.com/data-fair/portals/page-elements#/$defs/element'

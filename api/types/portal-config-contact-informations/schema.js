@@ -11,7 +11,7 @@ export default {
       type: 'string',
       title: 'Email de contact',
       format: 'email',
-      description: 'Cet email n\'est pas visible pour les utilisateurs. Les messages envoyés via des blocs de contact seront transmis à cette adresse email.'
+      description: "Cet email n'est pas visible pour les utilisateurs. Les messages envoyés via des blocs de contact seront transmis à cette adresse email."
     },
     phone: {
       type: 'string',

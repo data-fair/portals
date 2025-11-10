@@ -3,7 +3,7 @@ export default {
   'x-exports': [],
   title: 'Application Page',
   'x-i18n-title': {
-    fr: 'Page d\'une visualisation'
+    fr: "Page d'une visualisation"
   },
   type: 'object',
   unevaluatedProperties: false,
@@ -24,13 +24,13 @@ export default {
       layout: { cols: { md: 4 } },
       default: 'action',
       oneOf: [
-        { const: 'action', title: 'Dans un bouton d\'action' },
+        { const: 'action', title: "Dans un bouton d'action" },
         { const: 'full', title: 'Dans les métadonnées' }
       ]
     },
     actionsStyle: {
       type: 'string',
-      title: 'Style des boutons d\'actions',
+      title: "Style des boutons d'actions",
       layout: { cols: { md: 4 } },
       default: 'full',
       oneOf: [
@@ -41,8 +41,8 @@ export default {
     },
     showImage: {
       type: 'boolean',
-      title: 'Afficher l\'image',
-      description: 'L\'image sera affichée au dessus de la description.',
+      title: "Afficher l'image",
+      description: "L'image sera affichée au dessus de la description.",
       layout: {
         comp: 'switch',
         cols: { md: 4 }

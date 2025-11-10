@@ -70,7 +70,7 @@ export default {
       default: 'default',
       oneOf: [
         { const: 'default', title: 'Utiliser le logo global' },
-        { const: 'header', title: 'Utiliser le logo principal de l\'entête' },
+        { const: 'header', title: "Utiliser le logo principal de l'entête" },
         { const: 'local', title: 'Charger une image' },
         { const: 'hidden', title: 'Ne pas afficher de logo' }
       ]
@@ -113,12 +113,12 @@ export default {
       },
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo.'
+      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo."
     },
     copyright: {
       type: 'string',
       title: 'Affichage du copyright',
-      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l\'entreprise parmis la liste des logos du pied de page.',
+      description: "Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l'entreprise parmis la liste des logos du pied de page.",
       default: 'text',
       oneOf: [
         {
@@ -218,7 +218,7 @@ export default {
           link: {
             type: 'string',
             title: 'Lien au clic sur le logo',
-            description: 'Lien vers lequel l\'utilisateur sera redirigé en cliquant sur le logo.',
+            description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo.",
             layout: { cols: { md: 6 } }
           }
         }

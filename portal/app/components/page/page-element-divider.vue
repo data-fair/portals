@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import type { SeparateurHorizontal } from '~~/../api/types/page-config'
+import type { DividerElement } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
-  element: { type: Object as () => SeparateurHorizontal, required: true }
+  element: { type: Object as () => DividerElement, required: true }
 })
 </script>

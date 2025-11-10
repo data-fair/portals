@@ -10,6 +10,7 @@
   <d-frame-wrapper
     :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('apiDoc')}`"
     :src="`/openapi-viewer/?urlType=dataset&id=${$route.params.ref}`"
+    class="fill-height"
     sync-params
   />
 </template>

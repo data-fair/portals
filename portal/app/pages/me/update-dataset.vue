@@ -2,6 +2,7 @@
   <d-frame-wrapper
     :iframe-title="t('contribute')"
     :src="`/data-fair/next-ui/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"
+    class="fill-height"
   />
 </template>
 

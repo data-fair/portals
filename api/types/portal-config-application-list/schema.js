@@ -33,7 +33,7 @@ export default {
     defaultSort: {
       type: 'string',
       title: 'Tri par défaut',
-      description: 'Ce tri sera appliqué par défaut lorsque l\'utilisateur arrive sur la page. Lorsqu\'il commence une recherche, le tri par pertinence sera appliqué.',
+      description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page. Lorsqu'il commence une recherche, le tri par pertinence sera appliqué.",
       layout: { cols: { md: 4 } },
       default: 'createdAt',
       oneOf: [

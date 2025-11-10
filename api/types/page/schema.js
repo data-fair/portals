@@ -8,12 +8,9 @@ export default {
   properties: {
     _id: {
       type: 'string',
-      title: 'Identifiant',
       readOnly: true
     },
-    title: {
-      type: 'string',
-    },
+    title: { type: 'string' }, // can be synced from config.title or edited by user
     type: {
       type: 'string',
       enum: ['home', 'event', 'news', 'contact', 'privacy-policy', 'generic'],
@@ -22,7 +19,10 @@ export default {
     },
     isReference: { // superadmin can set a page as reference page
       type: 'boolean',
-      title: 'Page de référence',
+      title: 'Reference Page',
+      'x-i18n-title': {
+        fr: 'Page de référence'
+      },
       readOnly: true
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
@@ -31,7 +31,7 @@ export default {
     configUpdatedAt: {
       type: 'string',
       format: 'date-time',
-      title: 'Date de mise à jour de la configuration',
+      title: 'Last configuration update',
       readOnly: true
     },
     config: { $ref: 'https://github.com/data-fair/portals/page-config' },

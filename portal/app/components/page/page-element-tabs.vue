@@ -44,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Onglets, PageElement } from '~~/../api/types/page-config'
+import type { TabsElement, PageElement } from '~~/../api/types/page-config'
 
 const { element } = defineProps({
-  element: { type: Object as () => Onglets, required: true }
+  element: { type: Object as () => TabsElement, required: true }
 })
 
 const activeTab = ref(0)

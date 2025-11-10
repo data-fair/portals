@@ -8,7 +8,7 @@ export default {
   properties: {
     actionsLocation: {
       type: 'string',
-      title: 'Position des boutons d\'actions sur la carte',
+      title: "Position des boutons d'actions sur la carte",
       layout: { cols: { md: 6 } },
       default: 'bottom',
       oneOf: [
@@ -19,7 +19,7 @@ export default {
     },
     actionsStyle: {
       type: 'string',
-      title: 'Style des boutons d\'actions',
+      title: "Style des boutons d'actions",
       layout: { cols: { md: 6 } },
       default: 'full',
       oneOf: [
@@ -69,13 +69,13 @@ export default {
       properties: {
         show: {
           type: 'boolean',
-          title: 'Afficher l\'image',
+          title: "Afficher l'image",
           layout: 'switch',
           default: true
         },
         location: {
           type: 'string',
-          title: 'Position de l\'image sur la carte',
+          title: "Position de l'image sur la carte",
           layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
@@ -87,7 +87,7 @@ export default {
         default: {
           type: 'object',
           title: 'Image par défaut',
-          description: 'Image à afficher si le jeu de données n\'a pas d\'image définie.',
+          description: "Image à afficher si le jeu de données n'a pas d'image définie.",
           required: ['_id', 'name', 'mimeType'],
           layout: {
             slots: {
@@ -135,8 +135,8 @@ export default {
         },
         crop: {
           type: 'boolean',
-          title: 'Recadrer l\'image pour un rendu uniforme',
-          description: 'Si désactivé, l\'image gardera son ratio d\'origine',
+          title: "Recadrer l'image pour un rendu uniforme",
+          description: "Si désactivé, l'image gardera son ratio d'origine",
           layout: {
             comp: 'switch',
             cols: { md: 6 }

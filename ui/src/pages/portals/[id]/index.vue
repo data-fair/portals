@@ -84,7 +84,7 @@
 
 <script lang="ts" setup>
 import type { Portal, PortalConfig } from '#api/types/portal'
-import type { Page, Groupe } from '#api/types/page'
+import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
@@ -157,7 +157,7 @@ const pages = computed(() => {
       key: page._id,
       slug: metadata.slug,
       title: page.config.title,
-      group: metadata.group as Groupe | undefined,
+      group: metadata.group as Group | undefined,
     }
 
     if (page.type === 'generic') {
