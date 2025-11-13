@@ -13,7 +13,7 @@ export default {
     sites: 'secret-sites',
     ingress: 'secret-ingress'
   },
-  draftUrlPattern: 'http://{id}.draft.localhost:5607',
+  portalUrlPattern: 'http://{subdomain}.localhost:5607',
   // 5697 for dev/ingress-manager.ts
   // 5603 for the separate project portals-ingress-manager development server
   privateIngressManagerUrl: 'http://localhost:5697',

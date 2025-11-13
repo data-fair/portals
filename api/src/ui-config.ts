@@ -1,7 +1,7 @@
 import config from './config.ts'
 
 export const uiConfig = {
-  draftUrlPattern: config.draftUrlPattern,
+  portalUrlPattern: config.portalUrlPattern,
   ingressControllers: config.ingressControllers
 }
 export type UiConfig = typeof uiConfig

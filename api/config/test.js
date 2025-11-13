@@ -12,6 +12,6 @@ export default {
     events: 'secret-events',
     sites: 'secret-sites'
   },
-  draftUrlPattern: 'http://{id}.draft.localhost:5607',
+  portalUrlPattern: 'http://{subdomain}.localhost:5607',
   serveUi: false
 }

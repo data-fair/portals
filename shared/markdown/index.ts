@@ -13,6 +13,7 @@ const sanitizeOpts: SanitizeOptions = {
 
 const sanitize = (html: string) => sanitizeHtml(html, sanitizeOpts)
 
+// ==== Helpers functions from marked library ====
 const REGEX = {
   escapeTest: /[&<>"']/,
   escapeReplace: /[&<>"']/g,
@@ -30,7 +31,7 @@ const escapeReplacements: { [index: string]: string } = {
 }
 const getEscapeReplacement = (ch: string) => escapeReplacements[ch]
 
-export function escape (html: string, encode?: boolean) {
+function escape (html: string, encode?: boolean) {
   if (encode) {
     if (REGEX.escapeTest.test(html)) {
       return html.replace(REGEX.escapeReplace, getEscapeReplacement)
@@ -52,6 +53,7 @@ function cleanUrl (href: string) {
   }
   return href
 }
+// ==============================================
 
 const headingClasses: Record<number, string> = {
   1: 'text-h2 text-primary mt-12 mb-8',

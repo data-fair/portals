@@ -70,7 +70,7 @@ export const cancelPortalDraft = async (portal: Portal, session: SessionStateAut
 
 const getPublicationSite = (portal: Portal) => {
   const refType = portal.ingress ? 'slug' : 'id'
-  const draftUrl = config.draftUrlPattern.replace('{id}', portal._id)
+  const draftUrl = config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')
   const url = portal.ingress ? portal.ingress.url : draftUrl
   const publicationSite: any = {
     type: 'data-fair-portals',
@@ -97,7 +97,7 @@ const getSDSites = async (portal: Portal) => {
   const sites = [{
     _id: 'data-fair-portals:draft-' + portal._id,
     owner: portal.owner,
-    host: new URL(config.draftUrlPattern.replace('{id}', portal._id)).host,
+    host: new URL(config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')).host,
     theme: {
       ...portal.draftConfig.theme,
       logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
@@ -108,28 +108,26 @@ const getSDSites = async (portal: Portal) => {
     },
     contact: portal.draftConfig.contactInformations.email
   }]
-  if (portal.ingress) {
-    sites.push({
-      _id: 'data-fair-portals:' + portal._id,
-      owner: portal.owner,
-      host: new URL(portal.ingress.url).host,
-      theme: {
-        ...portal.config.theme,
-        logo: portal.config.logo && getImageSrc(portal.config.logo, true),
-        bodyFontFamily: portal.config.bodyFontFamily,
-        bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.config.bodyFontFamily),
-        headingFontFamily: portal.config.headingFontFamily,
-        headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.owner, portal.config.headingFontFamily)
-      },
-      contact: portal.config.contactInformations.email
-    })
-  }
+  sites.push({
+    _id: 'data-fair-portals:' + portal._id,
+    owner: portal.owner,
+    host: portal.ingress ? new URL(portal.ingress.url).host : new URL(config.portalUrlPattern.replace('{subdomain}', portal._id)).host,
+    theme: {
+      ...portal.config.theme,
+      logo: portal.config.logo && getImageSrc(portal.config.logo, true),
+      bodyFontFamily: portal.config.bodyFontFamily,
+      bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.config.bodyFontFamily),
+      headingFontFamily: portal.config.headingFontFamily,
+      headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.owner, portal.config.headingFontFamily)
+    },
+    contact: portal.config.contactInformations.email
+  })
   return sites
 }
 
 const getIngressInfos = (portal: Portal) => {
   const ingressInfos: IngressManagerIngressInfo[] = [{
-    url: config.draftUrlPattern.replace('{id}', portal._id),
+    url: config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft'),
     owner: portal.owner,
     _id: portal._id + '--draft',
     waf: 'off'
@@ -143,6 +141,13 @@ const getIngressInfos = (portal: Portal) => {
       redirects: portal.ingress.redirects,
       blockedIps: portal.ingress.blockedIps,
       waf: portal.ingress.waf ?? 'off'
+    })
+  } else {
+    ingressInfos.push({
+      url: config.portalUrlPattern.replace('{subdomain}', portal._id),
+      owner: portal.owner,
+      _id: portal._id,
+      waf: 'off'
     })
   }
   return ingressInfos

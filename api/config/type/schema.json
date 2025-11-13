@@ -17,7 +17,7 @@
     "tmpDir",
     "observer",
     "secretKeys",
-    "draftUrlPattern",
+    "portalUrlPattern",
     "ingressControllers",
     "serveUi"
   ],
@@ -65,7 +65,7 @@
         }
       }
     },
-    "draftUrlPattern": {
+    "portalUrlPattern": {
       "type": "string"
     },
     "privateIngressManagerUrl": {

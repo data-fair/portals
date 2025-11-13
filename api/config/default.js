@@ -14,7 +14,7 @@ export default {
     sites: undefined,
     ingress: undefined
   },
-  draftUrlPattern: undefined,
+  portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
   ingressControllers: [],
   serveUi: true,

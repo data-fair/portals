@@ -90,7 +90,7 @@
   </v-list-item>
 
   <v-list-item
-    :href="$uiConfig.draftUrlPattern.replace('{id}', route.params.id)"
+    :href="$uiConfig.portalUrlPattern.replace('{subdomain}', route.params.id + '.draft')"
     target="_blank"
     rel="noopener"
   >
@@ -104,8 +104,7 @@
   </v-list-item>
 
   <v-list-item
-    v-if="portalUrl"
-    :href="portalUrl"
+    :href="portalUrl || $uiConfig.portalUrlPattern.replace('{subdomain}', route.params.id)"
     target="_blank"
     rel="noopener"
   >

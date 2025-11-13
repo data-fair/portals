@@ -12,7 +12,7 @@ export default {
     active: 'OBSERVER_ACTIVE',
     port: 'OBSERVER_PORT'
   },
-  draftUrlPattern: 'DRAFT_URL_PATTERN',
+  portalUrlPattern: 'PORTAL_URL_PATTERN',
   privateIngressManagerUrl: 'PRIVATE_INGRESS_MANAGER_URL',
   ingressControllers: {
     __name: 'INGRESS_CONTROLLERS',
