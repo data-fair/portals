@@ -4,7 +4,7 @@ import type { Portal } from '~~/../api/types/portal'
 
 const config = useRuntimeConfig()
 
-const draftUrlRegexp = new RegExp('^' + escapeRegExp(config.portalUrlPattern).replace('\\{subdomain\\}', '(.*)') + '$')
+const portalUrlRegexp = new RegExp('^' + escapeRegExp(config.portalUrlPattern).replace('\\{subdomain\\}', '(.*)') + '$')
 
 export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
 
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
 
   // TODO: small memory cache based on origin ?
-  const portalMatch = origin.match(draftUrlRegexp)?.[1]
+  const portalMatch = origin.match(portalUrlRegexp)?.[1]
   const draft = portalMatch?.endsWith('.draft')
   const portal = await mongo.portals.findOne(
     portalMatch ? { _id: draft ? portalMatch.slice(0, -6) : portalMatch } : { 'ingress.url': origin },

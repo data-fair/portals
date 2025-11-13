@@ -6,7 +6,7 @@
     <v-card-item>
       <template #append>
         <owner-avatar
-          v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
+          v-if="showAll || !!(page.owner.department && !session.state.account.department)"
           :owner="page.owner"
         />
       </template>

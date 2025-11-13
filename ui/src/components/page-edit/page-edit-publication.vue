@@ -29,9 +29,7 @@
         {{ warning }}
       </p>
     </v-alert>
-    <p v-else>
-      {{ t('publishThisPage') }}
-    </p>
+
     <v-list lines="three">
       <v-list-item
         v-for="(portal,i) in portals"
@@ -39,12 +37,9 @@
       >
         <v-list-item-title>
           <a
-            v-if="portal.ingress"
-            :href="portal.ingress?.url"
+            :href="getPortalUrl(portal)"
+            target="_blank"
           >{{ portal.title }}</a>
-          <template v-else>
-            {{ portal.title }}
-          </template>
         </v-list-item-title>
         <v-list-item-subtitle
           v-if="page.owner.department"
@@ -54,11 +49,14 @@
           <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
         </v-list-item-subtitle>
         <v-list-item-subtitle
-          v-if="portal.ingress && page.portals.includes(portal._id) && getPageUrl(page)"
+          v-if="page.portals.includes(portal._id) && getPageUrl(page)"
           class="mb-2"
         >
-          <a :href="portal.ingress.url + getPageUrl(page)">
-            {{ portal.ingress.url + getPageUrl(page) }}
+          <a
+            :href="getPortalUrl(portal) + getPageUrl(page)"
+            target="_blank"
+          >
+            {{ getPortalUrl(portal) + getPageUrl(page) }}
           </a>
         </v-list-item-subtitle>
         <v-list-item-subtitle>
@@ -181,6 +179,11 @@ const toggleRequestedPortals = (id: string) => {
   patchPage.execute({ requestedPortals })
 }
 
+const getPortalUrl = (portal: PartialPortal): string => {
+  if (portal.ingress?.url) return portal.ingress.url
+  return $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id)
+}
+
 const getPageUrl = (pageData: Page): string | undefined => {
   switch (pageData.type) {
     case 'home': return '/'
@@ -205,7 +208,6 @@ const getPageUrl = (pageData: Page): string | undefined => {
     noPortal: You have not configured any portal yet.
     publicationRequested: Publication requested by a contributor
     published: Published
-    publishThisPage: Publish this page on one or more of your portals.
     warning:
       title: Cannot publish until these warnings are fixed
       content: The page is empty
@@ -223,7 +225,6 @@ const getPageUrl = (pageData: Page): string | undefined => {
     noPortal: Vous n'avez pas encore configuré de portail.
     publicationRequested: Publication demandée par un contributeur
     published: Publié
-    publishThisPage: Publiez cette page sur un ou plusieurs de vos portails
     warning:
       title: Publication impossible tant que ces avertissements ne sont pas corrigés
       content: Le contenu de la page est vide
