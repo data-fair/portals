@@ -5,6 +5,7 @@ export default {
   ...jsonSchema(pageSchema)
     .pickProperties(['type', 'config', 'owner', 'portals'])
     .removeFromRequired(['owner', 'portals'])
+    .addProperty('sourcePageId', { type: 'string', description: 'ID of the page to duplicate' })
     .schema,
   $id: 'https://github.com/data-fair/portals/pages/post-req-body',
   title: 'Post page req body',

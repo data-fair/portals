@@ -1,10 +1,12 @@
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
-import mongo from '#mongo'
+import type { Image } from '#types/image/index.js'
+import { randomUUID } from 'node:crypto'
 import debugModule from 'debug'
-import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import slug from 'slugify'
+import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
+import mongo from '#mongo'
 
 const debug = debugModule('pages')
 
@@ -13,6 +15,124 @@ export const getPageAsContrib = async (sessionState: SessionStateAuthenticated, 
   if (!page) throw httpError(404, `page "${id}" not found`)
   assertAccountRole(sessionState, page.owner, ['admin', 'contrib'])
   return page
+}
+
+/**
+ * Duplicate a single image with its mobile variant
+ * @param sourceImageId - The ID of the image to duplicate
+ * @param newPageId - The ID of the new page
+ * @param newOwner - The owner account of the new page
+ * @param sessionState - The session state of the user
+ * @returns The new image ID
+ */
+const duplicateImage = async (
+  sourceImageId: string,
+  newPageId: string,
+  newOwner: SessionStateAuthenticated['account'],
+  sessionState: SessionStateAuthenticated
+): Promise<string> => {
+  const sourceImage = await mongo.images.findOne({ _id: sourceImageId })
+  if (!sourceImage) {
+    debug(`Image ${sourceImageId} not found, skipping`)
+    return sourceImageId // Return original ID if image not found
+  }
+
+  const newImageId = randomUUID()
+  const created = {
+    id: sessionState.user.id,
+    name: sessionState.user.name,
+    date: new Date().toISOString()
+  }
+
+  const newImage: Image = {
+    ...sourceImage,
+    _id: newImageId,
+    owner: { ...newOwner, department: undefined, departmentName: undefined },
+    resource: {
+      type: 'page',
+      _id: newPageId
+    },
+    created
+  }
+
+  // Duplicate mobile variant if it exists
+  if (newImage.mobileAlt) {
+    const sourceMobileImage = await mongo.images.findOne({ _id: sourceImageId + '-mobile' })
+    if (sourceMobileImage) {
+      const newMobileImage: Image = {
+        ...sourceMobileImage,
+        _id: newImageId + '-mobile',
+        owner: { ...newOwner, department: undefined, departmentName: undefined },
+        resource: {
+          type: 'page',
+          _id: newPageId
+        },
+        created
+      }
+      await mongo.images.insertOne(newMobileImage)
+    }
+  }
+
+  await mongo.images.insertOne(newImage)
+  return newImageId
+}
+
+/**
+ * Duplicate page elements with images duplication
+ * @param sessionState - The session state of the user
+ * @param sourcePageId - The ID of the page to duplicate
+ * @param newPageId - The ID of the new page
+ * @param newOwner - The owner account of the new page
+ * @returns The duplicated elements with new image references
+ */
+export const duplicatePageElements = async (
+  sessionState: SessionStateAuthenticated,
+  sourcePageId: string,
+  newPageId: string,
+  newOwner: SessionStateAuthenticated['account']
+): Promise<PageElement[]> => {
+  debug('duplicatePageElements', sourcePageId, newPageId)
+
+  // Get source page
+  const sourcePage = await mongo.pages.findOne({ _id: sourcePageId })
+  if (!sourcePage) throw httpError(404, `source page "${sourcePageId}" not found`)
+
+  if (!sourcePage.isReference) assertAccountRole(sessionState, sourcePage.owner, 'admin')
+
+  const clonedElements = JSON.parse(JSON.stringify(sourcePage.config.elements)) as PageElement[]
+
+  const imageIdMap = new Map<string, string>()
+  const imageRefs = await getElementsImageRefs(clonedElements)
+
+  // Duplicate all unique images
+  await Promise.all(
+    imageRefs.map(async (imageRef) => {
+      if (!imageIdMap.has(imageRef._id)) {
+        const newImageId = await duplicateImage(imageRef._id, newPageId, newOwner, sessionState)
+        imageIdMap.set(imageRef._id, newImageId)
+      }
+    })
+  )
+
+  const updateImageId = (image?: { _id: string }) => {
+    if (image && imageIdMap.has(image._id)) {
+      image._id = imageIdMap.get(image._id)!
+    }
+  }
+
+  // Update image references in cloned elements
+  await traversePageElements(clonedElements, (el) => {
+    if (el.type === 'image') {
+      updateImageId(el.image)
+      updateImageId(el.wideImage)
+    } else if (el.type === 'banner' || el.type === 'card') {
+      updateImageId(el.background?.image)
+    } else if (el.type === 'dataset-card') {
+      updateImageId(el.cardConfig?.thumbnail?.default)
+    }
+  })
+
+  return clonedElements
 }
 
 export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 'news' | 'generic', owner: { type: string, id: string }) => {
@@ -125,7 +245,10 @@ export const cancelPageDraft = async (page: Page, session: SessionStateAuthentic
 }
 
 const cleanUnusedImages = async (page: Page) => {
-  const imageRefs = await getPageImageRefs(page)
+  const imageRefs = [
+    ...await getElementsImageRefs(page.config.elements),
+    ...await getElementsImageRefs(page.draftConfig.elements)
+  ]
   const imagesIds = []
   for (const imageRef of imageRefs) {
     imagesIds.push(imageRef._id)
@@ -149,9 +272,9 @@ const renderMarkdownElements = async (pageConfig: PageConfig) => {
   })
 }
 
-const getPageImageRefs = async (page: Page) => {
+const getElementsImageRefs = async (pageElements: PageElement[]) => {
   const imageRefs: ImageRef[] = []
-  await traversePage(page, (pageElement) => {
+  await traversePageElements(pageElements, (pageElement) => {
     if (pageElement.type === 'image' && pageElement.image) imageRefs.push(pageElement.image)
     if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
@@ -159,11 +282,6 @@ const getPageImageRefs = async (page: Page) => {
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
   })
   return imageRefs
-}
-
-const traversePage = async (page: Page, callback: (pageElement: PageElement) => Promise<void> | void) => {
-  await traversePageElements(page.config.elements, callback)
-  await traversePageElements(page.draftConfig.elements, callback)
 }
 
 const traversePageElements = async (pageElements: PageElement[] | undefined, callback: (pageElement: PageElement) => Promise<void> | void) => {

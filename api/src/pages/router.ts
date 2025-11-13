@@ -6,7 +6,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements } from './service.ts'
 
 const router = Router()
 export default router
@@ -64,11 +64,19 @@ router.post('', async (req, res, next) => {
     date: new Date().toISOString()
   }
   const config = { ...body.config }
+  const pageId = randomUUID()
+  const owner = body.owner ?? session.account
+
+  // Handle page duplication if sourcePageId is provided
+  if (body.sourcePageId) {
+    config.elements = await duplicatePageElements(session, body.sourcePageId, pageId, owner)
+  }
+
   const page: Page = {
-    _id: randomUUID(),
+    _id: pageId,
     title: body.config.title,
     type: body.type,
-    owner: body.owner ?? session.account,
+    owner,
     created,
     updated: created,
     config,

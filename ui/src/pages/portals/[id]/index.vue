@@ -141,6 +141,7 @@ const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
   }
 })
 
+// List of pages that can be linked in the portal
 const pages = computed(() => {
   const results = pagesFetch.data.value?.results ?? []
   if (!results.length) return { event: [], news: [], generic: [] }
@@ -156,7 +157,7 @@ const pages = computed(() => {
     const item = {
       key: page._id,
       slug: metadata.slug,
-      title: page.config.title,
+      title: page.title,
       group: metadata.group as Group | undefined,
     }
 

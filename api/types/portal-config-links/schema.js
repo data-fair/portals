@@ -68,7 +68,7 @@ export default {
     linkItem: {
       type: 'object',
       unevaluatedProperties: false,
-      oneOfLayout: { emptyData: true, label: 'Type de page' },
+      oneOfLayout: { label: 'Type de page' },
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },

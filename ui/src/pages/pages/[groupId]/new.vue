@@ -69,23 +69,23 @@
         >
           <v-row class="d-flex align-stretch">
             <v-col
-              v-for="type in pageTypes"
-              :key="type.value"
+              v-for="pType in pageTypes"
+              :key="pType.value"
               md="4"
               sm="6"
               cols="12"
             >
               <v-card
                 class="h-100"
-                :color="pageType === type.value ? 'primary' : ''"
-                @click="selectPageType(type.value)"
+                :color="pageType === pType.value ? 'primary' : ''"
+                @click="selectPageType(pType.value)"
               >
                 <template #title>
-                  <span :class="pageType !== type.value ? 'text-primary' : ''">
-                    {{ t('pageTypeTitle.' + type.value) }}
+                  <span :class="pageType !== pType.value ? 'text-primary' : ''">
+                    {{ t('pageTypeTitle.' + pType.value) }}
                   </span>
                 </template>
-                <v-card-text>{{ t('pageTypeDesc.' + type.value) }}</v-card-text>
+                <v-card-text>{{ t('pageTypeDesc.' + pType.value) }}</v-card-text>
               </v-card>
             </v-col>
           </v-row>
@@ -232,7 +232,6 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/session'
-import type { Page } from '#api/types/page/index.ts'
 
 import { mdiAccount, mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
 import { computedAsync } from '@vueuse/core'
@@ -263,21 +262,32 @@ const ownersReady = ref(false)
 const valid = ref(false)
 
 // Computed query for fetching pages based on selected type
-const fetchQuery = computed(() => {
-  const type = isStandardGroup ? pageType.value : route.params.groupId
-  return { type }
+// For standard/event/news, use the type directly (or pageType.value for standard)
+// For default and custom groups, use 'generic'
+const type = computed(() => {
+  let type: string
+  if (route.params.groupId === 'standard' && pageType.value) type = pageType.value
+  else if (route.params.groupId === 'event' || route.params.groupId === 'news') type = route.params.groupId
+  else type = 'generic'
+  return type
 })
 
 // Fetch reference pages (isReference: true)
-const referencesFetch = useFetch<{ results: Page[] }>(
+const referencesFetch = useFetch<{ results: Array<{ _id: string, title: string, config: { description?: string } }> }>(
   $apiPath + '/pages',
-  { query: computed(() => ({ ...fetchQuery.value, isReference: true })), notifError: false }
+  {
+    query: computed(() => ({ type: type.value, isReference: true, select: '_id,title,config.description' })),
+    notifError: false
+  }
 )
 
 // Fetch user's pages for duplication
-const userPagesFetch = useFetch<{ results: Page[] }>(
+const userPagesFetch = useFetch<{ results: Array<{ _id: string, title: string, config: { description?: string } }> }>(
   $apiPath + '/pages',
-  { query: fetchQuery, notifError: false }
+  {
+    query: computed(() => ({ type: type.value, select: '_id,title,config.description' })),
+    notifError: false
+  }
 )
 
 /** `True` if the active account isn't in a department and his organization has departments */
@@ -346,31 +356,16 @@ const createPage = useAsyncAction(
   async () => {
     if (!newTitle.value) return
 
-    // Find the selected page (reference or to duplicate)
-    let sourceElements: any[] = []
-    if (actionType.value === 'reference' && selectedPageId.value) {
-      const referencePage = referencesFetch.data.value?.results.find(p => p._id === selectedPageId.value)
-      sourceElements = referencePage ? referencePage.config.elements : []
-    } else if (actionType.value === 'duplicate' && selectedPageId.value) {
-      const pageToDuplicate = userPagesFetch.data.value?.results.find(p => p._id === selectedPageId.value)
-      sourceElements = pageToDuplicate ? pageToDuplicate.config.elements : []
-    }
-
-    // Use selected pageType for standard group, otherwise use groupId
-    let type: string
-    if (route.params.groupId === 'standard' && pageType.value) type = pageType.value
-    else if (route.params.groupId === 'event' || route.params.groupId === 'news') type = route.params.groupId
-    else type = 'generic'
-
     const page = await $fetch<{ _id: string }>($apiPath + '/pages', {
       method: 'POST',
       body: {
         owner: newOwner.value,
-        type,
+        type: type.value,
+        sourcePageId: selectedPageId.value, // Source page ID to duplicate (optional)
         config: {
           title: newTitle.value,
-          elements: sourceElements,
-          genericMetadata: type === 'generic' && route.params.groupId !== 'default'
+          elements: [],
+          genericMetadata: type.value === 'generic' && route.params.groupId !== 'default'
             ? {
                 group: {
                   _id: group.value._id,

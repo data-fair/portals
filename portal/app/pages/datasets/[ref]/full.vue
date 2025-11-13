@@ -17,6 +17,7 @@ const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
+const { origin } = useRequestURL()
 
 const datasetFetch = useLocalFetch<{
   title: string
@@ -50,7 +51,6 @@ const thumbnailUrl = computed(() => {
   if (!dataset || !cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
-    const { origin } = useRequestURL()
     return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
   if (cardConfig.thumbnail?.default) return origin + getImageSrc(cardConfig.thumbnail.default, false)

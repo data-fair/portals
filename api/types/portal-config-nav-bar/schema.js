@@ -26,7 +26,7 @@ export default {
       title: 'Logo principal',
       required: ['_id', 'name', 'mimeType'],
       layout: {
-        if: 'parent.data?.logoPrimaryType === "local"',
+        if: 'parent.data?.logoType === "local"',
         slots: {
           component: {
             name: 'image-upload',
