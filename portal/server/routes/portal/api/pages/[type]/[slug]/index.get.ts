@@ -1,5 +1,5 @@
 import type { Page } from '#api/types/page'
-import type { RequestPortal } from '~~/server/middleware/get-portal'
+import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
 
 export default defineEventHandler(async (event) => {

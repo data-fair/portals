@@ -1,4 +1,4 @@
-import type { RequestPortal } from '~~/server/middleware/get-portal'
+import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
 import type { FontAsset } from '~~/../api/types/font-asset'
 

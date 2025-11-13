@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "check-types": "nuxt typecheck",
-    "dev": "NUXT_MONGO_URL=mongodb://localhost:27017/data-fair-portals-development NUXT_DRAFT_URL_PATTERN=http://{id}.draft.localhost:5607 nuxt dev",
+    "dev": "NUXT_MONGO_URL=mongodb://localhost:27017/data-fair-portals-development NUXT_PORTAL_URL_PATTERN=http://{subdomain}.localhost:5607  NUXT_PRIVATE_DIRECTORY_URL=http://localhost:5607/simple-directory nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",

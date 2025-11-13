@@ -140,7 +140,8 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - ingest.geoip.downloader.enabled=false
-      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - ES_JAVA_OPTS=-Xms128m -Xmx128m -server
+      - ES_HEAP_SIZE=128m
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:

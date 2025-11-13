@@ -1,4 +1,4 @@
-import type { RequestPortal } from '~~/server/middleware/get-portal'
+import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { defineEventHandler, setResponseHeader } from 'h3'
 
 export default defineEventHandler((event) => {

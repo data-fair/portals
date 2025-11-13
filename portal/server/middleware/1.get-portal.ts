@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
 
   // TODO: small memory cache based on origin ?
-  const portalMatch = origin.match(draftUrlRegexp)
-  const draft = portalMatch && portalMatch[1].endsWith('.draft')
+  const portalMatch = origin.match(draftUrlRegexp)?.[1]
+  const draft = portalMatch?.endsWith('.draft')
   const portal = await mongo.portals.findOne(
-    portalMatch ? { _id: draft ? portalMatch[1].slice(0, -6) : portalMatch[1] } : { 'ingress.url': origin },
+    portalMatch ? { _id: draft ? portalMatch.slice(0, -6) : portalMatch } : { 'ingress.url': origin },
     { projection: { _id: 1, owner: 1, staging: 1, config: draft ? undefined : 1, draftConfig: draft ? 1 : undefined } }
   )
   if (!portal) throw createError({ status: 404, message: 'portal not found' })
