@@ -30,6 +30,72 @@
   <v-divider class="my-2" />
 
   <v-menu
+    v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
+    v-model="showChangeOwnerMenu"
+    :close-on-content-click="false"
+    max-width="500"
+  >
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        rounded
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiAccount"
+          />
+        </template>
+        {{ t('changeOwner') }}
+      </v-list-item>
+    </template>
+    <v-card
+      rounded="lg"
+      variant="elevated"
+    >
+      <v-card-title primary-title>
+        {{ t('changeOwner') }}
+      </v-card-title>
+      <v-progress-linear
+        v-if="changeOwner.loading.value"
+        indeterminate
+        color="warning"
+      />
+      <v-card-text>
+        <owner-pick
+          v-model="newOwner"
+          v-model:ready="ownersReady"
+          message=" "
+        />
+        <v-alert
+          type="warning"
+          :title="t('sensitiveOperation')"
+          :text="t('changeOwnerWarning')"
+          variant="outlined"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          :disabled="changeOwner.loading.value"
+          @click="showChangeOwnerMenu = false"
+        >
+          {{ t('cancel') }}
+        </v-btn>
+        <v-btn
+          color="warning"
+          variant="flat"
+          :disabled="!ownersReady"
+          :loading="changeOwner.loading.value"
+          @click="changeOwner.execute()"
+        >
+          {{ t('confirm') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+
+  <v-menu
     v-model="showDeleteMenu"
     :close-on-content-click="false"
     max-width="500"
@@ -119,13 +185,19 @@
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant } from '@mdi/js'
+import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount } from '@mdi/js'
+import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
+import { computedAsync } from '@vueuse/core'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const route = useRoute<'/portals/[id]/'>()
 const router = useRouter()
+const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
+
+const ownersReady = ref(false)
+const newOwner = ref<Record<string, string> | null>(null)
 
 const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
 defineProps<{
@@ -145,6 +217,20 @@ const cancelDraft = useAsyncAction(async () => {
   emit('refresh-portal')
 })
 
+const changeOwner = useAsyncAction(
+  async () => {
+    await $fetch(`/portals/${route.params.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ owner: newOwner.value })
+    })
+    showChangeOwnerMenu.value = false
+  },
+  {
+    success: t('ownerChanged'),
+    error: t('errorChangingOwner'),
+  }
+)
+
 const deletePortal = useAsyncAction(async () => {
   await $fetch(`portals/${route.params.id}`, { method: 'DELETE' })
   router.replace('/portals')
@@ -153,32 +239,53 @@ const deletePortal = useAsyncAction(async () => {
   error: t('errorDeletingPortal'),
 })
 
+/** `True` if the active account isn't in a department and his organization has departments */
+const hasDepartments = computedAsync(async (): Promise<boolean> => {
+  if (session.state.account.department || session.state.account.type === 'user') return false
+  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
+  return !!org.departments?.length
+}, false)
+
 </script>
 
 <i18n lang="yaml">
   en:
+    cancel: Cancel
     cancelDraft: Cancel draft
+    changeOwner: Change owner
+    changeOwnerWarning: Changing the owner of a portal may have consequences on permissions.
+    confirm: Confirm
     confirmDeletePortal: Do you really want to delete the portal "{title}"? Deletion is permanent and data cannot be recovered.
     deletePortal: Delete portal
     deletingPortal: Deleting portal
+    errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
     manageDomainExposure: Manage domain exposure
     no: No
+    ownerChanged: Owner changed!
     portalDeleted: Portal deleted!
+    sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
     viewDraft: View draft
     viewPortal: View portal
     yes: Yes
 
   fr:
+    cancel: Annuler
     cancelDraft: Annuler le brouillon
+    changeOwner: Changer le propriétaire
+    changeOwnerWarning: Changer le propriétaire d'un portail peut avoir des conséquences sur les permissions.
+    confirm: Confirmer
     confirmDeletePortal: Voulez-vous vraiment supprimer le portail "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
+    errorChangingOwner: Erreur lors de le changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
     manageDomainExposure: Gérer l'exposition du domaine
     no: Non
+    ownerChanged: Propriétaire changé !
     portalDeleted: Portail supprimé !
+    sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail

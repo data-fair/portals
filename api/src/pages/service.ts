@@ -193,6 +193,25 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
     patch.title = patch.config.title
   }
 
+  if (patch.owner) {
+    assertAccountRole(session, page.owner, 'admin')
+    assertAccountRole(session, patch.owner, 'admin')
+    await mongo.images.updateMany(
+      {
+        'owner.type': page.owner.type,
+        'owner.id': page.owner.id,
+        'resource.type': 'page',
+        'resource._id': page._id
+      },
+      {
+        $set: {
+          'owner.type': patch.owner.type,
+          'owner.id': patch.owner.id
+        }
+      }
+    )
+  }
+
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }

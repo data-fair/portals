@@ -40,6 +40,24 @@ export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
+  if (patch.owner) {
+    assertAccountRole(session, patch.owner, 'admin')
+    await mongo.images.updateMany(
+      {
+        'owner.type': portal.owner.type,
+        'owner.id': portal.owner.id,
+        'resource.type': 'portal',
+        'resource._id': portal._id
+      },
+      {
+        $set: {
+          'owner.type': patch.owner.type,
+          'owner.id': patch.owner.id
+        }
+      }
+    )
+  }
+
   const fullPatch = {
     ...patch,
     updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
