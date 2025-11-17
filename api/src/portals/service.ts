@@ -89,7 +89,7 @@ export const cancelPortalDraft = async (portal: Portal, session: SessionStateAut
 const getPublicationSite = (portal: Portal) => {
   const refType = portal.ingress ? 'slug' : 'id'
   const draftUrl = config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')
-  const url = portal.ingress ? portal.ingress.url : draftUrl
+  const url = portal.ingress ? portal.ingress.url : config.portalUrlPattern.replace('{subdomain}', portal._id)
   const publicationSite: any = {
     type: 'data-fair-portals',
     id: portal._id,
