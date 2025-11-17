@@ -51,7 +51,7 @@
 
     <!-- Datasets Source -->
     <template v-if="datasetsFetch.data.value?.results.length">
-      <h5 class="text-h5 my-4">{{ t('datasetsUsed', datasetsFetch.data.value?.results.length) }}</h5>
+      <h5 class="text-h5 mt-4 mb-2">{{ t('datasetsUsed', datasetsFetch.data.value?.results.length) }}</h5>
       <v-row class="d-flex align-stretch mt-2">
         <v-col
           v-for="(dataset, i) in datasetsFetch.data.value?.results"
@@ -85,8 +85,9 @@
 </template>
 
 <script setup lang="ts">
-import { mdiChevronLeft } from '@mdi/js'
 import type { Account } from '@data-fair/lib-common-types/account'
+import { mdiChevronLeft } from '@mdi/js'
+import { withQuery } from 'ufo'
 
 type Application = {
   id: string
@@ -146,15 +147,15 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
 )
 
-const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
-  params: {
-    select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
-    size: 1000,
-    html: true,
-    ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(',') || '',
-    publicationSites: 'data-fair-portals:' + portal.value._id
-  }
-})
+const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
+  select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+  size: 1000,
+  html: true,
+  ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(',') || '',
+  publicationSites: 'data-fair-portals:' + portal.value._id
+}))
+
+const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 
 usePageSeo({
   title: () => application.value?.title || t('application'),
