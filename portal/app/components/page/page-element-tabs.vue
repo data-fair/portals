@@ -10,7 +10,7 @@
       :align-tabs="element.align"
     >
       <v-tab
-        v-for="(tab, i) of element.tabs"
+        v-for="(tab, i) of element.tabs.filter(Boolean)"
         :key="i"
         :value="i"
       >
@@ -27,14 +27,14 @@
     <v-card-text>
       <v-tabs-window v-model="activeTab">
         <v-tabs-window-item
-          v-for="(tab, i) of element.tabs.filter(t => t.children?.length)"
+          v-for="(tab, i) of element.tabs.filter(Boolean)"
           :key="i"
           :value="i"
         >
           <slot
             name="page-elements"
             :on-update="(newElements: PageElement[]) => onTabsChildrenUpdate(newElements, i)"
-            :elements="tab.children!"
+            :elements="tab.children"
             add-item-message="Ajouter un bloc à l'onglet"
           />
         </v-tabs-window-item>
