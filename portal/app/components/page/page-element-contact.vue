@@ -2,7 +2,7 @@
   <div :class="element.mb !== 0 && `mb-${element.mb ?? 4}`">
     <v-row>
       <v-col v-if="!tokenFetch?.error.value">
-        <v-form v-model="valid">
+        <v-form ref="formRef" v-model="valid">
           <v-text-field
             v-model="message.from"
             :label="t('email')"
@@ -149,6 +149,7 @@ const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
 
+const formRef = ref()
 const newMessage = { from: '', subject: '', text: '' }
 const valid = ref(false)
 const message = ref({ ...newMessage })
@@ -223,6 +224,7 @@ const sendMessage = useAsyncAction(async () => {
 
   message.value = { ...newMessage } // Reset form
   additionalData.value = {} // Reset additional fields
+  formRef.value?.resetValidation() // Reset validation state
 }, {
   success: t('messageSent'),
 })
