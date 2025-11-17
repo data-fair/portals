@@ -132,6 +132,16 @@ export default {
         { const: 'background', title: 'Couleur du fond de page' }
       ]
     },
+    align: {
+      type: 'string',
+      title: 'Position des onglets',
+      layout: { cols: { md: 4 } },
+      default: 'center',
+      oneOf: [
+        { const: 'left', title: 'Aligner à gauche' },
+        { const: 'center', title: 'Centrer' },
+      ]
+    },
     tabsStyle: {
       type: 'array',
       title: 'Style des titres des onglets',

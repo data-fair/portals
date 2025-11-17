@@ -1,8 +1,9 @@
 <template>
-  <v-spacer />
+  <v-spacer v-if="!navBarConfig.align || navBarConfig.align === 'center'" />
   <v-tabs
     v-model="modelTab"
     :slider-color="navBarConfig.sliderColor"
+    :class="{ 'ml-8': navBarConfig.align === 'left' }"
     show-arrows
   >
     <template

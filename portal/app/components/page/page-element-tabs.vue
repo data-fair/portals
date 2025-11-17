@@ -8,6 +8,7 @@
       color="primary"
       :grow="element.grow"
       :align-tabs="element.align"
+      show-arrows
     >
       <v-tab
         v-for="(tab, i) of element.tabs.filter(Boolean)"
