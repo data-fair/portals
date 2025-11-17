@@ -3,6 +3,7 @@
     :iframe-title="t('contribute')"
     :src="`/data-fair/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"
     class="fill-height"
+    resize="no"
   />
 </template>
 

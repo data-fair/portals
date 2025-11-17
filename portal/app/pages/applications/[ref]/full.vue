@@ -3,6 +3,7 @@
     :iframe-title="`${t('applications', 0)} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     class="fill-height"
+    resize="no"
     sync-params
   />
 </template>

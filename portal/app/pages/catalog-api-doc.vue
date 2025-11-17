@@ -3,6 +3,7 @@
     :iframe-title="`${t('apiDoc')}`"
     :src="`/openapi-viewer/?urlType=catalog`"
     class="fill-height"
+    resize="no"
     sync-params
   />
 </template>

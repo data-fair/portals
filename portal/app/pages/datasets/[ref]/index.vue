@@ -77,6 +77,7 @@
           <d-frame-wrapper
             :iframe-title="`${t('application')} - ${app.title}`"
             :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+            resize="no"
             aspect-ratio
           />
         </v-col>

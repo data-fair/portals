@@ -4,6 +4,7 @@
     :iframe-title="page.title"
     :src="page.href"
     class="fill-height"
+    resize="no"
   />
 </template>
 

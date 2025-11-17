@@ -3,6 +3,7 @@
     :iframe-title="`${t('datasets', 0)} - ${datasetFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/table`"
     class="fill-height"
+    resize="no"
     scrolling="no"
     sync-params
   />
