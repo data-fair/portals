@@ -301,26 +301,17 @@ const createPortal = useAsyncAction(
       }
     })
 
-    // Step 2: Find the selected page (reference or to duplicate) to get elements
-    let sourceElements: any[] = []
-    if (actionType.value === 'reference' && selectedPageId.value) {
-      const referencePage = referencesFetch.data.value?.results.find(p => p._id === selectedPageId.value)
-      sourceElements = referencePage ? referencePage.config.elements : []
-    } else if (actionType.value === 'duplicate' && selectedPageId.value) {
-      const pageToDuplicate = homePagesUserFetch.data.value?.results.find(p => p._id === selectedPageId.value)
-      sourceElements = pageToDuplicate ? pageToDuplicate.config.elements : []
-    }
-
-    // Step 3: Create the home page with portals array containing the portal id
+    // Step 2: Create the home page with sourcePageId for duplication (handled by API)
     await $fetch($apiPath + '/pages', {
       method: 'POST',
       body: {
         owner: newOwner.value,
         type: 'home',
+        sourcePageId: selectedPageId.value, // Source page ID to duplicate (optional)
         portals: [portal._id],
         config: {
           title: t('home') + ' - ' + newPortalTitle.value,
-          elements: sourceElements
+          elements: []
         }
       }
     })
