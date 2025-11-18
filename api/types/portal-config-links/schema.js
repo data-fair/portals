@@ -176,7 +176,11 @@ export default {
           required: ['slug', 'title'],
           title: 'Page',
           layout: {
-            getItems: 'options.context.pages.generic',
+            getItems: {
+              expr: 'options.context.pages.generic',
+              // eslint-disable-next-line no-template-curly-in-string
+              itemTitle: '`${item.titleBackOffice} (${item.slug})`'
+            },
             cols: { md: 6 }
           },
           properties: {

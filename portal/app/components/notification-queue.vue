@@ -22,9 +22,12 @@
       </v-btn>
     </template>
 
-    <v-list>
+    <v-list density="compact">
       <v-list-item v-if="!session.user.value">
-        {{ t('loginRequired.part1') }} <a :href="session.loginUrl()">{{ t('loginRequired.part2') }}</a> {{ t('loginRequired.part3') }}
+        {{ t('loginRequired.part1') }} <a
+          :href="session.loginUrl()"
+          class="simple-link"
+        >{{ t('loginRequired.part2') }}</a> {{ t('loginRequired.part3') }}
       </v-list-item>
       <v-list-item v-else-if="!fetchNotifications?.data.value || !fetchNotifications.data.value.results.length">
         {{ t('noNotifications') }}
@@ -40,11 +43,15 @@
         active-class="text-pink"
         lines="three"
       >
-        <template v-if="notif.body" #subtitle>
-          {{ notif.body }}
+        <template #subtitle>
+          {{ dayjs(notif.date).format('lll') }}
+          <div v-if="notif.body">{{ notif.body }}</div>
         </template>
 
-        <template v-if="notif.sender" #prepend>
+        <template
+          v-if="notif.sender"
+          #append
+        >
           <owner-avatar :owner="notif.sender" />
         </template>
       </v-list-item>

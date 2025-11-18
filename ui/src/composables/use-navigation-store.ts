@@ -30,9 +30,9 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         default: return i18n[lang]['standardPage']
       }
     }
-    case 'event': return link.pageRef.title
-    case 'news': return link.pageRef.title
-    case 'generic': return link.pageRef.title
+    case 'event': return link.pageRef?.title
+    case 'news': return link.pageRef?.title
+    case 'generic': return link.pageRef?.title
     case 'external': return link.title
     default: return i18n[lang]['link']
   }

@@ -135,7 +135,7 @@ const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
   query: {
     portal: route.params.id,
     type: 'event,news,generic',
-    select: '_id,type,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
+    select: '_id,type,title,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
     limit: 1000,
     sort: 'config.title'
   }
@@ -157,7 +157,8 @@ const pages = computed(() => {
     const item = {
       key: page._id,
       slug: metadata.slug,
-      title: page.title,
+      title: page.config.title,
+      titleBackOffice: page.title,
       group: metadata.group as Group | undefined,
     }
 

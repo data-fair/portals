@@ -59,12 +59,13 @@ services:
       - PORT=8082
       - MONGO_URL=mongodb://localhost:27017/data-fair
       - DIRECTORY_URL=http://localhost:5607/simple-directory
-      - NOTIFY_URL=http://localhost:5607/events
+      - PRIVATE_EVENTS_URL=http://localhost:8083
       - PRIVATE_DIRECTORY_URL=http://localhost:8081
       - PUBLIC_URL=http://localhost:5607/data-fair
       - WS_PUBLIC_URL=ws://localhost:5607/data-fair
       - OBSERVER_ACTIVE=false
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:8097
+      - SECRET_EVENTS=secret-events
     volumes:
       - data-fair-data:/data
 
@@ -81,6 +82,7 @@ services:
       - mongo
     environment:
       - PORT=8083
+      - MONGO_URL=mongodb://localhost:27017/data-fair-events
       - PRIVATE_DIRECTORY_URL=http://localhost:5607/simple-directory
       - SECRET_IDENTITIES=secret-identities
       - SECRET_EVENTS=secret-events

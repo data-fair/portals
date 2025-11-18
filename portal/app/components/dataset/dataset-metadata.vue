@@ -168,7 +168,11 @@
           v-if="portalConfig.datasets.page.attachmentsLocation === 'action' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
           :dataset="dataset"
         />
-        <!-- TODO: <notif-edit v-if="canLogin && notifyUrl" :dataset="dataset" /> -->
+        <dataset-notifications
+          v-if="portalConfig.authentication !== 'none'"
+          :dataset="dataset"
+          :action-style="portalConfig.datasets.page.actionsStyle"
+        />
       </v-col>
 
       <v-col v-bind="metadataColProps">
