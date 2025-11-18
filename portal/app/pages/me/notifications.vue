@@ -6,7 +6,7 @@
         color="primary"
         style="top:-2px"
         :icon="mdiBellCircle"
-    />
+      />
       {{ t('notifications') }}
     </h1>
     <p class="my-4">
@@ -20,6 +20,13 @@
     <d-frame-wrapper
       :iframe-title="t('notifications')"
       :src="notifyUrl"
+    />
+    <p class="my-4">
+      {{ t('devicesInfo') }}
+    </p>
+    <d-frame-wrapper
+      :iframe-title="t('devices')"
+      src="/events/embed/devices"
     />
   </v-container>
 </template>
@@ -63,10 +70,14 @@ useHead({ title: t('notifications') })
 
 <i18n lang="yaml">
   en:
+    devices: Devices configured
+    devicesInfo: Devices configured to receive your notifications
     notifications: Notifications
     notificationsInfo: You can configure here global notifications on this data portal.
     notificationsAlert: For targeted notifications on datasets visit their individual pages and click the bell.
   fr:
+    devices: Appareils configurés
+    devicesInfo: Appareils configurés pour recevoir vos notifications
     notifications: Notifications
     notificationsInfo: Vous pouvez configurer ici des notifications globales sur ce portail de données.
     notificationsAlert: Pour des notifications ciblées sur des jeux de données visitez leurs pages individuelles et cliquez sur la cloche.

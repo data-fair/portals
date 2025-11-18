@@ -59,6 +59,61 @@ export default {
         cols: { md: 4 }
       },
       default: true
+    },
+    applications: {
+      type: 'object',
+      title: 'Configuration des applications',
+      layout: {
+        comp: 'card',
+        children: [
+          'display',
+          {
+            if: 'data?.display === "card"',
+            children: [
+              'columns',
+              'useGlobalCard',
+              {
+                if: 'data?.useGlobalCard === false',
+                children: ['card']
+              }
+            ]
+          }
+        ]
+      },
+      properties: {
+        display: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'side-by-side',
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'card', title: 'Vignette' },
+            { const: 'full-list', title: 'Liste pleine page' },
+            { const: 'side-by-side', title: 'Liste en alternance' }
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          layout: { cols: { md: 6 } },
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        useGlobalCard: {
+          type: 'boolean',
+          title: 'Utiliser la configuration globale des vignettes',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        card: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-application-card'
+        }
+      }
     }
   }
 }

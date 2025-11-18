@@ -3,14 +3,14 @@
   <h1 class="text-h4 mb-4">
     {{ t('datasetsCount', { count: datasetsFetch.data.value?.count || 0 }) }}
     <!-- TODO: Export filtered catalog -->
-    <v-btn
+    <!-- <v-btn
       :icon="mdiFileTable"
       :loading="false"
       :title="t('export')"
       class="ml-2"
       density="comfortable"
       variant="text"
-    />
+    /> -->
     <v-btn
       v-if="!$vuetify.display.smAndDown"
       :icon="mdiCog"
@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import { mdiCog, mdiFileTable } from '@mdi/js'
+import { mdiCog } from '@mdi/js'
 
 type DatasetFetch = {
   count: number
