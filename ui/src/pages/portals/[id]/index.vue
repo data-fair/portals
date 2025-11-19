@@ -74,8 +74,11 @@
       <portal-actions
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
-        :portal-title="portalFetch.data.value.config.title"
-        :portal-url="portalFetch.data.value.ingress?.url"
+        :portal="{
+          id: route.params.id,
+          title: portalFetch.data.value.config.title,
+          url: portalFetch.data.value.ingress?.url,
+        }"
         @refresh-portal="portalFetch.refresh()"
       />
     </navigation-right>

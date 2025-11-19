@@ -21,6 +21,10 @@
     v-else-if="element.type === 'button'"
     :element="element"
   />
+  <page-element-menu
+    v-else-if="element.type === 'menu'"
+    :element="element"
+  />
   <page-element-divider
     v-else-if="element.type === 'divider'"
     :element="element"

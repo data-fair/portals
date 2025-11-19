@@ -118,7 +118,7 @@
       :loading="deletePortal.loading.value ? 'warning' : undefined"
     >
       <v-card-text class="pb-0">
-        {{ t('confirmDeletePortal', { title: portalTitle }) }}
+        {{ t('confirmDeletePortal', { title: portal.title }) }}
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -144,7 +144,7 @@
 
   <v-list-item
     v-if="session.state.user?.adminMode"
-    :to="`/portals/${route.params.id}/ingress`"
+    :to="`/portals/${portal.id}/ingress`"
   >
     <template #prepend>
       <v-icon
@@ -156,7 +156,7 @@
   </v-list-item>
 
   <v-list-item
-    :href="$uiConfig.portalUrlPattern.replace('{subdomain}', route.params.id + '.draft')"
+    :href="$uiConfig.portalUrlPattern.replace('{subdomain}', portal.id + '.draft')"
     target="_blank"
     rel="noopener"
   >
@@ -170,7 +170,7 @@
   </v-list-item>
 
   <v-list-item
-    :href="portalUrl || $uiConfig.portalUrlPattern.replace('{subdomain}', route.params.id)"
+    :href="portal.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal.id)"
     target="_blank"
     rel="noopener"
   >
@@ -191,7 +191,6 @@ import { computedAsync } from '@vueuse/core'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const route = useRoute<'/portals/[id]/'>()
 const router = useRouter()
 const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
@@ -200,26 +199,29 @@ const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
-defineProps<{
+const { portal } = defineProps<{
   hasDraftDiff: boolean
   isSavingDraft: boolean
-  portalTitle: string
-  portalUrl: string | undefined
+  portal: {
+    id: string
+    title: string
+    url: string | undefined
+  }
 }>()
 
 const validateDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'POST' })
+  await $fetch(`portals/${portal.id}/draft`, { method: 'POST' })
   emit('refresh-portal')
 })
 
 const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}/draft`, { method: 'DELETE' })
+  await $fetch(`portals/${portal.id}/draft`, { method: 'DELETE' })
   emit('refresh-portal')
 })
 
 const changeOwner = useAsyncAction(
   async () => {
-    await $fetch(`/portals/${route.params.id}`, {
+    await $fetch(`/portals/${portal.id}`, {
       method: 'PATCH',
       body: JSON.stringify({ owner: newOwner.value })
     })
@@ -232,7 +234,7 @@ const changeOwner = useAsyncAction(
 )
 
 const deletePortal = useAsyncAction(async () => {
-  await $fetch(`portals/${route.params.id}`, { method: 'DELETE' })
+  await $fetch(`portals/${portal.id}`, { method: 'DELETE' })
   router.replace('/portals')
 }, {
   success: t('portalDeleted'),

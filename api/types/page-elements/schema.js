@@ -53,8 +53,9 @@ export default {
           { key: 2, title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
           { key: 3, title: 'Image', 'x-i18n-title': { fr: 'Image' } },
           { key: 4, title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
-          { key: 5, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
-          { key: 6, title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
+          { key: 5, title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
+          { key: 6, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
+          { key: 7, title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
           {
             header: true,
             title: 'Layout & structure',
@@ -63,11 +64,11 @@ export default {
             },
             icon: mdiViewGridOutline
           },
-          { key: 7, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
-          { key: 8, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
-          { key: 9, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-          // { key: 10, title: 'Responsive Flow', 'x-i18n-title': { fr: 'Flux responsive' } }, // TODO: Create the element-responsive-flow
-          { key: 11, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
+          { key: 8, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
+          { key: 9, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
+          { key: 10, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
+          // { key: 11, title: 'Responsive Flow', 'x-i18n-title': { fr: 'Flux responsive' } }, // TODO: Create the element-responsive-flow
+          { key: 12, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
           {
             header: true,
             title: 'Functional blocks',
@@ -76,10 +77,10 @@ export default {
             },
             icon: mdiPuzzleOutline
           },
-          { key: 12, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
-          { key: 13, title: 'Topics list', 'x-i18n-title': { fr: 'Liste des thématiques' } },
-          { key: 14, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } },
-          { key: 15, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+          { key: 13, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
+          { key: 14, title: 'Topics list', 'x-i18n-title': { fr: 'Liste des thématiques' } },
+          // { key: 15, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated ?
+          { key: 16, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
           {
             header: true,
             title: 'Datasets',
@@ -88,10 +89,10 @@ export default {
             },
             icon: mdiDatabaseOutline
           },
-          { key: 16, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
-          { key: 17, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
-          { key: 18, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
-          { key: 19, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 17, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { key: 18, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { key: 19, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { key: 20, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
           {
             header: true,
             title: 'Applications',
@@ -100,8 +101,8 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 20, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 21, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
+          { key: 21, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 22, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
         ]
       },
       default: {
@@ -115,6 +116,7 @@ export default {
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-image' },
         { $ref: '#/$defs/element-button' },
+        { $ref: '#/$defs/element-menu' },
         { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-iframe' },
 
@@ -441,6 +443,66 @@ export default {
       properties: {
         type: { const: 'button' },
         link: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: { comp: 'switch' },
+          default: true
+        },
+        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        centered: {
+          type: 'boolean',
+          title: 'Centré',
+          default: true
+        },
+        mb: { $ref: '#/$defs/margin-bottom' }
+      }
+    },
+    'element-menu': {
+      type: 'object',
+      title: 'MenuElement',
+      'x-i18n-title': {
+        en: 'Navigation menu',
+        fr: 'Menu de navigation'
+      },
+      layout: {
+        children: [
+          'type',
+          'label',
+          'links',
+          {
+            title: 'Configuration du menu',
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!parent.data?.usePortalConfig',
+                children: ['config']
+              }
+            ]
+          },
+          'centered',
+          'mb'
+        ]
+      },
+      required: ['type'],
+      properties: {
+        type: { const: 'menu' },
+        label: {
+          type: 'string',
+          title: 'Libellé du menu',
+          description: 'Texte affiché sur le bouton du menu',
+          default: 'Menu'
+        },
+        links: {
+          type: 'array',
+          title: 'Liens',
+          items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
+          layout: {
+            listEditMode: 'inline',
+            messages: { addItem: 'Ajouter un lien' }
+          }
+        },
         usePortalConfig: {
           type: 'boolean',
           title: 'Utiliser la configuration du portail',

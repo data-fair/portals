@@ -12,6 +12,7 @@
           index: node.key,
           parentLength: elements?.length || 0
         }"
+        :pages="pages"
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
@@ -35,7 +36,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 
 const elements = defineModel<PageElement[]>()
-const { addItemMessage } = defineProps<{ addItemMessage: string, root?: boolean }>()
+const { addItemMessage, pages } = defineProps<{ addItemMessage: string, pages: any, root?: boolean }>()
 const session = useSession()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
@@ -57,7 +58,8 @@ const vjsfOptions: VjsfOptions = {
   },
   icons: {
     close: '$tableGroupExpand'
-  }
+  },
+  context: { pages }
 }
 </script>
 

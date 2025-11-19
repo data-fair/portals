@@ -1,5 +1,6 @@
 <template>
   <v-container data-iframe-height>
+    <pre>{{ vjsfOptions }}</pre>
     <portal-preview-provider>
       <v-form
         v-if="editConfig"
@@ -16,6 +17,7 @@
               <page-edit-elements
                 :model-value="node.data"
                 :add-item-message="t('addItemMessage')"
+                :pages="pages"
                 root
                 @update:model-value="(data: any) => statefulLayout.input(node, data)"
               />
@@ -33,6 +35,7 @@
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { PageConfig } from '#api/types/page-config'
+import type { Page, Group } from '#api/types/page'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
@@ -49,13 +52,61 @@ watch(pageFetch.data, () => {
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
 
+const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
+  query: {
+    type: 'event,news,generic',
+    select: '_id,type,title,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
+    limit: 1000,
+    sort: 'config.title'
+  }
+})
+
+// List of pages that can be linked in the portal
+const pages = computed(() => {
+  const results = pagesFetch.data.value?.results ?? []
+  if (!results.length) return { event: [], news: [], generic: [] }
+
+  const result = { event: [], news: [], generic: [] } as Record<'event' | 'news' | 'generic', any[]>
+  const genericByGroup: Record<string, { title: string, pages: any[] }> = {} // store each group of generic pages
+
+  results.forEach(page => {
+    const metaKey = page.type + 'Metadata' // 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
+    const metadata = page.config[metaKey] as Page['config']['eventMetadata'] | Page['config']['newsMetadata'] | Page['config']['genericMetadata']
+    if (!metadata) return
+
+    const item = {
+      key: page._id,
+      slug: metadata.slug,
+      title: page.config.title,
+      titleBackOffice: page.title,
+      group: metadata.group as Group | undefined,
+    }
+
+    if (page.type === 'generic') {
+      const groupId = item.group?._id ?? 'no-group'
+      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId].pages.push(item)
+    } else {
+      result[page.type as 'event' | 'news'].push(item)
+    }
+  })
+
+  // insert headers for generic pages
+  Object.values(genericByGroup).forEach(({ title, pages }) => {
+    result.generic.push({ title, header: true }, ...pages)
+  })
+
+  return result
+})
+
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
   initialValidation: 'always',
   context: {
-    pageType: pageFetch.data.value?.type
+    pageType: pageFetch.data.value?.type,
+    pages: pages.value
   }
 }))
 const vjsfDefaults = {

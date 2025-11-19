@@ -10,6 +10,7 @@
           <page-edit-elements
             :model-value="elements"
             :add-item-message="addItemMessage"
+            :pages="pages"
             @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
           />
         </v-defaults-provider>
@@ -23,7 +24,7 @@ import type { PageElement } from '#api/types/page-config'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 
 const element = defineModel<PageElement>()
-defineProps<{ context: { isRoot: boolean, index: number, parentLength: number } }>()
+defineProps<{ context: { isRoot: boolean, index: number, parentLength: number }, pages: any }>()
 
 const renderedElement = computed(() => {
   if (!element.value) return

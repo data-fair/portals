@@ -1,5 +1,5 @@
 <template>
-  <v-list-item :to="`/pages/${route.params.groupId}/new`">
+  <v-list-item :to="`/pages/${group._id}/new`">
     <template #prepend>
       <v-icon
         color="primary"
@@ -155,7 +155,6 @@ import { mdiMagnify, mdiPlusCircle, mdiPencil, mdiDelete } from '@mdi/js'
 const { t } = useI18n()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const router = useRouter()
-const route = useRoute<'/pages/[groupId]/new'>()
 const session = useSessionAuthenticated()
 
 const search = defineModel('search', { type: String, default: '' })

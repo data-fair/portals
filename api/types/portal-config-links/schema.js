@@ -179,7 +179,7 @@ export default {
             getItems: {
               expr: 'options.context.pages.generic',
               // eslint-disable-next-line no-template-curly-in-string
-              itemTitle: '`${item.titleBackOffice} (${item.slug})`'
+              itemTitle: 'item.header ? item.title : `${item.titleBackOffice} (${item.slug})`'
             },
             cols: { md: 6 }
           },

@@ -46,7 +46,7 @@
     <!-- Applications -->
     <template v-if="orderedApplications.length && portalConfig.datasets.page.applications?.display !== 'none'">
       <h2 class="text-h5 mt-8 mb-4">
-        {{ t('application', { count: orderedApplications.length }) }}
+        {{ t('linkedApplication', { count: orderedApplications.length }) }}
       </h2>
 
       <!-- Card display mode -->
@@ -317,16 +317,18 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
-    application: Application | Applications
+    application: Application
     backToDatasets: Back to datasets list
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
+    linkedApplication: Linked application | Linked applications
 
   fr:
-    application: Visualisation | Visualisations
+    application: Visualisation
     backToDatasets: Retour à la liste des jeux de données
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
+    linkedApplication: Visualisation associée | Visualisations associées
 </i18n>
