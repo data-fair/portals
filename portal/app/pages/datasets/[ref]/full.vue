@@ -1,6 +1,6 @@
 <template>
   <d-frame-wrapper
-    :iframe-title="`${t('datasets', 0)} - ${datasetFetch.data.value?.title} - ${t('fullscreen')}`"
+    :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/table`"
     class="fill-height"
     resize="no"
@@ -14,7 +14,7 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs } = useNavigationStore()
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -35,15 +35,6 @@ const datasetFetch = useLocalFetch<{
   }
 })
 
-watch(datasetFetch.data, () => {
-  setBreadcrumbs([
-    { title: t('datasets', 1), href: '/datasets' },
-    { title: datasetFetch.data.value?.title || '', href: '/datasets/' + route.params.ref },
-    { title: t('fullscreen') }
-  ])
-}, { immediate: true })
-onUnmounted(() => clearBreadcrumbs())
-
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 const thumbnailUrl = computed(() => {
@@ -58,8 +49,16 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
+watch(datasetFetch.data, () => {
+  setBreadcrumbs([
+    { type: 'standard', subtype: 'datasets' },
+    { title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref },
+    { title: t('fullscreen') }
+  ])
+}, { immediate: true })
+
 usePageSeo({
-  title: () => datasetFetch.data.value?.title || t('datasets', 0),
+  title: () => datasetFetch.data.value?.title || t('dataset'),
   description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description,
   ogImage: () => thumbnailUrl.value
 })
@@ -67,9 +66,9 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
-    datasets: Dataset | Datasets
+    dataset: Dataset
     fullscreen: Fullscreen
   fr:
-    datasets: Jeu de données | Jeux de données
+    dataset: Jeu de données
     fullscreen: Plein écran
 </i18n>

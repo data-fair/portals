@@ -19,7 +19,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs } = useNavigationStore()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -28,25 +28,24 @@ const datasetFetch = useLocalFetch<{ title: string, summary: string, description
 
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
-    { title: t('dataset', 1), href: '/datasets' },
-    { title: datasetFetch.data.value?.title || '', href: '/datasets/' + route.params.ref },
+    { type: 'standard', subtype: 'datasets' },
+    { title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref },
     { title: t('apiDoc') }
   ])
 }, { immediate: true })
-onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
-  title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('datasets', 0)),
+  title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
   description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description
 })
 </script>
 
 <i18n lang="yaml">
   en:
-    dataset: Dataset | Datasets
+    dataset: Dataset
     apiDoc: API Documentation
   fr:
-    dataset: Jeu de données | Jeux de données
+    dataset: Jeu de données
     apiDoc: Documentation de l'API
 </i18n>
 

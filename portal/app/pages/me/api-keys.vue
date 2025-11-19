@@ -28,6 +28,7 @@
 import { mdiCloudKey } from '@mdi/js'
 const session = useSessionAuthenticated()
 const { t } = useI18n()
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: t('apiKeys') })
 </script>
 

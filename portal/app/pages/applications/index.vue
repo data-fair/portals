@@ -180,6 +180,8 @@ type ApplicationFetch = {
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
+
 const search = useStringSearchParam('q')
 const sort = useStringSearchParam('sort', { default: portalConfig.value.applications.list.defaultSort || 'createdAt' })
 const filters = {
@@ -263,6 +265,10 @@ const sortItems = [
   { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
   { title: t('sort.title'), value: 'title' }
 ]
+
+setBreadcrumbs([
+  { type: 'standard', subtype: 'applications' }
+])
 
 usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),

@@ -1,4 +1,7 @@
 <template>
+  <!-- Breadcrumb above footer -->
+  <layout-breadcrumbs v-if="portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both'" />
+
   <v-container
     v-if="portalConfig.footer.showContactInformations"
     :class="[`bg-${portalConfig.footer.color}`, 'pa-0']"
@@ -306,5 +309,4 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
   fr:
     contactUs: 'Contactez-nous'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
-
 </i18n>

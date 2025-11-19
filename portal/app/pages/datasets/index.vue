@@ -111,8 +111,8 @@ const filters = {
 const order = ref<0 | 1>(0) // 0 = desc, 1 = asc
 
 const { t } = useI18n()
-
 const { portal, portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
 
 // Infinite scroll state
 const currentPage = ref(0)
@@ -180,6 +180,10 @@ watch([search, sort, order, filters.concepts, filters.topics, filters.owners], a
     displayedDatasets.value = [...datasetsFetch.data.value.results]
   }
 })
+
+setBreadcrumbs([
+  { type: 'standard', subtype: 'datasets' }
+])
 
 usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),

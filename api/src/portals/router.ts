@@ -64,6 +64,7 @@ router.post('', async (req, res, next) => {
     },
     header: {},
     navBar: {},
+    breadcrumb: {},
     footer: {
       color: 'primary',
       showSocial: false,

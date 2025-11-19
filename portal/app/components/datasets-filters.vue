@@ -217,7 +217,6 @@ const sortItems = [
 <i18n lang="yaml">
   en:
     ascending: Ascending order
-    catalogApiDoc: Catalog API Documentation
     datasetsCount: '{count} dataset | {count} datasets'
     descending: Descending order
     export: Export filtered data as CSV
@@ -238,7 +237,6 @@ const sortItems = [
 
   fr:
     ascending: Ordre croissant
-    catalogApiDoc: Documentation de l'API du catalogue
     datasetsCount: '{count} jeu de données | {count} jeux de données'
     descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV

@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 const { t } = useI18n()
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: t('myAccount') })
 </script>
 

@@ -11,18 +11,17 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs } = useNavigationStore()
 const { t } = useI18n()
 
 setBreadcrumbs([
-  { title: t('dataset'), href: '/datasets' },
+  { type: 'standard', subtype: 'datasets' },
   { title: t('apiDoc') }
 ])
-onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
-  title: () => t('apiDoc') + t('datasets'),
-  description: () => t('apiDocDescription')
+  title: t('apiDoc'),
+  description: t('apiDocDescription')
 })
 </script>
 

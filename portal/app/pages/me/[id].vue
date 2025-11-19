@@ -13,5 +13,7 @@
 const route = useRoute()
 const { portalConfig } = usePortalStore()
 const page = computed(() => portalConfig.value.personal.accountPages.find(p => p.id === route.params.id))
+
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: page.value?.title })
 </script>

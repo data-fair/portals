@@ -1,6 +1,7 @@
 <template>
   <LayoutAppBar :home="true" />
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
+    <layout-breadcrumbs v-if="portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both'" />
     <v-container class="container">
       <slot />
     </v-container>

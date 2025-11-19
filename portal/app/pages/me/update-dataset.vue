@@ -17,6 +17,7 @@ const portalOwner = computed(() => {
   return owner
 })
 
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: t('contribute') })
 </script>
 

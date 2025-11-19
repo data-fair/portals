@@ -17,11 +17,7 @@
 
         <!-- Breadcrumbs -->
         <v-spacer />
-        <v-breadcrumbs :items="[{ title: t('home'), to: '/' }, ...breadcrumbs]">
-          <template #divider>
-            <v-icon :icon="mdiChevronRight" />
-          </template>
-        </v-breadcrumbs>
+        <layout-breadcrumbs />
         <v-spacer />
 
       </v-row>
@@ -30,21 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { mdiChevronRight } from '@mdi/js'
 import { useElementSize } from '@vueuse/core'
 
 const { portalConfig } = usePortalStore()
-const { breadcrumbs } = useNavigationStore()
-const { t } = useI18n()
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
 
 </script>
-
-<i18n lang="yaml">
-  en:
-    home: Home
-  fr:
-    home: Accueil
-</i18n>

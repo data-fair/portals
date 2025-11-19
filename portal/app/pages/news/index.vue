@@ -54,6 +54,7 @@ import type { Page } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -76,9 +77,11 @@ const news = await useFetch<{
 
 const { pending, error } = news
 
-const goToPage = (page: number) => {
-  router.push({ query: { page } })
-}
+const goToPage = (page: number) => router.push({ query: { page } })
+
+setBreadcrumbs([
+  { type: 'standard', subtype: 'event' }
+])
 
 usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),

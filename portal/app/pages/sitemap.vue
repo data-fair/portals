@@ -48,7 +48,7 @@ import type { MenuItem, LinkItem } from '#api/types/portal'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { resolveLink } = useNavigationStore()
+const { resolveLink, setBreadcrumbs } = useNavigationStore()
 
 // Check if contact / privacy policy page exists
 const contactFetch = await useLocalFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
@@ -105,6 +105,10 @@ const allInternalPaths = computed(() => {
   }
   return paths
 })
+
+setBreadcrumbs([
+  { type: 'standard', subtype: 'sitemap' }
+])
 
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,

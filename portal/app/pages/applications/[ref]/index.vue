@@ -126,6 +126,7 @@ type Dataset = {
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
 
 const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
@@ -157,6 +158,13 @@ const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
 }))
 
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
+
+watch(application, () => {
+  setBreadcrumbs([
+    { type: 'standard', subtype: 'applications' },
+    { title: application.value?.title || t('application') }
+  ])
+}, { immediate: true })
 
 usePageSeo({
   title: () => application.value?.title || t('application'),

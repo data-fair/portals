@@ -114,6 +114,7 @@ export default {
           }
         ]
       },
+      { title: 'Fil d\'arianne', children: ['breadcrumb'] },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
@@ -127,7 +128,7 @@ export default {
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'footer', 'datasets', 'applications', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'breadcrumb', 'footer', 'datasets', 'applications', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -297,6 +298,7 @@ export default {
         }
       }
     },
+    breadcrumb: { $ref: 'https://github.com/data-fair/portals/portal-config-breadcrumb' },
     footer: { $ref: 'https://github.com/data-fair/portals/portal-config-footer' },
     datasets: { $ref: 'https://github.com/data-fair/portals/portal-config-datasets' },
     applications: { $ref: 'https://github.com/data-fair/portals/portal-config-applications' },

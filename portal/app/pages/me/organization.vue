@@ -10,6 +10,7 @@
 const session = useSessionAuthenticated()
 const url = useRequestURL()
 const { t } = useI18n()
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: t('organization') })
 </script>
 

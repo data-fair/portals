@@ -5,10 +5,7 @@
     flat
   >
     <!-- If mobile, show menu to open navigation drawer -->
-    <v-breadcrumbs
-      v-if="showBreadcrumbs"
-      :items="breadcrumbs"
-    />
+    <v-breadcrumbs :items="breadcrumbs" />
 
     <v-spacer />
     <v-toolbar-items>
@@ -24,6 +21,6 @@
 import { VToolbar, VAppBar } from 'vuetify/components'
 
 const { preview } = usePortalStore()
-const { breadcrumbs, showBreadcrumbs } = useNavigationStore()
+const { breadcrumbs } = useNavigationStore()
 
 </script>

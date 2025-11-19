@@ -1,6 +1,7 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { LinkItem, MenuItem } from '#api/types/portal'
 
+type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
 export type NavigationStore = ReturnType<typeof createNavigationStore>
@@ -10,8 +11,33 @@ const createNavigationStore = () => {
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
 
-  const setBreadcrumbs = (breadcrumbItems: BreadcrumbItems) => {
-    _breadcrumbs.value = breadcrumbItems
+  const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
+    const { $i18n } = useNuxtApp()
+    const locale = $i18n.locale.value as 'fr' | 'en'
+    _breadcrumbs.value = breadcrumbInputs.map(input => {
+      // If it's already a breadcrumb item (has title property and no type property), return as is
+      if (typeof input === 'object' && 'title' in input && !('type' in input)) {
+        return input as BreadcrumbItem
+      }
+
+      // Otherwise, it's a LinkItem, resolve it
+      const linkItem = input as LinkItem
+      const title = resolveLinkTitle(linkItem, locale)
+      const resolvedLink = resolveLink(linkItem)
+
+      const breadcrumbItem: BreadcrumbItem = { title }
+
+      // Use 'to' for internal links, 'href' for external
+      if (linkItem.type === 'external') {
+        breadcrumbItem.href = resolvedLink
+      } else if (resolvedLink) {
+        breadcrumbItem.to = resolvedLink
+      } else {
+        breadcrumbItem.disabled = true
+      }
+
+      return breadcrumbItem
+    })
   }
 
   const clearBreadcrumbs = () => { _breadcrumbs.value = [] }

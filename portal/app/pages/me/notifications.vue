@@ -65,6 +65,7 @@ const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics
   })
 const topics = computed(() => topicsFetch.data.value?.facets.topics || [])
 
+useNavigationStore().clearBreadcrumbs()
 useHead({ title: t('notifications') })
 </script>
 

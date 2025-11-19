@@ -1,6 +1,6 @@
 <template>
   <d-frame-wrapper
-    :iframe-title="`${t('applications', 0)} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
+    :iframe-title="`${t('application')} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
     class="fill-height"
     resize="no"
@@ -11,7 +11,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs, clearBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs } = useNavigationStore()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -20,15 +20,14 @@ const applicationFetch = useLocalFetch<{ title: string, summary?: string, descri
 
 watch(applicationFetch.data, () => {
   setBreadcrumbs([
-    { title: t('applications', 1), href: '/applications' },
-    { title: applicationFetch.data.value?.title || '', href: '/applications/' + route.params.ref },
+    { type: 'standard', subtype: 'applications' },
+    { title: applicationFetch.data.value?.title || t('application'), to: '/applications/' + route.params.ref },
     { title: t('fullscreen') }
   ])
 }, { immediate: true })
-onUnmounted(() => clearBreadcrumbs())
 
 usePageSeo({
-  title: () => applicationFetch.data.value?.title || t('applications', 0),
+  title: () => applicationFetch.data.value?.title || t('application'),
   description: () => applicationFetch.data.value?.summary || applicationFetch.data.value?.description || portalConfig.value.description,
   ogImage: () => applicationFetch.data.value?.image
 })
@@ -36,9 +35,9 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
-    applications: Application | Applications
+    application: Application
     fullscreen: Fullscreen
   fr:
-    applications: Visualisation | Visualisations
+    application: Visualisation
     fullscreen: Plein écran
 </i18n>

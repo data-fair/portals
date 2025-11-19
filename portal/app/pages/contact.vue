@@ -15,7 +15,10 @@
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { PageConfig } from '#api/types/page'
 
+const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
+
 const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
@@ -24,11 +27,22 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/contact/contact/images/${id}`
 })
 
-const title = computed(() => (pageConfigFetch.data.value?.title || 'Contact') + ' - ' + portalConfig.value.title)
-const description = computed(() => pageConfigFetch.data.value?.description || portalConfig.value.description)
+watch(() => pageConfigFetch.data.value, () => {
+  setBreadcrumbs([
+    { type: 'standard', subtype: 'contact', title: pageConfigFetch.data.value?.title }
+  ])
+}, { immediate: true })
+
 usePageSeo({
-  title: title.value,
-  description: description.value
+  title: () => (pageConfigFetch.data.value?.title || t('contact')) + ' - ' + portalConfig.value.title,
+  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
 })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    contact: Contact
+  fr:
+    contact: Contact
+</i18n>

@@ -261,6 +261,7 @@ type Dataset = {
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
+const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
 
 const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
@@ -271,6 +272,7 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 })
 
 const dataset = computed(() => datasetFetch.data.value)
+
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
   size: 1000,
@@ -306,10 +308,17 @@ const errorTitle = computed(() => {
   return t('datasetError')
 })
 
+watch(dataset, () => {
+  setBreadcrumbs([
+    { type: 'standard', subtype: 'datasets' },
+    { title: dataset.value?.title || t('dataset'), disabled: true }
+  ])
+}, { immediate: true })
+
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
   description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
-  ogImage: () => dataset.value?.image,
+  ogImage: () => dataset.value?.image, // TODO: use thumbnailUrl
   ogType: 'article'
 })
 
