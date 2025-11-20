@@ -43,6 +43,7 @@
           :title="'Schéma du jeu de données : ' + dataset.title"
           :src="iframeSrc"
           scrolling="auto"
+          :iframe-resizer="false"
         />
       </client-only>
     </v-card>
