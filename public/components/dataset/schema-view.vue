@@ -42,6 +42,7 @@
         <v-iframe
           :title="'Schéma du jeu de données : ' + dataset.title"
           :src="iframeSrc"
+          scrolling="auto"
         />
       </client-only>
     </v-card>
