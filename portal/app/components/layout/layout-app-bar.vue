@@ -3,7 +3,10 @@
     :is="preview ? VToolbar : VAppBar"
     ref="appBarRef"
     :color="navBarConfig.color"
-    :class="(navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined"
+    :class="[
+      (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
+      (headerConfig.show && headerConfig.color === 'background') || navBarConfig.color === 'background' ? 'border-b' : undefined
+    ]"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"

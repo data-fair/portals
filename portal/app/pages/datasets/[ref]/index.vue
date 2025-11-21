@@ -257,6 +257,11 @@ type Dataset = {
   bbox?: number[]
   public: boolean
   userPermissions: string[]
+  previews: {
+    id: string
+    title: string
+    href: string
+  }[]
 }
 
 const { t } = useI18n()

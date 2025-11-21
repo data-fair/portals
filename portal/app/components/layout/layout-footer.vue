@@ -1,7 +1,4 @@
 <template>
-  <!-- Breadcrumb above footer -->
-  <layout-breadcrumbs v-if="portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both'" />
-
   <v-container
     v-if="portalConfig.footer.showContactInformations"
     :class="[`bg-${portalConfig.footer.color}`, 'pa-0']"
@@ -38,7 +35,10 @@
       backgroundPosition: `bottom ${portalConfig.footer.backgroundImageLocation}`,
       backgroundRepeat: portalConfig.footer.backgroundImageLocation === 'repeat' ? 'repeat' : 'no-repeat'
     } : {}"
-    class="pa-0 d-flex justify-center flex-wrap flex-grow-0"
+    :class="[
+      'pa-0 d-flex justify-center flex-wrap flex-grow-0',
+      portalConfig.footer.color === 'background' ? 'border-t' : undefined
+    ]"
   >
     <v-container>
       <!-- Logo and/or Social Links -->

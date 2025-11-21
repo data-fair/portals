@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/image-ref/index.ts'
+import { useTheme } from 'vuetify'
 
 definePageMeta({ layout: 'full' })
 
@@ -19,6 +20,7 @@ const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 const { origin } = useRequestURL()
+const theme = useTheme()
 
 const datasetFetch = useLocalFetch<{
   title: string
@@ -43,7 +45,7 @@ const thumbnailUrl = computed(() => {
   if (!dataset || !cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
-    return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
+    return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}&app_primary=${encodeURIComponent(theme.current.value.colors.primary)}`
   }
   if (cardConfig.thumbnail?.default) return origin + getImageSrc(cardConfig.thumbnail.default, false)
   return undefined

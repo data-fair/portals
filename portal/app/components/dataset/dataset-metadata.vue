@@ -156,12 +156,9 @@
             :short-text="t('shortText.api')"
           />
 
-          <dataset-download
-            :dataset="dataset"
-            :action-style="portalConfig.datasets.page.actionsStyle"
-          />
+          <dataset-download :dataset="dataset" />
           <dataset-schema :dataset="dataset" />
-          <!-- TODO: <dataset-embed :dataset="dataset" /> -->
+          <dataset-embed :dataset="dataset" />
         </template>
 
         <dataset-attachments-preview
@@ -171,7 +168,6 @@
         <dataset-notifications
           v-if="portalConfig.authentication !== 'none'"
           :dataset="dataset"
-          :action-style="portalConfig.datasets.page.actionsStyle"
         />
       </v-col>
 
@@ -241,6 +237,11 @@ type Dataset = {
   bbox?: number[]
   public: boolean
   userPermissions: string[]
+  previews: {
+    id: string
+    title: string
+    href: string
+  }[]
 }
 
 const { dataset } = defineProps<{ dataset: Dataset }>()

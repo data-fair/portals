@@ -29,7 +29,7 @@
           v-bind="props"
           :title="t('openPersonalMenu')"
           :append-icon="personal ? mdiMenuDown : undefined"
-          :class="loginColor !== 'primary' ? 'bg-' + loginColor : undefined"
+          :class="'bg-' + loginColor"
         >
           <v-avatar
             :image="avatarUrl"

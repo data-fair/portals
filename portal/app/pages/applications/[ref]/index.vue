@@ -48,6 +48,7 @@
       class="mt-2"
       resize="no"
       aspect-ratio
+      sync-params
     />
 
     <!-- Datasets Source -->

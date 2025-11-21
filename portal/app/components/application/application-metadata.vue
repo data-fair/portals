@@ -46,17 +46,8 @@
           :text="t('text.full')"
           :short-text="t('shortText.full')"
         />
-        <!-- TODO: Capture -->
-        <!-- <action-btn
-          v-if="!$vuetify.display.smAndDown"
-          :to="`/applications/${application.slug}/api-doc`"
-          :action-style="portalConfig.applications.actionsStyle"
-          :icon="mdiCog"
-          :text="t('text.api')"
-          :short-text="t('shortText.api')"
-        /> -->
-        <!-- <application-embed :application="application" /> -->
-
+        <application-capture :application="application" />
+        <application-embed :application="application" />
         <!-- TODO: add attachments ? -->
         <!-- <application-attachments
           v-if="application.attachments?.filter(a => a.url !== application!.image).length"
@@ -89,8 +80,16 @@ type Application = {
   updatedAt: string
   image?: string
   url: string
+  href: string
+  exposedUrl: string
   public: boolean
   owner: Account
+  baseApplication?: {
+    meta?: {
+      'df:capture-width'?: string
+      'df:capture-height'?: string
+    }
+  }
 }
 
 const { application } = defineProps<{ application: Application }>()

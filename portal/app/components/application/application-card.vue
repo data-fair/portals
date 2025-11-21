@@ -123,6 +123,7 @@ import type { ApplicationCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { useTheme } from 'vuetify'
 
 const { application, cardConfig } = defineProps<{
   application: {
@@ -144,6 +145,7 @@ const { application, cardConfig } = defineProps<{
 const { dayjs } = useLocaleDayjs()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
+const theme = useTheme()
 
 const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
@@ -158,7 +160,7 @@ const thumbnailUrl = computed(() => {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics[0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
-  return `${application.href}/capture?updatedAt=${application.updatedAt}`
+  return `${application.href}/capture?updatedAt=${application.updatedAt}&app_primary=${encodeURIComponent(theme.current.value.colors.primary)}`
 })
 
 </script>

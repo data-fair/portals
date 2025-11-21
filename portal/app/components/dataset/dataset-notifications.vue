@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="actionStyle"
+    :action-style="portalConfig.datasets.page.actionsStyle"
     :icon="mdiBell"
     :text="t('preview')"
   >
@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiBell } from '@mdi/js'
 
 const { dataset } = defineProps<{
@@ -28,9 +27,9 @@ const { dataset } = defineProps<{
       department?: string
     }
   }
-  actionStyle: DatasetCard['actionsStyle']
 }>()
 const { t } = useI18n()
+const { portalConfig } = usePortalStore()
 
 const src = computed(() => {
   const keys = [`data-fair:dataset-data-updated:${dataset.id}`, `data-fair:dataset-breaking-change:${dataset.id}`]
