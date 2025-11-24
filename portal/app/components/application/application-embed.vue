@@ -9,13 +9,13 @@
     <v-card-text class="py-0">
       {{ t('description') }}
       <v-code class="d-block my-2 pa-4">
-        &lt;iframe src="{{ stateUrl }}" width="100%"
+        &lt;iframe src="{{ stateUrl.replace('d-frame=true', '') }}" width="100%"
         height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;
       </v-code>
     </v-card-text>
     <d-frame-wrapper
       :iframe-title="t('embed') + ' - ' + application.title"
-      :src="application.exposedUrl + '?primary=' + $vuetify.theme.current.colors.primary"
+      :src="application.exposedUrl + '?d-frame=true&primary=' + $vuetify.theme.current.colors.primary"
       scrolling="no"
       resize="no"
       aspect-ratio
@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { mdiCodeTags } from '@mdi/js'
-import { useTheme } from 'vuetify'
 
 const { application } = defineProps<{
   application: {
@@ -37,11 +36,10 @@ const { application } = defineProps<{
   }
 }>()
 
-const theme = useTheme()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 
-const stateUrl = ref(application.exposedUrl + '?primary=' + theme.current.value.colors.primary)
+const stateUrl = ref(application.exposedUrl)
 const storeState = (state: { detail: [string, string] }) => {
   stateUrl.value = state.detail[1]
 }
