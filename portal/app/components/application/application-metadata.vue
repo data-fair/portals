@@ -50,7 +50,7 @@
           :short-text="t('shortText.full')"
         />
         <application-capture :application="application" />
-        <application-embed :application="application" />
+        <application-embed v-if="!$vuetify.display.smAndDown" :application="application" />
         <!-- TODO: add attachments ? -->
         <!-- <application-attachments
           v-if="application.attachments?.filter(a => a.url !== application!.image).length"

@@ -158,7 +158,7 @@
 
           <dataset-download :dataset="dataset" />
           <dataset-schema :dataset="dataset" />
-          <dataset-embed :dataset="dataset" />
+          <dataset-embed v-if="!$vuetify.display.smAndDown" :dataset="dataset" />
         </template>
 
         <dataset-attachments-preview
