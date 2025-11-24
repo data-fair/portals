@@ -5,7 +5,7 @@
     :color="navBarConfig.color"
     :class="[
       (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
-      (headerConfig.show && headerConfig.color === 'background') || navBarConfig.color === 'background' ? 'border-b' : undefined
+      (navBarConfig.color === 'background' && !isScrolled) ? 'border-b' : undefined
     ]"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"

@@ -46,7 +46,6 @@
       :iframe-title="`${t('application')} - ${application.title}`"
       :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
       class="mt-2"
-      resize="no"
       aspect-ratio
       sync-params
     />

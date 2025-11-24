@@ -162,7 +162,6 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCog, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
-import { useTheme } from 'vuetify'
 
 const { dataset, cardConfig, isPortalConfig } = defineProps<{
   dataset: {
@@ -189,7 +188,6 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
 const { dayjs } = useLocaleDayjs()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
-const theme = useTheme()
 
 const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
@@ -206,7 +204,7 @@ const thumbnailUrl = computed(() => {
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
-    return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}&app_primary=${encodeURIComponent(theme.current.value.colors.primary)}`
+    return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined

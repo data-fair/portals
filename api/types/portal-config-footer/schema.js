@@ -118,7 +118,7 @@ export default {
     copyright: {
       type: 'string',
       title: 'Affichage du copyright',
-      description: "Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de l'entreprise parmis la liste des logos du pied de page.",
+      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de **Koumoul** parmi la liste des logos du pied de page.',
       default: 'text',
       oneOf: [
         {

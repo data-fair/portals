@@ -8,9 +8,9 @@
     <v-btn
       v-if="$vuetify.display.smAndDown"
       variant="text"
-      :icon="drawer ? mdiMenuOpen : mdiMenu"
+      :icon="personalDrawer ? mdiMenuOpen : mdiMenu"
       :title="t('openNavigationMenu')"
-      @click="drawer = !drawer"
+      @click="personalDrawer = !personalDrawer"
     />
     <v-breadcrumbs :items="breadcrumbs" />
 
@@ -29,7 +29,7 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 import { mdiMenu, mdiMenuOpen } from '@mdi/js'
 
 const { preview } = usePortalStore()
-const { drawer, breadcrumbs } = useNavigationStore()
+const { personalDrawer, breadcrumbs } = useNavigationStore()
 const { t } = useI18n()
 
 </script>

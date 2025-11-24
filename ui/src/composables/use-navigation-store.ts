@@ -1,6 +1,7 @@
 import type { LinkItem, MenuItem } from '#api/types/portal-config'
 
 const drawer = ref(false)
+const personalDrawer = ref(false)
 const setBreadcrumbs = () => {}
 const clearBreadcrumbs = () => {}
 const showBreadcrumbs = computed(() => {
@@ -47,7 +48,8 @@ export const useNavigationStore = () => {
     isMenuItemActive,
     resolveLink,
     resolveLinkTitle,
-    drawer
+    drawer,
+    personalDrawer
   }
 }
 

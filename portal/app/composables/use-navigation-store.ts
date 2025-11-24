@@ -10,6 +10,7 @@ const navigationStoreKey = Symbol('navigation-store')
 const createNavigationStore = () => {
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
+  const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
 
   const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
@@ -116,7 +117,8 @@ const createNavigationStore = () => {
     isMenuItemActive,
     resolveLink,
     resolveLinkTitle,
-    drawer
+    drawer,
+    personalDrawer
   }
 }
 

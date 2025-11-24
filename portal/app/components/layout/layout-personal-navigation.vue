@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-model="drawer"
+    v-model="personalDrawer"
     :color="portalConfig.personal.navigationColor"
     :temporary="$vuetify.display.smAndDown"
     :permanent="!$vuetify.display.smAndDown"
@@ -120,7 +120,7 @@ import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTra
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const { portal, portalConfig } = usePortalStore()
-const { drawer } = useNavigationStore()
+const { personalDrawer } = useNavigationStore()
 
 const accountValue = computed(() => {
   if (session.state.account.type === 'user') return null
