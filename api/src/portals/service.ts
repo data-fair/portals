@@ -266,6 +266,23 @@ const cleanUnusedImages = async (portal: Portal) => {
       imageRefs.push(extraLogo.logo)
     }
   }
+  if (portal.draftConfig.footer.extraLogos) {
+    for (const extraLogo of portal.draftConfig.footer.extraLogos) {
+      imageRefs.push(extraLogo.logo)
+    }
+  }
+
+  // List of topics images
+  if (portal.config.topics) {
+    for (const topic of portal.config.topics) {
+      imageRefs.push(topic.thumbnail)
+    }
+  }
+  if (portal.draftConfig.topics) {
+    for (const topic of portal.draftConfig.topics) {
+      imageRefs.push(topic.thumbnail)
+    }
+  }
 
   for (const imageRef of imageRefs) {
     if (!imageRef) continue

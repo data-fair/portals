@@ -21,7 +21,7 @@ const applicationFetch = useLocalFetch<{ title: string, summary?: string, descri
 watch(applicationFetch.data, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'applications' },
-    { title: applicationFetch.data.value?.title || t('application'), to: '/applications/' + route.params.ref },
+    { title: applicationFetch.data.value?.title || t('application'), to: { path: '/applications/' + route.params.ref, query: route.query } },
     { title: t('fullscreen') }
   ])
 }, { immediate: true })

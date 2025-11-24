@@ -40,7 +40,10 @@
     >
       <v-col v-bind="metadataColProps">
         <action-btn
-          :to="`/applications/${application.slug}/full`"
+          :to="{
+            path: `/applications/${application.slug}/full`,
+            query: route.query
+          }"
           :action-style="portalConfig.applications.page.actionsStyle"
           :icon="mdiFullscreen"
           :text="t('text.full')"
@@ -96,6 +99,7 @@ const { application } = defineProps<{ application: Application }>()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
+const route = useRoute()
 
 const baseApplicationFetch = useLocalFetch<{
   title: string

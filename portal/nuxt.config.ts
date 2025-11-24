@@ -81,6 +81,11 @@ export default defineNuxtConfig({
     '@data-fair/lib-vuetify/style/global.scss',
     '@data-fair/portals-shared-markdown/style.css'
   ],
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag === 'd-frame'
+    }
+  },
   vuetify: {
     moduleOptions: {
       ssrClientHints: {

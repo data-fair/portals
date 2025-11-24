@@ -8,7 +8,6 @@
   >
     <v-card-text class="py-0">
       {{ t('description') }}<br>
-      {{ selectedPreview }}
       <v-select
         v-if="dataset.previews && dataset.previews.length > 1"
         v-model="selectedPreview"
@@ -17,7 +16,7 @@
         :label="t('previewType')"
         hide-details
       />
-      <code class="d-block my-2 pa-4 v-code">
+      <code class="d-block bg-surface-light my-2 pa-4 v-code">
 &lt;iframe src="{{ selectedPreview }}" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;
       </code>
     </v-card-text>

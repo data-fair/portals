@@ -12,11 +12,12 @@
 </template>
 
 <script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
 import type { DatasetCard } from '#api/types/portal/index.js'
 
 defineProps<{
   /** Button destination */
-  to?: string
+  to?: RouteLocationRaw
   /** Button style */
   actionStyle: DatasetCard['actionsStyle']
   /** Button icon */

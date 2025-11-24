@@ -1,6 +1,5 @@
 <template>
   <v-container data-iframe-height>
-    <pre>{{ vjsfOptions }}</pre>
     <portal-preview-provider>
       <v-form
         v-if="editConfig"

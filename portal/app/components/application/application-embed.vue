@@ -8,7 +8,7 @@
   >
     <v-card-text class="py-0">
       {{ t('description') }}
-      <code class="d-block my-2 pa-4 v-code">
+      <code class="d-block bg-surface-light my-2 pa-4 v-code">
 &lt;iframe src="{{ application.exposedUrl }}?primary={{ $vuetify.theme.current.colors.primary }}" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;
       </code>
     </v-card-text>
