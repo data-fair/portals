@@ -1,9 +1,9 @@
 <template>
   <template v-if="requiresConsent">
-    <p>Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.</p>
+    <p>{{ t('trackingMessage') }}</p>
     <v-switch
       :model-value="cookieTrack === 'yes'"
-      label="Autoriser la mesure d'audience"
+      :label="t('authorizeTracking')"
       @update:model-value="toggleCookieTrack"
     />
   </template>
@@ -58,7 +58,11 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
+    trackingMessage: You can opt out of being tracked on this website. This will protect your privacy, but it will also prevent the owner from learning from your actions and creating a better experience for you and other users.
+    authorizeTracking: authorize audience metrics collection
     privacyPolicy: Privacy Policy
   fr:
+    trackingMessage: Vous pouvez vous opposer au suivi de votre navigation sur ce site web. Cela protégera votre vie privée, mais empêchera également le propriétaire d'apprendre de vos actions et de créer une meilleure expérience pour vous et les autres utilisateurs.
+    authorizeTracking: autoriser la mesure d'audience
     privacyPolicy: Politique de confidentialité
 </i18n>
