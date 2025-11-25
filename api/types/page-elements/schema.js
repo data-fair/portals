@@ -1909,7 +1909,6 @@ export default {
       maximum: 16
     },
     'rendered-html': {
-      title: 'Contenu rendu en HTML',
       type: 'string',
       readOnly: true,
       layout: 'none'
