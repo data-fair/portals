@@ -6,10 +6,11 @@ import { defaultNonceCSPDirectives } from '@data-fair/lib-express/serve-spa'
 const contentSecurityPolicy: Record<string, string[]> = {}
 for (const [name, value] of Object.entries(defaultNonceCSPDirectives)) {
   contentSecurityPolicy[name] = value.replace('{NONCE}', '{{nonce}}').split(' ')
-
-  // for now we are force to use unsafe-inline for vuetify theme
-  if (name === 'style-src') contentSecurityPolicy[name] = ["'self'", "'unsafe-inline'"]
 }
+// for now we are force to use unsafe-inline for vuetify theme
+contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
+// strict-dynamic necessary for analytics
+contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
 export default defineNuxtConfig({
   devServer: {

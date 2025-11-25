@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build-types": "mkdir -p ui/src/components/vjsf && rm -f ui/src/components/vjsf/* && df-build-types . --vjsf-dir ui/src/components/vjsf",
+    "build-types": "mkdir -p ui/src/components/vjsf && df-build-types . --vjsf-dir ui/src/components/vjsf",
     "check-types": "tsc && npm -w portal run check-types && npm -w ui run check-types",
     "dev-api": "npm -w api run dev",
     "dev-deps": "docker compose --profile dev up -d --wait",
@@ -43,7 +43,7 @@
     "node": "v24"
   },
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.10.1"
+    "@data-fair/lib-types-builder": "^1.11.2"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
