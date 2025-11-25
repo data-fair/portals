@@ -1,33 +1,5 @@
 <template>
-  <v-container
-    v-if="portalConfig.footer.showContactInformations"
-    :class="[`bg-${portalConfig.footer.color}`, 'pa-0']"
-    fluid
-  >
-    <v-container>
-      <v-row>
-        <v-col cols="6">
-          <p v-if="portalConfig.contactInformations.phone">
-            <v-icon :icon="mdiPhone" />
-            {{ portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone }}
-          </p>
-          <p v-if="portalConfig.contactInformations.website">
-            <v-icon :icon="mdiWeb" />
-            {{ portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website }}
-          </p>
-          <p v-if="portalConfig.contactInformations.email">
-            <v-icon :icon="mdiEmail" />
-            <NuxtLink to="/contact">{{ t('contactUs') }}</NuxtLink>
-          </p>
-        </v-col>
-        <v-col cols="6">
-          <!--eslint-disable-next-line vue/no-v-html -->
-          <div v-html="portalConfig.contactInformations.infos" />
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-container>
-
+  <!-- <layout-footer-contact v-if="portalConfig.footer.showContactInformations" /> -->
   <v-footer
     :color="portalConfig.footer.color"
     :style="portalConfig.footer.backgroundImage ? {
@@ -41,173 +13,232 @@
     ]"
   >
     <v-container>
-      <!-- Logo and/or Social Links -->
-      <v-row
-        v-if="logo || portalConfig.footer.showSocial"
-        align="center"
-        justify="center"
-      >
+      <!-- Main content with optional left column -->
+      <v-row>
+        <!-- Left column (1/3) -->
         <v-col
-          v-if="logo"
-          class="text-center"
-          :cols="portalConfig.footer.showSocial ? 6 : 12"
+          v-if="hasLeftColumn"
+          cols="12"
+          md="4"
         >
-          <layout-header-logo
-            :logo="logo"
-            class="justify-center"
-          />
-        </v-col>
-        <v-col
-          v-if="portalConfig.footer.showSocial && Object.keys(portalConfig.socialLinks).length"
-          class="text-center text-caption"
-          :cols="logo ? 6 : 12"
-        >
-          <div>{{ t('socialMedia') }}</div>
-          <social-links :links="portalConfig.socialLinks" />
-        </v-col>
-      </v-row>
-
-      <!-- Extra logos -->
-      <v-row
-        v-if="portalConfig.footer.extraLogos.length || portalConfig.footer.copyright === 'logo'"
-        justify="center"
-      >
-        <v-col
-          v-for="(extraLogo, index) in portalConfig.footer.extraLogos"
-          :key="index"
-          cols="auto"
-        >
-          <a
-            v-if="extraLogo.link"
-            :href="extraLogo.link"
-            :title="extraLogo.label"
-            target="_blank"
-            rel="noopener"
+          <!-- Logo in left column -->
+          <div
+            v-if="logo && portalConfig.footer.logoPosition === 'left'"
+            :class="getAlignmentClass(portalConfig.footer.logoAlignment)"
+            class="mb-4"
           >
-            <img
-              :alt="extraLogo.label"
-              :src="getImageSrc(extraLogo.logo, false)"
-              style="height:40px;"
+            <layout-header-logo
+              :logo="logo"
+              :link="portalConfig.footer.logoPrimaryLink"
+              :class="getLogoJustifyClass(portalConfig.footer.logoAlignment)"
+            />
+          </div>
+
+          <!-- Slogan in left column -->
+          <div
+            v-if="portalConfig.footer.slogan && portalConfig.footer.sloganPosition === 'left'"
+            class="mb-4"
+            :class="[
+              getAlignmentClass(portalConfig.footer.sloganAlignment),
+              portalConfig.footer.sloganColor ? `text-${portalConfig.footer.sloganColor}` : ''
+            ]"
+          >
+            {{ portalConfig.footer.slogan }}
+          </div>
+
+          <!-- Social links in left column -->
+          <div
+            v-if="showSocialLinks && portalConfig.footer.socialPosition === 'left'"
+            class="w-100 text-center text-caption"
+          >
+            <div>{{ t('socialMedia') }}</div>
+            <social-links :links="portalConfig.socialLinks" />
+          </div>
+        </v-col>
+
+        <!-- Main column (2/3 or full width) -->
+        <v-col
+          cols="12"
+          :md="hasLeftColumn ? 8 : 12"
+        >
+          <!-- Logo in main column -->
+          <div
+            v-if="logo && portalConfig.footer.logoPosition === 'main'"
+            :class="getAlignmentClass(portalConfig.footer.logoAlignment)"
+            class="mb-4"
+          >
+            <layout-header-logo
+              :logo="logo"
+              :link="portalConfig.footer.logoPrimaryLink"
+              :class="getLogoJustifyClass(portalConfig.footer.logoAlignment)"
+            />
+          </div>
+
+          <!-- Slogan in main column -->
+          <div
+            v-if="portalConfig.footer.slogan && portalConfig.footer.sloganPosition === 'main'"
+            class="mb-4"
+            :class="[
+              getAlignmentClass(portalConfig.footer.sloganAlignment),
+              portalConfig.footer.sloganColor ? `text-${portalConfig.footer.sloganColor}` : ''
+            ]"
+          >
+            {{ portalConfig.footer.slogan }}
+          </div>
+
+          <!-- Social links in main column -->
+          <div
+            v-if="showSocialLinks && portalConfig.footer.socialPosition === 'main'"
+            class="mb-4 text-caption"
+            :class="getAlignmentClass('center')"
+          >
+            <div>{{ t('socialMedia') }}</div>
+            <social-links :links="portalConfig.socialLinks" />
+          </div>
+
+          <!-- Extra logos -->
+          <v-row
+            v-if="portalConfig.footer.extraLogos.length || portalConfig.footer.copyright === 'logo'"
+            justify="center"
+          >
+            <v-col
+              v-for="(extraLogo, index) in portalConfig.footer.extraLogos"
+              :key="index"
+              cols="auto"
             >
-          </a>
-          <img
-            v-else
-            :alt="extraLogo.label"
-            :src="getImageSrc(extraLogo.logo, false)"
-            style="height:40px;"
-          >
-        </v-col>
-        <!-- Copyright Logo -->
-        <v-col
-          v-if="portalConfig.footer.copyright === 'logo'"
-          cols="auto"
-        >
-          <a
-            href="https://koumoul.com"
-            title="Koumoul"
-            target="_blank"
-            rel="noopener"
-          >
-            <img
-              alt="Koumoul Logo"
-              src="https://koumoul.com/static/logo-title-right.png"
-              style="height:40px;"
+              <a
+                v-if="extraLogo.link"
+                :href="extraLogo.link"
+                :title="extraLogo.label"
+                target="_blank"
+                rel="noopener"
+              >
+                <img
+                  :alt="extraLogo.label"
+                  :src="getImageSrc(extraLogo.logo, false)"
+                  style="height:40px;"
+                >
+              </a>
+              <img
+                v-else
+                :alt="extraLogo.label"
+                :src="getImageSrc(extraLogo.logo, false)"
+                style="height:40px;"
+              >
+            </v-col>
+            <!-- Copyright Logo -->
+            <v-col
+              v-if="portalConfig.footer.copyright === 'logo'"
+              cols="auto"
             >
-          </a>
-        </v-col>
-      </v-row>
+              <a
+                href="https://koumoul.com"
+                title="Koumoul"
+                target="_blank"
+                rel="noopener"
+              >
+                <img
+                  alt="Koumoul Logo"
+                  src="https://koumoul.com/static/logo-title-right.png"
+                  style="height:40px;"
+                >
+              </a>
+            </v-col>
+          </v-row>
 
-      <!-- Links in single line -->
-      <v-row
-        v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'lines'"
-        class="my-2"
-        justify="center"
-      >
-        <v-col
-          v-for="(link, key) in portalConfig.footer.links"
-          :key="key"
-          cols="auto"
-          class="text-center"
-        >
-          <a
-            v-if="link.type === 'external'"
-            :href="link.href"
-            target="_blank"
-            rel="noopener"
-            class="simple-link"
+          <!-- Links in single line -->
+          <v-row
+            v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'lines'"
+            class="my-2"
+            justify="center"
           >
-            <v-icon
-              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-              :icon="link.icon.mdi?.svgPath || link.icon.custom"
-              :color="link.icon.color"
-              size="small"
-              class="mr-1"
-            />
-            {{ link.title }}
-          </a>
-          <NuxtLink
-            v-else
-            :to="resolveLink(link)"
-            class="simple-link"
-          >
-            <v-icon
-              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-              :icon="link.icon.mdi?.svgPath || link.icon.custom"
-              :color="link.icon.color"
-              size="small"
-              class="mr-1"
-            />
-            {{ resolveLinkTitle(link, locale) }}
-          </NuxtLink>
-        </v-col>
-      </v-row>
+            <v-col
+              v-for="(link, key) in portalConfig.footer.links"
+              :key="key"
+              cols="auto"
+              class="text-center"
+            >
+              <a
+                v-if="link.type === 'external'"
+                :href="link.href"
+                target="_blank"
+                rel="noopener"
+                class="simple-link"
+              >
+                <v-icon
+                  v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                  :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                  :color="link.icon.color"
+                  size="small"
+                  class="mr-1"
+                />
+                {{ link.title }}
+              </a>
+              <NuxtLink
+                v-else
+                :to="resolveLink(link)"
+                class="simple-link"
+              >
+                <v-icon
+                  v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                  :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                  :color="link.icon.color"
+                  size="small"
+                  class="mr-1"
+                />
+                {{ resolveLinkTitle(link, locale) }}
+              </NuxtLink>
+            </v-col>
+          </v-row>
 
-      <!-- Links in columns -->
-      <v-row
-        v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'columns'"
-        class="my-2"
-      >
-        <v-col
-          v-for="(link, key) in portalConfig.footer.links"
-          :key="key"
-          cols="10"
-          sm="4"
-          offset="2"
-          offset-sm="2"
-          class="pa-0"
-        >
-          <a
-            v-if="link.type === 'external'"
-            :href="link.href"
-            target="_blank"
-            rel="noopener"
-            class="simple-link"
+          <!-- Links in columns -->
+          <v-row
+            v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'columns'"
+            class="my-2"
           >
-            <v-icon
-              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-              :icon="link.icon.mdi?.svgPath || link.icon.custom"
-              :color="link.icon.color"
-              size="small"
-              class="mr-1"
-            />
-            {{ link.title }}
-          </a>
-          <NuxtLink
-            v-else
-            :to="resolveLink(link)"
-            class="simple-link"
-          >
-            <span class="d-flex align-center">
-              <v-icon
-                v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-                :icon="link.icon.mdi?.svgPath || link.icon.custom"
-                :color="link.icon.color"
-                size="small"
-                class="mr-1"
-              />
-              {{ resolveLinkTitle(link, locale) }}
-            </span>
-          </NuxtLink>
+            <v-col
+              v-for="(link, key) in portalConfig.footer.links"
+              :key="key"
+              cols="10"
+              sm="4"
+              offset="2"
+              offset-sm="2"
+              class="pa-0"
+            >
+              <a
+                v-if="link.type === 'external'"
+                :href="link.href"
+                target="_blank"
+                rel="noopener"
+                class="simple-link"
+              >
+                <v-icon
+                  v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                  :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                  :color="link.icon.color"
+                  size="small"
+                  class="mr-1"
+                />
+                {{ link.title }}
+              </a>
+              <NuxtLink
+                v-else
+                :to="resolveLink(link)"
+                class="simple-link"
+              >
+                <span class="d-flex align-center">
+                  <v-icon
+                    v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                    :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                    :color="link.icon.color"
+                    size="small"
+                    class="mr-1"
+                  />
+                  {{ resolveLinkTitle(link, locale) }}
+                </span>
+              </NuxtLink>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
 
@@ -277,7 +308,6 @@
 
 <script setup lang="ts">
 import type { ImageRef } from '#api/types/image-ref/index.ts'
-import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
 const { t, locale } = useI18n()
 const { portalConfig } = usePortalStore()
@@ -297,16 +327,43 @@ const logo = computed(() => {
   }
 })
 
+const showSocialLinks = computed(() => {
+  return portalConfig.value.footer.socialPosition !== 'none' &&
+    Object.keys(portalConfig.value.socialLinks).length > 0
+})
+
+const hasLeftColumn = computed(() => {
+  const footer = portalConfig.value.footer
+  return (logo.value && footer.logoPosition === 'left') ||
+    (footer.slogan && footer.sloganPosition === 'left') ||
+    (showSocialLinks.value && footer.socialPosition === 'left')
+})
+
+const getAlignmentClass = (alignment?: string) => {
+  switch (alignment) {
+    case 'center': return 'text-center'
+    case 'right': return 'text-right'
+    case 'left': return 'text-left'
+    default: return 'text-left'
+  }
+}
+
+const getLogoJustifyClass = (alignment?: string) => {
+  switch (alignment) {
+    case 'center': return 'justify-center'
+    case 'right': return 'justify-end'
+    case 'left': return 'justify-start'
+    default: return 'justify-start'
+  }
+}
+
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 </script>
 
 <i18n lang="yaml">
   en:
-    contactUs: 'Contact Us'
     socialMedia: 'Find us on social media'
-
   fr:
-    contactUs: 'Contactez-nous'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
 </i18n>

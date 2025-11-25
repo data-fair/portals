@@ -7,14 +7,12 @@ export default {
     title: null,
     children: [
       'color',
-      'showSocial',
-      'showContactInformations',
       'copyright',
-      'backgroundImage',
-      'backgroundImageLocation',
-      'logoPrimaryType',
-      'logoPrimary',
-      'logoPrimaryLink',
+      'socialPosition',
+      { children: ['logoPrimaryType', 'logoPrimary'] },
+      { children: ['logoPrimaryLink', 'logoPosition', 'logoAlignment'] },
+      { children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
+      { children: ['backgroundImage', 'backgroundImageLocation'] },
       {
         comp: 'tabs',
         children: [
@@ -25,7 +23,7 @@ export default {
       }
     ]
   },
-  required: ['color', 'showSocial', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
+  required: ['color', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
   properties: {
     color: {
       type: 'string',
@@ -38,35 +36,50 @@ export default {
         { const: 'surface', title: 'Couleur des surfaces' },
         { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
         { const: 'background', title: 'Couleur du fond de page' }
-      ]
+      ],
+      layout: { cols: { md: 4 } }
     },
-    showSocial: {
-      type: 'boolean',
-      title: 'Afficher les liens de réseaux sociaux',
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      }
+    copyright: {
+      type: 'string',
+      title: 'Affichage du copyright',
+      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de **Koumoul** parmi la liste des logos du pied de page.',
+      default: 'text',
+      oneOf: [
+        {
+          const: 'text',
+          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
+        },
+        {
+          const: 'logo',
+          title: 'Afficher le logo Koumoul',
+        }
+      ],
+      layout: { cols: { md: 4 } }
     },
-    showContactInformations: {
-      type: 'boolean',
-      title: 'Afficher les informations de contact',
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      }
+    socialPosition: {
+      type: 'string',
+      title: 'Position des réseaux sociaux',
+      default: 'none',
+      oneOf: [
+        { const: 'none', title: 'Aucun' },
+        { const: 'main', title: 'Colonne principale' },
+        { const: 'left', title: 'Colonne de gauche' }
+      ],
+      layout: { cols: { md: 4 } }
     },
+    // DEPRECATED for now
+    // showContactInformations: {
+    //   type: 'boolean',
+    //   title: 'Afficher les informations de contact',
+    //   layout: {
+    //     comp: 'switch',
+    //     cols: { md: 6 }
+    //   }
+    // },
     logoPrimaryType: {
       type: 'string',
       title: 'Logo principal du pied de page',
-      layout: {
-        switch: [
-          {
-            if: 'data === "local" ',
-            cols: { md: 6 }
-          }
-        ]
-      },
+      layout: { cols: { md: 6 } },
       default: 'default',
       oneOf: [
         { const: 'default', title: 'Utiliser le logo global' },
@@ -105,31 +118,77 @@ export default {
       }
     },
     logoPrimaryLink: {
-      layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"',
-        props: {
-          clearable: true
-        }
-      },
       type: 'string',
       title: 'Lien au clic sur le logo principal',
-      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo."
+      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo.",
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        cols: { md: 4 },
+        props: { clearable: true }
+      }
     },
-    copyright: {
+    logoPosition: {
       type: 'string',
-      title: 'Affichage du copyright',
-      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de **Koumoul** parmi la liste des logos du pied de page.',
-      default: 'text',
+      title: 'Position du logo principal',
+      default: 'main',
       oneOf: [
-        {
-          const: 'text',
-          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
-        },
-        {
-          const: 'logo',
-          title: 'Afficher le logo Koumoul',
-        }
-      ]
+        { const: 'main', title: 'Colonne principale' },
+        { const: 'left', title: 'Colonne de gauche' }
+      ],
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        cols: { md: 4 }
+      }
+    },
+    logoAlignment: {
+      type: 'string',
+      title: 'Alignement du logo principal',
+      default: 'left',
+      oneOf: [
+        { const: 'left', title: 'Gauche' },
+        { const: 'center', title: 'Centre' },
+        { const: 'right', title: 'Droite' }
+      ],
+      layout: { cols: { md: 4 } }
+    },
+    slogan: {
+      type: 'string',
+      title: 'Slogan'
+    },
+    sloganColor: {
+      type: 'string',
+      title: 'Couleur du slogan',
+      oneOf: [
+        { const: 'primary', title: 'Primaire' },
+        { const: 'secondary', title: 'Secondaire' },
+        { const: 'accent', title: 'Accentuée' },
+        { const: 'info', title: 'Information' },
+        { const: 'success', title: 'Succès' },
+        { const: 'error', title: 'Erreur' },
+        { const: 'warning', title: 'Avertissement' }
+      ],
+      layout: { cols: { md: 4 } }
+    },
+    sloganPosition: {
+      type: 'string',
+      title: 'Position du slogan',
+      default: 'main',
+      oneOf: [
+        { const: 'main', title: 'Colonne principale' },
+        { const: 'left', title: 'Colonne de gauche' }
+      ],
+      layout: { cols: { md: 4 } }
+    },
+    sloganAlignment: {
+      type: 'string',
+      title: 'Alignement du slogan',
+      default: 'left',
+      oneOf: [
+        { const: 'left', title: 'Gauche' },
+        { const: 'center', title: 'Centre' },
+        { const: 'right', title: 'Droite' }
+      ],
+      layout: { cols: { md: 4 } }
     },
     backgroundImage: {
       type: 'object',
@@ -142,7 +201,7 @@ export default {
             props: { width: 2560, label: 'Chargez une image de fond' }
           }
         },
-        cols: { md: 8 }
+        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -163,7 +222,7 @@ export default {
       type: 'string',
       title: "Position de l'image de fond",
       default: 'right',
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 6 } },
       oneOf: [
         { const: 'left', title: 'Gauche' },
         { const: 'center', title: 'Centre' },

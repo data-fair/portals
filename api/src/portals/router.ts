@@ -67,7 +67,7 @@ router.post('', async (req, res, next) => {
     breadcrumb: {},
     footer: {
       color: 'primary',
-      showSocial: false,
+      socialPosition: 'none',
       copyright: 'text',
       logoPrimaryType: 'default',
       extraLogos: [],
