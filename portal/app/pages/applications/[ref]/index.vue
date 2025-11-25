@@ -145,6 +145,23 @@ const errorTitle = computed(() => {
   return t('applicationError')
 })
 
+const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
+
+const thumbnailUrl = computed(() => {
+  const cardConfig = portalConfig.value.applications.card
+  if (!cardConfig.thumbnail?.show || !application.value) return undefined
+  if (application.value.image) return application.value.image
+  if (cardConfig.thumbnail.useTopic && application.value.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
+  return `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`
+})
+
 const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] }>(
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
 )
@@ -169,7 +186,7 @@ watch(application, () => {
 usePageSeo({
   title: () => application.value?.title || t('application'),
   description: () => application.value?.summary || application.value?.description || portalConfig.value.description,
-  ogImage: () => application.value?.image,
+  ogImage: () => thumbnailUrl.value,
   ogType: 'article'
 })
 

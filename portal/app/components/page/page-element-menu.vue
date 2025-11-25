@@ -13,6 +13,8 @@
           :rounded="config?.rounded"
           :variant="config?.variant !== 'default' ? config?.variant : undefined"
           :append-icon="mdiChevronDown"
+          class="text-truncate justify-start"
+          :class="{ 'text-none': !config?.uppercase }"
         >
           {{ element.label || 'Menu' }}
         </v-btn>

@@ -9,6 +9,8 @@
     :elevation="config?.elevation"
     :rounded="config?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
+    class="text-truncate justify-start"
+    :class="{'text-none': !config?.uppercase}"
   >
     <template #prepend>
       <v-icon
