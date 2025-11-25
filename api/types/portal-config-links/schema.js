@@ -60,6 +60,15 @@ export default {
             cols: { md: 4 }
           },
           default: true
+        },
+        uppercase: {
+          type: 'boolean',
+          title: 'Texte en majuscules',
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
         }
       }
     },
