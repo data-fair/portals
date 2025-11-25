@@ -28,6 +28,30 @@ export default {
         { const: 'text', title: 'Texte seulement' }
       ]
     },
+    elevation: {
+      type: 'integer',
+      title: 'Élévation de la carte',
+      layout: { cols: { md: 6 } },
+      default: 0,
+      oneOf: [
+        { const: 0, title: 'Aucune' },
+        { const: 1, title: 'Légère' },
+        { const: 2, title: 'Modérée' },
+        { const: 3, title: 'Forte' }
+      ]
+    },
+    rounded: {
+      type: 'string',
+      title: 'Arrondi de la carte',
+      layout: { cols: { md: 6 } },
+      default: 'default',
+      oneOf: [
+        { const: '0', title: 'Aucun' },
+        { const: 'default', title: 'Normal' },
+        { const: 'lg', title: 'Moyen' },
+        { const: 'xl', title: 'Grand' }
+      ]
+    },
     showSummary: {
       type: 'boolean',
       title: 'Afficher le résumé sur la carte',

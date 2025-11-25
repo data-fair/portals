@@ -2,6 +2,8 @@
   <v-card
     :to="`/applications/${application.slug}`"
     class="h-100 d-flex flex-column"
+    :elevation="cardConfig.elevation ?? 0"
+    :rounded="cardConfig.rounded ?? 'default'"
   >
     <v-row
       class="flex-nowrap"
