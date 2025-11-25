@@ -22,3 +22,7 @@ export function useCookie (_name: string, _options?: any): any {
 export function useAnalytics (): any {
   throw new Error('useAnalytics should only be called from portal, not portals-manager')
 }
+
+export function useAnalyticsInfo (_portal: any): any {
+  throw new Error('useAnalytics should only be called from portal, not portals-manager')
+}
