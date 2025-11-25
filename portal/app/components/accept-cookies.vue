@@ -36,7 +36,7 @@
       </p>
       <v-btn
         color="primary"
-        class="mt-4"
+        class="mt-6"
         @click="save()"
       >
         Ok
@@ -47,26 +47,18 @@
 
 <script setup lang="ts">
 
-const { portal } = usePortalStore()
-
 const show = ref(false)
 const authorizeTracking = ref(true)
-// can be yes / no / undefined
-const cookiePortalTrack = useCookie('df_portal_track', { maxAge: 60 * 60 * 24 * 365, sameSite: true, path: '/' })
+const { portal } = usePortalStore()
+const { requiresConsent, cookieTrack } = useAnalyticsInfo(portal.value)
 const hostname = window.location.hostname
 
-const trackerType = portal.value.config.analytics?.tracker.type
-if (
-  !portal.value.draft &&
-  trackerType && trackerType !== 'none' &&
-  !portal.value.config.analytics?.tracker.anonymized &&
-  cookiePortalTrack.value === undefined
-) {
+if (requiresConsent && cookieTrack.value === undefined) {
   show.value = true
 }
 
 const save = () => {
-  cookiePortalTrack.value = authorizeTracking.value ? 'yes' : 'no'
+  cookieTrack.value = authorizeTracking.value ? 'yes' : 'no'
   window.location.reload()
 }
 

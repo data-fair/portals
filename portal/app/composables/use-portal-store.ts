@@ -1,6 +1,6 @@
 import type { Portal } from '#api/types/portal'
 
-type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
+export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
 
 export type PortalStore = ReturnType<typeof createPortalStore>
 const portalStoreKey = Symbol('portal-store')
