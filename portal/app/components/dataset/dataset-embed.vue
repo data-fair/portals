@@ -5,7 +5,7 @@
     :icon="mdiCodeTags"
     :text="t('embed')"
     :short-text="t('embedShort')"
-    @update:dialog="dialogToggled"
+    :track-path="`/datasets/${dataset.slug}/embed-dialog`"
   >
     <v-card-text class="py-0">
       <v-row>
@@ -76,11 +76,6 @@ const selectedPreview = ref<string | undefined>(previewItems[0]?.href)
 const stateUrl = ref(previewItems[0]?.href)
 const storeState = (state: { detail: [string, string] }) => {
   stateUrl.value = state.detail[1]
-}
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/datasets/${dataset.slug}/embed-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
 }
 </script>
 

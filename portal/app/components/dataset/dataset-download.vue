@@ -5,7 +5,7 @@
     :icon="mdiDownload"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    @update:dialog="dialogToggled"
+    :track-path="`/datasets/${dataset.slug}/download-dialog`"
   >
     <!-- direct links to files-->
     <v-list-item
@@ -155,11 +155,6 @@ const join = (array?: string[]): string => {
 
 const clickDownload = (format: string) => {
   useAnalytics()?.track('download', { label: `${dataset.slug} - ${format}` })
-}
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/datasets/${dataset.slug}/download-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
 }
 
 </script>

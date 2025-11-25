@@ -5,7 +5,7 @@
     :icon="mdiTableEye"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    @update:dialog="dialogToggled"
+    :track-path="`/datasets/${dataset.slug}/table-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"
@@ -35,11 +35,6 @@ const { t } = useI18n()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onIframeMessage = (message: any) => {
   if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
-}
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/datasets/${dataset.slug}/table-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
 }
 </script>
 

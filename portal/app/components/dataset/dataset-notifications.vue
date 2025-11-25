@@ -4,7 +4,7 @@
     :action-style="portalConfig.datasets.page.actionsStyle"
     :icon="mdiBell"
     :text="t('preview')"
-    @update:dialog="dialogToggled"
+    :track-path="`/datasets/${dataset.slug}/notifications-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"
@@ -41,11 +41,6 @@ const src = computed(() => {
   if (dataset.owner.department) sender += ':' + dataset.owner.department
   return `/events/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
 })
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/datasets/${dataset.slug}/notifications-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
-}
 </script>
 
 <i18n lang="yaml">

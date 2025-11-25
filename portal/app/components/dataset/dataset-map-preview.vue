@@ -5,7 +5,7 @@
     :icon="mdiMapMarker"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    @update:dialog="dialogToggled"
+    :track-path="`/datasets/${dataset.slug}/map-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('previewShort') + ' - ' + dataset.title"
@@ -28,11 +28,6 @@ const { dataset } = defineProps<{
   actionStyle: DatasetCard['actionsStyle']
 }>()
 const { t } = useI18n()
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/datasets/${dataset.slug}/map-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
-}
 </script>
 
 <i18n lang="yaml">

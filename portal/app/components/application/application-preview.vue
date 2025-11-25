@@ -5,7 +5,7 @@
     :icon="mdiFlipToFront"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    @update:dialog="dialogToggled"
+    :track-path="`/applications/${application.slug}/preview-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"
@@ -27,11 +27,6 @@ const { application } = defineProps<{
 }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-
-const dialogToggled = (dialog: boolean | undefined) => {
-  const title = dialog ? `/applications/${application.slug}/preview-dialog` : useRoute().path
-  useAnalytics()?.page({ title })
-}
 </script>
 
 <i18n lang="yaml">
