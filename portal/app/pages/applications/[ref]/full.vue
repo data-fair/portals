@@ -16,7 +16,33 @@ const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 
-const applicationFetch = useLocalFetch<{ title: string, summary?: string, description?: string, image?: string }>(`/data-fair/api/v1/applications/${route.params.ref}`)
+const applicationFetch = useLocalFetch<{
+  title: string
+  summary?: string
+  description?: string
+  image?: string
+  href: string
+  updatedAt: string
+  topics: { id: string; title: string; color: string }[]
+}>(`/data-fair/api/v1/applications/${route.params.ref}`)
+
+const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
+
+const thumbnailUrl = computed(() => {
+  const cardConfig = portalConfig.value.applications.card
+  const application = applicationFetch.data.value
+  if (!cardConfig.thumbnail?.show || !application) return undefined
+  if (application.image) return application.image
+  if (cardConfig.thumbnail.useTopic && application.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application!.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
+  return `${application.href}/capture?updatedAt=${application.updatedAt}`
+})
 
 watch(applicationFetch.data, () => {
   setBreadcrumbs([
@@ -29,7 +55,7 @@ watch(applicationFetch.data, () => {
 usePageSeo({
   title: () => applicationFetch.data.value?.title || t('application'),
   description: () => applicationFetch.data.value?.summary || applicationFetch.data.value?.description || portalConfig.value.description,
-  ogImage: () => applicationFetch.data.value?.image
+  ogImage: () => thumbnailUrl.value
 })
 </script>
 

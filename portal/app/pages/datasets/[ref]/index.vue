@@ -255,6 +255,7 @@ type Dataset = {
     applications?: { id: string; slug: string; updatedAt: string }[]
   }
   bbox?: number[]
+  topics: { id: string; title: string; color: string }[]
   public: boolean
   userPermissions: string[]
   previews: {
@@ -313,6 +314,26 @@ const errorTitle = computed(() => {
   return t('datasetError')
 })
 
+const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
+
+const thumbnailUrl = computed(() => {
+  const cardConfig = portalConfig.value.datasets.card
+  if (!cardConfig.thumbnail?.show || !dataset.value) return undefined
+  if (dataset.value.image) return dataset.value.image
+  if (cardConfig.thumbnail.useTopic && dataset.value.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.value!.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
+  if (cardConfig.thumbnail.useApplication && dataset.value.extras?.applications?.[0]) {
+    return `/data-fair/api/v1/applications/${dataset.value.extras.applications[0].id}/capture?updatedAt=${dataset.value.extras.applications[0].updatedAt}`
+  }
+  return undefined
+})
+
 watch(dataset, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'datasets' },
@@ -323,7 +344,7 @@ watch(dataset, () => {
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
   description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
-  ogImage: () => dataset.value?.image, // TODO: use thumbnailUrl
+  ogImage: () => thumbnailUrl.value,
   ogType: 'article'
 })
 

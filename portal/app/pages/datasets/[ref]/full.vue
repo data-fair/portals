@@ -26,6 +26,7 @@ const datasetFetch = useLocalFetch<{
   description?: string
   image?: string
   thumbnail?: string
+  topics: { id: string; title: string; color: string }[]
   extras?: {
     applications?: { id: string; slug: string; updatedAt: string }[]
   }
@@ -35,17 +36,24 @@ const datasetFetch = useLocalFetch<{
   }
 })
 
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/images/${id}`
+}
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card
   const dataset = datasetFetch.data.value
   if (!dataset || !cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
+  if (cardConfig.thumbnail.useTopic && dataset.topics?.[0]?.id) {
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics[0]!.id)
+    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
+  }
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
     return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
-  if (cardConfig.thumbnail?.default) return origin + getImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
 
