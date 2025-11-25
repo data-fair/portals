@@ -10,8 +10,7 @@
       class="text-center pa-6"
     >
       <p>
-        Le site {{ hostname }} utilise des cookies pour réaliser des
-        statistiques de visite et améliorer l'expérience utilisateur.
+        {{ t('cookieMessage', { hostname }) }}
       </p>
       <v-row>
         <v-spacer />
@@ -22,24 +21,24 @@
           <v-switch
             v-model="authorizeTracking"
             color="primary"
-            label="Autoriser la mesure d'audience"
+            :label="t('authorizeTracking')"
           />
         </v-col>
         <v-spacer />
       </v-row>
       <p>
-        Votre choix est conservé pendant 1 an. Vous pouvez le modifier à tout moment sur la page de
-        <nuxt-link to="/privacy-policy">
-          politique de confidentialité
-        </nuxt-link>
-        du site.
+        <i18n-t keypath="privacyPolicyMessage">
+          <nuxt-link to="/privacy-policy">
+            {{ t('privacyPolicyPage') }}
+          </nuxt-link>
+        </i18n-t>
       </p>
       <v-btn
         color="primary"
         class="mt-6"
         @click="save()"
       >
-        Ok
+        {{ t('ok') }}
       </v-btn>
     </v-sheet>
   </v-bottom-sheet>
@@ -49,6 +48,7 @@
 
 const show = ref(false)
 const authorizeTracking = ref(true)
+const { t } = useI18n()
 const { portal } = usePortalStore()
 const { requiresConsent, cookieTrack } = useAnalyticsInfo(portal.value)
 const hostname = window.location.hostname
@@ -65,3 +65,18 @@ const save = () => {
 </script>
 
 <style lang="css"></style>
+
+<i18n lang="yaml">
+  fr:
+    cookieMessage: Le site {hostname} utilise des cookies pour réaliser des statistiques de visite et améliorer l'expérience utilisateur.
+    authorizeTracking: autoriser la mesure d'audience
+    privacyPolicyMessage: Votre choix est conservé pendant 1 an. Vous pouvez le modifier à tout moment sur la {0} du site.
+    privacyPolicyPage: page de politique de confidentialité
+    ok: ok
+  en:
+    cookieMessage: The site {hostname} uses cookies to record visit statistics and improve user experience.
+    authorizeTracking: authorize audience metrics collection
+    privacyPolicyMessage: Your choice is remembered for 1 year. You can change it at any time on the {0} of this site.
+    privacyPolicyPage: privacy policy page
+    ok: ok
+</i18n>
