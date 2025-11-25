@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app'
-import type { AnalyticsPlugin, AnalyticsInstance } from 'analytics'
+import type { AnalyticsPlugin } from 'analytics'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _window = window as any
@@ -11,6 +11,13 @@ export default defineNuxtPlugin(async () => {
     return
   }
   const portalConfig = nuxtApp.$portal.config
+  const cookiePortalTrack = useCookie<string>('df_portal_track')
+  if (cookiePortalTrack.value === 'yes' || ((cookiePortalTrack.value + '') === '1')) {
+    // console.log('tracking was enabled by df_portal_track cookie')
+  } else {
+    // console.log('tracking was not enabled by df_portal_track cookie')
+    return
+  }
 
   const trackerType = portalConfig.analytics?.tracker.type
   if (portalConfig.analytics && trackerType && trackerType !== 'none') {

@@ -1,5 +1,6 @@
 <template>
   <LayoutAppBar />
+  <client-only><accept-cookies /></client-only>
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
     <layout-breadcrumbs
       v-if="portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both'"

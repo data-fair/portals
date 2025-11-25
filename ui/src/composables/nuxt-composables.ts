@@ -14,3 +14,11 @@ export function useRuntimeConfig (): any {
 export function useRequestURL (): any {
   throw new Error('useRequestURL should only be called from portal, not portals-manager')
 }
+
+export function useCookie (_name: string, _options?: any): any {
+  throw new Error('useCookie should only be called from portal, not portals-manager')
+}
+
+export function useAnalytics (): any {
+  throw new Error('useAnalytics should only be called from portal, not portals-manager')
+}

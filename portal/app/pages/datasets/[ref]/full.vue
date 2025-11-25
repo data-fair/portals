@@ -53,7 +53,7 @@ const thumbnailUrl = computed(() => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onIframeMessage = (message: any) => {
-  if (message) useAnalytics()?.(message.trackEvent.action, message.trackEvent)
+  if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
 }
 
 watch(datasetFetch.data, () => {

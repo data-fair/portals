@@ -14,6 +14,9 @@ export default {
       properties: {
         type: {
           const: 'none'
+        },
+        anonymized: {
+          const: true
         }
       }
     },
