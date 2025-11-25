@@ -23,8 +23,13 @@ export default defineNuxtPlugin(async () => {
     }
 
     if (portalConfig.analytics.tracker.type === 'matomo') {
-      const matomo = (await import('../utils/matomo')).default
+      const matomo = (await import('../utils/analytics/matomo')).default
       plugins.push(matomo({ ...portalConfig.analytics.tracker.params }))
+    }
+
+    if (portalConfig.analytics.tracker.type === 'piano') {
+      const piano = (await import('../utils/analytics/piano')).default
+      plugins.push(piano({ ...portalConfig.analytics.tracker.params }))
     }
 
     const a = await import('analytics')

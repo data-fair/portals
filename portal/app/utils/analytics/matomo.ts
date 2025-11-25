@@ -42,12 +42,7 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
     track: ({ payload }) => {
       debug('track', payload)
       _window._paq.push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
-    },
-    identify: ({ payload }) => {
-      debug('identify', payload)
-      // call provider specific user identify method
-      // _window._paq.push(['setUserId', userId])
-    },
+    }
   }
 
   return plugin

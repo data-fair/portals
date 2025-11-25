@@ -18,6 +18,32 @@ export default {
       }
     },
     {
+      title: 'Google Analytics v4',
+      required: ['type', 'params'],
+      properties: {
+        type: {
+          const: 'google-analytics-v4',
+          title: 'Type de système'
+        },
+        params: {
+          type: 'object',
+          description: '[Voir la documentation du plugin](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)',
+          additionalProperties: false,
+          required: ['measurementIds'],
+          properties: {
+            measurementIds: {
+              type: 'string',
+              title: 'Google Analytics MEASUREMENT IDs'
+            }
+          }
+        },
+        anonymized: {
+          const: false,
+          title: 'Système configuré en mode anonyme'
+        }
+      }
+    },
+    {
       title: 'Matomo',
       required: ['type', 'params'],
       properties: {
@@ -48,28 +74,28 @@ export default {
       }
     },
     {
-      title: 'Google Analytics v4',
+      title: 'Piano',
       required: ['type', 'params'],
       properties: {
         type: {
-          const: 'google-analytics-v4',
+          const: 'piano',
           title: 'Type de système'
         },
         params: {
           type: 'object',
-          description: '[Voir la documentation du plugin](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)',
           additionalProperties: false,
-          required: ['measurementIds'],
           properties: {
-            measurementIds: {
-              type: 'string',
-              title: 'Google Analytics MEASUREMENT IDs'
+            site: {
+              type: 'number',
+              title: 'Site'
             }
           }
         },
         anonymized: {
-          const: false,
-          title: 'Système configuré en mode anonyme'
+          type: 'boolean',
+          'x-display': 'switch',
+          title: 'système configuré en mode anonyme',
+          description: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
         }
       }
     }
