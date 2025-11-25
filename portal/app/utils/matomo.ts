@@ -2,6 +2,9 @@
 // https://github.com/DavidWells/analytics?tab=readme-ov-file#creating-analytics-plugins
 
 import type { AnalyticsPlugin } from 'analytics'
+import debugModule from 'debug'
+
+const debug = debugModule('matomo')
 
 type MatomoPluginConfig = { trackerBase?: string, siteId?: string, nonce?: string }
 
@@ -32,16 +35,16 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
       s!.parentNode!.insertBefore(g, s!)
     },
     page: ({ payload }) => {
-      console.log('MATOMO PAGE', payload)
-      // _window._paq.push(['setDocumentTitle', viewName])
-      // _window._paq.push(['trackPageView'])
+      debug('page', payload.properties)
+      _window._paq.push(['setDocumentTitle', payload.properties.title])
+      _window._paq.push(['trackPageView'])
     },
     track: ({ payload }) => {
-      console.log('MATOMO TRACK', payload)
-      // _window._paq.push(['trackEvent', category, action, label, value])
+      debug('track', payload)
+      _window._paq.push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
     },
     identify: ({ payload }) => {
-      console.log('MATOMO IDENTIFY', payload)
+      debug('identify', payload)
       // call provider specific user identify method
       // _window._paq.push(['setUserId', userId])
     },

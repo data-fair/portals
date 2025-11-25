@@ -5,6 +5,7 @@
     :icon="mdiDownload"
     :text="t('preview')"
     :short-text="t('previewShort')"
+    @update:dialog="dialogToggled"
   >
     <!-- direct links to files-->
     <v-list-item
@@ -24,6 +25,7 @@
           :icon="mdiDownload"
           :href="file.url"
           variant="text"
+          @click="clickDownload(file.format)"
         />
       </template>
     </v-list-item>
@@ -41,6 +43,7 @@
           :icon="mdiDownload"
           :href="`/data-fair/api/v1/datasets/${dataset.id}/lines?size=10000&page=1&format=${format}`"
           variant="text"
+          @click="clickDownload(format)"
         />
       </template>
     </v-list-item>
@@ -148,6 +151,15 @@ const join = (array?: string[]): string => {
   if (array.length === 1) return array[0] || ''
   if (array.length === 2) return `${array[0] || ''} ${t('or')} ${array[1] || ''}`
   return `${array.slice(0, -1).map(s => s || '').join(', ')} ${t('or')} ${array[array.length - 1] || ''}`
+}
+
+const clickDownload = (format: string) => {
+  useAnalytics()?.track('download', { label: `${dataset.slug} - ${format}` })
+}
+
+const dialogToggled = (dialog: boolean | undefined) => {
+  const title = dialog ? `/datasets/${dataset.slug}/download-dialog` : useRoute().path
+  useAnalytics()?.page({ title })
 }
 
 </script>

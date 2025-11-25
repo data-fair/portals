@@ -1,6 +1,9 @@
 import { defineNuxtPlugin } from '#app'
 import type { AnalyticsPlugin, AnalyticsInstance } from 'analytics'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _window = window as any
+
 export default defineNuxtPlugin(async () => {
   const nuxtApp = useNuxtApp()
   if (nuxtApp.$portal.draft) {
@@ -9,7 +12,6 @@ export default defineNuxtPlugin(async () => {
   }
   const portalConfig = nuxtApp.$portal.config
 
-  let analytics: AnalyticsInstance | null = null
   const trackerType = portalConfig.analytics?.tracker.type
   if (portalConfig.analytics && trackerType && trackerType !== 'none') {
     const plugins: AnalyticsPlugin[] = []
@@ -26,14 +28,14 @@ export default defineNuxtPlugin(async () => {
     }
 
     const a = await import('analytics')
-    analytics = a.Analytics({
-      debug: true,
-      plugins
-    })
+    const analytics = _window.__ANALYTICS = a.Analytics({ plugins })
 
-    nuxtApp.hook('page:loading:end', () => {
-      console.log('PAGE')
-      analytics?.page()
+    useRouter().afterEach((to, from) => {
+      // from.name is absent on initial page load
+      if (!from.name || from.path !== to.path) {
+        // using path instead of title meta as it is what we did historically
+        analytics?.page({ title: to.path })
+      }
     })
   }
 })

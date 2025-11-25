@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="1200">
+  <v-dialog v-model="dialog" max-width="1200">
     <template #activator="{ props }">
       <action-btn
         v-bind="props"
@@ -45,5 +45,7 @@ defineProps<{
   /** Button short text */
   shortText?: string
 }>()
+
+const dialog = defineModel('dialog', { type: Boolean })
 
 </script>

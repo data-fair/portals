@@ -6,6 +6,8 @@
     resize="no"
     scrolling="no"
     sync-params
+    emit-iframe-messages
+    @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
   />
 </template>
 
@@ -48,6 +50,11 @@ const thumbnailUrl = computed(() => {
   if (cardConfig.thumbnail?.default) return origin + getImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onIframeMessage = (message: any) => {
+  if (message) useAnalytics()?.(message.trackEvent.action, message.trackEvent)
+}
 
 watch(datasetFetch.data, () => {
   setBreadcrumbs([

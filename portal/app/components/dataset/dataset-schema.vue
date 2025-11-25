@@ -5,6 +5,7 @@
     :icon="mdiViewList"
     :text="t('preview')"
     :short-text="t('previewShort')"
+    @update:dialog="dialogToggled"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"
@@ -20,12 +21,17 @@ import { mdiViewList } from '@mdi/js'
 const { dataset } = defineProps<{
   dataset: {
     id: string
+    slug: string
     title: string
   }
 }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 
+const dialogToggled = (dialog: boolean | undefined) => {
+  const title = dialog ? `/datasets/${dataset.slug}/notifications-dialog` : useRoute().path
+  useAnalytics()?.page({ title })
+}
 </script>
 
 <i18n lang="yaml">

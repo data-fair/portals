@@ -218,6 +218,10 @@ const applicationsQuery = computed(() => {
 })
 const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery, watch: false })
 
+watch(search, () => {
+  if (search.value) useAnalytics()?.track('search', { category: 'applications', label: search.value })
+})
+
 // Computed property to check if there are more applications to load
 const hasMore = computed(() => displayedApplications.value.length < (applicationsFetch.data.value?.count || 0))
 
