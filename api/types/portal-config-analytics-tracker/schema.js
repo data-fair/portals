@@ -32,7 +32,6 @@ export default {
           type: 'object',
           description: '[Voir la documentation du plugin](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)',
           additionalProperties: false,
-          required: ['measurementIds'],
           properties: {
             measurementIds: {
               type: 'string',
