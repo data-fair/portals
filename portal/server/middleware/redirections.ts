@@ -10,4 +10,9 @@ export default defineEventHandler((event) => {
     const id = path.replace('/explore/dataset/', '').split('/')[0]
     return sendRedirect(event, `/datasets/${id}`, 301)
   }
+
+  if (path.match(/^\/datasets\/[^/]+\/full$/)) {
+    const newPath = path.replace('/full', '/table')
+    return sendRedirect(event, newPath, 301)
+  }
 })

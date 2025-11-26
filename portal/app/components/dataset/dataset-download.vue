@@ -56,7 +56,7 @@
       <v-list-item :title="`Export filtré aux formats ${join(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`">
         <template #append>
           <v-btn
-            :to="`/datasets/${dataset.slug}/full`"
+            :to="`/datasets/${dataset.slug}/table`"
             :title="t('table')"
             :icon="mdiTableLarge"
             variant="text"
@@ -154,26 +154,30 @@ const join = (array?: string[]): string => {
 
 <i18n lang="yaml">
   en:
-    preview: Data download
-    previewShort: Download
+    dataTooLargeAlertTitle: This dataset contains more than 10,000 rows.
+    dataTooLargeAlertText: Export in the following formats is only possible from the table view
     export: Export { format }
     formatSubtitle:
       csv: Text format for all spreadsheet software (separator ",")
       xlsx: Format suitable for Excel
       ods: Format suitable for Libre Office and other free spreadsheet software
       geojson: Portable format for geographic data
-    dataTooLargeAlertTitle: This dataset contains more than 10,000 rows.
-    dataTooLargeAlertText: Export in the following formats is only possible from the table view
+    or: or
+    preview: Data download
+    previewShort: Download
+    table: Table
   fr:
-    or: ou
-    preview: Téléchargement des données
-    previewShort: Télécharger
+
+    dataTooLargeAlertTitle: Ce jeu de données contient plus de 10 000 lignes.
+    dataTooLargeAlertText: L'export dans les formats suivants n'est possible qu'à partir de la vue tableau.
     export: Export { format }
     formatSubtitle:
       csv: Format textuel pour tous logiciels tableurs (séparateur ",")
       xlsx: Format adapté pour Excel
       ods: Format adapté pour Libre Office et autres logiciels tableurs libres
       geojson: Format portable pour données géographiques
-    dataTooLargeAlertTitle: Ce jeu de données contient plus de 10 000 lignes.
-    dataTooLargeAlertText: L'export dans les formats suivants n'est possible qu'à partir de la vue tableau.
+    or: ou
+    preview: Téléchargement des données
+    previewShort: Télécharger
+    table: Tableau
 </i18n>
