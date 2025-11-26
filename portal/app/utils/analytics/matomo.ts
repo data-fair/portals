@@ -21,8 +21,8 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
       // The matomo configuration array, cf https://developer.matomo.org/guides/tracking-javascript-guide
       // items are of the form ['API_method_name', parameters...]
       _window._paq = _window._paq || []
-      const trackerUrl = params.trackerBase + (params.trackerBase.endsWith('/') ? 'piwik.php' : '/piwik.php')
-      _window._paq.push(['setTrackerUrl', trackerUrl])
+      const trackerBase = params.trackerBase + (params.trackerBase.endsWith('/') ? '' : '/')
+      _window._paq.push(['setTrackerUrl', trackerBase + 'piwik.php'])
       _window._paq.push(['setSiteId', params.siteId])
       const d = document
       const g = d.createElement('script')
@@ -30,7 +30,7 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
       g.type = 'text/javascript'
       g.async = true
       g.defer = true
-      g.src = trackerUrl
+      g.src = trackerBase + 'piwik.js'
       if (params.nonce) g.nonce = params.nonce
       s!.parentNode!.insertBefore(g, s!)
     },
