@@ -89,48 +89,18 @@ export default {
         cols: { md: 6 }
       }
     },
-    color: {
-      type: 'string',
-      title: 'Couleur de la barre de navigation',
-      layout: { cols: { md: 4 } },
-      default: 'primary',
-      oneOf: [
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
-    },
+    color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background' },
     loginColor: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: 'Couleur du bouton de connexion',
-      layout: { cols: { md: 4 } },
-      default: 'navBar',
-      oneOf: [
-        { const: 'navBar', title: 'Couleur de la barre de navigation' },
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
+      description: 'Laisser vide pour utiliser la couleur de la barre de navigation.',
+      layout: { cols: { md: 4 } }
     },
     sliderColor: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: "Couleur de l'indicateur de l'élément actif",
-      layout: { cols: { md: 4 } },
-      oneOf: [
-        { const: 'default', title: 'Couleur par défaut' },
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
+      description: 'Laisser vide pour utiliser la couleur par défaut.',
+      layout: { cols: { md: 4 } }
     },
     align: {
       type: 'string',

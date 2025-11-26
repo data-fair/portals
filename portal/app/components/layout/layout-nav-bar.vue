@@ -26,7 +26,7 @@
       <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
         <notification-queue />
         <layout-personal-menu
-          :login-color="navBarConfig.loginColor === 'navBar' ? navBarConfig.color : navBarConfig.loginColor"
+          :login-color="navBarConfig.loginColor ? navBarConfig.loginColor : navBarConfig.color"
         />
       </v-toolbar-items>
     </v-row>

@@ -29,28 +29,14 @@ export default {
       ]
     },
     elevation: {
-      type: 'integer',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
       title: 'Élévation de la carte',
-      layout: { cols: { md: 6 } },
-      default: 0,
-      oneOf: [
-        { const: 0, title: 'Aucune' },
-        { const: 1, title: 'Légère' },
-        { const: 2, title: 'Modérée' },
-        { const: 3, title: 'Forte' }
-      ]
+      layout: { cols: { md: 6 } }
     },
     rounded: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
       title: 'Arrondi de la carte',
-      layout: { cols: { md: 6 } },
-      default: 'default',
-      oneOf: [
-        { const: '0', title: 'Aucun' },
-        { const: 'default', title: 'Normal' },
-        { const: 'lg', title: 'Moyen' },
-        { const: 'xl', title: 'Grand' }
-      ]
+      layout: { cols: { md: 6 } }
     },
     showSummary: {
       type: 'boolean',
@@ -196,15 +182,8 @@ export default {
           layout: 'switch',
         },
         color: {
-          type: 'string',
-          title: 'Couleur',
-          layout: { cols: { md: 6 } },
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
+          layout: { cols: { md: 6 } }
         },
         elevation: {
           type: 'integer',
@@ -230,16 +209,8 @@ export default {
           ]
         },
         rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          layout: { cols: { md: 6 } },
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 6 } }
         },
         showIcon: {
           type: 'boolean',
@@ -251,18 +222,12 @@ export default {
           default: true
         },
         iconColor: {
-          type: 'string',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
             cols: { md: 6 }
-          },
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
+          }
         }
       }
     },
@@ -301,39 +266,16 @@ export default {
           ]
         },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          layout: { cols: { md: 6 } },
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 6 } }
         },
         density: {
-          type: 'string',
-          title: 'Densité',
-          layout: { cols: { md: 6 } },
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 6 } }
         },
         rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          layout: { cols: { md: 6 } },
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 6 } }
         }
       }
     }

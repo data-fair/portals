@@ -374,7 +374,7 @@ export default {
               type: 'string',
               title: 'Libellé'
             },
-            icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+            icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
             children: {
               type: 'array',
               title: '',

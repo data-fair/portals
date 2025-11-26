@@ -8,7 +8,9 @@
       <slot />
     </v-container>
   </v-main>
-  <layout-breadcrumbs v-if="portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both'" />
+  <layout-breadcrumbs
+    v-if="portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both'"
+  />
   <LayoutFooter />
   <LayoutScrollToTop />
 </template>
