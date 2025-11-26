@@ -34,8 +34,11 @@ export default {
           additionalProperties: false,
           properties: {
             measurementIds: {
-              type: 'string',
-              title: 'Google Analytics MEASUREMENT IDs'
+              title: 'Google Analytics MEASUREMENT IDs',
+              type: 'array',
+              items: {
+                type: 'string'
+              }
             }
           }
         },
