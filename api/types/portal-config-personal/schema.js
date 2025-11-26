@@ -8,17 +8,9 @@ export default {
   required: ['navigationColor', 'hidePages', 'accountPages'],
   properties: {
     navigationColor: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: "Couleur de la barre de navigation de l'espace personnel",
       default: 'primary',
-      oneOf: [
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
     },
     hidePages: {
       type: 'array',
@@ -63,7 +55,7 @@ export default {
             title: 'Libellé du lien',
             layout: { cols: { md: 4 } }
           },
-          icon: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/icon' },
+          icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
           href: {
             type: 'string',
             title: 'URL de la page',

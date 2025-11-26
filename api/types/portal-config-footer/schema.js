@@ -26,17 +26,8 @@ export default {
   required: ['color', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
   properties: {
     color: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: 'Couleur du pied de page',
-      default: 'primary',
-      oneOf: [
-        { const: 'primary', title: 'Couleur principale' },
-        { const: 'secondary', title: 'Couleur secondaire' },
-        { const: 'accent', title: 'Couleur accentuée' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ],
       layout: { cols: { md: 4 } }
     },
     copyright: {
@@ -156,17 +147,8 @@ export default {
       title: 'Slogan'
     },
     sloganColor: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
       title: 'Couleur du slogan',
-      oneOf: [
-        { const: 'primary', title: 'Primaire' },
-        { const: 'secondary', title: 'Secondaire' },
-        { const: 'accent', title: 'Accentuée' },
-        { const: 'info', title: 'Information' },
-        { const: 'success', title: 'Succès' },
-        { const: 'error', title: 'Erreur' },
-        { const: 'warning', title: 'Avertissement' }
-      ],
       layout: { cols: { md: 4 } }
     },
     sloganPosition: {

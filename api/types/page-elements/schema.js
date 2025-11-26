@@ -179,7 +179,7 @@ export default {
           ],
           default: 'h3',
         },
-        color: { $ref: '#/$defs/color' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
         centered: {
           type: 'boolean',
           title: 'Center the title',
@@ -188,7 +188,7 @@ export default {
           },
           default: false,
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
           type: 'object',
           title: 'Line configuration',
@@ -212,7 +212,7 @@ export default {
               ],
               default: 'none'
             },
-            color: { $ref: '#/$defs/color' }
+            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' }
           }
         }
       }
@@ -289,8 +289,8 @@ export default {
             }
           ]
         },
-        icon: { $ref: '#/$defs/icon' },
-        color: { $ref: '#/$defs/color' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
         title: {
           title: 'Titre',
           type: 'string',
@@ -527,12 +527,8 @@ export default {
       },
       required: ['type', 'opacity', 'thickness'],
       properties: {
-        type: {
-          const: 'divider'
-        },
-        color: {
-          $ref: '#/$defs/color'
-        },
+        type: { const: 'divider' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
         content: {
           title: 'Contenu',
           type: 'string',
@@ -646,7 +642,7 @@ export default {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: '#/$defs/color-background' },
+            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
@@ -770,36 +766,13 @@ export default {
           type: 'string'
         },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         // density: {
-        //   type: 'string',
-        //   title: 'Densité',
-        //   default: 'comfortable',
-        //   oneOf: [
-        //     { const: 'default', title: 'Normale' },
-        //     { const: 'comfortable', title: 'Confortable' },
-        //     { const: 'compact', title: 'Compacte' }
-        //   ]
+        //   $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         // },
         rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
         border: {
           title: 'Bordure',
@@ -816,14 +789,29 @@ export default {
             listEditMode: 'inline'
           },
           items: {
-            $ref: '#/$defs/button'
+            type: 'object',
+            title: 'Bouton',
+            required: ['color'],
+            default: { color: 'primary' },
+            properties: {
+              label: {
+                type: 'string',
+                title: 'Libellé'
+              },
+              href: {
+                type: 'string',
+                title: 'URL'
+              },
+              icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+              color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' }
+            }
           }
         },
         background: {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: '#/$defs/color-background' },
+            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
@@ -1056,7 +1044,7 @@ export default {
                 title: 'Titre onglet',
                 type: 'string'
               },
-              icon: { $ref: '#/$defs/icon' },
+              icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
               children: {
                 type: 'array',
                 layout: 'none',
@@ -1085,38 +1073,15 @@ export default {
           const: 'search'
         },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          type: 'string',
-          title: 'Densité',
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
-        color: { $ref: '#/$defs/color' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
         fullWidth: {
           type: 'boolean',
           title: 'Pleine largeur',
@@ -1142,51 +1107,11 @@ export default {
       },
       required: ['type'],
       properties: {
-        type: {
-          const: 'topics'
-        },
-        color: {
-          type: 'string',
-          title: 'Couleur',
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
-        },
-        elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
-        },
-        density: {
-          type: 'string',
-          title: 'Densité',
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
-        },
-        rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
-        },
+        type: { const: 'topics' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes des thématiques',
@@ -1194,17 +1119,9 @@ export default {
           default: true
         },
         iconColor: {
-          type: 'string',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
           title: 'Couleur des icônes des thématiques',
-          layout: {
-            if: 'parent.data?.showIcon === true'
-          },
-          oneOf: [
-            { const: 'default', title: 'Couleur de la thématique' },
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
+          layout: { if: 'parent.data?.showIcon === true' }
         },
         centered: {
           type: 'boolean',
@@ -1239,28 +1156,21 @@ export default {
             ]
           }
         },
-        color: { $ref: '#/$defs/color' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         rounded: {
           type: 'string',
-          title: 'Arrondi',
+          title: 'Rounded',
+          'x-i18n-title': { fr: 'Arrondi' },
           default: 'default',
           oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' },
-            { const: 'shaped', title: 'Coins opposés' }
+            { const: '0', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normal' } },
+            { const: 'lg', title: 'Medium', 'x-i18n-title': { fr: 'Moyen' } },
+            { const: 'xl', title: 'Large', 'x-i18n-title': { fr: 'Grand' } },
+            { const: 'shaped', title: 'Opposite corners', 'x-i18n-title': { fr: 'Coins opposés' } }
           ]
         },
         fullWidth: {
@@ -1806,93 +1716,6 @@ export default {
     },
 
     // Reusable definitions
-    icon: {
-      type: 'object',
-      title: "Configuration de l'icône",
-      layout: 'card',
-      properties: {
-        mdi: {
-          type: 'object',
-          title: 'Icône MDI',
-          required: ['name', 'svg', 'svgPath'],
-          layout: {
-            getItems: {
-              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
-              itemKey: 'data.name',
-              itemTitle: 'data.name',
-              itemIcon: 'data.svg',
-              itemsResults: 'data.results'
-            },
-            cols: { md: 6 }
-          },
-          properties: {
-            name: { type: 'string' },
-            svg: { type: 'string' },
-            svgPath: { type: 'string' }
-          }
-        },
-        custom: {
-          type: 'string',
-          title: 'Icône personnalisée',
-          description: 'Seul les SVG Path sont supportés.',
-          layout: { cols: { md: 6 } }
-        },
-        color: { $ref: '#/$defs/color' }
-      }
-    },
-    color: {
-      type: 'string',
-      title: 'Couleur',
-      oneOf: [
-        { const: 'primary', title: 'Primaire' },
-        { const: 'secondary', title: 'Secondaire' },
-        { const: 'accent', title: 'Accentuée' },
-        { const: 'info', title: 'Information' },
-        { const: 'success', title: 'Succès' },
-        { const: 'error', title: 'Erreur' },
-        { const: 'warning', title: 'Avertissement' }
-      ]
-    },
-    'color-background': {
-      type: 'string',
-      title: 'Couleur',
-      oneOf: [
-        { const: 'primary', title: 'Primaire' },
-        { const: 'secondary', title: 'Secondaire' },
-        { const: 'accent', title: 'Accentuée' },
-        { const: 'info', title: 'Information' },
-        { const: 'success', title: 'Succès' },
-        { const: 'error', title: 'Erreur' },
-        { const: 'warning', title: 'Avertissement' },
-        { const: 'surface', title: 'Couleur des surfaces' },
-        { const: 'surface-inverse', title: 'Couleur inversée des surfaces' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
-    },
-    button: {
-      type: 'object',
-      title: 'Bouton',
-      required: ['color'],
-      default: {
-        color: 'primary'
-      },
-      properties: {
-        label: {
-          type: 'string',
-          title: 'Libellé'
-        },
-        href: {
-          type: 'string',
-          title: 'URL'
-        },
-        icon: {
-          $ref: '#/$defs/icon'
-        },
-        color: {
-          $ref: '#/$defs/color'
-        }
-      }
-    },
     'margin-bottom': {
       title: 'Espacement inférieur',
       type: 'integer',

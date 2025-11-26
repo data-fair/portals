@@ -130,22 +130,18 @@
     >
       <v-col v-bind="metadataColProps">
         <template v-if="!dataset.isMetaOnly">
-          <dataset-table-preview
-            v-if="!$vuetify.display.smAndDown"
-            :dataset="dataset"
-            :action-style="portalConfig.datasets.page.actionsStyle"
-          />
           <action-btn
-            :to="`/datasets/${dataset.slug}/full`"
+            :to="`/datasets/${dataset.slug}/table`"
             :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
-            :short-text="t('shortText.table')"
           />
-          <dataset-map-preview
-            v-if="!$vuetify.display.smAndDown && dataset.bbox?.length"
-            :dataset="dataset"
+          <action-btn
+            v-if="dataset.bbox?.length"
+            :to="`/datasets/${dataset.slug}/map`"
             :action-style="portalConfig.datasets.page.actionsStyle"
+            :icon="mdiMapMarker"
+            :text="t('text.map')"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown"
@@ -158,7 +154,10 @@
 
           <dataset-download :dataset="dataset" />
           <dataset-schema :dataset="dataset" />
-          <dataset-embed v-if="!$vuetify.display.smAndDown" :dataset="dataset" />
+          <dataset-embed
+            v-if="!$vuetify.display.smAndDown"
+            :dataset="dataset"
+          />
         </template>
 
         <dataset-attachments-preview
@@ -187,7 +186,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
-import { mdiCog, mdiTableLarge } from '@mdi/js'
+import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 type Dataset = {
@@ -292,14 +291,14 @@ const avatarUrl = computed(() => {
     share: 'Share:'
     shortText:
       api: API
-      table: Table
     size: 'Size:'
     spatialCoverage: 'Spatial coverage:'
     temporalCoverage: 'Temporal coverage:'
     temporalStart: 'From'
     text:
       api: API documentation
-      table: Full table
+      map: Map
+      table: Table
     thisSource: 'this source'
     updateFrequency: 'Update frequency:'
     updatedAt: Updated at
@@ -332,14 +331,14 @@ const avatarUrl = computed(() => {
     share: 'Partager :'
     shortText:
       api: API
-      table: Tableau
     size: 'Taille :'
     spatialCoverage: 'Couverture géographique :'
     temporalCoverage: 'Couverture temporelle :'
     temporalStart: 'À partir de'
     text:
       api: Documentation d'API
-      table: Tableau plein écran
+      map: Carte
+      table: Tableau
     thisSource: 'cette source'
     updateFrequency: 'Fréquence de mise à jour :'
     updatedAt: Mis à jour le

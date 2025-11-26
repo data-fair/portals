@@ -84,18 +84,8 @@ export default {
           }
         },
         color: {
-          type: 'string',
-          title: 'Couleur',
-          layout: { cols: { md: 4 } },
-          oneOf: [
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' },
-            { const: 'info', title: 'Information' },
-            { const: 'success', title: 'Succès' },
-            { const: 'error', title: 'Erreur' },
-            { const: 'warning', title: 'Avertissement' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: { cols: { md: 4 } }
         }
       }
     }

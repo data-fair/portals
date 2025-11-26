@@ -20,6 +20,7 @@
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="h-100"
+          max-height="200"
         />
         <v-divider vertical />
       </v-col>
@@ -94,21 +95,18 @@
             style="min-height: auto"
             @click.prevent
           >
-            <dataset-table-preview
-              :dataset="dataset"
-              :action-style="cardConfig.actionsStyle"
-            />
             <action-btn
-              :to="`/datasets/${dataset.slug}/full`"
+              :to="`/datasets/${dataset.slug}/table`"
               :action-style="cardConfig.actionsStyle"
               :icon="mdiTableLarge"
               :text="t('text.table')"
-              :short-text="t('shortText.table')"
             />
-            <dataset-map-preview
+            <action-btn
               v-if="dataset.bbox?.length"
-              :dataset="dataset"
+              :to="`/datasets/${dataset.slug}/map`"
               :action-style="cardConfig.actionsStyle"
+              :icon="mdiMapMarker"
+              :text="t('text.map')"
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
@@ -129,21 +127,18 @@
           class="pa-2 cursor-default d-flex flex-column ga-2"
           @click.prevent
         >
-          <dataset-table-preview
-            :dataset="dataset"
-            :action-style="cardConfig.actionsStyle"
-          />
           <action-btn
-            :to="`/datasets/${dataset.slug}/full`"
+            :to="`/datasets/${dataset.slug}/table`"
             :action-style="cardConfig.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
-            :short-text="t('shortText.table')"
           />
-          <dataset-map-preview
+          <action-btn
             v-if="dataset.bbox?.length"
-            :dataset="dataset"
+            :to="`/datasets/${dataset.slug}/map`"
             :action-style="cardConfig.actionsStyle"
+            :icon="mdiMapMarker"
+            :text="t('text.map')"
           />
           <action-btn
             :to="`/datasets/${dataset.slug}/api-doc`"
@@ -162,7 +157,7 @@
 import type { Account } from '@data-fair/lib-common-types/account'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
-import { mdiCog, mdiTableLarge } from '@mdi/js'
+import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { dataset, cardConfig, isPortalConfig } = defineProps<{
@@ -219,20 +214,20 @@ const thumbnailUrl = computed(() => {
     imageAlt: 'Thumbnail image for {title}'
     updatedAt: Updated at
     text:
-      table: Full table
+      table: Table
+      map: Map
       api: API documentation
     shortText:
-      table: Table
       api: API
 
   fr:
     imageAlt: 'Image de couverture pour le jeu de données {title}'
     updatedAt: Mis à jour le
     text:
-      table: Tableau plein écran
+      table: Tableau
+      map: Carte
       api: Documentation d'API
     shortText:
-      table: Tableau
       api: API
 
 </i18n>

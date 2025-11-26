@@ -1,6 +1,6 @@
 <template>
   <d-frame-wrapper
-    :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('fullscreen')}`"
+    :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('table')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/table`"
     class="fill-height"
     resize="no"
@@ -68,7 +68,7 @@ watch(datasetFetch.data, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'datasets' },
     { title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref },
-    { title: t('fullscreen') }
+    { title: t('table') }
   ])
 }, { immediate: true })
 
@@ -82,8 +82,8 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     dataset: Dataset
-    fullscreen: Fullscreen
+    table: Table
   fr:
     dataset: Jeu de données
-    fullscreen: Plein écran
+    table: Tableau
 </i18n>

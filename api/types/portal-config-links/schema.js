@@ -5,41 +5,19 @@ export default {
     linkConfig: {
       type: 'object',
       properties: {
-        color: { $ref: '#/$defs/color' },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          layout: { cols: { md: 4 } },
-          default: 1,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          default: 1, // TODO: check if default can be overwrite the $ref
+          layout: { cols: { md: 4 } }
         },
         density: {
-          type: 'string',
-          title: 'Densité',
-          layout: { cols: { md: 4 } },
-          default: 'default',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } }
         },
         rounded: {
-          type: 'string',
-          title: 'Arrondi',
-          layout: { cols: { md: 4 } },
-          default: 'default',
-          oneOf: [
-            { const: '0', title: 'Aucun' },
-            { const: 'default', title: 'Normal' },
-            { const: 'lg', title: 'Moyen' },
-            { const: 'xl', title: 'Grand' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 4 } }
         },
         variant: {
           type: 'string',
@@ -118,7 +96,7 @@ export default {
           title: 'Libellé',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
     },
     eventPage: {
@@ -145,7 +123,7 @@ export default {
           default: 'Événements',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
     },
     newsPage: {
@@ -172,7 +150,7 @@ export default {
           default: 'Actualités',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
     },
     genericPage: {
@@ -210,7 +188,7 @@ export default {
           title: 'Libellé',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
     },
     externalLink: {
@@ -226,58 +204,8 @@ export default {
           title: 'URL',
           type: 'string'
         },
-        icon: { $ref: '#/$defs/icon' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
-    },
-
-    // Other definitions
-    icon: {
-      type: 'object',
-      title: "Configuration de l'icône",
-      layout: 'card',
-      properties: {
-        mdi: {
-          type: 'object',
-          title: 'Icône MDI',
-          required: ['name', 'svg', 'svgPath'],
-          layout: {
-            getItems: {
-              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath',
-              itemKey: 'data.name',
-              itemTitle: 'data.name',
-              itemIcon: 'data.svg',
-              itemsResults: 'data.results'
-            },
-            cols: { md: 4 }
-          },
-          properties: {
-            name: { type: 'string' },
-            svg: { type: 'string' },
-            svgPath: { type: 'string' }
-          }
-        },
-        custom: {
-          type: 'string',
-          title: 'Icône personnalisée',
-          description: 'Seul les SVG Path sont supportés.',
-          layout: { cols: { md: 4 } }
-        },
-        color: { $ref: '#/$defs/color' }
-      }
-    },
-    color: {
-      type: 'string',
-      title: 'Couleur',
-      layout: { cols: { md: 4 } },
-      oneOf: [
-        { const: 'primary', title: 'Primaire' },
-        { const: 'secondary', title: 'Secondaire' },
-        { const: 'accent', title: 'Accentuée' },
-        { const: 'info', title: 'Information' },
-        { const: 'success', title: 'Succès' },
-        { const: 'error', title: 'Erreur' },
-        { const: 'warning', title: 'Avertissement' }
-      ]
     }
   }
 }
