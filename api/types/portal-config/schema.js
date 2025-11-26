@@ -122,6 +122,7 @@ export default {
       { title: 'Thématiques', children: ['topics'] },
       { title: 'Informations de contact', children: ['contactInformations'] },
       { title: 'Réseaux sociaux', children: ['socialShares', 'socialLinks'] },
+      { title: 'Suivi d\'activité', children: ['analytics'] },
       {
         title: 'Espace personnel',
         children: ['personal']
@@ -305,6 +306,17 @@ export default {
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialShares: { $ref: 'https://github.com/data-fair/portals/portal-config-social-shares' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
+    analytics: {
+      type: 'object',
+      description: "Configurez un système de suivi d'activité des utilisateurs (Web analytics).",
+      unevaluatedProperties: false,
+      required: ['tracker'],
+      properties: {
+        tracker: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-analytics-tracker'
+        }
+      }
+    },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
     topics: {
       type: 'array',

@@ -4,6 +4,7 @@
     :action-style="portalConfig.datasets.page.actionsStyle"
     :icon="mdiBell"
     :text="t('preview')"
+    :track-path="`/datasets/${dataset.slug}/notifications-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"
@@ -20,6 +21,7 @@ import { mdiBell } from '@mdi/js'
 const { dataset } = defineProps<{
   dataset: {
     id: string
+    slug: string
     title: string
     owner: {
       type: string
@@ -39,7 +41,6 @@ const src = computed(() => {
   if (dataset.owner.department) sender += ':' + dataset.owner.department
   return `/events/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
 })
-
 </script>
 
 <i18n lang="yaml">

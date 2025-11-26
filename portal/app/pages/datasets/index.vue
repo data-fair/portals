@@ -144,6 +144,10 @@ const datasetsQuery = computed(() => {
 })
 const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery, watch: false })
 
+watch(search, () => {
+  if (search.value) useAnalytics()?.track('search', { category: 'datasets', label: search.value })
+})
+
 // Computed property to check if there are more datasets to load
 const hasMore = computed(() => displayedDatasets.value.length < (datasetsFetch.data.value?.count || 0))
 

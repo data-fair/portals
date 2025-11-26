@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="1200">
+  <v-dialog v-model="dialog" max-width="1200">
     <template #activator="{ props }">
       <action-btn
         v-bind="props"
@@ -33,7 +33,7 @@
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiClose } from '@mdi/js'
 
-defineProps<{
+const { trackPath } = defineProps<{
   /** Dialog title */
   title?: string
   /** Button action style */
@@ -44,6 +44,15 @@ defineProps<{
   text: string
   /** Button short text */
   shortText?: string
+  /** Used to track a page view when this dialog is opened */
+  trackPath?: string
 }>()
 
+const dialog = ref(false)
+
+if (trackPath) {
+  watch(dialog, () => {
+    useAnalytics()?.page({ title: trackPath })
+  })
+}
 </script>

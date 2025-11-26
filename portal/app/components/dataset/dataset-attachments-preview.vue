@@ -4,6 +4,7 @@
     :action-style="portalConfig.datasets.card.actionsStyle"
     :icon="mdiAttachment"
     :text="t('preview')"
+    :track-path="`/datasets/${dataset.slug}/attachments-dialog`"
   >
     <dataset-attachments :dataset="dataset" />
   </layout-preview>
@@ -14,6 +15,7 @@ import { mdiAttachment } from '@mdi/js'
 
 type Dataset = {
   title: string
+  slug: string,
   attachments: {
     url: string
     title: string
@@ -29,7 +31,6 @@ type Dataset = {
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-
 </script>
 
 <i18n lang="yaml">

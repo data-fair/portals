@@ -3,9 +3,8 @@
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
-      <ClientOnly>
-        <UiNotif />
-      </ClientOnly>
+      <ClientOnly><UiNotif /></ClientOnly>
+      <ClientOnly><AcceptCookies /></ClientOnly>
     </NuxtLayout>
   </v-app>
 </template>

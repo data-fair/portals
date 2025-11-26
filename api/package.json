@@ -15,6 +15,7 @@
   "dependencies": {
     "@data-fair/lib-express": "^1.20.8",
     "@data-fair/lib-node": "^2.9.1",
+    "@data-fair/lib-utils": "^1.7.1",
     "@data-fair/portals-shared-markdown": "*",
     "config": "^4.0.0",
     "debug": "^4.4.1",
@@ -29,8 +30,5 @@
     "sharp": "^0.34.3",
     "slugify": "^1.6.6",
     "tinycolor2": "^1.6.0"
-  },
-  "devDependencies": {
-    "@data-fair/lib-utils": "^1.6.1"
   }
 }

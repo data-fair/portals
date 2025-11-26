@@ -5,6 +5,7 @@
     :icon="mdiCodeTags"
     :text="t('embed')"
     :short-text="t('embedShort')"
+    :track-path="`/applications/${application.slug}/embed-dialog`"
   >
     <v-card-text class="py-0">
       {{ t('description') }}
@@ -31,6 +32,7 @@ import { mdiCodeTags } from '@mdi/js'
 const { application } = defineProps<{
   application: {
     id: string
+    slug: string
     title: string
     exposedUrl: string
   }

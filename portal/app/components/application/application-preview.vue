@@ -5,6 +5,7 @@
     :icon="mdiFlipToFront"
     :text="t('preview')"
     :short-text="t('previewShort')"
+    :track-path="`/applications/${application.slug}/preview-dialog`"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"
@@ -20,12 +21,12 @@ import { mdiFlipToFront } from '@mdi/js'
 const { application } = defineProps<{
   application: {
     title: string
+    slug: string
     exposedUrl: string
   }
 }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-
 </script>
 
 <i18n lang="yaml">

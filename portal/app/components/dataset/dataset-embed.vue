@@ -5,6 +5,7 @@
     :icon="mdiCodeTags"
     :text="t('embed')"
     :short-text="t('embedShort')"
+    :track-path="`/datasets/${dataset.slug}/embed-dialog`"
   >
     <v-card-text class="py-0">
       <v-row>
@@ -51,6 +52,7 @@ import { mdiCodeTags } from '@mdi/js'
 const { dataset } = defineProps<{
   dataset: {
     id: string
+    slug: string
     title: string
     previews: {
       id: string
@@ -75,7 +77,6 @@ const stateUrl = ref(previewItems[0]?.href)
 const storeState = (state: { detail: [string, string] }) => {
   stateUrl.value = state.detail[1]
 }
-
 </script>
 
 <i18n lang="yaml">
