@@ -20,13 +20,7 @@ const portalConfigDefault: PortalConfig = {
       columns: 0
     },
     card: {},
-    page: {
-      metadataLocation: 'top',
-      attachmentsLocation: 'full',
-      showImage: false,
-      showDepartment: false,
-      actionsStyle: 'full'
-    }
+    page: {}
   },
   applications: {
     list: {},

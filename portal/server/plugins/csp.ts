@@ -26,7 +26,10 @@ export default defineNitroPlugin(async (nitroApp) => {
       cspPatch['connect-src'] = [...existingCsp['connect-src'], 'www.google-analytics.com']
     }
 
-    // TODO: allow frame-ancestors on restricted domains
+    // allow frame-ancestors on restricted domains
+    if (portal.config.allowedFrameAncestors && portal.config.allowedFrameAncestors.length > 0) {
+      cspPatch['frame-ancestors'] = [...existingCsp['frame-ancestors'], ...portal.config.allowedFrameAncestors]
+    }
 
     if (Object.keys(cspPatch).length) {
       event.context.security.rules.headers.contentSecurityPolicy = { ...existingCsp, ...cspPatch }

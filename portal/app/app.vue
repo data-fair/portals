@@ -13,6 +13,8 @@
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { useTheme } from 'vuetify'
+import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
+dFrameContent(useRouter())
 
 const { $portal } = useNuxtApp()
 const session = useSession()

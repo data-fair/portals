@@ -7,7 +7,7 @@
     <v-row class="ma-0">
       <!--
         All fields are wrapped in v-cols for responsive grid layout
-        that adapts to screen size and metadataLocation setting
+        that adapts to screen size and metadata.location setting
         (full width or single column)
       -->
 
