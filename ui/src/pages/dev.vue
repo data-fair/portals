@@ -36,7 +36,7 @@
     <p>
       Session :
     </p>
-    <pre>{{ session.state }}</pre>
+    <pre>{{ session }}</pre>
   </div>
 </template>
 

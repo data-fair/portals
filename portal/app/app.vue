@@ -16,7 +16,7 @@ import { useTheme } from 'vuetify'
 import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
 dFrameContent(useRouter())
 
-const { $portal } = useNuxtApp()
+const { $portal, $siteInfo } = useNuxtApp()
 const session = useSession()
 const theme = useTheme()
 
@@ -27,7 +27,7 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
 }
 
 provideNavigationStore()
-providePortalStore($portal)
+providePortalStore($portal, $siteInfo)
 provide('get-image-src', getImageSrc)
 
 const meta = [

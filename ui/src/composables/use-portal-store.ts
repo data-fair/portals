@@ -20,7 +20,7 @@ const createPortalStore = (config?: PortalConfig) => {
     set: (newConfig: PortalConfig) => { portal.value.config = newConfig }
   })
 
-  return { portal, portalConfig, preview: true }
+  return { portal, portalConfig, preview: true, siteInfo: session.site.value! }
 }
 
 export const providePortalStore = (config?: PortalConfig) => {

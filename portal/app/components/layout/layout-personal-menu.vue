@@ -79,13 +79,11 @@ defineProps<{
 }>()
 
 const { t } = useI18n()
-const { portal, preview } = usePortalStore()
+const { portal, preview, siteInfo } = usePortalStore()
 const session = useSession()
 
 let avatarUrl, isPortalOwner, backOfficeUrl
 if (!preview) {
-  const config = useRuntimeConfig()
-
   avatarUrl = computed(() => {
     if (!session.user.value) return
     return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
@@ -106,11 +104,8 @@ if (!preview) {
   const requestUrl = useRequestURL()
 
   backOfficeUrl = computed(() => {
-    const site = session.site.value
-    if (!site) return '/data-fair/'
-    if (site.authMode === 'onlyBackOffice') return config.mainPublicUrl
-    if (!site.isAccountMain && site.authMode === 'onlyOtherSite') {
-      return `${requestUrl.protocol}//${site.authOnlyOtherSite}/data-fair/`
+    if (siteInfo.authMode === 'onlyBackOffice' || siteInfo.authMode === 'onlyOtherSite') {
+      return `${requestUrl.protocol}//${siteInfo.authOnlyOtherSite}/data-fair/`
     }
     return '/data-fair/'
   })
