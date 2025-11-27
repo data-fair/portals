@@ -13,7 +13,13 @@ export default defineNitroPlugin(async (nitroApp) => {
 
     if (portal.config.analytics?.tracker?.type === 'matomo') {
       const trackerBase = portal.config.analytics?.tracker?.params.trackerBase
-      if (trackerBase) cspPatch['connect-src'] = [...existingCsp['connect-src'], trackerBase]
+      if (trackerBase) {
+        if (trackerBase.startsWith('//')) {
+          cspPatch['connect-src'] = [...existingCsp['connect-src'], 'http:' + trackerBase, 'https:' + trackerBase]
+        } else {
+          cspPatch['connect-src'] = [...existingCsp['connect-src'], trackerBase]
+        }
+      }
     }
     if (portal.config.analytics?.tracker?.type === 'google-analytics-v4') {
       // cf https://content-security-policy.com/examples/google-analytics/
