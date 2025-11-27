@@ -191,7 +191,7 @@ setBreadcrumbs([
 
 usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),
-  description: t('seo.description')
+  description: t('seo.description', { title: portalConfig.value.title })
 })
 
 </script>

@@ -56,6 +56,7 @@ const thumbnailUrl = computed(() => {
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
     return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
+  if (cardConfig.thumbnail?.default) return getPortalImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
 
@@ -74,8 +75,8 @@ watch(datasetFetch.data, () => {
 
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('dataset'),
-  description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description,
-  ogImage: () => thumbnailUrl.value
+  description: () => datasetFetch.data.value?.summary,
+  ogImage: thumbnailUrl
 })
 </script>
 

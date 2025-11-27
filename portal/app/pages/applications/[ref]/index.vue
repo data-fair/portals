@@ -185,7 +185,7 @@ watch(application, () => {
 
 usePageSeo({
   title: () => application.value?.title || t('application'),
-  description: () => application.value?.summary || application.value?.description || portalConfig.value.description,
+  description: () => application.value?.summary,
   ogImage: () => thumbnailUrl.value,
   ogType: 'article'
 })

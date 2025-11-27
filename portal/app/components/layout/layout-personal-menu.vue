@@ -34,6 +34,7 @@
           <v-avatar
             :image="avatarUrl"
             :size="40"
+            alt=""
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
             <p class="ml-2">{{ session.user.value.name }}</p>

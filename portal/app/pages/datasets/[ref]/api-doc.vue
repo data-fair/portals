@@ -20,7 +20,6 @@
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs } = useNavigationStore()
-const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 
@@ -36,7 +35,7 @@ watch(datasetFetch.data, () => {
 
 usePageSeo({
   title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
-  description: () => datasetFetch.data.value?.summary || datasetFetch.data.value?.description || portalConfig.value.description
+  description: () => datasetFetch.data.value?.summary
 })
 </script>
 

@@ -217,7 +217,6 @@ const sortItems = [
 <i18n lang="yaml">
   en:
     ascending: Ascending order
-    datasetsCount: '{count} dataset | {count} datasets'
     descending: Descending order
     export: Export filtered data as CSV
     filters:
@@ -226,9 +225,6 @@ const sortItems = [
       topics: Topics
       noTopics: No topics available
     search: Search
-    seo:
-      title: 'Datasets - {title}'
-      description: 'Browse and search open datasets available on {title}. Find data by topics, concepts, and more.'
     sort:
       by: Sort by
       createdAt: Creation date
@@ -237,7 +233,6 @@ const sortItems = [
 
   fr:
     ascending: Ordre croissant
-    datasetsCount: '{count} jeu de données | {count} jeux de données'
     descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV
     filters:
@@ -246,9 +241,6 @@ const sortItems = [
       topics: Thématiques
       noTopics: Aucune thématique disponible
     search: Rechercher
-    seo:
-      title: 'Données - {title}'
-      description: 'Explorez nos jeux de données. Trouvez des données par thèmes, concepts, et plus encore.'
     sort:
       by: Trier par
       createdAt: Date de création

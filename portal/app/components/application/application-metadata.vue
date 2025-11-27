@@ -23,6 +23,7 @@
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
+            :alt="t('ownerAvatar')"
             :title="application.owner.departmentName || application.owner.department || application.owner.name"
             :size="28"
           />
@@ -122,6 +123,7 @@ const avatarUrl = computed(() => {
   en:
     application: 'Application:'
     owner: 'Owner:'
+    ownerAvatar: 'Owner avatar'
     share: 'Share:'
     shortText:
       full: Fullscreen
@@ -131,6 +133,7 @@ const avatarUrl = computed(() => {
   fr:
     application: 'Application :'
     owner: 'Propriétaire :'
+    ownerAvatar: 'Avatar du propriétaire'
     share: 'Partager :'
     shortText:
       full: Plein écran

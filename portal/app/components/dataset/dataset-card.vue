@@ -20,7 +20,6 @@
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="h-100"
-          max-height="200"
         />
         <v-divider vertical />
       </v-col>

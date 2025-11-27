@@ -262,6 +262,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
 
@@ -385,7 +386,7 @@ const errorTitle = computed(() => {
   return t('datasetError')
 })
 
-const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
+const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/images/${id}`
@@ -402,6 +403,7 @@ const thumbnailUrl = computed(() => {
   if (cardConfig.thumbnail.useApplication && dataset.value.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.value.extras.applications[0].id}/capture?updatedAt=${dataset.value.extras.applications[0].updatedAt}`
   }
+  if (cardConfig.thumbnail?.default) return getPortalImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
 
@@ -414,8 +416,8 @@ watch(dataset, () => {
 
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
-  description: () => dataset.value?.summary || dataset.value?.description || portalConfig.value.description,
-  ogImage: () => thumbnailUrl.value,
+  description: () => dataset.value?.summary,
+  ogImage: thumbnailUrl,
   ogType: 'article'
 })
 

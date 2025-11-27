@@ -49,6 +49,7 @@
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
+            :alt="t('ownerAvatar')"
             :title="dataset.owner.departmentName || dataset.owner.department || dataset.owner.name"
             :size="28"
           />
@@ -303,6 +304,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => pageConfig.val
     keywords: 'Keywords:'
     license: 'License:'
     owner: 'Owner:'
+    ownerAvatar: 'Owner avatar'
     share: 'Share:'
     shortText:
       api: API
@@ -343,6 +345,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => pageConfig.val
     keywords: 'Mots-clés :'
     license: 'Licence :'
     owner: 'Propriétaire :'
+    ownerAvatar: 'Avatar du propriétaire'
     share: 'Partager :'
     shortText:
       api: API

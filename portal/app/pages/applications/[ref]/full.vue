@@ -54,7 +54,7 @@ watch(applicationFetch.data, () => {
 
 usePageSeo({
   title: () => applicationFetch.data.value?.title || t('application'),
-  description: () => applicationFetch.data.value?.summary || applicationFetch.data.value?.description || portalConfig.value.description,
+  description: () => applicationFetch.data.value?.summary,
   ogImage: () => thumbnailUrl.value
 })
 </script>
