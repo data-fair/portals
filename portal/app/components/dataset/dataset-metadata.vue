@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :rounded="pageConfig.metadata?.rounded"
-    :elevation="pageConfig.metadata?.elevation"
+    :rounded="metadataConfig?.rounded"
+    :elevation="metadataConfig?.elevation"
   >
     <!-- Dataset Metadata -->
     <v-row class="ma-0">
@@ -42,7 +42,7 @@
 
       <!-- Owner -->
       <v-col
-        v-if="portalConfig.datasets.page.metadata?.showDepartment && dataset.owner.department"
+        v-if="metadataConfig?.showDepartment && dataset.owner.department"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
@@ -117,7 +117,7 @@
       </v-col>
 
       <v-col
-        v-if="portalConfig.datasets.page.metadata?.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-if="metadataConfig?.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
@@ -137,21 +137,21 @@
           <action-btn
             v-if="shouldShowActionButton('table')"
             :to="`/datasets/${dataset.slug}/table`"
-            :action-style="portalConfig.datasets.page.actionsStyle"
+            :action-style="metadataConfig?.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
           />
           <action-btn
             v-if="dataset.bbox?.length && shouldShowActionButton('map')"
             :to="`/datasets/${dataset.slug}/map`"
-            :action-style="portalConfig.datasets.page.actionsStyle"
+            :action-style="metadataConfig?.actionsStyle"
             :icon="mdiMapMarker"
             :text="t('text.map')"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
             :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="portalConfig.datasets.page.actionsStyle"
+            :action-style="metadataConfig?.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
@@ -260,12 +260,12 @@ const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
-const pageConfig = computed(() => portalConfig.value.datasets.page)
+const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata)
 
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: pageConfig.value.metadata?.location !== 'right' ? 4 : 12
+  md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {
@@ -273,7 +273,7 @@ const avatarUrl = computed(() => {
   else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
 })
 
-const shouldShowActionButton = (button: ActionButtons[number]) => pageConfig.value.actionButtons?.includes(button)
+const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value?.actionButtons?.includes(button)
 
 </script>
 

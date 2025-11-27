@@ -8,54 +8,13 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   properties: {
-    actionButtons: {
-      type: 'array',
-      title: 'Action Buttons',
-      'x-i18n-title': {
-        fr: "Boutons d'actions"
-      },
-      description: "Choisir les boutons d'actions à afficher dans les métadonnées",
-      layout: { cols: { md: 4 } },
-      items: {
-        type: 'string',
-        oneOf: [
-          { const: 'download', title: 'Télécharger' },
-          { const: 'api', title: 'API' },
-          { const: 'embed', title: 'Intégrer' },
-          { const: 'notifications', title: 'Notifications' },
-          { const: 'attachments', title: 'Pièces jointes' },
-          { const: 'table', title: 'Tableau' },
-          { const: 'map', title: 'Carte' },
-          { const: 'schema', title: 'Schéma' }
-        ]
-      }
-    },
-
-    actionsStyle: {
-      type: 'string',
-      title: "Style des boutons d'actions",
-      layout: { cols: { md: 4 } },
-      default: 'full',
-      oneOf: [
-        { const: 'icon', title: 'Icône seulement' },
-        { const: 'full', title: 'Icône et texte' },
-        { const: 'text', title: 'Texte seulement' }
-      ]
-    },
-
-    sections: {
-      type: 'array',
-      title: 'Sections',
-      description: 'Choisir les sections à afficher dans la page',
-      layout: { cols: { md: 4 } },
-      items: {
-        type: 'string',
-        oneOf: [
-          { const: 'table', title: 'Tableau' },
-          { const: 'map', title: 'Carte' },
-          { const: 'schema', title: 'Schéma' },
-          { const: 'visualizations', title: 'Visualisations associées' }
-        ]
+    showData: {
+      type: 'boolean',
+      title: 'Afficher la section "Données"',
+      description: 'Affiche une section avec les onglets "Tableau", "Carte", "Schéma",... en fonction des vues disponibles.',
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
       }
     },
 
@@ -122,6 +81,39 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
           layout: { cols: { md: 4 } }
         },
+        actionButtons: {
+          type: 'array',
+          title: 'Action Buttons',
+          'x-i18n-title': {
+            fr: "Boutons d'actions"
+          },
+          layout: { cols: { md: 8 } },
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'download', title: 'Télécharger' },
+              { const: 'api', title: 'API' },
+              { const: 'embed', title: 'Intégrer' },
+              { const: 'notifications', title: 'Notifications' },
+              { const: 'attachments', title: 'Pièces jointes' },
+              { const: 'table', title: 'Tableau' },
+              { const: 'map', title: 'Carte' },
+              { const: 'schema', title: 'Schéma' }
+            ]
+          }
+        },
+
+        actionsStyle: {
+          type: 'string',
+          title: "Style des boutons d'actions",
+          layout: { cols: { md: 4 } },
+          default: 'full',
+          oneOf: [
+            { const: 'icon', title: 'Icône seulement' },
+            { const: 'full', title: 'Icône et texte' },
+            { const: 'text', title: 'Texte seulement' }
+          ]
+        },
         showDepartment: {
           type: 'boolean',
           title: 'Afficher le département du propriétaire',
@@ -148,7 +140,6 @@ export default {
       title: 'Configuration des applications',
       layout: {
         comp: 'card',
-        if: 'parent.data?.pageSections?.includes("visualizations")',
         children: [
           'display',
           'columns',
@@ -166,6 +157,7 @@ export default {
           default: 'side-by-side',
           layout: { cols: { md: 4 } },
           oneOf: [
+            { const: 'none', title: 'Aucun' },
             { const: 'card', title: 'Vignette' },
             { const: 'full-list', title: 'Liste pleine page' },
             { const: 'side-by-side', title: 'Liste en alternance' }

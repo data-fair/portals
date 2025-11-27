@@ -79,8 +79,9 @@ router.post('', async (req, res, next) => {
       list: {},
       card: {},
       page: {
-        actionButtons: ['download', 'api', 'embed', 'notifications', 'attachments', 'table', 'map', 'schema'],
-        sections: ['visualizations']
+        metadata: {
+          actionButtons: ['download', 'api', 'embed', 'notifications', 'attachments', 'table', 'map', 'schema']
+        }
       }
     },
     applications: {

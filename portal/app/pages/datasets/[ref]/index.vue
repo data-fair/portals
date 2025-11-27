@@ -19,6 +19,7 @@
         titleSize: 'h4',
         line: portalConfig.datasets.page.titleStyle
       }"
+      class="mt-n4"
     />
 
     <v-row>
@@ -47,70 +48,75 @@
       </v-col>
     </v-row>
 
-    <!-- Page Sections -->
-    <template v-if="!dataset.isMetaOnly">
-      <!-- Table section -->
-      <template v-if="sections?.includes('table')">
+    <!-- Data section with tabs -->
+    <template v-if="portalConfig.datasets.page.showData && !dataset.isMetaOnly">
         <page-element-title
           :element="{
             type: 'title',
-            content: t('sections.table'),
+            content: t('sections.data'),
             titleSize: 'h5',
             line: portalConfig.datasets.page.titleStyle
           }"
         />
-        <d-frame-wrapper
-          :iframe-title="`${t('sections.table')} - ${dataset.title}`"
-          :src="`/data-fair/embed/dataset/${dataset.id}/table`"
-          class="mb-8"
-          scrolling="no"
-          resize="no"
-          aspect-ratio
-        />
-      </template>
 
-      <!-- Map section -->
-      <template v-if="dataset.bbox?.length && sections?.includes('map')">
-        <page-element-title
-          :element="{
-            type: 'title',
-            content: t('sections.map'),
-            titleSize: 'h5',
-            line: portalConfig.datasets.page.titleStyle
-          }"
-        />
-        <d-frame-wrapper
-          :iframe-title="`${t('sections.map')} - ${dataset.title}`"
-          :src="`/data-fair/embed/dataset/${dataset.id}/map`"
-          class="mb-8"
-          scrolling="no"
-          resize="no"
-          aspect-ratio
-        />
-      </template>
+        <v-tabs
+          v-model="dataTab"
+          class="mb-4"
+        >
+          <v-tab value="table">
+            {{ t('sections.table') }}
+          </v-tab>
+          <v-tab
+            v-if="dataset.bbox?.length"
+            value="map"
+          >
+            {{ t('sections.map') }}
+          </v-tab>
+          <v-tab value="schema">
+            {{ t('sections.schema') }}
+          </v-tab>
+        </v-tabs>
 
-      <!-- Schema section -->
-      <template v-if="sections?.includes('schema')">
-        <page-element-title
-          :element="{
-            type: 'title',
-            content: t('sections.schema'),
-            titleSize: 'h5',
-            line: portalConfig.datasets.page.titleStyle
-          }"
-        />
-        <d-frame-wrapper
-          :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
-          :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
+        <v-tabs-window
+          v-model="dataTab"
           class="mb-8"
-          resize="no"
-          aspect-ratio
-        />
-      </template>
+        >
+          <v-tabs-window-item value="table">
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.table')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/table`"
+              scrolling="no"
+              resize="no"
+              aspect-ratio
+            />
+          </v-tabs-window-item>
+
+          <v-tabs-window-item
+            v-if="dataset.bbox?.length"
+            value="map"
+          >
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.map')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/map`"
+              scrolling="no"
+              resize="no"
+              aspect-ratio
+            />
+          </v-tabs-window-item>
+
+          <v-tabs-window-item value="schema">
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
+              resize="no"
+              aspect-ratio
+            />
+          </v-tabs-window-item>
+        </v-tabs-window>
     </template>
 
-    <!-- Applications / Visualizations -->
-    <template v-if="sections?.includes('visualizations') && orderedApplications.length">
+    <!-- Applications section -->
+    <template v-if="portalConfig.datasets.page.applications?.display && portalConfig.datasets.page.applications?.display !== 'none' && orderedApplications.length">
       <page-element-title
         :element="{
           type: 'title',
@@ -341,6 +347,8 @@ const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
 
+const dataTab = ref<string | undefined>()
+
 const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
   params: {
     html: true,
@@ -349,7 +357,6 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 })
 
 const dataset = computed(() => datasetFetch.data.value)
-const sections = computed(() => portalConfig.value.datasets.page.sections)
 
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
@@ -432,6 +439,7 @@ usePageSeo({
     datasetError: An error occurred while loading the dataset
     sections:
       application: Linked application | Linked applications
+      data: Data
       map: Map
       schema: Schema
       table: Table
@@ -444,6 +452,7 @@ usePageSeo({
     datasetError: Une erreur est survenue lors du chargement du jeu de données
     sections:
       application: Visualisation associée | Visualisations associées
+      data: Données
       map: Carte
       schema: Schéma
       table: Tableau

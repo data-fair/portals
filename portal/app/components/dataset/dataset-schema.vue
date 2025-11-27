@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.page.actionsStyle"
+    :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiViewList"
     :text="t('preview')"
     :short-text="t('previewShort')"
