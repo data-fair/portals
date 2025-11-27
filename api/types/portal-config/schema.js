@@ -16,7 +16,7 @@ export default {
     comp: 'expansion-panels',
     children: [
       { title: 'Métadonnées', children: ['title', 'description'] },
-      { title: 'Sécurité', children: ['allowRobots', 'authentication', 'allowedFrameAncestors'] },
+      { title: 'Sécurité', children: ['allowRobots', 'authentication', 'allowedFrameAncestors', 'allowedFrameSources'] },
       { title: 'Couleurs', children: ['theme'] },
       {
         title: 'Polices de caractères',
@@ -170,6 +170,12 @@ export default {
       type: 'array',
       title: 'Domaines autorisés à intégrer ce portail en iframe',
       description: 'Liste des domaines (ex: https://example.com) autorisés à afficher ce portail dans une iframe. Laissez vide pour interdire toute intégration en iframe.',
+      items: { type: 'string' }
+    },
+    allowedFrameSources: {
+      type: 'array',
+      title: 'Domaines autorisés pour les iframes intégrées dans ce portail',
+      description: 'Liste des domaines (ex: https://example.com) dont les contenus peuvent être affichés dans des iframes sur ce portail. Laissez vide pour interdire toute iframe externe.',
       items: { type: 'string' }
     },
     theme: { $ref: 'https://github.com/data-fair/lib/theme' },

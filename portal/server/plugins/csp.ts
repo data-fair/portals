@@ -31,6 +31,11 @@ export default defineNitroPlugin(async (nitroApp) => {
       cspPatch['frame-ancestors'] = [...existingCsp['frame-ancestors'], ...portal.config.allowedFrameAncestors]
     }
 
+    // allow frame-src for embedded iframes in the portal
+    if (portal.config.allowedFrameSources && portal.config.allowedFrameSources.length > 0) {
+      cspPatch['frame-src'] = [...existingCsp['frame-src'], ...portal.config.allowedFrameSources]
+    }
+
     if (Object.keys(cspPatch).length) {
       event.context.security.rules.headers.contentSecurityPolicy = { ...existingCsp, ...cspPatch }
     }
