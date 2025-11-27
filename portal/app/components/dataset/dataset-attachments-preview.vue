@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('preview') + ' - ' + dataset.title"
-    :action-style="portalConfig.datasets.card.actionsStyle"
+    :action-style="portalConfig.datasets.page.actionsStyle"
     :icon="mdiAttachment"
     :text="t('preview')"
     :track-path="`/datasets/${dataset.slug}/attachments-dialog`"

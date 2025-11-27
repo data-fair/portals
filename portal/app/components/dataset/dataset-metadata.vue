@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    :rounded="pageConfig.metadata?.rounded"
+    :elevation="pageConfig.metadata?.elevation"
+  >
     <!-- Dataset Metadata -->
     <v-row class="ma-0">
       <!--
@@ -39,7 +42,7 @@
 
       <!-- Owner -->
       <v-col
-        v-if="dataset.owner.department && portalConfig.datasets.page.showDepartment"
+        v-if="portalConfig.datasets.page.metadata?.showDepartment && dataset.owner.department"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
@@ -113,7 +116,7 @@
       </v-col>
 
       <v-col
-        v-if="portalConfig.datasets.page.attachmentsLocation === 'full' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-if="portalConfig.datasets.page.metadata?.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
@@ -131,20 +134,21 @@
       <v-col v-bind="metadataColProps">
         <template v-if="!dataset.isMetaOnly">
           <action-btn
+            v-if="shouldShowActionButton('table')"
             :to="`/datasets/${dataset.slug}/table`"
             :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
           />
           <action-btn
-            v-if="dataset.bbox?.length"
+            v-if="dataset.bbox?.length && shouldShowActionButton('map')"
             :to="`/datasets/${dataset.slug}/map`"
             :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiMapMarker"
             :text="t('text.map')"
           />
           <action-btn
-            v-if="!$vuetify.display.smAndDown"
+            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
             :to="`/datasets/${dataset.slug}/api-doc`"
             :action-style="portalConfig.datasets.page.actionsStyle"
             :icon="mdiCog"
@@ -152,20 +156,26 @@
             :short-text="t('shortText.api')"
           />
 
-          <dataset-download :dataset="dataset" />
-          <dataset-schema :dataset="dataset" />
+          <dataset-download
+            v-if="shouldShowActionButton('download')"
+            :dataset="dataset"
+          />
+          <dataset-schema
+            v-if="shouldShowActionButton('schema')"
+            :dataset="dataset"
+          />
           <dataset-embed
-            v-if="!$vuetify.display.smAndDown"
+            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed')"
             :dataset="dataset"
           />
         </template>
 
         <dataset-attachments-preview
-          v-if="portalConfig.datasets.page.attachmentsLocation === 'action' && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+          v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
           :dataset="dataset"
         />
         <dataset-notifications
-          v-if="portalConfig.authentication !== 'none'"
+          v-if="portalConfig.authentication !== 'none' && shouldShowActionButton('notifications')"
           :dataset="dataset"
         />
       </v-col>
@@ -186,6 +196,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
+import type { ActionButtons } from '#api/types/portal-config'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
@@ -248,16 +259,20 @@ const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
+const pageConfig = computed(() => portalConfig.value.datasets.page)
+
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.datasets.page.metadataLocation !== 'right' ? 4 : 12
+  md: pageConfig.value.metadata?.location !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {
   if (dataset.owner.department) return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`
   else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
 })
+
+const shouldShowActionButton = (button: ActionButtons[number]) => pageConfig.value.actionButtons?.includes(button)
 
 </script>
 

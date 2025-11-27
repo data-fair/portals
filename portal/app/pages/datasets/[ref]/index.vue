@@ -12,14 +12,19 @@
   />
 
   <template v-else-if="dataset">
-    <h1 class="text-h4 mb-4">
-      {{ dataset.title }}
-    </h1>
+    <page-element-title
+      :element="{
+        type: 'title',
+        content: dataset.title,
+        titleSize: 'h4',
+        line: portalConfig.datasets.page.titleStyle
+      }"
+    />
 
     <v-row>
       <!-- Dataset image and description -->
       <v-col
-        :md="portalConfig.datasets.page.metadataLocation === 'right' ? 8 : 12"
+        :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
         cols="12"
       >
         <img
@@ -29,25 +34,91 @@
           class="mb-4"
           style="max-height:300px"
         >
-        <!--eslint-disable-next-line vue/no-v-html -->
-        <div v-html="dataset.description" />
+        <div v-html="/*eslint-disable-line vue/no-v-html*/dataset.description" />
       </v-col>
 
       <!-- Metadata -->
       <v-col
-        :md="portalConfig.datasets.page.metadataLocation === 'right' ? 4 : 12"
-        :order-md="portalConfig.datasets.page.metadataLocation === 'top' ? 'first' : 1"
+        :md="portalConfig.datasets.page.metadata?.location === 'right' ? 4 : 12"
+        :order-md="portalConfig.datasets.page.metadata?.location === 'top' ? 'first' : 1"
         cols="12"
       >
         <dataset-metadata :dataset="dataset" />
       </v-col>
     </v-row>
 
-    <!-- Applications -->
-    <template v-if="orderedApplications.length && portalConfig.datasets.page.applications?.display !== 'none'">
-      <h2 class="text-h5 mt-8 mb-4">
-        {{ t('linkedApplication', { count: orderedApplications.length }) }}
-      </h2>
+    <!-- Page Sections -->
+    <template v-if="!dataset.isMetaOnly">
+      <!-- Table section -->
+      <template v-if="sections?.includes('table')">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.table'),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+        <d-frame-wrapper
+          :iframe-title="`${t('sections.table')} - ${dataset.title}`"
+          :src="`/data-fair/embed/dataset/${dataset.id}/table`"
+          class="mb-8"
+          scrolling="no"
+          resize="no"
+          aspect-ratio
+        />
+      </template>
+
+      <!-- Map section -->
+      <template v-if="dataset.bbox?.length && sections?.includes('map')">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.map'),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+        <d-frame-wrapper
+          :iframe-title="`${t('sections.map')} - ${dataset.title}`"
+          :src="`/data-fair/embed/dataset/${dataset.id}/map`"
+          class="mb-8"
+          scrolling="no"
+          resize="no"
+          aspect-ratio
+        />
+      </template>
+
+      <!-- Schema section -->
+      <template v-if="sections?.includes('schema')">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.schema'),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+        <d-frame-wrapper
+          :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
+          :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
+          class="mb-8"
+          resize="no"
+          aspect-ratio
+        />
+      </template>
+    </template>
+
+    <!-- Applications / Visualizations -->
+    <template v-if="sections?.includes('visualizations') && orderedApplications.length">
+      <page-element-title
+        :element="{
+          type: 'title',
+          content: t('sections.application', { count: orderedApplications.length }),
+          titleSize: 'h5',
+          line: portalConfig.datasets.page.titleStyle
+        }"
+      />
 
       <!-- Card display mode -->
       <v-row
@@ -118,10 +189,9 @@
                   color="primary"
                 />
               </NuxtLink>
-              <!--eslint-disable-next-line vue/no-v-html -->
               <div
                 class="mt-2"
-                v-html="app.description"
+                v-html="/*eslint-disable-line vue/no-v-html*/app.description"
               />
             </v-col>
             <v-col cols="12">
@@ -162,10 +232,9 @@
                   color="primary"
                 />
               </NuxtLink>
-              <!--eslint-disable-next-line vue/no-v-html -->
               <div
                 class="mt-2"
-                v-html="app.description"
+                v-html="/*eslint-disable-line vue/no-v-html*/app.description"
               />
             </v-col>
           </template>
@@ -173,6 +242,7 @@
       </template>
     </template>
 
+    <!-- Back to datasets link -->
     <v-row
       class="my-4"
       justify="center"
@@ -278,6 +348,7 @@ const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + rout
 })
 
 const dataset = computed(() => datasetFetch.data.value)
+const sections = computed(() => portalConfig.value.datasets.page.sections)
 
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
@@ -357,7 +428,11 @@ usePageSeo({
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
-    linkedApplication: Linked application | Linked applications
+    sections:
+      application: Linked application | Linked applications
+      map: Map
+      schema: Schema
+      table: Table
 
   fr:
     application: Visualisation
@@ -365,5 +440,9 @@ usePageSeo({
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
-    linkedApplication: Visualisation associée | Visualisations associées
+    sections:
+      application: Visualisation associée | Visualisations associées
+      map: Carte
+      schema: Schéma
+      table: Tableau
 </i18n>

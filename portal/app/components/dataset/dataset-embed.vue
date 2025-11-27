@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('embed') + ' - ' + dataset.title"
-    :action-style="portalConfig.applications.page.actionsStyle"
+    :action-style="portalConfig.datasets.page.actionsStyle"
     :icon="mdiCodeTags"
     :text="t('embed')"
     :short-text="t('embedShort')"
