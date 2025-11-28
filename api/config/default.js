@@ -16,6 +16,5 @@ export default {
   },
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
-  ingressControllers: [],
-  serveUi: true,
+  ingressControllers: []
 }

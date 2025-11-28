@@ -22,6 +22,7 @@
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "http-terminator": "^3.2.0",
+    "memoizee": "^0.4.17",
     "mongodb": "^6.17.0",
     "multer": "^2.0.2",
     "piscina": "^5.1.3",

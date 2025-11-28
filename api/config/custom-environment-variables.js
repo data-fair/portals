@@ -17,6 +17,5 @@ export default {
   ingressControllers: {
     __name: 'INGRESS_CONTROLLERS',
     __format: 'json'
-  },
-  serveUi: 'SERVE_UI',
+  }
 }

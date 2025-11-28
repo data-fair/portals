@@ -11,7 +11,7 @@ import imagesRouter from './images/router.ts'
 import fontsRouter from './fonts/router.ts'
 import fontAssetsRouter from './font-assets/router.ts'
 import { uiConfig } from './ui-config.ts'
-import config from '#config'
+import { getSiteHashes } from './utils/site.ts'
 
 const app = express()
 export default app
@@ -47,10 +47,9 @@ app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
-if (config.serveUi) {
-  app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
-    csp: { nonce: true, header: true }
-  }))
-}
+app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
+  csp: { nonce: true, header: true },
+  getSiteExtraParams: getSiteHashes
+}))
 
 app.use(errorHandler)

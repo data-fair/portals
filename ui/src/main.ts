@@ -23,7 +23,7 @@ import App from './App.vue'
   const router = createRouter({ history: createWebHistory($sitePath + '/portals-manager/'), routes })
   dFrameContent(router)
   const reactiveSearchParams = createReactiveSearchParams(router)
-  const session = await createSession({ siteInfo: true })
+  const session = await createSession({})
   const localeDayjs = createLocaleDayjs(session.state.lang)
   const uiNotif = createUiNotif()
   const vuetify = createVuetify({
