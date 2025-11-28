@@ -47,18 +47,4 @@ const vjsfDefaults = {
     color: 'primary'
   }
 }
-
-/* const onElementsUpdate = (elements: PageElement[], childKey: string, ) => {
-  if (!element.value) return
-  console.log('onElementsUpdate', childKey, elements)
-  const newValue = { ...element.value }
-  const childKeyParts = childKey.split('.')
-  if (childKeyParts.length === 2) {
-    // @ts-ignore
-    newValue[childKeyParts[0]] = { ...newValue[childKeyParts[0]], [childKeyParts[1]]: elements }
-  } else {
-    newValue[childKeyParts[0]] = elements
-  }
-  element.value = newValue
-} */
 </script>

@@ -183,41 +183,26 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         elevation: {
-          type: 'integer',
-          title: 'Élévation',
-          layout: { cols: { md: 6 } },
-          default: 0,
-          oneOf: [
-            { const: 0, title: 'Aucune' },
-            { const: 1, title: 'Légère' },
-            { const: 2, title: 'Modérée' },
-            { const: 3, title: 'Forte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 4 } }
         },
         density: {
-          type: 'string',
-          title: 'Densité',
-          layout: { cols: { md: 6 } },
-          default: 'comfortable',
-          oneOf: [
-            { const: 'default', title: 'Normale' },
-            { const: 'comfortable', title: 'Confortable' },
-            { const: 'compact', title: 'Compacte' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: true
         },
@@ -226,7 +211,7 @@ export default {
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
-            cols: { md: 6 }
+            cols: { md: 4 }
           }
         }
       }

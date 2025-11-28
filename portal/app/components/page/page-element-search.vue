@@ -9,26 +9,32 @@
       v-model="searchQuery"
       :label="t('searchLabel')"
       :density="element.density"
-      :rounded="element.rounded"
-      :color="element.color || 'primary'"
-      :base-color="element.color || 'primary'"
-      bg-color="surface"
+      :rounded="element.btnPosition === 'attached' ? `e-0 s-${element.rounded}` : element.rounded"
+      :color="element.color"
+      :base-color="element.color"
+      :variant="element.border ? 'outlined' : 'solo'"
       :max-width="!element.fullWidth ? '400' : undefined"
-      variant="solo"
+      :append-inner-icon="element.btnPosition === 'included' ? mdiMagnify : undefined"
       autofocus
       flat
       hide-details
+      bg-color="surface"
       @keyup.enter="onSearch"
+      @click:append="onSearch"
+      @click:append-inner="onSearch"
     >
-      <template #append>
+      <template
+        v-if="element.btnPosition === 'attached' || element.btnPosition === 'spaced'"
+        #append
+      >
         <v-btn
-          :color="element.color || 'primary'"
-          stacked
+          :color="element.color"
           :title="t('searchBtn')"
           :density="element.density"
-          :rounded="element.rounded"
-          :elevation="element.elevation"
-          @click="onSearch"
+          :rounded="element.btnPosition === 'attached' ? `s-0 e-${element.rounded}` : element.rounded"
+          :elevation="element.btnPosition === 'spaced' ? element.elevation : 0"
+          :class="element.btnPosition === 'spaced' ? 'ml-4 h-100' : 'h-100'"
+          stacked
         >
           <v-icon :icon="mdiMagnify" />
         </v-btn>
@@ -78,6 +84,7 @@ const onSearch = () => {
 </i18n>
 
 <style scoped>
+/* Remove margin between input and appended button for attached button position */
 :deep(.v-input--horizontal .v-input__append) {
   margin-inline-start: 0 !important;
 }

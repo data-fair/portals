@@ -1072,9 +1072,6 @@ export default {
         type: {
           const: 'search'
         },
-        elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
-        },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
@@ -1082,6 +1079,29 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
+        btnPosition: {
+          type: 'string',
+          title: 'Position du bouton',
+          description: 'Définit la position du bouton de recherche par rapport à la barre de saisie',
+          default: 'included',
+          oneOf: [
+            { const: 'included', title: 'Included', 'x-i18n-title': { fr: 'Inclus' } },
+            { const: 'attached', title: 'Attached', 'x-i18n-title': { fr: 'Collé' } },
+            { const: 'spaced', title: 'Spaced', 'x-i18n-title': { fr: 'Espacé' } }
+          ]
+        },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          title: 'Élévation du bouton',
+          layout: { if: 'parent.data?.btnPosition !== "spaced"' }
+        },
+        border: {
+          type: 'boolean',
+          title: 'Bordure',
+          description: 'Afficher une bordure autour de la barre de recherche',
+          layout: 'switch',
+          default: false
+        },
         fullWidth: {
           type: 'boolean',
           title: 'Pleine largeur',

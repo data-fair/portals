@@ -142,26 +142,26 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 4 } }
         },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: true
         },
@@ -170,7 +170,7 @@ export default {
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
-            cols: { md: 6 }
+            cols: { md: 4 }
           }
         }
       }
