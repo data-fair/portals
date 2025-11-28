@@ -3,7 +3,7 @@
   <v-tabs
     v-model="modelTab"
     :slider-color="navBarConfig.sliderColor"
-    :class="{ 'ml-8': navBarConfig.align === 'left' }"
+    :class="{ 'ml-8': navBarConfig.align === 'left', 'nav-tabs': true }"
     show-arrows
   >
     <template
@@ -85,6 +85,15 @@ const route = useRoute()
 const { locale } = useI18n()
 const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
 const { preview } = usePortalStore()
+
+// we use MutationObserver to watch for change of class .v-slide-group--is-overflowing by vuetify
+// https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VSlideGroup/VSlideGroup.tsx#L153
+const overflowing = defineModel('overflowing', { type: Boolean })
+const observer = new MutationObserver(() => {
+  if (document.querySelector('.nav-tabs.v-slide-group--is-overflowing')) overflowing.value = true
+})
+onMounted(() => observer.observe(document.querySelector('.nav-tabs')!, { attributes: true, attributeFilter: ['class'] }))
+onUnmounted(() => observer.disconnect())
 
 /** Get the active tab index based on the current route */
 const computedActiveTab = computed(() => {
