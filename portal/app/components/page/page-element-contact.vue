@@ -2,103 +2,129 @@
   <div :class="element.mb !== 0 && `mb-${element.mb ?? 4}`">
     <v-row>
       <v-col v-if="!tokenFetch?.error.value">
-        <v-form ref="formRef" v-model="valid">
-          <v-text-field
-            v-model="message.from"
-            :label="t('email')"
-            :rules="[rules.required(), rules.email()]"
-          />
+        <v-defaults-provider
+          :defaults="{
+            VTextField: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+            VTextarea: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+            VSelect: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+            VAutocomplete: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+          }"
+        >
+          <v-form
+            ref="formRef"
+            v-model="valid"
+          >
+            <v-text-field
+              v-model="message.from"
+              :label="t('email')"
+              :rules="[rules.required(), rules.email()]"
+            />
 
-          <!-- Additional fields -->
-          <template v-if="element.additionalFields && element.additionalFields.length">
-            <template
-              v-for="(field, index) in element.additionalFields"
-              :key="index"
-            >
-              <!-- Text field -->
-              <v-text-field
-                v-if="field.type === 'text'"
-                v-model="additionalData[index]"
-                :label="field.label"
-                :rules="field.required ? [rules.required()] : []"
-                :clearable="!field.required"
-              />
+            <!-- Additional fields -->
+            <template v-if="element.additionalFields && element.additionalFields.length">
+              <template
+                v-for="(field, index) in element.additionalFields"
+                :key="index"
+              >
+                <!-- Text field -->
+                <v-text-field
+                  v-if="field.type === 'text'"
+                  v-model="additionalData[index]"
+                  :label="field.label"
+                  :rules="field.required ? [rules.required()] : []"
+                  :clearable="!field.required"
+                />
 
-              <!-- Select field -->
-              <v-select
-                v-else-if="field.type === 'select'"
-                v-model="additionalData[index]"
-                :label="field.label"
-                :items="field.options || []"
-                :rules="field.required ? [rules.required()] : []"
-                :multiple="field.multiple"
-                :clearable="!field.required"
-              />
+                <!-- Select field -->
+                <v-select
+                  v-else-if="field.type === 'select'"
+                  v-model="additionalData[index]"
+                  :label="field.label"
+                  :items="field.options || []"
+                  :rules="field.required ? [rules.required()] : []"
+                  :multiple="field.multiple"
+                  :clearable="!field.required"
+                />
 
-              <!-- Dataset select -->
-              <v-autocomplete
-                v-else-if="field.type === 'dataset'"
-                v-model="additionalData[index]"
-                :label="field.label || t('dataset')"
-                :items="datasetsFetch?.data.value?.results ?? []"
-                :loading="datasetsFetch?.status.value === 'pending'"
-                :rules="field.required ? [rules.required()] : []"
-                item-title="title"
-                item-value="id"
-                :clearable="!field.required"
-              />
+                <!-- Dataset select -->
+                <v-autocomplete
+                  v-else-if="field.type === 'dataset'"
+                  v-model="additionalData[index]"
+                  :label="field.label || t('dataset')"
+                  :items="datasetsFetch?.data.value?.results ?? []"
+                  :loading="datasetsFetch?.status.value === 'pending'"
+                  :rules="field.required ? [rules.required()] : []"
+                  item-title="title"
+                  item-value="id"
+                  :clearable="!field.required"
+                />
 
-              <!-- Application select -->
-              <v-autocomplete
-                v-else-if="field.type === 'application'"
-                v-model="additionalData[index]"
-                :label="field.label || t('application')"
-                :items="applicationsFetch?.data.value?.results ?? []"
-                :loading="applicationsFetch?.status.value === 'pending'"
-                :rules="field.required ? [rules.required()] : []"
-                item-title="title"
-                item-value="id"
-                :clearable="!field.required"
-              />
+                <!-- Application select -->
+                <v-autocomplete
+                  v-else-if="field.type === 'application'"
+                  v-model="additionalData[index]"
+                  :label="field.label || t('application')"
+                  :items="applicationsFetch?.data.value?.results ?? []"
+                  :loading="applicationsFetch?.status.value === 'pending'"
+                  :rules="field.required ? [rules.required()] : []"
+                  item-title="title"
+                  item-value="id"
+                  :clearable="!field.required"
+                />
+              </template>
             </template>
-          </template>
 
-          <v-text-field
-            v-model="message.subject"
-            :label="t('subject')"
-            :rules="[rules.required(), rules.minLength(10), rules.maxLength(150)]"
-            :counter="150"
-          />
-          <v-textarea
-            v-model="message.text"
-            :label="t('message')"
-            :rules="[rules.required(), rules.minLength(50), rules.maxLength(3000)]"
-            :counter="3000"
-          />
+            <v-text-field
+              v-model="message.subject"
+              :label="t('subject')"
+              :rules="[rules.required(), rules.minLength(10), rules.maxLength(150)]"
+              :counter="150"
+            />
+            <v-textarea
+              v-model="message.text"
+              :label="t('message')"
+              :rules="[rules.required(), rules.minLength(50), rules.maxLength(3000)]"
+              :counter="3000"
+            />
 
-          <div class="d-flex justify-center">
-            <v-btn
-              :disabled="!valid"
-              :loading="sendMessage.loading.value"
-              color="primary"
-              @click="sendMessage.execute()"
-            >
-              {{ t('send') }}
-            </v-btn>
-          </div>
-        </v-form>
+            <div class="d-flex justify-center">
+              <v-btn
+                :color="buttonConfig?.color"
+                :density="buttonConfig?.density"
+                :elevation="buttonConfig?.elevation"
+                :rounded="buttonConfig?.rounded"
+                :variant="buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined"
+                :class="{ 'text-none': !buttonConfig?.uppercase }"
+                :text="t('send')"
+                :disabled="!valid"
+                :loading="sendMessage.loading.value"
+                @click="sendMessage.execute()"
+              >
+                <template
+                  v-if="buttonConfig?.showIcon"
+                  #prepend
+                >
+                  <v-icon :icon="mdiSend" />
+                </template>
+              </v-btn>
+            </div>
+          </v-form>
+        </v-defaults-provider>
       </v-col>
       <v-col
         v-if="element.showInfo || element.showSocial"
         :cols="12"
         :md="4"
       >
-        <v-card>
+        <v-card
+          :elevation="element.elevation"
+          :rounded="element.rounded"
+        >
           <v-card-text>
             <template v-if="element.showInfo">
               <div
                 v-if="portalConfig.contactInformations.infos"
-                v-html="portalConfig.contactInformations.infos"
+                v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos"
               />
               <v-divider
                 v-if="portalConfig.contactInformations.infos"
@@ -125,7 +151,7 @@
 
             <template v-if="element.showSocial && Object.keys(portalConfig.socialLinks).length">
               <v-divider
-                v-if="portalConfig.contactInformations.phone || portalConfig.contactInformations.website"
+                v-if="element.showInfo"
                 class="my-2"
               />
               <p class="text-caption">{{ t('socialMedia') }}</p>
@@ -142,7 +168,7 @@
 import type { ContactElement } from '#api/types/page-config'
 import { useRules } from 'vuetify/labs/rules'
 import { useAsyncAction } from '@data-fair/lib-vue/async-action.js'
-import { mdiPhone, mdiWeb } from '@mdi/js'
+import { mdiPhone, mdiWeb, mdiSend } from '@mdi/js'
 
 const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
@@ -153,6 +179,8 @@ const formRef = ref()
 const newMessage = { from: '', subject: '', text: '' }
 const valid = ref(false)
 const message = ref({ ...newMessage })
+
+const buttonConfig = computed(() => (!element.sendButton?.usePortalConfig && element.sendButton?.config) ? element.sendButton?.config : portalConfig.value.navLinksConfig)
 
 // Additional fields data
 const additionalData = ref<Record<number, string | string[] | undefined>>({})

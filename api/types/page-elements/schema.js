@@ -1199,6 +1199,23 @@ export default {
         type: {
           const: 'contact'
         },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        showInfo: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les informations de contact'
+        },
+        showSocial: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les liens de réseaux sociaux'
+        },
+        mb: { $ref: '#/$defs/margin-bottom' },
         additionalFields: {
           type: 'array',
           title: 'Champs additionnels',
@@ -1298,17 +1315,22 @@ export default {
             ]
           }
         },
-        showInfo: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les informations de contact'
-        },
-        showSocial: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les liens de réseaux sociaux'
-        },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        sendButton: {
+          title: 'Configuration du bouton',
+          layout: { comp: 'card' },
+          properties: {
+            usePortalConfig: {
+              type: 'boolean',
+              title: 'Utiliser la configuration du portail',
+              layout: { comp: 'switch' },
+              default: true
+            },
+            config: {
+              $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig',
+              layout: { if: '!parent.data?.usePortalConfig' }
+            }
+          }
+        }
       }
     },
 

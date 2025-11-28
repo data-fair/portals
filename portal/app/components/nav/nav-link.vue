@@ -12,9 +12,11 @@
     class="text-truncate justify-start"
     :class="{'text-none': !config?.uppercase}"
   >
-    <template #prepend>
+    <template
+      v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+      #prepend
+    >
       <v-icon
-        v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
         :icon="link.icon.mdi?.svgPath || link.icon.custom"
         :color="link.icon.color"
       />

@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="dialog" max-width="1200">
+  <v-dialog
+    v-model="dialog"
+    max-width="1200"
+    :fullscreen="$vuetify.display.smAndDown"
+  >
     <template #activator="{ props }">
       <action-btn
         v-bind="props"
