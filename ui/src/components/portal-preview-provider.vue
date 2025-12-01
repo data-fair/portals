@@ -14,7 +14,6 @@ const { t } = useI18n()
 // @ts-ignore
 const portalConfigDefault: PortalConfig = {
   datasets: {
-    list: {},
     card: {},
     page: {}
   },

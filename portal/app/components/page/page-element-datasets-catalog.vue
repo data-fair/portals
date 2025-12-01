@@ -96,8 +96,18 @@
     </v-col>
   </v-row>
 
-  <!-- Datasets with infinite scroll -->
-  <v-row class="d-flex align-stretch mt-2">
+  <!-- Pagination above results -->
+  <datasets-pagination
+    v-if="paginationPosition === 'before' || paginationPosition === 'both'"
+    :current-page="currentPage"
+    :total-pages="totalPages"
+    :alignment="element.pagination?.alignment"
+    class="my-4"
+    @update:page="goToPage"
+  />
+
+  <!-- Datasets -->
+  <v-row ref="resultsRow" class="d-flex align-stretch mt-2">
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
@@ -123,10 +133,19 @@
     />
   </div>
 
-  <!-- TODO: Add pagination -->
+  <!-- Pagination above footer -->
+  <datasets-pagination
+    v-if="paginationPosition === 'after' || paginationPosition === 'both'"
+    :current-page="currentPage"
+    :total-pages="totalPages"
+    :alignment="element.pagination?.alignment"
+    class="my-4"
+    @update:page="goToPage"
+  />
+
   <!-- Intersection observer trigger for infinite scroll -->
   <div
-    v-if="hasMore"
+    v-if="hasMore && paginationPosition === 'none'"
     v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
   />
 </template>
@@ -135,10 +154,12 @@
 import type { PageElement, DatasetsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
+import { useGoTo } from 'vuetify'
 
 const { element } = defineProps<{ element: DatasetsCatalogElement }>()
-const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
+const { t } = useI18n()
+const goTo = useGoTo()
 
 type Dataset = {
   id: string
@@ -175,10 +196,13 @@ const filters = {
 const sort = ref<string>()
 const order = ref<'-1' | '1'>()
 
-// Infinite scroll state
-const currentPage = ref(0)
+// Infinite scroll state / pagination state
+const paginationPosition = computed(() => element.pagination?.position || 'none')
+const currentPage = ref(1)
 const displayedDatasets = ref<DatasetFetch['results']>([])
 const loading = ref(false)
+const resultsRow = ref()
+const pageSize = 4
 
 let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetFetch>> | undefined
 
@@ -188,8 +212,8 @@ if (!preview) {
       select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
-      size: 20,
-      page: currentPage.value + 1
+      size: pageSize,
+      page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
     if (filters.concepts.value?.length) query.concepts = filters.concepts.value.join(',')
@@ -210,14 +234,39 @@ if (!preview) {
   })
 }
 
-// Computed property to check if there are more datasets to load
-const hasMore = computed(() => preview ? false : displayedDatasets.value.length < (datasetsFetch?.data.value?.count || 0))
+// Computed property to check if there are more datasets to load (for infinite scroll)
+const hasMore = computed(() => {
+  if (preview || paginationPosition.value !== 'none') return false
+  return displayedDatasets.value.length < (datasetsFetch?.data.value?.count || 0)
+})
 
 const datasetsCount = computed(() => preview ? displayedDatasets.value.length : (datasetsFetch?.data.value?.count || 0))
 
-// Function to load more datasets
+// Total pages for pagination
+const totalPages = computed(() => {
+  if (preview) return 1
+  return Math.ceil((datasetsFetch?.data.value?.count || 0) / pageSize)
+})
+
+// Function to go to a specific page (for pagination)
+const goToPage = async (page: number) => {
+  if (preview || !datasetsFetch) return
+  loading.value = true
+  try {
+    currentPage.value = page
+    await datasetsFetch.refresh()
+    if (datasetsFetch.data.value?.results) {
+      displayedDatasets.value = [...datasetsFetch.data.value.results]
+    }
+    goTo(resultsRow.value)
+  } finally {
+    loading.value = false
+  }
+}
+
+// Function to load more datasets (for infinite scroll)
 const loadMore = async () => {
-  if (preview || loading.value || !hasMore.value || !datasetsFetch) return
+  if (preview || loading.value || !hasMore.value || !datasetsFetch || paginationPosition.value !== 'none') return
   loading.value = true
   try {
     currentPage.value++
@@ -257,10 +306,14 @@ if (!preview) {
 // Reset datasets when filters change
 if (!preview) {
   watch([filters.search, filters.sort, filters.concepts, filters.topics, filters.owners], async () => {
-    currentPage.value = 0
+    currentPage.value = 1
     await datasetsFetch?.refresh()
     if (datasetsFetch?.data.value?.results) {
       displayedDatasets.value = [...datasetsFetch.data.value.results]
+    }
+    // Scroll to results
+    if (resultsRow.value) {
+      goTo(resultsRow.value, { offset: -20 })
     }
   })
 }

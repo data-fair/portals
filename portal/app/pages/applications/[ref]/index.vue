@@ -51,13 +51,14 @@
     />
 
     <!-- Datasets Source -->
+     <!-- TODO add configs to number of datasets columns-->
     <template v-if="datasetsFetch.data.value?.results.length">
       <h5 class="text-h5 mt-4 mb-2">{{ t('datasetsUsed', datasetsFetch.data.value?.results.length) }}</h5>
       <v-row class="d-flex align-stretch mt-2">
         <v-col
           v-for="(dataset, i) in datasetsFetch.data.value?.results"
           :key="i"
-          :md="12 / (portalConfig.datasets.list.columns || 2)"
+          :md="12 / 2"
           cols="12"
         >
           <dataset-card

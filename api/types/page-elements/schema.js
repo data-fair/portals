@@ -1461,8 +1461,8 @@ export default {
               default: 'none',
               oneOf: [
                 { const: 'none', title: 'Aucun' },
-                { const: 'below-nav', title: 'Sous la barre de navigation' },
-                { const: 'above-footer', title: 'Au-dessus du pied de page' },
+                { const: 'before', title: 'Avant les résultats' },
+                { const: 'after', title: 'Après les résultats' },
                 { const: 'both', title: 'Les deux' }
               ]
             },

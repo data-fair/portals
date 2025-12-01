@@ -76,7 +76,6 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      list: {},
       card: {},
       page: {
         metadata: {
