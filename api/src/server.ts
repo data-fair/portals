@@ -2,7 +2,8 @@ import { createServer } from 'node:http'
 import { session } from '@data-fair/lib-express/index.js'
 import { startObserver, stopObserver } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
-// import upgradeScripts from '@data-fair/lib-node/upgrade-scripts.js'
+import locks from '@data-fair/lib-node/locks.js'
+import upgradeScripts from '@data-fair/lib-node/upgrade-scripts.js'
 import mongo from '#mongo'
 import { createHttpTerminator } from 'http-terminator'
 import app from './app.ts'
@@ -21,7 +22,8 @@ export const start = async () => {
   if (config.observer.active) await startObserver(config.observer.port)
   session.init(config.privateDirectoryUrl)
   await mongo.init()
-  // await upgradeScripts(mongo.db, resolve(import.meta.dirname, '../..'))
+  await locks.start(mongo.db)
+  await upgradeScripts(mongo.db, locks, config.upgradeRoot)
 
   server.listen(config.port)
   await eventPromise(server, 'listening')
@@ -32,5 +34,6 @@ export const start = async () => {
 export const stop = async () => {
   await httpTerminator.terminate()
   if (config.observer.active) await stopObserver()
+  await locks.stop()
   await mongo.client.close()
 }

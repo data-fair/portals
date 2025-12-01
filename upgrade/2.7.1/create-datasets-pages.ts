@@ -34,7 +34,7 @@ export default {
 
         // Build filter items array
         const filterItems: NonNullable<DatasetsCatalogElement['filters']>['items'] = ['search']
-        if (datasetsList.filtersList.includes('concepts')) filterItems.push('concepts')
+        if (datasetsList.filtersList && datasetsList.filtersList.includes('concepts')) filterItems.push('concepts')
         filterItems.push('sort')
 
         // Construct default sort with direction
@@ -47,7 +47,7 @@ export default {
         }
 
         const advancedFilters = []
-        if (datasetsList.filtersList.includes('topics')) {
+        if (datasetsList.filtersList && datasetsList.filtersList.includes('topics')) {
           advancedFilters.push({
             type: 'topics',
             centered: false,
@@ -68,7 +68,7 @@ export default {
               datasetsCountPosition: 'top',
               showApiButton: true,
               showSortBesideCount: false,
-              showAdvancedFilters: datasetsList.filtersList.includes('topics'),
+              showAdvancedFilters: datasetsList.filtersList && datasetsList.filtersList.includes('topics'),
               filters: {
                 position: datasetsList.filtersLocation || 'top',
                 items: filterItems

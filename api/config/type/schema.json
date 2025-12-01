@@ -76,6 +76,9 @@
         "type": "string"
       }
     },
+    "upgradeRoot": {
+      "type": "string"
+    },
     "util": {},
     "get": {},
     "has": {}

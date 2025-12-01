@@ -16,5 +16,6 @@ export default {
   },
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
-  ingressControllers: []
+  ingressControllers: [],
+  upgradeRoot: '/app/'
 }
