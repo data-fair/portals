@@ -1413,7 +1413,7 @@ export default {
         },
         showAdvancedFilters: {
           type: 'boolean',
-          title: 'Afficher les filtres avancés',
+          title: 'Activer les filtres avancés',
           description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
           layout: { comp: 'switch' }
         },

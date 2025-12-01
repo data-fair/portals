@@ -19,7 +19,7 @@
         titleSize: 'h4',
         line: portalConfig.datasets.page.titleStyle
       }"
-      class="mt-n4"
+      class="mt-0"
     />
 
     <v-row>
