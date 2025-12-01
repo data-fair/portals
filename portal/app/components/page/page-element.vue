@@ -54,6 +54,18 @@
   />
 
   <!-- Datasets -->
+  <page-element-datasets-catalog
+    v-else-if="element.type === 'datasets-catalog'"
+    :element="element"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-datasets-catalog>
+
   <page-element-datasets-list
     v-else-if="element.type === 'datasets-list'"
     :element="element"

@@ -89,10 +89,11 @@ export default {
             },
             icon: mdiDatabaseOutline
           },
-          { key: 17, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
-          { key: 18, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
-          { key: 19, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
-          { key: 20, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 17, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+          { key: 18, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { key: 19, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { key: 20, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { key: 21, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
           {
             header: true,
             title: 'Applications',
@@ -101,8 +102,8 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 21, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 22, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
+          { key: 22, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 23, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
         ]
       },
       default: {
@@ -134,6 +135,7 @@ export default {
         { $ref: '#/$defs/element-contact' },
 
         // Datasets
+        { $ref: '#/$defs/element-datasets-catalog' },
         { $ref: '#/$defs/element-datasets-list' },
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
@@ -235,8 +237,8 @@ export default {
           title: 'Centrer le contenu',
           default: false,
         },
-        mb: { $ref: '#/$defs/margin-bottom' },
-        _html: { $ref: '#/$defs/rendered-html' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
+        _html: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/rendered-html' }
       }
     },
     'element-alert': {
@@ -300,8 +302,8 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
-        mb: { $ref: '#/$defs/margin-bottom' },
-        _html: { $ref: '#/$defs/rendered-html' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
+        _html: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/rendered-html' }
       }
     },
     'element-image': {
@@ -410,7 +412,7 @@ export default {
           description: "Ne fonctionne que si aucun lien n'est associé à l'image",
           layout: { if: '!parent.data?.banner' }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-button': {
@@ -455,7 +457,7 @@ export default {
           title: 'Centré',
           default: true
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-menu': {
@@ -515,7 +517,7 @@ export default {
           title: 'Centré',
           default: true
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-divider': {
@@ -593,7 +595,7 @@ export default {
           description: "URL de la page web à afficher dans l'iframe.",
           type: 'string'
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
 
@@ -734,7 +736,7 @@ export default {
             cols: { xs: 6 }
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-card': {
@@ -862,7 +864,7 @@ export default {
             }
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-two-columns': {
@@ -948,7 +950,7 @@ export default {
             $ref: '#/$defs/element'
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-responsive-flow': {
@@ -990,7 +992,7 @@ export default {
             }
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-tabs': {
@@ -1055,7 +1057,7 @@ export default {
             }
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
 
@@ -1115,7 +1117,7 @@ export default {
             if: '!parent.data?.fullWidth'
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-topics': {
@@ -1147,7 +1149,7 @@ export default {
           type: 'boolean',
           title: 'Centrer les thématiques'
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-metrics': {
@@ -1204,7 +1206,7 @@ export default {
           title: 'Bordure',
           default: true
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-contact': {
@@ -1235,7 +1237,7 @@ export default {
           layout: 'switch',
           title: 'Afficher les liens de réseaux sociaux'
         },
-        mb: { $ref: '#/$defs/margin-bottom' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         additionalFields: {
           type: 'array',
           title: 'Champs additionnels',
@@ -1355,6 +1357,139 @@ export default {
     },
 
     // Datasets
+    'element-datasets-catalog': {
+      title: 'DatasetsCatalogElement',
+      'x-i18n-title': {
+        en: 'Datasets catalog',
+        fr: 'Catalogue de données'
+      },
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['type'],
+      properties: {
+        type: { const: 'datasets-catalog' },
+        defaultSort: {
+          type: 'string',
+          title: 'Tri par défaut',
+          description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page. Lorsqu'il commence une recherche, le tri par pertinence sera appliqué.",
+          default: 'createdAt:-1',
+          oneOf: [
+            { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
+            { const: 'dataUpdatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        datasetsCountPosition: {
+          type: 'string',
+          title: 'Position du nombre de résultats',
+          default: 'top',
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'top', title: 'Au dessus des filtres standards' }, // Used for compat with old portals
+            { const: 'bottom', title: 'Au dessus des résultats' }
+          ]
+        },
+        // Used for compat with old portals
+        showApiButton: {
+          type: 'boolean',
+          title: 'Afficher le bouton d\'accès à la documentation API',
+          description: 'Affiche un bouton à coté du nombre de résultats permettant d\'accéder à la documentation de l\'API.',
+          layout: { comp: 'switch' },
+          default: true
+        },
+        showSortBesideCount: {
+          type: 'boolean',
+          title: 'Afficher le tri à droite du nombre de résultats.',
+          layout: { comp: 'switch' },
+          default: false
+        },
+        showAdvancedFilters: {
+          type: 'boolean',
+          title: 'Afficher les filtres avancés',
+          description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
+          layout: { comp: 'switch' }
+        },
+        filters: {
+          type: 'object',
+          title: 'Configuration des filtres',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position des filtres',
+              default: 'top',
+              oneOf: [
+                { const: 'top', title: 'Au dessus des résultats' },
+                { const: 'left', title: 'À gauche des résultats' }
+              ]
+            },
+            items: {
+              type: 'array',
+              title: 'Filtres à afficher',
+              description: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'search', title: 'Barre de recherche' },
+                  { const: 'concepts', title: 'Filtres par concepts' },
+                  { const: 'topics', title: 'Filtres par thématiques' },
+                  { const: 'keywords', title: 'Filtres par mots-clés' },
+                  { const: 'owners', title: 'Filtres par propriétaires' },
+                  { const: 'sort', title: 'Tri' }
+                ]
+              }
+            }
+          }
+        },
+        pagination: {
+          type: 'object',
+          title: 'Configuration de la pagination',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position',
+              description: 'Désactiver la pagination affichera les résultats en scroll infini.',
+              default: 'none',
+              oneOf: [
+                { const: 'none', title: 'Aucun' },
+                { const: 'below-nav', title: 'Sous la barre de navigation' },
+                { const: 'above-footer', title: 'Au-dessus du pied de page' },
+                { const: 'both', title: 'Les deux' }
+              ]
+            },
+            alignment: {
+              type: 'string',
+              title: 'Alignement',
+              default: 'center',
+              layout: { if: 'parent.data?.position !== "none"' },
+              oneOf: [
+                { const: 'left', title: 'Gauche' },
+                { const: 'center', title: 'Centré' },
+                { const: 'right', title: 'Droite' }
+              ]
+            }
+          }
+        },
+        // TODO: add static filters ?
+        advancedFilters: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
     'element-datasets-list': {
       type: 'object',
       title: 'DatasetsListElement',
@@ -1457,8 +1592,11 @@ export default {
           layout: 'switch',
           default: true
         },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        cardConfig: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card',
+          layout: { title: null }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-dataset-card': {
@@ -1523,8 +1661,11 @@ export default {
           layout: 'switch',
           default: true
         },
-        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        cardConfig: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card',
+          layout: { title: null }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-dataset-table': {
@@ -1603,7 +1744,7 @@ export default {
           type: 'boolean',
           default: true
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-dataset-form': {
@@ -1640,7 +1781,7 @@ export default {
             }
           }
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
 
@@ -1702,7 +1843,7 @@ export default {
           default: true
         },
         cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
     'element-application': {
@@ -1753,30 +1894,8 @@ export default {
           description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application.",
           default: true
         },
-        mb: { $ref: '#/$defs/margin-bottom' }
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
-    },
-
-    // Reusable definitions
-    'margin-bottom': {
-      title: 'Espacement inférieur',
-      type: 'integer',
-      layout: {
-        comp: 'slider',
-        props: {
-          step: 1,
-          thumbLabel: true,
-          showTicks: 'always'
-        }
-      },
-      default: 4,
-      minimum: 0,
-      maximum: 16
-    },
-    'rendered-html': {
-      type: 'string',
-      readOnly: true,
-      layout: 'none'
     }
   }
 }
