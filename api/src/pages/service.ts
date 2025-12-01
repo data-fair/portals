@@ -178,7 +178,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   }
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'privacy-policy'].includes(page.type)) {
+  if (patch.portals && ['home', 'contact', 'privacy-policy', 'datasets'].includes(page.type)) {
     const addedPortals = patch.portals.filter(portalId => !page.portals.includes(portalId))
     if (addedPortals.length > 0) {
       await switchStandardPages(page, addedPortals, session)

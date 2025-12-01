@@ -32,10 +32,10 @@ export default defineEventHandler(async (event) => {
       case 'standard': {
         switch (item.subtype) {
           case 'home': return '/'
-          case 'datasets': return '/datasets'
-          case 'applications': return '/applications'
           case 'contact': return '/contact'
           case 'privacy-policy': return '/privacy-policy'
+          case 'datasets': return '/datasets'
+          case 'applications': return '/applications'
           default: return undefined
         }
       }

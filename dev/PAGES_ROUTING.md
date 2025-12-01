@@ -9,9 +9,10 @@ The system currently supports 6 page types:
 1. **home** - Home page (unique per portal)
 2. **contact** - Contact page (unique per portal)
 3. **privacy-policy** - Privacy policy page (unique per portal)
-4. **event** - Event pages (multiple, with unique slug)
-5. **news** - News pages (multiple, with unique slug)
-6. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
+4. **datasets** - Datasets Catalog page (unique per portal)
+5. **event** - Event pages (multiple, with unique slug)
+6. **news** - News pages (multiple, with unique slug)
+7. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
 
 ### Organization in the Portals-Manager UI
 
@@ -27,6 +28,7 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 - `/` → `home` type page
 - `/contact` → `contact` type page
 - `/privacy-policy` → `privacy-policy` type page
+- `/datasets` → `datasets` type page
 
 ### Multiple Pages - Events
 
@@ -60,7 +62,7 @@ portal/server/routes/portal/api/pages/
 ### Unique Pattern
 
 All pages use **the same pattern**: `/portal/api/pages/[type]/[slug]`
-For unique pages (home, contact, privacy-policy), the `slug` is repeated and identical to the `type`.
+For unique pages (home, contact, privacy-policy, datasets), the `slug` is repeated and identical to the `type`.
 
 ```text
 /portal/api/pages/[type]          → Retrieves a list of pages (event/news only)
@@ -92,6 +94,7 @@ Retrieves the configuration of a specific page.
 - `GET /portal/api/pages/home/home` → Home page
 - `GET /portal/api/pages/contact/contact` → Contact page
 - `GET /portal/api/pages/privacy-policy/privacy-policy` → Privacy policy page
+- `GET /portal/api/pages/datasets/datasets` → Datasets Catalog page
 
 **Event/news pages**:
 

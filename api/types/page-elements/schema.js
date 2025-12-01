@@ -1393,7 +1393,7 @@ export default {
           default: 'top',
           oneOf: [
             { const: 'none', title: 'Aucun' },
-            { const: 'top', title: 'Au dessus des filtres standards' }, // Used for compat with old portals
+            { const: 'top', title: 'Au dessus des filtres' }, // Used for compat with old portals
             { const: 'bottom', title: 'Au dessus des résultats' }
           ]
         },
@@ -1460,7 +1460,7 @@ export default {
               description: 'Désactiver la pagination affichera les résultats en scroll infini.',
               default: 'none',
               oneOf: [
-                { const: 'none', title: 'Aucun' },
+                { const: 'none', title: 'Scroll infini' },
                 { const: 'before', title: 'Avant les résultats' },
                 { const: 'after', title: 'Après les résultats' },
                 { const: 'both', title: 'Les deux' }

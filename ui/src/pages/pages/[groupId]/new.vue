@@ -248,6 +248,7 @@ const isStandardGroup = route.params.groupId === 'standard'
 // Available page types for standard group
 const pageTypes = [
   { value: 'home', label: 'Home' },
+  { value: 'datasets', label: 'Datasets Catalog' },
   { value: 'contact', label: 'Contact' },
   { value: 'privacy-policy', label: 'Privacy Policy' }
 ]
@@ -438,10 +439,12 @@ watch(group, () => {
       home: Home Page
       contact: Contact Page
       privacy-policy: Privacy Policy
+      datasets: Datasets Catalog
     pageTypeDesc:
       home: Create a home page for your portal
       contact: Create a contact page with your information
       privacy-policy: Create a privacy policy page
+      datasets: Create a datasets catalog page
 
   fr:
     pages: Pages
@@ -475,9 +478,11 @@ watch(group, () => {
       home: Page d'accueil
       contact: Page de contact
       privacy-policy: Politique de confidentialité
+      datasets: Catalogue de données
     pageTypeDesc:
       home: Créer une page d'accueil pour votre portail
       contact: Créer une page de contact avec vos informations
       privacy-policy: Créer une page de politique de confidentialité
+      datasets: Créer une page catalogue de données
 
 </i18n>

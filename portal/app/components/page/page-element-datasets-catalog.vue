@@ -26,7 +26,10 @@
   </h4>
 
   <!-- Standard Filters -->
-  <v-row class="my-0">
+  <v-row
+    v-if="element.filters?.items?.length"
+    class="my-0"
+  >
     <datasets-filters :config="element" />
   </v-row>
 
@@ -202,7 +205,7 @@ const currentPage = ref(1)
 const displayedDatasets = ref<DatasetFetch['results']>([])
 const loading = ref(false)
 const resultsRow = ref()
-const pageSize = 4
+const pageSize = 20
 
 let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetFetch>> | undefined
 
@@ -311,10 +314,7 @@ if (!preview) {
     if (datasetsFetch?.data.value?.results) {
       displayedDatasets.value = [...datasetsFetch.data.value.results]
     }
-    // Scroll to results
-    if (resultsRow.value) {
-      goTo(resultsRow.value, { offset: -20 })
-    }
+    goTo(resultsRow.value)
   })
 }
 
