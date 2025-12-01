@@ -89,10 +89,13 @@ const { preview } = usePortalStore()
 // we use MutationObserver to watch for change of class .v-slide-group--is-overflowing by vuetify
 // https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VSlideGroup/VSlideGroup.tsx#L153
 const overflowing = defineModel('overflowing', { type: Boolean })
-const observer = new MutationObserver(() => {
-  if (document.querySelector('.nav-tabs.v-slide-group--is-overflowing')) overflowing.value = true
+let observer: MutationObserver
+onMounted(() => {
+  observer = new MutationObserver(() => {
+    overflowing.value = !!document.querySelector('.nav-tabs.v-slide-group--is-overflowing')
+  })
+  observer.observe(document.querySelector('.nav-tabs')!, { attributes: true, attributeFilter: ['class'] })
 })
-onMounted(() => observer.observe(document.querySelector('.nav-tabs')!, { attributes: true, attributeFilter: ['class'] }))
 onUnmounted(() => observer.disconnect())
 
 /** Get the active tab index based on the current route */
