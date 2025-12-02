@@ -71,7 +71,7 @@
           />
           <!-- Warning for conflicting standard page -->
           <v-alert
-            v-if="['home', 'contact', 'privacy-policy', 'datasets'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
+            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
             class="mt-2"
             density="compact"
             type="warning"
@@ -118,9 +118,9 @@ type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'stagi
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
 const portals = computed(() => portalsFetch.data.value?.results)
 
-// Fetch all standard pages (home, contact, privacy-policy, datasets) to detect conflicts
+// Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,datasets', select: '_id,type,portals,config.title', size: 10000 }
+  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title', size: 10000 }
 })
 
 const warnings = computed(() => {
@@ -189,6 +189,10 @@ const getPageUrl = (pageData: Page): string | undefined => {
     case 'home': return '/'
     case 'contact': return '/contact'
     case 'privacy-policy': return '/privacy-policy'
+    case 'accessibility': return '/accessibility'
+    case 'legal-notice': return '/legal-notice'
+    case 'cookie-policy': return '/cookie-policy'
+    case 'terms-of-service': return '/terms-of-service'
     case 'datasets': return '/datasets'
     case 'event': return pageData.config.eventMetadata?.slug ? `/event/${pageData.config.eventMetadata.slug}` : undefined
     case 'news': return pageData.config.newsMetadata?.slug ? `/news/${pageData.config.newsMetadata.slug}` : undefined

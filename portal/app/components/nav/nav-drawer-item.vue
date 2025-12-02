@@ -7,7 +7,7 @@
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
       :rel="item.type === 'external' ? 'noopener' : undefined"
-      :active="isItemActive(item)"
+      :active="isMenuItemActive(props.item, route.path)"
     >
       <template #prepend>
         <v-icon
@@ -50,7 +50,7 @@
       :href="item.type === 'external' ? item.href : undefined"
       :target="item.type === 'external' ? '_blank' : undefined"
       :rel="item.type === 'external' ? 'noopener' : undefined"
-      :active="isItemActive(item)"
+      :active="isMenuItemActive(props.item, route.path)"
     >
       <template #prepend>
         <v-icon
@@ -72,7 +72,7 @@
         <v-list-item
           v-bind="activatorProps"
           :title="item.title"
-          :active="isItemActive(item)"
+          :active="isMenuItemActive(props.item, route.path)"
         >
           <template #prepend>
             <v-icon
@@ -105,16 +105,11 @@ const route = useRoute()
 const { locale } = useI18n()
 const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
 
-/** Check if the given item is active based on the current route */
-function isItemActive (item: MenuItem): boolean {
-  return isMenuItemActive(item, route.path)
-}
-
 // For submenu groups at level 2+, track if they should be open
 const isGroupOpen = ref(false)
 
 // Watch for changes in active state and open the group if an item inside is active
-watch(() => isItemActive(props.item), (active) => {
+watch(() => isMenuItemActive(props.item, route.path), (active) => {
   if (props.item.type === 'submenu' && props.level >= 2 && active) {
     isGroupOpen.value = true
   }

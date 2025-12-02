@@ -1,3 +1,5 @@
+import { linkItemTitle } from '../portal-config-links/schema.js'
+
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',
   'x-exports': [],
@@ -279,8 +281,7 @@ export default {
       title: 'Links',
       layout: {
         title: '',
-        // eslint-disable-next-line no-template-curly-in-string
-        itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+        itemTitle: linkItemTitle,
         messages: { addItem: 'Ajouter un lien' }
       },
       items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
@@ -292,8 +293,7 @@ export default {
       description: 'Les liens importants sont affichés sous forme de boutons, ils sont plus visibles que les simples liens.',
       layout: {
         title: '',
-        // eslint-disable-next-line no-template-curly-in-string
-        itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+        itemTitle: linkItemTitle,
         messages: { addItem: 'Ajouter un lien' }
       },
       items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },

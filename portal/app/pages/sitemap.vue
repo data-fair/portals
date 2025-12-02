@@ -31,12 +31,24 @@
         :item="item"
       />
 
-      <!-- Contact and Privacy Policy in last -->
-      <li v-if="contactExists && !allInternalPaths.has('/contact')">
+      <!-- Standard pages at the end -->
+      <li v-if="pageExists(contactFetch) && !allInternalPaths.has('/contact')">
         <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
       </li>
-      <li v-if="privacyPolicyExists && !allInternalPaths.has('/privacy-policy')">
+      <li v-if="pageExists(privacyPolicyFetch) && !allInternalPaths.has('/privacy-policy')">
         <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+      </li>
+      <li v-if="pageExists(accessibilityFetch) && !allInternalPaths.has('/accessibility')">
+        <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+      </li>
+      <li v-if="pageExists(legalNoticeFetch) && !allInternalPaths.has('/legal-notice')">
+        <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
+      </li>
+      <li v-if="pageExists(cookiePolicyFetch) && !allInternalPaths.has('/cookie-policy')">
+        <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
+      </li>
+      <li v-if="pageExists(termsOfServiceFetch) && !allInternalPaths.has('/terms-of-service')">
+        <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
       </li>
     </ul>
   </v-container>
@@ -50,11 +62,14 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs } = useNavigationStore()
 
-// Check if contact / privacy policy page exists
+// Check if standard pages exist
 const contactFetch = await useLocalFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
-const contactExists = computed(() => !!contactFetch.data.value && !contactFetch.error.value)
 const privacyPolicyFetch = await useLocalFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
-const privacyPolicyExists = computed(() => !!privacyPolicyFetch.data.value && !privacyPolicyFetch.error.value)
+const accessibilityFetch = await useLocalFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { watch: false })
+const legalNoticeFetch = await useLocalFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
+const cookiePolicyFetch = await useLocalFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
+const termsOfServiceFetch = await useLocalFetch<PageConfig>('/portal/api/pages/terms-of-service/terms-of-service', { watch: false })
+const pageExists = (pageFetch: typeof contactFetch) => !!pageFetch.data.value && !pageFetch.error.value
 
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
@@ -123,10 +138,18 @@ usePageSeo({
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
+    accessibility: Accessibility
+    legalNotice: Legal Notice
+    cookiePolicy: Cookie Policy
+    termsOfService: Terms of Service
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité
+    accessibility: Accessibilité
+    legalNotice: Mentions légales
+    cookiePolicy: Politique de cookies
+    termsOfService: Conditions générales d'utilisation
 </i18n>

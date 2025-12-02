@@ -13,7 +13,7 @@ export default {
     title: { type: 'string' }, // can be synced from config.title or edited by user
     type: {
       type: 'string',
-      enum: ['home', 'contact', 'privacy-policy', 'datasets', 'event', 'news', 'generic'],
+      enum: ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'event', 'news', 'generic'],
       default: 'generic',
       readOnly: true
     },

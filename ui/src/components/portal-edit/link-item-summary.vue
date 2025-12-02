@@ -50,6 +50,10 @@ const standardPageLabel = computed(() => {
     home: 'homePage',
     contact: 'contactPage',
     'privacy-policy': 'privacyPolicyPage',
+    accessibility: 'accessibilityPage',
+    'legal-notice': 'legalNoticePage',
+    'cookie-policy': 'cookiePolicyPage',
+    'terms-of-service': 'termsOfServicePage',
     datasets: 'datasetsCatalog',
     applications: 'applicationsCatalog',
     event: 'eventsList',
@@ -68,6 +72,10 @@ const standardPageLabel = computed(() => {
     homePage: Home page
     contactPage: Contact page
     privacyPolicyPage: Privacy policy page
+    accessibilityPage: Accessibility page
+    legalNoticePage: Legal notice page
+    cookiePolicyPage: Cookie policy page
+    termsOfServicePage: Terms of service page
     datasetsCatalog: Datasets catalog
     applicationsCatalog: Applications catalog
     eventsList: Events list
@@ -87,6 +95,10 @@ const standardPageLabel = computed(() => {
     homePage: Page d'accueil
     contactPage: Page de contact
     privacyPolicyPage: Page de politique de confidentialité
+    accessibilityPage: Page d'accessibilité
+    legalNoticePage: Page de mentions légales
+    cookiePolicyPage: Page de politique de cookies
+    termsOfServicePage: Page de conditions générales d'utilisation
     datasetsCatalog: Catalogue de données
     applicationsCatalog: Catalogue de visualisation
     eventsList: Liste des évènements

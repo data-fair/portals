@@ -34,6 +34,10 @@ export default defineEventHandler(async (event) => {
           case 'home': return '/'
           case 'contact': return '/contact'
           case 'privacy-policy': return '/privacy-policy'
+          case 'accessibility': return '/accessibility'
+          case 'legal-notice': return '/legal-notice'
+          case 'cookie-policy': return '/cookie-policy'
+          case 'terms-of-service': return '/terms-of-service'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           default: return undefined
@@ -209,39 +213,22 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Add contact page if it exists
-  const contactPage = await portalMongo.pages.findOne<Pick<Page, 'configUpdatedAt'>>(
+  // Add standard pages (contact, privacy-policy, accessibility, etc.) if they exist
+  const standardPages = await portalMongo.pages.find<Pick<Page, 'type' | 'configUpdatedAt'>>(
     {
-      type: 'contact',
+      type: { $in: ['contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service'] },
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
       [portal.staging ? 'requestedPortals' : 'portals']: portal._id
     },
-    { projection: { configUpdatedAt: 1 } }
-  )
-  if (contactPage) {
-    sitemapUrls.push({
-      loc: fullUrl('/contact'),
-      lastmod: contactPage.configUpdatedAt ? formatDate(contactPage.configUpdatedAt) : undefined,
-      priority: '0.5'
-    })
-  }
+    { projection: { type: 1, configUpdatedAt: 1 } }
+  ).toArray()
 
-  // Add privacy policy page if it exists
-  const privacyPage = await portalMongo.pages.findOne<Pick<Page, 'configUpdatedAt'>>(
-    {
-      type: 'privacy-policy',
-      'owner.type': portal.owner.type,
-      'owner.id': portal.owner.id,
-      [portal.staging ? 'requestedPortals' : 'portals']: portal._id
-    },
-    { projection: { configUpdatedAt: 1 } }
-  )
-  if (privacyPage) {
+  for (const page of standardPages) {
     sitemapUrls.push({
-      loc: fullUrl('/privacy-policy'),
-      lastmod: privacyPage.configUpdatedAt ? formatDate(privacyPage.configUpdatedAt) : undefined,
-      priority: '0.3'
+      loc: fullUrl(`/${page.type}`),
+      lastmod: page.configUpdatedAt ? formatDate(page.configUpdatedAt) : undefined,
+      priority: page.type === 'contact' ? '0.5' : '0.3'
     })
   }
 

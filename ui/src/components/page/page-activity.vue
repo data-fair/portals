@@ -78,6 +78,10 @@ const avatarUrl = computed(() => {
       home: Home
       contact: Contact
       privacy-policy: Privacy policy
+      accessibility: Accessibility
+      legal-notice: Legal Notice
+      cookie-policy: Cookie Policy
+      terms-of-service: Terms of Service
       datasets: Datasets Catalog
       event: Event
       news: News
@@ -94,6 +98,10 @@ const avatarUrl = computed(() => {
       home: Accueil
       contact: Contact
       privacy-policy: Politique de confidentialité
+      accessibility: Accessibilité
+      legal-notice: Mentions légales
+      cookie-policy: Politique de cookies
+      terms-of-service: Conditions d'utilisation
       datasets: Catalogue de données
       event: Evénement
       news: Actualité

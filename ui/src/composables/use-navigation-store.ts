@@ -23,6 +23,10 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         case 'home': return i18n[lang]['homePage']
         case 'contact': return i18n[lang]['contactPage']
         case 'privacy-policy': return i18n[lang]['privacyPolicyPage']
+        case 'accessibility': return i18n[lang]['accessibilityPage']
+        case 'legal-notice': return i18n[lang]['legalNoticePage']
+        case 'cookie-policy': return i18n[lang]['cookiePolicyPage']
+        case 'terms-of-service': return i18n[lang]['termsOfServicePage']
         case 'datasets': return i18n[lang]['datasetsPage']
         case 'applications': return i18n[lang]['applicationsPage']
         case 'news': return i18n[lang]['newsPage']
@@ -58,6 +62,10 @@ const i18n = {
     homePage: 'Home',
     contactPage: 'Contact',
     privacyPolicyPage: 'Privacy Policy',
+    accessibilityPage: 'Accessibility',
+    legalNoticePage: 'Legal Notice',
+    cookiePolicyPage: 'Cookie Policy',
+    termsOfServicePage: 'Terms of Service',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
     newsPage: 'News',
@@ -70,6 +78,10 @@ const i18n = {
     homePage: 'Accueil',
     contactPage: 'Contact',
     privacyPolicyPage: 'Politique de confidentialité',
+    accessibilityPage: 'Accessibilité',
+    legalNoticePage: 'Mentions légales',
+    cookiePolicyPage: 'Politique de cookies',
+    termsOfServicePage: "Conditions d'utilisation",
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',
