@@ -67,16 +67,16 @@ const save = () => {
 <style lang="css"></style>
 
 <i18n lang="yaml">
-  fr:
-    cookieMessage: Le site {hostname} utilise des cookies pour réaliser des statistiques de visite et améliorer l'expérience utilisateur.
-    authorizeTracking: autoriser la mesure d'audience
-    privacyPolicyMessage: Votre choix est conservé pendant 1 an. Vous pouvez le modifier à tout moment sur la {0} du site.
-    privacyPolicyPage: page de politique de confidentialité
-    ok: ok
   en:
     cookieMessage: The site {hostname} uses cookies to record visit statistics and improve user experience.
-    authorizeTracking: authorize audience metrics collection
+    authorizeTracking: Authorize audience metrics collection
     privacyPolicyMessage: Your choice is remembered for 1 year. You can change it at any time on the {0} of this site.
     privacyPolicyPage: privacy policy page
+    ok: ok
+  fr:
+    cookieMessage: Le site {hostname} utilise des cookies pour réaliser des statistiques de visite et améliorer l'expérience utilisateur.
+    authorizeTracking: Autoriser la mesure d'audience
+    privacyPolicyMessage: Votre choix est conservé pendant 1 an. Vous pouvez le modifier à tout moment sur la {0} du site.
+    privacyPolicyPage: page de politique de confidentialité
     ok: ok
 </i18n>

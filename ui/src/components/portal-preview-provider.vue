@@ -14,11 +14,6 @@ const { t } = useI18n()
 // @ts-ignore
 const portalConfigDefault: PortalConfig = {
   datasets: {
-    list: {
-      filtersLocation: 'left',
-      defaultSort: 'createdAt',
-      columns: 0
-    },
     card: {},
     page: {}
   },

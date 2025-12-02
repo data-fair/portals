@@ -11,7 +11,7 @@ describe('identities webhooks', () => {
   after(stopApiServer)
 
   it('should update owner name', async () => {
-    let portal = (await user1.post('/api/portals', { config: { title: 'Portal 1' } })).data
+    let portal = (await user1.post('/api/portals', { config: { title: 'Portal 1', menu: { children: [] } } })).data
     await axIdentities.post('/api/identities/user/adminOrga', { name: 'New name' })
     portal = (await user1.get('/api/portals/' + portal._id)).data
     assert.equal(portal.owner.name, 'New name')

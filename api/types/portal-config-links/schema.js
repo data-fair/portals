@@ -83,6 +83,10 @@ export default {
           oneOf: [{ const: 'home', title: 'Accueil' },
             { const: 'contact', title: 'Contact' },
             { const: 'privacy-policy', title: 'Politique de confidentialité' },
+            { const: 'accessibility', title: 'Accessibilité' },
+            { const: 'legal-notice', title: 'Mentions légales' },
+            { const: 'cookie-policy', title: 'Politique de cookies' },
+            { const: 'terms-of-service', title: 'Conditions générales d\'utilisation' },
             { const: 'datasets', title: 'Catalogue de données' },
             { const: 'applications', title: 'Catalogue de visualisation' },
             { const: 'event', title: 'Liste des événements' },
@@ -208,4 +212,54 @@ export default {
       }
     }
   }
+}
+
+// @ts-expect-error
+const linkItemTitleFn = (item) => {
+  const standardPageTitles = {
+    home: 'Page d\'accueil',
+    contact: 'Page de contact',
+    'privacy-policy': 'Page de politique de confidentialité',
+    accessibility: 'Accessibilité',
+    'legal-notice': 'Mentions légales',
+    'cookie-policy': 'Politique de cookies',
+    'terms-of-service': 'Conditions générales d\'utilisation',
+    datasets: 'Catalogue de données',
+    applications: 'Catalogue de visualisation',
+    event: 'Liste des évènements',
+    news: 'Liste des actualités',
+    sitemap: 'Plan du site'
+  }
+
+  // @ts-expect-error
+  const formatPageRef = (pageRef) => pageRef?.title ? ` - ${pageRef.title} (${pageRef.slug})` : ''
+  // @ts-expect-error
+  const formatLabel = (title) => title ? ` - Libellé : ${title}` : ''
+
+  if (item.type === 'standard') {
+    // @ts-expect-error
+    const pageTitle = standardPageTitles[item.subtype] || 'Page standard'
+    return pageTitle + formatLabel(item.title)
+  }
+  if (item.type === 'event') {
+    return 'Événement' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'news') {
+    return 'Actualité' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'generic') {
+    return 'Page éditée' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'external') {
+    return `Lien externe - Libellé : ${item.title} - URL : ${item.href}`
+  }
+  if (item.type === 'submenu') {
+    return `Sous-menu - Libellé : ${item.title}`
+  }
+  return 'Lien non configuré'
+}
+
+export const linkItemTitle = {
+  expr: linkItemTitleFn.toString().replace(/^[^{]+{|}$/g, '').trim(),
+  type: 'js-fn'
 }

@@ -55,13 +55,6 @@ router.post('', async (req, res, next) => {
     allowRobots: !body.staging, // By default, allow robots if not a staging portal
     authentication: 'optional' as const,
     theme: fillTheme(defaultTheme, defaultTheme),
-    menu: {
-      children: [
-        { type: 'standard', subtype: 'home', title: 'Accueil' },
-        { type: 'standard', subtype: 'datasets', title: 'Jeux de données' },
-        { type: 'standard', subtype: 'applications', title: 'Visualisations' }
-      ]
-    },
     header: {},
     navBar: {},
     breadcrumb: {},
@@ -76,7 +69,6 @@ router.post('', async (req, res, next) => {
       importantLinks: []
     },
     datasets: {
-      list: {},
       card: {},
       page: {
         metadata: {

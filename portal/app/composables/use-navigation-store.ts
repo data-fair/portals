@@ -69,6 +69,10 @@ const createNavigationStore = () => {
           case 'home': return '/'
           case 'contact': return '/contact'
           case 'privacy-policy': return '/privacy-policy'
+          case 'accessibility': return '/accessibility'
+          case 'legal-notice': return '/legal-notice'
+          case 'cookie-policy': return '/cookie-policy'
+          case 'terms-of-service': return '/terms-of-service'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'news': return '/news'
@@ -93,6 +97,10 @@ const createNavigationStore = () => {
           case 'home': return i18n[locale]['homePage']
           case 'contact': return i18n[locale]['contactPage']
           case 'privacy-policy': return i18n[locale]['privacyPolicyPage']
+          case 'accessibility': return i18n[locale]['accessibilityPage']
+          case 'legal-notice': return i18n[locale]['legalNoticePage']
+          case 'cookie-policy': return i18n[locale]['cookiePolicyPage']
+          case 'terms-of-service': return i18n[locale]['termsOfServicePage']
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
           case 'news': return i18n[locale]['newsPage']
@@ -139,6 +147,10 @@ const i18n = {
     homePage: 'Home',
     contactPage: 'Contact',
     privacyPolicyPage: 'Privacy Policy',
+    accessibilityPage: 'Accessibility',
+    legalNoticePage: 'Legal Notice',
+    cookiePolicyPage: 'Cookie Policy',
+    termsOfServicePage: 'Terms of Service',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
     newsPage: 'News',
@@ -151,6 +163,10 @@ const i18n = {
     homePage: 'Accueil',
     contactPage: 'Contact',
     privacyPolicyPage: 'Politique de confidentialité',
+    accessibilityPage: 'Accessibilité',
+    legalNoticePage: 'Mentions légales',
+    cookiePolicyPage: 'Politique de cookies',
+    termsOfServicePage: "Conditions générales d'utilisation",
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',

@@ -70,22 +70,22 @@
           <v-row class="d-flex align-stretch">
             <v-col
               v-for="pType in pageTypes"
-              :key="pType.value"
+              :key="pType"
               md="4"
               sm="6"
               cols="12"
             >
               <v-card
                 class="h-100"
-                :color="pageType === pType.value ? 'primary' : ''"
-                @click="selectPageType(pType.value)"
+                :color="pageType === pType ? 'primary' : ''"
+                @click="selectPageType(pType)"
               >
                 <template #title>
-                  <span :class="pageType !== pType.value ? 'text-primary' : ''">
-                    {{ t('pageTypeTitle.' + pType.value) }}
+                  <span :class="pageType !== pType ? 'text-primary' : ''">
+                    {{ t('pageTypeTitle.' + pType) }}
                   </span>
                 </template>
-                <v-card-text>{{ t('pageTypeDesc.' + pType.value) }}</v-card-text>
+                <v-card-text>{{ t('pageTypeDesc.' + pType) }}</v-card-text>
               </v-card>
             </v-col>
           </v-row>
@@ -210,7 +210,7 @@
       </v-stepper-window>
 
       <v-stepper-actions
-        v-if="step !== 'type' && step !== 'action'"
+        v-if="step !== 'type' && (step !== 'action' || isStandardGroup)"
         :prev-text="t('previous')"
         @click:prev="goToPreviousStep()"
       >
@@ -246,11 +246,7 @@ const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(route.para
 const isStandardGroup = route.params.groupId === 'standard'
 
 // Available page types for standard group
-const pageTypes = [
-  { value: 'home', label: 'Home' },
-  { value: 'contact', label: 'Contact' },
-  { value: 'privacy-policy', label: 'Privacy Policy' }
-]
+const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets']
 
 const step = ref<'type' | 'action' | 'source' | 'owner' | 'information'>(isStandardGroup ? 'type' : 'action')
 const pageType = ref<string | undefined>(undefined) // For standard group only
@@ -438,10 +434,20 @@ watch(group, () => {
       home: Home Page
       contact: Contact Page
       privacy-policy: Privacy Policy
+      accessibility: Accessibility
+      legal-notice: Legal Notice
+      cookie-policy: Cookie Policy
+      terms-of-service: Terms of Service
+      datasets: Datasets Catalog
     pageTypeDesc:
-      home: Create a home page for your portal
-      contact: Create a contact page with your information
-      privacy-policy: Create a privacy policy page
+      home: Create the main home page for your portal.
+      contact: Create a page to allow users to contact you.
+      privacy-policy: Create a page presenting your privacy policy.
+      accessibility: Create a page describing your accessibility level and commitments.
+      legal-notice: Create a page gathering your mandatory legal notices.
+      cookie-policy: Create a page detailing the use of cookies.
+      terms-of-service: Create a page presenting your terms of service.
+      datasets: Create a page listing your datasets.
 
   fr:
     pages: Pages
@@ -475,9 +481,19 @@ watch(group, () => {
       home: Page d'accueil
       contact: Page de contact
       privacy-policy: Politique de confidentialité
+      accessibility: Accessibilité
+      legal-notice: Mentions légales
+      cookie-policy: Politique de cookies
+      terms-of-service: Conditions générales d'utilisation
+      datasets: Catalogue de données
     pageTypeDesc:
-      home: Créer une page d'accueil pour votre portail
-      contact: Créer une page de contact avec vos informations
-      privacy-policy: Créer une page de politique de confidentialité
+      home: Créer la page d'accueil principale de votre portail.
+      contact: Créer une page permettant aux utilisateurs de vous contacter.
+      privacy-policy: Créer une page présentant votre politique de confidentialité.
+      accessibility: Créer une page décrivant votre niveau et vos engagements d'accessibilité.
+      legal-notice: Créer une page regroupant vos mentions légales obligatoires.
+      cookie-policy: Créer une page détaillant l'usage des cookies.
+      terms-of-service: Créer une page présentant vos conditions générales d'utilisation.
+      datasets: Créer une page listant vos jeux de données.
 
 </i18n>

@@ -1,4 +1,5 @@
-/* eslint-disable no-template-curly-in-string */
+import { linkItemTitle } from '../portal-config-links/schema.js'
+
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
   'x-exports': ['types', 'vjsf'],
@@ -305,7 +306,7 @@ export default {
           type: 'array',
           title: 'Éléments du menu de navigation',
           layout: {
-            itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")" : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+            itemTitle: linkItemTitle,
             messages: { addItem: 'Ajouter un lien' }
           },
           items: { $ref: '#/$defs/menuItem' }
@@ -330,51 +331,7 @@ export default {
       }
     },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
-    topics: {
-      type: 'array',
-      title: '',
-      layout: {
-        comp: 'list',
-        listEditMode: 'inline',
-        density: 'compact',
-        getItems: {
-          url: '/data-fair/api/v1/settings/${context.owner.type}/${context.owner.id}/topics',
-          itemsResults: 'data',
-          itemKey: 'item.id',
-          itemTitle: '`Thématique : ${item.title}`',
-          itemIcon: 'item.icon?.svg'
-        }
-      },
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string', layout: 'none' },
-          title: { type: 'string', layout: 'none' },
-          description: {
-            type: 'string',
-            title: 'Ajouter une description',
-            layout: 'textarea'
-          },
-          thumbnail: {
-            type: 'object',
-            required: ['_id', 'name', 'mimeType'],
-            layout: {
-              slots: {
-                component: {
-                  name: 'image-upload',
-                  props: { width: 1280, label: 'Chargez une image' }
-                }
-              }
-            },
-            properties: {
-              _id: { type: 'string' },
-              name: { type: 'string' },
-              mimeType: { type: 'string' }
-            }
-          }
-        }
-      }
-    }
+    topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' }
   },
   $defs: {
     menuItem: {
@@ -403,7 +360,7 @@ export default {
               type: 'array',
               title: '',
               layout: {
-                itemTitle: 'item.type === "standard" ? (item.subtype === "home" ? "Page d\'accueil" : item.subtype === "contact" ? "Page de contact" : item.subtype === "privacy-policy" ? "Page de politique de confidentialité" : item.subtype === "datasets" ? "Catalogue de données" : item.subtype === "applications" ? "Catalogue de visualisation" : item.subtype === "event" ? "Liste des évènements" : item.subtype === "news" ? "Liste des actualités" : item.subtype === "sitemap" ? "Plan du site" : "Page standard") + (item.title ? ` - Libellé : ${item.title}` : "") : item.type === "event" ? `Événement${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "news" ? `Actualité${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "generic" ? `Page éditée${item.pageRef?.title ? " - " + item.pageRef.title + "(" + item.pageRef.slug + ")"  : ""}${item.title ? " - Libellé : " + item.title : ""}` : item.type === "external" ? `Lien externe - Libellé : ${item.title} - URL : ${item.href}` : item.type === "submenu" ? `Sous-menu - Libellé : ${item.title}` : "Lien non configuré"',
+                itemTitle: linkItemTitle,
                 messages: { addItem: 'Ajouter un lien' }
               },
               items: { $ref: '#/$defs/menuItem' }

@@ -76,10 +76,15 @@ const avatarUrl = computed(() => {
     pageType:
       title: Page Type
       home: Home
-      event: Event
-      news: News
       contact: Contact
       privacy-policy: Privacy policy
+      accessibility: Accessibility
+      legal-notice: Legal Notice
+      cookie-policy: Cookie Policy
+      terms-of-service: Terms of Service
+      datasets: Datasets Catalog
+      event: Event
+      news: News
       generic: Custom content
     referenceCheckbox: Set as reference page (Only editable by superadmins)
   fr:
@@ -91,10 +96,15 @@ const avatarUrl = computed(() => {
     pageType:
       title: Type de page
       home: Accueil
-      event: Evénement
-      news: Actualité
       contact: Contact
       privacy-policy: Politique de confidentialité
+      accessibility: Accessibilité
+      legal-notice: Mentions légales
+      cookie-policy: Politique de cookies
+      terms-of-service: Conditions générales d'utilisation
+      datasets: Catalogue de données
+      event: Evénement
+      news: Actualité
       generic: Contenu libre
     referenceCheckbox: Définir cette page comme page de référence
 </i18n>

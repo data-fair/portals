@@ -3,7 +3,7 @@ import portalSchema from '#types/portal/schema.js'
 import portalConfigSchema from '#types/portal-config/schema.js'
 
 const configSchema = jsonSchema(portalConfigSchema)
-  .pickProperties(['title'])
+  .pickProperties(['title', 'menu'])
   .schema
 
 const schema = jsonSchema(portalSchema)

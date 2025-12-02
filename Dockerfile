@@ -115,6 +115,7 @@ FROM base AS manager
 
 COPY --from=fonts-builder /app/api/assets api/assets
 COPY --from=api-installer /app/node_modules node_modules
+COPY upgrade upgrade
 ADD /shared shared
 ADD /api api
 COPY --from=types /app/api/types api/types

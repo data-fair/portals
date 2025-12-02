@@ -10,7 +10,7 @@ describe('portals management', () => {
   after(stopApiServer)
 
   it('should create a portal', async () => {
-    const portalConfig = { title: 'Portal 1' }
+    const portalConfig = { title: 'Portal 1', menu: { children: [] } }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
     assert.equal(portal.owner.id, 'adminOrga')
     assert.equal(portal.config.authentication, 'optional')

@@ -17,5 +17,6 @@ export default {
   ingressControllers: {
     __name: 'INGRESS_CONTROLLERS',
     __format: 'json'
-  }
+  },
+  upgradeRoot: 'UPGRADE_ROOT'
 }
