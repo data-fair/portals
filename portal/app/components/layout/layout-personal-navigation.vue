@@ -130,15 +130,26 @@ const accountValue = computed(() => {
 
 const accounts = computed(() => {
   const accounts = []
-  if (!session.state.user.ipa || !session.state.user.organizations.length) {
+  const user = session.state.user
+
+  const isPortalOwner = (
+    (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
+    (
+      portal.value.owner.type === 'organization' &&
+      user.organizations.find(o => o.id === portal.value.owner.id)
+    )
+  )
+
+  if (!(isPortalOwner || user.ipa || user.organizations.length)) {
     accounts.push({
       title: t('personalAccount'),
       value: null,
-      prependAvatar: `/simple-directory/api/avatars/user/${session.state.user.id}/avatar.png`
+      prependAvatar: `/simple-directory/api/avatars/user/${user.id}/avatar.png`
     })
   }
 
-  for (const org of session.state.user.organizations) {
+  for (const org of user.organizations) {
+    if (isPortalOwner && org.id !== portal.value.owner.id) continue
     const account = {
       title: org.name,
       value: org.id,
