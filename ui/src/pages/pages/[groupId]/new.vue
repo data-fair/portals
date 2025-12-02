@@ -476,7 +476,7 @@ watch(group, () => {
       accessibility: Accessibilité
       legal-notice: Mentions légales
       cookie-policy: Politique de cookies
-      terms-of-service: Conditions d'utilisation
+      terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
     pageTypeDesc:
       home: Créer une page d'accueil pour votre portail
@@ -485,7 +485,7 @@ watch(group, () => {
       accessibility: Créer une page déclairant votre niveau d'accessibilité
       legal-notice: Créer une page de mentions légales
       cookie-policy: Créer une page de politique de cookies
-      terms-of-service: Créer une page de conditions d'utilisation
+      terms-of-service: Créer une page de Conditions générales d'utilisation
       datasets: Créer une page catalogue de données
 
 </i18n>

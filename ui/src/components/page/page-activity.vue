@@ -101,7 +101,7 @@ const avatarUrl = computed(() => {
       accessibility: Accessibilité
       legal-notice: Mentions légales
       cookie-policy: Politique de cookies
-      terms-of-service: Conditions d'utilisation
+      terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
       event: Evénement
       news: Actualité

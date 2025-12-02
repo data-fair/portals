@@ -1,4 +1,6 @@
 <template>
+  <tracking-consent />
+
   <!-- Error state -->
   <page-error
     v-if="pageConfigFetch.error.value"

@@ -1,4 +1,6 @@
 <template>
+  <tracking-consent v-if="privacyPolicyCheck.error.value && cookiePolicyCheck.error.value" />
+
   <!-- Error state -->
   <page-error
     v-if="pageConfigFetch.error.value"
@@ -20,6 +22,8 @@ const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 
 const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
+const privacyPolicyCheck = await useLocalFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
+const cookiePolicyCheck = await useLocalFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id

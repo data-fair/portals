@@ -81,7 +81,7 @@ const i18n = {
     accessibilityPage: 'Accessibilité',
     legalNoticePage: 'Mentions légales',
     cookiePolicyPage: 'Politique de cookies',
-    termsOfServicePage: "Conditions d'utilisation",
+    termsOfServicePage: "Conditions générales d'utilisation",
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',
