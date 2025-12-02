@@ -479,13 +479,19 @@ const createPortal = useAsyncAction(
   async () => {
     if (!newPortalTitle.value) return
 
+    const menu = { children: [{ type: 'standard', subtype: 'home', title: t('home') }] }
+    if (catalogActionType.value && catalogActionType.value !== 'none') {
+      menu.children.push({ type: 'standard', subtype: 'datasets', title: t('datasets') })
+    }
+    menu.children.push({ type: 'standard', subtype: 'applications', title: t('applications') })
+
     // Step 1: Create the portal
     const portal = await $fetch<Portal>($apiPath + '/portals', {
       method: 'POST',
       body: {
         owner: newOwner.value,
         staging: newPortalStaging.value,
-        config: { title: newPortalTitle.value }
+        config: { title: newPortalTitle.value, menu }
       }
     })
 
@@ -549,6 +555,8 @@ setBreadcrumbs([
     createPortal: Create a portal
     errorCreatingPortal: Error while creating the portal
     home: Home
+    datasets: Datasets
+    applications: Applications
     portalInformation: Portal information
     next: Next
     portalTitle: Portal title
@@ -585,6 +593,8 @@ setBreadcrumbs([
     createPortal: Créer un portail
     errorCreatingPortal: Erreur lors de la création du portail
     home: Accueil
+    datasets: Jeux de données
+    applications: Visualisations
     portalInformation: Informations du portail
     next: Suivant
     portalTitle: Titre du portail

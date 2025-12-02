@@ -1401,7 +1401,7 @@ export default {
         showApiButton: {
           type: 'boolean',
           title: 'Afficher le bouton d\'accès à la documentation API',
-          description: 'Affiche un bouton à coté du nombre de résultats permettant d\'accéder à la documentation de l\'API.',
+          description: 'Affiche un bouton à coté du nombre de résultats permettant d\'accéder à la documentation de l\'API **(Seulement sur desktop)**.',
           layout: { comp: 'switch' },
           default: true
         },
