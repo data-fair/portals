@@ -16,12 +16,13 @@
       :max-width="!element.fullWidth ? '400' : undefined"
       :append-inner-icon="element.btnPosition === 'included' ? mdiMagnify : undefined"
       autofocus
+      clearable
       flat
       hide-details
       bg-color="surface"
       @keyup.enter="onSearch"
-      @click:append="onSearch"
       @click:append-inner="onSearch"
+      @click:clear="onClear"
     >
       <template
         v-if="element.btnPosition === 'attached' || element.btnPosition === 'spaced'"
@@ -35,6 +36,7 @@
           :elevation="element.btnPosition === 'spaced' ? element.elevation : 0"
           :class="element.btnPosition === 'spaced' ? 'ml-4 h-100' : 'h-100'"
           stacked
+          @click="onSearch"
         >
           <v-icon :icon="mdiMagnify" />
         </v-btn>
@@ -59,6 +61,7 @@ const { element } = defineProps<{
 const { t } = useI18n()
 const router = useRouter()
 const { preview } = usePortalStore()
+const search = useStringSearchParam('q')
 
 const searchQuery = ref('')
 
@@ -70,6 +73,8 @@ const onSearch = () => {
     })
   }
 }
+
+const onClear = () => { if (!preview) search.value = '' }
 
 </script>
 

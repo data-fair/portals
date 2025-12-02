@@ -16,6 +16,7 @@
       hide-details
       @keyup.enter="filters.search.value = search"
       @click:append-inner="filters.search.value = search"
+      @click:clear="filters.search.value = ''"
     />
   </v-col>
 

@@ -1408,8 +1408,10 @@ export default {
         showSortBesideCount: {
           type: 'boolean',
           title: 'Afficher le tri à droite du nombre de résultats.',
-          layout: { comp: 'switch' },
-          default: false
+          layout: {
+            if: 'parent.data?.datasetsCountPosition === "bottom"',
+            comp: 'switch'
+          }
         },
         showAdvancedFilters: {
           type: 'boolean',

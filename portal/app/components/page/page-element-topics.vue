@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import type { TopicsElement } from '#api/types/page-config'
+import { mdiHome, mdiBook } from '@mdi/js'
 
 const { element } = defineProps({
   element: { type: Object as () => TopicsElement, required: true }
@@ -24,7 +25,7 @@ type TopicItem = {
   id: string
   title: string
   count: number
-  color: string
+  color?: string
   icon?: {
     svgPath: string
   }
@@ -50,9 +51,9 @@ if (!preview) {
   topicsItems = computed(() => datasetsFetch.data.value?.facets.topics.map(facet => ({ ...facet.value, count: facet.count })) || [])
 } else {
   topicsItems = [
-    { id: 'topic-1', title: 'Topic 1', count: 10, color: '#0000FF' },
+    { id: 'topic-1', title: 'Topic 1', count: 10, icon: { svgPath: mdiHome } },
     { id: 'topic-2', title: 'Topic 2', count: 5, color: '#FF0000' },
-    { id: 'topic-3', title: 'Topic 3', count: 8, color: '#008000' }
+    { id: 'topic-3', title: 'Topic 3', count: 8, color: '#008000', icon: { svgPath: mdiBook } }
   ]
 }
 

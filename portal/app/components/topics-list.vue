@@ -20,6 +20,7 @@
           :elevation="config?.elevation"
           :rounded="config?.rounded"
           :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
+          label
           @click="isFilters ? toggle(topic.id) : undefined"
         >
           <v-icon
@@ -56,7 +57,7 @@ const { topics } = defineProps<{
     id: string
     title: string
     count?: number
-    color: string
+    color?: string
     icon?: {
       svgPath: string
     }

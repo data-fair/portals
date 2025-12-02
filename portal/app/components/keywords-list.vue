@@ -15,6 +15,7 @@
         :elevation="config?.elevation"
         :rounded="config?.rounded"
         :text="keyword"
+        label
       />
     </v-col>
   </v-row>

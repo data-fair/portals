@@ -50,6 +50,7 @@
   <v-row
     v-if="element.datasetsCountPosition === 'bottom'"
     class="mt-2"
+    align="end"
   >
     <v-col>
       {{ t('resultsCount', { count: datasetsCount }) }}
@@ -65,7 +66,8 @@
     </v-col>
     <v-col
       cols="12"
-      md="4"
+      md="6"
+      lg="4"
     >
       <v-select
         v-if="element.showSortBesideCount"
@@ -110,7 +112,7 @@
   />
 
   <!-- Datasets -->
-  <v-row ref="resultsRow" class="d-flex align-stretch mt-2">
+  <v-row class="d-flex align-stretch mt-2">
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
@@ -157,12 +159,10 @@
 import type { PageElement, DatasetsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
-import { useGoTo } from 'vuetify'
 
 const { element } = defineProps<{ element: DatasetsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
-const goTo = useGoTo()
 
 type Dataset = {
   id: string
@@ -204,7 +204,6 @@ const paginationPosition = computed(() => element.pagination?.position || 'none'
 const currentPage = ref(1)
 const displayedDatasets = ref<DatasetFetch['results']>([])
 const loading = ref(false)
-const resultsRow = ref()
 const pageSize = 20
 
 let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetFetch>> | undefined
@@ -261,7 +260,7 @@ const goToPage = async (page: number) => {
     if (datasetsFetch.data.value?.results) {
       displayedDatasets.value = [...datasetsFetch.data.value.results]
     }
-    goTo(resultsRow.value)
+    // goTo(catalogTop.value)
   } finally {
     loading.value = false
   }
@@ -314,7 +313,7 @@ if (!preview) {
     if (datasetsFetch?.data.value?.results) {
       displayedDatasets.value = [...datasetsFetch.data.value.results]
     }
-    goTo(resultsRow.value)
+    // goTo(catalogTop.value)
   })
 }
 
