@@ -434,12 +434,20 @@ watch(group, () => {
       home: Home Page
       contact: Contact Page
       privacy-policy: Privacy Policy
+      accessibility: Accessibility
+      legal-notice: Legal Notice
+      cookie-policy: Cookie Policy
+      terms-of-service: Terms of Service
       datasets: Datasets Catalog
     pageTypeDesc:
-      home: Create a home page for your portal
-      contact: Create a contact page with your information
-      privacy-policy: Create a privacy policy page
-      datasets: Create a datasets catalog page
+      home: Create the main home page for your portal.
+      contact: Create a page to allow users to contact you.
+      privacy-policy: Create a page presenting your privacy policy.
+      accessibility: Create a page describing your accessibility level and commitments.
+      legal-notice: Create a page gathering your mandatory legal notices.
+      cookie-policy: Create a page detailing the use of cookies.
+      terms-of-service: Create a page presenting your terms of service.
+      datasets: Create a page listing your datasets.
 
   fr:
     pages: Pages
@@ -479,13 +487,13 @@ watch(group, () => {
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
     pageTypeDesc:
-      home: Créer une page d'accueil pour votre portail
-      contact: Créer une page de contact avec vos informations
-      privacy-policy: Créer une page de politique de confidentialité
-      accessibility: Créer une page déclairant votre niveau d'accessibilité
-      legal-notice: Créer une page de mentions légales
-      cookie-policy: Créer une page de politique de cookies
-      terms-of-service: Créer une page de Conditions générales d'utilisation
-      datasets: Créer une page catalogue de données
+      home: Créer la page d'accueil principale de votre portail.
+      contact: Créer une page permettant aux utilisateurs de vous contacter.
+      privacy-policy: Créer une page présentant votre politique de confidentialité.
+      accessibility: Créer une page décrivant votre niveau et vos engagements d'accessibilité.
+      legal-notice: Créer une page regroupant vos mentions légales obligatoires.
+      cookie-policy: Créer une page détaillant l'usage des cookies.
+      terms-of-service: Créer une page présentant vos conditions générales d'utilisation.
+      datasets: Créer une page listant vos jeux de données.
 
 </i18n>
