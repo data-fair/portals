@@ -210,7 +210,7 @@
       </v-stepper-window>
 
       <v-stepper-actions
-        v-if="step !== 'type' && step !== 'action'"
+        v-if="step !== 'type' && (step !== 'action' || isStandardGroup)"
         :prev-text="t('previous')"
         @click:prev="goToPreviousStep()"
       >
