@@ -38,7 +38,7 @@
             md="6"
             lg="4"
           >
-            <portal-reuse-card
+            <reuse-card
               :reuse="reuse"
               :card-config="portalConfig.reuses.card"
             />

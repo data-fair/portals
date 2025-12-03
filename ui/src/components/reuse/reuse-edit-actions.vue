@@ -1,52 +1,47 @@
 <template>
-  <!-- Undo last change -->
-  <v-list-item
-    :disabled="!changesStack.canUndo.value"
-    @click="changesStack.undo()"
-  >
-    <template #prepend>
-      <v-icon
-        color="primary"
+  <!-- Undo / redo -->
+  <div class="d-flex justify-center">
+    <v-btn-group
+      variant="tonal"
+      color="primary"
+      density="comfortable"
+      class="mt-2 mx-2 w-100"
+      divided
+    >
+      <v-btn
+        :disabled="!changesStack.canUndo.value"
         :icon="mdiUndo"
+        :title="t('undo')"
+        class="flex-grow-1"
+        @click="changesStack.undo()"
       />
-    </template>
-    {{ t('undoLastChange') }}
-  </v-list-item>
-
-  <!-- Redo last change -->
-  <v-list-item
-    :disabled="!changesStack.canRedo.value"
-    @click="changesStack.redo()"
-  >
-    <template #prepend>
-      <v-icon
-        color="primary"
+      <v-btn
+        :disabled="!changesStack.canRedo.value"
         :icon="mdiRedo"
+        :title="t('redo')"
+        class="flex-grow-1"
+        @click="changesStack.redo()"
       />
-    </template>
-    {{ t('redoLastChange') }}
-  </v-list-item>
+    </v-btn-group>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { mdiUndo, mdiRedo } from '@mdi/js'
-import type useChangesStack from '~/composables/use-changes-stack'
 
 const { t } = useI18n()
 
-defineProps<{
-  changesStack: ReturnType<typeof useChangesStack>
-}>()
+defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
 
 </script>
 
 <i18n lang="yaml">
   en:
-    undoLastChange: Undo last change
-    redoLastChange: Redo last change
+    undo: Undo last change
+    redo: Redo last change
 
   fr:
-    undoLastChange: Annuler le dernier changement
-    redoLastChange: Rétablir le dernier changement
+    undo: Annuler le dernier changement
+    redo: Rétablir le dernier changement
 
 </i18n>

@@ -10,28 +10,7 @@ export default {
   title: 'Reuse config',
   type: 'object',
   unevaluatedProperties: false,
-  layout: {
-    title: null,
-    children: [{
-      title: 'Metadata',
-      'x-i18n-title': {
-        fr: 'Métadonnées'
-      },
-      children: ['title', 'author', 'link', 'image', 'summary']
-    }, {
-      title: 'Description',
-      'x-i18n-title': {
-        fr: 'Description'
-      },
-      children: ['description']
-    }, {
-      title: 'Datasets',
-      'x-i18n-title': {
-        fr: 'Jeux de données'
-      },
-      children: ['datasets']
-    }]
-  },
+  layout: { title: null },
   required: ['title'],
   properties: {
     title: {
@@ -46,7 +25,8 @@ export default {
       title: 'Author',
       'x-i18n-title': {
         fr: 'Auteur'
-      }
+      },
+      layout: { cols: { md: 4 } }
     },
     link: {
       type: 'string',
@@ -54,7 +34,11 @@ export default {
       'x-i18n-title': {
         fr: 'Lien'
       },
-      format: 'uri'
+      description: 'Link to your reuse: mobile app, website, ...',
+      'x-i18n-description': {
+        fr: 'Lien vers votre réutilisation : application mobile, site web,...'
+      },
+      layout: { cols: { md: 4 } }
     },
     image: {
       type: 'object',
@@ -67,7 +51,7 @@ export default {
             props: { width: 1280, label: 'Image' }
           }
         },
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       properties: {
         _id: {
@@ -90,8 +74,39 @@ export default {
       'x-i18n-title': {
         fr: 'Résumé'
       },
-      layout: 'textarea',
-      maxLength: 500
+      layout: {
+        comp: 'textarea',
+        cols: { md: 8 }
+      }
+    },
+    datasets: {
+      type: 'array',
+      title: 'Datasets',
+      'x-i18n-title': {
+        fr: 'Jeux de données'
+      },
+      layout: {
+        listEditMode: 'inline',
+        cols: { md: 4 }
+      },
+      items: {
+        type: 'object',
+        required: ['id'],
+        layout: {
+          getItems: {
+            url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+            qSearchParam: 'q',
+            itemsResults: 'data.results',
+            // eslint-disable-next-line no-template-curly-in-string
+            itemTitle: '`${item.title} (${item.id})`',
+            itemKey: 'item.id'
+          }
+        },
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' }
+        }
+      }
     },
     description: {
       type: 'string',
@@ -105,30 +120,6 @@ export default {
       type: 'string',
       readOnly: true,
       layout: 'none'
-    },
-    datasets: {
-      type: 'array',
-      title: 'Datasets',
-      'x-i18n-title': {
-        fr: 'Jeux de données'
-      },
-      items: {
-        type: 'object',
-        required: ['id', 'title'],
-        layout: {
-          getItems: {
-            url: '/data-fair/api/v1/datasets?select=id,title,slug&owner={context.owner.type}:{context.owner.id}',
-            itemKey: 'item.id',
-            itemTitle: 'item.title',
-            itemsResults: 'data.results'
-          }
-        },
-        properties: {
-          id: { type: 'string' },
-          title: { type: 'string' },
-          slug: { type: 'string' }
-        }
-      }
     }
   }
 }

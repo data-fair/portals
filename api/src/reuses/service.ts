@@ -24,17 +24,12 @@ export const createReuse = async (reuse: Reuse) => {
 
 export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: SessionStateAuthenticated) => {
   // Render markdown description if provided
-  if (patch.config?.description) {
-    patch.config._descriptionHtml = renderMarkdown(patch.config.description)
-  }
+  if (patch.config?.description) patch.config._descriptionHtml = renderMarkdown(patch.config.description)
 
-  // Sync title from config if config.title is changed and current title matches current config.title
-  if (patch.config?.title && reuse.title === reuse.config.title) {
-    patch.title = patch.config.title
-  }
+  // Sync title
+  if (patch.config?.title) patch.title = patch.config.title
 
   if (patch.owner) {
-    assertAccountRole(session, reuse.owner, 'admin')
     assertAccountRole(session, patch.owner, 'admin')
     await mongo.images.updateMany(
       {
@@ -59,9 +54,7 @@ export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: S
   const updatedReuse = { ...reuse, ...fullPatch }
 
   await mongo.reuses.updateOne({ _id: reuse._id }, { $set: fullPatch })
-
   await cleanUnusedImages(updatedReuse)
-
   return updatedReuse
 }
 

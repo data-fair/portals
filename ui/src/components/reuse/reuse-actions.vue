@@ -1,8 +1,8 @@
 <template>
-  <!-- Edit reuse -->
+  <!-- Edit config -->
   <v-list-item
     :to="`/reuses/${reuseId}/edit-config`"
-    :title="t('editReuse')"
+    :title="t('editConfig')"
   >
     <template #prepend>
       <v-icon
@@ -182,7 +182,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     confirmDeleteReuse: Do you really want to delete the reuse "{title}"? Deletion is permanent and data cannot be recovered.
     deleteReuse: Delete reuse
     deletingReuse: Deleting reuse
-    editReuse: Edit reuse
+    editConfig: Edit config
     errorChangingOwner: Error while changing the owner
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
@@ -196,7 +196,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     confirmDeleteReuse: Voulez-vous vraiment supprimer la réutilisation "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
     deleteReuse: Supprimer la réutilisation
     deletingReuse: Suppression de la réutilisation
-    editReuse: Éditer la réutilisation
+    editConfig: Éditer la configuration
     errorChangingOwner: Erreur lors de le changement de propriétaire
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible

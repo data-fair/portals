@@ -1,31 +1,33 @@
 import type { Reuse } from '#api/types/reuse'
 
-const reuseStoreKey = Symbol('reuseStore') as InjectionKey<ReturnType<typeof useReuseStoreInternal>>
+// we do not use SSR, so we can use a simple module level singleton
+export type ReuseStore = ReturnType<typeof createReuseStore>
+const reuseStoreKey = Symbol('reuseStore')
 
-function useReuseStoreInternal (reuseId: string) {
-  const fetchResult = useFetch<Reuse>($apiPath + '/reuses/' + reuseId)
+const createReuseStore = (id: string) => {
+  const reuseFetch = useFetch<Reuse>($apiPath + '/reuses/' + id)
 
-  const patchReuse = useAsyncAction(async (data: Partial<Reuse>) => {
-    await $fetch($apiPath + '/reuses/' + reuseId, {
-      method: 'PATCH',
-      body: data
-    })
-    await fetchResult.refresh()
+  const reuse = ref<Reuse | null>()
+  watch(reuseFetch.data, () => {
+    reuse.value = reuseFetch.data.value
   })
 
-  return { reuseFetch: fetchResult, patchReuse }
+  const patchReuse = useAsyncAction(async (patch: Partial<Reuse>) => {
+    await $fetch(`/reuses/${id}`, { method: 'PATCH', body: patch })
+    if (reuse.value) reuse.value = { ...reuse.value, ...patch }
+  })
+
+  return { reuseFetch, reuse, patchReuse }
 }
 
 export function provideReuseStore (reuseId: string) {
-  const store = useReuseStoreInternal(reuseId)
+  const store = createReuseStore(reuseId)
   provide(reuseStoreKey, store)
   return store
 }
 
 export function useReuseStore () {
-  const store = inject(reuseStoreKey)
-  if (!store) {
-    throw new Error('useReuseStore() is called without provideReuseStore() in parent')
-  }
+  const store = inject(reuseStoreKey) as ReuseStore | undefined
+  if (!store) throw new Error('reuse store was not initialized')
   return store
 }

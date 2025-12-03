@@ -1570,12 +1570,8 @@ export default {
               }
             },
             properties: {
-              id: {
-                type: 'string'
-              },
-              title: {
-                type: 'string'
-              }
+              id: { type: 'string' },
+              title: { type: 'string' }
             }
           },
           maxItems: 100
@@ -1649,12 +1645,8 @@ export default {
             }
           },
           properties: {
-            id: {
-              type: 'string'
-            },
-            title: {
-              type: 'string'
-            }
+            id: { type: 'string' },
+            title: { type: 'string' }
           }
         },
         usePortalConfig: {
@@ -1775,12 +1767,8 @@ export default {
             }
           },
           properties: {
-            id: {
-              type: 'string'
-            },
-            title: {
-              type: 'string'
-            }
+            id: { type: 'string' },
+            title: { type: 'string' }
           }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }

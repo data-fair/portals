@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
 import type { Group } from '#api/types/group'
-
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const session = useSessionAuthenticated()

@@ -81,11 +81,11 @@ const cancelDraft = useAsyncAction(async () => {
   en:
     validateDraft: Validate draft
     cancelDraft: Cancel draft
-    undo: Undo
-    redo: Redo
+    undo: Undo last change
+    redo: Redo last change
   fr:
-    cancelDraft: Annuler le brouillon
-    redo: Rétablir
-    undo: Annuler
     validateDraft: Valider le brouillon
+    cancelDraft: Annuler le brouillon
+    undo: Annuler le dernier changement
+    redo: Rétablir le dernier changement
 </i18n>

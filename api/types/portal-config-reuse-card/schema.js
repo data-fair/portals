@@ -29,7 +29,7 @@ export default {
       type: 'boolean',
       title: 'Show summary on card',
       'x-i18n-title': {
-        fr: 'Afficher le résumé sur la carte'
+        fr: 'Afficher le résumé'
       },
       layout: {
         comp: 'switch',
@@ -42,10 +42,6 @@ export default {
       title: 'Show author',
       'x-i18n-title': {
         fr: 'Afficher l\'auteur'
-      },
-      description: 'Display the author instead of owner department.',
-      'x-i18n-description': {
-        fr: 'Affiche l\'auteur à la place du département propriétaire.'
       },
       layout: {
         comp: 'switch',
@@ -89,7 +85,7 @@ export default {
           'x-i18n-title': {
             fr: "Position de l'image sur la carte"
           },
-          layout: { cols: { md: 6 } },
+          layout: { cols: { md: 4 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'À gauche' } },
@@ -112,10 +108,10 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 1280, label: 'Default image' }
+                props: { width: 1280, label: 'Image par défaut' }
               }
             },
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           properties: {
             _id: {
@@ -144,7 +140,7 @@ export default {
           },
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: true
         }

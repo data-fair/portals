@@ -23,7 +23,8 @@
         :link="{
           type: 'external',
           href: reuseData.data.value.config.link,
-          title: t('visitLink')
+          title: t('visitLink'),
+          icon: { custom: mdiArrowTopRight }
         }"
         :config="portalConfig.navLinksConfig"
       />
@@ -37,6 +38,13 @@
       {{ t('publishedBy', { author: reuseData.data.value.config.author }) }}
     </p>
 
+    <!-- Description (rendered markdown) -->
+    <div
+      v-if="reuseData.data.value.config._descriptionHtml"
+      class="markdown-content mb-6"
+      v-html="/*eslint-disable-line vue/no-v-html*/reuseData.data.value.config._descriptionHtml"
+    />
+
     <!-- Image -->
     <v-img
       v-if="reuseData.data.value.config.image"
@@ -44,13 +52,6 @@
       :alt="reuseData.data.value.config.title"
       class="mb-4"
       max-height="400"
-    />
-
-    <!-- Description (rendered markdown) -->
-    <div
-      v-if="reuseData.data.value.config._descriptionHtml"
-      class="markdown-content mb-6"
-      v-html="/*eslint-disable-line vue/no-v-html*/reuseData.data.value.config._descriptionHtml"
     />
 
     <!-- Datasets -->
@@ -104,7 +105,7 @@
 <script setup lang="ts">
 import type { Reuse } from '#api/types/reuse'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
-import { mdiChevronLeft } from '@mdi/js'
+import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -150,15 +151,15 @@ usePageSeo({
     reuse: Reuse
     reuseNotFound: The requested reuse was not found
     reuseError: An error occurred while loading the reuse
-    visitLink: Visit link
+    visitLink: View reuse
     publishedBy: Published by {author}
-    datasets: Linked datasets
+    datasets: Datasets used
   fr:
     backToReuses: Retourner à la liste des réutilisations
     reuse: Réutilisation
     reuseNotFound: La réutilisation demandée n'a pas été trouvée
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
-    visitLink: Visiter le lien
+    visitLink: Voir la réutilisation
     publishedBy: Publié par {author}
-    datasets: Jeux de données associés
+    datasets: Données utilisées
 </i18n>

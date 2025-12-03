@@ -4,6 +4,8 @@ import slug from 'slugify'
 import { Router } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
+import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
+import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse } from './service.ts'
 
@@ -20,7 +22,7 @@ router.get('', async (req, res, next) => {
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals' })
 
-  // If showAll is true, we get all reuses without owner filter (super admin mode)
+  // TODO: account filter for super admins ?
   const showAll = params.showAll === 'true' || params.showAll === '1'
   if (showAll && !session.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
   const query = showAll ? {} : findUtils.filterPermissions(params, session)
@@ -36,9 +38,8 @@ router.get('', async (req, res, next) => {
 
 router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  assertAccountRole(session, session.account, 'admin')
 
-  const body = req.body as { owner?: Reuse['owner'], config: Reuse['config'], portals?: string[] }
+  const body = postReqBody.returnValid(req.body, { name: 'body' })
 
   const created = {
     id: session.user.id,
@@ -91,17 +92,13 @@ router.get('/:id', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
-  const body = req.body as Partial<Reuse>
-  if (body.portals) assertAccountRole(session, reuse.owner, 'admin')
+  const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
   res.send(updatedReuse)
 })
 
 router.delete('/:id', async (req, res, next) => {
-  const session = reqSessionAuthenticated(req)
-  const reuse = await mongo.reuses.findOne({ _id: req.params.id })
-  if (!reuse) throw httpError(404, `reuse "${req.params.id}" not found`)
-  assertAccountRole(session, reuse.owner, 'admin')
+  const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   res.status(201).send()
 })

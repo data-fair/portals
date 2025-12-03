@@ -27,18 +27,6 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
   await mongo.portals.insertOne(portal)
 }
 
-export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
-  debug('deletePortal', portal)
-  await syncPortalDelete(portal, reqOrigin, cookie)
-  await mongo.images.deleteMany({
-    'owner.type': portal.owner.type,
-    'owner.id': portal.owner.id,
-    'resource.type': 'portal',
-    'resource._id': portal._id
-  })
-  await mongo.portals.deleteOne({ _id: portal._id })
-}
-
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
@@ -70,6 +58,18 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, cookie)
   await mongo.portals.updateOne({ _id: portal._id }, { $set: fullPatch })
   return updatedPortal
+}
+
+export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
+  debug('deletePortal', portal)
+  await syncPortalDelete(portal, reqOrigin, cookie)
+  await mongo.images.deleteMany({
+    'owner.type': portal.owner.type,
+    'owner.id': portal.owner.id,
+    'resource.type': 'portal',
+    'resource._id': portal._id
+  })
+  await mongo.portals.deleteOne({ _id: portal._id })
 }
 
 export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {

@@ -40,25 +40,23 @@
     </span>
 
     <!-- List of reuses -->
-    <template v-else>
-      <v-row class="d-flex align-stretch">
-        <v-col
-          v-for="reuse in displayReuses"
-          :key="reuse._id"
-          md="4"
-          sm="6"
-          cols="12"
-        >
-          <reuse-card
-            :reuse="reuse"
-            :show-owner="showAll || !!(reuse.owner.department && !session.state.account.department)"
-          />
-        </v-col>
-      </v-row>
-    </template>
+    <v-row
+      v-else
+      class="d-flex align-stretch"
+    >
+      <v-col
+        v-for="reuse in displayReuses"
+        :key="reuse._id"
+        md="4"
+        sm="6"
+        cols="12"
+      >
+        <reuse-card-ui :reuse="reuse" />
+      </v-col>
+    </v-row>
 
     <!-- Actions -->
-    <navigation-right v-if="reusesFetch.data.value">
+    <navigation-right>
       <reuses-actions
         v-model:search="search"
         v-model:show-all="showAll"
@@ -71,23 +69,21 @@
 import type { Reuse } from '#api/types/reuse/index'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
-const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
 const { t } = useI18n()
 
 const reusesParams = computed(() => {
   const params: Record<string, any> = {
-    size: 10000,
+    size: 1000,
     sort: 'updated.date:-1',
-    select: '_id,title,slug,config.title,config.author,config.summary,config.image,owner'
+    select: '_id,title'
   }
-  if (showAll.value) params.showAll = true
+  if (showAll.value) params.showAll = 'true'
   return params
 })
 
 const reusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses', { query: reusesParams })
-
 const displayReuses = computed(() => {
   const reuses = (reusesFetch.data.value?.results ?? [])
   if (!search.value) return reuses

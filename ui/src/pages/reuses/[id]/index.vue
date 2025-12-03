@@ -15,9 +15,9 @@
 
       <v-card-text>
         <v-tabs-window v-model="tab">
-          <v-tabs-window-item value="preview">
-            <reuse-preview :reuse-config="reuseFetch.data.value?.config" />
-          </v-tabs-window-item>
+          <!-- <v-tabs-window-item value="preview">
+            TODO: add preview of the reuse
+          </v-tabs-window-item> -->
 
           <v-tabs-window-item value="publications">
             <reuse-edit-publication />
@@ -39,7 +39,7 @@
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
-const route = useRoute<'/reuses/[id]'>()
+const route = useRoute<'/reuses/[id]/'>()
 
 const { reuseFetch } = useReuseStore()
 

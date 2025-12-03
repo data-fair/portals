@@ -77,6 +77,7 @@ const createNavigationStore = () => {
           case 'applications': return '/applications'
           case 'news': return '/news'
           case 'event': return '/event'
+          case 'reuses': return '/reuses'
           case 'sitemap': return '/sitemap'
           default: return undefined
         }
@@ -105,6 +106,7 @@ const createNavigationStore = () => {
           case 'applications': return i18n[locale]['applicationsPage']
           case 'news': return i18n[locale]['newsPage']
           case 'event': return i18n[locale]['eventPage']
+          case 'reuses': return i18n[locale]['reusesPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
           default: return i18n[locale]['standardPage']
         }
@@ -155,6 +157,7 @@ const i18n = {
     applicationsPage: 'Applications',
     newsPage: 'News',
     eventPage: 'Event',
+    reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
     standardPage: 'Standard Page',
     link: 'Link'
@@ -171,6 +174,7 @@ const i18n = {
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',
     eventPage: "Page d'événement",
+    reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
     standardPage: 'Page standard',
     link: 'Lien'

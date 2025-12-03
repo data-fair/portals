@@ -137,7 +137,7 @@ export default {
 
     applications: {
       type: 'object',
-      title: 'Configuration des applications',
+      title: 'Configuration des visualisations',
       layout: {
         comp: 'card',
         children: [

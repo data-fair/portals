@@ -1,38 +1,38 @@
 <template>
   <v-card
     :to="`/reuses/${reuse._id}`"
-    class="h-100 d-flex flex-column"
-    :elevation="1"
-    rounded="default"
+    class="h-100"
   >
-    <v-card-title
-      class="font-weight-bold"
-      style="white-space: unset;"
-    >
-      {{ reuse.config.title }}
-    </v-card-title>
-    <v-card-text
-      v-if="reuse.config.summary"
-      class="pb-0"
-    >
-      {{ reuse.config.summary }}
-    </v-card-text>
-
-    <v-spacer />
-
-    <v-list-item>
-      <template #prepend>
+    <v-card-item>
+      <template #append>
         <owner-avatar
-          v-if="showOwner"
+          v-if="showAll || !!(reuse.owner.department && !session.state.account.department)"
           :owner="reuse.owner"
         />
       </template>
-      <span :class="['text-caption', showOwner ? 'ml-2' : '']">
-        <template v-if="reuse.config.author">
-          {{ t('publishedBy', { author: reuse.config.author }) }}
-        </template>
-      </span>
-    </v-list-item>
+
+      <template #title>
+        <span class="font-weight-bold text-primary">
+          {{ reuse.title }}
+        </span>
+        <v-tooltip
+          v-if="reuse.title?.length > 20"
+          activator="parent"
+          location="top left"
+          open-delay="300"
+          :text="reuse.title"
+        />
+      </template>
+    </v-card-item>
+    <v-divider />
+    <v-card-text class="pa-0">
+      <v-list
+        density="compact"
+        style="background-color: inherit;"
+      >
+        <!-- TODO: Add a content -->
+      </v-list>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -40,20 +40,8 @@
 import type { Reuse } from '#api/types/reuse/index'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
-const { reuse, showOwner = false } = defineProps<{
-  reuse: Reuse
-  showOwner?: boolean
-}>()
+const session = useSessionAuthenticated()
+const showAll = useBooleanSearchParam('showAll')
 
-const { t } = useI18n()
-
+const { reuse } = defineProps<{ reuse: Reuse }>()
 </script>
-
-<i18n lang="yaml">
-  en:
-    publishedBy: Published by {author}
-
-  fr:
-    publishedBy: Publié par {author}
-
-</i18n>

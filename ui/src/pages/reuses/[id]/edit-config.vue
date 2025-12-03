@@ -34,7 +34,7 @@
       </v-form>
     </v-defaults-provider>
 
-    <navigation-right v-if="reuseFetch.data.value">
+    <navigation-right>
       <reuse-edit-actions :changes-stack="changesStack" />
     </navigation-right>
   </v-container>
@@ -48,7 +48,6 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/reuses/[id]/edit-config'>()
-const session = useSession()
 
 const { reuseFetch, patchReuse } = useReuseStore()
 
@@ -59,17 +58,13 @@ watch(reuseFetch.data, () => {
 
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
-
 const reuseRef = { type: 'reuse' as const, _id: route.params.id }
 
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
-  initialValidation: 'always',
-  context: {
-    owner: session.account.value
-  }
+  initialValidation: 'always'
 }))
 
 const saveConfig = useAsyncAction(async () => {

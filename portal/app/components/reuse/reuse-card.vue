@@ -57,16 +57,13 @@
 
         <v-spacer />
 
-        <v-list-item v-if="cardConfig.showAuthor && reuse.config.author">
-          <span class="text-caption">
+        <v-list-item>
+          <p v-if="cardConfig.showAuthor && reuse.config.author" class="text-caption">
             {{ t('publishedBy', { author: reuse.config.author }) }}
-          </span>
-        </v-list-item>
-
-        <v-list-item v-else-if="reuse.updated">
-          <span class="text-caption">
+          </p>
+          <p class="text-caption">
             {{ t('updatedAt') }} {{ dayjs(reuse.updated.date).format('L') }}
-          </span>
+          </p>
         </v-list-item>
       </v-col>
     </v-row>
@@ -78,21 +75,23 @@ import type { Reuse } from '#api/types/reuse'
 import type { ReuseCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
-const { reuse, cardConfig } = defineProps<{
+const { reuse, cardConfig, isPortalConfig } = defineProps<{
   reuse: Pick<Reuse, '_id' | 'slug' | 'config' | 'updated'>
   cardConfig: ReuseCard
+  isPortalConfig?: boolean
 }>()
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/reuses/${reuse.slug}/images/${id}`
 }
 
-const getDefaultImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/images/${id}`
@@ -100,8 +99,8 @@ const getDefaultImageSrc = (imageRef: ImageRef, mobile: boolean) => {
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
-  if (reuse.config.image) return getPortalImageSrc(reuse.config.image, false)
-  if (cardConfig.thumbnail?.default) return getDefaultImageSrc(cardConfig.thumbnail.default, false)
+  if (reuse.config.image) return getReuseImageSrc(reuse.config.image, false)
+  if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
 })
 

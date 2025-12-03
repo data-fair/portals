@@ -249,11 +249,11 @@
     </template>
 
     <!-- Reuses section -->
-    <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && datasetReuses.length">
+    <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && reuses.length">
       <page-element-title
         :element="{
           type: 'title',
-          content: t('sections.reuse', { count: datasetReuses.length }),
+          content: t('sections.reuse', { count: reuses.length }),
           titleSize: 'h5',
           line: portalConfig.datasets.page.titleStyle
         }"
@@ -261,14 +261,15 @@
 
       <v-row class="d-flex align-stretch">
         <v-col
-          v-for="reuse in datasetReuses"
+          v-for="reuse in reuses"
           :key="reuse._id"
           :md="12 / (portalConfig.datasets.page.reuses.columns || 3)"
           cols="12"
         >
-          <portal-reuse-card
+          <reuse-card
             :reuse="reuse"
             :card-config="reusesCardConfig"
+            :is-portal-config="portalConfig.datasets.page.reuses?.useGlobalCard"
           />
         </v-col>
       </v-row>
@@ -295,6 +296,7 @@
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/account'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
+import type { Reuse } from '#api/types/reuse/index.js'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
 
@@ -386,7 +388,7 @@ const dataset = computed(() => datasetFetch.data.value)
 
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
-  size: 1000,
+  size: 100,
   html: true,
   dataset: datasetFetch.data.value?.id,
   publicationSites: 'data-fair-portals:' + portal.value._id
@@ -412,17 +414,13 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
-// Fetch reuses that reference this dataset
 const reusesUrl = computed(() => withQuery('/portal/api/reuses', {
   dataset: datasetFetch.data.value?.id,
   limit: 100
 }))
 
-const reusesFetch = useLocalFetch<{ results: Array<{ _id: string, slug: string, config: any, updated: any }>, total: number }>(reusesUrl)
-
-const datasetReuses = computed(() => {
-  return reusesFetch.data.value?.results || []
-})
+const reusesFetch = useLocalFetch<{ count: number, results: Reuse[] }>(reusesUrl)
+const reuses = computed(() => reusesFetch.data.value?.results || [])
 
 const reusesCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.reuses

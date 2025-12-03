@@ -1,4 +1,5 @@
 <template>
+  <!-- Create new reuse -->
   <v-list-item :to="`/reuses/new`">
     <template #prepend>
       <v-icon

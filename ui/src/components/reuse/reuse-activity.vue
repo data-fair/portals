@@ -1,92 +1,48 @@
 <template>
-  <div v-if="reuseFetch.data.value">
-    <v-table density="compact">
-      <tbody>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('id') }}
-          </td>
-          <td>{{ reuseFetch.data.value._id }}</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('slug') }}
-          </td>
-          <td>{{ reuseFetch.data.value.slug }}</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('owner') }}
-          </td>
-          <td>
-            <owner-avatar
-              :owner="reuseFetch.data.value.owner"
-              size="24"
-            />
-            {{ reuseFetch.data.value.owner.name }}
-            <template v-if="reuseFetch.data.value.owner.departmentName">
-              - {{ reuseFetch.data.value.owner.departmentName }}
-            </template>
-          </td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('createdAt') }}
-          </td>
-          <td>{{ formatDate(reuseFetch.data.value.created.date) }}</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('createdBy') }}
-          </td>
-          <td>{{ reuseFetch.data.value.created.name }}</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('updatedAt') }}
-          </td>
-          <td>{{ formatDate(reuseFetch.data.value.updated.date) }}</td>
-        </tr>
-        <tr>
-          <td class="font-weight-bold">
-            {{ t('updatedBy') }}
-          </td>
-          <td>{{ reuseFetch.data.value.updated.name }}</td>
-        </tr>
-      </tbody>
-    </v-table>
-  </div>
+  <v-list-item
+    :prepend-avatar="avatarUrl"
+    :title="ownerName"
+  />
+  <v-list-item
+    :prepend-icon="mdiPencil"
+    :title="reuseFetch.data.value?.updated.name"
+    :subtitle="dayjs(reuseFetch.data.value?.updated.date).format(t('dateFormat'))"
+  />
+  <v-list-item
+    :prepend-icon="mdiPlusCircleOutline"
+    :title="reuseFetch.data.value?.created.name"
+    :subtitle="dayjs(reuseFetch.data.value?.created.date).format(t('dateFormat'))"
+  />
 </template>
 
 <script setup lang="ts">
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiPencil, mdiPlusCircleOutline } from '@mdi/js'
 
+const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 const { reuseFetch } = useReuseStore()
 
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleString()
-}
+const ownerName = computed(() => {
+  if (!reuseFetch.data.value) return ''
+  const baseName = reuseFetch.data.value.owner.name || reuseFetch.data.value.owner.id
+  const departmentInfo = reuseFetch.data.value.owner.departmentName || reuseFetch.data.value.owner.department
+  return departmentInfo
+    ? `${baseName} - ${departmentInfo}`
+    : baseName
+})
+
+const avatarUrl = computed(() => {
+  if (reuseFetch.data.value?.owner.department) return `/simple-directory/api/avatars/${reuseFetch.data.value?.owner.type}/${reuseFetch.data.value?.owner.id}/${reuseFetch.data.value?.owner.department}/avatar.png`
+  else return `/simple-directory/api/avatars/${reuseFetch.data.value?.owner.type}/${reuseFetch.data.value?.owner.id}/avatar.png`
+})
 
 </script>
 
 <i18n lang="yaml">
   en:
-    id: ID
-    slug: Slug
-    owner: Owner
-    createdAt: Created at
-    createdBy: Created by
-    updatedAt: Updated at
-    updatedBy: Updated by
+    dateFormat: D MMM YYYY at HH:mm
 
   fr:
-    id: ID
-    slug: Slug
-    owner: Propriétaire
-    createdAt: Créé le
-    createdBy: Créé par
-    updatedAt: Mis à jour le
-    updatedBy: Mis à jour par
+    dateFormat: D MMM YYYY à HH:mm
 
 </i18n>
