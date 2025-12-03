@@ -29,7 +29,7 @@
 import type { Portal } from '#api/types/portal/index'
 
 const { t } = useI18n()
-const { useFetch, patchUse } = useUseStore()
+const { useFetch: useDataFetch, patchUse } = useUseStore()
 
 const portalsFetch = useFetch<{ results: Portal[], count: number }>($apiPath + '/portals', {
   query: {
@@ -39,15 +39,15 @@ const portalsFetch = useFetch<{ results: Portal[], count: number }>($apiPath + '
 })
 
 const isPublished = (portalId: string) => {
-  return useFetch.data.value?.portals.includes(portalId) ?? false
+  return useDataFetch.data.value?.portals.includes(portalId) ?? false
 }
 
 const isRequested = (portalId: string) => {
-  return useFetch.data.value?.requestedPortals.includes(portalId) ?? false
+  return useDataFetch.data.value?.requestedPortals.includes(portalId) ?? false
 }
 
 const togglePortal = async (portalId: string) => {
-  const currentPortals = [...(useFetch.data.value?.portals ?? [])]
+  const currentPortals = [...(useDataFetch.data.value?.portals ?? [])]
   const index = currentPortals.indexOf(portalId)
 
   if (index >= 0) {

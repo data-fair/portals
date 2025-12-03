@@ -1,8 +1,8 @@
 <template>
   <!-- Error state -->
   <page-error
-    v-if="useFetch.error.value"
-    :status-code="useFetch.error.value.statusCode || 500"
+    v-if="useData.error.value"
+    :status-code="useData.error.value.statusCode || 500"
     :title="errorTitle"
     :link="{
       type: 'standard',
@@ -11,18 +11,18 @@
     }"
   />
 
-  <template v-else-if="useFetch.data.value">
+  <template v-else-if="useData.data.value">
     <!-- Title and link -->
     <div class="d-flex align-center mb-4 flex-wrap gap-2">
       <h1 class="text-h4">
-        {{ useFetch.data.value.config.title }}
+        {{ useData.data.value.config.title }}
       </h1>
       <v-spacer />
       <nav-link
-        v-if="useFetch.data.value.config.link"
+        v-if="useData.data.value.config.link"
         :link="{
           type: 'external',
-          href: useFetch.data.value.config.link,
+          href: useData.data.value.config.link,
           title: t('visitLink')
         }"
         :config="portalConfig.navLinksConfig"
@@ -31,30 +31,30 @@
 
     <!-- Author -->
     <p
-      v-if="useFetch.data.value.config.author"
+      v-if="useData.data.value.config.author"
       class="text-subtitle-1 mb-4"
     >
-      {{ t('publishedBy', { author: useFetch.data.value.config.author }) }}
+      {{ t('publishedBy', { author: useData.data.value.config.author }) }}
     </p>
 
     <!-- Image -->
     <v-img
-      v-if="useFetch.data.value.config.image"
-      :src="getImageSrc(useFetch.data.value.config.image, false)"
-      :alt="useFetch.data.value.config.title"
+      v-if="useData.data.value.config.image"
+      :src="getImageSrc(useData.data.value.config.image, false)"
+      :alt="useData.data.value.config.title"
       class="mb-4"
       max-height="400"
     />
 
     <!-- Description (rendered markdown) -->
     <div
-      v-if="useFetch.data.value.config._descriptionHtml"
+      v-if="useData.data.value.config._descriptionHtml"
       class="markdown-content mb-6"
-      v-html="/*eslint-disable-line vue/no-v-html*/useFetch.data.value.config._descriptionHtml"
+      v-html="/*eslint-disable-line vue/no-v-html*/useData.data.value.config._descriptionHtml"
     />
 
     <!-- Datasets -->
-    <template v-if="useFetch.data.value.config.datasets?.length">
+    <template v-if="useData.data.value.config.datasets?.length">
       <page-element-title
         :element="{
           type: 'title',
@@ -65,15 +65,20 @@
       />
       <v-row>
         <v-col
-          v-for="dataset in useFetch.data.value.config.datasets"
+          v-for="dataset in useData.data.value.config.datasets"
           :key="dataset.id"
           cols="12"
           md="4"
         >
-          <dataset-card
-            :dataset="{ id: dataset.id, slug: dataset.slug, title: dataset.title }"
-            :card-config="portalConfig.datasets.card"
-          />
+          <v-card
+            :to="`/datasets/${dataset.slug || dataset.id}`"
+            :elevation="portalConfig.datasets.card.elevation ?? 0"
+            :rounded="portalConfig.datasets.card.rounded ?? 'default'"
+          >
+            <v-card-title class="font-weight-bold">
+              {{ dataset.title }}
+            </v-card-title>
+          </v-card>
         </v-col>
       </v-row>
     </template>
@@ -108,12 +113,12 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 
-const useFetch = await useFetch<Pick<Use, '_id' | 'slug' | 'config'>>(`/portal/api/uses/${slug}`, {
+const useData = await useFetch<Pick<Use, '_id' | 'slug' | 'config'>>(`/portal/api/uses/${slug}`, {
   watch: false
 })
 
 const errorTitle = computed(() => {
-  const code = useFetch.error.value?.statusCode
+  const code = useData.error.value?.statusCode
   if (code === 401 || code === 403) return undefined
   if (code === 404) return t('useNotFound')
   return t('useError')
@@ -125,16 +130,16 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/uses/${slug}/images/${id}`
 }
 
-watch(() => useFetch.data.value, () => {
+watch(() => useData.data.value, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'uses' },
-    { title: useFetch.data.value?.config.title || t('use') }
+    { title: useData.data.value?.config.title || t('use') }
   ])
 }, { immediate: true })
 
 usePageSeo({
-  title: () => (useFetch.data.value?.config.title || t('use')) + ' - ' + portalConfig.value.title,
-  description: () => useFetch.data.value?.config.summary || portalConfig.value.description,
+  title: () => (useData.data.value?.config.title || t('use')) + ' - ' + portalConfig.value.title,
+  description: () => useData.data.value?.config.summary || portalConfig.value.description,
   ogType: 'article'
 })
 </script>

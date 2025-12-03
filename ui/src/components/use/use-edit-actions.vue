@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { mdiUndo, mdiRedo } from '@mdi/js'
-import type { useChangesStack } from '~/composables/use-changes-stack'
+import type useChangesStack from '~/composables/use-changes-stack'
 
 const { t } = useI18n()
 
