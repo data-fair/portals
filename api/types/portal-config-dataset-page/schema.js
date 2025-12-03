@@ -188,7 +188,7 @@ export default {
       }
     },
 
-    uses: {
+    reuses: {
       type: 'object',
       title: 'Configuration des réutilisations',
       layout: {
@@ -234,7 +234,7 @@ export default {
           default: true
         },
         card: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-use-card'
+          $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card'
         }
       }
     }

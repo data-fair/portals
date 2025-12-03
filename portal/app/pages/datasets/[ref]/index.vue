@@ -248,12 +248,12 @@
       </template>
     </template>
 
-    <!-- Uses section -->
-    <template v-if="portalConfig.datasets.page.uses?.display && portalConfig.datasets.page.uses?.display !== 'none' && datasetUses.length">
+    <!-- Reuses section -->
+    <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && datasetReuses.length">
       <page-element-title
         :element="{
           type: 'title',
-          content: t('sections.use', { count: datasetUses.length }),
+          content: t('sections.reuse', { count: datasetReuses.length }),
           titleSize: 'h5',
           line: portalConfig.datasets.page.titleStyle
         }"
@@ -261,14 +261,14 @@
 
       <v-row class="d-flex align-stretch">
         <v-col
-          v-for="use in datasetUses"
-          :key="use._id"
-          :md="12 / (portalConfig.datasets.page.uses.columns || 3)"
+          v-for="reuse in datasetReuses"
+          :key="reuse._id"
+          :md="12 / (portalConfig.datasets.page.reuses.columns || 3)"
           cols="12"
         >
-          <portal-use-card
-            :use="use"
-            :card-config="usesCardConfig"
+          <portal-reuse-card
+            :reuse="reuse"
+            :card-config="reusesCardConfig"
           />
         </v-col>
       </v-row>
@@ -412,24 +412,24 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
-// Fetch uses that reference this dataset
-const usesUrl = computed(() => withQuery('/portal/api/uses', {
+// Fetch reuses that reference this dataset
+const reusesUrl = computed(() => withQuery('/portal/api/reuses', {
   dataset: datasetFetch.data.value?.id,
   limit: 100
 }))
 
-const usesFetch = useLocalFetch<{ results: Array<{ _id: string, slug: string, config: any, updated: any }>, total: number }>(usesUrl)
+const reusesFetch = useLocalFetch<{ results: Array<{ _id: string, slug: string, config: any, updated: any }>, total: number }>(reusesUrl)
 
-const datasetUses = computed(() => {
-  return usesFetch.data.value?.results || []
+const datasetReuses = computed(() => {
+  return reusesFetch.data.value?.results || []
 })
 
-const usesCardConfig = computed(() => {
-  const pageConfig = portalConfig.value.datasets.page.uses
+const reusesCardConfig = computed(() => {
+  const pageConfig = portalConfig.value.datasets.page.reuses
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
-    return portalConfig.value.uses.card
+    return portalConfig.value.reuses.card
   }
-  return { ...portalConfig.value.uses.card, ...pageConfig.card }
+  return { ...portalConfig.value.reuses.card, ...pageConfig.card }
 })
 
 const errorTitle = computed(() => {
@@ -485,7 +485,7 @@ usePageSeo({
     datasetError: An error occurred while loading the dataset
     sections:
       application: Linked application | Linked applications
-      use: Linked use | Linked uses
+      reuse: Linked reuse | Linked reuses
       data: Data
       map: Map
       schema: Schema
@@ -499,7 +499,7 @@ usePageSeo({
     datasetError: Une erreur est survenue lors du chargement du jeu de données
     sections:
       application: Visualisation associée | Visualisations associées
-      use: Réutilisation associée | Réutilisations associées
+      reuse: Réutilisation associée | Réutilisations associées
       data: Données
       map: Carte
       schema: Schéma

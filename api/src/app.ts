@@ -6,7 +6,7 @@ import identitiesRouter from './identities/router.ts'
 import groupRouter from './groups/router.ts'
 import portalsRouter from './portals/router.ts'
 import pagesRouter from './pages/router.ts'
-import usesRouter from './uses/router.ts'
+import reusesRouter from './reuses/router.ts'
 import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
 import fontsRouter from './fonts/router.ts'
@@ -41,7 +41,7 @@ app.use('/api/assets', express.static(resolve(import.meta.dirname, '../assets'))
 app.use('/api/groups', groupRouter)
 app.use('/api/portals', portalsRouter)
 app.use('/api/pages', pagesRouter)
-app.use('/api/uses', usesRouter)
+app.use('/api/reuses', reusesRouter)
 app.use('/api/images', imagesRouter)
 app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)

@@ -1,7 +1,7 @@
 import type { Group } from '#types/group/index.ts'
 import type { Portal } from '#types/portal/index.ts'
 import type { Page } from '#types/page/index.ts'
-import type { Use } from '#types/use/index.ts'
+import type { Reuse } from '#types/reuse/index.ts'
 import type { Image } from '#types/image/index.js'
 import type { FontAsset } from '#types/font-asset/index.js'
 
@@ -29,8 +29,8 @@ export class PortalsMongo {
     return mongo.db.collection<Page>('pages')
   }
 
-  get uses () {
-    return mongo.db.collection<Use>('uses')
+  get reuses () {
+    return mongo.db.collection<Reuse>('reuses')
   }
 
   get images () {
@@ -57,7 +57,7 @@ export class PortalsMongo {
         'unique-news-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.newsMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.newsMetadata.slug': { $exists: true } } }],
         'unique-generic-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.genericMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.genericMetadata.slug': { $exists: true } } }]
       },
-      uses: {
+      reuses: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 },
         'unique-slug': [{ 'owner.type': 1, 'owner.id': 1, slug: 1 }, { unique: true }]
       },
