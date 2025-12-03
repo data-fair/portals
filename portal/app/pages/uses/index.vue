@@ -38,7 +38,7 @@
             md="6"
             lg="4"
           >
-            <use-card
+            <portal-use-card
               :use="use"
               :card-config="portalConfig.uses.card"
             />

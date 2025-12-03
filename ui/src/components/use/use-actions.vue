@@ -147,7 +147,7 @@ const { useId } = defineProps<{ useId: string }>()
 
 const changeOwner = useAsyncAction(
   async () => {
-    await $fetch(`/uses/${useId}`, {
+    await $fetch($apiPath + `/uses/${useId}`, {
       method: 'PATCH',
       body: JSON.stringify({ owner: newOwner.value })
     })
@@ -160,7 +160,7 @@ const changeOwner = useAsyncAction(
 )
 
 const deleteUse = useAsyncAction(async () => {
-  await $fetch(`uses/${useId}`, { method: 'DELETE' })
+  await $fetch($apiPath + `/uses/${useId}`, { method: 'DELETE' })
   router.push('/uses')
 })
 

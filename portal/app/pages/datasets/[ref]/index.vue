@@ -266,7 +266,7 @@
           :md="12 / (portalConfig.datasets.page.uses.columns || 3)"
           cols="12"
         >
-          <use-card
+          <portal-use-card
             :use="use"
             :card-config="usesCardConfig"
           />

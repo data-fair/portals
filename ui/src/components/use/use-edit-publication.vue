@@ -1,5 +1,5 @@
 <template>
-  <div v-if="useFetch.data.value">
+  <div v-if="useDataFetch.data.value">
     <h3 class="text-h6 mb-4">
       {{ t('publication') }}
     </h3>
