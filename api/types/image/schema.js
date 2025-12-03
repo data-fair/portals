@@ -19,7 +19,7 @@ export default {
       properties: {
         type: {
           type: 'string',
-          enum: ['page', 'portal']
+          enum: ['page', 'portal', 'reuse']
         },
         _id: {
           type: 'string'

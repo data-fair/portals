@@ -31,6 +31,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         case 'applications': return i18n[lang]['applicationsPage']
         case 'news': return i18n[lang]['newsPage']
         case 'event': return i18n[lang]['eventPage']
+        case 'reuses': return i18n[lang]['reusesPage']
         case 'sitemap': return i18n[lang]['sitemapPage']
         default: return i18n[lang]['standardPage']
       }
@@ -70,6 +71,7 @@ const i18n = {
     applicationsPage: 'Applications',
     newsPage: 'News',
     eventPage: 'Event',
+    reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
     standardPage: 'Standard Page',
     link: 'Link'
@@ -86,6 +88,7 @@ const i18n = {
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',
     eventPage: "Page d'événement",
+    reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
     standardPage: 'Page standard',
     link: 'Lien'

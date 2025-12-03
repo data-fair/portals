@@ -38,7 +38,7 @@ const { width, height, resource } = defineProps({
   label: { type: String, default: undefined },
   width: { type: Number, default: undefined },
   height: { type: Number, default: undefined },
-  resource: { type: Object as () => ({ type: 'page' | 'portal', _id: string }), required: true }
+  resource: { type: Object as () => ({ type: 'page' | 'portal' | 'reuse', _id: string }), required: true }
 })
 
 const loadFile = useAsyncAction(async (file: File) => {

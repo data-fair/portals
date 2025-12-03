@@ -137,7 +137,7 @@ export default {
 
     applications: {
       type: 'object',
-      title: 'Configuration des applications',
+      title: 'Configuration des visualisations',
       layout: {
         comp: 'card',
         children: [
@@ -184,6 +184,57 @@ export default {
         },
         card: {
           $ref: 'https://github.com/data-fair/portals/portal-config-application-card'
+        }
+      }
+    },
+
+    reuses: {
+      type: 'object',
+      title: 'Configuration des réutilisations',
+      layout: {
+        comp: 'card',
+        children: [
+          'display',
+          'columns',
+          'useGlobalCard',
+          {
+            if: 'data?.display === "card" && data?.useGlobalCard === false',
+            children: ['card']
+          }
+        ]
+      },
+      properties: {
+        display: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'none',
+          layout: { cols: { md: 4 } },
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'card', title: 'Vignette' }
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
+          default: 3,
+          minimum: 1,
+          maximum: 4
+        },
+        useGlobalCard: {
+          type: 'boolean',
+          title: 'Utiliser la configuration globale des vignettes',
+          layout: {
+            if: 'parent.data?.display === "card"',
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        },
+        card: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card'
         }
       }
     }

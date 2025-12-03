@@ -89,6 +89,7 @@ export default {
             { const: 'terms-of-service', title: 'Conditions générales d\'utilisation' },
             { const: 'datasets', title: 'Catalogue de données' },
             { const: 'applications', title: 'Catalogue de visualisation' },
+            { const: 'reuses', title: 'Liste des réutilisations' },
             { const: 'event', title: 'Liste des événements' },
             { const: 'news', title: 'Liste des actualités' },
             { const: 'sitemap', title: 'Plan du site' }
@@ -226,6 +227,7 @@ const linkItemTitleFn = (item) => {
     'terms-of-service': 'Conditions générales d\'utilisation',
     datasets: 'Catalogue de données',
     applications: 'Catalogue de visualisation',
+    reuses: 'Liste des réutilisations',
     event: 'Liste des évènements',
     news: 'Liste des actualités',
     sitemap: 'Plan du site'

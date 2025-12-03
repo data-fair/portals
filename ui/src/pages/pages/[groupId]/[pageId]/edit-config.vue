@@ -24,6 +24,7 @@
           </template>
         </vjsf-page-config>
       </v-form>
+
       <navigation-right>
         <page-edit-actions :changes-stack="changesStack" />
       </navigation-right>

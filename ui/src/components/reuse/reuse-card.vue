@@ -1,26 +1,26 @@
 <template>
   <v-card
+    :to="`/reuses/${reuse._id}`"
     class="h-100"
-    :to="`/pages/${group._id}/${page._id}`"
   >
     <v-card-item>
       <template #append>
         <owner-avatar
-          v-if="showAll || !!(page.owner.department && !session.state.account.department)"
-          :owner="page.owner"
+          v-if="showAll || !!(reuse.owner.department && !session.state.account.department)"
+          :owner="reuse.owner"
         />
       </template>
 
       <template #title>
         <span class="font-weight-bold text-primary">
-          {{ page.title }}
+          {{ reuse.title }}
         </span>
         <v-tooltip
-          v-if="page.title?.length > 20"
+          v-if="reuse.title?.length > 20"
           activator="parent"
           location="top left"
           open-delay="300"
-          :text="page.title"
+          :text="reuse.title"
         />
       </template>
     </v-card-item>
@@ -37,15 +37,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
-import type { Group } from '#api/types/group'
+import type { Reuse } from '#api/types/reuse/index'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
-defineProps<{
-  page: Page
-  group: Pick<Group, '_id' | 'title'> & Partial<Pick<Group, 'owner'>>
-}>()
+const { reuse } = defineProps<{ reuse: Reuse }>()
 </script>

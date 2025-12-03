@@ -42,7 +42,7 @@ export default {
     },
     showSummary: {
       type: 'boolean',
-      title: 'Afficher le résumé sur la carte',
+      title: 'Afficher le résumé',
       layout: {
         comp: 'switch',
         cols: { md: 6 }
