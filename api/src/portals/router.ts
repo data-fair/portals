@@ -81,6 +81,9 @@ router.post('', async (req, res, next) => {
       card: {},
       page: {}
     },
+    uses: {
+      card: {}
+    },
     socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
     socialLinks: {},
     contactInformations: {},

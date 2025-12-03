@@ -248,6 +248,32 @@
       </template>
     </template>
 
+    <!-- Uses section -->
+    <template v-if="portalConfig.datasets.page.uses?.display && portalConfig.datasets.page.uses?.display !== 'none' && datasetUses.length">
+      <page-element-title
+        :element="{
+          type: 'title',
+          content: t('sections.use', { count: datasetUses.length }),
+          titleSize: 'h5',
+          line: portalConfig.datasets.page.titleStyle
+        }"
+      />
+
+      <v-row class="d-flex align-stretch">
+        <v-col
+          v-for="use in datasetUses"
+          :key="use._id"
+          :md="12 / (portalConfig.datasets.page.uses.columns || 3)"
+          cols="12"
+        >
+          <use-card
+            :use="use"
+            :card-config="usesCardConfig"
+          />
+        </v-col>
+      </v-row>
+    </template>
+
     <!-- Back to datasets link -->
     <v-row
       class="my-4"
@@ -386,6 +412,26 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
+// Fetch uses that reference this dataset
+const usesUrl = computed(() => withQuery('/portal/api/uses', {
+  dataset: datasetFetch.data.value?.id,
+  limit: 100
+}))
+
+const usesFetch = useLocalFetch<{ results: Array<{ _id: string, slug: string, config: any, updated: any }>, total: number }>(usesUrl)
+
+const datasetUses = computed(() => {
+  return usesFetch.data.value?.results || []
+})
+
+const usesCardConfig = computed(() => {
+  const pageConfig = portalConfig.value.datasets.page.uses
+  if (!pageConfig || pageConfig.useGlobalCard !== false) {
+    return portalConfig.value.uses.card
+  }
+  return { ...portalConfig.value.uses.card, ...pageConfig.card }
+})
+
 const errorTitle = computed(() => {
   const code = datasetFetch.error.value?.statusCode
   if (code === 401 || code === 403) return undefined
@@ -439,6 +485,7 @@ usePageSeo({
     datasetError: An error occurred while loading the dataset
     sections:
       application: Linked application | Linked applications
+      use: Linked use | Linked uses
       data: Data
       map: Map
       schema: Schema
@@ -452,6 +499,7 @@ usePageSeo({
     datasetError: Une erreur est survenue lors du chargement du jeu de données
     sections:
       application: Visualisation associée | Visualisations associées
+      use: Réutilisation associée | Réutilisations associées
       data: Données
       map: Carte
       schema: Schéma
