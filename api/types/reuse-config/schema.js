@@ -87,6 +87,12 @@ export default {
       },
       layout: {
         listEditMode: 'inline',
+        messages: {
+          addItem: 'Add a dataset',
+          'x-i18n-addItem': {
+            fr: 'Ajouter un jeu de données'
+          }
+        },
         cols: { md: 4 }
       },
       items: {
@@ -110,9 +116,9 @@ export default {
     },
     description: {
       type: 'string',
-      title: 'Description (Markdown)',
+      title: 'Description',
       'x-i18n-title': {
-        fr: 'Description (Markdown)'
+        fr: 'Description'
       },
       layout: 'markdown'
     },

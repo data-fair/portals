@@ -496,7 +496,7 @@ const createPortal = useAsyncAction(
     })
 
     // Step 2: Create the home page with sourcePageId for duplication (handled by API)
-    await $fetch($apiPath + '/pages', {
+    await $fetch('/pages', {
       method: 'POST',
       body: {
         owner: newOwner.value,
@@ -512,7 +512,7 @@ const createPortal = useAsyncAction(
 
     // Step 3: Create the datasets catalog page if requested (optional)
     if (catalogActionType.value && catalogActionType.value !== 'none') {
-      await $fetch($apiPath + '/pages', {
+      await $fetch('/pages', {
         method: 'POST',
         body: {
           owner: newOwner.value,

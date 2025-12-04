@@ -16,12 +16,14 @@ export default {
           fr: "Vignette d'une réutilisation"
         },
         children: ['card']
-      }
+      },
+      'page'
     ]
   },
   unevaluatedProperties: false,
-  required: ['card'],
+  required: ['card', 'page'],
   properties: {
-    card: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' }
+    card: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
+    page: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-page' }
   }
 }

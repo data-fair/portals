@@ -22,6 +22,10 @@ const portalConfigDefault: PortalConfig = {
     card: {},
     page: {}
   },
+  reuses: {
+    card: {},
+    page: {}
+  },
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   contactInformations: {
     infos: t('contactInfoExample'),

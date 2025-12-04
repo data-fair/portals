@@ -80,7 +80,7 @@ const { pending, error } = news
 const goToPage = (page: number) => router.push({ query: { page } })
 
 setBreadcrumbs([
-  { type: 'standard', subtype: 'event' }
+  { type: 'standard', subtype: 'news' }
 ])
 
 usePageSeo({

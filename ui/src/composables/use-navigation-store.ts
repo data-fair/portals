@@ -87,7 +87,7 @@ const i18n = {
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',
-    eventPage: "Page d'événement",
+    eventPage: 'Événement',
     reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
     standardPage: 'Page standard',

@@ -171,7 +171,7 @@ const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
   select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
   size: 1000,
   html: true,
-  ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(',') || '',
+  ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(','),
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))
 

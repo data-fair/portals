@@ -352,7 +352,7 @@ const createPage = useAsyncAction(
   async () => {
     if (!newTitle.value) return
 
-    const page = await $fetch<{ _id: string }>($apiPath + '/pages', {
+    const page = await $fetch<{ _id: string }>('/pages', {
       method: 'POST',
       body: {
         owner: newOwner.value,

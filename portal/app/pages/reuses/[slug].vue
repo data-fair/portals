@@ -1,8 +1,8 @@
 <template>
   <!-- Error state -->
   <page-error
-    v-if="reuseData.error.value"
-    :status-code="reuseData.error.value.statusCode || 500"
+    v-if="reuseFetch.error.value"
+    :status-code="reuseFetch.error.value.statusCode || 500"
     :title="errorTitle"
     :link="{
       type: 'standard',
@@ -11,18 +11,24 @@
     }"
   />
 
-  <template v-else-if="reuseData.data.value">
+  <template v-else-if="reuseConfig">
     <!-- Title and link -->
-    <div class="d-flex align-center mb-4 flex-wrap gap-2">
-      <h1 class="text-h4">
-        {{ reuseData.data.value.config.title }}
-      </h1>
+    <div class="d-flex align-center">
+      <page-element-title
+        :element="{
+          type: 'title',
+          content: reuseConfig.title,
+          titleSize: 'h4',
+          line: portalConfig.reuses.page.titleStyle
+        }"
+        class="my-0"
+      />
       <v-spacer />
       <nav-link
-        v-if="reuseData.data.value.config.link"
+        v-if="reuseConfig.link"
         :link="{
           type: 'external',
-          href: reuseData.data.value.config.link,
+          href: reuseConfig.link,
           title: t('visitLink'),
           icon: { custom: mdiArrowTopRight }
         }"
@@ -32,54 +38,49 @@
 
     <!-- Author -->
     <p
-      v-if="reuseData.data.value.config.author"
+      v-if="reuseConfig.author"
       class="text-subtitle-1 mb-4"
     >
-      {{ t('publishedBy', { author: reuseData.data.value.config.author }) }}
+      {{ t('publishedBy', { author: reuseConfig.author }) }}
     </p>
 
     <!-- Description (rendered markdown) -->
     <div
-      v-if="reuseData.data.value.config._descriptionHtml"
+      v-if="reuseConfig._descriptionHtml"
       class="markdown-content mb-6"
-      v-html="/*eslint-disable-line vue/no-v-html*/reuseData.data.value.config._descriptionHtml"
+      v-html="/*eslint-disable-line vue/no-v-html*/reuseConfig._descriptionHtml"
     />
 
     <!-- Image -->
     <v-img
-      v-if="reuseData.data.value.config.image"
-      :src="getImageSrc(reuseData.data.value.config.image, false)"
-      :alt="reuseData.data.value.config.title"
+      v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
+      :src="getImageSrc(reuseConfig.image, false)"
+      :alt="reuseConfig.title"
       class="mb-4"
       max-height="400"
     />
 
     <!-- Datasets -->
-    <template v-if="reuseData.data.value.config.datasets?.length">
+    <template v-if="portalConfig.reuses.page.datasets?.display === 'card' && datasets.length">
       <page-element-title
         :element="{
           type: 'title',
-          content: t('datasets'),
+          content: t('datasetsUsed', datasets.length),
           titleSize: 'h5',
-          line: portalConfig.datasets.page.titleStyle
+          line: portalConfig.reuses.page.titleStyle
         }"
       />
-      <v-row>
+      <v-row class="d-flex align-stretch">
         <v-col
-          v-for="dataset in reuseData.data.value.config.datasets"
+          v-for="dataset in datasets"
           :key="dataset.id"
+          :md="12 / (portalConfig.reuses.page.datasets?.columns || 2)"
           cols="12"
-          md="4"
         >
-          <v-card
-            :to="`/datasets/${dataset.slug || dataset.id}`"
-            :elevation="portalConfig.datasets.card.elevation ?? 0"
-            :rounded="portalConfig.datasets.card.rounded ?? 'default'"
-          >
-            <v-card-title class="font-weight-bold">
-              {{ dataset.title }}
-            </v-card-title>
-          </v-card>
+          <dataset-card
+            :dataset="dataset"
+            :card-config="datasetCardConfig"
+          />
         </v-col>
       </v-row>
     </template>
@@ -103,23 +104,63 @@
 </template>
 
 <script setup lang="ts">
+import type { Account } from '@data-fair/lib-common-types/account'
 import type { Reuse } from '#api/types/reuse'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
+import { withQuery } from 'ufo'
+
+type Dataset = {
+  id: string
+  slug: string
+  title: string
+  summary: string
+  dataUpdatedAt: string
+  updatedAt: string
+  owner: Account
+  extras: {
+    applications?: { id: string; updatedAt: string }[]
+  }
+  bbox?: number[]
+  topics: { id: string; title: string; color: string }[]
+  keywords?: string[]
+  image?: string
+  isMetaOnly: boolean
+}
 
 const route = useRoute()
 const slug = route.params.slug as string
 
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 
-const reuseData = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config'>>(`/portal/api/reuses/${slug}`, {
+const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config'>>(`/portal/api/reuses/${slug}`, {
   watch: false
 })
+const reuseConfig = computed(() => reuseFetch.data.value?.config)
+
+const datasetCardConfig = computed(() => {
+  const pageConfig = portalConfig.value.reuses.page.datasets
+  if (!pageConfig || pageConfig.useGlobalCard !== false) {
+    return portalConfig.value.datasets.card
+  }
+  return { ...portalConfig.value.datasets.card, ...pageConfig.card }
+})
+
+const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
+  select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+  size: 100,
+  html: true,
+  ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
+  publicationSites: 'data-fair-portals:' + portal.value._id
+}))
+
+const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
+const datasets = computed(() => datasetsFetch.data.value?.results || [])
 
 const errorTitle = computed(() => {
-  const code = reuseData.error.value?.statusCode
+  const code = reuseFetch.error.value?.statusCode
   if (code === 401 || code === 403) return undefined
   if (code === 404) return t('reuseNotFound')
   return t('reuseError')
@@ -131,16 +172,16 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/reuses/${slug}/images/${id}`
 }
 
-watch(() => reuseData.data.value, () => {
+watch(() => reuseFetch.data.value, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'reuses' },
-    { title: reuseData.data.value?.config.title || t('reuse') }
+    { title: reuseConfig.value?.title || t('reuse') }
   ])
 }, { immediate: true })
 
 usePageSeo({
-  title: () => (reuseData.data.value?.config.title || t('reuse')) + ' - ' + portalConfig.value.title,
-  description: () => reuseData.data.value?.config.summary || portalConfig.value.description,
+  title: () => (reuseConfig.value?.title || t('reuse')) + ' - ' + portalConfig.value.title,
+  description: () => reuseConfig.value?.summary || portalConfig.value.description,
   ogType: 'article'
 })
 </script>
@@ -153,7 +194,7 @@ usePageSeo({
     reuseError: An error occurred while loading the reuse
     visitLink: View reuse
     publishedBy: Published by {author}
-    datasets: Datasets used
+    datasetsUsed: Dataset used | Datasets used
   fr:
     backToReuses: Retourner à la liste des réutilisations
     reuse: Réutilisation
@@ -161,5 +202,5 @@ usePageSeo({
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
     visitLink: Voir la réutilisation
     publishedBy: Publié par {author}
-    datasets: Données utilisées
+    datasetsUsed: Jeu de données utilisé | Jeux de données utilisées
 </i18n>

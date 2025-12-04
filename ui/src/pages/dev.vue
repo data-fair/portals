@@ -4,15 +4,21 @@
       <v-toolbar-items>
         <v-btn
           variant="text"
+          href="/portals-manager/portals"
+        >
+          Portals
+        </v-btn>
+        <v-btn
+          variant="text"
           href="/portals-manager/pages"
         >
           Pages
         </v-btn>
         <v-btn
           variant="text"
-          href="/portals-manager/portals"
+          href="/portals-manager/reuses"
         >
-          Portals
+          Reuses
         </v-btn>
         <v-btn
           variant="text"
