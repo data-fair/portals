@@ -127,7 +127,7 @@
                 v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos"
               />
               <v-divider
-                v-if="portalConfig.contactInformations.infos"
+                v-if="portalConfig.contactInformations.infos && (portalConfig.contactInformations.phone || portalConfig.contactInformations.website)"
                 class="my-2"
               />
 

@@ -1,6 +1,7 @@
 <template>
   <v-breadcrumbs
     :items="breadcrumbItems"
+    density="compact"
   >
     <template #divider>
       <v-icon

@@ -12,7 +12,8 @@
       <!-- Image column -->
       <v-col
         v-if="cardConfig.thumbnail?.location === 'left'"
-        cols="4"
+        cols="12"
+        sm="4"
       >
         <v-img
           v-if="thumbnailUrl"
@@ -58,7 +59,10 @@
         <v-spacer />
 
         <v-list-item>
-          <p v-if="cardConfig.showAuthor && reuse.config.author" class="text-caption">
+          <p
+            v-if="cardConfig.showAuthor && reuse.config.author"
+            class="text-caption"
+          >
             {{ t('publishedBy', { author: reuse.config.author }) }}
           </p>
           <p class="text-caption">

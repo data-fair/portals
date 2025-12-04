@@ -12,7 +12,8 @@
       <!-- Image column -->
       <v-col
         v-if="cardConfig.thumbnail?.location === 'left'"
-        cols="4"
+        cols="12"
+        sm="4"
       >
         <v-img
           v-if="thumbnailUrl"

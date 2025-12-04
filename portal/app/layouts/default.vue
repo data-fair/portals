@@ -3,7 +3,6 @@
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
     <layout-breadcrumbs
       v-if="!isIframe && (portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both')"
-      class="pb-0"
     />
     <v-container class="container">
       <slot />
@@ -11,7 +10,6 @@
   </v-main>
   <layout-breadcrumbs
     v-if="!isIframe && (portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both')"
-    class="pt-0"
   />
   <LayoutFooter v-if="!isIframe" />
   <LayoutScrollToTop v-if="!isIframe" />

@@ -76,7 +76,7 @@
             density="compact"
             type="warning"
             variant="outlined"
-            :text="t('standardPage.willReplace', { pageType: t(`pageType.${page.type}`), pageTitle: getExistingPageOnPortal(portal)!.config.title })"
+            :text="t('standardPage.willReplace', { pageType: t(`pageType.${page.type}`), pageTitle: getExistingPageOnPortal(portal)!.title })"
           />
           <v-row class="my-0">
             <v-switch
@@ -119,7 +119,7 @@ const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals
 const portals = computed(() => portalsFetch.data.value?.results)
 
 // Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
-const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config'>[] }>($apiPath + '/pages', {
+const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
   query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title', size: 10000 }
 })
 
