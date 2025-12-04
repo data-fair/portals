@@ -57,6 +57,17 @@
         </div>
       </v-col>
 
+      <!-- Creator -->
+      <v-col
+        v-if="dataset.creator"
+        v-bind="metadataColProps"
+      >
+        <div class="text-caption text-medium-emphasis">{{ t('creator') }}</div>
+        <div class="d-flex align-center ga-2">
+          {{ dataset.creator }}
+        </div>
+      </v-col>
+
       <v-col
         v-if="dataset.license"
         v-bind="metadataColProps"
@@ -114,6 +125,17 @@
       >
         <div class="text-caption text-medium-emphasis"> {{ t('updateFrequency') }}</div>
         {{ t('frequency.' + dataset.frequency) }}
+      </v-col>
+
+      <!-- Modified -->
+      <v-col
+        v-if="dataset.modified"
+        v-bind="metadataColProps"
+      >
+        <div class="text-caption text-medium-emphasis">{{ t('modified') }}</div>
+        <div class="d-flex align-center ga-2">
+          {{ dayjs(dataset.modified || dataset.dataUpdatedAt).format('LL') }}
+        </div>
       </v-col>
 
       <v-col
@@ -181,9 +203,9 @@
         />
       </v-col>
 
-      <v-col v-bind="metadataColProps">
+      <!-- <v-col v-bind="metadataColProps">
         {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('LL') }}
-      </v-col>
+      </v-col> -->
 
       <ClientOnly>
         <v-col v-if="dataset.public">
@@ -209,6 +231,8 @@ type Dataset = {
   description?: string
   dataUpdatedAt: string
   updatedAt: string
+  modified?: string
+  creator?: string
   owner: Account
   count?: number
   storage?: {
@@ -280,6 +304,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
 <i18n lang="yaml">
   en:
     attachments: 'Attachments:'
+    creator: 'Creator:'
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
     records: '{count} record | {count} records'
@@ -305,6 +330,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     license: 'License:'
     owner: 'Owner:'
     ownerAvatar: 'Owner avatar'
+    modified: 'Data last modified:'
     share: 'Share:'
     shortText:
       api: API
@@ -321,6 +347,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     updatedAt: Updated at
   fr:
     attachments: 'Pièces jointes :'
+    creator: 'Producteur :'
     dataFrom: 'Données issues de'
     dataProducedBy: 'Données produites par :'
     records: '{count} enregistrement | {count} enregistrements'
@@ -344,6 +371,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
       weekly: 'Chaque semaine'
     keywords: 'Mots-clés :'
     license: 'Licence :'
+    modified: 'Dernière mise à jour des données :'
     owner: 'Propriétaire :'
     ownerAvatar: 'Avatar du propriétaire'
     share: 'Partager :'

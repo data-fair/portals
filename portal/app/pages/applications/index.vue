@@ -266,7 +266,7 @@ const topicsItems = computed(() => {
 
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
-  { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+  { title: t('sort.updatedAt'), value: 'updatedAt' },
   { title: t('sort.title'), value: 'title' }
 ]
 
@@ -298,7 +298,7 @@ usePageSeo({
     sort:
       by: Sort by
       createdAt: Creation date
-      dataUpdatedAt: Data update date
+      updatedAt: Update date
       title: Alphabetical order
 
   fr:
@@ -317,6 +317,6 @@ usePageSeo({
     sort:
       by: Trier par
       createdAt: Date de création
-      dataUpdatedAt: Date de mise à jour des données
+      updatedAt: Date de mise à jour
       title: Ordre alphabétique
 </i18n>

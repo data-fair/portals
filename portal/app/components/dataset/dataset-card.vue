@@ -81,9 +81,9 @@
               :owner="dataset.owner"
             />
           </template>
-          <span :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
+          <!-- <span :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-          </span>
+          </span> -->
         </v-list-item>
 
         <!-- Actions (Bottom Location) -->
@@ -181,7 +181,7 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
   isPortalConfig?: boolean
 }>()
 
-const { dayjs } = useLocaleDayjs()
+// const { dayjs } = useLocaleDayjs()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 
