@@ -149,7 +149,9 @@ const getIngressInfos = (portal: Portal) => {
   const ingressInfos: IngressManagerIngressInfo[] = [{
     url: config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft'),
     owner: portal.owner,
-    _id: portal._id + '--draft'
+    _id: portal._id + '--draft',
+    blockedIps: portal.ingress?.blockedIps,
+    redirects: portal.ingress?.redirects,
   }]
   if (portal.ingress) {
     ingressInfos.push({
@@ -158,7 +160,8 @@ const getIngressInfos = (portal: Portal) => {
       _id: portal._id,
       controller: portal.ingress.controller,
       redirects: portal.ingress.redirects,
-      blockedIps: portal.ingress.blockedIps
+      blockedIps: portal.ingress.blockedIps,
+      customCert: portal.ingress.customerCert
     })
   } else {
     ingressInfos.push({
