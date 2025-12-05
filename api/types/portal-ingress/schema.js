@@ -52,8 +52,8 @@ export default {
         minItems: 2,
         maxItems: 2,
         items: [
-          { type: 'string', title: 'Origine', layout: { cols: 6, placeholder: 'Par exemple /data-fair/api/datasets/old-dataset-id/(.*)' } },
-          { type: 'string', title: 'Destination', layout: { cols: 6, placeholder: 'Par exemple /data-fair/api/datasets/new-dataset-id/$1' } }
+          { type: 'string', title: 'Origine', layout: { cols: 6, placeholder: 'Par exemple /api/explore/(.+?)/catalog/datasets/compat-slug/(.*)' } },
+          { type: 'string', title: 'Destination', layout: { cols: 6, placeholder: 'Par exemple /api/explore/$1/catalog/datasets/new-slug/$2' } }
         ]
       }
     },
