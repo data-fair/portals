@@ -36,7 +36,7 @@ const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editIngress = ref<PortalIngress>()
 const formValid = ref(false)
 watch(portalFetch.data, () => {
-  if (portalFetch.data.value) editIngress.value = portalFetch.data.value.ingress ?? { url: '', waf: 'on' }
+  if (portalFetch.data.value) editIngress.value = portalFetch.data.value.ingress ?? { url: '' }
 })
 
 const saveIngress = useAsyncAction(async () => {

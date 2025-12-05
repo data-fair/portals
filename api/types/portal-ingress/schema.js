@@ -7,7 +7,7 @@ export default {
   layout: { title: null },
   type: 'object',
   unevaluatedProperties: false,
-  required: ['url', 'waf'],
+  required: ['url'],
   properties: {
     url: {
       type: 'string',
@@ -50,17 +50,6 @@ export default {
       items: {
         type: 'string'
       }
-    },
-    waf: {
-      type: 'string',
-      title: 'Activation du WAF',
-      default: 'off',
-      oneOf: [
-        { title: 'actif', const: 'on' },
-        { title: 'inactif', const: 'off' },
-        { title: 'actif non bloquant', const: 'detectionOnly' }
-      ],
-      description: '"Web Application Firewall", fortement recommandé, à désactiver uniquement ponctuellement si le WAF créé un blocage.'
     }
   }
 }
