@@ -335,11 +335,6 @@ const sortItems = [
     resultsCount: '{count} result | {count} results'
     descending: Descending order
     export: Export filtered data as CSV
-    filters:
-      concepts: Concepts
-      noConcepts: No concepts available
-      topics: Topics
-      noTopics: No topics available
     search: Search
     sort:
       by: Sort by
@@ -354,11 +349,6 @@ const sortItems = [
     resultsCount: '{count} résultat | {count} résultats'
     descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV
-    filters:
-      concepts: Concepts
-      noConcepts: Aucun concept disponible
-      topics: Thématiques
-      noTopics: Aucune thématique disponible
     search: Rechercher
     sort:
       by: Trier par

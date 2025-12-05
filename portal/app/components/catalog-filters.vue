@@ -116,8 +116,8 @@
   >
     <v-autocomplete
       v-model="filters.owners.value"
-      :label="t('filters.owners')"
-      :no-data-text="t('filters.noOwners')"
+      :label="portalConfig.labelsOverrides?.owner || t('filters.owners')"
+      :no-data-text="t(`filters.${portalConfig.labelsOverrides?.owner ? 'noChoices' : 'noOwners'}`)"
       :items="ownersItems"
       density="comfortable"
       variant="outlined"
@@ -225,7 +225,7 @@ type CatalogType = 'datasets' | 'applications'
 type FilterType = 'search' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
 
 const { t } = useI18n()
-const { portal, preview } = usePortalStore()
+const { portal, preview, portalConfig } = usePortalStore()
 
 const { config, catalogType, drawer } = defineProps<{
   config: DatasetsCatalogElement | ApplicationsCatalogElement
@@ -415,6 +415,7 @@ const sortItems = computed(() => {
       noTopics: No topics available
       noKeywords: No keywords available
       noOwners: No owners available
+      noChoices: No choices available # When a label is overridden
     search: Search
     sort:
       by: Sort by
@@ -438,6 +439,7 @@ const sortItems = computed(() => {
       noTopics: Aucune thématique disponible
       noKeywords: Aucun mot-clé disponible
       noOwners: Aucun propriétaire disponible
+      noChoices: Aucun choix disponible # When a label is overridden
     search: Rechercher
     sort:
       by: Trier par

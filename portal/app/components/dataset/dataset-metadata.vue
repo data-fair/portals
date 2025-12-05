@@ -45,11 +45,11 @@
         v-if="metadataConfig?.showDepartment && dataset.owner.department"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="t('ownerAvatar')"
+            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :title="dataset.owner.departmentName || dataset.owner.department"
             :size="28"
           />
@@ -294,6 +294,8 @@ const metadataColProps = computed(() => ({
   md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))
 
+const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
+
 const avatarUrl = computed(() => {
   if (dataset.owner.department) return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`
   else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
@@ -331,7 +333,9 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     keywords: 'Keywords:'
     license: 'License:'
     owner: 'Owner:'
+    ownerOverride: '{owner}:'
     ownerAvatar: 'Owner avatar'
+    ownerAvatarOverride: '{owner} - Avatar'
     modified: 'Data last modified:'
     share: 'Share:'
     shortText:
@@ -375,7 +379,9 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
     owner: 'Propriétaire :'
+    ownerOverride: 'Propriétaire :'
     ownerAvatar: 'Avatar du propriétaire'
+    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Partager :'
     shortText:
       api: API

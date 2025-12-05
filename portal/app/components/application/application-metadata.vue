@@ -22,11 +22,11 @@
         v-if="metadataConfig.showDepartment && application.owner.department"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="t('ownerAvatar')"
+            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :title="application.owner.departmentName || application.owner.department"
             :size="28"
           />
@@ -114,6 +114,8 @@ const metadataColProps = computed(() => ({
   md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))
 
+const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
+
 const avatarUrl = computed(() => {
   if (application.owner.department) return `/simple-directory/api/avatars/${application.owner.type}/${application.owner.id}/${application.owner.department}/avatar.png`
   else return `/simple-directory/api/avatars/${application.owner.type}/${application.owner.id}/avatar.png`
@@ -125,7 +127,9 @@ const avatarUrl = computed(() => {
   en:
     application: 'Application:'
     owner: 'Owner:'
+    ownerOverride: '{owner}:'
     ownerAvatar: 'Owner avatar'
+    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Share:'
     shortText:
       full: Fullscreen
@@ -135,7 +139,9 @@ const avatarUrl = computed(() => {
   fr:
     application: 'Application :'
     owner: 'Propriétaire :'
+    ownerOverride: '{owner} :'
     ownerAvatar: 'Avatar du propriétaire'
+    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Partager :'
     shortText:
       full: Plein écran

@@ -122,6 +122,7 @@ export default {
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
       { title: 'Thématiques', children: ['topics'] },
+      { title: 'Surcharge de libellés', children: ['labelsOverrides'] },
       { title: 'Informations de contact', children: ['contactInformations'] },
       { title: 'Réseaux sociaux', children: ['socialShares', 'socialLinks'] },
       { title: 'Suivi d\'activité (Web analytics)', children: ['analytics'] },
@@ -332,7 +333,8 @@ export default {
       }
     },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
-    topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' }
+    topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' },
+    labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' }
   },
   $defs: {
     menuItem: {
