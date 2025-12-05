@@ -13,19 +13,53 @@
     {{ t('validateDraft') }}
   </v-list-item>
 
-  <v-list-item
-    :disabled="isSavingDraft || !hasDraftDiff"
-    :loading="cancelDraft.loading.value"
-    @click="cancelDraft.execute()"
+  <v-menu
+    v-model="showCancelDraftMenu"
+    :close-on-content-click="false"
+    max-width="500"
   >
-    <template #prepend>
-      <v-icon
-        color="warning"
-        :icon="mdiFileCancel"
-      />
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        :disabled="isSavingDraft || !hasDraftDiff"
+        :loading="cancelDraft.loading.value"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiFileCancel"
+          />
+        </template>
+        {{ t('cancelDraft') }}
+      </v-list-item>
     </template>
-    {{ t('cancelDraft') }}
-  </v-list-item>
+    <template #default="{ isActive }">
+      <v-card
+        variant="elevated"
+        :title="t('cancelingDraft')"
+        :text="t('confirmCancelDraft')"
+        :loading="cancelDraft.loading.value ? 'warning' : undefined"
+      >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="cancelDraft.loading.value"
+            @click="isActive.value = false"
+          >
+            {{ t('no') }}
+          </v-btn>
+          <v-btn
+            color="warning"
+            variant="flat"
+            :loading="cancelDraft.loading.value"
+            @click="cancelDraft.execute()"
+          >
+            {{ t('yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-menu>
 
   <v-divider class="my-2" />
 
@@ -208,6 +242,7 @@ const { portal } = defineProps<{
     url: string | undefined
   }
 }>()
+const showCancelDraftMenu = ref(false)
 
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`portals/${portal.id}/draft`, { method: 'POST' })
@@ -217,6 +252,7 @@ const validateDraft = useAsyncAction(async () => {
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`portals/${portal.id}/draft`, { method: 'DELETE' })
   emit('refresh-portal')
+  showCancelDraftMenu.value = false
 })
 
 const changeOwner = useAsyncAction(
@@ -254,6 +290,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   en:
     cancel: Cancel
     cancelDraft: Cancel draft
+    cancelingDraft: Canceling draft
+    confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
     changeOwner: Change owner
     changeOwnerWarning: Changing the owner of a portal may have consequences on permissions.
     confirm: Confirm
@@ -275,6 +313,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   fr:
     cancel: Annuler
     cancelDraft: Annuler le brouillon
+    cancelingDraft: Annulation du brouillon
+    confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
     changeOwner: Changer le propriétaire
     changeOwnerWarning: Changer le propriétaire d'un portail peut avoir des conséquences sur les permissions.
     confirm: Confirmer

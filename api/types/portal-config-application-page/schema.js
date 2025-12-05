@@ -71,27 +71,6 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
           layout: { cols: { md: 4 } }
         },
-        actionButtons: {
-          type: 'array',
-          title: 'Action Buttons',
-          'x-i18n-title': {
-            fr: "Boutons d'actions"
-          },
-          layout: { cols: { md: 8 } },
-          items: {
-            type: 'string',
-            oneOf: [
-              { const: 'download', title: 'Télécharger' },
-              { const: 'api', title: 'API' },
-              { const: 'embed', title: 'Intégrer' },
-              { const: 'notifications', title: 'Notifications' },
-              { const: 'attachments', title: 'Pièces jointes' },
-              { const: 'table', title: 'Tableau' },
-              { const: 'map', title: 'Carte' },
-              { const: 'schema', title: 'Schéma' }
-            ]
-          }
-        },
 
         actionsStyle: {
           type: 'string',
@@ -112,15 +91,6 @@ export default {
             cols: { md: 4 }
           },
           default: true
-        },
-        showAttachments: {
-          type: 'boolean',
-          title: 'Afficher les pièces jointes',
-          description: 'Affiche les pièces jointes directement dans les métadonnées.',
-          layout: {
-            comp: 'switch',
-            cols: { md: 4 }
-          }
         }
       }
     },

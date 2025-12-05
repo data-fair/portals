@@ -15,19 +15,53 @@
   </v-list-item>
 
   <!-- Cancel draft -->
-  <v-list-item
-    :loading="cancelDraft.loading.value"
-    :disabled="validateDraft.loading.value || !hasDraftDiff"
-    :title="t('cancelDraft')"
-    @click="cancelDraft.execute()"
+  <v-menu
+    v-model="showCancelDraftMenu"
+    :close-on-content-click="false"
+    max-width="500"
   >
-    <template #prepend>
-      <v-icon
-        color="warning"
-        :icon="mdiFileCancel"
-      />
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        :loading="cancelDraft.loading.value"
+        :disabled="validateDraft.loading.value || !hasDraftDiff"
+        :title="t('cancelDraft')"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiFileCancel"
+          />
+        </template>
+      </v-list-item>
     </template>
-  </v-list-item>
+    <template #default="{ isActive }">
+      <v-card
+        variant="elevated"
+        :title="t('cancelingDraft')"
+        :text="t('confirmCancelDraft')"
+        :loading="cancelDraft.loading.value ? 'warning' : undefined"
+      >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="cancelDraft.loading.value"
+            @click="isActive.value = false"
+          >
+            {{ t('no') }}
+          </v-btn>
+          <v-btn
+            color="warning"
+            variant="flat"
+            :loading="cancelDraft.loading.value"
+            @click="cancelDraft.execute()"
+          >
+            {{ t('yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-menu>
 
   <!-- Undo / redo -->
   <div class="d-flex justify-center">
@@ -62,6 +96,7 @@ import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo } from '@mdi/js'
 const { t } = useI18n()
 const { pageFetch, hasDraftDiff } = usePageStore()
 const { changesStack } = defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
+const showCancelDraftMenu = ref(false)
 
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageFetch.data.value?._id}/draft`, { method: 'POST' })
@@ -73,6 +108,7 @@ const cancelDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageFetch.data.value?._id}/draft`, { method: 'DELETE' })
   await pageFetch.refresh()
   changesStack.reset()
+  showCancelDraftMenu.value = false
 })
 
 </script>
@@ -81,11 +117,19 @@ const cancelDraft = useAsyncAction(async () => {
   en:
     validateDraft: Validate draft
     cancelDraft: Cancel draft
+    cancelingDraft: Canceling draft
+    confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
+    no: No
+    yes: Yes
     undo: Undo last change
     redo: Redo last change
   fr:
     validateDraft: Valider le brouillon
     cancelDraft: Annuler le brouillon
+    cancelingDraft: Annulation du brouillon
+    confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
+    no: Non
+    yes: Oui
     undo: Annuler le dernier changement
     redo: Rétablir le dernier changement
 </i18n>

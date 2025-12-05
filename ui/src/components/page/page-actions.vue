@@ -28,19 +28,53 @@
   </v-list-item>
 
   <!-- Cancel draft -->
-  <v-list-item
-    :loading="cancelDraft.loading.value"
-    :disabled="validateDraft.loading.value || !hasDraftDiff"
-    :title="t('cancelDraft')"
-    @click="cancelDraft.execute()"
+  <v-menu
+    v-model="showCancelDraftMenu"
+    :close-on-content-click="false"
+    max-width="500"
   >
-    <template #prepend>
-      <v-icon
-        color="warning"
-        :icon="mdiFileCancel"
-      />
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        :loading="cancelDraft.loading.value"
+        :disabled="validateDraft.loading.value || !hasDraftDiff"
+        :title="t('cancelDraft')"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiFileCancel"
+          />
+        </template>
+      </v-list-item>
     </template>
-  </v-list-item>
+    <template #default="{ isActive }">
+      <v-card
+        variant="elevated"
+        :title="t('cancelingDraft')"
+        :text="t('confirmCancelDraft')"
+        :loading="cancelDraft.loading.value ? 'warning' : undefined"
+      >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="cancelDraft.loading.value"
+            @click="isActive.value = false"
+          >
+            {{ t('no') }}
+          </v-btn>
+          <v-btn
+            color="warning"
+            variant="flat"
+            :loading="cancelDraft.loading.value"
+            @click="cancelDraft.execute()"
+          >
+            {{ t('yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-menu>
 
   <v-divider class="my-2" />
 
@@ -169,6 +203,7 @@ const { pageFetch, hasDraftDiff } = usePageStore()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const showChangeOwnerMenu = ref(false)
+const showCancelDraftMenu = ref(false)
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
@@ -183,6 +218,7 @@ const validateDraft = useAsyncAction(async () => {
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'DELETE' })
   await pageFetch.refresh()
+  showCancelDraftMenu.value = false
 })
 
 const changeOwner = useAsyncAction(
@@ -217,6 +253,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   en:
     cancel: Cancel
     cancelDraft: Cancel draft
+    cancelingDraft: Canceling draft
+    confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
     changeOwner: Change owner
     changeOwnerWarning: Changing the owner of a page may have consequences on permissions.
     confirm: Confirm
@@ -233,6 +271,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   fr:
     cancel: Annuler
     cancelDraft: Annuler le brouillon
+    cancelingDraft: Annulation du brouillon
+    confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
     changeOwner: Changer le propriétaire
     changeOwnerWarning: Changer le propriétaire d'une page peut avoir des conséquences sur les permissions.
     confirm: Confirmer

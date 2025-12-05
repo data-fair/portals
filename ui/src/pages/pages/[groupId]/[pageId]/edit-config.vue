@@ -152,33 +152,23 @@ watch(pageFetch.data, (page) => {
 <i18n lang="yaml">
   en:
     addItemMessage: Add a block to the page
-    cancelDraft: Cancel draft
-    contactInfoExample: <strong>My address</strong></br>Peace Street</br>75000Paris, France
     edit: Editing draft
     groupTitle:
-      standard: Standard pages
+      default: Other pages
       event: Events
       news: News
-      default: Other pages
+      standard: Standard pages
     pages: Pages
-    redoLastChange: Redo last change
-    undoLastChange: Undo last change
-    validateDraft: Validate draft
 
   fr:
     addItemMessage: Ajouter un bloc à la page
-    cancelDraft: Annuler le brouillon
-    contactInfoExample: <strong>Mon adresse</strong></br>rue de la paix</br>75000 Paris, France
     edit: Édition du brouillon
     groupTitle:
-      standard: Pages standard
+      default: Autres pages
       event: Événements
       news: Actualités
-      default: Autres pages
+      standard: Pages standard
     pages: Pages
-    redoLastChange: Rétablir le dernier changement
-    undoLastChange: Annuler le dernier changement
-    validateDraft: Valider le brouillon
 
 </i18n>
 
