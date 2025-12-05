@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card
+    :rounded="metadataConfig.rounded"
+    :elevation="metadataConfig.elevation"
+  >
     <!-- Application Metadata -->
     <v-row class="ma-0">
       <!--
@@ -16,7 +19,7 @@
 
       <!-- Owner -->
       <v-col
-        v-if="application.owner.department && portalConfig.applications.page.showDepartment"
+        v-if="metadataConfig.showDepartment && application.owner.department"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ t('owner') }}</div>
@@ -24,10 +27,10 @@
           <v-avatar
             :image="avatarUrl"
             :alt="t('ownerAvatar')"
-            :title="application.owner.departmentName || application.owner.department || application.owner.name"
+            :title="application.owner.departmentName || application.owner.department"
             :size="28"
           />
-          {{ application.owner.departmentName || application.owner.department || application.owner.name }}
+          {{ application.owner.departmentName || application.owner.department }}
         </div>
       </v-col>
     </v-row>
@@ -43,20 +46,19 @@
         <action-btn
           :to="{
             path: `/applications/${application.slug}/full`,
-            query: route.query
+            query: $route.query
           }"
-          :action-style="portalConfig.applications.page.actionsStyle"
+          :action-style="metadataConfig.actionsStyle"
           :icon="mdiFullscreen"
           :text="t('text.full')"
           :short-text="t('shortText.full')"
         />
         <application-capture :application="application" />
-        <application-embed v-if="!$vuetify.display.smAndDown" :application="application" />
-        <!-- TODO: add attachments ? -->
-        <!-- <application-attachments
-          v-if="application.attachments?.filter(a => a.url !== application!.image).length"
+        <application-embed
+          v-if="!$vuetify.display.smAndDown"
           :application="application"
-        /> -->
+        />
+        <!-- TODO: Show applications attachments ? -->
       </v-col>
 
       <v-col v-bind="metadataColProps">
@@ -100,16 +102,16 @@ const { application } = defineProps<{ application: Application }>()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
-const route = useRoute()
 
 const baseApplicationFetch = useLocalFetch<{
   title: string
 }>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: true } })
 
+const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: portalConfig.value.applications.page.metadataLocation !== 'right' ? 4 : 12
+  md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))
 
 const avatarUrl = computed(() => {

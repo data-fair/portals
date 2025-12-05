@@ -83,6 +83,7 @@ const avatarUrl = computed(() => {
       cookie-policy: Cookie Policy
       terms-of-service: Terms of Service
       datasets: Datasets Catalog
+      applications: Applications Catalog
       event: Event
       news: News
       generic: Custom content
@@ -103,7 +104,8 @@ const avatarUrl = computed(() => {
       cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
-      event: Evénement
+      applications: Catalogue d'applications
+      event: Événement
       news: Actualité
       generic: Contenu libre
     referenceCheckbox: Définir cette page comme page de référence

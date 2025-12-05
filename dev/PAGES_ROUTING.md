@@ -14,9 +14,10 @@ The system currently supports many page types:
 6. **cookie-policy** - Cookie policy page (unique per portal)
 7. **terms-of-service** - Terms of service page (unique per portal)
 8. **datasets** - Datasets Catalog page (unique per portal)
-9. **event** - Event pages (multiple, with unique slug)
-10. **news** - News pages (multiple, with unique slug)
-11. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
+9. **applications** - Applications Catalog page (unique per portal)
+10. **event** - Event pages (multiple, with unique slug)
+11. **news** - News pages (multiple, with unique slug)
+12. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
 
 ### Organization in the Portals-Manager UI
 
@@ -37,6 +38,7 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 - `/cookie-policy` → `cookie-policy` type page
 - `/terms-of-service` → `terms-of-service` type page
 - `/datasets` → `datasets` type page
+- `/applications` → `applications` type page
 
 ### Multiple Pages - Events
 
@@ -47,6 +49,11 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 
 - `/news` → List of `news` type pages
 - `/news/[slug]` → Detail of a `news` type page
+
+### Multiple Pages - Reuses
+
+- `/reuses` → List of `reuse` type pages
+- `/reuses/[slug]` → Detail of a `reuse` type page
 
 ### Generic Pages
 
@@ -70,7 +77,7 @@ portal/server/routes/portal/api/pages/
 ### Unique Pattern
 
 All pages use **the same pattern**: `/portal/api/pages/[type]/[slug]`
-For unique pages (home, contact, privacy-policy, accessibility, legal-notice, cookie-policy, terms-of-service, datasets), the `slug` is repeated and identical to the `type`.
+For unique pages (home, contact, privacy-policy,...), the `slug` is repeated and identical to the `type`.
 
 ```text
 /portal/api/pages/[type]          → Retrieves a list of pages (event/news only)
@@ -107,6 +114,7 @@ Retrieves the configuration of a specific page.
 - `GET /portal/api/pages/cookie-policy/cookie-policy` → Cookie policy page
 - `GET /portal/api/pages/terms-of-service/terms-of-service` → Terms of service page
 - `GET /portal/api/pages/datasets/datasets` → Datasets Catalog page
+- `GET /portal/api/pages/applications/applications` → Applications Catalog page
 
 **Event/news pages**:
 

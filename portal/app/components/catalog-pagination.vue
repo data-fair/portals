@@ -16,9 +16,7 @@ const props = defineProps<{
   alignment?: 'left' | 'center' | 'right'
 }>()
 
-defineEmits<{
-  'update:page': [page: number]
-}>()
+defineEmits<{ 'update:page': [page: number] }>()
 
 const alignmentClass = computed(() => {
   if (props.alignment === 'left') return 'd-flex justify-start'

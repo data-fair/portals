@@ -88,6 +88,7 @@
               scrolling="no"
               resize="no"
               aspect-ratio
+              sync-params
             />
           </v-tabs-window-item>
 
@@ -461,7 +462,7 @@ const thumbnailUrl = computed(() => {
 watch(dataset, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'datasets' },
-    { title: dataset.value?.title || t('dataset'), disabled: true }
+    { title: dataset.value?.title || t('dataset') }
   ])
 }, { immediate: true })
 

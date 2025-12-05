@@ -20,7 +20,7 @@
     />
   </v-col>
 
-  <!-- Concepts filter -->
+  <!-- Concepts filter (datasets only) -->
   <v-col
     v-if="showFilter('concepts')"
     cols="12"
@@ -31,6 +31,27 @@
       :items="conceptsItems"
       :label="t('filters.concepts')"
       :no-data-text="t('filters.noConcepts')"
+      density="comfortable"
+      variant="outlined"
+      chips
+      clearable
+      closable-chips
+      multiple
+      hide-details
+    />
+  </v-col>
+
+  <!-- Base Application filter (applications only) -->
+  <v-col
+    v-if="showFilter('base-application')"
+    cols="12"
+    :md="colSize"
+  >
+    <v-autocomplete
+      v-model="filters.baseApplication.value"
+      :items="baseApplicationItems"
+      :label="t('filters.baseApplication')"
+      :no-data-text="t('filters.noBaseApplication')"
       density="comfortable"
       variant="outlined"
       chips
@@ -64,7 +85,7 @@
     />
   </v-col>
 
-  <!-- Keywords filters -->
+  <!-- Keywords filters (datasets only) -->
   <v-col
     v-if="showFilter('keywords')"
     cols="12"
@@ -181,7 +202,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DatasetsCatalogElement } from '#api/types/page'
+import type { DatasetsCatalogElement, ApplicationsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-vue/session'
 import { mdiMagnify, mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
@@ -195,17 +216,27 @@ type Concept = {
   private: boolean
 }
 
+type BaseApplication = {
+  id: string
+  title: string
+}
+
+type CatalogType = 'datasets' | 'applications'
+type FilterType = 'search' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
+
 const { t } = useI18n()
 const { portal, preview } = usePortalStore()
 
-const { config, drawer } = defineProps<{
-  config: DatasetsCatalogElement
+const { config, catalogType, drawer } = defineProps<{
+  config: DatasetsCatalogElement | ApplicationsCatalogElement
+  catalogType: CatalogType
   drawer?: boolean
 }>()
 
 const filters = {
   search: useStringSearchParam('q'),
   concepts: useStringsArraySearchParam('concepts'),
+  baseApplication: useStringsArraySearchParam('base-application'),
   topics: useStringsArraySearchParam('topics'),
   keywords: useStringsArraySearchParam('keywords'),
   owners: useStringsArraySearchParam('owner'),
@@ -216,7 +247,7 @@ const search = ref<string>('')
 const sort = ref<string>()
 const order = ref<'-1' | '1'>()
 
-const showFilter = (filter: NonNullable<NonNullable<DatasetsCatalogElement['filters']>['items']>[number]) => !!config.filters?.items?.includes(filter)
+const showFilter = (filter: FilterType) => ((config.filters?.items ?? []) as FilterType[]).includes(filter)
 
 // Compute best column size based on number of filters shown
 const colSize = computed(() => {
@@ -233,28 +264,44 @@ const colSize = computed(() => {
 
 type Facets = {
   concepts: { value: string; count: number }[]
+  'base-application': { value: BaseApplication; count: number }[]
   topics: { value: { id: string; title: string; color: string; icon?: { svgPath: string } }; count: number }[]
   keywords: { value: string; count: number }[]
   owner: { value: Account; count: number }[]
 }
 
-let datasetsFetch: ReturnType<typeof useLocalFetch<{ facets: Facets }>> | undefined
+let catalogFetch: ReturnType<typeof useLocalFetch<{ facets: Facets }>> | undefined
 let conceptsFetch: ReturnType<typeof useLocalFetch<Concept[]>> | undefined
 if (!preview) {
-  datasetsFetch = useLocalFetch<{ facets: Facets }>('/data-fair/api/v1/datasets', {
+  const facetsToFetch = []
+  if (showFilter('concepts')) facetsToFetch.push('concepts')
+  if (showFilter('base-application')) facetsToFetch.push('base-application')
+  if (showFilter('topics')) facetsToFetch.push('topics')
+  if (showFilter('keywords')) facetsToFetch.push('keywords')
+  if (showFilter('owners')) facetsToFetch.push('owner')
+
+  const endpoint = catalogType === 'datasets' ? '/data-fair/api/v1/datasets' : '/data-fair/api/v1/applications'
+  catalogFetch = useLocalFetch<{ facets: Facets }>(endpoint, {
     query: {
-      facets: 'concepts,topics,owner,keywords', // TODO fetch only needed facets
+      facets: facetsToFetch.join(','),
       size: 0,
       publicationSites: 'data-fair-portals:' + portal.value._id,
     }
   })
-  conceptsFetch = useLocalFetch<Concept[]>('/data-fair/api/v1/vocabulary')
+
+  if (showFilter('concepts')) {
+    conceptsFetch = useLocalFetch<Concept[]>('/data-fair/api/v1/vocabulary')
+  }
 }
 
 const previewFacets: Facets = {
   concepts: [
     { value: 'concept-a', count: 4 },
     { value: 'concept-b', count: 2 }
+  ],
+  'base-application': [
+    { value: { id: 'app-1', title: 'Application 1' }, count: 3 },
+    { value: { id: 'app-2', title: 'Application 2' }, count: 5 }
   ],
   topics: [
     { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }, count: 5 },
@@ -269,7 +316,7 @@ const previewFacets: Facets = {
     { value: { type: 'organization', id: 'KWqAGZ4mG', name: 'Fivechat', department: 'dep1', departmentName: 'Department 1' }, count: 2 }
   ]
 }
-const facets = computed(() => preview ? previewFacets : (datasetsFetch?.data.value?.facets ?? { concepts: [], topics: [], keywords: [], owner: [] }))
+const facets = computed(() => preview ? previewFacets : (catalogFetch?.data.value?.facets ?? { concepts: [], 'base-application': [], topics: [], keywords: [], owner: [] }))
 
 const conceptsItems = computed(() => {
   const conceptsList = preview
@@ -298,6 +345,16 @@ const conceptsItems = computed(() => {
   return items
 })
 
+const baseApplicationItems = computed(() => {
+  return facets.value['base-application'].map(facet => {
+    const app = facet.value
+    return {
+      title: `${app.title} (${facet.count})`,
+      value: app.id
+    }
+  })
+})
+
 const ownersItems = computed(() => {
   return facets.value.owner.map(facet => {
     const owner = facet.value
@@ -323,11 +380,22 @@ watch([sort, order], () => {
   filters.sort.value = `${field}:${ord}`
 })
 
-const sortItems = [
-  { title: t('sort.createdAt'), value: 'createdAt' },
-  { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
-  { title: t('sort.title'), value: 'title' }
-]
+// Sort items depend on catalog type
+const sortItems = computed(() => {
+  if (catalogType === 'datasets') {
+    return [
+      { title: t('sort.createdAt'), value: 'createdAt' },
+      { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+      { title: t('sort.title'), value: 'title' }
+    ]
+  } else {
+    return [
+      { title: t('sort.createdAt'), value: 'createdAt' },
+      { title: t('sort.updatedAt'), value: 'updatedAt' },
+      { title: t('sort.title'), value: 'title' }
+    ]
+  }
+})
 
 </script>
 
@@ -338,10 +406,12 @@ const sortItems = [
     export: Export filtered data as CSV
     filters:
       concepts: Concepts
+      baseApplication: Base Applications
       topics: Topics
       keywords: Keywords
       owners: Owners
       noConcepts: No concepts available
+      noBaseApplication: No base applications available
       noTopics: No topics available
       noKeywords: No keywords available
       noOwners: No owners available
@@ -350,6 +420,7 @@ const sortItems = [
       by: Sort by
       createdAt: Creation date
       dataUpdatedAt: Data update date
+      updatedAt: Update date
       title: Alphabetical order
 
   fr:
@@ -358,10 +429,12 @@ const sortItems = [
     export: Exporter les données filtrées au format CSV
     filters:
       concepts: Concepts
+      baseApplication: Applications de base
       topics: Thématiques
       keywords: Mots-clés
       owners: Propriétaires
       noConcepts: Aucun concept disponible
+      noBaseApplication: Aucune application de base disponible
       noTopics: Aucune thématique disponible
       noKeywords: Aucun mot-clé disponible
       noOwners: Aucun propriétaire disponible
@@ -370,5 +443,6 @@ const sortItems = [
       by: Trier par
       createdAt: Date de création
       dataUpdatedAt: Date de mise à jour des données
+      updatedAt: Date de mise à jour
       title: Ordre alphabétique
 </i18n>

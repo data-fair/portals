@@ -246,7 +246,7 @@ const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(route.para
 const isStandardGroup = route.params.groupId === 'standard'
 
 // Available page types for standard group
-const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets']
+const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications']
 
 const step = ref<'type' | 'action' | 'source' | 'owner' | 'information'>(isStandardGroup ? 'type' : 'action')
 const pageType = ref<string | undefined>(undefined) // For standard group only
@@ -439,6 +439,7 @@ watch(group, () => {
       cookie-policy: Cookie Policy
       terms-of-service: Terms of Service
       datasets: Datasets Catalog
+      applications: Applications Catalog
     pageTypeDesc:
       home: Create the main home page for your portal.
       contact: Create a page to allow users to contact you.
@@ -448,6 +449,7 @@ watch(group, () => {
       cookie-policy: Create a page detailing the use of cookies.
       terms-of-service: Create a page presenting your terms of service.
       datasets: Create a page listing your datasets.
+      applications: Create a page listing your applications.
 
   fr:
     pages: Pages
@@ -486,6 +488,7 @@ watch(group, () => {
       cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
+      applications: Catalogue d'applications
     pageTypeDesc:
       home: Créer la page d'accueil principale de votre portail.
       contact: Créer une page permettant aux utilisateurs de vous contacter.
@@ -495,5 +498,6 @@ watch(group, () => {
       cookie-policy: Créer une page détaillant l'usage des cookies.
       terms-of-service: Créer une page présentant vos conditions générales d'utilisation.
       datasets: Créer une page listant vos jeux de données.
+      applications: Créer une page listant vos applications.
 
 </i18n>

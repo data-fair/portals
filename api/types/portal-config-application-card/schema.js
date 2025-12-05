@@ -2,8 +2,10 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-application-card',
   'x-exports': [],
   title: 'Application Card',
+  'x-i18n-title': {
+    fr: "Vignette d'une application"
+  },
   type: 'object',
-  layout: { title: null },
   unevaluatedProperties: false,
   properties: {
     actionsLocation: {

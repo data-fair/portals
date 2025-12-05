@@ -50,13 +50,33 @@
             :icon="mdiFile"
           />
         </template>
+        <v-divider />
+        <v-stepper-item
+          :title="t('selectApplicationsAction')"
+          value="applications-action"
+          :color="step === 'applications-action' ? 'primary' : ''"
+          :complete="applicationsActionType !== undefined"
+          :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined)"
+          :icon="mdiPlaylistEdit"
+        />
+        <template v-if="applicationsActionType === 'reference' || applicationsActionType === 'duplicate'">
+          <v-divider />
+          <v-stepper-item
+            :title="applicationsActionType === 'reference' ? t('selectApplicationsReference') : t('selectApplicationsToDuplicate')"
+            value="applications-source"
+            :color="step === 'applications-source' ? 'primary' : ''"
+            :complete="selectedApplicationsPageId !== undefined"
+            :editable="applicationsActionType !== undefined"
+            :icon="mdiFile"
+          />
+        </template>
         <template v-if="hasDepartments">
           <v-divider />
           <v-stepper-item
             value="owner"
             :title="t('selectOwner')"
             :color="step === 'owner' ? 'primary' : ''"
-            :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined)"
+            :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined) && (applicationsActionType === 'blank' || applicationsActionType === 'none' || selectedApplicationsPageId !== undefined)"
             :icon="mdiAccount"
           />
         </template>
@@ -65,7 +85,7 @@
           value="information"
           :title="t('portalInformation')"
           :color="step === 'information' ? 'primary' : ''"
-          :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined)"
+          :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined) && (applicationsActionType === 'blank' || applicationsActionType === 'none' || selectedApplicationsPageId !== undefined)"
           :icon="mdiTextBox"
         />
       </v-stepper-header>
@@ -182,10 +202,10 @@
               >
                 <template #title>
                   <span :class="catalogActionType !== 'none' ? 'text-primary' : ''">
-                    {{ t('noCatalog') }}
+                    {{ t('noDatasetsCatalog') }}
                   </span>
                 </template>
-                <v-card-text>{{ t('noCatalogDescription') }}</v-card-text>
+                <v-card-text>{{ t('noDatasetsCatalogDescription') }}</v-card-text>
               </v-card>
             </v-col>
 
@@ -281,7 +301,122 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 5: Select owner (optional) -->
+        <!-- Step 5: Select applications action type -->
+        <v-stepper-window-item value="applications-action">
+          <v-row class="d-flex align-stretch">
+            <!-- No applications option -->
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="applicationsActionType === 'none' ? 'primary' : ''"
+                @click="selectApplicationsAction('none')"
+              >
+                <template #title>
+                  <span :class="applicationsActionType !== 'none' ? 'text-primary' : ''">
+                    {{ t('noApplicationsCatalog') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('noApplicationsCatalogDescription') }}</v-card-text>
+              </v-card>
+            </v-col>
+
+            <!-- Reference applications template card (only if reference pages exist) -->
+            <v-col
+              v-if="applicationsReferencesFetch.data.value?.results?.length"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="applicationsActionType === 'reference' ? 'primary' : ''"
+                @click="selectApplicationsAction('reference')"
+              >
+                <template #title>
+                  <span :class="applicationsActionType !== 'reference' ? 'text-primary' : ''">
+                    {{ t('applicationsReferenceTemplate') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('applicationsReferenceTemplateDescription') }}</v-card-text>
+              </v-card>
+            </v-col>
+
+            <!-- Blank applications page card -->
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="applicationsActionType === 'blank' ? 'primary' : ''"
+                @click="selectApplicationsAction('blank')"
+              >
+                <template #title>
+                  <span :class="applicationsActionType !== 'blank' ? 'text-primary' : ''">
+                    {{ t('blankApplications') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('blankApplicationsDescription') }}</v-card-text>
+              </v-card>
+            </v-col>
+
+            <!-- Duplicate existing applications card (only if user applications exist) -->
+            <v-col
+              v-if="applicationsPagesUserFetch.data.value?.results?.length"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="applicationsActionType === 'duplicate' ? 'primary' : ''"
+                @click="selectApplicationsAction('duplicate')"
+              >
+                <template #title>
+                  <span :class="applicationsActionType !== 'duplicate' ? 'text-primary' : ''">
+                    {{ t('duplicateApplications') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('duplicateApplicationsDescription') }}</v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-stepper-window-item>
+
+        <!-- Step 6: Select applications reference page or page to duplicate -->
+        <v-stepper-window-item value="applications-source">
+          <v-row class="d-flex align-stretch">
+            <v-col
+              v-for="page in applicationsPagesListForStep"
+              :key="page._id"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedApplicationsPageId === page._id ? 'primary' : ''"
+                @click="selectApplicationsPage(page._id)"
+              >
+                <template #title>
+                  <span :class="selectedApplicationsPageId !== page._id ? 'text-primary' : ''">
+                    {{ page.title }}
+                  </span>
+                </template>
+                <v-card-text v-if="page.config.description">
+                  {{ page.config.description }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-stepper-window-item>
+
+        <!-- Step 7: Select owner (optional) -->
         <v-stepper-window-item value="owner">
           <owner-pick
             v-model="newOwner"
@@ -289,7 +424,7 @@
           />
         </v-stepper-window-item>
 
-        <!-- Step 6: Portal information -->
+        <!-- Step 8: Portal information -->
         <v-stepper-window-item value="information">
           <v-form v-model="valid">
             <v-text-field
@@ -344,11 +479,13 @@ const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
 
-const step = ref<'action' | 'source' | 'catalog-action' | 'catalog-source' | 'owner' | 'information'>('action')
+const step = ref<'action' | 'source' | 'catalog-action' | 'catalog-source' | 'applications-action' | 'applications-source' | 'owner' | 'information'>('action')
 const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
 const selectedPageId = ref<string | undefined>(undefined)
 const catalogActionType = ref<'none' | 'blank' | 'reference' | 'duplicate' | undefined>(undefined)
 const selectedCatalogPageId = ref<string | undefined>(undefined)
+const applicationsActionType = ref<'none' | 'blank' | 'reference' | 'duplicate' | undefined>(undefined)
+const selectedApplicationsPageId = ref<string | undefined>(undefined)
 const newPortalTitle = ref<string>('')
 const newPortalStaging = ref<boolean>(false)
 const newOwner = ref<Account | undefined>(session.state.account)
@@ -379,6 +516,18 @@ const catalogPagesUserFetch = useFetch<{ results: Page[] }>(
   { query: { type: 'datasets' }, notifError: false }
 )
 
+// Fetch reference applications pages (isReference: true, type: applications)
+const applicationsReferencesFetch = useFetch<{ results: Page[] }>(
+  $apiPath + '/pages',
+  { query: { type: 'applications', isReference: true }, notifError: false }
+)
+
+// Fetch user's applications pages for duplication
+const applicationsPagesUserFetch = useFetch<{ results: Page[] }>(
+  $apiPath + '/pages',
+  { query: { type: 'applications' }, notifError: false }
+)
+
 // Pages list for step 2 (references or user pages)
 const pagesListForStep2 = computed(() => {
   if (actionType.value === 'reference') return referencesFetch.data.value?.results || []
@@ -393,9 +542,17 @@ const catalogPagesListForStep = computed(() => {
   return []
 })
 
+// Applications pages list for step 6 (references or user applications pages)
+const applicationsPagesListForStep = computed(() => {
+  if (applicationsActionType.value === 'reference') return applicationsReferencesFetch.data.value?.results || []
+  if (applicationsActionType.value === 'duplicate') return applicationsPagesUserFetch.data.value?.results || []
+  return []
+})
+
 const isNextButtonDisabled = computed(() => {
   if (step.value === 'source') return selectedPageId.value === undefined
   if (step.value === 'catalog-source') return selectedCatalogPageId.value === undefined
+  if (step.value === 'applications-source') return selectedApplicationsPageId.value === undefined
   if (step.value === 'information') return !valid.value || !newPortalTitle.value
   return false
 })
@@ -430,8 +587,8 @@ const selectCatalogAction = (type: 'none' | 'blank' | 'reference' | 'duplicate')
   selectedCatalogPageId.value = undefined
 
   if (type === 'none' || type === 'blank') {
-    // Skip catalog source step, go directly to owner or information
-    step.value = hasDepartments.value ? 'owner' : 'information'
+    // Skip catalog source step, go to applications action
+    step.value = 'applications-action'
   } else {
     // Go to catalog source step to select a catalog page
     step.value = 'catalog-source'
@@ -440,6 +597,24 @@ const selectCatalogAction = (type: 'none' | 'blank' | 'reference' | 'duplicate')
 
 const selectCatalogPage = (pageId: string) => {
   selectedCatalogPageId.value = pageId
+  step.value = 'applications-action' // Go to applications action step
+}
+
+const selectApplicationsAction = (type: 'none' | 'blank' | 'reference' | 'duplicate') => {
+  applicationsActionType.value = type
+  selectedApplicationsPageId.value = undefined
+
+  if (type === 'none' || type === 'blank') {
+    // Skip applications source step, go directly to owner or information
+    step.value = hasDepartments.value ? 'owner' : 'information'
+  } else {
+    // Go to applications source step to select an applications page
+    step.value = 'applications-source'
+  }
+}
+
+const selectApplicationsPage = (pageId: string) => {
+  selectedApplicationsPageId.value = pageId
   step.value = hasDepartments.value ? 'owner' : 'information' // Go to next step (owner or information)
 }
 
@@ -451,19 +626,27 @@ const goToPreviousStep = () => {
     else step.value = 'source'
   } else if (step.value === 'catalog-source') {
     step.value = 'catalog-action'
-  } else if (step.value === 'owner') {
+  } else if (step.value === 'applications-action') {
     if (catalogActionType.value === 'blank' || catalogActionType.value === 'none') {
       step.value = 'catalog-action'
     } else {
       step.value = 'catalog-source'
     }
+  } else if (step.value === 'applications-source') {
+    step.value = 'applications-action'
+  } else if (step.value === 'owner') {
+    if (applicationsActionType.value === 'blank' || applicationsActionType.value === 'none') {
+      step.value = 'applications-action'
+    } else {
+      step.value = 'applications-source'
+    }
   } else if (step.value === 'information') {
     if (hasDepartments.value) {
       step.value = 'owner'
-    } else if (catalogActionType.value === 'blank' || catalogActionType.value === 'none') {
-      step.value = 'catalog-action'
+    } else if (applicationsActionType.value === 'blank' || applicationsActionType.value === 'none') {
+      step.value = 'applications-action'
     } else {
-      step.value = 'catalog-source'
+      step.value = 'applications-source'
     }
   }
 }
@@ -471,7 +654,8 @@ const goToPreviousStep = () => {
 const goToNextStep = () => {
   if (step.value === 'information') createPortal.execute()
   else if (step.value === 'source') step.value = 'catalog-action'
-  else if (step.value === 'catalog-source') step.value = hasDepartments.value ? 'owner' : 'information'
+  else if (step.value === 'catalog-source') step.value = 'applications-action'
+  else if (step.value === 'applications-source') step.value = hasDepartments.value ? 'owner' : 'information'
   else if (step.value === 'owner') step.value = 'information'
 }
 
@@ -483,7 +667,9 @@ const createPortal = useAsyncAction(
     if (catalogActionType.value && catalogActionType.value !== 'none') {
       menu.children.push({ type: 'standard', subtype: 'datasets', title: t('datasets') })
     }
-    menu.children.push({ type: 'standard', subtype: 'applications', title: t('applications') })
+    if (applicationsActionType.value && applicationsActionType.value !== 'none') {
+      menu.children.push({ type: 'standard', subtype: 'applications', title: t('applications') })
+    }
 
     // Step 1: Create the portal
     const portal = await $fetch<Portal>($apiPath + '/portals', {
@@ -521,6 +707,23 @@ const createPortal = useAsyncAction(
           portals: [portal._id],
           config: {
             title: t('datasetsCatalog') + ' - ' + newPortalTitle.value,
+            elements: []
+          }
+        }
+      })
+    }
+
+    // Step 4: Create the applications catalog page if requested (optional)
+    if (applicationsActionType.value && applicationsActionType.value !== 'none') {
+      await $fetch('/pages', {
+        method: 'POST',
+        body: {
+          owner: newOwner.value,
+          type: 'applications',
+          sourcePageId: selectedApplicationsPageId.value, // Source applications page ID to duplicate (optional)
+          portals: [portal._id],
+          config: {
+            title: t('applicationsCatalog') + ' - ' + newPortalTitle.value,
             elements: []
           }
         }
@@ -571,8 +774,8 @@ setBreadcrumbs([
     selectCatalogAction: Choose datasets catalog
     selectCatalogReference: Select a catalog template
     selectCatalogToDuplicate: Select a catalog to duplicate
-    noCatalog: No catalog
-    noCatalogDescription: Do not create a datasets catalog page
+    noDatasetsCatalog: No datasets catalog
+    noDatasetsCatalogDescription: Do not create a datasets catalog page
     catalogReferenceTemplate: Reference template
     catalogReferenceTemplateDescription: Use a reference datasets catalog template
     blankCatalog: Blank page
@@ -580,6 +783,18 @@ setBreadcrumbs([
     duplicateCatalog: Duplicate existing catalog
     duplicateCatalogDescription: Copy an existing datasets catalog
     datasetsCatalog: Datasets catalog
+    selectApplicationsAction: Choose applications catalog
+    selectApplicationsReference: Select an applications template
+    selectApplicationsToDuplicate: Select an applications catalog to duplicate
+    noApplicationsCatalog: No applications catalog
+    noApplicationsCatalogDescription: Do not create an applications catalog page
+    applicationsReferenceTemplate: Reference template
+    applicationsReferenceTemplateDescription: Use a reference applications catalog template
+    blankApplications: Blank page
+    blankApplicationsDescription: Start with an empty applications catalog
+    duplicateApplications: Duplicate existing catalog
+    duplicateApplicationsDescription: Copy an existing applications catalog
+    applicationsCatalog: Applications catalog
 
   fr:
     portals: Portails
@@ -609,8 +824,8 @@ setBreadcrumbs([
     selectCatalogAction: Choisir le catalogue de données
     selectCatalogReference: Sélectionner un modèle de catalogue
     selectCatalogToDuplicate: Sélectionner un catalogue à dupliquer
-    noCatalog: Pas de catalogue
-    noCatalogDescription: Ne pas créer de page catalogue de données
+    noDatasetsCatalog: Pas de catalogue de données
+    noDatasetsCatalogDescription: Ne pas créer de page catalogue de données
     catalogReferenceTemplate: Modèle de référence
     catalogReferenceTemplateDescription: Utiliser un modèle de catalogue de données de référence
     blankCatalog: Page blanche
@@ -618,5 +833,17 @@ setBreadcrumbs([
     duplicateCatalog: Dupliquer un catalogue existant
     duplicateCatalogDescription: Copier un catalogue de données existant
     datasetsCatalog: Catalogue de données
+    selectApplicationsAction: Choisir le catalogue de visualisations
+    selectApplicationsReference: Sélectionner un modèle de visualisations
+    selectApplicationsToDuplicate: Sélectionner un catalogue de visualisations à dupliquer
+    noApplicationsCatalog: Pas de catalogue de visualisations
+    noApplicationsCatalogDescription: Ne pas créer de page catalogue de visualisations
+    applicationsReferenceTemplate: Modèle de référence
+    applicationsReferenceTemplateDescription: Utiliser un modèle de catalogue de visualisations de référence
+    blankApplications: Page blanche
+    blankApplicationsDescription: Commencer avec un catalogue de visualisations vide
+    duplicateApplications: Dupliquer un catalogue existant
+    duplicateApplicationsDescription: Copier un catalogue de visualisations existant
+    applicationsCatalog: Catalogue de visualisations
 
 </i18n>

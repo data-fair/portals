@@ -55,7 +55,7 @@ if (!preview) {
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,
     size: element.mode !== 'custom' ? element.limit : 100,
-    sort: element.mode === 'lastUpdated' ? 'updatedAt: -1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
+    sort: element.mode === 'lastUpdated' ? 'dataUpdatedAt: -1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
   const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery })

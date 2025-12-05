@@ -1,19 +1,10 @@
 <template>
   <!-- Page Title -->
   <h4
-    v-if="element.datasetsCountPosition === 'top'"
+    v-if="element.applicationsCountPosition === 'top'"
     class="text-h4 mb-4"
   >
-    {{ t('datasetsCount', { count: datasetsCount }) }}
-    <v-btn
-      v-if="element.showApiButton && !$vuetify.display.smAndDown"
-      :icon="mdiCog"
-      :title="t('catalogApiDoc')"
-      to="/catalog-api-doc"
-      class="ml-2"
-      density="comfortable"
-      variant="text"
-    />
+    {{ t('applicationsCount', { count: applicationsCount }) }}
   </h4>
 
   <!-- Standard Filters -->
@@ -23,7 +14,7 @@
   >
     <catalog-filters
       :config="element"
-      catalog-type="datasets"
+      catalog-type="applications"
     />
   </v-row>
 
@@ -40,24 +31,13 @@
     />
   </div>
 
-  <!-- Datasets Count + API Link + Order -->
+  <!-- Applications Count + Order -->
   <v-row
-    v-if="element.datasetsCountPosition === 'bottom'"
+    v-if="element.applicationsCountPosition === 'bottom'"
     class="mt-2"
     align="end"
   >
-    <v-col>
-      {{ t('resultsCount', { count: datasetsCount }) }}
-      <v-btn
-        v-if="element.showApiButton && !$vuetify.display.smAndDown"
-        :icon="mdiCog"
-        :title="t('catalogApiDoc')"
-        to="/catalog-api-doc"
-        density="comfortable"
-        variant="text"
-        class="ml-2"
-      />
-    </v-col>
+    <v-col>{{ t('resultsCount', { count: applicationsCount }) }}</v-col>
     <v-col
       cols="12"
       md="6"
@@ -105,17 +85,17 @@
     @update:page="goToPage"
   />
 
-  <!-- Datasets -->
+  <!-- Applications -->
   <v-row class="d-flex align-stretch mt-2">
     <v-col
-      v-for="dataset in displayedDatasets"
-      :key="dataset.id"
+      v-for="application in displayedApplications"
+      :key="application.id"
       :md="12 / (element.columns || 2)"
       cols="12"
     >
-      <dataset-card
-        :dataset="dataset"
-        :card-config="portalConfig.datasets.card"
+      <application-card
+        :application="application"
+        :card-config="portalConfig.applications.card"
       />
     </v-col>
   </v-row>
@@ -150,42 +130,37 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, DatasetsCatalogElement } from '#api/types/page'
+import type { PageElement, ApplicationsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-common-types/account'
-import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
+import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
-const { element } = defineProps<{ element: DatasetsCatalogElement }>()
+const { element } = defineProps<{ element: ApplicationsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
 
-type Dataset = {
+type Application = {
   id: string
   slug: string
   title: string
   summary: string
-  dataUpdatedAt: string
   updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  },
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
   image?: string
-  isMetaOnly: boolean
+  url: string
+  href: string
+  exposedUrl: string
+  owner: Account
+  topics: { id: string; title: string; color: string }[]
 }
 
-type DatasetFetch = {
+type ApplicationFetch = {
   count: number
-  results: Dataset[]
+  results: Application[]
 }
 
 const filters = {
   search: useStringSearchParam('q'),
-  concepts: useStringsArraySearchParam('concepts'),
+  baseApplication: useStringsArraySearchParam('base-application'),
   topics: useStringsArraySearchParam('topics'),
-  keywords: useStringsArraySearchParam('keywords'),
   owners: useStringsArraySearchParam('owner'),
   sort: useStringSearchParam('sort', { default: element.defaultSort })
 }
@@ -196,63 +171,62 @@ const order = ref<'-1' | '1'>()
 // Infinite scroll state / pagination state
 const paginationPosition = computed(() => element.pagination?.position || 'none')
 const currentPage = ref(1)
-const displayedDatasets = ref<DatasetFetch['results']>([])
+const displayedApplications = ref<ApplicationFetch['results']>([])
 const loading = ref(false)
 const pageSize = 20
 
-let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetFetch>> | undefined
-
+let applicationsFetch: ReturnType<typeof useLocalFetch<ApplicationFetch>> | undefined
 if (!preview) {
-  const datasetsQuery = computed(() => {
+  const applicationsQuery = computed(() => {
     const query: Record<string, string | number> = {
-      select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
+      select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
       size: pageSize,
       page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
-    if (filters.concepts.value?.length) query.concepts = filters.concepts.value.join(',')
+    if (filters.baseApplication.value?.length) query['base-application'] = filters.baseApplication.value.join(',')
     if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
-    if (filters.keywords.value?.length) query.keywords = filters.keywords.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
     if (filters.sort.value) query.sort = filters.sort.value
     return query
   })
-  datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery, watch: false })
+  applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery, watch: false })
 }
 
+// TODO: Track applications search ?
 // Track searches
-if (!preview) {
-  // TODO: ask if params are tracked, in this case, this track is useless
-  watch(filters.search, () => {
-    if (filters.search.value) useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value })
-  })
-}
+// if (!preview) {
+//   // TODO: ask if params are tracked, in this case, this track is useless
+//   watch(filters.search, () => {
+//     if (filters.search.value) useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value })
+//   })
+// }
 
 // Computed property to check if there are more datasets to load (for infinite scroll)
 const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
-  return displayedDatasets.value.length < (datasetsFetch?.data.value?.count || 0)
+  return displayedApplications.value.length < (applicationsFetch?.data.value?.count || 0)
 })
 
-const datasetsCount = computed(() => preview ? displayedDatasets.value.length : (datasetsFetch?.data.value?.count || 0))
+const applicationsCount = computed(() => preview ? displayedApplications.value.length : (applicationsFetch?.data.value?.count || 0))
 
 // Total pages for pagination
 const totalPages = computed(() => {
   if (preview) return 1
-  return Math.ceil((datasetsFetch?.data.value?.count || 0) / pageSize)
+  return Math.ceil((applicationsFetch?.data.value?.count || 0) / pageSize)
 })
 
 // Function to go to a specific page (for pagination)
 const goToPage = async (page: number) => {
-  if (preview || !datasetsFetch) return
+  if (preview || !applicationsFetch) return
   loading.value = true
   try {
     currentPage.value = page
-    await datasetsFetch.refresh()
-    if (datasetsFetch.data.value?.results) {
-      displayedDatasets.value = [...datasetsFetch.data.value.results]
+    await applicationsFetch.refresh()
+    if (applicationsFetch.data.value?.results) {
+      displayedApplications.value = [...applicationsFetch.data.value.results]
     }
     // goTo(catalogTop.value)
   } finally {
@@ -262,13 +236,13 @@ const goToPage = async (page: number) => {
 
 // Function to load more datasets (for infinite scroll)
 const loadMore = async () => {
-  if (preview || loading.value || !hasMore.value || !datasetsFetch || paginationPosition.value !== 'none') return
+  if (preview || loading.value || !hasMore.value || !applicationsFetch || paginationPosition.value !== 'none') return
   loading.value = true
   try {
     currentPage.value++
-    await datasetsFetch?.refresh()
-    if (datasetsFetch?.data.value?.results) {
-      displayedDatasets.value.push(...datasetsFetch.data.value.results)
+    await applicationsFetch?.refresh()
+    if (applicationsFetch?.data.value?.results) {
+      displayedApplications.value.push(...applicationsFetch.data.value.results)
     }
   } finally {
     loading.value = false
@@ -278,34 +252,38 @@ const loadMore = async () => {
 // Initialize datasets on mount
 if (!preview) {
   onMounted(async () => {
-    await datasetsFetch?.refresh()
-    if (datasetsFetch?.data.value?.results) {
-      displayedDatasets.value = [...datasetsFetch.data.value.results]
+    await applicationsFetch?.refresh()
+    if (applicationsFetch?.data.value?.results) {
+      displayedApplications.value = [...applicationsFetch.data.value.results]
     }
   })
 } else {
   // Mock data for preview
-  displayedDatasets.value = Array.from({ length: 6 }, (_, i) => ({
-    id: `dataset-${i + 1}`,
-    slug: `dataset-${i + 1}`,
-    title: `Dataset ${i + 1}`,
-    summary: 'Exemple de jeu de données pour la prévisualisation.',
-    dataUpdatedAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
-    extras: {},
-    topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }],
-    isMetaOnly: false
-  }))
+  displayedApplications.value = Array.from({ length: 6 }, (_, i) => {
+    const slug = `application-${i + 1}`
+    return {
+      id: slug,
+      slug,
+      title: `Application ${i + 1}`,
+      summary: 'Exemple d\'application pour la prévisualisation.',
+      updatedAt: new Date().toISOString(),
+      image: undefined,
+      url: `/applications/${slug}`,
+      href: `/applications/${slug}`,
+      exposedUrl: `/applications/${slug}`,
+      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+      topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }]
+    }
+  })
 }
 
 // Reset datasets when filters change
 if (!preview) {
-  watch([filters.search, filters.sort, filters.concepts, filters.topics, filters.keywords, filters.owners], async () => {
+  watch([filters.search, filters.sort, filters.baseApplication, filters.topics, filters.owners], async () => {
     currentPage.value = 1
-    await datasetsFetch?.refresh()
-    if (datasetsFetch?.data.value?.results) {
-      displayedDatasets.value = [...datasetsFetch.data.value.results]
+    await applicationsFetch?.refresh()
+    if (applicationsFetch?.data.value?.results) {
+      displayedApplications.value = [...applicationsFetch.data.value.results]
     }
     // goTo(catalogTop.value)
   })
@@ -321,7 +299,7 @@ watch([sort, order], () => {
 
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
-  { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+  { title: t('sort.updatedAt'), value: 'updatedAt' },
   { title: t('sort.title'), value: 'title' }
 ]
 
@@ -329,40 +307,24 @@ const sortItems = [
 
 <i18n lang="yaml">
   en:
+    applicationsCount: '{count} application | {count} applications'
     ascending: Ascending order
-    catalogApiDoc: Catalog API Documentation
-    datasetsCount: '{count} dataset | {count} datasets'
-    resultsCount: '{count} result | {count} results'
     descending: Descending order
-    export: Export filtered data as CSV
-    filters:
-      concepts: Concepts
-      noConcepts: No concepts available
-      topics: Topics
-      noTopics: No topics available
-    search: Search
+    resultsCount: '{count} result | {count} results'
     sort:
       by: Sort by
       createdAt: Creation date
-      dataUpdatedAt: Data update date
       title: Alphabetical order
+      updatedAt: Update date
 
   fr:
+    applicationsCount: '{count} visualisation | {count} visualisations'
     ascending: Ordre croissant
-    catalogApiDoc: Documentation de l'API du catalogue
-    datasetsCount: '{count} jeu de données | {count} jeux de données'
-    resultsCount: '{count} résultat | {count} résultats'
     descending: Ordre décroissant
-    export: Exporter les données filtrées au format CSV
-    filters:
-      concepts: Concepts
-      noConcepts: Aucun concept disponible
-      topics: Thématiques
-      noTopics: Aucune thématique disponible
-    search: Rechercher
+    resultsCount: '{count} résultat | {count} résultats'
     sort:
       by: Trier par
       createdAt: Date de création
-      dataUpdatedAt: Date de mise à jour des données
       title: Ordre alphabétique
+      updatedAt: Date de mise à jour
 </i18n>

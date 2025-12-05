@@ -77,7 +77,6 @@ router.post('', async (req, res, next) => {
       }
     },
     applications: {
-      list: {},
       card: {},
       page: {}
     },

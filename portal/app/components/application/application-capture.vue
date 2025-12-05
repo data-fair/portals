@@ -1,6 +1,6 @@
 <template>
   <action-btn
-    :action-style="portalConfig.applications.page.actionsStyle"
+    :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiCamera"
     :text="t('text.capture')"
     :short-text="t('shortText.capture')"

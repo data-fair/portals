@@ -84,6 +84,17 @@
   />
 
   <!-- Applications -->
+  <page-element-applications-catalog
+    v-else-if="element.type === 'applications-catalog'"
+    :element="element"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-applications-catalog>
   <page-element-applications-list
     v-else-if="element.type === 'applications-list'"
     :element="element"

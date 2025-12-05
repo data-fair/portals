@@ -57,7 +57,7 @@ const groupsParams = computed(() => {
 })
 const groupsFetch = useFetch<{ results: Group[], count: number }>($apiPath + '/groups', { query: groupsParams })
 
-// Add base groups : standard (home, contact, privacy policy pages), event, news, default (generic pages without group)
+// Add base groups : standard (home, contact, privacy policy,... pages), event, news, default (generic pages without group)
 const displayGroups = computed(() => {
   const groups: (Pick<Group, '_id' | 'title' | 'description'> & Partial<Pick<Group, 'owner'>>)[] = [
     { _id: 'standard', title: t('groupTitle.standard'), description: t('groupDesc.standard') },

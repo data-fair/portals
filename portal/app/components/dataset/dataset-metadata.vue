@@ -50,10 +50,10 @@
           <v-avatar
             :image="avatarUrl"
             :alt="t('ownerAvatar')"
-            :title="dataset.owner.departmentName || dataset.owner.department || dataset.owner.name"
+            :title="dataset.owner.departmentName || dataset.owner.department"
             :size="28"
           />
-          {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
+          {{ dataset.owner.departmentName || dataset.owner.department }}
         </div>
       </v-col>
 
@@ -158,7 +158,10 @@
         <template v-if="!dataset.isMetaOnly">
           <action-btn
             v-if="shouldShowActionButton('table')"
-            :to="`/datasets/${dataset.slug}/table`"
+            :to="{
+              path: `/datasets/${dataset.slug}/table`,
+              query: $route.query
+            }"
             :action-style="metadataConfig?.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
@@ -285,7 +288,6 @@ const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata)
-
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
@@ -349,7 +351,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     attachments: 'Pièces jointes :'
     creator: 'Producteur :'
     dataFrom: 'Données issues de'
-    dataProducedBy: 'Données produites par :'
+    dataProducedBy: 'Provenance des données :'
     records: '{count} enregistrement | {count} enregistrements'
     frequency:
       annual: 'Tous les ans'

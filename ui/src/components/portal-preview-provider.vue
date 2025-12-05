@@ -18,7 +18,6 @@ const portalConfigDefault: PortalConfig = {
     page: {}
   },
   applications: {
-    list: {},
     card: {},
     page: {}
   },
