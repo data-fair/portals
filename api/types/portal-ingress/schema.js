@@ -33,7 +33,7 @@ export default {
     },
     redirects: {
       type: 'array',
-      title: 'Redirections spécifiques',
+      title: 'Redirections spécifiques (résolues par le navigateur)',
       items: {
         type: 'array',
         minItems: 2,
@@ -41,6 +41,19 @@ export default {
         items: [
           { type: 'string', title: 'Origine', layout: { cols: 6, placeholder: 'Par exemple /pages/accueil/' } },
           { type: 'string', title: 'Destination', layout: { cols: 6, placeholder: 'Par exemple /' } }
+        ]
+      }
+    },
+    rewrites: {
+      type: 'array',
+      title: 'Re-écriture (résolues directement sur le serveur)',
+      items: {
+        type: 'array',
+        minItems: 2,
+        maxItems: 2,
+        items: [
+          { type: 'string', title: 'Origine', layout: { cols: 6, placeholder: 'Par exemple /data-fair/api/datasets/old-dataset-id/(.*)' } },
+          { type: 'string', title: 'Destination', layout: { cols: 6, placeholder: 'Par exemple /data-fair/api/datasets/new-dataset-id/$1' } }
         ]
       }
     },

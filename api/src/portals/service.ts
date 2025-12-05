@@ -152,6 +152,7 @@ const getIngressInfos = (portal: Portal) => {
     _id: portal._id + '--draft',
     blockedIps: portal.ingress?.blockedIps,
     redirects: portal.ingress?.redirects,
+    rewrites: portal.ingress?.rewrites,
   }]
   if (portal.ingress) {
     ingressInfos.push({
@@ -160,6 +161,7 @@ const getIngressInfos = (portal: Portal) => {
       _id: portal._id,
       controller: portal.ingress.controller,
       redirects: portal.ingress.redirects,
+      rewrites: portal.ingress.rewrites,
       blockedIps: portal.ingress.blockedIps,
       customCert: portal.ingress.customerCert
     })
