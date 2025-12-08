@@ -1117,6 +1117,12 @@ export default {
           description: "Le champ de recherche s'étendra sur toute la largeur de son conteneur parent.",
           layout: 'switch'
         },
+        redirectPage: {
+          type: 'boolean',
+          title: 'Rediriger vers la page de jeux de données',
+          description: "Si activé, la recherche redirigera vers la page des jeux de données Sinon, la recherche s'appliquera sur la page actuelle.",
+          layout: 'switch'
+        },
         centered: {
           type: 'boolean',
           title: 'Centrer le champ de recherche',
@@ -1151,6 +1157,12 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
           title: 'Couleur des icônes des thématiques',
           layout: { if: 'parent.data?.showIcon === true' }
+        },
+        redirectPage: {
+          type: 'boolean',
+          title: 'Rediriger vers la page de jeux de données',
+          description: 'Si activé, cliquer sur une thématique redirigera vers la page des jeux de données avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
+          layout: 'switch'
         },
         centered: {
           type: 'boolean',

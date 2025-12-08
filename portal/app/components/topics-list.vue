@@ -11,10 +11,11 @@
     >
       <div class="bg-surface">
         <v-chip
-          :variant="!selected.includes(topic.id) ? 'outlined' : undefined"
-          :color="config?.color === 'default' ? topic.color
+          :variant="!isFilters || !selected.includes(topic.id) ? 'outlined' : undefined"
+          :color="!isFilters || selected.includes(topic.id) ? (config?.color === 'default' ? topic.color
             : config?.color ? config.color
             : undefined
+          ) : undefined
           "
           :density="config?.density"
           :elevation="config?.elevation"
@@ -25,12 +26,13 @@
         >
           <v-icon
             v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
-            :color="!selected.includes(topic.id) ? (config?.iconColor === 'default' ? topic.color
+            :color="!isFilters || selected.includes(topic.id) ? undefined
+              : (config?.iconColor === 'default' ? topic.color
                 : config?.iconColor ? config.iconColor
                 : config?.color === 'default' ? topic.color
                 : config?.color ? config.color
                 : undefined
-              ) : undefined
+              )
             "
             :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
             start
@@ -46,11 +48,7 @@
 import type { TopicsElement } from '#api/types/page-config'
 
 const { preview } = usePortalStore()
-
-const selected = defineModel({
-  type: Array as () => string[],
-  default: () => []
-})
+const selected = useStringsArraySearchParam('topics')
 
 const { topics } = defineProps<{
   topics: {

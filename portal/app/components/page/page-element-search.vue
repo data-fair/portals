@@ -67,10 +67,14 @@ const searchQuery = ref('')
 
 const onSearch = () => {
   if (!preview && searchQuery.value?.trim()) {
-    router.push({
-      path: '/datasets',
-      query: { q: searchQuery.value.trim() }
-    })
+    if (element.redirectPage) {
+      router.push({
+        path: '/datasets',
+        query: { q: searchQuery.value.trim() }
+      })
+    } else {
+      search.value = searchQuery.value.trim()
+    }
   }
 }
 

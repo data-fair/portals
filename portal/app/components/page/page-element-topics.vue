@@ -6,7 +6,8 @@
     <topics-list
       :config="element"
       :topics="topicsItems"
-      is-links
+      :is-links="element.redirectPage"
+      :is-filters="!element.redirectPage"
     />
   </div>
 </template>
