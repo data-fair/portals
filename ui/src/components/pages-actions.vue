@@ -1,13 +1,16 @@
 <template>
-  <v-list-item :to="`/pages/${group._id}/new`">
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiPlusCircle"
-      />
-    </template>
-    {{ t('createNewPage') }}
-  </v-list-item>
+  <!-- Create new page -->
+  <custom-router-link :to="`/pages/${group._id}/new`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiPlusCircle"
+        />
+      </template>
+      {{ t('createNewPage') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Group management menu -->
   <v-menu

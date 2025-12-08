@@ -1,25 +1,29 @@
 <template>
   <!-- Create new portal -->
-  <v-list-item :to="'/portals/new'">
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiPlusCircle"
-      />
-    </template>
-    {{ t('createNewPortal') }}
-  </v-list-item>
+  <custom-router-link :to="'/portals/new'">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiPlusCircle"
+        />
+      </template>
+      {{ t('createNewPortal') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Manage fonts -->
-  <v-list-item :to="'/portals/font-assets'">
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiFormatFont"
-      />
-    </template>
-    {{ t('manageFontAssets') }}
-  </v-list-item>
+  <custom-router-link :to="'/portals/font-assets'">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiFormatFont"
+        />
+      </template>
+      {{ t('manageFontAssets') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Search field -->
   <v-text-field

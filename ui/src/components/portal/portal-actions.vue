@@ -176,18 +176,20 @@
 
   <v-divider class="my-2" />
 
-  <v-list-item
+  <custom-router-link
     v-if="session.state.user?.adminMode"
     :to="`/portals/${portal.id}/ingress`"
   >
-    <template #prepend>
-      <v-icon
-        color="admin"
-        :icon="mdiShieldLinkVariant"
-      />
-    </template>
-    {{ t('manageDomainExposure') }}
-  </v-list-item>
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="admin"
+          :icon="mdiShieldLinkVariant"
+        />
+      </template>
+      {{ t('manageDomainExposure') }}
+    </v-list-item>
+  </custom-router-link>
 
   <v-list-item
     :href="$uiConfig.portalUrlPattern.replace('{subdomain}', portal.id + '.draft')"

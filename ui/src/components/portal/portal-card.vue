@@ -1,40 +1,42 @@
 <template>
-  <v-card
-    class="h-100"
-    :to="`/portals/${portal._id}`"
-  >
-    <v-card-item>
-      <template #append>
-        <owner-avatar
-          v-if="showOwner"
-          :owner="portal.owner"
-        />
-      </template>
+  <custom-router-link :to="`/portals/${portal._id}`">
+    <v-card
+      class="h-100"
+      link
+    >
+      <v-card-item>
+        <template #append>
+          <owner-avatar
+            v-if="showOwner"
+            :owner="portal.owner"
+          />
+        </template>
 
-      <template #title>
-        <span class="font-weight-bold text-primary">
-          {{ portal.config.title }}
-        </span>
-        <v-tooltip
-          v-if="portal.config.title.length > 20"
-          activator="parent"
-          location="top left"
-          open-delay="300"
-          :text="portal.config.title"
-        />
-      </template>
-    </v-card-item>
-    <v-divider />
-    <v-card-text class="pa-0">
-      <v-list
-        density="compact"
-        style="background-color: inherit;"
-      >
-        <!-- TODO: Add a content -->
-        {{ portal.config.description }}
-      </v-list>
-    </v-card-text>
-  </v-card>
+        <template #title>
+          <span class="font-weight-bold text-primary">
+            {{ portal.config.title }}
+          </span>
+          <v-tooltip
+            v-if="portal.config.title.length > 20"
+            activator="parent"
+            location="top left"
+            open-delay="300"
+            :text="portal.config.title"
+          />
+        </template>
+      </v-card-item>
+      <v-divider />
+      <v-card-text class="pa-0">
+        <v-list
+          density="compact"
+          style="background-color: inherit;"
+        >
+          <!-- TODO: Add a content -->
+          {{ portal.config.description }}
+        </v-list>
+      </v-card-text>
+    </v-card>
+  </custom-router-link>
 </template>
 
 <script setup lang="ts">

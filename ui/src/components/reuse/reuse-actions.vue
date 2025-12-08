@@ -1,16 +1,16 @@
 <template>
   <!-- Edit config -->
-  <v-list-item
-    :to="`/reuses/${reuseId}/edit-config`"
-    :title="t('editConfig')"
-  >
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiFileEdit"
-      />
-    </template>
-  </v-list-item>
+  <custom-router-link :to="`/reuses/${reuseId}/edit-config`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiFileEdit"
+        />
+      </template>
+      {{ t('editConfig') }}
+    </v-list-item>
+  </custom-router-link>
 
   <v-divider class="my-2" />
 

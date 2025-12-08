@@ -1,37 +1,39 @@
 <template>
-  <v-card
-    class="h-100"
-    :to="`/pages/${group._id}`"
-  >
-    <v-card-item>
-      <!-- Group title -->
-      <template #title>
-        <span class="font-weight-bold text-primary">
-          {{ group.title }}
-        </span>
-        <v-tooltip
-          v-if="group.title.length > 20"
-          activator="parent"
-          location="top left"
-          open-delay="300"
-          :text="group.title"
-        />
-      </template>
+  <custom-router-link :to="`/pages/${group._id}`">
+    <v-card
+      class="h-100"
+      link
+    >
+      <v-card-item>
+        <!-- Group title -->
+        <template #title>
+          <span class="font-weight-bold text-primary">
+            {{ group.title }}
+          </span>
+          <v-tooltip
+            v-if="group.title.length > 20"
+            activator="parent"
+            location="top left"
+            open-delay="300"
+            :text="group.title"
+          />
+        </template>
 
-      <!-- Owner -->
-      <template #append>
-        <owner-avatar
-          v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
-          :owner="group.owner"
-        />
-      </template>
-    </v-card-item>
+        <!-- Owner -->
+        <template #append>
+          <owner-avatar
+            v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
+            :owner="group.owner"
+          />
+        </template>
+      </v-card-item>
 
-    <!-- Description -->
-    <v-card-text>
-      {{ group.description }}
-    </v-card-text>
-  </v-card>
+      <!-- Description -->
+      <v-card-text>
+        {{ group.description }}
+      </v-card-text>
+    </v-card>
+  </custom-router-link>
 </template>
 
 <script setup lang="ts">

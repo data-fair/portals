@@ -1,16 +1,16 @@
 <template>
   <!-- Edit draft -->
-  <v-list-item
-    :to="`/pages/${groupId}/${pageId}/edit-config`"
-    :title="t('editDraft')"
-  >
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiFileEdit"
-      />
-    </template>
-  </v-list-item>
+  <custom-router-link :to="`/pages/${groupId}/${pageId}/edit-config`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiFileEdit"
+        />
+      </template>
+      {{ t('editDraft') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Validate draft -->
   <v-list-item

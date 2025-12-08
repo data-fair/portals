@@ -1,14 +1,16 @@
 <template>
   <!-- Create new reuse -->
-  <v-list-item :to="`/reuses/new`">
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiPlusCircle"
-      />
-    </template>
-    {{ t('createNewReuse') }}
-  </v-list-item>
+  <custom-router-link :to="`/reuses/new`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiPlusCircle"
+        />
+      </template>
+      {{ t('createNewReuse') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Search field -->
   <v-text-field
