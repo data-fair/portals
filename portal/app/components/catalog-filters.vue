@@ -9,7 +9,8 @@
       v-model="search"
       :append-inner-icon="mdiMagnify"
       :label="t('search')"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       autofocus
       clearable
@@ -31,7 +32,8 @@
       :items="conceptsItems"
       :label="t('filters.concepts')"
       :no-data-text="t('filters.noConcepts')"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       chips
       clearable
@@ -52,7 +54,8 @@
       :items="baseApplicationItems"
       :label="t('filters.baseApplication')"
       :no-data-text="t('filters.noBaseApplication')"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       chips
       clearable
@@ -75,7 +78,8 @@
       :items="facets.topics"
       :item-title="(item) => `${item.value.title} (${item.count})`"
       :item-value="(item) => item.value.id"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       chips
       clearable
@@ -98,7 +102,8 @@
       :items="facets.keywords"
       :item-title="(item) => `${item.value} (${item.count})`"
       item-value="id"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       chips
       clearable
@@ -119,7 +124,8 @@
       :label="portalConfig.labelsOverrides?.owner || t('filters.owners')"
       :no-data-text="t(`filters.${portalConfig.labelsOverrides?.owner ? 'noChoices' : 'noOwners'}`)"
       :items="ownersItems"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       chips
       clearable
@@ -153,7 +159,8 @@
       v-model="sort"
       :items="sortItems"
       :label="t('sort.by')"
-      density="comfortable"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
       hide-details
       clearable
@@ -163,16 +170,21 @@
         <v-btn-toggle
           v-if="!drawer"
           v-model="order"
+          :density="config.filters?.density || 'comfortable'"
+          :rounded="config.filters?.rounded"
           variant="outlined"
+          class="h-100"
           mandatory
         >
           <v-btn
             :icon="mdiSortDescending"
             :title="t('descending')"
+            stacked
           />
           <v-btn
             :icon="mdiSortAscending"
             :title="t('ascending')"
+            stacked
           />
         </v-btn-toggle>
       </template>
@@ -186,16 +198,21 @@
     <!-- Order toggle -->
     <v-btn-toggle
       v-model="order"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
       variant="outlined"
+      class="h-100"
       mandatory
     >
       <v-btn
         :icon="mdiSortDescending"
         :title="t('descending')"
+        stacked
       />
       <v-btn
         :icon="mdiSortAscending"
         :title="t('ascending')"
+        stacked
       />
     </v-btn-toggle>
   </v-col>

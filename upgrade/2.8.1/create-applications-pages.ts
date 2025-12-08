@@ -66,7 +66,6 @@ export default {
               defaultSort,
               columns: applicationsList.columns || 2,
               applicationsCountPosition: 'top',
-              showApiButton: true,
               showSortBesideCount: false,
               showAdvancedFilters: applicationsList.filtersList && applicationsList.filtersList.includes('topics'),
               filters: {

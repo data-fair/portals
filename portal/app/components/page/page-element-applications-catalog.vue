@@ -48,7 +48,8 @@
         v-model="sort"
         :items="sortItems"
         :label="t('sort.by')"
-        density="comfortable"
+        :density="element.filters?.density || 'comfortable'"
+        :rounded="element.filters?.rounded"
         variant="outlined"
         hide-details
         clearable
@@ -56,18 +57,23 @@
         <template #append>
           <v-btn-toggle
             v-model="order"
+            :density="element.filters?.density || 'comfortable'"
+            :rounded="element.filters?.rounded"
             variant="outlined"
+            class="h-100"
             mandatory
           >
             <v-btn
               :icon="mdiSortDescending"
               :title="t('descending')"
               value="-1"
+              stacked
             />
             <v-btn
               :icon="mdiSortAscending"
               :title="t('ascending')"
               value="1"
+              stacked
             />
           </v-btn-toggle>
         </template>

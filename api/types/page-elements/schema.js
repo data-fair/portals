@@ -595,7 +595,12 @@ export default {
         url: {
           title: "URL de l'iframe",
           description: "URL de la page web à afficher dans l'iframe.",
-          type: 'string'
+          type: 'string',
+          layout: {
+            slots: {
+              before: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → section **Sécurité**."
+            }
+          }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
@@ -1450,7 +1455,13 @@ export default {
                   { const: 'sort', title: 'Tri' }
                 ]
               }
-            }
+            },
+            density: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+            },
+            rounded: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+            },
           }
         },
         pagination: {
@@ -1860,7 +1871,13 @@ export default {
                   { const: 'sort', title: 'Tri' }
                 ]
               }
-            }
+            },
+            density: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+            },
+            rounded: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+            },
           }
         },
         pagination: {
