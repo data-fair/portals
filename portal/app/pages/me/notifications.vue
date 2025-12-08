@@ -43,8 +43,8 @@ const notifyUrl = computed(() => {
   const keys = [`data-fair:dataset-published:data-fair-portals:${portal.value._id}`]
   const titles = ['Nouveau jeu de données sur ' + portalTitle]
   for (const topic of topics.value) {
-    keys.push(`data-fair:dataset-published-topic:data-fair-portals:${portal.value._id}:${topic.id}`)
-    titles.push(`Nouveau jeu de données dans la thématique ${topic.title} sur ${portalTitle}`)
+    keys.push(`data-fair:dataset-published-topic:data-fair-portals:${portal.value._id}:${topic.value.id}`)
+    titles.push(`Nouveau jeu de données dans la thématique ${topic.value.title} sur ${portalTitle}`)
   }
   const icon = `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/avatar.png`
   const urlTemplate = '/datasets/{id}'
@@ -53,7 +53,7 @@ const notifyUrl = computed(() => {
   return `/events/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&sender=${encodeURIComponent(sender)}&outputs=auto`
 })
 
-const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics: { id: string, title: string }[] } }>(
+const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics: { count: string, value: { id: string, title: string } }[] } }>(
   '/data-fair/api/v1/datasets',
   {
     query: {
