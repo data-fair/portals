@@ -27,7 +27,8 @@ type TopicItem = {
   count: number
   color?: string
   icon?: {
-    svgPath: string
+    svg?: string
+    svgPath?: string
   }
 }
 

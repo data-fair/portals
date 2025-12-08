@@ -24,7 +24,7 @@
           @click="isFilters ? toggle(topic.id) : undefined"
         >
           <v-icon
-            v-if="config?.showIcon && topic.icon?.svgPath"
+            v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
             :color="!selected.includes(topic.id) ? (config?.iconColor === 'default' ? topic.color
                 : config?.iconColor ? config.iconColor
                 : config?.color === 'default' ? topic.color
@@ -32,7 +32,7 @@
                 : undefined
               ) : undefined
             "
-            :icon="topic.icon?.svgPath"
+            :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
             start
           />
           {{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}
@@ -59,7 +59,8 @@ const { topics } = defineProps<{
     count?: number
     color?: string
     icon?: {
-      svgPath: string
+      svg?: string
+      svgPath?: string
     }
   }[]
   isLinks?: boolean
@@ -71,6 +72,12 @@ const { topics } = defineProps<{
 const toggle = (id: string) => {
   if (selected.value.includes(id)) selected.value = selected.value.filter(x => x !== id)
   else selected.value = [...selected.value, id]
+}
+
+function extractSvgPath (svg?: string): string | undefined {
+  if (!svg) return
+  const match = svg.match(/<path[^>]*d="([^"]+)"/)
+  return match ? match[1] : undefined
 }
 
 </script>
