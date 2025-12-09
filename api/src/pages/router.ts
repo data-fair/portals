@@ -6,7 +6,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -86,8 +86,8 @@ router.post('', async (req, res, next) => {
   }
   assertAccountRole(session, page.owner, 'admin')
 
-  await createPage(page)
-
+  const creationDetails = await createPage(page, body.sourcePageId)
+  sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
   res.status(201).json(page)
 })
 
@@ -101,8 +101,8 @@ router.patch('/:id', async (req, res, next) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   if (body.isReference !== undefined) assertAdminMode(session)
   if (body.portals) assertAccountRole(session, page.owner, 'admin')
-  await patchPage(page, body, session)
-  res.send({ ...page, body })
+  const updatedPage = await patchPage(page, body, session)
+  res.send({ ...updatedPage, body })
 })
 
 router.delete('/:id', async (req, res, next) => {
@@ -111,6 +111,7 @@ router.delete('/:id', async (req, res, next) => {
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
+  sendPageEvent(page, 'a été supprimée', 'delete', session)
   res.status(201).send()
 })
 

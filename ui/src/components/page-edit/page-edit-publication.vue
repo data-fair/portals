@@ -120,7 +120,7 @@ const portals = computed(() => portalsFetch.data.value?.results)
 
 // Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title', size: 10000 }
+  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title,title', size: 10000 }
 })
 
 const warnings = computed(() => {
