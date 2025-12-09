@@ -149,7 +149,7 @@ const route = useRoute()
 
 const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
   params: {
-    html: true,
+    html: 'vuetify',
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
@@ -161,7 +161,7 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
 const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
   select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
   size: 100,
-  html: true,
+  html: 'vuetify',
   ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(','),
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))

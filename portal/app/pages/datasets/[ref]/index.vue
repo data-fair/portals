@@ -380,7 +380,7 @@ const dataTab = ref<string | undefined>()
 
 const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
   params: {
-    html: true,
+    html: 'vuetify',
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
@@ -390,7 +390,7 @@ const dataset = computed(() => datasetFetch.data.value)
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
   size: 100,
-  html: true,
+  html: 'vuetify',
   dataset: datasetFetch.data.value?.id,
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))

@@ -151,7 +151,7 @@ const datasetCardConfig = computed(() => {
 const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
   select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
   size: 100,
-  html: true,
+  html: 'vuetify',
   ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))

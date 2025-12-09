@@ -105,7 +105,7 @@ const { dayjs } = useLocaleDayjs()
 
 const baseApplicationFetch = useLocalFetch<{
   title: string
-}>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: true } })
+}>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({

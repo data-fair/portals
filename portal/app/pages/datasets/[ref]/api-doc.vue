@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: API Doc-->
   <!-- <p
     v-if="useReadApiKey && actualReadApiKey"
     class="my-0 mx-2"
@@ -64,7 +65,7 @@ export default {
   async fetch () {
     this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.ref, {
       params: {
-        html: true,
+        html: 'vuetify',
         publicationSites: 'data-fair-portals:' + this.portal._id
       }
     })
