@@ -9,37 +9,35 @@
       :key="topic.id"
       cols="auto"
     >
-      <div class="bg-surface">
-        <v-chip
-          :variant="!isFilters || !selected.includes(topic.id) ? 'outlined' : undefined"
-          :color="!isFilters || selected.includes(topic.id) ? (config?.color === 'default' ? topic.color
-            : config?.color ? config.color
-            : undefined
-          ) : undefined
+      <v-chip
+        :variant="!isFilters || !selected.includes(topic.id) ? 'outlined' : undefined"
+        :color="!isFilters || selected.includes(topic.id) ? (config?.color === 'default' ? topic.color
+          : config?.color ? config.color
+          : undefined
+        ) : undefined
+        "
+        :density="config?.density"
+        :elevation="config?.elevation"
+        :rounded="config?.rounded"
+        :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
+        label
+        @click="isFilters ? toggle(topic.id) : undefined"
+      >
+        <v-icon
+          v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
+          :color="!isFilters || selected.includes(topic.id) ? undefined
+            : (config?.iconColor === 'default' ? topic.color
+              : config?.iconColor ? config.iconColor
+              : config?.color === 'default' ? topic.color
+              : config?.color ? config.color
+              : undefined
+            )
           "
-          :density="config?.density"
-          :elevation="config?.elevation"
-          :rounded="config?.rounded"
-          :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
-          label
-          @click="isFilters ? toggle(topic.id) : undefined"
-        >
-          <v-icon
-            v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
-            :color="!isFilters || selected.includes(topic.id) ? undefined
-              : (config?.iconColor === 'default' ? topic.color
-                : config?.iconColor ? config.iconColor
-                : config?.color === 'default' ? topic.color
-                : config?.color ? config.color
-                : undefined
-              )
-            "
-            :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
-            start
-          />
-          {{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}
-        </v-chip>
-      </div>
+          :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
+          start
+        />
+        <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
+      </v-chip>
     </v-col>
   </v-row>
 </template>
@@ -79,3 +77,15 @@ function extractSvgPath (svg?: string): string | undefined {
 }
 
 </script>
+
+<style scoped>
+/* Set a background color for outlined chips */
+:deep(.v-chip--variant-outlined) {
+  background-color: var(--v-theme-surface);
+}
+
+/* Allow to truncate text */
+:deep(.v-chip__content) {
+  max-width: 100%;
+}
+</style>

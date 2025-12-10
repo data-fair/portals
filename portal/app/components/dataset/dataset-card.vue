@@ -28,7 +28,14 @@
       </template>
 
       <!-- Main column -->
-      <v-col class="d-flex flex-column">
+      <!--
+        d-flex flex-column => make the column take full height of the card and arrange content vertically
+        min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+      -->
+      <v-col
+        class="d-flex flex-column"
+        style="min-width: 0"
+      >
         <!-- Thumbnail (Top Location) -->
         <v-img
           v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
@@ -89,6 +96,7 @@
         />
 
         <!-- Department / Updated At -->
+        <!-- TODO: Convert to v-row ?-->
         <v-list-item>
           <template #prepend>
             <owner-avatar
@@ -105,8 +113,8 @@
         <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">
           <v-divider />
           <!--
-            cursor-default and @click.prevent => disable card link on action buttons
             ga-0 => remove default v-card-actions gap between action buttons
+            cursor-default and @click.prevent => disable card link on action buttons
             min-height: auto => remove default v-card-actions min-height
           -->
           <v-card-actions

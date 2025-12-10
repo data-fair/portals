@@ -16,7 +16,9 @@
         :rounded="config?.rounded"
         :text="keyword"
         label
-      />
+      >
+        <span class="text-truncate">{{ keyword }}</span>
+      </v-chip>
     </v-col>
   </v-row>
 </template>
@@ -30,3 +32,15 @@ const { keywords } = defineProps<{
 }>()
 
 </script>
+
+<style scoped>
+/* Set a background color for outlined chips */
+:deep(.v-chip--variant-outlined) {
+  background-color: var(--v-theme-surface);
+}
+
+/* Allow to truncate text */
+:deep(.v-chip__content) {
+  max-width: 100%;
+}
+</style>
