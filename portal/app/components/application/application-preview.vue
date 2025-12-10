@@ -6,6 +6,7 @@
     :text="t('preview')"
     :short-text="t('previewShort')"
     :track-path="`/applications/${application.slug}/preview-dialog`"
+    block
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"

@@ -5,42 +5,48 @@
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
   >
+    <!--
+      flex-nowrap => prevent columns from wrapping on multiple rows
+      no-gutters => remove spaces between columns
+    -->
     <v-row
       class="flex-nowrap"
       no-gutters
     >
-      <!-- Image column -->
-      <v-col
-        v-if="cardConfig.thumbnail?.location === 'left'"
-        cols="12"
-        sm="4"
-      >
-        <v-img
-          v-if="thumbnailUrl"
-          :alt="t('imageAlt', { title: dataset.title })"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="h-100"
-        />
+      <!-- Thumbnail (Left Location) -->
+      <!-- On mobile, always use top location -->
+      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+        <v-col cols="4">
+          <div
+            v-if="thumbnailUrl"
+            role="img"
+            :aria-label="t('imageAlt', { title: dataset.title })"
+            :style="leftThumbnailStyle"
+          />
+        </v-col>
         <v-divider vertical />
-      </v-col>
+      </template>
 
-      <!-- Center column -->
+      <!-- Main column -->
       <v-col class="d-flex flex-column">
+        <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'top' && thumbnailUrl"
+          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
         />
+
         <v-card-title
           class="font-weight-bold"
           style="white-space: unset;"
         >
           {{ dataset.title }}
         </v-card-title>
+
+        <!-- Thumbnail (Center Location) -->
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: dataset.title })"
@@ -49,6 +55,7 @@
           class="flex-grow-0"
           height="170"
         />
+
         <v-card-text
           v-if="cardConfig.showSummary && dataset.summary?.length"
           class="pb-0"
@@ -66,12 +73,12 @@
           class="mx-4 mt-2 flex-grow-0"
         />
 
-        <!-- keywords list -->
+        <!-- Keywords list -->
         <keywords-list
           v-if="cardConfig.keywords?.show && dataset.keywords?.length"
           :config="cardConfig.keywords"
           :keywords="dataset.keywords"
-          class="px-4 mt-2 flex-grow-0"
+          class="mx-4 mt-2 flex-grow-0"
         />
 
         <!-- Department / Updated At -->
@@ -88,8 +95,13 @@
         </v-list-item>
 
         <!-- Actions (Bottom Location) -->
-        <template v-if="(cardConfig.actionsLocation === 'bottom' && !dataset.isMetaOnly) || $vuetify.display.smAndDown">
+        <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">
           <v-divider />
+          <!--
+            cursor-default and @click.prevent => disable card link on action buttons
+            ga-0 => remove default v-card-actions gap between action buttons
+            min-height: auto => remove default v-card-actions min-height
+          -->
           <v-card-actions
             class="py-2 ga-0 cursor-default"
             style="min-height: auto"
@@ -120,11 +132,15 @@
       </v-col>
 
       <!-- Actions (Right Location) -->
-      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown && !dataset.isMetaOnly">
         <v-divider vertical />
+        <!--
+          cols=auto => fit column width to largest button
+          cursor-default and @click.prevent => disable card link on action buttons
+        -->
         <v-col
           cols="auto"
-          class="pa-2 cursor-default d-flex flex-column ga-2"
+          class="pa-2 cursor-default"
           @click.prevent
         >
           <action-btn
@@ -132,6 +148,7 @@
             :action-style="cardConfig.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
+            block
           />
           <action-btn
             v-if="dataset.bbox?.length"
@@ -139,6 +156,7 @@
             :action-style="cardConfig.actionsStyle"
             :icon="mdiMapMarker"
             :text="t('text.map')"
+            block
           />
           <action-btn
             :to="`/datasets/${dataset.slug}/api-doc`"
@@ -146,6 +164,7 @@
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
+            block
           />
         </v-col>
       </template>
@@ -205,6 +224,19 @@ const thumbnailUrl = computed(() => {
   }
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
+})
+
+// Set thumbnail in background for left location to cover full height of the card
+const leftThumbnailStyle = computed(() => {
+  if (!thumbnailUrl.value) return undefined
+  return {
+    backgroundImage: `url("${thumbnailUrl.value}")`,
+    backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '200px',
+    height: '100%'
+  }
 })
 
 </script>

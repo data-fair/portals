@@ -5,42 +5,48 @@
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
   >
+    <!--
+      flex-nowrap => prevent columns from wrapping on multiple rows
+      no-gutters => remove spaces between columns
+    -->
     <v-row
       class="flex-nowrap"
       no-gutters
     >
-      <!-- Image column -->
-      <v-col
-        v-if="cardConfig.thumbnail?.location === 'left'"
-        cols="12"
-        sm="4"
-      >
-        <v-img
-          v-if="thumbnailUrl"
-          :alt="t('imageAlt', { title: reuse.config.title })"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="h-100"
-        />
+      <!-- Thumbnail (Left Location) -->
+      <!-- On mobile, always use top location -->
+      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+        <v-col cols="4">
+          <div
+            v-if="thumbnailUrl"
+            role="img"
+            :aria-label="t('imageAlt', { title: reuse.config.title })"
+            :style="leftThumbnailStyle"
+          />
+        </v-col>
         <v-divider vertical />
-      </v-col>
+      </template>
 
-      <!-- Center column -->
+      <!-- Main column -->
       <v-col class="d-flex flex-column">
+        <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'top' && thumbnailUrl"
+          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
           :alt="t('imageAlt', { title: reuse.config.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
         />
+
         <v-card-title
           class="font-weight-bold"
           style="white-space: unset;"
         >
           {{ reuse.config.title }}
         </v-card-title>
+
+        <!-- Thumbnail (Center Location) -->
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: reuse.config.title })"
@@ -49,6 +55,7 @@
           class="flex-grow-0"
           height="170"
         />
+
         <v-card-text
           v-if="cardConfig.showSummary && reuse.config.summary?.length"
           class="pb-0"
@@ -106,6 +113,19 @@ const thumbnailUrl = computed(() => {
   if (reuse.config.image) return getReuseImageSrc(reuse.config.image, false)
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
+})
+
+// Set thumbnail in background for left location to cover full height of the card
+const leftThumbnailStyle = computed(() => {
+  if (!thumbnailUrl.value) return undefined
+  return {
+    backgroundImage: `url("${thumbnailUrl.value}")`,
+    backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '200px',
+    height: '100%'
+  }
 })
 
 </script>
