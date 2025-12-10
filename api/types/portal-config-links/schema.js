@@ -197,7 +197,7 @@ export default {
       }
     },
     externalLink: {
-      title: 'Lien externe',
+      title: 'Lien',
       required: ['type', 'title', 'href'],
       properties: {
         type: { const: 'external' },
@@ -208,6 +208,11 @@ export default {
         href: {
           title: 'URL',
           type: 'string'
+        },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet',
+          default: true
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
       }
@@ -253,7 +258,8 @@ const linkItemTitleFn = (item) => {
     return 'Page éditée' + formatPageRef(item.pageRef) + formatLabel(item.title)
   }
   if (item.type === 'external') {
-    return `Lien externe - Libellé : ${item.title} - URL : ${item.href}`
+    const targetInfo = item.target ? ' - S\'ouvre dans un nouvel onglet' : ''
+    return `Lien - Libellé : ${item.title} - URL : ${item.href}${targetInfo}`
   }
   if (item.type === 'submenu') {
     return `Sous-menu - Libellé : ${item.title}`

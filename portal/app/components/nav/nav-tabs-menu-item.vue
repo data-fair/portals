@@ -6,10 +6,10 @@
       :title="resolveLinkTitle(link, locale)"
       :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
       :active="isItemActive(link)"
-      :to="link.type !== 'external' && link.type !== 'submenu' ? resolveLink(link) : undefined"
-      :href="link.type === 'external' ? link.href : undefined"
-      :target="link.type === 'external' ? '_blank' : undefined"
-      :rel="link.type === 'external' ? 'noopener' : undefined"
+      :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
+      :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
+      :target="link.type === 'external' && link.target ? '_blank' : undefined"
+      :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
       color="primary"
       link
     >
@@ -41,7 +41,7 @@ defineProps<{ children: MenuItem[] }>()
 
 const route = useRoute()
 const { locale } = useI18n()
-const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {

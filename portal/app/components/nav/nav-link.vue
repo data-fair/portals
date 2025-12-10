@@ -1,9 +1,9 @@
 <template>
   <v-btn
-    :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
-    :href="(!preview && link.type === 'external') ? link.href : undefined"
-    :target="link.type === 'external' ? '_blank' : undefined"
-    :rel="link.type === 'external' ? 'noopener' : undefined"
+    :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
+    :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
+    :target="link.type === 'external' && link.target ? '_blank' : undefined"
+    :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
     :color="config?.color"
     :density="config?.density"
     :elevation="config?.elevation"
@@ -36,6 +36,6 @@ defineProps<{
 const { locale } = useI18n()
 
 const { preview } = usePortalStore()
-const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 </script>

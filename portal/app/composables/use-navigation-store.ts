@@ -29,13 +29,9 @@ const createNavigationStore = () => {
       const breadcrumbItem: BreadcrumbItem = { title }
 
       // Use 'to' for internal links, 'href' for external
-      if (linkItem.type === 'external') {
-        breadcrumbItem.href = resolvedLink
-      } else if (resolvedLink) {
-        breadcrumbItem.to = resolvedLink
-      } else {
-        breadcrumbItem.disabled = true
-      }
+      if (linkItem.type === 'external') breadcrumbItem.to = resolvedLink
+      else if (resolvedLink) breadcrumbItem.to = resolvedLink
+      else breadcrumbItem.disabled = true
 
       return breadcrumbItem
     })
@@ -59,6 +55,12 @@ const createNavigationStore = () => {
 
     // Exact match only - avoid activating parent routes
     return resolvedLink === currentPath
+  }
+
+  /** Check if a link is external (not internal and not starting with /) */
+  const isExternalLink = (link: LinkItem | MenuItem): boolean => {
+    if (link.type === 'external') return !link.href.startsWith('/')
+    return false
   }
 
   /** Resolve a link or menu item to its corresponding URL path */
@@ -125,6 +127,7 @@ const createNavigationStore = () => {
     setBreadcrumbs,
     clearBreadcrumbs,
     isMenuItemActive,
+    isExternalLink,
     resolveLink,
     resolveLinkTitle,
     drawer,

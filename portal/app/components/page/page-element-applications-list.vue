@@ -26,11 +26,13 @@ const { portal, preview, portalConfig } = usePortalStore()
 let applications: Application[] | ComputedRef<Application[]>
 
 if (!preview) {
+  const ids = element.applications?.map(app => app.id) || []
   const applicationsQuery = computed(() => ({
     select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
+    ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
-    size: element.limit,
-    sort: 'createdAt:-1' // Latest applications first
+    size: element.mode !== 'custom' ? element.limit : undefined,
+    sort: element.mode === 'lastUpdated' ? 'dataUpdatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
   const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
