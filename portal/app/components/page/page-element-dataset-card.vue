@@ -9,26 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { DatasetCardElement } from '#api/types/page-config'
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  description: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
 
 const { element } = defineProps<{ element: DatasetCardElement }>()
 const { preview, portalConfig } = usePortalStore()

@@ -104,43 +104,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application, Dataset } from '#api/types/index.ts'
 import { mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description?: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  public: boolean
-  owner: Account
-  topics: { id: string; title: string }[]
-}
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -195,7 +161,7 @@ const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show || !application.value) return undefined
   if (application.value.image) return application.value.image
   if (cardConfig.thumbnail.useTopic && application.value.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics[0]!.id)
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   return `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`

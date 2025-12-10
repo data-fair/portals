@@ -180,30 +180,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { dataset, cardConfig, isPortalConfig } = defineProps<{
-  dataset: {
-    id: string
-    slug: string
-    title: string
-    summary?: string
-    dataUpdatedAt: string
-    updatedAt: string
-    owner: Account
-    extras: {
-      applications?: { id: string; updatedAt: string }[]
-    }
-    bbox?: number[]
-    topics: { id: string; title: string; color: string }[]
-    keywords?: string[]
-    image?: string
-    isMetaOnly: boolean
-  },
+  dataset: Omit<Dataset, 'userPermissions'>,
   cardConfig: DatasetCard
   isPortalConfig?: boolean
 }>()
@@ -223,7 +207,7 @@ const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
   if (cardConfig.thumbnail.useTopic && dataset.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics[0]!.id)
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {

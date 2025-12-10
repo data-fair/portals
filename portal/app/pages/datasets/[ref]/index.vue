@@ -295,81 +295,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application, Dataset } from '#api/types/index.ts'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { Reuse } from '#api/types/reuse/index.js'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description: string
-  updatedAt: string
-  exposedUrl: string
-  url: string
-  href: string
-  preferLargeDisplay: boolean
-  owner: Account
-  topics: { id: string; title: string; color: string }[]
-}
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description?: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  count?: number
-  storage?: {
-    indexed?: {
-      size?: number
-    }
-  }
-  origin?: string
-  license?: {
-    title: string
-    href: string
-  }
-  keywords?: string[]
-  spatial?: string
-  temporal?: {
-    start: string
-    end?: string
-  }
-  frequency?: string
-  attachments: {
-    url: string
-    title: string
-    name: string
-    type: 'file' | 'remoteFile'
-    description: string
-    size: string
-    updatedAt: string
-  }[]
-  image?: string
-  thumbnail?: string
-  isMetaOnly: boolean
-  isRest: boolean
-  isVirtual: boolean
-  extras: {
-    applications?: { id: string; slug: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  public: boolean
-  userPermissions: string[]
-  previews: {
-    id: string
-    title: string
-    href: string
-  }[]
-}
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -449,7 +379,7 @@ const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show || !dataset.value) return undefined
   if (dataset.value.image) return dataset.value.image
   if (cardConfig.thumbnail.useTopic && dataset.value.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.value!.topics[0]!.id)
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.value!.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   if (cardConfig.thumbnail.useApplication && dataset.value.extras?.applications?.[0]) {

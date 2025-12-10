@@ -76,27 +76,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application } from '#api/types/index.ts'
 import { mdiFullscreen } from '@mdi/js'
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  public: boolean
-  owner: Account
-  baseApplication?: {
-    meta?: {
-      'df:capture-width'?: string
-      'df:capture-height'?: string
-    }
-  }
-}
 
 const { application } = defineProps<{ application: Application }>()
 const { portalConfig } = usePortalStore()

@@ -71,21 +71,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import { mdiDownload, mdiTableLarge } from '@mdi/js'
 
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  isMetaOnly: boolean
-  isRest: boolean
-  isVirtual: boolean
-  virtual?: {
-    children?: string[]
-  }
-  bbox?: number[]
-  userPermissions: string[]
-}
 type File = {
   name: string
   key: 'original' | string

@@ -136,32 +136,15 @@
 </template>
 
 <script setup lang="ts">
+import type { Application } from '#api/types/index.ts'
 import type { PageElement, ApplicationsCatalogElement } from '#api/types/page'
-import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
+
+type ApplicationFetch = { count: number; results: Application[] }
 
 const { element } = defineProps<{ element: ApplicationsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  owner: Account
-  topics: { id: string; title: string; color: string }[]
-}
-
-type ApplicationFetch = {
-  count: number
-  results: Application[]
-}
 
 const filters = {
   search: useStringSearchParam('q'),
@@ -177,7 +160,7 @@ const order = ref<'-1' | '1'>()
 // Infinite scroll state / pagination state
 const paginationPosition = computed(() => element.pagination?.position || 'none')
 const currentPage = ref(1)
-const displayedApplications = ref<ApplicationFetch['results']>([])
+const displayedApplications = ref<Application[]>([])
 const loading = ref(false)
 const pageSize = 20
 
@@ -277,7 +260,7 @@ if (!preview) {
       url: `/applications/${slug}`,
       href: `/applications/${slug}`,
       exposedUrl: `/applications/${slug}`,
-      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
       topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }]
     }
   })

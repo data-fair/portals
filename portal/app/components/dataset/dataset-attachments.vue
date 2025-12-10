@@ -1,6 +1,6 @@
 <template>
   <v-list-item
-    v-for="(attachment, i) of dataset.attachments.filter(a => a.url !== dataset.image)"
+    v-for="(attachment, i) of dataset.attachments?.filter(a => a.url !== dataset.image)"
     :key="i"
     :title="attachment.title"
   >
@@ -26,24 +26,11 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import { mdiDownload, mdiOpenInNew } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
-type Dataset = {
-  title: string
-  attachments: {
-    url: string
-    title: string
-    name: string
-    type: 'file' | 'remoteFile'
-    description: string
-    size: string
-    updatedAt: string
-  }[]
-  image?: string
-}
-
-const { dataset } = defineProps<{ dataset: Dataset }>()
+const { dataset } = defineProps<{ dataset: Pick<Dataset, 'image' | 'attachments'> }>()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 

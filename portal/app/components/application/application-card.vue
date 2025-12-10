@@ -146,26 +146,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application } from '#api/types/index.ts'
 import type { ApplicationCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { application, cardConfig } = defineProps<{
-  application: {
-    id: string
-    slug: string
-    title: string
-    summary?: string
-    updatedAt: string
-    image?: string
-    url: string
-    href: string
-    exposedUrl: string
-    owner: Account
-    topics: { id: string; title: string; color: string }[]
-  }
+  application: Application
   cardConfig: ApplicationCard
 }>()
 
@@ -183,7 +171,7 @@ const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
   if (application.image) return application.image
   if (cardConfig.thumbnail.useTopic && application.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics[0]!.id)
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   return `${application.href}/capture?updatedAt=${application.updatedAt}`

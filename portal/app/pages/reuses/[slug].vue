@@ -104,29 +104,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { Reuse } from '#api/types/reuse'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
 import { withQuery } from 'ufo'
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
 
 const route = useRoute()
 const slug = route.params.slug as string

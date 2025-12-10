@@ -156,36 +156,15 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import type { PageElement, DatasetsCatalogElement } from '#api/types/page'
-import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
+
+type DatasetFetch = { count: number; results: Omit<Dataset, 'userPermissions'>[] }
 
 const { element } = defineProps<{ element: DatasetsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  },
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
-
-type DatasetFetch = {
-  count: number
-  results: Dataset[]
-}
 
 const filters = {
   search: useStringSearchParam('q'),
@@ -290,7 +269,7 @@ if (!preview) {
     }
   })
 } else {
-  // Mock data for preview
+// Mock data for preview
   displayedDatasets.value = Array.from({ length: 6 }, (_, i) => ({
     id: `dataset-${i + 1}`,
     slug: `dataset-${i + 1}`,
@@ -298,10 +277,10 @@ if (!preview) {
     summary: 'Exemple de jeu de données pour la prévisualisation.',
     dataUpdatedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
     extras: {},
     topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }],
-    isMetaOnly: false
+    isMetaOnly: false,
   }))
 }
 

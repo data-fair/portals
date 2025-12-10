@@ -191,13 +191,13 @@
             :dataset="dataset"
           />
           <dataset-embed
-            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed')"
+            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed') && dataset.previews?.length"
             :dataset="dataset"
           />
         </template>
 
         <dataset-attachments-preview
-          v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+          v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset.image).length"
           :dataset="dataset"
         />
         <dataset-notifications
@@ -221,66 +221,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description?: string
-  dataUpdatedAt: string
-  updatedAt: string
-  modified?: string
-  creator?: string
-  owner: Account
-  count?: number
-  storage?: {
-    indexed?: {
-      size?: number
-    }
-  }
-  origin?: string
-  license?: {
-    title: string
-    href: string
-  }
-  keywords?: string[]
-  spatial?: string
-  temporal?: {
-    start: string
-    end?: string
-  }
-  frequency?: string
-  attachments: {
-    url: string
-    title: string
-    name: string
-    type: 'file' | 'remoteFile'
-    description: string
-    size: string
-    updatedAt: string
-  }[]
-  image?: string
-  thumbnail?: string
-  isMetaOnly: boolean
-  isRest: boolean
-  isVirtual: boolean
-  extras: {
-    applications?: { id: string; slug: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  public: boolean
-  userPermissions: string[]
-  previews: {
-    id: string
-    title: string
-    href: string
-  }[]
-}
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
