@@ -39,9 +39,16 @@
           height="170"
         />
 
+        <!--
+          title-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          white-space: unset; => remove default nowrap from v-card-title
+        -->
         <v-card-title
-          class="font-weight-bold"
-          style="white-space: unset;"
+          :class="['font-weight-bold', { 'title-two-lines': cardConfig.titleLinesCount === 2 }]"
+          :style="[
+            cardConfig.titleLinesCount !== 1 ? { 'white-space': 'unset' } : {},
+            cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
+          ]"
         >
           {{ dataset.title }}
         </v-card-title>
@@ -70,7 +77,7 @@
           v-if="cardConfig.topics?.show && dataset.topics?.length"
           :config="cardConfig.topics"
           :topics="dataset.topics"
-          class="mx-4 mt-2 flex-grow-0"
+          class="px-4 mt-2 flex-grow-0"
         />
 
         <!-- Keywords list -->
@@ -78,7 +85,7 @@
           v-if="cardConfig.keywords?.show && dataset.keywords?.length"
           :config="cardConfig.keywords"
           :keywords="dataset.keywords"
-          class="mx-4 mt-2 flex-grow-0"
+          class="px-4 mt-2 flex-grow-0"
         />
 
         <!-- Department / Updated At -->
@@ -239,6 +246,19 @@ const leftThumbnailStyle = computed(() => {
   }
 })
 
+// Height calculation for title with 2 lines
+const titleHeight = ref<string>()
+onMounted(() => {
+  const titleElement = document.querySelector('.title-two-lines')
+  if (titleElement) {
+    const styles = getComputedStyle(titleElement)
+    const lineHeight = parseFloat(styles.lineHeight)
+    const paddingTop = parseFloat(styles.paddingTop)
+    const paddingBottom = parseFloat(styles.paddingBottom)
+    titleHeight.value = `${lineHeight * 2 + paddingTop + paddingBottom}px`
+  }
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -263,3 +283,12 @@ const leftThumbnailStyle = computed(() => {
       api: API
 
 </i18n>
+
+<style scoped>
+.title-two-lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+</style>

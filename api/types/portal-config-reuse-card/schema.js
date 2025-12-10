@@ -25,6 +25,18 @@ export default {
       },
       layout: { cols: { md: 6 } }
     },
+    titleLinesCount: {
+      type: 'number',
+      title: 'Nombre de lignes pour le titre',
+      description: 'Force le titre à occuper exactement N lignes.',
+      layout: { cols: { md: 4 } },
+      default: 2,
+      oneOf: [
+        { const: 1, title: '1 ligne' },
+        { const: 2, title: '2 lignes' },
+        { const: 0, title: 'Sans limite de lignes' }
+      ]
+    },
     showSummary: {
       type: 'boolean',
       title: 'Show summary on card',

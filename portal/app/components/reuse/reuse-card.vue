@@ -39,9 +39,16 @@
           height="170"
         />
 
+        <!--
+          title-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          white-space: unset; => remove default nowrap from v-card-title
+        -->
         <v-card-title
-          class="font-weight-bold"
-          style="white-space: unset;"
+          :class="['font-weight-bold', { 'title-two-lines': cardConfig.titleLinesCount === 2 }]"
+          :style="[
+            cardConfig.titleLinesCount !== 1 ? { 'white-space': 'unset' } : {},
+            cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
+          ]"
         >
           {{ reuse.config.title }}
         </v-card-title>
@@ -128,6 +135,19 @@ const leftThumbnailStyle = computed(() => {
   }
 })
 
+// Height calculation for title with 2 lines
+const titleHeight = ref<string>()
+onMounted(() => {
+  const titleElement = document.querySelector('.title-two-lines')
+  if (titleElement) {
+    const styles = getComputedStyle(titleElement)
+    const lineHeight = parseFloat(styles.lineHeight)
+    const paddingTop = parseFloat(styles.paddingTop)
+    const paddingBottom = parseFloat(styles.paddingBottom)
+    titleHeight.value = `${lineHeight * 2 + paddingTop + paddingBottom}px`
+  }
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -141,3 +161,12 @@ const leftThumbnailStyle = computed(() => {
     publishedBy: Publié par {author}
 
 </i18n>
+
+<style scoped>
+.title-two-lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+</style>

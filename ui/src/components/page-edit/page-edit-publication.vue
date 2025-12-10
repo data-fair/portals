@@ -120,7 +120,7 @@ const portals = computed(() => portalsFetch.data.value?.results)
 
 // Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title', size: 10000 }
+  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title,title', size: 10000 }
 })
 
 const warnings = computed(() => {
@@ -224,6 +224,12 @@ const getPageUrl = (pageData: Page): string | undefined => {
       home: home page
       contact: contact page
       privacyPolicy: privacy policy page
+      accessibility: accessibility page
+      legal-notice: legal notice page
+      cookie-policy: cookie policy page
+      terms-of-service: terms of service page
+      datasets: datasets catalog page
+      applications: applications catalog page
 
   fr:
     createPortal: Créer un portail
@@ -241,4 +247,10 @@ const getPageUrl = (pageData: Page): string | undefined => {
       home: page d'accueil
       contact: page de contact
       privacyPolicy: page de politique de confidentialité
+      accessibility: page d'accessibilité
+      legal-notice: page de mentions légales
+      cookie-policy: page de politique de cookies
+      terms-of-service: page de conditions générales d'utilisation
+      datasets: page de catalogue de données
+      applications: page de catalogue d'applications
 </i18n>

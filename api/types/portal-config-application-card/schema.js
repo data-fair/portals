@@ -11,7 +11,7 @@ export default {
     actionsLocation: {
       type: 'string',
       title: "Position des boutons d'actions sur la carte",
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'bottom',
       oneOf: [
         { const: 'right', title: 'À droite' },
@@ -22,7 +22,7 @@ export default {
     actionsStyle: {
       type: 'string',
       title: "Style des boutons d'actions",
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'full',
       oneOf: [
         { const: 'icon', title: 'Icône seulement' },
@@ -33,19 +33,31 @@ export default {
     elevation: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
       title: 'Élévation de la carte',
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 4 } }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
       title: 'Arrondi de la carte',
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 4 } }
+    },
+    titleLinesCount: {
+      type: 'number',
+      title: 'Nombre de lignes pour le titre',
+      description: 'Force le titre à occuper exactement N lignes.',
+      layout: { cols: { md: 4 } },
+      default: 2,
+      oneOf: [
+        { const: 1, title: '1 ligne' },
+        { const: 2, title: '2 lignes' },
+        { const: 0, title: 'Sans limite de lignes' }
+      ]
     },
     showSummary: {
       type: 'boolean',
       title: 'Afficher le résumé',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
     },
@@ -55,7 +67,7 @@ export default {
       description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
     },
@@ -86,7 +98,7 @@ export default {
         location: {
           type: 'string',
           title: "Position de l'image sur la carte",
-          layout: { cols: { md: 6 } },
+          layout: { cols: { md: 4 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'À gauche' },
@@ -100,7 +112,7 @@ export default {
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: false
         },
@@ -110,7 +122,7 @@ export default {
           description: "Si désactivé, l'image gardera son ratio d'origine",
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: true
         }
