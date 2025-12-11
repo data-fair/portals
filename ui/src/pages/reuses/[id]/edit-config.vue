@@ -4,9 +4,6 @@
       :defaults="{
         global: {
           hideDetails: 'auto'
-        },
-        VSwitch: {
-          color: 'primary'
         }
       }"
     >

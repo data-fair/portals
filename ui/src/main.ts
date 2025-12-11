@@ -25,7 +25,8 @@ import App from './App.vue'
     ...vuetifySessionOptions(session, $cspNonce),
     icons: { defaultSet: 'mdi', aliases, sets: { mdi, } }
   })
-  const vuetifyRules = createRulesPlugin({ }, vuetify.locale)
+  const vuetifyRules = createRulesPlugin({}, vuetify.locale)
+  vuetify.defaults.value!.VColorPicker = { mode: 'hex', modes: ['hex', 'rgb', 'hsl'] }
 
   const i18n = createI18n({ locale: session.state.lang })
 

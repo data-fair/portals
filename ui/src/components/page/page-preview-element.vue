@@ -42,9 +42,6 @@ const previewDefaults = {
 const vjsfDefaults = {
   'VjsfList-VCard': {
     border: false
-  },
-  VSwitch: {
-    color: 'primary'
   }
 }
 </script>
