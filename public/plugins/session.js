@@ -4,7 +4,7 @@ export default async ({ store, req, env, app, route, $vuetify, redirect, error }
   // remove the switch param defined in nuxtServerInit to force a redirect when switching org
   if (route.query.switch) app.router.replace({ query: { ...route.query, switch: undefined } })
 
-  store.dispatch('session/loop')
+  await store.dispatch('session/loop')
   store.watch(
     (state, getters) => getters['session/activeAccount'],
     (newValue, oldValue) => {
