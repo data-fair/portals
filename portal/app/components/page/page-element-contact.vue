@@ -87,6 +87,7 @@
               :counter="3000"
             />
 
+            <!-- Send button -->
             <div class="d-flex justify-center">
               <v-btn
                 :color="buttonConfig?.color"

@@ -33,14 +33,14 @@
         :color="action.color"
         variant="outlined"
       >
-        <template #prepend>
-          <v-icon
-            v-if="action.icon && (action.icon.mdi?.svgPath || action.icon.custom)"
-            :icon="action.icon.mdi?.svgPath || action.icon.custom"
-            :color="action.icon.color"
-          />
-        </template>
-        {{ action.label }}
+        <v-icon
+          v-if="action.icon && (action.icon.mdi?.svgPath || action.icon.custom)"
+          :color="action.icon.color"
+          :icon="action.icon.mdi?.svgPath || action.icon.custom"
+          start
+        />
+        <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+        <span class="text-truncate">{{ action.label }}</span>
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -58,3 +58,12 @@ const { preview } = usePortalStore()
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 </script>
+
+<style scoped>
+/* Without this, .text-truncate class would have no effect. */
+:deep(.v-btn__content) {
+  max-width: 100%;
+  min-width: 0;
+  /* needed for btn but not for chip ?!! */
+}
+</style>

@@ -13,10 +13,10 @@
           :rounded="config?.rounded"
           :variant="config?.variant !== 'default' ? config?.variant : undefined"
           :append-icon="mdiChevronDown"
-          class="text-truncate justify-start"
           :class="{ 'text-none': !config?.uppercase }"
         >
-          {{ element.label || 'Menu' }}
+          <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+          <span class="text-truncate">{{ element.label || 'Menu' }}</span>
         </v-btn>
       </template>
       <v-list>
@@ -59,3 +59,12 @@ const config = computed(() => {
 })
 
 </script>
+
+<style scoped>
+/* Without this, .text-truncate class would have no effect. */
+:deep(.v-btn__content) {
+  max-width: 100%;
+  min-width: 0;
+  /* needed for btn but not for chip ?!! */
+}
+</style>
