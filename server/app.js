@@ -44,11 +44,10 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.text())
 
-app.use(session.auth)
 app.set('session', session)
-app.use('/api/v1', require('./router/root'))
-app.use('/api/v1/admin', require('./router/admin'))
-app.use('/api/v1/portals', require('./router/portals'))
+app.use('/api/v1', session.auth, require('./router/root'))
+app.use('/api/v1/admin', session.auth, require('./router/admin'))
+app.use('/api/v1/portals', session.auth, require('./router/portals'))
 
 app.use('/api/', (req, res) => {
   return res.status(404).send('unknown api endpoint')
