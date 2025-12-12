@@ -1,5 +1,5 @@
 <template>
-  <v-app data-iframe-height>
+  <v-app>
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
