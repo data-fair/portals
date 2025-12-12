@@ -292,6 +292,8 @@
       />
     </v-row>
   </template>
+
+  <div data-iframe-height/>
 </template>
 
 <script setup lang="ts">

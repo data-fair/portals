@@ -4,7 +4,7 @@
     <LayoutBreadcrumbs
       v-if="!isIframe && (portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both')"
     />
-    <v-container class="container" data-iframe-height>
+    <v-container class="container">
       <slot />
     </v-container>
   </v-main>

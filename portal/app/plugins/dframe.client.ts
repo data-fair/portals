@@ -1,6 +1,10 @@
-import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
+import dFrameContentVueRouter from '@data-fair/frame/lib/vue-router/d-frame-content.js'
+import useDFrameParentUrls from '@data-fair/frame/lib/vue/use-parent-urls'
 import { defineNuxtPlugin, useRouter } from '#app'
 
 export default defineNuxtPlugin(async (app) => {
-  dFrameContent(useRouter())
+  const router = useRouter()
+  const dFrameContent = dFrameContentVueRouter(router)
+  const dFrameParentUrls = useDFrameParentUrls(dFrameContent, router)
+  return { provide: { dFrameContent, dFrameParentUrls } }
 })
