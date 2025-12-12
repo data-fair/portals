@@ -7,6 +7,24 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'actionsLocation' },
+        { cols: { md: 6 }, key: 'actionsStyle' },
+        { cols: { md: 6 }, key: 'elevation' },
+        { cols: { md: 6 }, key: 'rounded' },
+        { cols: { md: 6 }, key: 'titleLinesCount' },
+        { cols: { md: 6 }, key: 'showSummary' },
+        { cols: { md: 6 }, key: 'showDepartment' }
+      ]
+    },
+    'thumbnail',
+    'topics'
+    ]
+  },
   properties: {
     actionsLocation: {
       type: 'string',
@@ -82,8 +100,8 @@ export default {
             if: 'data?.show === true',
             children: [
               'location',
-              'useTopic',
-              'crop'
+              'crop',
+              'useTopic'
             ]
           },
         ]
@@ -98,7 +116,7 @@ export default {
         location: {
           type: 'string',
           title: "Position de l'image sur la carte",
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'À gauche' },
@@ -112,7 +130,7 @@ export default {
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: false
         },
@@ -122,7 +140,7 @@ export default {
           description: "Si désactivé, l'image gardera son ratio d'origine",
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         }
@@ -156,26 +174,26 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         },
@@ -184,7 +202,7 @@ export default {
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
-            cols: { md: 4 }
+            cols: { md: 6 }
           }
         }
       }

@@ -3,19 +3,20 @@
     :theme="'preview-' + colorsKey"
     with-background
   >
-    <v-alert
-      variant="outlined"
-      color="info"
+    <v-card
+      density="compact"
+      class="pa-0"
     >
-      <h2 class="text-h6 mb-2">
+      <v-card-title class="text-success">
         <v-icon
           :icon="mdiEye"
           class="me-2"
+          size="small"
         />
-        {{ t('preview') }}
-      </h2>
+        {{ t('preview') }}{{ appendTitle }}
+      </v-card-title>
       <slot />
-    </v-alert>
+    </v-card>
   </v-theme-provider>
 </template>
 
@@ -29,6 +30,10 @@ defineProps(
     colorsKey: {
       type: String,
       default: 'colors',
+    },
+    appendTitle: {
+      type: String,
+      default: ''
     }
   }
 )
@@ -38,5 +43,5 @@ defineProps(
   en:
     preview: preview
   fr:
-    preview: Aperçu
+    preview: aperçu
 </i18n>

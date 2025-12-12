@@ -8,21 +8,30 @@ export default {
   layout: {
     title: null,
     children: [
-      'color',
-      'copyright',
-      'socialPosition',
-      { children: ['logoPrimaryType', 'logoPrimary'] },
-      { children: ['logoPrimaryLink', 'logoPosition', 'logoAlignment'] },
-      { children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
-      { children: ['backgroundImage', 'backgroundImageLocation'] },
       {
-        comp: 'tabs',
+        comp: 'card',
+        title: 'Options',
         children: [
-          { title: 'Liens', children: ['linksMode', 'links'] },
-          { title: 'Liens importants', children: ['importantLinks'] },
-          { title: 'Liste de logos', children: ['extraLogos'] }
+          { cols: { md: 6, }, key: 'color' },
+          { cols: { md: 6, }, key: 'socialPosition' },
+          'copyright',
         ]
-      }
+      },
+      {
+        comp: 'card',
+        title: 'Logo',
+        children: [
+          [{ key: 'logoPrimaryType', cols: { md: 6 } }, { key: 'logoPrimary', cols: { md: 6 } }],
+          'logoPrimaryLink',
+          { key: 'logoPosition', cols: { md: 6 } },
+          { key: 'logoAlignment', cols: { md: 6 } }
+        ]
+      },
+      { comp: 'card', title: 'Image de fond', children: ['backgroundImage', 'backgroundImageLocation'] },
+      { comp: 'card', title: 'Slogan', children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
+      { comp: 'card', title: 'Liens', children: ['linksMode', 'links'] },
+      { comp: 'card', title: 'Liens importants', children: ['importantLinks'] },
+      { comp: 'card', title: 'Liste de logos', children: ['extraLogos'] }
     ]
   },
   required: ['color', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
@@ -30,7 +39,6 @@ export default {
     color: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: 'Couleur du pied de page',
-      layout: { cols: { md: 4 } }
     },
     copyright: {
       type: 'string',
@@ -46,8 +54,7 @@ export default {
           const: 'logo',
           title: 'Afficher le logo Koumoul',
         }
-      ],
-      layout: { cols: { md: 4 } }
+      ]
     },
     socialPosition: {
       type: 'string',
@@ -58,7 +65,6 @@ export default {
         { const: 'main', title: 'Colonne principale' },
         { const: 'left', title: 'Colonne de gauche' }
       ],
-      layout: { cols: { md: 4 } }
     },
     // DEPRECATED for now
     // showContactInformations: {
@@ -72,7 +78,6 @@ export default {
     logoPrimaryType: {
       type: 'string',
       title: 'Logo principal du pied de page',
-      layout: { cols: { md: 6 } },
       default: 'default',
       oneOf: [
         { const: 'default', title: 'Utiliser le logo global' },
@@ -93,7 +98,6 @@ export default {
             props: { width: 1280, label: 'Logo principal' }
           }
         },
-        cols: { md: 6 }
       },
       properties: {
         _id: {
@@ -116,7 +120,6 @@ export default {
       description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo.",
       layout: {
         if: 'parent.data?.logoPrimaryType !== "hidden"',
-        cols: { md: 4 },
         props: { clearable: true }
       }
     },
@@ -130,7 +133,6 @@ export default {
       ],
       layout: {
         if: 'parent.data?.logoPrimaryType !== "hidden"',
-        cols: { md: 4 }
       }
     },
     logoAlignment: {

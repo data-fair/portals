@@ -3,8 +3,24 @@ export default {
   'x-exports': [],
   title: 'Personal Space',
   type: 'object',
-  layout: { title: "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification." },
   unevaluatedProperties: false,
+  layout: {
+    title: '',
+    subtitle: "L'espace personnel sera proposé aux utilisateurs connectés si vous activez l'authentification.",
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        'navigationColor',
+        'hidePages'
+      ]
+    },
+    {
+      comp: 'card',
+      title: 'Pages supplémentaires en iframe',
+      children: ['accountPages']
+    }]
+  },
   required: ['navigationColor', 'hidePages', 'accountPages'],
   properties: {
     navigationColor: {
@@ -41,6 +57,12 @@ export default {
     accountPages: {
       type: 'array',
       title: 'Pages supplémentaires en iframe',
+      layout: {
+        title: '',
+        messages: {
+          addItem: 'Ajouter une page'
+        }
+      },
       items: {
         type: 'object',
         required: ['id', 'title', 'href', 'icon'],

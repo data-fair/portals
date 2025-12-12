@@ -6,9 +6,11 @@
     accept="image/*"
     @update:model-value="file => loadFile.execute(file as File)"
   >
-    <template #prepend>
+    <template
+      v-if="previewSrc"
+      #prepend
+    >
       <v-img
-        v-if="previewSrc"
         :src="previewSrc"
         width="40"
         height="40"

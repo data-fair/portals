@@ -7,25 +7,34 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'showData' },
+        { cols: { md: 6 }, key: 'showImage' }
+      ]
+    },
+    'titleStyle',
+    'metadata',
+    'applications',
+    'reuses'
+    ]
+  },
   properties: {
     showData: {
       type: 'boolean',
       title: 'Afficher la section "Données"',
       description: 'Affiche une section avec les onglets "Tableau", "Carte", "Schéma",... en fonction des vues disponibles.',
-      layout: {
-        comp: 'switch',
-        cols: { md: 4 }
-      }
+      layout: { comp: 'switch' }
     },
 
     showImage: {
       type: 'boolean',
       title: "Afficher l'image",
       description: "L'image sera affichée au dessus de la description.",
-      layout: {
-        comp: 'switch',
-        cols: { md: 4 }
-      },
+      layout: { comp: 'switch' },
       default: true
     },
 
@@ -40,7 +49,7 @@ export default {
           'x-i18n-title': {
             fr: 'Afficher un trait'
           },
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           oneOf: [
             { const: 'none', title: 'Aucun trait' },
             { const: 'left', title: 'Trait à gauche du titre' },
@@ -52,7 +61,7 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
         }
       }
     },
@@ -119,7 +128,7 @@ export default {
           title: 'Afficher le département du propriétaire',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         },
@@ -129,7 +138,7 @@ export default {
           description: 'Affiche les pièces jointes directement dans les métadonnées.',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           }
         }
       }
