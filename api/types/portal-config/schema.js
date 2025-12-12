@@ -14,23 +14,69 @@ export default {
   unevaluatedProperties: false,
   layout: {
     title: null,
-    comp: 'expansion-panels',
+    comp: 'vertical-tabs',
+    props: { color: 'primary' },
     children: [
-      { title: 'Métadonnées', children: ['title', 'description'] },
-      { title: 'Sécurité', children: ['allowRobots', 'authentication', 'allowedFrameAncestors', 'allowedFrameSources'] },
-      { title: 'Couleurs', children: ['theme'] },
       {
-        title: 'Polices de caractères',
-        children: [
-          { cols: 6, children: ['bodyFontFamily', 'headingFontFamily'] },
-          { cols: 6, name: 'font-families-preview' }
-        ]
+        title: 'Paramètres généraux',
+        children: [{
+          title: 'Métadonnées',
+          comp: 'card',
+          children: ['title', 'description']
+        },
+        {
+          title: 'Thématiques',
+          subtitle: 'Vous pouvez configurer le rendu de vos thématiques dans ce portail. La définition initiale des thématiques se fait dans les paramètres du back-office.',
+          comp: 'card',
+          children: ['topics']
+        },
+        {
+          title: 'Libellés',
+          subtitle: 'Vous pouvez surcharger certains des libellés standards du portail',
+          comp: 'card',
+          children: ['labelsOverrides']
+        },
+        {
+          title: 'Réseaux sociaux',
+          comp: 'card',
+          children: ['socialShares', 'socialLinks']
+        },
+        {
+          title: 'Suivi d\'activité (Web analytics)',
+          subtitle: 'Vous pouvez configurer votre propre système de suivi d\'activité parmi une liste de systèmes supportés. Par défaut aucun suivi n\'est effectué par la plateforme hormis les métriques de consommation des APIs.',
+          comp: 'card',
+          children: ['analytics']
+        },
+        {
+          title: 'Sécurité',
+          comp: 'card',
+          children: ['allowRobots', 'authentication', 'allowedFrameAncestors', 'allowedFrameSources']
+        }]
       },
       {
-        title: 'Styles',
+        title: 'Apparence',
         children: [
           {
-            title: 'Liens de navigation',
+            title: 'Images',
+            subtitle: 'Ces images seront utilisées pour l\'apparence globale du site, la mire d\'authentification, etc. Vous pouvez charger de nombreuses autres images de manière plus ciblée dans les autres sections et dans les pages.',
+            comp: 'card',
+            children: ['logo', 'logoDark', 'favicon']
+          },
+          {
+            title: 'Couleurs',
+            comp: 'card',
+            children: ['theme']
+          },
+          {
+            title: 'Polices de caractères',
+            comp: 'card',
+            children: [
+              { cols: 6, children: ['bodyFontFamily', 'headingFontFamily'] },
+              { cols: 6, name: 'font-families-preview' }
+            ]
+          },
+          {
+            title: 'Rendu des liens de navigation',
             comp: 'card',
             children: [
               'navLinksConfig',
@@ -39,7 +85,6 @@ export default {
           }
         ]
       },
-      { title: 'Images', children: ['logo', 'logoDark', 'favicon'] },
       {
         title: 'Entête',
         children: [
@@ -81,51 +126,62 @@ export default {
         title: 'Barre de navigation',
         children: [
           {
-            if: 'data?.navBarHomeActive',
             children: [
               'navBarHomeActive',
               {
-                cols: { md: 6 },
-                comp: 'card',
-                title: 'Options générales',
+                if: 'data?.navBarHomeActive',
                 children: [
-                  'navBar',
-                  { name: 'app-bar-preview' }
+                  {
+                    cols: { md: 6 },
+                    comp: 'card',
+                    title: 'Options',
+                    children: ['navBar']
+                  },
+                  {
+                    cols: { md: 6 },
+                    comp: 'card',
+                    title: 'Options - accueil',
+                    children: ['navBarHome']
+                  },
+                  {
+                    name: 'app-bar-preview',
+                    cols: { md: 6 }
+                  },
+                  {
+                    name: 'app-bar-preview',
+                    props: { home: true },
+                    cols: { md: 6 }
+                  },
                 ]
               },
               {
-                cols: { md: 6 },
-                comp: 'card',
-                title: "Options spécifiques pour la page d'accueil",
+                if: '!data?.navBarHomeActive',
                 children: [
-                  'navBarHome',
-                  { name: 'app-bar-preview', props: { home: true } }
+                  { name: 'app-bar-preview' },
+                  {
+                    comp: 'card',
+                    title: 'Options',
+                    children: [
+                      'navBar'
+                    ]
+                  }
                 ]
               },
-              'menu'
-            ]
-          },
-          {
-            if: '!data?.navBarHomeActive',
-            children: [
-              'navBarHomeActive',
-              'navBar',
-              { name: 'app-bar-preview' },
-              'menu'
+              {
+                comp: 'card',
+                title: 'Éléments du menu de navigation',
+                children: ['menu']
+              }
             ]
           }
         ]
       },
       { title: 'Fil d\'arianne', children: ['breadcrumb'] },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
+      { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
-      { title: 'Thématiques', children: ['topics'] },
-      { title: 'Surcharge de libellés', children: ['labelsOverrides'] },
-      { title: 'Informations de contact', children: ['contactInformations'] },
-      { title: 'Réseaux sociaux', children: ['socialShares', 'socialLinks'] },
-      { title: 'Suivi d\'activité (Web analytics)', children: ['analytics'] },
       {
         title: 'Espace personnel',
         children: ['personal']
@@ -307,6 +363,7 @@ export default {
           type: 'array',
           title: 'Éléments du menu de navigation',
           layout: {
+            title: '',
             itemTitle: linkItemTitle,
             messages: { addItem: 'Ajouter un lien' }
           },

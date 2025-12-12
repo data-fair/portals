@@ -27,6 +27,7 @@ import App from './App.vue'
   })
   const vuetifyRules = createRulesPlugin({}, vuetify.locale)
   vuetify.defaults.value!.VColorPicker = { mode: 'hex', modes: ['hex', 'rgb', 'hsl'] }
+  vuetify.defaults.value!['VjsfVerticalTabs-VSheet'] = { border: false }
 
   const i18n = createI18n({ locale: session.state.lang })
 
