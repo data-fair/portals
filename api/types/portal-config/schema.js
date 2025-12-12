@@ -88,91 +88,94 @@ export default {
       {
         title: 'Entête',
         children: [
+          'headerHomeActive',
           {
             if: 'data?.headerHomeActive',
             children: [
-              'headerHomeActive',
               {
+
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options générales',
-                children: [
-                  'header',
-                  { name: 'app-bar-preview' }
-                ]
+                title: 'Options',
+                children: ['header']
               },
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: "Options spécifiques pour la page d'accueil",
-                children: [
-                  'headerHome',
-                  { name: 'app-bar-preview', props: { home: true } }
-                ]
+                title: 'Options - accueil',
+                children: ['headerHome']
+              },
+              {
+                name: 'app-bar-preview',
+                cols: { md: 6 }
+              },
+              {
+                name: 'app-bar-preview',
+                props: { home: true },
+                cols: { md: 6 }
               }
             ]
           },
           {
             if: '!data?.headerHomeActive',
             children: [
-              'headerHomeActive',
-              'header',
+              {
+                comp: 'card',
+                title: 'Options',
+                children: ['header']
+              },
               { name: 'app-bar-preview' }
             ]
-          }
+          },
         ]
       },
       {
         title: 'Barre de navigation',
         children: [
+          'navBarHomeActive',
           {
+            if: 'data?.navBarHomeActive',
             children: [
-              'navBarHomeActive',
               {
-                if: 'data?.navBarHomeActive',
-                children: [
-                  {
-                    cols: { md: 6 },
-                    comp: 'card',
-                    title: 'Options',
-                    children: ['navBar']
-                  },
-                  {
-                    cols: { md: 6 },
-                    comp: 'card',
-                    title: 'Options - accueil',
-                    children: ['navBarHome']
-                  },
-                  {
-                    name: 'app-bar-preview',
-                    cols: { md: 6 }
-                  },
-                  {
-                    name: 'app-bar-preview',
-                    props: { home: true },
-                    cols: { md: 6 }
-                  },
-                ]
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options',
+                children: ['navBar']
               },
               {
-                if: '!data?.navBarHomeActive',
-                children: [
-                  { name: 'app-bar-preview' },
-                  {
-                    comp: 'card',
-                    title: 'Options',
-                    children: [
-                      'navBar'
-                    ]
-                  }
-                ]
+                cols: { md: 6 },
+                comp: 'card',
+                title: 'Options - accueil',
+                children: ['navBarHome']
               },
+              {
+                name: 'app-bar-preview',
+                cols: { md: 6 }
+              },
+              {
+                name: 'app-bar-preview',
+                props: { home: true },
+                cols: { md: 6 }
+              },
+            ]
+          },
+          {
+            if: '!data?.navBarHomeActive',
+            children: [
+              { name: 'app-bar-preview' },
               {
                 comp: 'card',
-                title: 'Éléments du menu de navigation',
-                children: ['menu']
+                title: 'Options',
+                children: [
+                  'navBar'
+                ]
               }
             ]
+          },
+          {
+            comp: 'card',
+            title: 'Éléments du menu de navigation',
+            children: ['menu']
           }
         ]
       },
