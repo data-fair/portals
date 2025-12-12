@@ -165,15 +165,15 @@
       hide-details
       clearable
     >
-      <template #append>
+      <template v-if="!drawer" #append>
         <!-- Order toggle -->
         <v-btn-toggle
-          v-if="!drawer"
           v-model="order"
           :density="config.filters?.density || 'comfortable'"
           :rounded="config.filters?.rounded"
           variant="outlined"
           class="h-100"
+          divided
           mandatory
         >
           <v-btn
@@ -191,28 +191,29 @@
     </v-select>
   </v-col>
 
+  <!-- Order toggle (drawer) -->
   <v-col
     v-if="drawer && showFilter('sort')"
     cols="12"
   >
-    <!-- Order toggle -->
     <v-btn-toggle
       v-model="order"
       :density="config.filters?.density || 'comfortable'"
       :rounded="config.filters?.rounded"
       variant="outlined"
-      class="h-100"
+      class="w-100"
+      divided
       mandatory
     >
       <v-btn
         :icon="mdiSortDescending"
         :title="t('descending')"
-        stacked
+        class="flex-grow-1"
       />
       <v-btn
         :icon="mdiSortAscending"
         :title="t('ascending')"
-        stacked
+        class="flex-grow-1"
       />
     </v-btn-toggle>
   </v-col>

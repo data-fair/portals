@@ -61,6 +61,7 @@
             :rounded="element.filters?.rounded"
             variant="outlined"
             class="h-100"
+            divided
             mandatory
           >
             <v-btn

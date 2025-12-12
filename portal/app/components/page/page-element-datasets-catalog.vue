@@ -17,15 +17,28 @@
   </h4>
 
   <!-- Standard Filters -->
-  <v-row
-    v-if="element.filters?.items?.length"
-    class="my-0"
-  >
-    <catalog-filters
-      :config="element"
-      catalog-type="datasets"
-    />
-  </v-row>
+  <template v-if="element.filters?.items?.length">
+    <!-- (drawer position) -->
+    <v-navigation-drawer
+      v-if="element.filters.position === 'left' && !$vuetify.display.smAndDown"
+      style="position: absolute;"
+    >
+      <catalog-filters
+        :config="element"
+        catalog-type="datasets"
+        drawer
+      />
+    </v-navigation-drawer>
+    <!-- ici, je ne veux pas un navigation drawer, mais simplement afficher les filtres dans une colonne, donc tout mon composant dois avoir un layout avec row et 2 cols. La cols des filtres doit être limité a 256px (qui est la valeur par défaut de la largeur des navigation drawer). La seconde colonne n'a pas de largeur définie -->
+
+    <!-- (default position) -->
+    <v-row v-else class="my-0">
+      <catalog-filters
+        :config="element"
+        catalog-type="datasets"
+      />
+    </v-row>
+  </template>
 
   <!-- Advanced Filters -->
   <div
@@ -81,6 +94,7 @@
             :rounded="element.filters?.rounded"
             variant="outlined"
             class="h-100"
+            divided
             mandatory
           >
             <v-btn

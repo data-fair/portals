@@ -1,14 +1,15 @@
 <template>
   <LayoutAppBar v-if="!isIframe" />
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
-    <layout-breadcrumbs
+    <LayoutBreadcrumbs
       v-if="!isIframe && (portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both')"
     />
-    <v-container class="container">
+    <v-container class="container" data-iframe-height>
       <slot />
     </v-container>
   </v-main>
-  <layout-breadcrumbs
+  <!-- Do not put bottom breadcrumbs in main, ensuring they stay just above the footer even when main content is short. -->
+  <LayoutBreadcrumbs
     v-if="!isIframe && (portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both')"
   />
   <LayoutFooter v-if="!isIframe" />

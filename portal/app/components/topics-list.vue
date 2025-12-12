@@ -84,7 +84,10 @@ const isSelected = (id: string): boolean => isFilters && selected.value.includes
 
 /** Background color of the chip : colored when selected, surface when not */
 const chipColor = (topicId: string, topicColor?: string): string | undefined => {
-  if (isSelected(topicId) && config?.color) return config.color === 'default' ? topicColor : config.color
+  if (isSelected(topicId)) {
+    if (config?.color) return config.color === 'default' ? topicColor : config.color
+    return undefined
+  }
   return 'surface'
 }
 

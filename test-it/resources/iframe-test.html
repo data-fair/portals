@@ -4,6 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal iframe integration test</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@data-fair/frame@0.14.1/dist/d-frame.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Test page</h1>
+    <p>This is a minimal test page for iframe integration</p>
+    <p class="highlight">Start me with <code>npx live-server test-it/resources --open=iframe-test.html</code> (And add http://127.0.0.1:8080 to the portal config) </p>
+  </header>
+
+  <main>
+    <h2>Portal home page (d-frame without sync)</h2>
+    <d-frame class="frame-container" src="http://portal1.localhost:5607" resize="no"></d-frame>
+
+    <h2>Portal datasets page (d-frame without sync)</h2>
+    <d-frame class="frame-container" src="http://portal1.localhost:5607/datasets" resize="no"></d-frame>
+
+    <h2>Portal datasets page (d-frame with sync-params, sync-path and resize)</h2>
+    <d-frame class="frame-container" src="http://portal1.localhost:5607/applications" resize="yes" sync-params sync-path debug></d-frame>
+
+    <h2>Portal datasets page (native iframe)</h2>
+    <iframe class="frame-container" src="http://portal1.localhost:5607/datasets"></iframe>
+  </main>
+
+  <footer>
+    <p>Test page footer &copy; 2025</p>
+  </footer>
   <style>
     * {
       margin: 0;
@@ -22,6 +49,15 @@
       padding: 20px;
       text-align: center;
     }
+    .highlight {
+      background-color: #f1930f;
+      color: #2c3e50;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      display: inline-block;
+      font-weight: bold;
+    }
     main {
       flex: 1;
       padding: 20px;
@@ -32,16 +68,9 @@
       padding: 20px;
       text-align: center;
     }
-    d-frame {
+    .frame-container {
       width: 100%;
-      height: 500px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 40px;
-    }
-    iframe {
-      width: 100%;
-      height: 500px;
+      min-height: 500px;
       border: 2px solid #ddd;
       border-radius: 8px;
       margin-bottom: 40px;
@@ -51,30 +80,5 @@
       margin-bottom: 15px;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@data-fair/frame@0/dist/d-frame.min.js"></script>
-</head>
-<body>
-  <header>
-    <h1>Test page</h1>
-    <p>This is a minimal test page for iframe integration</p>
-  </header>
-
-  <main>
-    <h2>Portal home page (d-frame without sync)</h2>
-    <d-frame src="http://portal1.localhost:5607" resize="no"></d-frame>
-
-    <h2>Portal datasets page (d-frame without sync)</h2>
-    <d-frame src="http://portal1.localhost:5607/datasets" resize="no"></d-frame>
-
-    <h2>Portal datasets page (d-frame with sync-params and sync-path)</h2>
-    <d-frame src="http://portal1.localhost:5607/datasets" resize="no" sync-params sync-path debug></d-frame>
-
-    <h2>Portal datasets page (native iframe)</h2>
-    <iframe src="http://portal1.localhost:5607/datasets"></iframe>
-  </main>
-
-  <footer>
-    <p>Test page footer &copy; 2025</p>
-  </footer>
 </body>
 </html>
