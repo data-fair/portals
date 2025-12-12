@@ -4,12 +4,22 @@ export default {
   $defs: {
     linkConfig: {
       type: 'object',
+      layout: {
+        children: [
+          { key: 'color', cols: { md: 6 } },
+          { key: 'elevation', cols: { md: 6 } },
+          { key: 'density', cols: { md: 6 } },
+          { key: 'rounded', cols: { md: 6 } },
+          { key: 'variant', cols: { md: 6 } },
+          { key: 'showIcon', cols: { md: 6 } },
+          { key: 'uppercase', cols: { md: 6 } }
+        ]
+      },
       properties: {
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
           default: 1, // TODO: check if default can be overwrite the $ref
-          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
