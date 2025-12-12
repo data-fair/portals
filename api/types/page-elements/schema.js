@@ -67,7 +67,7 @@ export default {
           { key: 8, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
           { key: 9, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
           { key: 10, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-          // { key: 11, title: 'Responsive Flow', 'x-i18n-title': { fr: 'Flux responsive' } }, // TODO: Create the element-responsive-flow
+          { key: 11, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
           { key: 12, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
           {
             header: true,
@@ -126,7 +126,7 @@ export default {
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
-        { $ref: '#/$defs/element-responsive-flow' },
+        { $ref: '#/$defs/element-responsive-grid' },
         { $ref: '#/$defs/element-tabs' },
 
         // Functional blocks
@@ -960,43 +960,47 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
-    'element-responsive-flow': {
+    'element-responsive-grid': {
       type: 'object',
-      title: 'ResponsiveFlowElement',
+      title: 'ResponsiveGridElement',
       'x-i18n-title': {
-        en: 'Responsive Flow',
-        fr: 'Flux responsive'
+        en: 'Responsive Grid',
+        fr: 'Grille responsive'
       },
-      required: ['type', 'blocks'],
+      required: ['type', 'children'],
       properties: {
-        type: {
-          const: 'responsive-flow'
+        type: { const: 'responsive-grid' },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.<br>| **Colonnes** | 2 | 3 | 4 | 6 |<br>| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |<br>| **Ordinateur portable** | 6 | 6 | 6 | 3 |<br>| **Tablette** | 12 | 6 | 6 | 4 |<br>| **Mobile** | 12 | 12 | 12 | 6 |',
+          oneOf: [
+            { const: 2, title: '2' },
+            { const: 3, title: '3' },
+            { const: 4, title: '4' },
+            { const: 6, title: '6' }
+          ],
+          default: 2
         },
-        blocks: {
+        gutter: {
+          type: 'string',
+          title: 'Espacement des blocs',
+          default: 'default',
+          oneOf: [
+            { const: 'none', title: 'Aucun espacement' },
+            { const: 'dense', title: 'Petit espacement' },
+            { const: 'default', title: 'Espacement normal' }
+          ]
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centre les blocs sur les lignes incomplètes',
+        },
+        children: {
           type: 'array',
-          title: 'Blocs',
-          layout: {
-            messages: {
-              addItem: 'Ajouter un bloc',
-            },
-            listEditMode: 'inline'
-          },
+          layout: 'none',
           items: {
-            type: 'object',
-            properties: {
-              large: {
-                title: 'élargir',
-                type: 'boolean',
-                default: false,
-              },
-              children: {
-                type: 'array',
-                layout: 'none',
-                items: {
-                  $ref: '#/$defs/element'
-                }
-              }
-            }
+            $ref: '#/$defs/element'
           }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
