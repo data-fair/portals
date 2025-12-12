@@ -6,7 +6,7 @@ import { createRulesPlugin } from 'vuetify/labs/rules'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { vuetifySessionOptions } from '@data-fair/lib-vuetify'
 import '@data-fair/lib-vuetify/style/global.scss'
-import dFrameContent from '@data-fair/frame/lib/vue-router/d-frame-content.js'
+import { createVueRouterDFrameContent } from '@data-fair/frame/lib/vue-router/d-frame-content.js'
 import { createReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { createLocaleDayjs } from '@data-fair/lib-vue/locale-dayjs.js'
 import { createSession } from '@data-fair/lib-vue/session.js'
@@ -16,7 +16,7 @@ import App from './App.vue'
 
 (async function () {
   const router = createRouter({ history: createWebHistory($sitePath + '/portals-manager/'), routes })
-  dFrameContent(router)
+  const dFrameContent = createVueRouterDFrameContent(router)
   const reactiveSearchParams = createReactiveSearchParams(router)
   const session = await createSession({})
   const localeDayjs = createLocaleDayjs(session.state.lang)
@@ -33,6 +33,7 @@ import App from './App.vue'
 
   createApp(App)
     .use(router)
+    .use(dFrameContent)
     .use(reactiveSearchParams)
     .use(session)
     .use(localeDayjs)

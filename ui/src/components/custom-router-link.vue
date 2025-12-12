@@ -11,12 +11,12 @@
 
 <script setup lang="ts">
 import useDFrameParentUrls from '@data-fair/frame/lib/vue/use-parent-urls'
-import dFrameContentVueRouter from '@data-fair/frame/lib/vue-router/d-frame-content'
+import { useVueRouterDFrameContent } from '@data-fair/frame/lib/vue-router/d-frame-content'
 
 defineProps<{ to: string }>()
 
 const router = useRouter()
-const dFrameContent = dFrameContentVueRouter(router)
+const dFrameContent = useVueRouterDFrameContent()
 const parentUrls = useDFrameParentUrls(dFrameContent, router)
 
 </script>
