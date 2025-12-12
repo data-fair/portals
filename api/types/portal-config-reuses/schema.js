@@ -10,13 +10,7 @@ export default {
     title: null,
     comp: 'expansion-panels',
     children: [
-      {
-        title: 'Reuse card',
-        'x-i18n-title': {
-          fr: "Vignette d'une réutilisation"
-        },
-        children: ['card']
-      },
+      'card',
       'page'
     ]
   },
