@@ -139,6 +139,18 @@
       />
     </template>
   </page-element-two-columns>
+  <page-element-responsive-grid
+    v-else-if="element.type === 'responsive-grid'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-responsive-grid>
   <page-element-tabs
     v-else-if="element.type === 'tabs'"
     :element="element"

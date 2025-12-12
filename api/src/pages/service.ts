@@ -310,11 +310,8 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     await callback(element)
     if (element.type === 'card') await traversePageElements(element.children, callback)
     if (element.type === 'banner') await traversePageElements(element.children, callback)
-    if (element.type === 'responsive-flow') {
-      for (const block of element.blocks) {
-        await traversePageElements(block.children, callback)
-      }
-    }
+    if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
+
     if (element.type === 'tabs') {
       for (const tab of element.tabs) {
         await traversePageElements(tab.children, callback)
