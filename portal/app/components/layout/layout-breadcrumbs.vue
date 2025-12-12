@@ -1,30 +1,32 @@
 <template>
-  <v-breadcrumbs
-    :items="breadcrumbItems"
-    density="compact"
-  >
-    <template #divider>
-      <v-icon
-        v-if="breadcrumbConfig.separator?.type === 'icon' && breadcrumbConfig.separator.icon?.svgPath"
-        :icon="breadcrumbConfig.separator.icon.svgPath"
-        :color="breadcrumbConfig.separator.color"
-        size="small"
-      />
-      <span
-        v-else
-        :class="breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined"
-      >
-        {{ breadcrumbConfig.separator?.text || '/' }}
-      </span>
+
+  <ul class="v-breadcrumbs v-breadcrumbs--density-compact">
+    <template v-for="(item, i) of breadcrumbItems" :key="i">
+      <li v-if="item.to" class="v-breadcrumbs-item">
+        <custom-router-link :to="item.to as string" >
+          {{ item.title }}
+        </custom-router-link>
+      </li>
+      <li v-else class="v-breadcrumbs-item v-breadcrumbs-item--disabled">{{ item.title }}</li>
+      <li v-if="i < breadcrumbItems.length - 1" aria-hidden="true" class="v-breadcrumbs-divider">
+        <v-icon
+          v-if="breadcrumbConfig.separator?.type === 'icon' && breadcrumbConfig.separator.icon?.svgPath"
+          :icon="breadcrumbConfig.separator.icon.svgPath"
+          :color="breadcrumbConfig.separator.color"
+          size="small"
+        />
+        <span
+          v-else
+          :class="breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined"
+        >
+          {{ breadcrumbConfig.separator?.text || '/' }}
+        </span>
+      </li>
     </template>
-  </v-breadcrumbs>
+  </ul>
 </template>
 
 <script setup lang="ts">
-import type { VBreadcrumbs } from 'vuetify/components'
-
-type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
-
 const { portalConfig } = usePortalStore()
 const { breadcrumbs } = useNavigationStore()
 
@@ -33,7 +35,7 @@ const { t } = useI18n()
 const breadcrumbConfig = computed(() => portalConfig.value.breadcrumb)
 
 const breadcrumbItems = computed(() => {
-  const items: BreadcrumbItems = [...breadcrumbs.value]
+  const items = [...breadcrumbs.value]
 
   // Add home link if configured
   if (breadcrumbConfig.value.showHome) {

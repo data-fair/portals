@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+import { withQuery } from 'ufo'
+
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs } = useNavigationStore()
@@ -47,7 +49,7 @@ const thumbnailUrl = computed(() => {
 watch(applicationFetch.data, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'applications' },
-    { title: applicationFetch.data.value?.title || t('application'), to: { path: '/applications/' + route.params.ref, query: route.query } },
+    { title: applicationFetch.data.value?.title || t('application'), to: withQuery('/applications/' + route.params.ref, route.query) },
     { title: t('fullscreen') }
   ])
 }, { immediate: true })

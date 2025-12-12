@@ -1,15 +1,17 @@
 <template>
   <client-only>
-    <custom-nuxt-link-client :to="to" />
+    <custom-router-link-client :to="to">
+      <slot />
+    </custom-router-link-client>
     <template #fallback>
       <!-- this will be rendered on server side -->
-       <nuxt-link
+       <router-link
         :to="to"
         target="_top"
         style="text-decoration: none; color: inherit;"
       >
         <slot />
-      </nuxt-link>
+      </router-link>
     </template>
   </client-only>
 </template>

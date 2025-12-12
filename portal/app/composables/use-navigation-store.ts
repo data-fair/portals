@@ -1,8 +1,7 @@
-import type { VBreadcrumbs } from 'vuetify/components'
 import type { LinkItem, MenuItem } from '#api/types/portal'
 
 type BreadcrumbItem = BreadcrumbItems[number]
-type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
+type BreadcrumbItems = { title: string, to?: string, disabled?: boolean }[]
 
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')

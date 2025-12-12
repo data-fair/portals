@@ -18,7 +18,7 @@
   "dependencies": {
     "@analytics/google-analytics": "^1.1.0",
     "@analytics/google-tag-manager": "^0.6.0",
-    "@data-fair/frame": "^0.15.0",
+    "@data-fair/frame": "^0.16.0",
     "@data-fair/lib-node": "^2.8.2",
     "@data-fair/lib-utils": "^1.6.1",
     "@data-fair/lib-vue": "^1.23.3",
@@ -32,6 +32,7 @@
     "nuxt": "^4.2.1",
     "nuxt-security": "^2.3.0",
     "piano-analytics-js": "^6.16.4",
+    "ufo": "^1.6.1",
     "undici": "^7.14.0",
     "vite-plugin-vuetify": "^2.1.2",
     "vue": "^3.5.18",
