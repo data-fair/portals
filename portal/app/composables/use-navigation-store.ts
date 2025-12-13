@@ -1,7 +1,7 @@
 import type { LinkItem, MenuItem } from '#api/types/portal'
 
-export type BreadcrumbItems = { title: string, to?: string, disabled?: boolean }[]
-export type BreadcrumbItem = BreadcrumbItems[number]
+type BreadcrumbItems = { title: string, to?: string, disabled?: boolean }[]
+type BreadcrumbItem = BreadcrumbItems[number]
 
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')

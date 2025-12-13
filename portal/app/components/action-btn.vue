@@ -2,18 +2,19 @@
   <!--
     class="justify-start" => Force left alignment of icon and text when actionLocation is 'right'
   -->
-  <v-btn
-    :to="to"
-    :icon="actionStyle === 'icon' ? icon : undefined"
-    :prepend-icon="actionStyle === 'full' ? icon : undefined"
-    :title="actionStyle === 'icon' ? text : undefined"
-    :text="actionStyle !== 'icon' ? shortText || text : undefined"
-    :density="actionStyle === 'icon' ? 'comfortable' : undefined"
-    :size="actionStyle !== 'icon' ? 'small' : undefined"
-    :block="block"
-    class="justify-start"
-    variant="text"
-  />
+  <custom-router-link :to="to">
+    <v-btn
+      :icon="actionStyle === 'icon' ? icon : undefined"
+      :prepend-icon="actionStyle === 'full' ? icon : undefined"
+      :title="actionStyle === 'icon' ? text : undefined"
+      :text="actionStyle !== 'icon' ? shortText || text : undefined"
+      :density="actionStyle === 'icon' ? 'comfortable' : undefined"
+      :size="actionStyle !== 'icon' ? 'small' : undefined"
+      :block="block"
+      class="justify-start"
+      variant="text"
+    />
+  </custom-router-link>
 </template>
 
 <script setup lang="ts">

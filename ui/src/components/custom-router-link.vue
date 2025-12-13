@@ -1,5 +1,9 @@
 <template>
+  <template v-if="!to">
+    <slot />
+  </template>
   <router-link
+    v-else
     :to="to"
     :href="href"
     target="_top"
@@ -13,6 +17,6 @@
 import useParentUrl from '@data-fair/frame/lib/vue-router/use-parent-url.js'
 import { RouteLocationRaw, useRouter } from 'vue-router'
 
-const { to } = defineProps<{ to: RouteLocationRaw }>()
-const href = useParentUrl(() => to, useRouter())
+const { to } = defineProps<{ to?: RouteLocationRaw }>()
+const href = useParentUrl(() => to ?? '', useRouter())
 </script>

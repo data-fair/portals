@@ -293,7 +293,7 @@
     </v-row>
   </template>
 
-  <div data-iframe-height/>
+  <div data-iframe-height="40"/>
 </template>
 
 <script setup lang="ts">

@@ -3,7 +3,7 @@
   <ul class="v-breadcrumbs v-breadcrumbs--density-compact">
     <template v-for="(item, i) of breadcrumbItems" :key="i">
       <li v-if="item.to" class="v-breadcrumbs-item">
-        <custom-router-link :to="item.to">
+        <custom-router-link :to="item.to" class="v-breadcrumbs-item--link">
           {{ item.title }}
         </custom-router-link>
       </li>
@@ -27,6 +27,9 @@
 </template>
 
 <script setup lang="ts">
+// we re-reate v-breadcrumbs using our custom-router-link component
+import 'vuetify/lib/components/VBreadcrumbs/VBreadcrumbs.css'
+
 const { portalConfig } = usePortalStore()
 const { breadcrumbs } = useNavigationStore()
 

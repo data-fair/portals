@@ -1,5 +1,8 @@
 <template>
-  <client-only>
+  <template v-if="!to">
+    <slot />
+  </template>
+  <client-only v-else>
     <custom-router-link-client :to="to">
       <slot />
     </custom-router-link-client>
@@ -18,5 +21,5 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
 
-const { to } = defineProps<{ to: RouteLocationRaw }>()
+const { to } = defineProps<{ to?: RouteLocationRaw }>()
 </script>
