@@ -13,6 +13,7 @@
       :block="block"
       class="justify-start"
       variant="text"
+      v-bind="$attrs"
     />
   </custom-router-link>
 </template>
@@ -36,4 +37,6 @@ defineProps<{
   block?: boolean
 }>()
 
+// allow passing fallthrough attributes to v-btn using $attrs
+defineOptions({ inheritAttrs: false })
 </script>
