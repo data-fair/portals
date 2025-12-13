@@ -3,7 +3,7 @@
   <ul class="v-breadcrumbs v-breadcrumbs--density-compact">
     <template v-for="(item, i) of breadcrumbItems" :key="i">
       <li v-if="item.to" class="v-breadcrumbs-item">
-        <custom-router-link :to="item.to as string" >
+        <custom-router-link :to="item.to">
           {{ item.title }}
         </custom-router-link>
       </li>
@@ -35,7 +35,7 @@ const { t } = useI18n()
 const breadcrumbConfig = computed(() => portalConfig.value.breadcrumb)
 
 const breadcrumbItems = computed(() => {
-  const items = [...breadcrumbs.value]
+  const items: { title: string, to?: string, disabled?: boolean }[] = [...breadcrumbs.value]
 
   // Add home link if configured
   if (breadcrumbConfig.value.showHome) {

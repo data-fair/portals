@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="to"
-    :href="parentUrls.get(to).value"
+    :href="href"
     target="_top"
     style="text-decoration: none; color: inherit;"
   >
@@ -10,13 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import useDFrameParentUrls from '@data-fair/frame/lib/vue/use-parent-urls'
-import { useVueRouterDFrameContent } from '@data-fair/frame/lib/vue-router/d-frame-content'
+import useParentUrl from '@data-fair/frame/lib/vue-router/use-parent-url.js'
+import { RouteLocationRaw, useRouter } from 'vue-router'
 
-defineProps<{ to: string }>()
-
-const router = useRouter()
-const dFrameContent = useVueRouterDFrameContent()
-const parentUrls = useDFrameParentUrls(dFrameContent, router)
-
+const { to } = defineProps<{ to: RouteLocationRaw }>()
+const href = useParentUrl(() => to, useRouter())
 </script>

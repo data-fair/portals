@@ -7,7 +7,6 @@
       <!-- this will be rendered on server side -->
        <router-link
         :to="to"
-        target="_top"
         style="text-decoration: none; color: inherit;"
       >
         <slot />
@@ -17,5 +16,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ to: string }>()
+import type { RouteLocationRaw } from 'vue-router'
+
+const { to } = defineProps<{ to: RouteLocationRaw }>()
 </script>
