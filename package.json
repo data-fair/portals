@@ -44,7 +44,8 @@
     "node": "v24"
   },
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.11.2"
+    "@data-fair/lib-types-builder": "^1.11.2",
+    "patch-package": "^8.0.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
@@ -64,7 +65,6 @@
     "form-data": "^4.0.4",
     "husky": "^9.1.7",
     "neostandard": "^0.12.2",
-    "patch-package": "^8.0.1",
     "tough-cookie": "^5.1.2"
   }
 }
