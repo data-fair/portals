@@ -63,6 +63,22 @@ export default {
       items: {
         type: 'string'
       }
+    },
+    datasetUrlTemplate: {
+      type: 'string',
+      title: 'Template de lien vers les jeux de données',
+      description: 'Laisser vide pour créer des liens automatiques vers le portail de la plateforme. Utile uniquement pour rediriger vers un rendu alternatif de portail.',
+      layout: {
+        placeholder: 'https://test.com/datasets/{slug}'
+      }
+    },
+    applicationUrlTemplate: {
+      type: 'string',
+      title: 'Template de lien vers les visualisations',
+      description: 'Laisser vide pour créer des liens automatiques vers le portail de la plateforme. Utile uniquement pour rediriger vers un rendu alternatif de portail.',
+      layout: {
+        placeholder: 'https://test.com/applications/{slug}'
+      }
     }
   }
 }
