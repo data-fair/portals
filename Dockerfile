@@ -30,6 +30,7 @@ COPY --from=package-strip /app/package-lock.json package-lock.json
 ADD ui/package.json ui/package.json
 ADD api/package.json api/package.json
 ADD portal/package.json portal/package.json
+ADD patches patches
 # full deps install used for types and ui building
 # also used to fill the npm cache for faster install of api deps
 # Note: --omit=peer can break nuxt's dependency resolution during postinstall
