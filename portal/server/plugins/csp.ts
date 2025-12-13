@@ -29,8 +29,12 @@ export default defineNitroPlugin(async (nitroApp) => {
     }
 
     // allow frame-ancestors on restricted domains
-    if (portal.config.allowedFrameAncestors && portal.config.allowedFrameAncestors.length > 0) {
-      cspPatch['frame-ancestors'] = [...existingCsp['frame-ancestors'], ...globalFrameAncestors, ...portal.config.allowedFrameAncestors]
+    if (globalFrameAncestors.length || (portal.config.allowedFrameAncestors && portal.config.allowedFrameAncestors.length > 0)) {
+      cspPatch['frame-ancestors'] = [
+        ...existingCsp['frame-ancestors'],
+        ...globalFrameAncestors,
+        ...(portal.config.allowedFrameAncestors ?? [])
+      ]
     }
 
     // allow frame-src for embedded iframes in the portal
