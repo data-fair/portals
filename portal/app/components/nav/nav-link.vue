@@ -1,25 +1,28 @@
 <template>
-  <v-btn
+  <custom-router-link
     :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
     :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
     :target="link.type === 'external' && link.target ? '_blank' : undefined"
     :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
-    :color="config?.color"
-    :density="config?.density"
-    :elevation="config?.elevation"
-    :rounded="config?.rounded"
-    :variant="config?.variant !== 'default' ? config?.variant : undefined"
-    :class="{'text-none': !config?.uppercase}"
   >
-    <v-icon
-      v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-      :color="link.icon.color"
-      :icon="link.icon.mdi?.svgPath || link.icon.custom"
-      start
-    />
-    <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-    <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
-  </v-btn>
+    <v-btn
+      :color="config?.color"
+      :density="config?.density"
+      :elevation="config?.elevation"
+      :rounded="config?.rounded"
+      :variant="config?.variant !== 'default' ? config?.variant : undefined"
+      :class="{'text-none': !config?.uppercase}"
+    >
+      <v-icon
+        v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+        :color="link.icon.color"
+        :icon="link.icon.mdi?.svgPath || link.icon.custom"
+        start
+      />
+      <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+      <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
+    </v-btn>
+  </custom-router-link>
 </template>
 
 <script setup lang="ts">

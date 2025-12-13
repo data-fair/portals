@@ -1,9 +1,6 @@
 <template>
-  <template v-if="!to">
-    <slot />
-  </template>
   <router-link
-    v-else
+    v-if="to"
     :to="to"
     :href="href"
     target="_top"
@@ -11,6 +8,16 @@
   >
     <slot />
   </router-link>
+  <a
+    v-else-if="href"
+    :href="href"
+    style="text-decoration: none; color: inherit;"
+  >
+    <slot />
+  </a>
+  <template v-else>
+    <slot />
+  </template>
 </template>
 
 <script setup lang="ts">

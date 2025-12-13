@@ -1,8 +1,9 @@
 <template>
   <router-link
     :to="to"
-    :href="href"
-    target="_top"
+    :href="href ?? parentHref"
+    :target="target ?? '_top'"
+    :rel="rel"
     style="text-decoration: none; color: inherit;"
   >
     <slot />
@@ -13,6 +14,11 @@
 import useParentUrl from '@data-fair/frame/lib/vue-router/use-parent-url.js'
 import type { RouteLocationRaw } from 'vue-router'
 
-const { to } = defineProps<{ to: RouteLocationRaw }>()
-const href = useParentUrl(() => to, useRouter())
+const { to, href } = defineProps<{
+  to: RouteLocationRaw,
+  href?: string,
+  target?: string,
+  rel?: string
+}>()
+const parentHref = useParentUrl(() => to, useRouter())
 </script>
