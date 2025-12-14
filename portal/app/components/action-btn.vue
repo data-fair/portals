@@ -2,20 +2,18 @@
   <!--
     class="justify-start" => Force left alignment of icon and text when actionLocation is 'right'
   -->
-  <custom-router-link :to="to">
-    <v-btn
-      :icon="actionStyle === 'icon' ? icon : undefined"
-      :prepend-icon="actionStyle === 'full' ? icon : undefined"
-      :title="actionStyle === 'icon' ? text : undefined"
-      :text="actionStyle !== 'icon' ? shortText || text : undefined"
-      :density="actionStyle === 'icon' ? 'comfortable' : undefined"
-      :size="actionStyle !== 'icon' ? 'small' : undefined"
-      :block="block"
-      class="justify-start"
-      variant="text"
-      v-bind="$attrs"
-    />
-  </custom-router-link>
+  <v-btn
+    :to="to"
+    :icon="actionStyle === 'icon' ? icon : undefined"
+    :prepend-icon="actionStyle === 'full' ? icon : undefined"
+    :title="actionStyle === 'icon' ? text : undefined"
+    :text="actionStyle !== 'icon' ? shortText || text : undefined"
+    :density="actionStyle === 'icon' ? 'comfortable' : undefined"
+    :size="actionStyle !== 'icon' ? 'small' : undefined"
+    :block="block"
+    class="justify-start"
+    variant="text"
+  />
 </template>
 
 <script setup lang="ts">
@@ -37,6 +35,4 @@ defineProps<{
   block?: boolean
 }>()
 
-// allow passing fallthrough attributes to v-btn using $attrs
-defineOptions({ inheritAttrs: false })
 </script>
