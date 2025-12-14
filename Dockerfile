@@ -35,6 +35,7 @@ ADD patches patches
 # also used to fill the npm cache for faster install of api deps
 # Note: --omit=peer can break nuxt's dependency resolution during postinstall
 RUN npm ci --omit=dev --no-audit --no-fund
+RUN npx patch-package
 
 # =============================
 # Build Types
