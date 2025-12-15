@@ -187,5 +187,5 @@ usePageSeo({
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
     visitLink: Voir la réutilisation
     publishedBy: Publié par {author}
-    datasetsUsed: Jeu de données utilisé | Jeux de données utilisées
+    datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

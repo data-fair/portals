@@ -1,11 +1,10 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-datasets',
   'x-exports': [],
-  title: 'Datasets Catalog',
   type: 'object',
   layout: {
     title: null,
-    comp: 'expansion-panels',
+    comp: 'tabs'
   },
   unevaluatedProperties: false,
   required: ['card', 'page'],
