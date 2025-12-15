@@ -101,7 +101,7 @@
       :no-data-text="t('filters.noKeywords')"
       :items="facets.keywords"
       :item-title="(item) => `${item.value} (${item.count})`"
-      item-value="id"
+      item-value="value"
       :density="config.filters?.density || 'comfortable'"
       :rounded="config.filters?.rounded"
       variant="outlined"
