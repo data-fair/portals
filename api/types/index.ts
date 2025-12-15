@@ -50,25 +50,26 @@ export type Dataset = {
   owner: Account
 
   // Metadata fields
-  modified?: string
-  creator?: string
-  origin?: string
+  topics?: {
+    id: string
+    title: string
+    color?: string
+  }[]
+  keywords?: string[]
   license?: {
     title: string
     href: string
   }
-  keywords?: string[]
+  origin?: string
+  modified?: string
+  creator?: string
   spatial?: string
   temporal?: {
     start: string
     end?: string
   }
   frequency?: string
-  topics?: {
-    id: string
-    title: string
-    color?: string
-  }[]
+  customMetadata?: Record<string, string>
 
   attachments?: {
     url: string

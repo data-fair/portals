@@ -61,7 +61,7 @@
         v-if="dataset.creator"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('creator') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('creator') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dataset.creator }}
         </div>
@@ -86,7 +86,7 @@
         v-if="dataset.keywords?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('keywords') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
           :key="i"
@@ -101,7 +101,7 @@
         v-if="dataset.spatial"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('spatialCoverage') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('spatial') }}</div>
         {{ dataset.spatial }}
       </v-col>
 
@@ -109,7 +109,7 @@
         v-if="dataset.temporal?.start"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('temporalCoverage') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('temporal') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
         </template>
@@ -122,19 +122,26 @@
         v-if="dataset.frequency"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('updateFrequency') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('frequency') }}</div>
         {{ t('frequency.' + dataset.frequency) }}
       </v-col>
 
-      <!-- Modified -->
-      <v-col
-        v-if="dataset.modified"
-        v-bind="metadataColProps"
-      >
-        <div class="text-caption text-medium-emphasis">{{ t('modified') }}</div>
+      <!-- Modified or dataUpdatedAt -->
+      <v-col v-bind="metadataColProps">
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('modified') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dayjs(dataset.modified || dataset.dataUpdatedAt).format('LL') }}
         </div>
+      </v-col>
+
+      <!-- Custom metadata -->
+      <v-col
+        v-for="customMeta in metadataSettings.data.value?.custom"
+        :key="customMeta.key"
+        v-bind="metadataColProps"
+      >
+        <div class="text-caption text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
+        <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
       </v-col>
 
       <v-col
@@ -246,6 +253,14 @@ const avatarUrl = computed(() => {
 
 const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
 
+type BaseMetadataSettings = Partial<Record<'keywords' | 'frequency' | 'temporal' | 'spatial' | 'modified' | 'creator',
+  { active?: boolean; title?: string }
+>>
+
+type MetadataSettings = BaseMetadataSettings & { custom?: { key: string; title?: string }[] }
+const metadataSettings = useLocalFetch<MetadataSettings>('/data-fair/api/v1/datasets/' + dataset.id + '/metadata-settings')
+const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data.value?.[key]?.title || t(key)
+
 </script>
 
 <i18n lang="yaml">
@@ -284,15 +299,15 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     shortText:
       api: API
     size: 'Size:'
-    spatialCoverage: 'Spatial coverage:'
-    temporalCoverage: 'Temporal coverage:'
+    spatial: 'Spatial coverage:'
+    temporal: 'Temporal coverage:'
     temporalStart: 'From'
     text:
       api: API documentation
       map: Map
       table: Table
     thisSource: 'this source'
-    updateFrequency: 'Update frequency:'
+    frequency: 'Update frequency:'
     updatedAt: Updated at
   fr:
     attachments: 'Pièces jointes :'
@@ -329,14 +344,14 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     shortText:
       api: API
     size: 'Taille :'
-    spatialCoverage: 'Couverture géographique :'
-    temporalCoverage: 'Couverture temporelle :'
+    spatial: 'Couverture géographique :'
+    temporal: 'Couverture temporelle :'
     temporalStart: 'À partir de'
     text:
       api: Documentation d'API
       map: Carte
       table: Tableau
     thisSource: 'cette source'
-    updateFrequency: 'Fréquence de mise à jour :'
+    frequency: 'Fréquence de mise à jour :'
     updatedAt: Mis à jour le
 </i18n>

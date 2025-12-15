@@ -57,7 +57,7 @@
           v-if="!$vuetify.display.smAndDown"
           :application="application"
         />
-        <!-- TODO: Show applications attachments ? -->
+        <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
       <v-col v-bind="metadataColProps">
