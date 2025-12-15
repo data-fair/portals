@@ -19,18 +19,17 @@
 
       <!-- Owner -->
       <v-col
-        v-if="metadataConfig.showDepartment && application.owner.department"
+        v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
-            :title="application.owner.departmentName || application.owner.department"
+            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
           />
-          {{ application.owner.departmentName || application.owner.department }}
+          {{ application.owner.departmentName || application.owner.department || application.owner.name }}
         </div>
       </v-col>
     </v-row>

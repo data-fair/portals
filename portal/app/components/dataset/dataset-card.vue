@@ -100,11 +100,11 @@
         <v-list-item>
           <template #prepend>
             <owner-avatar
-              v-if="dataset.owner.department && cardConfig.showDepartment"
+              v-if="cardConfig.showDepartment"
               :owner="dataset.owner"
             />
           </template>
-          <!-- <span :class="['text-caption', dataset.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
+          <!-- <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">
             {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
           </span> -->
         </v-list-item>

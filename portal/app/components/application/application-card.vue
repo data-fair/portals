@@ -91,11 +91,11 @@
         <v-list-item>
           <template #prepend>
             <owner-avatar
-              v-if="application.owner.department && cardConfig.showDepartment"
+              v-if="cardConfig.showDepartment"
               :owner="application.owner"
             />
           </template>
-          <span :class="['text-caption', application.owner.department && cardConfig.showDepartment ? 'ml-2' : '']">
+          <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">
             {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
           </span>
         </v-list-item>

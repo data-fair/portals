@@ -308,7 +308,8 @@ watch([sort, order], () => {
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
   { title: t('sort.updatedAt'), value: 'updatedAt' },
-  { title: t('sort.title'), value: 'title' }
+  { title: t('sort.title'), value: 'title' },
+  { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
 ]
 
 </script>
@@ -324,6 +325,7 @@ const sortItems = [
       createdAt: Creation date
       title: Alphabetical order
       updatedAt: Update date
+      owner: Owner
 
   fr:
     applicationsCount: '{count} visualisation | {count} visualisations'
@@ -335,4 +337,5 @@ const sortItems = [
       createdAt: Date de création
       title: Ordre alphabétique
       updatedAt: Date de mise à jour
+      owner: Propriétaire
 </i18n>

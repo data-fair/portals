@@ -92,7 +92,7 @@ export default {
         },
         showDepartment: {
           type: 'boolean',
-          title: 'Afficher le département du propriétaire',
+          title: 'Afficher le propriétaire',
           layout: {
             comp: 'switch',
             cols: { md: 6 }

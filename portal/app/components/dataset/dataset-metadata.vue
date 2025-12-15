@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :rounded="metadataConfig?.rounded"
-    :elevation="metadataConfig?.elevation"
+    :rounded="metadataConfig.rounded"
+    :elevation="metadataConfig.elevation"
   >
     <!-- Dataset Metadata -->
     <v-row class="ma-0">
@@ -42,18 +42,17 @@
 
       <!-- Owner -->
       <v-col
-        v-if="metadataConfig?.showDepartment && dataset.owner.department"
+        v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
-            :title="dataset.owner.departmentName || dataset.owner.department"
+            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
           />
-          {{ dataset.owner.departmentName || dataset.owner.department }}
+          {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
         </div>
       </v-col>
 
@@ -139,7 +138,7 @@
       </v-col>
 
       <v-col
-        v-if="metadataConfig?.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-if="metadataConfig.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
@@ -162,21 +161,21 @@
               path: `/datasets/${dataset.slug}/table`,
               query: $route.query
             }"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
           />
           <action-btn
             v-if="dataset.bbox?.length && shouldShowActionButton('map')"
             :to="`/datasets/${dataset.slug}/map`"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiMapMarker"
             :text="t('text.map')"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
             :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
@@ -231,11 +230,11 @@ const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
-const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata)
+const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: metadataConfig.value?.location !== 'right' ? 4 : 12
+  md: metadataConfig.value.location !== 'right' ? 4 : 12
 }))
 
 const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
@@ -245,7 +244,7 @@ const avatarUrl = computed(() => {
   else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
 })
 
-const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value?.actionButtons?.includes(button)
+const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
 
 </script>
 

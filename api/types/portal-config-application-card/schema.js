@@ -81,8 +81,7 @@ export default {
     },
     showDepartment: {
       type: 'boolean',
-      title: 'Afficher le département du propriétaire',
-      description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
+      title: 'Afficher le propriétaire',
       layout: {
         comp: 'switch',
         cols: { md: 4 }

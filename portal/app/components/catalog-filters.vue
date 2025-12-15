@@ -401,13 +401,15 @@ const sortItems = computed(() => {
     return [
       { title: t('sort.createdAt'), value: 'createdAt' },
       { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
-      { title: t('sort.title'), value: 'title' }
+      { title: t('sort.title'), value: 'title' },
+      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
     ]
   } else {
     return [
       { title: t('sort.createdAt'), value: 'createdAt' },
       { title: t('sort.updatedAt'), value: 'updatedAt' },
-      { title: t('sort.title'), value: 'title' }
+      { title: t('sort.title'), value: 'title' },
+      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
     ]
   }
 })
@@ -438,6 +440,7 @@ const sortItems = computed(() => {
       dataUpdatedAt: Data update date
       updatedAt: Update date
       title: Alphabetical order
+      owner: Owner
 
   fr:
     ascending: Ordre croissant
@@ -462,4 +465,5 @@ const sortItems = computed(() => {
       dataUpdatedAt: Date de mise à jour des données
       updatedAt: Date de mise à jour
       title: Ordre alphabétique
+      owner: Propriétaire
 </i18n>
