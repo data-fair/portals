@@ -41,7 +41,7 @@ defineProps(
 
 <i18n lang="yaml">
   en:
-    preview: preview
+    preview: Preview
   fr:
-    preview: aperçu
+    preview: Aperçu
 </i18n>

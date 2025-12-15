@@ -41,7 +41,7 @@
             />
           </template>
           <template #app-bar-preview="context">
-            <preview :append-title="context.home ? ' - accueil' : ''">
+            <preview :append-title="context.home ? ' - Accueil' : ''">
               <layout-app-bar
                 v-if="formValid"
                 :home="context.home"

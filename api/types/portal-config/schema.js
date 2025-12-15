@@ -106,13 +106,11 @@ export default {
                 children: ['headerHome']
               },
               {
-                name: 'app-bar-preview',
-                cols: { md: 6 }
+                name: 'app-bar-preview'
               },
               {
                 name: 'app-bar-preview',
-                props: { home: true },
-                cols: { md: 6 }
+                props: { home: true }
               }
             ]
           },
@@ -149,27 +147,25 @@ export default {
                 children: ['navBarHome']
               },
               {
-                name: 'app-bar-preview',
-                cols: { md: 6 }
+                name: 'app-bar-preview'
               },
               {
                 name: 'app-bar-preview',
-                props: { home: true },
-                cols: { md: 6 }
-              },
+                props: { home: true }
+              }
             ]
           },
           {
             if: '!data?.navBarHomeActive',
             children: [
-              { name: 'app-bar-preview' },
               {
                 comp: 'card',
                 title: 'Options',
                 children: [
                   'navBar'
                 ]
-              }
+              },
+              { name: 'app-bar-preview' }
             ]
           },
           {
