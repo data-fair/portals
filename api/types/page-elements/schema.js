@@ -777,9 +777,6 @@ export default {
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
-        // density: {
-        //   $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
-        // },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
@@ -789,31 +786,36 @@ export default {
           default: true
         },
         actions: {
-          title: 'Actions',
+          title: 'Boutons de navigations',
           type: 'array',
           layout: {
             messages: {
-              addItem: "Ajouter un bouton d'action"
+              addItem: 'Ajouter un bouton de navigation'
             },
             listEditMode: 'inline'
           },
-          items: {
-            type: 'object',
-            title: 'Bouton',
-            required: ['color'],
-            default: { color: 'primary' },
-            properties: {
-              label: {
-                type: 'string',
-                title: 'Libellé'
-              },
-              href: {
-                type: 'string',
-                title: 'URL'
-              },
-              icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
-              color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' }
-            }
+          items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' }
+        },
+        actionStyle: {
+          title: 'Style des boutons',
+          layout: {
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!parent.data?.usePortalConfig',
+                children: ['config']
+              }
+            ]
+          },
+          properties: {
+            usePortalConfig: {
+              type: 'boolean',
+              title: 'Utiliser la configuration du portail',
+              layout: { comp: 'switch' },
+              default: true
+            },
+            config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' }
           }
         },
         background: {
@@ -973,7 +975,7 @@ export default {
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.<br>| **Colonnes** | 2 | 3 | 4 | 6 |<br>| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |<br>| **Ordinateur portable** | 6 | 6 | 6 | 3 |<br>| **Tablette** | 12 | 6 | 6 | 4 |<br>| **Mobile** | 12 | 12 | 12 | 6 |',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.<br>| **Colonnes** | 2 | 3 | 4 | 6 |<br>| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |<br>| **Ordinateur portable** | 6 | 6 | 3 | 3 |<br>| **Tablette** | 12 | 6 | 4 | 4 |<br>| **Mobile** | 12 | 12 | 12 | 6 |',
           oneOf: [
             { const: 2, title: '2' },
             { const: 3, title: '3' },
@@ -984,7 +986,7 @@ export default {
         },
         gutter: {
           type: 'string',
-          title: 'Espacement des blocs',
+          title: 'Espacement entre les blocs',
           default: 'default',
           oneOf: [
             { const: 'none', title: 'Aucun espacement' },
@@ -992,9 +994,20 @@ export default {
             { const: 'default', title: 'Espacement normal' }
           ]
         },
+        align: {
+          type: 'string',
+          title: 'Alignement des éléments',
+          layout: { cols: { xs: 6 } },
+          oneOf: [
+            { const: 'start', title: 'Aligné en haut' },
+            { const: 'center', title: 'Aligné au centre' },
+            { const: 'end', title: 'Aligné en bas' },
+            { const: 'stretch', title: 'Étendre les éléments' }
+          ]
+        },
         centered: {
           type: 'boolean',
-          title: 'Centre les blocs sur les lignes incomplètes',
+          title: 'Centrer les blocs sur les lignes incomplètes',
         },
         children: {
           type: 'array',

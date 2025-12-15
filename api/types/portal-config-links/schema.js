@@ -65,7 +65,7 @@ export default {
     linkItem: {
       type: 'object',
       unevaluatedProperties: false,
-      oneOfLayout: { label: 'Type de page' },
+      oneOfLayout: { label: 'Type de page', emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
