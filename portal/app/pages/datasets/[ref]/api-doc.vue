@@ -38,6 +38,8 @@ usePageSeo({
   title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
   description: () => datasetFetch.data.value?.summary
 })
+
+onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>
 
 <i18n lang="yaml">

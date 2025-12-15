@@ -57,6 +57,8 @@ usePageSeo({
   description: () => applicationFetch.data.value?.summary,
   ogImage: () => thumbnailUrl.value
 })
+
+onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>
 
 <i18n lang="yaml">

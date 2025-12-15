@@ -9,6 +9,8 @@
     v-else-if="pageConfigFetch.data.value"
     :model-value="pageConfigFetch.data.value.elements"
   />
+
+  <div data-iframe-height="40" />
 </template>
 
 <script setup lang="ts">

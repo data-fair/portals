@@ -96,8 +96,8 @@ const getPublicationSite = (portal: Portal) => {
     title: portal.config.title,
     url,
     draftUrl,
-    datasetUrlTemplate: url + `/datasets/{${refType}}`,
-    applicationUrlTemplate: url + `/applications/{${refType}}`
+    datasetUrlTemplate: portal.ingress?.datasetUrlTemplate || (url + `/datasets/{${refType}}`),
+    applicationUrlTemplate: portal.ingress?.applicationUrlTemplate || (url + `/applications/{${refType}}`)
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
