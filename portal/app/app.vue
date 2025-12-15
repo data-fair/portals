@@ -24,9 +24,20 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/images/${id}`
 }
 
+// Detect if the page is displayed in an iframe via the Sec-Fetch-Dest header
+// useState allows sharing the value between server and client
+const isIframe = useState('isIframe', () => {
+  if (import.meta.server) {
+    const headers = useRequestHeaders()
+    return headers['sec-fetch-dest'] === 'iframe'
+  }
+  return false
+})
+
 provideNavigationStore()
 providePortalStore($portal, $siteInfo)
 provide('get-image-src', getImageSrc)
+provide('is-iframe', isIframe)
 
 const meta = [
   { name: 'theme-color', content: theme.current.value.colors.primary },
