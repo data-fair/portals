@@ -130,13 +130,16 @@ const datasetCardConfig = computed(() => {
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
-const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
-  select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
-  size: 100,
-  html: 'vuetify',
-  ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
-  publicationSites: 'data-fair-portals:' + portal.value._id
-}))
+const datasetsUrl = computed(() => {
+  if (!reuseConfig.value?.datasets?.length) return ''
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    size: 100,
+    html: 'vuetify',
+    ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  })
+})
 
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])

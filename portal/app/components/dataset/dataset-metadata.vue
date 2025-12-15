@@ -123,7 +123,7 @@
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ metadataLabel('frequency') }}</div>
-        {{ t('frequency.' + dataset.frequency) }}
+        {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
       <!-- Modified or dataUpdatedAt -->
@@ -270,7 +270,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
     records: '{count} record | {count} records'
-    frequency:
+    frequencyLabels:
       annual: 'Every year'
       biennial: 'Every 2 years'
       bimonthly: 'Every 2 months'
@@ -315,7 +315,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     dataFrom: 'Données issues de'
     dataProducedBy: 'Provenance des données :'
     records: '{count} enregistrement | {count} enregistrements'
-    frequency:
+    frequencyLabels:
       annual: 'Tous les ans'
       biennial: 'Tous les 2 ans'
       bimonthly: 'Tous les 2 mois'
