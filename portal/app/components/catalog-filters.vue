@@ -378,10 +378,7 @@ const ownersItems = computed(() => {
     const owner = facet.value
     let title = owner.department ? (owner.departmentName || owner.department) : owner.name
     title += ` (${facet.count})`
-
-    let value = `${owner.type}:${owner.id}`
-    if (owner.department) value += `:${owner.department}`
-
+    const value = `${owner.type}:${owner.id}:` + (owner.department ? `${owner.department}` : '-')
     const avatar = owner.department
       ? `/simple-directory/api/avatars/${owner.type}/${owner.id}/${owner.department}/avatar.png`
       : `/simple-directory/api/avatars/${owner.type}/${owner.id}/avatar.png`

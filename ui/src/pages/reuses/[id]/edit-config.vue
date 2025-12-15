@@ -27,6 +27,25 @@
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </template>
+          <template #color-select-item="context">
+            <v-list-item v-bind="context.props">
+              <template #prepend>
+                <v-icon
+                  :icon="mdiCircle"
+                  :color="context.item.raw.value"
+                />
+              </template>
+            </v-list-item>
+          </template>
+          <template #color-select-selection="context">
+            <span :class="'v-select__selection-text'">
+              <v-icon
+                :icon="mdiCircle"
+                :color="context.item.raw.value"
+                class="mr-3"
+              />{{ context.item.raw.title }}
+            </span>
+          </template>
         </vjsf-reuse-config>
       </v-form>
     </v-defaults-provider>
@@ -42,6 +61,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { ReuseConfig } from '#api/types/reuse-config'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { mdiCircle } from '@mdi/js'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/reuses/[id]/edit-config'>()

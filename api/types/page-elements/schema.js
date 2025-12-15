@@ -786,7 +786,7 @@ export default {
           default: true
         },
         actions: {
-          title: 'Boutons de navigations',
+          title: 'Boutons de navigation',
           type: 'array',
           layout: {
             messages: {
@@ -797,7 +797,7 @@ export default {
           items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' }
         },
         actionStyle: {
-          title: 'Style des boutons',
+          title: 'Style des boutons de navigation',
           layout: {
             comp: 'card',
             children: [
@@ -996,13 +996,12 @@ export default {
         },
         align: {
           type: 'string',
-          title: 'Alignement des éléments',
-          layout: { cols: { xs: 6 } },
+          title: 'Alignement vertical des blocs',
           oneOf: [
             { const: 'start', title: 'Aligné en haut' },
             { const: 'center', title: 'Aligné au centre' },
             { const: 'end', title: 'Aligné en bas' },
-            { const: 'stretch', title: 'Étendre les éléments' }
+            { const: 'stretch', title: 'Étendre les blocs' }
           ]
         },
         centered: {
