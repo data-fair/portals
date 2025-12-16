@@ -9,7 +9,7 @@
     :elevation="config?.elevation"
     :rounded="config?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
-    :class="{'text-none': !config?.uppercase}"
+    :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
   >
     <v-icon
       v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"

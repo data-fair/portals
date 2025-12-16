@@ -29,13 +29,29 @@
       />
     </v-card-text>
     <v-spacer />
-    <v-card-actions v-if="element.actions.length">
-      <nav-link
-        v-for="(action, i) in element.actions"
-        :key="i"
-        :link="action"
-        :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
-      />
+    <!--
+      min-height: auto => remove default v-card-actions min-height
+    -->
+    <v-card-actions
+      v-if="element.actions.length"
+      style="min-height: auto"
+    >
+      <!-- Reset default btn styles apply by v-card-actions -->
+      <v-defaults-provider
+        :defaults="{
+          VBtn: {
+            variant: 'flat',
+            slim: false
+          }
+        }"
+      >
+        <nav-link
+          v-for="(action, i) in element.actions"
+          :key="i"
+          :link="action"
+          :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
+        />
+      </v-defaults-provider>
     </v-card-actions>
   </v-card>
 </template>
@@ -57,7 +73,6 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 /* Without this, .text-truncate class would have no effect. */
 :deep(.v-btn__content) {
   max-width: 100%;
-  min-width: 0;
-  /* needed for btn but not for chip ?!! */
+  min-width: 0; /* needed for btn but not for chip ?!! */
 }
 </style>
