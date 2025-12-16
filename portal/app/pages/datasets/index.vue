@@ -21,7 +21,7 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 
-const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/datasets/datasets', { watch: false })
+const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/datasets/datasets', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
