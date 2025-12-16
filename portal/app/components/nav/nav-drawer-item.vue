@@ -3,10 +3,10 @@
   <template v-if="level === 1 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
-      :to="item.type !== 'external' ? resolveLink(item) : undefined"
-      :href="item.type === 'external' ? item.href : undefined"
-      :target="item.type === 'external' ? '_blank' : undefined"
-      :rel="item.type === 'external' ? 'noopener' : undefined"
+      :to="!isExternalLink(item) ? resolveLink(item) : undefined"
+      :href="isExternalLink(item) ? resolveLink(item) : undefined"
+      :target="item.type === 'external' && item.target ? '_blank' : undefined"
+      :rel="item.type === 'external' && item.target ? 'noopener' : undefined"
       :active="isMenuItemActive(props.item, route.path)"
     >
       <template #prepend>
@@ -46,10 +46,10 @@
   <template v-else-if="level >= 2 && item.type !== 'submenu'">
     <v-list-item
       :title="resolveLinkTitle(item, locale)"
-      :to="item.type !== 'external' ? resolveLink(item) : undefined"
-      :href="item.type === 'external' ? item.href : undefined"
-      :target="item.type === 'external' ? '_blank' : undefined"
-      :rel="item.type === 'external' ? 'noopener' : undefined"
+      :to="!isExternalLink(item) ? resolveLink(item) : undefined"
+      :href="isExternalLink(item) ? resolveLink(item) : undefined"
+      :target="item.type === 'external' && item.target ? '_blank' : undefined"
+      :rel="item.type === 'external' && item.target ? 'noopener' : undefined"
       :active="isMenuItemActive(props.item, route.path)"
     >
       <template #prepend>
@@ -103,7 +103,7 @@ const props = defineProps<{
 
 const route = useRoute()
 const { locale } = useI18n()
-const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 // For submenu groups at level 2+, track if they should be open
 const isGroupOpen = ref(false)

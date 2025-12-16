@@ -19,18 +19,17 @@
 
       <!-- Owner -->
       <v-col
-        v-if="metadataConfig.showDepartment && application.owner.department"
+        v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
-            :title="application.owner.departmentName || application.owner.department"
+            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
           />
-          {{ application.owner.departmentName || application.owner.department }}
+          {{ application.owner.departmentName || application.owner.department || application.owner.name }}
         </div>
       </v-col>
     </v-row>
@@ -58,7 +57,7 @@
           v-if="!$vuetify.display.smAndDown"
           :application="application"
         />
-        <!-- TODO: Show applications attachments ? -->
+        <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
       <v-col v-bind="metadataColProps">
@@ -76,27 +75,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application } from '#api/types/index.ts'
 import { mdiFullscreen } from '@mdi/js'
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  public: boolean
-  owner: Account
-  baseApplication?: {
-    meta?: {
-      'df:capture-width'?: string
-      'df:capture-height'?: string
-    }
-  }
-}
 
 const { application } = defineProps<{ application: Application }>()
 const { portalConfig } = usePortalStore()
@@ -105,7 +85,7 @@ const { dayjs } = useLocaleDayjs()
 
 const baseApplicationFetch = useLocalFetch<{
   title: string
-}>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: true } })
+}>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({

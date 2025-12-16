@@ -5,8 +5,9 @@
         global: {
           hideDetails: 'auto'
         },
-        VSwitch: {
-          color: 'primary'
+        VjsfVerticalTabs: {
+          VBtn: { class: 'text-none' },
+          VTabs: { color: 'primary' }
         }
       }"
     >
@@ -40,7 +41,7 @@
             />
           </template>
           <template #app-bar-preview="context">
-            <preview>
+            <preview :append-title="context.home ? ' - Accueil' : ''">
               <layout-app-bar
                 v-if="formValid"
                 :home="context.home"
@@ -65,6 +66,25 @@
               :resource="portalRef"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
+          </template>
+          <template #color-select-item="context">
+            <v-list-item v-bind="context.props">
+              <template #prepend>
+                <v-icon
+                  :icon="mdiCircle"
+                  :color="context.item.raw.value"
+                />
+              </template>
+            </v-list-item>
+          </template>
+          <template #color-select-selection="context">
+            <span :class="'v-select__selection-text'">
+              <v-icon
+                :icon="mdiCircle"
+                :color="context.item.raw.value"
+                class="mr-3"
+              />{{ context.item.raw.title }}
+            </span>
           </template>
         </vjsf-portal-config>
       </v-form>
@@ -92,6 +112,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
+import { mdiCircle } from '@mdi/js'
 
 const { t, locale } = useI18n()
 const session = useSession()

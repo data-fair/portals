@@ -104,29 +104,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { Reuse } from '#api/types/reuse'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
 import { withQuery } from 'ufo'
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -148,13 +130,16 @@ const datasetCardConfig = computed(() => {
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
-const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
-  select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
-  size: 100,
-  html: true,
-  ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
-  publicationSites: 'data-fair-portals:' + portal.value._id
-}))
+const datasetsUrl = computed(() => {
+  if (!reuseConfig.value?.datasets?.length) return ''
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    size: 100,
+    html: 'vuetify',
+    ids: reuseConfig.value?.datasets?.map(d => d.id).join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  })
+})
 
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
@@ -202,5 +187,5 @@ usePageSeo({
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
     visitLink: Voir la réutilisation
     publishedBy: Publié par {author}
-    datasetsUsed: Jeu de données utilisé | Jeux de données utilisées
+    datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

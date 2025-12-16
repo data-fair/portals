@@ -33,6 +33,7 @@
         >
           <v-avatar
             :image="avatarUrl"
+            class="bg-transparent"
             :size="40"
             alt=""
           />

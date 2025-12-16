@@ -17,7 +17,10 @@
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
 
-    <v-row dense>
+    <v-row
+      dense
+      class="ma-0"
+    >
       <v-col>
         <v-card
           :title="t('cardExample.title')"

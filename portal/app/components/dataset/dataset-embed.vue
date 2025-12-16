@@ -47,30 +47,22 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import { mdiCodeTags } from '@mdi/js'
 
 const { dataset } = defineProps<{
-  dataset: {
-    id: string
-    slug: string
-    title: string
-    previews: {
-      id: string
-      title: string
-      href: string
-    }[]
-  }
+  dataset: Pick<Dataset, 'id' | 'slug' | 'title' | 'previews'>
 }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 
-const previewItems = dataset.previews.map(preview => {
+const previewItems = dataset.previews?.map(preview => {
   let title = preview.title
   if (preview.id === 'table') title = t('preview.table')
   else if (preview.id === 'map') title = t('preview.map')
   else if (preview.id === 'map-bounds') title = t('preview.mapBounds')
   return { ...preview, title }
-})
+}) || []
 
 const selectedPreview = ref<string | undefined>(previewItems[0]?.href)
 const stateUrl = ref(previewItems[0]?.href)

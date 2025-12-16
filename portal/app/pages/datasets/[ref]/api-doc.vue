@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: API Doc-->
   <!-- <p
     v-if="useReadApiKey && actualReadApiKey"
     class="my-0 mx-2"
@@ -37,6 +38,8 @@ usePageSeo({
   title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
   description: () => datasetFetch.data.value?.summary
 })
+
+onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>
 
 <i18n lang="yaml">
@@ -64,7 +67,7 @@ export default {
   async fetch () {
     this.dataset = await this.$axios.$get(this.$store.getters.dataFairUrl + '/api/v1/datasets/' + this.$route.params.ref, {
       params: {
-        html: true,
+        html: 'vuetify',
         publicationSites: 'data-fair-portals:' + this.portal._id
       }
     })

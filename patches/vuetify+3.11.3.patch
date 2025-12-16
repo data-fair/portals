@@ -1,0 +1,33 @@
+diff --git a/node_modules/vuetify/lib/composables/router.js b/node_modules/vuetify/lib/composables/router.js
+index 8dd52b6..2dd54c9 100644
+--- a/node_modules/vuetify/lib/composables/router.js
++++ b/node_modules/vuetify/lib/composables/router.js
+@@ -1,6 +1,8 @@
+ // Utilities
+ import { computed, nextTick, onScopeDispose, reactive, resolveDynamicComponent, toRef } from 'vue';
+ import { deepEqual, getCurrentInstance, hasEvent, IN_BROWSER, propsFactory } from "../util/index.js"; // Types
++import useParentUrl from '@data-fair/frame/lib/vue-router/use-parent-url.js'
++
+ export function useRoute() {
+   const vm = getCurrentInstance('useRoute');
+   return computed(() => vm?.proxy?.$route);
+@@ -41,7 +43,10 @@ export function useLink(props, attrs) {
+     if (!route.value) return link.value.isExactActive?.value ?? false;
+     return link.value.isExactActive?.value && deepEqual(link.value.route.value.query, route.value.query);
+   });
+-  const href = computed(() => props.to ? link.value?.route.value.href : props.href);
++  // patch this composable so that the links work in iframe
++  const parentUrl = useParentUrl(() => props.to, useRouter())
++  const href = computed(() => props.to ? parentUrl.value : props.href);
++  const target = computed(() => props.target ?? attrs.target ?? '_top')
+   const isRouterLink = toRef(() => !!props.to);
+   return {
+     isLink,
+@@ -53,6 +58,7 @@ export function useLink(props, attrs) {
+     href,
+     linkProps: reactive({
+       href,
++      target,
+       'aria-current': toRef(() => isActive.value ? 'page' : undefined),
+       'aria-disabled': toRef(() => props.disabled && isLink.value ? 'true' : undefined),
+       tabindex: toRef(() => props.disabled && isLink.value ? '-1' : undefined)

@@ -1,11 +1,10 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-applications',
   'x-exports': [],
-  title: 'Applications Catalog',
   type: 'object',
   layout: {
     title: null,
-    comp: 'expansion-panels'
+    comp: 'tabs'
   },
   unevaluatedProperties: false,
   required: ['card', 'page'],

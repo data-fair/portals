@@ -15,27 +15,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application } from '#api/types/index.ts'
 import type { ApplicationsListElement } from '#api/types/page-elements'
 
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  owner: Account
-  topics: { id: string; title: string; color: string }[]
-}
-
-type ApplicationFetch = {
-  count: number
-  results: Application[]
-}
+type ApplicationFetch = { count: number; results: Application[] }
 
 const { element } = defineProps<{ element: ApplicationsListElement }>()
 const { portal, preview, portalConfig } = usePortalStore()
@@ -43,11 +26,13 @@ const { portal, preview, portalConfig } = usePortalStore()
 let applications: Application[] | ComputedRef<Application[]>
 
 if (!preview) {
+  const ids = element.applications?.map(app => app.id) || []
   const applicationsQuery = computed(() => ({
     select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
+    ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
-    size: element.limit,
-    sort: 'createdAt:-1' // Latest applications first
+    size: element.mode !== 'custom' ? element.limit : undefined,
+    sort: element.mode === 'lastUpdated' ? 'dataUpdatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
   const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
@@ -63,7 +48,7 @@ if (!preview) {
     url: `https://example.com/app-${i + 1}`,
     href: `/applications/application-${i + 1}`,
     exposedUrl: `https://example.com/app-${i + 1}`,
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
     topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
   }))
 }

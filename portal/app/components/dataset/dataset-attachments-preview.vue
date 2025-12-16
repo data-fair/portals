@@ -11,24 +11,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import { mdiAttachment } from '@mdi/js'
 
-type Dataset = {
-  title: string
-  slug: string,
-  attachments: {
-    url: string
-    title: string
-    name: string
-    type: 'file' | 'remoteFile'
-    description: string
-    size: string
-    updatedAt: string
-  }[]
-  image?: string
-}
-
-const { dataset } = defineProps<{ dataset: Dataset }>()
+const { dataset } = defineProps<{ dataset: Pick<Dataset, 'title' | 'slug' | 'image' | 'attachments'> }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 </script>

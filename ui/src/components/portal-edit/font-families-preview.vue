@@ -5,7 +5,10 @@
   >
     {{ fontFamiliesCss }}
   </component>
-  <div :style="fontFamiliesVariables">
+  <div
+    :style="fontFamiliesVariables"
+    class="ma-4"
+  >
     <p
       class="text-h3 mb-4"
     >

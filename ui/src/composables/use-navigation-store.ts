@@ -10,6 +10,10 @@ const showBreadcrumbs = computed(() => {
 })
 
 const isMenuItemActive = (_item: any, _currentPath: string): boolean => { return false }
+const isExternalLink = (link: LinkItem | MenuItem): boolean => {
+  if (link.type === 'external') return !link.href.startsWith('/')
+  return false
+}
 const resolveLink = (_link: any | any) => { return undefined }
 
 const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => {
@@ -51,6 +55,7 @@ export const useNavigationStore = () => {
     setBreadcrumbs,
     clearBreadcrumbs,
     isMenuItemActive,
+    isExternalLink,
     resolveLink,
     resolveLinkTitle,
     drawer,

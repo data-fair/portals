@@ -1,14 +1,13 @@
 <template>
-  <!-- d-flex align-center flex-grow-1 is used with two columns stretch-->
+  <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
   <v-card
     :border="element.border"
     :elevation="element.elevation"
     :rounded="element.rounded"
     :variant="element.background?.tonal ? 'tonal' : undefined"
-    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex align-center flex-grow-1']"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
     :color="element.background?.color"
     :href="!preview ? element.href : undefined"
-    :title="element.title"
     :style="element.background && element.background.image ? {
       backgroundImage: element.background.tintStrength
         ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getImageSrc(element.background.image, false)})`
@@ -17,7 +16,11 @@
       backgroundPosition: 'center',
     } : undefined"
   >
-    <v-card-text>
+    <v-card-title v-if="element.title">
+      {{ element.title }}
+    </v-card-title>
+    <v-spacer />
+    <v-card-text class="flex-grow-0">
       <slot
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
@@ -25,23 +28,14 @@
         add-item-message="Ajouter un bloc à la boite"
       />
     </v-card-text>
+    <v-spacer />
     <v-card-actions v-if="element.actions.length">
-      <v-btn
+      <nav-link
         v-for="(action, i) in element.actions"
         :key="i"
-        :href="action.href"
-        :color="action.color"
-        variant="outlined"
-      >
-        <template #prepend>
-          <v-icon
-            v-if="action.icon && (action.icon.mdi?.svgPath || action.icon.custom)"
-            :icon="action.icon.mdi?.svgPath || action.icon.custom"
-            :color="action.icon.color"
-          />
-        </template>
-        {{ action.label }}
-      </v-btn>
+        :link="action"
+        :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
+      />
     </v-card-actions>
   </v-card>
 </template>
@@ -54,7 +48,16 @@ const { element } = defineProps({
   element: { type: Object as () => CardElement, required: true }
 })
 
-const { preview } = usePortalStore()
+const { preview, portalConfig } = usePortalStore()
 const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 </script>
+
+<style scoped>
+/* Without this, .text-truncate class would have no effect. */
+:deep(.v-btn__content) {
+  max-width: 100%;
+  min-width: 0;
+  /* needed for btn but not for chip ?!! */
+}
+</style>

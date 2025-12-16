@@ -119,9 +119,6 @@ const vjsfDefaults = {
   },
   'VjsfList-Edit-VDialog-VSheet': {
     rounded: '0'
-  },
-  VSwitch: {
-    color: 'primary'
   }
 }
 

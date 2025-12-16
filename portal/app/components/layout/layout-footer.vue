@@ -158,25 +158,10 @@
               cols="auto"
               class="text-center"
             >
-              <a
-                v-if="link.type === 'external'"
-                :href="link.href"
-                target="_blank"
-                rel="noopener"
-                class="simple-link"
-              >
-                <v-icon
-                  v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-                  :icon="link.icon.mdi?.svgPath || link.icon.custom"
-                  :color="link.icon.color"
-                  size="small"
-                  class="mr-1"
-                />
-                {{ link.title }}
-              </a>
               <NuxtLink
-                v-else
                 :to="resolveLink(link)"
+                :target="link.type === 'external' && link.target ? '_blank' : undefined"
+                :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
                 class="simple-link"
               >
                 <v-icon
@@ -205,25 +190,10 @@
               offset-sm="2"
               class="pa-0"
             >
-              <a
-                v-if="link.type === 'external'"
-                :href="link.href"
-                target="_blank"
-                rel="noopener"
-                class="simple-link"
-              >
-                <v-icon
-                  v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-                  :icon="link.icon.mdi?.svgPath || link.icon.custom"
-                  :color="link.icon.color"
-                  size="small"
-                  class="mr-1"
-                />
-                {{ link.title }}
-              </a>
               <NuxtLink
-                v-else
                 :to="resolveLink(link)"
+                :target="link.type === 'external' && link.target ? '_blank' : undefined"
+                :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
                 class="simple-link"
               >
                 <span class="d-flex align-center">

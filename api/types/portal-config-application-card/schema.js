@@ -7,11 +7,29 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'actionsLocation' },
+        { cols: { md: 6 }, key: 'actionsStyle' },
+        { cols: { md: 6 }, key: 'elevation' },
+        { cols: { md: 6 }, key: 'rounded' },
+        { cols: { md: 6 }, key: 'titleLinesCount' },
+        { cols: { md: 6 }, key: 'showSummary' },
+        { cols: { md: 6 }, key: 'showDepartment' }
+      ]
+    },
+    'thumbnail',
+    'topics'
+    ]
+  },
   properties: {
     actionsLocation: {
       type: 'string',
       title: "Position des boutons d'actions sur la carte",
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'bottom',
       oneOf: [
         { const: 'right', title: 'À droite' },
@@ -22,7 +40,7 @@ export default {
     actionsStyle: {
       type: 'string',
       title: "Style des boutons d'actions",
-      layout: { cols: { md: 6 } },
+      layout: { cols: { md: 4 } },
       default: 'full',
       oneOf: [
         { const: 'icon', title: 'Icône seulement' },
@@ -33,29 +51,40 @@ export default {
     elevation: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
       title: 'Élévation de la carte',
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 4 } }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
       title: 'Arrondi de la carte',
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 4 } }
+    },
+    titleLinesCount: {
+      type: 'number',
+      title: 'Nombre de lignes pour le titre',
+      description: 'Force le titre à occuper exactement N lignes.',
+      layout: { cols: { md: 4 } },
+      default: 2,
+      oneOf: [
+        { const: 1, title: '1 ligne' },
+        { const: 2, title: '2 lignes' },
+        { const: 0, title: 'Sans limite de lignes' }
+      ]
     },
     showSummary: {
       type: 'boolean',
       title: 'Afficher le résumé',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
     },
     showDepartment: {
       type: 'boolean',
-      title: 'Afficher le département du propriétaire',
-      description: 'Affiche le département du propriétaire si la visualisation est détenue par un département.',
+      title: 'Afficher le propriétaire',
       layout: {
         comp: 'switch',
-        cols: { md: 6 }
+        cols: { md: 4 }
       },
       default: true
     },
@@ -70,8 +99,8 @@ export default {
             if: 'data?.show === true',
             children: [
               'location',
-              'useTopic',
-              'crop'
+              'crop',
+              'useTopic'
             ]
           },
         ]
@@ -144,26 +173,26 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 6 } }
         },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         },
@@ -172,7 +201,7 @@ export default {
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
-            cols: { md: 4 }
+            cols: { md: 6 }
           }
         }
       }

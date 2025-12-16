@@ -67,7 +67,7 @@ export default {
           { key: 8, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
           { key: 9, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
           { key: 10, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-          // { key: 11, title: 'Responsive Flow', 'x-i18n-title': { fr: 'Flux responsive' } }, // TODO: Create the element-responsive-flow
+          { key: 11, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
           { key: 12, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
           {
             header: true,
@@ -126,7 +126,7 @@ export default {
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
-        { $ref: '#/$defs/element-responsive-flow' },
+        { $ref: '#/$defs/element-responsive-grid' },
         { $ref: '#/$defs/element-tabs' },
 
         // Functional blocks
@@ -777,9 +777,6 @@ export default {
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
-        // density: {
-        //   $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
-        // },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
@@ -789,31 +786,36 @@ export default {
           default: true
         },
         actions: {
-          title: 'Actions',
+          title: 'Boutons de navigation',
           type: 'array',
           layout: {
             messages: {
-              addItem: "Ajouter un bouton d'action"
+              addItem: 'Ajouter un bouton de navigation'
             },
             listEditMode: 'inline'
           },
-          items: {
-            type: 'object',
-            title: 'Bouton',
-            required: ['color'],
-            default: { color: 'primary' },
-            properties: {
-              label: {
-                type: 'string',
-                title: 'Libellé'
-              },
-              href: {
-                type: 'string',
-                title: 'URL'
-              },
-              icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
-              color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' }
-            }
+          items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' }
+        },
+        actionStyle: {
+          title: 'Style des boutons de navigation',
+          layout: {
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!parent.data?.usePortalConfig',
+                children: ['config']
+              }
+            ]
+          },
+          properties: {
+            usePortalConfig: {
+              type: 'boolean',
+              title: 'Utiliser la configuration du portail',
+              layout: { comp: 'switch' },
+              default: true
+            },
+            config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' }
           }
         },
         background: {
@@ -960,43 +962,57 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
-    'element-responsive-flow': {
+    'element-responsive-grid': {
       type: 'object',
-      title: 'ResponsiveFlowElement',
+      title: 'ResponsiveGridElement',
       'x-i18n-title': {
-        en: 'Responsive Flow',
-        fr: 'Flux responsive'
+        en: 'Responsive Grid',
+        fr: 'Grille responsive'
       },
-      required: ['type', 'blocks'],
+      required: ['type', 'children'],
       properties: {
-        type: {
-          const: 'responsive-flow'
+        type: { const: 'responsive-grid' },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.<br>| **Colonnes** | 2 | 3 | 4 | 6 |<br>| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |<br>| **Ordinateur portable** | 6 | 6 | 3 | 3 |<br>| **Tablette** | 12 | 6 | 4 | 4 |<br>| **Mobile** | 12 | 12 | 12 | 6 |',
+          oneOf: [
+            { const: 2, title: '2' },
+            { const: 3, title: '3' },
+            { const: 4, title: '4' },
+            { const: 6, title: '6' }
+          ],
+          default: 2
         },
-        blocks: {
+        gutter: {
+          type: 'string',
+          title: 'Espacement entre les blocs',
+          default: 'default',
+          oneOf: [
+            { const: 'none', title: 'Aucun espacement' },
+            { const: 'dense', title: 'Petit espacement' },
+            { const: 'default', title: 'Espacement normal' }
+          ]
+        },
+        align: {
+          type: 'string',
+          title: 'Alignement vertical des blocs',
+          oneOf: [
+            { const: 'start', title: 'Aligné en haut' },
+            { const: 'center', title: 'Aligné au centre' },
+            { const: 'end', title: 'Aligné en bas' },
+            { const: 'stretch', title: 'Étendre les blocs' }
+          ]
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer les blocs sur les lignes incomplètes',
+        },
+        children: {
           type: 'array',
-          title: 'Blocs',
-          layout: {
-            messages: {
-              addItem: 'Ajouter un bloc',
-            },
-            listEditMode: 'inline'
-          },
+          layout: 'none',
           items: {
-            type: 'object',
-            properties: {
-              large: {
-                title: 'élargir',
-                type: 'boolean',
-                default: false,
-              },
-              children: {
-                type: 'array',
-                layout: 'none',
-                items: {
-                  $ref: '#/$defs/element'
-                }
-              }
-            }
+            $ref: '#/$defs/element'
           }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
@@ -1395,7 +1411,8 @@ export default {
           oneOf: [
             { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
             { const: 'dataUpdatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
-            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' },
+            { const: 'owner.departmentName:1', title: 'Propriétaire' }
           ]
         },
         columns: {

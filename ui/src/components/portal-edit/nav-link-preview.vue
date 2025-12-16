@@ -1,6 +1,6 @@
 <template>
   <preview>
-    <div class="d-flex justify-center">
+    <div class="d-flex justify-center mb-4">
       <nav-link
         :link="{
           type: 'standard',

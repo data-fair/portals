@@ -25,7 +25,8 @@ export default defineNuxtConfig({
     mainPublicUrl: 'http://localhost:5607',
     privateDirectoryUrl: 'http://simple-directory:8080',
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
-    portalUrlPattern: ''
+    portalUrlPattern: '',
+    frameAncestors: ''
   },
   security: {
     nonce: true,
@@ -79,7 +80,8 @@ export default defineNuxtConfig({
   },
   css: [
     '@data-fair/lib-vuetify/style/global.scss',
-    '@data-fair/portals-shared-markdown/style.css'
+    '@data-fair/portals-shared-markdown/style.css',
+    'vuetify/lib/components/VDataTable/VDataTable.css' // Ensure VDataTable styles are included, as the component is used in markdown rendering
   ],
   vue: {
     compilerOptions: {

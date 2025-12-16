@@ -35,29 +35,14 @@
         <nav-tabs-menu-item :children="link.children" />
       </v-menu>
       <v-tab
-        v-else-if="link?.type === 'external'"
-        :class="!navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined"
-        :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"
-        :text="link.title"
-        :href="link.href"
-        target="_blank"
-        rel="noopener"
-        :value="i"
-      >
-        <template #prepend>
-          <v-icon
-            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-            :icon="link.icon.mdi?.svgPath || link.icon.custom"
-            :color="link.icon.color"
-          />
-        </template>
-      </v-tab>
-      <v-tab
         v-else
         :class="!navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined"
         :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"
         :text="resolveLinkTitle(link, locale)"
-        :to="resolveLink(link)"
+        :to="!isExternalLink(link) ? resolveLink(link) : undefined"
+        :href="isExternalLink(link) ? resolveLink(link) : undefined"
+        :target="link.type === 'external' && link.target ? '_blank' : undefined"
+        :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
         :value="i"
       >
         <template #prepend>
@@ -83,7 +68,7 @@ const { navigation } = defineProps<{
 
 const route = useRoute()
 const { locale } = useI18n()
-const { isMenuItemActive, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 const { preview } = usePortalStore()
 
 // we use MutationObserver to watch for change of class .v-slide-group--is-overflowing by vuetify

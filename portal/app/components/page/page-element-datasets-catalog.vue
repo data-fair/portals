@@ -1,191 +1,189 @@
 <template>
-  <!-- Page Title -->
-  <h4
-    v-if="element.datasetsCountPosition === 'top'"
-    class="text-h4 mb-4"
-  >
-    {{ t('datasetsCount', { count: datasetsCount }) }}
-    <v-btn
-      v-if="element.showApiButton && !$vuetify.display.smAndDown"
-      :icon="mdiCog"
-      :title="t('catalogApiDoc')"
-      to="/catalog-api-doc"
-      class="ml-2"
-      density="comfortable"
-      variant="text"
-    />
-  </h4>
-
-  <!-- Standard Filters -->
-  <v-row
-    v-if="element.filters?.items?.length"
-    class="my-0"
-  >
-    <catalog-filters
-      :config="element"
-      catalog-type="datasets"
-    />
-  </v-row>
-
-  <!-- Advanced Filters -->
-  <div
-    v-if="element.showAdvancedFilters"
-    class="mt-2"
-  >
-    <slot
-      name="page-elements"
-      :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
-      :elements="element.advancedFilters"
-      add-item-message="Ajouter un filtre (Mode avancé)"
-    />
-  </div>
-
-  <!-- Datasets Count + API Link + Order -->
-  <v-row
-    v-if="element.datasetsCountPosition === 'bottom'"
-    class="mt-2"
-    align="end"
-  >
-    <v-col>
-      {{ t('resultsCount', { count: datasetsCount }) }}
-      <v-btn
-        v-if="element.showApiButton && !$vuetify.display.smAndDown"
-        :icon="mdiCog"
-        :title="t('catalogApiDoc')"
-        to="/catalog-api-doc"
-        density="comfortable"
-        variant="text"
-        class="ml-2"
+  <v-row>
+    <!-- Left Column: Filters (256px) -->
+    <v-col
+      v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.smAndDown"
+      style="max-width: 256px;"
+      class="pa-0"
+    >
+      <catalog-filters
+        :config="element"
+        catalog-type="datasets"
+        drawer
       />
     </v-col>
-    <v-col
-      cols="12"
-      md="6"
-      lg="4"
-    >
-      <v-select
-        v-if="element.showSortBesideCount"
-        v-model="sort"
-        :items="sortItems"
-        :label="t('sort.by')"
-        :density="element.filters?.density || 'comfortable'"
-        :rounded="element.filters?.rounded"
-        variant="outlined"
-        hide-details
-        clearable
+
+    <!-- Main Column: Main Content -->
+    <v-col>
+      <!-- Page Title -->
+      <h4
+        v-if="element.datasetsCountPosition === 'top'"
+        class="text-h4 mb-4"
       >
-        <template #append>
-          <v-btn-toggle
-            v-model="order"
+        {{ t('datasetsCount', { count: datasetsCount }) }}
+        <v-btn
+          v-if="element.showApiButton && !$vuetify.display.smAndDown"
+          :icon="mdiCog"
+          :title="t('catalogApiDoc')"
+          to="/catalog-api-doc"
+          class="ml-2"
+          density="comfortable"
+          variant="text"
+        />
+      </h4>
+
+      <!-- Standard Filters -->
+      <v-row
+        v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.smAndDown)"
+        class="my-0"
+      >
+        <catalog-filters
+          :config="element"
+          catalog-type="datasets"
+        />
+      </v-row>
+
+      <!-- Advanced Filters -->
+      <div
+        v-if="element.showAdvancedFilters"
+        class="mt-2"
+      >
+        <slot
+          name="page-elements"
+          :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
+          :elements="element.advancedFilters"
+          add-item-message="Ajouter un filtre (Mode avancé)"
+        />
+      </div>
+
+      <!-- Datasets Count + API Link + Order -->
+      <v-row
+        v-if="element.datasetsCountPosition === 'bottom'"
+        class="mt-2"
+        align="end"
+      >
+        <v-col class="py-0">
+          {{ t('resultsCount', { count: datasetsCount }) }}
+          <v-btn
+            v-if="element.showApiButton && !$vuetify.display.smAndDown"
+            :icon="mdiCog"
+            :title="t('catalogApiDoc')"
+            to="/catalog-api-doc"
+            density="comfortable"
+            variant="text"
+            class="ml-2"
+          />
+        </v-col>
+        <v-col
+          v-if="element.showSortBesideCount"
+          cols="12"
+          md="6"
+          lg="4"
+        >
+          <v-select
+            v-model="sort"
+            :items="sortItems"
+            :label="t('sort.by')"
             :density="element.filters?.density || 'comfortable'"
             :rounded="element.filters?.rounded"
             variant="outlined"
-            class="h-100"
-            mandatory
+            hide-details
+            clearable
           >
-            <v-btn
-              :icon="mdiSortDescending"
-              :title="t('descending')"
-              value="-1"
-              stacked
-            />
-            <v-btn
-              :icon="mdiSortAscending"
-              :title="t('ascending')"
-              value="1"
-              stacked
-            />
-          </v-btn-toggle>
-        </template>
-      </v-select>
-    </v-col>
-  </v-row>
+            <template #append>
+              <v-btn-toggle
+                v-model="order"
+                :density="element.filters?.density || 'comfortable'"
+                :rounded="element.filters?.rounded"
+                variant="outlined"
+                class="h-100"
+                divided
+                mandatory
+              >
+                <v-btn
+                  :icon="mdiSortDescending"
+                  :title="t('descending')"
+                  value="-1"
+                  stacked
+                />
+                <v-btn
+                  :icon="mdiSortAscending"
+                  :title="t('ascending')"
+                  value="1"
+                  stacked
+                />
+              </v-btn-toggle>
+            </template>
+          </v-select>
+        </v-col>
+      </v-row>
 
-  <!-- Pagination above results -->
-  <catalog-pagination
-    v-if="paginationPosition === 'before' || paginationPosition === 'both'"
-    :current-page="currentPage"
-    :total-pages="totalPages"
-    :alignment="element.pagination?.alignment"
-    class="my-4"
-    @update:page="goToPage"
-  />
+      <!-- Pagination above results -->
+      <catalog-pagination
+        v-if="paginationPosition === 'before' || paginationPosition === 'both'"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :alignment="element.pagination?.alignment"
+        class="my-4"
+        @update:page="goToPage"
+      />
 
-  <!-- Datasets -->
-  <v-row class="d-flex align-stretch mt-2">
-    <v-col
-      v-for="dataset in displayedDatasets"
-      :key="dataset.id"
-      :md="12 / (element.columns || 2)"
-      cols="12"
-    >
-      <dataset-card
-        :dataset="dataset"
-        :card-config="portalConfig.datasets.card"
+      <!-- Datasets -->
+      <v-row class="d-flex align-stretch mt-2">
+        <v-col
+          v-for="dataset in displayedDatasets"
+          :key="dataset.id"
+          :md="12 / (element.columns || 2)"
+          cols="12"
+        >
+          <dataset-card
+            :dataset="dataset"
+            :card-config="portalConfig.datasets.card"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Loading spinner -->
+      <!-- TODO: Replace by skeleton-loader ? -->
+      <div
+        v-if="loading"
+        class="d-flex justify-center my-4"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        />
+      </div>
+
+      <!-- Pagination above footer -->
+      <catalog-pagination
+        v-if="paginationPosition === 'after' || paginationPosition === 'both'"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :alignment="element.pagination?.alignment"
+        class="my-4"
+        @update:page="goToPage"
+      />
+
+      <!-- Intersection observer trigger for infinite scroll -->
+      <div
+        v-if="hasMore && paginationPosition === 'none'"
+        v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
       />
     </v-col>
   </v-row>
-
-  <!-- Loading spinner -->
-  <!-- TODO: Replace by skeleton-loader ? -->
-  <div
-    v-if="loading"
-    class="d-flex justify-center my-4"
-  >
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    />
-  </div>
-
-  <!-- Pagination above footer -->
-  <catalog-pagination
-    v-if="paginationPosition === 'after' || paginationPosition === 'both'"
-    :current-page="currentPage"
-    :total-pages="totalPages"
-    :alignment="element.pagination?.alignment"
-    class="my-4"
-    @update:page="goToPage"
-  />
-
-  <!-- Intersection observer trigger for infinite scroll -->
-  <div
-    v-if="hasMore && paginationPosition === 'none'"
-    v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
-  />
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import type { PageElement, DatasetsCatalogElement } from '#api/types/page'
-import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
+
+type DatasetFetch = { count: number; results: Omit<Dataset, 'userPermissions'>[] }
 
 const { element } = defineProps<{ element: DatasetsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  },
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
-
-type DatasetFetch = {
-  count: number
-  results: Dataset[]
-}
 
 const filters = {
   search: useStringSearchParam('q'),
@@ -290,7 +288,7 @@ if (!preview) {
     }
   })
 } else {
-  // Mock data for preview
+// Mock data for preview
   displayedDatasets.value = Array.from({ length: 6 }, (_, i) => ({
     id: `dataset-${i + 1}`,
     slug: `dataset-${i + 1}`,
@@ -298,10 +296,10 @@ if (!preview) {
     summary: 'Exemple de jeu de données pour la prévisualisation.',
     dataUpdatedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
     extras: {},
     topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }],
-    isMetaOnly: false
+    isMetaOnly: false,
   }))
 }
 
@@ -328,7 +326,8 @@ watch([sort, order], () => {
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
   { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
-  { title: t('sort.title'), value: 'title' }
+  { title: t('sort.title'), value: 'title' },
+  { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
 ]
 
 </script>
@@ -347,6 +346,7 @@ const sortItems = [
       createdAt: Creation date
       dataUpdatedAt: Data update date
       title: Alphabetical order
+      owner: Owner
 
   fr:
     ascending: Ordre croissant
@@ -361,4 +361,5 @@ const sortItems = [
       createdAt: Date de création
       dataUpdatedAt: Date de mise à jour des données
       title: Ordre alphabétique
+      owner: Propriétaire
 </i18n>

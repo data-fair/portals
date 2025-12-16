@@ -101,46 +101,14 @@
       />
     </v-row>
   </template>
+
+  <div data-iframe-height="40" />
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Application, Dataset } from '#api/types/index.ts'
 import { mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description?: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  public: boolean
-  owner: Account
-  topics: { id: string; title: string }[]
-}
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  dataUpdatedAt: string
-  updatedAt: string
-  owner: Account
-  extras: {
-    applications?: { id: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  topics: { id: string; title: string; color: string }[]
-  keywords?: string[]
-  image?: string
-  isMetaOnly: boolean
-}
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -149,7 +117,7 @@ const route = useRoute()
 
 const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
   params: {
-    html: true,
+    html: 'vuetify',
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
@@ -161,7 +129,7 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
 const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
   select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
   size: 100,
-  html: true,
+  html: 'vuetify',
   ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(','),
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))
@@ -195,7 +163,7 @@ const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show || !application.value) return undefined
   if (application.value.image) return application.value.image
   if (cardConfig.thumbnail.useTopic && application.value.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics[0]!.id)
+    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
   return `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`

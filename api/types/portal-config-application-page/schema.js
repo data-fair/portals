@@ -7,18 +7,27 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'showImage' }
+      ]
+    },
+    'titleStyle',
+    'metadata',
+    'datasets'
+    ]
+  },
   properties: {
     showImage: {
       type: 'boolean',
       title: "Afficher l'image",
       description: "L'image sera affichée au dessus de la description.",
-      layout: {
-        comp: 'switch',
-        cols: { md: 4 }
-      },
+      layout: { comp: 'switch' },
       default: true
     },
-
     titleStyle: {
       type: 'object',
       title: 'Configuration des titres',
@@ -30,7 +39,7 @@ export default {
           'x-i18n-title': {
             fr: 'Afficher un trait'
           },
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           oneOf: [
             { const: 'none', title: 'Aucun trait' },
             { const: 'left', title: 'Trait à gauche du titre' },
@@ -42,11 +51,10 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
         }
       }
     },
-
     metadata: {
       type: 'object',
       title: 'Configuration des métadonnées',
@@ -55,7 +63,7 @@ export default {
         location: {
           type: 'string',
           title: 'Position des métadonnées',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'right',
           oneOf: [
             { const: 'top', title: 'Sous le titre' },
@@ -63,19 +71,10 @@ export default {
             { const: 'right', title: 'À droite' }
           ]
         },
-        rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
-        },
-        elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
-        },
-
         actionsStyle: {
           type: 'string',
           title: "Style des boutons d'actions",
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'full',
           oneOf: [
             { const: 'icon', title: 'Icône seulement' },
@@ -83,12 +82,20 @@ export default {
             { const: 'text', title: 'Texte seulement' }
           ]
         },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 6 } }
+        },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 6 } }
+        },
         showDepartment: {
           type: 'boolean',
-          title: 'Afficher le département du propriétaire',
+          title: 'Afficher le propriétaire',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         }
@@ -115,7 +122,7 @@ export default {
           type: 'string',
           title: "Mode d'affichage",
           default: 'card',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           oneOf: [
             { const: 'none', title: 'Aucun' },
             { const: 'card', title: 'Vignette' },
@@ -125,7 +132,7 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 6 } },
           default: 2,
           minimum: 1,
           maximum: 3
@@ -136,7 +143,7 @@ export default {
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         },

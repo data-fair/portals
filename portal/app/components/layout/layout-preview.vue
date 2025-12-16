@@ -11,6 +11,7 @@
         :icon="icon"
         :text="text"
         :short-text="shortText"
+        :block="block"
         @click.prevent
       />
     </template>
@@ -50,6 +51,8 @@ const { trackPath } = defineProps<{
   shortText?: string
   /** Used to track a page view when this dialog is opened */
   trackPath?: string
+  /** Whether the button should take the full width of its container */
+  block?: boolean
 }>()
 
 const dialog = ref(false)

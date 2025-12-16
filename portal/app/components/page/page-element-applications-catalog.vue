@@ -1,167 +1,169 @@
 <template>
-  <!-- Page Title -->
-  <h4
-    v-if="element.applicationsCountPosition === 'top'"
-    class="text-h4 mb-4"
-  >
-    {{ t('applicationsCount', { count: applicationsCount }) }}
-  </h4>
-
-  <!-- Standard Filters -->
-  <v-row
-    v-if="element.filters?.items?.length"
-    class="my-0"
-  >
-    <catalog-filters
-      :config="element"
-      catalog-type="applications"
-    />
-  </v-row>
-
-  <!-- Advanced Filters -->
-  <div
-    v-if="element.showAdvancedFilters"
-    class="mt-2"
-  >
-    <slot
-      name="page-elements"
-      :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
-      :elements="element.advancedFilters"
-      add-item-message="Ajouter un filtre (Mode avancé)"
-    />
-  </div>
-
-  <!-- Applications Count + Order -->
-  <v-row
-    v-if="element.applicationsCountPosition === 'bottom'"
-    class="mt-2"
-    align="end"
-  >
-    <v-col>{{ t('resultsCount', { count: applicationsCount }) }}</v-col>
+  <v-row>
+    <!-- Left Column: Filters (256px) -->
     <v-col
-      cols="12"
-      md="6"
-      lg="4"
+      v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.smAndDown"
+      style="max-width: 256px;"
+      class="pa-0"
     >
-      <v-select
-        v-if="element.showSortBesideCount"
-        v-model="sort"
-        :items="sortItems"
-        :label="t('sort.by')"
-        :density="element.filters?.density || 'comfortable'"
-        :rounded="element.filters?.rounded"
-        variant="outlined"
-        hide-details
-        clearable
+      <catalog-filters
+        :config="element"
+        catalog-type="applications"
+        drawer
+      />
+    </v-col>
+
+    <!-- Main Column: Main Content -->
+    <v-col>
+      <!-- Page Title -->
+      <h4
+        v-if="element.applicationsCountPosition === 'top'"
+        class="text-h4 mb-4"
       >
-        <template #append>
-          <v-btn-toggle
-            v-model="order"
+        {{ t('applicationsCount', { count: applicationsCount }) }}
+      </h4>
+
+      <!-- Standard Filters -->
+      <v-row
+        v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.smAndDown)"
+        class="my-0"
+      >
+        <catalog-filters
+          :config="element"
+          catalog-type="applications"
+        />
+      </v-row>
+
+      <!-- Advanced Filters -->
+      <div
+        v-if="element.showAdvancedFilters"
+        class="mt-2"
+      >
+        <slot
+          name="page-elements"
+          :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
+          :elements="element.advancedFilters"
+          add-item-message="Ajouter un filtre (Mode avancé)"
+        />
+      </div>
+
+      <!-- Applications Count + Order -->
+      <v-row
+        v-if="element.applicationsCountPosition === 'bottom'"
+        class="mt-2"
+        align="end"
+      >
+        <v-col class="py-0">{{ t('resultsCount', { count: applicationsCount }) }}</v-col>
+        <v-col
+          v-if="element.showSortBesideCount"
+          cols="12"
+          md="6"
+          lg="4"
+        >
+          <v-select
+            v-model="sort"
+            :items="sortItems"
+            :label="t('sort.by')"
             :density="element.filters?.density || 'comfortable'"
             :rounded="element.filters?.rounded"
             variant="outlined"
-            class="h-100"
-            mandatory
+            hide-details
+            clearable
           >
-            <v-btn
-              :icon="mdiSortDescending"
-              :title="t('descending')"
-              value="-1"
-              stacked
-            />
-            <v-btn
-              :icon="mdiSortAscending"
-              :title="t('ascending')"
-              value="1"
-              stacked
-            />
-          </v-btn-toggle>
-        </template>
-      </v-select>
-    </v-col>
-  </v-row>
+            <template #append>
+              <v-btn-toggle
+                v-model="order"
+                :density="element.filters?.density || 'comfortable'"
+                :rounded="element.filters?.rounded"
+                variant="outlined"
+                class="h-100"
+                divided
+                mandatory
+              >
+                <v-btn
+                  :icon="mdiSortDescending"
+                  :title="t('descending')"
+                  value="-1"
+                  stacked
+                />
+                <v-btn
+                  :icon="mdiSortAscending"
+                  :title="t('ascending')"
+                  value="1"
+                  stacked
+                />
+              </v-btn-toggle>
+            </template>
+          </v-select>
+        </v-col>
+      </v-row>
 
-  <!-- Pagination above results -->
-  <catalog-pagination
-    v-if="paginationPosition === 'before' || paginationPosition === 'both'"
-    :current-page="currentPage"
-    :total-pages="totalPages"
-    :alignment="element.pagination?.alignment"
-    class="my-4"
-    @update:page="goToPage"
-  />
+      <!-- Pagination above results -->
+      <catalog-pagination
+        v-if="paginationPosition === 'before' || paginationPosition === 'both'"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :alignment="element.pagination?.alignment"
+        class="my-4"
+        @update:page="goToPage"
+      />
 
-  <!-- Applications -->
-  <v-row class="d-flex align-stretch mt-2">
-    <v-col
-      v-for="application in displayedApplications"
-      :key="application.id"
-      :md="12 / (element.columns || 2)"
-      cols="12"
-    >
-      <application-card
-        :application="application"
-        :card-config="portalConfig.applications.card"
+      <!-- Applications -->
+      <v-row class="d-flex align-stretch mt-2">
+        <v-col
+          v-for="application in displayedApplications"
+          :key="application.id"
+          :md="12 / (element.columns || 2)"
+          cols="12"
+        >
+          <application-card
+            :application="application"
+            :card-config="portalConfig.applications.card"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Loading spinner -->
+      <!-- TODO: Replace by skeleton-loader ? -->
+      <div
+        v-if="loading"
+        class="d-flex justify-center my-4"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        />
+      </div>
+
+      <!-- Pagination above footer -->
+      <catalog-pagination
+        v-if="paginationPosition === 'after' || paginationPosition === 'both'"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :alignment="element.pagination?.alignment"
+        class="my-4"
+        @update:page="goToPage"
+      />
+
+      <!-- Intersection observer trigger for infinite scroll -->
+      <div
+        v-if="hasMore && paginationPosition === 'none'"
+        v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
       />
     </v-col>
   </v-row>
-
-  <!-- Loading spinner -->
-  <!-- TODO: Replace by skeleton-loader ? -->
-  <div
-    v-if="loading"
-    class="d-flex justify-center my-4"
-  >
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    />
-  </div>
-
-  <!-- Pagination above footer -->
-  <catalog-pagination
-    v-if="paginationPosition === 'after' || paginationPosition === 'both'"
-    :current-page="currentPage"
-    :total-pages="totalPages"
-    :alignment="element.pagination?.alignment"
-    class="my-4"
-    @update:page="goToPage"
-  />
-
-  <!-- Intersection observer trigger for infinite scroll -->
-  <div
-    v-if="hasMore && paginationPosition === 'none'"
-    v-intersect="(isIntersecting: boolean) => isIntersecting && loadMore()"
-  />
 </template>
 
 <script setup lang="ts">
+import type { Application } from '#api/types/index.ts'
 import type { PageElement, ApplicationsCatalogElement } from '#api/types/page'
-import type { Account } from '@data-fair/lib-common-types/account'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
+
+type ApplicationFetch = { count: number; results: Application[] }
 
 const { element } = defineProps<{ element: ApplicationsCatalogElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
-
-type Application = {
-  id: string
-  slug: string
-  title: string
-  summary: string
-  updatedAt: string
-  image?: string
-  url: string
-  href: string
-  exposedUrl: string
-  owner: Account
-  topics: { id: string; title: string; color: string }[]
-}
-
-type ApplicationFetch = {
-  count: number
-  results: Application[]
-}
 
 const filters = {
   search: useStringSearchParam('q'),
@@ -177,7 +179,7 @@ const order = ref<'-1' | '1'>()
 // Infinite scroll state / pagination state
 const paginationPosition = computed(() => element.pagination?.position || 'none')
 const currentPage = ref(1)
-const displayedApplications = ref<ApplicationFetch['results']>([])
+const displayedApplications = ref<Application[]>([])
 const loading = ref(false)
 const pageSize = 20
 
@@ -277,7 +279,7 @@ if (!preview) {
       url: `/applications/${slug}`,
       href: `/applications/${slug}`,
       exposedUrl: `/applications/${slug}`,
-      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' } as Account,
+      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
       topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }]
     }
   })
@@ -306,7 +308,8 @@ watch([sort, order], () => {
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
   { title: t('sort.updatedAt'), value: 'updatedAt' },
-  { title: t('sort.title'), value: 'title' }
+  { title: t('sort.title'), value: 'title' },
+  { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
 ]
 
 </script>
@@ -322,6 +325,7 @@ const sortItems = [
       createdAt: Creation date
       title: Alphabetical order
       updatedAt: Update date
+      owner: Owner
 
   fr:
     applicationsCount: '{count} visualisation | {count} visualisations'
@@ -333,4 +337,5 @@ const sortItems = [
       createdAt: Date de création
       title: Ordre alphabétique
       updatedAt: Date de mise à jour
+      owner: Propriétaire
 </i18n>

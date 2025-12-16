@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/portals",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "type": "module",
@@ -43,7 +43,8 @@
     "node": "v24"
   },
   "dependencies": {
-    "@data-fair/lib-types-builder": "^1.11.2"
+    "@data-fair/lib-types-builder": "^1.11.2",
+    "patch-package": "^8.0.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",

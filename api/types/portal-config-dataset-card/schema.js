@@ -7,6 +7,25 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        'actionsLocation',
+        'actionsStyle',
+        'elevation',
+        'rounded',
+        'titleLinesCount',
+        'showSummary',
+        'showDepartment'
+      ]
+    },
+    'thumbnail',
+    'topics',
+    'keywords'
+    ]
+  },
   properties: {
     actionsLocation: {
       type: 'string',
@@ -40,6 +59,18 @@ export default {
       title: 'Arrondi de la carte',
       layout: { cols: { md: 6 } }
     },
+    titleLinesCount: {
+      type: 'number',
+      title: 'Nombre de lignes pour le titre',
+      description: 'Force le titre à occuper exactement N lignes.',
+      layout: { cols: { md: 6 } },
+      default: 2,
+      oneOf: [
+        { const: 1, title: '1 ligne' },
+        { const: 2, title: '2 lignes' },
+        { const: 0, title: 'Sans limite de lignes' }
+      ]
+    },
     showSummary: {
       type: 'boolean',
       title: 'Afficher le résumé',
@@ -51,8 +82,7 @@ export default {
     },
     showDepartment: {
       type: 'boolean',
-      title: 'Afficher le département du propriétaire',
-      description: 'Affiche le département du propriétaire si le jeu de données est détenu par un département.',
+      title: 'Afficher le propriétaire',
       layout: {
         comp: 'switch',
         cols: { md: 6 }
@@ -69,11 +99,11 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'location',
-              'default',
-              'useTopic',
-              'useApplication',
-              'crop'
+              { key: 'location', cols: { md: 6 } },
+              { key: 'crop', cols: { md: 6 } },
+              { key: 'default', cols: { md: 4 } },
+              { key: 'useTopic', cols: { md: 4 } },
+              { key: 'useApplication', cols: { md: 4 } }
             ]
           },
         ]
@@ -96,6 +126,13 @@ export default {
             { const: 'center', title: 'Sous le titre' }
           ]
         },
+        crop: {
+          type: 'boolean',
+          title: "Recadrer l'image pour un rendu uniforme",
+          description: "Si désactivé, l'image gardera son ratio d'origine",
+          layout: { comp: 'switch' },
+          default: true
+        },
         default: {
           type: 'object',
           title: 'Image par défaut',
@@ -107,8 +144,7 @@ export default {
                 name: 'image-upload',
                 props: { width: 1280, label: 'Image par défaut' }
               }
-            },
-            cols: { md: 6 }
+            }
           },
           properties: {
             _id: {
@@ -129,31 +165,15 @@ export default {
           type: 'boolean',
           title: "Utiliser l'image de la première thématique",
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
+          layout: { comp: 'switch', },
           default: false
         },
         useApplication: {
           type: 'boolean',
           title: "Utiliser l'image de la première application",
           description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
+          layout: { comp: 'switch', },
           default: false
-        },
-        crop: {
-          type: 'boolean',
-          title: "Recadrer l'image pour un rendu uniforme",
-          description: "Si désactivé, l'image gardera son ratio d'origine",
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
-          default: true
         }
       }
     },
@@ -167,12 +187,12 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'color',
-              'elevation',
-              'density',
-              'rounded',
-              'showIcon',
-              'iconColor'
+              { key: 'color', cols: { md: 6 } },
+              { key: 'elevation', cols: { md: 6 } },
+              { key: 'density', cols: { md: 6 } },
+              { key: 'rounded', cols: { md: 6 } },
+              { key: 'showIcon', cols: { md: 6 } },
+              { key: 'iconColor', cols: { md: 6 } }
             ]
           }
         ]
@@ -185,26 +205,21 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 4 } }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 4 } }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
         },
         showIcon: {
           type: 'boolean',
           title: 'Afficher les icônes',
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
           },
           default: true
         },
@@ -213,7 +228,6 @@ export default {
           title: 'Couleur des icônes',
           layout: {
             if: 'parent.data?.showIcon === true',
-            cols: { md: 4 }
           }
         }
       }

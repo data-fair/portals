@@ -1,5 +1,5 @@
 <template>
-  <!-- d-flex align-center flex-grow-1 is used with two columns stretch-->
+  <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
   <v-sheet
     :class="[
       preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',

@@ -101,7 +101,7 @@
       :no-data-text="t('filters.noKeywords')"
       :items="facets.keywords"
       :item-title="(item) => `${item.value} (${item.count})`"
-      item-value="id"
+      item-value="value"
       :density="config.filters?.density || 'comfortable'"
       :rounded="config.filters?.rounded"
       variant="outlined"
@@ -165,15 +165,15 @@
       hide-details
       clearable
     >
-      <template #append>
+      <template v-if="!drawer" #append>
         <!-- Order toggle -->
         <v-btn-toggle
-          v-if="!drawer"
           v-model="order"
           :density="config.filters?.density || 'comfortable'"
           :rounded="config.filters?.rounded"
           variant="outlined"
           class="h-100"
+          divided
           mandatory
         >
           <v-btn
@@ -191,28 +191,29 @@
     </v-select>
   </v-col>
 
+  <!-- Order toggle (drawer) -->
   <v-col
     v-if="drawer && showFilter('sort')"
     cols="12"
   >
-    <!-- Order toggle -->
     <v-btn-toggle
       v-model="order"
       :density="config.filters?.density || 'comfortable'"
       :rounded="config.filters?.rounded"
       variant="outlined"
-      class="h-100"
+      class="w-100"
+      divided
       mandatory
     >
       <v-btn
         :icon="mdiSortDescending"
         :title="t('descending')"
-        stacked
+        class="flex-grow-1"
       />
       <v-btn
         :icon="mdiSortAscending"
         :title="t('ascending')"
-        stacked
+        class="flex-grow-1"
       />
     </v-btn-toggle>
   </v-col>
@@ -377,10 +378,7 @@ const ownersItems = computed(() => {
     const owner = facet.value
     let title = owner.department ? (owner.departmentName || owner.department) : owner.name
     title += ` (${facet.count})`
-
-    let value = `${owner.type}:${owner.id}`
-    if (owner.department) value += `:${owner.department}`
-
+    const value = `${owner.type}:${owner.id}:` + (owner.department ? `${owner.department}` : '-')
     const avatar = owner.department
       ? `/simple-directory/api/avatars/${owner.type}/${owner.id}/${owner.department}/avatar.png`
       : `/simple-directory/api/avatars/${owner.type}/${owner.id}/avatar.png`
@@ -403,13 +401,15 @@ const sortItems = computed(() => {
     return [
       { title: t('sort.createdAt'), value: 'createdAt' },
       { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
-      { title: t('sort.title'), value: 'title' }
+      { title: t('sort.title'), value: 'title' },
+      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
     ]
   } else {
     return [
       { title: t('sort.createdAt'), value: 'createdAt' },
       { title: t('sort.updatedAt'), value: 'updatedAt' },
-      { title: t('sort.title'), value: 'title' }
+      { title: t('sort.title'), value: 'title' },
+      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
     ]
   }
 })
@@ -440,6 +440,7 @@ const sortItems = computed(() => {
       dataUpdatedAt: Data update date
       updatedAt: Update date
       title: Alphabetical order
+      owner: Owner
 
   fr:
     ascending: Ordre croissant
@@ -464,4 +465,5 @@ const sortItems = computed(() => {
       dataUpdatedAt: Date de mise à jour des données
       updatedAt: Date de mise à jour
       title: Ordre alphabétique
+      owner: Propriétaire
 </i18n>

@@ -380,6 +380,7 @@ const getElementsImageRefs = async (pageElements: PageElement[]) => {
     if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
     if (pageElement.type === 'card' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
+    if (pageElement.type === 'datasets-list' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
   })
   return imageRefs
@@ -391,11 +392,8 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     await callback(element)
     if (element.type === 'card') await traversePageElements(element.children, callback)
     if (element.type === 'banner') await traversePageElements(element.children, callback)
-    if (element.type === 'responsive-flow') {
-      for (const block of element.blocks) {
-        await traversePageElements(block.children, callback)
-      }
-    }
+    if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
+
     if (element.type === 'tabs') {
       for (const tab of element.tabs) {
         await traversePageElements(tab.children, callback)

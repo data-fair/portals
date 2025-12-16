@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :rounded="metadataConfig?.rounded"
-    :elevation="metadataConfig?.elevation"
+    :rounded="metadataConfig.rounded"
+    :elevation="metadataConfig.elevation"
   >
     <!-- Dataset Metadata -->
     <v-row class="ma-0">
@@ -42,18 +42,17 @@
 
       <!-- Owner -->
       <v-col
-        v-if="metadataConfig?.showDepartment && dataset.owner.department"
+        v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :alt="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
-            :title="dataset.owner.departmentName || dataset.owner.department"
+            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
           />
-          {{ dataset.owner.departmentName || dataset.owner.department }}
+          {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
         </div>
       </v-col>
 
@@ -62,7 +61,7 @@
         v-if="dataset.creator"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('creator') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('creator') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dataset.creator }}
         </div>
@@ -87,7 +86,7 @@
         v-if="dataset.keywords?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('keywords') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
           :key="i"
@@ -102,7 +101,7 @@
         v-if="dataset.spatial"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('spatialCoverage') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('spatial') }}</div>
         {{ dataset.spatial }}
       </v-col>
 
@@ -110,7 +109,7 @@
         v-if="dataset.temporal?.start"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('temporalCoverage') }}</div>
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('temporal') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
         </template>
@@ -123,23 +122,30 @@
         v-if="dataset.frequency"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('updateFrequency') }}</div>
-        {{ t('frequency.' + dataset.frequency) }}
+        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('frequency') }}</div>
+        {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
-      <!-- Modified -->
-      <v-col
-        v-if="dataset.modified"
-        v-bind="metadataColProps"
-      >
-        <div class="text-caption text-medium-emphasis">{{ t('modified') }}</div>
+      <!-- Modified or dataUpdatedAt -->
+      <v-col v-bind="metadataColProps">
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('modified') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dayjs(dataset.modified || dataset.dataUpdatedAt).format('LL') }}
         </div>
       </v-col>
 
+      <!-- Custom metadata -->
       <v-col
-        v-if="metadataConfig?.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+        v-for="customMeta in metadataSettings.data.value?.custom"
+        :key="customMeta.key"
+        v-bind="metadataColProps"
+      >
+        <div class="text-caption text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
+        <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
+      </v-col>
+
+      <v-col
+        v-if="metadataConfig.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
@@ -162,21 +168,21 @@
               path: `/datasets/${dataset.slug}/table`,
               query: $route.query
             }"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiTableLarge"
             :text="t('text.table')"
           />
           <action-btn
             v-if="dataset.bbox?.length && shouldShowActionButton('map')"
             :to="`/datasets/${dataset.slug}/map`"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiMapMarker"
             :text="t('text.map')"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
             :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="metadataConfig?.actionsStyle"
+            :action-style="metadataConfig.actionsStyle"
             :icon="mdiCog"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
@@ -191,13 +197,13 @@
             :dataset="dataset"
           />
           <dataset-embed
-            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed')"
+            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed') && dataset.previews?.length"
             :dataset="dataset"
           />
         </template>
 
         <dataset-attachments-preview
-          v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
+          v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset.image).length"
           :dataset="dataset"
         />
         <dataset-notifications
@@ -221,77 +227,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Account } from '@data-fair/lib-common-types/account'
+import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
-
-type Dataset = {
-  id: string
-  slug: string
-  title: string
-  summary?: string
-  description?: string
-  dataUpdatedAt: string
-  updatedAt: string
-  modified?: string
-  creator?: string
-  owner: Account
-  count?: number
-  storage?: {
-    indexed?: {
-      size?: number
-    }
-  }
-  origin?: string
-  license?: {
-    title: string
-    href: string
-  }
-  keywords?: string[]
-  spatial?: string
-  temporal?: {
-    start: string
-    end?: string
-  }
-  frequency?: string
-  attachments: {
-    url: string
-    title: string
-    name: string
-    type: 'file' | 'remoteFile'
-    description: string
-    size: string
-    updatedAt: string
-  }[]
-  image?: string
-  thumbnail?: string
-  isMetaOnly: boolean
-  isRest: boolean
-  isVirtual: boolean
-  extras: {
-    applications?: { id: string; slug: string; updatedAt: string }[]
-  }
-  bbox?: number[]
-  public: boolean
-  userPermissions: string[]
-  previews: {
-    id: string
-    title: string
-    href: string
-  }[]
-}
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
-const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata)
+const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,
-  md: metadataConfig.value?.location !== 'right' ? 4 : 12
+  md: metadataConfig.value.location !== 'right' ? 4 : 12
 }))
 
 const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
@@ -301,7 +251,15 @@ const avatarUrl = computed(() => {
   else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
 })
 
-const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value?.actionButtons?.includes(button)
+const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
+
+type BaseMetadataSettings = Partial<Record<'keywords' | 'frequency' | 'temporal' | 'spatial' | 'modified' | 'creator',
+  { active?: boolean; title?: string }
+>>
+
+type MetadataSettings = BaseMetadataSettings & { custom?: { key: string; title?: string }[] }
+const metadataSettings = useLocalFetch<MetadataSettings>('/data-fair/api/v1/datasets/' + dataset.id + '/metadata-settings')
+const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data.value?.[key]?.title || t(key)
 
 </script>
 
@@ -312,7 +270,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
     records: '{count} record | {count} records'
-    frequency:
+    frequencyLabels:
       annual: 'Every year'
       biennial: 'Every 2 years'
       bimonthly: 'Every 2 months'
@@ -341,15 +299,15 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     shortText:
       api: API
     size: 'Size:'
-    spatialCoverage: 'Spatial coverage:'
-    temporalCoverage: 'Temporal coverage:'
+    spatial: 'Spatial coverage:'
+    temporal: 'Temporal coverage:'
     temporalStart: 'From'
     text:
       api: API documentation
       map: Map
       table: Table
     thisSource: 'this source'
-    updateFrequency: 'Update frequency:'
+    frequency: 'Update frequency:'
     updatedAt: Updated at
   fr:
     attachments: 'Pièces jointes :'
@@ -357,7 +315,7 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     dataFrom: 'Données issues de'
     dataProducedBy: 'Provenance des données :'
     records: '{count} enregistrement | {count} enregistrements'
-    frequency:
+    frequencyLabels:
       annual: 'Tous les ans'
       biennial: 'Tous les 2 ans'
       bimonthly: 'Tous les 2 mois'
@@ -386,14 +344,14 @@ const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig
     shortText:
       api: API
     size: 'Taille :'
-    spatialCoverage: 'Couverture géographique :'
-    temporalCoverage: 'Couverture temporelle :'
+    spatial: 'Couverture géographique :'
+    temporal: 'Couverture temporelle :'
     temporalStart: 'À partir de'
     text:
       api: Documentation d'API
       map: Carte
       table: Tableau
     thisSource: 'cette source'
-    updateFrequency: 'Fréquence de mise à jour :'
+    frequency: 'Fréquence de mise à jour :'
     updatedAt: Mis à jour le
 </i18n>

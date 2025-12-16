@@ -6,8 +6,22 @@ export default {
     fr: "Vignette d'une réutilisation"
   },
   type: 'object',
-  layout: { title: null },
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'elevation' },
+        { cols: { md: 6 }, key: 'rounded' },
+        { cols: { md: 6 }, key: 'titleLinesCount' },
+        { cols: { md: 6 }, key: 'showSummary' },
+        { cols: { md: 6 }, key: 'showAuthor' }
+      ]
+    },
+    'thumbnail'
+    ]
+  },
   properties: {
     elevation: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
@@ -24,6 +38,18 @@ export default {
         fr: 'Arrondi de la carte'
       },
       layout: { cols: { md: 6 } }
+    },
+    titleLinesCount: {
+      type: 'number',
+      title: 'Nombre de lignes pour le titre',
+      description: 'Force le titre à occuper exactement N lignes.',
+      layout: { cols: { md: 4 } },
+      default: 2,
+      oneOf: [
+        { const: 1, title: '1 ligne' },
+        { const: 2, title: '2 lignes' },
+        { const: 0, title: 'Sans limite de lignes' }
+      ]
     },
     showSummary: {
       type: 'boolean',
@@ -63,8 +89,8 @@ export default {
             if: 'data?.show === true',
             children: [
               'location',
-              'default',
-              'crop'
+              'crop',
+              'default'
             ]
           }
         ]
@@ -85,7 +111,7 @@ export default {
           'x-i18n-title': {
             fr: "Position de l'image sur la carte"
           },
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'À gauche' } },
@@ -111,7 +137,7 @@ export default {
                 props: { width: 1280, label: 'Image par défaut' }
               }
             },
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           properties: {
             _id: {
@@ -140,7 +166,7 @@ export default {
           },
           layout: {
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         }

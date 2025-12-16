@@ -24,7 +24,9 @@
     > - {{ t('label') }} : {{ item.title }}</template>
   </span>
   <span v-else-if="item.type === 'external'">
-    {{ t('externalLink') }} - {{ t('label') }} : {{ item.title }} - {{ t('url') }} : {{ item.href }}
+    {{ t('externalLink') }} - {{ t('label') }} : {{ item.title }} - {{ t('url') }} : {{ item.href }}<template
+      v-if="item.target"
+    > - {{ t('openNewTab') }}</template>
   </span>
   <span v-else-if="item.type === 'submenu'">
     {{ t('submenu') }} - {{ t('label') }} : {{ item.title }}
@@ -69,6 +71,7 @@ const standardPageLabel = computed(() => {
   en:
     label: Label
     url: URL
+    openNewTab: Opens in a new tab
     homePage: Home page
     contactPage: Contact page
     privacyPolicyPage: Privacy policy page
@@ -85,13 +88,14 @@ const standardPageLabel = computed(() => {
     event: Event
     news: News
     customPage: Custom page
-    externalLink: External link
+    externalLink: Link
     submenu: Submenu
     notConfigured: Link not configured
 
   fr:
     label: Libellé
     url: URL
+    openNewTab: S'ouvre dans un nouvel onglet
     homePage: Page d'accueil
     contactPage: Page de contact
     privacyPolicyPage: Page de politique de confidentialité
@@ -108,7 +112,7 @@ const standardPageLabel = computed(() => {
     event: Événement
     news: Actualité
     customPage: Page éditée
-    externalLink: Lien externe
+    externalLink: Lien
     submenu: Sous-menu
     notConfigured: Lien non configuré
 

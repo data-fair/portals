@@ -15,8 +15,12 @@
         :elevation="config?.elevation"
         :rounded="config?.rounded"
         :text="keyword"
+        class="bg-surface"
         label
-      />
+      >
+        <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+        <span class="text-truncate">{{ keyword }}</span>
+      </v-chip>
     </v-col>
   </v-row>
 </template>
@@ -30,3 +34,10 @@ const { keywords } = defineProps<{
 }>()
 
 </script>
+
+<style scoped>
+/* Without this, .text-truncate class would have no effect. */
+:deep(.v-chip__content) {
+  max-width: 100%;
+}
+</style>

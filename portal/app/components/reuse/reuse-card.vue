@@ -5,42 +5,62 @@
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
   >
+    <!--
+      flex-nowrap => prevent columns from wrapping on multiple rows
+      no-gutters => remove spaces between columns
+    -->
     <v-row
       class="flex-nowrap"
       no-gutters
     >
-      <!-- Image column -->
-      <v-col
-        v-if="cardConfig.thumbnail?.location === 'left'"
-        cols="12"
-        sm="4"
-      >
-        <v-img
-          v-if="thumbnailUrl"
-          :alt="t('imageAlt', { title: reuse.config.title })"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="h-100"
-        />
+      <!-- Thumbnail (Left Location) -->
+      <!-- On mobile, always use top location -->
+      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+        <v-col cols="4">
+          <div
+            v-if="thumbnailUrl"
+            role="img"
+            :aria-label="t('imageAlt', { title: reuse.config.title })"
+            :style="leftThumbnailStyle"
+          />
+        </v-col>
         <v-divider vertical />
-      </v-col>
+      </template>
 
-      <!-- Center column -->
-      <v-col class="d-flex flex-column">
+      <!-- Main column -->
+      <!--
+        d-flex flex-column => make the column take full height of the card and arrange content vertically
+        min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+      -->
+      <v-col
+        class="d-flex flex-column"
+        style="min-width: 0"
+      >
+        <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'top' && thumbnailUrl"
+          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
           :alt="t('imageAlt', { title: reuse.config.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
         />
+
+        <!--
+          title-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          white-space: unset; => remove default nowrap from v-card-title
+        -->
         <v-card-title
-          class="font-weight-bold"
-          style="white-space: unset;"
+          :class="['font-weight-bold', { 'title-two-lines': cardConfig.titleLinesCount === 2 }]"
+          :style="[
+            cardConfig.titleLinesCount !== 1 ? { 'white-space': 'unset' } : {},
+            cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
+          ]"
         >
           {{ reuse.config.title }}
         </v-card-title>
+
+        <!-- Thumbnail (Center Location) -->
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :alt="t('imageAlt', { title: reuse.config.title })"
@@ -49,6 +69,7 @@
           class="flex-grow-0"
           height="170"
         />
+
         <v-card-text
           v-if="cardConfig.showSummary && reuse.config.summary?.length"
           class="pb-0"
@@ -108,6 +129,32 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
+// Set thumbnail in background for left location to cover full height of the card
+const leftThumbnailStyle = computed(() => {
+  if (!thumbnailUrl.value) return undefined
+  return {
+    backgroundImage: `url("${thumbnailUrl.value}")`,
+    backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '200px',
+    height: '100%'
+  }
+})
+
+// Height calculation for title with 2 lines
+const titleHeight = ref<string>()
+onMounted(() => {
+  const titleElement = document.querySelector('.title-two-lines')
+  if (titleElement) {
+    const styles = getComputedStyle(titleElement)
+    const lineHeight = parseFloat(styles.lineHeight)
+    const paddingTop = parseFloat(styles.paddingTop)
+    const paddingBottom = parseFloat(styles.paddingBottom)
+    titleHeight.value = `${lineHeight * 2 + paddingTop + paddingBottom}px`
+  }
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -121,3 +168,12 @@ const thumbnailUrl = computed(() => {
     publishedBy: Publié par {author}
 
 </i18n>
+
+<style scoped>
+.title-two-lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+</style>

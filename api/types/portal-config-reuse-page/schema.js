@@ -7,6 +7,18 @@ export default {
   },
   type: 'object',
   unevaluatedProperties: false,
+  layout: {
+    children: [{
+      comp: 'card',
+      title: 'Options',
+      children: [
+        { cols: { md: 6 }, key: 'showImage' }
+      ]
+    },
+    'titleStyle',
+    'datasets'
+    ]
+  },
   properties: {
     showImage: {
       type: 'boolean',
@@ -67,7 +79,7 @@ export default {
           type: 'string',
           title: "Mode d'affichage",
           default: 'card',
-          layout: { cols: { md: 4 } },
+          layout: { cols: { md: 6 } },
           oneOf: [
             { const: 'none', title: 'Aucun' },
             { const: 'card', title: 'Vignette' }
@@ -77,7 +89,7 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 6 } },
           default: 2,
           minimum: 1,
           maximum: 3
@@ -88,7 +100,7 @@ export default {
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
-            cols: { md: 4 }
+            cols: { md: 6 }
           },
           default: true
         },

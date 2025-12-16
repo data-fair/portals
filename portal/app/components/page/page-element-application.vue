@@ -1,6 +1,10 @@
 <template>
+  <v-img
+    v-if="preview && applicationFetch?.data?.value"
+    :src="`${applicationFetch.data?.value.href}/capture?updatedAt=${applicationFetch.data?.value.updatedAt}`"
+  />
   <d-frame-wrapper
-    v-if="element.application?.slug"
+    v-if="!preview && element.application?.slug"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('application')} - ${element.application.title}`"
     :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
@@ -10,10 +14,20 @@
 </template>
 
 <script setup lang="ts">
+import type { Application } from '#api/types/index.ts'
 import type { ApplicationElement } from '#api/types/page-config'
 
 const { element } = defineProps<{ element: ApplicationElement }>()
 const { t } = useI18n()
+const { preview } = usePortalStore()
+
+let applicationFetch
+if (preview) {
+  applicationFetch = useFetch<Application>('/data-fair/api/v1/applications/' + element.application?.id, { immediate: false })
+  watch(() => element.application?.id, (id) => {
+    if (id) applicationFetch!.refresh()
+  }, { immediate: true })
+}
 
 </script>
 
