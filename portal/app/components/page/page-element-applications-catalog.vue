@@ -181,7 +181,10 @@ const paginationPosition = computed(() => element.pagination?.position || 'none'
 const currentPage = ref(1)
 const displayedApplications = ref<Application[]>([])
 const loading = ref(false)
-const pageSize = 20
+
+const pageSize = computed(() => {
+  return paginationPosition.value !== 'none' ? (element.pagination?.pageSize ?? 20) : 20
+})
 
 let applicationsFetch: ReturnType<typeof useLocalFetch<ApplicationFetch>> | undefined
 if (!preview) {
@@ -190,7 +193,7 @@ if (!preview) {
       select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
-      size: pageSize,
+      size: pageSize.value,
       page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
@@ -222,8 +225,8 @@ const applicationsCount = computed(() => preview ? displayedApplications.value.l
 
 // Total pages for pagination
 const totalPages = computed(() => {
-  if (preview) return 1
-  return Math.ceil((applicationsFetch?.data.value?.count || 0) / pageSize)
+  if (preview) return 2
+  return Math.ceil((applicationsFetch?.data.value?.count || 0) / pageSize.value)
 })
 
 // Function to go to a specific page (for pagination)

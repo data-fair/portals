@@ -202,7 +202,10 @@ const paginationPosition = computed(() => element.pagination?.position || 'none'
 const currentPage = ref(1)
 const displayedDatasets = ref<DatasetFetch['results']>([])
 const loading = ref(false)
-const pageSize = 20
+
+const pageSize = computed(() => {
+  return paginationPosition.value !== 'none' ? (element.pagination?.pageSize ?? 20) : 20
+})
 
 let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetFetch>> | undefined
 
@@ -212,7 +215,7 @@ if (!preview) {
       select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
-      size: pageSize,
+      size: pageSize.value,
       page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
@@ -244,8 +247,8 @@ const datasetsCount = computed(() => preview ? displayedDatasets.value.length : 
 
 // Total pages for pagination
 const totalPages = computed(() => {
-  if (preview) return 1
-  return Math.ceil((datasetsFetch?.data.value?.count || 0) / pageSize)
+  if (preview) return 2
+  return Math.ceil((datasetsFetch?.data.value?.count || 0) / pageSize.value)
 })
 
 // Function to go to a specific page (for pagination)

@@ -1504,15 +1504,23 @@ export default {
               description: 'Désactiver la pagination affichera les résultats en scroll infini.',
               default: 'none',
               oneOf: [
-                { const: 'none', title: 'Scroll infini' },
+                { const: 'none', title: 'Aucune (Scroll infini)' },
                 { const: 'before', title: 'Avant les résultats' },
                 { const: 'after', title: 'Après les résultats' },
                 { const: 'both', title: 'Les deux' }
               ]
             },
+            pageSize: {
+              type: 'integer',
+              title: 'Nombre de jeux de données par page',
+              default: 20,
+              minimum: 1,
+              maximum: 50,
+              layout: { if: 'parent.data?.position !== "none"' }
+            },
             alignment: {
               type: 'string',
-              title: 'Alignement',
+              title: 'Alignement de la pagination',
               default: 'center',
               layout: { if: 'parent.data?.position !== "none"' },
               oneOf: [
@@ -1591,7 +1599,7 @@ export default {
           title: 'Nombre de jeux de données',
           default: 3,
           minimum: 1,
-          maximum: 12
+          maximum: 20
         },
         datasets: {
           type: 'array',
@@ -1920,15 +1928,23 @@ export default {
               description: 'Désactiver la pagination affichera les résultats en scroll infini.',
               default: 'none',
               oneOf: [
-                { const: 'none', title: 'Scroll infini' },
+                { const: 'none', title: 'Aucune (Scroll infini)' },
                 { const: 'before', title: 'Avant les résultats' },
                 { const: 'after', title: 'Après les résultats' },
                 { const: 'both', title: 'Les deux' }
               ]
             },
+            pageSize: {
+              type: 'integer',
+              title: 'Nombre de visualisations par page',
+              default: 20,
+              minimum: 1,
+              maximum: 50,
+              layout: { if: 'parent.data?.position !== "none"' }
+            },
             alignment: {
               type: 'string',
-              title: 'Alignement',
+              title: 'Alignement de la pagination',
               default: 'center',
               layout: { if: 'parent.data?.position !== "none"' },
               oneOf: [
@@ -1970,7 +1986,6 @@ export default {
             children: ['applications']
           },
           'columns',
-          'limit',
           'mb',
           {
             title: 'Application Card',
@@ -2028,6 +2043,13 @@ export default {
           },
           maxItems: 100
         },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de visualisations',
+          default: 3,
+          minimum: 1,
+          maximum: 20
+        },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -2035,14 +2057,6 @@ export default {
           default: 3,
           minimum: 1,
           maximum: 3
-        },
-        limit: {
-          type: 'integer',
-          title: 'Nombre de visualisations',
-          description: 'Nombre total de visualisations à afficher.',
-          default: 3,
-          minimum: 1,
-          maximum: 12
         },
         usePortalConfig: {
           type: 'boolean',
