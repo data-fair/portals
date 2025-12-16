@@ -6,7 +6,10 @@
     <topics-list
       :config="element"
       :topics="topicsItems"
-      :is-links="element.redirectPage"
+      :link="element.redirectPage ? {
+        type: 'standard',
+        subtype: mode
+      } : undefined"
       :is-filters="!element.redirectPage"
     />
   </div>
@@ -19,6 +22,7 @@ import { mdiHome, mdiBook } from '@mdi/js'
 const { element } = defineProps({
   element: { type: Object as () => TopicsElement, required: true }
 })
+const mode = element.mode || 'datasets'
 
 const { portal, preview } = usePortalStore()
 
@@ -43,7 +47,7 @@ if (!preview) {
         count: number
       }[]
     }
-  }>('/data-fair/api/v1/datasets', {
+  }>(`/data-fair/api/v1/${mode}`, {
     query: {
       facets: 'topics',
       size: 0,
@@ -54,8 +58,8 @@ if (!preview) {
 } else {
   topicsItems = [
     { id: 'topic-1', title: 'Topic 1', count: 10, icon: { svgPath: mdiHome } },
-    { id: 'topic-2', title: 'Topic 2', count: 5, color: '#FF0000' },
-    { id: 'topic-3', title: 'Topic 3', count: 8, color: '#008000', icon: { svgPath: mdiBook } }
+    { id: 'topic-2', title: 'Topic 2', count: 5, color: '#A0F' },
+    { id: 'topic-3', title: 'Topic 3', count: 8, color: '#080', icon: { svgPath: mdiBook } }
   ]
 }
 
