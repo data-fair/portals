@@ -27,6 +27,8 @@ export default defineNuxtPlugin(async () => {
         const { origin } = getRequestURL(event)
         const cookies = getRequestHeader(event, 'cookie')
         if (cookies) options.headers.set('cookie', cookies)
+        const secretIgnoreRateLimiting = useNuxtApp().$config.secretIgnoreRateLimiting
+        if (secretIgnoreRateLimiting) options.headers.set('x-ignore-rate-limiting', secretIgnoreRateLimiting)
         options.baseURL = origin
         options.retry = 0
         options.dispatcher = _ssrDispatcher

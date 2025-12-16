@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     privateDirectoryUrl: 'http://simple-directory:8080',
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     portalUrlPattern: '',
-    frameAncestors: ''
+    frameAncestors: '',
+    secretIgnoreRateLimiting: ''
   },
   security: {
     nonce: true,
