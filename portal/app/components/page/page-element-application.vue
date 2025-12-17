@@ -23,10 +23,7 @@ const { preview } = usePortalStore()
 
 let applicationFetch
 if (preview) {
-  applicationFetch = useFetch<Application>('/data-fair/api/v1/applications/' + element.application?.id, { immediate: false })
-  watch(() => element.application?.id, (id) => {
-    if (id) applicationFetch!.refresh()
-  }, { immediate: true })
+  applicationFetch = useFetch<Application>(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application?.id : '')
 }
 
 </script>
