@@ -337,7 +337,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
     owner: 'Propriétaire :'
-    ownerOverride: 'Propriétaire :'
+    ownerOverride: '{owner} :'
     ownerAvatar: 'Avatar du propriétaire'
     ownerAvatarOverride: '{owner} - Avatar'
     share: 'Partager :'
