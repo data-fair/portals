@@ -6,15 +6,15 @@ export default {
   title: '',
   layout: {
     comp: 'list',
+    listEditMode: 'inline',
     density: 'compact',
     getItems: {
       url: '/data-fair/api/v1/settings/${context.owner.type}/${context.owner.id}/topics',
       itemsResults: 'data',
       itemKey: 'item.id',
-      itemTitle: 'item.title',
+      itemTitle: '`Thématique : ${item.title}`',
       itemIcon: 'item.icon?.svg'
-    },
-    switch: [{ if: 'summary', children: [] }]
+    }
   },
   items: {
     type: 'object',

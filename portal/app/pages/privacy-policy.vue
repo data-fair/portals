@@ -21,8 +21,8 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 
-const pageConfigFetch = await useLocalFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
-const cookiePolicyCheck = await useLocalFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
+const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
+const cookiePolicyCheck = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
 
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id

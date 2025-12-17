@@ -23,8 +23,8 @@
         :density="config?.density"
         :elevation="config?.elevation"
         :rounded="config?.rounded"
-        :link="isFilters || isLinks"
-        :to="isLinks && !preview ? `/datasets?topics=${topic.id}` : undefined"
+        :link="isFilters || !!link"
+        :to="(!preview && link && !isExternalLink(link)) ? resolveLink(link) : undefined"
         :style="{ '--v-border-color': borderColor(topic.color) }"
         border="sm opacity-100"
         variant="flat"
@@ -46,8 +46,10 @@
 
 <script setup lang="ts">
 import type { TopicsElement } from '#api/types/page-config'
+import type { LinkItem } from '#api/types/page-elements/index.js'
 
 const { preview } = usePortalStore()
+const { isExternalLink, resolveLink } = useNavigationStore()
 const selected = useStringsArraySearchParam('topics')
 
 const { isFilters, config } = defineProps<{
@@ -61,7 +63,7 @@ const { isFilters, config } = defineProps<{
       svgPath?: string
     }
   }[]
-  isLinks?: boolean
+  link?: LinkItem
   isFilters?: boolean
   centered?: boolean
   config?: Pick < TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'>

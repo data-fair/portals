@@ -1159,6 +1159,21 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'topics' },
+        mode: {
+          type: 'string',
+          title: 'Source des thématiques',
+          default: 'datasets',
+          oneOf: [
+            { const: 'datasets', title: 'Jeux de données' },
+            { const: 'applications', title: 'Visualisations' }
+          ]
+        },
+        redirectPage: {
+          type: 'boolean',
+          title: 'Rediriger vers la page',
+          description: 'Si activé, cliquer sur une thématique redirigera vers la page sélectionnée (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
+          layout: 'switch'
+        },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
@@ -1173,12 +1188,6 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
           title: 'Couleur des icônes des thématiques',
           layout: { if: 'parent.data?.showIcon === true' }
-        },
-        redirectPage: {
-          type: 'boolean',
-          title: 'Rediriger vers la page de jeux de données',
-          description: 'Si activé, cliquer sur une thématique redirigera vers la page des jeux de données avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
-          layout: 'switch'
         },
         centered: {
           type: 'boolean',

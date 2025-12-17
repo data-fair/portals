@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     privateDirectoryUrl: 'http://simple-directory:8080',
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     portalUrlPattern: '',
-    frameAncestors: ''
+    frameAncestors: '',
+    secretIgnoreRateLimiting: ''
   },
   security: {
     nonce: true,
@@ -34,7 +35,9 @@ export default defineNuxtConfig({
       // this blocks iframes starting with a / is better covered by CSP anyway
       crossOriginEmbedderPolicy: false,
       contentSecurityPolicy
-    }
+    },
+    // we use rate-limiting on reverse proxy instead
+    rateLimiter: false
   },
   // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
   build: {
