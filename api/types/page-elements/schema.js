@@ -1613,7 +1613,7 @@ export default {
             required: ['id'],
             layout: {
               getItems: {
-                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
                 qSearchParam: 'q',
                 itemsResults: 'data.results',
                 itemTitle: '`${item.title} (${item.id})`',
@@ -1688,7 +1688,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -1731,7 +1731,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -1809,7 +1809,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2022,7 +2022,7 @@ export default {
             required: ['id'],
             layout: {
               getItems: {
-                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title',
+                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
                 qSearchParam: 'q',
                 itemsResults: 'data.results',
                 itemTitle: '`${item.title} (${item.id})`',
@@ -2084,7 +2084,7 @@ export default {
           required: ['id', 'title', 'slug'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
