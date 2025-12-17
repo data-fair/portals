@@ -91,7 +91,13 @@ router.patch('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
-  sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+
+  // Send patch event only if there are changes beyond portals
+  const hasOtherChanges = Object.keys(body).some(key => key !== 'portals')
+  if (hasOtherChanges) {
+    sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+  }
+
   res.send(updatedReuse)
 })
 

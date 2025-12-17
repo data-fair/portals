@@ -55,8 +55,22 @@ export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: S
   }
   const updatedReuse = { ...reuse, ...fullPatch }
 
+  // Track portal additions/removals
+  const addedPortals = patch.portals ? patch.portals.filter(portalId => !reuse.portals.includes(portalId)) : []
+  const removedPortals = patch.portals ? reuse.portals.filter(portalId => !patch.portals!.includes(portalId)) : []
+
   await mongo.reuses.updateOne({ _id: reuse._id }, { $set: fullPatch })
   await cleanUnusedImages(updatedReuse)
+
+  // Send events for portal publication changes
+  for (const portalId of addedPortals) {
+    sendReuseEvent(updatedReuse, 'a été publiée sur un portail', 'publish', session, `La réutilisation a été publiée sur le portail : ${portalId}`)
+  }
+
+  for (const portalId of removedPortals) {
+    sendReuseEvent(updatedReuse, "a été dépubliée d'un portail", 'unpublish', session, `La réutilisation a été dépubliée du portail : ${portalId}`)
+  }
+
   return updatedReuse
 }
 
