@@ -7,9 +7,8 @@
       <v-tabs
         v-model="tab"
         :items="[
-          { text: t('tabs.preview'), value: 'preview' },
-          { text: t('tabs.publications'), value: 'publications' },
-          { text: t('tabs.informations'), value: 'informations' }
+          // { text: t('tabs.preview'), value: 'preview' }, // TODO: add preview of the reuse
+          { text: t('tabs.publications'), value: 'publications' }
         ]"
       />
 
@@ -21,10 +20,6 @@
 
           <v-tabs-window-item value="publications">
             <reuse-edit-publication />
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="informations">
-            <reuse-activity />
           </v-tabs-window-item>
         </v-tabs-window>
       </v-card-text>
