@@ -136,7 +136,7 @@
 
       <!-- Custom metadata -->
       <v-col
-        v-for="customMeta in metadataSettings.data.value?.custom"
+        v-for="customMeta in metadataSettings.data.value?.custom?.filter(cm => dataset.customMetadata?.[cm.key])"
         :key="customMeta.key"
         v-bind="metadataColProps"
       >

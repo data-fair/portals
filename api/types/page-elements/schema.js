@@ -1748,8 +1748,7 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: "Synchroniser les paramètres d'URL",
-          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
-          default: true
+          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.'
         },
         display: {
           type: 'string',
@@ -2108,8 +2107,7 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: "Synchroniser les paramètres d'URL",
-          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application.",
-          default: true
+          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application."
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
