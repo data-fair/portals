@@ -7,7 +7,7 @@ import * as patchReqBody from '#doc/groups/patch-req-body/index.ts'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createGroup, patchGroup } from './service.ts'
+import { createGroup, patchGroup, sendGroupEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -46,6 +46,7 @@ router.post('', async (req, res) => {
   }
 
   await createGroup(group)
+  sendGroupEvent(group, 'a été créé', 'create', session)
   res.status(201).json(group)
 })
 
@@ -64,8 +65,9 @@ router.patch('/:id', async (req, res) => {
   assertAccountRole(session, group.owner, 'admin')
 
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-  await patchGroup(group, body, session)
-  res.send({ ...group, body })
+  const updatedGroup = await patchGroup(group, body, session)
+  sendGroupEvent(updatedGroup, 'a été modifié', 'patch', session)
+  res.send(updatedGroup)
 })
 
 router.delete('/:id', async (req, res) => {
@@ -74,5 +76,6 @@ router.delete('/:id', async (req, res) => {
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
   assertAccountRole(session, group.owner, 'admin')
   await mongo.groups.deleteOne({ _id: req.params.id })
+  sendGroupEvent(group, 'a été supprimé', 'delete', session)
   res.status(204).send()
 })

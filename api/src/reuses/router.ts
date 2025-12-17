@@ -7,7 +7,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse } from './service.ts'
+import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -78,6 +78,7 @@ router.post('', async (req, res, next) => {
 
   await createReuse(reuse)
 
+  sendReuseEvent(reuse, 'a été créée', 'create', session)
   res.status(201).json(reuse)
 })
 
@@ -90,11 +91,13 @@ router.patch('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
+  sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
   res.send(updatedReuse)
 })
 
 router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
+  sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
   res.status(201).send()
 })

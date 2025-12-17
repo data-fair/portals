@@ -2,8 +2,10 @@ import type { Reuse } from '#types/reuse/index.ts'
 
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
+import config from '#config'
 
 const debug = debugModule('reuses')
 
@@ -83,4 +85,36 @@ const cleanUnusedImages = async (reuse: Reuse) => {
     _id: { $nin: imagesIds }
   }
   await mongo.images.deleteMany(deleteFilter)
+}
+
+/**
+ * Helper function to send events related to reuses
+ * @param reuse The reuse object
+ * @param actionText The text describing the action (e.g. "a été créé")
+ * @param topicAction The action part of the topic key (e.g. "create", "patch", "delete")
+ * @param sessionState Optional session state for authentication
+ * @param body Optional additional information to include in the event
+ */
+export const sendReuseEvent = (
+  reuse: Reuse,
+  actionText: string,
+  topicAction: string,
+  sessionState?: SessionStateAuthenticated,
+  body?: string
+) => {
+  if (!config.privateEventsUrl && !config.secretKeys.events) return
+
+  const title = `La réutilisation ${reuse.title} ${actionText}`
+
+  eventsQueue.pushEvent({
+    title,
+    topic: { key: `reuses:reuse-${topicAction}:${reuse._id}` },
+    sender: reuse.owner,
+    resource: {
+      type: 'reuse',
+      id: reuse._id,
+      title: reuse.title,
+    },
+    body
+  }, sessionState)
 }
