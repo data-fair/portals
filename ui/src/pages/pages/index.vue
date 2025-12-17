@@ -50,7 +50,7 @@ const showAll = useBooleanSearchParam('showAll')
 const groupsParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
-    sort: 'updated.date:-1'
+    sort: 'updatedAt:-1'
   }
   if (showAll.value) params.showAll = 'true'
   return params

@@ -21,7 +21,7 @@ export const createGroup = async (group: Group) => {
 export const patchGroup = async (group: Group, patch: Partial<Group>, session: SessionStateAuthenticated) => {
   const fullPatch = {
     ...patch,
-    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+    updatedAt: new Date().toISOString()
   }
   const updatedGroup = { ...group, ...fullPatch }
   await validateGroup(updatedGroup)

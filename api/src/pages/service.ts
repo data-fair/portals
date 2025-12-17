@@ -41,11 +41,7 @@ const duplicateImage = async (
   }
 
   const newImageId = randomUUID()
-  const created = {
-    id: sessionState.user.id,
-    name: sessionState.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
 
   const newImage: Image = {
     ...sourceImage,
@@ -55,7 +51,7 @@ const duplicateImage = async (
       type: 'page',
       _id: newPageId
     },
-    created
+    createdAt
   }
 
   // Duplicate mobile variant if it exists
@@ -70,7 +66,7 @@ const duplicateImage = async (
           type: 'page',
           _id: newPageId
         },
-        created
+        createdAt
       }
       await mongo.images.insertOne(newMobileImage)
     }
@@ -238,7 +234,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
 
   const fullPatch = {
     ...patch,
-    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+    updatedAt: new Date().toISOString()
   }
   const updatedPage = { ...page, ...fullPatch }
 
@@ -438,7 +434,7 @@ const switchStandardPages = async (page: Page, addedPortals: string[], session: 
       {
         $set: {
           portals: newPortals,
-          updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+          updatedAt: new Date().toISOString()
         }
       }
     )

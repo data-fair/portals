@@ -26,14 +26,14 @@ export default defineEventHandler(async (event) => {
   const skip = Math.max(parseInt(query.skip as string) || 0, 0)
 
   // Tri (par défaut, les plus récentes en premier)
-  const sort = query.sort === 'asc' ? { 'updated.date': 1 as const } : { 'updated.date': -1 as const }
+  const sort = query.sort === 'asc' ? { updatedAt: 1 as const } : { updatedAt: -1 as const }
 
   // Récupération des pages
   // TODO: do not fetch full config
-  const pages = await portalMongo.pages.find<Pick<Page, '_id' | 'type' | 'config' | 'updated'>>(
+  const pages = await portalMongo.pages.find<Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>>(
     mongoQuery,
     {
-      projection: { _id: 1, type: 1, config: 1, updated: 1 },
+      projection: { _id: 1, type: 1, config: 1, updatedAt: 1 },
       sort,
       limit,
       skip

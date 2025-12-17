@@ -4,7 +4,7 @@ export default {
   title: 'Group',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'slug', 'title', 'description', 'owner', 'created', 'updated'],
+  required: ['_id', 'slug', 'title', 'description', 'owner', 'createdAt', 'updatedAt'],
   properties: {
     _id: {
       type: 'string',
@@ -25,7 +25,7 @@ export default {
       description: 'Une zone de texte libre pour décrire le groupe. Elle sera affichée sur la vignette du groupe.'
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
-    created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
-    updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' }
+    createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
+    updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' }
   }
 }

@@ -49,7 +49,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 
   const fullPatch = {
     ...patch,
-    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+    updatedAt: new Date().toISOString()
   }
   if (fullPatch.draftConfig) {
     fullPatch.draftConfig.theme = fillTheme(fullPatch.draftConfig.theme, defaultTheme)

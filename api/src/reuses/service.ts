@@ -49,7 +49,7 @@ export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: S
 
   const fullPatch = {
     ...patch,
-    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+    updatedAt: new Date().toISOString()
   }
   const updatedReuse = { ...reuse, ...fullPatch }
 

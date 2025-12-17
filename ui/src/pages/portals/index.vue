@@ -79,7 +79,7 @@ const { t } = useI18n()
 const portalsParams = computed(() => {
   const params: Record<string, any> = {
     size: 10000,
-    sort: 'updated.date:-1',
+    sort: 'updatedAt:-1',
     select: '_id,config.title,owner'
   }
   if (showAll.value) params.showAll = true

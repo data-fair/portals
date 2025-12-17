@@ -27,7 +27,7 @@ router.get('', async (req, res, next) => {
   // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
 
   const project = findUtils.project(req.query.select)
-  const sort = findUtils.sort(req.query.sort || 'created.date:-1')
+  const sort = findUtils.sort(req.query.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(req.query)
 
   const [count, portals] = await Promise.all([
@@ -44,11 +44,7 @@ router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
 
   const initialConfig: PortalConfig = {
     ...body.config,
@@ -98,8 +94,8 @@ router.post('', async (req, res, next) => {
     _id: randomUUID(),
     title: initialConfig.title,
     owner: body.owner || session.account,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     ...body,
     config: initialConfig,
     draftConfig: initialConfig

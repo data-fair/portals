@@ -24,13 +24,13 @@ export default defineEventHandler(async (event) => {
   const skip = Math.max(parseInt(query.skip as string) || 0, 0)
 
   // Tri (par défaut, les plus récentes en premier)
-  const sort = query.sort === 'asc' ? { 'updated.date': 1 as const } : { 'updated.date': -1 as const }
+  const sort = query.sort === 'asc' ? { updatedAt: 1 as const } : { updatedAt: -1 as const }
 
   // Récupération des reuses
-  const reuses = await portalMongo.reuses.find<Pick<Reuse, '_id' | 'slug' | 'config' | 'updated'>>(
+  const reuses = await portalMongo.reuses.find<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(
     mongoQuery,
     {
-      projection: { _id: 1, slug: 1, config: 1, updated: 1 },
+      projection: { _id: 1, slug: 1, config: 1, updatedAt: 1 },
       sort,
       limit,
       skip

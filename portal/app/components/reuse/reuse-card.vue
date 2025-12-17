@@ -87,7 +87,7 @@
             {{ t('publishedBy', { author: reuse.config.author }) }}
           </p>
           <p class="text-caption">
-            {{ t('updatedAt') }} {{ dayjs(reuse.updated.date).format('L') }}
+            {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
           </p>
         </v-list-item>
       </v-col>
@@ -101,7 +101,7 @@ import type { ReuseCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 const { reuse, cardConfig, isPortalConfig } = defineProps<{
-  reuse: Pick<Reuse, '_id' | 'slug' | 'config' | 'updated'>
+  reuse: Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>
   cardConfig: ReuseCard
   isPortalConfig?: boolean
 }>()

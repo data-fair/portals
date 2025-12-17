@@ -29,8 +29,8 @@
               <v-card-subtitle v-if="event.config.description">
                 {{ event.config.description }}
               </v-card-subtitle>
-              <v-card-text v-if="event.updated">
-                <small>{{ new Date(event.updated.date).toLocaleDateString() }}</small>
+              <v-card-text v-if="event.updatedAt">
+                <small>{{ new Date(event.updatedAt).toLocaleDateString() }}</small>
               </v-card-text>
             </v-card>
           </v-col>
@@ -68,7 +68,7 @@ const currentPage = computed(() => {
 const skip = computed(() => (currentPage.value - 1) * limit)
 
 const events = await useFetch<{
-  results: Array<Pick<Page, '_id' | 'type' | 'config' | 'updated'>>
+  results: Array<Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>>
   total: number
   limit: number
   skip: number

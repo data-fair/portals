@@ -5,7 +5,7 @@ export default {
   title: 'Portal',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'title', 'owner', 'created', 'updated', 'config', 'draftConfig'],
+  required: ['_id', 'title', 'owner', 'createdAt', 'updatedAt', 'config', 'draftConfig'],
   properties: {
     _id: {
       type: 'string',
@@ -24,8 +24,8 @@ export default {
       default: false
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
-    created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
-    updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
+    createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
+    updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     config: { $ref: 'https://github.com/data-fair/portals/portal-config' },
     draftConfig: { $ref: 'https://github.com/data-fair/portals/portal-config' },
     ingress: { $ref: 'https://github.com/data-fair/portals/portal-ingress' }

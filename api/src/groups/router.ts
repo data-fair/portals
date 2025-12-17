@@ -17,7 +17,7 @@ router.get('', async (req, res) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'created.date:-1')
+  const sort = findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params, 1000)
   const query = findUtils.filterPermissions(params, session)
 
@@ -34,17 +34,13 @@ router.post('', async (req, res) => {
   assertAccountRole(session, session.account, 'admin')
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const group: Group = {
     _id: randomUUID(),
     slug: slug.default(body.title, { lower: true, strict: true }),
     owner: session.account,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     description: '',
     ...body
   }

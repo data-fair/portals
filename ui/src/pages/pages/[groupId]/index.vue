@@ -91,7 +91,7 @@ const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(route.para
 const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
-    sort: 'updated.date:-1',
+    sort: 'updatedAt:-1',
     select: '_id,title'
   }
 

@@ -76,7 +76,7 @@ const { t } = useI18n()
 const reusesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
-    sort: 'updated.date:-1',
+    sort: 'updatedAt:-1',
     select: '_id,title'
   }
   if (showAll.value) params.showAll = 'true'
