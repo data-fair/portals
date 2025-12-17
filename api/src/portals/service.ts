@@ -6,6 +6,7 @@ import debugModule from 'debug'
 import equal from 'fast-deep-equal'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import axios from '@data-fair/lib-node/axios.js'
+import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import mongo from '#mongo'
 import config from '#config'
@@ -76,6 +77,7 @@ export const validatePortalDraft = async (portal: Portal, session: SessionStateA
   debug('validatePortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
+  sendPortalEvent(portal, 'a été validé', 'draft-validate', session)
   return updatedPortal
 }
 
@@ -83,6 +85,7 @@ export const cancelPortalDraft = async (portal: Portal, session: SessionStateAut
   debug('cancelPortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
+  sendPortalEvent(portal, 'a été annulé', 'draft-discard', session)
   return updatedPortal
 }
 
@@ -301,4 +304,38 @@ const cleanUnusedImages = async (portal: Portal) => {
     _id: { $nin: imagesIds }
   }
   await mongo.images.deleteMany(deleteFilter)
+}
+
+/**
+ * Helper function to send events related to portals
+ * @param portal The portal object
+ * @param actionText The text describing the action (e.g. "a été validé")
+ * @param topicAction The action part of the topic key (e.g. "draft-validate", "draft-discard")
+ * @param sessionState Optional session state for authentication
+ * @param body Optional additional information to include in the event
+ */
+export const sendPortalEvent = (
+  portal: Portal,
+  actionText: string,
+  topicAction: string,
+  sessionState?: SessionStateAuthenticated,
+  body?: string
+) => {
+  if (!config.privateEventsUrl && !config.secretKeys.events) return
+
+  const title = topicAction.includes('draft-')
+    ? `Le brouillon du portail ${portal.title} ${actionText}`
+    : `Le portail ${portal.title} ${actionText}`
+
+  eventsQueue.pushEvent({
+    title,
+    topic: { key: `portals:portal-${topicAction}:${portal._id}` },
+    sender: portal.owner,
+    resource: {
+      type: 'portal',
+      id: portal._id,
+      title: portal.title,
+    },
+    body
+  }, sessionState)
 }

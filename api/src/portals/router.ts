@@ -10,7 +10,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -107,6 +107,7 @@ router.post('', async (req, res, next) => {
   assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), req.headers.cookie)
+  sendPortalEvent(portal, 'a été créé', 'create', session)
 
   res.status(201).json(portal)
 })
@@ -120,12 +121,21 @@ router.patch('/:id', async (req, res, next) => {
   const portal = await getPortalAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), [], req.headers.cookie)
+
+  // Send patch event only if not just draft changed
+  const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
+  if (!onlyDraftChanged) {
+    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session)
+  }
+
   res.send(updatedPortal)
 })
 
 router.delete('/:id', async (req, res, next) => {
-  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  const session = reqSessionAuthenticated(req)
+  const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), req.headers.cookie)
+  sendPortalEvent(portal, 'a été supprimé', 'delete', session)
   res.status(201).send()
 })
 
