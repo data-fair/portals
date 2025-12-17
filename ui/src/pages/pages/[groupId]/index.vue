@@ -71,6 +71,7 @@
         v-model:search="search"
         v-model:show-all="showAll"
         :group="group"
+        :pages-count="pagesFetch.data.value?.count || 0"
         @refresh-group="groupFetch.refresh()"
       />
     </navigation-right>

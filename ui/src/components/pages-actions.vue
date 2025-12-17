@@ -105,6 +105,14 @@
     >
       <v-card-text class="pb-0">
         {{ t('confirmDeleteGroup', { title: group.title }) }}
+        <v-alert
+          v-if="pagesCount"
+          class="mt-4"
+          type="error"
+          variant="outlined"
+        >
+          {{ t('deletingGroupWithPagesError') }}
+        </v-alert>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -118,6 +126,7 @@
           color="warning"
           variant="flat"
           :loading="deleteGroup.loading.value"
+          :disabled="!!pagesCount"
           @click="deleteGroup.execute()"
         >
           {{ t('yes') }}
@@ -162,7 +171,7 @@ const session = useSessionAuthenticated()
 
 const search = defineModel('search', { type: String, default: '' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
-const { group } = defineProps < { group: { _id: string, slug: string, title: string, description?: string } }>()
+const { group } = defineProps < { group: { _id: string, slug: string, title: string, description?: string }, pagesCount: number }>()
 const emit = defineEmits<{ (e: 'refresh-group'): void }>()
 
 const editGroupMenu = ref(false)
