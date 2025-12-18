@@ -63,6 +63,19 @@
 
   <v-divider class="my-2" />
 
+  <!-- Events -->
+  <custom-router-link :to="`/portals/${portal.id}/events`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiClipboardTextClock"
+        />
+      </template>
+      {{ t('events') }}
+    </v-list-item>
+  </custom-router-link>
+
   <v-menu
     v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
     v-model="showChangeOwnerMenu"
@@ -221,7 +234,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount } from '@mdi/js'
+import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -302,6 +315,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletingPortal: Deleting portal
     errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
+    events: Events
     manageDomainExposure: Manage domain exposure
     no: No
     ownerChanged: Owner changed!
@@ -325,6 +339,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletingPortal: Suppression du portail
     errorChangingOwner: Erreur lors de le changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
+    events: Traçabilité
     manageDomainExposure: Gérer l'exposition du domaine
     no: Non
     ownerChanged: Propriétaire changé !

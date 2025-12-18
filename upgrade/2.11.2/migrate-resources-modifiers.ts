@@ -27,7 +27,6 @@ export default {
       }).toArray()
 
       for (const doc of documents) {
-        console.log(doc._id)
         const patch: { $set?: Record<string, any>, $unset?: Record<string, number> } = {}
         let hasMigration = false
 

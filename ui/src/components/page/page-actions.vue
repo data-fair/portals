@@ -78,6 +78,19 @@
 
   <v-divider class="my-2" />
 
+  <!-- Events -->
+  <custom-router-link :to="`/pages/${groupId}/${pageId}/events`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiClipboardTextClock"
+        />
+      </template>
+      {{ t('events') }}
+    </v-list-item>
+  </custom-router-link>
+
   <!-- Change owner -->
   <v-menu
     v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
@@ -194,7 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete } from '@mdi/js'
+import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -263,6 +276,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletingPage: Deleting page
     editDraft: Edit draft
     errorChangingOwner: Error while changing the owner
+    events: Events
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
@@ -281,6 +295,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletingPage: Suppression de la page
     editDraft: Éditer le brouillon
     errorChangingOwner: Erreur lors de le changement de propriétaire
+    events: Traçabilité
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
