@@ -1613,7 +1613,7 @@ export default {
             required: ['id'],
             layout: {
               getItems: {
-                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
                 qSearchParam: 'q',
                 itemsResults: 'data.results',
                 itemTitle: '`${item.title} (${item.id})`',
@@ -1688,7 +1688,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -1731,7 +1731,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -1748,8 +1748,7 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: "Synchroniser les paramètres d'URL",
-          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.',
-          default: true
+          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.'
         },
         display: {
           type: 'string',
@@ -1810,7 +1809,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2023,7 +2022,7 @@ export default {
             required: ['id'],
             layout: {
               getItems: {
-                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title',
+                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
                 qSearchParam: 'q',
                 itemsResults: 'data.results',
                 itemTitle: '`${item.title} (${item.id})`',
@@ -2085,7 +2084,7 @@ export default {
           required: ['id', 'title', 'slug'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug',
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2108,8 +2107,7 @@ export default {
           type: 'boolean',
           layout: 'switch',
           title: "Synchroniser les paramètres d'URL",
-          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application.",
-          default: true
+          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application."
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

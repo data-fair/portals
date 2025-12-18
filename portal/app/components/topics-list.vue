@@ -24,7 +24,7 @@
         :elevation="config?.elevation"
         :rounded="config?.rounded"
         :link="isFilters || !!link"
-        :to="(!preview && link && !isExternalLink(link)) ? resolveLink(link) : undefined"
+        :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
         :style="{ '--v-border-color': borderColor(topic.color) }"
         border="sm opacity-100"
         variant="flat"
