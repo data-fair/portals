@@ -261,7 +261,7 @@ const filters = {
   sort: useStringSearchParam('sort', { default: config.defaultSort })
 }
 
-const search = ref<string>('')
+const search = ref<string>(filters.search.value || '')
 const sort = ref<string>()
 const order = ref<'-1' | '1'>()
 
