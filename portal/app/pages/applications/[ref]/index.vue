@@ -115,7 +115,7 @@ const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const route = useRoute()
 
-const applicationFetch = useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
+const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
   params: {
     html: 'vuetify',
     publicationSites: 'data-fair-portals:' + portal.value._id
@@ -169,12 +169,10 @@ const thumbnailUrl = computed(() => {
   return `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`
 })
 
-watch(application, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'applications' },
-    { title: application.value?.title || t('application') }
-  ])
-}, { immediate: true })
+setBreadcrumbs([
+  { type: 'standard', subtype: 'applications' },
+  { title: application.value?.title || t('application') }
+])
 
 usePageSeo({
   title: () => application.value?.title || t('application'),

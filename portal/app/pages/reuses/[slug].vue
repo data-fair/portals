@@ -157,12 +157,10 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/reuses/${slug}/images/${id}`
 }
 
-watch(() => reuseFetch.data.value, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'reuses' },
-    { title: reuseConfig.value?.title || t('reuse') }
-  ])
-}, { immediate: true })
+setBreadcrumbs([
+  { type: 'standard', subtype: 'reuses' },
+  { title: reuseConfig.value?.title || t('reuse') }
+])
 
 usePageSeo({
   title: () => (reuseConfig.value?.title || t('reuse')) + ' - ' + portalConfig.value.title,
