@@ -62,14 +62,14 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs } = useNavigationStore()
 
-// Check if standard pages exist
-const contactFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
-const privacyPolicyFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
-const accessibilityFetch = await useFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { watch: false })
-const legalNoticeFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
-const cookiePolicyFetch = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
-const termsOfServiceFetch = await useFetch<PageConfig>('/portal/api/pages/terms-of-service/terms-of-service', { watch: false })
-const pageExists = (pageFetch: typeof contactFetch) => !!pageFetch.data.value && !pageFetch.error.value
+// Check if standard pages exist - HEAD request to avoid fetching full content
+const contactFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { method: 'HEAD', watch: false })
+const privacyPolicyFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { method: 'HEAD', watch: false })
+const accessibilityFetch = await useFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { method: 'HEAD', watch: false })
+const legalNoticeFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { method: 'HEAD', watch: false })
+const cookiePolicyFetch = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { method: 'HEAD', watch: false })
+const termsOfServiceFetch = await useFetch<PageConfig>('/portal/api/pages/terms-of-service/terms-of-service', { method: 'HEAD', watch: false })
+const pageExists = (pageFetch: Awaited<ReturnType<typeof useFetch<PageConfig | undefined>>>) => !!pageFetch.data.value && !pageFetch.error.value
 
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {

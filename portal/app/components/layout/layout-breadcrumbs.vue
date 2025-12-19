@@ -50,7 +50,6 @@ const breadcrumbItems = computed(() => {
 <i18n lang="yaml">
   en:
     home: Home
-
   fr:
     home: 'Accueil'
 </i18n>

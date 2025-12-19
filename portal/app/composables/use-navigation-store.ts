@@ -29,7 +29,7 @@ const createNavigationStore = () => {
       const breadcrumbItem: BreadcrumbItem = { title }
 
       // Use 'to' for internal links, 'href' for external
-      if (linkItem.type === 'external') breadcrumbItem.to = resolvedLink
+      if (linkItem.type === 'external' && isExternalLink(linkItem)) breadcrumbItem.to = resolvedLink
       else if (resolvedLink) breadcrumbItem.to = resolvedLink
       else breadcrumbItem.disabled = true
 
