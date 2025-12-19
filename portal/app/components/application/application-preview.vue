@@ -6,7 +6,7 @@
     :text="t('preview')"
     :short-text="t('previewShort')"
     :track-path="`/applications/${application.slug}/preview-dialog`"
-    block
+    :block="block"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + application.title"
@@ -24,7 +24,9 @@ const { application } = defineProps<{
     title: string
     slug: string
     exposedUrl: string
-  }
+  },
+  /** Whether the button should take the full width of its container */
+  block?: boolean
 }>()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
