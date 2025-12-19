@@ -86,7 +86,23 @@
       closable-chips
       multiple
       hide-details
-    />
+    >
+      <template #chip="{ props, item }">
+        <v-chip
+          v-bind="props"
+          :prepend-icon="item.raw.value.icon?.svgPath"
+          :text="item.title"
+        />
+      </template>
+
+      <template #item="{ props, item }">
+        <v-list-item
+          v-bind="props"
+          :prepend-icon="item.raw.value.icon?.svgPath"
+          :title="item.title"
+        />
+      </template>
+    </v-autocomplete>
   </v-col>
 
   <!-- Keywords filters (datasets only) -->
@@ -222,7 +238,7 @@
 <script setup lang="ts">
 import type { DatasetsCatalogElement, ApplicationsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-vue/session'
-import { mdiMagnify, mdiSortAscending, mdiSortDescending } from '@mdi/js'
+import { mdiMagnify, mdiSortAscending, mdiSortDescending, mdiHome, mdiBook } from '@mdi/js'
 
 type Concept = {
   id: string
@@ -261,7 +277,7 @@ const filters = {
   sort: useStringSearchParam('sort', { default: config.defaultSort })
 }
 
-const search = ref<string>('')
+const search = ref<string>(filters.search.value || '')
 const sort = ref<string>()
 const order = ref<'-1' | '1'>()
 
@@ -322,8 +338,9 @@ const previewFacets: Facets = {
     { value: { id: 'app-2', title: 'Application 2' }, count: 5 }
   ],
   topics: [
-    { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }, count: 5 },
-    { value: { id: 'topic-2', title: 'Autre thématique', color: '#1d6bd3' }, count: 3 }
+    { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d', icon: { svgPath: mdiHome } }, count: 5 },
+    { value: { id: 'topic-2', title: 'Autre thématique', color: '#1d6bd3', icon: { svgPath: mdiBook } }, count: 3 },
+    { value: { id: 'topic-3', title: 'Dernière thématique', color: '#d31d6b' }, count: 2 }
   ],
   keywords: [
     { value: 'keyword-1', count: 6 },

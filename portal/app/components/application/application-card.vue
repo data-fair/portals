@@ -137,7 +137,7 @@
           class="pa-2 cursor-default"
           @click.prevent
         >
-          <application-preview :application="application" />
+          <application-preview :application="application" block />
           <action-btn
             :to="`/applications/${application.slug}/full`"
             :action-style="cardConfig.actionsStyle"

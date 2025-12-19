@@ -336,8 +336,8 @@ const sortItems = [
   en:
     ascending: Ascending order
     catalogApiDoc: Catalog API Documentation
-    datasetsCount: '{count} dataset | {count} datasets'
-    resultsCount: '{count} result | {count} results'
+    datasetsCount: 'No dataset | {count} dataset | {count} datasets'
+    resultsCount: 'No result | {count} result | {count} results'
     descending: Descending order
     export: Export filtered data as CSV
     search: Search
@@ -351,8 +351,8 @@ const sortItems = [
   fr:
     ascending: Ordre croissant
     catalogApiDoc: Documentation de l'API du catalogue
-    datasetsCount: '{count} jeu de données | {count} jeux de données'
-    resultsCount: '{count} résultat | {count} résultats'
+    datasetsCount: 'Aucun jeu de données | {count} jeu de données | {count} jeux de données'
+    resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
     descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV
     search: Rechercher

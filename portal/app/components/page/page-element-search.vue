@@ -22,7 +22,7 @@
       bg-color="surface"
       @keyup.enter="onSearch"
       @click:append-inner="onSearch"
-      @click:clear="onClear"
+      @click:clear="search = ''"
     >
       <template
         v-if="element.btnPosition === 'attached' || element.btnPosition === 'spaced'"
@@ -63,22 +63,20 @@ const router = useRouter()
 const { preview } = usePortalStore()
 const search = useStringSearchParam('q')
 
-const searchQuery = ref('')
+const searchQuery = ref(search.value || '')
 
 const onSearch = () => {
-  if (!preview && searchQuery.value?.trim()) {
+  if (!preview) {
     if (element.redirectPage) {
       router.push({
         path: '/datasets',
-        query: { q: searchQuery.value.trim() }
+        query: { q: searchQuery.value }
       })
     } else {
-      search.value = searchQuery.value.trim()
+      search.value = searchQuery.value
     }
   }
 }
-
-const onClear = () => { if (!preview) search.value = '' }
 
 </script>
 
