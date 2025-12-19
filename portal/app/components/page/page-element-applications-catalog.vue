@@ -316,10 +316,10 @@ const sortItems = [
 
 <i18n lang="yaml">
   en:
-    applicationsCount: '{count} application | {count} applications'
+    applicationsCount: 'No application | {count} application | {count} applications'
     ascending: Ascending order
     descending: Descending order
-    resultsCount: '{count} result | {count} results'
+    resultsCount: 'No result | {count} result | {count} results'
     sort:
       by: Sort by
       createdAt: Creation date
@@ -328,10 +328,10 @@ const sortItems = [
       owner: Owner
 
   fr:
-    applicationsCount: '{count} visualisation | {count} visualisations'
+    applicationsCount: 'Aucune visualisation | {count} visualisation | {count} visualisations'
     ascending: Ordre croissant
     descending: Ordre décroissant
-    resultsCount: '{count} résultat | {count} résultats'
+    resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
     sort:
       by: Trier par
       createdAt: Date de création
