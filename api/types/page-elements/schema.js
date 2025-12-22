@@ -78,7 +78,7 @@ export default {
             icon: mdiPuzzleOutline
           },
           { key: 13, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
-          { key: 14, title: 'Topics list', 'x-i18n-title': { fr: 'Liste des thématiques' } },
+          { key: 14, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
           // { key: 15, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated ?
           { key: 16, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
           {
@@ -1171,7 +1171,7 @@ export default {
       title: 'TopicsElement',
       'x-i18n-title': {
         en: 'Topics list',
-        fr: 'Liste des thématiques'
+        fr: 'Liste de thématiques'
       },
       required: ['type'],
       properties: {

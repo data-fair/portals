@@ -26,20 +26,6 @@
   </v-alert>
 
   <v-list-item
-    :prepend-avatar="avatarUrl"
-    :title="ownerName"
-  />
-  <v-list-item
-    :prepend-icon="mdiPencil"
-    :title="page?.updated.name"
-    :subtitle="dayjs(page?.updated.date).format(t('dateFormat'))"
-  />
-  <v-list-item
-    :prepend-icon="mdiPlusCircleOutline"
-    :title="page?.created.name"
-    :subtitle="dayjs(page?.created.date).format(t('dateFormat'))"
-  />
-  <v-list-item
     :prepend-icon="mdiInformationOutline"
     :title="t('pageType.title')"
     :subtitle="t('pageType.' + (page?.type || 'generic')) + (page?.config.genericMetadata?.group?.title ? ' ' + t('pageGroup', { groupTitle: page.config.genericMetadata.group.title }) : '')"
@@ -47,25 +33,11 @@
 </template>
 
 <script setup lang="ts">
-import { mdiPencil, mdiPlusCircleOutline, mdiInformationOutline } from '@mdi/js'
+import { mdiInformationOutline } from '@mdi/js'
 
 const session = useSessionAuthenticated()
-const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
 const { patchPage, page } = usePageStore()
-
-const ownerName = computed(() => {
-  if (!page.value) return ''
-  const baseName = page.value.owner.name || page.value.owner.id
-  const departmentInfo = page.value.owner.departmentName || page.value.owner.department
-  return departmentInfo
-    ? `${baseName} - ${departmentInfo}`
-    : baseName
-})
-const avatarUrl = computed(() => {
-  if (page.value?.owner.department) return `/simple-directory/api/avatars/${page.value?.owner.type}/${page.value?.owner.id}/${page.value?.owner.department}/avatar.png`
-  else return `/simple-directory/api/avatars/${page.value?.owner.type}/${page.value?.owner.id}/avatar.png`
-})
 
 </script>
 

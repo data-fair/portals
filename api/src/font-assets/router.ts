@@ -35,15 +35,11 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
   const file = req.file
   if (!file) throw httpError(400, 'missing font-asset file')
 
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const fontAsset: FontAsset = {
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
-    created,
+    createdAt,
     ...body,
     data: await readFile(file.path)
   }

@@ -7,7 +7,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse } from './service.ts'
+import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -17,7 +17,7 @@ router.get('', async (req, res, next) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'created.date:-1')
+  const sort = findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals' })
@@ -41,11 +41,7 @@ router.post('', async (req, res, next) => {
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
 
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const reuseId = randomUUID()
   const owner = body.owner ?? session.account
@@ -72,8 +68,8 @@ router.post('', async (req, res, next) => {
     title: config.title,
     slug: uniqueSlug,
     owner,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     config,
     portals: body.portals || [],
     requestedPortals: []
@@ -82,6 +78,7 @@ router.post('', async (req, res, next) => {
 
   await createReuse(reuse)
 
+  sendReuseEvent(reuse, 'a été créée', 'create', session)
   res.status(201).json(reuse)
 })
 
@@ -94,11 +91,19 @@ router.patch('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
+
+  // Send patch event only if there are changes beyond portals
+  const hasOtherChanges = Object.keys(body).some(key => key !== 'portals')
+  if (hasOtherChanges) {
+    sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+  }
+
   res.send(updatedReuse)
 })
 
 router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
+  sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
   res.status(201).send()
 })

@@ -1,7 +1,8 @@
 import { createServer } from 'node:http'
 import { session } from '@data-fair/lib-express/index.js'
-import { startObserver, stopObserver } from '@data-fair/lib-node/observer.js'
+import { startObserver, stopObserver, internalError } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
+import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import locks from '@data-fair/lib-node/locks.js'
 import upgradeScripts from '@data-fair/lib-node/upgrade-scripts.js'
 import mongo from '#mongo'
@@ -24,6 +25,15 @@ export const start = async () => {
   await mongo.init()
   await locks.start(mongo.db)
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
+
+  // Configure events queue
+  if (config.privateEventsUrl) {
+    if (!config.secretKeys.events) {
+      internalError('portals', 'Missing secretKeys.events in config')
+    } else {
+      await eventsQueue.start({ eventsUrl: config.privateEventsUrl, eventsSecret: config.secretKeys.events })
+    }
+  }
 
   server.listen(config.port)
   await eventPromise(server, 'listening')

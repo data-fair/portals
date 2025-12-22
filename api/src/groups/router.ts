@@ -7,7 +7,7 @@ import * as patchReqBody from '#doc/groups/patch-req-body/index.ts'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createGroup, patchGroup } from './service.ts'
+import { createGroup, patchGroup, sendGroupEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -17,7 +17,7 @@ router.get('', async (req, res) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'created.date:-1')
+  const sort = findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params, 1000)
   const query = findUtils.filterPermissions(params, session)
 
@@ -34,22 +34,19 @@ router.post('', async (req, res) => {
   assertAccountRole(session, session.account, 'admin')
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const group: Group = {
     _id: randomUUID(),
     slug: slug.default(body.title, { lower: true, strict: true }),
     owner: session.account,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     description: '',
     ...body
   }
 
   await createGroup(group)
+  sendGroupEvent(group, 'a été créé', 'create', session)
   res.status(201).json(group)
 })
 
@@ -68,8 +65,9 @@ router.patch('/:id', async (req, res) => {
   assertAccountRole(session, group.owner, 'admin')
 
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-  await patchGroup(group, body, session)
-  res.send({ ...group, body })
+  const updatedGroup = await patchGroup(group, body, session)
+  sendGroupEvent(updatedGroup, 'a été modifié', 'patch', session)
+  res.send(updatedGroup)
 })
 
 router.delete('/:id', async (req, res) => {
@@ -78,5 +76,6 @@ router.delete('/:id', async (req, res) => {
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
   assertAccountRole(session, group.owner, 'admin')
   await mongo.groups.deleteOne({ _id: req.params.id })
+  sendGroupEvent(group, 'a été supprimé', 'delete', session)
   res.status(204).send()
 })

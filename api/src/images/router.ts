@@ -40,15 +40,11 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
     if (!hasPage) throw httpError(404, 'linked page not found')
   }
 
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const image: Image = {
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
-    created,
+    createdAt,
     name: file.originalname,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))

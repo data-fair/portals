@@ -6,7 +6,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -16,7 +16,7 @@ router.get('', async (req, res, next) => {
   assertAccountRole(session, session.account, 'admin')
 
   const params = req.query as Record<string, string>
-  const sort = findUtils.sort(params.sort || 'created.date:-1')
+  const sort = findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals', type: 'type', groupId: 'config.genericMetadata.group._id' })
@@ -58,11 +58,7 @@ router.post('', async (req, res, next) => {
   }
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const pageId = randomUUID()
   const owner = body.owner ?? session.account
@@ -77,8 +73,8 @@ router.post('', async (req, res, next) => {
     title: body.config.title,
     type: body.type,
     owner,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     config,
     draftConfig: config,
     portals: body.portals || [],
@@ -86,8 +82,8 @@ router.post('', async (req, res, next) => {
   }
   assertAccountRole(session, page.owner, 'admin')
 
-  await createPage(page)
-
+  const creationDetails = await createPage(page, body.sourcePageId)
+  sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
   res.status(201).json(page)
 })
 
@@ -101,8 +97,8 @@ router.patch('/:id', async (req, res, next) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   if (body.isReference !== undefined) assertAdminMode(session)
   if (body.portals) assertAccountRole(session, page.owner, 'admin')
-  await patchPage(page, body, session)
-  res.send({ ...page, body })
+  const updatedPage = await patchPage(page, body, session)
+  res.send({ ...updatedPage, body })
 })
 
 router.delete('/:id', async (req, res, next) => {
@@ -111,6 +107,7 @@ router.delete('/:id', async (req, res, next) => {
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
+  sendPageEvent(page, 'a été supprimée', 'delete', session)
   res.status(201).send()
 })
 

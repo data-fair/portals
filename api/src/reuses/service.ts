@@ -2,8 +2,10 @@ import type { Reuse } from '#types/reuse/index.ts'
 
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
+import config from '#config'
 
 const debug = debugModule('reuses')
 
@@ -49,12 +51,26 @@ export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: S
 
   const fullPatch = {
     ...patch,
-    updated: { id: session.user.id, name: session.user.name, date: new Date().toISOString() }
+    updatedAt: new Date().toISOString()
   }
   const updatedReuse = { ...reuse, ...fullPatch }
 
+  // Track portal additions/removals
+  const addedPortals = patch.portals ? patch.portals.filter(portalId => !reuse.portals.includes(portalId)) : []
+  const removedPortals = patch.portals ? reuse.portals.filter(portalId => !patch.portals!.includes(portalId)) : []
+
   await mongo.reuses.updateOne({ _id: reuse._id }, { $set: fullPatch })
   await cleanUnusedImages(updatedReuse)
+
+  // Send events for portal publication changes
+  for (const portalId of addedPortals) {
+    sendReuseEvent(updatedReuse, 'a été publiée sur un portail', 'publish', session, `La réutilisation a été publiée sur le portail : ${portalId}`)
+  }
+
+  for (const portalId of removedPortals) {
+    sendReuseEvent(updatedReuse, "a été dépubliée d'un portail", 'unpublish', session, `La réutilisation a été dépubliée du portail : ${portalId}`)
+  }
+
   return updatedReuse
 }
 
@@ -83,4 +99,36 @@ const cleanUnusedImages = async (reuse: Reuse) => {
     _id: { $nin: imagesIds }
   }
   await mongo.images.deleteMany(deleteFilter)
+}
+
+/**
+ * Helper function to send events related to reuses
+ * @param reuse The reuse object
+ * @param actionText The text describing the action (e.g. "a été créé")
+ * @param topicAction The action part of the topic key (e.g. "create", "patch", "delete")
+ * @param sessionState Optional session state for authentication
+ * @param body Optional additional information to include in the event
+ */
+export const sendReuseEvent = (
+  reuse: Reuse,
+  actionText: string,
+  topicAction: string,
+  sessionState?: SessionStateAuthenticated,
+  body?: string
+) => {
+  if (!config.privateEventsUrl && !config.secretKeys.events) return
+
+  const title = `La réutilisation ${reuse.title} ${actionText}`
+
+  eventsQueue.pushEvent({
+    title,
+    topic: { key: `reuses:reuse-${topicAction}:${reuse._id}` },
+    sender: reuse.owner,
+    resource: {
+      type: 'reuse',
+      id: reuse._id,
+      title: reuse.title,
+    },
+    body
+  }, sessionState)
 }

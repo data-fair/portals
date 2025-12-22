@@ -2,7 +2,7 @@
   "name": "api",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development DEBUG=sync-portal,upgrade node --watch --experimental-strip-types index.ts"
+    "dev": "NODE_ENV=development DEBUG=sync-portal,upgrade* node --watch --experimental-strip-types index.ts"
   },
   "imports": {
     "#config": "./src/config.ts",

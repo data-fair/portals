@@ -80,7 +80,7 @@ const currentPage = computed(() => {
 const skip = computed(() => (currentPage.value - 1) * limit)
 
 const reuses = await useFetch<{
-  results: Array<Pick<Reuse, '_id' | 'slug' | 'config' | 'updated'>>
+  results: Array<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>
   total: number
   limit: number
   skip: number

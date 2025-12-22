@@ -10,7 +10,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent } from './service.ts'
 
 const router = Router()
 export default router
@@ -27,7 +27,7 @@ router.get('', async (req, res, next) => {
   // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
 
   const project = findUtils.project(req.query.select)
-  const sort = findUtils.sort(req.query.sort || 'created.date:-1')
+  const sort = findUtils.sort(req.query.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(req.query)
 
   const [count, portals] = await Promise.all([
@@ -44,11 +44,7 @@ router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const created = {
-    id: session.user.id,
-    name: session.user.name,
-    date: new Date().toISOString()
-  }
+  const createdAt = new Date().toISOString()
 
   const initialConfig: PortalConfig = {
     ...body.config,
@@ -98,8 +94,8 @@ router.post('', async (req, res, next) => {
     _id: randomUUID(),
     title: initialConfig.title,
     owner: body.owner || session.account,
-    created,
-    updated: created,
+    createdAt,
+    updatedAt: createdAt,
     ...body,
     config: initialConfig,
     draftConfig: initialConfig
@@ -107,6 +103,7 @@ router.post('', async (req, res, next) => {
   assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), req.headers.cookie)
+  sendPortalEvent(portal, 'a été créé', 'create', session)
 
   res.status(201).json(portal)
 })
@@ -120,12 +117,21 @@ router.patch('/:id', async (req, res, next) => {
   const portal = await getPortalAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), [], req.headers.cookie)
+
+  // Send patch event only if not just draft changed
+  const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
+  if (!onlyDraftChanged) {
+    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session, 'Modifications : ' + Object.keys(body).join(', '))
+  }
+
   res.send(updatedPortal)
 })
 
 router.delete('/:id', async (req, res, next) => {
-  const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
+  const session = reqSessionAuthenticated(req)
+  const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), req.headers.cookie)
+  sendPortalEvent(portal, 'a été supprimé', 'delete', session)
   res.status(201).send()
 })
 

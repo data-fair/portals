@@ -93,11 +93,13 @@ export default {
         title: `Catalogue de visualisations - ${portal.title}`,
         type: 'applications',
         owner: portal.owner,
+        // @ts-ignore renamed by createdAt in later versions
         created: {
           id: portal.owner.id,
           name: portal.owner.name + ' (Administration)',
           date: now
         },
+        // @ts-ignore renamed by createdAt in later versions
         updated: {
           id: portal.owner.id,
           name: portal.owner.name + ' (Administration)',

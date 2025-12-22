@@ -4,7 +4,7 @@ export default {
   title: 'Page',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'title', 'type', 'owner', 'created', 'updated', 'config', 'draftConfig', 'portals', 'requestedPortals'],
+  required: ['_id', 'title', 'type', 'owner', 'createdAt', 'updatedAt', 'config', 'draftConfig', 'portals', 'requestedPortals'],
   properties: {
     _id: {
       type: 'string',
@@ -26,8 +26,8 @@ export default {
       readOnly: true
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
-    created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
-    updated: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
+    createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
+    updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     configUpdatedAt: {
       type: 'string',
       format: 'date-time',

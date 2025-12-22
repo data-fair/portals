@@ -4,13 +4,13 @@ export default {
   title: 'Font asset',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'name', 'owner', 'created', 'subset', 'weightRange', 'style', 'file', 'data'],
+  required: ['_id', 'name', 'owner', 'createdAt', 'subset', 'weightRange', 'style', 'file', 'data'],
   properties: {
     _id: {
       type: 'string'
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
-    created: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/modifier' },
+    createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     name: {
       type: 'string',
       title: 'Nom de la famille de police'
