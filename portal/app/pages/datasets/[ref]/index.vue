@@ -310,7 +310,7 @@ const route = useRoute()
 
 const dataTab = ref<string | undefined>()
 
-const datasetFetch = useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
+const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
   params: {
     html: 'vuetify',
     publicationSites: 'data-fair-portals:' + portal.value._id
@@ -391,12 +391,10 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
-watch(dataset, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'datasets' },
-    { title: dataset.value?.title || t('dataset') }
-  ])
-}, { immediate: true })
+setBreadcrumbs([
+  { type: 'standard', subtype: 'datasets' },
+  { title: dataset.value?.title || t('dataset') }
+])
 
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),

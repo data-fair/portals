@@ -91,12 +91,9 @@ const computedActiveTab = computed(() => {
   return undefined // No match found, no active tab and slider
 })
 
-/** For preview mode */
-const activeTab = ref<number | undefined>()
-
-/** Writable model for v-model: uses activeTab when previewing, otherwise reads computedActiveTab */
-const modelTab = preview ? activeTab : computedActiveTab
-
+/** Writable model for v-model */
+const modelTab = ref<number | undefined>(computedActiveTab.value)
+watch(computedActiveTab, (val) => { if (!preview) modelTab.value = val })
 </script>
 
 <style scoped lang="css">

@@ -60,7 +60,7 @@ export default {
             title: 'Images',
             subtitle: 'Ces images seront utilisées pour l\'apparence globale du site, la mire d\'authentification, etc. Vous pouvez charger de nombreuses autres images de manière plus ciblée dans les autres sections et dans les pages.',
             comp: 'card',
-            children: ['logo', 'logoDark', 'favicon']
+            children: ['logo', 'logoDark', 'favicon', 'errorImages']
           },
           {
             title: 'Couleurs',
@@ -339,6 +339,7 @@ export default {
         }
       }
     },
+    errorImages: { $ref: 'https://github.com/data-fair/portals/portal-config-error-images' },
     headerHomeActive: {
       type: 'boolean',
       title: "Utiliser un rendu différent sur la page d'accueil",
