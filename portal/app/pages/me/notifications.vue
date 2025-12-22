@@ -34,17 +34,16 @@
 <script setup lang="ts">
 import { mdiBellCircle } from '@mdi/js'
 
-const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
+const { portal, portalConfig } = usePortalStore()
 
 const notifyUrl = computed(() => {
   if (!topics.value) return
-  const portalTitle = portalConfig.value.title || new URL(window.location.href).host
   const keys = [`data-fair:dataset-published:data-fair-portals:${portal.value._id}`]
-  const titles = ['Nouveau jeu de données sur ' + portalTitle]
+  const titles = ['Nouveau jeu de données sur ' + portalConfig.value.title]
   for (const topic of topics.value) {
     keys.push(`data-fair:dataset-published-topic:data-fair-portals:${portal.value._id}:${topic.value.id}`)
-    titles.push(`Nouveau jeu de données dans la thématique ${topic.value.title} sur ${portalTitle}`)
+    titles.push(`Nouveau jeu de données dans la thématique ${topic.value.title} sur ${portalConfig.value.title}`)
   }
   const icon = `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/avatar.png`
   const urlTemplate = '/datasets/{id}'

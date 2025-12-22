@@ -36,7 +36,7 @@ const { portalConfig } = usePortalStore()
 const src = computed(() => {
   const keys = [`data-fair:dataset-data-updated:${dataset.id}`, `data-fair:dataset-breaking-change:${dataset.id}`]
   const titles = ['Mise à jour des données', 'Rupture de compatibilité des données']
-  const urlTemplate = `/data-fair/datasets/${dataset.id}`
+  const urlTemplate = '/datasets/' + dataset.id
   let sender = `${dataset.owner.type}:${dataset.owner.id}`
   if (dataset.owner.department) sender += ':' + dataset.owner.department
   return `/events/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
