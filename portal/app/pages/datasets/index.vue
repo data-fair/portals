@@ -37,7 +37,7 @@ watch(() => pageConfigFetch.data.value, () => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('datasets')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
+  description: () => pageConfigFetch.data.value?.description || t('seoDescription')
 })
 
 </script>
@@ -45,6 +45,8 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     datasets: Datasets
+    seoDescription: 'Explore our datasets. Find data by themes, concepts, and more.'
   fr:
     datasets: Données
+    seoDescription: 'Explorez nos jeux de données. Trouvez des données par thèmes, concepts, et plus encore.'
 </i18n>

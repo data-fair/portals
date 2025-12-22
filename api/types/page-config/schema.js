@@ -41,7 +41,14 @@ export default {
       'x-i18n-title': {
         fr: 'Description'
       },
-      layout: 'textarea'
+      description: "### Tips for Writing Your Description\nThe description helps search engines and social networks present your page. Here are some best practices:\n- **Be concise:** 150-160 characters.  \n- **Clear summary:** describe the main content of the page.  \n- **Unique:** each page should have a description tailored to its content.  \n- **Encourage clicks:** make the description attractive for users.\nIt's better to leave the description empty than to provide a poorly written one. If no description is provided, search engines will automatically generate a snippet from the page content.",
+      'x-i18n-description': {
+        fr: "### Quelques conseils pour rédiger votre description\nLa description aide les moteurs de recherche et les réseaux sociaux à présenter votre page. Voici quelques bonnes pratiques :\n- **Soyez concis :** 150-160 caractères.  \n- **Résumé clair :** décrivez le contenu principal de la page.  \n- **Unique :** chaque page doit avoir une description adaptée à son contenu.  \n- **Incitez au clic :** rendez la description attractive pour l'utilisateur.\nIl vaut mieux ne pas saisir de description que de saisir une description bâclée.\nSi aucune description n'est renseignée, les moteurs de recherche généreront automatiquement un extrait du contenu de la page."
+      },
+      layout: {
+        comp: 'textarea',
+        props: { counter: true }
+      }
     },
     eventMetadata: {
       type: 'object',

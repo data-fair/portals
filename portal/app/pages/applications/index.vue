@@ -37,7 +37,7 @@ watch(() => pageConfigFetch.data.value, () => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('applications')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
+  description: () => pageConfigFetch.data.value?.description || t('seoDescription')
 })
 
 </script>
@@ -45,6 +45,8 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     applications: Applications
+    seoDescription: 'Explore our applications: interactive maps, charts, and tables to analyze and understand data.'
   fr:
     applications: Visualisations
+    seoDescription: 'Explorez nos visualisations : cartes interactives, graphiques et tableaux pour analyser et comprendre les données.'
 </i18n>

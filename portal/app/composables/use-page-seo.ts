@@ -15,11 +15,13 @@ export const usePageSeo = (meta: {
   ogType?: 'website' | 'article'
   ogImage?: MaybeRefOrGetter<string | undefined>
 }) => {
+  const { portalConfig } = usePortalStore()
+
   const seoMeta: UseSeoMetaInput = {
     title: () => toValue(meta.title),
     description: () => toValue(meta.description),
     ogTitle: () => toValue(meta.title),
-    ogDescription: () => toValue(meta.description),
+    ogDescription: () => toValue(meta.description) || portalConfig.value.description,
     ogType: meta.ogType || 'website',
     ogUrl: useRequestURL().href
   }

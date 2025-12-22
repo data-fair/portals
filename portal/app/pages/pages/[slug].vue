@@ -42,6 +42,6 @@ usePageSeo({
   title: () => pageConfigFetch.data.value?.title
     ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
     : portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
+  description: () => pageConfigFetch.data.value?.description
 })
 </script>

@@ -164,7 +164,7 @@ setBreadcrumbs([
 
 usePageSeo({
   title: () => (reuseConfig.value?.title || t('reuse')) + ' - ' + portalConfig.value.title,
-  description: () => reuseConfig.value?.summary || portalConfig.value.description,
+  description: () => reuseConfig.value?.summary,
   ogType: 'article'
 })
 </script>

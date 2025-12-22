@@ -39,7 +39,7 @@ watch(() => pageConfigFetch.data.value, () => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('legalNotice')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || portalConfig.value.description
+  description: () => pageConfigFetch.data.value?.description
 })
 </script>
 

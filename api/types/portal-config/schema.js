@@ -196,7 +196,13 @@ export default {
     description: {
       type: 'string',
       title: 'Description',
-      layout: 'textarea'
+      layout: {
+        comp: 'textarea',
+        props: {
+          counter: true,
+          placeholder: 'Une brève description du portail utilisée par les moteurs de recherche et lors du partage sur les réseaux sociaux.'
+        }
+      }
     },
     allowRobots: {
       type: 'boolean',

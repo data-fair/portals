@@ -25,7 +25,7 @@ useNavigationStore().clearBreadcrumbs()
 // Meta from portal config, not home page config
 usePageSeo({
   title: portalConfig.value.title,
-  description: portalConfig.value.description
+  description: pageConfigFetch.data.value?.description || portalConfig.value.description
 })
 
 </script>
