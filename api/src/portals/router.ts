@@ -121,7 +121,7 @@ router.patch('/:id', async (req, res, next) => {
   // Send patch event only if not just draft changed
   const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
   if (!onlyDraftChanged) {
-    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session, Object.keys(body).join(', '))
+    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session, 'Modifications : ' + Object.keys(body).join(', '))
   }
 
   res.send(updatedPortal)
