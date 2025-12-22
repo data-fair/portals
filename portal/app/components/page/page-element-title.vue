@@ -1,7 +1,7 @@
 <template>
   <div :class="`my-${margins[element.titleSize] || '4'}`">
     <component
-      :is="element.titleSize"
+      :is="titleTag"
       :class="[
         'd-flex align-center',
         element.centered ? 'justify-center' : undefined,
@@ -52,7 +52,7 @@ import type { TitleElement } from '#api/types/page-config'
 
 const { element } = defineProps<{ element: TitleElement }>()
 
-// utile pour les marges dynamiques
+const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 const margins = {
   h6: '2',
   h5: '3',

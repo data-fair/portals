@@ -174,6 +174,23 @@ export default {
           },
           type: 'string',
           oneOf: [
+            { const: 'h1', title: 'Titre principal' },
+            { const: 'h2', title: 'Très grand' },
+            { const: 'h3', title: 'Grand' },
+            { const: 'h4', title: 'Moyen' },
+            { const: 'h5', title: 'Petit' },
+            { const: 'h6', title: 'Très petit' }
+          ],
+          default: 'h3',
+          layout: { cols: { xs: 8 } },
+        },
+        titleTag: {
+          title: 'Heading tag',
+          'x-i18n-title': {
+            fr: 'Balise'
+          },
+          type: 'string',
+          oneOf: [
             { const: 'h1', title: 'H1' },
             { const: 'h2', title: 'H2' },
             { const: 'h3', title: 'H3' },
@@ -181,7 +198,7 @@ export default {
             { const: 'h5', title: 'H5' },
             { const: 'h6', title: 'H6' }
           ],
-          default: 'h3',
+          layout: { cols: { xs: 4 } },
         },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
         centered: {
