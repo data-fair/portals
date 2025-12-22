@@ -2,13 +2,28 @@
   <v-row justify="center">
     <v-col class="text-center">
       <template v-if="statusCode === 404">
-        <error-not-found style="max-height: 300px" />
+        <v-img
+          v-if="portalConfig.errorImages?.notFound"
+          :src="getErrorImageSrc('notFound')"
+          style="max-height: 300px; margin: auto"
+        />
+        <error-not-found v-else style="max-height: 300px" />
       </template>
       <template v-else-if="statusCode === 401 || statusCode === 403">
-        <error-forbidden style="max-height: 300px" />
+        <v-img
+          v-if="portalConfig.errorImages?.forbidden"
+          :src="getErrorImageSrc('forbidden')"
+          style="max-height: 300px; margin: auto"
+        />
+        <error-forbidden v-else style="max-height: 300px" />
       </template>
       <template v-else>
-        <error-server style="max-height: 300px" />
+        <v-img
+          v-if="portalConfig.errorImages?.fallback"
+          :src="getErrorImageSrc('fallback')"
+          style="max-height: 300px; margin: auto"
+        />
+        <error-server v-else style="max-height: 300px" />
       </template>
       <div class="text-h5 my-4">
         {{ title }}
@@ -46,6 +61,12 @@ const defaultTitles: Record<number, string> = {
 }
 
 const title = computed(() => props.title || defaultTitles[props.statusCode] || t('error'))
+
+const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
+  const image = portalConfig.value.errorImages?.[type]
+  if (!image) return ''
+  return `/portal/api/images/${image._id}`
+}
 </script>
 
 <i18n lang="yaml">

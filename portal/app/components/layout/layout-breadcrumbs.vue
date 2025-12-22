@@ -3,7 +3,7 @@
     IMPORTANT: Manual v-for with <v-breadcrumbs-item> is used instead of the ":items" prop because:
       1. Bug Fix: Combining ":items" with the "#divider" slot in Nuxt 3 triggers a Vue "Slot invoked
         outside of render function" warning during hydration due to Vuetify's internal slot management.
-     2. Stability: Manual rendering bypasses complex internal logic, ensuring a stable render cycle
+      2. Stability: Manual rendering bypasses complex internal logic, ensuring a stable render cycle
         and better performance when breadcrumbs are updated reactively from a store.
   -->
   <v-breadcrumbs density="compact">
