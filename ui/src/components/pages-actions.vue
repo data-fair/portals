@@ -111,7 +111,7 @@
           type="error"
           variant="outlined"
         >
-          {{ t('deletingGroupWithPagesError') }}
+          {{ t('groupNotEmptyError') }}
         </v-alert>
       </v-card-text>
       <v-card-actions>
@@ -220,6 +220,7 @@ const deleteGroup = useAsyncAction(async () => {
     deleteGroup: Delete group
     deletingGroup: Deleting group
     confirmDeleteGroup: Do you really want to delete the group "{title}"? Deletion is permanent and data cannot be recovered.
+    groupNotEmptyError: Cannot delete the group while it contains pages
     no: No
     yes: Yes
 
@@ -238,6 +239,7 @@ const deleteGroup = useAsyncAction(async () => {
     deleteGroup: Supprimer le groupe
     deletingGroup: Suppression du groupe
     confirmDeleteGroup: Voulez-vous vraiment supprimer le groupe "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
+    groupNotEmptyError: Impossible de supprimer le groupe tant qu'il contient des pages
     no: Non
     yes: Oui
 </i18n>
