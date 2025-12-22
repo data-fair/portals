@@ -77,7 +77,7 @@ export const validatePortalDraft = async (portal: Portal, session: SessionStateA
   debug('validatePortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
-  sendPortalEvent(portal, 'a été validé', 'draft-validate', session)
+  sendPortalEvent(portal, 'a été validé', 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
   return updatedPortal
 }
 
@@ -338,4 +338,15 @@ export const sendPortalEvent = (
     },
     body
   }, sessionState)
+}
+
+const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): string => {
+  const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)])
+  const modifiedKeys: string[] = []
+
+  for (const key of allKeys) {
+    if (!equal(obj1[key], obj2[key])) modifiedKeys.push(key)
+  }
+
+  return modifiedKeys.join(', ')
 }
