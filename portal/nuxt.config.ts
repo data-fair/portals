@@ -84,7 +84,7 @@ export default defineNuxtConfig({
   css: [
     '@data-fair/lib-vuetify/style/global.scss',
     '@data-fair/portals-shared-markdown/style.css',
-    'vuetify/lib/components/VDataTable/VDataTable.css' // Ensure VDataTable styles are included, as the component is used in markdown rendering
+    'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
   vue: {
     compilerOptions: {

@@ -1,4 +1,7 @@
 <template>
+  <!--
+    active false => remove overlay when the `to` props is the current route
+  -->
   <v-btn
     :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
     :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
@@ -10,6 +13,7 @@
     :rounded="config?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
     :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
+    :active="false"
   >
     <v-icon
       v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
