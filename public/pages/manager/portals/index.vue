@@ -101,7 +101,7 @@
         </v-col>
       </v-container>
     </v-col>
-    <layout-navigation-right v-if="$vuetify.breakpoint.mdAndUp">
+    <!-- <layout-navigation-right v-if="$vuetify.breakpoint.mdAndUp">
       <v-list
         dense
         class="list-actions mr-2"
@@ -170,7 +170,7 @@
           </v-card>
         </v-menu>
       </v-list>
-    </layout-navigation-right>
+    </layout-navigation-right> -->
   </v-row>
 </template>
 
