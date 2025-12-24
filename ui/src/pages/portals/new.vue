@@ -1,454 +1,450 @@
 <template>
   <v-container
     data-iframe-height
-    style="min-height:800px"
     class="pa-0"
     fluid
   >
     <v-stepper
       v-model="step"
-      style="background-color: transparent"
+      bg-color="background"
       flat
     >
       <v-stepper-header>
         <v-stepper-item
-          :title="t('selectHomePageAction')"
-          value="action"
-          :color="step === 'action' ? 'primary' : ''"
-          :complete="actionType !== undefined"
-          editable
-          :icon="mdiPlaylistEdit"
-        />
-        <template v-if="actionType === 'reference' || actionType === 'duplicate'">
-          <v-divider />
-          <v-stepper-item
-            :title="actionType === 'reference' ? t('selectReference') : t('selectPageToDuplicate')"
-            value="source"
-            :color="step === 'source' ? 'primary' : ''"
-            :complete="selectedPageId !== undefined"
-            :editable="actionType !== undefined"
-            :icon="mdiFile"
-          />
-        </template>
-        <v-divider />
-        <v-stepper-item
-          :title="t('selectCatalogAction')"
-          value="catalog-action"
-          :color="step === 'catalog-action' ? 'primary' : ''"
-          :complete="catalogActionType !== undefined"
-          :editable="actionType === 'blank' || selectedPageId !== undefined"
-          :icon="mdiPlaylistEdit"
-        />
-        <template v-if="catalogActionType === 'reference' || catalogActionType === 'duplicate'">
-          <v-divider />
-          <v-stepper-item
-            :title="catalogActionType === 'reference' ? t('selectCatalogReference') : t('selectCatalogToDuplicate')"
-            value="catalog-source"
-            :color="step === 'catalog-source' ? 'primary' : ''"
-            :complete="selectedCatalogPageId !== undefined"
-            :editable="catalogActionType !== undefined"
-            :icon="mdiFile"
-          />
-        </template>
-        <v-divider />
-        <v-stepper-item
-          :title="t('selectApplicationsAction')"
-          value="applications-action"
-          :color="step === 'applications-action' ? 'primary' : ''"
-          :complete="applicationsActionType !== undefined"
-          :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined)"
-          :icon="mdiPlaylistEdit"
-        />
-        <template v-if="applicationsActionType === 'reference' || applicationsActionType === 'duplicate'">
-          <v-divider />
-          <v-stepper-item
-            :title="applicationsActionType === 'reference' ? t('selectApplicationsReference') : t('selectApplicationsToDuplicate')"
-            value="applications-source"
-            :color="step === 'applications-source' ? 'primary' : ''"
-            :complete="selectedApplicationsPageId !== undefined"
-            :editable="applicationsActionType !== undefined"
-            :icon="mdiFile"
-          />
-        </template>
-        <template v-if="hasDepartments">
-          <v-divider />
-          <v-stepper-item
-            value="owner"
-            :title="t('selectOwner')"
-            :color="step === 'owner' ? 'primary' : ''"
-            :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined) && (applicationsActionType === 'blank' || applicationsActionType === 'none' || selectedApplicationsPageId !== undefined)"
-            :icon="mdiAccount"
-          />
-        </template>
-        <v-divider />
-        <v-stepper-item
-          value="information"
-          :title="t('portalInformation')"
-          :color="step === 'information' ? 'primary' : ''"
-          :editable="(actionType === 'blank' || selectedPageId !== undefined) && (catalogActionType === 'blank' || catalogActionType === 'none' || selectedCatalogPageId !== undefined) && (applicationsActionType === 'blank' || applicationsActionType === 'none' || selectedApplicationsPageId !== undefined)"
+          value="general-information"
+          :title="t('step.generalInformations')"
           :icon="mdiTextBox"
+          :color="step === 'general-information' ? 'primary' : ''"
+          editable
+        />
+        <v-divider />
+        <v-stepper-item
+          value="home"
+          :title="t('step.homePage')"
+          :icon="mdiHome"
+          :color="step === 'home' ? 'primary' : ''"
+          editable
+        />
+        <v-divider />
+        <v-stepper-item
+          value="datasets-catalog"
+          :title="t('step.datasetsCatalog')"
+          :icon="mdiDatabase"
+          :color="step === 'datasets-catalog' ? 'primary' : ''"
+          editable
+        />
+        <v-divider />
+        <v-stepper-item
+          value="applications-catalog"
+          :title="t('step.applicationsCatalog')"
+          :icon="mdiImageMultiple"
+          :color="step === 'applications-catalog' ? 'primary' : ''"
+          editable
         />
       </v-stepper-header>
 
       <v-stepper-window>
-        <!-- Step 1: Select action type -->
-        <v-stepper-window-item value="action">
-          <v-row class="d-flex align-stretch">
-            <!-- Reference template card (only if reference pages exist) -->
-            <v-col
-              v-if="referencesFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="actionType === 'reference' ? 'primary' : ''"
-                @click="selectAction('reference')"
-              >
-                <template #title>
-                  <span :class="actionType !== 'reference' ? 'text-primary' : ''">
-                    {{ t('referenceTemplate') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('referenceTemplateDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Blank page card -->
-            <v-col
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="actionType === 'blank' ? 'primary' : ''"
-                @click="selectAction('blank')"
-              >
-                <template #title>
-                  <span :class="actionType !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankPage') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('blankPageDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Duplicate existing page card (only if home pages exist) -->
-            <v-col
-              v-if="homePagesUserFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="actionType === 'duplicate' ? 'primary' : ''"
-                @click="selectAction('duplicate')"
-              >
-                <template #title>
-                  <span :class="actionType !== 'duplicate' ? 'text-primary' : ''">
-                    {{ t('duplicatePage') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('duplicatePageDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 2: Select reference page or page to duplicate -->
-        <v-stepper-window-item value="source">
-          <v-row class="d-flex align-stretch">
-            <v-col
-              v-for="page in pagesListForStep2"
-              :key="page._id"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="selectedPageId === page._id ? 'primary' : ''"
-                @click="selectPage(page._id)"
-              >
-                <template #title>
-                  <span :class="selectedPageId !== page._id ? 'text-primary' : ''">
-                    {{ page.title }}
-                  </span>
-                </template>
-                <v-card-text v-if="page.config.description">
-                  {{ page.config.description }}
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 3: Select catalog action type -->
-        <v-stepper-window-item value="catalog-action">
-          <v-row class="d-flex align-stretch">
-            <!-- No catalog option -->
-            <v-col
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="catalogActionType === 'none' ? 'primary' : ''"
-                @click="selectCatalogAction('none')"
-              >
-                <template #title>
-                  <span :class="catalogActionType !== 'none' ? 'text-primary' : ''">
-                    {{ t('noDatasetsCatalog') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('noDatasetsCatalogDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Reference catalog template card (only if reference pages exist) -->
-            <v-col
-              v-if="catalogReferencesFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="catalogActionType === 'reference' ? 'primary' : ''"
-                @click="selectCatalogAction('reference')"
-              >
-                <template #title>
-                  <span :class="catalogActionType !== 'reference' ? 'text-primary' : ''">
-                    {{ t('catalogReferenceTemplate') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('catalogReferenceTemplateDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Blank catalog page card -->
-            <v-col
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="catalogActionType === 'blank' ? 'primary' : ''"
-                @click="selectCatalogAction('blank')"
-              >
-                <template #title>
-                  <span :class="catalogActionType !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankCatalog') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('blankCatalogDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Duplicate existing catalog card (only if user catalogs exist) -->
-            <v-col
-              v-if="catalogPagesUserFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="catalogActionType === 'duplicate' ? 'primary' : ''"
-                @click="selectCatalogAction('duplicate')"
-              >
-                <template #title>
-                  <span :class="catalogActionType !== 'duplicate' ? 'text-primary' : ''">
-                    {{ t('duplicateCatalog') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('duplicateCatalogDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 4: Select catalog reference page or page to duplicate -->
-        <v-stepper-window-item value="catalog-source">
-          <v-row class="d-flex align-stretch">
-            <v-col
-              v-for="page in catalogPagesListForStep"
-              :key="page._id"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="selectedCatalogPageId === page._id ? 'primary' : ''"
-                @click="selectCatalogPage(page._id)"
-              >
-                <template #title>
-                  <span :class="selectedCatalogPageId !== page._id ? 'text-primary' : ''">
-                    {{ page.title }}
-                  </span>
-                </template>
-                <v-card-text v-if="page.config.description">
-                  {{ page.config.description }}
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 5: Select applications action type -->
-        <v-stepper-window-item value="applications-action">
-          <v-row class="d-flex align-stretch">
-            <!-- No applications option -->
-            <v-col
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="applicationsActionType === 'none' ? 'primary' : ''"
-                @click="selectApplicationsAction('none')"
-              >
-                <template #title>
-                  <span :class="applicationsActionType !== 'none' ? 'text-primary' : ''">
-                    {{ t('noApplicationsCatalog') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('noApplicationsCatalogDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Reference applications template card (only if reference pages exist) -->
-            <v-col
-              v-if="applicationsReferencesFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="applicationsActionType === 'reference' ? 'primary' : ''"
-                @click="selectApplicationsAction('reference')"
-              >
-                <template #title>
-                  <span :class="applicationsActionType !== 'reference' ? 'text-primary' : ''">
-                    {{ t('applicationsReferenceTemplate') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('applicationsReferenceTemplateDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Blank applications page card -->
-            <v-col
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="applicationsActionType === 'blank' ? 'primary' : ''"
-                @click="selectApplicationsAction('blank')"
-              >
-                <template #title>
-                  <span :class="applicationsActionType !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankApplications') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('blankApplicationsDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Duplicate existing applications card (only if user applications exist) -->
-            <v-col
-              v-if="applicationsPagesUserFetch.data.value?.results?.length"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="applicationsActionType === 'duplicate' ? 'primary' : ''"
-                @click="selectApplicationsAction('duplicate')"
-              >
-                <template #title>
-                  <span :class="applicationsActionType !== 'duplicate' ? 'text-primary' : ''">
-                    {{ t('duplicateApplications') }}
-                  </span>
-                </template>
-                <v-card-text>{{ t('duplicateApplicationsDescription') }}</v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 6: Select applications reference page or page to duplicate -->
-        <v-stepper-window-item value="applications-source">
-          <v-row class="d-flex align-stretch">
-            <v-col
-              v-for="page in applicationsPagesListForStep"
-              :key="page._id"
-              md="4"
-              sm="6"
-              cols="12"
-            >
-              <v-card
-                class="h-100"
-                :color="selectedApplicationsPageId === page._id ? 'primary' : ''"
-                @click="selectApplicationsPage(page._id)"
-              >
-                <template #title>
-                  <span :class="selectedApplicationsPageId !== page._id ? 'text-primary' : ''">
-                    {{ page.title }}
-                  </span>
-                </template>
-                <v-card-text v-if="page.config.description">
-                  {{ page.config.description }}
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-stepper-window-item>
-
-        <!-- Step 7: Select owner (optional) -->
-        <v-stepper-window-item value="owner">
-          <owner-pick
-            v-model="newOwner"
-            v-model:ready="ownersReady"
-          />
-        </v-stepper-window-item>
-
-        <!-- Step 8: Portal information -->
-        <v-stepper-window-item value="information">
-          <v-form v-model="valid">
+        <!-- Step 1: Configure general informations -->
+        <v-stepper-window-item value="general-information">
+          <v-form
+            v-model="formValid"
+            @submit.prevent
+          >
             <v-text-field
-              v-model="newPortalTitle"
-              :label="t('portalTitle')"
-              :rules="[v => !!v || t('portalTitleRequired')]"
+              v-model="generalInformations.title.value"
+              :label="t('form.title')"
+              :rules="[v => !!v || t('form.titleRequired')]"
               hide-details="auto"
               autofocus
               required
             />
             <v-checkbox
-              v-model="newPortalStaging"
+              v-model="generalInformations.staging.value"
+              :label="t('form.staging')"
               density="comfortable"
-              :label="t('portalStaging')"
               hide-details
             />
           </v-form>
+
+          <!-- Select owner -->
+          <template v-if="hasDepartments">
+            <h2 class="text-h6 mt-4">
+              {{ t('form.owner') }}
+            </h2>
+            <owner-pick
+              v-model="generalInformations.owner.value"
+              v-model:ready="ownersReady"
+              message=" "
+            />
+          </template>
+
+          <!-- Init from other portal -->
+          <template v-if="portalsFetch.data.value?.results?.length">
+            <h2 class="text-h6">
+              {{ t('initFromOtherPortal.title') }}
+            </h2>
+            <p>{{ t('initFromOtherPortal.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <!-- Default -->
+              <v-col
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPortal === undefined ? 'primary' : ''"
+                  @click="selectPortal()"
+                >
+                  <template #title>
+                    <span :class="selectedPortal !== undefined ? 'text-primary' : ''">
+                      {{ t('blankPortal') }}
+                    </span>
+                  </template>
+                </v-card>
+              </v-col>
+
+              <!-- Other portals -->
+              <v-col
+                v-for="portal in portalsFetch.data.value.results"
+                :key="portal._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  :color="selectedPortal === portal._id ? 'primary' : ''"
+                  class="h-100"
+                  @click="selectPortal(portal._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                      {{ portal.title }}
+                    </span>
+                  </template>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-stepper-window-item>
+
+        <!-- Step 2: Choose home page -->
+        <v-stepper-window-item value="home">
+          <!-- Blank page -->
+          <v-row>
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPages.home.value === 'blank' ? 'primary' : ''"
+                @click="selectPage('home', 'blank')"
+              >
+                <template #title>
+                  <span :class="selectedPages.home.value !== 'blank' ? 'text-primary' : ''">
+                    {{ t('blankPage.title') }}
+                  </span>
+                </template>
+                <v-card-text>
+                  {{ t('blankPage.description') }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Reference templates -->
+          <template v-if="homeReferencesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('useReferenceTemplate.title') }}
+            </h2>
+            <p>{{ t('useReferenceTemplate.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in homeReferencesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.home.value === page._id ? 'primary' : ''"
+                  @click="selectPage('home', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+
+          <!-- Duplicate existing page -->
+          <template v-if="homePagesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('duplicatePage.title') }}
+            </h2>
+            <p>{{ t('duplicatePage.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in homePagesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.home.value === page._id ? 'primary' : ''"
+                  @click="selectPage('home', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-stepper-window-item>
+
+        <!-- Step 3: Choose datasets catalog page -->
+        <v-stepper-window-item value="datasets-catalog">
+          <!-- No catalog / Blank page -->
+          <v-row class="d-flex align-stretch">
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPages.datasets.value === 'none' ? 'primary' : ''"
+                @click="selectPage('datasets', 'none')"
+              >
+                <template #title>
+                  <span :class="selectedPages.datasets.value !== 'none' ? 'text-primary' : ''">
+                    {{ t('noCatalog.title') }}
+                  </span>
+                </template>
+                <v-card-text>
+                  {{ t('noCatalog.description') }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPages.datasets.value === 'blank' ? 'primary' : ''"
+                @click="selectPage('datasets', 'blank')"
+              >
+                <template #title>
+                  <span :class="selectedPages.datasets.value !== 'blank' ? 'text-primary' : ''">
+                    {{ t('blankPage.title') }}
+                  </span>
+                </template>
+                <v-card-text>
+                  {{ t('blankPage.description') }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Reference templates -->
+          <template v-if="datasetsReferencesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('useReferenceTemplate.title') }}
+            </h2>
+            <p>{{ t('useReferenceTemplate.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in datasetsReferencesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.datasets.value === page._id ? 'primary' : ''"
+                  @click="selectPage('datasets', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+
+          <!-- Duplicate existing page -->
+          <template v-if="datasetsPagesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('duplicatePage.title') }}
+            </h2>
+            <p>{{ t('duplicatePage.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in datasetsPagesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.datasets.value === page._id ? 'primary' : ''"
+                  @click="selectPage('datasets', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-stepper-window-item>
+
+        <!-- Step 4: Choose applications catalog page -->
+        <v-stepper-window-item value="applications-catalog">
+          <!-- No catalog / Blank page -->
+          <v-row class="d-flex align-stretch">
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPages.applications.value === 'none' ? 'primary' : ''"
+                @click="selectPage('applications', 'none')"
+              >
+                <template #title>
+                  <span :class="selectedPages.applications.value !== 'none' ? 'text-primary' : ''">
+                    {{ t('noCatalog.title') }}
+                  </span>
+                </template>
+                <v-card-text>
+                  {{ t('noCatalog.description') }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPages.applications.value === 'blank' ? 'primary' : ''"
+                @click="selectPage('applications', 'blank')"
+              >
+                <template #title>
+                  <span :class="selectedPages.applications.value !== 'blank' ? 'text-primary' : ''">
+                    {{ t('blankPage.title') }}
+                  </span>
+                </template>
+                <v-card-text>
+                  {{ t('blankPage.description') }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Reference templates -->
+          <template v-if="applicationsReferencesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('useReferenceTemplate.title') }}
+            </h2>
+            <p>{{ t('useReferenceTemplate.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in applicationsReferencesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.applications.value === page._id ? 'primary' : ''"
+                  @click="selectPage('applications', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+
+          <!-- Duplicate existing page -->
+          <template v-if="applicationsPagesFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('duplicatePage.title') }}
+            </h2>
+            <p>{{ t('duplicatePage.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="page in applicationsPagesFetch.data.value?.results"
+                :key="page._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPages.applications.value === page._id ? 'primary' : ''"
+                  @click="selectPage('applications', page._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                      {{ page.title }}
+                    </span>
+                  </template>
+                  <v-card-text v-if="page.config.description">
+                    {{ page.config.description }}
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
         </v-stepper-window-item>
       </v-stepper-window>
 
       <v-stepper-actions
-        v-if="step !== 'action'"
         :prev-text="t('previous')"
-        @click:prev="goToPreviousStep()"
+        @click:prev="goToPrev()"
       >
         <template #next>
           <v-btn
@@ -456,9 +452,9 @@
             variant="flat"
             :disabled="isNextButtonDisabled"
             :loading="createPortal.loading.value"
-            @click="goToNextStep()"
+            @click="goToNext()"
           >
-            {{ step === 'information' ? t('create') : t('next') }}
+            {{ step === 'applications-catalog' ? t('create') : t('next') }}
           </v-btn>
         </template>
       </v-stepper-actions>
@@ -471,7 +467,7 @@ import type { Portal } from '#api/types/portal/index.ts'
 import type { Page } from '#api/types/page/index.ts'
 import type { Account } from '@data-fair/lib-common-types/session/index.js'
 
-import { mdiAccount, mdiFile, mdiPlaylistEdit, mdiTextBox } from '@mdi/js'
+import { mdiDatabase, mdiHome, mdiImageMultiple, mdiTextBox } from '@mdi/js'
 import { computedAsync } from '@vueuse/core'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
@@ -479,83 +475,96 @@ const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
 
-const step = ref<'action' | 'source' | 'catalog-action' | 'catalog-source' | 'applications-action' | 'applications-source' | 'owner' | 'information'>('action')
-const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
-const selectedPageId = ref<string | undefined>(undefined)
-const catalogActionType = ref<'none' | 'blank' | 'reference' | 'duplicate' | undefined>(undefined)
-const selectedCatalogPageId = ref<string | undefined>(undefined)
-const applicationsActionType = ref<'none' | 'blank' | 'reference' | 'duplicate' | undefined>(undefined)
-const selectedApplicationsPageId = ref<string | undefined>(undefined)
-const newPortalTitle = ref<string>('')
-const newPortalStaging = ref<boolean>(false)
-const newOwner = ref<Account | undefined>(session.state.account)
-const ownersReady = ref(false)
-const valid = ref(false)
+const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applications-catalog'>('general-information')
 
-// Fetch reference home pages (isReference: true, type: home)
-const referencesFetch = useFetch<{ results: Page[] }>(
+const generalInformations = {
+  title: ref<string>(''),
+  staging: ref<boolean>(false),
+  owner: ref<Account>()
+}
+const selectedPortal = ref<string | undefined>(undefined)
+const selectedPages = {
+  home: ref<string | undefined>(undefined),
+  datasets: ref<string | undefined>(undefined),
+  applications: ref<string | undefined>(undefined)
+}
+
+const ownersReady = ref(false)
+const formValid = ref(false)
+
+// Fetch portals
+const portalsFetch = useFetch<{ results: Pick<Portal, '_id' | 'title'>[] }>(
+  $apiPath + '/portals',
+  { query: { select: '_id,title' }, notifError: false }
+)
+
+// Fetch reference home pages
+const homeReferencesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'home', isReference: true }, notifError: false }
 )
 
-// Fetch user's home pages for duplication
-const homePagesUserFetch = useFetch<{ results: Page[] }>(
+// Fetch user's home pages
+const homePagesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'home' }, notifError: false }
 )
 
-// Fetch reference catalog pages (isReference: true, type: datasets)
-const catalogReferencesFetch = useFetch<{ results: Page[] }>(
+// Fetch reference datasets pages
+const datasetsReferencesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'datasets', isReference: true }, notifError: false }
 )
 
-// Fetch user's catalog pages for duplication
-const catalogPagesUserFetch = useFetch<{ results: Page[] }>(
+// Fetch user's datasets pages
+const datasetsPagesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'datasets' }, notifError: false }
 )
 
-// Fetch reference applications pages (isReference: true, type: applications)
+// Fetch reference applications pages
 const applicationsReferencesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'applications', isReference: true }, notifError: false }
 )
 
-// Fetch user's applications pages for duplication
-const applicationsPagesUserFetch = useFetch<{ results: Page[] }>(
+// Fetch user's applications pages
+const applicationsPagesFetch = useFetch<{ results: Page[] }>(
   $apiPath + '/pages',
   { query: { type: 'applications' }, notifError: false }
 )
 
-// Pages list for step 2 (references or user pages)
-const pagesListForStep2 = computed(() => {
-  if (actionType.value === 'reference') return referencesFetch.data.value?.results || []
-  if (actionType.value === 'duplicate') return homePagesUserFetch.data.value?.results || []
-  return []
-})
+const selectPortal = (portalId?: string) => {
+  selectedPortal.value = portalId
+  if (formValid.value) step.value = 'home'
+}
 
-// Catalog pages list for step 4 (references or user catalog pages)
-const catalogPagesListForStep = computed(() => {
-  if (catalogActionType.value === 'reference') return catalogReferencesFetch.data.value?.results || []
-  if (catalogActionType.value === 'duplicate') return catalogPagesUserFetch.data.value?.results || []
-  return []
-})
-
-// Applications pages list for step 6 (references or user applications pages)
-const applicationsPagesListForStep = computed(() => {
-  if (applicationsActionType.value === 'reference') return applicationsReferencesFetch.data.value?.results || []
-  if (applicationsActionType.value === 'duplicate') return applicationsPagesUserFetch.data.value?.results || []
-  return []
-})
+const selectPage = (type: 'home' | 'datasets' | 'applications', pageId: string) => {
+  selectedPages[type].value = pageId
+  if (type === 'home' && formValid.value) step.value = 'datasets-catalog'
+  else if (type === 'datasets' && formValid.value) step.value = 'applications-catalog'
+}
 
 const isNextButtonDisabled = computed(() => {
-  if (step.value === 'source') return selectedPageId.value === undefined
-  if (step.value === 'catalog-source') return selectedCatalogPageId.value === undefined
-  if (step.value === 'applications-source') return selectedApplicationsPageId.value === undefined
-  if (step.value === 'information') return !valid.value || !newPortalTitle.value
+  if (step.value === 'general-information') return !formValid.value || !ownersReady.value
+  else if (step.value === 'home') return !selectedPages.home.value
+  else if (step.value === 'datasets-catalog') return !selectedPages.datasets.value
+  else if (step.value === 'applications-catalog') return !selectedPages.applications.value
   return false
 })
+
+const goToPrev = () => {
+  if (step.value === 'home') step.value = 'general-information'
+  else if (step.value === 'datasets-catalog') step.value = 'home'
+  else if (step.value === 'applications-catalog') step.value = 'datasets-catalog'
+}
+
+const goToNext = () => {
+  if (step.value === 'general-information') step.value = 'home'
+  else if (step.value === 'home') step.value = 'datasets-catalog'
+  else if (step.value === 'datasets-catalog') step.value = 'applications-catalog'
+  else if (step.value === 'applications-catalog') createPortal.execute()
+}
 
 /** `True` if the active account isn't in a department and his organization has departments */
 const hasDepartments = computedAsync(async (): Promise<boolean> => {
@@ -564,120 +573,28 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   return !!org.departments?.length
 }, false)
 
-const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
-  actionType.value = type
-  selectedPageId.value = undefined
-
-  if (type === 'blank') {
-    // Skip source step, go directly to catalog action
-    step.value = 'catalog-action'
-  } else {
-    // Go to source step to select a page
-    step.value = 'source'
-  }
-}
-
-const selectPage = (pageId: string) => {
-  selectedPageId.value = pageId
-  step.value = 'catalog-action' // Go to catalog action step
-}
-
-const selectCatalogAction = (type: 'none' | 'blank' | 'reference' | 'duplicate') => {
-  catalogActionType.value = type
-  selectedCatalogPageId.value = undefined
-
-  if (type === 'none' || type === 'blank') {
-    // Skip catalog source step, go to applications action
-    step.value = 'applications-action'
-  } else {
-    // Go to catalog source step to select a catalog page
-    step.value = 'catalog-source'
-  }
-}
-
-const selectCatalogPage = (pageId: string) => {
-  selectedCatalogPageId.value = pageId
-  step.value = 'applications-action' // Go to applications action step
-}
-
-const selectApplicationsAction = (type: 'none' | 'blank' | 'reference' | 'duplicate') => {
-  applicationsActionType.value = type
-  selectedApplicationsPageId.value = undefined
-
-  if (type === 'none' || type === 'blank') {
-    // Skip applications source step, go directly to owner or information
-    step.value = hasDepartments.value ? 'owner' : 'information'
-  } else {
-    // Go to applications source step to select an applications page
-    step.value = 'applications-source'
-  }
-}
-
-const selectApplicationsPage = (pageId: string) => {
-  selectedApplicationsPageId.value = pageId
-  step.value = hasDepartments.value ? 'owner' : 'information' // Go to next step (owner or information)
-}
-
-const goToPreviousStep = () => {
-  if (step.value === 'source') {
-    step.value = 'action'
-  } else if (step.value === 'catalog-action') {
-    if (actionType.value === 'blank') step.value = 'action'
-    else step.value = 'source'
-  } else if (step.value === 'catalog-source') {
-    step.value = 'catalog-action'
-  } else if (step.value === 'applications-action') {
-    if (catalogActionType.value === 'blank' || catalogActionType.value === 'none') {
-      step.value = 'catalog-action'
-    } else {
-      step.value = 'catalog-source'
-    }
-  } else if (step.value === 'applications-source') {
-    step.value = 'applications-action'
-  } else if (step.value === 'owner') {
-    if (applicationsActionType.value === 'blank' || applicationsActionType.value === 'none') {
-      step.value = 'applications-action'
-    } else {
-      step.value = 'applications-source'
-    }
-  } else if (step.value === 'information') {
-    if (hasDepartments.value) {
-      step.value = 'owner'
-    } else if (applicationsActionType.value === 'blank' || applicationsActionType.value === 'none') {
-      step.value = 'applications-action'
-    } else {
-      step.value = 'applications-source'
-    }
-  }
-}
-
-const goToNextStep = () => {
-  if (step.value === 'information') createPortal.execute()
-  else if (step.value === 'source') step.value = 'catalog-action'
-  else if (step.value === 'catalog-source') step.value = 'applications-action'
-  else if (step.value === 'applications-source') step.value = hasDepartments.value ? 'owner' : 'information'
-  else if (step.value === 'owner') step.value = 'information'
-}
-
 const createPortal = useAsyncAction(
   async () => {
-    if (!newPortalTitle.value) return
+    const portalTitle = generalInformations.title.value.trim()
+    const owner = generalInformations.owner.value
+    if (!portalTitle || !owner) return
 
-    const menu = { children: [{ type: 'standard', subtype: 'home', title: t('home') }] }
-    if (catalogActionType.value && catalogActionType.value !== 'none') {
-      menu.children.push({ type: 'standard', subtype: 'datasets', title: t('datasets') })
+    const menu = { children: [{ type: 'standard', subtype: 'home', title: t('pages.home') }] }
+    if (selectedPages.datasets.value && selectedPages.datasets.value !== 'none') {
+      menu.children.push({ type: 'standard', subtype: 'datasets', title: t('pages.datasets') })
     }
-    if (applicationsActionType.value && applicationsActionType.value !== 'none') {
-      menu.children.push({ type: 'standard', subtype: 'applications', title: t('applications') })
+    if (selectedPages.applications.value && selectedPages.applications.value !== 'none') {
+      menu.children.push({ type: 'standard', subtype: 'applications', title: t('pages.applications') })
     }
 
     // Step 1: Create the portal
     const portal = await $fetch<Portal>($apiPath + '/portals', {
       method: 'POST',
       body: {
-        owner: newOwner.value,
-        staging: newPortalStaging.value,
-        config: { title: newPortalTitle.value, menu }
+        owner,
+        staging: generalInformations.staging.value,
+        sourcePortalId: selectedPortal.value !== 'blank' ? selectedPortal.value : undefined, // Source page ID to duplicate (optional)
+        config: { title: portalTitle, menu: selectedPortal.value !== 'blank' ? undefined : menu } // Init menu only if not duplicating from another portal
       }
     })
 
@@ -685,28 +602,28 @@ const createPortal = useAsyncAction(
     await $fetch('/pages', {
       method: 'POST',
       body: {
-        owner: newOwner.value,
+        owner,
         type: 'home',
-        sourcePageId: selectedPageId.value, // Source page ID to duplicate (optional)
+        sourcePageId: selectedPages.home.value !== 'blank' ? selectedPages.home.value : undefined, // Source page ID to duplicate (optional)
         portals: [portal._id],
         config: {
-          title: t('home') + ' - ' + newPortalTitle.value,
+          title: t('pages.home') + ' - ' + portalTitle,
           elements: []
         }
       }
     })
 
     // Step 3: Create the datasets catalog page if requested (optional)
-    if (catalogActionType.value && catalogActionType.value !== 'none') {
+    if (selectedPages.datasets.value !== 'none') {
       await $fetch('/pages', {
         method: 'POST',
         body: {
-          owner: newOwner.value,
+          owner,
           type: 'datasets',
-          sourcePageId: selectedCatalogPageId.value, // Source catalog page ID to duplicate (optional)
+          sourcePageId: selectedPages.datasets.value !== 'blank' ? selectedPages.datasets.value : undefined, // Source catalog page ID to duplicate (optional)
           portals: [portal._id],
           config: {
-            title: t('datasetsCatalog') + ' - ' + newPortalTitle.value,
+            title: t('pages.datasetsCatalog') + ' - ' + portalTitle,
             elements: []
           }
         }
@@ -714,16 +631,16 @@ const createPortal = useAsyncAction(
     }
 
     // Step 4: Create the applications catalog page if requested (optional)
-    if (applicationsActionType.value && applicationsActionType.value !== 'none') {
+    if (selectedPages.applications.value !== 'none') {
       await $fetch('/pages', {
         method: 'POST',
         body: {
-          owner: newOwner.value,
+          owner,
           type: 'applications',
-          sourcePageId: selectedApplicationsPageId.value, // Source applications page ID to duplicate (optional)
+          sourcePageId: selectedPages.applications.value !== 'blank' ? selectedPages.applications.value : undefined, // Source applications page ID to duplicate (optional)
           portals: [portal._id],
           config: {
-            title: t('applicationsCatalog') + ' - ' + newPortalTitle.value,
+            title: t('pages.applicationsCatalog') + ' - ' + portalTitle,
             elements: []
           }
         }
@@ -747,103 +664,82 @@ setBreadcrumbs([
 
 <i18n lang="yaml">
   en:
-    portals: Portals
-    blankPage: Blank Page
-    blankPageDescription: Start with an empty home page
-    referenceTemplate: Reference Template
-    referenceTemplateDescription: Use a reference home page template as a model
-    duplicatePage: Duplicate Existing Page
-    duplicatePageDescription: Copy an existing home page
-    create: Create
-    createPortal: Create a portal
-    errorCreatingPortal: Error while creating the portal
-    home: Home
-    datasets: Datasets
-    applications: Applications
-    portalInformation: Portal information
+    step:
+      generalInformations: General Information
+      homePage: Home Page
+      datasetsCatalog: Datasets Catalog
+      applicationsCatalog: Applications Catalog
+    form:
+      title: Portal Title
+      titleRequired: Portal title is required
+      staging: Staging Portal
+      owner: Choose the portal owner
+    initFromOtherPortal:
+      title: Initialize configuration from an existing portal
+      description: This will copy the styles, menu and permissions, but not the pages.
+    useReferenceTemplate:
+      title: Use a reference template
+      description: Select a pre-designed layout to save time.
+    duplicatePage:
+      title: Duplicate one of your existing pages
+      description: Create a copy of a page you already own.
+    blankPage:
+      title: Blank Page
+      description: Start with an empty structure. Requires advanced manual configuration.
+    blankPortal: None (Default)
+    noCatalog:
+      title: Do not include a catalog
+      description: You can add it later in the page management.
     next: Next
-    portalTitle: Portal title
-    portalTitleRequired: Portal title is required
-    portalStaging: Pre-production portal
     previous: Previous
-    selectAction: Choose home page option
-    selectReference: Select a reference template
-    selectPageToDuplicate: Select a page to duplicate
-    selectOwner: Select owner
-    selectHomePageAction: Choose home page
-    selectCatalogAction: Choose datasets catalog
-    selectCatalogReference: Select a catalog template
-    selectCatalogToDuplicate: Select a catalog to duplicate
-    noDatasetsCatalog: No datasets catalog
-    noDatasetsCatalogDescription: Do not create a datasets catalog page
-    catalogReferenceTemplate: Reference template
-    catalogReferenceTemplateDescription: Use a reference datasets catalog template
-    blankCatalog: Blank page
-    blankCatalogDescription: Start with an empty datasets catalog
-    duplicateCatalog: Duplicate existing catalog
-    duplicateCatalogDescription: Copy an existing datasets catalog
-    datasetsCatalog: Datasets catalog
-    selectApplicationsAction: Choose applications catalog
-    selectApplicationsReference: Select an applications template
-    selectApplicationsToDuplicate: Select an applications catalog to duplicate
-    noApplicationsCatalog: No applications catalog
-    noApplicationsCatalogDescription: Do not create an applications catalog page
-    applicationsReferenceTemplate: Reference template
-    applicationsReferenceTemplateDescription: Use a reference applications catalog template
-    blankApplications: Blank page
-    blankApplicationsDescription: Start with an empty applications catalog
-    duplicateApplications: Duplicate existing catalog
-    duplicateApplicationsDescription: Copy an existing applications catalog
-    applicationsCatalog: Applications catalog
+    create: Create Portal
+    portals: Portals
+    createPortal: Create a Portal
+    pages:
+      home: Home Page
+      datasets: Datasets
+      applications: Visualizations
+      datasetsCatalog: Datasets Catalog
+      applicationsCatalog: Applications Catalog
+    errorCreatingPortal: An error occurred while creating the portal.
 
   fr:
-    portals: Portails
-    blankPage: Page blanche
-    blankPageDescription: Commencer avec une page d'accueil vide
-    referenceTemplate: Modèle de référence
-    referenceTemplateDescription: Utiliser un modèle de page d'accueil de référence
-    duplicatePage: Dupliquer une page existante
-    duplicatePageDescription: Copier une page d'accueil existante
-    create: Créer
-    createPortal: Créer un portail
-    errorCreatingPortal: Erreur lors de la création du portail
-    home: Accueil
-    datasets: Jeux de données
-    applications: Visualisations
-    portalInformation: Informations du portail
+    step:
+      generalInformations: Informations générales
+      homePage: Page d'accueil
+      datasetsCatalog: Catalogue de données
+      applicationsCatalog: Catalogue de visualisations
+    form:
+      title: Titre du portail
+      titleRequired: Le titre du portail est obligatoire
+      staging: Portail de pré-production
+      owner: Choisir le propriétaire du portail
+    initFromOtherPortal:
+      title: Initialiser la configuration depuis un portail existant
+      description: Cela copiera les styles, le menu et les permissions, mais pas les pages.
+    useReferenceTemplate:
+      title: Utiliser un modèle de référence
+      description: Sélectionnez une mise en page pré-conçue pour gagner du temps.
+    duplicatePage:
+      title: Dupliquer l'une de vos pages existantes
+      description: Créez une copie d'une page que vous possédez déjà.
+    blankPage:
+      title: Page blanche
+      description: Commencer avec une structure vide. Nécessite une configuration manuelle avancée.
+    blankPortal: Aucun (Défaut)
+    noCatalog:
+      title: Ne pas inclure de catalogue
+      description: Vous pourrez l'ajouter plus tard dans la gestion des pages.
     next: Suivant
-    portalTitle: Titre du portail
-    portalTitleRequired: Le titre du portail est requis
-    portalStaging: Portail de pré-production
     previous: Précédent
-    selectAction: Choisir une option de page d'accueil
-    selectReference: Sélectionner un modèle de référence
-    selectPageToDuplicate: Sélectionner une page à dupliquer
-    selectOwner: Sélection du propriétaire
-    selectHomePageAction: Choisir la page d'accueil
-    selectCatalogAction: Choisir le catalogue de données
-    selectCatalogReference: Sélectionner un modèle de catalogue
-    selectCatalogToDuplicate: Sélectionner un catalogue à dupliquer
-    noDatasetsCatalog: Pas de catalogue de données
-    noDatasetsCatalogDescription: Ne pas créer de page catalogue de données
-    catalogReferenceTemplate: Modèle de référence
-    catalogReferenceTemplateDescription: Utiliser un modèle de catalogue de données de référence
-    blankCatalog: Page blanche
-    blankCatalogDescription: Commencer avec un catalogue de données vide
-    duplicateCatalog: Dupliquer un catalogue existant
-    duplicateCatalogDescription: Copier un catalogue de données existant
-    datasetsCatalog: Catalogue de données
-    selectApplicationsAction: Choisir le catalogue de visualisations
-    selectApplicationsReference: Sélectionner un modèle de visualisations
-    selectApplicationsToDuplicate: Sélectionner un catalogue de visualisations à dupliquer
-    noApplicationsCatalog: Pas de catalogue de visualisations
-    noApplicationsCatalogDescription: Ne pas créer de page catalogue de visualisations
-    applicationsReferenceTemplate: Modèle de référence
-    applicationsReferenceTemplateDescription: Utiliser un modèle de catalogue de visualisations de référence
-    blankApplications: Page blanche
-    blankApplicationsDescription: Commencer avec un catalogue de visualisations vide
-    duplicateApplications: Dupliquer un catalogue existant
-    duplicateApplicationsDescription: Copier un catalogue de visualisations existant
-    applicationsCatalog: Catalogue de visualisations
-
+    create: Créer le portail
+    portals: Portails
+    createPortal: Créer un portail
+    pages:
+      home: Page d'accueil
+      datasets: Jeux de données
+      applications: Visualisations
+      datasetsCatalog: Catalogue de données
+      applicationsCatalog: Catalogue de visualisations
+    errorCreatingPortal: Une erreur est survenue lors de la création du portail.
 </i18n>

@@ -10,7 +10,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 
 const router = Router()
 export default router
@@ -44,11 +44,13 @@ router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const createdAt = new Date().toISOString()
 
   const initialConfig: PortalConfig = {
-    ...body.config,
-    allowRobots: !body.staging, // By default, allow robots if not a staging portal
+    title: body.config.title,
+    menu: {
+      children: []
+    },
+    allowRobots: !body.config, // By default, allow robots if not a staging portal
     authentication: 'optional' as const,
     theme: fillTheme(defaultTheme, defaultTheme),
     header: {},
@@ -90,21 +92,38 @@ router.post('', async (req, res, next) => {
     }
   }
 
+  // Prepare config by applying overrides in the expected order:
+  // 1) initialConfig
+  // 2) duplicated portal config (if any)
+  // 3) body.config
+  let config = { ...initialConfig }
+  const portalId = randomUUID()
+  const owner = body.owner ?? session.account
+
+  // Handle portal duplication if sourcePortalId is provided
+  let duplicationEventDetails: string | undefined
+  if (body.sourcePortalId) {
+    const { config: duplicatedConfig, eventDetails } = await duplicatePortalConfig(session, body.sourcePortalId, portalId, owner)
+    config = { ...config, ...duplicatedConfig }
+    duplicationEventDetails = eventDetails
+  }
+
+  // Finally apply explicit body config overrides
+  config = { ...config, ...body.config }
+
   const portal: Portal = {
-    _id: randomUUID(),
-    title: initialConfig.title,
-    owner: body.owner || session.account,
-    createdAt,
-    updatedAt: createdAt,
-    ...body,
-    config: initialConfig,
-    draftConfig: initialConfig
+    _id: portalId,
+    title: config.title,
+    owner,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    config,
+    draftConfig: config
   }
   assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), req.headers.cookie)
-  sendPortalEvent(portal, 'a été créé', 'create', session)
-
+  sendPortalEvent(portal, 'a été créé', 'create', session, duplicationEventDetails)
   res.status(201).json(portal)
 })
 

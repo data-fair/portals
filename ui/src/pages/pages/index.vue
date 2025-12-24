@@ -1,8 +1,5 @@
 <template>
-  <v-container
-    data-iframe-height
-    style="min-height:500px"
-  >
+  <v-container data-iframe-height>
     <!-- List of groups -->
     <v-row class="d-flex align-stretch">
       <v-col

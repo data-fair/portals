@@ -1,8 +1,5 @@
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
-import type { Image } from '#types/image/index.js'
-
-import { randomUUID } from 'node:crypto'
 import debugModule from 'debug'
 import slug from 'slugify'
 import { assertAccountRole, httpError, type SessionStateAuthenticated } from '@data-fair/lib-express'
@@ -10,6 +7,7 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
+import { duplicateImage } from '../images/service.ts'
 
 const debug = debugModule('pages')
 
@@ -18,62 +16,6 @@ export const getPageAsContrib = async (sessionState: SessionStateAuthenticated, 
   if (!page) throw httpError(404, `page "${id}" not found`)
   assertAccountRole(sessionState, page.owner, ['admin', 'contrib'])
   return page
-}
-
-/**
- * Duplicate a single image with its mobile variant
- * @param sourceImageId - The ID of the image to duplicate
- * @param newPageId - The ID of the new page
- * @param newOwner - The owner account of the new page
- * @param sessionState - The session state of the user
- * @returns The new image ID
- */
-const duplicateImage = async (
-  sourceImageId: string,
-  newPageId: string,
-  newOwner: SessionStateAuthenticated['account'],
-  sessionState: SessionStateAuthenticated
-): Promise<string> => {
-  const sourceImage = await mongo.images.findOne({ _id: sourceImageId })
-  if (!sourceImage) {
-    debug(`Image ${sourceImageId} not found, skipping`)
-    return sourceImageId // Return original ID if image not found
-  }
-
-  const newImageId = randomUUID()
-  const createdAt = new Date().toISOString()
-
-  const newImage: Image = {
-    ...sourceImage,
-    _id: newImageId,
-    owner: { ...newOwner, department: undefined, departmentName: undefined },
-    resource: {
-      type: 'page',
-      _id: newPageId
-    },
-    createdAt
-  }
-
-  // Duplicate mobile variant if it exists
-  if (newImage.mobileAlt) {
-    const sourceMobileImage = await mongo.images.findOne({ _id: sourceImageId + '-mobile' })
-    if (sourceMobileImage) {
-      const newMobileImage: Image = {
-        ...sourceMobileImage,
-        _id: newImageId + '-mobile',
-        owner: { ...newOwner, department: undefined, departmentName: undefined },
-        resource: {
-          type: 'page',
-          _id: newPageId
-        },
-        createdAt
-      }
-      await mongo.images.insertOne(newMobileImage)
-    }
-  }
-
-  await mongo.images.insertOne(newImage)
-  return newImageId
 }
 
 /**
@@ -107,7 +49,7 @@ export const duplicatePageElements = async (
   await Promise.all(
     imageRefs.map(async (imageRef) => {
       if (!imageIdMap.has(imageRef._id)) {
-        const newImageId = await duplicateImage(imageRef._id, newPageId, newOwner, sessionState)
+        const newImageId = await duplicateImage(imageRef._id, 'page', newPageId, newOwner)
         imageIdMap.set(imageRef._id, newImageId)
       }
     })
@@ -201,7 +143,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   // Handle standard page type publication: auto-switch pages of same type on the same portal
   if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications'].includes(page.type)) {
     if (addedPortals.length > 0) {
-      standardReplacements = await switchStandardPages(page, addedPortals, session)
+      standardReplacements = await switchStandardPages(page, addedPortals)
     }
   }
 
@@ -416,7 +358,7 @@ const validateMetadata = (page: Page, patch?: Partial<Page>) => {
   }
 }
 
-const switchStandardPages = async (page: Page, addedPortals: string[], session: SessionStateAuthenticated): Promise<Record<string, string>> => {
+const switchStandardPages = async (page: Page, addedPortals: string[]): Promise<Record<string, string>> => {
   const replacements: Record<string, string> = {}
 
   // Find other pages of the same type already published on these portals

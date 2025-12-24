@@ -1,6 +1,7 @@
-import type { Portal } from '#types/portal/index.ts'
+import type { Portal, PortalConfig } from '#types/portal/index.ts'
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { IngressManagerIngressInfo } from '#types'
+import { duplicateImage } from '../images/service.ts'
 
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
@@ -244,59 +245,9 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
 const cleanUnusedImages = async (portal: Portal) => {
   const imagesIds = []
   const imageRefs = [
-    portal.config.logo,
-    portal.config.logoDark,
-    portal.config.favicon,
-    portal.config.errorImages?.notFound,
-    portal.config.errorImages?.forbidden,
-    portal.config.errorImages?.fallback,
-    portal.config.footer.logoPrimary,
-    portal.config.footer.backgroundImage,
-    portal.config.header.logoPrimary,
-    portal.config.header.logoPrimaryMobile,
-    portal.config.header.logoSecondary,
-    portal.config.navBar.logo,
-    portal.config.navBar.logoMobile,
-    portal.config.datasets.card.thumbnail?.default,
-
-    portal.draftConfig.logo,
-    portal.draftConfig.logoDark,
-    portal.draftConfig.favicon,
-    portal.draftConfig.errorImages?.notFound,
-    portal.draftConfig.errorImages?.forbidden,
-    portal.draftConfig.errorImages?.fallback,
-    portal.draftConfig.footer.logoPrimary,
-    portal.draftConfig.footer.backgroundImage,
-    portal.draftConfig.header.logoPrimary,
-    portal.draftConfig.header.logoPrimaryMobile,
-    portal.draftConfig.header.logoSecondary,
-    portal.draftConfig.navBar.logo,
-    portal.draftConfig.navBar.logoMobile,
-    portal.draftConfig.datasets.card.thumbnail?.default
+    ...getPortalConfigImageRefs(portal.config),
+    ...getPortalConfigImageRefs(portal.draftConfig)
   ]
-  // List of footer extra logos
-  if (portal.config.footer.extraLogos) {
-    for (const extraLogo of portal.config.footer.extraLogos) {
-      imageRefs.push(extraLogo.logo)
-    }
-  }
-  if (portal.draftConfig.footer.extraLogos) {
-    for (const extraLogo of portal.draftConfig.footer.extraLogos) {
-      imageRefs.push(extraLogo.logo)
-    }
-  }
-
-  // List of topics images
-  if (portal.config.topics) {
-    for (const topic of portal.config.topics) {
-      imageRefs.push(topic.thumbnail)
-    }
-  }
-  if (portal.draftConfig.topics) {
-    for (const topic of portal.draftConfig.topics) {
-      imageRefs.push(topic.thumbnail)
-    }
-  }
 
   for (const imageRef of imageRefs) {
     if (!imageRef) continue
@@ -356,4 +307,100 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): s
   }
 
   return 'Modifications : ' + modifiedKeys.join(', ')
+}
+
+/**
+ * Duplicate the configuration from an existing portal.
+ * Returns the duplicated config and an event details message.
+ * The caller decides merge order with its own defaults and overrides.
+ */
+export const duplicatePortalConfig = async (
+  sessionState: SessionStateAuthenticated,
+  sourcePortalId: string,
+  _newPortalId: string,
+  _newOwner: Portal['owner']
+): Promise<{ config: PortalConfig; eventDetails: string }> => {
+  const sourcePortal = await getPortalAsAdmin(sessionState, sourcePortalId)
+  if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
+  const eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
+
+  // Duplicate images referenced in the portal config and rewrite IDs
+  const imageIdMap = new Map<string, string>()
+  const duplicatedConfig = JSON.parse(JSON.stringify(sourcePortal.config)) as PortalConfig
+  const imageRefs = getPortalConfigImageRefs(duplicatedConfig).filter((ref): ref is ImageRef => Boolean(ref))
+
+  await Promise.all(
+    imageRefs.map(async (imageRef) => {
+      if (!imageIdMap.has(imageRef._id)) {
+        const newImageId = await duplicateImage(imageRef._id, 'portal', _newPortalId, _newOwner)
+        imageIdMap.set(imageRef._id, newImageId)
+      }
+    })
+  )
+
+  const rewrite = (imageRef?: ImageRef) => {
+    if (imageRef && imageIdMap.has(imageRef._id)) {
+      imageRef._id = imageIdMap.get(imageRef._id)!
+    }
+  }
+
+  rewrite(duplicatedConfig.logo)
+  rewrite(duplicatedConfig.logoDark)
+  rewrite(duplicatedConfig.favicon)
+  rewrite(duplicatedConfig.errorImages?.notFound)
+  rewrite(duplicatedConfig.errorImages?.forbidden)
+  rewrite(duplicatedConfig.errorImages?.fallback)
+  rewrite(duplicatedConfig.footer.logoPrimary)
+  rewrite(duplicatedConfig.footer.backgroundImage)
+  rewrite(duplicatedConfig.header.logoPrimary)
+  rewrite(duplicatedConfig.header.logoPrimaryMobile)
+  rewrite(duplicatedConfig.header.logoSecondary)
+  rewrite(duplicatedConfig.navBar.logo)
+  rewrite(duplicatedConfig.navBar.logoMobile)
+  rewrite(duplicatedConfig.datasets.card.thumbnail?.default)
+  if (duplicatedConfig.footer.extraLogos) {
+    for (const extraLogo of duplicatedConfig.footer.extraLogos) rewrite(extraLogo.logo)
+  }
+  if (duplicatedConfig.topics) {
+    for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
+  }
+
+  return { config: duplicatedConfig, eventDetails }
+}
+
+/**
+ * Collect image references from a portal config.
+ */
+const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
+  const imageRefs = [
+    portalConfig.logo,
+    portalConfig.logoDark,
+    portalConfig.favicon,
+    portalConfig.errorImages?.notFound,
+    portalConfig.errorImages?.forbidden,
+    portalConfig.errorImages?.fallback,
+    portalConfig.footer.logoPrimary,
+    portalConfig.footer.backgroundImage,
+    portalConfig.header.logoPrimary,
+    portalConfig.header.logoPrimaryMobile,
+    portalConfig.header.logoSecondary,
+    portalConfig.navBar.logo,
+    portalConfig.navBar.logoMobile,
+    portalConfig.datasets.card.thumbnail?.default,
+  ]
+  // List of footer extra logos
+  if (portalConfig.footer.extraLogos) {
+    for (const extraLogo of portalConfig.footer.extraLogos) {
+      imageRefs.push(extraLogo.logo)
+    }
+  }
+
+  // List of topics images
+  if (portalConfig.topics) {
+    for (const topic of portalConfig.topics) {
+      imageRefs.push(topic.thumbnail)
+    }
+  }
+
+  return imageRefs
 }

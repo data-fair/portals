@@ -14,12 +14,12 @@
     variant="outlined"
     density="compact"
     color="admin"
-    class="mb-4"
+    class="mb-4 py-0"
   >
     <v-checkbox
       :model-value="page.isReference"
       :label="t('referenceCheckbox')"
-      density="compact"
+      color="admin"
       hide-details
       @click="patchPage.execute({ isReference: !page.isReference })"
     />
@@ -59,7 +59,7 @@ const { patchPage, page } = usePageStore()
       event: Event
       news: News
       generic: Custom content
-    referenceCheckbox: Set as reference page (Only editable by superadmins)
+    referenceCheckbox: Set this page as reference template
   fr:
     changeTitle:
       label: Titre affiché dans le back-office (non visible sur le portail).
@@ -80,5 +80,5 @@ const { patchPage, page } = usePageStore()
       event: Événement
       news: Actualité
       generic: Contenu libre
-    referenceCheckbox: Définir cette page comme page de référence
+    referenceCheckbox: Définir cette page comme modèle de référence
 </i18n>

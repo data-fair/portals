@@ -1,8 +1,5 @@
 <template>
-  <v-container
-    data-iframe-height
-    style="min-height: 500px"
-  >
+  <v-container data-iframe-height>
     <v-card>
       <v-tabs
         v-model="tab"

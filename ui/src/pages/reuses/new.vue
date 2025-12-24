@@ -1,7 +1,6 @@
 <template>
   <v-container
     data-iframe-height
-    style="min-height:800px"
     class="pa-0"
     fluid
   >

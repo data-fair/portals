@@ -58,7 +58,6 @@ router.post('', async (req, res, next) => {
   }
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const pageId = randomUUID()
   const owner = body.owner ?? session.account
@@ -73,8 +72,8 @@ router.post('', async (req, res, next) => {
     title: body.config.title,
     type: body.type,
     owner,
-    createdAt,
-    updatedAt: createdAt,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     config,
     draftConfig: config,
     portals: body.portals || [],

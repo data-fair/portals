@@ -1,8 +1,5 @@
 <template>
-  <v-container
-    data-iframe-height
-    style="min-height:500px"
-  >
+  <v-container data-iframe-height>
     <v-row class="ma-0">
       <v-col v-if="!addToggle">
         <p
