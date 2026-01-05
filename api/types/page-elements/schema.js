@@ -257,7 +257,7 @@ export default {
           default: false,
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
-        _html: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/rendered-html' }
+        _html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
       }
     },
     'element-alert': {
@@ -322,7 +322,7 @@ export default {
           layout: 'markdown'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
-        _html: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/rendered-html' }
+        _html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
       }
     },
     'element-image': {

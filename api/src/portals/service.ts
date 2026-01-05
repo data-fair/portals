@@ -9,6 +9,7 @@ import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@d
 import axios from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { getFontFamilyCss } from '../fonts/service.ts'
@@ -25,6 +26,8 @@ export const getPortalAsAdmin = async (sessionState: SessionStateAuthenticated, 
 
 export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
   debug('createPortal', portal)
+  renderPortalConfigMarkdown(portal.config)
+  renderPortalConfigMarkdown(portal.draftConfig)
   await syncPortalUpdate(portal, null, reqOrigin, [], cookie)
   await mongo.portals.insertOne(portal)
 }
@@ -54,6 +57,10 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   }
   if (fullPatch.draftConfig) {
     fullPatch.draftConfig.theme = fillTheme(fullPatch.draftConfig.theme, defaultTheme)
+    renderPortalConfigMarkdown(fullPatch.draftConfig)
+  }
+  if (fullPatch.config) {
+    renderPortalConfigMarkdown(fullPatch.config)
   }
   const updatedPortal = { ...portal, ...fullPatch }
   // we propagate before storing as it has a greater probability of failing and we prefer a cohesive state
@@ -403,4 +410,13 @@ const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
   }
 
   return imageRefs
+}
+
+/**
+ * Render markdown fields in portal config to HTML
+ */
+const renderPortalConfigMarkdown = (portalConfig: PortalConfig) => {
+  if (portalConfig.contactInformations?.infos) {
+    portalConfig.contactInformations.infos_html = renderMarkdown(portalConfig.contactInformations.infos)
+  }
 }

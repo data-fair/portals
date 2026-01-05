@@ -38,6 +38,7 @@ export default {
       title: 'Informations de contact',
       description: 'Ce champ de texte pourra être affiché à côté du formulaire de contact ou au dessus du pied de page dans une partie dédiée aux informations de contact.',
       layout: 'markdown'
-    }
+    },
+    infos_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
   }
 }

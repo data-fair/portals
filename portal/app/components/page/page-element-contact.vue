@@ -124,11 +124,11 @@
           <v-card-text>
             <template v-if="element.showInfo">
               <div
-                v-if="portalConfig.contactInformations.infos"
-                v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos"
+                v-if="portalConfig.contactInformations.infos_html"
+                v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos_html"
               />
               <v-divider
-                v-if="portalConfig.contactInformations.infos && (portalConfig.contactInformations.phone || portalConfig.contactInformations.website)"
+                v-if="portalConfig.contactInformations.infos_html && (portalConfig.contactInformations.phone || portalConfig.contactInformations.website)"
                 class="my-2"
               />
 

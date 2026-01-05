@@ -16,11 +16,6 @@ export default {
       default: 4,
       minimum: 0,
       maximum: 16
-    },
-    'rendered-html': {
-      type: 'string',
-      readOnly: true,
-      layout: 'none'
     }
   }
 }

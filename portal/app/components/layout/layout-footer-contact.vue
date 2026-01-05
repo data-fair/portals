@@ -20,8 +20,7 @@
           </p>
         </v-col>
         <v-col cols="6">
-          <!--eslint-disable-next-line vue/no-v-html -->
-          <div v-html="portalConfig.contactInformations.infos" />
+          <div v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos_html" />
         </v-col>
       </v-row>
     </v-container>

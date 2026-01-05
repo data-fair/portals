@@ -2,6 +2,12 @@ export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
   'x-exports': [],
   $defs: {
+    'rendered-html': {
+      type: 'string',
+      readOnly: true,
+      layout: 'none'
+    },
+
     rounded: {
       type: 'string',
       title: 'Rounded',

@@ -28,6 +28,7 @@ const portalConfigDefault: PortalConfig = {
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   contactInformations: {
     infos: t('contactInfoExample'),
+    infos_html: t('contactInfoExample'),
     phone: '0123456789',
     phoneLabel: 'Phone',
     website: 'https://example.com',
