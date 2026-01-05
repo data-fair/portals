@@ -9,6 +9,7 @@
         v-bind="props"
         :action-style="actionStyle"
         :icon="icon"
+        :resource-title="resourceTitle"
         :text="text"
         :short-text="shortText"
         :block="block"
@@ -45,6 +46,8 @@ const { trackPath } = defineProps<{
   actionStyle: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
+  /** Resource title */
+  resourceTitle: string
   /** Button text */
   text: string
   /** Button short text */

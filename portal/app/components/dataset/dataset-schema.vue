@@ -3,6 +3,7 @@
     :title="t('preview') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiViewList"
+    :resource-title="dataset.title"
     :text="t('preview')"
     :short-text="t('previewShort')"
     :track-path="`/datasets/${dataset.slug}/notifications-dialog`"

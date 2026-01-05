@@ -3,6 +3,7 @@
     :title="t('embed') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
+    :resource-title="dataset.title"
     :text="t('embed')"
     :short-text="t('embedShort')"
     :track-path="`/datasets/${dataset.slug}/embed-dialog`"

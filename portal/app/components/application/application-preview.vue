@@ -3,6 +3,7 @@
     :title="t('preview') + ' - ' + application.title"
     :action-style="portalConfig.applications.card.actionsStyle"
     :icon="mdiFlipToFront"
+    :resource-title="application.title"
     :text="t('preview')"
     :short-text="t('previewShort')"
     :track-path="`/applications/${application.slug}/preview-dialog`"

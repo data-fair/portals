@@ -51,6 +51,7 @@
           }"
           :action-style="metadataConfig.actionsStyle"
           :icon="mdiFullscreen"
+          :resource-title="application.title"
           :text="t('text.full')"
           :short-text="t('shortText.full')"
         />

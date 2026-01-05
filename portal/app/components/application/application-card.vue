@@ -122,6 +122,7 @@
               :to="`/applications/${application.slug}/full`"
               :action-style="cardConfig.actionsStyle"
               :icon="mdiFullscreen"
+              :resource-title="application.title"
               :text="t('text.full')"
               :short-text="t('shortText.full')"
             />
@@ -146,6 +147,7 @@
             :to="`/applications/${application.slug}/full`"
             :action-style="cardConfig.actionsStyle"
             :icon="mdiFullscreen"
+            :resource-title="application.title"
             :text="t('text.full')"
             :short-text="t('shortText.full')"
             block

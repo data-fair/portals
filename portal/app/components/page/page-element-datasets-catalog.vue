@@ -16,7 +16,8 @@
     <!-- Main Column: Main Content -->
     <v-col>
       <!-- Page Title -->
-      <h4
+      <component
+        :is="headingTag"
         v-if="element.datasetsCountPosition === 'top'"
         class="text-h4 mb-4"
       >
@@ -30,7 +31,7 @@
           density="comfortable"
           variant="text"
         />
-      </h4>
+      </component>
 
       <!-- Standard Filters -->
       <v-row
@@ -181,9 +182,19 @@ import { mdiCog, mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
 type DatasetFetch = { count: number; results: Omit<Dataset, 'userPermissions'>[] }
 
-const { element } = defineProps<{ element: DatasetsCatalogElement }>()
+const { element, context } = defineProps<{
+  element: DatasetsCatalogElement
+  context?: { isRoot: boolean, index: number, parentLength: number }
+}>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
+
+const headingTag = computed(() => {
+  let level = 1
+  if (portalConfig.value.header?.show) level++
+  if (context?.isRoot && context.index > 0) level++
+  return `h${level}`
+})
 
 const filters = {
   search: useStringSearchParam('q'),

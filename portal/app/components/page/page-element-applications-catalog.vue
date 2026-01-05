@@ -16,12 +16,13 @@
     <!-- Main Column: Main Content -->
     <v-col>
       <!-- Page Title -->
-      <h4
+      <component
+        :is="headingTag"
         v-if="element.applicationsCountPosition === 'top'"
         class="text-h4 mb-4"
       >
         {{ t('applicationsCount', { count: applicationsCount }) }}
-      </h4>
+      </component>
 
       <!-- Standard Filters -->
       <v-row
@@ -161,9 +162,19 @@ import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
 type ApplicationFetch = { count: number; results: Application[] }
 
-const { element } = defineProps<{ element: ApplicationsCatalogElement }>()
+const { element, context } = defineProps<{
+  element: ApplicationsCatalogElement
+  context?: { isRoot: boolean, index: number, parentLength: number }
+}>()
 const { portal, portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
+
+const headingTag = computed(() => {
+  let level = 1
+  if (portalConfig.value.header?.show) level++
+  if (context?.isRoot && context.index > 0) level++
+  return `h${level}` as 'h1' | 'h2' | 'h3'
+})
 
 const filters = {
   search: useStringSearchParam('q'),

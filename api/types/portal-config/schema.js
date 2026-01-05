@@ -199,7 +199,9 @@ export default {
       layout: {
         comp: 'textarea',
         props: {
+          autoGrow: true,
           counter: true,
+          rows: 3,
           placeholder: 'Une brève description du portail utilisée par les moteurs de recherche et lors du partage sur les réseaux sociaux.'
         }
       }

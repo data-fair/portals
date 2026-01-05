@@ -133,7 +133,7 @@
             >
               <a
                 href="https://koumoul.com"
-                title="Koumoul"
+                :title="t('koumoulWebsite')"
                 target="_blank"
                 rel="noopener"
               >
@@ -334,6 +334,8 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 <i18n lang="yaml">
   en:
     socialMedia: 'Find us on social media'
+    koumoulWebsite: 'Koumoul website - New tab'
   fr:
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
+    koumoulWebsite: 'Site web de Koumoul - Nouvel onglet'
 </i18n>

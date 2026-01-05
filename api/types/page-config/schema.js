@@ -47,7 +47,11 @@ export default {
       },
       layout: {
         comp: 'textarea',
-        props: { counter: true }
+        props: {
+          autoGrow: true,
+          counter: true,
+          rows: 2
+        }
       }
     },
     eventMetadata: {

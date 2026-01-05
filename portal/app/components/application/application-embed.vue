@@ -3,6 +3,7 @@
     :title="t('embed') + ' - ' + application.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
+    :resource-title="application.title"
     :text="t('embed')"
     :short-text="t('embedShort')"
     :track-path="`/applications/${application.slug}/embed-dialog`"

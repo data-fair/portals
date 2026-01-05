@@ -76,7 +76,12 @@ export default {
       },
       layout: {
         comp: 'textarea',
-        cols: { md: 8 }
+        cols: { md: 8 },
+        props: {
+          autoGrow: true,
+          counter: true,
+          rows: 3
+        }
       }
     },
     datasets: {

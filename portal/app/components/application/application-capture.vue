@@ -2,6 +2,7 @@
   <action-btn
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiCamera"
+    :resource-title="application.title"
     :text="t('text.capture')"
     :short-text="t('shortText.capture')"
     @click="handleCapture"
@@ -16,6 +17,7 @@ import { useTheme } from 'vuetify'
 const { application } = defineProps<{
   application: {
     id: string
+    title: string
     href: string
     updatedAt: string
     baseApplication?: {

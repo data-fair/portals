@@ -57,6 +57,7 @@
   <page-element-datasets-catalog
     v-else-if="element.type === 'datasets-catalog'"
     :element="element"
+    :context="context"
   >
     <template #page-elements="vjsfContext">
       <slot
@@ -87,6 +88,7 @@
   <page-element-applications-catalog
     v-else-if="element.type === 'applications-catalog'"
     :element="element"
+    :context="context"
   >
     <template #page-elements="vjsfContext">
       <slot

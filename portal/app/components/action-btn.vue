@@ -7,6 +7,7 @@
     :icon="actionStyle === 'icon' ? icon : undefined"
     :prepend-icon="actionStyle === 'full' ? icon : undefined"
     :title="actionStyle === 'icon' ? text : undefined"
+    :aria-label="resourceTitle + ' - ' + text"
     :text="actionStyle !== 'icon' ? shortText || text : undefined"
     :density="actionStyle === 'icon' ? 'comfortable' : undefined"
     :size="actionStyle !== 'icon' ? 'small' : undefined"
@@ -27,6 +28,8 @@ defineProps<{
   actionStyle: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
+  /** Resource title */
+  resourceTitle: string
   /** Button text */
   text: string
   /** Button short text */

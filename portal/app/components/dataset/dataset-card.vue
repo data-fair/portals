@@ -130,6 +130,7 @@
               :to="`/datasets/${dataset.slug}/table`"
               :action-style="cardConfig.actionsStyle"
               :icon="mdiTableLarge"
+              :resource-title="dataset.title"
               :text="t('text.table')"
             />
             <action-btn
@@ -137,12 +138,14 @@
               :to="`/datasets/${dataset.slug}/map`"
               :action-style="cardConfig.actionsStyle"
               :icon="mdiMapMarker"
+              :resource-title="dataset.title"
               :text="t('text.map')"
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
               :action-style="cardConfig.actionsStyle"
               :icon="mdiCog"
+              :resource-title="dataset.title"
               :text="t('text.api')"
               :short-text="t('shortText.api')"
             />
@@ -166,6 +169,7 @@
             :to="`/datasets/${dataset.slug}/table`"
             :action-style="cardConfig.actionsStyle"
             :icon="mdiTableLarge"
+            :resource-title="dataset.title"
             :text="t('text.table')"
             block
           />
@@ -174,6 +178,7 @@
             :to="`/datasets/${dataset.slug}/map`"
             :action-style="cardConfig.actionsStyle"
             :icon="mdiMapMarker"
+            :resource-title="dataset.title"
             :text="t('text.map')"
             block
           />
@@ -181,6 +186,7 @@
             :to="`/datasets/${dataset.slug}/api-doc`"
             :action-style="cardConfig.actionsStyle"
             :icon="mdiCog"
+            :resource-title="dataset.title"
             :text="t('text.api')"
             :short-text="t('shortText.api')"
             block
