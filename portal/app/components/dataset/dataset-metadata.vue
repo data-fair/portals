@@ -49,8 +49,10 @@
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
+            alt=""
+            role="presentation"
+            aria-hidden="true"
           />
           {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
         </div>
@@ -292,8 +294,6 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     license: 'License:'
     owner: 'Owner:'
     ownerOverride: '{owner}:'
-    ownerAvatar: 'Owner avatar'
-    ownerAvatarOverride: '{owner} - Avatar'
     modified: 'Data last modified:'
     share: 'Share:'
     shortText:
@@ -338,8 +338,6 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     modified: 'Dernière mise à jour des données :'
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
-    ownerAvatar: 'Avatar du propriétaire'
-    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Partager :'
     shortText:
       api: API

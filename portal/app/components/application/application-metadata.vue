@@ -26,8 +26,10 @@
         <div class="d-flex align-center ga-2">
           <v-avatar
             :image="avatarUrl"
-            :title="customOwnerLabel ? t('ownerAvatarOverride', { owner: customOwnerLabel }) : t('ownerAvatar')"
             :size="28"
+            alt=""
+            role="presentation"
+            aria-hidden="true"
           />
           {{ application.owner.departmentName || application.owner.department || application.owner.name }}
         </div>
@@ -108,8 +110,6 @@ const avatarUrl = computed(() => {
     application: 'Application:'
     owner: 'Owner:'
     ownerOverride: '{owner}:'
-    ownerAvatar: 'Owner avatar'
-    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Share:'
     shortText:
       full: Fullscreen
@@ -120,8 +120,6 @@ const avatarUrl = computed(() => {
     application: 'Application :'
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
-    ownerAvatar: 'Avatar du propriétaire'
-    ownerAvatarOverride: '{owner} - Avatar'
     share: 'Partager :'
     shortText:
       full: Plein écran

@@ -19,8 +19,8 @@
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
-            role="img"
-            :aria-label="t('imageAlt', { title: dataset.title })"
+            role="presentation"
+            aria-hidden="true"
             :style="leftThumbnailStyle"
           />
         </v-col>
@@ -39,11 +39,13 @@
         <!-- Thumbnail (Top Location) -->
         <v-img
           v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
-          :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
         />
 
         <!--
@@ -63,11 +65,13 @@
         <!-- Thumbnail (Center Location) -->
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          :alt="t('imageAlt', { title: dataset.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
+          alt=""
+          role="presentation"
+          aria-hidden="true"
         />
 
         <v-card-text
@@ -255,7 +259,6 @@ onMounted(() => {
 
 <i18n lang="yaml">
   en:
-    imageAlt: 'Thumbnail image for {title}'
     updatedAt: Updated at
     text:
       table: Table
@@ -265,7 +268,6 @@ onMounted(() => {
       api: API
 
   fr:
-    imageAlt: 'Image de couverture pour le jeu de données {title}'
     updatedAt: Mis à jour le
     text:
       table: Tableau

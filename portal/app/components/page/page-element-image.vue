@@ -1,4 +1,17 @@
 <template>
+  <!--
+    Accessibility (A11y) Logic:
+      1. Banner Images: Considered decorative background, no accessibility required (hidden).
+      2. Standard Images:
+        - If 'isPresentation' is true: Purely decorative. Uses empty alt, role="presentation",
+        and aria-hidden="true" to be ignored by screen readers.
+        - Otherwise: Informative. Uses 'element.title' as the alternative text.
+      3. Linked Images: Functional content. 'isPresentation' is incompatible here as links
+        must have an accessible name.
+      4. Zoomed/Interactive Images: Primarily for mouse users. However, for A11y safety,
+        the presentation attributes are mirrored to ensure consistency across devices
+        and prevent screen readers from announcing "ghost" interactive elements.
+  -->
   <div
     v-if="src"
     :class="[
@@ -10,7 +23,7 @@
     ]"
   >
     <a
-      v-if="element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
+      v-if="!element.isPresentation && element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
       target="_blank"
       rel="noopener"
@@ -25,7 +38,9 @@
     <img
       v-else
       ref="img"
-      :alt="element.title"
+      :alt="element.isPresentation ? '' : element.title"
+      :role="element.isPresentation ? 'presentation' : undefined"
+      :aria-hidden="element.isPresentation ? 'true' : undefined"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
       @click="element.zoomable ? zoomed = true : undefined"
@@ -45,7 +60,9 @@
     @click="zoomed = false"
   >
     <img
-      :alt="element.title"
+      :alt="element.isPresentation ? '' : element.title"
+      :role="element.isPresentation ? 'presentation' : undefined"
+      :aria-hidden="element.isPresentation ? 'true' : undefined"
       :src="zoomedSrc"
     >
   </v-overlay>
