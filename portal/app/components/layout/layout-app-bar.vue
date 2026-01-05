@@ -5,7 +5,7 @@
     :color="navBarConfig.color"
     :class="[
       (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
-      (navBarConfig.color === 'background' && !isScrolled) ? 'border-b' : undefined
+      navBarConfig.color === 'background' ? 'header-border-inner' : undefined
     ]"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
@@ -71,5 +71,22 @@ const scrollBehavior = computed(() => {
 <style>
 .v-app-bar {
   transition-property: all !important;
+}
+
+/* Show a inner border when the color background is "background" */
+.header-border-inner.v-toolbar--flat::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(var(--v-border-color), var(--v-border-opacity));
+  transition: opacity 0.3s ease;
+}
+
+/* Hide the border when scrolled */
+.header-border-inner.v-toolbar:not(.v-toolbar--flat)::after {
+  opacity: 0;
 }
 </style>

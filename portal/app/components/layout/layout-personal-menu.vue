@@ -3,7 +3,7 @@
     <v-btn
       v-if="!showHeader || $vuetify.display.smAndDown"
       :title="t('login')"
-      :class="`bg-${loginColor}`"
+      :class="backgroundColor"
       stacked
       @click="!preview ? session.login() : null"
     >
@@ -14,7 +14,7 @@
     </v-btn>
     <v-btn
       v-else
-      :class="`bg-${loginColor}`"
+      :class="backgroundColor"
       stacked
       @click="!preview ? session.login() : null"
     >
@@ -29,7 +29,7 @@
           v-bind="props"
           :title="t('openPersonalMenu')"
           :append-icon="personal ? mdiMenuDown : undefined"
-          :class="'bg-' + loginColor"
+          :class="backgroundColor"
         >
           <v-avatar
             :image="avatarUrl"
@@ -74,8 +74,9 @@
 <script setup lang="ts">
 import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } from '@mdi/js'
 
-defineProps<{
+const { loginColor, navBarColor } = defineProps<{
   loginColor?: string
+  navBarColor?: string
   personal?: boolean
   showHeader?: boolean // TODO: it's never passed !
 }>()
@@ -84,7 +85,9 @@ const { t } = useI18n()
 const { portal, preview, siteInfo } = usePortalStore()
 const session = useSession()
 
-let avatarUrl, isPortalOwner, backOfficeUrl
+let avatarUrl: ComputedRef<string | undefined>
+let isPortalOwner: ComputedRef<boolean>
+let backOfficeUrl: ComputedRef<string>
 if (!preview) {
   avatarUrl = computed(() => {
     if (!session.user.value) return
@@ -98,7 +101,7 @@ if (!preview) {
       (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
       (
         portal.value.owner.type === 'organization' &&
-        user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
+        !!user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
       )
     )
   })
@@ -112,6 +115,13 @@ if (!preview) {
     return '/data-fair/'
   })
 }
+
+const backgroundColor = computed(() => {
+  if (loginColor && loginColor !== 'background') return loginColor
+  if (loginColor === 'background' && navBarColor !== 'background') return 'background'
+  if (!loginColor && navBarColor && navBarColor !== 'background') return navBarColor
+  return undefined
+})
 
 </script>
 
