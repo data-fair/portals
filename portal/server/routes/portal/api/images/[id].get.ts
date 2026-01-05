@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     { _id: imageId, 'owner.type': portal.owner.type, 'owner.id': portal.owner.id, 'resource.type': 'portal', 'resource._id': portal._id })
   if (!image) throw createError({ status: 404, message: 'image not found' })
 
-  setResponseHeader(event, 'cache-control', 'public, max-age=604800, immutable')
+  setResponseHeader(event, 'cache-control', 'public, max-age=31536000, immutable')
   setResponseHeader(event, 'content-type', image.mimeType)
   return image.data.buffer
 })

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     { _id: fontAssetId, 'owner.type': portal.owner.type, 'owner.id': portal.owner.id })
   if (!fontAsset) throw createError({ status: 404, message: 'font asset not found' })
 
-  setResponseHeader(event, 'cache-control', 'public, max-age=604800, immutable')
+  setResponseHeader(event, 'cache-control', 'public, max-age=31536000, immutable')
   setResponseHeader(event, 'content-type', fontAsset.file.type)
   return fontAsset.data.buffer
 })

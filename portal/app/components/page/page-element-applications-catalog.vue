@@ -171,7 +171,7 @@ const { t } = useI18n()
 
 const headingTag = computed(() => {
   let level = 1
-  if (portalConfig.value.header?.show) level++
+  if (portalConfig.value.header?.show && portalConfig.value.header?.showTitle) level++
   if (context?.isRoot && context.index > 0) level++
   return `h${level}` as 'h1' | 'h2' | 'h3'
 })
