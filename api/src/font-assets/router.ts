@@ -63,7 +63,9 @@ router.get('/:id/data', async (req, res) => {
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
   assertAccountRole(session, fontAsset.owner, 'admin')
-  res.set('cache-control', 'public, max-age=604800, immutable')
-  res.set('content-type', fontAsset.file.type)
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable') // 365 days
+  // force buffering (necessary for caching) of this response in the reverse proxy
+  res.setHeader('X-Accel-Buffering', 'yes')
+  if (fontAsset.file.type) res.type(fontAsset.file.type)
   res.send(fontAsset.data.buffer)
 })

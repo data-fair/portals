@@ -72,5 +72,9 @@ router.get('/:id/data', async (req, res, next) => {
   const image = await mongo.images.findOne({ _id: req.params.id, 'owner.type': session.account.type, 'owner.id': session.account.id, 'owner.department': session.account.department })
   if (!image) throw httpError(404, 'image not found')
 
-  res.type(image.mimeType).setHeader('Cache-Control', 'private, max-age=604800, immutable').send(image.data.buffer)
+  res.type(image.mimeType)
+  res.setHeader('Cache-Control', 'private, max-age=31536000, immutable')  // 365 days
+  // force buffering (necessary for caching) of this response in the reverse proxy
+  res.setHeader('X-Accel-Buffering', 'yes')
+  res.send(image.data.buffer)
 })
