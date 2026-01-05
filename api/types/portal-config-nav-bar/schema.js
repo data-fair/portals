@@ -119,7 +119,8 @@ export default {
         type: 'string',
         oneOf: [
           { const: 'uppercaseTitle', title: 'Afficher en majuscules' },
-          { const: 'largerFont', title: 'Police plus grande' }
+          { const: 'boldTitle', title: 'Afficher en gras' },
+          { const: 'largerFont', title: 'Police plus grande' },
         ]
       },
       layout: { cols: { md: 4 } }

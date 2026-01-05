@@ -17,7 +17,10 @@
         <template #activator="{ props: menuProps }">
           <v-tab
             v-bind="menuProps"
-            :class="!navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined"
+            :class="[
+              !navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined,
+              navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
+            ]"
             :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"
             :text="link.title"
             :append-icon="mdiChevronDown"
@@ -36,7 +39,10 @@
       </v-menu>
       <v-tab
         v-else
-        :class="!navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined"
+        :class="[
+          !navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined,
+          navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
+        ]"
         :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"
         :text="resolveLinkTitle(link, locale)"
         :to="!isExternalLink(link) ? resolveLink(link) : undefined"
