@@ -209,6 +209,13 @@ export default {
           },
           default: false,
         },
+        bold: {
+          type: 'boolean',
+          title: 'Bold text',
+          'x-i18n-title': {
+            fr: 'Texte en gras'
+          }
+        },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
           type: 'object',
@@ -338,10 +345,11 @@ export default {
           title: 'Pleine largeur',
           layout: 'switch'
         },
-        title: {
-          title: "Titre de l'image",
-          description: "Recommandé pour l'accessibilité et pour afficher une information utile au survol",
-          type: 'string'
+        isPresentation: {
+          type: 'boolean',
+          title: 'Image de présentation (décorative)',
+          description: "Les images de présentations ne sont pas affichés pour les lecteurs d'écrans pour l'accessibilité. Dans ce cas, l'image ne peut pas porter de liens.",
+          layout: 'switch'
         },
         url: {
           title: "URL vers l'image",
@@ -418,7 +426,14 @@ export default {
         href: {
           title: 'URL vers une autre page',
           description: "L'image devient un lien qui pointe vers l'URL renseignée.",
-          type: 'string'
+          type: 'string',
+          layout: { if: '!parent.data?.isPresentation' }
+        },
+        title: {
+          title: "Titre de l'image (Accessibilité)",
+          description: "Nécessaire pour l'accessibilité si l'image n'est pas décorative.",
+          type: 'string',
+          layout: { if: '!parent.data?.isPresentation' }
         },
         legend: {
           type: 'string',

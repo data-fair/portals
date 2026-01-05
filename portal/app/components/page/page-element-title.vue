@@ -5,6 +5,7 @@
       :class="[
         'd-flex align-center',
         element.centered ? 'justify-center' : undefined,
+        element.bold ? 'font-weight-bold' : undefined,
         `text-${element.titleSize || 'h3'}`
       ]"
     >
