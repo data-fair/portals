@@ -1,10 +1,5 @@
 <template>
-  <v-container
-    :class="[
-      headerConfig.color === 'background' ? 'bg-background' : undefined,
-      'h-100 d-flex flex-column justify-center pb-0 container',
-    ]"
-  >
+  <v-container class="h-100 d-flex flex-column justify-center pb-0 container">
     <v-row
       v-if="headerConfig.showSocial"
       class="ma-0"

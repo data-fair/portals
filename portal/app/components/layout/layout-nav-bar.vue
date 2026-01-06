@@ -1,7 +1,8 @@
 <template>
   <v-container
-    fluid
+    :class="`bg-${navBarConfig.color}`"
     class="pa-0 h-100"
+    fluid
   >
     <v-row
       align="center"

@@ -2,7 +2,7 @@
   <component
     :is="preview ? VToolbar : VAppBar"
     ref="appBarRef"
-    :color="navBarConfig.color"
+    :color="headerConfig.show && headerConfig.color === 'background' ? 'bg-background' : navBarConfig.color"
     :class="[
       (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
       navBarConfig.color === 'background' ? 'header-border-inner' : undefined
