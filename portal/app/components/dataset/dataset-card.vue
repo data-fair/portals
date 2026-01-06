@@ -100,8 +100,8 @@
         />
 
         <!-- Department / Updated At -->
-        <!-- TODO: Convert to v-row ?-->
-        <v-list-item>
+        <!-- TODO: Convert to v-row like topics and keywords -->
+        <v-list-item v-if="cardConfig.showDepartment">
           <template #prepend>
             <owner-avatar
               v-if="cardConfig.showDepartment"

@@ -92,6 +92,7 @@
         />
 
         <!-- Department / Updated At -->
+        <!-- TODO: Convert to v-row like topics and keywords -->
         <v-list-item>
           <template #prepend>
             <owner-avatar
