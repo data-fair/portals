@@ -106,6 +106,7 @@
         href="https://koumoul.com"
         target="_blank"
         rel="noopener"
+        :title="t('publishYourData') + ' - ' + t('newWindow')"
       >
         <span class="text-caption">{{ t('publishYourData') }}</span>
       </v-list-item>
@@ -185,6 +186,7 @@ const navigationTextStyle = computed(() => {
     contribute: Contribute
     myAccount: My Account
     myNotifications: My Notifications
+    newWindow: New window
     organizationManagement: Organization Management
     personalAccount: Personal Account
     personalSpace: Personal Space
@@ -198,6 +200,7 @@ const navigationTextStyle = computed(() => {
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
+    newWindow: Nouvelle fenêtre
     organizationManagement: Gestion de l'organisation
     personalAccount: Compte personnel
     personalSpace: Espace personnel

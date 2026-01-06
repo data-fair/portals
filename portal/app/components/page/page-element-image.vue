@@ -25,6 +25,7 @@
     <a
       v-if="!element.isPresentation && element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
       :href="element.href"
+      :title="element.title + ' - ' + t('newWindow')"
       target="_blank"
       rel="noopener"
     >
@@ -83,6 +84,7 @@ const { element } = defineProps<{
   }
 }>()
 
+const { t } = useI18n()
 const imgEl = useTemplateRef('img')
 const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
@@ -118,6 +120,13 @@ const imgStyle = computed(() => {
   return `${fit}${dims}`
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>
 
 <style scoped>
 .banner-fluid {

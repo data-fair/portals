@@ -57,13 +57,13 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 <i18n lang="yaml">
   en:
     home: Go to Home
-    openInNewTab: Open in a new tab
+    openInNewTab: Open in a new window
     imageAlt: Main logo of the site
     imageAltSecondary: Secondary logo of the site
 
   fr:
     home: Aller à l'accueil
-    openInNewTab: Ouvrir dans un nouvel onglet
+    openInNewTab: Ouvrir dans une nouvelle fenêtre
     imageAlt: Logo principal du site
     imageAltSecondary: Logo secondaire du site
 

@@ -109,7 +109,7 @@
               <a
                 v-if="extraLogo.link"
                 :href="extraLogo.link"
-                :title="extraLogo.label"
+                :title="extraLogo.label + ' - ' + t('newWindow')"
                 target="_blank"
                 rel="noopener"
               >
@@ -133,7 +133,7 @@
             >
               <a
                 href="https://koumoul.com"
-                :title="t('koumoulWebsite')"
+                :title="t('koumoulWebsite') + ' - ' + t('newWindow')"
                 target="_blank"
                 rel="noopener"
               >
@@ -227,6 +227,7 @@
               <v-btn
                 v-if="link.type === 'external'"
                 :href="link.href"
+                :title="link.title + ' - ' + t('newWindow')"
                 target="_blank"
                 rel="noopener"
                 variant="text"
@@ -267,6 +268,7 @@
       <div class="text-center my-2">
         <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a
             href="https://koumoul.com"
+            :title="t('koumoulWebsite') + ' - ' + t('newWindow')"
             target="_blank"
             rel="noopener"
             class="simple-link"
@@ -333,9 +335,11 @@ const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('g
 
 <i18n lang="yaml">
   en:
+    koumoulWebsite: 'Koumoul website'
+    newWindow: 'New window'
     socialMedia: 'Find us on social media'
-    koumoulWebsite: 'Koumoul website - New tab'
   fr:
+    koumoulWebsite: 'Site web Koumoul'
+    newWindow: 'Nouvelle fenêtre'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
-    koumoulWebsite: 'Site web de Koumoul - Nouvel onglet'
 </i18n>

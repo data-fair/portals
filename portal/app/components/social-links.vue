@@ -2,7 +2,7 @@
   <v-btn
     v-for="[key, platform] in filteredSocialPlatforms"
     :key="key"
-    :title="t('openAccount', { account: key })"
+    :title="t('openAccount', { account: key }) + ' - ' + t('newWindow')"
     :href="platform.url(links[key as keyof SocialLinks] ?? '')"
     target="_blank"
     rel="noopener"
@@ -67,9 +67,11 @@ const socialPlatforms: Record<
 
 <i18n lang="yaml">
   en:
+    account: '{account}'
+    newWindow: New window
     openAccount: Open @.capitalize:{'account'} profile
-    account: '{account}'
   fr:
-    openAccount: Ouvrir le profil @.capitalize:{'account'}
     account: '{account}'
+    newWindow: Nouvelle fenêtre
+    openAccount: Ouvrir le profil @.capitalize:{'account'}
 </i18n>

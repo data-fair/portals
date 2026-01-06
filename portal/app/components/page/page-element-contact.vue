@@ -132,9 +132,15 @@
                 class="my-2"
               />
 
+              <!--
+                Note that the `title` prop overrides the native `title` attribute,
+                which must be set using `v-bind:title.attr` instead.
+                See https://vuetifyjs.com/en/api/v-list-item/#props
+              -->
               <v-list-item
                 v-if="portalConfig.contactInformations.phone"
                 :prepend-icon="mdiPhone"
+                v-bind="{ 'title': (portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone) + ' - ' + t('newWindow') }"
                 :title="portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone"
                 :href="`tel:${portalConfig.contactInformations.phone}`"
                 target="_blank"
@@ -143,6 +149,7 @@
               <v-list-item
                 v-if="portalConfig.contactInformations.website"
                 :prepend-icon="mdiWeb"
+                v-bind="{ 'title': (portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website) + ' - ' + t('newWindow') }"
                 :title="portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website"
                 :href="portalConfig.contactInformations.website"
                 target="_blank"
@@ -267,6 +274,7 @@ const sendMessage = useAsyncAction(async () => {
     email: 'Email'
     message: 'Message'
     messageSent: 'Message sent!'
+    newWindow: 'New window'
     send: 'Send'
     socialMedia: 'Find us on social media'
     subject: 'Subject'
@@ -277,6 +285,7 @@ const sendMessage = useAsyncAction(async () => {
     email: 'Email'
     message: 'Message'
     messageSent: 'Message envoyé !'
+    newWindow: 'Nouvelle fenêtre'
     send: 'Envoyer'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
     subject: 'Sujet'

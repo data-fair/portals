@@ -29,6 +29,7 @@
             :href="dataset.origin"
             rel="noopener"
             target="_blank"
+            :title="t('thisSource') + ' - ' + t('newWindow')"
             class="simple-link"
           >
             {{ t('thisSource') }}
@@ -78,6 +79,7 @@
           :href="dataset.license.href"
           rel="noopener"
           target="_blank"
+          :title="dataset.license.title + ' - ' + t('newWindow')"
           class="simple-link"
         >
           {{ dataset.license.title }}

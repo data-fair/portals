@@ -17,6 +17,7 @@
       <v-btn
         :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
         :href="attachment.url"
+        :title="(attachmentMode(attachment) === 'open' ? t('openInNewWindow') : t('download'))"
         target="_blank"
         rel="noopener"
         variant="text"
@@ -43,7 +44,11 @@ const attachmentMode = (attachment: { type: string; mimetype?: string }) => {
 
 <i18n lang="yaml">
   en:
+    download: Download
+    openInNewWindow: Open in new window
     updatedAt: Updated at
   fr:
+    download: Télécharger
+    openInNewWindow: Ouvrir dans une nouvelle fenêtre
     updatedAt: Mis à jour le
 </i18n>
