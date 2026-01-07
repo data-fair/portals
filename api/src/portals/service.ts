@@ -126,6 +126,7 @@ const getSDSites = async (portal: Portal) => {
   const sites = [{
     _id: 'data-fair-portals:draft-' + portal._id,
     owner: portal.owner,
+    tmp: true,
     host: new URL(config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')).host,
     title: portal.draftConfig.title + ' (brouillon)',
     theme: {
@@ -141,6 +142,7 @@ const getSDSites = async (portal: Portal) => {
   sites.push({
     _id: 'data-fair-portals:' + portal._id,
     owner: portal.owner,
+    tmp: !portal.ingress,
     host: portal.ingress ? new URL(portal.ingress.url).host : new URL(config.portalUrlPattern.replace('{subdomain}', portal._id)).host,
     title: portal.config.title,
     theme: {
