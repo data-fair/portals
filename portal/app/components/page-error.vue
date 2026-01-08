@@ -44,15 +44,16 @@
 import type { LinkItem } from '#api/types/portal/index.js'
 import { mdiChevronLeft } from '@mdi/js'
 
-const { t } = useI18n()
-
 const props = defineProps<{
   statusCode: number
   title?: string
   link?: LinkItem
 }>()
 
+const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const event = useRequestEvent()
+if (event) setResponseStatus(event, props.statusCode)
 
 const defaultTitles: Record<number, string> = {
   404: t('notFound'),

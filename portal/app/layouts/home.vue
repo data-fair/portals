@@ -4,17 +4,10 @@
     :home="true"
   />
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
-    <LayoutBreadcrumbs
-      v-if="!isIframe && (portalConfig.breadcrumb.position === 'below-nav' || portalConfig.breadcrumb.position === 'both')"
-    />
     <v-container class="container">
       <slot />
     </v-container>
   </v-main>
-  <!-- Do not put bottom breadcrumbs in main, ensuring they stay just above the footer even when main content is short. -->
-  <LayoutBreadcrumbs
-    v-if="!isIframe && (portalConfig.breadcrumb.position === 'above-footer' || portalConfig.breadcrumb.position === 'both')"
-  />
   <LayoutFooter v-if="!isIframe" />
   <LayoutScrollToTop v-if="!isIframe" />
 </template>

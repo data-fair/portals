@@ -26,3 +26,11 @@ export function useAnalytics (): any {
 export function useAnalyticsInfo (_portal: any): any {
   throw new Error('useAnalytics should only be called from portal, not portals-manager')
 }
+
+export function useRequestEvent (): any {
+  throw new Error('useRequestEvent should only be called from portal, not portals-manager')
+}
+
+export function setResponseStatus (_event: any, _statusCode: number): void {
+  throw new Error('setResponseStatus should only be called from portal, not portals-manager')
+}
