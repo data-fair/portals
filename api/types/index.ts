@@ -18,6 +18,7 @@ export type Application = {
   title: string
   summary?: string
   description?: string
+  createdAt: string
   updatedAt: string
   image?: string
   url: string

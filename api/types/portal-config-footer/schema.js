@@ -30,7 +30,12 @@ export default {
       { comp: 'card', title: 'Image de fond', children: ['backgroundImage', 'backgroundImageLocation'] },
       { comp: 'card', title: 'Slogan', children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
       { comp: 'card', title: 'Liens', children: ['linksMode', 'links'] },
-      { comp: 'card', title: 'Liens importants', children: ['importantLinks'] },
+      {
+        comp: 'card',
+        title: 'Liens importants',
+        subtitle: 'Les liens importants sont affichés sous forme de boutons, ce qui les rend plus visibles que de simples liens.',
+        children: ['importantLinks']
+      },
       { comp: 'card', title: 'Liste de logos', children: ['extraLogos'] }
     ]
   },
@@ -132,7 +137,7 @@ export default {
         { const: 'left', title: 'Colonne de gauche' }
       ],
       layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        if: 'parent.data?.logoPrimaryType !== "hidden"'
       }
     },
     logoAlignment: {
@@ -144,7 +149,10 @@ export default {
         { const: 'center', title: 'Centre' },
         { const: 'right', title: 'Droite' }
       ],
-      layout: { cols: { md: 4 } }
+      layout: {
+        if: 'parent.data?.logoPrimaryType !== "hidden"',
+        cols: { md: 4 }
+      }
     },
     slogan: {
       type: 'string',
@@ -292,7 +300,6 @@ export default {
     importantLinks: {
       type: 'array',
       title: 'Important Links',
-      description: 'Les liens importants sont affichés sous forme de boutons, ils sont plus visibles que les simples liens.',
       layout: {
         title: '',
         itemTitle: linkItemTitle,

@@ -4,10 +4,10 @@
       class="h-100"
       link
     >
-      <v-card-item>
+      <v-card-item class="text-primary">
         <!-- Group title -->
         <template #title>
-          <span class="font-weight-bold text-primary">
+          <span class="font-weight-bold">
             {{ group.title }}
           </span>
           <v-tooltip

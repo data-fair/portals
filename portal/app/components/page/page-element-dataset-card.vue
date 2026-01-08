@@ -4,7 +4,7 @@
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :dataset="datasetFetch.data?.value"
     :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.datasets.card"
-    :is-portal-config="element.usePortalConfig"
+    :is-portal-config="element.usePortalConfig || !element.cardConfig"
   />
 </template>
 

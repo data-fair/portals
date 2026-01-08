@@ -4,16 +4,9 @@
       class="h-100"
       link
     >
-      <v-card-item>
-        <template #append>
-          <owner-avatar
-            v-if="showOwner"
-            :owner="portal.owner"
-          />
-        </template>
-
+      <v-card-item class="text-primary">
         <template #title>
-          <span class="font-weight-bold text-primary">
+          <span class="font-weight-bold">
             {{ portal.config.title }}
           </span>
           <v-tooltip
@@ -22,6 +15,14 @@
             location="top left"
             open-delay="300"
             :text="portal.config.title"
+          />
+        </template>
+
+        <!-- Owner -->
+        <template #append>
+          <owner-avatar
+            v-if="showOwner"
+            :owner="portal.owner"
           />
         </template>
       </v-card-item>
