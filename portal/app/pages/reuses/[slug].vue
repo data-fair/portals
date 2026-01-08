@@ -167,6 +167,39 @@ usePageSeo({
   description: () => reuseConfig.value?.summary,
   ogType: 'article'
 })
+
+// Add JSON-LD for reuse
+useJsonLd(() => {
+  const config = reuseConfig.value
+  if (!config) return []
+  
+  const schemas: JsonLdGraph[] = [
+    createReuseSchema({
+      id: reuseFetch.data.value?._id || slug,
+      title: config.title,
+      description: config._descriptionHtml || config.description,
+      url: useRequestURL().href,
+      datePublished: reuseFetch.data.value?.createdAt,
+      dateModified: reuseFetch.data.value?.updatedAt,
+      author: config.author ? { name: config.author } : undefined,
+      keywords: config.keywords || [],
+      basedOnDatasets: datasets.value.map(d => ({
+        id: d.id,
+        url: useRequestURL().origin + `/datasets/${d.slug}`,
+        name: d.title
+      }))
+    })
+  ]
+  
+  // Add breadcrumb schema
+  schemas.push(createBreadcrumbSchema([
+    { name: portalConfig.value.title, url: useRequestURL().origin },
+    { name: t('reuse'), url: useRequestURL().origin + '/reuses' },
+    { name: config.title, url: useRequestURL().href }
+  ]))
+  
+  return schemas
+})
 </script>
 
 <i18n lang="yaml">

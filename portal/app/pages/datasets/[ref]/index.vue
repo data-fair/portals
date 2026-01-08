@@ -403,6 +403,59 @@ usePageSeo({
   ogType: 'article'
 })
 
+useJsonLd(() => {
+  const d = dataset.value
+  if (!d) return []
+
+  const ds = createDatasetSchema({
+    id: d.id,
+    title: d.title,
+    description: d.description || d.summary,
+    url: useRequestURL().href,
+    image: d.image || thumbnailUrl.value,
+    datePublished: d.createdAt,
+    dateModified: d.updatedAt,
+    keywords: [
+      ...(d.keywords || []),
+      ...(d.topics?.map(t => t.title) || [])
+    ],
+    creator: {
+      name: portalConfig.value.title
+    }
+  })
+
+  // Link subjectOf to related WebApplications (visualizations) and CreativeWorks (reuses)
+  const subjectOf: any[] = []
+  for (const app of orderedApplications.value) {
+    subjectOf.push({
+      '@type': 'WebApplication',
+      '@id': app.id,
+      name: app.title,
+      url: useRequestURL().origin + `/applications/${app.slug}`,
+      applicationCategory: 'DataVisualization'
+    })
+  }
+  for (const r of reuses.value) {
+    subjectOf.push({
+      '@type': 'CreativeWork',
+      name: r.config.title,
+      url: useRequestURL().origin + `/reuses/${r.slug}`
+    })
+  }
+  if (subjectOf.length) (ds as any).subjectOf = subjectOf
+
+  const schemas = [ds]
+
+  // Add breadcrumb schema
+  schemas.push(createBreadcrumbSchema([
+    { name: portalConfig.value.title, url: useRequestURL().origin },
+    { name: t('dataset'), url: useRequestURL().origin + '/datasets' },
+    { name: d.title, url: useRequestURL().href }
+  ]))
+
+  return schemas
+})
+
 </script>
 
 <i18n lang="yaml">

@@ -99,6 +99,20 @@ usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),
   description: t('seo.description')
 })
+
+useJsonLd(() => {
+  if (!reuses.data.value) return []
+  const base = useRequestURL()
+  return createItemListSchema({
+    id: `${base.origin}/reuses`,
+    title: t('reuses'),
+    numberOfItems: reuses.data.value.total || reuses.data.value.results.length,
+    items: reuses.data.value.results.map(r => ({
+      name: r.config.title,
+      url: `${base.origin}/reuses/${r.slug}`
+    }))
+  })
+})
 </script>
 
 <i18n lang="yaml">

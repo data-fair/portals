@@ -93,6 +93,20 @@ usePageSeo({
   title: t('seo.title', { title: portalConfig.value.title }),
   description: t('seo.description')
 })
+
+useJsonLd(() => {
+  if (!events.data.value) return []
+  const base = useRequestURL()
+  return createItemListSchema({
+    id: `${base.origin}/event`,
+    title: 'Events',
+    numberOfItems: events.data.value.total || events.data.value.results.length,
+    items: events.data.value.results.map(ev => ({
+      name: ev.config.title,
+      url: `${base.origin}/event/${ev.config.eventMetadata?.slug || ''}`
+    }))
+  })
+})
 </script>
 
 <i18n lang="yaml">

@@ -40,6 +40,17 @@ usePageSeo({
   description: () => pageConfigFetch.data.value?.description || t('seoDescription')
 })
 
+useJsonLd(() => createDataCatalogSchema({
+  id: `${useRequestURL().origin}/datasets`,
+  title: pageConfigFetch.data.value?.title || t('datasets'),
+  description: pageConfigFetch.data.value?.description || t('seoDescription'),
+  url: useRequestURL().href,
+  creator: {
+    name: portalConfig.value.title
+  },
+  datePublished: new Date().toISOString()
+}))
+
 </script>
 
 <i18n lang="yaml">
