@@ -9,7 +9,7 @@
       <dataset-card
         :dataset="dataset"
         :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.datasets.card"
-        :is-portal-config="element.usePortalConfig"
+        :is-portal-config="element.usePortalConfig || !element.cardConfig"
       />
     </v-col>
   </v-row>

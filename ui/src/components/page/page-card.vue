@@ -4,16 +4,9 @@
       class="h-100"
       link
     >
-      <v-card-item>
-        <template #append>
-          <owner-avatar
-            v-if="showAll || !!(page.owner.department && !session.state.account.department)"
-            :owner="page.owner"
-          />
-        </template>
-
+      <v-card-item class="text-primary">
         <template #title>
-          <span class="font-weight-bold text-primary">
+          <span class="font-weight-bold">
             {{ page.title }}
           </span>
           <v-tooltip
@@ -22,6 +15,14 @@
             location="top left"
             open-delay="300"
             :text="page.title"
+          />
+        </template>
+
+        <!-- Owner -->
+        <template #append>
+          <owner-avatar
+            v-if="showAll || !!(page.owner.department && !session.state.account.department)"
+            :owner="page.owner"
           />
         </template>
       </v-card-item>

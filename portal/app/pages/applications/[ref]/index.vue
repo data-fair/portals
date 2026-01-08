@@ -126,13 +126,17 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
 )
 
-const datasetsUrl = computed(() => withQuery('/data-fair/api/v1/datasets', {
-  select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
-  size: 100,
-  html: 'vuetify',
-  ids: appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop()).join(','),
-  publicationSites: 'data-fair-portals:' + portal.value._id
-}))
+const datasetsUrl = computed(() => {
+  const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
+  if (!datasetsIds || datasetsIds.length === 0) return ''
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    size: 100,
+    html: 'vuetify',
+    ids: datasetsIds.join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  })
+})
 
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
