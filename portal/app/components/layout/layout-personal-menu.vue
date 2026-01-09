@@ -33,9 +33,9 @@
         >
           <v-avatar
             :image="avatarUrl"
-            class="bg-transparent"
             :size="40"
-            alt=""
+            class="bg-transparent"
+            aria-hidden="true"
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
             <p class="ml-2">{{ session.user.value.name }}</p>

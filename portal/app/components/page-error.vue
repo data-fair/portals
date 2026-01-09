@@ -6,6 +6,7 @@
           v-if="portalConfig.errorImages?.notFound"
           :src="getErrorImageSrc('notFound')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-not-found v-else style="max-height: 300px" />
       </template>
@@ -14,6 +15,7 @@
           v-if="portalConfig.errorImages?.forbidden"
           :src="getErrorImageSrc('forbidden')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-forbidden v-else style="max-height: 300px" />
       </template>
@@ -22,6 +24,7 @@
           v-if="portalConfig.errorImages?.fallback"
           :src="getErrorImageSrc('fallback')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-server v-else style="max-height: 300px" />
       </template>

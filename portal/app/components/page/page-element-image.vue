@@ -1,10 +1,10 @@
 <template>
   <!--
     Accessibility (A11y) Logic:
-      1. Banner Images: Considered decorative background, no accessibility required (hidden).
+      1. Banner Images: Considered decorative background, aria-hidden.
       2. Standard Images:
-        - If 'isPresentation' is true: Purely decorative. Uses empty alt, role="presentation",
-        and aria-hidden="true" to be ignored by screen readers.
+        - If 'isPresentation' is true: Purely decorative. Uses empty alt to be ignored by screen readers.
+          (role="presentation" and aria-hidden="true" is redundant) => Ok for <img> but not for <v-img> tags.
         - Otherwise: Informative. Uses 'element.title' as the alternative text.
       3. Linked Images: Functional content. 'isPresentation' is incompatible here as links
         must have an accessible name.
@@ -40,8 +40,6 @@
       v-else
       ref="img"
       :alt="element.isPresentation ? '' : element.title"
-      :role="element.isPresentation ? 'presentation' : undefined"
-      :aria-hidden="element.isPresentation ? 'true' : undefined"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
       @click="element.zoomable ? zoomed = true : undefined"
@@ -62,8 +60,6 @@
   >
     <img
       :alt="element.isPresentation ? '' : element.title"
-      :role="element.isPresentation ? 'presentation' : undefined"
-      :aria-hidden="element.isPresentation ? 'true' : undefined"
       :src="zoomedSrc"
     >
   </v-overlay>

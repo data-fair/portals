@@ -55,9 +55,9 @@
     <v-img
       v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
       :src="getImageSrc(reuseConfig.image, false)"
-      :alt="reuseConfig.title"
       class="mb-4"
       max-height="400"
+      aria-hidden="true"
     />
 
     <!-- Datasets -->

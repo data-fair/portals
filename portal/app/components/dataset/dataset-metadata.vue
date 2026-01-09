@@ -51,8 +51,6 @@
           <v-avatar
             :image="avatarUrl"
             :size="28"
-            alt=""
-            role="presentation"
             aria-hidden="true"
           />
           {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
@@ -74,7 +72,7 @@
         v-if="dataset.license"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('license') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ t('license') }}</div>
         <a
           :href="dataset.license.href"
           rel="noopener"
@@ -90,7 +88,7 @@
         v-if="dataset.keywords?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('keywords') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
           :key="i"
@@ -105,7 +103,7 @@
         v-if="dataset.spatial"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('spatial') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('spatial') }}</div>
         {{ dataset.spatial }}
       </v-col>
 
@@ -113,7 +111,7 @@
         v-if="dataset.temporal?.start"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('temporal') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('temporal') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
         </template>
@@ -126,7 +124,7 @@
         v-if="dataset.frequency"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('frequency') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('frequency') }}</div>
         {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
@@ -152,9 +150,19 @@
         v-if="metadataConfig.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ t('attachments') }}</div>
         <dataset-attachments :dataset="dataset" />
       </v-col>
+
+      <ClientOnly>
+        <v-col
+          v-if="dataset.public && metadataConfig.location !== 'right'"
+          v-bind="metadataColProps"
+        >
+          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <social-share :title="dataset.title" />
+        </v-col>
+      </ClientOnly>
     </v-row>
 
     <v-divider />
@@ -164,7 +172,7 @@
       class="ma-0"
       align="center"
     >
-      <v-col v-bind="metadataColProps">
+      <v-col class="py-0 my-2" cols="12">
         <template v-if="!dataset.isMetaOnly">
           <action-btn
             v-if="shouldShowActionButton('table')"
@@ -224,7 +232,7 @@
       </v-col> -->
 
       <ClientOnly>
-        <v-col v-if="dataset.public">
+        <v-col v-if="dataset.public && metadataConfig.location === 'right'">
           {{ t('share') }}
           <social-share :title="dataset.title" />
         </v-col>

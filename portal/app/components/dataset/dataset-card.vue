@@ -19,7 +19,6 @@
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
-            role="presentation"
             aria-hidden="true"
             :style="leftThumbnailStyle"
           />
@@ -43,8 +42,6 @@
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
-          alt=""
-          role="presentation"
           aria-hidden="true"
         />
 
@@ -69,8 +66,6 @@
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
-          alt=""
-          role="presentation"
           aria-hidden="true"
         />
 

@@ -27,8 +27,6 @@
           <v-avatar
             :image="avatarUrl"
             :size="28"
-            alt=""
-            role="presentation"
             aria-hidden="true"
           />
           {{ application.owner.departmentName || application.owner.department || application.owner.name }}

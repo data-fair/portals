@@ -1,8 +1,10 @@
 <template>
+  <!-- In preview, we just show a screenshot -->
   <v-img
     v-if="preview && applicationFetch?.data?.value"
     :src="`${applicationFetch.data?.value.href}/capture?updatedAt=${applicationFetch.data?.value.updatedAt}`"
   />
+
   <d-frame-wrapper
     v-if="!preview && element.application?.slug"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"

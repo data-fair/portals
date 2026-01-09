@@ -44,24 +44,14 @@ export default {
       layout: { comp: 'card' },
       properties: {
         position: {
-          type: 'string',
-          title: 'Display a line',
-          'x-i18n-title': {
-            fr: 'Afficher un trait'
-          },
-          layout: { cols: { md: 6 } },
-          oneOf: [
-            { const: 'none', title: 'Aucun trait' },
-            { const: 'left', title: 'Trait à gauche du titre' },
-            { const: 'bottom-small', title: 'Petit trait sous le titre' },
-            { const: 'bottom-medium', title: 'Trait sous le titre (largeur du texte)' },
-            { const: 'bottom-large', title: 'Trait pleine largeur sous le titre' }
-          ],
-          default: 'none'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/linePosition',
+          layout: { cols: { md: 6 } }
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-          layout: { cols: { md: 6 } },
+          title: 'Line color',
+          'x-i18n-title': { fr: 'Couleur du trait' },
+          layout: { cols: { md: 6 } }
         }
       }
     },
@@ -78,7 +68,7 @@ export default {
           default: 'right',
           oneOf: [
             { const: 'top', title: 'Sous le titre' },
-            { const: 'bottom', title: 'Entre la description et les applications' },
+            { const: 'bottom', title: 'Sous la description' },
             { const: 'right', title: 'À droite' }
           ]
         },
