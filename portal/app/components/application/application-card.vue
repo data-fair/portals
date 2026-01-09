@@ -93,6 +93,7 @@
             <owner-avatar
               v-if="cardConfig.showDepartment"
               :owner="application.owner"
+              omit-owner-name
             />
           </template>
           <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">

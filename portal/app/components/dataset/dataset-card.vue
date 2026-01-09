@@ -101,6 +101,7 @@
             <owner-avatar
               v-if="cardConfig.showDepartment"
               :owner="dataset.owner"
+              omit-owner-name
             />
           </template>
           <!-- <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">

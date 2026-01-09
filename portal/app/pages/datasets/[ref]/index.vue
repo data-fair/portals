@@ -48,6 +48,38 @@
       </v-col>
     </v-row>
 
+    <!-- Attachments section -->
+    <template v-if="portalConfig.datasets.page.showAttachments && urlAttachments.length">
+      <v-row
+        v-for="attachment in urlAttachments"
+        :key="attachment.url"
+        align="center"
+        class="mb-4"
+      >
+        <v-col cols="12">
+          <NuxtLink
+            class="simple-link"
+            :to="attachment.url"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ attachment.title || attachment.name }}
+            <v-icon
+              :icon="mdiOpenInNew"
+              color="primary"
+            />
+          </NuxtLink>
+          <d-frame-wrapper
+            :iframe-title="attachment.title || attachment.name"
+            :src="attachment.url"
+            scrolling="no"
+            aspect-ratio
+            class="mt-2"
+          />
+        </v-col>
+      </v-row>
+    </template>
+
     <!-- Data section with tabs -->
     <template v-if="portalConfig.datasets.page.showData && !dataset.isMetaOnly">
         <page-element-title
@@ -361,6 +393,11 @@ const reusesCardConfig = computed(() => {
     return portalConfig.value.reuses.card
   }
   return { ...portalConfig.value.reuses.card, ...pageConfig.card }
+})
+
+const urlAttachments = computed(() => {
+  if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
+  return dataset.value.attachments.filter(a => a.type === 'url' && a.url)
 })
 
 const errorTitle = computed(() => {

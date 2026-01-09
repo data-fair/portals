@@ -12,8 +12,9 @@ export default {
       comp: 'card',
       title: 'Options',
       children: [
-        { cols: { md: 6 }, key: 'showData' },
-        { cols: { md: 6 }, key: 'showImage' }
+        { cols: { md: 4 }, key: 'showImage' },
+        { cols: { md: 4 }, key: 'showData' },
+        { cols: { md: 4 }, key: 'showAttachments' },
       ]
     },
     'titleStyle',
@@ -36,6 +37,13 @@ export default {
       description: "L'image sera affichée au dessus de la description.",
       layout: { comp: 'switch' },
       default: true
+    },
+
+    showAttachments: {
+      type: 'boolean',
+      title: 'Afficher les pièces jointes de type lien',
+      description: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Paramètres généraux** → **Sécurité**.",
+      layout: { comp: 'switch' }
     },
 
     titleStyle: {

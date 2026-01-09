@@ -75,7 +75,7 @@ export type Dataset = {
     url: string
     title: string
     name: string
-    type: 'file' | 'remoteFile'
+    type: 'file' | 'remoteFile' | 'url'
     description: string
     size: string
     updatedAt: string

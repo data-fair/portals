@@ -48,9 +48,9 @@
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
-          <v-avatar
-            :image="avatarUrl"
-            :size="28"
+          <owner-avatar
+            :owner="dataset.owner"
+            :show-tooltip="false"
             aria-hidden="true"
           />
           {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
@@ -245,6 +245,7 @@
 import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
+import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
@@ -260,11 +261,6 @@ const metadataColProps = computed(() => ({
 }))
 
 const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
-
-const avatarUrl = computed(() => {
-  if (dataset.owner.department) return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`
-  else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
-})
 
 const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
 

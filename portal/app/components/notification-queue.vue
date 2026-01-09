@@ -61,8 +61,8 @@
 
 <script setup lang="ts">
 import type { Emitter } from '@data-fair/lib-common-types/event'
-import { mdiBell } from '@mdi/js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiBell } from '@mdi/js'
 
 const session = useSession()
 const { dayjs } = useLocaleDayjs()

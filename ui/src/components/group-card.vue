@@ -22,7 +22,7 @@
         <!-- Owner -->
         <template #append>
           <owner-avatar
-            v-if="showAll || !!(group.owner?.department && !session.state.account.department)"
+            v-if="group.owner && (showAll || !!(group.owner?.department && !session.state.account.department))"
             :owner="group.owner"
           />
         </template>

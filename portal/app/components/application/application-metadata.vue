@@ -24,9 +24,9 @@
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
-          <v-avatar
-            :image="avatarUrl"
-            :size="28"
+          <owner-avatar
+            :owner="application.owner"
+            :show-tooltip="false"
             aria-hidden="true"
           />
           {{ application.owner.departmentName || application.owner.department || application.owner.name }}
@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
+import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiFullscreen } from '@mdi/js'
 
 const { application } = defineProps<{ application: Application }>()
@@ -96,11 +97,6 @@ const metadataColProps = computed(() => ({
 }))
 
 const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
-
-const avatarUrl = computed(() => {
-  if (application.owner.department) return `/simple-directory/api/avatars/${application.owner.type}/${application.owner.id}/${application.owner.department}/avatar.png`
-  else return `/simple-directory/api/avatars/${application.owner.type}/${application.owner.id}/avatar.png`
-})
 
 </script>
 

@@ -31,10 +31,10 @@
           :append-icon="personal ? mdiMenuDown : undefined"
           :class="backgroundColor"
         >
-          <v-avatar
-            :image="avatarUrl"
+          <owner-avatar
+            :owner="{ type: 'user', id: session.user.value.id, name: session.user.value.name }"
+            :show-tooltip="false"
             :size="40"
-            class="bg-transparent"
             aria-hidden="true"
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
@@ -73,6 +73,7 @@
 
 <script setup lang="ts">
 import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } from '@mdi/js'
+import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { loginColor, navBarColor } = defineProps<{
   loginColor?: string
@@ -85,15 +86,9 @@ const { t } = useI18n()
 const { portal, preview, siteInfo } = usePortalStore()
 const session = useSession()
 
-let avatarUrl: ComputedRef<string | undefined>
 let isPortalOwner: ComputedRef<boolean>
 let backOfficeUrl: ComputedRef<string>
 if (!preview) {
-  avatarUrl = computed(() => {
-    if (!session.user.value) return
-    return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
-  })
-
   isPortalOwner = computed(() => {
     const user = session.user.value
     if (!user || !portal.value.owner) return false
