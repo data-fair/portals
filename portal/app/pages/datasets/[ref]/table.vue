@@ -76,7 +76,7 @@ watch(datasetFetch.data, () => {
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('dataset'),
   description: () => datasetFetch.data.value?.summary,
-  ogImage: thumbnailUrl
+  ogImage: () => thumbnailUrl.value
 })
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))

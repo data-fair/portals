@@ -4,11 +4,11 @@
     v-if="applicationFetch.error.value"
     :status-code="applicationFetch.error.value.statusCode || 500"
     :title="errorTitle"
-    :link="{
+    :link="applicationsCatalogExists ? {
       type: 'standard',
       subtype: 'applications',
       title: t('backToApplications')
-    }"
+    } : undefined"
   />
 
   <template v-else-if="application">
@@ -87,6 +87,7 @@
 
     <!-- Back to applications link -->
     <v-row
+      v-if="applicationsCatalogExists"
       class="my-4"
       justify="center"
     >
@@ -107,8 +108,13 @@
 
 <script setup lang="ts">
 import type { Application, Dataset } from '#api/types/index.ts'
+import type { PageConfig } from '#api/types/page'
+import type { LinkItem } from '#api/types/portal'
+import type { VBreadcrumbs } from 'vuetify/components'
 import { mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
+
+type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -121,6 +127,10 @@ const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/app
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
+
+// Check if applications catalog page exists
+const applicationsCatalogFetch = await useFetch<PageConfig>('/portal/api/pages/applications/applications', { method: 'HEAD', watch: false })
+const applicationsCatalogExists = computed(() => !!applicationsCatalogFetch.data.value && !applicationsCatalogFetch.error.value)
 const application = computed(() => applicationFetch.data.value)
 const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] }>(
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
@@ -173,10 +183,12 @@ const thumbnailUrl = computed(() => {
   return `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`
 })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'applications' },
-  { title: application.value?.title || t('application') }
-])
+watch(applicationsCatalogExists, () => {
+  const items: (LinkItem | BreadcrumbItem)[] = []
+  if (applicationsCatalogExists.value) { items.push({ type: 'standard', subtype: 'applications' }) }
+  items.push({ title: application.value?.title || t('application') })
+  setBreadcrumbs(items)
+}, { immediate: true })
 
 usePageSeo({
   title: () => application.value?.title || t('application'),
@@ -192,12 +204,12 @@ usePageSeo({
     application: Application
     applicationNotFound: The requested application was not found
     applicationError: An error occurred while loading the application
-    backToApplications: Back to applications list
+    backToApplications: Go to applications catalog
     datasetsUsed: Dataset used | Datasets used
   fr:
     application: Visualisation
     applicationNotFound: La visualisation demandée n'a pas été trouvée
     applicationError: Une erreur est survenue lors du chargement de la visualisation
-    backToApplications: Retour à la liste des visualisations
+    backToApplications: Aller au catalogue de visualisations
     datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

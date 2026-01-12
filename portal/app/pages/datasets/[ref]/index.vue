@@ -4,11 +4,11 @@
     v-if="datasetFetch.error.value"
     :status-code="datasetFetch.error.value.statusCode || 500"
     :title="errorTitle"
-    :link="{
+    :link="datasetsCatalogExists ? {
       type: 'standard',
       subtype: 'datasets',
       title: t('backToDatasets')
-    }"
+    } : undefined"
   />
 
   <template v-else-if="dataset">
@@ -310,6 +310,7 @@
 
     <!-- Back to datasets link -->
     <v-row
+      v-if="datasetsCatalogExists"
       class="my-4"
       justify="center"
     >
@@ -332,8 +333,13 @@
 import type { Application, Dataset } from '#api/types/index.ts'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { Reuse } from '#api/types/reuse/index.js'
+import type { PageConfig } from '#api/types/page'
+import type { LinkItem } from '#api/types/portal'
+import type { VBreadcrumbs } from 'vuetify/components'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
 import { withQuery } from 'ufo'
+
+type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -348,6 +354,10 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
+
+// Check if datasets catalog page exists using HEAD method
+const datasetsCatalogFetch = await useFetch<PageConfig>('/portal/api/pages/datasets/datasets', { method: 'HEAD', watch: false })
+const datasetsCatalogExists = computed(() => !!datasetsCatalogFetch.data.value && !datasetsCatalogFetch.error.value)
 
 const dataset = computed(() => datasetFetch.data.value)
 
@@ -428,15 +438,17 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'datasets' },
-  { title: dataset.value?.title || t('dataset') }
-])
+watch(datasetsCatalogExists, () => {
+  const items: (LinkItem | BreadcrumbItem)[] = []
+  if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
+  items.push({ title: dataset.value?.title || t('dataset') })
+  setBreadcrumbs(items)
+}, { immediate: true })
 
 usePageSeo({
   title: () => dataset.value?.title || t('dataset'),
   description: () => dataset.value?.summary,
-  ogImage: thumbnailUrl,
+  ogImage: () => thumbnailUrl.value,
   ogType: 'article'
 })
 
@@ -445,7 +457,7 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     application: Application
-    backToDatasets: Back to datasets list
+    backToDatasets: Go to datasets catalog
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
@@ -459,7 +471,7 @@ usePageSeo({
 
   fr:
     application: Visualisation
-    backToDatasets: Retour à la liste des jeux de données
+    backToDatasets: Aller au catalogue de données
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
