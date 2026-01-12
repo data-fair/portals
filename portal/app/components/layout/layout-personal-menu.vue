@@ -112,9 +112,9 @@ if (!preview) {
 }
 
 const backgroundColor = computed(() => {
-  if (loginColor && loginColor !== 'background') return loginColor
-  if (loginColor === 'background' && navBarColor !== 'background') return 'background'
-  if (!loginColor && navBarColor && navBarColor !== 'background') return navBarColor
+  if (loginColor && loginColor !== 'background') return 'bg-' + loginColor
+  if (loginColor === 'background' && navBarColor !== 'background') return 'bg-background'
+  if (!loginColor && navBarColor && navBarColor !== 'background') return 'bg-' + navBarColor
   return undefined
 })
 

@@ -1,4 +1,3 @@
-import type { Page } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
 
@@ -17,11 +16,8 @@ export default defineEventHandler(async (event) => {
   // Standard types do not have a slug
   if (['event', 'news', 'generic'].includes(type)) mongoQuery[`config.${type}Metadata.slug`] = slug
 
-  const page = await portalMongo.pages.findOne<Pick<Page, 'config'>>(
-    mongoQuery,
-    { projection: { config: 1 } }
-  )
+  const exists = await portalMongo.pages.countDocuments(mongoQuery, { limit: 1 })
 
-  if (!page) throw createError({ status: 404, message: 'Page not found' })
-  return page.config
+  if (!exists) throw createError({ status: 404, statusMessage: 'Page not found' })
+  return null
 })
