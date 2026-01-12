@@ -196,7 +196,8 @@ export default {
             { const: 'h3', title: 'H3' },
             { const: 'h4', title: 'H4' },
             { const: 'h5', title: 'H5' },
-            { const: 'h6', title: 'H6' }
+            { const: 'h6', title: 'H6' },
+            { const: 'div', title: 'Div' }
           ],
           layout: { cols: { xs: 4 } },
         },

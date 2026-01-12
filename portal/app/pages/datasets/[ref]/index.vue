@@ -335,7 +335,6 @@
 import type { Application, Dataset } from '#api/types/index.ts'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { Reuse } from '#api/types/reuse/index.js'
-import type { PageConfig } from '#api/types/page'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
@@ -357,9 +356,9 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
   }
 })
 
-// Check if datasets catalog page exists using HEAD method
-const datasetsCatalogFetch = await useFetch<PageConfig>('/portal/api/pages/datasets/datasets', { method: 'HEAD', watch: false })
-const datasetsCatalogExists = computed(() => !!datasetsCatalogFetch.data.value && !datasetsCatalogFetch.error.value)
+// Check if datasets catalog page exists
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const datasetsCatalogExists = computed(() => standardPagesFetch.data.value?.datasets || false)
 
 const dataset = computed(() => datasetFetch.data.value)
 

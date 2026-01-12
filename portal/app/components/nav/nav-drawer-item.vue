@@ -21,7 +21,7 @@
 
   <!-- Level 1: group with subtitle -->
   <template v-else-if="level === 1 && item.type === 'submenu' && item.children?.length">
-    <v-divider />
+    <v-divider v-if="!isFirst" />
     <v-list-subheader>
       <span class="d-flex align-center">
         <v-icon
@@ -99,6 +99,7 @@ import type { MenuItem } from '#api/types/portal'
 const props = defineProps<{
   item: MenuItem
   level: number
+  isFirst?: boolean
 }>()
 
 const route = useRoute()

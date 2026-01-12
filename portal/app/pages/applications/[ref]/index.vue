@@ -111,7 +111,6 @@
 
 <script setup lang="ts">
 import type { Application, Dataset } from '#api/types/index.ts'
-import type { PageConfig } from '#api/types/page'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
 import { mdiChevronLeft } from '@mdi/js'
@@ -132,8 +131,8 @@ const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/app
 })
 
 // Check if applications catalog page exists
-const applicationsCatalogFetch = await useFetch<PageConfig>('/portal/api/pages/applications/applications', { method: 'HEAD', watch: false })
-const applicationsCatalogExists = computed(() => !!applicationsCatalogFetch.data.value && !applicationsCatalogFetch.error.value)
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const applicationsCatalogExists = computed(() => standardPagesFetch.data.value?.applications || false)
 const application = computed(() => applicationFetch.data.value)
 const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] }>(
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'

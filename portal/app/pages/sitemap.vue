@@ -32,22 +32,28 @@
       />
 
       <!-- Standard pages at the end -->
-      <li v-if="pageExists(contactFetch) && !allInternalPaths.has('/contact')">
+      <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
+        <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
+      </li>
+      <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
+        <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+      </li>
+      <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
         <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
       </li>
-      <li v-if="pageExists(privacyPolicyFetch) && !allInternalPaths.has('/privacy-policy')">
+      <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
         <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
       </li>
-      <li v-if="pageExists(accessibilityFetch) && !allInternalPaths.has('/accessibility')">
+      <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
         <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
       </li>
-      <li v-if="pageExists(legalNoticeFetch) && !allInternalPaths.has('/legal-notice')">
+      <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
         <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
       </li>
-      <li v-if="pageExists(cookiePolicyFetch) && !allInternalPaths.has('/cookie-policy')">
+      <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
         <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
       </li>
-      <li v-if="pageExists(termsOfServiceFetch) && !allInternalPaths.has('/terms-of-service')">
+      <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
         <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
       </li>
     </ul>
@@ -55,21 +61,15 @@
 </template>
 
 <script setup lang="ts">
-import type { PageConfig } from '#api/types/page'
 import type { MenuItem, LinkItem } from '#api/types/portal'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs } = useNavigationStore()
 
-// Check if standard pages exist - HEAD request to avoid fetching full content
-const contactFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { method: 'HEAD', watch: false })
-const privacyPolicyFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { method: 'HEAD', watch: false })
-const accessibilityFetch = await useFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { method: 'HEAD', watch: false })
-const legalNoticeFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { method: 'HEAD', watch: false })
-const cookiePolicyFetch = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { method: 'HEAD', watch: false })
-const termsOfServiceFetch = await useFetch<PageConfig>('/portal/api/pages/terms-of-service/terms-of-service', { method: 'HEAD', watch: false })
-const pageExists = (pageFetch: Awaited<ReturnType<typeof useFetch<PageConfig | undefined>>>) => !!pageFetch.data.value && !pageFetch.error.value
+// Check which standard pages exist
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const standardPages = computed(() => standardPagesFetch.data.value || {})
 
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
@@ -135,6 +135,8 @@ usePageSeo({
   en:
     sitemap: Sitemap
     description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
+    applications: Applications
+    datasets: Datasets
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
@@ -145,6 +147,8 @@ usePageSeo({
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
+    applications: Visualisations
+    datasets: Jeux de données
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité
