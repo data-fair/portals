@@ -38,6 +38,6 @@
     "vue-router": "^4.5.1",
     "vue3-social-sharing": "^1.4.1",
     "vuetify": "^3.9.5",
-    "vuetify-nuxt-module": "^0.18.8"
+    "vuetify-nuxt-module": "^0.19.2"
   }
 }

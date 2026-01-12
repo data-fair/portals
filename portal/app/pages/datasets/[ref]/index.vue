@@ -35,7 +35,10 @@
           class="mb-4"
           style="max-height:300px"
         >
-        <div v-html="/*eslint-disable-line vue/no-v-html*/dataset.description" />
+        <div
+          class="text-break"
+          v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
+        />
       </v-col>
 
       <!-- Metadata -->
@@ -72,7 +75,6 @@
           <d-frame-wrapper
             :iframe-title="attachment.title || attachment.name"
             :src="attachment.url"
-            scrolling="no"
             aspect-ratio
             class="mt-2"
           />
@@ -272,7 +274,7 @@
                 />
               </NuxtLink>
               <div
-                class="mt-2"
+                class="mt-2 text-break"
                 v-html="/*eslint-disable-line vue/no-v-html*/app.description"
               />
             </v-col>

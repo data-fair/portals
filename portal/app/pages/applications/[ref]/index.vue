@@ -35,7 +35,10 @@
           class="mb-4"
           style="max-height:300px"
         >
-        <div v-html="/*eslint-disable-line vue/no-v-html*/application.description" />
+        <div
+          class="text-break"
+          v-html="/*eslint-disable-line vue/no-v-html*/application.description"
+        />
       </v-col>
 
       <!-- Metadata -->
