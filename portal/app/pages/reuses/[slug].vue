@@ -28,6 +28,7 @@
         v-if="reuseConfig.link"
         :link="{
           type: 'external',
+          target: true,
           href: reuseConfig.link,
           title: t('visitLink'),
           icon: { custom: mdiArrowTopRight }
