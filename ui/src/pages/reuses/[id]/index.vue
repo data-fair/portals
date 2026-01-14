@@ -4,21 +4,36 @@
       <v-tabs
         v-model="tab"
         :items="[
-          // { text: t('tabs.preview'), value: 'preview' }, // TODO: add preview of the reuse
+          { text: t('tabs.preview'), value: 'preview' },
+          { text: t('tabs.previewDraft'), value: 'preview-draft' },
           { text: t('tabs.publications'), value: 'publications' }
         ]"
       />
 
       <v-card-text>
-        <v-tabs-window v-model="tab">
-          <!-- <v-tabs-window-item value="preview">
-            TODO: add preview of the reuse
-          </v-tabs-window-item> -->
+        <portal-preview-provider>
+          <v-tabs-window v-model="tab">
+            <v-tabs-window-item value="preview">
+              <reuse-preview-wrapper
+                v-if="reuseFetch.data.value?.config"
+                :reuse-config="reuseFetch.data.value.config"
+                :slug="reuseFetch.data.value.slug"
+              />
+            </v-tabs-window-item>
 
-          <v-tabs-window-item value="publications">
-            <reuse-edit-publication />
-          </v-tabs-window-item>
-        </v-tabs-window>
+            <v-tabs-window-item value="preview-draft">
+              <reuse-preview-wrapper
+                v-if="reuseFetch.data.value?.draftConfig"
+                :reuse-config="reuseFetch.data.value.draftConfig"
+                :slug="reuseFetch.data.value.slug"
+              />
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="publications">
+              <reuse-edit-publication />
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </portal-preview-provider>
       </v-card-text>
     </v-card>
     <navigation-right>
@@ -52,6 +67,7 @@ watch(reuseFetch.data, (reuse) => {
     reuses: Reuses
     tabs:
       preview: Preview
+      previewDraft: Preview (draft)
       publications: Publications
       informations: Informations
 
@@ -59,6 +75,7 @@ watch(reuseFetch.data, (reuse) => {
     reuses: Réutilisations
     tabs:
       preview: Aperçu
+      previewDraft: Aperçu (brouillon)
       publications: Publications
       informations: Informations
 

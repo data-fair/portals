@@ -2018,7 +2018,6 @@ export default {
             children: ['applications']
           },
           'columns',
-          'limit',
           'mb',
           {
             title: 'Application Card',
@@ -2301,7 +2300,6 @@ export default {
             children: ['reuses']
           },
           'columns',
-          'limit',
           'mb',
           {
             title: 'Reuse Card',

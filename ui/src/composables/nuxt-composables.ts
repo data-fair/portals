@@ -1,7 +1,7 @@
 import type { UseFetchOptions, AsyncData } from 'nuxt/app'
 
 export function useLocalFetch<T = unknown> (
-  _url: string | (() => string),
+  _url: string | (() => string) | Ref<string>,
   _options: UseFetchOptions<T> = {}
 ): AsyncData<T, Error> {
   throw new Error('useLocalFetch should only be called from portal, not portals-manager')

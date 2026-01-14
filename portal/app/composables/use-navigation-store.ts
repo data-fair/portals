@@ -77,9 +77,9 @@ const createNavigationStore = () => {
           case 'terms-of-service': return '/terms-of-service'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
+          case 'reuses': return '/reuses'
           case 'news': return '/news'
           case 'event': return '/event'
-          case 'reuses': return '/reuses'
           case 'sitemap': return '/sitemap'
           default: return undefined
         }
@@ -106,9 +106,9 @@ const createNavigationStore = () => {
           case 'terms-of-service': return i18n[locale]['termsOfServicePage']
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
+          case 'reuses': return i18n[locale]['reusesPage']
           case 'news': return i18n[locale]['newsPage']
           case 'event': return i18n[locale]['eventPage']
-          case 'reuses': return i18n[locale]['reusesPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
           default: return i18n[locale]['standardPage']
         }
@@ -158,9 +158,9 @@ const i18n = {
     termsOfServicePage: 'Terms of Service',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
+    reusesPage: 'Reuses',
     newsPage: 'News',
     eventPage: 'Event',
-    reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
     standardPage: 'Standard Page',
     link: 'Link'
@@ -175,9 +175,9 @@ const i18n = {
     termsOfServicePage: "Conditions générales d'utilisation",
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
+    reusesPage: 'Réutilisations',
     newsPage: 'Actualités',
     eventPage: 'Événement',
-    reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
     standardPage: 'Page standard',
     link: 'Lien'

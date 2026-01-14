@@ -70,7 +70,7 @@ const { reuseFetch, patchReuse } = useReuseStore()
 
 const editConfig = ref<ReuseConfig>()
 watch(reuseFetch.data, () => {
-  if (reuseFetch.data.value) editConfig.value = reuseFetch.data.value.config
+  if (reuseFetch.data.value) editConfig.value = reuseFetch.data.value.draftConfig
 }, { immediate: true })
 
 const changesStack = useChangesStack(editConfig)
@@ -86,7 +86,7 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
 
 const saveConfig = useAsyncAction(async () => {
   if (!formValid.value) return
-  await patchReuse.execute({ config: editConfig.value })
+  await patchReuse.execute({ draftConfig: editConfig.value })
 })
 
 watch(reuseFetch.data, (reuse) => {

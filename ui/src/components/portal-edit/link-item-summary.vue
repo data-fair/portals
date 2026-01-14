@@ -58,6 +58,7 @@ const standardPageLabel = computed(() => {
     'terms-of-service': 'termsOfServicePage',
     datasets: 'datasetsCatalog',
     applications: 'applicationsCatalog',
+    reuses: 'reusesCatalog',
     event: 'eventsList',
     news: 'newsList',
     sitemap: 'sitemap'

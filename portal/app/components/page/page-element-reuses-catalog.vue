@@ -275,6 +275,10 @@ if (!preview) {
       title: `Réutilisation ${i + 1}`,
       summary: 'Exemple de réutilisation pour la prévisualisation.'
     },
+    draftConfig: {
+      title: `Réutilisation ${i + 1}`,
+      summary: 'Exemple de réutilisation pour la prévisualisation.'
+    },
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' }

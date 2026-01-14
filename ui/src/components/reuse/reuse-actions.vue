@@ -14,6 +14,41 @@
 
   <v-divider class="my-2" />
 
+  <!-- Validate draft -->
+  <v-list-item
+    v-if="hasDraftDiff"
+    :loading="validateDraft.loading.value"
+    @click="validateDraft.execute()"
+  >
+    <template #prepend>
+      <v-icon
+        color="success"
+        :icon="mdiFileReplace"
+      />
+    </template>
+    {{ t('validateDraft') }}
+  </v-list-item>
+
+  <!-- Cancel draft -->
+  <v-list-item
+    v-if="hasDraftDiff"
+    :loading="cancelDraft.loading.value"
+    @click="cancelDraft.execute()"
+  >
+    <template #prepend>
+      <v-icon
+        color="warning"
+        :icon="mdiFileCancel"
+      />
+    </template>
+    {{ t('cancelDraft') }}
+  </v-list-item>
+
+  <v-divider
+    v-if="hasDraftDiff"
+    class="my-2"
+  />
+
   <!-- Change owner -->
   <v-menu
     v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
@@ -90,7 +125,6 @@
       <v-list-item
         v-bind="props"
         :loading="deleteReuse.loading.value"
-        :title="t('deleteReuse')"
       >
         <template #prepend>
           <v-icon
@@ -98,6 +132,8 @@
             :icon="mdiDelete"
           />
         </template>
+        <!-- Text in slot to prevent wrapping (would be wrapped if in title prop) -->
+        {{ t('deleteReuse') }}
       </v-list-item>
     </template>
     <template #default="{ isActive }">
@@ -130,9 +166,10 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiFileEdit, mdiDelete } from '@mdi/js'
+import { mdiAccount, mdiFileEdit, mdiDelete, mdiFileReplace, mdiFileCancel } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
+import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
 const { reuseFetch } = useReuseStore()
@@ -144,6 +181,33 @@ const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const { reuseId } = defineProps<{ reuseId: string }>()
+
+const hasDraftDiff = computed(() => {
+  if (!reuseFetch.data.value) return false
+  return !equal(reuseFetch.data.value.config, reuseFetch.data.value.draftConfig)
+})
+
+const validateDraft = useAsyncAction(
+  async () => {
+    await $fetch(`/reuses/${reuseId}/draft`, { method: 'POST' })
+    reuseFetch.refresh()
+  },
+  {
+    success: t('draftValidated'),
+    error: t('errorValidatingDraft')
+  }
+)
+
+const cancelDraft = useAsyncAction(
+  async () => {
+    await $fetch(`/reuses/${reuseId}/draft`, { method: 'DELETE' })
+    reuseFetch.refresh()
+  },
+  {
+    success: t('draftCanceled'),
+    error: t('errorCancelingDraft')
+  }
+)
 
 const changeOwner = useAsyncAction(
   async () => {
@@ -176,31 +240,43 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
 <i18n lang="yaml">
   en:
     cancel: Cancel
+    cancelDraft: Cancel draft
     changeOwner: Change owner
     changeOwnerWarning: Changing the owner of a reuse may have consequences on permissions.
     confirm: Confirm
     confirmDeleteReuse: Do you really want to delete the reuse "{title}"? Deletion is permanent and data cannot be recovered.
     deleteReuse: Delete reuse
     deletingReuse: Deleting reuse
+    draftCanceled: Draft canceled!
+    draftValidated: Draft validated!
     editConfig: Edit config
+    errorCancelingDraft: Error while canceling the draft
     errorChangingOwner: Error while changing the owner
+    errorValidatingDraft: Error while validating the draft
+    no: No
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
+    validateDraft: Validate draft
     yes: Yes
-    no: No
   fr:
     cancel: Annuler
+    cancelDraft: Annuler le brouillon
     changeOwner: Changer le propriétaire
     changeOwnerWarning: Changer le propriétaire d'une réutilisation peut avoir des conséquences sur les permissions.
     confirm: Confirmer
     confirmDeleteReuse: Voulez-vous vraiment supprimer la réutilisation "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
     deleteReuse: Supprimer la réutilisation
     deletingReuse: Suppression de la réutilisation
+    draftCanceled: Brouillon annulé !
+    draftValidated: Brouillon validé !
     editConfig: Éditer la configuration
+    errorCancelingDraft: Erreur lors de l'annulation du brouillon
     errorChangingOwner: Erreur lors de le changement de propriétaire
+    errorValidatingDraft: Erreur lors de la validation du brouillon
+    no: Non
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
+    validateDraft: Valider le brouillon
     yes: Oui
-    no: Non
 
 </i18n>

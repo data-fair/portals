@@ -4,7 +4,7 @@ export default {
   title: 'Reuse',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'title', 'slug', 'owner', 'createdAt', 'updatedAt', 'config', 'portals', 'requestedPortals'],
+  required: ['_id', 'title', 'slug', 'owner', 'createdAt', 'updatedAt', 'config', 'draftConfig', 'portals', 'requestedPortals'],
   properties: {
     _id: {
       type: 'string',
@@ -20,6 +20,7 @@ export default {
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     config: { $ref: 'https://github.com/data-fair/portals/reuse-config' },
+    draftConfig: { $ref: 'https://github.com/data-fair/portals/reuse-config' },
     portals: {
       type: 'array',
       items: { type: 'string' }

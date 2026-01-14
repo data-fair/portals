@@ -56,6 +56,7 @@ const { patchPage, page } = usePageStore()
       terms-of-service: Terms of Service
       datasets: Datasets Catalog
       applications: Applications Catalog
+      reuses: Reuses Catalog
       event: Event
       news: News
       generic: Custom content
@@ -77,6 +78,7 @@ const { patchPage, page } = usePageStore()
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
       applications: Catalogue d'applications
+      reuses: Catalogue de réutilisations
       event: Événement
       news: Actualité
       generic: Contenu libre

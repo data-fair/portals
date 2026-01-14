@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
           case 'terms-of-service': return '/terms-of-service'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
+          case 'reuses': return '/reuses'
           default: return undefined
         }
       }

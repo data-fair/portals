@@ -7,7 +7,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent } from './service.ts'
+import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft } from './service.ts'
 
 const router = Router()
 export default router
@@ -71,6 +71,7 @@ router.post('', async (req, res, next) => {
     createdAt,
     updatedAt: createdAt,
     config,
+    draftConfig: config,
     portals: body.portals || [],
     requestedPortals: []
   }
@@ -92,10 +93,13 @@ router.patch('/:id', async (req, res, next) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
 
-  // Send patch event only if there are changes beyond portals
-  const hasOtherChanges = Object.keys(body).some(key => key !== 'portals')
-  if (hasOtherChanges) {
-    sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+  // Send patch event only if not just draft changed
+  const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
+  if (!onlyDraftChanged) {
+    const hasOtherChanges = Object.keys(body).some(key => key !== 'portals' && key !== 'draftConfig')
+    if (hasOtherChanges) {
+      sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+    }
   }
 
   res.send(updatedReuse)
@@ -105,5 +109,19 @@ router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
+  res.status(201).send()
+})
+
+router.post('/:id/draft', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  await validateReuseDraft(reuse, session)
+  res.status(201).send()
+})
+
+router.delete('/:id/draft', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  await cancelReuseDraft(reuse, session)
   res.status(201).send()
 })
