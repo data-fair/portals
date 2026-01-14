@@ -72,7 +72,6 @@ const news = await useFetch<{
   total: number
   limit: number
   skip: number
-  hasMore: boolean
 }>('/portal/api/pages/news', { query: { limit, skip }, watch: [skip] })
 
 const { pending, error } = news

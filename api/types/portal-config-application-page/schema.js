@@ -112,7 +112,7 @@ export default {
           type: 'string',
           title: "Mode d'affichage",
           default: 'card',
-          layout: { cols: { md: 6 } },
+          layout: { cols: { md: 4 } },
           oneOf: [
             { const: 'none', title: 'Aucun' },
             { const: 'card', title: 'Vignette' },
@@ -122,7 +122,7 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          layout: { if: 'parent.data?.display === "card"', cols: { md: 6 } },
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 2,
           minimum: 1,
           maximum: 3
@@ -133,7 +133,7 @@ export default {
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 4 }
           },
           default: true
         },

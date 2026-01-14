@@ -59,7 +59,11 @@ export class PortalsMongo {
       },
       reuses: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 },
-        'unique-slug': [{ 'owner.type': 1, 'owner.id': 1, slug: 1 }, { unique: true }]
+        'unique-slug': [{ 'owner.type': 1, 'owner.id': 1, slug: 1 }, { unique: true }],
+        'text-search': [
+          { 'config.title': 'text', 'config.summary': 'text', 'config.description': 'text', 'config.author': 'text', 'config.datasets.title': 'text' },
+          { weights: { 'config.title': 10, 'config.summary': 5, 'config.description': 3, 'config.author': 2, 'config.datasets.title': 1 } }
+        ]
       },
       images: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, 'resource.type': 1, 'resource._id': 1 }

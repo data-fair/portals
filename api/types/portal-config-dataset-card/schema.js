@@ -100,8 +100,8 @@ export default {
             if: 'data?.show === true',
             children: [
               { key: 'location', cols: { md: 6 } },
-              { key: 'crop', cols: { md: 6 } },
-              { key: 'default', cols: { md: 4 } },
+              { key: 'default', cols: { md: 6 } },
+              { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
               { key: 'useApplication', cols: { md: 4 } }
             ]
@@ -118,7 +118,6 @@ export default {
         location: {
           type: 'string',
           title: "Position de l'image sur la carte",
-          layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'À gauche' },

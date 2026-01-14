@@ -4,6 +4,7 @@ const mdiViewGridOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0
 const mdiPuzzleOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>puzzle-outline</title><path d="M22,13.5C22,15.26 20.7,16.72 19,16.96V20A2,2 0 0,1 17,22H13.2V21.7A2.7,2.7 0 0,0 10.5,19C9,19 7.8,20.21 7.8,21.7V22H4A2,2 0 0,1 2,20V16.2H2.3C3.79,16.2 5,15 5,13.5C5,12 3.79,10.8 2.3,10.8H2V7A2,2 0 0,1 4,5H7.04C7.28,3.3 8.74,2 10.5,2C12.26,2 13.72,3.3 13.96,5H17A2,2 0 0,1 19,7V10.04C20.7,10.28 22,11.74 22,13.5M17,15H18.5A1.5,1.5 0 0,0 20,13.5A1.5,1.5 0 0,0 18.5,12H17V7H12V5.5A1.5,1.5 0 0,0 10.5,4A1.5,1.5 0 0,0 9,5.5V7H4V9.12C5.76,9.8 7,11.5 7,13.5C7,15.5 5.75,17.2 4,17.88V20H6.12C6.8,18.25 8.5,17 10.5,17C12.5,17 14.2,18.25 14.88,20H17V15Z" /></svg>'
 const mdiDatabaseOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>database-outline</title><path d="M12 3C7.58 3 4 4.79 4 7V17C4 19.21 7.59 21 12 21S20 19.21 20 17V7C20 4.79 16.42 3 12 3M18 17C18 17.5 15.87 19 12 19S6 17.5 6 17V14.77C7.61 15.55 9.72 16 12 16S16.39 15.55 18 14.77V17M18 12.45C16.7 13.4 14.42 14 12 14C9.58 14 7.3 13.4 6 12.45V9.64C7.47 10.47 9.61 11 12 11C14.39 11 16.53 10.47 18 9.64V12.45M12 9C8.13 9 6 7.5 6 7S8.13 5 12 5C15.87 5 18 6.5 18 7S15.87 9 12 9Z" /></svg>'
 const mdiImageMultiple = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>image-multiple</title><path d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" /></svg>'
+const mdiPageNext = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>page-next</title><path d="M20,3H5A2,2 0 0,0 3,5V11H7V9L11,12L7,15V13H3V19A2,2 0 0,0 5,21H20A2,2 0 0,0 22,19V5A2,2 0 0,0 20,3M17,17H13V15H17V17M20,13H13V11H20V13M20,9H13V7H20V9M3,13H0V11H3V13Z" /></svg>'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-elements',
@@ -104,7 +105,18 @@ export default {
           },
           { key: 22, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
           { key: 23, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 24, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } }
+          { key: 24, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          {
+            header: true,
+            title: 'Reuses',
+            'x-i18n-title': {
+              fr: 'Réutilisations'
+            },
+            icon: mdiPageNext
+          },
+          { key: 25, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 26, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 27, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
       },
       default: {
@@ -145,7 +157,12 @@ export default {
         // Applications
         { $ref: '#/$defs/element-applications-catalog' },
         { $ref: '#/$defs/element-applications-list' },
-        { $ref: '#/$defs/element-application' }
+        { $ref: '#/$defs/element-application' },
+
+        // Reuses
+        { $ref: '#/$defs/element-reuses-catalog' },
+        { $ref: '#/$defs/element-reuses-list' },
+        { $ref: '#/$defs/element-reuse-card' }
       ]
     },
 
@@ -2132,6 +2149,301 @@ export default {
           title: "Synchroniser les paramètres d'URL",
           description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application."
         },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    // Reuses
+    'element-reuses-catalog': {
+      title: 'ReusesCatalogElement',
+      'x-i18n-title': {
+        en: 'Reuses catalog',
+        fr: 'Catalogue de réutilisations'
+      },
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['type'],
+      properties: {
+        type: { const: 'reuses-catalog' },
+        defaultSort: {
+          type: 'string',
+          title: 'Tri par défaut',
+          description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+          default: 'updatedAt:-1',
+          oneOf: [
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' },
+            { const: 'updatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' }
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        reusesCountPosition: {
+          type: 'string',
+          title: 'Position du nombre de résultats',
+          default: 'top',
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'top', title: 'Au dessus des filtres' },
+            { const: 'bottom', title: 'Au dessus des résultats' }
+          ]
+        },
+        showSortBesideCount: {
+          type: 'boolean',
+          title: 'Afficher le tri à droite du nombre de résultats.',
+          layout: {
+            if: 'parent.data?.reusesCountPosition === "bottom"',
+            comp: 'switch'
+          }
+        },
+        showAdvancedFilters: {
+          type: 'boolean',
+          title: 'Activer les filtres avancés',
+          description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
+          layout: { comp: 'switch' }
+        },
+        filters: {
+          type: 'object',
+          title: 'Configuration des filtres',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position des filtres',
+              default: 'top',
+              oneOf: [
+                { const: 'top', title: 'Au dessus des résultats' },
+                { const: 'left', title: 'À gauche des résultats' }
+              ]
+            },
+            items: {
+              type: 'array',
+              title: 'Filtres à afficher',
+              description: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'search', title: 'Barre de recherche' },
+                  { const: 'sort', title: 'Tri' }
+                ]
+              }
+            },
+            density: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+            },
+            rounded: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+            }
+          }
+        },
+        pagination: {
+          type: 'object',
+          title: 'Configuration de la pagination',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position',
+              description: 'Désactiver la pagination affichera les résultats en scroll infini.',
+              default: 'none',
+              oneOf: [
+                { const: 'none', title: 'Scroll infini' },
+                { const: 'before', title: 'Avant les résultats' },
+                { const: 'after', title: 'Après les résultats' },
+                { const: 'both', title: 'Les deux' }
+              ]
+            },
+            alignment: {
+              type: 'string',
+              title: 'Alignement',
+              default: 'center',
+              layout: { if: 'parent.data?.position !== "none"' },
+              oneOf: [
+                { const: 'left', title: 'Gauche' },
+                { const: 'center', title: 'Centré' },
+                { const: 'right', title: 'Droite' }
+              ]
+            }
+          }
+        },
+        advancedFilters: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-reuses-list': {
+      type: 'object',
+      title: 'ReusesListElement',
+      'x-i18n-title': {
+        en: 'Reuses list',
+        fr: 'Liste de réutilisations'
+      },
+      layout: {
+        children: [
+          'type',
+          'mode',
+          {
+            if: 'data?.mode !== "custom"',
+            children: ['limit']
+          },
+          {
+            if: 'data?.mode === "custom"',
+            children: ['reuses']
+          },
+          'columns',
+          'limit',
+          'mb',
+          {
+            title: 'Reuse Card',
+            'x-i18n-title': {
+              fr: 'Configuration des vignettes'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit'],
+      properties: {
+        type: {
+          const: 'reuses-list'
+        },
+        mode: {
+          type: 'string',
+          title: 'Type de liste',
+          default: 'lastUpdated',
+          oneOf: [
+            { const: 'lastUpdated', title: 'Last updated', 'x-i18n-title': { fr: 'Les derniers modifiés' } },
+            { const: 'lastCreated', title: 'Last created', 'x-i18n-title': { fr: 'Les derniers créés' } },
+            { const: 'custom', title: 'Custom list', 'x-i18n-title': { fr: 'Liste libre' } }
+          ]
+        },
+        reuses: {
+          type: 'array',
+          title: 'Liste de réutilisations',
+          description: 'Sélectionnez manuellement les réutilisations à afficher.',
+          items: {
+            type: 'object',
+            title: 'Réutilisation',
+            additionalProperties: false,
+            required: ['slug'],
+            layout: {
+              getItems: {
+                url: '/portal/api/reuses?select=slug,title&size=20',
+                qSearchParam: 'q',
+                itemsResults: 'data.results',
+                itemTitle: '`${item.config.title} (${item.slug})`',
+                itemKey: 'item.slug'
+              }
+            },
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          maxItems: 100
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: 'Nombre de réutilisations',
+          description: 'Nombre total de réutilisations à afficher.',
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-reuse-card': {
+      type: 'object',
+      title: 'ReuseCardElement',
+      'x-i18n-title': {
+        en: 'Reuse card',
+        fr: 'Vignette de réutilisation'
+      },
+      layout: {
+        children: [
+          'type',
+          'reuse',
+          'mb',
+          {
+            title: 'Reuse Card',
+            'x-i18n-title': {
+              fr: 'Configuration de la vignette'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'reuse', 'usePortalConfig'],
+      properties: {
+        type: {
+          const: 'reuse-card'
+        },
+        reuse: {
+          type: 'object',
+          title: 'Réutilisation',
+          additionalProperties: false,
+          required: ['slug'],
+          layout: {
+            getItems: {
+              url: '/portal/api/reuses?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.config.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     }
