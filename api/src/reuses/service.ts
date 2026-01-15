@@ -152,7 +152,7 @@ export const sendReuseEvent = (
 
 export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
   debug('validateReuseDraft', reuse)
-  const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title }, session)
+  const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title, requestedValidationDraft: false }, session)
   await cleanUnusedImages(updatedReuse)
   sendReuseEvent(reuse, 'a été validé', 'draft-validate', session)
   return updatedReuse
@@ -160,7 +160,7 @@ export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuth
 
 export const cancelReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
   debug('cancelReuseDraft', reuse)
-  const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config }, session)
+  const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config, requestedValidationDraft: false }, session)
   await cleanUnusedImages(updatedReuse)
   sendReuseEvent(reuse, 'a été annulé', 'draft-discard', session)
   return updatedReuse

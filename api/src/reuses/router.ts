@@ -73,7 +73,8 @@ router.post('', async (req, res, next) => {
     config,
     draftConfig: config,
     portals: body.portals || [],
-    requestedPortals: []
+    requestedPortals: [],
+    requestedValidationDraft: false
   }
   assertAccountRole(session, reuse.owner, 'admin')
 

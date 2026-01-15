@@ -8,18 +8,19 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    children: [{
-      comp: 'card',
-      title: 'Options',
-      children: [
-        { cols: { md: 6 }, key: 'elevation' },
-        { cols: { md: 6 }, key: 'rounded' },
-        { cols: { md: 6 }, key: 'titleLinesCount' },
-        { cols: { md: 6 }, key: 'showSummary' },
-        { cols: { md: 6 }, key: 'showAuthor' }
-      ]
-    },
-    'thumbnail'
+    children: [
+      {
+        comp: 'card',
+        title: 'Options',
+        children: [
+          { cols: { md: 6 }, key: 'elevation' },
+          { cols: { md: 6 }, key: 'rounded' },
+          { cols: { md: 6 }, key: 'titleLinesCount' },
+          { cols: { md: 6 }, key: 'showSummary' },
+          { cols: { md: 6 }, key: 'showAuthor' }
+        ]
+      },
+      'thumbnail'
     ]
   },
   properties: {

@@ -1,4 +1,15 @@
 <template>
+  <!-- Validation request alert -->
+  <v-alert
+    v-if="reuseFetch.data.value?.requestedValidationDraft"
+    type="warning"
+    icon="mdi-information"
+    class="ma-2"
+    variant="outlined"
+  >
+    {{ t('validationRequestedByUser') }}
+  </v-alert>
+
   <!-- Edit config -->
   <custom-router-link :to="`/reuses/${reuseId}/edit-config`">
     <v-list-item link>
@@ -252,6 +263,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
+    validationRequestedByUser: Une validation est demandée par un utilisateur
     yes: Yes
   fr:
     cancel: Annuler
@@ -272,6 +284,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
+    validationRequestedByUser: Une validation est demandée par un utilisateur
     yes: Oui
 
 </i18n>

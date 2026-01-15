@@ -27,12 +27,12 @@
         :title="t('myAccount')"
         to="/me/account"
       />
-      <!-- TODO: Add reuses -->
-      <!-- <v-list-item
-        to="/me/uses"
-        :prepend-icon="mdiShare"
-        title="Mes réutilisations"
-      /> -->
+      <v-list-item
+        v-if="portalConfig.reuses?.allowUserReuses"
+        :prepend-icon="mdiPageNext"
+        :title="t('myReuses')"
+        to="/me/reuses"
+      />
       <v-list-item
         v-if="!portalConfig.personal.hidePages.includes('notifications')"
         :prepend-icon="mdiBell"
@@ -102,11 +102,16 @@
 
     <!-- Copyright -->
     <template #append>
+      <!--
+        Note that the `title` prop overrides the native `title` attribute,
+        which must be set using `v-bind:title.attr` instead.
+        See https://vuetifyjs.com/en/api/v-list-item/#props
+      -->
       <v-list-item
         href="https://koumoul.com"
         target="_blank"
         rel="noopener"
-        :title="t('publishYourData') + ' - ' + t('newWindow')"
+        v-bind="{ 'title': t('publishYourData') + ' - ' + t('newWindow') }"
       >
         <span class="text-caption">{{ t('publishYourData') }}</span>
       </v-list-item>
@@ -116,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline } from '@mdi/js'
+import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline, mdiPageNext } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -186,6 +191,7 @@ const navigationTextStyle = computed(() => {
     contribute: Contribute
     myAccount: My Account
     myNotifications: My Notifications
+    myReuses: My Reuses
     newWindow: New window
     organizationManagement: Organization Management
     personalAccount: Personal Account
@@ -200,6 +206,7 @@ const navigationTextStyle = computed(() => {
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
+    myReuses: Mes réutilisations
     newWindow: Nouvelle fenêtre
     organizationManagement: Gestion de l'organisation
     personalAccount: Compte personnel
