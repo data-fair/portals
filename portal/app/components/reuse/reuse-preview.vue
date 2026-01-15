@@ -75,7 +75,7 @@
 
   <!-- Back to reuses link -->
   <v-row
-    v-if="showBackLink"
+    v-if="reusesCatalogExists"
     class="my-4"
     justify="center"
   >
@@ -98,14 +98,14 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
 import { withQuery } from 'ufo'
 
-const { reuseConfig, slug, showBackLink = true } = defineProps<{
+const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
   reuseConfig: ReuseConfig
   slug: string
-  showBackLink?: boolean
+  reusesCatalogExists?: boolean
 }>()
 
 const { t } = useI18n()
-const { portal, portalConfig } = usePortalStore()
+const { portal, portalConfig, preview } = usePortalStore()
 
 const datasetCardConfig = computed(() => {
   const pageConfig = portalConfig.value.reuses.page.datasets
@@ -122,11 +122,12 @@ const datasetsUrl = computed(() => {
     size: 100,
     html: 'vuetify',
     ids: reuseConfig?.datasets?.map(d => d.id).join(','),
-    publicationSites: 'data-fair-portals:' + portal.value._id
+    publicationSites: !preview ? 'data-fair-portals:' + portal.value._id : undefined
   })
 })
 
-const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
+const fetch = preview ? useFetch<{ count: number, results: Dataset[] }> : useLocalFetch<{ count: number, results: Dataset[] }>
+const datasetsFetch = fetch(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
 
 const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {

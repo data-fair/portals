@@ -4,7 +4,6 @@
       v-if="reuseConfig"
       :reuse-config="reuseConfig"
       :slug="slug"
-      :show-back-link="false"
     />
   </portal-preview-provider>
 </template>

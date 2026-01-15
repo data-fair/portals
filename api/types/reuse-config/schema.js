@@ -43,6 +43,10 @@ export default {
     image: {
       type: 'object',
       title: 'Image',
+      description: 'Images may be disabled by the portal administrator. You can still upload an image, but it may not be displayed.',
+      'x-i18n-description': {
+        fr: 'Les images peuvent être désactivées par l\'administrateur du portail. Vous pouvez toujours ajouter une image, mais elle pourrait ne pas être affichée.'
+      },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
@@ -91,7 +95,8 @@ export default {
         fr: 'Jeux de données'
       },
       layout: {
-        listEditMode: 'inline',
+        listActions: ['add', 'sort', 'delete'],
+        options: { confirmDeleteItem: false },
         messages: {
           addItem: 'Add a dataset',
           'x-i18n-addItem': {

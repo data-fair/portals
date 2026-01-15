@@ -10,10 +10,13 @@
         ]"
       />
 
-      <v-card-text>
+      <v-card-text class="pa-0">
         <portal-preview-provider>
           <v-tabs-window v-model="tab">
-            <v-tabs-window-item value="preview">
+            <v-tabs-window-item
+              value="preview"
+              class="ma-4"
+            >
               <reuse-preview-wrapper
                 v-if="reuseFetch.data.value?.config"
                 :reuse-config="reuseFetch.data.value.config"
@@ -21,7 +24,10 @@
               />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="preview-draft">
+            <v-tabs-window-item
+              value="preview-draft"
+              class="ma-4"
+            >
               <reuse-preview-wrapper
                 v-if="reuseFetch.data.value?.draftConfig"
                 :reuse-config="reuseFetch.data.value.draftConfig"
@@ -29,7 +35,10 @@
               />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="publications">
+            <v-tabs-window-item
+              value="publications"
+              class="ma-4"
+            >
               <reuse-edit-publication />
             </v-tabs-window-item>
           </v-tabs-window>

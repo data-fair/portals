@@ -12,12 +12,10 @@
     </v-list-item>
   </custom-router-link>
 
-  <v-divider class="my-2" />
-
   <!-- Validate draft -->
   <v-list-item
-    v-if="hasDraftDiff"
     :loading="validateDraft.loading.value"
+    :disabled="cancelDraft.loading.value || !hasDraftDiff"
     @click="validateDraft.execute()"
   >
     <template #prepend>
@@ -31,8 +29,8 @@
 
   <!-- Cancel draft -->
   <v-list-item
-    v-if="hasDraftDiff"
     :loading="cancelDraft.loading.value"
+    :disabled="validateDraft.loading.value || !hasDraftDiff"
     @click="cancelDraft.execute()"
   >
     <template #prepend>
@@ -44,10 +42,7 @@
     {{ t('cancelDraft') }}
   </v-list-item>
 
-  <v-divider
-    v-if="hasDraftDiff"
-    class="my-2"
-  />
+  <v-divider class="my-2" />
 
   <!-- Change owner -->
   <v-menu
