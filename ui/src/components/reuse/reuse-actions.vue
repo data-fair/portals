@@ -1,14 +1,12 @@
 <template>
   <!-- Validation request alert -->
   <v-alert
-    v-if="reuseFetch.data.value?.requestedValidationDraft"
+    v-if="reuse?.requestedValidationDraft"
     type="warning"
-    icon="mdi-information"
-    class="ma-2"
+    :text="t('validationRequestedByUser')"
+    class="mx-2 mb-2"
     variant="outlined"
-  >
-    {{ t('validationRequestedByUser') }}
-  </v-alert>
+  />
 
   <!-- Edit config -->
   <custom-router-link :to="`/reuses/${reuseId}/edit-config`">
@@ -146,7 +144,7 @@
       <v-card
         variant="elevated"
         :title="t('deletingReuse')"
-        :text="t('confirmDeleteReuse', { title: reuseFetch.data.value?.config.title })"
+        :text="t('confirmDeleteReuse', { title: reuse?.config.title })"
         :loading="deleteReuse.loading.value ? 'warning' : undefined"
       >
         <v-card-actions>
@@ -178,7 +176,7 @@ import { computedAsync } from '@vueuse/core'
 import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
-const { reuseFetch } = useReuseStore()
+const { reuseFetch, reuse } = useReuseStore()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const showChangeOwnerMenu = ref(false)
@@ -189,8 +187,8 @@ const newOwner = ref<Record<string, string> | null>(null)
 const { reuseId } = defineProps<{ reuseId: string }>()
 
 const hasDraftDiff = computed(() => {
-  if (!reuseFetch.data.value) return false
-  return !equal(reuseFetch.data.value.config, reuseFetch.data.value.draftConfig)
+  if (!reuse.value) return false
+  return !equal(reuse.value.config, reuse.value.draftConfig)
 })
 
 const validateDraft = useAsyncAction(
@@ -263,7 +261,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
-    validationRequestedByUser: Une validation est demandée par un utilisateur
+    validationRequestedByUser: A draft validation is requested by a user
     yes: Yes
   fr:
     cancel: Annuler
@@ -284,7 +282,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
-    validationRequestedByUser: Une validation est demandée par un utilisateur
+    validationRequestedByUser: Une validation du brouillon est demandée par un utilisateur
     yes: Oui
 
 </i18n>

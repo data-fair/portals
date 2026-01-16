@@ -40,11 +40,18 @@ router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
+  let owner = body.owner ?? session.account
+
+  // If portalId is provided, fetch the owner from the portal
+  if (body.portalId) {
+    const portal = await mongo.portals.findOne({ _id: body.portalId }, { projection: { owner: 1 } })
+    if (!portal) throw httpError(404, 'Portal not found')
+    owner = portal.owner
+  }
 
   const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const reuseId = randomUUID()
-  const owner = body.owner ?? session.account
 
   // Generate slug from title
   const baseSlug = slug.default(config.title, { lower: true, strict: true })

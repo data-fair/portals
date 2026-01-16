@@ -2,7 +2,7 @@
   <d-frame-wrapper
     :iframe-title="t('myReuses')"
     :adapter.prop="stateChangeAdapter"
-    src="/portals-manager/embed/reuses/"
+    :src="iframeSrc"
     class="fill-height"
     resize="no"
     sync-path="/me/reuses/"
@@ -18,9 +18,15 @@ import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-chan
 
 const { t } = useI18n()
 const { setBreadcrumbs } = useNavigationStore()
+const { portal } = usePortalStore()
 
 // Handle navigation from the iframe to the parent app
 const stateChangeAdapter = createStateChangeAdapter(useRouter())
+
+const iframeSrc = computed(() => {
+  const params = new URLSearchParams({ portalId: portal.value._id })
+  return `/portals-manager/embed/reuses/?${params.toString()}`
+})
 
 const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) => {
   if (!message.breadcrumbs) return

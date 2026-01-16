@@ -136,7 +136,7 @@ const createReuse = useAsyncAction(
       }
     })
 
-    await router.replace({ path: `/reuses/${reuse._id}` })
+    await router.replace({ path: `/reuses/${reuse._id}/edit-config` })
   },
   {
     error: t('errorCreatingReuse')

@@ -373,7 +373,7 @@ const createPage = useAsyncAction(
       }
     })
 
-    await router.replace({ path: `/pages/${route.params.groupId}/${page._id}` })
+    await router.replace({ path: `/pages/${route.params.groupId}/${page._id}/edit-config` })
   },
   {
     error: t('errorCreatingPage')

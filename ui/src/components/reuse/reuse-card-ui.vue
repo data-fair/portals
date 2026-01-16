@@ -1,5 +1,5 @@
 <template>
-  <custom-router-link :to="`/reuses/${reuse._id}`">
+  <custom-router-link :to="`${isEmbed ? '/embed' : ''}/reuses/${reuse._id}`">
     <v-card
       class="h-100"
       link
@@ -18,10 +18,14 @@
           />
         </template>
 
-        <!-- Owner -->
+        <!-- Owner or Submitter -->
         <template #append>
           <owner-avatar
-            v-if="showAll || !!(reuse.owner.department && !session.state.account.department)"
+            v-if="isEmbed && !!(reuse.submitter?.department && !session.state.account.department)"
+            :owner="reuse.submitter"
+          />
+          <owner-avatar
+            v-else-if="showAll || !!(reuse.owner.department && !session.state.account.department)"
             :owner="reuse.owner"
           />
         </template>
@@ -46,5 +50,8 @@ import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
-const { reuse } = defineProps<{ reuse: Reuse }>()
+const { reuse, isEmbed } = defineProps<{
+  reuse: Reuse
+  isEmbed?: boolean
+}>()
 </script>

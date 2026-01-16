@@ -8,7 +8,6 @@ import { provideReuseStore } from '~/composables/use-reuse-store'
 const route = useRoute<'/reuses/[id]'>()
 provideReuseStore(route.params.id)
 
-provide('reuse-id', route.params.id)
 provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'

@@ -35,10 +35,7 @@
               />
             </v-tabs-window-item>
 
-            <v-tabs-window-item
-              value="publications"
-              class="ma-4"
-            >
+            <v-tabs-window-item value="publications">
               <reuse-edit-publication />
             </v-tabs-window-item>
           </v-tabs-window>

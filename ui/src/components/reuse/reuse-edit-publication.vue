@@ -72,7 +72,6 @@
               size="small"
               color="primary"
               :loading="publishAction.loading.value"
-              :disabled="reuse.requestedPortals.includes(portal._id)"
               @click="publishAction.execute(portal)"
             >
               {{ reuse.portals.includes(portal._id) ? t('unpublish') : t('publish') }}
@@ -81,6 +80,7 @@
               v-if="reuse.requestedPortals.includes(portal._id)"
               size="small"
               color="warning"
+              class="ml-2"
               :loading="refuseAction.loading.value"
               @click="refuseAction.execute(portal)"
             >
@@ -128,7 +128,8 @@ const publishAction = useAsyncAction(async (portal: PartialPortal) => {
   } else {
     // Publish
     const portals = [...reuse.value.portals, portal._id]
-    await patchReuse.execute({ portals })
+    const requestedPortals = reuse.value.requestedPortals.filter(id => id !== portal._id)
+    await patchReuse.execute({ portals, requestedPortals })
   }
 })
 
