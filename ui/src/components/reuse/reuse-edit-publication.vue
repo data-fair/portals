@@ -91,6 +91,7 @@
             <v-btn
               v-if="reuse.portals.includes(portal._id)"
               :href="getPortalUrl(portal) + '/reuses/' + reuse.slug"
+              :title="t('viewOn', { portalTitle: portal.title })"
               target="_blank"
               size="small"
               variant="text"
@@ -162,6 +163,7 @@ const getPortalUrl = (portal: PartialPortal): string => {
     refuse: Refuse
     status: Status
     unpublish: Unpublish
+    viewOn: View on {portalTitle}
 
   fr:
     actions: Actions
@@ -178,4 +180,5 @@ const getPortalUrl = (portal: PartialPortal): string => {
     refuse: Refuser
     status: Statut
     unpublish: Dépublier
+    viewOn: Voir sur {portalTitle}
 </i18n>

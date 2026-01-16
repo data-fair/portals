@@ -43,37 +43,55 @@
 
   <v-divider class="my-2" />
 
-  <!-- Publication status -->
-  <v-list-item>
-    <p class="text-body-1">
-      {{ t('publicationStatus') }}
-    </p>
-    <v-chip
-      v-if="isPublished"
-      color="success"
-      size="small"
-    >
-      {{ t('published') }}
-    </v-chip>
-    <v-chip
-      v-else-if="isPublicationRequested"
-      color="warning"
-      size="small"
-    >
-      {{ t('pending') }}
-    </v-chip>
-    <v-chip
-      v-else
-      color="default"
-      size="small"
-    >
-      {{ t('notPublished') }}
-    </v-chip>
+  <!-- Published portals -->
+  <p
+    v-if="publishedPortalsInfo.length"
+    class="text-caption font-weight-bold text-success my-2 px-2"
+  >
+    {{ t('publishedOn') }}
+  </p>
+  <v-list-item
+    v-for="portal in publishedPortalsInfo"
+    :key="portal._id"
+    :href="portal.url + '/reuses/' + reuse?.slug"
+    target="_blank"
+    :title="portal.title"
+    :subtitle="portal._id === portalId ? t('currentPortal') : undefined"
+  >
+    <template #append>
+      <v-icon
+        size="small"
+        :icon="mdiOpenInNew"
+      />
+    </template>
   </v-list-item>
 
-  <!-- Not published: Request publication -->
+  <!-- Portals with pending requests -->
+  <p
+    v-if="requestedPortalsInfo.length"
+    class="text-caption font-weight-bold text-warning my-2 px-2"
+  >
+    {{ t('pendingOn') }}
+  </p>
   <v-list-item
-    v-if="!isPublished && !isPublicationRequested"
+    v-for="portal in requestedPortalsInfo"
+    :key="portal._id"
+    :href="portal.url"
+    target="_blank"
+    :title="portal.title"
+    :subtitle="portal._id === portalId ? t('currentPortal') : undefined"
+  >
+    <template #append>
+      <v-icon
+        size="small"
+        :icon="mdiOpenInNew"
+      />
+    </template>
+  </v-list-item>
+
+  <!-- Not published on any portal: Request publication -->
+  <v-list-item
+    v-if="!isPublished && !isPublicationRequested && !reuse?.portals?.length"
     :disabled="requestAction.loading.value"
     @click="requestAction.execute()"
   >
@@ -86,7 +104,7 @@
     {{ t('requestPublication') }}
   </v-list-item>
 
-  <!-- Published with changes: Request validation -->
+  <!-- Validation pending: Show status only -->
   <v-list-item
     v-else-if="isValidationPending"
     disabled
@@ -100,6 +118,7 @@
     {{ t('validationPending') }}
   </v-list-item>
 
+  <!-- Published on current portal with changes: Request validation -->
   <v-list-item
     v-else-if="isPublished && hasDraftDiff"
     :disabled="requestValidationAction.loading.value"
@@ -111,10 +130,25 @@
         :icon="mdiFileSync"
       />
     </template>
-    {{ t('requestValidation') }}
+    <span>{{ t('requestValidation') }}</span>
   </v-list-item>
 
-  <!-- Pending: Cancel request -->
+  <!-- Already published on other portals: Request publication on this portal -->
+  <v-list-item
+    v-else-if="!isPublished && !isPublicationRequested && (reuse?.portals?.length ?? 0) > 0"
+    :disabled="requestAction.loading.value"
+    @click="requestAction.execute()"
+  >
+    <template #prepend>
+      <v-icon
+        color="primary"
+        :icon="mdiSend"
+      />
+    </template>
+    <span>{{ hasDraftDiff ? t('requestPublicationAndValidationOnPortal') : t('requestPublicationOnPortal') }}</span>
+  </v-list-item>
+
+  <!-- Pending request: Cancel request -->
   <v-list-item
     v-else-if="isPublicationRequested"
     :disabled="cancelAction.loading.value"
@@ -181,7 +215,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiSend, mdiFileSync, mdiClose, mdiDelete, mdiClockAlert, mdiUndo, mdiRedo, mdiFileCancel } from '@mdi/js'
+import { mdiSend, mdiFileSync, mdiClose, mdiDelete, mdiClockAlert, mdiUndo, mdiRedo, mdiFileCancel, mdiOpenInNew } from '@mdi/js'
 import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
@@ -194,6 +228,55 @@ const { changesStack, reuseId } = defineProps<{
 
 const { reuseFetch, reuse } = useReuseStore()
 const portalId = useStringSearchParam('portalId')
+
+// Fetch portal information for published and requested portals
+interface PortalPublicInfo {
+  _id: string
+  title: string
+  url: string
+}
+
+const publishedPortalsInfo = ref<PortalPublicInfo[]>([])
+const requestedPortalsInfo = ref<PortalPublicInfo[]>([])
+
+// Fetch portal info when reuse changes
+watch(() => reuse.value, async (newReuse) => {
+  if (!newReuse) return
+
+  // Fetch published portals info
+  if (newReuse.portals.length > 0) {
+    publishedPortalsInfo.value = await Promise.all(
+      newReuse.portals.map(async (portalId) => {
+        try {
+          const data = await $fetch<PortalPublicInfo>(`${$apiPath}/portals/${portalId}/public`)
+          return data
+        } catch (e) {
+          console.error('Failed to fetch portal info', portalId, e)
+          return { _id: portalId, title: portalId, url: '' }
+        }
+      })
+    )
+  } else {
+    publishedPortalsInfo.value = []
+  }
+
+  // Fetch requested portals info
+  if (newReuse.requestedPortals.length > 0) {
+    requestedPortalsInfo.value = await Promise.all(
+      newReuse.requestedPortals.map(async (portalId) => {
+        try {
+          const data = await $fetch<PortalPublicInfo>(`${$apiPath}/portals/${portalId}/public`)
+          return data
+        } catch (e) {
+          console.error('Failed to fetch portal info', portalId, e)
+          return { _id: portalId, title: portalId, url: '' }
+        }
+      })
+    )
+  } else {
+    requestedPortalsInfo.value = []
+  }
+}, { immediate: true })
 
 const isPublished = computed(() => reuse.value?.portals?.includes(portalId.value) ?? false)
 const isPublicationRequested = computed(() => reuse.value?.requestedPortals?.includes(portalId.value) ?? false)
@@ -247,12 +330,14 @@ const cancelAction = useAsyncAction(
   async () => {
     if (!reuse.value || !portalId.value) return
     const requestedPortals = reuse.value.requestedPortals.filter(id => id !== portalId.value)
+    const patchBody: Record<string, any> = { requestedPortals }
+    // Only cancel validation request if there are no more requested portals AND no draft diff
+    if (requestedPortals.length === 0 && !hasDraftDiff.value) {
+      patchBody.requestedValidationDraft = false
+    }
     await $fetch(`/reuses/${reuseId}`, {
       method: 'PATCH',
-      body: {
-        requestedPortals,
-        requestedValidationDraft: false
-      }
+      body: patchBody
     })
     reuseFetch.refresh()
   },
@@ -282,14 +367,19 @@ const cancelDraft = useAsyncAction(
 
 <i18n lang="yaml">
   en:
-    publicationStatus: Publication status
+    publishedOn: Published on
+    pendingOn: Publication pending on
+    currentPortal: This portal
     published: Published
     pending: Pending publication request
-    validationPending: Validation pending
+    validationPending: Validation of changes pending
     notPublished: Not published
     requestPublication: Request publication
+    requestPublicationOnPortal: Request publication on this portal
+    requestPublicationAndValidationOnPortal: Request publication on this portal and validation of changes
     requestValidation: Request validation of changes
-    cancelRequest: Cancel request
+    viewOn: View on {portalId}
+    cancelRequest: Cancel publication request
     undo: Undo last change
     redo: Redo last change
     deleteReuse: Delete reuse
@@ -309,14 +399,19 @@ const cancelDraft = useAsyncAction(
     errorCancelingDraft: Error while canceling changes
 
   fr:
-    publicationStatus: Statut de publication
+    publishedOn: Publié sur
+    pendingOn: En attente de publication sur
+    currentPortal: Ce portail
     published: Publié
     pending: Demande de publication en attente
-    validationPending: Validation en attente
+    validationPending: Validation des modifications en attente
     notPublished: Non publié
     requestPublication: Demander la publication
+    requestPublicationOnPortal: Demander la publication sur ce portail
+    requestPublicationAndValidationOnPortal: Demander la publication sur ce portail et la validation des modifications
     requestValidation: Demander la validation des modifications
-    cancelRequest: Annuler la demande
+    viewOn: Voir sur {portalId}
+    cancelRequest: Annuler la demande de publication
     undo: Annuler le dernier changement
     redo: Rétablir le dernier changement
     deleteReuse: Supprimer la réutilisation

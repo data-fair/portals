@@ -65,6 +65,7 @@ import type { ReuseConfig } from '#api/types/reuse'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { mdiCircle } from '@mdi/js'
+import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/embed/reuses/[id]'>()
@@ -89,7 +90,15 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
 
 const saveConfig = useAsyncAction(async () => {
   if (!formValid.value) return
-  await patchReuse.execute({ draftConfig: editConfig.value })
+  // Only send patch if config has changed
+  if (equal(editConfig.value, reuseFetch.data.value?.draftConfig)) return
+
+  const patch: Record<string, any> = { draftConfig: editConfig.value }
+  // If there are pending publication requests, mark validation as required
+  if (reuseFetch.data.value?.requestedPortals?.length) {
+    patch.requestedValidationDraft = true
+  }
+  await patchReuse.execute(patch)
 })
 
 watch(reuseFetch.data, (reuse) => {

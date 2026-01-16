@@ -4,6 +4,7 @@ import type { Portal, PortalConfig } from '#types/portal/index.ts'
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import mongo from '#mongo'
+import config from '#config'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
@@ -129,6 +130,21 @@ router.post('', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   res.send(await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id))
+})
+
+router.get('/:id/public', async (req, res, next) => {
+  const portal = await mongo.portals.findOne({ _id: req.params.id })
+  if (!portal) throw httpError(404, 'portal not found')
+
+  let url = ''
+  if (portal.ingress?.url) url = portal.ingress.url
+  else url = config.portalUrlPattern.replace('{subdomain}', portal._id)
+
+  res.json({
+    _id: portal._id,
+    title: portal.config.title,
+    url
+  })
 })
 
 router.patch('/:id', async (req, res, next) => {
