@@ -14,7 +14,7 @@
             <v-icon :icon="mdiWeb" />
             {{ portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website }}
           </p>
-          <p v-if="portalConfig.contactInformations.email">
+          <p v-if="standardPagesFetch.data.value?.contact">
             <v-icon :icon="mdiEmail" />
             <NuxtLink to="/contact">{{ t('contactUs') }}</NuxtLink>
           </p>
@@ -32,6 +32,8 @@ import { mdiEmail, mdiPhone, mdiWeb } from '@mdi/js'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 
 </script>
 
