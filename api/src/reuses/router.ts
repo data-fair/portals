@@ -6,7 +6,7 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
+import { httpError, reqSessionAuthenticated, assertAccountRole, type Account } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft } from './service.ts'
 
 const router = Router()
@@ -23,9 +23,7 @@ router.get('', async (req, res, next) => {
   const filters = findUtils.query(params, { portal: 'portals' })
 
   // TODO: account filter for super admins ?
-  const showAll = params.showAll === 'true' || params.showAll === '1'
-  if (showAll && !session.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
-  const query = showAll ? {} : findUtils.filterPermissions(params, session)
+  const query = findUtils.filterPermissions(params, session)
   const queryWithFilters = Object.assign(filters, query)
 
   const [count, results] = await Promise.all([
@@ -36,17 +34,37 @@ router.get('', async (req, res, next) => {
   res.json({ results, count })
 })
 
+/**
+ * Create a new reuse
+ * Two cases:
+ * 1. Creation by an owner
+ * 2. Creation by a submitter (must have portalId and submitter)
+ */
 router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-  let owner = body.owner ?? session.account
 
-  // If portalId is provided, fetch the owner from the portal
-  if (body.portalId) {
-    const portal = await mongo.portals.findOne({ _id: body.portalId }, { projection: { owner: 1 } })
+  let owner: Account
+  let submitter: Account | undefined
+
+  if (body.submitter) { // Submit by a submitter in the personal space of a portal
+    if (!body.portalId) throw httpError(400, 'portalId is required when submitter is provided')
+
+    // Check portal config to allow user reuses
+    const portal = await mongo.portals.findOne(
+      { _id: body.portalId },
+      { projection: { owner: 1, config: 1 } }
+    )
     if (!portal) throw httpError(404, 'Portal not found')
+    if (!portal.config.reuses?.allowUserReuses) throw httpError(403, 'This portal does not accept user reuse submissions')
+
     owner = portal.owner
+    submitter = body.submitter
+    assertAccountRole(session, submitter, 'admin', { allAccounts: true }) // TODO: remove `allAccounts` when submitter can be an organization
+  } else { // Creation by an owner in the backoffice
+    owner = body.owner ?? session.account
+    assertAccountRole(session, owner, 'admin')
   }
 
   const createdAt = new Date().toISOString()
@@ -83,7 +101,7 @@ router.post('', async (req, res, next) => {
     requestedPortals: [],
     requestedValidationDraft: false
   }
-  assertAccountRole(session, reuse.owner, 'admin')
+  if (submitter) reuse.submitter = submitter
 
   await createReuse(reuse)
 

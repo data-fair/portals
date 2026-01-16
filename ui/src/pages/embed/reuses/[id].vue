@@ -78,7 +78,7 @@ watch(reuseFetch.data, () => {
 
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
-const reuseRef = computed(() => ({ type: 'reuse' as const, _id: route.params.id }))
+const reuseRef = { type: 'reuse' as const, _id: route.params.id }
 
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
