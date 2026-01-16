@@ -44,8 +44,8 @@ usePageSeo({
 <i18n lang="yaml">
   en:
     reuses: Reuses
-    seoDescription: 'Browse and discover how our datasets are reused.'
+    seoDescription: 'Discover how our data is utilized by our users: explore reuses, applications, and innovative projects from the community.'
   fr:
     reuses: Réutilisations
-    seoDescription: 'Parcourez et découvrez les réutilisations de nos données.'
+    seoDescription: 'Découvrez comment nos données sont exploitées par nos utilisateurs : parcourez les réutilisations, applications et projets innovants de la communauté.'
 </i18n>
