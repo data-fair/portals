@@ -26,20 +26,54 @@
   </div>
 
   <!-- Cancel draft -->
-  <v-list-item
-    :loading="cancelDraft.loading.value"
-    :disabled="!hasDraftDiff"
-    class="mt-2"
-    @click="cancelDraft.execute()"
+  <v-menu
+    v-model="showCancelDraftMenu"
+    :close-on-content-click="false"
+    max-width="500"
   >
-    <template #prepend>
-      <v-icon
-        color="warning"
-        :icon="mdiFileCancel"
-      />
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        :loading="cancelDraft.loading.value"
+        :disabled="!hasDraftDiff"
+        :title="t('cancelDraft')"
+        class="mt-2"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiFileCancel"
+          />
+        </template>
+      </v-list-item>
     </template>
-    {{ t('cancelDraft') }}
-  </v-list-item>
+    <template #default="{ isActive }">
+      <v-card
+        variant="elevated"
+        :title="t('cancelingDraft')"
+        :text="t('confirmCancelDraft')"
+        :loading="cancelDraft.loading.value ? 'warning' : undefined"
+      >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="cancelDraft.loading.value"
+            @click="isActive.value = false"
+          >
+            {{ t('no') }}
+          </v-btn>
+          <v-btn
+            color="warning"
+            variant="flat"
+            :loading="cancelDraft.loading.value"
+            @click="cancelDraft.execute()"
+          >
+            {{ t('yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-menu>
 
   <v-divider class="my-2" />
 
@@ -216,17 +250,17 @@
 
 <script setup lang="ts">
 import { mdiSend, mdiFileSync, mdiClose, mdiDelete, mdiClockAlert, mdiUndo, mdiRedo, mdiFileCancel, mdiOpenInNew } from '@mdi/js'
-import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
 const router = useRouter()
+const showCancelDraftMenu = ref(false)
 
 const { changesStack, reuseId } = defineProps<{
   changesStack: ReturnType<typeof useChangesStack>
   reuseId: string
 }>()
 
-const { reuseFetch, reuse } = useReuseStore()
+const { reuseFetch, reuse, hasDraftDiff } = useReuseStore()
 const portalId = useStringSearchParam('portalId')
 
 // Fetch portal information for published and requested portals
@@ -281,11 +315,6 @@ watch(() => reuse.value, async (newReuse) => {
 const isPublished = computed(() => reuse.value?.portals?.includes(portalId.value) ?? false)
 const isPublicationRequested = computed(() => reuse.value?.requestedPortals?.includes(portalId.value) ?? false)
 const isValidationPending = computed(() => isPublished.value && !!reuse.value?.requestedValidationDraft)
-
-const hasDraftDiff = computed(() => {
-  if (!reuse.value) return false
-  return !equal(reuse.value.config, reuse.value.draftConfig)
-})
 
 const requestAction = useAsyncAction(
   async () => {
@@ -355,7 +384,8 @@ const deleteReuse = useAsyncAction(async () => {
 const cancelDraft = useAsyncAction(
   async () => {
     await $fetch(`/reuses/${reuseId}/draft`, { method: 'DELETE' })
-    reuseFetch.refresh()
+    await reuseFetch.refresh()
+    showCancelDraftMenu.value = false
   },
   {
     success: t('draftCanceled'),
@@ -395,6 +425,8 @@ const cancelDraft = useAsyncAction(
     errorCancellingRequest: Error while cancelling request
     errorDeleting: Error while deleting the reuse
     cancelDraft: Cancel all changes
+    cancelingDraft: Canceling changes
+    confirmCancelDraft: Are you sure you want to cancel all changes? All changes will be lost and cannot be recovered.
     draftCanceled: Changes canceled!
     errorCancelingDraft: Error while canceling changes
 
@@ -427,6 +459,8 @@ const cancelDraft = useAsyncAction(
     errorCancellingRequest: Erreur lors de l'annulation de la demande
     errorDeleting: Erreur lors de la suppression de la réutilisation
     cancelDraft: Annuler toutes les modifications
+    cancelingDraft: Annulation des modifications
+    confirmCancelDraft: Êtes-vous sûr de vouloir annuler toutes les modifications ? Tous les changements seront perdus et ne pourront pas être récupérés.
     draftCanceled: Modifications annulées !
     errorCancelingDraft: Erreur lors de l'annulation des modifications
 </i18n>

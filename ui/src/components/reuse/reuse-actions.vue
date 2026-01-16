@@ -37,19 +37,53 @@
   </v-list-item>
 
   <!-- Cancel draft -->
-  <v-list-item
-    :loading="cancelDraft.loading.value"
-    :disabled="validateDraft.loading.value || !hasDraftDiff"
-    @click="cancelDraft.execute()"
+  <v-menu
+    v-model="showCancelDraftMenu"
+    :close-on-content-click="false"
+    max-width="500"
   >
-    <template #prepend>
-      <v-icon
-        color="warning"
-        :icon="mdiFileCancel"
-      />
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        :loading="cancelDraft.loading.value"
+        :disabled="validateDraft.loading.value || !hasDraftDiff"
+        :title="t('cancelDraft')"
+      >
+        <template #prepend>
+          <v-icon
+            color="warning"
+            :icon="mdiFileCancel"
+          />
+        </template>
+      </v-list-item>
     </template>
-    {{ t('cancelDraft') }}
-  </v-list-item>
+    <template #default="{ isActive }">
+      <v-card
+        variant="elevated"
+        :title="t('cancelingDraft')"
+        :text="t('confirmCancelDraft')"
+        :loading="cancelDraft.loading.value ? 'warning' : undefined"
+      >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="cancelDraft.loading.value"
+            @click="isActive.value = false"
+          >
+            {{ t('no') }}
+          </v-btn>
+          <v-btn
+            color="warning"
+            variant="flat"
+            :loading="cancelDraft.loading.value"
+            @click="cancelDraft.execute()"
+          >
+            {{ t('yes') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-menu>
 
   <v-divider class="my-2" />
 
@@ -173,23 +207,18 @@
 import { mdiAccount, mdiFileEdit, mdiDelete, mdiFileReplace, mdiFileCancel } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
-import equal from 'fast-deep-equal'
 
 const { t } = useI18n()
-const { reuseFetch, reuse } = useReuseStore()
+const { reuseFetch, reuse, hasDraftDiff } = useReuseStore()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const showChangeOwnerMenu = ref(false)
+const showCancelDraftMenu = ref(false)
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const { reuseId } = defineProps<{ reuseId: string }>()
-
-const hasDraftDiff = computed(() => {
-  if (!reuse.value) return false
-  return !equal(reuse.value.config, reuse.value.draftConfig)
-})
 
 const validateDraft = useAsyncAction(
   async () => {
@@ -205,7 +234,8 @@ const validateDraft = useAsyncAction(
 const cancelDraft = useAsyncAction(
   async () => {
     await $fetch(`/reuses/${reuseId}/draft`, { method: 'DELETE' })
-    reuseFetch.refresh()
+    await reuseFetch.refresh()
+    showCancelDraftMenu.value = false
   },
   {
     success: t('draftCanceled'),
@@ -245,9 +275,11 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   en:
     cancel: Cancel
     cancelDraft: Cancel draft
+    cancelingDraft: Canceling draft
     changeOwner: Change owner
     changeOwnerWarning: Changing the owner of a reuse may have consequences on permissions.
     confirm: Confirm
+    confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
     confirmDeleteReuse: Do you really want to delete the reuse "{title}"? Deletion is permanent and data cannot be recovered.
     deleteReuse: Delete reuse
     deletingReuse: Deleting reuse
@@ -266,9 +298,11 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   fr:
     cancel: Annuler
     cancelDraft: Annuler le brouillon
+    cancelingDraft: Annulation du brouillon
     changeOwner: Changer le propriétaire
     changeOwnerWarning: Changer le propriétaire d'une réutilisation peut avoir des conséquences sur les permissions.
     confirm: Confirmer
+    confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
     confirmDeleteReuse: Voulez-vous vraiment supprimer la réutilisation "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
     deleteReuse: Supprimer la réutilisation
     deletingReuse: Suppression de la réutilisation
