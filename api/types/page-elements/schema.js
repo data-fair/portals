@@ -2170,8 +2170,9 @@ export default {
           description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
           default: 'updatedAt:-1',
           oneOf: [
-            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' },
-            { const: 'updatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' }
+            { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
+            { const: 'updatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
           ]
         },
         columns: {
