@@ -85,7 +85,8 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
-  initialValidation: 'always'
+  initialValidation: 'always',
+  context: { isEmbed: true } // Fetch only datasets of the current portal
 }))
 
 const saveConfig = useAsyncAction(async () => {

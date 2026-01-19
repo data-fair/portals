@@ -27,6 +27,7 @@
 
   <!-- Cancel draft -->
   <v-menu
+    v-if="isPublished"
     v-model="showCancelDraftMenu"
     :close-on-content-click="false"
     max-width="500"
@@ -424,11 +425,11 @@ const cancelDraft = useAsyncAction(
     requestCancelled: Request cancelled
     errorCancellingRequest: Error while cancelling request
     errorDeleting: Error while deleting the reuse
-    cancelDraft: Cancel all changes
-    cancelingDraft: Canceling changes
-    confirmCancelDraft: Are you sure you want to cancel all changes? All changes will be lost and cannot be recovered.
-    draftCanceled: Changes canceled!
-    errorCancelingDraft: Error while canceling changes
+    cancelDraft: Revert to published version
+    cancelingDraft: Reverting to published version
+    confirmCancelDraft: Are you sure you want to discard your changes? The content will be reverted to how it currently appears online. Your ongoing changes will be lost.
+    draftCanceled: Configuration reverted!
+    errorCancelingDraft: Error while reverting configuration
 
   fr:
     publishedOn: Publié sur
@@ -458,9 +459,9 @@ const cancelDraft = useAsyncAction(
     requestCancelled: Demande annulée
     errorCancellingRequest: Erreur lors de l'annulation de la demande
     errorDeleting: Erreur lors de la suppression de la réutilisation
-    cancelDraft: Annuler toutes les modifications
-    cancelingDraft: Annulation des modifications
-    confirmCancelDraft: Êtes-vous sûr de vouloir annuler toutes les modifications ? Tous les changements seront perdus et ne pourront pas être récupérés.
-    draftCanceled: Modifications annulées !
-    errorCancelingDraft: Erreur lors de l'annulation des modifications
+    cancelDraft: Rétablir la version publiée
+    cancelingDraft: Rétablissement de la version publiée
+    confirmCancelDraft: Êtes-vous sûr de vouloir abandonner vos changements ? Le contenu sera rétabli tel qu'il apparaît actuellement en ligne. Vos changements en cours seront perdus.
+    draftCanceled: Configuration rétablie !
+    errorCancelingDraft:  Erreur lors de la rétablissement de la configuration
 </i18n>

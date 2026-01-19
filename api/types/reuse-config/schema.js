@@ -110,7 +110,8 @@ export default {
         required: ['id'],
         layout: {
           getItems: {
-            url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+            // eslint-disable-next-line no-template-curly-in-string
+            url: "/data-fair/api/v1/${context.isEmbed ? '/catalog/datasets?' : '/datasets?mine=true&'}raw=true&select=id,title&size=20",
             qSearchParam: 'q',
             itemsResults: 'data.results',
             // eslint-disable-next-line no-template-curly-in-string

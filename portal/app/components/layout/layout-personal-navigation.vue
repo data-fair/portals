@@ -208,7 +208,7 @@ const navigationTextStyle = computed(() => {
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
-    myReuses: Mes réutilisations
+    myReuses: Mes réutilisations (Bêta)
     newWindow: Nouvelle fenêtre
     organizationManagement: Gestion de l'organisation
     personalAccount: Compte personnel
