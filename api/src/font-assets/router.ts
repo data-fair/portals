@@ -6,7 +6,7 @@ import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fai
 import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { randomUUID } from 'node:crypto'
 import { type FontAsset } from '#types/font-asset/index.js'
-import { readFile } from 'node:fs/promises'
+import { readFile, unlink } from 'node:fs/promises'
 
 const router = Router()
 export default router
@@ -45,6 +45,7 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
   }
 
   await mongo.fontAssets.insertOne(fontAsset)
+  await unlink(file.path)
 
   res.json({ ...fontAsset, data: undefined })
 })
