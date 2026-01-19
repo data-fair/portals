@@ -40,7 +40,10 @@
 
         <!-- Step 2: Reuse information -->
         <v-stepper-window-item value="information">
-          <v-form v-model="valid">
+          <v-form
+            v-model="valid"
+            @submit.prevent
+          >
             <v-text-field
               v-model="newReuseTitle"
               :label="t('reuseTitle')"

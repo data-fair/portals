@@ -9,10 +9,26 @@ import config from '#config'
 
 const debug = debugModule('reuses')
 
-export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
+const findReuseOr404 = async (id: string) => {
   const reuse = await mongo.reuses.findOne({ _id: id })
   if (!reuse) throw httpError(404, `reuse "${id}" not found`)
+  return reuse
+}
+
+export const isReuseSubmitter = (sessionState: SessionStateAuthenticated, reuse: Reuse) => {
+  // TODO change 'user' check when other account types will be allowed to submit reuses
+  return reuse.submitter?.type === 'user' && reuse.submitter.id === sessionState.user.id
+}
+
+export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
+  const reuse = await findReuseOr404(id)
   assertAccountRole(sessionState, reuse.owner, 'admin')
+  return reuse
+}
+
+export const getReuseAsAdminOrSubmitter = async (sessionState: SessionStateAuthenticated, id: string) => {
+  const reuse = await findReuseOr404(id)
+  if (!isReuseSubmitter(sessionState, reuse)) assertAccountRole(sessionState, reuse.owner, 'admin')
   return reuse
 }
 

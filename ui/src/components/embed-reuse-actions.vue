@@ -36,7 +36,6 @@
         v-bind="props"
         :loading="cancelDraft.loading.value"
         :disabled="!hasDraftDiff"
-        :title="t('cancelDraft')"
         class="mt-2"
       >
         <template #prepend>
@@ -45,6 +44,7 @@
             :icon="mdiFileCancel"
           />
         </template>
+        {{ t('cancelDraft') }}
       </v-list-item>
     </template>
     <template #default="{ isActive }">

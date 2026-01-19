@@ -95,7 +95,7 @@ export default {
         fr: 'Jeux de données'
       },
       layout: {
-        listActions: ['add', 'sort', 'delete'],
+        listEditMode: 'inline',
         options: { confirmDeleteItem: false },
         messages: {
           addItem: 'Add a dataset',

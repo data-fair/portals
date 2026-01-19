@@ -23,7 +23,10 @@ const portalConfigDefault: PortalConfig = {
   },
   reuses: {
     card: {},
-    page: { datasets: { display: 'card' } }
+    page: {
+      datasets: { display: 'card' },
+      showImage: true
+    }
   },
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   contactInformations: {

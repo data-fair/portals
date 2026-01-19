@@ -22,7 +22,10 @@
           :title="t('addFontAsset')"
         >
           <v-card-text>
-            <v-form v-model="formValid">
+            <v-form
+              v-model="formValid"
+              @submit.prevent
+            >
               <vjsf-font-asset
                 v-model="newFontAsset"
                 :options="vjsfOptions"

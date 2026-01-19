@@ -195,7 +195,10 @@
 
         <!-- Step 4: Page information -->
         <v-stepper-window-item value="information">
-          <v-form v-model="valid">
+          <v-form
+            v-model="valid"
+            @submit.prevent
+          >
             <v-text-field
               v-model="newTitle"
               :label="t('pageTitle')"

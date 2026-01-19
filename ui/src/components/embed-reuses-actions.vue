@@ -26,7 +26,10 @@
     >
       <v-card-title>{{ t('createNewReuse') }}</v-card-title>
       <v-card-text>
-        <v-form v-model="valid">
+        <v-form
+          v-model="valid"
+          @submit.prevent
+        >
           <v-text-field
             v-model="newReuseTitle"
             :label="t('reuseTitle')"
