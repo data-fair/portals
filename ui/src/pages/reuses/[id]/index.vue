@@ -1,14 +1,23 @@
 <template>
   <v-container data-iframe-height>
     <v-card>
-      <v-tabs
-        v-model="tab"
-        :items="[
-          { text: t('tabs.preview'), value: 'preview' },
-          { text: t('tabs.previewDraft'), value: 'preview-draft' },
-          { text: t('tabs.publications'), value: 'publications' }
-        ]"
-      />
+      <v-tabs v-model="tab">
+        <v-tab value="preview">
+          {{ t('tabs.preview') }}
+        </v-tab>
+        <v-tab value="preview-draft">
+          {{ t('tabs.previewDraft') }}
+        </v-tab>
+        <v-tab value="publications">
+          <span>{{ t('tabs.publications') }}</span>
+          <v-icon
+            v-if="hasPendingPublicationRequest"
+            :icon="mdiAlertCircle"
+            color="warning"
+            class="ml-1"
+          />
+        </v-tab>
+      </v-tabs>
 
       <v-card-text class="pa-0">
         <portal-preview-provider>
@@ -50,6 +59,7 @@
 
 <script lang="ts" setup>
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { mdiAlertCircle } from '@mdi/js'
 
 const { t } = useI18n()
 const route = useRoute<'/reuses/[id]/'>()
@@ -57,6 +67,11 @@ const route = useRoute<'/reuses/[id]/'>()
 const { reuseFetch } = useReuseStore()
 
 const tab = useStringSearchParam('tab', { default: 'preview' })
+
+const hasPendingPublicationRequest = computed(() => {
+  const requestedPortals = reuseFetch.data.value?.requestedPortals
+  return Array.isArray(requestedPortals) && requestedPortals.length > 0
+})
 
 watch(reuseFetch.data, (reuse) => {
   if (!reuse) return
