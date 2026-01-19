@@ -51,9 +51,10 @@ export default {
               defaultSort,
               columns: reusesList.columns || 2,
               reusesCountPosition: 'top',
-              showSortBesideCount: false,
               filters: {
                 position: reusesList.filtersLocation || 'top',
+                density: 'comfortable',
+                rounded: 'default',
                 items: ['search', 'sort']
               },
               pagination: { position: 'none' }
@@ -73,7 +74,7 @@ export default {
       // Build page document
       const page: Page = {
         _id: randomUUID(),
-        title: `Catalogue de visualisations - ${portal.title}`,
+        title: `Catalogue de réutilisations - ${portal.title}`,
         type: 'reuses',
         owner: portal.owner,
         createdAt: now,
