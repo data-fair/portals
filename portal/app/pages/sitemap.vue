@@ -6,7 +6,10 @@
 
     <ul style="list-style: none;">
       <!-- Home always first -->
-      <li v-if="!allInternalPaths.has('/')" class="mb-2">
+      <li
+        v-if="!allInternalPaths.has('/')"
+        class="mb-2"
+      >
         <NuxtLink to="/">{{ t('home') }}</NuxtLink>
       </li>
 
@@ -30,6 +33,11 @@
         :key="`footer-important-${i}`"
         :item="item"
       />
+
+      <!-- Login page (only if not authenticated) -->
+      <li v-if="!session.user.value">
+        <a :href="session.loginUrl()">{{ t('login') }}</a>
+      </li>
 
       <!-- Standard pages at the end -->
       <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
@@ -64,6 +72,7 @@
 import type { MenuItem, LinkItem } from '#api/types/portal'
 
 const { t } = useI18n()
+const session = useSession()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs } = useNavigationStore()
 
@@ -88,18 +97,27 @@ const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
   return paths
 }
 
-// Filter to get only internal items
+// Filter to get only internal items and exclude the sitemap route
 const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkItem)[] => {
-  return items.filter(item => {
-    if (item.type === 'submenu' && 'children' in item && item.children) {
-      return filterInternalItems(item.children).length > 0
-    }
-    return item.type !== 'external'
-  }).map(item => {
-    if (item.type === 'submenu' && 'children' in item && item.children) {
-      return { ...item, children: filterInternalItems(item.children) }
-    }
-    return item
+  const filtered = items
+    .map(item => {
+      if (item.type === 'submenu' && 'children' in item && item.children) {
+        const children = filterInternalItems(item.children)
+        if (children.length === 0) return null
+        return { ...item, children }
+      }
+      return item
+    })
+    .filter(Boolean) as (MenuItem | LinkItem)[]
+
+  // Remove external links and any links resolving to '/sitemap'
+  return filtered.filter(item => {
+    if (item.type === 'submenu') return true // keep submenus
+    if (item.type === 'external') return false
+    const path = resolveLink(item)
+    if (!path) return false
+    if (path === '/sitemap') return false
+    return true
   })
 }
 
@@ -110,7 +128,7 @@ const internalFooterImportantLinks = computed(() => filterInternalItems(portalCo
 // All internal paths (to avoid duplicates)
 const allInternalPaths = computed(() => {
   const paths = new Set<string>()
-  paths.add('/') // Always add home
+
   collectInternalPaths(portalConfig.value.menu.children).forEach(p => paths.add(p))
   if (portalConfig.value.footer.links) {
     collectInternalPaths(portalConfig.value.footer.links).forEach(p => paths.add(p))
@@ -144,6 +162,7 @@ usePageSeo({
     legalNotice: Legal Notice
     cookiePolicy: Cookie Policy
     termsOfService: Terms of Service
+    login: Login Page
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
@@ -156,4 +175,5 @@ usePageSeo({
     legalNotice: Mentions légales
     cookiePolicy: Politique de cookies
     termsOfService: Conditions générales d'utilisation
+    login: Page de connexion
 </i18n>
