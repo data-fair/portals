@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="my-0">
     <!-- Left Column: Filters (256px) -->
     <v-col
       v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.smAndDown"

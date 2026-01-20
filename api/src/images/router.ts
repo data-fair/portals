@@ -1,6 +1,5 @@
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
-import { unlink } from 'node:fs/promises'
 import type { Image } from '#types/image/index.js'
 import { Piscina } from 'piscina'
 import type { ResizeInput, ResizeOutput } from './resize-image.ts'
@@ -63,7 +62,6 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
     await mongo.images.insertOne(imageMobile)
   }
   await mongo.images.insertOne(image)
-  await unlink(file.path)
 
   res.json({ ...image, data: undefined })
 })

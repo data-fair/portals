@@ -6,8 +6,8 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole, type Account } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, isReuseSubmitter } from './service.ts'
+import { reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
+import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft } from './service.ts'
 
 const router = Router()
 export default router
@@ -34,42 +34,14 @@ router.get('', async (req, res, next) => {
   res.json({ results, count })
 })
 
-/**
- * Create a new reuse
- * Two cases:
- * 1. Creation by an owner
- * 2. Creation by a submitter (must have portalId and submitter)
- */
 router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-
-  let owner: Account
-  let submitter: Account | undefined
-
-  if (body.submitter) { // Submit by a submitter in the personal space of a portal
-    if (!body.portalId) throw httpError(400, 'portalId is required when submitter is provided')
-
-    // Check portal config to allow user reuses
-    const portal = await mongo.portals.findOne(
-      { _id: body.portalId },
-      { projection: { owner: 1, config: 1 } }
-    )
-    if (!portal) throw httpError(404, 'Portal not found')
-    if (!portal.config.reuses?.allowUserReuses) throw httpError(403, 'This portal does not accept user reuse submissions')
-
-    owner = portal.owner
-    submitter = body.submitter
-    assertAccountRole(session, submitter, 'admin', { allAccounts: true }) // TODO: remove `allAccounts` when submitter can be an organization
-  } else { // Creation by an owner in the backoffice
-    owner = body.owner ?? session.account
-    assertAccountRole(session, owner, 'admin')
-  }
-
   const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const reuseId = randomUUID()
+  const owner = body.owner ?? session.account
 
   // Generate slug from title
   const baseSlug = slug.default(config.title, { lower: true, strict: true })
@@ -98,10 +70,9 @@ router.post('', async (req, res, next) => {
     config,
     draftConfig: config,
     portals: body.portals || [],
-    requestedPortals: [],
-    requestedValidationDraft: false
+    requestedPortals: []
   }
-  if (submitter) reuse.submitter = submitter
+  assertAccountRole(session, reuse.owner, 'admin')
 
   await createReuse(reuse)
 
@@ -110,19 +81,13 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-  res.send(await getReuseAsAdminOrSubmitter(reqSessionAuthenticated(req), req.params.id))
+  res.send(await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id))
 })
 
 router.patch('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  const reuse = await getReuseAsAdminOrSubmitter(session, req.params.id)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-
-  if (isReuseSubmitter(session, reuse)) {
-    const allowedKeysForSubmitter = ['draftConfig', 'requestedPortals', 'requestedValidationDraft']
-    const unauthorizedKey = Object.keys(body).find(key => !allowedKeysForSubmitter.includes(key))
-    if (unauthorizedKey) throw httpError(403, 'submitter can only update draftConfig, requestedPortals or requestedValidationDraft')
-  }
   const updatedReuse = await patchReuse(reuse, body, session)
 
   // Send patch event only if not just draft changed
@@ -138,7 +103,7 @@ router.patch('/:id', async (req, res, next) => {
 })
 
 router.delete('/:id', async (req, res, next) => {
-  const reuse = await getReuseAsAdminOrSubmitter(reqSessionAuthenticated(req), req.params.id)
+  const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
   res.status(201).send()
@@ -153,7 +118,7 @@ router.post('/:id/draft', async (req, res, next) => {
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  const reuse = await getReuseAsAdminOrSubmitter(session, req.params.id)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
   await cancelReuseDraft(reuse, session)
   res.status(201).send()
 })

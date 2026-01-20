@@ -9,26 +9,10 @@ import config from '#config'
 
 const debug = debugModule('reuses')
 
-const findReuseOr404 = async (id: string) => {
+export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
   const reuse = await mongo.reuses.findOne({ _id: id })
   if (!reuse) throw httpError(404, `reuse "${id}" not found`)
-  return reuse
-}
-
-export const isReuseSubmitter = (sessionState: SessionStateAuthenticated, reuse: Reuse) => {
-  // TODO change 'user' check when other account types will be allowed to submit reuses
-  return reuse.submitter?.type === 'user' && reuse.submitter.id === sessionState.user.id
-}
-
-export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
-  const reuse = await findReuseOr404(id)
   assertAccountRole(sessionState, reuse.owner, 'admin')
-  return reuse
-}
-
-export const getReuseAsAdminOrSubmitter = async (sessionState: SessionStateAuthenticated, id: string) => {
-  const reuse = await findReuseOr404(id)
-  if (!isReuseSubmitter(sessionState, reuse)) assertAccountRole(sessionState, reuse.owner, 'admin')
   return reuse
 }
 
@@ -168,7 +152,7 @@ export const sendReuseEvent = (
 
 export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
   debug('validateReuseDraft', reuse)
-  const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title, requestedValidationDraft: false }, session)
+  const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title }, session)
   await cleanUnusedImages(updatedReuse)
   sendReuseEvent(reuse, 'a été validé', 'draft-validate', session)
   return updatedReuse
@@ -176,7 +160,7 @@ export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuth
 
 export const cancelReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
   debug('cancelReuseDraft', reuse)
-  const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config, requestedValidationDraft: false }, session)
+  const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config }, session)
   await cleanUnusedImages(updatedReuse)
   sendReuseEvent(reuse, 'a été annulé', 'draft-discard', session)
   return updatedReuse

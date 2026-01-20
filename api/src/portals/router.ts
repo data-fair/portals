@@ -132,6 +132,9 @@ router.get('/:id', async (req, res, next) => {
   res.send(await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id))
 })
 
+/**
+ * Get public info about a portal (_id, title and url)
+ */
 router.get('/:id/public', async (req, res, next) => {
   const portal = await mongo.portals.findOne({ _id: req.params.id })
   if (!portal) throw httpError(404, 'portal not found')
@@ -143,6 +146,7 @@ router.get('/:id/public', async (req, res, next) => {
   res.json({
     _id: portal._id,
     title: portal.config.title,
+    owner: portal.owner,
     url
   })
 })

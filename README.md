@@ -12,11 +12,3 @@
 ## Developers
 
 Take a look at the [contribution guidelines](./CONTRIBUTING.md).
-
-## ⚖️ Architectural Decisions
-
-## Reuses Workflow
-A proposal for user-generated reuses was explored in [PR #XXX].
-Detailed analysis of why this specific workflow (Draft/Validation/Publication)
-was found inconsistent for functional requirements is documented here:
-👉 [REUSES.md](./REUSES.md)

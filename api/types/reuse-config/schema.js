@@ -45,7 +45,7 @@ export default {
       title: 'Image',
       description: 'Images may be disabled by the portal administrator. You can still upload an image, but it may not be displayed.',
       'x-i18n-description': {
-        fr: 'Les images peuvent être désactivées par l\'administrateur du portail. Vous pouvez toujours ajouter une image, mais elle pourrait ne pas être affichée.'
+        fr: 'Les images peuvent être désactivées par l\'administrateur du portail.<br>Vous pouvez toujours ajouter une image, mais elle pourrait ne pas être affichée.'
       },
       required: ['_id', 'name', 'mimeType'],
       layout: {

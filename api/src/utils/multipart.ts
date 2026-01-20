@@ -14,4 +14,4 @@ export const jsonFromMultiPart = (req: Request, res: Response, next: NextFunctio
   next()
 }
 
-export const upload = multer({ dest: config.tmpDir, limits: { fileSize: 50 * 1024 * 1024 } })
+export const upload = multer({ dest: config.tmpDir })
