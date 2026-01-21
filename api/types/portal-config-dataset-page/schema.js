@@ -35,8 +35,7 @@ export default {
       type: 'boolean',
       title: "Afficher l'image",
       description: "L'image sera affichée au dessus de la description.",
-      layout: { comp: 'switch' },
-      default: true
+      layout: { comp: 'switch' }
     },
 
     showAttachments: {

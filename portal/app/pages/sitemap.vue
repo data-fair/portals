@@ -74,7 +74,7 @@ import type { MenuItem, LinkItem } from '#api/types/portal'
 const { t } = useI18n()
 const session = useSession()
 const { portalConfig } = usePortalStore()
-const { resolveLink, setBreadcrumbs } = useNavigationStore()
+const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
 
 // Check which standard pages exist
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
@@ -87,7 +87,7 @@ const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
   const processItem = (item: MenuItem | LinkItem) => {
     if (item.type === 'submenu' && 'children' in item && item.children) {
       item.children.forEach(processItem)
-    } else if (item.type !== 'external') {
+    } else if (!isExternalLink(item)) {
       const path = resolveLink(item)
       if (path) paths.add(path)
     }
@@ -113,7 +113,7 @@ const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkIt
   // Remove external links and any links resolving to '/sitemap'
   return filtered.filter(item => {
     if (item.type === 'submenu') return true // keep submenus
-    if (item.type === 'external') return false
+    if (isExternalLink(item)) return false
     const path = resolveLink(item)
     if (!path) return false
     if (path === '/sitemap') return false
