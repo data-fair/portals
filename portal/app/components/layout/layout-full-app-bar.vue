@@ -17,7 +17,7 @@
 
         <!-- Breadcrumbs -->
         <v-spacer />
-        <layout-breadcrumbs />
+        <LayoutBreadcrumbs is-layout-full/>
         <v-spacer />
 
       </v-row>

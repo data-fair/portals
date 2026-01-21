@@ -175,7 +175,7 @@ export default {
           }
         ]
       },
-      { title: 'Fil d\'arianne', children: ['breadcrumb'] },
+      { title: 'Fil d\'ariane', children: ['breadcrumb'] },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
       { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },
