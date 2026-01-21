@@ -100,11 +100,11 @@
       </v-col>
 
       <v-col
-        v-if="dataset.spatial"
+        v-if="formattedSpatial"
         v-bind="metadataColProps"
       >
         <div class="text-caption text-medium-emphasis">{{ metadataLabel('spatial') }}</div>
-        {{ dataset.spatial }}
+        {{ formattedSpatial }}
       </v-col>
 
       <v-col
@@ -250,7 +250,7 @@ import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
@@ -259,6 +259,17 @@ const metadataColProps = computed(() => ({
   cols: 12,
   md: metadataConfig.value.location !== 'right' ? 4 : 12
 }))
+
+const formattedSpatial = computed(() => {
+  const spatial = dataset.spatial
+  if (!spatial) return ''
+
+  const parts = spatial.split(';').map(part => part.trim()).filter(Boolean)
+  if (!parts.length) return spatial
+  if (parts.length === 1) return parts[0]
+
+  return new Intl.ListFormat(locale.value, { style: 'long', type: 'conjunction' }).format(parts)
+})
 
 const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
 

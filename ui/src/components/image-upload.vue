@@ -3,6 +3,7 @@
     :label="label"
     :model-value="pseudoFile"
     :prepend-icon="previewSrc ? '' : undefined"
+    :loading="loadFile.loading.value"
     accept="image/*"
     @update:model-value="file => loadFile.execute(file as File)"
   >
