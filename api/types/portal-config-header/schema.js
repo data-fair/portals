@@ -7,7 +7,7 @@ export default {
   properties: {
     show: {
       type: 'boolean',
-      layout: { comp: 'switch' },
+      layout: 'switch',
       title: "Afficher l'entête",
       default: true
     },

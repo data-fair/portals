@@ -5,6 +5,7 @@ const mdiPuzzleOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 const mdiDatabaseOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>database-outline</title><path d="M12 3C7.58 3 4 4.79 4 7V17C4 19.21 7.59 21 12 21S20 19.21 20 17V7C20 4.79 16.42 3 12 3M18 17C18 17.5 15.87 19 12 19S6 17.5 6 17V14.77C7.61 15.55 9.72 16 12 16S16.39 15.55 18 14.77V17M18 12.45C16.7 13.4 14.42 14 12 14C9.58 14 7.3 13.4 6 12.45V9.64C7.47 10.47 9.61 11 12 11C14.39 11 16.53 10.47 18 9.64V12.45M12 9C8.13 9 6 7.5 6 7S8.13 5 12 5C15.87 5 18 6.5 18 7S15.87 9 12 9Z" /></svg>'
 const mdiImageMultiple = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>image-multiple</title><path d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" /></svg>'
 const mdiPageNext = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>page-next</title><path d="M20,3H5A2,2 0 0,0 3,5V11H7V9L11,12L7,15V13H3V19A2,2 0 0,0 5,21H20A2,2 0 0,0 22,19V5A2,2 0 0,0 20,3M17,17H13V15H17V17M20,13H13V11H20V13M20,9H13V7H20V9M3,13H0V11H3V13Z" /></svg>'
+const mdiNavigationVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>navigation-variant</title><path d="M21 3L3 10.53V11.5L9.84 14.16L12.5 21H13.46L21 3Z" /></svg>'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-elements',
@@ -53,10 +54,20 @@ export default {
           { key: 1, title: 'Text', 'x-i18n-title': { fr: 'Texte' } },
           { key: 2, title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
           { key: 3, title: 'Image', 'x-i18n-title': { fr: 'Image' } },
-          { key: 4, title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
-          { key: 5, title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
-          { key: 6, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
-          { key: 7, title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
+          { key: 4, title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
+
+          {
+            header: true,
+            title: 'Navigation elements',
+            'x-i18n-title': {
+              fr: 'Éléments de navigation'
+            },
+            icon: mdiNavigationVariant
+          },
+          { key: 5, title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
+          { key: 6, title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
+          { key: 7, title: 'Breadcrumbs', 'x-i18n-title': { fr: 'Fil d\'Ariane' } },
+
           {
             header: true,
             title: 'Layout & structure',
@@ -65,11 +76,13 @@ export default {
             },
             icon: mdiViewGridOutline
           },
-          { key: 8, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
-          { key: 9, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
-          { key: 10, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-          { key: 11, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
-          { key: 12, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
+          { key: 8, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
+          { key: 9, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
+          { key: 10, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
+          { key: 11, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
+          { key: 12, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
+          { key: 13, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
+
           {
             header: true,
             title: 'Functional blocks',
@@ -78,10 +91,11 @@ export default {
             },
             icon: mdiPuzzleOutline
           },
-          { key: 13, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
-          { key: 14, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
-          // { key: 15, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated ?
-          { key: 16, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+          { key: 14, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
+          { key: 15, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
+          // { key: 16, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
+          { key: 17, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+
           {
             header: true,
             title: 'Datasets',
@@ -90,11 +104,12 @@ export default {
             },
             icon: mdiDatabaseOutline
           },
-          { key: 17, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
-          { key: 18, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
-          { key: 19, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
-          { key: 20, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
-          { key: 21, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 18, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+          { key: 19, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { key: 20, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { key: 21, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { key: 22, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+
           {
             header: true,
             title: 'Applications',
@@ -103,9 +118,10 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 22, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 23, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 24, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 23, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 24, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 25, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+
           {
             header: true,
             title: 'Reuses',
@@ -114,9 +130,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 25, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 26, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 27, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
+          { key: 26, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 27, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 28, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
       },
       default: {
@@ -129,12 +145,15 @@ export default {
         { $ref: '#/$defs/element-text' },
         { $ref: '#/$defs/element-alert' },
         { $ref: '#/$defs/element-image' },
-        { $ref: '#/$defs/element-button' },
-        { $ref: '#/$defs/element-menu' },
-        { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-iframe' },
 
+        // Navigation elements
+        { $ref: '#/$defs/element-button' },
+        { $ref: '#/$defs/element-menu' },
+        { $ref: '#/$defs/element-breadcrumbs' },
+
         // Layout & structure
+        { $ref: '#/$defs/element-divider' },
         { $ref: '#/$defs/element-banner' },
         { $ref: '#/$defs/element-card' },
         { $ref: '#/$defs/element-two-columns' },
@@ -457,6 +476,34 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
+    'element-iframe': {
+      type: 'object',
+      title: 'IFrame',
+      required: ['type', 'url'],
+      properties: {
+        type: {
+          const: 'iframe'
+        },
+        title: {
+          title: "Titre de l'iframe",
+          description: "Recommandé pour l'accessibilité.",
+          type: 'string'
+        },
+        url: {
+          title: "URL de l'iframe",
+          description: "URL de la page web à afficher dans l'iframe.",
+          type: 'string',
+          layout: {
+            slots: {
+              before: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**."
+            }
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    // Navigation elements
     'element-button': {
       type: 'object',
       title: 'ButtonElement',
@@ -490,7 +537,7 @@ export default {
         usePortalConfig: {
           type: 'boolean',
           title: 'Utiliser la configuration du portail',
-          layout: { comp: 'switch' },
+          layout: 'switch',
           default: true
         },
         config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
@@ -550,7 +597,7 @@ export default {
         usePortalConfig: {
           type: 'boolean',
           title: 'Utiliser la configuration du portail',
-          layout: { comp: 'switch' },
+          layout: 'switch',
           default: true
         },
         config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
@@ -562,6 +609,21 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
+    'element-breadcrumbs': {
+      type: 'object',
+      title: 'BreadcrumbsElement',
+      'x-i18n-title': {
+        en: 'Breadcrumbs',
+        fr: 'Fil d\'Ariane'
+      },
+      required: ['type'],
+      properties: {
+        type: { const: 'breadcrumbs' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    // Layout & structure elements
     'element-divider': {
       type: 'object',
       title: 'DividerElement',
@@ -619,34 +681,6 @@ export default {
         }
       }
     },
-    'element-iframe': {
-      type: 'object',
-      title: 'IFrame',
-      required: ['type', 'url'],
-      properties: {
-        type: {
-          const: 'iframe'
-        },
-        title: {
-          title: "Titre de l'iframe",
-          description: "Recommandé pour l'accessibilité.",
-          type: 'string'
-        },
-        url: {
-          title: "URL de l'iframe",
-          description: "URL de la page web à afficher dans l'iframe.",
-          type: 'string',
-          layout: {
-            slots: {
-              before: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**."
-            }
-          }
-        },
-        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
-      }
-    },
-
-    // Layout & structure elements
     'element-banner': {
       type: 'object',
       title: 'BannerElement',
@@ -852,7 +886,7 @@ export default {
             usePortalConfig: {
               type: 'boolean',
               title: 'Utiliser la configuration du portail',
-              layout: { comp: 'switch' },
+              layout: 'switch',
               default: true
             },
             config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' }
@@ -1428,7 +1462,7 @@ export default {
             usePortalConfig: {
               type: 'boolean',
               title: 'Utiliser la configuration du portail',
-              layout: { comp: 'switch' },
+              layout: 'switch',
               default: true
             },
             config: {
@@ -1487,7 +1521,7 @@ export default {
           type: 'boolean',
           title: 'Afficher le bouton d\'accès à la documentation API',
           description: 'Affiche un bouton à coté du nombre de résultats permettant d\'accéder à la documentation de l\'API **(Seulement sur desktop)**.',
-          layout: { comp: 'switch' },
+          layout: 'switch',
           default: true
         },
         showSortBesideCount: {
@@ -1502,7 +1536,7 @@ export default {
           type: 'boolean',
           title: 'Activer les filtres avancés',
           description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
-          layout: { comp: 'switch' }
+          layout: 'switch'
         },
         filters: {
           type: 'object',
@@ -1918,7 +1952,7 @@ export default {
           type: 'boolean',
           title: 'Activer les filtres avancés',
           description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
-          layout: { comp: 'switch' }
+          layout: 'switch'
         },
         filters: {
           type: 'object',

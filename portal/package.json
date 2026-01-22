@@ -29,7 +29,7 @@
     "analytics": "^0.8.19",
     "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
-    "nuxt": "^4.2.1",
+    "nuxt": "^4.2.2",
     "nuxt-security": "^2.3.0",
     "piano-analytics-js": "^6.16.4",
     "undici": "^7.14.0",
@@ -38,6 +38,6 @@
     "vue-router": "^4.5.1",
     "vue3-social-sharing": "^1.4.1",
     "vuetify": "^3.9.5",
-    "vuetify-nuxt-module": "^0.19.2"
+    "vuetify-nuxt-module": "^0.19.3"
   }
 }

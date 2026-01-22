@@ -71,14 +71,14 @@
       />
 
       <v-list-item
-        v-if="!portalConfig.personal.hidePages.includes('contribute')"
+        v-if="(datasetsCount.rest || datasetsCount.file) && !portalConfig.personal.hidePages.includes('contribute')"
         :prepend-icon="mdiUpload"
         :title="t('contribute')"
         to="/me/update-dataset"
       />
 
       <v-list-item
-        v-if="!portalConfig.personal.hidePages.includes('processings')"
+        v-if="processingsCount && !portalConfig.personal.hidePages.includes('processings')"
         :prepend-icon="mdiCogTransferOutline"
         :title="t('processings')"
         to="/me/processings"
@@ -129,6 +129,9 @@ const { t } = useI18n()
 const session = useSessionAuthenticated()
 const { portal, portalConfig } = usePortalStore()
 const { personalDrawer } = useNavigationStore()
+
+const datasetsCount = ref({ file: null as number | null, rest: null as number | null })
+const processingsCount = ref<number | null>(null)
 
 const accountValue = computed(() => {
   if (session.state.account.type === 'user') return null
@@ -181,6 +184,20 @@ const ownerAvatar = computed(() => {
 
 const navigationTextStyle = computed(() => {
   return `color: rgba(var(--v-theme-on-${portalConfig.value.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
+})
+
+onMounted(async () => {
+  let ownerFilter = `${portal.value.owner.type}:${portal.value.owner.id}`
+  if (portal.value.owner.department) ownerFilter += `:${portal.value.owner.department}`
+  const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${portal.value._id}` }
+
+  try {
+    datasetsCount.value.file = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
+    datasetsCount.value.rest = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
+    processingsCount.value = (await $fetch<{ count: number }>('/processings/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
+  } catch (e) {
+    console.error('Failed to fetch datasets or processings counts:', e)
+  }
 })
 
 </script>

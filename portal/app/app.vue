@@ -34,8 +34,8 @@ const isIframe = useState('isIframe', () => {
   return false
 })
 
-provideNavigationStore()
 providePortalStore($portal, $siteInfo)
+provideNavigationStore({ isIframe })
 provide('get-image-src', getImageSrc)
 provide('is-iframe', isIframe)
 

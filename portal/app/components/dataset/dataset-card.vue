@@ -95,19 +95,32 @@
         />
 
         <!-- Department / Updated At -->
-        <!-- TODO: Convert to v-row like topics and keywords -->
-        <v-list-item v-if="cardConfig.showDepartment">
-          <template #prepend>
+        <v-row
+          v-if="cardConfig.showDepartment"
+          class="px-4 my-2"
+          dense
+        >
+          <v-col
+            v-if="cardConfig.showDepartment"
+            cols="auto"
+            class="d-flex align-center"
+          >
             <owner-avatar
-              v-if="cardConfig.showDepartment"
               :owner="dataset.owner"
               omit-owner-name
             />
-          </template>
-          <!-- <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">
-            {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-          </span> -->
-        </v-list-item>
+          </v-col>
+          <!-- <v-col
+            cols="auto"
+            class="d-flex align-center"
+            :class="{ 'ml-2': cardConfig.showDepartment }"
+          >
+            <span class="text-caption">
+              {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+            </span>
+          </v-col> -->
+        </v-row>
+        <div v-else class="mt-3" /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
 
         <!-- Actions (Bottom Location) -->
         <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">

@@ -69,7 +69,7 @@ router.post('', async (req, res, next) => {
 
   const page: Page = {
     _id: pageId,
-    title: body.config.title,
+    title: body.title || body.config.title,
     type: body.type,
     owner,
     createdAt: new Date().toISOString(),

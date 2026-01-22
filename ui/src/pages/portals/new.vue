@@ -480,7 +480,7 @@ const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applicat
 const generalInformations = {
   title: ref<string>(''),
   staging: ref<boolean>(false),
-  owner: ref<Account>()
+  owner: ref<Account>(session.state.account)
 }
 const selectedPortal = ref<string | undefined>(undefined)
 const selectedPages = {
@@ -489,7 +489,7 @@ const selectedPages = {
   applications: ref<string | undefined>(undefined)
 }
 
-const ownersReady = ref(false)
+const ownersReady = ref(true)
 const formValid = ref(false)
 
 // Fetch portals
@@ -606,8 +606,9 @@ const createPortal = useAsyncAction(
         type: 'home',
         sourcePageId: selectedPages.home.value !== 'blank' ? selectedPages.home.value : undefined, // Source page ID to duplicate (optional)
         portals: [portal._id],
+        title: t('pages.home') + ' - ' + portalTitle,
         config: {
-          title: t('pages.home') + ' - ' + portalTitle,
+          title: t('pages.home'),
           elements: []
         }
       }
@@ -622,8 +623,9 @@ const createPortal = useAsyncAction(
           type: 'datasets',
           sourcePageId: selectedPages.datasets.value !== 'blank' ? selectedPages.datasets.value : undefined, // Source catalog page ID to duplicate (optional)
           portals: [portal._id],
+          title: t('pages.datasetsCatalog') + ' - ' + portalTitle,
           config: {
-            title: t('pages.datasetsCatalog') + ' - ' + portalTitle,
+            title: t('pages.datasetsCatalog'),
             elements: []
           }
         }
@@ -639,8 +641,9 @@ const createPortal = useAsyncAction(
           type: 'applications',
           sourcePageId: selectedPages.applications.value !== 'blank' ? selectedPages.applications.value : undefined, // Source applications page ID to duplicate (optional)
           portals: [portal._id],
+          title: t('pages.applicationsCatalog') + ' - ' + portalTitle,
           config: {
-            title: t('pages.applicationsCatalog') + ' - ' + portalTitle,
+            title: t('pages.applicationsCatalog'),
             elements: []
           }
         }

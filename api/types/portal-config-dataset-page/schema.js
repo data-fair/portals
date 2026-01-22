@@ -28,22 +28,21 @@ export default {
       type: 'boolean',
       title: 'Afficher la section "Données"',
       description: 'Affiche une section avec les onglets "Tableau", "Carte", "Schéma",... en fonction des vues disponibles.',
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
 
     showImage: {
       type: 'boolean',
       title: "Afficher l'image",
       description: "L'image sera affichée au dessus de la description.",
-      layout: { comp: 'switch' },
-      default: true
+      layout: 'switch'
     },
 
     showAttachments: {
       type: 'boolean',
       title: 'Afficher les pièces jointes de type lien',
       description: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Paramètres généraux** → **Sécurité**.",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
 
     titleStyle: {

@@ -17,6 +17,12 @@
     :element="element"
     :context="context"
   />
+  <page-element-iframe
+    v-else-if="element.type === 'iframe'"
+    :element="element"
+  />
+
+  <!-- Navigation elements -->
   <page-element-button
     v-else-if="element.type === 'button'"
     :element="element"
@@ -25,12 +31,8 @@
     v-else-if="element.type === 'menu'"
     :element="element"
   />
-  <page-element-divider
-    v-else-if="element.type === 'divider'"
-    :element="element"
-  />
-  <page-element-iframe
-    v-else-if="element.type === 'iframe'"
+  <page-element-breadcrumbs
+    v-else-if="element.type === 'breadcrumbs'"
     :element="element"
   />
 
@@ -66,7 +68,6 @@
       />
     </template>
   </page-element-datasets-catalog>
-
   <page-element-datasets-list
     v-else-if="element.type === 'datasets-list'"
     :element="element"
@@ -128,7 +129,11 @@
     :element="element"
   />
 
-  <!-- Layout & structure -->
+  <!-- Layout & structure elements -->
+  <page-element-divider
+    v-else-if="element.type === 'divider'"
+    :element="element"
+  />
   <page-element-banner
     v-else-if="element.type === 'banner'"
     :element="element"
@@ -186,10 +191,16 @@
       />
     </template>
   </page-element-tabs>
+
+  <div v-else>
+    {{ t('unknownElement') }}
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page'
+
+const { t } = useI18n()
 
 defineProps<{
   element: PageElement
@@ -200,3 +211,10 @@ defineProps<{
   }
 }>()
 </script>
+
+<i18n lang="yaml">
+  en:
+    unknownElement: Unknown element
+  fr:
+    unknownElement: Élément inconnu
+</i18n>

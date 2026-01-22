@@ -4,13 +4,17 @@ import type { LinkItem, MenuItem } from '#api/types/portal'
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
+type NavigationStoreOptions = { isIframe: Ref<boolean> }
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
 
-const createNavigationStore = () => {
+const createNavigationStore = (options: NavigationStoreOptions) => {
+  const { $portal } = useNuxtApp()
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
+  const isIframe = options.isIframe
+  const showBreadcrumbsOverride = ref<boolean | undefined>(undefined)
 
   const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
@@ -38,7 +42,15 @@ const createNavigationStore = () => {
   }
 
   const clearBreadcrumbs = () => { _breadcrumbs.value = [] }
-  const showBreadcrumbs = computed(() => _breadcrumbs.value.length > 0)
+
+  const setShowBreadcrumbs = (value?: boolean) => { showBreadcrumbsOverride.value = value }
+  const showBreadcrumbs = (place: 'top' | 'bottom') => {
+    if (showBreadcrumbsOverride.value === false) return false
+    if (isIframe.value) return false
+    const pos = $portal.config.breadcrumb.position
+    if (pos === 'both') return true
+    return place === 'top' ? pos === 'below-nav' : pos === 'above-footer'
+  }
 
   /** Check if a menu item (or any of its children) matches the current route */
   const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
@@ -123,7 +135,6 @@ const createNavigationStore = () => {
 
   return {
     breadcrumbs: _breadcrumbs,
-    showBreadcrumbs,
     setBreadcrumbs,
     clearBreadcrumbs,
     isMenuItemActive,
@@ -131,12 +142,15 @@ const createNavigationStore = () => {
     resolveLink,
     resolveLinkTitle,
     drawer,
-    personalDrawer
+    personalDrawer,
+    showBreadcrumbs,
+    setShowBreadcrumbs,
+    isIframe
   }
 }
 
-export const provideNavigationStore = () => {
-  const store = createNavigationStore()
+export const provideNavigationStore = (options: NavigationStoreOptions) => {
+  const store = createNavigationStore(options)
   provide(navigationStoreKey, store)
   return store
 }

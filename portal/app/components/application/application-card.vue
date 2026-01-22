@@ -87,19 +87,30 @@
         />
 
         <!-- Department / Updated At -->
-        <!-- TODO: Convert to v-row like topics and keywords -->
-        <v-list-item>
-          <template #prepend>
+        <v-row
+          no-gutters
+          class="px-4 py-2"
+        >
+          <v-col
+            v-if="cardConfig.showDepartment"
+            cols="auto"
+            class="d-flex align-center"
+          >
             <owner-avatar
-              v-if="cardConfig.showDepartment"
               :owner="application.owner"
               omit-owner-name
             />
-          </template>
-          <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">
-            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-          </span>
-        </v-list-item>
+          </v-col>
+          <v-col
+            cols="auto"
+            class="d-flex align-center"
+            :class="{ 'ml-2': cardConfig.showDepartment }"
+          >
+            <span class="text-caption">
+              {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+            </span>
+          </v-col>
+        </v-row>
 
         <!-- Actions (Bottom Location) -->
         <template v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown">
