@@ -42,6 +42,15 @@ const portalConfigDefault: PortalConfig = {
     navigationColor: 'primary',
     hidePages: [],
     accountPages: []
+  },
+  breadcrumb: {
+    compact: true,
+    showHome: true,
+    fluid: false,
+    separator: {
+      type: 'text',
+      text: '/'
+    }
   }
 }
 

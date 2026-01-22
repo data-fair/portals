@@ -19,7 +19,7 @@ import type { PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
 const privacyPolicyCheck = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
@@ -31,10 +31,11 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/legal-notice/legal-notice/images/${id}`
 })
 
-watch(() => pageConfigFetch.data.value, () => {
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
-    { type: 'standard', subtype: 'legal-notice', title: pageConfigFetch.data.value?.title }
+    { type: 'standard', subtype: 'legal-notice', title: pageConfig?.title }
   ])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({

@@ -7,7 +7,7 @@ export default {
   properties: {
     position: {
       type: 'string',
-      title: 'Position du fil d\'ariane',
+      title: "Position du fil d'Ariane",
       default: 'none',
       oneOf: [
         { const: 'none', title: 'Aucun' },
@@ -38,7 +38,7 @@ export default {
     fluid: {
       type: 'boolean',
       title: "Aligner à gauche de l'écran",
-      description: "Le fil d'ariane sera aligné au bord gauche de l'écran. Sinon, il sera aligné au contenu de la page.",
+      description: "Le fil d'Ariane sera aligné au bord gauche de l'écran. Sinon, il sera aligné au contenu de la page.",
       layout: {
         if: 'parent.data?.position !== "none"',
         comp: 'switch',
@@ -49,7 +49,7 @@ export default {
     compact: {
       type: 'boolean',
       title: 'Affichage compact',
-      description: "Le texte du fil d'ariane sera affiché en plus petit.",
+      description: "Le texte du fil d'Ariane sera affiché en plus petit.",
       layout: {
         if: 'parent.data?.position !== "none"',
         comp: 'switch',

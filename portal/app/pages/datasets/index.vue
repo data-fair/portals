@@ -19,7 +19,7 @@ import type { PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/datasets/datasets', { watch: false })
 
@@ -29,10 +29,11 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/datasets/datasets/images/${id}`
 })
 
-watch(() => pageConfigFetch.data.value, () => {
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
-    { type: 'standard', subtype: 'datasets', title: pageConfigFetch.data.value?.title }
+    { type: 'standard', subtype: 'datasets', title: pageConfig?.title }
   ])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({

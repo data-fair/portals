@@ -14,6 +14,7 @@
       <v-breadcrumbs
         tag="ol"
         density="compact"
+        :class="{ 'px-0 ml-n1': isElement }"
       >
         <template
           v-for="(item, index) in breadcrumbItems"
@@ -57,7 +58,7 @@ import type { VBreadcrumbs } from 'vuetify/components'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
-defineProps<{ isLayoutFull?: boolean }>()
+defineProps<{ isLayoutFull?: boolean, isElement?: boolean }>()
 
 const { portalConfig } = usePortalStore()
 const { breadcrumbs } = useNavigationStore()

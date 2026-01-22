@@ -87,7 +87,7 @@ router.post('', async (req, res, next) => {
     contactInformations: {},
     personal: {
       navigationColor: 'primary',
-      hidePages: [],
+      hidePages: ['contribute', 'processings'],
       accountPages: []
     }
   }

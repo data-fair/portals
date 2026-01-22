@@ -175,7 +175,7 @@ export default {
           }
         ]
       },
-      { title: 'Fil d\'ariane', children: ['breadcrumb'] },
+      { title: "Fil d'Ariane", children: ['breadcrumb', { name: 'breadcrumb-preview' }] },
       { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
       { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },
@@ -351,14 +351,14 @@ export default {
     headerHomeActive: {
       type: 'boolean',
       title: "Utiliser un rendu différent sur la page d'accueil",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
     header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     headerHome: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     navBarHomeActive: {
       type: 'boolean',
       title: "Utiliser un rendu différent sur la page d'accueil",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
     navBar: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },
     navBarHome: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },

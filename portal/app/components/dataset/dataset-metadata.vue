@@ -14,7 +14,7 @@
       <!-- Records count / Size -->
       <v-col v-bind="metadataColProps">
         <div class="text-caption text-medium-emphasis">{{ t('size') }}</div>
-        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' +
+        {{ t('records', { count: (dataset.count || 0), formatted: (dataset.count || 0).toLocaleString('fr') }) }} {{ dataset.storage?.indexed?.size ? ' - ' +
         formatBytes(dataset.storage.indexed.size) : '' }}
       </v-col>
 
@@ -291,7 +291,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     creator: 'Creator:'
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
-    records: '{count} record | {count} records'
+    records: '0 record | {formatted} record | {formatted} records'
     frequencyLabels:
       annual: 'Every year'
       biennial: 'Every 2 years'
@@ -334,7 +334,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     creator: 'Producteur :'
     dataFrom: 'Données issues de'
     dataProducedBy: 'Provenance des données :'
-    records: '{count} enregistrement | {count} enregistrements'
+    records: '0 enregistrement | {formatted} enregistrement | {formatted} enregistrements'
     frequencyLabels:
       annual: 'Tous les ans'
       biennial: 'Tous les 2 ans'

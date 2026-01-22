@@ -4,7 +4,7 @@
     :class="[
       preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',
       element.background?.color && 'bg-' + element.background.color,
-      !preview && context.isRoot && context.index === 0 && 'mt-n4',
+      !preview && context.isRoot && context.index === 0 && !showBreadcrumbs('top') && 'mt-n4',
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`,
       !preview && element.overflowTop && `mt-n${element.pt ?? 4}`,
@@ -52,6 +52,9 @@ if (typeof window !== 'undefined') {
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
   document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`)
 }
+
+// If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
+const { showBreadcrumbs } = useNavigationStore()
 
 </script>
 

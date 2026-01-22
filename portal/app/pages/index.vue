@@ -11,6 +11,7 @@ import type { PageConfig } from '#api/types/page'
 
 definePageMeta({ layout: 'home' })
 const { portalConfig } = usePortalStore()
+const { clearBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/home/home', { watch: false })
 
@@ -20,7 +21,10 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/home/home/images/${id}`
 })
 
-useNavigationStore().clearBreadcrumbs()
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  clearBreadcrumbs()
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
+}, { immediate: true })
 
 // Meta from portal config, not home page config
 usePageSeo({

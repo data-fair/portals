@@ -53,6 +53,11 @@
               <layout-footer v-if="formValid" />
             </preview>
           </template>
+          <template #breadcrumb-preview>
+            <preview>
+              <layout-breadcrumbs v-if="formValid" />
+            </preview>
+          </template>
           <!-- TODO: fix vjsf bug -->
           <!-- <template #link-item-summary="{ node }">
             <link-item-summary :item="node.data" />

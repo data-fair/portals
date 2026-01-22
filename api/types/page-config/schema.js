@@ -17,7 +17,7 @@ export default {
       'x-i18n-title': {
         fr: 'Métadonnées'
       },
-      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs']
     }, {
       title: 'Content',
       'x-i18n-title': {
@@ -122,6 +122,22 @@ export default {
           }
         }
       }
+    },
+    showBreadcrumbs: {
+      type: 'boolean',
+      title: 'Show breadcrumbs',
+      'x-i18n-title': {
+        fr: "Afficher le fil d'Ariane"
+      },
+      description: 'Display the breadcrumbs if they are enabled in the portal settings. If set to false, they will never be shown on this page. You can manually add the Breadcrumbs via the page block to position it wherever you want.',
+      'x-i18n-description': {
+        fr: "Affiche le fil d'Ariane si celui-ci est activé dans la configuration du portail. Si désactivé ici, il ne sera jamais affiché sur cette page. Vous pouvez ajouter manuellement le Fil d'Ariane via le bloc de pages pour le positionner où vous le souhaitez."
+      },
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: true,
     },
     elements: {
       type: 'array',

@@ -25,7 +25,7 @@ export default {
       type: 'boolean',
       title: "Afficher l'image",
       description: "L'image sera affichée au dessus de la description.",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
     titleStyle: {
       type: 'object',

@@ -3,11 +3,8 @@ import type { LinkItem, MenuItem } from '#api/types/portal-config'
 const drawer = ref(false)
 const personalDrawer = ref(false)
 const setBreadcrumbs = () => {}
-const clearBreadcrumbs = () => {}
-const showBreadcrumbs = computed(() => {
-  console.warn('showBreadcrumbs is used in portals-manager')
-  return true
-})
+const clearBreadcrumbs = () => { }
+const showBreadcrumbs = (_place: 'top' | 'bottom') => false
 
 const isMenuItemActive = (_item: any, _currentPath: string): boolean => { return false }
 const isExternalLink = (link: LinkItem | MenuItem): boolean => {
@@ -50,9 +47,9 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
 
 export const useNavigationStore = () => {
   return {
-    breadcrumbs: ref([]),
-    showBreadcrumbs,
+    breadcrumbs: ref([{ title: 'Page de contenu', to: '/my-page' }]),
     setBreadcrumbs,
+    showBreadcrumbs,
     clearBreadcrumbs,
     isMenuItemActive,
     isExternalLink,

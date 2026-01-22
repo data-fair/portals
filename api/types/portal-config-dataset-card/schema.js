@@ -130,7 +130,7 @@ export default {
           type: 'boolean',
           title: "Recadrer l'image pour un rendu uniforme",
           description: "Si désactivé, l'image gardera son ratio d'origine",
-          layout: { comp: 'switch' },
+          layout: 'switch',
           default: true
         },
         default: {
@@ -165,14 +165,14 @@ export default {
           type: 'boolean',
           title: "Utiliser l'image de la première thématique",
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: { comp: 'switch', },
+          layout: 'switch',
           default: false
         },
         useApplication: {
           type: 'boolean',
           title: "Utiliser l'image de la première application",
           description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: { comp: 'switch', },
+          layout: 'switch',
           default: false
         }
       }

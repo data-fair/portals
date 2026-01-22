@@ -26,7 +26,7 @@ const slug = route.params.slug as string
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, {
   watch: false
@@ -45,11 +45,12 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/pages/event/${slug}/images/${id}`
 })
 
-watch(() => pageConfigFetch.data.value, () => {
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'event' },
-    { title: pageConfigFetch.data.value?.title || t('event') }
+    { title: pageConfig?.title || t('event') }
   ])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({
