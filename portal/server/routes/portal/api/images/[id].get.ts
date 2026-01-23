@@ -1,6 +1,6 @@
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
-import { portalMongo } from '~~/server/plugins/mongo'
 import type { Image } from '~~/../api/types/image'
+import { portalMongo } from '~~/server/plugins/mongo'
 
 export default defineEventHandler(async (event) => {
   // TODO: check visibility of content based on event.context.portal ?

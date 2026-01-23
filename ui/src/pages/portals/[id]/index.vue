@@ -103,6 +103,7 @@
           id: route.params.id,
           title: portalFetch.data.value.config.title,
           url: portalFetch.data.value.ingress?.url,
+          whiteLabel: portalFetch.data.value.whiteLabel
         }"
         @refresh-portal="portalFetch.refresh()"
       />

@@ -1,4 +1,5 @@
 <template>
+  <!-- Validate draft -->
   <v-list-item
     :disabled="isSavingDraft || !hasDraftDiff"
     :loading="validateDraft.loading.value"
@@ -13,6 +14,7 @@
     {{ t('validateDraft') }}
   </v-list-item>
 
+  <!-- Cancel draft -->
   <v-menu
     v-model="showCancelDraftMenu"
     :close-on-content-click="false"
@@ -76,6 +78,7 @@
     </v-list-item>
   </custom-router-link>
 
+  <!-- Change owner -->
   <v-menu
     v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
     v-model="showChangeOwnerMenu"
@@ -142,6 +145,7 @@
     </v-card>
   </v-menu>
 
+  <!-- Delete portal -->
   <v-menu
     v-model="showDeleteMenu"
     :close-on-content-click="false"
@@ -187,8 +191,12 @@
     </v-card>
   </v-menu>
 
-  <v-divider class="my-2" />
+  <v-divider
+    v-if="session.state.user?.adminMode"
+    class="my-2"
+  />
 
+  <!-- Manage domain exposure -->
   <custom-router-link
     v-if="session.state.user?.adminMode"
     :to="`/portals/${portal.id}/ingress`"
@@ -204,6 +212,46 @@
     </v-list-item>
   </custom-router-link>
 
+  <!-- Manage whiteLabel -->
+  <v-menu
+    v-if="session.state.user?.adminMode"
+    v-model="showWhiteLabelMenu"
+    :close-on-content-click="false"
+    max-width="500"
+  >
+    <template #activator="{ props }">
+      <v-list-item v-bind="props">
+        <template #prepend>
+          <v-icon
+            color="admin"
+            :icon="mdiIncognito"
+          />
+        </template>
+        {{ t('whiteLabel') }}
+      </v-list-item>
+    </template>
+    <v-card
+      rounded="lg"
+      variant="elevated"
+      :title="t('whiteLabelConfiguration')"
+      :loading="updateWhiteLabel.loading.value ? 'admin' : undefined"
+    >
+      <v-card-text class="text-admin">
+        <v-checkbox
+          :model-value="portal.whiteLabel"
+          :label="t('enableWhiteLabel')"
+          :disabled="updateWhiteLabel.loading.value"
+          color="admin"
+          hide-details
+          @update:model-value="(value) => updateWhiteLabel.execute(!!value)"
+        />
+      </v-card-text>
+    </v-card>
+  </v-menu>
+
+  <v-divider class="my-2" />
+
+  <!-- View draft link -->
   <v-list-item
     :href="$uiConfig.portalUrlPattern.replace('{subdomain}', portal.id + '.draft')"
     target="_blank"
@@ -218,6 +266,7 @@
     {{ t('viewDraft') }}
   </v-list-item>
 
+  <!-- View portal link -->
   <v-list-item
     :href="portal.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal.id)"
     target="_blank"
@@ -234,7 +283,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock } from '@mdi/js'
+import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiIncognito } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -243,6 +292,7 @@ const session = useSessionAuthenticated()
 const router = useRouter()
 const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
+const showWhiteLabelMenu = ref(false)
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
@@ -255,6 +305,7 @@ const { portal } = defineProps<{
     id: string
     title: string
     url: string | undefined
+    whiteLabel?: boolean
   }
 }>()
 const showCancelDraftMenu = ref(false)
@@ -292,6 +343,17 @@ const deletePortal = useAsyncAction(async () => {
   error: t('errorDeletingPortal'),
 })
 
+const updateWhiteLabel = useAsyncAction(async (value: boolean) => {
+  await $fetch(`/portals/${portal.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ whiteLabel: value })
+  })
+  emit('refresh-portal')
+}, {
+  success: t('whiteLabelUpdated'),
+  error: t('errorUpdatingWhiteLabel'),
+})
+
 /** `True` if the active account isn't in a department and his organization has departments */
 const hasDepartments = computedAsync(async (): Promise<boolean> => {
   if (session.state.account.department || session.state.account.type === 'user') return false
@@ -313,8 +375,10 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     confirmDeletePortal: Do you really want to delete the portal "{title}"? Deletion is permanent and data cannot be recovered.
     deletePortal: Delete portal
     deletingPortal: Deleting portal
+    enableWhiteLabel: Enable white label
     errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
+    errorUpdatingWhiteLabel: Error while updating white label
     events: Events
     manageDomainExposure: Manage domain exposure
     no: No
@@ -324,6 +388,9 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Validate draft
     viewDraft: View draft
     viewPortal: View portal
+    whiteLabel: White label
+    whiteLabelConfiguration: White label configuration
+    whiteLabelUpdated: White label updated!
     yes: Yes
 
   fr:
@@ -337,10 +404,12 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     confirmDeletePortal: Voulez-vous vraiment supprimer le portail "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
+    enableWhiteLabel: Activer la marque blanche
     errorChangingOwner: Erreur lors de le changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
+    errorUpdatingWhiteLabel: Erreur lors de la mise à jour de la marque blanche
     events: Traçabilité
-    manageDomainExposure: Gérer l'exposition du domaine
+    manageDomainExposure: Exposition du domaine
     no: Non
     ownerChanged: Propriétaire changé !
     portalDeleted: Portail supprimé !
@@ -348,6 +417,9 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Valider le brouillon
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail
+    whiteLabel: Marque blanche
+    whiteLabelConfiguration: Configuration de la marque blanche
+    whiteLabelUpdated: Marque blanche mise à jour !
     yes: Oui
 
 </i18n>

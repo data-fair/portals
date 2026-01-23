@@ -111,6 +111,11 @@ export type Dataset = {
     }[]
   }
 
+  relatedDatasets?: {
+    id: string
+    title: string
+  }[]
+
   previews?: {
     id: string
     title: string

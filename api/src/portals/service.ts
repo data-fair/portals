@@ -1,17 +1,17 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { IngressManagerIngressInfo } from '#types'
-import { duplicateImage } from '../images/service.ts'
 
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
-import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, httpError } from '@data-fair/lib-express'
 import axios from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
+import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyCss } from '../fonts/service.ts'
 
 const debug = debugModule('portals')
@@ -33,6 +33,10 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
+  // Change WhiteLabel by super admin only
+  if (patch.whiteLabel) assertAdminMode(session)
+
+  // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
     await mongo.images.updateMany(

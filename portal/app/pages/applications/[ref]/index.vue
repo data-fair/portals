@@ -138,6 +138,7 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
   '/data-fair/api/v1/applications/' + route.params.ref + '/configuration'
 )
 
+// Datasets used by the application
 const datasetsUrl = computed(() => {
   const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
   if (!datasetsIds || datasetsIds.length === 0) return ''
@@ -149,10 +150,8 @@ const datasetsUrl = computed(() => {
     publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
-
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
-
 const datasetsCardConfig = computed(() => {
   const pageConfig = portalConfig.value.applications.page.datasets
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
@@ -207,11 +206,11 @@ usePageSeo({
     applicationNotFound: The requested application was not found
     applicationError: An error occurred while loading the application
     backToApplications: Go to applications catalog
-    datasetsUsed: Dataset used | Datasets used
+    datasetsUsed: Dataset used | Dataset used | Datasets used
   fr:
     application: Visualisation
     applicationNotFound: La visualisation demandée n'a pas été trouvée
     applicationError: Une erreur est survenue lors du chargement de la visualisation
     backToApplications: Aller au catalogue de visualisations
-    datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
+    datasetsUsed: Jeu de données utilisé | Jeu de données utilisé | Jeux de données utilisés
 </i18n>

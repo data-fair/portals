@@ -102,7 +102,10 @@
     </v-list>
 
     <!-- Copyright -->
-    <template #append>
+    <template
+      v-if="!portal.whiteLabel"
+      #append
+    >
       <!--
         Note that the `title` prop overrides the native `title` attribute,
         which must be set using `v-bind:title.attr` instead.

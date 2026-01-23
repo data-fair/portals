@@ -8,19 +8,21 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    children: [{
-      comp: 'card',
-      title: 'Options',
-      children: [
-        { cols: { md: 4 }, key: 'showImage' },
-        { cols: { md: 4 }, key: 'showData' },
-        { cols: { md: 4 }, key: 'showAttachments' },
-      ]
-    },
-    'titleStyle',
-    'metadata',
-    'applications',
-    'reuses'
+    children: [
+      {
+        comp: 'card',
+        title: 'Options',
+        children: [
+          { cols: { md: 4 }, key: 'showImage' },
+          { cols: { md: 4 }, key: 'showData' },
+          { cols: { md: 4 }, key: 'showAttachments' },
+        ]
+      },
+      'titleStyle',
+      'metadata',
+      'applications',
+      'reuses',
+      'relatedDatasets'
     ]
   },
   properties: {
@@ -241,6 +243,57 @@ export default {
         },
         card: {
           $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card'
+        }
+      }
+    },
+
+    relatedDatasets: {
+      type: 'object',
+      title: 'Configuration des jeux de données liés',
+      layout: {
+        comp: 'card',
+        children: [
+          'display',
+          'columns',
+          'useGlobalCard',
+          {
+            if: 'data?.display === "card" && data?.useGlobalCard === false',
+            children: ['card']
+          }
+        ]
+      },
+      properties: {
+        display: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'card',
+          layout: { cols: { md: 6 } },
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'card', title: 'Vignette' },
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 6 } },
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        useGlobalCard: {
+          type: 'boolean',
+          title: 'Utiliser la configuration globale des vignettes',
+          layout: {
+            if: 'parent.data?.display === "card"',
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
+        },
+        card: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card'
         }
       }
     }

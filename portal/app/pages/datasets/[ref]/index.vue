@@ -310,6 +310,34 @@
       </v-row>
     </template>
 
+    <!-- Related datasets section -->
+    <template
+      v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
+    >
+      <page-element-title
+        :element="{
+          type: 'title',
+          content: t('sections.relatedDatasets', { count: relatedDatasets.length }),
+          titleSize: 'h5',
+          line: portalConfig.datasets.page.titleStyle
+        }"
+      />
+
+      <v-row class="d-flex align-stretch">
+        <v-col
+          v-for="(relatedDataset, i) in relatedDatasetsFetch.data.value?.results"
+          :key="i"
+          :md="12 / (portalConfig.datasets.page.relatedDatasets.columns || 3)"
+          cols="12"
+        >
+          <dataset-card
+            :dataset="relatedDataset"
+            :card-config="relatedDatasetsCardConfig"
+          />
+        </v-col>
+      </v-row>
+    </template>
+
     <!-- Back to datasets link -->
     <v-row
       v-if="datasetsCatalogExists"
@@ -355,13 +383,13 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
     publicationSites: 'data-fair-portals:' + portal.value._id
   }
 })
+const dataset = computed(() => datasetFetch.data.value)
 
 // Check if datasets catalog page exists
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const datasetsCatalogExists = computed(() => standardPagesFetch.data.value?.datasets || false)
 
-const dataset = computed(() => datasetFetch.data.value)
-
+// Applications linked to the dataset
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
   select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
   size: 100,
@@ -369,9 +397,7 @@ const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications
   dataset: datasetFetch.data.value?.id,
   publicationSites: 'data-fair-portals:' + portal.value._id
 }))
-
 const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>(applicationsUrl)
-
 const orderedApplications = computed(() => {
   const datasetApplications = datasetFetch.data.value?.extras?.applications || []
   const applications = applicationsFetch.data.value?.results || []
@@ -381,7 +407,6 @@ const orderedApplications = computed(() => {
   const remaining = applications.filter(a => !ordered.find(app => app.id === a.id))
   return [...ordered, ...remaining]
 })
-
 const applicationCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.applications
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
@@ -390,20 +415,41 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
+// Reuses linked to the dataset
 const reusesUrl = computed(() => withQuery('/portal/api/reuses', {
   dataset: datasetFetch.data.value?.id,
   limit: 100
 }))
-
 const reusesFetch = useLocalFetch<{ count: number, results: Reuse[] }>(reusesUrl)
 const reuses = computed(() => reusesFetch.data.value?.results || [])
-
 const reusesCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.reuses
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
     return portalConfig.value.reuses.card
   }
   return { ...portalConfig.value.reuses.card, ...pageConfig.card }
+})
+
+// Related datasets
+const relatedDatasetsUrl = computed(() => {
+  const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
+  if (!datasetsIds || datasetsIds.length === 0) return ''
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    size: 100,
+    html: 'vuetify',
+    ids: datasetsIds.join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
+  })
+})
+const relatedDatasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(relatedDatasetsUrl)
+const relatedDatasets = computed(() => relatedDatasetsFetch.data.value?.results || [])
+const relatedDatasetsCardConfig = computed(() => {
+  const pageConfig = portalConfig.value.datasets.page.relatedDatasets
+  if (!pageConfig || pageConfig.useGlobalCard !== false) {
+    return portalConfig.value.datasets.card
+  }
+  return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
 const urlAttachments = computed(() => {
@@ -464,7 +510,8 @@ usePageSeo({
     datasetError: An error occurred while loading the dataset
     sections:
       application: Linked application | Linked applications
-      reuse: Linked reuse | Linked reuses
+      reuse: Linked reuse | Linked reuse | Linked reuses
+      relatedDatasets: Related dataset | Related dataset | Related datasets
       data: Data
       map: Map
       schema: Schema
@@ -477,8 +524,9 @@ usePageSeo({
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
     sections:
-      application: Visualisation associée | Visualisations associées
-      reuse: Réutilisation associée | Réutilisations associées
+      application: Visualisation associée | Visualisation associée | Visualisations associées
+      reuse: Réutilisation associée | Réutilisation associée | Réutilisations associées
+      relatedDatasets: Voir plus
       data: Données
       map: Carte
       schema: Schéma
