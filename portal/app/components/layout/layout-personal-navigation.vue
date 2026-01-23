@@ -101,7 +101,10 @@
     </v-list>
 
     <!-- Copyright -->
-    <template #append>
+    <template
+      v-if="!portal.whiteLabel"
+      #append
+    >
       <v-list-item
         href="https://koumoul.com"
         target="_blank"

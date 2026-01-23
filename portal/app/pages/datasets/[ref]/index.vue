@@ -510,8 +510,8 @@ usePageSeo({
     datasetError: An error occurred while loading the dataset
     sections:
       application: Linked application | Linked applications
-      reuse: Linked reuse | Linked reuses
-      relatedDatasets: Related dataset | Related datasets
+      reuse: Linked reuse | Linked reuse | Linked reuses
+      relatedDatasets: Related dataset | Related dataset | Related datasets
       data: Data
       map: Map
       schema: Schema
@@ -524,8 +524,8 @@ usePageSeo({
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
     sections:
-      application: Visualisation associée | Visualisations associées
-      reuse: Réutilisation associée | Réutilisations associées
+      application: Visualisation associée | Visualisation associée | Visualisations associées
+      reuse: Réutilisation associée | Réutilisation associée | Réutilisations associées
       relatedDatasets: Voir plus
       data: Données
       map: Carte

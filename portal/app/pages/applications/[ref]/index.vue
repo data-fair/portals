@@ -206,11 +206,11 @@ usePageSeo({
     applicationNotFound: The requested application was not found
     applicationError: An error occurred while loading the application
     backToApplications: Go to applications catalog
-    datasetsUsed: Dataset used | Datasets used
+    datasetsUsed: Dataset used | Dataset used | Datasets used
   fr:
     application: Visualisation
     applicationNotFound: La visualisation demandée n'a pas été trouvée
     applicationError: Une erreur est survenue lors du chargement de la visualisation
     backToApplications: Aller au catalogue de visualisations
-    datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
+    datasetsUsed: Jeu de données utilisé | Jeu de données utilisé | Jeux de données utilisés
 </i18n>

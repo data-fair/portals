@@ -34,7 +34,7 @@
       data-iframe-height
       min-width="300"
       rounded="lg"
-      :loading="editGroup.loading.value ? 'primary' : false"
+      :loading="editGroup.loading.value ? 'primary' : undefined"
     >
       <v-card-text>
         <v-text-field

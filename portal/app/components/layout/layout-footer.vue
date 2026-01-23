@@ -128,7 +128,7 @@
             </v-col>
             <!-- Copyright Logo -->
             <v-col
-              v-if="portalConfig.footer.copyright === 'logo'"
+              v-if="portalConfig.footer.copyright === 'logo' && !portal.whiteLabel"
               cols="auto"
             >
               <a
@@ -263,7 +263,7 @@
     </v-container>
 
     <!-- Copyright -->
-    <template v-if="portalConfig.footer.copyright === 'text'">
+    <template v-if="portalConfig.footer.copyright === 'text' && !portal.whiteLabel">
       <v-divider />
       <div class="text-center my-2">
         <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a
@@ -282,7 +282,7 @@
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 const { t, locale } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portal, portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 
 const logo = computed(() => {

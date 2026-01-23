@@ -1,6 +1,6 @@
 import type { Portal, PortalConfig } from '#api/types/portal/index.ts'
 
-type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
+type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'whiteLabel' | 'staging'> & { draft: boolean }
 
 // we do not use SSR, so we can use a simple module level singleton
 export type PortalStore = ReturnType<typeof createPortalStore>
