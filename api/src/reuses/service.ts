@@ -1,4 +1,5 @@
 import type { Reuse } from '#types/reuse/index.ts'
+import type { Portal } from '#types/portal/index.ts'
 
 import debugModule from 'debug'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
@@ -13,6 +14,20 @@ export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, i
   const reuse = await mongo.reuses.findOne({ _id: id })
   if (!reuse) throw httpError(404, `reuse "${id}" not found`)
   assertAccountRole(sessionState, reuse.owner, 'admin')
+  return reuse
+}
+
+// Allow access if user is owner (admin) or submitter
+export const getReuseAsAdminOrSubmitter = async (sessionState: SessionStateAuthenticated, id: string) => {
+  const reuse = await mongo.reuses.findOne({ _id: id })
+  if (!reuse) throw httpError(404, `reuse "${id}" not found`)
+
+  const isOwner = reuse.owner.type === sessionState.account.type && reuse.owner.id === sessionState.account.id
+  const isSubmitter = reuse.submitter?.type === sessionState.account.type && reuse.submitter?.id === sessionState.account.id
+
+  if (isOwner) assertAccountRole(sessionState, reuse.owner, 'admin')
+  else if (isSubmitter) assertAccountRole(sessionState, reuse.submitter!, 'admin')
+
   return reuse
 }
 
@@ -163,5 +178,60 @@ export const cancelReuseDraft = async (reuse: Reuse, session: SessionStateAuthen
   const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config }, session)
   await cleanUnusedImages(updatedReuse)
   sendReuseEvent(reuse, 'a été annulé', 'draft-discard', session)
+  return updatedReuse
+}
+
+export const submitReuse = async (reuse: Reuse, portalId: string, session: SessionStateAuthenticated) => {
+  debug('submitReuse', reuse, portalId)
+
+  // Get portal configuration
+  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
+  if (!portal) throw httpError(404, `portal "${portalId}" not found`)
+
+  // Check if reuse submission is allowed on this portal
+  const allowUserReuses = portal.config.reuses?.allowUserReuses ?? portal.draftConfig?.reuses?.allowUserReuses ?? false
+  if (!allowUserReuses) {
+    throw httpError(403, 'Reuse submission is not allowed on this portal')
+  }
+
+  // Validate draft before submitting
+  await validateReuseDraft(reuse, session)
+
+  // Create submitter object (previous owner + portalId)
+  const submitter = {
+    type: reuse.owner.type,
+    id: reuse.owner.id,
+    name: reuse.owner.name,
+    portalId
+  }
+
+  // Transfer ownership to portal owner
+  const newOwner = portal.owner
+
+  // Migrate images ownership
+  await mongo.images.updateMany(
+    {
+      'owner.type': reuse.owner.type,
+      'owner.id': reuse.owner.id,
+      'resource.type': 'reuse',
+      'resource._id': reuse._id
+    },
+    {
+      $set: {
+        'owner.type': newOwner.type,
+        'owner.id': newOwner.id
+      }
+    }
+  )
+
+  // Update reuse with new owner, submitter, and add to requestedPortals
+  const updatedReuse = await patchReuse(reuse, {
+    owner: newOwner,
+    submitter,
+    requestedPortals: [...new Set([...reuse.requestedPortals, portalId])]
+  }, session)
+
+  sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalId}`)
+
   return updatedReuse
 }

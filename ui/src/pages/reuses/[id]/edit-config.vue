@@ -23,7 +23,7 @@
               :label="label"
               :width="width"
               :height="height"
-              :resource="reuseRef"
+              :resource="{ type: 'reuse' as const, _id: route.params.id }"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </template>
@@ -75,7 +75,6 @@ watch(reuseFetch.data, () => {
 
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
-const reuseRef = { type: 'reuse' as const, _id: route.params.id }
 
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,

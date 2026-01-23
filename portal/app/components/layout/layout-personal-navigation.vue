@@ -28,12 +28,6 @@
         to="/me/account"
       />
       <v-list-item
-        v-if="portalConfig.reuses?.allowUserReuses"
-        :prepend-icon="mdiPageNext"
-        :title="t('myReuses')"
-        to="/me/reuses"
-      />
-      <v-list-item
         v-if="!portalConfig.personal.hidePages.includes('notifications')"
         :prepend-icon="mdiBell"
         :title="t('myNotifications')"
@@ -61,6 +55,13 @@
         :prepend-icon="mdiAccountGroup"
         :title="t('organizationManagement')"
         to="/me/organization"
+      />
+
+      <v-list-item
+        v-if="portalConfig.reuses?.allowUserReuses"
+        :prepend-icon="mdiPageNext"
+        :title="t('myReuses')"
+        to="/me/reuses"
       />
 
       <v-list-item

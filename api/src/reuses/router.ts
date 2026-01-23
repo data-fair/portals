@@ -6,8 +6,8 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
-import { reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft } from './service.ts'
+import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
+import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
 
 const router = Router()
 export default router
@@ -22,8 +22,15 @@ router.get('', async (req, res, next) => {
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals' })
 
-  // TODO: account filter for super admins ?
-  const query = findUtils.filterPermissions(params, session)
+  // Filter by submitter instead of owner if isSubmitter=true
+  // TODO     if (sessionState.account.department) query['owner.department'] = sessionState.account.department
+  const query: Record<string, any> = {}
+  if (params.isSubmitter === 'true') {
+    query['owner.type'] = session.account.type
+    query['owner.id'] = session.account.id
+    if (session.account.department) query['owner.department'] = session.account.department
+  } else findUtils.filterPermissions(params, session)
+
   const queryWithFilters = Object.assign(filters, query)
 
   const [count, results] = await Promise.all([
@@ -81,7 +88,9 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-  res.send(await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id))
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdminOrSubmitter(session, req.params.id)
+  res.send(reuse)
 })
 
 router.patch('/:id', async (req, res, next) => {
@@ -120,5 +129,15 @@ router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await cancelReuseDraft(reuse, session)
+  res.status(201).send()
+})
+
+router.post('/:id/submit', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  const portalId = req.body.portalId as string
+
+  if (!portalId) throw httpError(400, 'portalId is required')
+  await submitReuse(reuse, portalId, session)
   res.status(201).send()
 })
