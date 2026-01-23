@@ -27,7 +27,8 @@
           block
           color="primary"
           class="mb-4"
-          @click="createReuse"
+          :loading="createReuse.loading.value"
+          @click="createReuse.execute()"
         >
           {{ t('createNew') }}
         </v-btn>
@@ -35,13 +36,13 @@
         <!-- List of drafts -->
         <template v-if="draftReuses.length">
           <v-card
-            v-for="reuse in draftReuses"
+            v-for="(reuse, i) in draftReuses"
             :key="reuse._id"
-            class="mb-3"
-            :title="newReuseId !== reuse._id ? reuse.draftConfig?.title : t('createNewReuse')"
-            :subtitle="newReuseId !== reuse._id ? `${t('lastModified')} : ${dayjs(reuse.updatedAt).format('L')}` : undefined"
+            :class="{ 'mb-2': i !== draftReuses.length - 1 }"
+            :title="reuse.draftConfig?.title || t('untitled')"
+            :subtitle="`${t('lastModified')} : ${dayjs(reuse.updatedAt).format('L')}`"
           >
-            <v-card-text v-if="editingReuseId === reuse._id || newReuseId === reuse._id">
+            <v-card-text v-if="editingReuseId === reuse._id">
               <v-form v-model="formValid">
                 <v-defaults-provider :defaults="{ global: { hideDetails: 'auto' } }">
                   <vjsf-reuse-config
@@ -70,7 +71,7 @@
             >
               <v-spacer />
 
-              <template v-if="editingReuseId === reuse._id || newReuseId === reuse._id">
+              <template v-if="editingReuseId === reuse._id">
                 <v-btn
                   size="small"
                   :disabled="saveReuse.loading.value"
@@ -86,7 +87,7 @@
                   :loading="saveReuse.loading.value"
                   @click="saveReuse.execute()"
                 >
-                  {{ newReuseId === reuse._id ? t('create') : t('save') }}
+                  {{ t('save') }}
                 </v-btn>
               </template>
 
@@ -221,34 +222,25 @@
     </v-card>
 
     <!-- Submissions -->
-    <v-card>
-      <v-card-title>{{ t('submittedSection') }}</v-card-title>
+    <v-card :title="t('submittedSection')">
       <v-card-text>
+        <!-- List of submissions -->
         <template v-if="submittedReuses.length">
-          <div
-            v-for="reuse in submittedReuses"
+          <v-card
+            v-for="(reuse, i) in submittedReuses"
             :key="reuse._id"
-            class="mb-3 pa-3 bg-surface rounded border"
+            :class="{ 'mb-2': i !== submittedReuses.length - 1 }"
+            :title="reuse.config.title"
+            :subtitle="`${t('submittedOn')} : ${dayjs(reuse.createdAt).format('L')}`"
           >
-            <div class="d-flex justify-space-between align-start gap-2">
-              <div class="flex-grow-1">
-                <div class="d-flex align-center gap-2 mb-1">
-                  <h3 class="text-base font-weight-medium mr-2">
-                    {{ reuse.title || t('untitled') }}
-                  </h3>
-                  <v-chip
-                    size="small"
-                    :color="getStatusColor(getSubmissionStatus(reuse))"
-                  >
-                    {{ t(`status.${getSubmissionStatus(reuse)}`) }}
-                  </v-chip>
-                </div>
-                <p class="text-caption text-medium-emphasis">
-                  {{ t('submittedOn') }}: {{ dayjs(reuse.createdAt).format('L') }}
-                </p>
-              </div>
-            </div>
-          </div>
+            <template #append>
+              <v-chip
+                size="small"
+                :color="getStatusColor(getSubmissionStatus(reuse))"
+                :text="t(`status.${getSubmissionStatus(reuse)}`)"
+              />
+            </template>
+          </v-card>
         </template>
 
         <!-- Empty state -->
@@ -268,7 +260,6 @@ import { mdiPageNext } from '@mdi/js'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Reuse } from '#api/types/reuse/index'
 
-const session = useSessionAuthenticated()
 const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
@@ -283,10 +274,15 @@ watch(() => draftReusesFetch.data.value?.results, (results) => {
 const submittedReusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses?isSubmitter=true')
 const submittedReuses = computed<Reuse[]>(() => submittedReusesFetch.data.value?.results || [])
 
+const portalId = useStringSearchParam('portalId')
+
 /** Id of the reuse currently being edited */
 const editingReuseId = ref<string | null>(null)
+/** Id of a newly created reuse that hasn't been saved yet (will be deleted on cancel) */
+const creatingReuseId = ref<string | null>(null)
+/** Id of the reuse currently being submitted or deleted to show loader only on that one */
+const currentReuseId = ref<string | null>(null)
 const formValid = ref(false)
-const newReuseId = ref<string | null>(null)
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
@@ -312,36 +308,27 @@ const getSubmissionStatus = (reuse: Reuse) => {
   return 'rejected'
 }
 
-const createReuse = () => {
-  draftReuses.value.unshift({
-    _id: 'new-reuse',
-    draftConfig: { title: '' },
-    title: '',
-    slug: '',
-    owner: session.state.account,
-    createdAt: '',
-    updatedAt: '',
-    config: { title: '' },
-    portals: [],
-    requestedPortals: []
+const createReuse = useAsyncAction(async () => {
+  // Create a minimal reuse with empty title to get an ID
+  const newReuse = await $fetch<Reuse>('/reuses', {
+    method: 'POST',
+    body: { config: { title: '' } }
   })
-  newReuseId.value = 'new-reuse'
-}
+  await draftReusesFetch.refresh() // Refresh the list to include the new reuse
+  creatingReuseId.value = newReuse._id // Track as newly created so cancel can delete it
+  editingReuseId.value = newReuse._id // Start editing the newly created reuse
+})
 
-const currentReuseId = ref<string | null>(null)
-
-const submitReuse = useAsyncAction(async (reuseId: string, closeMenu?: () => void) => {
+const submitReuse = useAsyncAction(async (reuseId: string) => {
   currentReuseId.value = reuseId
   try {
-    // TODO: Get portalId from context or user selection
-    const portalId = 'current-portal-id' // This should come from the portal context
+    console.log('ici')
     await $fetch(`/reuses/${reuseId}/submit`, {
       method: 'POST',
-      body: { portalId }
+      body: { portalId: portalId.value }
     })
     await draftReusesFetch.refresh()
     await submittedReusesFetch.refresh()
-    if (closeMenu) closeMenu()
   } finally {
     currentReuseId.value = null
   }
@@ -351,6 +338,8 @@ const deleteReuse = useAsyncAction(async (reuseId: string) => {
   currentReuseId.value = reuseId
   try {
     await $fetch(`/reuses/${reuseId}`, { method: 'DELETE' })
+    // Clear creating flag if we're deleting the reuse being created
+    if (creatingReuseId.value === reuseId) creatingReuseId.value = null
     await draftReusesFetch.refresh()
   } finally {
     currentReuseId.value = null
@@ -358,39 +347,32 @@ const deleteReuse = useAsyncAction(async (reuseId: string) => {
 })
 
 const saveReuse = useAsyncAction(async () => {
-  if (newReuseId.value) {
-    // Create new reuse
-    const reuse = draftReuses.value.find(r => r._id === newReuseId.value)
-    if (!reuse) return
+  if (!editingReuseId.value) return
 
-    await $fetch<Reuse>('/reuses', {
-      method: 'POST',
-      body: { config: reuse.draftConfig }
-    })
+  const reuse = draftReuses.value.find(r => r._id === editingReuseId.value)
+  if (!reuse) return
 
-    newReuseId.value = null
-  } else if (editingReuseId.value) {
-    // Update existing reuse
-    const reuse = draftReuses.value.find(r => r._id === editingReuseId.value)
-    if (!reuse) return
+  await $fetch(`/reuses/${editingReuseId.value}`, {
+    method: 'PATCH',
+    body: { draftConfig: reuse.draftConfig }
+  })
 
-    await $fetch(`/reuses/${editingReuseId.value}`, {
-      method: 'PATCH',
-      body: { draftConfig: reuse.draftConfig }
-    })
-
-    editingReuseId.value = null
-  }
+  // No longer a new reuse after first save
+  creatingReuseId.value = null
+  editingReuseId.value = null
   await draftReusesFetch.refresh()
 })
 
-// Fully local
-const cancelEdit = () => {
-  if (newReuseId.value) {
-    draftReuses.value = draftReuses.value.filter(reuse => reuse._id !== newReuseId.value)
-    newReuseId.value = null
+// Cancel editing and revert changes by refreshing from API
+// If cancelling a newly created reuse, delete it
+const cancelEdit = async () => {
+  if (creatingReuseId.value) {
+    // Delete the newly created reuse that was never saved
+    await $fetch(`/reuses/${creatingReuseId.value}`, { method: 'DELETE' })
+    creatingReuseId.value = null
   }
   editingReuseId.value = null
+  await draftReusesFetch.refresh()
 }
 
 useNavigationStore().clearBreadcrumbs()

@@ -2,7 +2,7 @@
   <d-frame-wrapper
     :iframe-title="t('myReuses')"
     :adapter.prop="stateChangeAdapter"
-    :src="iframeSrc"
+    :src="`/portals-manager/embed/reuses?portalId=${portal._id}`"
     class="fill-height"
     resize="no"
     sync-path="/me/reuses/"
@@ -22,11 +22,6 @@ const { portal } = usePortalStore()
 
 // Handle navigation from the iframe to the parent app
 const stateChangeAdapter = createStateChangeAdapter(useRouter())
-
-const iframeSrc = computed(() => {
-  const params = new URLSearchParams({ portalId: portal.value._id })
-  return `/portals-manager/embed/reuses/?${params.toString()}`
-})
 
 const onMessage = (message: { breadcrumbs?: { to?: string, text: string }[] }) => {
   if (!message.breadcrumbs) return

@@ -1,13 +1,4 @@
 <template>
-  <!-- Validation request alert -->
-  <v-alert
-    v-if="reuse?.requestedValidationDraft"
-    type="warning"
-    :text="t('validationRequestedByUser')"
-    class="mx-2 mb-2"
-    variant="outlined"
-  />
-
   <!-- Edit config -->
   <custom-router-link :to="`/reuses/${reuseId}/edit-config`">
     <v-list-item link>
@@ -293,7 +284,6 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
-    validationRequestedByUser: A draft validation is requested by a user
     yes: Yes
   fr:
     cancel: Annuler
@@ -316,7 +306,6 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
-    validationRequestedByUser: Une validation du brouillon est demandée par un utilisateur
     yes: Oui
 
 </i18n>
