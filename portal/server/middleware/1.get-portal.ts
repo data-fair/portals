@@ -21,6 +21,8 @@ export default defineEventHandler(async (event) => {
     { projection: { _id: 1, owner: 1, staging: 1, config: draft ? undefined : 1, draftConfig: draft ? 1 : undefined } }
   )
   if (!portal) throw createError({ status: 404, message: 'portal not found' })
+  delete portal.config?.contactInformations?.email
+  delete portal.draftConfig?.contactInformations?.email
   const requestPortal: RequestPortal = { _id: portal._id, owner: portal.owner, staging: portal.staging, config: draft ? portal.draftConfig : portal.config, draft: !!draft }
   event.context.portal = requestPortal
 })
