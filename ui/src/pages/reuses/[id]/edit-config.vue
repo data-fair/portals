@@ -66,11 +66,11 @@ import { mdiCircle } from '@mdi/js'
 const { t, locale } = useI18n()
 const route = useRoute<'/reuses/[id]/edit-config'>()
 
-const { reuseFetch, patchReuse } = useReuseStore()
+const { reuse, patchReuse } = useReuseStore()
 
 const editConfig = ref<ReuseConfig>()
-watch(reuseFetch.data, () => {
-  if (reuseFetch.data.value) editConfig.value = reuseFetch.data.value.draftConfig
+watch(reuse, () => {
+  if (reuse.value) editConfig.value = reuse.value.draftConfig
 }, { immediate: true })
 
 const changesStack = useChangesStack(editConfig)
@@ -88,7 +88,7 @@ const saveConfig = useAsyncAction(async () => {
   await patchReuse.execute({ draftConfig: editConfig.value })
 })
 
-watch(reuseFetch.data, (reuse) => {
+watch(reuse, (reuse) => {
   if (!reuse) return
   setBreadcrumbs([
     { text: t('reuses'), to: '/reuses' },

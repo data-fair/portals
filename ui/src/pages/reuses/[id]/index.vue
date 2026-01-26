@@ -27,9 +27,9 @@
               class="ma-4"
             >
               <reuse-preview-wrapper
-                v-if="reuseFetch.data.value?.config"
-                :reuse-config="reuseFetch.data.value.config"
-                :slug="reuseFetch.data.value.slug"
+                v-if="reuse?.config"
+                :reuse-config="reuse.config"
+                :slug="reuse.slug"
               />
             </v-tabs-window-item>
 
@@ -38,9 +38,9 @@
               class="ma-4"
             >
               <reuse-preview-wrapper
-                v-if="reuseFetch.data.value?.draftConfig"
-                :reuse-config="reuseFetch.data.value.draftConfig"
-                :slug="reuseFetch.data.value.slug"
+                v-if="reuse?.draftConfig"
+                :reuse-config="reuse.draftConfig"
+                :slug="reuse.slug"
               />
             </v-tabs-window-item>
 
@@ -64,16 +64,16 @@ import { mdiAlertCircle } from '@mdi/js'
 const { t } = useI18n()
 const route = useRoute<'/reuses/[id]/'>()
 
-const { reuseFetch } = useReuseStore()
+const { reuse } = useReuseStore()
 
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 const hasPendingPublicationRequest = computed(() => {
-  const requestedPortals = reuseFetch.data.value?.requestedPortals
+  const requestedPortals = reuse.value?.requestedPortals
   return Array.isArray(requestedPortals) && requestedPortals.length > 0
 })
 
-watch(reuseFetch.data, (reuse) => {
+watch(reuse, (reuse) => {
   if (!reuse) return
   setBreadcrumbs([
     { text: t('reuses'), to: '/reuses' },

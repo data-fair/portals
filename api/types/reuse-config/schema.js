@@ -95,30 +95,25 @@ export default {
         fr: 'Jeux de données'
       },
       layout: {
-        listEditMode: 'inline',
-        options: { confirmDeleteItem: false },
-        messages: {
-          addItem: 'Add a dataset',
-          'x-i18n-addItem': {
-            fr: 'Ajouter un jeu de données'
-          }
+        getItems: {
+          // eslint-disable-next-line no-template-curly-in-string
+          url: "/data-fair/api/v1/${context.isEmbed ? '/catalog/datasets?' : '/datasets?mine=true&'}raw=true&select=id,title&size=20",
+          qSearchParam: 'q',
+          itemsResults: 'data.results',
+          // eslint-disable-next-line no-template-curly-in-string
+          itemTitle: '`${item.title} (${item.id})`',
+          itemKey: 'item.id'
+        },
+        props: {
+          chips: true,
+          closableChips: true,
+          clearable: false
         },
         cols: { md: 4 }
       },
       items: {
         type: 'object',
         required: ['id'],
-        layout: {
-          getItems: {
-            // eslint-disable-next-line no-template-curly-in-string
-            url: "/data-fair/api/v1/${context.isEmbed ? '/catalog/datasets?' : '/datasets?mine=true&'}raw=true&select=id,title&size=20",
-            qSearchParam: 'q',
-            itemsResults: 'data.results',
-            // eslint-disable-next-line no-template-curly-in-string
-            itemTitle: '`${item.title} (${item.id})`',
-            itemKey: 'item.id'
-          }
-        },
         properties: {
           id: { type: 'string' },
           title: { type: 'string' }
