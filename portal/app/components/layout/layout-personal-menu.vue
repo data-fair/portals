@@ -90,14 +90,11 @@ let isPortalOwner: ComputedRef<boolean>
 let backOfficeUrl: ComputedRef<string>
 if (!preview) {
   isPortalOwner = computed(() => {
-    const user = session.user.value
-    if (!user || !portal.value.owner) return false
+    const account = session.account.value
+    if (!account || !portal.value.owner) return false
     return (
-      (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
-      (
-        portal.value.owner.type === 'organization' &&
-        !!user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
-      )
+      account.type === portal.value.owner.type &&
+      account.id === portal.value.owner.id
     )
   })
 

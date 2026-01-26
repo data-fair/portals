@@ -86,6 +86,13 @@
       />
 
       <v-list-item
+        v-if="isPortalOwner"
+        :prepend-icon="mdiWrench"
+        :href="backOfficeUrl"
+        :title="t('backOffice')"
+      />
+
+      <v-list-item
         v-for="(page, p) in portalConfig.personal.accountPages"
         :key="p"
         :to="'/me/' + page.id"
@@ -127,11 +134,11 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline, mdiPageNext } from '@mdi/js'
+import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline, mdiPageNext, mdiWrench } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { portal, portalConfig } = usePortalStore()
+const { portal, portalConfig, siteInfo } = usePortalStore()
 const { personalDrawer } = useNavigationStore()
 
 const datasetsCount = ref({ file: null as number | null, rest: null as number | null })
@@ -143,18 +150,18 @@ const accountValue = computed(() => {
   else return session.state.account.id
 })
 
-const isPortalOwner = computed(() => (portal.value.owner.type === 'user' && portal.value.owner.id === session.state.user.id) ||
-  (
-    portal.value.owner.type === 'organization' &&
-    session.state.user.organizations.find(o => o.id === portal.value.owner.id)
-  )
+// Check if active account is portal owner
+const isPortalOwner = computed(() =>
+  session.state.account.type === portal.value.owner.type &&
+  session.state.account.id === portal.value.owner.id
 )
 
 const accounts = computed(() => {
   const accounts = []
   const user = session.state.user
 
-  if (!(isPortalOwner.value || user.ipa || user.organizations.length)) {
+  // IPA for ignore personal account
+  if (!user.ipa) {
     accounts.push({
       title: t('personalAccount'),
       value: null,
@@ -163,7 +170,6 @@ const accounts = computed(() => {
   }
 
   for (const org of user.organizations) {
-    if (isPortalOwner.value && org.id !== portal.value.owner.id) continue
     const account = {
       title: org.name,
       value: org.id,
@@ -189,6 +195,14 @@ const navigationTextStyle = computed(() => {
   return `color: rgba(var(--v-theme-on-${portalConfig.value.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
 })
 
+const requestUrl = useRequestURL()
+const backOfficeUrl = computed(() => {
+  if (siteInfo.authMode === 'onlyBackOffice' || siteInfo.authMode === 'onlyOtherSite') {
+    return `${requestUrl.protocol}//${siteInfo.authOnlyOtherSite}/data-fair/`
+  }
+  return '/data-fair/'
+})
+
 onMounted(async () => {
   let ownerFilter = `${portal.value.owner.type}:${portal.value.owner.id}`
   if (portal.value.owner.department) ownerFilter += `:${portal.value.owner.department}`
@@ -210,6 +224,7 @@ onMounted(async () => {
     activeAccount: Active Account
     apiKeys: API Keys
     backToPortal: Back to portal
+    backOffice: Go to Back Office
     contribute: Contribute
     myAccount: My Account
     myNotifications: My Notifications
@@ -225,6 +240,7 @@ onMounted(async () => {
     activeAccount: Compte actif
     apiKeys: Clés d'API
     backToPortal: Retour au portail
+    backOffice: Aller au Back-Office
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
