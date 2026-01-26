@@ -1,7 +1,7 @@
 import type { Reuse } from '#types/reuse/index.ts'
 import type { Portal } from '#types/portal/index.ts'
-
 import debugModule from 'debug'
+import slug from 'slugify'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
@@ -53,6 +53,36 @@ export const patchReuse = async (
 
   if (patch.owner) {
     if (!options?.skipOwnerRoleCheck) assertAccountRole(session, patch.owner, 'admin')
+
+    // Check slug uniqueness for new owner - try to keep current slug first
+    let uniqueSlug = reuse.slug
+    const existingWithCurrentSlug = await mongo.reuses.findOne({
+      'owner.type': patch.owner.type,
+      'owner.id': patch.owner.id,
+      slug: uniqueSlug,
+      _id: { $ne: reuse._id }
+    })
+
+    // If current slug is not available, generate a new one
+    if (existingWithCurrentSlug) {
+      const baseSlug = slug.default(reuse.config.title, { lower: true, strict: true })
+      uniqueSlug = baseSlug
+      let counter = 1
+
+      while (true) {
+        const existing = await mongo.reuses.findOne({
+          'owner.type': patch.owner.type,
+          'owner.id': patch.owner.id,
+          slug: uniqueSlug,
+          _id: { $ne: reuse._id }
+        })
+        if (!existing) break
+        uniqueSlug = `${baseSlug}-${counter++}`
+      }
+      patch.slug = uniqueSlug
+    }
+
+    // Update ownership of associated images
     await mongo.images.updateMany(
       {
         'owner.type': reuse.owner.type,
