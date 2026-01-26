@@ -39,22 +39,20 @@ export const createReuse = async (reuse: Reuse) => {
   await mongo.reuses.insertOne(reuse)
 }
 
-export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: SessionStateAuthenticated) => {
+export const patchReuse = async (
+  reuse: Reuse,
+  patch: Partial<Reuse>,
+  session: SessionStateAuthenticated,
+  options?: { skipOwnerRoleCheck?: boolean }
+) => {
   // Render markdown description if provided in config
-  if (patch.config?.description) {
-    patch.config._descriptionHtml = renderMarkdown(patch.config.description)
-  }
+  if (patch.config?.description) patch.config._descriptionHtml = renderMarkdown(patch.config.description)
+  if (patch.draftConfig?.description) patch.draftConfig._descriptionHtml = renderMarkdown(patch.draftConfig.description)
 
-  // Render markdown description if provided in draftConfig
-  if (patch.draftConfig?.description) {
-    patch.draftConfig._descriptionHtml = renderMarkdown(patch.draftConfig.description)
-  }
-
-  // Sync title from config
-  if (patch.config?.title) patch.title = patch.config.title
+  if (patch.config?.title) patch.title = patch.config.title // Sync title from config
 
   if (patch.owner) {
-    assertAccountRole(session, patch.owner, 'admin')
+    if (!options?.skipOwnerRoleCheck) assertAccountRole(session, patch.owner, 'admin')
     await mongo.images.updateMany(
       {
         'owner.type': reuse.owner.type,
@@ -189,10 +187,7 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
   if (!portal) throw httpError(404, `portal "${portalId}" not found`)
 
   // Check if reuse submission is allowed on this portal
-  const allowUserReuses = portal.config.reuses?.allowUserReuses ?? portal.draftConfig?.reuses?.allowUserReuses ?? false
-  if (!allowUserReuses) {
-    throw httpError(403, 'Reuse submission is not allowed on this portal')
-  }
+  if (!portal.config.reuses?.allowUserReuses) throw httpError(403, 'Reuse submission is not allowed on this portal')
 
   // Validate draft before submitting
   await validateReuseDraft(reuse, session)
@@ -205,31 +200,12 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
     portalId
   }
 
-  // Transfer ownership to portal owner
-  const newOwner = portal.owner
-
-  // Migrate images ownership
-  await mongo.images.updateMany(
-    {
-      'owner.type': reuse.owner.type,
-      'owner.id': reuse.owner.id,
-      'resource.type': 'reuse',
-      'resource._id': reuse._id
-    },
-    {
-      $set: {
-        'owner.type': newOwner.type,
-        'owner.id': newOwner.id
-      }
-    }
-  )
-
   // Update reuse with new owner, submitter, and add to requestedPortals
   const updatedReuse = await patchReuse(reuse, {
-    owner: newOwner,
+    owner: portal.owner,
     submitter,
     requestedPortals: [...new Set([...reuse.requestedPortals, portalId])]
-  }, session)
+  }, session, { skipOwnerRoleCheck: true })
 
   sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalId}`)
 

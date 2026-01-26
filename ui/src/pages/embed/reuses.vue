@@ -322,7 +322,6 @@ const createReuse = useAsyncAction(async () => {
 const submitReuse = useAsyncAction(async (reuseId: string) => {
   currentReuseId.value = reuseId
   try {
-    console.log('ici')
     await $fetch(`/reuses/${reuseId}/submit`, {
       method: 'POST',
       body: { portalId: portalId.value }

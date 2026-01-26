@@ -25,9 +25,9 @@ router.get('', async (req, res, next) => {
   // Filter by submitter instead of owner if isSubmitter=true
   let query: Record<string, any> = {}
   if (params.isSubmitter === 'true') {
-    query['owner.type'] = session.account.type
-    query['owner.id'] = session.account.id
-    if (session.account.department) query['owner.department'] = session.account.department
+    query['submitter.type'] = session.account.type
+    query['submitter.id'] = session.account.id
+    if (session.account.department) query['submitter.department'] = session.account.department
   } else query = findUtils.filterPermissions(params, session)
 
   const queryWithFilters = Object.assign(filters, query)
