@@ -58,7 +58,7 @@
       />
 
       <v-list-item
-        v-if="portalConfig.reuses?.allowUserReuses"
+        v-if="portalConfig.reuses?.allowUserReuses && !isPortalOwner"
         :prepend-icon="mdiPageNext"
         :title="t('myReuses')"
         to="/me/reuses"
@@ -143,19 +143,18 @@ const accountValue = computed(() => {
   else return session.state.account.id
 })
 
+const isPortalOwner = computed(() => (portal.value.owner.type === 'user' && portal.value.owner.id === session.state.user.id) ||
+  (
+    portal.value.owner.type === 'organization' &&
+    session.state.user.organizations.find(o => o.id === portal.value.owner.id)
+  )
+)
+
 const accounts = computed(() => {
   const accounts = []
   const user = session.state.user
 
-  const isPortalOwner = (
-    (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
-    (
-      portal.value.owner.type === 'organization' &&
-      user.organizations.find(o => o.id === portal.value.owner.id)
-    )
-  )
-
-  if (!(isPortalOwner || user.ipa || user.organizations.length)) {
+  if (!(isPortalOwner.value || user.ipa || user.organizations.length)) {
     accounts.push({
       title: t('personalAccount'),
       value: null,
@@ -164,7 +163,7 @@ const accounts = computed(() => {
   }
 
   for (const org of user.organizations) {
-    if (isPortalOwner && org.id !== portal.value.owner.id) continue
+    if (isPortalOwner.value && org.id !== portal.value.owner.id) continue
     const account = {
       title: org.name,
       value: org.id,

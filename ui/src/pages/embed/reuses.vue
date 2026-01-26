@@ -166,13 +166,13 @@
                     <v-card :title="t('submittingReuse')">
                       <v-card-text>
                         <p class="mb-2">
-                          {{ t('submitConfirm.line1.body') }}
+                          {{ t('submitConfirm.line1') }}
                         </p>
                         <v-alert
                           variant="outlined"
                           color="warning"
                         >
-                          <strong>{{ t('submitConfirm.line2.label') }}</strong> {{ t('submitConfirm.line2.body') }}
+                          <strong>{{ t('submitConfirm.line2') }}</strong>
                           <ul class="text-body-2 pl-4 mt-2">
                             <li class="mb-1">
                               <strong>{{ t('submitConfirm.line3.label') }}</strong> {{ t('submitConfirm.line3.body') }}
@@ -184,6 +184,9 @@
                               <strong>{{ t('submitConfirm.line5.label') }}</strong> {{ t('submitConfirm.line5.body') }}
                             </li>
                           </ul>
+                          <p class="text-info mt-2 text-body-2">
+                            {{ t('submitConfirm.line6') }}
+                          </p>
                         </v-alert>
                       </v-card-text>
                       <v-card-actions>
@@ -402,11 +405,8 @@ useNavigationStore().clearBreadcrumbs()
     submit: Submit
     submitButton: Submit
     submitConfirm:
-      line1:
-        body: Do you want to send this reuse for validation?
-      line2:
-        body: Once submitted, the ownership of this entry will be transferred to the portal owner to ensure publication.
-        label: "Warning:"
+      line1: Do you want to send this reuse for validation?
+      line2: "Warning! Before submitting, please note the following points:"
       line3:
         body: You will no longer be able to modify or delete this content directly from your personal space.
         label: "Editing lock:"
@@ -416,6 +416,7 @@ useNavigationStore().clearBreadcrumbs()
       line5:
         body: You will be able to follow the status of your submission (Pending, Accepted or Rejected) in the submissions section.
         label: "Tracking:"
+      line6: For any modification request after sending, you must contact the portal team via the contact form.
     submittedOn: Submitted
     submittedSection: Submissions
     submittingReuse: Submit reuse for validation
@@ -446,11 +447,8 @@ useNavigationStore().clearBreadcrumbs()
     submit: Soumettre
     submitButton: Soumettre
     submitConfirm:
-      line1:
-        body: Souhaitez-vous envoyer cette réutilisation pour validation ?
-      line2:
-        body: Une fois soumise, la propriété de cette fiche sera transférée au propriétaire du portail afin d'en assurer la publication.
-        label: "Attention :"
+      line1: Souhaitez-vous envoyer cette réutilisation pour validation ?
+      line2: "Attention ! Avant de soumettre, veuillez noter les points suivants :"
       line3:
         body: Vous ne pourrez plus modifier ou supprimer directement ce contenu depuis votre espace personnel.
         label: "Verrouillage de l'édition :"
@@ -458,8 +456,9 @@ useNavigationStore().clearBreadcrumbs()
         body: L'administrateur du portail pourra apporter des ajustements pour finaliser la mise en ligne.
         label: "Modération :"
       line5:
-        body: Vous pourrez suivre l'état de votre soumission (En attente, Acceptée ou Refusée) dans la section soumissions. Pour toute demande de modification après l'envoi, vous devrez contacter l'équipe du portail via le formulaire de contact.
+        body: Vous pourrez suivre l'état de votre soumission (En attente, Acceptée ou Refusée) dans la section soumissions.
         label: "Suivi :"
+      line6: Pour toute demande de modification après l'envoi, vous devrez contacter l'équipe du portail via le formulaire de contact.
     submittedOn: Soumise
     submittedSection: Soumissions
     submittingReuse: Soumettre la réutilisation pour validation
