@@ -107,18 +107,13 @@ const { reuse, cardConfig, isPortalConfig } = defineProps<{
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
+const getPageImageSrc = usePageImageSrc()
+const getPortalImageSrc = usePortalImageSrc()
 
-const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/reuses/${reuse.slug}/images/${id}`
-}
-
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
 }
 
 const thumbnailUrl = computed(() => {

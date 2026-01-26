@@ -169,7 +169,6 @@
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationCard } from '#api/types/portal-config'
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
@@ -180,13 +179,8 @@ const { application, cardConfig } = defineProps<{
 
 const { dayjs } = useLocaleDayjs()
 const { portalConfig } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
-
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined

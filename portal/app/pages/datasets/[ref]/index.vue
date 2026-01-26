@@ -361,7 +361,6 @@
 
 <script setup lang="ts">
 import type { Application, Dataset } from '#api/types/index.ts'
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { Reuse } from '#api/types/reuse/index.js'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
@@ -371,9 +370,10 @@ import { withQuery } from 'ufo'
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
+const route = useRoute()
 const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
-const route = useRoute()
+const getPortalImageSrc = usePortalImageSrc()
 
 const dataTab = ref<string | undefined>()
 
@@ -463,12 +463,6 @@ const errorTitle = computed(() => {
   if (code === 404) return t('datasetNotFound')
   return t('datasetError')
 })
-
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card

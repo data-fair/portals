@@ -14,20 +14,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
+providePageImageSrc('reuses')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/reuses/reuses', { watch: false })
-
-provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/reuses/reuses/images/${id}`
-})
 
 watch(() => pageConfigFetch.data.value, () => {
   setBreadcrumbs([

@@ -11,10 +11,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs } = useNavigationStore()
-const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
+const { setBreadcrumbs } = useNavigationStore()
+const { portalConfig } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
 
 const applicationFetch = useLocalFetch<{
   title: string
@@ -25,12 +26,6 @@ const applicationFetch = useLocalFetch<{
   updatedAt: string
   topics: { id: string; title: string; color: string }[]
 }>(`/data-fair/api/v1/applications/${route.params.ref}`)
-
-const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.applications.card

@@ -121,6 +121,7 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
+const getPortalImageSrc = usePortalImageSrc()
 const route = useRoute()
 
 const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
@@ -166,12 +167,6 @@ const errorTitle = computed(() => {
   if (code === 404) return t('applicationNotFound')
   return t('applicationError')
 })
-
-const getPortalImageSrc = (imageRef: { _id: string, mobileAlt?: string }, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.applications.card

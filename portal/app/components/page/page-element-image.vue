@@ -66,13 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
-import type { Image } from '#api/types/page-elements'
+import type { ImageElement } from '#api/types/page-elements'
 import { useElementSize } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
 
 const { element } = defineProps<{
-  element: Image
+  element: ImageElement
   context: {
     isRoot: boolean
     index: number
@@ -84,8 +83,8 @@ const { t } = useI18n()
 const imgEl = useTemplateRef('img')
 const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
+const getPageImageSrc = usePageImageSrc()
 
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const display = useDisplay()
 
 const image = computed(() => {
@@ -97,13 +96,13 @@ const image = computed(() => {
 const src = computed(() => {
   if (element.url) return element.url
   if (!image.value) return
-  return getImageSrc(image.value, width.value < 1280)
+  return getPageImageSrc(image.value, width.value < 1280)
 })
 
 const zoomedSrc = computed(() => {
   if (element.url) return element.url
   if (!image.value) return
-  return getImageSrc(image.value, display.mobile.value)
+  return getPageImageSrc(image.value, display.mobile.value)
 })
 
 const zoomed = ref(false)

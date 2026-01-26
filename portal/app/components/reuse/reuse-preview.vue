@@ -42,7 +42,7 @@
   <!-- Image -->
   <v-img
     v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
-    :src="getImageSrc(reuseConfig.image, false)"
+    :src="getReuseImageSrc(reuseConfig.image, false)"
     class="mb-4"
     max-height="400"
     aria-hidden="true"
@@ -107,6 +107,12 @@ const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
 
+const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+  let id = imageRef._id
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/reuses/${slug}/images/${id}`
+}
+
 const datasetCardConfig = computed(() => {
   const pageConfig = portalConfig.value.reuses.page.datasets
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
@@ -130,11 +136,6 @@ const fetch = preview ? useFetch<{ count: number, results: Dataset[] }> : useLoc
 const datasetsFetch = fetch(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
 
-const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/reuses/${slug}/images/${id}`
-}
 </script>
 
 <i18n lang="yaml">

@@ -55,6 +55,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
 const event = useRequestEvent()
 if (event) setResponseStatus(event, props.statusCode)
 
@@ -69,7 +70,7 @@ const title = computed(() => props.title || defaultTitles[props.statusCode] || t
 const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
   const image = portalConfig.value.errorImages?.[type]
   if (!image) return ''
-  return `/portal/api/images/${image._id}`
+  return getPortalImageSrc(image, false)
 }
 </script>
 

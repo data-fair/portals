@@ -10,7 +10,7 @@
   >
     <img
       :alt="isSecondary ? t('imageAltSecondary') : t('imageAlt')"
-      :src="getImageSrc(logo, false)"
+      :src="getPortalImageSrc(logo, false)"
       :height="height || 80"
     >
   </a>
@@ -24,7 +24,7 @@
   >
     <img
       :alt="t('imageAlt')"
-      :src="getImageSrc(logo, false)"
+      :src="getPortalImageSrc(logo, false)"
       :height="height || 80"
     >
   </NuxtLink>
@@ -32,7 +32,7 @@
   <img
     v-else
     :alt="isSecondary ? t('imageAltSecondary') : t('imageAlt')"
-    :src="getImageSrc(logo, false)"
+    :src="getPortalImageSrc(logo, false)"
     :height="height || 80"
     :class="$attrs.class"
   >
@@ -49,8 +49,7 @@ defineProps<{
 }>()
 
 const { t } = useI18n()
-
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const getPortalImageSrc = usePortalImageSrc()
 
 </script>
 

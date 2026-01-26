@@ -208,7 +208,6 @@
 
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
@@ -222,13 +221,8 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
 // const { dayjs } = useLocaleDayjs()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
-
-const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
+const getPageImageSrc = usePageImageSrc()
+const getPortalImageSrc = usePortalImageSrc()
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined

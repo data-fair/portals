@@ -361,7 +361,11 @@ export default {
     },
     'element-image': {
       type: 'object',
-      title: 'Image',
+      title: 'ImageElement',
+      'x-i18n-title': {
+        en: 'Image',
+        fr: 'Image'
+      },
       required: ['type'],
       properties: {
         type: {

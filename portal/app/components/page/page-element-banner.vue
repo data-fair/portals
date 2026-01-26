@@ -13,8 +13,8 @@
     ]"
     :style="element.background && element.background.image ? {
       backgroundImage: element.background.tintStrength
-    ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getImageSrc(element.background.image, false)})`
-    : `url(${getImageSrc(element.background.image, false)})`,
+    ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
+    : `url(${getPageImageSrc(element.background.image, false)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     } : undefined"
@@ -31,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { PageElement, BannerElement } from '#api/types/page-config'
 
 const { element } = defineProps<{
@@ -44,7 +43,7 @@ const { element } = defineProps<{
 }>()
 
 const { preview } = usePortalStore()
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
+const getPageImageSrc = usePageImageSrc()
 
 // Calculate scrollbar width to adjust full width banners
 // By default 100vw includes scrollbar width
