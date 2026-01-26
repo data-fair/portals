@@ -141,7 +141,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   let standardReplacements: Record<string, string> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications'].includes(page.type)) {
+  if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type)) {
     if (addedPortals.length > 0) {
       standardReplacements = await switchStandardPages(page, addedPortals)
     }
@@ -333,6 +333,7 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
     if (element.type === 'datasets-catalog') await traversePageElements(element.advancedFilters, callback)
     if (element.type === 'applications-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'reuses-catalog') await traversePageElements(element.advancedFilters, callback)
 
     if (element.type === 'tabs') {
       for (const tab of element.tabs) {

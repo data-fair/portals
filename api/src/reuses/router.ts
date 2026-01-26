@@ -6,8 +6,8 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
-import { createReuse, getReuseAsAdmin, patchReuse, deleteReuse, sendReuseEvent } from './service.ts'
+import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
+import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
 
 const router = Router()
 export default router
@@ -22,10 +22,14 @@ router.get('', async (req, res, next) => {
   const project = findUtils.project(params.select)
   const filters = findUtils.query(params, { portal: 'portals' })
 
-  // TODO: account filter for super admins ?
-  const showAll = params.showAll === 'true' || params.showAll === '1'
-  if (showAll && !session.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
-  const query = showAll ? {} : findUtils.filterPermissions(params, session)
+  // Filter by submitter instead of owner if isSubmitter=true
+  let query: Record<string, any> = {}
+  if (params.isSubmitter === 'true') {
+    query['submitter.type'] = session.account.type
+    query['submitter.id'] = session.account.id
+    if (session.account.department) query['submitter.department'] = session.account.department
+  } else query = findUtils.filterPermissions(params, session)
+
   const queryWithFilters = Object.assign(filters, query)
 
   const [count, results] = await Promise.all([
@@ -40,7 +44,6 @@ router.post('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
-
   const createdAt = new Date().toISOString()
   const config = { ...body.config }
   const reuseId = randomUUID()
@@ -71,6 +74,7 @@ router.post('', async (req, res, next) => {
     createdAt,
     updatedAt: createdAt,
     config,
+    draftConfig: config,
     portals: body.portals || [],
     requestedPortals: []
   }
@@ -83,7 +87,9 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-  res.send(await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id))
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdminOrSubmitter(session, req.params.id)
+  res.send(reuse)
 })
 
 router.patch('/:id', async (req, res, next) => {
@@ -92,10 +98,13 @@ router.patch('/:id', async (req, res, next) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedReuse = await patchReuse(reuse, body, session)
 
-  // Send patch event only if there are changes beyond portals
-  const hasOtherChanges = Object.keys(body).some(key => key !== 'portals')
-  if (hasOtherChanges) {
-    sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+  // Send patch event only if not just draft changed
+  const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
+  if (!onlyDraftChanged) {
+    const hasOtherChanges = Object.keys(body).some(key => key !== 'portals' && key !== 'draftConfig')
+    if (hasOtherChanges) {
+      sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+    }
   }
 
   res.send(updatedReuse)
@@ -105,5 +114,29 @@ router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
+  res.status(201).send()
+})
+
+router.post('/:id/draft', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  await validateReuseDraft(reuse, session)
+  res.status(201).send()
+})
+
+router.delete('/:id/draft', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  await cancelReuseDraft(reuse, session)
+  res.status(201).send()
+})
+
+router.post('/:id/submit', async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const reuse = await getReuseAsAdmin(session, req.params.id)
+  const portalId = req.body.portalId as string
+
+  if (!portalId) throw httpError(400, 'portalId is required')
+  await submitReuse(reuse, portalId, session)
   res.status(201).send()
 })

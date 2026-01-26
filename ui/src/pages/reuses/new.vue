@@ -40,7 +40,10 @@
 
         <!-- Step 2: Reuse information -->
         <v-stepper-window-item value="information">
-          <v-form v-model="valid">
+          <v-form
+            v-model="valid"
+            @submit.prevent
+          >
             <v-text-field
               v-model="newReuseTitle"
               :label="t('reuseTitle')"
@@ -136,7 +139,7 @@ const createReuse = useAsyncAction(
       }
     })
 
-    await router.replace({ path: `/reuses/${reuse._id}` })
+    await router.replace({ path: `/reuses/${reuse._id}/edit-config` })
   },
   {
     error: t('errorCreatingReuse')

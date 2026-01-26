@@ -195,7 +195,10 @@
 
         <!-- Step 4: Page information -->
         <v-stepper-window-item value="information">
-          <v-form v-model="valid">
+          <v-form
+            v-model="valid"
+            @submit.prevent
+          >
             <v-text-field
               v-model="newTitle"
               :label="t('pageTitle')"
@@ -245,7 +248,7 @@ const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(route.para
 const isStandardGroup = route.params.groupId === 'standard'
 
 // Available page types for standard group
-const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications']
+const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses']
 
 const step = ref<'type' | 'action' | 'source' | 'owner' | 'information'>(isStandardGroup ? 'type' : 'action')
 const pageType = ref<string | undefined>(undefined) // For standard group only
@@ -373,7 +376,7 @@ const createPage = useAsyncAction(
       }
     })
 
-    await router.replace({ path: `/pages/${route.params.groupId}/${page._id}` })
+    await router.replace({ path: `/pages/${route.params.groupId}/${page._id}/edit-config` })
   },
   {
     error: t('errorCreatingPage')
@@ -439,6 +442,7 @@ watch(group, () => {
       terms-of-service: Terms of Service
       datasets: Datasets Catalog
       applications: Applications Catalog
+      reuses: Reuses Catalog
     pageTypeDesc:
       home: Create the main home page for your portal.
       contact: Create a page to allow users to contact you.
@@ -449,6 +453,7 @@ watch(group, () => {
       terms-of-service: Create a page presenting your terms of service.
       datasets: Create a page listing your datasets.
       applications: Create a page listing your applications.
+      reuses: Create a page listing your reuses.
 
   fr:
     pages: Pages
@@ -488,6 +493,7 @@ watch(group, () => {
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
       applications: Catalogue d'applications
+      reuses: Catalogue de réutilisations
     pageTypeDesc:
       home: Créer la page d'accueil principale de votre portail.
       contact: Créer une page permettant aux utilisateurs de vous contacter.
@@ -498,5 +504,6 @@ watch(group, () => {
       terms-of-service: Créer une page présentant vos conditions générales d'utilisation.
       datasets: Créer une page listant vos jeux de données.
       applications: Créer une page listant vos applications.
+      reuses: Créer une page listant vos réutilisations.
 
 </i18n>

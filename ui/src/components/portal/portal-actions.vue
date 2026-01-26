@@ -7,7 +7,7 @@
   >
     <template #prepend>
       <v-icon
-        color="primary"
+        color="success"
         :icon="mdiFileReplace"
       />
     </template>

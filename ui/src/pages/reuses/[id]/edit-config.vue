@@ -23,7 +23,7 @@
               :label="label"
               :width="width"
               :height="height"
-              :resource="reuseRef"
+              :resource="{ type: 'reuse' as const, _id: route.params.id }"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </template>
@@ -66,16 +66,15 @@ import { mdiCircle } from '@mdi/js'
 const { t, locale } = useI18n()
 const route = useRoute<'/reuses/[id]/edit-config'>()
 
-const { reuseFetch, patchReuse } = useReuseStore()
+const { reuse, patchReuse } = useReuseStore()
 
 const editConfig = ref<ReuseConfig>()
-watch(reuseFetch.data, () => {
-  if (reuseFetch.data.value) editConfig.value = reuseFetch.data.value.config
+watch(reuse, () => {
+  if (reuse.value) editConfig.value = reuse.value.draftConfig
 }, { immediate: true })
 
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)
-const reuseRef = { type: 'reuse' as const, _id: route.params.id }
 
 const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
@@ -86,10 +85,10 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
 
 const saveConfig = useAsyncAction(async () => {
   if (!formValid.value) return
-  await patchReuse.execute({ config: editConfig.value })
+  await patchReuse.execute({ draftConfig: editConfig.value })
 })
 
-watch(reuseFetch.data, (reuse) => {
+watch(reuse, (reuse) => {
   if (!reuse) return
   setBreadcrumbs([
     { text: t('reuses'), to: '/reuses' },

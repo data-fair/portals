@@ -68,7 +68,7 @@
               :label="label"
               :width="width"
               :height="height"
-              :resource="portalRef"
+              :resource="{ type: 'portal', _id: route.params.id }"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
           </template>
@@ -139,8 +139,6 @@ watch(portalFetch.data, () => {
 watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
 })
-
-const portalRef = { type: 'portal' as const, _id: route.params.id }
 
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return

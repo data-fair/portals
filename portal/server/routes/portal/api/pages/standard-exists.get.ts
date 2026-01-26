@@ -9,7 +9,8 @@ const STANDARD_PAGE_TYPES = [
   'cookie-policy',
   'terms-of-service',
   'applications',
-  'datasets'
+  'datasets',
+  'reuses'
 ] as const
 
 type StandardPageType = typeof STANDARD_PAGE_TYPES[number]
@@ -38,7 +39,8 @@ export default defineEventHandler(async (event) => {
     'cookie-policy': false,
     'terms-of-service': false,
     applications: false,
-    datasets: false
+    datasets: false,
+    reuses: false
   }
 
   pages.forEach(page => {

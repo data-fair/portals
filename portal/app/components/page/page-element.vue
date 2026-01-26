@@ -107,6 +107,28 @@
     :element="element"
   />
 
+  <!-- Reuses -->
+  <page-element-reuses-catalog
+    v-else-if="element.type === 'reuses-catalog'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-reuses-catalog>
+  <page-element-reuses-list
+    v-else-if="element.type === 'reuses-list'"
+    :element="element"
+  />
+  <page-element-reuse-card
+    v-else-if="element.type === 'reuse-card'"
+    :element="element"
+  />
+
   <!-- Layout & structure elements -->
   <page-element-divider
     v-else-if="element.type === 'divider'"

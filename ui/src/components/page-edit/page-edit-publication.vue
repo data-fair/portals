@@ -71,7 +71,7 @@
           />
           <!-- Warning for conflicting standard page -->
           <v-alert
-            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
+            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
             class="mt-2"
             density="compact"
             type="warning"
@@ -120,7 +120,7 @@ const portals = computed(() => portalsFetch.data.value?.results)
 
 // Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title,title', size: 10000 }
+  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets,applications,reuses', select: '_id,type,portals,config.title,title', size: 10000 }
 })
 
 const warnings = computed(() => {
@@ -193,6 +193,8 @@ const getPageUrl = (pageData: Page): string | undefined => {
     case 'cookie-policy': return '/cookie-policy'
     case 'terms-of-service': return '/terms-of-service'
     case 'datasets': return '/datasets'
+    case 'applications': return '/applications'
+    case 'reuses': return '/reuses'
     case 'event': return pageData.config.eventMetadata?.slug ? `/event/${pageData.config.eventMetadata.slug}` : undefined
     case 'news': return pageData.config.newsMetadata?.slug ? `/news/${pageData.config.newsMetadata.slug}` : undefined
     case 'generic': {
@@ -228,6 +230,7 @@ const getPageUrl = (pageData: Page): string | undefined => {
       terms-of-service: terms of service page
       datasets: datasets catalog page
       applications: applications catalog page
+      reuses: reuses catalog page
 
   fr:
     createPortal: Créer un portail
@@ -250,4 +253,5 @@ const getPageUrl = (pageData: Page): string | undefined => {
       terms-of-service: page de conditions générales d'utilisation
       datasets: page de catalogue de données
       applications: page de catalogue d'applications
+      reuses: page de catalogue de réutilisations
 </i18n>

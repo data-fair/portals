@@ -74,7 +74,7 @@ const reusesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
     sort: 'updatedAt:-1',
-    select: '_id,title'
+    select: '_id,title,owner'
   }
   if (showAll.value) params.showAll = 'true'
   return params
@@ -84,7 +84,7 @@ const reusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/r
 const displayReuses = computed(() => {
   const reuses = (reusesFetch.data.value?.results ?? [])
   if (!search.value) return reuses
-  return reuses.filter(reuse => reuse.config.title.toLowerCase().includes(search.value.toLowerCase()))
+  return reuses.filter(reuse => reuse.title.toLowerCase().includes(search.value.toLowerCase()))
 })
 
 watch(

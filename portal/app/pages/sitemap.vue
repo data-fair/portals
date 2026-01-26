@@ -40,11 +40,14 @@
       </li>
 
       <!-- Standard pages at the end -->
+      <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
+        <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+      </li>
       <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
         <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
       </li>
-      <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
-        <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+      <li v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')">
+        <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
       </li>
       <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
         <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
@@ -153,8 +156,9 @@ usePageSeo({
   en:
     sitemap: Sitemap
     description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
-    applications: Applications
     datasets: Datasets
+    applications: Applications
+    reuses: Reuses
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
@@ -166,8 +170,9 @@ usePageSeo({
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
-    applications: Visualisations
     datasets: Jeux de données
+    applications: Visualisations
+    reuses: Réutilisations
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité

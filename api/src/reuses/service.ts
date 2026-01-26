@@ -1,6 +1,7 @@
 import type { Reuse } from '#types/reuse/index.ts'
-
+import type { Portal } from '#types/portal/index.ts'
 import debugModule from 'debug'
+import slug from 'slugify'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
@@ -16,6 +17,20 @@ export const getReuseAsAdmin = async (sessionState: SessionStateAuthenticated, i
   return reuse
 }
 
+// Allow access if user is owner (admin) or submitter
+export const getReuseAsAdminOrSubmitter = async (sessionState: SessionStateAuthenticated, id: string) => {
+  const reuse = await mongo.reuses.findOne({ _id: id })
+  if (!reuse) throw httpError(404, `reuse "${id}" not found`)
+
+  const isOwner = reuse.owner.type === sessionState.account.type && reuse.owner.id === sessionState.account.id
+  const isSubmitter = reuse.submitter?.type === sessionState.account.type && reuse.submitter?.id === sessionState.account.id
+
+  if (isOwner) assertAccountRole(sessionState, reuse.owner, 'admin')
+  else if (isSubmitter) assertAccountRole(sessionState, reuse.submitter!, 'admin')
+
+  return reuse
+}
+
 export const createReuse = async (reuse: Reuse) => {
   debug('createReuse', reuse)
   if (reuse.config.description) {
@@ -24,15 +39,50 @@ export const createReuse = async (reuse: Reuse) => {
   await mongo.reuses.insertOne(reuse)
 }
 
-export const patchReuse = async (reuse: Reuse, patch: Partial<Reuse>, session: SessionStateAuthenticated) => {
-  // Render markdown description if provided
+export const patchReuse = async (
+  reuse: Reuse,
+  patch: Partial<Reuse>,
+  session: SessionStateAuthenticated,
+  options?: { skipOwnerRoleCheck?: boolean }
+) => {
+  // Render markdown description if provided in config
   if (patch.config?.description) patch.config._descriptionHtml = renderMarkdown(patch.config.description)
+  if (patch.draftConfig?.description) patch.draftConfig._descriptionHtml = renderMarkdown(patch.draftConfig.description)
 
-  // Sync title
-  if (patch.config?.title) patch.title = patch.config.title
+  if (patch.config?.title) patch.title = patch.config.title // Sync title from config
 
   if (patch.owner) {
-    assertAccountRole(session, patch.owner, 'admin')
+    if (!options?.skipOwnerRoleCheck) assertAccountRole(session, patch.owner, 'admin')
+
+    // Check slug uniqueness for new owner - try to keep current slug first
+    let uniqueSlug = reuse.slug
+    const existingWithCurrentSlug = await mongo.reuses.findOne({
+      'owner.type': patch.owner.type,
+      'owner.id': patch.owner.id,
+      slug: uniqueSlug,
+      _id: { $ne: reuse._id }
+    })
+
+    // If current slug is not available, generate a new one
+    if (existingWithCurrentSlug) {
+      const baseSlug = slug.default(reuse.config.title, { lower: true, strict: true })
+      uniqueSlug = baseSlug
+      let counter = 1
+
+      while (true) {
+        const existing = await mongo.reuses.findOne({
+          'owner.type': patch.owner.type,
+          'owner.id': patch.owner.id,
+          slug: uniqueSlug,
+          _id: { $ne: reuse._id }
+        })
+        if (!existing) break
+        uniqueSlug = `${baseSlug}-${counter++}`
+      }
+      patch.slug = uniqueSlug
+    }
+
+    // Update ownership of associated images
     await mongo.images.updateMany(
       {
         'owner.type': reuse.owner.type,
@@ -86,11 +136,21 @@ export const deleteReuse = async (reuse: Reuse) => {
 
 const cleanUnusedImages = async (reuse: Reuse) => {
   const imagesIds: string[] = []
-  const imageRef = reuse.config.image
-  if (imageRef) {
-    imagesIds.push(imageRef._id)
-    if (imageRef.mobileAlt) imagesIds.push(imageRef._id + '-mobile')
+
+  // Add images from config
+  const configImageRef = reuse.config.image
+  if (configImageRef) {
+    imagesIds.push(configImageRef._id)
+    if (configImageRef.mobileAlt) imagesIds.push(configImageRef._id + '-mobile')
   }
+
+  // Add images from draftConfig
+  const draftImageRef = reuse.draftConfig?.image
+  if (draftImageRef) {
+    imagesIds.push(draftImageRef._id)
+    if (draftImageRef.mobileAlt) imagesIds.push(draftImageRef._id + '-mobile')
+  }
+
   const deleteFilter = {
     'owner.type': reuse.owner.type,
     'owner.id': reuse.owner.id,
@@ -131,4 +191,53 @@ export const sendReuseEvent = (
     },
     body
   }, sessionState)
+}
+
+export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
+  debug('validateReuseDraft', reuse)
+  const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title }, session)
+  await cleanUnusedImages(updatedReuse)
+  sendReuseEvent(reuse, 'a été validé', 'draft-validate', session)
+  return updatedReuse
+}
+
+export const cancelReuseDraft = async (reuse: Reuse, session: SessionStateAuthenticated) => {
+  debug('cancelReuseDraft', reuse)
+  const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config }, session)
+  await cleanUnusedImages(updatedReuse)
+  sendReuseEvent(reuse, 'a été annulé', 'draft-discard', session)
+  return updatedReuse
+}
+
+export const submitReuse = async (reuse: Reuse, portalId: string, session: SessionStateAuthenticated) => {
+  debug('submitReuse', reuse, portalId)
+
+  // Get portal configuration
+  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
+  if (!portal) throw httpError(404, `portal "${portalId}" not found`)
+
+  // Check if reuse submission is allowed on this portal
+  if (!portal.config.reuses?.allowUserReuses) throw httpError(403, 'Reuse submission is not allowed on this portal')
+
+  // Validate draft before submitting
+  await validateReuseDraft(reuse, session)
+
+  // Create submitter object (previous owner + portalId)
+  const submitter = {
+    type: reuse.owner.type,
+    id: reuse.owner.id,
+    name: reuse.owner.name,
+    portalId
+  }
+
+  // Update reuse with new owner, submitter, and add to requestedPortals
+  const updatedReuse = await patchReuse(reuse, {
+    owner: portal.owner,
+    submitter,
+    requestedPortals: [...new Set([...reuse.requestedPortals, portalId])]
+  }, session, { skipOwnerRoleCheck: true })
+
+  sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalId}`)
+
+  return updatedReuse
 }

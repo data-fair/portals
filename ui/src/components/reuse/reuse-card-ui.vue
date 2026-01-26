@@ -18,7 +18,7 @@
           />
         </template>
 
-        <!-- Owner -->
+        <!-- Owner or Submitter -->
         <template #append>
           <owner-avatar
             v-if="showAll || !!(reuse.owner.department && !session.state.account.department)"

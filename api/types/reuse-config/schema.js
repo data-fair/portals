@@ -43,6 +43,10 @@ export default {
     image: {
       type: 'object',
       title: 'Image',
+      description: 'Images may be disabled by the portal administrator. You can still upload an image, but it may not be displayed.',
+      'x-i18n-description': {
+        fr: 'Les images peuvent être désactivées par l\'administrateur du portail.<br>Vous pouvez toujours ajouter une image, mais elle pourrait ne pas être affichée.'
+      },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
@@ -91,28 +95,25 @@ export default {
         fr: 'Jeux de données'
       },
       layout: {
-        listEditMode: 'inline',
-        messages: {
-          addItem: 'Add a dataset',
-          'x-i18n-addItem': {
-            fr: 'Ajouter un jeu de données'
-          }
+        getItems: {
+          // eslint-disable-next-line no-template-curly-in-string
+          url: "/data-fair/api/v1/${context.isEmbed ? '/catalog/datasets?' : '/datasets?mine=true&'}raw=true&select=id,title&size=20",
+          qSearchParam: 'q',
+          itemsResults: 'data.results',
+          // eslint-disable-next-line no-template-curly-in-string
+          itemTitle: '`${item.title} (${item.id})`',
+          itemKey: 'item.id'
+        },
+        props: {
+          chips: true,
+          closableChips: true,
+          clearable: false
         },
         cols: { md: 4 }
       },
       items: {
         type: 'object',
         required: ['id'],
-        layout: {
-          getItems: {
-            url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
-            qSearchParam: 'q',
-            itemsResults: 'data.results',
-            // eslint-disable-next-line no-template-curly-in-string
-            itemTitle: '`${item.title} (${item.id})`',
-            itemKey: 'item.id'
-          }
-        },
         properties: {
           id: { type: 'string' },
           title: { type: 'string' }

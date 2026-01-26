@@ -72,7 +72,6 @@ const events = await useFetch<{
   total: number
   limit: number
   skip: number
-  hasMore: boolean
 }>('/portal/api/pages/event', {
   query: {
     limit,

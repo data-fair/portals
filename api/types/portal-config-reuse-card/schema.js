@@ -8,18 +8,19 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    children: [{
-      comp: 'card',
-      title: 'Options',
-      children: [
-        { cols: { md: 6 }, key: 'elevation' },
-        { cols: { md: 6 }, key: 'rounded' },
-        { cols: { md: 6 }, key: 'titleLinesCount' },
-        { cols: { md: 6 }, key: 'showSummary' },
-        { cols: { md: 6 }, key: 'showAuthor' }
-      ]
-    },
-    'thumbnail'
+    children: [
+      {
+        comp: 'card',
+        title: 'Options',
+        children: [
+          { cols: { md: 6 }, key: 'elevation' },
+          { cols: { md: 6 }, key: 'rounded' },
+          { cols: { md: 6 }, key: 'titleLinesCount' },
+          { cols: { md: 6 }, key: 'showSummary' },
+          { cols: { md: 6 }, key: 'showAuthor' }
+        ]
+      },
+      'thumbnail'
     ]
   },
   properties: {
@@ -88,9 +89,9 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'location',
-              'crop',
-              'default'
+              { key: 'location', cols: { md: 6 } },
+              { key: 'default', cols: { md: 6 } },
+              { key: 'crop', cols: { md: 6 } }
             ]
           }
         ]
@@ -111,7 +112,6 @@ export default {
           'x-i18n-title': {
             fr: "Position de l'image sur la carte"
           },
-          layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'À gauche' } },
@@ -136,8 +136,7 @@ export default {
                 name: 'image-upload',
                 props: { width: 1280, label: 'Image par défaut' }
               }
-            },
-            cols: { md: 6 }
+            }
           },
           properties: {
             _id: {
@@ -164,10 +163,7 @@ export default {
           'x-i18n-description': {
             fr: "Si désactivé, l'image gardera son ratio d'origine"
           },
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
+          layout: { comp: 'switch' },
           default: true
         }
       }

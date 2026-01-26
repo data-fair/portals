@@ -15,12 +15,19 @@
     :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
     :active="false"
   >
-    <v-icon
+    <!--
+      Show icon in prepend, not directly in default slot with start props
+      to align vertically with the text properly.
+    -->
+    <template
       v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-      :color="link.icon.color"
-      :icon="link.icon.mdi?.svgPath || link.icon.custom"
-      start
-    />
+      #prepend
+    >
+      <v-icon
+        :color="link.icon.color"
+        :icon="link.icon.mdi?.svgPath || link.icon.custom"
+      />
+    </template>
     <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
     <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
   </v-btn>

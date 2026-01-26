@@ -95,7 +95,7 @@ const pagesParams = computed(() => {
 
   // Base groups: filter by type
   if (route.params.groupId === 'standard') {
-    params.type = 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets,applications'
+    params.type = 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets,applications,reuses'
   } else if (route.params.groupId === 'event') {
     params.type = 'event'
   } else if (route.params.groupId === 'news') {
