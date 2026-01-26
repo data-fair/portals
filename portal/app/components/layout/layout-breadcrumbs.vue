@@ -6,9 +6,12 @@
       2. Stability: Manual rendering bypasses complex internal logic, ensuring a stable render cycle
         and better performance when breadcrumbs are updated reactively from a store.
   -->
-  <v-container
-    :class="['pa-0', { 'container': !isLayoutFull && (breadcrumbConfig.fluid === false) }]"
-    fluid
+  <component
+    :is="isLayoutFull ? 'div' : 'v-container'"
+    v-bind="isLayoutFull ? undefined : {
+      class: ['pa-0', { container: breadcrumbConfig.fluid === false }],
+      fluid: true
+    }"
   >
     <nav :aria-label="t('breadcrumb')">
       <v-breadcrumbs
@@ -23,13 +26,13 @@
 
           <v-breadcrumbs-item
             v-bind="typeof item === 'object' ? item : { title: item }"
-            :class="{ 'text-body-2': breadcrumbConfig.compact, 'text-medium-emphasis': !isLayoutFull }"
+            :class="{ 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull }"
             :aria-current="index === breadcrumbItems.length - 1 ? 'page' : undefined"
           />
 
           <v-breadcrumbs-divider
             v-if="index < breadcrumbItems.length - 1"
-            :class="{ 'px-1': breadcrumbConfig.compact }"
+            :class="{ 'px-1': breadcrumbConfig.compact && !isLayoutFull }"
           >
             <v-icon
               v-if="breadcrumbConfig.separator?.type === 'icon' && breadcrumbConfig.separator.icon?.svgPath"
@@ -41,7 +44,7 @@
               v-else
               :class="[
                 breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined,
-                { 'text-body-2': breadcrumbConfig.compact, 'text-medium-emphasis': !isLayoutFull },
+                { 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull },
               ]"
             >
               {{ breadcrumbConfig.separator?.text || '/' }}
@@ -50,7 +53,7 @@
         </template>
       </v-breadcrumbs>
     </nav>
-  </v-container>
+  </component>
 </template>
 
 <script setup lang="ts">
