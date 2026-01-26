@@ -264,14 +264,14 @@ const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
 // Fetch draft reuses (owned by user)
-const draftReusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses')
+const draftReusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses?size=100')
 const draftReuses = ref<Reuse[]>([])
 watch(() => draftReusesFetch.data.value?.results, (results) => {
   if (results) draftReuses.value = results
 }, { immediate: true })
 
 // Fetch submitted reuses (submitted by user)
-const submittedReusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses?isSubmitter=true')
+const submittedReusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses?isSubmitter=true&size=100')
 const submittedReuses = computed<Reuse[]>(() => submittedReusesFetch.data.value?.results || [])
 
 const portalId = useStringSearchParam('portalId')
