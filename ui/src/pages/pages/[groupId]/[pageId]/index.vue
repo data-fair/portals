@@ -6,7 +6,7 @@
         :items="[
           { text: t('tabs.preview'), value: 'preview' },
           { text: t('tabs.previewDraft'), value: 'preview-draft' },
-          { text: t('tabs.permissions'), value: 'permissions' },
+          // { text: t('tabs.permissions'), value: 'permissions' },
           { text: t('tabs.publications'), value: 'publications' },
           { text: t('tabs.informations'), value: 'informations' }
         ]"

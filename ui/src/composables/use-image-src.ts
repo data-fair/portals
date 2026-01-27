@@ -12,5 +12,5 @@ export const usePortalImageSrc = () => getImageSrc
 export const usePageImageSrc = () => getImageSrc
 
 export const providePageImageSrc = (_pageType: string, _pageSlug?: string) => {
-  throw new Error('provideImageSrc should only be called from portal, not portals-manager')
+  throw new Error('providePageImageSrc should only be called from portal, not portals-manager')
 }

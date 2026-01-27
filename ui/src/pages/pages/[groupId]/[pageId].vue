@@ -8,6 +8,5 @@ const route = useRoute<'/pages/[groupId]/[pageId]'>()
 providePageStore(route.params.pageId)
 
 provide('page-id', route.params.pageId)
-provideImageSrc('page', route.params.pageId)
 
 </script>
