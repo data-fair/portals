@@ -7,7 +7,7 @@
         and better performance when breadcrumbs are updated reactively from a store.
   -->
   <component
-    :is="isLayoutFull ? 'div' : 'v-container'"
+    :is="isLayoutFull ? 'div' : VContainer"
     v-bind="isLayoutFull ? undefined : {
       class: ['pa-0', { container: breadcrumbConfig.fluid === false }],
       fluid: true
@@ -58,6 +58,7 @@
 
 <script setup lang="ts">
 import type { VBreadcrumbs } from 'vuetify/components'
+import { VContainer } from 'vuetify/components'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
