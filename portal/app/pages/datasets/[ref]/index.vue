@@ -401,12 +401,21 @@ const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications
 }))
 const applicationsFetch = useLocalFetch<{ count: number, results: Application[] }>(applicationsUrl)
 const orderedApplications = computed(() => {
-  const datasetApplications = datasetFetch.data.value?.extras?.applications || []
-  const applications = applicationsFetch.data.value?.results || []
-  if (!datasetApplications.length || !applications.length) return []
+  const datasetApps = datasetFetch.data.value?.extras?.applications || []
+  const allApps = applicationsFetch.data.value?.results || []
+  if (!allApps.length) return []
 
-  const ordered = datasetApplications.map(app => applications.find(a => a.id === app.id)).filter(a => a !== undefined) as Application[]
-  const remaining = applications.filter(a => !ordered.find(app => app.id === a.id))
+  const appsMap = new Map(allApps.map(app => [app.id, app])) // map for perfs
+
+  // First add applications in the order defined in dataset extras
+  const ordered = datasetApps
+    .map(dApp => appsMap.get(dApp.id))
+    .filter((app): app is Application => !!app)
+
+  // Add remaining applications not listed in dataset extras at the end
+  const orderedIds = new Set(ordered.map(a => a.id))
+  const remaining = allApps.filter(a => !orderedIds.has(a.id))
+
   return [...ordered, ...remaining]
 })
 const applicationCardConfig = computed(() => {
