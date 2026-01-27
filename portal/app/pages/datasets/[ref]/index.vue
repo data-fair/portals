@@ -304,7 +304,7 @@
           <reuse-card
             :reuse="reuse"
             :card-config="reusesCardConfig"
-            :is-portal-config="portalConfig.datasets.page.reuses?.useGlobalCard"
+            is-portal-config
           />
         </v-col>
       </v-row>
@@ -333,6 +333,7 @@
           <dataset-card
             :dataset="relatedDataset"
             :card-config="relatedDatasetsCardConfig"
+            is-portal-config
           />
         </v-col>
       </v-row>
@@ -370,10 +371,11 @@ import { withQuery } from 'ufo'
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
-const route = useRoute()
+const route = useRoute<'/datasets/[ref]'>()
 const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
+providePageImageSrc('datasets', route.params.ref as string)
 
 const dataTab = ref<string | undefined>()
 

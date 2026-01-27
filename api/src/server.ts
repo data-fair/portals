@@ -5,10 +5,10 @@ import eventPromise from '@data-fair/lib-utils/event-promise.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import locks from '@data-fair/lib-node/locks.js'
 import upgradeScripts from '@data-fair/lib-node/upgrade-scripts.js'
-import mongo from '#mongo'
 import { createHttpTerminator } from 'http-terminator'
-import app from './app.ts'
+import { app } from './app.ts'
 import config from '#config'
+import mongo from '#mongo'
 
 const server = createServer(app)
 const httpTerminator = createHttpTerminator({ server })

@@ -1,7 +1,7 @@
 # =============================
 # Base Node image
 # =============================
-FROM node:24.10.0-alpine3.22 AS base
+FROM node:24.11.1-alpine3.22 AS base
 
 WORKDIR /app
 ENV NODE_ENV=production

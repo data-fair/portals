@@ -4,9 +4,9 @@ import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { axiosAuth as _axiosAuth } from '@data-fair/lib-node/axios-auth.js'
 import mongo from '@data-fair/lib-node/mongo.js'
 
-const directoryUrl = 'http://localhost:5607/simple-directory'
+const directoryUrl = 'http://localhost:5600/simple-directory'
 
-export const baseURL = 'http://localhost:5607/portals-manager'
+export const baseURL = 'http://localhost:5600/portals-manager'
 
 const axiosOpts = { baseURL }
 

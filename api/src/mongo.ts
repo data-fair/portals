@@ -76,5 +76,4 @@ export class PortalsMongo {
 }
 
 const portalsMongo = new PortalsMongo()
-
 export default portalsMongo

@@ -30,6 +30,7 @@ const slug = route.params.slug as string
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
+providePageImageSrc('reuses', slug)
 
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 

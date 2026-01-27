@@ -1,6 +1,6 @@
 export default {
   port: 8097,
-  privateDirectoryUrl: 'http://localhost:8081',
+  privateDirectoryUrl: 'http://localhost:8080',
   privateEventsUrl: 'http://localhost:8083',
   mongoUrl: 'mongodb://localhost:27017/data-fair-portals-development',
   tmpDir: './tmp',
@@ -14,7 +14,7 @@ export default {
     sites: 'secret-sites',
     ingress: 'secret-ingress'
   },
-  portalUrlPattern: 'http://{subdomain}.portals.localhost:5607',
+  portalUrlPattern: 'http://{subdomain}.portals.localhost:5600',
   // 5697 for dev/ingress-manager.ts
   // 5603 for the separate project portals-ingress-manager development server
   privateIngressManagerUrl: 'http://localhost:5697',

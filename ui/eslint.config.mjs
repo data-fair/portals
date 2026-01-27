@@ -8,12 +8,6 @@ export default [
   ...pluginVue.configs['flat/recommended'],
   ...pluginVuetify.configs['flat/recommended'],
   {
-    rules: {
-      'vue/multi-word-component-names': 'off',
-      'vue/require-default-prop': 'off'
-    }
-  },
-  {
     files: ['**/*.vue'],
     languageOptions: {
       parserOptions: {
@@ -24,6 +18,8 @@ export default [
   ...neostandard({ ts: true }),
   {
     rules: {
+      'vue/require-default-prop': 'off',
+      'vue/multi-word-component-names': 'off',
       'no-unused-expressions': 'off',
       'no-undef': 'off' // typescript takes care of this with autoImport support
     }

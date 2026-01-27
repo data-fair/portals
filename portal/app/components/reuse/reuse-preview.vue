@@ -68,6 +68,7 @@
         <dataset-card
           :dataset="dataset"
           :card-config="datasetCardConfig"
+          is-portal-config
         />
       </v-col>
     </v-row>

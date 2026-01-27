@@ -83,6 +83,7 @@
           <dataset-card
             :dataset="dataset"
             :card-config="datasetsCardConfig"
+            is-portal-config
           />
         </v-col>
       </v-row>
@@ -119,10 +120,11 @@ import { withQuery } from 'ufo'
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
+const route = useRoute<'/applications/[ref]'>()
 const { portal, portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
-const route = useRoute()
+providePageImageSrc('applications', route.params.ref as string)
 
 const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
   params: {
