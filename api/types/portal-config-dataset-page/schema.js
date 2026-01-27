@@ -36,7 +36,7 @@ export default {
     showImage: {
       type: 'boolean',
       title: "Afficher l'image",
-      description: "L'image sera affichée au dessus de la description.",
+      description: "L'image sera affichée au dessus de la description.<br>**Seule l'image spécifique au jeu de données sera affichée.**<br>Les images de thématique, d'application ou par défaut sont ignorées sur cette page.",
       layout: 'switch'
     },
 

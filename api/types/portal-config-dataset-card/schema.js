@@ -8,22 +8,23 @@ export default {
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    children: [{
-      comp: 'card',
-      title: 'Options',
-      children: [
-        'actionsLocation',
-        'actionsStyle',
-        'elevation',
-        'rounded',
-        'titleLinesCount',
-        'showSummary',
-        'showDepartment'
-      ]
-    },
-    'thumbnail',
-    'topics',
-    'keywords'
+    children: [
+      {
+        comp: 'card',
+        title: 'Options',
+        children: [
+          'actionsLocation',
+          'actionsStyle',
+          'elevation',
+          'rounded',
+          'titleLinesCount',
+          'showSummary',
+          'showDepartment'
+        ]
+      },
+      'thumbnail',
+      'topics',
+      'keywords'
     ]
   },
   properties: {
@@ -103,7 +104,8 @@ export default {
               { key: 'default', cols: { md: 6 } },
               { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
-              { key: 'useApplication', cols: { md: 4 } }
+              { key: 'useApplication', cols: { md: 4 } },
+              { markdown: "**Ordre de priorité :**<br>1. **Image spécifique** (définie directement sur le jeu de données)<br>2. **Image de la thématique** (si activé)<br>3. **Image de l'application** (si activé)<br>4. **Image par défaut** (si définie)" }
             ]
           },
         ]

@@ -140,6 +140,15 @@ export default {
         comp: 'switch',
         cols: { md: 4 }
       }
+    },
+    fluid: {
+      type: 'boolean',
+      title: 'Afficher la barre de navigation en pleine largeur',
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: true
     }
   }
 }

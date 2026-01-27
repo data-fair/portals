@@ -1,8 +1,12 @@
 <template>
+  <!--
+    fluid: for compatibility, default to true (even if undefined).
+           It is only false when explicitly set to false.
+  -->
   <v-container
-    :class="`bg-${navBarConfig.color}`"
+    :fluid="navBarConfig.fluid !== false"
+    :class="[{ 'container': navBarConfig.fluid === false }, `bg-${navBarConfig.color}`]"
     class="pa-0 h-100"
-    fluid
   >
     <v-row
       align="center"
