@@ -1,4 +1,4 @@
-# <img alt="Data FAIR logo" src="https://cdn.jsdelivr.net/gh/data-fair/data-fair@master/public/assets/logo.svg" width="40"> @data-fair/portals
+# <img alt="Data FAIR logo" src="https://cdn.jsdelivr.net/gh/data-fair/data-fair@master/ui/public/assets/logo.svg" width="40"> @data-fair/portals
 
 ![GitHub License](https://img.shields.io/github/license/data-fair/portals) ![GitHub package.json version](https://img.shields.io/github/package-json/v/data-fair/portals)  
 *Portals manager for data-fair.*
