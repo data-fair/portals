@@ -4,6 +4,7 @@ import express from 'express'
 import helmet from 'helmet'
 import { uiConfig } from './ui-config.ts'
 import { getSiteHashes } from './utils/site.ts'
+import { getStatus } from './admin/status.ts'
 
 import identitiesRouter from './identities/router.ts'
 import groupRouter from './groups/router.ts'
@@ -47,6 +48,13 @@ app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
+
+app.get('/api/ping', async (req, res) => {
+  const status = await getStatus(req)
+  if (status.status === 'error') res.status(500)
+  res.send(status.status)
+})
+
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
 app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
