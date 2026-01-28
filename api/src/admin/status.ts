@@ -1,27 +1,36 @@
 import type { Request } from 'express'
-import type { Db } from 'mongodb'
+import mongo from '#mongo'
 
-async function mongoStatus (db: Db) {
-  const time = Date.now()
-  return db.admin().serverStatus().then(
-    status => ({
+const mongoStatus = async () => { await mongo.db.command({ ping: 1 }) }
+export const getStatus = async (req: Request) =>
+  runHealthChecks(req, [{ fn: mongoStatus, name: 'mongodb' }])
+
+// Helper functions
+const getSingleStatus = async (req: Request, fn: (req: Request) => Promise<void>, name: string) => {
+  const start = performance.now()
+  try {
+    await fn(req)
+    return {
       status: 'ok',
-      name: 'mongodb',
-      timeInMs: Date.now() - time
-    }),
-    err => ({
+      name,
+      timeInMs: Math.round(performance.now() - start)
+    }
+  } catch (err) {
+    return {
       status: 'error',
-      details: err,
-      name: 'mongodb',
-      timeInMs: Date.now() - time
-    })
-  )
+      message: err instanceof Error ? err.message : String(err),
+      name,
+      timeInMs: Math.round(performance.now() - start)
+    }
+  }
 }
-
-export async function getStatus (req: Request) {
+const runHealthChecks = async (
+  req: Request,
+  checks: Array<{ fn: () => Promise<void>; name: string }>
+) => {
   let results
   try {
-    results = await Promise.all([mongoStatus(req.app.get('db'))])
+    results = await Promise.all(checks.map(({ fn, name }) => getSingleStatus(req, fn, name)))
   } catch (err: any) {
     return {
       status: 'error',
