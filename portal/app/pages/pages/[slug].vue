@@ -27,9 +27,7 @@ const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${
 })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { title: pageConfig?.title || portalConfig.value.title }
-  ])
+  setBreadcrumbs([{ title: pageConfig?.title || portalConfig.value.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

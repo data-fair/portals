@@ -127,6 +127,12 @@ export default {
       type: 'string',
       title: 'Color',
       'x-i18n-title': { fr: 'Couleur' },
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        }
+      },
       oneOf: [
         { const: 'primary', title: 'Primary', 'x-i18n-title': { fr: 'Primaire' } },
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
@@ -142,6 +148,12 @@ export default {
       type: 'string',
       title: 'Color',
       'x-i18n-title': { fr: 'Couleur' },
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        }
+      },
       oneOf: [
         { const: 'primary', title: 'Primary', 'x-i18n-title': { fr: 'Primaire' } },
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },

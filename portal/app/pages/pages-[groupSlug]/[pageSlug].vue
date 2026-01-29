@@ -22,6 +22,7 @@ providePageImageSrc('generic', route.params.pageSlug as string)
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${route.params.pageSlug}`, { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  // Breadcrumbs with group if available
   const items = [{ title: pageConfig?.title || portalConfig.value.title }]
   if (pageConfig?.genericMetadata?.group?.title) {
     items.unshift({ title: pageConfig.genericMetadata.group.title })

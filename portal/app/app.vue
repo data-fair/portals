@@ -30,7 +30,6 @@ const isIframe = useState('isIframe', () => {
 
 providePortalStore($portal, $siteInfo)
 provideNavigationStore({ isIframe })
-provide('is-iframe', isIframe)
 
 const meta = [
   { name: 'theme-color', content: theme.current.value.colors.primary },

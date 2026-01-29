@@ -105,8 +105,8 @@ const standardPageLabel = computed(() => {
     cookiePolicyPage: Page de politique de cookies
     termsOfServicePage: Page de conditions générales d'utilisation
     datasetsCatalog: Catalogue de données
-    applicationsCatalog: Catalogue de visualisation
-    eventsList: Liste des évènements
+    applicationsCatalog: Catalogue de visualisations
+    eventsList: Liste des événements
     newsList: Liste des actualités
     sitemap: Plan du site
     standardPage: Page standard

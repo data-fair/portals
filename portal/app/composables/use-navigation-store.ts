@@ -14,7 +14,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const drawer = ref(false) // Simple boolean shared between navigations components
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
   const isIframe = options.isIframe
-  const showBreadcrumbsOverride = ref<boolean | undefined>(undefined)
+  const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
 
   const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
@@ -43,10 +43,12 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
 
   const clearBreadcrumbs = () => { _breadcrumbs.value = [] }
 
+  /** Allow to override breadcrumb visibility per page */
   const setShowBreadcrumbs = (value?: boolean) => { showBreadcrumbsOverride.value = value }
+
+  /** Determine if breadcrumbs should be shown at a given place, always false for home page */
   const showBreadcrumbs = (place: 'top' | 'bottom') => {
-    if (showBreadcrumbsOverride.value === false) return false
-    if (isIframe.value) return false
+    if (showBreadcrumbsOverride.value === false || isIframe.value) return false
     const pos = $portal.config.breadcrumb.position
     if (pos === 'both') return true
     return place === 'top' ? pos === 'below-nav' : pos === 'above-footer'

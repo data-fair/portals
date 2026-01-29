@@ -248,6 +248,7 @@ export default {
       type: 'string',
       title: 'Police principale',
       layout: {
+        comp: 'autocomplete',
         getItems: {
           url: '/portals-manager/api/fonts'
         }
@@ -258,6 +259,7 @@ export default {
       title: 'Police des titres',
       hint: 'laissez vide pour utiliser la police principale',
       layout: {
+        comp: 'autocomplete',
         getItems: {
           url: '/portals-manager/api/fonts'
         }

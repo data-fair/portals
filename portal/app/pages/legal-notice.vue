@@ -1,5 +1,5 @@
 <template>
-  <tracking-consent v-if="privacyPolicyCheck.error.value && cookiePolicyCheck.error.value" />
+  <tracking-consent v-if="!privacyPolicyExist && !cookiePolicyExist" />
 
   <!-- Error state -->
   <page-error
@@ -22,13 +22,12 @@ const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('legal-notice')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
-const privacyPolicyCheck = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
-const cookiePolicyCheck = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const privacyPolicyExist = computed(() => standardPagesFetch.data.value?.['privacy-policy'])
+const cookiePolicyExist = computed(() => standardPagesFetch.data.value?.['cookie-policy'])
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'legal-notice', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'legal-notice', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

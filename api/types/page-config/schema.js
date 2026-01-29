@@ -17,7 +17,7 @@ export default {
       'x-i18n-title': {
         fr: 'Métadonnées'
       },
-      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs', 'fluid']
     }, {
       title: 'Content',
       'x-i18n-title': {
@@ -134,10 +134,27 @@ export default {
         fr: "Affiche le fil d'Ariane si celui-ci est activé dans la configuration du portail. Si désactivé ici, il ne sera jamais affiché sur cette page. Vous pouvez ajouter manuellement le Fil d'Ariane via le bloc de pages pour le positionner où vous le souhaitez."
       },
       layout: {
+        if: 'context.pageType !== "home"', // Always hide on home page
         comp: 'switch',
         cols: { md: 4 }
       },
       default: true,
+    },
+    fluid: {
+      type: 'boolean',
+      title: '',
+      'x-i18n-title': {
+        fr: 'Page pleine largeur'
+      },
+      description: '',
+      'x-i18n-description': {
+        fr: 'Si activé, le contenu de la page utilisera toute la largeur disponible de l\'écran, sinon il sera contenu dans une largeur fixe pour une meilleure lisibilité.'
+      },
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: false
     },
     elements: {
       type: 'array',

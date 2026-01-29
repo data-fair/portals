@@ -98,7 +98,7 @@ export default {
             { const: 'cookie-policy', title: 'Politique de cookies' },
             { const: 'terms-of-service', title: 'Conditions générales d\'utilisation' },
             { const: 'datasets', title: 'Catalogue de données' },
-            { const: 'applications', title: 'Catalogue de visualisation' },
+            { const: 'applications', title: 'Catalogue de visualisations' },
             { const: 'reuses', title: 'Liste des réutilisations' },
             { const: 'event', title: 'Liste des événements' },
             { const: 'news', title: 'Liste des actualités' },
@@ -235,15 +235,15 @@ const linkItemTitleFn = (item) => {
   const standardPageTitles = {
     home: 'Page d\'accueil',
     contact: 'Page de contact',
-    'privacy-policy': 'Page de politique de confidentialité',
+    'privacy-policy': 'Politique de confidentialité',
     accessibility: 'Accessibilité',
     'legal-notice': 'Mentions légales',
     'cookie-policy': 'Politique de cookies',
     'terms-of-service': 'Conditions générales d\'utilisation',
     datasets: 'Catalogue de données',
-    applications: 'Catalogue de visualisation',
+    applications: 'Catalogue de visualisations',
     reuses: 'Liste des réutilisations',
-    event: 'Liste des évènements',
+    event: 'Liste des événements',
     news: 'Liste des actualités',
     sitemap: 'Plan du site'
   }

@@ -12,12 +12,12 @@ definePageMeta({ layout: 'home' })
 const { portalConfig } = usePortalStore()
 const { clearBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('home')
+setShowBreadcrumbs(false) // Home page does not show breadcrumbs
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/home/home', { watch: false })
 
-watch(() => pageConfigFetch.data.value, (pageConfig) => {
+watch(() => pageConfigFetch.data.value, () => {
   clearBreadcrumbs()
-  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 // Meta from portal config, not home page config

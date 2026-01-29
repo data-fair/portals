@@ -377,7 +377,6 @@ const cancelEdit = async () => {
   await draftReusesFetch.refresh()
 }
 
-useNavigationStore().clearBreadcrumbs()
 </script>
 
 <i18n lang="yaml">

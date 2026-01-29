@@ -25,9 +25,7 @@ const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-po
 const cookiePolicyCheck = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'privacy-policy', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'privacy-policy', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

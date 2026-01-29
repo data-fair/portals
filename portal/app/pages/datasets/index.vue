@@ -24,9 +24,7 @@ providePageImageSrc('datasets')
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/datasets/datasets', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'datasets', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'datasets', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

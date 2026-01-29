@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import type { PageConfig } from '#api/types/page'
 
+const route = useRoute()
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
@@ -22,10 +23,9 @@ providePageImageSrc('accessibility')
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'accessibility', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'accessibility', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
+  route.meta.isFluid = pageConfig?.fluid
 }, { immediate: true })
 
 usePageSeo({

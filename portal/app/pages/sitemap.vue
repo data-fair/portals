@@ -142,9 +142,7 @@ const allInternalPaths = computed(() => {
   return paths
 })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'sitemap' }
-])
+setBreadcrumbs([{ type: 'standard', subtype: 'sitemap' }])
 
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,

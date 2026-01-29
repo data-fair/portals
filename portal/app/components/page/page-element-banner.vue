@@ -2,7 +2,7 @@
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
   <v-sheet
     :class="[
-      preview || !context.isRoot ? 'banner-contained' : 'banner-fluid',
+      !preview && element.fullWidth && context.isRoot ? 'banner-fluid' : 'banner-container',
       element.background?.color && 'bg-' + element.background.color,
       !preview && context.isRoot && context.index === 0 && !showBreadcrumbs('top') && 'mt-n4',
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
@@ -59,16 +59,12 @@ const { showBreadcrumbs } = useNavigationStore()
 
 <style scoped>
 
-:root {
-  --scrollbar-width: 0px;
-}
+:root { --scrollbar-width: 0px; }
 
 .banner-fluid {
   width: calc(100vw - var(--scrollbar-width, 0px));
   margin-left: calc(50% - 50vw + var(--scrollbar-width, 0px) / 2);
 }
 
-.banner-contained {
-  width: 100%;
-}
+.banner-contained { width: 100%; }
 </style>

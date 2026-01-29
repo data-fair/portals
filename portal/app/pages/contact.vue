@@ -22,9 +22,7 @@ providePageImageSrc('contact')
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'contact', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'contact', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

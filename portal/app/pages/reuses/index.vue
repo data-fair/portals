@@ -18,15 +18,14 @@ import type { PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('reuses')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/reuses/reuses', { watch: false })
 
-watch(() => pageConfigFetch.data.value, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'reuses', title: pageConfigFetch.data.value?.title }
-  ])
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  setBreadcrumbs([{ type: 'standard', subtype: 'reuses', title: pageConfigFetch.data.value?.title }])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({

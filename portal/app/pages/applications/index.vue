@@ -24,9 +24,7 @@ providePageImageSrc('applications')
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/applications/applications', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'applications', title: pageConfig?.title }
-  ])
+  setBreadcrumbs([{ type: 'standard', subtype: 'applications', title: pageConfig?.title }])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
