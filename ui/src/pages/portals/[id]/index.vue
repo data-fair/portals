@@ -103,7 +103,8 @@
           id: route.params.id,
           title: portalFetch.data.value.config.title,
           url: portalFetch.data.value.ingress?.url,
-          whiteLabel: portalFetch.data.value.whiteLabel
+          whiteLabel: portalFetch.data.value.whiteLabel,
+          isReference: portalFetch.data.value.isReference
         }"
         @refresh-portal="portalFetch.refresh()"
       />
@@ -151,12 +152,7 @@ const hasDraftDiff = computed(() => {
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return
-  setBreadcrumbs([{
-    text: t('portals'),
-    to: '/portals'
-  }, {
-    text: portal.config.title
-  }])
+  setBreadcrumbs([{ text: t('portals'), to: '/portals' }, { text: portal.config.title }])
 })
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {

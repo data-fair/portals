@@ -24,6 +24,11 @@ export default {
       default: false,
       readOnly: true
     },
+    isReference: { // superadmin can set a page as reference page
+      type: 'boolean',
+      title: 'Reference Page',
+      readOnly: true
+    },
     staging: {
       title: 'Pré-production',
       description: 'Si coché les contributeurs pourront publier des ressources sans solliciter les administrateurs',

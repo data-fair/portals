@@ -33,8 +33,8 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
-  // Change WhiteLabel by super admin only
-  if (patch.whiteLabel) assertAdminMode(session)
+  // Change WhiteLabel or isReference by super admin only
+  if (patch.whiteLabel || patch.isReference) assertAdminMode(session)
 
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
@@ -330,22 +330,23 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): s
 export const duplicatePortalConfig = async (
   sessionState: SessionStateAuthenticated,
   sourcePortalId: string,
-  _newPortalId: string,
-  _newOwner: Portal['owner']
+  newPortalId: string,
+  newOwner: Portal['owner']
 ): Promise<{ config: PortalConfig; eventDetails: string }> => {
   const sourcePortal = await getPortalAsAdmin(sessionState, sourcePortalId)
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
-  const eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
 
-  // Duplicate images referenced in the portal config and rewrite IDs
-  const imageIdMap = new Map<string, string>()
+  if (!sourcePortal.isReference) assertAccountRole(sessionState, sourcePortal.owner, 'admin')
+
   const duplicatedConfig = JSON.parse(JSON.stringify(sourcePortal.config)) as PortalConfig
+
+  const imageIdMap = new Map<string, string>()
   const imageRefs = getPortalConfigImageRefs(duplicatedConfig).filter((ref): ref is ImageRef => Boolean(ref))
 
   await Promise.all(
     imageRefs.map(async (imageRef) => {
       if (!imageIdMap.has(imageRef._id)) {
-        const newImageId = await duplicateImage(imageRef._id, 'portal', _newPortalId, _newOwner)
+        const newImageId = await duplicateImage(imageRef._id, 'portal', newPortalId, newOwner)
         imageIdMap.set(imageRef._id, newImageId)
       }
     })
@@ -377,6 +378,9 @@ export const duplicatePortalConfig = async (
   if (duplicatedConfig.topics) {
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
+
+  let eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
+  if (sourcePortal?.isReference) eventDetails = `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})`
 
   return { config: duplicatedConfig, eventDetails }
 }

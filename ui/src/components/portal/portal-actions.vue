@@ -224,26 +224,37 @@
         <template #prepend>
           <v-icon
             color="admin"
-            :icon="mdiIncognito"
+            :icon="mdiShieldStar"
           />
         </template>
-        {{ t('whiteLabel') }}
+        {{ t('administration') }}
       </v-list-item>
     </template>
     <v-card
+      color="admin"
       rounded="lg"
-      variant="elevated"
-      :title="t('whiteLabelConfiguration')"
+      variant="text"
+      :title="t('administrationConfiguration')"
       :loading="updateWhiteLabel.loading.value ? 'admin' : undefined"
     >
-      <v-card-text class="text-admin">
+      <v-card-text>
         <v-checkbox
           :model-value="portal.whiteLabel"
           :label="t('enableWhiteLabel')"
           :disabled="updateWhiteLabel.loading.value"
           color="admin"
+          density="comfortable"
           hide-details
           @update:model-value="(value) => updateWhiteLabel.execute(!!value)"
+        />
+        <v-checkbox
+          :model-value="portal.isReference"
+          :label="t('defineIsReference')"
+          :disabled="updateIsReference.loading.value"
+          color="admin"
+          density="comfortable"
+          hide-details
+          @update:model-value="(value) => updateIsReference.execute(!!value)"
         />
       </v-card-text>
     </v-card>
@@ -283,7 +294,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiIncognito } from '@mdi/js'
+import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -306,6 +317,7 @@ const { portal } = defineProps<{
     title: string
     url: string | undefined
     whiteLabel?: boolean
+    isReference?: boolean
   }
 }>()
 const showCancelDraftMenu = ref(false)
@@ -354,6 +366,17 @@ const updateWhiteLabel = useAsyncAction(async (value: boolean) => {
   error: t('errorUpdatingWhiteLabel'),
 })
 
+const updateIsReference = useAsyncAction(async (value: boolean) => {
+  await $fetch(`/portals/${portal.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ isReference: value })
+  })
+  emit('refresh-portal')
+}, {
+  success: t('isReferenceUpdated'),
+  error: t('errorUpdatingIsReference'),
+})
+
 /** `True` if the active account isn't in a department and his organization has departments */
 const hasDepartments = computedAsync(async (): Promise<boolean> => {
   if (session.state.account.department || session.state.account.type === 'user') return false
@@ -365,6 +388,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
 
 <i18n lang="yaml">
   en:
+    administration: Administration
+    administrationConfiguration: Super admin configuration
     cancel: Cancel
     cancelDraft: Cancel draft
     cancelingDraft: Canceling draft
@@ -373,13 +398,16 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     changeOwnerWarning: Changing the owner of a portal may have consequences on permissions.
     confirm: Confirm
     confirmDeletePortal: Do you really want to delete the portal "{title}"? Deletion is permanent and data cannot be recovered.
+    defineIsReference: Define as reference template
     deletePortal: Delete portal
     deletingPortal: Deleting portal
     enableWhiteLabel: Enable white label
     errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
+    errorUpdatingIsReference: Error while updating reference status
     errorUpdatingWhiteLabel: Error while updating white label
     events: Events
+    isReferenceUpdated: Reference status updated!
     manageDomainExposure: Manage domain exposure
     no: No
     ownerChanged: Owner changed!
@@ -388,12 +416,12 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Validate draft
     viewDraft: View draft
     viewPortal: View portal
-    whiteLabel: White label
-    whiteLabelConfiguration: White label configuration
     whiteLabelUpdated: White label updated!
     yes: Yes
 
   fr:
+    administration: Administration
+    administrationConfiguration: Configuration super administrateur
     cancel: Annuler
     cancelDraft: Annuler le brouillon
     cancelingDraft: Annulation du brouillon
@@ -402,13 +430,16 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     changeOwnerWarning: Changer le propriétaire d'un portail peut avoir des conséquences sur les permissions.
     confirm: Confirmer
     confirmDeletePortal: Voulez-vous vraiment supprimer le portail "{title}" ? La suppression est définitive et les données ne pourront pas être récupérées.
+    defineIsReference: Définir comme modèle de référence
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
     enableWhiteLabel: Activer la marque blanche
     errorChangingOwner: Erreur lors de le changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
+    errorUpdatingIsReference: Erreur lors de la mise à jour du statut de modèle de référence
     errorUpdatingWhiteLabel: Erreur lors de la mise à jour de la marque blanche
     events: Traçabilité
+    isReferenceUpdated: Statut de référence mis à jour !
     manageDomainExposure: Exposition du domaine
     no: Non
     ownerChanged: Propriétaire changé !
@@ -417,8 +448,6 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Valider le brouillon
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail
-    whiteLabel: Marque blanche
-    whiteLabelConfiguration: Configuration de la marque blanche
     whiteLabelUpdated: Marque blanche mise à jour !
     yes: Oui
 
