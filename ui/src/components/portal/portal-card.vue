@@ -32,8 +32,34 @@
           density="compact"
           style="background-color: inherit;"
         >
-          <!-- TODO: Add a content -->
-          {{ portal.config.description }}
+          <!-- Description (wrapped after 2 lines)-->
+          <v-list-item>
+            <v-list-item-title style="white-space: unset; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;line-clamp: 2;">
+              {{ portal.config.description }}
+            </v-list-item-title>
+          </v-list-item>
+
+          <!-- Private / Public -->
+          <v-list-item v-if="portal.config.authentication === 'required'">
+            <template #prepend>
+              <v-icon :icon="mdiLock" />
+            </template>
+            {{ t('private') }}
+          </v-list-item>
+          <v-list-item v-else>
+            <template #prepend>
+              <v-icon :icon="mdiLockOpen" />
+            </template>
+            {{ t('public') }}
+          </v-list-item>
+
+          <!-- Domain name -->
+          <v-list-item v-if="portal.ingress?.url">
+            <template #prepend>
+              <v-icon :icon="mdiWeb" />
+            </template>
+            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -43,6 +69,7 @@
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiWeb, mdiLockOpen, mdiLock } from '@mdi/js'
 
 defineProps({
   portal: {
@@ -51,4 +78,16 @@ defineProps({
   },
   showOwner: Boolean
 })
+
+const { t } = useI18n()
+
 </script>
+
+<i18n lang="yaml">
+  en:
+    private: Private
+    public: Public
+  fr:
+    private: Privé
+    public: Public
+</i18n>

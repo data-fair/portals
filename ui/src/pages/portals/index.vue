@@ -77,7 +77,7 @@ const portalsParams = computed(() => {
   const params: Record<string, any> = {
     size: 10000,
     sort: 'updatedAt:-1',
-    select: '_id,config.title,owner'
+    select: '_id,config.title,config.description,config.authentication,ingress.url,owner'
   }
   if (showAll.value) params.showAll = true
   return params
