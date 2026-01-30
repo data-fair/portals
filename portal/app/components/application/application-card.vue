@@ -94,7 +94,7 @@
           <v-col
             v-if="cardConfig.showDepartment"
             cols="auto"
-            class="d-flex align-center"
+            class="d-flex align-center mr-2"
           >
             <owner-avatar
               :owner="application.owner"
@@ -104,7 +104,6 @@
           <v-col
             cols="auto"
             class="d-flex align-center"
-            :class="{ 'ml-2': cardConfig.showDepartment }"
           >
             <span class="text-caption">
               {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}

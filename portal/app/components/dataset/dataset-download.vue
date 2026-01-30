@@ -18,7 +18,7 @@
         {{ t('formatSubtitle.' + file.format) }}
       </v-list-item-subtitle>
       <v-list-item-subtitle v-else>
-        {{ file.name }} ({{ file.size }})
+        {{ file.name }} ({{ formatBytes(file.size) }})
       </v-list-item-subtitle>
       <template #append>
         <v-btn
@@ -51,13 +51,11 @@
 
     <!-- link to table vue for filtered exports -->
     <template v-if="count > 10000">
-      <v-alert
-        color="warning"
-        class="mx-4"
+      <v-list-item
         :title="t('dataTooLargeAlertTitle')"
-        :text="t('dataTooLargeAlertText')"
-      />
-      <v-list-item :title="`Export filtré aux formats ${join(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])])}`">
+        :subtitle="t('dataTooLargeAlertText', { formats: new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])]) })"
+        base-color="warning"
+      >
         <template #append>
           <v-btn
             :to="`/datasets/${dataset.slug}/table`"
@@ -74,6 +72,7 @@
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
 import { mdiDownload, mdiTableLarge } from '@mdi/js'
+import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 type File = {
   name: string
@@ -86,7 +85,7 @@ type File = {
 }
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { portalConfig } = usePortalStore()
 
 const files = ref<File[]>([])
@@ -106,41 +105,32 @@ const simpleExports = computed(() => {
   return exportsList
 })
 
-onMounted(async () => {
-  let filesRes: File[] = []
-  if (!dataset.isVirtual && !dataset.isRest && !dataset.isMetaOnly) {
-    filesRes = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${dataset.id}/data-files`)).data.value || []
-  }
-
-  if (dataset.virtual?.children) {
-    const childrenFetch = await useLocalFetch<{ results: Dataset[] }>('/data-fair/api/v1/datasets', {
-      params: {
-        id: dataset.virtual.children.join(','),
-        select: 'id,isVirtual,isRest,isMetaOnly'
-      }
-    })
-    for (const child of childrenFetch.data.value?.results || []) {
-      if (!child.userPermissions.includes('listDataFiles')) continue
-      if (child.isVirtual || child.isRest || child.isMetaOnly) continue
-      const childrenFiles: File[] = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${child.id}/data-files`)).data.value || []
-      const file = childrenFiles?.find(f => f.key === 'original')
-      if (file) filesRes.push(file)
-    }
-  }
-
-  // Add format
-  files.value = filesRes.map(f => ({
-    ...f,
-    format: f.mimetype ? f.mimetype.split('/').pop()?.replace('+', '') || '' : f.name.split('.').pop() || ''
-  }))
-})
-
-const join = (array?: string[]): string => {
-  if (!array || array.length === 0) return ''
-  if (array.length === 1) return array[0] || ''
-  if (array.length === 2) return `${array[0] || ''} ${t('or')} ${array[1] || ''}`
-  return `${array.slice(0, -1).map(s => s || '').join(', ')} ${t('or')} ${array[array.length - 1] || ''}`
+let filesRes: File[] = []
+if (!dataset.isVirtual && !dataset.isRest && !dataset.isMetaOnly) {
+  filesRes = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${dataset.id}/data-files`)).data.value || []
 }
+
+if (dataset.virtual?.children) {
+  const childrenFetch = await useLocalFetch<{ results: Dataset[] }>('/data-fair/api/v1/datasets', {
+    params: {
+      id: dataset.virtual.children.join(','),
+      select: 'id,isVirtual,isRest,isMetaOnly'
+    }
+  })
+  for (const child of childrenFetch.data.value?.results || []) {
+    if (!child.userPermissions.includes('listDataFiles')) continue
+    if (child.isVirtual || child.isRest || child.isMetaOnly) continue
+    const childrenFiles: File[] = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${child.id}/data-files`)).data.value || []
+    const file = childrenFiles?.find(f => f.key === 'original')
+    if (file) filesRes.push(file)
+  }
+}
+
+// Add format
+files.value = filesRes.map(f => ({
+  ...f,
+  format: f.mimetype ? f.mimetype.split('/').pop()?.replace('+', '') || '' : f.name.split('.').pop() || ''
+}))
 
 const clickDownload = (format: string) => {
   useAnalytics()?.track('download', { label: `${dataset.slug} - ${format}` })
@@ -151,29 +141,27 @@ const clickDownload = (format: string) => {
 <i18n lang="yaml">
   en:
     dataTooLargeAlertTitle: This dataset contains more than 10,000 rows.
-    dataTooLargeAlertText: Export in the following formats is only possible from the table view
+    dataTooLargeAlertText: "Export in the { formats } formats is only possible from the table view"
     export: Export { format }
     formatSubtitle:
       csv: Text format for all spreadsheet software (separator ",")
       xlsx: Format suitable for Excel
       ods: Format suitable for Libre Office and other free spreadsheet software
       geojson: Portable format for geographic data
-    or: or
     preview: Data download
     previewShort: Download
-    table: Table
+    table: Open table view
   fr:
 
     dataTooLargeAlertTitle: Ce jeu de données contient plus de 10 000 lignes.
-    dataTooLargeAlertText: L'export dans les formats suivants n'est possible qu'à partir de la vue tableau.
+    dataTooLargeAlertText: "L'export dans les formats { formats } n'est possible qu'à partir de la vue tableau."
     export: Export { format }
     formatSubtitle:
       csv: Format textuel pour tous logiciels tableurs (séparateur ",")
       xlsx: Format adapté pour Excel
       ods: Format adapté pour Libre Office et autres logiciels tableurs libres
       geojson: Format portable pour données géographiques
-    or: ou
     preview: Téléchargement des données
     previewShort: Télécharger
-    table: Tableau
+    table: Ouvrir la vue tableau
 </i18n>

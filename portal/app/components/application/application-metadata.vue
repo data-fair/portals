@@ -32,6 +32,17 @@
           {{ application.owner.departmentName || application.owner.department || application.owner.name }}
         </div>
       </v-col>
+
+      <!-- Share (location not right)-->
+      <ClientOnly>
+        <v-col
+          v-if="application.public && metadataConfig.location !== 'right'"
+          v-bind="metadataColProps"
+        >
+          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <social-share :title="application.title" />
+        </v-col>
+      </ClientOnly>
     </v-row>
 
     <v-divider />
@@ -66,7 +77,7 @@
       </v-col>
 
       <ClientOnly>
-        <v-col v-if="application.public">
+        <v-col v-if="application.public && metadataConfig.location === 'right'">
           {{ t('share') }}
           <social-share :title="application.title" />
         </v-col>
