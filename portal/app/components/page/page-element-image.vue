@@ -16,8 +16,8 @@
     v-if="src"
     :class="[
       'd-flex flex-column align-center overflow-hidden',
-      element.banner && ((preview || !context.isRoot) ? 'banner-contained' : 'banner-fluid'),
-      !preview && element.banner && context.isRoot && context.index === 0 && !showBreadcrumbs('top') && 'mt-n4',
+      !preview && element.banner && context.isRoot ? 'banner-fluid' : 'banner-container',
+      !preview && element.banner && context.isRoot && context.index === 0 && !showTopBreadcrumbs && 'mt-n4',
       !preview && element.banner && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
@@ -84,6 +84,8 @@ const imgEl = useTemplateRef('img')
 const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
+// If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
+const { showTopBreadcrumbs } = useNavigationStore()
 
 const display = useDisplay()
 
@@ -114,9 +116,6 @@ const imgStyle = computed(() => {
     : (element.height ? `height:${element.height}px;` : '')
   return `${fit}${dims}`
 })
-
-// If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
-const { showBreadcrumbs } = useNavigationStore()
 
 </script>
 

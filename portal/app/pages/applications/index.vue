@@ -1,16 +1,18 @@
 <template>
-  <!-- Error state -->
-  <page-error
-    v-if="pageConfigFetch.error.value"
-    :status-code="pageConfigFetch.error.value.statusCode || 500"
-  />
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
+    <!-- Error state -->
+    <page-error
+      v-if="pageConfigFetch.error.value"
+      :status-code="pageConfigFetch.error.value.statusCode || 500"
+    />
 
-  <page-elements
-    v-else-if="pageConfigFetch.data.value"
-    :model-value="pageConfigFetch.data.value.elements"
-  />
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
 
-  <div data-iframe-height="40" />
+    <div data-iframe-height="40" />
+  </layout-page>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +24,7 @@ const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('applications')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/applications/applications', { watch: false })
+provide('page-config', pageConfigFetch)
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([{ type: 'standard', subtype: 'applications', title: pageConfig?.title }])

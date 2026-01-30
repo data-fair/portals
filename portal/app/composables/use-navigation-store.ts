@@ -53,6 +53,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     if (pos === 'both') return true
     return place === 'top' ? pos === 'below-nav' : pos === 'above-footer'
   }
+  const showTopBreadcrumbs = computed(() => showBreadcrumbs('top'))
+  const showBottomBreadcrumbs = computed(() => showBreadcrumbs('bottom'))
 
   /** Check if a menu item (or any of its children) matches the current route */
   const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
@@ -145,7 +147,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     resolveLinkTitle,
     drawer,
     personalDrawer,
-    showBreadcrumbs,
+    showTopBreadcrumbs,
+    showBottomBreadcrumbs,
     setShowBreadcrumbs,
     isIframe
   }

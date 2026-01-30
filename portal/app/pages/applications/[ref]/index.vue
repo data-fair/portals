@@ -1,113 +1,115 @@
 <template>
-  <!-- Error state -->
-  <page-error
-    v-if="applicationFetch.error.value"
-    :status-code="applicationFetch.error.value.statusCode || 500"
-    :title="errorTitle"
-    :link="applicationsCatalogExists ? {
-      type: 'standard',
-      subtype: 'applications',
-      title: t('backToApplications')
-    } : undefined"
-  />
-
-  <template v-else-if="application">
-    <page-element-title
-      :element="{
-        type: 'title',
-        content: application.title,
-        titleSize: 'h4',
-        line: portalConfig.applications.page.titleStyle
-      }"
-      class="mt-0"
+  <layout-page>
+    <!-- Error state -->
+    <page-error
+      v-if="applicationFetch.error.value"
+      :status-code="applicationFetch.error.value.statusCode || 500"
+      :title="errorTitle"
+      :link="applicationsCatalogExists ? {
+        type: 'standard',
+        subtype: 'applications',
+        title: t('backToApplications')
+      } : undefined"
     />
 
-    <v-row>
-      <!-- Application image and description -->
-      <v-col
-        :md="portalConfig.applications.page.metadata?.location === 'right' ? 8 : 12"
-        cols="12"
-      >
-        <img
-          v-if="portalConfig.applications.page.showImage && application.image"
-          :alt="application.title"
-          :src="application.image"
-          class="mb-4"
-          style="max-height:300px"
-        >
-        <div
-          class="text-break"
-          v-html="/*eslint-disable-line vue/no-v-html*/application.description"
-        />
-      </v-col>
-
-      <!-- Metadata -->
-      <v-col
-        :md="portalConfig.applications.page.metadata?.location === 'right' ? 4 : 12"
-        :order-md="portalConfig.applications.page.metadata?.location === 'top' ? 'first' : 1"
-        cols="12"
-      >
-        <application-metadata :application="application" />
-      </v-col>
-    </v-row>
-
-    <!-- Application iframe -->
-    <d-frame-wrapper
-      :iframe-title="`${t('application')} - ${application.title}`"
-      :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
-      class="mt-2"
-      aspect-ratio
-      sync-params
-    />
-
-    <!-- Datasets section -->
-    <template
-      v-if="portalConfig.applications.page.datasets?.display && portalConfig.applications.page.datasets?.display !== 'none' && datasets.length"
-    >
+    <template v-else-if="application">
       <page-element-title
         :element="{
           type: 'title',
-          content: t('datasetsUsed', { count: datasets.length }),
-          titleSize: 'h5',
+          content: application.title,
+          titleSize: 'h4',
           line: portalConfig.applications.page.titleStyle
         }"
+        class="mt-0"
       />
 
-      <v-row class="d-flex align-stretch">
+      <v-row>
+        <!-- Application image and description -->
         <v-col
-          v-for="(dataset, i) in datasetsFetch.data.value?.results"
-          :key="i"
-          :md="12 / (portalConfig.applications.page.datasets.columns || 3)"
+          :md="portalConfig.applications.page.metadata?.location === 'right' ? 8 : 12"
           cols="12"
         >
-          <dataset-card
-            :dataset="dataset"
-            :card-config="datasetsCardConfig"
-            is-portal-config
+          <img
+            v-if="portalConfig.applications.page.showImage && application.image"
+            :alt="application.title"
+            :src="application.image"
+            class="mb-4"
+            style="max-height:300px"
+          >
+          <div
+            class="text-break"
+            v-html="/*eslint-disable-line vue/no-v-html*/application.description"
           />
         </v-col>
+
+        <!-- Metadata -->
+        <v-col
+          :md="portalConfig.applications.page.metadata?.location === 'right' ? 4 : 12"
+          :order-md="portalConfig.applications.page.metadata?.location === 'top' ? 'first' : 1"
+          cols="12"
+        >
+          <application-metadata :application="application" />
+        </v-col>
+      </v-row>
+
+      <!-- Application iframe -->
+      <d-frame-wrapper
+        :iframe-title="`${t('application')} - ${application.title}`"
+        :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+        class="mt-2"
+        aspect-ratio
+        sync-params
+      />
+
+      <!-- Datasets section -->
+      <template
+        v-if="portalConfig.applications.page.datasets?.display && portalConfig.applications.page.datasets?.display !== 'none' && datasets.length"
+      >
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('datasetsUsed', { count: datasets.length }),
+            titleSize: 'h5',
+            line: portalConfig.applications.page.titleStyle
+          }"
+        />
+
+        <v-row class="d-flex align-stretch">
+          <v-col
+            v-for="(dataset, i) in datasetsFetch.data.value?.results"
+            :key="i"
+            :md="12 / (portalConfig.applications.page.datasets.columns || 3)"
+            cols="12"
+          >
+            <dataset-card
+              :dataset="dataset"
+              :card-config="datasetsCardConfig"
+              is-portal-config
+            />
+          </v-col>
+        </v-row>
+      </template>
+
+      <!-- Back to applications link -->
+      <v-row
+        v-if="applicationsCatalogExists"
+        class="my-4"
+        justify="center"
+      >
+        <nav-link
+          :link="{
+            type: 'standard',
+            subtype: 'applications',
+            title: t('backToApplications'),
+            icon: { custom: mdiChevronLeft }
+          }"
+          :config="portalConfig.navLinksConfig"
+        />
       </v-row>
     </template>
 
-    <!-- Back to applications link -->
-    <v-row
-      v-if="applicationsCatalogExists"
-      class="my-4"
-      justify="center"
-    >
-      <nav-link
-        :link="{
-          type: 'standard',
-          subtype: 'applications',
-          title: t('backToApplications'),
-          icon: { custom: mdiChevronLeft }
-        }"
-        :config="portalConfig.navLinksConfig"
-      />
-    </v-row>
-  </template>
-
-  <div data-iframe-height="40" />
+    <div data-iframe-height="40" />
+  </layout-page>
 </template>
 
 <script setup lang="ts">

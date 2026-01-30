@@ -48,6 +48,7 @@ const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {
   if (pageFetch.data.value) editConfig.value = pageFetch.data.value.draftConfig
 }, { immediate: true })
+provide('page-config', editConfig)
 
 const changesStack = useChangesStack(editConfig)
 const formValid = ref(false)

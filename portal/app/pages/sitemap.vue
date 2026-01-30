@@ -1,74 +1,76 @@
 <template>
-  <v-container>
-    <h1 class="text-h3 text-primary mb-6">
-      {{ t('sitemap') }}
-    </h1>
+  <layout-page>
+    <v-container>
+      <h1 class="text-h3 text-primary mb-6">
+        {{ t('sitemap') }}
+      </h1>
 
-    <ul style="list-style: none;">
-      <!-- Home always first -->
-      <li
-        v-if="!allInternalPaths.has('/')"
-        class="mb-2"
-      >
-        <NuxtLink to="/">{{ t('home') }}</NuxtLink>
-      </li>
+      <ul style="list-style: none;">
+        <!-- Home always first -->
+        <li
+          v-if="!allInternalPaths.has('/')"
+          class="mb-2"
+        >
+          <NuxtLink to="/">{{ t('home') }}</NuxtLink>
+        </li>
 
-      <!-- Navigation menu items -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalNavigationItems"
-        :key="`nav-${i}`"
-        :item="item"
-      />
+        <!-- Navigation menu items -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalNavigationItems"
+          :key="`nav-${i}`"
+          :item="item"
+        />
 
-      <!-- Footer links -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalFooterLinks"
-        :key="`footer-${i}`"
-        :item="item"
-      />
+        <!-- Footer links -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalFooterLinks"
+          :key="`footer-${i}`"
+          :item="item"
+        />
 
-      <!-- Footer important links -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalFooterImportantLinks"
-        :key="`footer-important-${i}`"
-        :item="item"
-      />
+        <!-- Footer important links -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalFooterImportantLinks"
+          :key="`footer-important-${i}`"
+          :item="item"
+        />
 
-      <!-- Login page (only if not authenticated) -->
-      <li v-if="!session.user.value">
-        <a :href="session.loginUrl()">{{ t('login') }}</a>
-      </li>
+        <!-- Login page (only if not authenticated) -->
+        <li v-if="!session.user.value">
+          <a :href="session.loginUrl()">{{ t('login') }}</a>
+        </li>
 
-      <!-- Standard pages at the end -->
-      <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
-        <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
-        <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')">
-        <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
-        <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
-        <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
-        <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
-        <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
-        <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
-      </li>
-      <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
-        <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
-      </li>
-    </ul>
-  </v-container>
+        <!-- Standard pages at the end -->
+        <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
+          <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
+          <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')">
+          <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
+          <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
+          <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
+          <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
+          <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
+          <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
+          <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
+        </li>
+      </ul>
+    </v-container>
+  </layout-page>
 </template>
 
 <script setup lang="ts">

@@ -1,22 +1,24 @@
 <template>
-  <!-- Error state -->
-  <page-error
-    v-if="reuseFetch.error.value"
-    :status-code="reuseFetch.error.value.statusCode || 500"
-    :title="errorTitle"
-    :link="reusesCatalogExists ? {
-      type: 'standard',
-      subtype: 'reuses',
-      title: t('backToReuses')
-    } : undefined"
-  />
+  <layout-page>
+    <!-- Error state -->
+    <page-error
+      v-if="reuseFetch.error.value"
+      :status-code="reuseFetch.error.value.statusCode || 500"
+      :title="errorTitle"
+      :link="reusesCatalogExists ? {
+        type: 'standard',
+        subtype: 'reuses',
+        title: t('backToReuses')
+      } : undefined"
+    />
 
-  <reuse-preview
-    v-else-if="reuseConfig"
-    :reuse-config="reuseConfig"
-    :slug="slug"
-    :reuses-catalog-exists="reusesCatalogExists"
-  />
+    <reuse-preview
+      v-else-if="reuseConfig"
+      :reuse-config="reuseConfig"
+      :slug="slug"
+      :reuses-catalog-exists="reusesCatalogExists"
+    />
+  </layout-page>
 </template>
 
 <script setup lang="ts">

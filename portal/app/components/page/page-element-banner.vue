@@ -4,7 +4,7 @@
     :class="[
       !preview && element.fullWidth && context.isRoot ? 'banner-fluid' : 'banner-container',
       element.background?.color && 'bg-' + element.background.color,
-      !preview && context.isRoot && context.index === 0 && !showBreadcrumbs('top') && 'mt-n4',
+      !preview && context.isRoot && context.index === 0 && !showTopBreadcrumbs && 'mt-n4',
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
       element.mb !== 0 && `mb-${element.mb ?? 4}`,
       !preview && element.overflowTop && `mt-n${element.pt ?? 4}`,
@@ -19,7 +19,7 @@
       backgroundPosition: 'center',
     } : undefined"
   >
-    <v-container :class="['container', 'pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4), 'pl-' + (element.pl ?? 4), 'pr-' + (element.pr ?? 4)]">
+    <v-container :class="[{ 'container': !pageConfig?.fluid }, 'pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4), 'pl-' + (element.pl ?? 4), 'pr-' + (element.pr ?? 4)]">
       <slot
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, BannerElement } from '#api/types/page-config'
+import type { PageElement, BannerElement, PageConfig } from '#api/types/page-config'
 
 const { element } = defineProps<{
   element: BannerElement
@@ -44,6 +44,9 @@ const { element } = defineProps<{
 
 const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
+// If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
+const { showTopBreadcrumbs } = useNavigationStore()
+const pageConfig = inject<Ref<PageConfig>>('page-config')
 
 // Calculate scrollbar width to adjust full width banners
 // By default 100vw includes scrollbar width
@@ -51,9 +54,6 @@ if (typeof window !== 'undefined') {
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
   document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`)
 }
-
-// If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
-const { showBreadcrumbs } = useNavigationStore()
 
 </script>
 

@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-
 definePageMeta({ layout: 'full' })
 
 const { t } = useI18n()

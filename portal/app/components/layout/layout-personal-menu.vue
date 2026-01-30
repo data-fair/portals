@@ -23,6 +23,23 @@
   </template>
 
   <ClientOnly v-else>
+    <template #fallback>
+      <v-btn
+        :title="t('openPersonalMenu')"
+        :class="backgroundColor"
+        stacked
+      >
+        <v-avatar
+          :size="40"
+          color="surface"
+          aria-hidden="true"
+        />
+        <template v-if="(showHeader && !$vuetify.display.smAndDown)">
+          <p class="ml-2">{{ session.user.value.name }}</p>
+        </template>
+      </v-btn>
+    </template>
+
     <v-menu :close-on-content-click="false">
       <template #activator="{ props }">
         <v-btn

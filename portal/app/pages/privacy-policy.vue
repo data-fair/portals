@@ -1,16 +1,18 @@
 <template>
-  <tracking-consent v-if="cookiePolicyCheck.error.value" />
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
+    <tracking-consent v-if="cookiePolicyCheck.error.value" />
 
-  <!-- Error state -->
-  <page-error
-    v-if="pageConfigFetch.error.value"
-    :status-code="pageConfigFetch.error.value.statusCode || 500"
-  />
+    <!-- Error state -->
+    <page-error
+      v-if="pageConfigFetch.error.value"
+      :status-code="pageConfigFetch.error.value.statusCode || 500"
+    />
 
-  <page-elements
-    v-else-if="pageConfigFetch.data.value"
-    :model-value="pageConfigFetch.data.value.elements"
-  />
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
+  </layout-page>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +24,8 @@ const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('privacy-policy')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
+provide('page-config', pageConfigFetch.data)
+
 const cookiePolicyCheck = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {

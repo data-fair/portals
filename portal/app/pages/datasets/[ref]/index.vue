@@ -1,268 +1,193 @@
 <template>
-  <!-- Error state -->
-  <page-error
-    v-if="datasetFetch.error.value"
-    :status-code="datasetFetch.error.value.statusCode || 500"
-    :title="errorTitle"
-    :link="datasetsCatalogExists ? {
-      type: 'standard',
-      subtype: 'datasets',
-      title: t('backToDatasets')
-    } : undefined"
-  />
-
-  <template v-else-if="dataset">
-    <page-element-title
-      :element="{
-        type: 'title',
-        content: dataset.title,
-        titleSize: 'h4',
-        line: portalConfig.datasets.page.titleStyle
-      }"
-      class="mt-0"
+  <layout-page>
+    <!-- Error state -->
+    <page-error
+      v-if="datasetFetch.error.value"
+      :status-code="datasetFetch.error.value.statusCode || 500"
+      :title="errorTitle"
+      :link="datasetsCatalogExists ? {
+        type: 'standard',
+        subtype: 'datasets',
+        title: t('backToDatasets')
+      } : undefined"
     />
 
-    <v-row>
-      <!-- Dataset image and description -->
-      <v-col
-        :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
-        cols="12"
-      >
-        <img
-          v-if="portalConfig.datasets.page.showImage && dataset.image"
-          :alt="dataset.title"
-          :src="dataset.image"
-          class="mb-4"
-          style="max-height:300px"
-        >
-        <div
-          class="text-break"
-          v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
-        />
-      </v-col>
-
-      <!-- Metadata -->
-      <v-col
-        :md="portalConfig.datasets.page.metadata?.location === 'right' ? 4 : 12"
-        :order-md="portalConfig.datasets.page.metadata?.location === 'top' ? 'first' : 1"
-        cols="12"
-      >
-        <dataset-metadata :dataset="dataset" />
-      </v-col>
-    </v-row>
-
-    <!-- Attachments section -->
-    <template v-if="portalConfig.datasets.page.showAttachments && urlAttachments.length">
-      <v-row
-        v-for="attachment in urlAttachments"
-        :key="attachment.url"
-        align="center"
-        class="mb-4"
-      >
-        <v-col cols="12">
-          <NuxtLink
-            class="simple-link"
-            :to="attachment.url"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ attachment.title || attachment.name }}
-            <v-icon
-              :icon="mdiOpenInNew"
-              color="primary"
-            />
-          </NuxtLink>
-          <d-frame-wrapper
-            :iframe-title="attachment.title || attachment.name"
-            :src="attachment.url"
-            aspect-ratio
-            class="mt-2"
-          />
-        </v-col>
-      </v-row>
-    </template>
-
-    <!-- Data section with tabs -->
-    <template v-if="portalConfig.datasets.page.showData && !dataset.isMetaOnly">
-        <page-element-title
-          :element="{
-            type: 'title',
-            content: t('sections.data'),
-            titleSize: 'h5',
-            line: portalConfig.datasets.page.titleStyle
-          }"
-        />
-
-        <v-tabs
-          v-model="dataTab"
-          class="mb-4"
-        >
-          <v-tab value="table">
-            {{ t('sections.table') }}
-          </v-tab>
-          <v-tab
-            v-if="dataset.bbox?.length"
-            value="map"
-          >
-            {{ t('sections.map') }}
-          </v-tab>
-          <v-tab value="schema">
-            {{ t('sections.schema') }}
-          </v-tab>
-        </v-tabs>
-
-        <v-tabs-window
-          v-model="dataTab"
-          class="mb-8"
-        >
-          <v-tabs-window-item value="table">
-            <d-frame-wrapper
-              :iframe-title="`${t('sections.table')} - ${dataset.title}`"
-              :src="`/data-fair/embed/dataset/${dataset.id}/table`"
-              scrolling="no"
-              resize="no"
-              aspect-ratio
-              sync-params
-            />
-          </v-tabs-window-item>
-
-          <v-tabs-window-item
-            v-if="dataset.bbox?.length"
-            value="map"
-          >
-            <d-frame-wrapper
-              :iframe-title="`${t('sections.map')} - ${dataset.title}`"
-              :src="`/data-fair/embed/dataset/${dataset.id}/map`"
-              scrolling="no"
-              resize="no"
-              aspect-ratio
-            />
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="schema">
-            <d-frame-wrapper
-              :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
-              :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
-              resize="no"
-              aspect-ratio
-            />
-          </v-tabs-window-item>
-        </v-tabs-window>
-    </template>
-
-    <!-- Applications section -->
-    <template v-if="portalConfig.datasets.page.applications?.display && portalConfig.datasets.page.applications?.display !== 'none' && orderedApplications.length">
+    <template v-else-if="dataset">
       <page-element-title
         :element="{
           type: 'title',
-          content: t('sections.application', { count: orderedApplications.length }),
-          titleSize: 'h5',
+          content: dataset.title,
+          titleSize: 'h4',
           line: portalConfig.datasets.page.titleStyle
         }"
+        class="mt-0"
       />
 
-      <!-- Card display mode -->
-      <v-row
-        v-if="portalConfig.datasets.page.applications?.display === 'card'"
-        class="d-flex align-stretch"
-      >
+      <v-row>
+        <!-- Dataset image and description -->
         <v-col
-          v-for="app in orderedApplications"
-          :key="app.id"
-          :md="12 / (portalConfig.datasets.page.applications.columns || 2)"
+          :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
           cols="12"
         >
-          <application-card
-            :application="app"
-            :card-config="applicationCardConfig"
+          <img
+            v-if="portalConfig.datasets.page.showImage && dataset.image"
+            :alt="dataset.title"
+            :src="dataset.image"
+            class="mb-4"
+            style="max-height:300px"
+          >
+          <div
+            class="text-break"
+            v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
           />
+        </v-col>
+
+        <!-- Metadata -->
+        <v-col
+          :md="portalConfig.datasets.page.metadata?.location === 'right' ? 4 : 12"
+          :order-md="portalConfig.datasets.page.metadata?.location === 'top' ? 'first' : 1"
+          cols="12"
+        >
+          <dataset-metadata :dataset="dataset" />
         </v-col>
       </v-row>
 
-      <!-- Full list display mode -->
-      <template v-else-if="portalConfig.datasets.page.applications?.display === 'full-list'">
+      <!-- Attachments section -->
+      <template v-if="portalConfig.datasets.page.showAttachments && urlAttachments.length">
         <v-row
-          v-for="app in orderedApplications"
-          :key="app.id"
+          v-for="attachment in urlAttachments"
+          :key="attachment.url"
           align="center"
+          class="mb-4"
         >
           <v-col cols="12">
             <NuxtLink
               class="simple-link"
-              :to="`/applications/${app.slug}`"
+              :to="attachment.url"
+              target="_blank"
+              rel="noopener"
             >
-              {{ app.title }}
+              {{ attachment.title || attachment.name }}
               <v-icon
                 :icon="mdiOpenInNew"
                 color="primary"
               />
             </NuxtLink>
-          </v-col>
-          <v-col cols="12">
             <d-frame-wrapper
-              :iframe-title="`${t('application')} - ${app.title}`"
-              :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
-              resize="no"
+              :iframe-title="attachment.title || attachment.name"
+              :src="attachment.url"
               aspect-ratio
+              class="mt-2"
             />
           </v-col>
         </v-row>
       </template>
 
-      <!-- Side by side display mode (default) -->
-      <template v-else>
-        <v-row
-          v-for="(app, index) in orderedApplications"
-          :key="app.id"
-          align="center"
-          class="mb-4"
-        >
-          <!-- Large display: title, description and visualization full width -->
-          <template v-if="app.preferLargeDisplay">
-            <v-col cols="12">
-              <NuxtLink
-                class="simple-link"
-                :to="`/applications/${app.slug}`"
-              >
-                {{ app.title }}
-                <v-icon
-                  :icon="mdiOpenInNew"
-                  color="primary"
-                />
-              </NuxtLink>
-              <div
-                class="mt-2"
-                v-html="/*eslint-disable-line vue/no-v-html*/app.description"
-              />
-            </v-col>
-            <v-col cols="12">
-              <d-frame-wrapper
-                :iframe-title="`${t('application')} - ${app.title}`"
-                :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
-                resize="no"
-                aspect-ratio
-              />
-            </v-col>
-          </template>
+      <!-- Data section with tabs -->
+      <template v-if="portalConfig.datasets.page.showData && !dataset.isMetaOnly">
+          <page-element-title
+            :element="{
+              type: 'title',
+              content: t('sections.data'),
+              titleSize: 'h5',
+              line: portalConfig.datasets.page.titleStyle
+            }"
+          />
 
-          <!-- Side by side: alternate left/right -->
-          <template v-else>
-            <v-col
-              :md="6"
-              cols="12"
-              :order-md="index % 2 === 0 ? 'first' : 1"
+          <v-tabs
+            v-model="dataTab"
+            class="mb-4"
+          >
+            <v-tab value="table">
+              {{ t('sections.table') }}
+            </v-tab>
+            <v-tab
+              v-if="dataset.bbox?.length"
+              value="map"
+            >
+              {{ t('sections.map') }}
+            </v-tab>
+            <v-tab value="schema">
+              {{ t('sections.schema') }}
+            </v-tab>
+          </v-tabs>
+
+          <v-tabs-window
+            v-model="dataTab"
+            class="mb-8"
+          >
+            <v-tabs-window-item value="table">
+              <d-frame-wrapper
+                :iframe-title="`${t('sections.table')} - ${dataset.title}`"
+                :src="`/data-fair/embed/dataset/${dataset.id}/table`"
+                scrolling="no"
+                resize="no"
+                aspect-ratio
+                sync-params
+              />
+            </v-tabs-window-item>
+
+            <v-tabs-window-item
+              v-if="dataset.bbox?.length"
+              value="map"
             >
               <d-frame-wrapper
-                :iframe-title="`${t('application')} - ${app.title}`"
-                :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+                :iframe-title="`${t('sections.map')} - ${dataset.title}`"
+                :src="`/data-fair/embed/dataset/${dataset.id}/map`"
+                scrolling="no"
                 resize="no"
                 aspect-ratio
               />
-            </v-col>
-            <v-col
-              :md="6"
-              cols="12"
-            >
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="schema">
+              <d-frame-wrapper
+                :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
+                :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
+                resize="no"
+                aspect-ratio
+              />
+            </v-tabs-window-item>
+          </v-tabs-window>
+      </template>
+
+      <!-- Applications section -->
+      <template v-if="portalConfig.datasets.page.applications?.display && portalConfig.datasets.page.applications?.display !== 'none' && orderedApplications.length">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.application', { count: orderedApplications.length }),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+
+        <!-- Card display mode -->
+        <v-row
+          v-if="portalConfig.datasets.page.applications?.display === 'card'"
+          class="d-flex align-stretch"
+        >
+          <v-col
+            v-for="app in orderedApplications"
+            :key="app.id"
+            :md="12 / (portalConfig.datasets.page.applications.columns || 2)"
+            cols="12"
+          >
+            <application-card
+              :application="app"
+              :card-config="applicationCardConfig"
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Full list display mode -->
+        <template v-else-if="portalConfig.datasets.page.applications?.display === 'full-list'">
+          <v-row
+            v-for="app in orderedApplications"
+            :key="app.id"
+            align="center"
+          >
+            <v-col cols="12">
               <NuxtLink
                 class="simple-link"
                 :to="`/applications/${app.slug}`"
@@ -273,91 +198,168 @@
                   color="primary"
                 />
               </NuxtLink>
-              <div
-                class="mt-2 text-break"
-                v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+            </v-col>
+            <v-col cols="12">
+              <d-frame-wrapper
+                :iframe-title="`${t('application')} - ${app.title}`"
+                :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+                resize="no"
+                aspect-ratio
               />
             </v-col>
-          </template>
+          </v-row>
+        </template>
+
+        <!-- Side by side display mode (default) -->
+        <template v-else>
+          <v-row
+            v-for="(app, index) in orderedApplications"
+            :key="app.id"
+            align="center"
+            class="mb-4"
+          >
+            <!-- Large display: title, description and visualization full width -->
+            <template v-if="app.preferLargeDisplay">
+              <v-col cols="12">
+                <NuxtLink
+                  class="simple-link"
+                  :to="`/applications/${app.slug}`"
+                >
+                  {{ app.title }}
+                  <v-icon
+                    :icon="mdiOpenInNew"
+                    color="primary"
+                  />
+                </NuxtLink>
+                <div
+                  class="mt-2"
+                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                />
+              </v-col>
+              <v-col cols="12">
+                <d-frame-wrapper
+                  :iframe-title="`${t('application')} - ${app.title}`"
+                  :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+                  resize="no"
+                  aspect-ratio
+                />
+              </v-col>
+            </template>
+
+            <!-- Side by side: alternate left/right -->
+            <template v-else>
+              <v-col
+                :md="6"
+                cols="12"
+                :order-md="index % 2 === 0 ? 'first' : 1"
+              >
+                <d-frame-wrapper
+                  :iframe-title="`${t('application')} - ${app.title}`"
+                  :src="app.exposedUrl + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+                  resize="no"
+                  aspect-ratio
+                />
+              </v-col>
+              <v-col
+                :md="6"
+                cols="12"
+              >
+                <NuxtLink
+                  class="simple-link"
+                  :to="`/applications/${app.slug}`"
+                >
+                  {{ app.title }}
+                  <v-icon
+                    :icon="mdiOpenInNew"
+                    color="primary"
+                  />
+                </NuxtLink>
+                <div
+                  class="mt-2 text-break"
+                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                />
+              </v-col>
+            </template>
+          </v-row>
+        </template>
+      </template>
+
+      <!-- Reuses section -->
+      <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && reuses.length">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.reuse', { count: reuses.length }),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+
+        <v-row class="d-flex align-stretch">
+          <v-col
+            v-for="reuse in reuses"
+            :key="reuse._id"
+            :md="12 / (portalConfig.datasets.page.reuses.columns || 3)"
+            cols="12"
+          >
+            <reuse-card
+              :reuse="reuse"
+              :card-config="reusesCardConfig"
+              is-portal-config
+            />
+          </v-col>
         </v-row>
       </template>
-    </template>
 
-    <!-- Reuses section -->
-    <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && reuses.length">
-      <page-element-title
-        :element="{
-          type: 'title',
-          content: t('sections.reuse', { count: reuses.length }),
-          titleSize: 'h5',
-          line: portalConfig.datasets.page.titleStyle
-        }"
-      />
+      <!-- Related datasets section -->
+      <template
+        v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
+      >
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.relatedDatasets', { count: relatedDatasets.length }),
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
 
-      <v-row class="d-flex align-stretch">
-        <v-col
-          v-for="reuse in reuses"
-          :key="reuse._id"
-          :md="12 / (portalConfig.datasets.page.reuses.columns || 3)"
-          cols="12"
-        >
-          <reuse-card
-            :reuse="reuse"
-            :card-config="reusesCardConfig"
-            is-portal-config
-          />
-        </v-col>
+        <v-row class="d-flex align-stretch">
+          <v-col
+            v-for="(relatedDataset, i) in relatedDatasetsFetch.data.value?.results"
+            :key="i"
+            :md="12 / (portalConfig.datasets.page.relatedDatasets.columns || 3)"
+            cols="12"
+          >
+            <dataset-card
+              :dataset="relatedDataset"
+              :card-config="relatedDatasetsCardConfig"
+              is-portal-config
+            />
+          </v-col>
+        </v-row>
+      </template>
+
+      <!-- Back to datasets link -->
+      <v-row
+        v-if="datasetsCatalogExists"
+        class="my-4"
+        justify="center"
+      >
+        <nav-link
+          :link="{
+            type: 'standard',
+            subtype: 'datasets',
+            title: t('backToDatasets'),
+            icon: { custom: mdiChevronLeft }
+          }"
+          :config="portalConfig.navLinksConfig"
+        />
       </v-row>
     </template>
 
-    <!-- Related datasets section -->
-    <template
-      v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
-    >
-      <page-element-title
-        :element="{
-          type: 'title',
-          content: t('sections.relatedDatasets', { count: relatedDatasets.length }),
-          titleSize: 'h5',
-          line: portalConfig.datasets.page.titleStyle
-        }"
-      />
-
-      <v-row class="d-flex align-stretch">
-        <v-col
-          v-for="(relatedDataset, i) in relatedDatasetsFetch.data.value?.results"
-          :key="i"
-          :md="12 / (portalConfig.datasets.page.relatedDatasets.columns || 3)"
-          cols="12"
-        >
-          <dataset-card
-            :dataset="relatedDataset"
-            :card-config="relatedDatasetsCardConfig"
-            is-portal-config
-          />
-        </v-col>
-      </v-row>
-    </template>
-
-    <!-- Back to datasets link -->
-    <v-row
-      v-if="datasetsCatalogExists"
-      class="my-4"
-      justify="center"
-    >
-      <nav-link
-        :link="{
-          type: 'standard',
-          subtype: 'datasets',
-          title: t('backToDatasets'),
-          icon: { custom: mdiChevronLeft }
-        }"
-        :config="portalConfig.navLinksConfig"
-      />
-    </v-row>
-  </template>
-
-  <div data-iframe-height="40"/>
+    <div data-iframe-height="40"/>
+  </layout-page>
 </template>
 
 <script setup lang="ts">

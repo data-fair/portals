@@ -1,16 +1,18 @@
 <template>
-  <tracking-consent v-if="!privacyPolicyExist && !cookiePolicyExist" />
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
+    <tracking-consent v-if="!privacyPolicyExist && !cookiePolicyExist" />
 
-  <!-- Error state -->
-  <page-error
-    v-if="pageConfigFetch.error.value"
-    :status-code="pageConfigFetch.error.value.statusCode || 500"
-  />
+    <!-- Error state -->
+    <page-error
+      v-if="pageConfigFetch.error.value"
+      :status-code="pageConfigFetch.error.value.statusCode || 500"
+    />
 
-  <page-elements
-    v-else-if="pageConfigFetch.data.value"
-    :model-value="pageConfigFetch.data.value.elements"
-  />
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
+  </layout-page>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +24,8 @@ const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 providePageImageSrc('legal-notice')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
+provide('page-config', pageConfigFetch.data)
+
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const privacyPolicyExist = computed(() => standardPagesFetch.data.value?.['privacy-policy'])
 const cookiePolicyExist = computed(() => standardPagesFetch.data.value?.['cookie-policy'])

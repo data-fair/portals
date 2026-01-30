@@ -5,7 +5,7 @@
   -->
   <v-container
     :fluid="navBarConfig.fluid !== false"
-    :class="[{ 'container': navBarConfig.fluid === false }, `bg-${navBarConfig.color}`]"
+    :class="[{ 'container px-4': navBarConfig.fluid === false }, `bg-${navBarConfig.color}`]"
     class="pa-0 h-100"
   >
     <v-row
