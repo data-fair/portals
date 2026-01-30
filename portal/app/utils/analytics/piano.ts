@@ -3,19 +3,19 @@
 
 import type { AnalyticsPlugin } from 'analytics'
 import debugModule from 'debug'
-import { pianoAnalytics } from 'piano-analytics-js'
+// @ts-expect-error - Force import of browser version instead of browserless
+import { pianoAnalytics } from 'piano-analytics-js/dist/browser/piano-analytics.esm.js'
 
 const debug = debugModule('piano')
 
-type PianoPluginConfig = { site?: number }
+type PianoPluginConfig = { site?: number, collectDomain?: string }
 
 export default function pianoPlugin (params: PianoPluginConfig): AnalyticsPlugin {
   const plugin: AnalyticsPlugin = {
     name: 'piano',
     initialize: ({ config }) => {
       if (!params.site) throw new Error('Analytics : Please provide site option to Piano module')
-      // TODO: collect domain is required ? auto-fill with window.location ?
-      // if (!params.collectDomain) throw new Error('Analytics : Please provide collectDomain option to Piano module')
+      if (!params.collectDomain) throw new Error('Analytics : Please provide collectDomain option to Piano module')
       pianoAnalytics.setConfigurations(params)
     },
     page: ({ payload }) => {

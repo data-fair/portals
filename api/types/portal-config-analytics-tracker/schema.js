@@ -93,6 +93,10 @@ export default {
             site: {
               type: 'number',
               title: 'Site'
+            },
+            collectDomain: {
+              type: 'string',
+              title: 'Collect Domain'
             }
           }
         },

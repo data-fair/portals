@@ -11,8 +11,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     const portal: RequestPortal = event.context.portal
     const cspPatch: Record<string, string[]> = {}
 
-    // add analytics target domains in connect-src
-
+    // Add analytics target domains in connect-src
     if (portal.config.analytics?.tracker?.type === 'matomo') {
       const trackerBase = portal.config.analytics?.tracker?.params.trackerBase
       if (trackerBase) {
@@ -26,6 +25,10 @@ export default defineNitroPlugin(async (nitroApp) => {
     if (portal.config.analytics?.tracker?.type === 'google-analytics-v4') {
       // cf https://content-security-policy.com/examples/google-analytics/
       cspPatch['connect-src'] = [...existingCsp['connect-src'], 'www.google-analytics.com']
+    }
+    if (portal.config.analytics?.tracker?.type === 'piano') {
+      const collectDomain = portal.config.analytics?.tracker?.params.collectDomain
+      cspPatch['connect-src'] = [...existingCsp['connect-src'], collectDomain]
     }
 
     // allow frame-ancestors on restricted domains
