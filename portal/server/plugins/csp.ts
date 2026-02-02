@@ -7,7 +7,7 @@ export default defineNitroPlugin(async (nitroApp) => {
   const config = useRuntimeConfig()
   const globalFrameAncestors = config.frameAncestors.split(',').filter(Boolean)
   nitroApp.hooks.hook('render:html', (html, { event }) => {
-    const existingCsp = event.context.security.rules.headers.contentSecurityPolicy
+    const existingCsp: Record<string, string[]> = event.context.security.rules.headers.contentSecurityPolicy
     const portal: RequestPortal = event.context.portal
     const cspPatch: Record<string, string[]> = {}
 
@@ -28,7 +28,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     }
     if (portal.config.analytics?.tracker?.type === 'piano') {
       const collectDomain = portal.config.analytics?.tracker?.params.collectDomain
-      cspPatch['connect-src'] = [...existingCsp['connect-src'], collectDomain]
+      if (collectDomain) cspPatch['connect-src'] = [...existingCsp['connect-src'], collectDomain]
     }
 
     // allow frame-ancestors on restricted domains
