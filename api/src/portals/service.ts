@@ -333,7 +333,7 @@ export const duplicatePortalConfig = async (
   newPortalId: string,
   newOwner: Portal['owner']
 ): Promise<{ config: PortalConfig; eventDetails: string }> => {
-  const sourcePortal = await getPortalAsAdmin(sessionState, sourcePortalId)
+  const sourcePortal = await mongo.portals.findOne({ _id: sourcePortalId })
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
 
   if (!sourcePortal.isReference) assertAccountRole(sessionState, sourcePortal.owner, 'admin')
