@@ -33,7 +33,7 @@
           style="background-color: inherit;"
         >
           <!-- Description (wrapped after 2 lines)-->
-          <v-list-item>
+          <v-list-item v-if="portal.config.description">
             <v-list-item-title style="white-space: unset; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;line-clamp: 2;">
               {{ portal.config.description }}
             </v-list-item-title>

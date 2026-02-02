@@ -23,11 +23,12 @@
           density="compact"
           color="surface"
         >
-          <v-spacer />
-          <v-btn
-            :icon="mdiClose"
-            @click="isActive.value = false"
-          />
+          <template #append>
+            <v-btn
+              :icon="mdiClose"
+              @click="isActive.value = false"
+            />
+          </template>
         </v-toolbar>
         <slot />
       </v-card>
