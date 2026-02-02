@@ -6,7 +6,6 @@
         'container': !isFluid,
         'pt-0': showTopBreadcrumbs
       }"
-      fluid
     >
       <slot />
     </v-container>
