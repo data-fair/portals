@@ -1,6 +1,6 @@
+import type { FontAsset } from '#api/types/font-asset'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
-import type { FontAsset } from '~~/../api/types/font-asset'
 
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal

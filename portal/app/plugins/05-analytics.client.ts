@@ -33,7 +33,10 @@ export default defineNuxtPlugin(async () => {
 
     if (portal.config.analytics.tracker.type === 'piano') {
       const piano = (await import('../utils/analytics/piano')).default
-      plugins.push(piano({ ...portal.config.analytics.tracker.params }))
+      plugins.push(piano({
+        ...portal.config.analytics.tracker.params,
+        anonymized: portal.config.analytics.tracker.anonymized
+      }))
     }
 
     const a = await import('analytics')

@@ -1,7 +1,6 @@
 // dynamic CSP modifications based on portal config
 // similar to https://github.com/Baroshem/nuxt-security/blob/main/src/runtime/nitro/plugins/50-updateCsp.ts
-
-import type { RequestPortal } from '../middleware/1.get-portal'
+import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 
 export default defineNitroPlugin(async (nitroApp) => {
   const config = useRuntimeConfig()

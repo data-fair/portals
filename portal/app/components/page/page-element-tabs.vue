@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TabsElement, PageElement } from '~~/../api/types/page-config'
+import type { TabsElement, PageElement } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => TabsElement, required: true }

@@ -1,6 +1,6 @@
+import type { Portal } from '#api/types/portal'
 import { escapeRegExp } from '@data-fair/lib-utils/micro-template.js'
 import { portalMongo } from '~~/server/plugins/mongo'
-import type { Portal } from '~~/../api/types/portal'
 
 const config = useRuntimeConfig()
 

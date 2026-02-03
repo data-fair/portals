@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DividerElement } from '~~/../api/types/page-config'
+import type { DividerElement } from '#api/types/page-config'
 
 const { element } = defineProps({
   element: { type: Object as () => DividerElement, required: true }

@@ -1,5 +1,5 @@
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
-import type { Image } from '~~/../api/types/image'
+import type { Image } from '#api/types/image'
 import { portalMongo } from '~~/server/plugins/mongo'
 
 /**
