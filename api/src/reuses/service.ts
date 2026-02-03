@@ -231,7 +231,9 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
     requestedPortals: [...new Set([...validatedReuse.requestedPortals, portalId])]
   }, session, { skipOwnerRoleCheck: true, forceNewSlug: true })
 
-  sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalId}`)
+  const portalTitle = portal.title || portal.config?.title || portal._id
+  const portalUrlOrId = portal.ingress?.url || portal._id
+  sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalTitle} (${portalUrlOrId})`)
 
   return updatedReuse
 }
