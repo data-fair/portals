@@ -43,7 +43,7 @@ export const patchReuse = async (
   reuse: Reuse,
   patch: Partial<Reuse>,
   session: SessionStateAuthenticated,
-  options?: { skipOwnerRoleCheck?: boolean }
+  options?: { skipOwnerRoleCheck?: boolean; forceNewSlug?: boolean }
 ) => {
   // Render markdown description if provided in config
   if (patch.config?.description) patch.config._descriptionHtml = renderMarkdown(patch.config.description)
@@ -54,31 +54,25 @@ export const patchReuse = async (
   if (patch.owner) {
     if (!options?.skipOwnerRoleCheck) assertAccountRole(session, patch.owner, 'admin')
 
-    // Check slug uniqueness for new owner - try to keep current slug first
-    let uniqueSlug = reuse.slug
-    const existingWithCurrentSlug = await mongo.reuses.findOne({
+    // Generate new slug or check uniqueness for new owner
+    const ownerQuery = {
       'owner.type': patch.owner.type,
       'owner.id': patch.owner.id,
-      slug: uniqueSlug,
       _id: { $ne: reuse._id }
-    })
+    }
+    const isSlugTaken = !options?.forceNewSlug
+      ? await mongo.reuses.findOne({ ...ownerQuery, slug: reuse.slug })
+      : false
 
-    // If current slug is not available, generate a new one
-    if (existingWithCurrentSlug) {
+    if (options?.forceNewSlug || isSlugTaken) {
       const baseSlug = slug.default(reuse.config.title, { lower: true, strict: true })
-      uniqueSlug = baseSlug
+      let uniqueSlug = baseSlug
       let counter = 1
 
-      while (true) {
-        const existing = await mongo.reuses.findOne({
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id,
-          slug: uniqueSlug,
-          _id: { $ne: reuse._id }
-        })
-        if (!existing) break
+      while (await mongo.reuses.findOne({ ...ownerQuery, slug: uniqueSlug })) {
         uniqueSlug = `${baseSlug}-${counter++}`
       }
+
       patch.slug = uniqueSlug
     }
 
@@ -220,22 +214,22 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
   if (!portal.config.reuses?.allowUserReuses) throw httpError(403, 'Reuse submission is not allowed on this portal')
 
   // Validate draft before submitting
-  await validateReuseDraft(reuse, session)
+  const validatedReuse = await validateReuseDraft(reuse, session)
 
   // Create submitter object (previous owner + portalId)
   const submitter = {
-    type: reuse.owner.type,
-    id: reuse.owner.id,
-    name: reuse.owner.name,
+    type: validatedReuse.owner.type,
+    id: validatedReuse.owner.id,
+    name: validatedReuse.owner.name,
     portalId
   }
 
   // Update reuse with new owner, submitter, and add to requestedPortals
-  const updatedReuse = await patchReuse(reuse, {
+  const updatedReuse = await patchReuse(validatedReuse, {
     owner: portal.owner,
     submitter,
-    requestedPortals: [...new Set([...reuse.requestedPortals, portalId])]
-  }, session, { skipOwnerRoleCheck: true })
+    requestedPortals: [...new Set([...validatedReuse.requestedPortals, portalId])]
+  }, session, { skipOwnerRoleCheck: true, forceNewSlug: true })
 
   sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalId}`)
 

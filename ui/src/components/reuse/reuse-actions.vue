@@ -76,6 +76,25 @@
     </template>
   </v-menu>
 
+  <template v-if="reuse?.config.link">
+    <v-divider class="my-2" />
+
+    <!-- Link to reuse source -->
+    <v-list-item
+      rounded
+      :href="reuse?.config.link"
+      target="_blank"
+    >
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiOpenInNew"
+        />
+      </template>
+      {{ t('viewReuseLink') }}
+    </v-list-item>
+  </template>
+
   <v-divider class="my-2" />
 
   <!-- Change owner -->
@@ -195,7 +214,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiFileEdit, mdiDelete, mdiFileReplace, mdiFileCancel } from '@mdi/js'
+import { mdiAccount, mdiFileEdit, mdiDelete, mdiFileReplace, mdiFileCancel, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -284,6 +303,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
+    viewReuseLink: View reuse link
     yes: Yes
   fr:
     cancel: Annuler
@@ -306,6 +326,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
+    viewReuseLink: Voir le lien de la réutilisation
     yes: Oui
 
 </i18n>

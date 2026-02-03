@@ -5,6 +5,17 @@
       link
     >
       <v-card-item class="text-primary">
+        <template
+          v-if="hasPendingPublicationRequest"
+          #prepend
+        >
+          <v-icon
+            :icon="mdiAlertCircle"
+            color="warning"
+            class="ml-1"
+          />
+        </template>
+
         <template #title>
           <span class="font-weight-bold">
             {{ reuse.title }}
@@ -47,4 +58,10 @@ const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
 const { reuse } = defineProps<{ reuse: Reuse }>()
+
+const hasPendingPublicationRequest = computed(() => {
+  const requestedPortals = reuse.requestedPortals
+  return Array.isArray(requestedPortals) && requestedPortals.length > 0
+})
+
 </script>
