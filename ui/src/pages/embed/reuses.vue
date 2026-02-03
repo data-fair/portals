@@ -42,7 +42,8 @@
             :title="reuse.draftConfig?.title || t('untitled')"
             :subtitle="`${t('lastModified')} : ${dayjs(reuse.updatedAt).format('L')}`"
           >
-            <v-card-text v-if="editingReuseId === reuse._id">
+            <!-- v-show instead of v-if to preload the component and avoid lag when toggling -->
+            <v-card-text v-show="editingReuseId === reuse._id">
               <v-form v-model="formValid">
                 <v-defaults-provider :defaults="{ global: { hideDetails: 'auto' } }">
                   <vjsf-reuse-config
