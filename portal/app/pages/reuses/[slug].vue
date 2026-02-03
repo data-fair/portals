@@ -70,14 +70,8 @@ usePageSeo({
     reuse: Reuse
     reuseNotFound: The requested reuse was not found
     reuseError: An error occurred while loading the reuse
-    visitLink: View reuse
-    publishedBy: Published by {author}
-    datasetsUsed: Dataset used | Dataset used | Datasets used
   fr:
     reuse: Réutilisation
     reuseNotFound: La réutilisation demandée n'a pas été trouvée
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
-    visitLink: Voir la réutilisation
-    publishedBy: Publié par {author}
-    datasetsUsed: Jeu de données utilisé | Jeu de données utilisé | Jeux de données utilisés
 </i18n>

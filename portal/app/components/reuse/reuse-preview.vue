@@ -12,7 +12,7 @@
     />
     <v-spacer />
     <nav-link
-      v-if="reuseConfig.link"
+      v-if="!preview && reuseConfig.link"
       :link="{
         type: 'external',
         target: true,

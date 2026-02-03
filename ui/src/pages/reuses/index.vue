@@ -74,7 +74,7 @@ const reusesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
     sort: 'updatedAt:-1',
-    select: '_id,title,owner'
+    select: '_id,title,owner,requestedPortals'
   }
   if (showAll.value) params.showAll = 'true'
   return params
