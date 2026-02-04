@@ -12,8 +12,9 @@ export default defineNuxtPlugin(async () => {
   }
   const portal = nuxtApp.$portal
   const { requiresConsent, trackerType, cookieTrack } = useAnalyticsInfo(portal)
-  if (requiresConsent && cookieTrack.value !== 'yes') {
-    console.log('analytics tracking requires consent that was not yet granted')
+  // Explicit opt-out or missing consent
+  if (cookieTrack.value === 'no' || (requiresConsent && cookieTrack.value !== 'yes')) {
+    console.log('analytics tracking disabled (opt-out or missing consent)')
     return
   }
 
