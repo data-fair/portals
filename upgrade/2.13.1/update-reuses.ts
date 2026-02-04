@@ -4,9 +4,9 @@ import type { Reuse } from '../../api/types/reuse/index.ts'
 export default {
   description: 'Add draftConfig field to reuses',
   async exec (db, debug) {
-    const portals = db.collection<Reuse>('reuses')
+    const reuses = db.collection<Reuse>('reuses')
 
-    const result = await portals.updateMany(
+    const result = await reuses.updateMany(
       {
         config: { $exists: true },
         draftConfig: { $exists: false }
