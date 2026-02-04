@@ -54,6 +54,9 @@ const portalConfigDefault: PortalConfig = {
       type: 'text',
       text: '/'
     }
+  },
+  navLinksConfig: {
+    showIcon: true
   }
 }
 
