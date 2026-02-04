@@ -266,7 +266,14 @@ export default {
             color: {
               $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
               title: 'Line color',
-              'x-i18n-title': { fr: 'Couleur du trait' }
+              'x-i18n-title': { fr: 'Couleur du trait' },
+              layout: {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                props: { background: true }
+              }
             }
           }
         }
@@ -900,7 +907,16 @@ export default {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+              layout: {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                props: { background: true }
+              }
+            },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
