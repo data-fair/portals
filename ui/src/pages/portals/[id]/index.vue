@@ -85,10 +85,13 @@
             <v-theme-provider theme="preview-colors">
               <v-list-item v-bind="context.props">
                 <template #prepend>
-                  <v-icon
-                    :icon="mdiCircle"
-                    :style="{ color: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : '' }"
-                    :color="!context.node.props?.background ? context.item.raw.value : undefined"
+                  <v-sheet
+                    :style="{ backgroundColor: (context.node.props?.background || ['surface', 'surface-inverse', 'background'].includes(context.item.raw.value)) ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}))` }"
+                    :height="20"
+                    :width="20"
+                    class="mr-4"
+                    rounded="circle"
+                    border
                   />
                 </template>
               </v-list-item>
@@ -96,11 +99,14 @@
           </template>
           <template #color-select-selection="context">
             <v-theme-provider theme="preview-colors">
-              <span :class="'v-select__selection-text'">
-                <v-icon
-                  :icon="mdiCircle"
-                  :style="{ color: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}))` }"
-                  class="mr-2 mb-1"
+              <span class="v-select__selection-text d-inline-flex align-center">
+                <v-sheet
+                  :style="{ backgroundColor: (context.node.props?.background || ['surface', 'surface-inverse', 'background'].includes(context.item.raw.value)) ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}))` }"
+                  :height="20"
+                  :width="20"
+                  class="mr-2"
+                  rounded="circle"
+                  border
                 />
                 {{ context.item.raw.title }}
               </span>
@@ -134,7 +140,6 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
-import { mdiCircle } from '@mdi/js'
 
 const { t, locale } = useI18n()
 const session = useSession()
