@@ -86,7 +86,7 @@
               <v-list-item v-bind="context.props">
                 <template #prepend>
                   <v-sheet
-                    :style="{ backgroundColor: (context.node.props?.background || ['surface', 'surface-inverse', 'background'].includes(context.item.raw.value)) ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}))` }"
+                    :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
                     :height="20"
                     :width="20"
                     class="mr-4"
@@ -101,7 +101,7 @@
             <v-theme-provider theme="preview-colors">
               <span class="v-select__selection-text d-inline-flex align-center">
                 <v-sheet
-                  :style="{ backgroundColor: (context.node.props?.background || ['surface', 'surface-inverse', 'background'].includes(context.item.raw.value)) ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}))` }"
+                  :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
                   :height="20"
                   :width="20"
                   class="mr-2"

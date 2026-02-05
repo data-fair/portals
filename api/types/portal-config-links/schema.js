@@ -6,7 +6,7 @@ export default {
       type: 'object',
       layout: {
         children: [
-          { key: 'color', cols: { md: 6 } },
+          { key: 'color', props: { background: true }, cols: { md: 6 } },
           { key: 'elevation', cols: { md: 6 } },
           { key: 'density', cols: { md: 6 } },
           { key: 'rounded', cols: { md: 6 } },
