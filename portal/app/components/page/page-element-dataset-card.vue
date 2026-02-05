@@ -16,7 +16,7 @@ const { element } = defineProps<{ element: DatasetCardElement }>()
 const { preview, portalConfig } = usePortalStore()
 
 const fetch = preview ? useFetch<Dataset> : useLocalFetch<Dataset>
-const datasetFetch = fetch('/data-fair/api/v1/datasets/' + element.dataset?.id, { immediate: false })
+const datasetFetch = fetch(() => element.dataset?.id ? '/data-fair/api/v1/datasets/' + element.dataset?.id : '', { immediate: false })
 
 watch(() => element.dataset?.id, (id) => {
   if (id) datasetFetch.refresh()

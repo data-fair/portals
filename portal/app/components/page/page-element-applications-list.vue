@@ -1,7 +1,7 @@
 <template>
   <v-row :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
     <v-col
-      v-for="application in applications"
+      v-for="application in displayedApplications"
       :key="application.id"
       :md="12 / element.columns"
       cols="12"
@@ -23,7 +23,7 @@ type ApplicationFetch = { count: number; results: Application[] }
 const { element } = defineProps<{ element: ApplicationsListElement }>()
 const { portal, preview, portalConfig } = usePortalStore()
 
-let applications: Application[] | ComputedRef<Application[]>
+let displayedApplications: Application[] | ComputedRef<Application[]>
 
 if (!preview) {
   const ids = element.applications?.map(app => app.id) || []
@@ -36,21 +36,27 @@ if (!preview) {
   }))
 
   const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
-  applications = computed(() => applicationsFetch.data.value?.results || [])
+  displayedApplications = computed(() => {
+    const results = applicationsFetch.data.value?.results || []
+    if (element.mode === 'custom') return [...results].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)) // order by element.applications
+    return results
+  })
 } else {
   // Mock data for preview
-  applications = Array.from({ length: Math.min(element.limit, 3) }, (_, i) => ({
-    id: `application-${i + 1}`,
-    slug: `application-${i + 1}`,
-    title: `Visualisation ${i + 1}`,
-    summary: 'Ceci est un exemple de visualisation pour la prévisualisation.',
-    updatedAt: new Date().toISOString(),
-    url: `https://example.com/app-${i + 1}`,
-    href: `/applications/application-${i + 1}`,
-    exposedUrl: `https://example.com/app-${i + 1}`,
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
-    topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
-  }))
+  displayedApplications = computed(() => {
+    return Array.from({ length: element.mode === 'custom' ? (element.applications?.length || 1) : element.limit }, (_, i) => ({
+      id: `application-${i + 1}`,
+      slug: `application-${i + 1}`,
+      title: element.applications?.[i]?.title || `Application ${i + 1}`,
+      summary: 'Ceci est un exemple de visualisation pour la prévisualisation.',
+      updatedAt: new Date().toISOString(),
+      url: `https://example.com/app-${i + 1}`,
+      href: `/applications/application-${i + 1}`,
+      exposedUrl: `https://example.com/app-${i + 1}`,
+      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
+      topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
+    }))
+  })
 }
 
 </script>
