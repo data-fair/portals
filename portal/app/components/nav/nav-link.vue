@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkItem, LinkConfig } from '#api/types/page-elements/index.js'
+import type { LinkItem, LinkConfig } from '#api/types/page-elements/index.ts'
 
 defineProps<{
   link: LinkItem

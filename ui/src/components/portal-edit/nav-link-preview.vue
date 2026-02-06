@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkConfig } from '#api/types/page-elements'
+import type { LinkConfig } from '#api/types/page-elements/index.ts'
 import { mdiHome } from '@mdi/js'
 
 const { t } = useI18n()

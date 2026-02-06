@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuElement } from '#api/types/page-elements'
+import type { MenuElement } from '#api/types/page-elements/index.ts'
 import { mdiChevronDown } from '@mdi/js'
 
 const { element } = defineProps<{ element: MenuElement }>()

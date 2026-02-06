@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import type { Reuse } from '#api/types/reuse'
-import type { ReusesListElement } from '#api/types/page-elements'
+import type { ReusesListElement } from '#api/types/page-elements/index.ts'
 
 type ReuseFetch = { count: number; results: Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>[] }
 

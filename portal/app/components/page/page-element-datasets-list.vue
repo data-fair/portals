@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
-import type { DatasetsListElement } from '#api/types/page-elements'
+import type { DatasetsListElement } from '#api/types/page-elements/index.ts'
 
 type DatasetFetch = { count: number; results: Omit<Dataset, 'userPermissions'>[] }
 

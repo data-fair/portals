@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import type { TopicsElement } from '#api/types/page-config'
-import type { LinkItem } from '#api/types/page-elements/index.js'
+import type { LinkItem } from '#api/types/page-elements/index.ts'
 
 const { preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
