@@ -43,15 +43,8 @@ export default {
           layout: { cols: { md: 4 } }
         },
         variant: {
-          type: 'string',
-          title: 'Variante',
-          layout: { cols: { md: 4 } },
-          default: 'default',
-          oneOf: [
-            { const: 'default', title: 'Par défaut' },
-            { const: 'outlined', title: 'Avec bordure' },
-            { const: 'tonal', title: 'Tonale' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          layout: { cols: { md: 4 } }
         },
         showIcon: {
           type: 'boolean',

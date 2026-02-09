@@ -53,10 +53,10 @@ if (!preview) {
       summary: 'Ceci est un exemple de jeu de données pour la prévisualisation.',
       dataUpdatedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
-      extras: {},
-      topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }],
-      isMetaOnly: false
+      owner: { id: 'owner-1', name: "Organisation d'exemple", type: 'organization' },
+      topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
+      isMetaOnly: false,
+      extras: {}
     }))
   })
 }

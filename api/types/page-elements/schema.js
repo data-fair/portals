@@ -1268,24 +1268,24 @@ export default {
           description: 'Si activé, cliquer sur une thématique redirigera vers la page sélectionnée (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
           layout: 'switch'
         },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer les thématiques'
+        },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes des thématiques',
+          title: "Afficher l'icône",
           layout: 'switch',
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur des icônes des thématiques',
+          title: "Couleur de l'icône",
           layout: { if: 'parent.data?.showIcon === true' }
-        },
-        centered: {
-          type: 'boolean',
-          title: 'Centrer les thématiques'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

@@ -48,8 +48,8 @@ if (!preview) {
     url: `https://example.com/app-${i + 1}`,
     href: `/applications/application-${i + 1}`,
     exposedUrl: `https://example.com/app-${i + 1}`,
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
-    topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
+    owner: { id: 'owner-1', name: "Organisation d'exemple", type: 'organization' },
+    topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }]
   }))
 }
 
