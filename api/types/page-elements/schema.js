@@ -463,7 +463,7 @@ export default {
         },
         href: {
           title: 'URL vers une autre page',
-          description: "L'image devient un lien qui pointe vers l'URL renseignée.",
+          description: "L'image devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
           type: 'string',
           layout: { if: '!parent.data?.isPresentation' }
         },
@@ -856,7 +856,7 @@ export default {
         },
         href: {
           title: 'URL vers une autre page',
-          description: "La vignette devient un lien qui pointe vers l'URL renseignée.",
+          description: "La boite devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
           type: 'string'
         },
         elevation: {
@@ -1698,22 +1698,25 @@ export default {
         },
         datasets: {
           type: 'array',
-          title: 'Liste de jeux de données',
+          title: 'Jeux de données',
           description: 'Sélectionnez manuellement les jeux de données à afficher.',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Jeu de données',
-            additionalProperties: false,
             required: ['id'],
-            layout: {
-              getItems: {
-                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.title} (${item.id})`',
-                itemKey: 'item.id'
-              }
-            },
             properties: {
               id: { type: 'string' },
               title: { type: 'string' }
@@ -2106,28 +2109,31 @@ export default {
         },
         applications: {
           type: 'array',
-          title: 'Liste de visualisations',
+          title: 'Visualisations',
           description: 'Sélectionnez manuellement les visualisations à afficher.',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Visualisation',
-            additionalProperties: false,
             required: ['id'],
-            layout: {
-              getItems: {
-                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.title} (${item.id})`',
-                itemKey: 'item.id'
-              }
-            },
             properties: {
               id: { type: 'string' },
               title: { type: 'string' }
             }
           },
-          maxItems: 100
+          maxItems: 20
         },
         columns: {
           type: 'integer',
@@ -2389,22 +2395,25 @@ export default {
         },
         reuses: {
           type: 'array',
-          title: 'Liste de réutilisations',
+          title: 'Réutilisations',
           description: 'Sélectionnez manuellement les réutilisations à afficher.',
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/reuses?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Réutilisation',
-            additionalProperties: false,
             required: ['slug'],
-            layout: {
-              getItems: {
-                url: '/portal/api/reuses?select=slug,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.config.title} (${item.slug})`',
-                itemKey: 'item.slug'
-              }
-            },
             properties: {
               slug: { type: 'string' },
               title: { type: 'string' }
@@ -2478,10 +2487,10 @@ export default {
           required: ['slug'],
           layout: {
             getItems: {
-              url: '/portal/api/reuses?select=slug,title&size=20',
+              url: '/portals-manager/api/reuses?select=slug,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.config.title} (${item.slug})`',
+              itemTitle: '`${item.title} (${item.slug})`',
               itemKey: 'item.slug'
             }
           },
