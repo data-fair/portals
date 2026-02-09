@@ -1,20 +1,18 @@
 <template lang="html">
-  <v-container style="max-width:640px !important;">
-    <v-iframe
-      v-if="activeAccount.type === 'organization'"
-      title="Gestion de l'organisation"
-      :src="sdUrl"
-    />
-  </v-container>
+  <d-frame-wrapper
+    v-if="activeAccount.type === 'organization'"
+    iframe-title="Gestion de l'organisation"
+    :src="sdUrl"
+  />
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   computed: {
@@ -22,7 +20,7 @@ export default {
     ...mapGetters(['directoryUrl']),
     ...mapGetters('session', ['activeAccount']),
     sdUrl () {
-      return `${this.directoryUrl}/organization/${this.activeAccount.id}?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true&redirect=${encodeURIComponent(this.publicUrl + '/me/account')}&main_redirect=${encodeURIComponent(this.mainPublicUrl + '/data-fair')}`
+      return `${this.directoryUrl}/organization/${this.activeAccount.id}?redirect=${encodeURIComponent(this.publicUrl + '/me/account')}&main_redirect=${encodeURIComponent(this.mainPublicUrl + '/data-fair')}`
     }
   },
   created () {

@@ -18,25 +18,25 @@
     >
       Pour des notifications ciblées sur des jeux de données visitez leurs pages individuelles et cliquez sur la cloche.
     </v-alert>
-    <v-iframe
+    <d-frame-wrapper
       v-if="notifUrl"
-      title="Mes notifications"
+      iframe-title="Mes notifications"
       :src="notifUrl"
     />
     <!-- TODO: configure this page to perfectly suit our needs
-      <v-iframe
+      <d-frame-wrapper
       :src="`${notifyUrl}/embed/subscriptions`"
     />-->
   </v-container>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   data () {
@@ -59,7 +59,7 @@ export default {
       const urlTemplate = `${this.publicBaseUrl}/datasets/{id}`
       let sender = `${this.config.owner.type}:${this.config.owner.id}`
       if (this.config.owner.department) sender += ':' + this.config.owner.department
-      return `${this.notifyUrl}/embed/subscribe?primary=${encodeURIComponent(this.config.themeColor)}&key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
+      return `${this.notifyUrl}/embed/subscribe?key=${encodeURIComponent(keys.join(','))}&title=${encodeURIComponent(titles.join(','))}&icon=${encodeURIComponent(icon)}&url-template=${encodeURIComponent(urlTemplate)}&register=false&sender=${encodeURIComponent(sender)}&outputs=auto`
     }
   },
   async mounted () {

@@ -102,9 +102,8 @@
   "devDependencies": {
     "@commitlint/cli": "^17.5.0",
     "@commitlint/config-conventional": "^17.4.4",
-    "@data-fair/frame": "^0.12.0",
+    "@data-fair/frame": "^0.18.0",
     "@data-fair/sd-vue": "4.0.0",
-    "@koumoul/v-iframe": "^1.4.2",
     "@koumoul/vjsf": "2.22.1",
     "@koumoul/vue-multianalytics": "^1.11.4",
     "@mdi/font": "^7.0.96",

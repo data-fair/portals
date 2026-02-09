@@ -38,26 +38,26 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <client-only>
-        <v-iframe
-          :title="'Vue tableau du jeu de données : ' + dataset.title"
-          :src="iframeSrc"
-          scrolling="yes"
-          :iframe-resizer="false"
-          :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
-          @message="onMessage"
-        />
-      </client-only>
+      <d-frame-wrapper
+        :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
+        :src="iframeSrc"
+        scrolling="yes"
+        resize="no"
+        :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
+        emit-iframe-messages
+        @iframe-message="(iframeMessage) => onIframeMessage(iframeMessage.detail)"
+      />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['dataset', 'color', 'fab'],
   data () {
     return {
@@ -67,7 +67,7 @@ export default {
   computed: {
     ...mapState(['config']),
     iframeSrc () {
-      return `${this.$store.getters.dataFairUrl}${process.env.embeds.table.replace('{id}', this.dataset.id)}?primary=${encodeURIComponent(this.config.themeColor)}&display=${this.$vuetify.breakpoint.smAndDown ? 'list' : 'table'}`
+      return `${this.$store.getters.dataFairUrl}${process.env.embeds.table.replace('{id}', this.dataset.id)}?display=${this.$vuetify.breakpoint.smAndDown ? 'list' : 'table'}`
     }
   },
   watch: {
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     // receiving a message from the iframe
-    onMessage (message) {
+    onIframeMessage (message) {
       if (message.trackEvent && this.$ma) this.$ma.trackEvent(message.trackEvent)
     }
   }

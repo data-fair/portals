@@ -7,22 +7,20 @@
         class="text-center"
       >
         <section-subtitle :text="application.title" />
-        <client-only>
-          <iframe
-            v-if="application.fixedHeight"
-            :title="application.title"
-            :src="application.link"
-            :height="application.height"
-            width="100%"
-            class="mt-2"
-          />
-          <v-iframe
-            v-else
-            :title="application.title"
-            :src="application.link"
-            class="mt-2"
-          />
-        </client-only>
+        <iframe
+          v-if="application.fixedHeight"
+          :title="application.title"
+          :src="application.link"
+          :height="application.height"
+          width="100%"
+          class="mt-2"
+        />
+        <d-frame-wrapper
+          v-else
+          :iframe-title="application.title"
+          :src="application.link"
+          class="mt-2"
+        />
       </v-col>
     </v-row>
     <template v-if="linkExternalReuses.length">
@@ -76,11 +74,13 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 import VClamp from 'vue-clamp'
 
 export default {
-  components: { VIframe, VClamp },
+  components: {
+    VClamp,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: {
     dataset: { type: Object, required: true },
     showIframes: { type: Boolean, default: true },

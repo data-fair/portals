@@ -38,24 +38,23 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <client-only>
-        <v-iframe
-          :title="'Schéma du jeu de données : ' + dataset.title"
-          :src="iframeSrc"
-          scrolling="auto"
-          :iframe-resizer="false"
-        />
-      </client-only>
+      <d-frame-wrapper
+        :iframe-title="'Schéma du jeu de données : ' + dataset.title"
+        :src="iframeSrc"
+        scrolling="auto"
+        resize="no"
+      />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['dataset', 'color'],
   data () {
     return {

@@ -39,24 +39,22 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <client-only>
-        <v-iframe
-          :id="'application-' + application.slug"
-          :title="application.title"
-          :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
-        />
-      </client-only>
+      <d-frame-wrapper
+        :id="'application-' + application.slug"
+        :iframe-title="application.title"
+        :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+      />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['application'],
   data () {
     return {

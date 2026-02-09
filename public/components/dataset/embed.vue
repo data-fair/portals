@@ -62,10 +62,11 @@
         >&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="500px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
         <br>
         Résultat:
-        <v-iframe
-          :title="'Vue tableau du jeu de données : ' + dataset.title"
+        <d-frame-wrapper
+          :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="previewLink"
-          @state="s => iframeState = s"
+          state-change-events
+          @state-change="s => iframeState = s"
         />
       </v-card-text>
     </v-card>
@@ -73,12 +74,11 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
   components: {
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: ['dataset'],
   data () {

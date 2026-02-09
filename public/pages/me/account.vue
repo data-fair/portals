@@ -1,27 +1,17 @@
 <template lang="html">
-  <v-container style="max-width:640px !important;">
-    <v-iframe
-      title="Mon compte"
-      :src="sdUrl"
-    />
-  </v-container>
+  <d-frame-wrapper
+    iframe-title="Mon compte"
+    src="/simple-directory/me"
+  />
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
-const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
-  middleware: ['portal-required', 'auth-required'],
-  computed: {
-    ...mapState(['config']),
-    ...mapGetters(['directoryUrl']),
-    sdUrl () {
-      return `${this.directoryUrl}/me?embed=true&primary=${encodeURIComponent(this.config.themeColor)}&fluid=true`
-    }
-  }
+  middleware: ['portal-required', 'auth-required']
 }
 </script>

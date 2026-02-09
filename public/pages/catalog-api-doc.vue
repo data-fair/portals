@@ -2,13 +2,11 @@
   <div>
     <div>
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: 'Documentation d\'API', disabled: true}]" />
-      <client-only>
-        <d-frame-wrapper
-          :src="`${openapiViewerUrl}/?urlType=catalog`"
-          :height="`${windowHeight - 64}px`"
-          title="Documentation de l'API du catalogue"
-        />
-      </client-only>
+      <d-frame-wrapper
+        :src="`${openapiViewerUrl}/?urlType=catalog`"
+        class="fill-height"
+        iframe-title="Documentation de l'API du catalogue"
+      />
     </div>
   </div>
 </template>

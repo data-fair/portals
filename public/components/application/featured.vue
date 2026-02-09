@@ -21,27 +21,25 @@
         :synced-state="syncedState"
       />
     </v-row>
-    <client-only>
-      <v-iframe
-        :src="`${dataFairUrl}/app/${applicationRef}`"
-        :title="application.title"
-        :style="iframeStyle"
-        :sync-state="true"
-        :query-params-extra="queryParamsExtra"
-        :query-params-exclude="queryParamsExclude"
-        @state="s => syncedState = s"
-      />
-    </client-only>
+    <d-frame-wrapper
+      :src="`${dataFairUrl}/app/${applicationRef}?d-frame=true&primary=${readablePrimaryColor}`"
+      :iframe-title="application.title"
+      :style="iframeStyle"
+      scrolling="no"
+      resize="no"
+      aspect-ratio
+      state-change-events
+      @state-change="storeState"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import VIframe from '@koumoul/v-iframe'
 
 export default {
   components: {
-    VIframe
+    DFrameWrapper: () => process.client ? import('../../components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: {
     application: {
@@ -56,7 +54,7 @@ export default {
   data: () => ({
     baseApplication: null,
     fullApplication: null,
-    syncedState: null
+    storeState: null
   }),
   computed: {
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'owner', 'isPublished']),
@@ -68,15 +66,9 @@ export default {
       const url = new URL(this.syncedState.href)
       const params = {}
       for (const key of [...url.searchParams.keys()]) {
-        if (key !== 'embed' && key !== 'primary') params[key] = url.searchParams.get(key)
+        if (key !== 'primary') params[key] = url.searchParams.get(key)
       }
       return params
-    },
-    queryParamsExtra () {
-      return { primary: this.readablePrimaryColor, embed: true }
-    },
-    queryParamsExclude () {
-      return ['portalId']
     }
   },
   async mounted () {

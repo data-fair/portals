@@ -1,22 +1,19 @@
 <template lang="html">
-  <v-iframe
-    title="Contribuer"
+  <d-frame-wrapper
+    iframe-title="Contribuer"
     :src="updateDatasetUrl"
-    :query-params-extra="queryParamsExtra"
-    :query-params-exclude="queryParamsExclude"
-    :sync-state="true"
-    :style="`height: ${windowHeight - 48}px;`"
-    scrolling="auto"
-    :iframe-resizer="false"
+    class="fill-height"
+    resize="no"
   />
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   computed: {
@@ -30,17 +27,7 @@ export default {
       return ownerFilter
     },
     updateDatasetUrl () {
-      return `${this.dataFairUrl}${process.env.embeds.updateDataset}`
-    },
-    queryParamsExtra () {
-      return {
-        primary: this.readablePrimaryColor,
-        publicationSite: `data-fair-portals:${this.portal._id}`,
-        owner: this.ownerFilter
-      }
-    },
-    queryParamsExclude () {
-      return ['portalId']
+      return `${this.dataFairUrl}${process.env.embeds.updateDataset}?primary=${encodeURIComponent(this.readablePrimaryColor)}&publicationSite=${encodeURIComponent(`data-fair-portals:${this.portal._id}`)}&owner=${encodeURIComponent(this.ownerFilter)}`
     }
   }
 }

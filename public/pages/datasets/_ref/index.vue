@@ -456,12 +456,10 @@
             :order="1"
             :order-md="application.preferLargeDisplay ? 1 : i%2"
           >
-            <client-only>
-              <v-iframe
-                :title="application.title"
-                :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
-              />
-            </client-only>
+            <d-frame-wrapper
+              :iframe-title="application.title"
+              :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+            />
           </v-col>
         </v-row>
       </template>
@@ -499,22 +497,20 @@
           class="text-center"
         >
           <section-subtitle :text="application.title" />
-          <client-only>
-            <iframe
-              v-if="application.fixedHeight"
-              :title="application.title"
-              :src="application.link"
-              :height="application.height"
-              width="100%"
-              class="mt-2"
-            />
-            <v-iframe
-              v-else
-              :title="application.title"
-              :src="application.link"
-              class="mt-2"
-            />
-          </client-only>
+          <iframe
+            v-if="application.fixedHeight"
+            :title="application.title"
+            :src="application.link"
+            :height="application.height"
+            width="100%"
+            class="mt-2"
+          />
+          <d-frame-wrapper
+            v-else
+            :iframe-title="application.title"
+            :src="application.link"
+            class="mt-2"
+          />
         </v-col>
       </v-row>
       <template v-if="linkExternalReuses.length">
@@ -593,8 +589,6 @@ import DatasetEmbed from '~/components/dataset/embed.vue'
 import Social from '~/components/social'
 import Error from '~/components/error.vue'
 import { datasetPageHead } from '~/assets/meta-utils'
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import { isMobileOnly } from 'mobile-device-detect'
 const { mapState, mapGetters } = require('vuex')
 
@@ -610,7 +604,7 @@ export default {
     DatasetEmbed,
     Social,
     Error,
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'default',
   middleware: 'portal-required',

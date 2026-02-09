@@ -40,25 +40,24 @@
         </v-btn>
       </v-toolbar>
       <v-card-text class="pa-0">
-        <client-only>
-          <v-iframe
-            :title="'Notifications pour le jeu de données : ' + dataset.title"
-            :aspect-ratio="0.1"
-            :src="notifUrl"
-          />
-        </client-only>
+        <d-frame-wrapper
+          :iframe-title="'Notifications pour le jeu de données : ' + dataset.title"
+          :src="notifUrl"
+          scrolling="no"
+          aspect-ratio
+        />
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['dataset', 'color'],
   data () {
     return {

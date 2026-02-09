@@ -7,22 +7,20 @@
         class="text-center"
       >
         <section-subtitle :text="reuse.title" />
-        <client-only>
-          <iframe
-            v-if="reuse.fixedHeight"
-            :title="reuse.title"
-            :src="reuse.link"
-            :height="reuse.height"
-            width="100%"
-            class="mt-2"
-          />
-          <v-iframe
-            v-else
-            :title="reuse.title"
-            :src="reuse.link"
-            class="mt-2"
-          />
-        </client-only>
+        <iframe
+          v-if="reuse.fixedHeight"
+          :title="reuse.title"
+          :src="reuse.link"
+          :height="reuse.height"
+          width="100%"
+          class="mt-2"
+        />
+        <d-frame-wrapper
+          v-else
+          :iframe-title="reuse.title"
+          :src="reuse.link"
+          class="mt-2"
+        />
       </v-col>
     </v-row>
     <template v-if="linkExternalReuses.length">
@@ -76,11 +74,13 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 import VClamp from 'vue-clamp'
 
 export default {
-  components: { VIframe, VClamp },
+  components: {
+    VClamp,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: {
     dataset: { type: Object, required: true },
     showIframes: { type: Boolean, default: true },

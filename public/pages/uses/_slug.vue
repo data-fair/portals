@@ -48,12 +48,10 @@
           v-if="use.links && use.links.iframe"
           cols="12"
         >
-          <client-only>
-            <v-iframe
-              :title="use.title"
-              :src="use.links.iframe"
-            />
-          </client-only>
+          <d-frame-wrapper
+            :iframe-title="use.title"
+            :src="use.links.iframe"
+          />
         </v-col>
         <v-col
           v-else-if="use.image"
@@ -116,12 +114,11 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'default',
   middleware: 'portal-required',

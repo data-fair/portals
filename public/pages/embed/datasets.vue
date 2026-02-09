@@ -107,12 +107,7 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer.contentWindow'
 import { mapState, mapGetters } from 'vuex'
-
-global.iFrameResizer = {
-  heightCalculationMethod: 'taggedElement'
-}
 
 export default {
   layout: 'minimal',

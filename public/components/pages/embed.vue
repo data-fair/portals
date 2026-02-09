@@ -45,11 +45,12 @@
         >&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="{{ height }}px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
         <br>
         Résultat:
-        <v-iframe
-          :title="'Vue embarquée de la page : ' + page.title"
+        <d-frame-wrapper
+          :iframe-title="'Vue embarquée de la page : ' + page.title"
           :src="previewLink"
           :style="'height:'+height+'px'"
-          @state="s => iframeState = s"
+          state-change-events
+          @state-change="s => iframeState = s"
         />
       </v-card-text>
     </v-card>
@@ -57,12 +58,11 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
   components: {
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: ['page', 'height'],
   data () {

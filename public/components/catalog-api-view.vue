@@ -33,18 +33,15 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <client-only>
-        <d-frame-wrapper
-          :src="`${openapiViewerUrl}/?urlType=catalog`"
-          title="Documentation de l'API du catalogue"
-        />
-      </client-only>
+      <d-frame-wrapper
+        :src="`${openapiViewerUrl}/?urlType=catalog`"
+        iframe-title="Documentation de l'API du catalogue"
+      />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
 import { mapState, mapGetters } from 'vuex'
 export default {
   components: {

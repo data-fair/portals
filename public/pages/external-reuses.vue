@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
