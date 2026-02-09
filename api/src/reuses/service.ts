@@ -183,6 +183,7 @@ export const sendReuseEvent = (
       id: reuse._id,
       title: reuse.title,
     },
+    urlParams: { reuseId: reuse._id },
     body
   }, sessionState)
 }

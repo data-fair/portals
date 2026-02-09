@@ -1,9 +1,10 @@
 <template>
-  <template v-if="requiresConsent">
+  <template v-if="trackerType !== 'none'">
     <p>{{ t('trackingMessage') }}</p>
     <v-switch
-      :model-value="cookieTrack === 'yes'"
+      :model-value="requiresConsent ? cookieTrack === 'yes' : cookieTrack !== 'no'"
       :label="t('authorizeTracking')"
+      color="primary"
       @update:model-value="toggleCookieTrack"
     />
   </template>
@@ -13,10 +14,10 @@
 
 const { t } = useI18n()
 const { portal } = usePortalStore()
-const { requiresConsent, cookieTrack } = useAnalyticsInfo(portal.value)
+const { trackerType, cookieTrack, requiresConsent } = useAnalyticsInfo(portal.value)
 
 const toggleCookieTrack = () => {
-  if (cookieTrack.value === 'yes') cookieTrack.value = 'no'
+  if (requiresConsent ? cookieTrack.value === 'yes' : cookieTrack.value !== 'no') cookieTrack.value = 'no'
   else cookieTrack.value = 'yes'
   window.location.reload()
 }

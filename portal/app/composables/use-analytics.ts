@@ -15,7 +15,7 @@ export const useAnalyticsInfo = (portal: RequestPortal) => {
 
   const trackerType = portal.config.analytics?.tracker.type ?? 'none'
   const requiresConsent = !portal.draft && trackerType !== 'none' && !portal.config.analytics?.tracker.anonymized
-  if (!requiresConsent) cookieTrack.value = undefined
+  if (trackerType === 'none') cookieTrack.value = undefined
 
   return {
     cookieTrack,

@@ -182,6 +182,7 @@ export default {
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
       {
+        if: 'data?.authentication !== "none"',
         title: 'Espace personnel',
         children: ['personal']
       }
