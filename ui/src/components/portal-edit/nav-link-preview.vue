@@ -1,6 +1,6 @@
 <template>
   <preview>
-    <div class="d-flex justify-center mb-4">
+    <div class="d-flex justify-center">
       <nav-link
         :link="{
           type: 'standard',
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkConfig } from '#api/types/page-elements'
+import type { LinkConfig } from '#api/types/page-elements/index.ts'
 import { mdiHome } from '@mdi/js'
 
 const { t } = useI18n()

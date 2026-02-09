@@ -4,22 +4,35 @@ export default {
   $defs: {
     linkConfig: {
       type: 'object',
-      layout: {
-        children: [
-          { key: 'color', cols: { md: 6 } },
-          { key: 'elevation', cols: { md: 6 } },
-          { key: 'density', cols: { md: 6 } },
-          { key: 'rounded', cols: { md: 6 } },
-          { key: 'variant', cols: { md: 6 } },
-          { key: 'showIcon', cols: { md: 6 } },
-          { key: 'uppercase', cols: { md: 6 } }
-        ]
-      },
       properties: {
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: {
+            switch: [
+              {
+                if: 'parent.data?.variant === "default"',
+                props: { background: true },
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              },
+              {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              }
+            ]
+          },
+
+        },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          default: 1, // TODO: check if default can be overwrite the $ref
+          layout: { cols: { md: 4 } },
+          default: 1
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
@@ -30,15 +43,8 @@ export default {
           layout: { cols: { md: 4 } }
         },
         variant: {
-          type: 'string',
-          title: 'Variante',
-          layout: { cols: { md: 4 } },
-          default: 'default',
-          oneOf: [
-            { const: 'default', title: 'Par défaut' },
-            { const: 'outlined', title: 'Avec bordure' },
-            { const: 'tonal', title: 'Tonale' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          layout: { cols: { md: 4 } }
         },
         showIcon: {
           type: 'boolean',
@@ -183,6 +189,7 @@ export default {
               // eslint-disable-next-line no-template-curly-in-string
               itemTitle: 'item.header ? item.title : `${item.titleBackOffice} (${item.slug})`'
             },
+            comp: 'autocomplete',
             cols: { md: 6 }
           },
           properties: {

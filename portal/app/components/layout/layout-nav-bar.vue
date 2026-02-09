@@ -1,42 +1,48 @@
 <template>
   <!--
+    div: Background color always full width
     fluid: for compatibility, default to true (even if undefined).
            It is only false when explicitly set to false.
   -->
-  <v-container
-    :fluid="navBarConfig.fluid !== false"
-    :class="[{ 'container px-4': navBarConfig.fluid === false }, `bg-${navBarConfig.color}`]"
-    class="pa-0 h-100"
+  <div
+    :class="`bg-${navBarConfig.color}`"
+    class="w-100 h-100"
   >
-    <v-row
-      align="center"
-      no-gutters
-      class="h-100 flex-nowrap"
+    <v-container
+      :fluid="navBarConfig.fluid !== false"
+      :class="{ 'container px-4': navBarConfig.fluid === false }"
+      class="pa-0 h-100"
     >
-      <layout-header-logo
-        v-if="logo"
-        :height="(appBarHeight || 64) - 10"
-        :link="navBarConfig.logoLink"
-        :logo="logo"
-        class="pl-4"
-      />
-
-      <nav-tabs-or-drawer
-        :navigation="portalConfig.menu.children"
-        :nav-bar-config="navBarConfig"
-      />
-
-      <v-spacer />
-
-      <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
-        <notification-queue />
-        <layout-personal-menu
-          :login-color="navBarConfig.loginColor"
-          :nav-bar-color="navBarConfig.color"
+      <v-row
+        align="center"
+        no-gutters
+        class="h-100 flex-nowrap"
+      >
+        <layout-header-logo
+          v-if="logo"
+          :height="(appBarHeight || 64) - 10"
+          :link="navBarConfig.logoLink"
+          :logo="logo"
+          class="pl-4"
         />
-      </v-toolbar-items>
-    </v-row>
-  </v-container>
+
+        <nav-tabs-or-drawer
+          :navigation="portalConfig.menu.children"
+          :nav-bar-config="navBarConfig"
+        />
+
+        <v-spacer />
+
+        <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
+          <notification-queue />
+          <layout-personal-menu
+            :login-color="navBarConfig.loginColor"
+            :nav-bar-color="navBarConfig.color"
+          />
+        </v-toolbar-items>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

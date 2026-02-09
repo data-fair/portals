@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
-import type { ApplicationsListElement } from '#api/types/page-elements'
+import type { ApplicationsListElement } from '#api/types/page-elements/index.ts'
 
 type ApplicationFetch = { count: number; results: Application[] }
 

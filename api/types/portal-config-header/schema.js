@@ -156,17 +156,18 @@ export default {
       }
     },
     color: {
-      type: 'string',
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: "Couleur de l'entête",
+      description: 'Laisser vide pour utiliser la couleur de la barre de navigation.',
       layout: {
         if: 'parent.data?.show',
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true },
         cols: { md: 6 }
-      },
-      default: 'navBar',
-      oneOf: [
-        { const: 'navBar', title: 'Couleur de la barre de navigation' },
-        { const: 'background', title: 'Couleur du fond de page' }
-      ]
+      }
     },
     keepOnScroll: {
       type: 'boolean',

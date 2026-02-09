@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ButtonElement } from '#api/types/page-elements'
+import type { ButtonElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: ButtonElement }>()
 const { portalConfig } = usePortalStore()

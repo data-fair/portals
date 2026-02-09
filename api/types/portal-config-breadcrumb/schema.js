@@ -107,7 +107,13 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-          layout: { cols: { md: 4 } }
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
         }
       }
     }
