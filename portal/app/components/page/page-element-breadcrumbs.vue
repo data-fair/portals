@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BreadcrumbsElement } from '#api/types/page-elements'
+import type { BreadcrumbsElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: BreadcrumbsElement }>()
 </script>

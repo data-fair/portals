@@ -102,7 +102,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options - accueil',
+                title: 'Options - Accueil',
                 children: ['headerHome']
               },
               {
@@ -143,7 +143,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options - accueil',
+                title: 'Options - Accueil',
                 children: ['navBarHome']
               },
               {
@@ -176,7 +176,7 @@ export default {
         ]
       },
       { title: "Fil d'Ariane", children: ['breadcrumb', { name: 'breadcrumb-preview' }] },
-      { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
+      { title: 'Pied de page', children: ['footer'] },
       { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },

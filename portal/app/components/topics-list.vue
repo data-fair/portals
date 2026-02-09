@@ -11,34 +11,32 @@
     >
       <!--
         :to => redirect to the dataset page
-        @click => toggle selection in query param
         :link => disable hover effect when not used as link nor filter
-        variant => always flat, we determine the color, background color and outline ourselves
-        :style => override default border color with calculated one
-        border => force border style like outlined variant
+        :variant => flat when selected, outlined when not
+        :style => surface background + consistent border width
         label => use default button rounding, not default chip rounding
+        @click => toggle selection in query param
       -->
       <v-chip
-        :color="chipColor(topic.id, topic.color)"
+        :color="resolvedColor(topic.color)"
         :density="config?.density"
         :elevation="config?.elevation"
         :rounded="config?.rounded"
         :link="isFilters || !!link"
         :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
-        :style="{ '--v-border-color': borderColor(topic.color) }"
-        border="sm opacity-100"
-        variant="flat"
+        :variant="chipVariant(topic.id)"
+        :style="chipStyle(topic.id, topic.color)"
         label
         @click="toggle(topic.id)"
       >
         <v-icon
           v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
-          :color="iconColor(topic.id, topic.color, config?.iconColor)"
+          :color="resolvedIconColor(topic.id, topic.color)"
           :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
           start
         />
         <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-        <span class="text-truncate" :style="{ color: textColor(topic.id, topic.color) }">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
+        <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
       </v-chip>
     </v-col>
   </v-row>
@@ -46,7 +44,7 @@
 
 <script setup lang="ts">
 import type { TopicsElement } from '#api/types/page-config'
-import type { LinkItem } from '#api/types/page-elements/index.js'
+import type { LinkItem } from '#api/types/page-elements/index.ts'
 
 const { preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
@@ -66,69 +64,59 @@ const { isFilters, config } = defineProps<{
   link?: LinkItem
   isFilters?: boolean
   centered?: boolean
-  config?: Pick < TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'>
+  config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'>
 }>()
 
+// Toggle selection in the topics query param when filters are enabled.
 const toggle = (id: string) => {
   if (!isFilters) return
   if (selected.value.includes(id)) selected.value = selected.value.filter(x => x !== id)
   else selected.value = [...selected.value, id]
 }
 
+// Selection is only meaningful when used as filters.
 const isSelected = (id: string): boolean => isFilters && selected.value.includes(id)
 
 /*
- * Color is based on `config.color`:
- * - undefined: use Vuetify defaults (Vuetify adapts color based on background).
- * - 'default': use the topic's specific color (hexa).
- * - other: use the specified theme color ('primary', 'secondary', 'accent').
+ * Base Vuetify behavior:
+ * - Selected: variant flat, chip uses resolved color.
+ * - Not selected: variant outlined with surface background.
  */
+const chipVariant = (topicId: string) => (isSelected(topicId) ? 'flat' : 'outlined')
 
-/** Background color of the chip : colored when selected, surface when not */
-const chipColor = (topicId: string, topicColor?: string): string | undefined => {
-  if (isSelected(topicId)) {
-    if (config?.color) return config.color === 'default' ? topicColor : config.color
-    return undefined
-  }
-  return 'surface'
-}
+// Keep surface background and consistent width (by adding transparent border) when not selected.
+const chipStyle = (topicId: string, topicColor?: string): Record<string, string> | undefined => {
+  if (isSelected(topicId)) return { border: '1px solid transparent' }
 
-/** Text color of the chip: undefined when selected, colored when not */
-const textColor = (topicId: string, topicColor?: string): string | undefined => {
-  if (isSelected(topicId)) return undefined
-  if (config?.color) return config.color === 'default' ? topicColor : `rgba(var(--v-theme-${config.color}))`
-  return undefined
+  const style: Record<string, string> = { backgroundColor: 'rgb(var(--v-theme-surface))' }
+  if (!resolvedColor(topicColor)) style.color = 'rgb(var(--v-theme-on-surface))'
+  return style
 }
 
 /**
- * Border color of the chip: always colored.
- * Note: Returns an RGB value to override the CSS variable which doesn't support hexa.
+ * No color configured => use default chip color.
+ * 'default' => use topic color
+ * Any other value => use configured color.
  */
-const borderColor = (topicColor?: string): string | undefined => {
-  if (config?.color) return config.color === 'default' ? hexToRgb(topicColor) : `var(--v-theme-${config.color})`
-  return undefined
+const resolvedColor = (topicColor?: string): string | undefined => {
+  if (!config?.color) return undefined
+  return config.color === 'default' ? topicColor : config.color
 }
 
 /**
- * Icon color of the chip: default when selected, colored when not
- * Note: Icon can have a different color than text, but same logic applies.
+ * No icon color configured => use chip color (default behavior).
+ * 'default' => use topic color
+ * Any other value => use configured color.
+ *
+ * Default text color if selected
  */
-const iconColor = (topicId: string, topicColor?: string, iconColor?: string): string | undefined => {
+const resolvedIconColor = (topicId: string, topicColor?: string): string | undefined => {
   if (isSelected(topicId)) return undefined
-  if (iconColor) return iconColor === 'default' ? topicColor : iconColor
-  return textColor(topicId, topicColor)
+  if (!config?.iconColor) return undefined
+  return config.iconColor === 'default' ? topicColor : config.iconColor
 }
 
-/** Convert hex (hexadecimal accepted for compatibility) color to RGB string */
-const hexToRgb = (hex?: string): string | undefined => {
-  const m = hex?.match(/^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})/i)
-  if (!m) return
-  const [r, g, b] = m.slice(1).map(v => v.length === 1 ? v + v : v)
-  if (!r || !g || !b) return
-  return `${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}`
-}
-
-/** Extract path data from SVG string for compatibility if topic does not have svgPath */
+/** Extract path data from SVG string when svgPath is missing. */
 const extractSvgPath = (svg?: string): string | undefined => {
   if (!svg) return
   const match = svg.match(/<path[^>]*d="([^"]+)"/)

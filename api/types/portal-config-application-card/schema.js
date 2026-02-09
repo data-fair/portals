@@ -155,12 +155,12 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'color',
-              'elevation',
-              'density',
-              'rounded',
-              'showIcon',
-              'iconColor'
+              { key: 'color', cols: { md: 6 } },
+              { key: 'elevation', cols: { md: 6 } },
+              { key: 'density', cols: { md: 6 } },
+              { key: 'rounded', cols: { md: 6 } },
+              { key: 'showIcon', cols: { md: 6 } },
+              { key: 'iconColor', cols: { md: 6 } }
             ]
           }
         ]
@@ -172,36 +172,28 @@ export default {
           layout: 'switch',
         },
         color: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes',
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
+          title: "Afficher l'icône",
+          layout: { comp: 'switch' },
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur des icônes',
+          title: "Couleur de l'icône",
           layout: {
-            if: 'parent.data?.showIcon === true',
-            cols: { md: 6 }
+            if: 'parent.data?.showIcon === true'
           }
         }
       }

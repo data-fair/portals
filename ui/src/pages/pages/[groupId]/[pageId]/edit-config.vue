@@ -57,7 +57,7 @@ const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
   query: {
     type: 'event,news,generic',
     select: '_id,type,title,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
-    limit: 1000,
+    size: 1000,
     sort: 'config.title'
   }
 })

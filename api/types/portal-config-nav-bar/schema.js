@@ -89,18 +89,41 @@ export default {
         cols: { md: 6 }
       }
     },
-    color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background' },
+    color: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true },
+        cols: { md: 4 }
+      }
+    },
     loginColor: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: 'Couleur du bouton de connexion',
       description: 'Laisser vide pour utiliser la couleur de la barre de navigation.',
-      layout: { cols: { md: 4 } }
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true },
+        cols: { md: 4 }
+      }
     },
     sliderColor: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: "Couleur de l'indicateur de l'élément actif",
       description: 'Laisser vide pour utiliser la couleur par défaut.',
-      layout: { cols: { md: 4 } }
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        cols: { md: 4 }
+      }
     },
     align: {
       type: 'string',
@@ -127,7 +150,7 @@ export default {
     },
     transparent: {
       type: 'boolean',
-      title: 'Appliquer un effet de transparence',
+      title: 'Appliquer un effet de transparence au scroll',
       layout: {
         comp: 'switch',
         cols: { md: 4 }

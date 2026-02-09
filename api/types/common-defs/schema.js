@@ -12,7 +12,6 @@ export default {
       type: 'string',
       title: 'Rounded',
       'x-i18n-title': { fr: 'Arrondi' },
-      default: 'default',
       oneOf: [
         { const: '0', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
         { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normal' } },
@@ -25,7 +24,6 @@ export default {
       type: 'integer',
       title: 'Elevation',
       'x-i18n-title': { fr: 'Élévation' },
-      default: 0,
       oneOf: [
         { const: 0, title: 'None', 'x-i18n-title': { fr: 'Aucune' } },
         { const: 1, title: 'Light', 'x-i18n-title': { fr: 'Légère' } },
@@ -38,11 +36,22 @@ export default {
       type: 'string',
       title: 'Density',
       'x-i18n-title': { fr: 'Densité' },
-      default: 'comfortable',
       oneOf: [
         { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normale' } },
         { const: 'comfortable', title: 'Comfortable', 'x-i18n-title': { fr: 'Confortable' } },
         { const: 'compact', title: 'Compact', 'x-i18n-title': { fr: 'Compacte' } }
+      ]
+    },
+
+    variant: {
+      type: 'string',
+      title: 'Variant',
+      'x-i18n-title': { fr: 'Variante' },
+      default: 'default',
+      oneOf: [
+        { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Par défaut' } },
+        { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
+        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
       ]
     },
 

@@ -25,14 +25,12 @@
         <v-card
           :title="t('cardExample.title')"
           :text="t('cardExample.text')"
-          class="my-2"
         />
       </v-col>
       <v-col>
         <v-card
           :title="t('cardExample.title')"
           :text="t('cardExample.textInverse')"
-          class="my-2"
           color="surface-inverse"
         />
       </v-col>

@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SearchElement } from '#api/types/page-elements'
+import type { SearchElement } from '#api/types/page-elements/index.ts'
 import { mdiMagnify } from '@mdi/js'
 
 const { element } = defineProps<{

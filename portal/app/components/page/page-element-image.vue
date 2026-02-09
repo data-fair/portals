@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageElement } from '#api/types/page-elements'
+import type { ImageElement } from '#api/types/page-elements/index.ts'
 import { useElementSize } from '@vueuse/core'
 import { useDisplay } from 'vuetify'
 

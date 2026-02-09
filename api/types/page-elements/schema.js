@@ -266,7 +266,14 @@ export default {
             color: {
               $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
               title: 'Line color',
-              'x-i18n-title': { fr: 'Couleur du trait' }
+              'x-i18n-title': { fr: 'Couleur du trait' },
+              layout: {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                props: { background: true }
+              }
             }
           }
         }
@@ -456,7 +463,7 @@ export default {
         },
         href: {
           title: 'URL vers une autre page',
-          description: "L'image devient un lien qui pointe vers l'URL renseignée.",
+          description: "L'image devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
           type: 'string',
           layout: { if: '!parent.data?.isPresentation' }
         },
@@ -849,7 +856,7 @@ export default {
         },
         href: {
           title: 'URL vers une autre page',
-          description: "La vignette devient un lien qui pointe vers l'URL renseignée.",
+          description: "La boite devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
           type: 'string'
         },
         elevation: {
@@ -900,7 +907,16 @@ export default {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+              layout: {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                props: { background: true }
+              }
+            },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
@@ -1252,24 +1268,24 @@ export default {
           description: 'Si activé, cliquer sur une thématique redirigera vers la page sélectionnée (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
           layout: 'switch'
         },
+        centered: {
+          type: 'boolean',
+          title: 'Centrer les thématiques'
+        },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes des thématiques',
+          title: "Afficher l'icône",
           layout: 'switch',
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur des icônes des thématiques',
+          title: "Couleur de l'icône",
           layout: { if: 'parent.data?.showIcon === true' }
-        },
-        centered: {
-          type: 'boolean',
-          title: 'Centrer les thématiques'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
@@ -1682,22 +1698,25 @@ export default {
         },
         datasets: {
           type: 'array',
-          title: 'Liste de jeux de données',
+          title: 'Jeux de données',
           description: 'Sélectionnez manuellement les jeux de données à afficher.',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Jeu de données',
-            additionalProperties: false,
             required: ['id'],
-            layout: {
-              getItems: {
-                url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.title} (${item.id})`',
-                itemKey: 'item.id'
-              }
-            },
             properties: {
               id: { type: 'string' },
               title: { type: 'string' }
@@ -2090,28 +2109,31 @@ export default {
         },
         applications: {
           type: 'array',
-          title: 'Liste de visualisations',
+          title: 'Visualisations',
           description: 'Sélectionnez manuellement les visualisations à afficher.',
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Visualisation',
-            additionalProperties: false,
             required: ['id'],
-            layout: {
-              getItems: {
-                url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.title} (${item.id})`',
-                itemKey: 'item.id'
-              }
-            },
             properties: {
               id: { type: 'string' },
               title: { type: 'string' }
             }
           },
-          maxItems: 100
+          maxItems: 20
         },
         columns: {
           type: 'integer',
@@ -2373,22 +2395,25 @@ export default {
         },
         reuses: {
           type: 'array',
-          title: 'Liste de réutilisations',
+          title: 'Réutilisations',
           description: 'Sélectionnez manuellement les réutilisations à afficher.',
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/reuses?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
           items: {
             type: 'object',
-            title: 'Réutilisation',
-            additionalProperties: false,
             required: ['slug'],
-            layout: {
-              getItems: {
-                url: '/portal/api/reuses?select=slug,title&size=20',
-                qSearchParam: 'q',
-                itemsResults: 'data.results',
-                itemTitle: '`${item.config.title} (${item.slug})`',
-                itemKey: 'item.slug'
-              }
-            },
             properties: {
               slug: { type: 'string' },
               title: { type: 'string' }
@@ -2462,10 +2487,10 @@ export default {
           required: ['slug'],
           layout: {
             getItems: {
-              url: '/portal/api/reuses?select=slug,title&size=20',
+              url: '/portals-manager/api/reuses?select=slug,title&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.config.title} (${item.slug})`',
+              itemTitle: '`${item.title} (${item.slug})`',
               itemKey: 'item.slug'
             }
           },

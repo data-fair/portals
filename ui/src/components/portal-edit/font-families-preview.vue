@@ -1,31 +1,32 @@
 <template>
-  <component
-    :is="'style'"
-    :nonce="$cspNonce"
-  >
-    {{ fontFamiliesCss }}
-  </component>
-  <div
-    :style="fontFamiliesVariables"
-    class="ma-4"
-  >
-    <p
-      class="text-h3 mb-4"
+  <preview>
+    <component
+      :is="'style'"
+      :nonce="$cspNonce"
     >
-      {{ t('titleExample') }}
-    </p>
-    <p
-      class="text-body-1 mb-4"
+      {{ fontFamiliesCss }}
+    </component>
+    <div
+      :style="fontFamiliesVariables"
     >
-      {{ t('paragraphExample') }}
-    </p>
-    <v-btn
-      class="text-body-1"
-      color="primary"
-    >
-      {{ t('buttonExample') }}
-    </v-btn>
-  </div>
+      <p
+        class="text-h3 mb-4"
+      >
+        {{ t('titleExample') }}
+      </p>
+      <p
+        class="text-body-1 mb-4"
+      >
+        {{ t('paragraphExample') }}
+      </p>
+      <v-btn
+        class="text-body-1"
+        color="primary"
+      >
+        {{ t('buttonExample') }}
+      </v-btn>
+    </div>
+  </preview>
 </template>
 
 <script setup lang="ts">
