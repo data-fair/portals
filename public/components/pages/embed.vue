@@ -42,16 +42,18 @@
         <code
           class="pa-2 mt-2"
           style="line-height:1.9rem"
-        >&lt;iframe src="{{ iframeState ? iframeState.href : previewLink }}" width="100%" height="{{ height }}px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
+        >&lt;iframe src="{{ iframeState ? iframeState : previewLink }}" width="100%" height="{{ height }}px" style="background-color: transparent; border: none;"&gt;&lt;/iframe&gt;</code>
         <br>
         Résultat:
-        <d-frame-wrapper
-          :iframe-title="'Vue embarquée de la page : ' + page.title"
-          :src="previewLink"
-          :style="'height:'+height+'px'"
-          state-change-events
-          @state-change="s => iframeState = s"
-        />
+        <client-only>
+          <d-frame-wrapper
+            :iframe-title="'Vue embarquée de la page : ' + page.title"
+            :src="previewLink"
+            :style="'height:'+height+'px'"
+            state-change-events
+            @state-change="s => iframeState = s.detail[1]"
+          />
+        </client-only>
       </v-card-text>
     </v-card>
   </v-dialog>
