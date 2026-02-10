@@ -41,7 +41,7 @@ RUN rm -rf node_modules/.cache
 ##################################
 # Stage: main nodejs service stage
 FROM node:18.15.0-alpine3.17
-MAINTAINER "contact@koumoul.com"
+LABEL maintainer="contact@koumoul.com"
 
 RUN apk add --no-cache dumb-init
 
