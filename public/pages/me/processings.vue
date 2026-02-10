@@ -4,9 +4,10 @@
     :src="processingsListUrl"
     :height="`${windowHeight - 64}px`"
     resize="no"
-    sync-path="/me/processings/"
     sync-params
     emit-iframe-messages
+    @iframe-message="(message) => onMessage(message.detail)"
+    @message="(message) => onMessage(message.detail)"
   />
 </template>
 

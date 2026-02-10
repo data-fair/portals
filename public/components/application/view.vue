@@ -41,9 +41,9 @@
       </v-toolbar>
       <client-only>
         <d-frame-wrapper
-          :id="'application-' + application.slug"
           :iframe-title="application.title"
           :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+          aspect-ratio
         />
       </client-only>
     </v-card>

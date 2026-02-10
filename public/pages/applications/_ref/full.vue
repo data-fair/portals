@@ -10,10 +10,9 @@
         <d-frame-wrapper
           :iframe-title="application.title"
           :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
-          class="full-width"
-          scrolling="yes"
+          :height="`${windowHeight - 64}px`"
           resize="no"
-          state-change-events
+          sync-params
         />
       </client-only>
     </div>

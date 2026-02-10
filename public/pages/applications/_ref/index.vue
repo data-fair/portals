@@ -78,8 +78,8 @@
         <d-frame-wrapper
           :iframe-title="application.title"
           :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
-          state-change-events
-          @state-change="s => syncedState = s"
+          aspect-ratio
+          sync-params
         />
       </client-only>
 
