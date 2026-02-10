@@ -52,6 +52,7 @@
             <d-frame-wrapper
               :iframe-title="use.title"
               :src="use.links.iframe"
+              aspect-ratio
             />
           </client-only>
         </v-col>

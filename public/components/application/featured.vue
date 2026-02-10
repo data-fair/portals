@@ -21,16 +21,18 @@
         :synced-state="syncedState"
       />
     </v-row>
-    <d-frame-wrapper
-      :src="`${dataFairUrl}/app/${applicationRef}?d-frame=true&primary=${readablePrimaryColor}`"
-      :iframe-title="application.title"
-      :style="iframeStyle"
-      scrolling="no"
-      resize="no"
-      aspect-ratio
-      state-change-events
-      @state-change="storeState"
-    />
+    <client-only>
+      <d-frame-wrapper
+        :src="`${dataFairUrl}/app/${applicationRef}?d-frame=true&primary=${readablePrimaryColor}`"
+        :iframe-title="application.title"
+        :style="iframeStyle"
+        scrolling="no"
+        resize="no"
+        aspect-ratio
+        state-change-events
+        @state-change="storeState"
+      />
+    </client-only>
   </div>
 </template>
 
