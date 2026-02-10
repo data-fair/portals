@@ -80,6 +80,8 @@
           :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
           aspect-ratio
           sync-params
+          state-change-events
+          @state-change="s => syncedState = s.detail[1]"
         />
       </client-only>
 
