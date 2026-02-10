@@ -42,8 +42,7 @@
         <d-frame-wrapper
           :iframe-title="'Schéma du jeu de données : ' + dataset.title"
           :src="iframeSrc"
-          scrolling="auto"
-          resize="no"
+          aspect-ratio
         />
       </client-only>
     </v-card>

@@ -7,6 +7,8 @@
           :src="`${openapiViewerUrl}/?urlType=catalog`"
           :height="`${windowHeight - 64}px`"
           iframe-title="Documentation de l'API du catalogue"
+          scrolling="no"
+          resize="no"
         />
       </client-only>
     </div>

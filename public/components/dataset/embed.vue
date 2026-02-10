@@ -65,6 +65,9 @@
         <d-frame-wrapper
           :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="previewLink"
+          scrolling="no"
+          resize="no"
+          aspect-ratio
           state-change-events
           @state-change="s => iframeState = s"
         />

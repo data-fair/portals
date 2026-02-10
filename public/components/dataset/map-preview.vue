@@ -42,7 +42,9 @@
         <d-frame-wrapper
           :iframe-title="'Vue carte du jeu de données : ' + dataset.title"
           :src="iframeSrc"
-          :aspect-ratio="$vuetify.breakpoint.smAndDown ? windowWidth / (windowHeight - 48) : undefined"
+          aspect-ratio
+          scrolling="no"
+          resize="no"
         />
       </client-only>
     </v-card>

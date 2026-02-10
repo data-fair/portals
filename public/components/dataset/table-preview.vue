@@ -42,7 +42,8 @@
         <d-frame-wrapper
           :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="iframeSrc"
-          scrolling="yes"
+          aspect-ratio
+          scrolling="no"
           resize="no"
           :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
           emit-iframe-messages

@@ -11,8 +11,8 @@
           :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="tablePreview"
           :height="`${windowHeight - 64}px`"
-          resize="no"
           scrolling="no"
+          resize="no"
           sync-params
         />
       </client-only>
