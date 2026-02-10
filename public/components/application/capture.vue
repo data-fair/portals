@@ -55,8 +55,8 @@ export default {
       url.searchParams.set('width', this.meta['df:capture-width'] || '1280')
       url.searchParams.set('height', this.meta['df:capture-height'] || '720')
       url.searchParams.set('updatedAt', this.application.updatedAt)
-      if (this.syncedState && this.syncedState.href) {
-        const stateUrl = new URL(this.syncedState.href)
+      if (this.syncedState && this.syncedState) {
+        const stateUrl = new URL(this.syncedState)
         for (const key of stateUrl.searchParams.keys()) {
           url.searchParams.set('app_' + key, stateUrl.searchParams.get(key))
         }
