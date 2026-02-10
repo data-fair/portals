@@ -37,6 +37,7 @@ export default {
   methods: {
     // receiving a message from the iframe
     onMessage (message) {
+      console.log(message)
       // the iframe requests that we display a breadcrumb
       // we mirror its internal paths by using them as a "to" query param for our own current page
       if (message.breadcrumbs) {

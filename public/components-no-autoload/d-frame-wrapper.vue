@@ -2,6 +2,7 @@
   <d-frame
     v-bind="$attrs"
     :adapter.prop="dFrameAdapter"
+    v-on="$listeners"
   />
 </template>
 
