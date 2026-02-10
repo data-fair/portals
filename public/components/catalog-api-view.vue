@@ -33,10 +33,12 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <d-frame-wrapper
-        :src="`${openapiViewerUrl}/?urlType=catalog`"
-        iframe-title="Documentation de l'API du catalogue"
-      />
+      <client-only>
+        <d-frame-wrapper
+          :src="`${openapiViewerUrl}/?urlType=catalog`"
+          iframe-title="Documentation de l'API du catalogue"
+        />
+      </client-only>
     </v-card>
   </v-dialog>
 </template>
@@ -45,7 +47,7 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   components: {
-    DFrameWrapper: () => process.client ? import('../components-no-autoload/d-frame-wrapper.vue') : null
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: ['color'],
   data () {

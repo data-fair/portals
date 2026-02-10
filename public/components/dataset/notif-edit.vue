@@ -40,12 +40,14 @@
         </v-btn>
       </v-toolbar>
       <v-card-text class="pa-0">
-        <d-frame-wrapper
-          :iframe-title="'Notifications pour le jeu de données : ' + dataset.title"
-          :src="notifUrl"
-          scrolling="no"
-          aspect-ratio
-        />
+        <client-only>
+          <d-frame-wrapper
+            :iframe-title="'Notifications pour le jeu de données : ' + dataset.title"
+            :src="notifUrl"
+            scrolling="no"
+            aspect-ratio
+          />
+        </client-only>
       </v-card-text>
     </v-card>
   </v-dialog>

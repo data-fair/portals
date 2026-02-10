@@ -39,11 +39,13 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <d-frame-wrapper
-        :id="'application-' + application.slug"
-        :iframe-title="application.title"
-        :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
-      />
+      <client-only>
+        <d-frame-wrapper
+          :id="'application-' + application.slug"
+          :iframe-title="application.title"
+          :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+        />
+      </client-only>
     </v-card>
   </v-dialog>
 </template>

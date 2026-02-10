@@ -38,15 +38,17 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <d-frame-wrapper
-        :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
-        :src="iframeSrc"
-        scrolling="yes"
-        resize="no"
-        :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
-        emit-iframe-messages
-        @iframe-message="(iframeMessage) => onIframeMessage(iframeMessage.detail)"
-      />
+      <client-only>
+        <d-frame-wrapper
+          :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
+          :src="iframeSrc"
+          scrolling="yes"
+          resize="no"
+          :style="$vuetify.breakpoint.smAndDown ? `height: ${windowHeight - 48}px;` : ''"
+          emit-iframe-messages
+          @iframe-message="(iframeMessage) => onIframeMessage(iframeMessage.detail)"
+        />
+      </client-only>
     </v-card>
   </v-dialog>
 </template>

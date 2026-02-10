@@ -39,7 +39,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    DFrameWrapper: () => process.client ? import('../../components-no-autoload/d-frame-wrapper.vue') : null
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: {
     application: {

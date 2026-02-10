@@ -7,20 +7,22 @@
         class="text-center"
       >
         <section-subtitle :text="application.title" />
-        <iframe
-          v-if="application.fixedHeight"
-          :title="application.title"
-          :src="application.link"
-          :height="application.height"
-          width="100%"
-          class="mt-2"
-        />
-        <d-frame-wrapper
-          v-else
-          :iframe-title="application.title"
-          :src="application.link"
-          class="mt-2"
-        />
+        <client-only>
+          <iframe
+            v-if="application.fixedHeight"
+            :title="application.title"
+            :src="application.link"
+            :height="application.height"
+            width="100%"
+            class="mt-2"
+          />
+          <d-frame-wrapper
+            v-else
+            :iframe-title="application.title"
+            :src="application.link"
+            class="mt-2"
+          />
+        </client-only>
       </v-col>
     </v-row>
     <template v-if="linkExternalReuses.length">

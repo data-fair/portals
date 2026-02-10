@@ -2,10 +2,12 @@
   <v-row>
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
-        <d-frame-wrapper
-          :src="notifSubscribeUrl"
-          iframe-title="Gestion des notifications"
-        />
+        <client-only>
+          <d-frame-wrapper
+            :src="notifSubscribeUrl"
+            iframe-title="Gestion des notifications"
+          />
+        </client-only>
         <section-title
           text="Gérer les réutilisations"
           tag="h1"

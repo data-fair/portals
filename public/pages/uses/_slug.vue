@@ -48,10 +48,12 @@
           v-if="use.links && use.links.iframe"
           cols="12"
         >
-          <d-frame-wrapper
-            :iframe-title="use.title"
-            :src="use.links.iframe"
-          />
+          <client-only>
+            <d-frame-wrapper
+              :iframe-title="use.title"
+              :src="use.links.iframe"
+            />
+          </client-only>
         </v-col>
         <v-col
           v-else-if="use.image"

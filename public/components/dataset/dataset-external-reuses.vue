@@ -7,20 +7,22 @@
         class="text-center"
       >
         <section-subtitle :text="reuse.title" />
-        <iframe
-          v-if="reuse.fixedHeight"
-          :title="reuse.title"
-          :src="reuse.link"
-          :height="reuse.height"
-          width="100%"
-          class="mt-2"
-        />
-        <d-frame-wrapper
-          v-else
-          :iframe-title="reuse.title"
-          :src="reuse.link"
-          class="mt-2"
-        />
+        <client-only>
+          <iframe
+            v-if="reuse.fixedHeight"
+            :title="reuse.title"
+            :src="reuse.link"
+            :height="reuse.height"
+            width="100%"
+            class="mt-2"
+          />
+          <d-frame-wrapper
+            v-else
+            :iframe-title="reuse.title"
+            :src="reuse.link"
+            class="mt-2"
+          />
+        </client-only>
       </v-col>
     </v-row>
     <template v-if="linkExternalReuses.length">

@@ -6,14 +6,16 @@
     />
     <div v-else-if="application">
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
-      <d-frame-wrapper
-        :iframe-title="application.title"
-        :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
-        class="full-width"
-        scrolling="yes"
-        resize="no"
-        state-change-events
-      />
+      <client-only>
+        <d-frame-wrapper
+          :iframe-title="application.title"
+          :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
+          class="full-width"
+          scrolling="yes"
+          resize="no"
+          state-change-events
+        />
+      </client-only>
     </div>
   </div>
 </template>

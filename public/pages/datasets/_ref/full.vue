@@ -6,14 +6,16 @@
     />
     <div v-else-if="dataset">
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Vue tabulaire', disabled: true}]" />
-      <d-frame-wrapper
-        :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
-        :src="tablePreview"
-        class="fill-height"
-        resize="no"
-        scrolling="no"
-        sync-params
-      />
+      <client-only>
+        <d-frame-wrapper
+          :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
+          :src="tablePreview"
+          class="fill-height"
+          resize="no"
+          scrolling="no"
+          sync-params
+        />
+      </client-only>
     </div>
   </div>
 </template>

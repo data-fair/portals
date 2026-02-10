@@ -38,12 +38,14 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
-      <d-frame-wrapper
-        :iframe-title="'Schéma du jeu de données : ' + dataset.title"
-        :src="iframeSrc"
-        scrolling="auto"
-        resize="no"
-      />
+      <client-only>
+        <d-frame-wrapper
+          :iframe-title="'Schéma du jeu de données : ' + dataset.title"
+          :src="iframeSrc"
+          scrolling="auto"
+          resize="no"
+        />
+      </client-only>
     </v-card>
   </v-dialog>
 </template>

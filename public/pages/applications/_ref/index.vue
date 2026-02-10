@@ -74,12 +74,14 @@
         </v-col>
       </v-row>
 
-      <d-frame-wrapper
-        :iframe-title="application.title"
-        :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
-        state-change-events
-        @state-change="s => syncedState = s"
-      />
+      <client-only>
+        <d-frame-wrapper
+          :iframe-title="application.title"
+          :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
+          state-change-events
+          @state-change="s => syncedState = s"
+        />
+      </client-only>
 
       <section-subtitle text="Données utilisées" />
       <v-container

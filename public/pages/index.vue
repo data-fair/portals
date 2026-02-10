@@ -28,13 +28,14 @@
     </template>
     <template v-else-if="!config.homeTemplate || config.homeTemplate.type === 'default'">
       <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
-        <d-frame-wrapper
-          v-if="config.homeApplication"
-          :src="homeApplicationUrl"
-          :iframe-title="config.homeApplication.title"
-          :class="`elevation-${appBarElevation}`"
-          style="margin-top: -12px;height: 400px;"
-        />
+        <client-only v-if="config.homeApplication">
+          <d-frame-wrapper
+            :src="homeApplicationUrl"
+            :iframe-title="config.homeApplication.title"
+            :class="`elevation-${appBarElevation}`"
+            style="margin-top: -12px;height: 400px;"
+          />
+        </client-only>
         <v-row
           v-else
           justify="center"
@@ -74,12 +75,13 @@
             md="5"
             offset-md="1"
           >
-            <d-frame-wrapper
-              v-if="config.homeApplication"
-              :src="homeApplicationUrl"
-              style="height: 600px;"
-              :iframe-title="config.homeApplication.title"
-            />
+            <client-only v-if="config.homeApplication">
+              <d-frame-wrapper
+                :src="homeApplicationUrl"
+                style="height: 600px;"
+                :iframe-title="config.homeApplication.title"
+              />
+            </client-only>
             <v-img
               v-else
               :src="homeUrl"
