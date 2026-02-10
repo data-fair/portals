@@ -17,7 +17,7 @@ ADD config config
 ADD contract contract
 
 # Build UI
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN npm run build && \
     rm -rf dist
 
@@ -65,8 +65,8 @@ ADD LICENSE .
 ADD nodemon.json .
 
 # configure node webapp environment
-ENV NODE_ENV production
-ENV DEBUG db,upgrade*
+ENV NODE_ENV=production
+ENV DEBUG="db,upgrade*"
 # the following line would be a good practice
 # unfortunately it is a problem to activate now that the service was already deployed
 # with volumes belonging to root
