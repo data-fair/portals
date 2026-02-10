@@ -5,7 +5,7 @@
       <client-only>
         <d-frame-wrapper
           :src="`${openapiViewerUrl}/?urlType=catalog`"
-          class="fill-height"
+          :height="`${windowHeight - 64}px`"
           iframe-title="Documentation de l'API du catalogue"
         />
       </client-only>

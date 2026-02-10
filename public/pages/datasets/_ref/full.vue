@@ -10,7 +10,7 @@
         <d-frame-wrapper
           :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="tablePreview"
-          class="fill-height"
+          :height="`${windowHeight - 64}px`"
           resize="no"
           scrolling="no"
           sync-params

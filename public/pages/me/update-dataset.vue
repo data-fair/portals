@@ -2,7 +2,7 @@
   <d-frame-wrapper
     iframe-title="Contribuer"
     :src="updateDatasetUrl"
-    class="fill-height"
+    :height="`${windowHeight - 64}px`"
     resize="no"
   />
 </template>
