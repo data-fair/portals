@@ -460,6 +460,7 @@
               <d-frame-wrapper
                 :iframe-title="application.title"
                 :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+                aspect-ratio
               />
             </client-only>
           </v-col>
@@ -512,6 +513,7 @@
               v-else
               :iframe-title="application.title"
               :src="application.link"
+              aspect-ratio
               class="mt-2"
             />
           </client-only>

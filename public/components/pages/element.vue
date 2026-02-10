@@ -232,11 +232,11 @@
       <d-frame-wrapper
         v-else-if="value.type === 'application' && value.application"
         :style="value.fillHeight ? 'height:100%' : ''"
-        :aspect-ratio="!value.fillHeight"
         :src="applicationIframeSrc(value.application)"
         :iframe-title="value.application?.title"
         :sync-state="value.syncState"
         :sync-state-ignore-path="true"
+        aspect-ratio
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
         <a
