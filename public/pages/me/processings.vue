@@ -2,7 +2,7 @@
   <d-frame-wrapper
     iframe-title="Traitements"
     :src="processingsListUrl"
-    :height="`${windowHeight - 64}px`"
+    :height="`${windowHeight - 48}px`"
     resize="no"
     sync-params
     emit-iframe-messages

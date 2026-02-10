@@ -3,7 +3,7 @@
     <d-frame-wrapper
       :iframe-title="page.title"
       :src="page.href"
-      :height="`${windowHeight - 64}px`"
+      :height="`${windowHeight - 48}px`"
       resize="no"
     />
   </v-container>
