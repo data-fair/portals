@@ -218,21 +218,25 @@
         v-if="value.type === 'datasetForm' && value.dataset"
         :src="formIframeSrc(value.dataset)"
         :iframe-title="value.dataset?.title"
+        scrolling="no"
+        aspect-ratio
       />
       <d-frame-wrapper
         v-else-if="value.type === 'datasetTable' && value.dataset"
-        scrolling="yes"
-        :style="value.fillHeight ? 'height:100%' : ''"
-        resize="no"
-        :src="tableIframeSrc()"
         :iframe-title="value.dataset?.title"
+        :src="tableIframeSrc()"
+        :style="value.fillHeight ? 'height:100%' : ''"
+        scrolling="no"
+        aspect-ratio
       />
       <d-frame-wrapper
         v-else-if="value.type === 'application' && value.application"
         :style="value.fillHeight ? 'height:100%' : ''"
+        :aspect-ratio="!value.fillHeight"
         :src="applicationIframeSrc(value.application)"
         :iframe-title="value.application?.title"
-        state-change-events
+        :sync-state="value.syncState"
+        :sync-state-ignore-path="true"
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
         <a
