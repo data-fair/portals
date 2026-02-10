@@ -270,6 +270,7 @@
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
         :iframe-title="'Lien vers la page ' + value.url"
         :src="value.url"
+        aspect-ratio
       />
       <v-overlay
         :value="overlay.visible"
