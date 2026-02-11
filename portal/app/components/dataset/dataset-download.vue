@@ -101,7 +101,10 @@ const simpleExports = computed(() => {
   exportsList.push('xlsx')
   exportsList.push('ods')
   const hasNormalizedGeojson = files.value.some(f => (['normalized', 'full'].includes(f.key) && f.mimetype === 'application/geo+json') || f.key === 'export-geojson')
-  if (!hasNormalizedGeojson && dataset.bbox?.length) exportsList.push('geojson')
+  if (dataset.bbox?.length) {
+    if (!hasNormalizedGeojson) exportsList.push('geojson')
+    exportsList.push('shapefile')
+  }
   return exportsList
 })
 

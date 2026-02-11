@@ -5,7 +5,7 @@
         <v-defaults-provider
           :defaults="{
             VTextField: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
-            VTextarea: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+            VTextarea: { rounded: element.rounded ? `${element.rounded} b-0` : undefined, autoGrow: true },
             VSelect: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
             VAutocomplete: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
           }"
@@ -74,17 +74,20 @@
               </template>
             </template>
 
+            <!-- Not show only if explicitly false -->
             <v-text-field
+              v-if="element.defaultFields?.enableSubject !== false"
               v-model="message.subject"
               :label="t('subject')"
-              :rules="[rules.required(), rules.minLength(10), rules.maxLength(150)]"
+              :rules="subjectRules"
               :counter="150"
             />
             <v-textarea
+              v-if="element.defaultFields?.enableMessage !== false"
               v-model="message.text"
               :label="t('message')"
-              :rules="[rules.required(), rules.minLength(50), rules.maxLength(3000)]"
-              :counter="3000"
+              :rules="messageRules"
+              :counter="msgMaxLength > 0 ? msgMaxLength : undefined"
             />
 
             <!-- Send button -->
@@ -176,6 +179,7 @@
 import type { ContactElement } from '#api/types/page-config'
 import { useRules } from 'vuetify/labs/rules'
 import { useAsyncAction } from '@data-fair/lib-vue/async-action.js'
+import microTemplate from '@data-fair/lib-utils/micro-template.js'
 import { mdiPhone, mdiWeb, mdiSend } from '@mdi/js'
 
 const { element } = defineProps<{ element: ContactElement }>()
@@ -189,6 +193,28 @@ const valid = ref(false)
 const message = ref({ ...newMessage })
 
 const buttonConfig = computed(() => (!element.sendButton?.usePortalConfig && element.sendButton?.config) ? element.sendButton?.config : portalConfig.value.navLinksConfig)
+
+// Default fields config
+const msgMinLength = computed(() => {
+  const v = element.defaultFields?.messageMinLength ?? 50
+  return v === -1 ? 0 : v
+})
+const msgMaxLength = computed(() => {
+  const v = element.defaultFields?.messageMaxLength ?? 3000
+  return v === -1 ? 0 : v
+})
+const subjectRules = computed(() => {
+  const r = [rules.minLength(10), rules.maxLength(150)]
+  if (element.defaultFields?.requiredSubject !== false) r.push(rules.required())
+  return r
+})
+const messageRules = computed(() => {
+  const r = []
+  if (element.defaultFields?.requiredMessage !== false) r.push(rules.required())
+  if (msgMinLength.value > 0) r.push(rules.minLength(msgMinLength.value))
+  if (msgMaxLength.value > 0) r.push(rules.maxLength(msgMaxLength.value))
+  return r
+})
 
 // Additional fields data
 const additionalData = ref<Record<number, string | string[] | undefined>>({})
@@ -227,34 +253,65 @@ if (!preview) {
 const sendMessage = useAsyncAction(async () => {
   if (!valid.value || tokenFetch?.error.value || !tokenFetch?.data.value) return
 
-  // Prepare additional fields text
-  let additionalFieldsText = ''
+  // Build template params from all form fields
+  const templateParams: Record<string, string> = {
+    from: message.value.from,
+    subject: message.value.subject || '',
+    message: message.value.text || '',
+  }
+
+  // Add additional field values by their key
   if (element.additionalFields) {
     element.additionalFields.forEach((field, index) => {
       const value = additionalData.value[index]
       if (value !== undefined && value !== null && value !== '') {
-        let label = field.label
-        if (!label) {
-          if (field.type === 'dataset') label = t('dataset')
-          else if (field.type === 'application') label = t('application')
-          else label = `field_${index}`
+        const formattedValue = Array.isArray(value) ? value.join(', ') : String(value)
+        if (field.key) {
+          templateParams[field.key] = formattedValue
         }
-        const formattedValue = Array.isArray(value) ? value.join(', ') : value
-        additionalFieldsText += `<strong>${label}</strong> : ${formattedValue}\n`
       }
     })
   }
 
-  // Combine additional fields with message text
-  const fullText = additionalFieldsText ? `${additionalFieldsText}\n${message.value.text}` : message.value.text
+  // Format subject using template or fallback to raw subject
+  const formattedSubject = element.subjectTemplate
+    ? microTemplate(element.subjectTemplate, templateParams)
+    : message.value.subject || t('subject')
+
+  // Format body using template + markdown, or fallback to legacy format
+  let formattedBody: string = ''
+  if (element.bodyTemplate_html) {
+    formattedBody += microTemplate(element.bodyTemplate_html, templateParams)
+  } else {
+    // Legacy format: additional fields as bold labels + message text
+    const additionalFieldsItems: string[] = []
+    if (element.additionalFields) {
+      element.additionalFields.forEach((field, index) => {
+        const value = additionalData.value[index]
+        if (value !== undefined && value !== null && value !== '') {
+          let label = field.label
+          if (!label) {
+            if (field.type === 'dataset') label = t('dataset')
+            else if (field.type === 'application') label = t('application')
+            else label = `field_${index}`
+          }
+          const formattedValue = Array.isArray(value) ? value.join(', ') : value
+          additionalFieldsItems.push(`<li><strong>${label}</strong> : ${formattedValue}</li>`)
+        }
+      })
+    }
+    formattedBody += ' ' + t('by') + ' ' + (message.value.from) + '<br>'
+    formattedBody += additionalFieldsItems.length ? `<ul>${additionalFieldsItems.join('')}</ul>` : ''
+    formattedBody += `<p><strong>${t('messageBody')}</strong><br>${message.value.text}</p>`
+  }
 
   await $fetch('/simple-directory/api/mails/contact', {
     method: 'POST',
     body: {
       token: tokenFetch.data.value,
       from: message.value.from,
-      subject: message.value.subject,
-      text: fullText,
+      subject: formattedSubject,
+      text: formattedBody,
     },
   })
 
@@ -274,10 +331,12 @@ const sendMessage = useAsyncAction(async () => {
     email: 'Email'
     message: 'Message'
     messageSent: 'Message sent!'
+    messageBody: 'Message body:'
     newWindow: 'New window'
     send: 'Send'
     socialMedia: 'Find us on social media'
     subject: 'Subject'
+    by: 'submit by'
 
   fr:
     applications: 'Visualisation'
@@ -285,9 +344,11 @@ const sendMessage = useAsyncAction(async () => {
     email: 'Email'
     message: 'Message'
     messageSent: 'Message envoyé !'
+    messageBody: 'Corps du message :'
     newWindow: 'Nouvelle fenêtre'
     send: 'Envoyer'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
     subject: 'Sujet'
+    by: 'émis par'
 
 </i18n>
