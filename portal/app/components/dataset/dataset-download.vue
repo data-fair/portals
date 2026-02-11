@@ -35,7 +35,7 @@
     <v-list-item
       v-for="format in simpleExports"
       :key="format"
-      :title="t('export', { format: format.toUpperCase()})"
+      :title="t('export', { format: format.toUpperCase() })"
       :subtitle="t('formatSubtitle.' + format)"
     >
       <template #append>
@@ -53,7 +53,7 @@
     <template v-if="count > 10000">
       <v-list-item
         :title="t('dataTooLargeAlertTitle')"
-        :subtitle="t('dataTooLargeAlertText', { formats: new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])]) })"
+        :subtitle="t('dataTooLargeAlertText', { formats: new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GeoJSON', 'Shapefile'] : [])]) })"
         base-color="info"
       >
         <template #append>
@@ -101,7 +101,10 @@ const simpleExports = computed(() => {
   exportsList.push('xlsx')
   exportsList.push('ods')
   const hasNormalizedGeojson = files.value.some(f => (['normalized', 'full'].includes(f.key) && f.mimetype === 'application/geo+json') || f.key === 'export-geojson')
-  if (!hasNormalizedGeojson && dataset.bbox?.length) exportsList.push('geojson')
+  if (dataset.bbox?.length) {
+    if (!hasNormalizedGeojson) exportsList.push('geojson')
+    exportsList.push('shapefile')
+  }
   return exportsList
 })
 
@@ -148,6 +151,7 @@ const clickDownload = (format: string) => {
       xlsx: Format suitable for Excel
       ods: Format suitable for Libre Office and other free spreadsheet software
       geojson: Portable format for geographic data
+      shapefile: GIS format for geographic data
     preview: Data download
     previewShort: Download
     table: Open table view
@@ -161,6 +165,7 @@ const clickDownload = (format: string) => {
       xlsx: Format adapté pour Excel
       ods: Format adapté pour Libre Office et autres logiciels tableurs libres
       geojson: Format portable pour données géographiques
+      shapefile: Format SIG pour données géographiques
     preview: Téléchargement des données
     previewShort: Télécharger
     table: Ouvrir la vue tableau
