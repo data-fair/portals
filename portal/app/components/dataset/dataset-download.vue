@@ -35,7 +35,7 @@
     <v-list-item
       v-for="format in simpleExports"
       :key="format"
-      :title="t('export', { format: format.toUpperCase()})"
+      :title="t('export', { format: format.toUpperCase() })"
       :subtitle="t('formatSubtitle.' + format)"
     >
       <template #append>
@@ -151,6 +151,7 @@ const clickDownload = (format: string) => {
       xlsx: Format suitable for Excel
       ods: Format suitable for Libre Office and other free spreadsheet software
       geojson: Portable format for geographic data
+      shapefile: GIS format for geographic data
     preview: Data download
     previewShort: Download
     table: Open table view
@@ -164,6 +165,7 @@ const clickDownload = (format: string) => {
       xlsx: Format adapté pour Excel
       ods: Format adapté pour Libre Office et autres logiciels tableurs libres
       geojson: Format portable pour données géographiques
+      shapefile: Format SIG pour données géographiques
     preview: Téléchargement des données
     previewShort: Télécharger
     table: Ouvrir la vue tableau
