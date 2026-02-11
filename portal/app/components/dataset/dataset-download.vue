@@ -53,7 +53,7 @@
     <template v-if="count > 10000">
       <v-list-item
         :title="t('dataTooLargeAlertTitle')"
-        :subtitle="t('dataTooLargeAlertText', { formats: new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GEOJSON'] : [])]) })"
+        :subtitle="t('dataTooLargeAlertText', { formats: new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(['CSV', 'XLSX', 'ODS', ...(dataset.bbox ? ['GeoJSON', 'Shapefile'] : [])]) })"
         base-color="info"
       >
         <template #append>
