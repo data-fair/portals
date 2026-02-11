@@ -16,8 +16,8 @@ export default function pianoPlugin (params: PianoPluginConfig): AnalyticsPlugin
     initialize: ({ config }) => {
       if (!params.site) throw new Error('Analytics : Please provide site option to Piano module')
       if (!params.collectDomain) throw new Error('Analytics : Please provide collectDomain option to Piano module')
-      const privacyDefaultMode = params.anonymized ? 'exempt' : 'optin'
-      pianoAnalytics.setConfigurations({ ...params, privacyDefaultMode })
+      pianoAnalytics.privacy.setMode(params.anonymized ? 'exempt' : 'optin')
+      pianoAnalytics.setConfigurations({ ...params })
     },
     page: ({ payload }) => {
       debug('page', payload.properties)
