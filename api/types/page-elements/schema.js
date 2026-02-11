@@ -700,21 +700,19 @@ export default {
         fr: 'Section sur fond coloré'
       },
       required: ['type', 'children'],
-      layout: {
-        children: [
-          'type',
-          'children',
-          'fullWidth',
-          'background',
-          'pt',
-          'pb',
-          'pl',
-          'pr',
-          'overflowTop',
-          'overflowBottom',
-          { if: '!parent.data?.overflowBottom', children: ['mb'] }
-        ]
-      },
+      layout: [
+        'type',
+        'children',
+        'fullWidth',
+        'background',
+        'pt',
+        'pb',
+        'pl',
+        'pr',
+        'overflowTop',
+        'overflowBottom',
+        { if: '!parent.data?.overflowBottom', children: ['mb'] }
+      ],
       properties: {
         type: {
           const: 'banner'
@@ -1356,6 +1354,7 @@ export default {
       },
       required: ['type'],
       layout: [
+        'type',
         'defaultFields', 'additionalFields', 'subjectTemplate', 'bodyTemplate',
         {
           title: 'Appearance',
