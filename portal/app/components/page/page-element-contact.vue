@@ -41,7 +41,7 @@
                   v-model="additionalData[index]"
                   :label="field.label"
                   :items="field.options || []"
-                  :rules="field.required ? [rules.required()] : []"
+                  :rules="field.required ? [rules.required(), ...(field.multiple ? [rules.minLength(1)] : [])] : []"
                   :multiple="field.multiple"
                   :clearable="!field.required"
                 />
@@ -255,10 +255,11 @@ const sendMessage = useAsyncAction(async () => {
   if (!valid.value || tokenFetch?.error.value || !tokenFetch?.data.value) return
 
   // Build template params from all form fields
+  const messageTextHtml = (message.value.text || '').replace(/\r?\n/g, '<br>')
   const templateParams: Record<string, string> = {
     from: message.value.from,
     subject: message.value.subject || '',
-    message: message.value.text || '',
+    message: messageTextHtml,
     portalName: portalConfig.value.title || '',
     portalDomain: url?.hostname || ''
   }
@@ -305,7 +306,7 @@ const sendMessage = useAsyncAction(async () => {
     }
     formattedBody += ' ' + t('by') + ' ' + (message.value.from) + '<br>'
     formattedBody += additionalFieldsItems.length ? `<ul>${additionalFieldsItems.join('')}</ul>` : ''
-    formattedBody += `<p><strong>${t('messageBody')}</strong><br>${message.value.text}</p>`
+    formattedBody += messageTextHtml.trim() ? `<p><strong>${t('messageBody')}</strong><br>${messageTextHtml}</p>` : ''
   }
 
   await $fetch('/simple-directory/api/mails/contact', {
@@ -318,9 +319,7 @@ const sendMessage = useAsyncAction(async () => {
     },
   })
 
-  message.value = { ...newMessage } // Reset form
-  additionalData.value = {} // Reset additional fields
-  formRef.value?.resetValidation() // Reset validation state
+  formRef.value?.reset() // Reset validation state
 }, {
   success: t('messageSent'),
 })

@@ -1466,7 +1466,10 @@ export default {
                   type: { const: 'text' },
                   key: {
                     type: 'string',
-                    title: 'Clé dans le template'
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
                   },
                   label: {
                     type: 'string',
@@ -1487,7 +1490,10 @@ export default {
                   type: { const: 'select' },
                   key: {
                     type: 'string',
-                    title: 'Clé dans le template'
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
                   },
                   label: {
                     type: 'string',
@@ -1523,7 +1529,10 @@ export default {
                   type: { const: 'dataset' },
                   key: {
                     type: 'string',
-                    title: 'Clé dans le template'
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
                   },
                   label: {
                     type: 'string',
@@ -1544,7 +1553,10 @@ export default {
                   type: { const: 'application' },
                   key: {
                     type: 'string',
-                    title: 'Clé dans le template'
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
                   },
                   label: {
                     type: 'string',
