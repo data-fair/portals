@@ -1563,7 +1563,7 @@ export default {
         subjectTemplate: {
           type: 'string',
           title: "Format de l'objet de l'email",
-          description: "Personnalisez le format de l'objet des emails reçus. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut : **{subject}**",
+          description: "Personnalisez le format de l'objet des emails reçus. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{portalName}** : Le nom du portail.\n* **{portalDomain}** : Le domaine du portail.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut : **{subject}**",
           layout: {
             comp: 'textarea',
             props: {
@@ -1575,7 +1575,7 @@ export default {
         bodyTemplate: {
           type: 'string',
           title: "Format du corps de l'email",
-          description: "Personnalisez le format du corps des emails reçus. Le contenu est interprété en **Markdown** et sera rendu en HTML dans l'email. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut.",
+          description: "Personnalisez le format du corps des emails reçus. Le contenu est interprété en **Markdown** et sera rendu en HTML dans l'email. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{portalName}** : Le nom du portail.\n* **{portalDomain}** : Le domaine du portail.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut.",
           layout: 'markdown',
         },
         bodyTemplate_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' },

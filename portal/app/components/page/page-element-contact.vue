@@ -186,6 +186,7 @@ const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
+const url = useRequestURL()
 
 const formRef = ref()
 const newMessage = { from: '', subject: '', text: '' }
@@ -258,6 +259,8 @@ const sendMessage = useAsyncAction(async () => {
     from: message.value.from,
     subject: message.value.subject || '',
     message: message.value.text || '',
+    portalName: portalConfig.value.title || '',
+    portalDomain: url.hostname,
   }
 
   // Add additional field values by their key
