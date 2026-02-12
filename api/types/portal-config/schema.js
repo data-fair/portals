@@ -266,7 +266,7 @@ export default {
         }
       }
     },
-    navLinksConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+    navLinksConfig: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
     logo: {
       type: 'object',
       title: 'Logo',

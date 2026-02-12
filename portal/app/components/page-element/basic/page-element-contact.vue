@@ -97,10 +97,10 @@
                 :density="buttonConfig?.density"
                 :elevation="buttonConfig?.elevation"
                 :rounded="buttonConfig?.rounded"
-                :variant="buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined"
+                :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
                 :class="{ 'text-none': !buttonConfig?.uppercase }"
                 :text="t('send')"
-                :disabled="!valid"
+                :readonly="!valid"
                 :loading="sendMessage.loading.value"
                 @click="sendMessage.execute()"
               >
@@ -185,7 +185,7 @@ import { mdiPhone, mdiWeb, mdiSend } from '@mdi/js'
 const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
-const { portalConfig, preview } = usePortalStore()
+const { portal, portalConfig, preview } = usePortalStore()
 const url = !preview ? useRequestURL() : null
 
 const formRef = ref()
@@ -227,10 +227,26 @@ if (element.additionalFields?.some(field => field.type === 'dataset') && !previe
   datasetsFetch = useLocalFetch<DatasetsFetchResult>(
     '/data-fair/api/v1/datasets',
     {
-      query: { select: 'id,title', size: 1000 },
+      query: {
+        select: 'id,title',
+        size: 1000,
+        publicationSites: 'data-fair-portals:' + portal.value._id,
+      },
       watch: false
     }
   )
+} else {
+  // @ts-expect-error Mock datasets for preview mode
+  datasetsFetch = {
+    data: ref({
+      results: [
+        { id: 'dataset-1', title: 'Jeu de données exemple 1' },
+        { id: 'dataset-2', title: 'Jeu de données exemple 2' },
+        { id: 'dataset-3', title: 'Jeu de données exemple 3' }
+      ]
+    }),
+    status: ref('success')
+  }
 }
 
 // Fetch applications if needed
@@ -240,10 +256,26 @@ if (element.additionalFields?.some(field => field.type === 'application') && !pr
   applicationsFetch = useLocalFetch<ApplicationsFetchResult>(
     '/data-fair/api/v1/applications',
     {
-      query: { select: 'id,title', size: 1000 },
+      query: {
+        select: 'id,title',
+        size: 1000,
+        publicationSites: 'data-fair-portals:' + portal.value._id,
+      },
       watch: false
     }
   )
+} else {
+  // @ts-expect-error Mock applications for preview mode
+  applicationsFetch = {
+    data: ref({
+      results: [
+        { id: 'app-1', title: 'Visualisation exemple 1' },
+        { id: 'app-2', title: 'Visualisation exemple 2' },
+        { id: 'app-3', title: 'Visualisation exemple 3' }
+      ]
+    }),
+    status: ref('success')
+  }
 }
 
 let tokenFetch: ReturnType<typeof useLocalFetch> | undefined

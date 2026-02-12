@@ -34,11 +34,12 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkItem, LinkConfig } from '#api/types/page-elements/index.ts'
+import type { LinkItem } from '#api/types/page-elements/index.ts'
+import type { ButtonConfig } from '#api/types/common-defs/index.ts'
 
 defineProps<{
   link: LinkItem
-  config?: LinkConfig
+  config?: ButtonConfig
 }>()
 
 const { locale } = useI18n()
