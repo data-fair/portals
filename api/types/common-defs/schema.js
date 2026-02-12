@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
-  'x-exports': [],
+  'x-exports': ['types'],
   $defs: {
     'rendered-html': {
       type: 'string',
@@ -188,6 +188,71 @@ export default {
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
         { const: 'accent', title: 'Accent', 'x-i18n-title': { fr: 'Accentuée' } }
       ]
-    }
+    },
+
+    buttonConfig: {
+      type: 'object',
+      properties: {
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: {
+            switch: [
+              {
+                if: 'parent.data?.variant === "default"',
+                props: { background: true },
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              },
+              {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              }
+            ]
+          },
+
+        },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 4 } },
+          default: 1
+        },
+        density: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } }
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 4 } }
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          layout: { cols: { md: 4 } }
+        },
+        showIcon: {
+          type: 'boolean',
+          title: "Afficher l'icône",
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        },
+        uppercase: {
+          type: 'boolean',
+          title: 'Texte en majuscules',
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        }
+      }
+    },
   }
 }

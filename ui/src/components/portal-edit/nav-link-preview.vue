@@ -15,11 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkConfig } from '#api/types/page-elements/index.ts'
+import type { ButtonConfig } from '#api/types/common-defs/index.ts'
 import { mdiHome } from '@mdi/js'
 
 const { t } = useI18n()
-defineProps<{ config: LinkConfig }>()
+defineProps<{ config: ButtonConfig }>()
 
 </script>
 

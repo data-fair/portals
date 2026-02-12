@@ -534,10 +534,10 @@ export default {
               {
                 if: '!parent.data?.usePortalConfig',
                 children: ['config']
-              }
+              },
+              'centered'
             ]
           },
-          'centered',
           'mb'
         ]
       },
@@ -551,7 +551,7 @@ export default {
           layout: 'switch',
           default: true
         },
-        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         centered: {
           type: 'boolean',
           title: 'Centré',
@@ -580,10 +580,10 @@ export default {
               {
                 if: '!parent.data?.usePortalConfig',
                 children: ['config']
-              }
+              },
+              'centered'
             ]
           },
-          'centered',
           'mb'
         ]
       },
@@ -611,7 +611,7 @@ export default {
           layout: 'switch',
           default: true
         },
-        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         centered: {
           type: 'boolean',
           title: 'Centré',
@@ -898,7 +898,7 @@ export default {
               layout: 'switch',
               default: true
             },
-            config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' }
+            config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' }
           }
         },
         background: {
@@ -1619,7 +1619,7 @@ export default {
               default: true
             },
             config: {
-              $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig',
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig',
               layout: { if: '!parent.data?.usePortalConfig' }
             }
           }
