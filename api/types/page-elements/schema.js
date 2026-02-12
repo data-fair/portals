@@ -1218,12 +1218,19 @@ export default {
         openFirst: {
           type: 'boolean',
           title: 'Ouvrir le premier panneau par défaut',
-          layout: { if: 'parent.data?.openAll !== true' }
+          layout: {
+            switch: [
+              {
+                if: 'parent.data?.openAll',
+                props: { disabled: true }
+              }
+            ]
+          }
         },
         openAll: {
           type: 'boolean',
           title: 'Ouvrir tous les panneaux par défaut',
-          layout: { if: 'parent.data?.multiple === true' }
+          layout: { if: 'parent.data?.multiple' }
         },
         titleBackgroundColor: {
           title: 'Couleur de fond des titres',
