@@ -57,7 +57,7 @@ import { mdiCircle } from '@mdi/js'
 
 const elements = defineModel<PageElement[]>()
 const { addItemMessage, pages } = defineProps<{ addItemMessage: string, pages: any, root?: boolean }>()
-const session = useSession()
+const session = useSessionAuthenticated()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
 const vjsfOptions: VjsfOptions = {
