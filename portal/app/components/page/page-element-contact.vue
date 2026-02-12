@@ -185,7 +185,7 @@ import { mdiPhone, mdiWeb, mdiSend } from '@mdi/js'
 const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
-const { portalConfig, preview } = usePortalStore()
+const { portal, portalConfig, preview } = usePortalStore()
 const url = !preview ? useRequestURL() : null
 
 const formRef = ref()
@@ -227,7 +227,11 @@ if (element.additionalFields?.some(field => field.type === 'dataset') && !previe
   datasetsFetch = useLocalFetch<DatasetsFetchResult>(
     '/data-fair/api/v1/datasets',
     {
-      query: { select: 'id,title', size: 1000 },
+      query: {
+        select: 'id,title',
+        size: 1000,
+        publicationSites: 'data-fair-portals:' + portal.value._id,
+      },
       watch: false
     }
   )
@@ -240,7 +244,11 @@ if (element.additionalFields?.some(field => field.type === 'application') && !pr
   applicationsFetch = useLocalFetch<ApplicationsFetchResult>(
     '/data-fair/api/v1/applications',
     {
-      query: { select: 'id,title', size: 1000 },
+      query: {
+        select: 'id,title',
+        size: 1000,
+        publicationSites: 'data-fair-portals:' + portal.value._id,
+      },
       watch: false
     }
   )
