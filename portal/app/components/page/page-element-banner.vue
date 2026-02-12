@@ -2,7 +2,7 @@
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
   <v-sheet
     :class="[
-      !preview && element.fullWidth && context.isRoot ? 'banner-fluid' : 'banner-container',
+      !preview && element.fullWidth && context.isRoot ? 'banner-fluid' : '',
       element.background?.color && 'bg-' + element.background.color,
       !preview && context.isRoot && context.index === 0 && !showTopBreadcrumbs && 'mt-n4',
       !preview && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
@@ -48,23 +48,11 @@ const getPageImageSrc = usePageImageSrc()
 const { showTopBreadcrumbs } = useNavigationStore()
 const pageConfig = inject<Ref<PageConfig>>('page-config')
 
-// Calculate scrollbar width to adjust full width banners
-// By default 100vw includes scrollbar width
-if (typeof window !== 'undefined') {
-  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
-  document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`)
-}
-
 </script>
 
 <style scoped>
-
-:root { --scrollbar-width: 0px; }
-
 .banner-fluid {
-  width: calc(100vw - var(--scrollbar-width, 0px));
-  margin-left: calc(50% - 50vw + var(--scrollbar-width, 0px) / 2);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
 }
-
-.banner-contained { width: 100%; }
 </style>
