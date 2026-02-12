@@ -1213,8 +1213,17 @@ export default {
         multiple: {
           type: 'boolean',
           title: "Permettre l'ouverture multiple",
-          description: "Permet à l'utilisateur d'avoir plusieurs panneaux ouverts en même temps.",
-          default: false
+          description: "Permet à l'utilisateur d'avoir plusieurs panneaux ouverts en même temps."
+        },
+        openFirst: {
+          type: 'boolean',
+          title: 'Ouvrir le premier panneau par défaut',
+          layout: { if: 'parent.data?.openAll !== true' }
+        },
+        openAll: {
+          type: 'boolean',
+          title: 'Ouvrir tous les panneaux par défaut',
+          layout: { if: 'parent.data?.multiple === true' }
         },
         titleBackgroundColor: {
           title: 'Couleur de fond des titres',

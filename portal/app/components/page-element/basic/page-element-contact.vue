@@ -97,10 +97,10 @@
                 :density="buttonConfig?.density"
                 :elevation="buttonConfig?.elevation"
                 :rounded="buttonConfig?.rounded"
-                :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
+                :variant="buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined"
                 :class="{ 'text-none': !buttonConfig?.uppercase }"
                 :text="t('send')"
-                :readonly="!valid"
+                :disabled="!valid"
                 :loading="sendMessage.loading.value"
                 @click="sendMessage.execute()"
               >

@@ -47,7 +47,11 @@ const { element } = defineProps({
   element: { type: Object as () => ExpansionPanelsElement, required: true }
 })
 
-const activePanels = ref([])
+const activePanels = ref<number[] | number | null>(element.multiple ? [] : null)
+
+const count = element.panels.filter(Boolean).length
+if (element.openFirst) activePanels.value = element.multiple ? [0] : 0
+if (element.openAll) activePanels.value = element.multiple ? Array.from({ length: count }, (_, i) => i) : 0
 
 const onPanelsChildrenUpdate = (newElements: PageElement[], i: number) => {
   return {
