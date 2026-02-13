@@ -191,6 +191,17 @@
       />
     </template>
   </page-element-tabs>
+  <page-element-expansion-panels
+    v-else-if="element.type === 'expansion-panels'"
+    :element="element"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-expansion-panels>
 
   <div v-else>
     {{ t('unknownElement') }}

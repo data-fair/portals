@@ -103,7 +103,7 @@ export default {
               { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
               { key: 'useApplication', cols: { md: 4 } },
-              { markdown: "**Ordre de priorité :**<br>1. **Image spécifique** (définie directement sur le jeu de données)<br>2. **Image de la thématique** (si activé)<br>3. **Image de l'application** (si activé)<br>4. **Image par défaut** (si définie)" }
+              { markdown: "**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de l'application** (si activé)\n4. **Image par défaut** (si définie)" }
             ]
           },
         ]

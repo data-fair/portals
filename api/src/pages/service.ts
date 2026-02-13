@@ -338,14 +338,21 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     if (element.type === 'applications-catalog') await traversePageElements(element.advancedFilters, callback)
     if (element.type === 'reuses-catalog') await traversePageElements(element.advancedFilters, callback)
 
+    if (element.type === 'two-columns') {
+      await traversePageElements(element.children, callback)
+      await traversePageElements(element.children2, callback)
+    }
+
     if (element.type === 'tabs') {
       for (const tab of element.tabs) {
         await traversePageElements(tab.children, callback)
       }
     }
-    if (element.type === 'two-columns') {
-      await traversePageElements(element.children, callback)
-      await traversePageElements(element.children2, callback)
+
+    if (element.type === 'expansion-panels') {
+      for (const tab of element.panels) {
+        await traversePageElements(tab.children, callback)
+      }
     }
   }
 }

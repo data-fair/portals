@@ -43,6 +43,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify']
   },
+  components: [
+    { path: '~/components', pathPrefix: false }
+  ],
   imports: {
     presets: [
       {

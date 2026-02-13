@@ -82,6 +82,7 @@ export default {
           { key: 11, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
           { key: 12, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
           { key: 13, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
+          { key: 14, title: 'Expansion panels', 'x-i18n-title': { fr: 'Accordéons' } },
 
           {
             header: true,
@@ -91,10 +92,10 @@ export default {
             },
             icon: mdiPuzzleOutline
           },
-          { key: 14, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
-          { key: 15, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
-          // { key: 16, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
-          { key: 17, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+          { key: 15, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
+          { key: 16, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
+          // { key: 17, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
+          { key: 18, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
 
           {
             header: true,
@@ -104,11 +105,11 @@ export default {
             },
             icon: mdiDatabaseOutline
           },
-          { key: 18, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
-          { key: 19, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
-          { key: 20, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
-          { key: 21, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
-          { key: 22, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 19, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+          { key: 20, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { key: 21, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { key: 22, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { key: 23, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
 
           {
             header: true,
@@ -118,9 +119,9 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 23, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 24, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 25, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 24, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 25, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 26, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
 
           {
             header: true,
@@ -130,9 +131,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 26, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 27, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 28, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
+          { key: 27, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
       },
       default: {
@@ -159,6 +160,7 @@ export default {
         { $ref: '#/$defs/element-two-columns' },
         { $ref: '#/$defs/element-responsive-grid' },
         { $ref: '#/$defs/element-tabs' },
+        { $ref: '#/$defs/element-expansion-panels' },
 
         // Functional blocks
         { $ref: '#/$defs/element-search' },
@@ -1113,7 +1115,7 @@ export default {
     'element-tabs': {
       title: 'TabsElement',
       'x-i18n-title': {
-        en: 'tabs',
+        en: 'Tabs',
         fr: 'Onglets'
       },
       type: 'object',
@@ -1159,6 +1161,115 @@ export default {
             properties: {
               title: {
                 title: 'Titre onglet',
+                type: 'string'
+              },
+              icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+              children: {
+                type: 'array',
+                layout: 'none',
+                items: {
+                  $ref: '#/$defs/element'
+                }
+              }
+            }
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-expansion-panels': {
+      title: 'ExpansionPanelsElement',
+      'x-i18n-title': {
+        en: 'Expansion panels',
+        fr: 'Accordéons'
+      },
+      type: 'object',
+      required: ['type', 'panels'],
+      properties: {
+        type: { const: 'expansion-panels' },
+        // variant: {
+        //   type: 'string',
+        //   title: 'Variant',
+        //   'x-i18n-title': { fr: 'Variante' },
+        //   default: 'default',
+        //   oneOf: [
+        //     { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Par défaut' } },
+        //     { const: 'accordion', title: 'Accordion', 'x-i18n-title': { fr: 'En accordéon' } }
+        //   ]
+        // },
+        // notStatic: {
+        //   title: 'Agrandissement des titres',
+        //   description: 'Si activé, les titres des panneaux actifs s’agrandissent.'
+        //   type: 'boolean',
+        //   default: false
+        // },
+
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        multiple: {
+          type: 'boolean',
+          title: "Permettre l'ouverture multiple",
+          description: "Permet à l'utilisateur d'avoir plusieurs panneaux ouverts en même temps."
+        },
+        openFirst: {
+          type: 'boolean',
+          title: 'Ouvrir le premier panneau par défaut',
+          layout: {
+            switch: [
+              {
+                if: 'parent.data?.openAll',
+                props: { disabled: true }
+              }
+            ]
+          }
+        },
+        openAll: {
+          type: 'boolean',
+          title: 'Ouvrir tous les panneaux par défaut',
+          layout: { if: 'parent.data?.multiple' }
+        },
+        titleBackgroundColor: {
+          title: 'Couleur de fond des titres',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            props: { background: true }
+          }
+        },
+        textBackgroundColor: {
+          title: 'Couleur de fond du contenu',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            props: { background: true }
+          }
+        },
+
+        panels: {
+          type: 'array',
+          title: 'Panneaux',
+          layout: {
+            messages: {
+              addItem: 'Ajouter un panneau',
+            },
+            listEditMode: 'inline'
+          },
+          items: {
+            type: 'object',
+            required: [],
+            properties: {
+              title: {
+                title: 'Titre du panneau',
                 type: 'string'
               },
               icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
