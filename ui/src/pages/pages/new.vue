@@ -10,23 +10,32 @@
       flat
     >
       <v-stepper-header>
-        <template v-if="isStandardGroup">
+        <v-stepper-item
+          :title="t('selectPageType')"
+          value="type"
+          :color="step === 'type' ? 'primary' : ''"
+          :complete="pageType !== undefined"
+          editable
+          :icon="mdiShape"
+        />
+        <template v-if="isGenericPage">
+          <v-divider />
           <v-stepper-item
-            :title="t('selectPageType')"
-            value="type"
-            :color="step === 'type' ? 'primary' : ''"
-            :complete="pageType !== undefined"
-            editable
+            :title="t('selectGroup')"
+            value="group"
+            :color="step === 'group' ? 'primary' : ''"
+            :complete="selectedGroupId !== undefined"
+            :editable="pageType !== undefined"
             :icon="mdiShape"
           />
-          <v-divider />
         </template>
+        <v-divider />
         <v-stepper-item
           :title="t('selectAction')"
           value="action"
           :color="step === 'action' ? 'primary' : ''"
           :complete="actionType !== undefined"
-          :editable="!isStandardGroup || pageType !== undefined"
+          :editable="pageType !== undefined && (!isGenericPage || selectedGroupId !== undefined)"
           :icon="mdiPlaylistEdit"
         />
         <template v-if="actionType === 'reference' || actionType === 'duplicate'">
@@ -61,14 +70,32 @@
       </v-stepper-header>
 
       <v-stepper-window>
-        <!-- Step 0: Select page type (only for standard group) -->
-        <v-stepper-window-item
-          v-if="isStandardGroup"
-          value="type"
-        >
+        <!-- Step 0: Select page type -->
+        <v-stepper-window-item value="type">
           <v-row class="d-flex align-stretch">
+            <!-- Generic page (first) -->
             <v-col
-              v-for="pType in pageTypes"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="pageType === 'generic' ? 'primary' : ''"
+                @click="selectPageType('generic')"
+              >
+                <template #title>
+                  <span :class="pageType !== 'generic' ? 'text-primary' : ''">
+                    {{ t('pageTypeTitle.generic') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('pageTypeDesc.generic') }}</v-card-text>
+              </v-card>
+            </v-col>
+
+            <!-- Standard page types -->
+            <v-col
+              v-for="pType in standardPageTypes"
               :key="pType"
               md="4"
               sm="6"
@@ -90,7 +117,59 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 1: Select action type -->
+        <!-- Step 1: Select group (only for generic pages) -->
+        <v-stepper-window-item
+          v-if="isGenericPage"
+          value="group"
+        >
+          <v-row class="d-flex align-stretch">
+            <!-- No group option -->
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedGroupId === 'default' ? 'primary' : ''"
+                @click="selectGroup('default')"
+              >
+                <template #title>
+                  <span :class="selectedGroupId !== 'default' ? 'text-primary' : ''">
+                    {{ t('groupTitle.default') }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('groupDesc.default') }}</v-card-text>
+              </v-card>
+            </v-col>
+
+            <!-- Custom groups -->
+            <v-col
+              v-for="customGroup in customGroups"
+              :key="customGroup._id"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedGroupId === customGroup._id ? 'primary' : ''"
+                @click="selectGroup(customGroup._id)"
+              >
+                <template #title>
+                  <span :class="selectedGroupId !== customGroup._id ? 'text-primary' : ''">
+                    {{ customGroup.title }}
+                  </span>
+                </template>
+                <v-card-text v-if="customGroup.description">
+                  {{ customGroup.description }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-stepper-window-item>
+
+        <!-- Step 2: Select action type -->
         <v-stepper-window-item value="action">
           <v-row class="d-flex align-stretch">
             <!-- Blank page card -->
@@ -157,7 +236,7 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 2: Select reference page or page to duplicate -->
+        <!-- Step 3: Select reference page or page to duplicate -->
         <v-stepper-window-item value="source">
           <v-row class="d-flex align-stretch">
             <v-col
@@ -185,7 +264,7 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 3: Select owner (optional) -->
+        <!-- Step 4: Select owner (optional) -->
         <v-stepper-window-item value="owner">
           <owner-pick
             v-model="newOwner"
@@ -193,7 +272,7 @@
           />
         </v-stepper-window-item>
 
-        <!-- Step 4: Page information -->
+        <!-- Step 5: Page information -->
         <v-stepper-window-item value="information">
           <v-form
             v-model="valid"
@@ -212,7 +291,7 @@
       </v-stepper-window>
 
       <v-stepper-actions
-        v-if="step !== 'type' && (step !== 'action' || isStandardGroup)"
+        v-if="step !== 'type'"
         :prev-text="t('previous')"
         @click:prev="goToPreviousStep()"
       >
@@ -241,17 +320,22 @@ import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
 const session = useSessionAuthenticated()
 const router = useRouter()
-const route = useRoute<'/pages/[groupId]/new'>()
 const { t } = useI18n()
 
-const isBaseGroup = ['standard', 'event', 'news', 'default'].includes(route.params.groupId)
-const isStandardGroup = route.params.groupId === 'standard'
+// Fetch custom groups
+const customGroupsFetch = useFetch<{ results: Array<{ _id: string, title: string, slug: string, description?: string }> }>(
+  $apiPath + '/groups',
+  { query: { size: 1000, select: '_id,title,slug,description' } }
+)
 
-// Available page types for standard group
-const pageTypes = ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses']
+const customGroups = computed(() => customGroupsFetch.data.value?.results || [])
 
-const step = ref<'type' | 'action' | 'source' | 'owner' | 'information'>(isStandardGroup ? 'type' : 'action')
-const pageType = ref<string | undefined>(undefined) // For standard group only
+// Available page types (standard types, generic is shown separately first)
+const standardPageTypes = ['home', 'event', 'news', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses']
+
+const step = ref<'type' | 'group' | 'action' | 'source' | 'owner' | 'information'>('type')
+const pageType = ref<string | undefined>(undefined)
+const selectedGroupId = ref<string | undefined>(undefined)
 const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
 const selectedPageId = ref<string | undefined>(undefined)
 const newTitle = ref<string>()
@@ -259,15 +343,11 @@ const newOwner = ref<Account | undefined>(session.state.account)
 const ownersReady = ref(false)
 const valid = ref(false)
 
+const isGenericPage = computed(() => pageType.value === 'generic')
+
 // Computed query for fetching pages based on selected type
-// For standard/event/news, use the type directly (or pageType.value for standard)
-// For default and custom groups, use 'generic'
 const type = computed(() => {
-  let type: string
-  if (route.params.groupId === 'standard' && pageType.value) type = pageType.value
-  else if (route.params.groupId === 'event' || route.params.groupId === 'news') type = route.params.groupId
-  else type = 'generic'
-  return type
+  return pageType.value || 'generic'
 })
 
 // Fetch reference pages (isReference: true)
@@ -275,7 +355,8 @@ const referencesFetch = useFetch<{ results: Array<{ _id: string, title: string, 
   $apiPath + '/pages',
   {
     query: computed(() => ({ type: type.value, isReference: true, select: '_id,title,config.description' })),
-    notifError: false
+    notifError: false,
+    immediate: false
   }
 )
 
@@ -284,7 +365,8 @@ const userPagesFetch = useFetch<{ results: Array<{ _id: string, title: string, c
   $apiPath + '/pages',
   {
     query: computed(() => ({ type: type.value, select: '_id,title,config.description' })),
-    notifError: false
+    notifError: false,
+    immediate: false
   }
 )
 
@@ -310,7 +392,25 @@ const isNextButtonDisabled = computed(() => {
 
 const selectPageType = (type: string) => {
   pageType.value = type
+
+  if (type === 'generic') {
+    // For generic pages, go to group selection
+    step.value = 'group'
+  } else {
+    // For standard pages, go directly to action
+    step.value = 'action'
+    // Fetch pages for reference/duplicate options
+    referencesFetch.refresh()
+    userPagesFetch.refresh()
+  }
+}
+
+const selectGroup = (groupId: string) => {
+  selectedGroupId.value = groupId
   step.value = 'action'
+  // Fetch pages for reference/duplicate options
+  referencesFetch.refresh()
+  userPagesFetch.refresh()
 }
 
 const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
@@ -330,8 +430,11 @@ const selectPage = (pageId: string) => {
 }
 
 const goToPreviousStep = () => {
-  if (step.value === 'action') {
-    if (isStandardGroup) step.value = 'type'
+  if (step.value === 'group') {
+    step.value = 'type'
+  } else if (step.value === 'action') {
+    if (isGenericPage.value) step.value = 'group'
+    else step.value = 'type'
   } else if (step.value === 'source') {
     step.value = 'action'
   } else if (step.value === 'owner') {
@@ -350,9 +453,22 @@ const goToNextStep = () => {
   else if (step.value === 'owner') step.value = 'information'
 }
 
+const group = computed(() => {
+  if (!isGenericPage.value || !selectedGroupId.value) return undefined
+  if (selectedGroupId.value === 'default') {
+    return {
+      _id: 'default',
+      title: t('groupTitle.default'),
+      slug: 'default'
+    }
+  }
+  return customGroups.value.find(g => g._id === selectedGroupId.value)
+})
+
 const createPage = useAsyncAction(
   async () => {
     if (!newTitle.value) return
+    if (isGenericPage.value && !selectedGroupId.value) return
 
     const page = await $fetch<{ _id: string }>('/pages', {
       method: 'POST',
@@ -363,7 +479,7 @@ const createPage = useAsyncAction(
         config: {
           title: newTitle.value,
           elements: [],
-          genericMetadata: type.value === 'generic' && route.params.groupId !== 'default'
+          genericMetadata: isGenericPage.value && selectedGroupId.value !== 'default' && group.value
             ? {
                 group: {
                   _id: group.value._id,
@@ -376,31 +492,17 @@ const createPage = useAsyncAction(
       }
     })
 
-    await router.replace({ path: `/pages/${route.params.groupId}/${page._id}/edit-config` })
+    await router.replace({ path: `/pages/${page._id}/edit-config` })
   },
   {
     error: t('errorCreatingPage')
   }
 )
 
-const groupFetch = useFetch<{ _id: string, title: string, slug: string }>(
-  $apiPath + '/groups/' + route.params.groupId,
-  { immediate: !isBaseGroup }
-)
-
-const group = computed(() => {
-  if (isBaseGroup) return { _id: route.params.groupId, title: t('groupTitle.' + route.params.groupId), slug: route.params.groupId }
-  return groupFetch?.data.value || { _id: route.params.groupId, title: t('groupTitle.unknown'), slug: route.params.groupId }
-})
-
-watch(group, () => {
-  setBreadcrumbs([
-    { text: t('pages'), to: '/pages' },
-    { text: group.value?.title, to: `/pages/${route.params.groupId}` },
-    { text: t('createPage') }
-  ])
-}, { immediate: isBaseGroup })
-
+setBreadcrumbs([
+  { text: t('pages'), to: '/pages' },
+  { text: t('createPage') }
+])
 </script>
 
 <i18n lang="yaml">
@@ -422,17 +524,24 @@ watch(group, () => {
       news: News
       default: Other pages
       unknown: Unknown group
+    groupDesc:
+      standard: Home, contact, privacy policy pages, etc.
+      event: Event pages
+      news: News pages
+      default: No group
     information: Information
     next: Next
     pageTitle: Page title
     pageTitleRequired: Page title is required
     previous: Previous
     selectAction: Choose a source
+    selectGroup: Group
     selectPageType: Page type
     selectReference: Select a reference template
     selectPageToDuplicate: Select a page to duplicate
     selectOwner: Select owner
     pageTypeTitle:
+      generic: Free Page
       home: Home Page
       contact: Contact Page
       privacy-policy: Privacy Policy
@@ -443,7 +552,10 @@ watch(group, () => {
       datasets: Datasets Catalog
       applications: Applications Catalog
       reuses: Reuses Catalog
+      event: Event Page
+      news: News Page
     pageTypeDesc:
+      generic: Create a free-form page with custom content.
       home: Create the main home page for your portal.
       contact: Create a page to allow users to contact you.
       privacy-policy: Create a page presenting your privacy policy.
@@ -454,6 +566,8 @@ watch(group, () => {
       datasets: Create a page listing your datasets.
       applications: Create a page listing your applications.
       reuses: Create a page listing your reuses.
+      event: Create an event page.
+      news: Create a news page.
 
   fr:
     pages: Pages
@@ -473,28 +587,38 @@ watch(group, () => {
       news: Actualités
       default: Autres pages
       unknown: Groupe inconnu
+    groupDesc:
+      standard: Pages d'accueil, de contact, de politique de confidentialité, etc.
+      event: Pages d'événements
+      news: Pages d'actualités
+      default: Aucun groupe
     information: Informations
     next: Suivant
     pageTitle: Titre de la page
     pageTitleRequired: Le titre de la page est requis
     previous: Précédent
     selectAction: Choisir une source
+    selectGroup: Groupe
     selectPageType: Type de page
     selectReference: Sélectionner un modèle de référence
     selectPageToDuplicate: Sélectionner une page à dupliquer
     selectOwner: Sélection du propriétaire
     pageTypeTitle:
+      generic: Page libre
       home: Page d'accueil
-      contact: Page de contact
+      contact: Contact
       privacy-policy: Politique de confidentialité
       accessibility: Accessibilité
       legal-notice: Mentions légales
       cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
-      applications: Catalogue d'applications
+      applications: Catalogue de visualisations
       reuses: Catalogue de réutilisations
+      event: Page d'événement
+      news: Page d'actualité
     pageTypeDesc:
+      generic: Créer une page libre avec du contenu personnalisé.
       home: Créer la page d'accueil principale de votre portail.
       contact: Créer une page permettant aux utilisateurs de vous contacter.
       privacy-policy: Créer une page présentant votre politique de confidentialité.
@@ -505,5 +629,7 @@ watch(group, () => {
       datasets: Créer une page listant vos jeux de données.
       applications: Créer une page listant vos applications.
       reuses: Créer une page listant vos réutilisations.
+      event: Créer une page d'événement.
+      news: Créer une page d'actualité.
 
 </i18n>

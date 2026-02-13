@@ -176,7 +176,7 @@ export default {
 const linkItemTitleFn = (item) => {
   const standardPageTitles = {
     home: 'Page d\'accueil',
-    contact: 'Page de contact',
+    contact: 'Contact',
     'privacy-policy': 'Politique de confidentialité',
     accessibility: 'Accessibilité',
     'legal-notice': 'Mentions légales',

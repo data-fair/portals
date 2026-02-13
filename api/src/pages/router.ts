@@ -7,6 +7,7 @@ import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
+import { pageFacets } from './aggregations.ts'
 
 const router = Router()
 export default router
@@ -28,14 +29,25 @@ router.get('', async (req, res, next) => {
   const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
   const queryWithFilters = Object.assign(filters, query)
 
-  // TODO: account filter for super admins ?
+  // Filter by owner (if showAll)
+  const showAll = params.showAll === 'true'
+  if (showAll && params.owners) {
+    queryWithFilters.$or = params.owners.split(',').map(owner => {
+      const [type, id, department] = owner.split(':')
+      if (!type || !id) throw httpError(400, 'Invalid owner format')
+      const filter: any = { 'owner.type': type, 'owner.id': id }
+      if (department) filter['owner.department'] = department
+      return filter
+    })
+  }
 
-  const [count, results] = await Promise.all([
+  const [count, results, facets] = await Promise.all([
     mongo.pages.countDocuments(queryWithFilters),
-    mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
+    mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray(),
+    mongo.pages.aggregate(pageFacets(query, showAll)).toArray()
   ])
 
-  res.json({ results, count })
+  res.json({ results, count, facets: facets[0] })
 })
 
 router.post('', async (req, res, next) => {

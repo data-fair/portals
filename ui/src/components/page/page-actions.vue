@@ -1,6 +1,6 @@
 <template>
   <!-- Edit draft -->
-  <custom-router-link :to="`/pages/${groupId}/${pageId}/edit-config`">
+  <custom-router-link :to="`/pages/${pageId}/edit-config`">
     <v-list-item link>
       <template #prepend>
         <v-icon
@@ -79,7 +79,7 @@
   <v-divider class="my-2" />
 
   <!-- Events -->
-  <custom-router-link :to="`/pages/${groupId}/${pageId}/events`">
+  <custom-router-link :to="`/pages/${pageId}/events`">
     <v-list-item link>
       <template #prepend>
         <v-icon
@@ -221,7 +221,7 @@ const showCancelDraftMenu = ref(false)
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
-const { groupId, pageId } = defineProps<{ groupId: string, pageId: string }>()
+const { pageId } = defineProps<{ pageId: string }>()
 
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
@@ -250,7 +250,7 @@ const changeOwner = useAsyncAction(
 
 const deletePage = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}`, { method: 'DELETE' })
-  router.push(`/pages/${groupId}`)
+  router.push('/pages')
 })
 
 /** `True` if the active account isn't in a department and his organization has departments */
