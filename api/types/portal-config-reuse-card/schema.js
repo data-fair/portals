@@ -2,12 +2,10 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-reuse-card',
   'x-exports': [],
   title: 'Reuse Card',
-  'x-i18n-title': {
-    fr: "Vignette d'une réutilisation"
-  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
+    title: null,
     children: [
       {
         comp: 'card',

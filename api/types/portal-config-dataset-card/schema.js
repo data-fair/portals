@@ -2,12 +2,10 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-dataset-card',
   'x-exports': [],
   title: 'Dataset card',
-  'x-i18n-title': {
-    fr: "Vignette d'un jeu de données"
-  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
+    title: null,
     children: [
       {
         comp: 'card',

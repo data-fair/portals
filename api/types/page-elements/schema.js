@@ -1983,8 +1983,7 @@ export default {
           default: true
         },
         cardConfig: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card',
-          layout: { title: null }
+          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
@@ -2048,8 +2047,7 @@ export default {
           default: true
         },
         cardConfig: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card',
-          layout: { title: null }
+          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

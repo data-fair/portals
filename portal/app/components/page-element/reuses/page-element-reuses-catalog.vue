@@ -159,7 +159,7 @@ import type { Reuse } from '#api/types/reuse'
 import type { PageElement, ReusesCatalogElement } from '#api/types/page'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
-type ReuseFetch = { count: number; results: Omit<Reuse, 'portals' | 'requestedPortals'>[] }
+type ReuseFetch = { count: number; results: Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>[] }
 
 const { element, context } = defineProps<{
   element: ReusesCatalogElement
@@ -273,15 +273,10 @@ if (!preview) {
     title: `Réutilisation ${i + 1}`,
     config: {
       title: `Réutilisation ${i + 1}`,
-      summary: 'Exemple de réutilisation pour la prévisualisation.'
+      summary: 'Exemple de réutilisation pour la prévisualisation.',
+      author: 'Auteur exemple'
     },
-    draftConfig: {
-      title: `Réutilisation ${i + 1}`,
-      summary: 'Exemple de réutilisation pour la prévisualisation.'
-    },
-    updatedAt: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' }
+    updatedAt: new Date().toISOString()
   }))
 }
 

@@ -1,9 +1,14 @@
 <template>
+  <!--
+    :to => disabled in preview
+    link => simulate link style in preview
+  -->
   <v-card
-    :to="`/applications/${application.slug}`"
-    class="h-100 d-flex flex-column"
+    :to="!preview ? `/applications/${application.slug}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
+    class="h-100 d-flex flex-column"
+    link
   >
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
@@ -177,7 +182,7 @@ const { application, cardConfig } = defineProps<{
 }>()
 
 const { dayjs } = useLocaleDayjs()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
 

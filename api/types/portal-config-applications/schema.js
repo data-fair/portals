@@ -3,8 +3,20 @@ export default {
   'x-exports': [],
   type: 'object',
   layout: {
-    title: null,
-    comp: 'tabs'
+    comp: 'tabs',
+    children: [
+      {
+        title: 'Application Card',
+        'x-i18n-title': {
+          fr: "Vignette d'une application"
+        },
+        children: [
+          { key: 'card' },
+          { name: 'application-card-preview' }
+        ]
+      },
+      'page'
+    ]
   },
   unevaluatedProperties: false,
   required: ['card', 'page'],

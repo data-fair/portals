@@ -40,6 +40,7 @@
               :config="node.data.navLinksConfig"
             />
           </template>
+
           <template #app-bar-preview="context">
             <preview
               :append-title="context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview')"
@@ -67,20 +68,26 @@
               <layout-breadcrumbs v-if="formValid" />
             </preview>
           </template>
-          <!-- TODO: fix vjsf bug -->
-          <!-- <template #link-item-summary="{ node }">
-            <link-item-summary :item="node.data" />
-          </template> -->
-          <template #image-upload="{ node, statefulLayout, width, height, label }">
-            <image-upload
-              :model-value="node.data"
-              :label="label"
-              :width="width"
-              :height="height"
-              :resource="{ type: 'portal', _id: route.params.id }"
-              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+
+          <template #dataset-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="dataset"
             />
           </template>
+          <template #application-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="application"
+            />
+          </template>
+          <template #reuse-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="reuse"
+            />
+          </template>
+
           <template #color-select-item="context">
             <v-theme-provider theme="preview-colors">
               <v-list-item v-bind="context.props">
@@ -111,6 +118,21 @@
                 {{ context.item.raw.title }}
               </span>
             </v-theme-provider>
+          </template>
+
+          <!-- TODO: fix vjsf bug -->
+          <!-- <template #link-item-summary="{ node }">
+            <link-item-summary :item="node.data" />
+          </template> -->
+          <template #image-upload="{ node, statefulLayout, width, height, label }">
+            <image-upload
+              :model-value="node.data"
+              :label="label"
+              :width="width"
+              :height="height"
+              :resource="{ type: 'portal', _id: route.params.id }"
+              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+            />
           </template>
         </vjsf-portal-config>
       </v-form>
