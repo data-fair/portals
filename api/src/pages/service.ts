@@ -308,6 +308,9 @@ const renderMarkdownElements = async (pageConfig: PageConfig) => {
     if (pageElement.type === 'text' || pageElement.type === 'alert') {
       pageElement._html = pageElement.content && renderMarkdown(pageElement.content)
     }
+    if (pageElement.type === 'contact' && pageElement.bodyTemplate) {
+      pageElement.bodyTemplate_html = renderMarkdown(pageElement.bodyTemplate)
+    }
   })
 }
 

@@ -38,6 +38,10 @@ services:
       # When we test permissions, we need to authenticate many users from the same IP.
       - AUTHRATELIMIT_ATTEMPTS=500
       - AUTHRATELIMIT_DURATION=30
+      # To test contact form
+      - MAILDEV_ACTIVE=true
+      - ANONYMOUS_CONTACT_FORM=true
+
     volumes:
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
@@ -103,6 +107,18 @@ services:
   #     - SECRET_IDENTITIES=secret-identities
   #   volumes:
   #     - ./data/processings:/app/data
+  
+
+  maildev:
+    profiles:
+      - dev
+    image: maildev/maildev:2.1.0
+    ports:
+      - 1080:1080
+      - 1025:1025
+    # https://github.com/maildev/maildev/issues/484
+    healthcheck:
+      test: 'wget -O - http://127.0.0.1:$${MAILDEV_WEB_PORT}$${MAILDEV_BASE_PATHNAME}/healthz || exit 1'
   
   #####
   # db and search engine

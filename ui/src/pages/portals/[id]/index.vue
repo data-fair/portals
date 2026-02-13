@@ -142,7 +142,7 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
-const session = useSession()
+const session = useSessionAuthenticated()
 const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)

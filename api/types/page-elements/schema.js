@@ -534,10 +534,10 @@ export default {
               {
                 if: '!parent.data?.usePortalConfig',
                 children: ['config']
-              }
+              },
+              'centered'
             ]
           },
-          'centered',
           'mb'
         ]
       },
@@ -551,7 +551,7 @@ export default {
           layout: 'switch',
           default: true
         },
-        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         centered: {
           type: 'boolean',
           title: 'Centré',
@@ -580,10 +580,10 @@ export default {
               {
                 if: '!parent.data?.usePortalConfig',
                 children: ['config']
-              }
+              },
+              'centered'
             ]
           },
-          'centered',
           'mb'
         ]
       },
@@ -611,7 +611,7 @@ export default {
           layout: 'switch',
           default: true
         },
-        config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+        config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         centered: {
           type: 'boolean',
           title: 'Centré',
@@ -700,21 +700,19 @@ export default {
         fr: 'Section sur fond coloré'
       },
       required: ['type', 'children'],
-      layout: {
-        children: [
-          'type',
-          'children',
-          'fullWidth',
-          'background',
-          'pt',
-          'pb',
-          'pl',
-          'pr',
-          'overflowTop',
-          'overflowBottom',
-          { if: '!parent.data?.overflowBottom', children: ['mb'] }
-        ]
-      },
+      layout: [
+        'type',
+        'children',
+        'fullWidth',
+        'background',
+        'pt',
+        'pb',
+        'pl',
+        'pr',
+        'overflowTop',
+        'overflowBottom',
+        { if: '!parent.data?.overflowBottom', children: ['mb'] }
+      ],
       properties: {
         type: {
           const: 'banner'
@@ -900,7 +898,7 @@ export default {
               layout: 'switch',
               default: true
             },
-            config: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' }
+            config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' }
           }
         },
         background: {
@@ -1069,7 +1067,7 @@ export default {
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.<br>| **Colonnes** | 2 | 3 | 4 | 6 |<br>| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |<br>| **Ordinateur portable** | 6 | 6 | 3 | 3 |<br>| **Tablette** | 12 | 6 | 4 | 4 |<br>| **Mobile** | 12 | 12 | 12 | 6 |',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.\n\n| **Colonnes** | 2 | 3 | 4 | 6 |  \n| :-- | --: | --: | --: | --: |  \n| **Ordinateur de bureau** | 6 | 4 | 3 | 2 |  \n| **Ordinateur portable** | 6 | 6 | 3 | 3 |  \n| **Tablette** | 12 | 6 | 4 | 4 |  \n| **Mobile** | 12 | 12 | 12 | 6 |',
           oneOf: [
             { const: 2, title: '2' },
             { const: 3, title: '3' },
@@ -1355,31 +1353,101 @@ export default {
         fr: 'Formulaire de contact'
       },
       required: ['type'],
+      layout: [
+        'type',
+        'defaultFields', 'additionalFields', 'subjectTemplate', 'bodyTemplate',
+        {
+          title: 'Appearance',
+          'x-i18n-title': { fr: 'Apparence' },
+          comp: 'card',
+          children: ['elevation', 'rounded', 'showInfo', 'showSocial', 'mb']
+        },
+        'sendButton'
+      ],
       properties: {
         type: {
           const: 'contact'
         },
-        elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+        defaultFields: {
+          type: 'object',
+          title: 'Default fields',
+          'x-i18n-title': {
+            fr: 'Champs par défaut'
+          },
+          layout: {
+            comp: 'card',
+            children: [
+              { children: ['enableSubject', 'requiredSubject'] },
+              { children: ['enableMessage', 'requiredMessage', 'messageMinLength', 'messageMaxLength'] }
+            ]
+          },
+          properties: {
+            enableSubject: {
+              type: 'boolean',
+              title: 'Afficher le champ sujet',
+              layout: {
+                comp: 'switch',
+                cols: { xs: 6 }
+              },
+              default: true
+            },
+            requiredSubject: {
+              type: 'boolean',
+              title: 'Sujet obligatoire',
+              layout: {
+                if: 'parent.data?.enableSubject',
+                comp: 'switch',
+                cols: { xs: 6 }
+              },
+              default: true
+            },
+            enableMessage: {
+              type: 'boolean',
+              title: 'Afficher le champ message',
+              layout: {
+                comp: 'switch',
+                cols: { xs: 6 }
+              },
+              default: true
+            },
+            requiredMessage: {
+              type: 'boolean',
+              title: 'Message obligatoire',
+              layout: {
+                if: 'parent.data?.enableMessage',
+                comp: 'switch',
+                cols: { xs: 6 }
+              },
+              default: true
+            },
+            messageMinLength: {
+              type: 'integer',
+              title: 'Min. caractères',
+              description: 'Longueur minimale du message. Utilisez -1 pour désactiver la limite.',
+              minimum: -1,
+              default: 50,
+              layout: {
+                if: 'parent.data?.enableMessage',
+                cols: { xs: 6 }
+              }
+            },
+            messageMaxLength: {
+              type: 'integer',
+              title: 'Max. caractères',
+              description: 'Longueur maximale du message. Utilisez -1 pour désactiver la limite.',
+              minimum: -1,
+              default: 2000,
+              layout: {
+                if: 'parent.data?.enableMessage',
+                cols: { xs: 6 }
+              }
+            }
+          }
         },
-        rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
-        },
-        showInfo: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les informations de contact'
-        },
-        showSocial: {
-          type: 'boolean',
-          layout: 'switch',
-          title: 'Afficher les liens de réseaux sociaux'
-        },
-        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         additionalFields: {
           type: 'array',
           title: 'Champs additionnels',
-          description: 'Ajoutez des champs supplémentaires au formulaire de contact.',
+          description: 'Ajoutez des champs supplémentaires au formulaire de contact. Ils seront positionnés entre le champ email et le champ sujet',
           layout: {
             messages: {
               addItem: 'Ajouter un champ',
@@ -1396,6 +1464,13 @@ export default {
                 required: ['type'],
                 properties: {
                   type: { const: 'text' },
+                  key: {
+                    type: 'string',
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
+                  },
                   label: {
                     type: 'string',
                     title: 'Libellé du champ'
@@ -1413,6 +1488,13 @@ export default {
                 required: ['type'],
                 properties: {
                   type: { const: 'select' },
+                  key: {
+                    type: 'string',
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
+                  },
                   label: {
                     type: 'string',
                     title: 'Libellé du champ'
@@ -1434,6 +1516,7 @@ export default {
                   multiple: {
                     type: 'boolean',
                     title: 'Choix multiple autorisé',
+                    description: "Si activé, les valeurs seront séparées par des virgules dans l'email",
                     layout: 'switch'
                   }
                 }
@@ -1444,6 +1527,13 @@ export default {
                 required: ['type'],
                 properties: {
                   type: { const: 'dataset' },
+                  key: {
+                    type: 'string',
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
+                  },
                   label: {
                     type: 'string',
                     title: 'Libellé du champ'
@@ -1461,6 +1551,13 @@ export default {
                 required: ['type'],
                 properties: {
                   type: { const: 'application' },
+                  key: {
+                    type: 'string',
+                    title: 'Clé dans le template',
+                    description: 'Identifiant utilisé dans les templates (ex: department_name).',
+                    pattern: '^[a-z]+(?:_[a-z]+)*$',
+                    errorMessage: 'Utilisez uniquement des minuscules séparés par des _'
+                  },
                   label: {
                     type: 'string',
                     title: 'Libellé du champ'
@@ -1475,8 +1572,44 @@ export default {
             ]
           }
         },
+        subjectTemplate: {
+          type: 'string',
+          title: "Format de l'objet de l'email",
+          description: "Personnalisez le format de l'objet des emails reçus. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{portalName}** : Le nom du portail.\n* **{portalDomain}** : Le domaine du portail.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut : **{subject}**",
+          layout: {
+            comp: 'textarea',
+            props: {
+              autoGrow: true,
+              rows: 2
+            }
+          }
+        },
+        bodyTemplate: {
+          type: 'string',
+          title: "Format du corps de l'email",
+          description: "Personnalisez le format du corps des emails reçus. Le contenu est interprété en **Markdown** et sera rendu en HTML dans l'email. Vous pouvez insérer les valeurs saisies par l'utilisateur en utilisant des balises entre accolades :\n* **{subject}** : Le texte saisi dans le champ \"Sujet\" par défaut.\n* **{message}** : Le texte saisi dans le champ \"Message\" par défaut.\n* **{from}** : L'adresse email de l'expéditeur.\n* **{portalName}** : Le nom du portail.\n* **{portalDomain}** : Le domaine du portail.\n* **{votre_cle}** : Pour les champs additionnels, utilisez la **Clé dans le template** que vous avez définie (ex: si la clé est *departement*, utilisez **{departement}**).\n\nLaissez vide pour utiliser le format par défaut.",
+          layout: 'markdown',
+        },
+        bodyTemplate_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        showInfo: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les informations de contact'
+        },
+        showSocial: {
+          type: 'boolean',
+          layout: 'switch',
+          title: 'Afficher les liens de réseaux sociaux'
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         sendButton: {
-          title: 'Configuration du bouton',
+          title: "Configuration du bouton d'envoi",
           layout: { comp: 'card' },
           properties: {
             usePortalConfig: {
@@ -1486,7 +1619,7 @@ export default {
               default: true
             },
             config: {
-              $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig',
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig',
               layout: { if: '!parent.data?.usePortalConfig' }
             }
           }
