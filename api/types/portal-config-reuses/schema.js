@@ -7,7 +7,19 @@ export default {
       'allowUserReuses',
       {
         comp: 'tabs',
-        children: ['card', 'page']
+        children: [
+          {
+            title: 'Reuse Card',
+            'x-i18n-title': {
+              fr: "Vignette d'une réutilisation"
+            },
+            children: [
+              { key: 'card' },
+              { name: 'reuse-card-preview' }
+            ]
+          },
+          'page'
+        ]
       }
     ]
   },

@@ -3,7 +3,7 @@
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
-      :md="12 / element.columns"
+      :md="12 / (element.columns || 2)"
       cols="12"
     >
       <dataset-card
@@ -55,8 +55,7 @@ if (!preview) {
       updatedAt: new Date().toISOString(),
       owner: { id: 'owner-1', name: "Organisation d'exemple", type: 'organization' },
       topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
-      isMetaOnly: false,
-      extras: {}
+      isMetaOnly: false
     }))
   })
 }

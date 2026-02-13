@@ -1,9 +1,14 @@
 <template>
+  <!--
+    :to => disabled in preview
+    link => simulate link style in preview
+  -->
   <v-card
-    :to="`/reuses/${reuse.slug}`"
-    class="h-100 d-flex flex-column"
+    :to="!preview ? `/reuses/${reuse.slug}` : undefined "
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
+    class="h-100 d-flex flex-column"
+    link
   >
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
@@ -56,7 +61,7 @@
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
           ]"
         >
-          {{ reuse.config.title }}
+            {{ reuse.config.title }}
         </v-card-title>
 
         <!-- Thumbnail (Center Location) -->
@@ -107,6 +112,7 @@ const { reuse, cardConfig, isPortalConfig } = defineProps<{
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
+const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 

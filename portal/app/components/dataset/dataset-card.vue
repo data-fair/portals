@@ -1,9 +1,14 @@
 <template>
+  <!--
+    :to => disabled in preview
+    link => simulate link style in preview
+  -->
   <v-card
-    :to="`/datasets/${dataset.slug}`"
-    class="h-100 d-flex flex-column"
+    :to="!preview ? `/datasets/${dataset.slug}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
+    class="h-100 d-flex flex-column"
+    link
   >
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
@@ -56,7 +61,7 @@
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
           ]"
         >
-          {{ dataset.title }}
+            {{ dataset.title }}
         </v-card-title>
 
         <!-- Thumbnail (Center Location) -->
@@ -219,7 +224,7 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
 }>()
 
 // const { dayjs } = useLocaleDayjs()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
