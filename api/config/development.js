@@ -3,6 +3,9 @@ export default {
   privateDirectoryUrl: 'http://localhost:8080',
   privateEventsUrl: 'http://localhost:8083',
   mongoUrl: 'mongodb://localhost:27017/data-fair-portals-development',
+  elasticsearch: {
+    nodes: ['http://localhost:9200']
+  },
   tmpDir: './tmp',
   observer: {
     active: false,

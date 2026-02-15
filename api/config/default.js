@@ -18,5 +18,10 @@ export default {
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
   ingressControllers: [],
-  upgradeRoot: '/app/'
+  upgradeRoot: '/app/',
+  elasticsearch: {
+    // nodes: ['localhost:9200'],
+    // auth: {},
+    // ca: '', // the central authority for the ES cluster certificates
+  },
 }

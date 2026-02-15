@@ -19,5 +19,16 @@ export default {
     __name: 'INGRESS_CONTROLLERS',
     __format: 'json'
   },
-  upgradeRoot: 'UPGRADE_ROOT'
+  upgradeRoot: 'UPGRADE_ROOT',
+  elasticsearch: {
+    nodes: {
+      __name: 'ES_NODES',
+      __format: 'json'
+    },
+    auth: {
+      __name: 'ES_AUTH',
+      __format: 'json'
+    },
+    ca: 'ES_CA'
+  },
 }

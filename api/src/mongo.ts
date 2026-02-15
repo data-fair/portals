@@ -4,6 +4,7 @@ import type { Page } from '#types/page/index.ts'
 import type { Reuse } from '#types/reuse/index.ts'
 import type { Image } from '#types/image/index.js'
 import type { FontAsset } from '#types/font-asset/index.js'
+import type { SearchPageRef } from '#types/search-page-ref/index.js'
 
 import mongo from '@data-fair/lib-node/mongo.js'
 import config from './config.ts'
@@ -41,6 +42,10 @@ export class PortalsMongo {
     return mongo.db.collection<FontAsset>('font-assets')
   }
 
+  get searchPageRefs () {
+    return mongo.db.collection<SearchPageRef>('search-page-indexes')
+  }
+
   async connect () {
     await mongo.connect(config.mongoUrl)
   }
@@ -70,6 +75,10 @@ export class PortalsMongo {
       },
       'font-assets': {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, key: 1 }
+      },
+      'search-page-refs': {
+        'main-keys': { 'owner.type': 1, 'owner.id': 1, portal: 1, 'resource.type': 1, 'resource.id': 1 },
+        'indexing-status': { indexingStatus: 1 }
       }
     })
   }
