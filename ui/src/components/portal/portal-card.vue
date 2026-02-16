@@ -32,11 +32,12 @@
           density="compact"
           style="background-color: inherit;"
         >
-          <!-- Description (wrapped after 2 lines)-->
-          <v-list-item v-if="portal.config.description">
-            <v-list-item-title class="text-two-lines">
-              {{ portal.config.description }}
-            </v-list-item-title>
+          <!-- Domain name -->
+          <v-list-item v-if="portal.ingress?.url">
+            <template #prepend>
+              <v-icon :icon="mdiWeb" />
+            </template>
+            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
           </v-list-item>
 
           <!-- Private / Public -->
@@ -53,12 +54,11 @@
             {{ t('public') }}
           </v-list-item>
 
-          <!-- Domain name -->
-          <v-list-item v-if="portal.ingress?.url">
-            <template #prepend>
-              <v-icon :icon="mdiWeb" />
-            </template>
-            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
+          <!-- Description (wrapped after 2 lines)-->
+          <v-list-item v-if="portal.config.description">
+            <v-list-item-title class="text-two-lines">
+              {{ portal.config.description }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-card-text>

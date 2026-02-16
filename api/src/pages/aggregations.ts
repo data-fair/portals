@@ -20,6 +20,14 @@ export const pageFacets = (query: Record<string, any>, showAll: boolean) => {
               count: { $sum: 1 }
             }
           }
+        ],
+        groups: [
+          {
+            $group: {
+              _id: '$config.genericMetadata.group._id',
+              count: { $sum: 1 }
+            }
+          }
         ]
       }
     },
@@ -47,6 +55,21 @@ export const pageFacets = (query: Record<string, any>, showAll: boolean) => {
                 input: {
                   $filter: {
                     input: '$portals',
+                    as: 'el',
+                    cond: { $and: [{ $ne: ['$$el._id', null] }, { $ne: ['$$el._id', ''] }] }
+                  }
+                },
+                as: 'el',
+                in: { k: '$$el._id', v: '$$el.count' }
+              }
+            }
+          },
+          groups: {
+            $arrayToObject: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$groups',
                     as: 'el',
                     cond: { $and: [{ $ne: ['$$el._id', null] }, { $ne: ['$$el._id', ''] }] }
                   }

@@ -41,6 +41,12 @@ export default {
             type: 'number'
           }
         },
+        groups: {
+          type: 'object',
+          additionalProperties: {
+            type: 'number'
+          }
+        },
         owners: {
           type: 'array',
           items: {

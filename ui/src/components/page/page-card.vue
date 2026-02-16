@@ -32,13 +32,6 @@
           density="compact"
           style="background-color: inherit;"
         >
-          <!-- Description (wrapped after 2 lines)-->
-          <v-list-item v-if="page.config.description">
-            <v-list-item-title class="text-two-lines">
-              {{ page.config.description }}
-            </v-list-item-title>
-          </v-list-item>
-
           <!-- Page type -->
           <v-list-item v-if="page.type">
             <template #prepend>
@@ -56,6 +49,13 @@
             </template>
             <v-list-item-title>
               {{ page.config.genericMetadata.group.title }}
+            </v-list-item-title>
+          </v-list-item>
+
+          <!-- Description (wrapped after 2 lines)-->
+          <v-list-item v-if="page.config.description">
+            <v-list-item-title class="text-two-lines">
+              {{ page.config.description }}
             </v-list-item-title>
           </v-list-item>
         </v-list>

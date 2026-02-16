@@ -96,7 +96,7 @@ const pagesParams = computed(() => {
   return params
 })
 const pagesFetch = useFetch<PagesGetRes>($apiPath + '/pages', { query: pagesParams })
-const facets = computed<PagesFacets>(() => pagesFetch.data.value?.facets ?? { types: {} })
+const facets = computed<PagesFacets>(() => pagesFetch.data.value?.facets ?? { types: {}, groups: {} })
 
 const displayPages = computed(() => {
   const pages = (pagesFetch.data.value?.results ?? [])
@@ -128,7 +128,13 @@ const getPageGroupId = (page: Page) => {
   return 'default'
 }
 
-setBreadcrumbs([{ text: t('pages') }])
+watch(
+  [() => pagesFetch.data.value?.count, () => displayPages.value.length],
+  ([count, displayed]) => {
+    setBreadcrumbs([{ text: t('pagesDisplayed', { count: count ?? 0, displayed }) }])
+  },
+  { immediate: true }
+)
 
 </script>
 
@@ -142,6 +148,7 @@ setBreadcrumbs([{ text: t('pages') }])
       default: Other pages
     noPagesCreated: You haven't created any page yet.
     noPagesDisplayed: No result matches your criteria.
+    pagesDisplayed: No pages | {displayed}/{count} page displayed | {displayed}/{count} pages displayed
 
   fr:
     pages: Pages
@@ -152,5 +159,6 @@ setBreadcrumbs([{ text: t('pages') }])
       default: Autres pages
     noPagesCreated: Vous n'avez pas encore créé de page.
     noPagesDisplayed: Aucun résultat ne correspond à vos critères.
+    pagesDisplayed: Aucune page | {displayed}/{count} page affichée | {displayed}/{count} pages affichées
 
 </i18n>

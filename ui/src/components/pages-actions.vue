@@ -1,14 +1,16 @@
 <template>
   <!-- Create new page -->
-  <v-list-item @click="goToNewPage()">
-    <template #prepend>
-      <v-icon
-        color="primary"
-        :icon="mdiPlusCircle"
-      />
-    </template>
-    {{ t('createNewPage') }}
-  </v-list-item>
+  <custom-router-link :to="'/pages/new'">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiPlusCircle"
+        />
+      </template>
+      {{ t('createNewPage') }}
+    </v-list-item>
+  </custom-router-link>
 
   <!-- Create new group -->
   <v-menu
@@ -203,7 +205,7 @@
           :disabled="deleteGroup.loading.value"
           @click="deleteGroupMenu = false"
         >
-          {{ t('no') }}
+          {{ t('cancel') }}
         </v-btn>
         <v-btn
           color="warning"
@@ -212,7 +214,7 @@
           :disabled="!deleteGroupId"
           @click="deleteGroup.execute()"
         >
-          {{ t('yes') }}
+          {{ t('delete') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -268,11 +270,11 @@
     multiple
   />
 
-  <!-- Page groups filters (only custom groups) -->
+  <!-- Page groups filters -->
   <v-autocomplete
-    v-if="groupFilterItems.length > 0"
+    v-if="groupsItems.length > 0"
     v-model="groupsSelected"
-    :items="groupFilterItems"
+    :items="groupsItems"
     item-title="display"
     item-value="id"
     class="mt-4 mx-4"
@@ -319,22 +321,20 @@
 
 <script setup lang="ts">
 import type { PagesFacets } from '#api/doc/pages/get-res/index.ts'
-import type { PagesGetRes } from '#api/doc/pages/get-res'
 import type { Group } from '#api/types/group'
 import { useRules } from 'vuetify/labs/rules'
 import { mdiMagnify, mdiPlusCircle, mdiPencil, mdiDelete, mdiFolderPlusOutline } from '@mdi/js'
 
 const { t } = useI18n()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
-const router = useRouter()
 
 const session = useSessionAuthenticated()
 
 const search = defineModel('search', { type: String, default: '' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
+const portalsSelected = defineModel('portalsSelected', { type: Array, required: true })
 const typesSelected = defineModel('typesSelected', { type: Array, required: true })
 const groupsSelected = defineModel('groupsSelected', { type: Array, required: true })
-const portalsSelected = defineModel('portalsSelected', { type: Array, required: true })
 const ownersSelected = defineModel('ownersSelected', { type: Array, required: true })
 
 const { facets, currentGroupId } = defineProps<{
@@ -351,21 +351,28 @@ const editGroupMenu = ref(false)
 const editGroupId = ref<string | null>(null)
 const editGroupTitle = ref('')
 const editGroupDescription = ref('')
+
 const deleteGroupMenu = ref(false)
 const deleteGroupId = ref<string | null>(null)
 
-const groupsParams = computed(() => ({
-  size: 1000,
-  sort: 'updatedAt:-1'
-}))
 const groupsFetch = useFetch<{ results: Group[], count: number }>(
   $apiPath + '/groups',
-  { query: groupsParams }
+  { query: { size: 1000 } }
 )
 
-const groupFilterItems = computed(() => {
-  // Only return custom groups for filtering
-  return groupsFetch.data.value?.results?.map(group => ({ id: group._id, display: group.title })) ?? []
+const groupsItems = computed(() => {
+  const groups = (facets as PagesFacets & { groups?: Record<string, number> }).groups ?? {}
+  if (!Object.keys(groups).length || !groupsFetch.data.value?.results) return []
+
+  return Object.entries(groups)
+    .map(([groupId, count]) => {
+      const group = groupsFetch.data.value?.results.find(item => item._id === groupId)
+      return {
+        display: `${group?.title || groupId} (${count})`,
+        id: groupId
+      }
+    })
+    .sort((a, b) => a.display.localeCompare(b.display))
 })
 
 const portalsFetch = useFetch<{ results: Array<{ _id: string, title: string }> }>(
@@ -385,109 +392,6 @@ const portalsItems = computed(() => {
       }
     })
     .sort((a, b) => a.display.localeCompare(b.display))
-})
-
-const editableGroups = computed(() => groupsFetch.data.value?.results ?? [])
-
-const groupPageCounts = ref<Record<string, number>>({})
-const countsReady = ref(false)
-const refreshGroupCounts = async () => {
-  const groups = groupsFetch.data.value?.results ?? []
-  if (!groups.length) {
-    groupPageCounts.value = {}
-    countsReady.value = true
-    return
-  }
-  const counts = await Promise.all(groups.map(async group => {
-    const res = await $fetch<PagesGetRes>('/pages', {
-      query: {
-        groupId: group._id,
-        size: 1,
-        select: '_id'
-      }
-    })
-    return [group._id, res.count] as const
-  }))
-  groupPageCounts.value = Object.fromEntries(counts)
-  countsReady.value = true
-}
-
-const deletableGroups = computed(() => {
-  if (!countsReady.value) return []
-  const groups = groupsFetch.data.value?.results ?? []
-  return groups.filter(group => (groupPageCounts.value[group._id] ?? 0) === 0)
-})
-
-watch(groupsFetch.data, () => {
-  countsReady.value = false
-  refreshGroupCounts()
-})
-
-watch(newGroupMenu, () => {
-  newGroupTitle.value = ''
-  newGroupDescription.value = ''
-})
-
-watch(editGroupMenu, () => {
-  if (!editGroupMenu.value) return
-  if (!editGroupId.value && editableGroups.value.length) {
-    editGroupId.value = editableGroups.value[0]._id
-  }
-  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
-  editGroupTitle.value = selected?.title || ''
-  editGroupDescription.value = selected?.description || ''
-})
-
-watch(editGroupId, () => {
-  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
-  editGroupTitle.value = selected?.title || ''
-  editGroupDescription.value = selected?.description || ''
-})
-
-watch(deleteGroupMenu, () => {
-  if (!deleteGroupMenu.value) return
-  if (deletableGroups.value.length) deleteGroupId.value = deletableGroups.value[0]._id
-  else deleteGroupId.value = null
-})
-
-const goToNewPage = async () => {
-  await router.push({ path: '/pages/new' })
-}
-
-const createGroup = useAsyncAction(async () => {
-  await $fetch<Group>('/groups', {
-    method: 'POST',
-    body: {
-      title: newGroupTitle.value,
-      description: newGroupDescription.value
-    }
-  })
-  await groupsFetch.refresh()
-  await refreshGroupCounts()
-  newGroupMenu.value = false
-})
-
-const editGroup = useAsyncAction(async () => {
-  if (!editGroupId.value) return
-  await $fetch(`/groups/${editGroupId.value}`, {
-    method: 'PATCH',
-    body: {
-      title: editGroupTitle.value,
-      description: editGroupDescription.value
-    }
-  })
-  await groupsFetch.refresh()
-  await refreshGroupCounts()
-  if (editGroupId.value === currentGroupId) emit('refresh-group')
-  editGroupMenu.value = false
-})
-
-const deleteGroup = useAsyncAction(async () => {
-  if (!deleteGroupId.value) return
-  await $fetch(`/groups/${deleteGroupId.value}`, { method: 'DELETE' })
-  await groupsFetch.refresh()
-  await refreshGroupCounts()
-  deleteGroupMenu.value = false
 })
 
 const typesItems = computed(() => {
@@ -526,6 +430,90 @@ const ownersItems = computed(() => {
     .sort((a, b) => a.display.localeCompare(b.display))
 })
 
+const editableGroups = computed(() => groupsFetch.data.value?.results ?? [])
+
+const deletableGroups = computed(() => {
+  const groupsCounts = (facets as PagesFacets & { groups?: Record<string, number> }).groups ?? {}
+  if (!groupsFetch.data.value?.results || !Object.keys(groupsCounts).length) return []
+  const groups = groupsFetch.data.value?.results ?? []
+  return groups.filter(group => (groupsCounts[group._id] ?? 0) === 0)
+})
+
+watch(editGroupMenu, () => {
+  if (!editGroupMenu.value) return
+  if (!editGroupId.value && editableGroups.value.length) {
+    editGroupId.value = editableGroups.value[0]._id
+  }
+  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
+  editGroupTitle.value = selected?.title || ''
+  editGroupDescription.value = selected?.description || ''
+})
+
+watch(editGroupId, () => {
+  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
+  editGroupTitle.value = selected?.title || ''
+  editGroupDescription.value = selected?.description || ''
+})
+
+watch(deleteGroupMenu, () => {
+  if (!deleteGroupMenu.value) return
+  if (deletableGroups.value.length) deleteGroupId.value = deletableGroups.value[0]._id
+  else deleteGroupId.value = null
+})
+
+const createGroup = useAsyncAction(
+  async () => {
+    await $fetch<Group>('/groups', {
+      method: 'POST',
+      body: {
+        title: newGroupTitle.value,
+        description: newGroupDescription.value
+      }
+    })
+    await groupsFetch.refresh()
+    newGroupTitle.value = ''
+    newGroupDescription.value = ''
+    newGroupMenu.value = false
+  },
+  {
+    success: t('createGroupSuccess'),
+    error: t('createGroupError')
+  }
+)
+
+const editGroup = useAsyncAction(
+  async () => {
+    if (!editGroupId.value) return
+    await $fetch(`/groups/${editGroupId.value}`, {
+      method: 'PATCH',
+      body: {
+        title: editGroupTitle.value,
+        description: editGroupDescription.value
+      }
+    })
+    await groupsFetch.refresh()
+    if (editGroupId.value === currentGroupId) emit('refresh-group')
+    editGroupMenu.value = false
+  },
+  {
+    success: t('editGroupSuccess'),
+    error: t('editGroupError')
+  }
+)
+
+const deleteGroup = useAsyncAction(
+  async () => {
+    if (!deleteGroupId.value) return
+    await $fetch(`/groups/${deleteGroupId.value}`, { method: 'DELETE' })
+    await groupsFetch.refresh()
+    deleteGroupMenu.value = false
+  },
+  {
+    success: t('deleteGroupSuccess'),
+    error: t('deleteGroupError')
+  }
+)
+
 </script>
 
 <i18n lang="yaml">
@@ -537,19 +525,24 @@ const ownersItems = computed(() => {
     newPageStaging: New Page Staging
     search: Search
     createNewGroup: Create a new group
+    createGroupSuccess: Group created.
+    createGroupError: Error while creating the group.
     showAllPages: Show all pages
     editGroup: Edit a Group
     editGroupTitle: New Group Title
     editGroupDescription: New Group Description
+    editGroupSuccess: Group updated.
+    editGroupError: Error while updating the group.
     save: Save
     deleteGroup: Delete a group
     deletingGroup: Deleting a group
+    deleteGroupSuccess: Group deleted.
+    deleteGroupError: Error while deleting the group.
     newGroupTitle: New Group Title
     newGroupDescription: Description
     confirmDeleteGroup: Do you really want to delete the group "{title}"? Deletion is permanent and data cannot be recovered.
     groupNotEmptyError: Cannot delete the group while it contains pages
-    no: No
-    yes: Yes
+    delete: Delete
     deleteGroupWarning: Only groups without any page can be deleted.
     owner: Owner
     portal: Portal
@@ -582,6 +575,8 @@ const ownersItems = computed(() => {
     create: Créer
     createNewPage: Créer une nouvelle page
     createNewGroup: Créer un nouveau groupe
+    createGroupSuccess: Groupe créé.
+    createGroupError: Erreur lors de la création du groupe.
     newPageTitle: Titre de la nouvelle page
     newPageStaging: Page de pré-production
     search: Rechercher
@@ -589,14 +584,17 @@ const ownersItems = computed(() => {
     editGroup: Modifier un groupe
     editGroupTitle: Nouveau titre du groupe
     editGroupDescription: Nouvelle description du groupe
+    editGroupSuccess: Groupe modifié.
+    editGroupError: Erreur lors de la modification du groupe.
     newGroupTitle: Titre du nouveau groupe
     newGroupDescription: Description
     save: Enregistrer
     deleteGroup: Supprimer un groupe
     deletingGroup: "Suppression d'un groupe"
+    deleteGroupSuccess: Groupe supprimé.
+    deleteGroupError: Erreur lors de la suppression du groupe.
     deleteGroupWarning: Seuls les groupes sans aucune page peuvent être supprimes.
-    no: Non
-    yes: Oui
+    delete: Supprimer
     owner: Propriétaire
     portal: Portail
     pageGroup: Groupe
