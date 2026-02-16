@@ -26,8 +26,36 @@ export const pageFacets = (query: Record<string, any>, showAll: boolean) => {
     {
       $replaceRoot: {
         newRoot: {
-          types: { $arrayToObject: { $map: { input: '$types', as: 'el', in: { k: '$$el._id', v: '$$el.count' } } } },
-          portals: { $arrayToObject: { $map: { input: '$portals', as: 'el', in: { k: '$$el._id', v: '$$el.count' } } } }
+          types: {
+            $arrayToObject: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$types',
+                    as: 'el',
+                    cond: { $and: [{ $ne: ['$$el._id', null] }, { $ne: ['$$el._id', ''] }] }
+                  }
+                },
+                as: 'el',
+                in: { k: '$$el._id', v: '$$el.count' }
+              }
+            }
+          },
+          portals: {
+            $arrayToObject: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: '$portals',
+                    as: 'el',
+                    cond: { $and: [{ $ne: ['$$el._id', null] }, { $ne: ['$$el._id', ''] }] }
+                  }
+                },
+                as: 'el',
+                in: { k: '$$el._id', v: '$$el.count' }
+              }
+            }
+          }
         }
       }
     }
