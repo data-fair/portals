@@ -47,12 +47,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event) as { q: string }
   const cookieHeader = getRequestHeader(event, 'cookie')
 
-  let sessionState
-  try {
-    sessionState = await session.readStateFromCookie(cookieHeader)
-  } catch (err) {
-    sessionState = null
-  }
+  const sessionState = await session.readStateFromCookie(cookieHeader).catch(() => null)
 
   const user = sessionState?.user
 
@@ -61,8 +56,13 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     must.push({ term: { public: true } })
   } else {
-    const orgIds = user.organizations?.map((org: any) => org.id) || []
-    const privateAccessTerms = [`user:${user.id}:*:*`, ...orgIds.map((id: string) => `organization:${id}:*:*`)]
+    const privateAccessTerms: string[] = [`user:${user.id}:*:*`]
+
+    for (const org of user.organizations || []) {
+      const department = org.department || '*'
+      const roles = org.role ? org.role : '*'
+      privateAccessTerms.push(`organization:${org.id}:${department}:${roles}`)
+    }
 
     must.push({
       bool: {
