@@ -43,6 +43,43 @@ export const createOrUpdateSearchPageRef = async (params: CreateSearchPageRefPar
   )
 }
 
+export const reindexPage = async (page: Page, portalId: string): Promise<void> => {
+  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
+  if (!portal || !portal.config.searchEngine?.active) return
+
+  const searchTypes = portal.config.searchEngine.types || []
+  if (!searchTypes.includes('page')) return
+
+  const path = getPagePath(page)
+  if (!path) return
+
+  await createOrUpdateSearchPageRef({
+    portal: portalId,
+    owner: page.owner,
+    resource: { type: 'page', id: page._id },
+    path,
+    public: true
+  })
+}
+
+export const reindexReuse = async (reuse: Reuse, portalId: string): Promise<void> => {
+  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
+  if (!portal || !portal.config.searchEngine?.active) return
+
+  const searchTypes = portal.config.searchEngine.types || []
+  if (!searchTypes.includes('reuse')) return
+
+  const path = `/reuses/${reuse.slug || reuse._id}`
+
+  await createOrUpdateSearchPageRef({
+    portal: portalId,
+    owner: reuse.owner,
+    resource: { type: 'reuse', id: reuse._id },
+    path,
+    public: true
+  })
+}
+
 const getPortalUrl = async (portalId: string): Promise<string> => {
   const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
   if (!portal) {

@@ -7,6 +7,7 @@ import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
+import { reindexPage } from '../search-page-indexes/service.ts'
 
 const router = Router()
 export default router
@@ -97,6 +98,11 @@ router.patch('/:id', async (req, res, next) => {
   if (body.isReference !== undefined) assertAdminMode(session)
   if (body.portals) assertAccountRole(session, page.owner, 'admin')
   const updatedPage = await patchPage(page, body, session)
+
+  for (const portalId of updatedPage.portals) {
+    await reindexPage(updatedPage, portalId)
+  }
+
   res.send({ ...updatedPage, body })
 })
 

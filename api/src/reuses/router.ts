@@ -8,6 +8,7 @@ import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
+import { reindexReuse } from '../search-page-indexes/service.ts'
 
 const router = Router()
 export default router
@@ -105,6 +106,10 @@ router.patch('/:id', async (req, res, next) => {
     if (hasOtherChanges) {
       sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
     }
+  }
+
+  for (const portalId of updatedReuse.portals) {
+    await reindexReuse(updatedReuse, portalId)
   }
 
   res.send(updatedReuse)
