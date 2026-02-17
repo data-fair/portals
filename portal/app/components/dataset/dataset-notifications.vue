@@ -5,7 +5,7 @@
     :icon="mdiBell"
     :resource-title="dataset.title"
     :text="t('preview')"
-    :track-path="`/datasets/${dataset.slug}/notifications-dialog`"
+    :track-dialog="{ action: 'dataset-notifications', label: dataset.slug }"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"

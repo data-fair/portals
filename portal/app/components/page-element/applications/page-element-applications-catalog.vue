@@ -214,15 +214,6 @@ if (!preview) {
   applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery, watch: false })
 }
 
-// TODO: Track applications search ?
-// Track searches
-// if (!preview) {
-//   // TODO: ask if params are tracked, in this case, this track is useless
-//   watch(filters.search, () => {
-//     if (filters.search.value) useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value })
-//   })
-// }
-
 // Computed property to check if there are more datasets to load (for infinite scroll)
 const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
@@ -304,7 +295,10 @@ if (!preview) {
     if (applicationsFetch?.data.value?.results) {
       displayedApplications.value = [...applicationsFetch.data.value.results]
     }
-    // goTo(catalogTop.value)
+    // Track search event with analytics
+    if (filters.search.value) {
+      useAnalytics()?.track('search', { category: 'applications', label: filters.search.value, resultsCount: applicationsFetch?.data.value?.count ?? 0 })
+    }
   })
 }
 

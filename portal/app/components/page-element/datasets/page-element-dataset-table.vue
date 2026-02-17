@@ -7,7 +7,7 @@
     scrolling="no"
     aspect-ratio
     emit-iframe-messages
-    @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
+    @iframe-message="(iframeMessage: CustomEvent) => onIframeTrackMessage(iframeMessage.detail)"
   />
 </template>
 
@@ -23,11 +23,6 @@ const url = computed(() => {
   if (element.cols && element.cols.length) ret += `&cols=${element.cols.join(',')}`
   return ret
 })
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const onIframeMessage = (message: any) => {
-  if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
-}
 
 </script>
 

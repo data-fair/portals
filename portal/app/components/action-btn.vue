@@ -12,7 +12,7 @@
     :density="actionStyle === 'icon' ? 'comfortable' : undefined"
     :size="actionStyle !== 'icon' ? 'small' : undefined"
     :block="block"
-    class="justify-start"
+    :class="{ 'justify-start': actionStyle !== 'icon' }"
     variant="text"
   />
 </template>
