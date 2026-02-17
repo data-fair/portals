@@ -1,20 +1,11 @@
-/*
-import es from '#es'
-import mongo from '#mongo'
-import { Portal } from '#types/portal/index.ts'
+import type { SearchPageRef } from '#types/search-page-ref/index.js'
 
-const indexName = (portalId: string) => `portal-search-${portalId}`
-
-export const initPortalIndex = async (portal: Portal) => {
-  // TODO
+export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
+  // TODO: Implement indexing logic
+  console.log('Indexing page ref:', ref._id)
 }
 
-export const indexPortal = async (portal: Portal) => {
-  const existingSearchPageIndexes: { _id: string }[] = await mongo.searchPageIndexes.find({ 'owner.type': portal.owner.type, 'owner.id': portal.owner.id, portal: portal._id }).project({ _id: 1 }).toArray()
+export const deletePageRef = async (ref: SearchPageRef): Promise<void> => {
+  // TODO: Implement deletion logic
+  console.log('Deleting page ref:', ref._id)
 }
-
-export const deletePortalIndex = async (portal: Portal) => {
-  await mongo.searchPageIndexes.deleteMany({ 'owner.type': portal.owner.type, 'owner.id': portal.owner.id, portal: portal._id })
-  await es.client.indi
-}
-*/
