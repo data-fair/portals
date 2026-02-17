@@ -120,57 +120,60 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     }
   }
 
-  if (searchTypes.includes('dataset')) {
+  if (searchTypes.includes('dataset') || searchTypes.includes('application')) {
     const portalUrl = await getPortalUrl(portal._id)
-    try {
-      const datasetsResponse = await axios.get(`${portalUrl}/data-fair/api/v1/datasets`, {
-        params: {
-          size: 1000,
-          select: 'slug',
-          publicationSites: `data-fair-portals:${portal._id}`
-        }
-      })
+    const axiosInstance = await createPseudoSession(portal.owner)
 
-      for (const dataset of datasetsResponse.data.results || []) {
-        if (!dataset.slug) continue
-        searchPageRefs.push({
-          _id: `${portal._id}-dataset-${dataset.slug}`,
-          owner: portal.owner,
-          portal: portal._id,
-          resource: { type: 'dataset', id: dataset.slug },
-          path: `/datasets/${dataset.slug}`,
-          indexingStatus: 'toIndex'
+    if (searchTypes.includes('dataset')) {
+      try {
+        const datasetsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/datasets`, {
+          params: {
+            size: 1000,
+            select: 'slug',
+            publicationSites: `data-fair-portals:${portal._id}`
+          }
         })
+
+        for (const dataset of datasetsResponse.data.results || []) {
+          if (!dataset.slug) continue
+          searchPageRefs.push({
+            _id: `${portal._id}-dataset-${dataset.slug}`,
+            owner: portal.owner,
+            portal: portal._id,
+            resource: { type: 'dataset', id: dataset.slug },
+            path: `/datasets/${dataset.slug}`,
+            indexingStatus: 'toIndex'
+          })
+        }
+      } catch (err) {
+        console.error('Error fetching datasets for search indexing:', err)
       }
-    } catch (err) {
-      console.error('Error fetching datasets for search indexing:', err)
     }
-  }
 
-  if (searchTypes.includes('application')) {
-    const portalUrl = await getPortalUrl(portal._id)
-    try {
-      const applicationsResponse = await axios.get(`${portalUrl}/data-fair/api/v1/applications`, {
-        params: {
-          size: 1000,
-          select: 'slug',
-          publicationSites: `data-fair-portals:${portal._id}`
-        }
-      })
-
-      for (const application of applicationsResponse.data.results || []) {
-        if (!application.slug) continue
-        searchPageRefs.push({
-          _id: `${portal._id}-application-${application.slug}`,
-          owner: portal.owner,
-          portal: portal._id,
-          resource: { type: 'application', id: application.slug },
-          path: `/applications/${application.slug}`,
-          indexingStatus: 'toIndex'
+    if (searchTypes.includes('application')) {
+      try {
+        const applicationsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/applications`, {
+          params: {
+            size: 1000,
+            select: 'slug',
+            publicationSites: `data-fair-portals:${portal._id}`
+          }
         })
+
+        for (const application of applicationsResponse.data.results || []) {
+          if (!application.slug) continue
+          searchPageRefs.push({
+            _id: `${portal._id}-application-${application.slug}`,
+            owner: portal.owner,
+            portal: portal._id,
+            resource: { type: 'application', id: application.slug },
+            path: `/applications/${application.slug}`,
+            indexingStatus: 'toIndex'
+          })
+        }
+      } catch (err) {
+        console.error('Error fetching applications for search indexing:', err)
       }
-    } catch (err) {
-      console.error('Error fetching applications for search indexing:', err)
     }
   }
 

@@ -73,9 +73,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, cookie)
   await mongo.portals.updateOne({ _id: portal._id }, { $set: fullPatch })
 
-  const wasSearchEngineActive = portal.config.searchEngine?.active
-  const isSearchEngineActive = updatedPortal.config.searchEngine?.active
-  if (!wasSearchEngineActive && isSearchEngineActive) {
+  if (!portal.config.searchEngine?.active && updatedPortal.config.searchEngine?.active) {
     await initSearchEngine(updatedPortal)
   }
 
