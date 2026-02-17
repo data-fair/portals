@@ -2,14 +2,20 @@ import axios from '@data-fair/lib-node/axios.js'
 import axiosWithCookies from '@data-fair/lib-node/axios-with-cookies.js'
 import type { AxiosInstance } from 'axios'
 import config from '#config'
+import mongo from '#mongo'
+import type { Portal } from '#types/portal/index.js'
 import type { SearchPageRef } from '#types/search-page-ref/index.js'
 
-const getPortalUrl = (portalId: string): string => {
-  return config.portalUrlPattern.replace('{subdomain}', portalId)
+const getPortalUrl = async (portalId: string): Promise<string> => {
+  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
+  if (!portal) {
+    throw new Error(`Portal not found: ${portalId}`)
+  }
+  return portal.ingress?.url || config.portalUrlPattern.replace('{subdomain}', portalId)
 }
 
 const createPseudoSession = async (owner: SearchPageRef['owner']): Promise<AxiosInstance> => {
-  const ax = axiosWithCookies()
+  const ax = axiosWithCookies({ globalCookies: true })
   await ax.post(
     `${config.privateDirectoryUrl}/api/auth/pseudo?key=${config.secretKeys.pseudoSession}`,
     { type: owner.type, id: owner.id }
@@ -22,7 +28,7 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
     throw new Error('portal is required for indexing')
   }
 
-  const portalUrl = getPortalUrl(ref.portal)
+  const portalUrl = await getPortalUrl(ref.portal)
   const headers: Record<string, string> = {
     'x-forwarded-host': new URL(portalUrl).host
   }
