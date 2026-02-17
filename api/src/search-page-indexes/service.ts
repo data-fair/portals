@@ -1,6 +1,7 @@
 import axios from '@data-fair/lib-node/axios.js'
 import axiosWithCookies from '@data-fair/lib-node/axios-with-cookies.js'
 import type { AxiosInstance } from 'axios'
+import * as parse5 from 'parse5'
 import config from '#config'
 import mongo from '#mongo'
 import es from '#es'
@@ -196,11 +197,117 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
     axiosInstance = await createPseudoSession(ref.owner)
   }
 
-  const url = `${portalUrl}/api/search-indexable${ref.path}`
+  const url = `${portalUrl}${ref.path}`
 
   const response = await axiosInstance.get(url, { headers })
+  const html = response.data as string
 
-  console.log('Indexed page ref:', ref._id, 'with data:', response.data)
+  const document = parse5.parse(html) as any
+
+  let title = ''
+  let description = ''
+  let text = ''
+
+  const findMetaContent = (name: string): string | undefined => {
+    const findMeta = (nodes: any[]): any | undefined => {
+      for (const node of nodes) {
+        if (node.nodeName === 'meta') {
+          const attrs = node.attrs || []
+          if (attrs.some((a: any) => a.name === 'name' && a.value === name)) {
+            return node
+          }
+        }
+        if (node.childNodes) {
+          const found = findMeta(node.childNodes)
+          if (found) return found
+        }
+      }
+      return undefined
+    }
+
+    const meta = findMeta(document.childNodes)
+    if (meta) {
+      const attrs = meta.attrs || []
+      const contentAttr = attrs.find((a: any) => a.name === 'content')
+      return contentAttr?.value
+    }
+    return undefined
+  }
+
+  const extractText = (nodes: any[]): string => {
+    let result = ''
+    for (const node of nodes) {
+      if (node.nodeName === '#text' && node.value) {
+        result += node.value + ' '
+      }
+      if (node.childNodes) {
+        result += extractText(node.childNodes)
+      }
+    }
+    return result.trim()
+  }
+
+  const findTitle = (): string => {
+    const findInNodes = (nodes: any[]): string | undefined => {
+      for (const node of nodes) {
+        if (node.nodeName === 'title') {
+          if (node.childNodes && node.childNodes.length > 0 && node.childNodes[0].value) {
+            return node.childNodes[0].value
+          }
+        }
+        if (node.childNodes) {
+          const found = findInNodes(node.childNodes)
+          if (found) return found
+        }
+      }
+      return undefined
+    }
+    return findInNodes(document.childNodes) || ''
+  }
+
+  const findBodyText = (): string => {
+    const findBody = (nodes: any[]): any | undefined => {
+      for (const node of nodes) {
+        if (node.nodeName === 'body') {
+          return node
+        }
+        if (node.childNodes) {
+          const found = findBody(node.childNodes)
+          if (found) return found
+        }
+      }
+      return undefined
+    }
+
+    const body = findBody(document.childNodes)
+    if (body && body.childNodes) {
+      return extractText(body.childNodes)
+    }
+    return ''
+  }
+
+  title = findTitle()
+  description = findMetaContent('description') || ''
+  text = findBodyText()
+
+  const searchDoc = {
+    title,
+    description,
+    text,
+    path: ref.path,
+    resourceType: ref.resource.type,
+    resourceId: ref.resource.id,
+    public: ref.public,
+    privateAccess: ref.privateAccess,
+    owner: ref.owner,
+    portal: ref.portal
+  }
+
+  await es.client.index({
+    index: aliasName(ref.portal),
+    id: ref._id,
+    document: searchDoc
+  })
 }
 
 export const deletePageRef = async (ref: SearchPageRef): Promise<void> => {
