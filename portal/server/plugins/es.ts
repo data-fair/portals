@@ -18,14 +18,7 @@ export class PortalEs {
       options.tls = options.tls ?? {}
       options.tls.ca = config.ca
     }
-    const client = new Client(options)
-    try {
-      await client.ping()
-    } catch (err) {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      await client.ping()
-    }
-    this._client = client
+    this._client = new Client(options)
   }
 }
 
