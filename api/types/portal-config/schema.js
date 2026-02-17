@@ -51,6 +51,11 @@ export default {
           title: 'Sécurité',
           comp: 'card',
           children: ['allowRobots', 'authentication', 'allowedFrameAncestors', 'allowedFrameSources']
+        },
+        {
+          title: 'Moteur de recherche',
+          comp: 'card',
+          children: ['searchEngine']
         }]
       },
       {
@@ -397,6 +402,27 @@ export default {
       properties: {
         tracker: {
           $ref: 'https://github.com/data-fair/portals/portal-config-analytics-tracker'
+        }
+      }
+    },
+    searchEngine: {
+      type: 'object',
+      title: 'Moteur de recherche',
+      unevaluatedProperties: false,
+      properties: {
+        active: {
+          type: 'boolean',
+          title: 'Activer le moteur de recherche',
+          default: false,
+          layout: 'switch'
+        },
+        types: {
+          type: 'array',
+          title: 'Types de contenus à inclure',
+          items: {
+            type: 'string',
+            enum: ['dataset', 'application', 'page', 'reuse']
+          }
         }
       }
     },
