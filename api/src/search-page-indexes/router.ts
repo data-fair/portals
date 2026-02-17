@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router, type Request } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
@@ -8,8 +8,9 @@ import { createOrUpdateSearchPageRef, type CreateSearchPageRefParams } from './s
 const router = Router()
 export default router
 
-const assertReqInternalSecret = (secret: string | undefined) => {
-  if (!secret || secret !== config.secretKeys.pseudoSession) {
+const assertReqInternalSecret = (req: Request, knownSecret: string) => {
+  const secret = req.headers['x-internal-secret'] as string
+  if (!secret || secret !== knownSecret) {
     throw httpError(403, 'invalid internal secret')
   }
 }
@@ -40,7 +41,7 @@ router.get('', async (req, res, next) => {
 })
 
 router.post('/reindex', async (req, res, next) => {
-  assertReqInternalSecret(req.headers['x-internal-secret'] as string)
+  assertReqInternalSecret(req, config.secretKeys.searchPageIndex)
 
   const body = req.body as {
     portal: string

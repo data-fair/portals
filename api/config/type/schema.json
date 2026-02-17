@@ -60,6 +60,9 @@
         },
         "pseudoSession": {
           "type": "string"
+        },
+        "searchPageIndex": {
+          "type": "string"
         }
       }
     },
