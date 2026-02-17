@@ -3,6 +3,7 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import config from '#config'
+import * as reindexReqBody from '#doc/search-page-indexes/reindex-req-body/index.ts'
 import { createOrUpdateSearchPageRef, type CreateSearchPageRefParams } from './service.ts'
 
 const router = Router()
@@ -43,27 +44,9 @@ router.get('', async (req, res, next) => {
 router.post('/reindex', async (req, res, next) => {
   assertReqInternalSecret(req, config.secretKeys.searchPageIndex)
 
-  const body = req.body as {
-    portal: string
-    owner: CreateSearchPageRefParams['owner']
-    resource: CreateSearchPageRefParams['resource']
-    path: string
-    public?: boolean
-    privateAccess?: CreateSearchPageRefParams['privateAccess']
-  }
+  const body = reindexReqBody.returnValid(req.body, { name: 'body' }) as CreateSearchPageRefParams
 
-  if (!body.portal || !body.owner || !body.resource || !body.path) {
-    throw httpError(400, 'portal, owner, resource and path are required')
-  }
-
-  await createOrUpdateSearchPageRef({
-    portal: body.portal,
-    owner: body.owner,
-    resource: body.resource,
-    path: body.path,
-    public: body.public,
-    privateAccess: body.privateAccess
-  })
+  await createOrUpdateSearchPageRef(body)
 
   res.status(204).send()
 })
