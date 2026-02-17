@@ -14,6 +14,35 @@ import { indexDefinition } from './es.js'
 const indexName = (portalId: string) => `portal-search-${portalId}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
 
+export type CreateSearchPageRefParams = {
+  portal: string
+  owner: SearchPageRef['owner']
+  resource: SearchPageRef['resource']
+  path: string
+  public?: boolean
+  privateAccess?: SearchPageRef['privateAccess']
+}
+
+export const createOrUpdateSearchPageRef = async (params: CreateSearchPageRefParams): Promise<void> => {
+  const refId = `${params.portal}-${params.resource.type}-${params.resource.id}`
+
+  await mongo.searchPageRefs.updateOne(
+    { _id: refId },
+    {
+      $set: {
+        owner: params.owner,
+        portal: params.portal,
+        resource: params.resource,
+        path: params.path,
+        public: params.public,
+        privateAccess: params.privateAccess,
+        indexingStatus: 'toIndex'
+      }
+    },
+    { upsert: true }
+  )
+}
+
 const getPortalUrl = async (portalId: string): Promise<string> => {
   const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
   if (!portal) {

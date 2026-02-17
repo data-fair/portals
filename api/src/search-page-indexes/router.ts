@@ -1,10 +1,18 @@
 import { Router } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
-import { reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
+import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
+import config from '#config'
+import { createOrUpdateSearchPageRef, type CreateSearchPageRefParams } from './service.ts'
 
 const router = Router()
 export default router
+
+const assertReqInternalSecret = (secret: string | undefined) => {
+  if (!secret || secret !== config.secretKeys.pseudoSession) {
+    throw httpError(403, 'invalid internal secret')
+  }
+}
 
 router.get('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
@@ -29,4 +37,32 @@ router.get('', async (req, res, next) => {
   ])
 
   res.json({ results, count })
+})
+
+router.post('/reindex', async (req, res, next) => {
+  assertReqInternalSecret(req.headers['x-internal-secret'] as string)
+
+  const body = req.body as {
+    portal: string
+    owner: CreateSearchPageRefParams['owner']
+    resource: CreateSearchPageRefParams['resource']
+    path: string
+    public?: boolean
+    privateAccess?: CreateSearchPageRefParams['privateAccess']
+  }
+
+  if (!body.portal || !body.owner || !body.resource || !body.path) {
+    throw httpError(400, 'portal, owner, resource and path are required')
+  }
+
+  await createOrUpdateSearchPageRef({
+    portal: body.portal,
+    owner: body.owner,
+    resource: body.resource,
+    path: body.path,
+    public: body.public,
+    privateAccess: body.privateAccess
+  })
+
+  res.status(204).send()
 })
