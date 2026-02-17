@@ -4,7 +4,7 @@ export default {
   title: 'Search page ref',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'owner', 'resource', 'portal'],
+  required: ['_id', 'owner', 'resource', 'portal', 'path'],
   properties: {
     _id: {
       type: 'string',
@@ -22,7 +22,7 @@ export default {
     },
     resource: {
       additionalProperties: false,
-      required: ['type', 'id', 'slug'],
+      required: ['type', 'id'],
       properties: {
         type: {
           type: 'string',
@@ -30,11 +30,12 @@ export default {
         },
         id: {
           type: 'string'
-        },
-        slug: {
-          type: 'string'
         }
       }
+    },
+    path: {
+      type: 'string',
+      description: 'Full path of the resource on the portal'
     },
     public: {
       type: 'boolean'

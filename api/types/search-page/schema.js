@@ -4,7 +4,7 @@ export default {
   title: 'Search page',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'owner', 'resource'],
+  required: ['_id', 'owner', 'resource', 'path'],
   properties: {
     _id: {
       type: 'string',
@@ -13,7 +13,7 @@ export default {
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
     resource: {
       additionalProperties: false,
-      required: ['type', 'id', 'slug'],
+      required: ['type', 'id'],
       properties: {
         type: {
           type: 'string',
@@ -21,11 +21,12 @@ export default {
         },
         id: {
           type: 'string'
-        },
-        slug: {
-          type: 'string'
         }
       }
+    },
+    path: {
+      type: 'string',
+      description: 'Full path of the resource on the portal'
     },
     public: {
       type: 'boolean'
