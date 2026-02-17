@@ -16,6 +16,10 @@ export default {
       description: 'Last indexing date of this page',
       format: 'date-time'
     },
+    portal: {
+      type: 'string',
+      description: 'Portal ID'
+    },
     resource: {
       additionalProperties: false,
       required: ['type', 'id', 'slug'],

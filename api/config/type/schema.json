@@ -57,6 +57,9 @@
         },
         "ingress": {
           "type": "string"
+        },
+        "pseudoSession": {
+          "type": "string"
         }
       }
     },
