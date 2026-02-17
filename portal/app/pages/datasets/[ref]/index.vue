@@ -124,6 +124,8 @@
                 resize="no"
                 aspect-ratio
                 sync-params
+                emit-iframe-messages
+                @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
               />
             </v-tabs-window-item>
 
@@ -491,6 +493,11 @@ const thumbnailUrl = computed(() => {
   if (cardConfig.thumbnail?.default) return getPortalImageSrc(cardConfig.thumbnail.default, false)
   return undefined
 })
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onIframeMessage = (message: any) => {
+  if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
+}
 
 watch(datasetsCatalogExists, () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
