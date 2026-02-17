@@ -24,10 +24,6 @@ const createPseudoSession = async (owner: SearchPageRef['owner']): Promise<Axios
 }
 
 export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
-  if (!ref.portal) {
-    throw new Error('portal is required for indexing')
-  }
-
   const portalUrl = await getPortalUrl(ref.portal)
   const headers: Record<string, string> = {
     'x-forwarded-host': new URL(portalUrl).host

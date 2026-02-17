@@ -4,7 +4,7 @@ export default {
   title: 'Search page ref',
   type: 'object',
   additionalProperties: false,
-  required: ['_id', 'owner', 'resource'],
+  required: ['_id', 'owner', 'resource', 'portal'],
   properties: {
     _id: {
       type: 'string',
