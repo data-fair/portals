@@ -291,7 +291,18 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
   text = findBodyText()
 
   const privateAccessStrings = (ref.privateAccess || []).map(access => {
-    const id = access.id || '*'
+    let id: string
+    if (access.type === 'user') {
+      if (!access.id && !access.email) {
+        throw new Error('privateAccess user must have id or email')
+      }
+      id = access.id || `email:${access.email}`
+    } else {
+      if (!access.id) {
+        throw new Error('privateAccess organization must have id')
+      }
+      id = access.id
+    }
     const department = access.department || '*'
     const roles = access.roles?.join(',') || '*'
     return `${access.type}:${id}:${department}:${roles}`
