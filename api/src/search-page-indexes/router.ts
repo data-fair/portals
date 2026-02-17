@@ -4,7 +4,7 @@ import findUtils from '../utils/find.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import config from '#config'
 import * as reindexReqBody from '#doc/search-page-indexes/reindex-req-body/index.ts'
-import { createOrUpdateSearchPageRef, type CreateSearchPageRefParams } from './service.ts'
+import { createOrUpdateSearchPageRef } from './service.ts'
 
 const router = Router()
 export default router
@@ -44,9 +44,18 @@ router.get('', async (req, res, next) => {
 router.post('/reindex', async (req, res, next) => {
   assertReqInternalSecret(req, config.secretKeys.searchPageIndex)
 
-  const body = reindexReqBody.returnValid(req.body, { name: 'body' }) as CreateSearchPageRefParams
+  const body = reindexReqBody.returnValid(req.body, { name: 'body' })
 
-  await createOrUpdateSearchPageRef(body)
+  const path = `/${body.resource.type}s/${body.resource.id}`
+
+  await createOrUpdateSearchPageRef({
+    portal: body.portal,
+    owner: body.owner,
+    resource: body.resource,
+    path,
+    public: body.public,
+    privateAccess: body.privateAccess
+  })
 
   res.status(204).send()
 })

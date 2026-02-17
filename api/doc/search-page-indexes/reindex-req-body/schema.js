@@ -1,10 +1,22 @@
 import jsonSchema from '@data-fair/lib-utils/json-schema.js'
 import searchPageRefSchema from '#types/search-page-ref/schema.js'
 
+const resourceSchema = jsonSchema(searchPageRefSchema.properties.resource)
+  .set({
+    type: 'object',
+    properties: {
+      type: { type: 'string', enum: ['dataset', 'application'] },
+      id: { type: 'string' }
+    },
+    required: ['type', 'id']
+  })
+  .schema
+
 const schema = jsonSchema(searchPageRefSchema)
-  .pickProperties(['portal', 'owner', 'resource', 'path', 'public', 'privateAccess'])
-  .removeProperties(['_id', 'indexedAt', 'indexingStatus'])
-  .set({ required: ['portal', 'owner', 'resource', 'path'] })
+  .pickProperties(['portal', 'owner', 'resource', 'public', 'privateAccess'])
+  .removeProperties(['_id', 'indexedAt', 'indexingStatus', 'path'])
+  .addProperty('resource', resourceSchema)
+  .set({ required: ['portal', 'owner', 'resource'] })
   .schema
 
 export default {
