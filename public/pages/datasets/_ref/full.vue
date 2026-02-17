@@ -7,15 +7,13 @@
     <div v-else-if="dataset">
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Données', to: {name: 'datasets'}, exact: true}, {text: dataset.title, to: {name: 'datasets-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Vue tabulaire', disabled: true}]" />
       <client-only>
-        <v-iframe
-          :title="'Vue tableau du jeu de données : ' + dataset.title"
+        <d-frame-wrapper
+          :iframe-title="'Vue tableau du jeu de données : ' + dataset.title"
           :src="tablePreview"
-          :style="`height:${windowHeight - 64}px`"
-          scrolling="yes"
-          :iframe-resizer="false"
-          :sync-state="true"
-          :query-params-extra="queryParamsExtra"
-          :query-params-exclude="queryParamsExclude"
+          :height="`${windowHeight - 64}px`"
+          scrolling="no"
+          resize="no"
+          sync-params
         />
       </client-only>
     </div>
@@ -23,13 +21,15 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 import { datasetPageHead } from '~/assets/meta-utils'
 import Error from '~/components/error.vue'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { Error, VIframe },
+  components: {
+    Error,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'minimal',
   middleware: 'portal-required',
   data: () => ({
@@ -54,12 +54,6 @@ export default {
     },
     pageUrl () {
       return this.publicUrl + '/datasets/' + this.$route.params.ref + '/full'
-    },
-    queryParamsExtra () {
-      return { primary: this.readablePrimaryColor, embed: true }
-    },
-    queryParamsExclude () {
-      return ['portalId']
     }
   }
 }

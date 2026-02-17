@@ -49,9 +49,10 @@
           cols="12"
         >
           <client-only>
-            <v-iframe
-              :title="use.title"
+            <d-frame-wrapper
+              :iframe-title="use.title"
               :src="use.links.iframe"
+              aspect-ratio
             />
           </client-only>
         </v-col>
@@ -116,12 +117,11 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
   components: {
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'default',
   middleware: 'portal-required',

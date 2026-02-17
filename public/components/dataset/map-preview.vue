@@ -39,10 +39,12 @@
         </v-btn>
       </v-toolbar>
       <client-only>
-        <v-iframe
-          :title="'Vue carte du jeu de données : ' + dataset.title"
+        <d-frame-wrapper
+          :iframe-title="'Vue carte du jeu de données : ' + dataset.title"
           :src="iframeSrc"
-          :aspect-ratio="$vuetify.breakpoint.smAndDown ? windowWidth / (windowHeight - 48) : undefined"
+          aspect-ratio
+          scrolling="no"
+          resize="no"
         />
       </client-only>
     </v-card>
@@ -50,11 +52,12 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['dataset', 'color', 'fab'],
   data () {
     return {

@@ -214,30 +214,29 @@
       </v-col>
     </v-row>
     <client-only v-else>
-      <v-iframe
+      <d-frame-wrapper
         v-if="value.type === 'datasetForm' && value.dataset"
         :src="formIframeSrc(value.dataset)"
-        :title="value.dataset?.title"
+        :iframe-title="value.dataset?.title"
+        scrolling="no"
+        aspect-ratio
       />
-      <v-iframe
+      <d-frame-wrapper
         v-else-if="value.type === 'datasetTable' && value.dataset"
-        scrolling="yes"
-        :style="value.fillHeight ? 'height:100%' : ''"
-        :iframe-resizer="false"
-        :sync-state="value.syncState"
-        :sync-state-ignore-path="true"
+        :iframe-title="value.dataset?.title"
         :src="tableIframeSrc()"
-        :query-params-exclude="['primary']"
-        :title="value.dataset?.title"
+        :style="value.fillHeight ? 'height:100%' : ''"
+        scrolling="no"
+        aspect-ratio
       />
-      <v-iframe
+      <d-frame-wrapper
         v-else-if="value.type === 'application' && value.application"
         :style="value.fillHeight ? 'height:100%' : ''"
+        :src="applicationIframeSrc(value.application)"
+        :iframe-title="value.application?.title"
         :sync-state="value.syncState"
         :sync-state-ignore-path="true"
-        :src="applicationIframeSrc(value.application)"
-        :query-params-exclude="['primary', 'embed']"
-        :title="value.application?.title"
+        aspect-ratio
       />
       <template v-else-if="value.type === 'image' && (value.url || (value.local && value.local.attachmentPath))">
         <a
@@ -267,10 +266,11 @@
           {{ value.legend }}
         </div>
       </template>
-      <v-iframe
+      <d-frame-wrapper
         v-else-if="value.type === 'iframe' && isValidUrl(value.url)"
-        :title="'Lien vers la page ' + value.url"
+        :iframe-title="'Lien vers la page ' + value.url"
         :src="value.url"
+        aspect-ratio
       />
       <v-overlay
         :value="overlay.visible"
@@ -286,14 +286,15 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import DatasetCard from '~/components/dataset/card.vue'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
   name: 'KElement',
-  components: { VIframe, DatasetCard },
+  components: {
+    DatasetCard,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: ['value', 'images'],
   data () {
     return {
@@ -401,7 +402,7 @@ export default {
     },
     applicationIframeSrc (application) {
       const ref = this.isPublished && application.slug ? application.slug : application.id
-      return `${this.$store.getters.dataFairUrl}/app/${ref}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
+      return `${this.$store.getters.dataFairUrl}/app/${ref}?d-frame=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     async resolveDataset () {
       this.error = null

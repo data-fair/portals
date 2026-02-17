@@ -75,13 +75,13 @@
       </v-row>
 
       <client-only>
-        <v-iframe
-          :title="application.title"
-          :src="`${dataFairUrl}/app/${$route.params.ref}`"
-          :sync-state="true"
-          :query-params-extra="queryParamsExtra"
-          :query-params-exclude="queryParamsExclude"
-          @state="s => syncedState = s"
+        <d-frame-wrapper
+          :iframe-title="application.title"
+          :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
+          aspect-ratio
+          sync-params
+          state-change-events
+          @state-change="s => syncedState = s.detail[1]"
         />
       </client-only>
 
@@ -127,8 +127,6 @@
 import ApplicationEmbed from '~/components/application/embed.vue'
 import DatasetCard from '~/components/dataset/card.vue'
 import Social from '~/components/social'
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
 const { mapState, mapGetters } = require('vuex')
 
@@ -139,7 +137,7 @@ export default {
     ApplicationEmbed,
     Social,
     Error,
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   middleware: 'portal-required',
   data: () => ({
@@ -218,12 +216,6 @@ export default {
     ...mapGetters(['readablePrimaryColor', 'dataFairUrl', 'infoCardProps', 'directoryUrl']),
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.ref
-    },
-    queryParamsExtra () {
-      return { primary: this.readablePrimaryColor, embed: true }
-    },
-    queryParamsExclude () {
-      return ['portalId']
     }
   },
   watch: {

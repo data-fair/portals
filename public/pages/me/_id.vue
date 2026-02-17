@@ -1,19 +1,21 @@
 <template lang="html">
   <v-container>
-    <v-iframe
-      :title="page.title"
+    <d-frame-wrapper
+      :iframe-title="page.title"
       :src="page.href"
+      :height="`${windowHeight - 48}px`"
+      resize="no"
     />
   </v-container>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   computed: {

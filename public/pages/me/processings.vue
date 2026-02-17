@@ -1,21 +1,24 @@
 <template lang="html">
-  <v-iframe
-    title="Traitements"
+  <d-frame-wrapper
+    iframe-title="Traitements"
     :src="processingsListUrl"
-    :query-params-extra="queryParamsExtra"
-    :query-params-exclude="queryParamsExclude"
-    :sync-state="true"
-    @message="onMessage"
+    :height="`${windowHeight - 48}px`"
+    resize="no"
+    sync-path
+    sync-params
+    emit-iframe-messages
+    @iframe-message="(message) => onMessage(message.detail)"
+    @message="(message) => onMessage(message.detail)"
   />
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   computed: {
@@ -29,13 +32,7 @@ export default {
       return ownerFilter
     },
     processingsListUrl () {
-      return `${this.processingsUrl}/processings/`
-    },
-    queryParamsExtra () {
-      return { primary: this.readablePrimaryColor, owner: this.ownerFilter }
-    },
-    queryParamsExclude () {
-      return ['portalId']
+      return `${this.processingsUrl}/processings/?owner=${encodeURIComponent(this.ownerFilter)}`
     }
   },
   methods: {

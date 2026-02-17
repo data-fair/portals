@@ -16,9 +16,9 @@
             width="100%"
             class="mt-2"
           />
-          <v-iframe
+          <d-frame-wrapper
             v-else
-            :title="application.title"
+            :iframe-title="application.title"
             :src="application.link"
             class="mt-2"
           />
@@ -76,11 +76,13 @@
 </template>
 
 <script>
-import VIframe from '@koumoul/v-iframe'
 import VClamp from 'vue-clamp'
 
 export default {
-  components: { VIframe, VClamp },
+  components: {
+    VClamp,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   props: {
     dataset: { type: Object, required: true },
     showIframes: { type: Boolean, default: true },

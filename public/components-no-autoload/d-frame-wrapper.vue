@@ -1,21 +1,23 @@
 <template>
   <d-frame
-    :iframe-title="title"
-    :src="src"
-    :height="height"
-    :resize="resize"
-    sync-params
+    v-bind="$attrs"
+    :adapter.prop="dFrameAdapter"
+    v-on="$listeners"
   />
 </template>
 
 <script>
 import '@data-fair/frame/lib/d-frame.js'
+import createDFrameAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter.js'
+
 export default {
-  props: {
-    src: { type: String, required: true },
-    title: { type: String, required: true },
-    height: { type: String, default: '' },
-    resize: { type: String, default: 'no' }
+  data () {
+    return {
+      dFrameAdapter: null
+    }
+  },
+  created () {
+    this.dFrameAdapter = createDFrameAdapter(this.$router)
   }
 }
 </script>

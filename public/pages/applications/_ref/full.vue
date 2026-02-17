@@ -7,15 +7,12 @@
     <div v-else-if="application">
       <layout-full-page-header :breadcrumbs="[{text: 'Accueil', to: {name: 'index'}, exact: true}, {text: 'Visualisations', to: {name: 'applications'}, exact: true}, {text: application.title, to: {name: 'applications-ref', params: {ref: $route.params.ref}}, exact: true}, {text: 'Plein écran', disabled: true}]" />
       <client-only>
-        <v-iframe
-          :title="application.title"
-          :src="`${dataFairUrl}/app/${$route.params.ref}`"
-          :style="`height:${windowHeight - 64}px`"
-          scrolling="yes"
-          :iframe-resizer="false"
-          :sync-state="true"
-          :query-params-extra="queryParamsExtra"
-          :query-params-exclude="queryParamsExclude"
+        <d-frame-wrapper
+          :iframe-title="application.title"
+          :src="`${dataFairUrl}/app/${$route.params.ref}?d-frame=true&primary=${readablePrimaryColor}`"
+          :height="`${windowHeight - 64}px`"
+          resize="no"
+          sync-params
         />
       </client-only>
     </div>
@@ -23,13 +20,14 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import Error from '~/components/error.vue'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { Error, VIframe },
+  components: {
+    Error,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'minimal',
   middleware: 'portal-required',
   data: () => ({
@@ -98,12 +96,6 @@ export default {
     },
     pageUrl () {
       return this.publicUrl + '/applications/' + this.$route.params.ref + '/full'
-    },
-    queryParamsExtra () {
-      return { primary: this.readablePrimaryColor, embed: true }
-    },
-    queryParamsExclude () {
-      return ['portalId']
     }
   }
 }

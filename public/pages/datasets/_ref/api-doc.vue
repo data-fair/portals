@@ -16,9 +16,11 @@
       </p>
       <client-only>
         <d-frame-wrapper
-          :title="'Documentation de l\'API du jeu de données : ' + dataset.title"
+          :iframe-title="'Documentation de l\'API du jeu de données : ' + dataset.title"
           :src="iframeSrc"
           :height="`${windowHeight - 64}px`"
+          scrolling="no"
+          resize="no"
         />
       </client-only>
     </div>
@@ -33,7 +35,7 @@ const { mapState, mapGetters } = require('vuex')
 export default {
   components: {
     Error,
-    DFrameWrapper: () => process.client ? import('../../../components-no-autoload/d-frame-wrapper.vue') : null
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'minimal',
   middleware: 'portal-required',

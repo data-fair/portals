@@ -3,9 +3,9 @@
     <v-col :style="$vuetify.breakpoint.lgAndUp ? 'padding-right:256px;' : ''">
       <v-container v-scroll="onScroll">
         <client-only>
-          <v-iframe
+          <d-frame-wrapper
             :src="notifSubscribeUrl"
-            title="Gestion des notifications"
+            iframe-title="Gestion des notifications"
           />
         </client-only>
         <section-title
@@ -103,11 +103,11 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'manager',
   data: () => ({
     page: 1,

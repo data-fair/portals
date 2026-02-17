@@ -36,7 +36,7 @@ export default {
     },
     syncedStateParams () {
       if (!this.syncedState) return {}
-      const url = new URL(this.syncedState.href)
+      const url = new URL(this.syncedState)
       const params = {}
       for (const key of [...url.searchParams.keys()]) {
         if (key !== 'embed' && key !== 'primary') params[key] = url.searchParams.get(key)

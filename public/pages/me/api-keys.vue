@@ -18,20 +18,20 @@
     >
       Pour la plupart des usages simples sur un jeu de données public une clé n'est pas nécessaire.
     </v-alert>
-    <v-iframe
-      title="Mes clés d'API"
+    <d-frame-wrapper
+      iframe-title="Mes clés d'API"
       :src="apiKeysUrl"
     />
   </v-container>
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 const { mapState, mapGetters } = require('vuex')
 
 export default {
-  components: { VIframe },
+  components: {
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
+  },
   layout: 'personal',
   middleware: ['portal-required', 'auth-required'],
   computed: {
@@ -40,7 +40,7 @@ export default {
     ...mapGetters('session', ['activeAccount']),
     ...mapState('session', ['user']),
     apiKeysUrl () {
-      return `${this.dataFairUrl}/embed/settings/${this.activeAccount.type}/${this.activeAccount.id}/api-keys?primary=${encodeURIComponent(this.config.themeColor)}&scopes=datasets`
+      return `${this.dataFairUrl}/embed/settings/${this.activeAccount.type}/${this.activeAccount.id}/api-keys?scopes=datasets`
     }
   }
 }

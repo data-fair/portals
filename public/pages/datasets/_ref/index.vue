@@ -457,9 +457,10 @@
             :order-md="application.preferLargeDisplay ? 1 : i%2"
           >
             <client-only>
-              <v-iframe
-                :title="application.title"
-                :src="application.exposedUrl + `?embed=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+              <d-frame-wrapper
+                :iframe-title="application.title"
+                :src="application.exposedUrl + `?d-frame=true&primary=${encodeURIComponent(readablePrimaryColor)}`"
+                aspect-ratio
               />
             </client-only>
           </v-col>
@@ -508,10 +509,11 @@
               width="100%"
               class="mt-2"
             />
-            <v-iframe
+            <d-frame-wrapper
               v-else
-              :title="application.title"
+              :iframe-title="application.title"
               :src="application.link"
+              aspect-ratio
               class="mt-2"
             />
           </client-only>
@@ -593,8 +595,6 @@ import DatasetEmbed from '~/components/dataset/embed.vue'
 import Social from '~/components/social'
 import Error from '~/components/error.vue'
 import { datasetPageHead } from '~/assets/meta-utils'
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import { isMobileOnly } from 'mobile-device-detect'
 const { mapState, mapGetters } = require('vuex')
 
@@ -610,7 +610,7 @@ export default {
     DatasetEmbed,
     Social,
     Error,
-    VIframe
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   layout: 'default',
   middleware: 'portal-required',

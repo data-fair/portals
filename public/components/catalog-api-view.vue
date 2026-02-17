@@ -36,7 +36,7 @@
       <client-only>
         <d-frame-wrapper
           :src="`${openapiViewerUrl}/?urlType=catalog`"
-          title="Documentation de l'API du catalogue"
+          iframe-title="Documentation de l'API du catalogue"
         />
       </client-only>
     </v-card>
@@ -44,11 +44,10 @@
 </template>
 
 <script>
-import 'iframe-resizer/js/iframeResizer'
 import { mapState, mapGetters } from 'vuex'
 export default {
   components: {
-    DFrameWrapper: () => process.client ? import('../components-no-autoload/d-frame-wrapper.vue') : null
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null
   },
   props: ['color'],
   data () {

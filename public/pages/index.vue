@@ -29,9 +29,9 @@
     <template v-else-if="!config.homeTemplate || config.homeTemplate.type === 'default'">
       <template v-if="config.homeImageAsBanner && !config.homeImageHidden">
         <client-only v-if="config.homeApplication">
-          <v-iframe
+          <d-frame-wrapper
             :src="homeApplicationUrl"
-            :title="config.homeApplication.title"
+            :iframe-title="config.homeApplication.title"
             :class="`elevation-${appBarElevation}`"
             style="margin-top: -12px;height: 400px;"
           />
@@ -76,10 +76,10 @@
             offset-md="1"
           >
             <client-only v-if="config.homeApplication">
-              <v-iframe
+              <d-frame-wrapper
                 :src="homeApplicationUrl"
                 style="height: 600px;"
-                :title="config.homeApplication.title"
+                :iframe-title="config.homeApplication.title"
               />
             </client-only>
             <v-img
@@ -226,8 +226,6 @@
 <script>
 import LastDatasets from '~/components/last-datasets.vue'
 import LastApps from '~/components/last-apps.vue'
-import 'iframe-resizer/js/iframeResizer'
-import VIframe from '@koumoul/v-iframe'
 import Timeline from 'vue-tweet-embed/dist/timeline'
 const { mapState, mapGetters } = require('vuex')
 
@@ -235,7 +233,7 @@ export default {
   components: {
     LastDatasets,
     LastApps,
-    VIframe,
+    DFrameWrapper: () => process.client ? import('~/components-no-autoload/d-frame-wrapper.vue') : null,
     Timeline
   },
   middleware: 'portal-required',
@@ -327,7 +325,7 @@ export default {
       return `${this.publicUrl}/api/v1/portals/${this.portal._id}/assets/home?draft=${this.draft}&hash=${this.config.assets.home && this.config.assets.home.hash}`
     },
     homeApplicationUrl () {
-      return `${this.dataFairUrl}/app/${this.config.homeApplication.id}?embed=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
+      return `${this.dataFairUrl}/app/${this.config.homeApplication.id}?d-frame=true&primary=${encodeURIComponent(this.readablePrimaryColor)}`
     },
     showLastApps () {
       return this.config.homeApplications && this.config.homeApplications.type === 'lasts' && this.applications && this.applications.results.length

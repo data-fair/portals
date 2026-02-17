@@ -12,7 +12,7 @@ services:
       - MAILDEV_ACTIVE=true
       - STORAGE_TYPE=file
       - ROLES_DEFAULTS=["admin", "contrib", "user"]
-      - PROMETHEUS_ACTIVE=false
+      - OBSERVER_ACTIVE=false
       - NUXT_BUILD_BLOCKING=false
       - NO_UI=${NO_UI}
       - AUTHRATELIMIT_ATTEMPTS=200
