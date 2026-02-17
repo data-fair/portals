@@ -32,12 +32,9 @@ export default {
       type: 'string',
       description: 'Name of the department'
     },
-    roles: {
-      type: 'array',
-      items: {
-        type: 'string',
-        description: 'Role name'
-      }
+    role: {
+      type: 'string',
+      description: 'Role name'
     }
   }
 }

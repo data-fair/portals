@@ -333,8 +333,8 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
       id = access.id
     }
     const department = access.department || '*'
-    const roles = access.roles?.join(',') || '*'
-    return `${access.type}:${id}:${department}:${roles}`
+    const role = access.role || '*'
+    return `${access.type}:${id}:${department}:${role}`
   })
 
   const searchDoc = {
