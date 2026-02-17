@@ -290,6 +290,13 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
   description = findMetaContent('description') || ''
   text = findBodyText()
 
+  const privateAccessStrings = (ref.privateAccess || []).map(access => {
+    const id = access.id || '*'
+    const department = access.department || '*'
+    const roles = access.roles?.join(',') || '*'
+    return `${access.type}:${id}:${department}:${roles}`
+  })
+
   const searchDoc = {
     title,
     description,
@@ -298,7 +305,7 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
     resourceType: ref.resource.type,
     resourceId: ref.resource.id,
     public: ref.public,
-    privateAccess: ref.privateAccess,
+    privateAccess: privateAccessStrings,
     owner: ref.owner,
     portal: ref.portal
   }
