@@ -240,7 +240,6 @@ if (!preview) {
 
 // Track searches
 if (!preview) {
-  // TODO: ask if params are tracked, in this case, this track is useless
   watch(filters.search, () => {
     if (filters.search.value) useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value })
   })
