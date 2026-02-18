@@ -6,7 +6,7 @@
     :resource-title="dataset.title"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :track-path="`/datasets/${dataset.slug}/notifications-dialog`"
+    :track-dialog="{ action: 'dataset-schema', label: dataset.slug }"
   >
     <d-frame-wrapper
       :iframe-title="t('preview') + ' - ' + dataset.title"

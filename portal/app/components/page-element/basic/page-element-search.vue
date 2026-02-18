@@ -60,13 +60,27 @@ const { element } = defineProps<{
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { preview } = usePortalStore()
 const search = useStringSearchParam('q')
 
 const searchQuery = ref(search.value || '')
 
+const searchCategory = computed(() => {
+  if (route.path.startsWith('/datasets')) return 'datasets'
+  if (route.path.startsWith('/applications')) return 'applications'
+  if (route.path.startsWith('/reuses')) return 'reuses'
+  if (element.redirectPage) return 'datasets'
+  return undefined
+})
+
 const onSearch = () => {
   if (!preview) {
+    if (searchQuery.value) {
+      const properties: Record<string, string> = { label: searchQuery.value }
+      if (searchCategory.value) properties.category = searchCategory.value
+      useAnalytics()?.track('search', properties)
+    }
     if (element.redirectPage) {
       router.push({
         path: '/datasets',

@@ -27,6 +27,10 @@ export function useAnalyticsInfo (_portal: any): any {
   throw new Error('useAnalytics should only be called from portal, not portals-manager')
 }
 
+export function onIframeTrackMessage (_message: unknown): void {
+  throw new Error('onIframeTrackMessage should only be called from portal, not portals-manager')
+}
+
 export function useRequestEvent (): any {
   throw new Error('useRequestEvent should only be called from portal, not portals-manager')
 }

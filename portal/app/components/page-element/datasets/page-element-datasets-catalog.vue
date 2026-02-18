@@ -238,13 +238,6 @@ if (!preview) {
   datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery, watch: false })
 }
 
-// Track searches
-if (!preview) {
-  watch(filters.search, () => {
-    if (filters.search.value) useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value })
-  })
-}
-
 // Computed property to check if there are more datasets to load (for infinite scroll)
 const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
@@ -322,7 +315,10 @@ if (!preview) {
     if (datasetsFetch?.data.value?.results) {
       displayedDatasets.value = [...datasetsFetch.data.value.results]
     }
-    // goTo(catalogTop.value)
+    // Track search event with analytics
+    if (filters.search.value) {
+      useAnalytics()?.track('search', { category: 'datasets', label: filters.search.value, resultsCount: datasetsFetch?.data.value?.count ?? 0 })
+    }
   })
 }
 

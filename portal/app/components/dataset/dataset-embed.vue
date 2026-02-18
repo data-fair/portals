@@ -6,7 +6,7 @@
     :resource-title="dataset.title"
     :text="t('embed')"
     :short-text="t('embedShort')"
-    :track-path="`/datasets/${dataset.slug}/embed-dialog`"
+    :track-dialog="{ action: 'dataset-embed', label: dataset.slug }"
   >
     <v-card-text class="py-0">
       <v-row>

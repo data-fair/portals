@@ -25,11 +25,15 @@ export default function pianoPlugin (params: PianoPluginConfig): AnalyticsPlugin
     },
     track: ({ payload }) => {
       debug('track', payload)
-      pianoAnalytics.sendEvent('page.display', { page: payload.properties.title })
       if (payload.event === 'search') {
-        pianoAnalytics.sendEvent('internal_search_result.display', { ise_keyword: payload.properties.label })
+        pianoAnalytics.sendEvent('internal_search_result.display', {
+          ise_keyword: payload.properties.label,
+          ise_page: 1,
+          ...(payload.properties.resultsCount !== undefined && { ise_count: payload.properties.resultsCount })
+        })
       } else if (payload.event.startsWith('download')) {
-        pianoAnalytics.sendEvent('click.download', { click: payload.event, click_chapter1: payload.properties.label })
+        const url = payload.properties.url || `${window.location.origin}/download/${payload.properties.label}`
+        pianoAnalytics.sendEvent('click.download', { click: payload.event, click_chapter1: payload.properties.label, src_url: url })
       } else {
         pianoAnalytics.sendEvent('click.action', { click: payload.event, click_chapter1: payload.properties.label })
       }
