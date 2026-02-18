@@ -1,5 +1,5 @@
 <template>
-  <custom-router-link :to="`/pages/${page._id}`">
+  <custom-router-link :to="pageLink">
     <v-card
       class="h-100"
       link
@@ -73,9 +73,16 @@ const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
-defineProps<{
+const { page, portalId } = defineProps<{
   page: Page
+  portalId?: string
 }>()
+
+const pageLink = computed(() => {
+  const base = `/pages/${page._id}`
+  if (portalId) return `${base}?portal=${portalId}`
+  return base
+})
 </script>
 
 <i18n lang="yaml">

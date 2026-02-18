@@ -513,6 +513,10 @@ usePageSeo({
   ogType: 'article'
 })
 
+// Set Last-Modified header based on updatedAt
+const header = useResponseHeader('Last-Modified')
+if (dataset.value?.updatedAt) header.value = new Date(dataset.value?.updatedAt).toUTCString()
+
 </script>
 
 <i18n lang="yaml">

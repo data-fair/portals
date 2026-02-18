@@ -1,15 +1,38 @@
 <template>
-  <slot />
+  <v-theme-provider
+    v-if="themeColors"
+    :theme="themeKey"
+  >
+    <component
+      :is="'style'"
+      :nonce="$cspNonce"
+    >
+      {{ getTextColorsCss(themeColors, themeKey) }}
+    </component>
+    <slot />
+  </v-theme-provider>
+  <slot v-else />
 </template>
 
 <script setup lang="ts">
 import type { PortalConfig } from '#api/types/portal-config'
-
-const { portalConfig } = defineProps<{
-  portalConfig?: PortalConfig
-}>()
+import type { Ref } from 'vue'
+import { useTheme } from 'vuetify'
+import type { Colors } from '@data-fair/lib-common-types/theme/index.js'
+import { defaultTheme, fillTheme, getTextColorsCss } from '@data-fair/lib-common-types/theme/index.js'
 
 const { t } = useI18n()
+const vuetifyTheme = useTheme()
+
+const themeKey = 'page-preview'
+
+let previewPortalConfig: Ref<PortalConfig | undefined>
+try {
+  const previewPortal = usePreviewPortal()
+  previewPortalConfig = previewPortal.previewPortalConfig
+} catch {
+  previewPortalConfig = ref(undefined)
+}
 
 // @ts-ignore
 const portalConfigDefault: PortalConfig = {
@@ -60,7 +83,40 @@ const portalConfigDefault: PortalConfig = {
   }
 }
 
-providePortalStore(portalConfig || portalConfigDefault)
+const activeConfig = computed(() => previewPortalConfig.value || portalConfigDefault)
+
+const store = providePortalStore(activeConfig.value)
+
+// update the provided store reactively when the selected portal changes
+watch(activeConfig, (newConfig) => {
+  store.portalConfig.value = newConfig
+})
+
+// theme management
+const fullTheme = computed(() => {
+  const config = activeConfig.value
+  if (!config?.theme) return null
+  return fillTheme(config.theme, defaultTheme)
+})
+
+const themeColors = computed(() => fullTheme.value?.colors)
+
+watch(fullTheme, () => {
+  if (!fullTheme.value) return
+  const colors = fullTheme.value.colors
+  if (vuetifyTheme.themes.value[themeKey]) {
+    for (const color of Object.keys(vuetifyTheme.themes.value[themeKey].colors)) {
+      if (colors[color as keyof Colors] === undefined) delete vuetifyTheme.themes.value[themeKey].colors[color]
+    }
+    Object.assign(vuetifyTheme.themes.value[themeKey].colors, colors)
+  } else {
+    vuetifyTheme.themes.value[themeKey] = {
+      dark: false,
+      colors,
+      variables: vuetifyTheme.themes.value.light.variables
+    }
+  }
+}, { immediate: true })
 
 </script>
 

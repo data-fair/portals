@@ -51,6 +51,7 @@
       >
         <page-card
           :page="page"
+          :portal-id="portals.length === 1 ? portals[0] : undefined"
         />
       </v-col>
     </v-row>
