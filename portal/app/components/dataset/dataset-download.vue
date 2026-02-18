@@ -6,7 +6,7 @@
     :resource-title="dataset.title"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :track-path="`/datasets/${dataset.slug}/download-dialog`"
+    :track-dialog="{ action: 'dataset-download', label: dataset.slug }"
   >
     <!-- direct links to files-->
     <v-list-item
@@ -26,7 +26,7 @@
           :icon="mdiDownload"
           :href="file.url"
           variant="text"
-          @click="clickDownload(file.format)"
+          @click="clickDownload(file.url, file.format)"
         />
       </template>
     </v-list-item>
@@ -42,9 +42,9 @@
         <v-btn
           :title="t('export', { format: format.toUpperCase() })"
           :icon="mdiDownload"
-          :href="`/data-fair/api/v1/datasets/${dataset.id}/lines?size=10000&page=1&format=${format}`"
+          :href="`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${format}`"
           variant="text"
-          @click="clickDownload(format)"
+          @click="clickDownload(`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${format}`, format)"
         />
       </template>
     </v-list-item>
@@ -86,7 +86,7 @@ type File = {
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { t, locale } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 
 const files = ref<File[]>([])
 const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { params: { size: 0 } })
@@ -135,8 +135,10 @@ files.value = filesRes.map(f => ({
   format: f.mimetype ? f.mimetype.split('/').pop()?.replace('+', '') || '' : f.name.split('.').pop() || ''
 }))
 
-const clickDownload = (format: string) => {
-  useAnalytics()?.track('download', { label: `${dataset.slug} - ${format}` })
+const origin = !preview ? useRequestURL().origin : null
+const clickDownload = (url: string, format: string) => {
+  const fullUrl = url.startsWith('/') ? `${origin}${url}` : url
+  useAnalytics()?.track('download', { category: 'datasets', label: `${dataset.slug} - ${format}`, url: fullUrl })
 }
 
 </script>
