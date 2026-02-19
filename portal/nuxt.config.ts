@@ -22,12 +22,13 @@ export default defineNuxtConfig({
     '#api/types': '../../api/types'
   },
   runtimeConfig: {
-    mainPublicUrl: 'http://localhost:5600',
+    mainPublicUrl: 'http://localhost:5610',
     privateDirectoryUrl: 'http://simple-directory:8080',
-    mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
+    mongoUrl: 'mongodb://localhost:27018/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
-    secretIgnoreRateLimiting: ''
+    secretIgnoreRateLimiting: '',
+    elasticsearchNodes: 'http://localhost:9200'
   },
   security: {
     nonce: true,

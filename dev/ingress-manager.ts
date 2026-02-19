@@ -11,12 +11,12 @@ app.post('/api/ingress', (req, res, next) => {
   let hostAliases = ''
   for (const item of body) {
     const url = new URL(item.url)
-    if (url.port !== '5600') {
-      res.status(400).send('in dev env only 5600 port is allowed, for example "http://portal1.localhost:5600"')
+    if (url.port !== '5610') {
+      res.status(400).send('in dev env only 5610 port is allowed, for example "http://portal1.localhost:5610"')
       return
     }
     if (!url.hostname.endsWith('.localhost')) {
-      res.status(400).send('in dev env only *.localhost hostname is allowed, for example "http://portal1.localhost:5600"')
+      res.status(400).send('in dev env only *.localhost hostname is allowed, for example "http://portal1.localhost:5610"')
       return
     }
     hostAliases += `127.0.0.1 ${url.hostname}\n`
