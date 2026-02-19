@@ -5,7 +5,7 @@
     :icon="mdiAttachment"
     :resource-title="dataset.title"
     :text="t('preview')"
-    :track-path="`/datasets/${dataset.slug}/attachments-dialog`"
+    :track-dialog="{ action: 'dataset-attachments', label: dataset.slug }"
   >
     <dataset-attachments :dataset="dataset" />
   </layout-preview>

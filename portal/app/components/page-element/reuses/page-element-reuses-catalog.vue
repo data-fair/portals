@@ -206,13 +206,6 @@ if (!preview) {
   reusesFetch = useFetch<ReuseFetch>('/portal/api/reuses', { query: reusesQuery, watch: false })
 }
 
-// Track searches
-if (!preview) {
-  watch(filters.search, () => {
-    if (filters.search.value) useAnalytics()?.track('search', { category: 'reuses', label: filters.search.value })
-  })
-}
-
 // Computed property to check if there are more reuses to load (for infinite scroll)
 const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
@@ -287,6 +280,10 @@ if (!preview) {
     await reusesFetch?.refresh()
     if (reusesFetch?.data.value?.results) {
       displayedReuses.value = [...reusesFetch.data.value.results]
+    }
+    // Track search event with analytics
+    if (filters.search.value) {
+      useAnalytics()?.track('search', { category: 'reuses', label: filters.search.value, resultsCount: reusesFetch?.data.value?.count ?? 0 })
     }
   })
 }

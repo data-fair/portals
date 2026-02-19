@@ -22,8 +22,8 @@ export default defineNuxtConfig({
     '#api/types': '../../api/types'
   },
   runtimeConfig: {
-    mainPublicUrl: 'http://localhost:5600',
-    privateDirectoryUrl: 'http://simple-directory:8085',
+    mainPublicUrl: 'http://localhost:5610',
+    privateDirectoryUrl: 'http://simple-directory:8081',
     mongoUrl: 'mongodb://localhost:27022/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',

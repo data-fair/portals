@@ -142,12 +142,12 @@ const datasets = computed(() => datasetsFetch.data.value?.results || [])
 
 <i18n lang="yaml">
   en:
-    backToReuses: Back to Reuses List
+    backToReuses: Go to reuses catalog
     visitLink: View reuse
     publishedBy: Published by {author}
     datasetsUsed: Dataset used | Datasets used
   fr:
-    backToReuses: Retourner à la liste des réutilisations
+    backToReuses: Aller au catalogue de réutilisations
     visitLink: Voir la réutilisation
     publishedBy: Publié par {author}
     datasetsUsed: Jeu de données utilisé | Jeux de données utilisés

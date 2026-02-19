@@ -6,7 +6,7 @@
     :resource-title="application.title"
     :text="t('embed')"
     :short-text="t('embedShort')"
-    :track-path="`/applications/${application.slug}/embed-dialog`"
+    :track-dialog="{ action: 'application-embed', label: application.slug }"
   >
     <v-card-text class="py-0">
       {{ t('description') }}

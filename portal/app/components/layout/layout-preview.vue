@@ -40,7 +40,7 @@
 import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiClose } from '@mdi/js'
 
-const { trackPath } = defineProps<{
+const { trackDialog } = defineProps<{
   /** Dialog title */
   title?: string
   /** Button action style */
@@ -53,17 +53,17 @@ const { trackPath } = defineProps<{
   text: string
   /** Button short text */
   shortText?: string
-  /** Used to track a page view when this dialog is opened */
-  trackPath?: string
+  /** Used to track a dialog open event */
+  trackDialog?: { action: string, label: string }
   /** Whether the button should take the full width of its container */
   block?: boolean
 }>()
 
 const dialog = ref(false)
 
-if (trackPath) {
-  watch(dialog, () => {
-    useAnalytics()?.page({ title: trackPath })
+if (trackDialog) {
+  watch(dialog, (opened) => {
+    if (opened) useAnalytics()?.track(trackDialog.action, { category: 'dialog', label: trackDialog.label })
   })
 }
 </script>
