@@ -21,7 +21,7 @@ services:
     profiles:
       - dev
       - test
-    image: ghcr.io/data-fair/simple-directory:master
+    image: ghcr.io/data-fair/simple-directory:feat-pseudo-session
     network_mode: host
     depends_on:
       - mongo
@@ -30,9 +30,9 @@ services:
       - CIPHER_PASSWORD=dev
       - CONTACT=contact@test.com
       - MANAGE_SITES=true
-      - MONGO_URL=mongodb://localhost:27017/simple-directory
+      - MONGO_URL=mongodb://localhost:27022/simple-directory
       - OBSERVER_ACTIVE=false
-      - PUBLIC_URL=http://localhost:5600/simple-directory
+      - PUBLIC_URL=http://localhost:5605/simple-directory
       - STORAGE_TYPE=file
       - SECRET_SITES=secret-sites
       # When we test permissions, we need to authenticate many users from the same IP.
@@ -59,16 +59,16 @@ services:
       elasticsearch:
         condition: service_healthy
     environment:
-      - PORT=8081
-      - MONGO_URL=mongodb://localhost:27017/data-fair
-      - DIRECTORY_URL=http://localhost:5600/simple-directory
-      - PRIVATE_EVENTS_URL=http://localhost:8083
-      - PRIVATE_DIRECTORY_URL=http://localhost:8080
-      - PUBLIC_URL=http://localhost:5600/data-fair
-      - WS_PUBLIC_URL=ws://localhost:5600/data-fair
+      - PORT=8086
+      - MONGO_URL=mongodb://localhost:27022/data-fair
+      - DIRECTORY_URL=http://localhost:5605/simple-directory
+      - PRIVATE_EVENTS_URL=http://localhost:8088
+      - PRIVATE_DIRECTORY_URL=http://localhost:8085
+      - PUBLIC_URL=http://localhost:5605/data-fair
+      - WS_PUBLIC_URL=ws://localhost:5605/data-fair
       - OBSERVER_ACTIVE=false
 
-      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:8097
+      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:8102
       - SECRET_EVENTS=secret-events
 
   #####
@@ -81,9 +81,9 @@ services:
     image: ghcr.io/data-fair/events:main
     network_mode: host
     environment:
-      - PORT=8083
-      - MONGO_URL=mongodb://localhost:27017/data-fair-events
-      - PRIVATE_DIRECTORY_URL=http://localhost:5600/simple-directory
+      - PORT=8088
+      - MONGO_URL=mongodb://localhost:27022/data-fair-events
+      - PRIVATE_DIRECTORY_URL=http://localhost:5605/simple-directory
       - SECRET_IDENTITIES=secret-identities
       - SECRET_EVENTS=secret-events
       - SECRET_SENDMAILS=secret-sendmails
@@ -114,8 +114,8 @@ services:
       - dev
     image: maildev/maildev:2.1.0
     ports:
-      - 1080:1080
-      - 1025:1025
+      - 1085:1085
+      - 1030:1030
     # https://github.com/maildev/maildev/issues/484
     healthcheck:
       test: 'wget -O - http://127.0.0.1:$${MAILDEV_WEB_PORT}$${MAILDEV_BASE_PATHNAME}/healthz || exit 1'
@@ -129,7 +129,7 @@ services:
       - dev
     image: ghcr.io/data-fair/elasticsearch:7.x
     ports:
-      - 9200:9200
+      - 9205:9205
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -151,7 +151,7 @@ services:
       - dev
     image: mongo:4.2
     ports:
-      - 27017:27017
+      - 27022:27017
     volumes:
       - mongo-data:/data/db
 

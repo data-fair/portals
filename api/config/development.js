@@ -1,15 +1,15 @@
 export default {
-  port: 8097,
-  privateDirectoryUrl: 'http://localhost:8080',
-  privateEventsUrl: 'http://localhost:8083',
-  mongoUrl: 'mongodb://localhost:27017/data-fair-portals-development',
+  port: 8102,
+  privateDirectoryUrl: 'http://localhost:8085',
+  privateEventsUrl: 'http://localhost:8088',
+  mongoUrl: 'mongodb://localhost:27022/data-fair-portals-development',
   elasticsearch: {
-    nodes: ['http://localhost:9200']
+    nodes: ['http://localhost:9205']
   },
   tmpDir: './tmp',
   observer: {
     active: false,
-    port: 9097
+    port: 9102
   },
   secretKeys: {
     identities: 'secret-identities',
@@ -18,9 +18,9 @@ export default {
     ingress: 'secret-ingress'
   },
   portalUrlPattern: 'http://{subdomain}.portals.localhost:5600',
-  // 5697 for dev/ingress-manager.ts
-  // 5603 for the separate project portals-ingress-manager development server
-  privateIngressManagerUrl: 'http://localhost:5697',
+  // 5702 for dev/ingress-manager.ts
+  // 5608 for the separate project portals-ingress-manager development server
+  privateIngressManagerUrl: 'http://localhost:5702',
   ingressControllers: ['nginx'],
   upgradeRoot: '../'
 }

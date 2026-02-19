@@ -23,12 +23,12 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     mainPublicUrl: 'http://localhost:5600',
-    privateDirectoryUrl: 'http://simple-directory:8080',
-    mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
+    privateDirectoryUrl: 'http://simple-directory:8085',
+    mongoUrl: 'mongodb://localhost:27022/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
     secretIgnoreRateLimiting: '',
-    elasticsearchNodes: '',
+    elasticsearchNodes: 'http://localhost:9205',
     elasticsearchAuth: '',
     elasticsearchCA: ''
   },
