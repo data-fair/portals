@@ -209,7 +209,6 @@
 
   <!-- Portal preview selector -->
   <portal-preview-select />
-
 </template>
 
 <script setup lang="ts">

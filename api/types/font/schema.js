@@ -6,10 +6,7 @@ export default {
   additionalProperties: false,
   required: ['name', 'key', 'variants'],
   properties: {
-    name: {
-      type: 'string',
-      title: 'Nom de la famille de police'
-    },
+    name: { type: 'string' },
     variants: {
       type: 'array',
       items: {

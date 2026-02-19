@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import type { Reuse } from '#api/types/reuse/index'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiAlertCircle } from '@mdi/js'
 
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
