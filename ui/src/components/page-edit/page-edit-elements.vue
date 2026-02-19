@@ -16,6 +16,39 @@
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
+
+    <template #color-select-item="context">
+      <v-theme-provider theme="preview-colors">
+        <v-list-item v-bind="context.props">
+          <template #prepend>
+            <v-sheet
+              :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+              :height="20"
+              :width="20"
+              class="mr-4"
+              rounded="circle"
+              border
+            />
+          </template>
+        </v-list-item>
+      </v-theme-provider>
+    </template>
+    <template #color-select-selection="context">
+      <v-theme-provider theme="preview-colors">
+        <span class="v-select__selection-text d-inline-flex align-center">
+          <v-sheet
+            :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+            :height="20"
+            :width="20"
+            class="mr-2"
+            rounded="circle"
+            border
+          />
+          {{ context.item.raw.title }}
+        </span>
+      </v-theme-provider>
+    </template>
+
     <template #image-upload="{node, statefulLayout, width, height, label}">
       <image-upload
         :model-value="node.data"
@@ -27,25 +60,6 @@
         @update:model-value="(data: any) => statefulLayout.input(node, data)"
       />
     </template>
-    <template #color-select-item="context">
-      <v-list-item v-bind="context.props">
-        <template #prepend>
-          <v-icon
-            :icon="mdiCircle"
-            :color="context.item.raw.value"
-          />
-        </template>
-      </v-list-item>
-    </template>
-    <template #color-select-selection="context">
-      <span :class="'v-select__selection-text'">
-        <v-icon
-          :icon="mdiCircle"
-          :color="context.item.raw.value"
-          class="mr-3"
-        />{{ context.item.raw.title }}
-      </span>
-    </template>
   </vjsf-page-elements>
 </template>
 
@@ -53,7 +67,6 @@
 import type { PageElement } from '#api/types/page-config'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
-import { mdiCircle } from '@mdi/js'
 
 const elements = defineModel<PageElement[]>()
 const { addItemMessage, pages } = defineProps<{ addItemMessage: string, pages: any, root?: boolean }>()

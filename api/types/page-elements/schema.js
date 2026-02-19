@@ -331,30 +331,24 @@ export default {
           title: 'Type prédéfini',
           default: 'info',
           oneOf: [
-            {
-              const: 'none',
-              title: 'Aucun'
-            },
-            {
-              const: 'info',
-              title: 'Information'
-            },
-            {
-              const: 'success',
-              title: 'Succès'
-            },
-            {
-              const: 'error',
-              title: 'Erreur'
-            },
-            {
-              const: 'warning',
-              title: 'Avertissement'
-            }
+            { const: 'none', title: 'Aucun' },
+            { const: 'info', title: 'Information' },
+            { const: 'success', title: 'Succès' },
+            { const: 'error', title: 'Erreur' },
+            { const: 'warning', title: 'Avertissement' }
           ]
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          layout: {
+            props: { background: true },
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            }
+          }
+        },
         title: {
           title: 'Titre',
           type: 'string',
@@ -736,7 +730,16 @@ export default {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+              layout: {
+                props: { background: true },
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                }
+              }
+            },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
@@ -1306,7 +1309,16 @@ export default {
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: {
+            props: { background: true },
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            }
+          }
+        },
         btnPosition: {
           type: 'string',
           title: 'Position du bouton',
