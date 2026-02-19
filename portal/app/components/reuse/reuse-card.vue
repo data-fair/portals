@@ -61,6 +61,7 @@
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
 
           ]"
+          :title="reuse.config.title"
         >
             {{ reuse.config.title }}
         </v-card-title>

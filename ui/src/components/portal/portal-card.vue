@@ -6,16 +6,12 @@
     >
       <v-card-item class="text-primary">
         <template #title>
-          <span class="font-weight-bold">
+          <span
+            :title="portal.config.title"
+            class="font-weight-bold"
+          >
             {{ portal.config.title }}
           </span>
-          <v-tooltip
-            v-if="portal.config.title.length > 20"
-            activator="parent"
-            location="top left"
-            open-delay="300"
-            :text="portal.config.title"
-          />
         </template>
 
         <!-- Owner -->

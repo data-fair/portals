@@ -17,16 +17,12 @@
         </template>
 
         <template #title>
-          <span class="font-weight-bold">
+          <span
+            :title="reuse.title"
+            class="font-weight-bold"
+          >
             {{ reuse.title }}
           </span>
-          <v-tooltip
-            v-if="reuse.title?.length > 20"
-            activator="parent"
-            location="top left"
-            open-delay="300"
-            :text="reuse.title"
-          />
         </template>
 
         <!-- Owner or Submitter -->

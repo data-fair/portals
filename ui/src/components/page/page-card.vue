@@ -6,16 +6,12 @@
     >
       <v-card-item class="text-primary">
         <template #title>
-          <span class="font-weight-bold">
+          <span
+            :title="page.title"
+            class="font-weight-bold"
+          >
             {{ page.title }}
           </span>
-          <v-tooltip
-            v-if="page.title?.length > 20"
-            activator="parent"
-            location="top left"
-            open-delay="300"
-            :text="page.title"
-          />
         </template>
 
         <!-- Owner -->

@@ -60,6 +60,7 @@
             cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
           ]"
+          :title="application.title"
         >
           {{ application.title }}
         </v-card-title>
