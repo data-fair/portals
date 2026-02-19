@@ -52,7 +52,7 @@ describe('search page indexes', () => {
     assert.ok(indexedPage.description?.includes('test'), 'Description should be indexed')
 
     // 4. Query the portal's search engine
-    const searchResults = (await axios({
+    const searchResults = (await axios()({
       baseURL: `http://localhost:5610/portals/${portal._id}`,
       url: '/api/search',
       params: { q: 'test' }

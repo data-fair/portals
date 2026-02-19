@@ -42,6 +42,7 @@ router.get('', async (req, res, next) => {
 })
 
 router.post('/reindex', async (req, res, next) => {
+  if (!config.secretKeys.searchPageIndex) throw new Error('searchPageIndex secret is missing')
   assertReqInternalSecret(req, config.secretKeys.searchPageIndex)
 
   const body = reindexReqBody.returnValid(req.body, { name: 'body' })

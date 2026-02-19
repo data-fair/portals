@@ -28,7 +28,7 @@ export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
   await portalEs.connect({
     nodes: config.elasticsearchNodes,
-    auth: config.elasticsearchAuth ? { username: config.elasticsearchAuth.split(':')[0], password: config.elasticsearchAuth.split(':')[1] } : undefined,
+    auth: config.elasticsearchAuth ? { username: config.elasticsearchAuth.split(':')[0]!, password: config.elasticsearchAuth.split(':')[1]! } : undefined,
     ca: config.elasticsearchCA
   })
 })
