@@ -3,8 +3,8 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import config from '#config'
-import * as reindexReqBody from '#doc/search-page-indexes/reindex-req-body/index.ts'
-import { createOrUpdateSearchPageRef } from './service.ts'
+import * as reindexReqBody from '#doc/search-page-indexes/reindex-req-body/index.js'
+import { createOrUpdateSearchPageRef } from './service.js'
 
 const router = Router()
 export default router
