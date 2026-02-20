@@ -11,7 +11,7 @@ export default {
           fr: "Vignette d'un jeu de données"
         },
         children: [
-          { key: 'card' },
+          'card',
           { name: 'dataset-card-preview' }
         ]
       },

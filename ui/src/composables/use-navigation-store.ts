@@ -39,7 +39,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
 
 export const useNavigationStore = () => {
   return {
-    breadcrumbs: ref([{ title: 'Page de contenu', to: '/my-page' }]),
+    breadcrumbs: ref([{ title: 'Page libre', to: '/my-page' }]),
     setBreadcrumbs: () => { },
     showTopBreadcrumbs: ref(false),
     showBottomBreadcrumbs: ref(false),

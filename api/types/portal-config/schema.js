@@ -175,7 +175,7 @@ export default {
           }
         ]
       },
-      { title: "Fil d'Ariane", children: ['breadcrumb', { name: 'breadcrumb-preview' }] },
+      { title: "Fil d'Ariane", children: ['breadcrumb'] },
       { title: 'Pied de page', children: ['footer'] },
       { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },

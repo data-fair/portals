@@ -139,7 +139,6 @@
                     {{ t('groupTitle.default') }}
                   </span>
                 </template>
-                <v-card-text>{{ t('groupDesc.default') }}</v-card-text>
               </v-card>
             </v-col>
 
@@ -453,18 +452,6 @@ const goToNextStep = () => {
   else if (step.value === 'owner') step.value = 'information'
 }
 
-const group = computed(() => {
-  if (!isGenericPage.value || !selectedGroupId.value) return undefined
-  if (selectedGroupId.value === 'default') {
-    return {
-      _id: 'default',
-      title: t('groupTitle.default'),
-      slug: 'default'
-    }
-  }
-  return customGroups.value.find(g => g._id === selectedGroupId.value)
-})
-
 const createPage = useAsyncAction(
   async () => {
     if (!newTitle.value) return
@@ -479,14 +466,8 @@ const createPage = useAsyncAction(
         config: {
           title: newTitle.value,
           elements: [],
-          genericMetadata: isGenericPage.value && selectedGroupId.value !== 'default' && group.value
-            ? {
-                group: {
-                  _id: group.value._id,
-                  slug: group.value.slug,
-                  title: group.value.title
-                }
-              }
+          genericMetadata: isGenericPage.value && selectedGroupId.value !== 'default'
+            ? { group: customGroups.value.find(g => g._id === selectedGroupId.value) }
             : undefined
         }
       }
@@ -518,17 +499,7 @@ setBreadcrumbs([
     create: Create
     createPage: Create a page
     errorCreatingPage: Error while creating the page
-    groupTitle:
-      standard: Standard pages
-      event: Events
-      news: News
-      default: Other pages
-      unknown: Unknown group
-    groupDesc:
-      standard: Home, contact, privacy policy pages, etc.
-      event: Event pages
-      news: News pages
-      default: No group
+    defaultGroupTitle: No Group
     information: Information
     next: Next
     pageTitle: Page title
@@ -581,17 +552,7 @@ setBreadcrumbs([
     create: Créer
     createPage: Créer une page
     errorCreatingPage: Erreur lors de la création de la page
-    groupTitle:
-      standard: Pages standard
-      event: Événements
-      news: Actualités
-      default: Autres pages
-      unknown: Groupe inconnu
-    groupDesc:
-      standard: Pages d'accueil, de contact, de politique de confidentialité, etc.
-      event: Pages d'événements
-      news: Pages d'actualités
-      default: Aucun groupe
+    defaultGroupTitle: Aucun groupe
     information: Informations
     next: Suivant
     pageTitle: Titre de la page

@@ -31,7 +31,10 @@
           <!-- Page type -->
           <v-list-item v-if="page.type">
             <template #prepend>
-              <v-icon :icon="mdiInformationOutline" />
+              <v-icon
+                :icon="mdiInformationOutline"
+                :title="t('pageType.title')"
+              />
             </template>
             <v-list-item-title>
               {{ t('pageType.' + page.type) }}
@@ -41,7 +44,10 @@
           <!-- Page group -->
           <v-list-item v-if="page.config.genericMetadata?.group">
             <template #prepend>
-              <v-icon :icon="mdiFolderInformationOutline" />
+              <v-icon
+                :icon="mdiFolderInformationOutline"
+                :title="t('pageType.group')"
+              />
             </template>
             <v-list-item-title>
               {{ page.config.genericMetadata.group.title }}
@@ -85,6 +91,7 @@ const pageLink = computed(() => {
   en:
     pageType:
       title: Page Type
+      group: Group
       home: Home
       contact: Contact
       privacy-policy: Privacy policy
@@ -101,6 +108,7 @@ const pageLink = computed(() => {
   fr:
     pageType:
       title: Type de page
+      group: Groupe
       home: Accueil
       contact: Contact
       privacy-policy: Politique de confidentialité

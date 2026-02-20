@@ -134,6 +134,7 @@ const items = computed(() => {
       author: "John Doe"
   fr:
     nbColumns: 'Nombre de colonnes'
+    topic: Thématique {i}
     title:
       dataset: "Vignette d'un jeu de données"
       application: "Vignette d'une application"

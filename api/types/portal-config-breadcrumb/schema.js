@@ -3,7 +3,28 @@ export default {
   'x-exports': [],
   title: 'Breadcrumb',
   type: 'object',
-  layout: { title: null },
+  layout: {
+    title: null,
+    children: [
+      'position',
+      {
+        comp: 'card',
+        title: 'Options',
+        if: 'parent.data?.position !== "none"',
+        children: [
+          'showHome',
+          'homeLabel',
+          'fluid',
+          'compact',
+          'separator'
+        ]
+      },
+      {
+        if: 'parent.data?.position !== "none"',
+        children: [{ name: 'breadcrumb-preview' }]
+      }
+    ]
+  },
   properties: {
     position: {
       type: 'string',
