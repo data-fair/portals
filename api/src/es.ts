@@ -1,6 +1,5 @@
 import config from '#config'
-import { Client } from '@elastic/elasticsearch'
-import { ClientOptions } from '@elastic/elasticsearch/lib/client'
+import { Client, type ClientOptions } from '@elastic/elasticsearch'
 
 export class DfEs {
   private _client?: Client

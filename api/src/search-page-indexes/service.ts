@@ -9,7 +9,7 @@ import type { Portal } from '#types/portal/index.js'
 import type { Page } from '#types/page/index.js'
 import type { Reuse } from '#types/reuse/index.js'
 import type { SearchPageRef } from '#types/search-page-ref/index.js'
-import { indexDefinition } from './es.js'
+import { indexDefinition } from './es.ts'
 
 const indexName = (portalId: string) => `portal-search-${portalId}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
