@@ -97,6 +97,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'news': return '/news'
           case 'event': return '/event'
           case 'sitemap': return '/sitemap'
+          case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
         }
       }
@@ -126,6 +127,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'news': return i18n[locale]['newsPage']
           case 'event': return i18n[locale]['eventPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
+          case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
         }
       }
@@ -181,6 +183,7 @@ const i18n = {
     newsPage: 'News',
     eventPage: 'Event',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -198,6 +201,7 @@ const i18n = {
     newsPage: 'Actualités',
     eventPage: 'Événement',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }

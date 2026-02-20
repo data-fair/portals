@@ -26,6 +26,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         case 'event': return i18n[lang]['eventPage']
         case 'reuses': return i18n[lang]['reusesPage']
         case 'sitemap': return i18n[lang]['sitemapPage']
+        case 'catalog-api-doc': return i18n[lang]['catalogApiDocPage']
         default: return i18n[lang]['standardPage']
       }
     }
@@ -69,6 +70,7 @@ const i18n = {
     eventPage: 'Event',
     reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -86,6 +88,7 @@ const i18n = {
     eventPage: 'Événement',
     reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }
