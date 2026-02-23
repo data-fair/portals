@@ -1,50 +1,26 @@
 <template>
   <div :class="`my-${margins[element.titleSize] || '4'}`">
-    <component
-      :is="titleTag"
-      :class="[
-        'd-flex align-center',
-        element.centered ? 'justify-center' : undefined,
-        element.bold ? 'font-weight-bold' : undefined,
-        `text-${element.titleSize || 'h3'}`
-      ]"
+    <a
+      v-if="element.link && isExternalLink(element.link)"
+      :href="resolveLink(element.link)"
+      :title="element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      style="text-decoration: none; color: inherit;"
     >
-      <v-divider
-        v-if="element.line?.position === 'left'"
-        :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
-        class="border-opacity-100 mr-4"
-        thickness="4"
-        vertical
-      />
-      <v-icon
-        v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
-        :icon="element.icon.mdi?.svgPath || element.icon.custom"
-        :color="element.icon.color"
-        size="small"
-        class="mr-4"
-      />
-      <div :class="element.color ? `text-${element.color}` : undefined">
-        {{ element.content }}
-        <v-divider
-          v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
-          :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
-          :class="[
-            'border-opacity-100 mt-2',
-            element.centered ? 'mx-auto' : undefined
-          ]"
-          :length="element.line?.position === 'bottom-small' ? '80px' : '100%'"
-          thickness="4"
-        />
-      </div>
-    </component>
-
-    <v-divider
-      v-if="element.line?.position === 'bottom-large'"
-      :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
-      class="border-opacity-100 mt-2"
-      thickness="4"
-      length="100%"
-    />
+      <layout-title :element="element" />
+    </a>
+    <NuxtLink
+      v-else-if="element.link && !isExternalLink(element.link)"
+      :to="resolveLink(element.link)"
+      :title="element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      style="text-decoration: none; color: inherit;"
+    >
+      <layout-title :element="element" />
+    </NuxtLink>
+    <layout-title v-else :element="element" />
   </div>
 </template>
 
@@ -53,7 +29,9 @@ import type { TitleElement } from '#api/types/page-config'
 
 const { element } = defineProps<{ element: TitleElement }>()
 
-const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
+const { t } = useI18n()
+const { isExternalLink, resolveLink } = useNavigationStore()
+
 const margins = {
   h6: '2',
   h5: '3',
@@ -63,3 +41,10 @@ const margins = {
   h1: '7'
 }
 </script>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>

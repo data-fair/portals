@@ -254,6 +254,10 @@ export default {
           'x-i18n-title': { fr: 'Texte en gras' },
           layout: { cols: { xs: 6 } },
         },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          layout: { comp: 'card' }
+        },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
           type: 'object',
@@ -454,12 +458,6 @@ export default {
             comp: 'switch'
           }
         },
-        href: {
-          title: 'URL vers une autre page',
-          description: "L'image devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
-          type: 'string',
-          layout: { if: '!parent.data?.isPresentation' }
-        },
         title: {
           type: 'string',
           title: "Titre de l'image (Accessibilité)",
@@ -476,6 +474,14 @@ export default {
           type: 'boolean',
           title: 'Zoom au clic',
           layout: { if: '!parent.data?.banner && !parent.data?.href' }
+        },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: "Lien au clic sur l'image",
+          layout: {
+            if: '!parent.data?.isPresentation',
+            comp: 'card'
+          }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
@@ -865,10 +871,10 @@ export default {
           type: 'boolean',
           default: true
         },
-        href: {
-          title: 'URL vers une autre page',
-          description: "La boite devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
-          type: 'string'
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: 'Lien au clic sur la boite',
+          layout: { comp: 'card' }
         },
         actions: {
           title: 'Boutons de navigation',

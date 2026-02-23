@@ -23,11 +23,11 @@
     ]"
   >
     <a
-      v-if="!element.isPresentation && element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
-      :href="element.href"
-      :title="element.title + ' - ' + t('newWindow')"
-      target="_blank"
-      rel="noopener"
+      v-if="!element.isPresentation && element.link && isExternalLink(element.link)"
+      :href="resolveLink(element.link)"
+      :title="element.title + (element.link?.target ? ' - ' + t('newWindow') : '')"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
     >
       <img
         ref="img"
@@ -36,6 +36,20 @@
         :src="src"
       >
     </a>
+    <NuxtLink
+      v-else-if="!element.isPresentation && element.link && !isExternalLink(element.link)"
+      :to="resolveLink(element.link)"
+      :title="element.title + (element.link?.target ? ' - ' + t('newWindow') : '')"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+    >
+      <img
+        ref="img"
+        :alt="element.title"
+        :style="imgStyle"
+        :src="src"
+      >
+    </NuxtLink>
     <img
       v-else
       ref="img"
@@ -85,7 +99,7 @@ const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
-const { showTopBreadcrumbs } = useNavigationStore()
+const { showTopBreadcrumbs, isExternalLink, resolveLink } = useNavigationStore()
 
 const display = useDisplay()
 
