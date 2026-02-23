@@ -136,7 +136,7 @@
               >
                 <template #title>
                   <span :class="selectedGroupId !== 'default' ? 'text-primary' : ''">
-                    {{ t('groupTitle.default') }}
+                    {{ t('defaultGroupTitle') }}
                   </span>
                 </template>
               </v-card>
