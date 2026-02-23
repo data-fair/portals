@@ -25,7 +25,7 @@
     <a
       v-if="!element.isPresentation && element.link && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
-      :title="element.title + (element.link?.target ? ' - ' + t('newWindow') : '')"
+      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
     >
@@ -39,7 +39,7 @@
     <NuxtLink
       v-else-if="!element.isPresentation && element.link && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
-      :title="element.title + (element.link?.target ? ' - ' + t('newWindow') : '')"
+      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
     >

@@ -256,6 +256,7 @@ export default {
         },
         link: {
           $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: 'Configuration du lien',
           layout: { comp: 'card' }
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },

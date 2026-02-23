@@ -3,7 +3,7 @@
     <a
       v-if="element.link && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
-      :title="element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       style="text-decoration: none; color: inherit;"
@@ -13,7 +13,7 @@
     <NuxtLink
       v-else-if="element.link && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
-      :title="element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       style="text-decoration: none; color: inherit;"

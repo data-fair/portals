@@ -1,11 +1,17 @@
+<!-- eslint-disable vue/v-bind-style -->
 <template>
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
+  <!--
+    Note that the `title` prop overrides the native `title` attribute,
+    which must be set using `v-bind:title.attr` instead.
+    See https://vuetifyjs.com/en/api/v-list-item/#props
+  -->
   <v-card
     :to="!preview && element.link && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
     :href="!preview && element.link && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
     :target="element.link?.target ? '_blank' : undefined"
     :rel="element.link?.target ? 'noopener' : undefined"
-    :title="element.link ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+    v-bind:title.attr="element.link && element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
 
     :border="element.border"
     :elevation="element.elevation"
