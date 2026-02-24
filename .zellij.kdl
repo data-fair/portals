@@ -31,6 +31,6 @@ layout {
     }
     pane size=2 borderless=true {
         command "bash"
-        args "-ic" "echo -n -e \"Dev server available at \\e[1;96mhttp://localhost:5600/portals-manager/dev\\033[0m\""
+        args "-ic" "echo -n -e \"Dev server available at \\e[1;96mhttp://localhost:$NGINX_PORT/portals-manager/dev\\033[0m\""
     }
 }

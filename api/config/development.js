@@ -1,15 +1,19 @@
+import 'dotenv/config'
+
+if (!process.env.DEV_API_PORT) throw new Error('missing DEV_API_PORT env variable, use "source dev/init-env.sh" to init .env file')
+
 export default {
-  port: 8098,
-  privateDirectoryUrl: 'http://localhost:8081',
-  privateEventsUrl: 'http://localhost:8084',
-  mongoUrl: 'mongodb://localhost:27018/data-fair-portals-development',
+  port: process.env.DEV_API_PORT,
+  privateDirectoryUrl: `http://localhost:${process.env.SD_PORT}`,
+  privateEventsUrl: `http://localhost:${process.env.EVENTS_PORT}`,
+  mongoUrl: `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`,
   /* elasticsearch: {
-    nodes: ['http://localhost:9200']
+    nodes: [`http://localhost:${esPort}`]
   }, */
   tmpDir: './tmp',
   observer: {
     active: false,
-    port: 9098
+    port: process.env.DEV_OBSERVER_PORT
   },
   secretKeys: {
     identities: 'secret-identities',
@@ -17,10 +21,8 @@ export default {
     sites: 'secret-sites',
     ingress: 'secret-ingress'
   },
-  portalUrlPattern: 'http://{subdomain}.portals.localhost:5610',
-  // 5698 for dev/ingress-manager.ts
-  // 5604 for the separate project portals-ingress-manager development server
-  privateIngressManagerUrl: 'http://localhost:5698',
+  portalUrlPattern: `http://{subdomain}.portals.localhost:${process.env.NGINX_PORT}`,
+  privateIngressManagerUrl: `http://localhost:${parseInt(process.env.DEV_API_PORT) - 200}`,
   ingressControllers: ['nginx'],
   upgradeRoot: '../'
 }
