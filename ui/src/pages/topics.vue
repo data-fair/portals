@@ -90,7 +90,8 @@
                   centered: variant.centered,
                   elevation: 1,
                   density: 'comfortable',
-                  rounded: 'lg'
+                  rounded: 'lg',
+                  variant: variant.variant
                 }"
               />
             </v-card>
@@ -156,10 +157,6 @@ const portalConfigDefault: PortalConfig = {
 }
 
 providePortalStore(portalConfigDefault)
-
-onMounted(() => {
-
-})
 
 const vuetifyTheme = useTheme()
 const router = useRouter()
@@ -227,10 +224,26 @@ const colorOptions = [
 const variants = [
   {
     key: 'centered',
-    label: 'Centered',
+    label: 'Centered + Default Variant',
     centered: true,
     isFilters: false,
     link: undefined
+  },
+  {
+    key: 'outlined',
+    label: 'Outlined Variant',
+    centered: false,
+    isFilters: false,
+    link: undefined,
+    variant: 'outlined'
+  },
+  {
+    key: 'tonal',
+    label: 'Tonal Variant',
+    centered: false,
+    isFilters: false,
+    link: undefined,
+    variant: 'tonal'
   },
   {
     key: 'filters',
