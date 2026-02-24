@@ -727,7 +727,7 @@ export default {
         fullWidth: {
           type: 'boolean',
           title: 'Pleine largeur',
-          description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
+          description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Seul le fond est impacté, le contenu restera contraint. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
           layout: 'switch'
         },
         background: {
