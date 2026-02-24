@@ -11,7 +11,7 @@ export default {
           fr: "Vignette d'une application"
         },
         children: [
-          { key: 'card' },
+          'card',
           { name: 'application-card-preview' }
         ]
       },

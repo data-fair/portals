@@ -63,13 +63,16 @@
     </template>
   </v-menu>
 
+  <!-- Portal preview selector -->
+  <portal-preview-select />
+
   <!-- Undo / redo -->
   <div class="d-flex justify-center">
     <v-btn-group
       variant="tonal"
       color="primary"
       density="comfortable"
-      class="mt-2 mx-2 w-100"
+      class="mt-4 mx-2 w-100"
       divided
     >
       <v-btn

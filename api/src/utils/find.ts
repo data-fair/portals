@@ -7,7 +7,7 @@ import { httpError } from '@data-fair/lib-utils/http-errors.js'
 export const filterPermissions = (reqQuery: Record<string, string>, sessionState: SessionStateAuthenticated) => {
   const query: Record<string, any> = {}
 
-  const showAll = reqQuery.showAll === 'true' || reqQuery.showAll === '1'
+  const showAll = reqQuery.showAll === 'true'
   if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
 
   if (!showAll) {

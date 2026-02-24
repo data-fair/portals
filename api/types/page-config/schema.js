@@ -56,7 +56,7 @@ export default {
     },
     eventMetadata: {
       type: 'object',
-      required: ['slug', 'startDate'],
+      required: ['slug'],
       default: {},
       layout: { if: 'context.pageType === "event"' },
       properties: {
@@ -66,8 +66,9 @@ export default {
           format: 'date-time',
           title: 'Start Date',
           'x-i18n-title': {
-            fr: "Date de l'évènement"
-          }
+            fr: 'Date de debut'
+          },
+          layout: { cols: { md: 6 } }
         },
         endDate: {
           type: 'string',
@@ -75,7 +76,8 @@ export default {
           title: 'End Date',
           'x-i18n-title': {
             fr: 'Date de fin'
-          }
+          },
+          layout: { cols: { md: 6 } }
         }
       }
     },

@@ -312,9 +312,10 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       weekly: 'Every week'
     keywords: 'Keywords:'
     license: 'License:'
+    modified: 'Data last modified:'
+    newWindow: 'New window'
     owner: 'Owner:'
     ownerOverride: '{owner}:'
-    modified: 'Data last modified:'
     share: 'Share:'
     shortText:
       api: API
@@ -356,6 +357,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     keywords: 'Mots-clés :'
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
+    newWindow: 'Nouvelle fenêtre'
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
     share: 'Partager :'

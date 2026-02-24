@@ -3,12 +3,12 @@ import fontAssetSchema from '#types/font-asset/schema.js'
 
 export default {
   ...jsonSchema(fontAssetSchema)
-    .removeProperties(['_id', 'owner', 'createdAt', 'data'])
+    .pickProperties(['name', 'subset', 'weightRange', 'style'])
+    .removeRequired()
     .schema,
-  $id: 'https://github.com/data-fair/portals/font-assets/post-req-body',
-  title: 'Post font asset req body',
+  $id: 'https://github.com/data-fair/portals/font-assets/patch-req-body',
+  title: 'Patch font asset req body',
   'x-exports': ['validate', 'types', 'vjsf'],
-  'x-vjsf': { compName: 'font-asset' },
+  'x-vjsf': { compName: 'font-asset-patch' },
   layout: { title: null }
-
 }

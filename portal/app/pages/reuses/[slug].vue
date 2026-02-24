@@ -36,7 +36,7 @@ providePageImageSrc('reuses', slug)
 
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
-const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config'>>(`/portal/api/reuses/${slug}`, {
+const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, {
   watch: false
 })
 const reuseConfig = computed(() => reuseFetch.data.value?.config)
@@ -63,6 +63,11 @@ usePageSeo({
   description: () => reuseConfig.value?.summary,
   ogType: 'article'
 })
+
+// Set Last-Modified header based on updatedAt
+const header = useResponseHeader('Last-Modified')
+if (reuseFetch.data.value?.updatedAt) header.value = new Date(reuseFetch.data.value?.updatedAt).toUTCString()
+
 </script>
 
 <i18n lang="yaml">

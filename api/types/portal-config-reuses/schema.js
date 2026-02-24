@@ -14,7 +14,7 @@ export default {
               fr: "Vignette d'une réutilisation"
             },
             children: [
-              { key: 'card' },
+              'card',
               { name: 'reuse-card-preview' }
             ]
           },

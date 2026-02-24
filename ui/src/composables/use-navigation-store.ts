@@ -1,6 +1,7 @@
-import type { LinkItem, MenuItem } from '#api/types/portal-config'
+import type { MenuItem } from '#api/types/portal/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
 
-const isExternalLink = (link: LinkItem | MenuItem): boolean => {
+const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
   if (link.type === 'external') return !link.href.startsWith('/')
   return false
 }
@@ -26,6 +27,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         case 'event': return i18n[lang]['eventPage']
         case 'reuses': return i18n[lang]['reusesPage']
         case 'sitemap': return i18n[lang]['sitemapPage']
+        case 'catalog-api-doc': return i18n[lang]['catalogApiDocPage']
         default: return i18n[lang]['standardPage']
       }
     }
@@ -39,7 +41,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
 
 export const useNavigationStore = () => {
   return {
-    breadcrumbs: ref([{ title: 'Page de contenu', to: '/my-page' }]),
+    breadcrumbs: ref([{ title: 'Page libre', to: '/my-page' }]),
     setBreadcrumbs: () => { },
     showTopBreadcrumbs: ref(false),
     showBottomBreadcrumbs: ref(false),
@@ -69,6 +71,7 @@ const i18n = {
     eventPage: 'Event',
     reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -86,6 +89,7 @@ const i18n = {
     eventPage: 'Événement',
     reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }

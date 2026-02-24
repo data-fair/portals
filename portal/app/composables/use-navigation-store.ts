@@ -1,5 +1,6 @@
 import type { VBreadcrumbs } from 'vuetify/components'
-import type { LinkItem, MenuItem } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -16,7 +17,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const isIframe = options.isIframe
   const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
 
-  const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
+  const setBreadcrumbs = (breadcrumbInputs: (SimpleLinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
     const locale = $i18n.locale.value as 'fr' | 'en'
     _breadcrumbs.value = breadcrumbInputs.map(input => {
@@ -56,31 +57,14 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const showTopBreadcrumbs = computed(() => showBreadcrumbs('top'))
   const showBottomBreadcrumbs = computed(() => showBreadcrumbs('bottom'))
 
-  /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
-    if (item.type === 'external') return false
-
-    // Check if any child of the submenu matches the route
-    if (item.type === 'submenu' && item.children) {
-      return item.children.some(child => isMenuItemActive(child, currentPath))
-    }
-
-    // Resolve the link to compare with the current route
-    const resolvedLink = resolveLink(item)
-    if (!resolvedLink) return false
-
-    // Exact match only - avoid activating parent routes
-    return resolvedLink === currentPath
-  }
-
   /** Check if a link is external (not internal and not starting with /) */
-  const isExternalLink = (link: LinkItem | MenuItem): boolean => {
+  const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
     if (link.type === 'external') return !link.href.startsWith('/')
     return false
   }
 
   /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = (link: LinkItem | MenuItem): string | undefined => {
+  const resolveLink = (link: SimpleLinkItem | MenuItem): string | undefined => {
     switch (link.type) {
       case 'standard': {
         switch (link.subtype) {
@@ -97,6 +81,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'news': return '/news'
           case 'event': return '/event'
           case 'sitemap': return '/sitemap'
+          case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
         }
       }
@@ -126,6 +111,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'news': return i18n[locale]['newsPage']
           case 'event': return i18n[locale]['eventPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
+          case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
         }
       }
@@ -135,6 +121,23 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
       case 'external': return link.title
       default: return i18n[locale]['link']
     }
+  }
+
+  /** Check if a menu item (or any of its children) matches the current route */
+  const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
+    if (item.type === 'external') return false
+
+    // Check if any child of the submenu matches the route
+    if (item.type === 'submenu' && item.children) {
+      return item.children.some(child => isMenuItemActive(child, currentPath))
+    }
+
+    // Resolve the link to compare with the current route
+    const resolvedLink = resolveLink(item)
+    if (!resolvedLink) return false
+
+    // Exact match only - avoid activating parent routes
+    return resolvedLink === currentPath
   }
 
   return {
@@ -181,6 +184,7 @@ const i18n = {
     newsPage: 'News',
     eventPage: 'Event',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -198,6 +202,7 @@ const i18n = {
     newsPage: 'Actualités',
     eventPage: 'Événement',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }

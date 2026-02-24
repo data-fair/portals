@@ -28,6 +28,19 @@ export const patchGroup = async (group: Group, patch: Partial<Group>, session: S
   const updatedGroup = { ...group, ...fullPatch }
   await validateGroup(updatedGroup)
   await mongo.groups.updateOne({ _id: group._id }, { $set: fullPatch })
+  // Update group title in pages
+  if (fullPatch.title && fullPatch.title !== group.title) {
+    await Promise.all([
+      mongo.pages.updateMany(
+        { 'config.genericMetadata.group._id': group._id },
+        { $set: { 'config.genericMetadata.group.title': fullPatch.title } }
+      ),
+      mongo.pages.updateMany(
+        { 'draftConfig.genericMetadata.group._id': group._id },
+        { $set: { 'draftConfig.genericMetadata.group.title': fullPatch.title } }
+      )
+    ])
+  }
   return updatedGroup
 }
 

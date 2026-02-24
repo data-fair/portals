@@ -61,7 +61,8 @@ const standardPageLabel = computed(() => {
     reuses: 'reusesCatalog',
     event: 'eventsList',
     news: 'newsList',
-    sitemap: 'sitemap'
+    sitemap: 'sitemap',
+    'catalog-api-doc': 'catalogApiDocPage'
   }
 
   return labelKeys[props.item.subtype] || 'standardPage'
@@ -85,6 +86,7 @@ const standardPageLabel = computed(() => {
     eventsList: Events list
     newsList: News list
     sitemap: Sitemap
+    catalogApiDocPage: API Documentation
     standardPage: Standard page
     event: Event
     news: News
@@ -109,6 +111,7 @@ const standardPageLabel = computed(() => {
     eventsList: Liste des événements
     newsList: Liste des actualités
     sitemap: Plan du site
+    catalogApiDocPage: Documentation d'API
     standardPage: Page standard
     event: Événement
     news: Actualité

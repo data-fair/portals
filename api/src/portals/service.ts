@@ -76,6 +76,23 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
   debug('deletePortal', portal)
   await syncPortalDelete(portal, reqOrigin, cookie)
+  // Remove portal reference from pages and delete images related to the portal
+  await mongo.pages.updateMany(
+    {
+      'owner.type': portal.owner.type,
+      'owner.id': portal.owner.id,
+      $or: [
+        { portals: portal._id },
+        { requestedPortals: portal._id }
+      ]
+    },
+    {
+      $pull: {
+        portals: portal._id,
+        requestedPortals: portal._id
+      }
+    }
+  )
   await mongo.images.deleteMany({
     'owner.type': portal.owner.type,
     'owner.id': portal.owner.id,

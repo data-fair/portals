@@ -40,7 +40,6 @@
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { ReuseConfig } from '#api/types/reuse-config'
-
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
