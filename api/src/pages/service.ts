@@ -66,8 +66,11 @@ export const duplicatePageElements = async (
     if (el.type === 'image') {
       updateImageId(el.image)
       updateImageId(el.wideImage)
-    } else if (el.type === 'banner' || el.type === 'card') {
+    } else if (el.type === 'banner') {
       updateImageId(el.background?.image)
+    } else if (el.type === 'card') {
+      updateImageId(el.background?.image)
+      updateImageId(el.thumbnail?.image)
     } else if (el.type === 'dataset-card') {
       updateImageId(el.cardConfig?.thumbnail?.default)
     }

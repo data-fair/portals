@@ -843,7 +843,7 @@ export default {
       title: 'CardElement',
       'x-i18n-title': {
         en: 'Card',
-        fr: 'Vignette / Boite'
+        fr: 'Boite'
       },
       required: ['type', 'children', 'actions'],
       properties: {
