@@ -24,11 +24,11 @@
           </template>
         </vjsf-page-config>
       </v-form>
-
-      <navigation-right>
-        <page-edit-actions :changes-stack="changesStack" />
-      </navigation-right>
     </portal-preview-provider>
+
+    <navigation-right>
+      <page-edit-actions :changes-stack="changesStack" />
+    </navigation-right>
   </v-container>
 </template>
 

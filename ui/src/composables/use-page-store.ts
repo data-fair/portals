@@ -23,7 +23,7 @@ const createPageStore = (id: string) => {
     return !equal(page.value.draftConfig, page.value.config)
   })
 
-  return { pageFetch, page, patchPage, hasDraftDiff }
+  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id }
 }
 
 export const providePageStore = (id: string) => {

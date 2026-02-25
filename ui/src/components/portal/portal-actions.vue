@@ -448,7 +448,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
     enableWhiteLabel: Activer la marque blanche
-    errorChangingOwner: Erreur lors de le changement de propriétaire
+    errorChangingOwner: Erreur lors du changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
     errorUpdatingIsReference: Erreur lors de la mise à jour du statut de modèle de référence
     errorUpdatingWhiteLabel: Erreur lors de la mise à jour de la marque blanche

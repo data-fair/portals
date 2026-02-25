@@ -208,11 +208,32 @@
   <v-divider class="my-2" />
 
   <!-- Portal preview selector -->
-  <portal-preview-select />
+  <portal-preview-select class="mb-2" />
+
+  <!-- View portal pages list -->
+  <template
+    v-for="portal in page?.portals"
+    :key="portal"
+  >
+    <v-list-item
+      :href="portalsById[portal]?.url"
+      target="_blank"
+      rel="noopener"
+    >
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiOpenInNew"
+        />
+      </template>
+      {{ t('viewOn', { portalTitle: portalsById[portal]?.title }) }}
+    </v-list-item>
+  </template>
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock } from '@mdi/js'
+import type { Portal } from '#api/types/portal/index.ts'
+import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -226,8 +247,7 @@ const showCancelDraftMenu = ref(false)
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
-const { pageId } = defineProps<{ pageId: string }>()
-
+const { pageId, page } = usePageStore()
 const { previewPortalId } = usePreviewPortal()
 
 const editDraftLink = computed(() => {
@@ -273,6 +293,20 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   return !!org.departments?.length
 }, false)
 
+// For "View On" links
+type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress'>
+const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress', size: 10000 } })
+const portalsById = computed(() => {
+  const map: Record<string, { url: string; title: string }> = {}
+  for (const portal of portalsFetch.data.value?.results || []) {
+    map[portal._id] = {
+      url: portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id),
+      title: portal.title
+    }
+  }
+  return map
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -293,6 +327,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
+    viewOn: View on {portalTitle}
     yes: Yes
     no: No
   fr:
@@ -307,11 +342,12 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     deletePage: Supprimer la page
     deletingPage: Suppression de la page
     editDraft: Éditer le brouillon
-    errorChangingOwner: Erreur lors de le changement de propriétaire
+    errorChangingOwner: Erreur lors du changement de propriétaire
     events: Traçabilité
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
+    viewOn: Voir sur {portalTitle}
     yes: Oui
     no: Non
 

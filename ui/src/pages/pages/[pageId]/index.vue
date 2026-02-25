@@ -39,9 +39,7 @@
       </v-card-text>
     </v-card>
     <navigation-right>
-      <page-actions
-        :page-id="route.params.pageId"
-      />
+      <page-actions />
     </navigation-right>
   </v-container>
 </template>
@@ -50,10 +48,7 @@
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
-const route = useRoute<'/pages/[pageId]'>()
-
 const { pageFetch } = usePageStore()
-
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 watch(pageFetch.data, (page) => {

@@ -64,7 +64,27 @@
   </v-menu>
 
   <!-- Portal preview selector -->
-  <portal-preview-select />
+  <portal-preview-select class="mb-2" />
+
+  <!-- View portal pages list -->
+  <template
+    v-for="portal in page?.portals"
+    :key="portal"
+  >
+    <v-list-item
+      :href="portalsById[portal]?.url"
+      target="_blank"
+      rel="noopener"
+    >
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiOpenInNew"
+        />
+      </template>
+      {{ t('viewOn', { portalTitle: portalsById[portal]?.title }) }}
+    </v-list-item>
+  </template>
 
   <!-- Undo / redo -->
   <div class="d-flex justify-center">
@@ -72,7 +92,7 @@
       variant="tonal"
       color="primary"
       density="comfortable"
-      class="mt-4 mx-2 w-100"
+      class="mt-2 mx-2 w-100"
       divided
     >
       <v-btn
@@ -94,43 +114,60 @@
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo } from '@mdi/js'
+import type { Portal } from '#api/types/portal/index.ts'
+import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo, mdiOpenInNew } from '@mdi/js'
 
 const { t } = useI18n()
-const { pageFetch, hasDraftDiff } = usePageStore()
+const { pageId, page, pageFetch, hasDraftDiff } = usePageStore()
 const { changesStack } = defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
 const showCancelDraftMenu = ref(false)
 
 const validateDraft = useAsyncAction(async () => {
-  await $fetch(`pages/${pageFetch.data.value?._id}/draft`, { method: 'POST' })
+  await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
   await pageFetch.refresh()
   changesStack.reset()
 })
 
 const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`pages/${pageFetch.data.value?._id}/draft`, { method: 'DELETE' })
+  await $fetch(`pages/${pageId}/draft`, { method: 'DELETE' })
   await pageFetch.refresh()
   changesStack.reset()
   showCancelDraftMenu.value = false
+})
+
+// For "View On" links
+type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress'>
+const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress', size: 10000 } })
+const portalsById = computed(() => {
+  const map: Record<string, { url: string; title: string }> = {}
+  for (const portal of portalsFetch.data.value?.results || []) {
+    map[portal._id] = {
+      url: portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id),
+      title: portal.title
+    }
+  }
+  return map
 })
 
 </script>
 
 <i18n lang="yaml">
   en:
-    validateDraft: Validate draft
     cancelDraft: Cancel draft
     cancelingDraft: Canceling draft
     confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
+    validateDraft: Validate draft
+    viewOn: View on {portalTitle}
     no: No
     yes: Yes
     undo: Undo last change
     redo: Redo last change
   fr:
-    validateDraft: Valider le brouillon
     cancelDraft: Annuler le brouillon
     cancelingDraft: Annulation du brouillon
     confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
+    validateDraft: Valider le brouillon
+    viewOn: Voir sur {portalTitle}
     no: Non
     yes: Oui
     undo: Annuler le dernier changement
