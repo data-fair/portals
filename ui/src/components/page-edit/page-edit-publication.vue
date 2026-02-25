@@ -49,14 +49,14 @@
           <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
         </v-list-item-subtitle>
         <v-list-item-subtitle
-          v-if="page.portals.includes(portal._id) && getPageUrl(page)"
+          v-if="page.portals.includes(portal._id) && pageUrl"
           class="mb-2"
         >
           <a
-            :href="getPortalUrl(portal) + getPageUrl(page)"
+            :href="getPortalUrl(portal) + pageUrl"
             target="_blank"
           >
-            {{ getPortalUrl(portal) + getPageUrl(page) }}
+            {{ getPortalUrl(portal) + pageUrl }}
           </a>
         </v-list-item-subtitle>
         <v-list-item-subtitle>
@@ -112,7 +112,7 @@ import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { patchPage, page } = usePageStore()
+const { patchPage, page, pageUrl } = usePageStore()
 
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging'>
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
@@ -181,29 +181,6 @@ const toggleRequestedPortals = (id: string) => {
 const getPortalUrl = (portal: PartialPortal): string => {
   if (portal.ingress?.url) return portal.ingress.url
   return $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id)
-}
-
-const getPageUrl = (pageData: Page): string | undefined => {
-  switch (pageData.type) {
-    case 'home': return '/'
-    case 'contact': return '/contact'
-    case 'privacy-policy': return '/privacy-policy'
-    case 'accessibility': return '/accessibility'
-    case 'legal-notice': return '/legal-notice'
-    case 'cookie-policy': return '/cookie-policy'
-    case 'terms-of-service': return '/terms-of-service'
-    case 'datasets': return '/datasets'
-    case 'applications': return '/applications'
-    case 'reuses': return '/reuses'
-    case 'event': return pageData.config.eventMetadata?.slug ? `/event/${pageData.config.eventMetadata.slug}` : undefined
-    case 'news': return pageData.config.newsMetadata?.slug ? `/news/${pageData.config.newsMetadata.slug}` : undefined
-    case 'generic': {
-      const metadata = pageData.config.genericMetadata
-      if (!metadata?.slug) return undefined
-      return `/pages${metadata.group ? `-${metadata.group.slug}` : ''}/${metadata.slug}`
-    }
-    default: return undefined
-  }
 }
 
 </script>

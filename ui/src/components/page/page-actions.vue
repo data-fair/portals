@@ -216,7 +216,7 @@
     :key="portal"
   >
     <v-list-item
-      :href="portalsById[portal]?.url"
+      :href="portalsById[portal]?.url + pageUrl"
       target="_blank"
       rel="noopener"
     >
@@ -238,17 +238,15 @@ import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
 const { t } = useI18n()
-const { pageFetch, hasDraftDiff } = usePageStore()
 const session = useSessionAuthenticated()
 const router = useRouter()
+const { pageFetch, hasDraftDiff, pageId, page, pageUrl } = usePageStore()
+const { previewPortalId } = usePreviewPortal()
 const showChangeOwnerMenu = ref(false)
 const showCancelDraftMenu = ref(false)
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
-
-const { pageId, page } = usePageStore()
-const { previewPortalId } = usePreviewPortal()
 
 const editDraftLink = computed(() => {
   const base = `/pages/${pageId}/edit-config`

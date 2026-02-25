@@ -23,7 +23,30 @@ const createPageStore = (id: string) => {
     return !equal(page.value.draftConfig, page.value.config)
   })
 
-  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id }
+  const pageUrl = computed(() => {
+    switch (page.value?.type) {
+      case 'home': return '/'
+      case 'contact': return '/contact'
+      case 'privacy-policy': return '/privacy-policy'
+      case 'accessibility': return '/accessibility'
+      case 'legal-notice': return '/legal-notice'
+      case 'cookie-policy': return '/cookie-policy'
+      case 'terms-of-service': return '/terms-of-service'
+      case 'datasets': return '/datasets'
+      case 'applications': return '/applications'
+      case 'reuses': return '/reuses'
+      case 'event': return page.value.config.eventMetadata?.slug ? `/event/${page.value.config.eventMetadata.slug}` : undefined
+      case 'news': return page.value.config.newsMetadata?.slug ? `/news/${page.value.config.newsMetadata.slug}` : undefined
+      case 'generic': {
+        const metadata = page.value.config.genericMetadata
+        if (!metadata?.slug) return undefined
+        return `/pages${metadata.group ? `-${metadata.group.slug}` : ''}/${metadata.slug}`
+      }
+      default: return undefined
+    }
+  })
+
+  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl }
 }
 
 export const providePageStore = (id: string) => {

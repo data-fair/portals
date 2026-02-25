@@ -13,8 +13,8 @@
       />
 
       <v-card-text>
-        <portal-preview-provider>
-          <v-tabs-window v-model="tab">
+        <v-tabs-window v-model="tab">
+          <portal-preview-provider>
             <v-tabs-window-item value="preview">
               <page-elements :model-value="pageFetch.data.value?.config.elements" />
             </v-tabs-window-item>
@@ -22,20 +22,20 @@
             <v-tabs-window-item value="preview-draft">
               <page-elements :model-value="pageFetch.data.value?.draftConfig.elements" />
             </v-tabs-window-item>
+          </portal-preview-provider>
 
-            <!-- <v-tabs-window-item value="permissions">
+          <!-- <v-tabs-window-item value="permissions">
               TODO: add permissions management
             </v-tabs-window-item> -->
 
-            <v-tabs-window-item value="publications">
-              <page-edit-publication />
-            </v-tabs-window-item>
+          <v-tabs-window-item value="publications">
+            <page-edit-publication />
+          </v-tabs-window-item>
 
-            <v-tabs-window-item value="informations">
-              <page-activity />
-            </v-tabs-window-item>
-          </v-tabs-window>
-        </portal-preview-provider>
+          <v-tabs-window-item value="informations">
+            <page-activity />
+          </v-tabs-window-item>
+        </v-tabs-window>
       </v-card-text>
     </v-card>
     <navigation-right>

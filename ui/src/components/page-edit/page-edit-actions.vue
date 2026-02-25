@@ -72,7 +72,7 @@
     :key="portal"
   >
     <v-list-item
-      :href="portalsById[portal]?.url"
+      :href="portalsById[portal]?.url + pageUrl"
       target="_blank"
       rel="noopener"
     >
@@ -118,7 +118,7 @@ import type { Portal } from '#api/types/portal/index.ts'
 import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo, mdiOpenInNew } from '@mdi/js'
 
 const { t } = useI18n()
-const { pageId, page, pageFetch, hasDraftDiff } = usePageStore()
+const { pageId, page, pageFetch, hasDraftDiff, pageUrl } = usePageStore()
 const { changesStack } = defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
 const showCancelDraftMenu = ref(false)
 
