@@ -199,14 +199,19 @@ export default {
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseGenericPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseEventPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseNewsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseExternalLink' }
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseExternalLink' },
+        {
+          title: 'Aucun lien',
+          required: ['type'],
+          properties: { type: { const: 'none' } }
+        }
       ]
     },
 
     // Definitions of link item types without title and icon (used for title, image and card pages elements)
     baseStandardPage: {
       title: 'Page standard (Accueil, Contact,...)',
-      required: ['type', 'subtype'],
+      required: ['type'],
       properties: {
         type: { const: 'standard' },
         subtype: {
@@ -242,7 +247,7 @@ export default {
     },
     baseGenericPage: {
       title: 'Page libre',
-      required: ['type', 'pageRef'],
+      required: ['type'],
       properties: {
         type: { const: 'generic' },
         pageRef: {
@@ -279,7 +284,7 @@ export default {
     },
     baseEventPage: {
       title: "Page d'événements",
-      required: ['type', 'pageRef'],
+      required: ['type'],
       properties: {
         type: { const: 'event' },
         pageRef: {
@@ -303,7 +308,7 @@ export default {
     },
     baseNewsPage: {
       title: "Page d'actualités",
-      required: ['type', 'pageRef'],
+      required: ['type'],
       properties: {
         type: { const: 'news' },
         pageRef: {
@@ -327,7 +332,7 @@ export default {
     },
     baseExternalLink: {
       title: 'Lien',
-      required: ['type', 'href'],
+      required: ['type'],
       properties: {
         type: { const: 'external' },
         href: {

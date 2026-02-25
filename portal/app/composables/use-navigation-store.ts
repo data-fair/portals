@@ -34,7 +34,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
       const breadcrumbItem: BreadcrumbItem = { title }
 
       // Use 'to' for internal links, 'href' for external
-      if (linkItem.type === 'external' && isExternalLink(linkItem)) breadcrumbItem.to = resolvedLink
+      if (linkItem.type === 'external' && isExternalLink(linkItem)) breadcrumbItem.href = resolvedLink
       else if (resolvedLink) breadcrumbItem.to = resolvedLink
       else breadcrumbItem.disabled = true
 
@@ -59,7 +59,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
 
   /** Check if a link is external (not internal and not starting with /) */
   const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
-    if (link.type === 'external') return !link.href.startsWith('/')
+    if (link.type === 'external') return !link.href?.startsWith('/')
     return false
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div :class="`my-${margins[element.titleSize] || '4'}`">
     <a
-      v-if="element.link && isExternalLink(element.link)"
+      v-if="element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
       :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
       :target="element.link?.target ? '_blank' : undefined"
@@ -11,7 +11,7 @@
       <layout-title :element="element" />
     </a>
     <NuxtLink
-      v-else-if="element.link && !isExternalLink(element.link)"
+      v-else-if="element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
       :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
       :target="element.link?.target ? '_blank' : undefined"

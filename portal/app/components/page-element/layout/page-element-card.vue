@@ -7,11 +7,11 @@
     See https://vuetifyjs.com/en/api/v-list-item/#props
   -->
   <v-card
-    :to="!preview && element.link && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
-    :href="!preview && element.link && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
-    :target="element.link?.target ? '_blank' : undefined"
-    :rel="element.link?.target ? 'noopener' : undefined"
-    v-bind:title.attr="element.link && element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+    :to="!preview && element.link && element.link.type !== 'none' && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
+    :href="!preview && element.link && element.link.type !== 'none' && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
+    :target="element.link && element.link.type !== 'none' && element.link?.target ? '_blank' : undefined"
+    :rel="element.link && element.link.type !== 'none' && element.link?.target ? 'noopener' : undefined"
+    v-bind:title.attr="element.link && element.link.type !== 'none' && element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
 
     :border="element.border"
     :elevation="element.elevation"

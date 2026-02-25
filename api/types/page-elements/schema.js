@@ -376,6 +376,17 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'image' },
+        banner: {
+          type: 'boolean',
+          title: 'Pleine largeur',
+          layout: 'switch'
+        },
+        isPresentation: {
+          type: 'boolean',
+          title: 'Image de présentation (décorative)',
+          description: "Les images de présentations ne sont pas affichés pour les lecteurs d'écrans pour l'accessibilité. Dans ce cas, l'image ne peut pas porter de liens.",
+          layout: 'switch'
+        },
         url: {
           title: "URL vers l'image",
           description: "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
@@ -440,25 +451,6 @@ export default {
           type: 'integer',
           minimum: 0
         },
-        banner: {
-          type: 'boolean',
-          title: 'Pleine largeur',
-          layout: 'switch'
-        },
-        isPresentation: {
-          type: 'boolean',
-          title: 'Image de présentation (décorative)',
-          description: "Les images de présentations ne sont pas affichés pour les lecteurs d'écrans pour l'accessibilité. Dans ce cas, l'image ne peut pas porter de liens.",
-          layout: 'switch'
-        },
-        cover: {
-          type: 'boolean',
-          title: "Recadrer l'image pour remplir l'espace",
-          layout: {
-            if: '!parent.data?.banner',
-            comp: 'switch'
-          }
-        },
         title: {
           type: 'string',
           title: "Titre de l'image (Accessibilité)",
@@ -470,6 +462,14 @@ export default {
           title: "Légende de l'image",
           description: "Légende affichée en italique en dessous de l'image",
           layout: { if: '!parent.data?.isPresentation' }
+        },
+        cover: {
+          type: 'boolean',
+          title: "Recadrer l'image pour remplir l'espace",
+          layout: {
+            if: '!parent.data?.banner',
+            comp: 'switch'
+          }
         },
         zoomable: {
           type: 'boolean',

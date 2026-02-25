@@ -23,11 +23,12 @@
     ]"
   >
     <a
-      v-if="!element.isPresentation && element.link && isExternalLink(element.link)"
+      v-if="!element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
       :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
+      class="d-flex justify-center w-100"
     >
       <img
         ref="img"
@@ -37,11 +38,12 @@
       >
     </a>
     <NuxtLink
-      v-else-if="!element.isPresentation && element.link && !isExternalLink(element.link)"
+      v-else-if="!element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
       :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
+      class="d-flex justify-center w-100"
     >
       <img
         ref="img"
@@ -53,14 +55,14 @@
     <img
       v-else
       ref="img"
-      :alt="element.isPresentation ? '' : element.title"
+      :alt="!element.isPresentation ? element.title : ''"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
       @click="element.zoomable ? zoomed = true : undefined"
     >
     <div
       v-if="element.legend"
-      class="text-center text-caption font-italic"
+      class="text-center text-caption font-italic mt-2"
     >
       {{ element.legend }}
     </div>
@@ -73,7 +75,7 @@
     @click="zoomed = false"
   >
     <img
-      :alt="element.isPresentation ? '' : element.title"
+      :alt="!element.isPresentation ? element.title : ''"
       :src="zoomedSrc"
     >
   </v-overlay>

@@ -268,6 +268,8 @@ if (!preview) {
     }
   })
 } else {
+  const session = useSessionAuthenticated()
+
   // Mock data for preview
   displayedApplications.value = Array.from({ length: 6 }, (_, i) => {
     const slug = `application-${i + 1}`
@@ -281,7 +283,7 @@ if (!preview) {
       url: `/applications/${slug}`,
       href: `/applications/${slug}`,
       exposedUrl: `/applications/${slug}`,
-      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
+      owner: session.account.value,
       topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }]
     }
   })
