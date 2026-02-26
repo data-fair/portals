@@ -1,10 +1,8 @@
 import { type Portal } from '#types/portal/index.ts'
 import { type IndicesCreateRequest } from '@elastic/elasticsearch/lib/api/types'
 
-const indexName = (portalId: string) => `portal-search-${portalId}`
-
-export const indexDefinition = (portal: Portal): IndicesCreateRequest => ({
-  index: indexName(portal._id),
+export const indexDefinition = (portal: Portal, index: string): IndicesCreateRequest => ({
+  index,
   mappings: {
     properties: {
       // search_as_you_type will add words shingles for higher scores then search terms are closed by and edge ngram to search for token prefixes

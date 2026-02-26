@@ -9,6 +9,7 @@ import { createHttpTerminator } from 'http-terminator'
 import { app } from './app.ts'
 import config from '#config'
 import mongo from '#mongo'
+import es from '#es'
 
 const server = createServer(app)
 const httpTerminator = createHttpTerminator({ server })
@@ -23,6 +24,7 @@ export const start = async () => {
   if (config.observer.active) await startObserver(config.observer.port)
   session.init(config.privateDirectoryUrl)
   await mongo.init()
+  await es.init()
   await locks.start(mongo.db)
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
 

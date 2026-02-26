@@ -11,7 +11,7 @@ import type { Reuse } from '#types/reuse/index.js'
 import type { SearchPageRef } from '#types/search-page-ref/index.js'
 import { indexDefinition } from './es.ts'
 
-const indexName = (portalId: string) => `portal-search-${portalId}`
+const newIndexName = (portalId: string) => `${aliasName(portalId)}--${Date.now()}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
 
 export type CreateSearchPageRefParams = {
@@ -131,10 +131,10 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
   if (!portal.config.searchEngine?.active) return
 
   const searchTypes = portal.config.searchEngine.types || ['dataset', 'application', 'page', 'reuse']
-  const index = indexName(portal._id)
+  const index = newIndexName(portal._id)
   const alias = aliasName(portal._id)
 
-  await es.client.indices.create(indexDefinition(portal))
+  await es.client.indices.create(indexDefinition(portal, index))
 
   try {
     await es.client.indices.putAlias({ index, name: alias })

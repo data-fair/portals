@@ -5,7 +5,7 @@ export class DfEs {
   private _client?: Client
 
   get client () {
-    if (!this._client) throw new Error('db was not connected')
+    if (!this._client) throw new Error('ES was not connected')
     return this._client
   }
 
