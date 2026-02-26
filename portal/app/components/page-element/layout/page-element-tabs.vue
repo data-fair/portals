@@ -31,6 +31,7 @@
           v-for="(tab, i) of element.tabs.filter(Boolean)"
           :key="i"
           :value="i"
+          :eager="!preview"
         >
           <slot
             name="page-elements"
@@ -51,6 +52,7 @@ const { element } = defineProps({
   element: { type: Object as () => TabsElement, required: true }
 })
 
+const { preview } = usePortalStore()
 const activeTab = ref(0)
 
 const onTabsChildrenUpdate = (newElements: PageElement[], i: number) => {

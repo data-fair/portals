@@ -326,7 +326,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
-    viewReuseLink: Voir le lien de la réutilisation
+    viewReuseLink: Visiter le lien de la réutilisation
     yes: Oui
 
 </i18n>

@@ -23,11 +23,12 @@
     ]"
   >
     <a
-      v-if="!element.isPresentation && element.href && (element.href.startsWith('http://') || element.href.startsWith('https://'))"
-      :href="element.href"
-      :title="element.title + ' - ' + t('newWindow')"
-      target="_blank"
-      rel="noopener"
+      v-if="!element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
+      :href="resolveLink(element.link)"
+      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      class="d-flex justify-center w-100"
     >
       <img
         ref="img"
@@ -36,17 +37,32 @@
         :src="src"
       >
     </a>
+    <NuxtLink
+      v-else-if="!element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
+      :to="resolveLink(element.link)"
+      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      class="d-flex justify-center w-100"
+    >
+      <img
+        ref="img"
+        :alt="element.title"
+        :style="imgStyle"
+        :src="src"
+      >
+    </NuxtLink>
     <img
       v-else
       ref="img"
-      :alt="element.isPresentation ? '' : element.title"
+      :alt="!element.isPresentation ? element.title : ''"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
       @click="element.zoomable ? zoomed = true : undefined"
     >
     <div
       v-if="element.legend"
-      class="text-center text-caption font-italic"
+      class="text-center text-caption font-italic mt-2"
     >
       {{ element.legend }}
     </div>
@@ -59,7 +75,7 @@
     @click="zoomed = false"
   >
     <img
-      :alt="element.isPresentation ? '' : element.title"
+      :alt="!element.isPresentation ? element.title : ''"
       :src="zoomedSrc"
     >
   </v-overlay>
@@ -85,7 +101,7 @@ const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
-const { showTopBreadcrumbs } = useNavigationStore()
+const { showTopBreadcrumbs, isExternalLink, resolveLink } = useNavigationStore()
 
 const display = useDisplay()
 

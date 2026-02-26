@@ -16,15 +16,18 @@ export default {
       title: 'Nom de la famille de police'
     },
     subset: {
-      type: 'string',
       title: 'Ensemble de caractères',
       default: 'latin',
-      enum: ['latin', 'latin-ext']
+      oneOf: [
+        { const: 'latin', title: 'Latin' },
+        { const: 'latin-ext', title: 'Latin étendu' }
+      ]
     },
     weightRange: {
       type: 'string',
-      title: 'Interval de poids',
-      default: '300 700'
+      title: 'Poids',
+      description: 'WOFF2 variable : plage ex. "300 700". OTF/TTF statique : valeur unique ex. "400".',
+      default: '400 700'
     },
     style: {
       type: 'string',
@@ -34,9 +37,9 @@ export default {
     },
     file: {
       type: 'object',
-      title: 'Fichier',
+      title: 'Fichier de police',
       required: ['name', 'size'],
-      layout: { comp: 'file-input', accept: '.woff2' },
+      layout: { comp: 'file-input', accept: '.woff2,.otf,.ttf' },
       properties: {
         name: {
           type: 'string'
@@ -52,7 +55,7 @@ export default {
     data: {
       type: 'object',
       tsType: 'any',
-      description: 'A nodejs buffer containing the actual image file.'
+      description: 'A nodejs buffer containing the actual font file.'
     },
   }
 }

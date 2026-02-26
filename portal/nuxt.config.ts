@@ -14,7 +14,7 @@ contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
 export default defineNuxtConfig({
   devServer: {
-    port: 5657
+    port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },

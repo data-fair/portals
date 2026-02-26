@@ -42,6 +42,8 @@ if (!preview) {
     return results
   })
 } else {
+  const session = useSessionAuthenticated()
+
   // Mock data for preview
   displayedApplications = computed(() => {
     return Array.from({ length: element.mode === 'custom' ? (element.applications?.length || 1) : element.limit }, (_, i) => ({
@@ -53,7 +55,7 @@ if (!preview) {
       url: `https://example.com/app-${i + 1}`,
       href: `/applications/application-${i + 1}`,
       exposedUrl: `https://example.com/app-${i + 1}`,
-      owner: { id: 'owner-1', name: 'Organisation exemple', type: 'organization' },
+      owner: session.account.value,
       topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
     }))
   })

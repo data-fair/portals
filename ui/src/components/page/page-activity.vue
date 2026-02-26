@@ -77,7 +77,7 @@ const { patchPage, page } = usePageStore()
       cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
       datasets: Catalogue de données
-      applications: Catalogue d'applications
+      applications: Catalogue de visualisations
       reuses: Catalogue de réutilisations
       event: Événement
       news: Actualité

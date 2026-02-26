@@ -47,9 +47,8 @@ export default {
       type: 'string',
       title: 'Variant',
       'x-i18n-title': { fr: 'Variante' },
-      default: 'default',
       oneOf: [
-        { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Par défaut' } },
+        { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Avec fond coloré' } },
         { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
         { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
       ]
@@ -198,7 +197,7 @@ export default {
           layout: {
             switch: [
               {
-                if: 'parent.data?.variant === "default"',
+                if: '!parent.data?.variant || parent.data.variant === "default"',
                 props: { background: true },
                 slots: {
                   item: { name: 'color-select-item' },

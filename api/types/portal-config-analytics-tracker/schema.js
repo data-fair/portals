@@ -73,7 +73,7 @@ export default {
         anonymized: {
           type: 'boolean',
           layout: 'switch',
-          title: 'système configuré en mode anonyme',
+          title: 'Système configuré en mode anonyme',
           description: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
         }
       }
@@ -103,7 +103,7 @@ export default {
         anonymized: {
           type: 'boolean',
           layout: 'switch',
-          title: 'système configuré en mode anonyme',
+          title: 'Système configuré en mode anonyme',
           description: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
         }
       }

@@ -40,7 +40,6 @@
     </v-card>
     <navigation-right>
       <page-actions
-        :group-id="route.params.groupId"
         :page-id="route.params.pageId"
       />
     </navigation-right>
@@ -51,24 +50,16 @@
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
-const route = useRoute<'/pages/[groupId]/[pageId]'>()
+const route = useRoute<'/pages/[pageId]'>()
 
 const { pageFetch } = usePageStore()
 
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
-const groupTitle = computed(() => {
-  const page = pageFetch.data.value
-  if (!page) return ''
-  if (page.type === 'generic' && page.config.genericMetadata?.group) return page.config.genericMetadata.group.title
-  return t('groupTitle.' + route.params.groupId)
-})
-
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
-    { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
     { text: page.title }
   ])
 }, { immediate: true })
@@ -81,11 +72,6 @@ watch(pageFetch.data, (page) => {
     deletePage: Delete page
     deletingPage: Deleting page
     editPage: Edit page
-    groupTitle:
-      standard: Standard pages
-      event: Events
-      news: News
-      default: Other pages
     no: No
     pages: Pages
     tabs:
@@ -101,11 +87,6 @@ watch(pageFetch.data, (page) => {
     deletePage: Supprimer la page
     deletingPage: Suppression de la page
     editPage: Éditer la page
-    groupTitle:
-      standard: Pages standard
-      event: Événements
-      news: Actualités
-      default: Autres pages
     no: Non
     pages: Pages
     tabs:

@@ -15,7 +15,7 @@
       v-for="(panel, i) of element.panels.filter(Boolean)"
       :key="i"
     >
-      <v-expansion-panel>
+      <v-expansion-panel :eager="!preview">
         <template #title>
           <span class="d-flex align-center">
             <v-icon
@@ -47,6 +47,7 @@ const { element } = defineProps({
   element: { type: Object as () => ExpansionPanelsElement, required: true }
 })
 
+const { preview } = usePortalStore()
 const activePanels = ref<number[] | number | null>(element.multiple ? [] : null)
 
 const count = element.panels.filter(Boolean).length

@@ -13,7 +13,7 @@ export default {
           showTicks: 'always'
         }
       },
-      default: 4,
+      default: 0,
       minimum: 0,
       maximum: 16
     }

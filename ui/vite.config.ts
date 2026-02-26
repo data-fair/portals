@@ -37,22 +37,7 @@ export default defineConfig({
       imports: [
         ...autoImports,
         {
-          '~/context': ['$uiConfig', '$sitePath', '$cspNonce', '$apiPath', '$fetch'],
-          '@mdi/js': [
-            'mdiBell',
-            'mdiRefresh',
-            'mdiSend',
-            'mdiDelete',
-            'mdiDevices',
-            'mdiEmail',
-            'mdiRss',
-            'mdiDotsVertical',
-            'mdiCheckCircle',
-            'mdiCancel',
-            'mdiAlertCircle',
-            'mdiCellphone',
-            'mdiWeb'
-          ]
+          '~/context': ['$uiConfig', '$sitePath', '$cspNonce', '$apiPath', '$fetch']
         }
       ],
       dirs: [

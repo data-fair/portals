@@ -252,6 +252,6 @@ const getPageUrl = (pageData: Page): string | undefined => {
       cookie-policy: page de politique de cookies
       terms-of-service: page de conditions générales d'utilisation
       datasets: page de catalogue de données
-      applications: page de catalogue d'applications
+      applications: page de catalogue de visualisations
       reuses: page de catalogue de réutilisations
 </i18n>

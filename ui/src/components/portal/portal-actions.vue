@@ -291,10 +291,23 @@
     </template>
     {{ t('viewPortal') }}
   </v-list-item>
+
+  <!-- View portal pages list -->
+  <custom-router-link :to="`/pages?portal=${portal.id}`">
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiViewDashboardEdit"
+        />
+      </template>
+      {{ t('viewPortalPages') }}
+    </v-list-item>
+  </custom-router-link>
 </template>
 
 <script setup lang="ts">
-import { mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar } from '@mdi/js'
+import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -416,6 +429,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Validate draft
     viewDraft: View draft
     viewPortal: View portal
+    viewPortalPages: View published pages on this portal
     whiteLabelUpdated: White label updated!
     yes: Yes
 
@@ -448,6 +462,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     validateDraft: Valider le brouillon
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail
+    viewPortalPages: Voir les pages publiées sur ce portail
     whiteLabelUpdated: Marque blanche mise à jour !
     yes: Oui
 

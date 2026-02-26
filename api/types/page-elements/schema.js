@@ -1,4 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
+import { linkItemTitle } from '../portal-config-links/schema.js'
+
 const mdiShapeOutlineIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>shape-outline</title><path d="M11,13.5V21.5H3V13.5H11M9,15.5H5V19.5H9V15.5M12,2L17.5,11H6.5L12,2M12,5.86L10.08,9H13.92L12,5.86M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13M17.5,15A2.5,2.5 0 0,0 15,17.5A2.5,2.5 0 0,0 17.5,20A2.5,2.5 0 0,0 20,17.5A2.5,2.5 0 0,0 17.5,15Z" /></svg>'
 const mdiViewGridOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>view-grid-outline</title><path d="M3 11H11V3H3M5 5H9V9H5M13 21H21V13H13M15 15H19V19H15M3 21H11V13H3M5 15H9V19H5M13 3V11H21V3M19 9H15V5H19Z" /></svg>'
 const mdiPuzzleOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>puzzle-outline</title><path d="M22,13.5C22,15.26 20.7,16.72 19,16.96V20A2,2 0 0,1 17,22H13.2V21.7A2.7,2.7 0 0,0 10.5,19C9,19 7.8,20.21 7.8,21.7V22H4A2,2 0 0,1 2,20V16.2H2.3C3.79,16.2 5,15 5,13.5C5,12 3.79,10.8 2.3,10.8H2V7A2,2 0 0,1 4,5H7.04C7.28,3.3 8.74,2 10.5,2C12.26,2 13.72,3.3 13.96,5H17A2,2 0 0,1 19,7V10.04C20.7,10.28 22,11.74 22,13.5M17,15H18.5A1.5,1.5 0 0,0 20,13.5A1.5,1.5 0 0,0 18.5,12H17V7H12V5.5A1.5,1.5 0 0,0 10.5,4A1.5,1.5 0 0,0 9,5.5V7H4V9.12C5.76,9.8 7,11.5 7,13.5C7,15.5 5.75,17.2 4,17.88V20H6.12C6.8,18.25 8.5,17 10.5,17C12.5,17 14.2,18.25 14.88,20H17V15Z" /></svg>'
@@ -243,17 +245,19 @@ export default {
         centered: {
           type: 'boolean',
           title: 'Center the title',
-          'x-i18n-title': {
-            fr: 'Centrer le titre'
-          },
-          default: false,
+          'x-i18n-title': { fr: 'Centrer le titre' },
+          layout: { cols: { xs: 6 } }
         },
         bold: {
           type: 'boolean',
           title: 'Bold text',
-          'x-i18n-title': {
-            fr: 'Texte en gras'
-          }
+          'x-i18n-title': { fr: 'Texte en gras' },
+          layout: { cols: { xs: 6 } },
+        },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: 'Configuration du lien',
+          layout: { comp: 'card' }
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
@@ -331,30 +335,24 @@ export default {
           title: 'Type prédéfini',
           default: 'info',
           oneOf: [
-            {
-              const: 'none',
-              title: 'Aucun'
-            },
-            {
-              const: 'info',
-              title: 'Information'
-            },
-            {
-              const: 'success',
-              title: 'Succès'
-            },
-            {
-              const: 'error',
-              title: 'Erreur'
-            },
-            {
-              const: 'warning',
-              title: 'Avertissement'
-            }
+            { const: 'none', title: 'Aucun' },
+            { const: 'info', title: 'Information' },
+            { const: 'success', title: 'Succès' },
+            { const: 'error', title: 'Erreur' },
+            { const: 'warning', title: 'Avertissement' }
           ]
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          layout: {
+            props: { background: true },
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            }
+          }
+        },
         title: {
           title: 'Titre',
           type: 'string',
@@ -377,9 +375,7 @@ export default {
       },
       required: ['type'],
       properties: {
-        type: {
-          const: 'image'
-        },
+        type: { const: 'image' },
         banner: {
           type: 'boolean',
           title: 'Pleine largeur',
@@ -455,6 +451,18 @@ export default {
           type: 'integer',
           minimum: 0
         },
+        title: {
+          type: 'string',
+          title: "Titre de l'image (Accessibilité)",
+          description: "Nécessaire pour l'accessibilité si l'image n'est pas décorative.",
+          layout: { if: '!parent.data?.isPresentation' }
+        },
+        legend: {
+          type: 'string',
+          title: "Légende de l'image",
+          description: "Légende affichée en italique en dessous de l'image",
+          layout: { if: '!parent.data?.isPresentation' }
+        },
         cover: {
           type: 'boolean',
           title: "Recadrer l'image pour remplir l'espace",
@@ -463,28 +471,18 @@ export default {
             comp: 'switch'
           }
         },
-        href: {
-          title: 'URL vers une autre page',
-          description: "L'image devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
-          type: 'string',
-          layout: { if: '!parent.data?.isPresentation' }
-        },
-        title: {
-          title: "Titre de l'image (Accessibilité)",
-          description: "Nécessaire pour l'accessibilité si l'image n'est pas décorative.",
-          type: 'string',
-          layout: { if: '!parent.data?.isPresentation' }
-        },
-        legend: {
-          type: 'string',
-          title: "Légende de l'image",
-          description: "Légende affichée en italique en dessous de l'image",
-        },
         zoomable: {
           type: 'boolean',
           title: 'Zoom au clic',
-          description: "Ne fonctionne que si aucun lien n'est associé à l'image",
-          layout: { if: '!parent.data?.banner' }
+          layout: { if: '!parent.data?.banner && !parent.data?.href' }
+        },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: "Lien au clic sur l'image",
+          layout: {
+            if: '!parent.data?.isPresentation',
+            comp: 'card'
+          }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
@@ -603,7 +601,7 @@ export default {
           title: 'Liens',
           items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
           layout: {
-            listEditMode: 'inline',
+            itemTitle: linkItemTitle,
             messages: { addItem: 'Ajouter un lien' }
           }
         },
@@ -729,14 +727,23 @@ export default {
         fullWidth: {
           type: 'boolean',
           title: 'Pleine largeur',
-          description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
+          description: "La section s'étendra sur toute la largeur de l'écran, en ignorant les marges latérales de la page. Seul le fond est impacté, le contenu restera contraint. Cette option n'a aucun effet si le bloc n'est pas à la racine de la page.",
           layout: 'switch'
         },
         background: {
           title: 'Configuration du fond',
           layout: 'card',
           properties: {
-            color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+              layout: {
+                props: { background: true },
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                }
+              }
+            },
             image: {
               type: 'object',
               required: ['_id', 'name', 'mimeType'],
@@ -854,11 +861,6 @@ export default {
           title: 'Titre',
           type: 'string',
         },
-        href: {
-          title: 'URL vers une autre page',
-          description: "La boite devient cliquable et pointe vers l'URL renseignée. Privilégiez une URL commençant par `/` pour les liens internes au portail afin d'éviter un rechargement complet du site lors de la navigation.",
-          type: 'string'
-        },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
@@ -870,14 +872,17 @@ export default {
           type: 'boolean',
           default: true
         },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
+          title: 'Lien au clic sur la boite',
+          layout: { comp: 'card' }
+        },
         actions: {
           title: 'Boutons de navigation',
           type: 'array',
           layout: {
-            messages: {
-              addItem: 'Ajouter un bouton de navigation'
-            },
-            listEditMode: 'inline'
+            itemTitle: linkItemTitle,
+            messages: { addItem: 'Ajouter un bouton de navigation' }
           },
           items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' }
         },
@@ -1306,7 +1311,16 @@ export default {
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: {
+            props: { background: true },
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            }
+          }
+        },
         btnPosition: {
           type: 'string',
           title: 'Position du bouton',

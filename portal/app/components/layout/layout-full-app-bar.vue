@@ -1,6 +1,7 @@
 <template>
   <v-app-bar
     ref="appBarRef"
+    :color="portalConfig.navBar.color"
     flat
   >
     <v-container

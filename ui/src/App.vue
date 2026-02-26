@@ -17,4 +17,12 @@ import uiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 
 /* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
 html { overflow-y: auto; }
+
+.text-two-lines {
+  white-space: unset !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 </style>

@@ -15,25 +15,25 @@ export default defineNitroPlugin(async (nitroApp) => {
       const trackerBase = portal.config.analytics?.tracker?.params.trackerBase
       if (trackerBase) {
         if (trackerBase.startsWith('//')) {
-          cspPatch['connect-src'] = [...existingCsp['connect-src'], 'http:' + trackerBase, 'https:' + trackerBase]
+          cspPatch['connect-src'] = [...(existingCsp['connect-src'] ?? []), 'http:' + trackerBase, 'https:' + trackerBase]
         } else {
-          cspPatch['connect-src'] = [...existingCsp['connect-src'], trackerBase]
+          cspPatch['connect-src'] = [...(existingCsp['connect-src'] ?? []), trackerBase]
         }
       }
     }
     if (portal.config.analytics?.tracker?.type === 'google-analytics-v4') {
       // cf https://content-security-policy.com/examples/google-analytics/
-      cspPatch['connect-src'] = [...existingCsp['connect-src'], 'www.google-analytics.com']
+      cspPatch['connect-src'] = [...(existingCsp['connect-src'] ?? []), 'www.google-analytics.com']
     }
     if (portal.config.analytics?.tracker?.type === 'piano') {
       const collectDomain = portal.config.analytics?.tracker?.params.collectDomain
-      if (collectDomain) cspPatch['connect-src'] = [...existingCsp['connect-src'], collectDomain]
+      if (collectDomain) cspPatch['connect-src'] = [...(existingCsp['connect-src'] ?? []), collectDomain]
     }
 
     // allow frame-ancestors on restricted domains
     if (globalFrameAncestors.length || (portal.config.allowedFrameAncestors && portal.config.allowedFrameAncestors.length > 0)) {
       cspPatch['frame-ancestors'] = [
-        ...existingCsp['frame-ancestors'],
+        ...(existingCsp['frame-ancestors'] ?? []),
         ...globalFrameAncestors,
         ...(portal.config.allowedFrameAncestors ?? [])
       ]
@@ -41,7 +41,7 @@ export default defineNitroPlugin(async (nitroApp) => {
 
     // allow frame-src for embedded iframes in the portal
     if (portal.config.allowedFrameSources && portal.config.allowedFrameSources.length > 0) {
-      cspPatch['frame-src'] = [...existingCsp['frame-src'], ...portal.config.allowedFrameSources]
+      cspPatch['frame-src'] = [...(existingCsp['frame-src'] ?? []), ...portal.config.allowedFrameSources]
     }
 
     if (Object.keys(cspPatch).length) {

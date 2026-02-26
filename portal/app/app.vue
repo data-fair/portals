@@ -58,4 +58,12 @@ useHead({
     max-width: map.get(v.$grid-breakpoints, 'lg') !important;
   }
 }
+
+.text-two-lines {
+  white-space: unset !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 </style>

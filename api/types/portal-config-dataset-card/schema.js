@@ -178,7 +178,11 @@ export default {
     },
     topics: {
       type: 'object',
-      title: 'Configuration des thématiques',
+      title: 'TopicsConfig',
+      'x-i18n-title': {
+        en: 'Topics configuration',
+        fr: 'Configuration des thématiques'
+      },
       layout: {
         comp: 'card',
         children: [
@@ -186,12 +190,13 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              { key: 'color', cols: { md: 6 } },
-              { key: 'elevation', cols: { md: 6 } },
-              { key: 'density', cols: { md: 6 } },
-              { key: 'rounded', cols: { md: 6 } },
-              { key: 'showIcon', cols: { md: 6 } },
-              { key: 'iconColor', cols: { md: 6 } }
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } },
+              { key: 'showIcon', cols: { md: 4 } },
+              { key: 'iconColor', cols: { md: 4 } }
             ]
           }
         ]
@@ -214,6 +219,9 @@ export default {
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
+        },
         showIcon: {
           type: 'boolean',
           title: "Afficher l'icône",
@@ -231,7 +239,11 @@ export default {
     },
     keywords: {
       type: 'object',
-      title: 'Configuration des mots-clés',
+      title: 'KeywordsConfig',
+      'x-i18n-title': {
+        en: 'Keywords configuration',
+        fr: 'Configuration des mots-clés'
+      },
       layout: {
         comp: 'card',
         children: [
@@ -239,10 +251,11 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'color',
-              'elevation',
-              'density',
-              'rounded'
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } }
             ]
           }
         ]
@@ -254,26 +267,19 @@ export default {
           layout: 'switch'
         },
         color: {
-          type: 'string',
-          title: 'Couleur',
-          layout: { cols: { md: 6 } },
-          oneOf: [
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
         }
       }
     }

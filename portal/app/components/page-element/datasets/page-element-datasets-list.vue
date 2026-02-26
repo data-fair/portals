@@ -44,6 +44,8 @@ if (!preview) {
     return results
   })
 } else {
+  const session = useSessionAuthenticated()
+
   // Mock data for preview
   displayedDatasets = computed(() => {
     return Array.from({ length: element.mode === 'custom' ? (element.datasets?.length || 1) : element.limit }, (_, i) => ({
@@ -53,7 +55,7 @@ if (!preview) {
       summary: 'Ceci est un exemple de jeu de données pour la prévisualisation.',
       dataUpdatedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      owner: { id: 'owner-1', name: "Organisation d'exemple", type: 'organization' },
+      owner: session.account.value,
       topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
       isMetaOnly: false
     }))

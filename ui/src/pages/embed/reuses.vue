@@ -82,8 +82,8 @@
                 </v-btn>
                 <v-btn
                   size="small"
-                  variant="elevated"
                   color="primary"
+                  variant="elevated"
                   :disabled="!formValid"
                   :loading="saveReuse.loading.value"
                   @click="saveReuse.execute()"
