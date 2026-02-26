@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import type { IngressManagerIngressInfo } from '../api/types/index.ts'
 import { assertReqInternalSecret } from '@data-fair/lib-express/index.js'
@@ -39,10 +40,10 @@ ${req.params.id}
   res.status(201).send()
 })
 
-app.listen(5697, (err) => {
+app.listen(process.env.DEV_INGRESS_PORT, (err) => {
   if (err) {
     console.error(err)
     process.exit(-1)
   }
-  console.log('Mock ingress manager listening on port 5697')
+  console.log(`Mock ingress manager listening on port ${process.env.DEV_INGRESS_PORT}`)
 })

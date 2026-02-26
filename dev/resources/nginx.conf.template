@@ -24,7 +24,7 @@
           if ($host = "localhost") {
             return 302 /portals-manager/dev;
           }
-          proxy_pass http://localhost:${DEV_UI_PORT};
+          proxy_pass http://localhost:${DEV_PORTAL_PORT};
         }
         
         location = /portals-manager/ {  
@@ -32,7 +32,7 @@
         }
 
         location / {
-          proxy_pass http://localhost:${DEV_UI_PORT};
+          proxy_pass http://localhost:${DEV_PORTAL_PORT};
         }
 
         location /portals-manager/api/ {

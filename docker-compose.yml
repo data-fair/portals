@@ -18,6 +18,7 @@ services:
       - PROCESSINGS_PORT=${PROCESSINGS_PORT}
       - DEV_API_PORT=${DEV_API_PORT}
       - DEV_UI_PORT=${DEV_UI_PORT}
+      - DEV_PORTAL_PORT=${DEV_PORTAL_PORT}
     volumes:
       - ./dev/resources/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
 

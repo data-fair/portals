@@ -29,8 +29,7 @@ export default defineNuxtConfig({
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
-    secretIgnoreRateLimiting: '',
-    elasticsearchNodes: 'http://localhost:9200'
+    secretIgnoreRateLimiting: ''
   },
   security: {
     nonce: true,

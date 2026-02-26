@@ -22,7 +22,7 @@ export default {
     ingress: 'secret-ingress'
   },
   portalUrlPattern: `http://{subdomain}.portals.localhost:${process.env.NGINX_PORT}`,
-  privateIngressManagerUrl: `http://localhost:${parseInt(process.env.DEV_API_PORT) - 200}`,
+  privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,
   ingressControllers: ['nginx'],
   upgradeRoot: '../'
 }
