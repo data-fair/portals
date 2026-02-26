@@ -43,6 +43,19 @@ export const createOrUpdateSearchPageRef = async (params: CreateSearchPageRefPar
   )
 }
 
+export const deleteSearchPageRef = async (
+  portalId: string,
+  resourceType: SearchPageRef['resource']['type'],
+  resourceId: string
+): Promise<void> => {
+  const refId = `${portalId}-${resourceType}-${resourceId}`
+
+  await mongo.searchPageRefs.updateOne(
+    { _id: refId },
+    { $set: { indexingStatus: 'toDelete' } }
+  )
+}
+
 export const reindexPage = async (page: Page, portalId: string): Promise<void> => {
   const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
   if (!portal || !portal.config.searchEngine?.active) return
@@ -318,5 +331,14 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
 }
 
 export const deletePageRef = async (ref: SearchPageRef): Promise<void> => {
-  console.log('Deleting page ref:', ref._id)
+  try {
+    await es.client.delete({
+      index: aliasName(ref.portal),
+      id: ref._id
+    })
+  } catch (err: any) {
+    if (err.meta?.statusCode !== 404) {
+      throw err
+    }
+  }
 }

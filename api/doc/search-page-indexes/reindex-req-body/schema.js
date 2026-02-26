@@ -16,6 +16,7 @@ const schema = jsonSchema(searchPageRefSchema)
   .pickProperties(['portal', 'owner', 'resource', 'public', 'privateAccess'])
   .removeProperties(['_id', 'indexedAt', 'indexingStatus', 'path'])
   .addProperty('resource', resourceSchema)
+  .addProperty('delete', { type: 'boolean', description: 'If true, marks the resource for deletion from the search index' })
   .set({ required: ['portal', 'owner', 'resource'] })
   .schema
 
