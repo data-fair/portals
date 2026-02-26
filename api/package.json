@@ -19,6 +19,7 @@
     "@data-fair/lib-utils": "^1.8.0",
     "@data-fair/portals-shared-markdown": "*",
     "@elastic/elasticsearch": "^9.3.1",
+    "cheerio": "^1.0.0",
     "config": "^4.0.0",
     "debug": "^4.4.1",
     "decode-ico": "^0.4.1",
