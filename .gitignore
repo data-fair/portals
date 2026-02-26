@@ -5,3 +5,5 @@ api/config/local-*
 ui/src/components/vjsf
 tmp/
 data/
+.env
+.vscode
