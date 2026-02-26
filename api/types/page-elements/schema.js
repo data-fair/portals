@@ -510,6 +510,11 @@ export default {
             }
           }
         },
+        scroll: {
+          type: 'boolean',
+          title: 'Activer le scroll',
+          description: "Permet de scroller dans le contenu de l'iframe"
+        },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
