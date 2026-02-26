@@ -96,6 +96,11 @@ router.post('', async (req, res, next) => {
 
   const creationDetails = await createPage(page, body.sourcePageId)
   sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
+
+  for (const portalId of page.portals) {
+    await reindexPage(page, portalId)
+  }
+
   res.status(201).json(page)
 })
 

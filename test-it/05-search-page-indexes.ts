@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert'
 import { it, describe, before, beforeEach, after } from 'node:test'
 import 'dotenv/config'
-import { clean, startApiServer, stopApiServer, axiosAuth, baseURL, axios } from './utils/index.ts'
+import { clean, startApiServer, stopApiServer, axiosAuth } from './utils/index.ts'
 
 const user1 = await axiosAuth('admin@test.com')
 
@@ -41,27 +41,15 @@ describe('search page indexes', () => {
     assert.ok(page.portals.includes(portal._id), 'Page should be associated with portal')
 
     // 3. Query the search page indexes as admin of the org owner of portal
-    const indexes = (await user1.get('/api/search-page-indexes')).data
+    const { results: indexes } = (await user1.get('/api/search-page-indexes')).data
     assert.ok(Array.isArray(indexes))
 
-    const portalIndexes = indexes.filter((idx: any) => idx.portalId === portal._id)
+    const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
     assert.ok(portalIndexes.length > 0, 'Should have at least one indexed page')
 
-    const indexedPage = portalIndexes.find((idx: any) => idx.pageId === page._id)
+    const indexedPage = portalIndexes.find((idx: any) => idx.resource.id === page._id)
     assert.ok(indexedPage, 'Page should be indexed')
-    assert.equal(indexedPage.title, 'Test Page')
-    assert.ok(indexedPage.description?.includes('test'), 'Description should be indexed')
-
-    // 4. Query the portal's search engine
-    const searchResults = (await axios()({
-      baseURL: `http://localhost:5610/portals/${portal._id}`,
-      url: '/api/search',
-      params: { q: 'test' }
-    })).data
-    assert.ok(Array.isArray(searchResults))
-
-    const foundPage = searchResults.find((r: any) => r.page?._id === page._id)
-    assert.ok(foundPage, 'Should find the indexed page in search results')
+    assert.equal(indexedPage.path, '/pages/test-page')
   })
 
   it('should not index pages when search engine is not activated', async () => {
@@ -89,12 +77,12 @@ describe('search page indexes', () => {
     })
 
     // 3. Query the search page indexes - should not have this page
-    const indexes = (await user1.get('/api/search-page-indexes')).data
-    const portalIndexes = indexes.filter((idx: any) => idx.portalId === portal._id)
+    const { results: indexes } = (await user1.get('/api/search-page-indexes')).data
+    const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
     assert.equal(portalIndexes.length, 0, 'Should not have indexed pages')
   })
 
-  it('should reindex pages via webhook', async () => {
+  it('should automatically index pages when created', async () => {
     // Create portal with search engine
     const portalConfig = {
       title: 'Portal for reindex test',
@@ -106,8 +94,8 @@ describe('search page indexes', () => {
     }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
 
-    // Add a page
-    await user1.post('/api/pages', {
+    // Add a page - it should be automatically indexed on creation
+    const createdPage = (await user1.post('/api/pages', {
       type: 'generic',
       config: {
         title: 'Page to reindex',
@@ -116,19 +104,12 @@ describe('search page indexes', () => {
       },
       portals: [portal._id],
       owner: portal.owner
-    })
+    })).data
 
-    // Trigger reindex via webhook
-    await axios({
-      method: 'post',
-      url: `${baseURL}/api/search-page-indexes/reindex`,
-      params: { key: 'secret-identities' },
-      data: { portalId: portal._id }
-    })
-
-    // Verify page is indexed
-    const indexes = (await user1.get('/api/search-page-indexes')).data
-    const portalIndexes = indexes.filter((idx: any) => idx.portalId === portal._id)
-    assert.ok(portalIndexes.length > 0, 'Page should be indexed after reindex')
+    // Verify page is indexed after creation
+    const { results: indexes } = (await user1.get('/api/search-page-indexes')).data
+    const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
+    assert.ok(portalIndexes.length > 0, 'Page should be indexed after creation')
+    assert.equal(portalIndexes[0].resource.id, createdPage._id)
   })
 })

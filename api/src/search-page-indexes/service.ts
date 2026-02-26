@@ -111,11 +111,11 @@ const getPagePath = (page: Page): string | undefined => {
       }
       break
     case 'generic':
-      if (pageConfig.slug) {
+      if (pageConfig.genericMetadata?.slug) {
         if (pageConfig.group?.slug) {
-          return `/groups/${pageConfig.group.slug}/pages/${pageConfig.slug}`
+          return `/groups/${pageConfig.group.slug}/pages/${pageConfig.genericMetadata.slug}`
         }
-        return `/pages/${pageConfig.slug}`
+        return `/pages/${pageConfig.genericMetadata.slug}`
       }
       break
     default:
@@ -150,7 +150,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     const pages = await mongo.pages.find({
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
-      portal: portal._id
+      portals: portal._id
     }).toArray() as Page[]
 
     for (const page of pages) {
@@ -172,7 +172,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     const reuses = await mongo.reuses.find({
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
-      portal: portal._id
+      portals: portal._id
     }).toArray() as Reuse[]
 
     for (const reuse of reuses) {
@@ -195,8 +195,8 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
       try {
         const datasetsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/datasets`, {
           params: {
-            size: 1000,
-            select: 'slug',
+            size: 10000,
+            select: 'id,slug',
             publicationSites: `data-fair-portals:${portal._id}`
           }
         })
@@ -204,10 +204,10 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
         for (const dataset of datasetsResponse.data.results || []) {
           if (!dataset.slug) continue
           searchPageRefs.push({
-            _id: `${portal._id}-dataset-${dataset.slug}`,
+            _id: `${portal._id}-dataset-${dataset.id}`,
             owner: portal.owner,
             portal: portal._id,
-            resource: { type: 'dataset', id: dataset.slug },
+            resource: { type: 'dataset', id: dataset.id },
             path: `/datasets/${dataset.slug}`,
             indexingStatus: 'toIndex'
           })
@@ -221,8 +221,8 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
       try {
         const applicationsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/applications`, {
           params: {
-            size: 1000,
-            select: 'slug',
+            size: 10000,
+            select: 'id,slug',
             publicationSites: `data-fair-portals:${portal._id}`
           }
         })
@@ -230,10 +230,10 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
         for (const application of applicationsResponse.data.results || []) {
           if (!application.slug) continue
           searchPageRefs.push({
-            _id: `${portal._id}-application-${application.slug}`,
+            _id: `${portal._id}-application-${application.id}`,
             owner: portal.owner,
             portal: portal._id,
-            resource: { type: 'application', id: application.slug },
+            resource: { type: 'application', id: application.id },
             path: `/applications/${application.slug}`,
             indexingStatus: 'toIndex'
           })
