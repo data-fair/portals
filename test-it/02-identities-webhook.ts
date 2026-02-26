@@ -1,8 +1,9 @@
 import { strict as assert } from 'node:assert'
 import { describe, it, before, beforeEach, after } from 'node:test'
+import 'dotenv/config'
 import { axios, axiosAuth, clean, startApiServer, stopApiServer } from './utils/index.ts'
 
-const axIdentities = axios({ params: { key: 'secret-identities' }, baseURL: 'http://localhost:8098/portals-manager' })
+const axIdentities = axios({ params: { key: 'secret-identities' }, baseURL: `http://localhost:${process.env.DEV_API_PORT}/portals-manager` })
 const user1 = await axiosAuth('admin@test.com')
 
 describe('identities webhooks', () => {
