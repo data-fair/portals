@@ -24,7 +24,7 @@ router.get('', async (req, res, next) => {
   const sort = findUtils.sort(params.sort || 'indexedAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
-  const filters = findUtils.query(params)
+  const filters = findUtils.query(params, { portal: 'portal' })
 
   if (params.status) {
     filters.indexingStatus = params.status

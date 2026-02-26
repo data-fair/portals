@@ -212,6 +212,22 @@
     </v-list-item>
   </custom-router-link>
 
+  <!-- Search indexes -->
+  <custom-router-link
+    v-if="session.state.user?.adminMode"
+    :to="`/portals/${portal.id}/search-indexes`"
+  >
+    <v-list-item link>
+      <template #prepend>
+        <v-icon
+          color="admin"
+          :icon="mdiMagnify"
+        />
+      </template>
+      {{ t('searchIndexes') }}
+    </v-list-item>
+  </custom-router-link>
+
   <!-- Manage whiteLabel -->
   <v-menu
     v-if="session.state.user?.adminMode"
@@ -307,7 +323,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
+import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit, mdiMagnify } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
 
@@ -422,6 +438,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     events: Events
     isReferenceUpdated: Reference status updated!
     manageDomainExposure: Manage domain exposure
+    searchIndexes: Search indexes
     no: No
     ownerChanged: Owner changed!
     portalDeleted: Portal deleted!
@@ -455,6 +472,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     events: Traçabilité
     isReferenceUpdated: Statut de référence mis à jour !
     manageDomainExposure: Exposition du domaine
+    searchIndexes: Indexation de recherche
     no: Non
     ownerChanged: Propriétaire changé !
     portalDeleted: Portail supprimé !
