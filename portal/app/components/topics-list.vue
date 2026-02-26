@@ -64,7 +64,7 @@ const { isFilters, config } = defineProps<{
   link?: LinkItem
   isFilters?: boolean
   centered?: boolean
-  config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'>
+  config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'> & { variant?: 'default' | 'tonal' | 'outlined' }
 }>()
 
 // Toggle selection in the topics query param when filters are enabled.
@@ -78,14 +78,20 @@ const toggle = (id: string) => {
 const isSelected = (id: string): boolean => isFilters && selected.value.includes(id)
 
 /*
- * Base Vuetify behavior:
- * - Selected: variant flat, chip uses resolved color.
- * - Not selected: variant outlined with surface background.
+ * Variant behavior:
+ * - If filters: use selection behavior (selected=flat, not selected=outlined).
+ * - If config.variant === 'default': use undefined (Vuetify default).
+ * - Otherwise: use configured variant.
  */
-const chipVariant = (topicId: string) => (isSelected(topicId) ? 'flat' : 'outlined')
+const chipVariant = (topicId: string) => {
+  if (isFilters) return isSelected(topicId) ? 'flat' : 'outlined'
+  if (!config?.variant || config.variant === 'default') return 'flat'
+  return config.variant
+}
 
-// Keep surface background and consistent width (by adding transparent border) when not selected.
+// Keep surface background and consistent width (by adding transparent border) when filters are enabled and not selected.
 const chipStyle = (topicId: string, topicColor?: string): Record<string, string> | undefined => {
+  if (chipVariant(topicId) !== 'outlined') return undefined
   if (isSelected(topicId)) return { border: '1px solid transparent' }
 
   const style: Record<string, string> = { backgroundColor: 'rgb(var(--v-theme-surface))' }

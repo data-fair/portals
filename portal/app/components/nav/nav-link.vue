@@ -5,8 +5,8 @@
   <v-btn
     :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
     :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
-    :target="link.type === 'external' && link.target ? '_blank' : undefined"
-    :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+    :target="link.target ? '_blank' : undefined"
+    :rel="link.target ? 'noopener' : undefined"
     :color="config?.color"
     :density="config?.density"
     :elevation="config?.elevation"

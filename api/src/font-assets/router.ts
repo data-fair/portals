@@ -1,11 +1,12 @@
+import type { FontAsset } from '#types/font-asset/index.js'
 import { Router } from 'express'
-import * as postReqBody from '#doc/font-assets/post-req-body/index.js'
+import * as postReqBody from '#doc/font-assets/post-req-body/index.ts'
+import * as patchReqBody from '#doc/font-assets/patch-req-body/index.ts'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
 import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { randomUUID } from 'node:crypto'
-import { type FontAsset } from '#types/font-asset/index.js'
 import { readFile, unlink } from 'node:fs/promises'
 
 const router = Router()
@@ -35,6 +36,7 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
   const file = req.file
   if (!file) throw httpError(400, 'missing font-asset file')
 
+  body.name = body.name.trim()
   const createdAt = new Date().toISOString()
   const fontAsset: FontAsset = {
     _id: randomUUID(),
@@ -48,6 +50,19 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
   await unlink(file.path)
 
   res.json({ ...fontAsset, data: undefined })
+})
+
+router.patch('/:id', async (req, res) => {
+  const session = reqSessionAuthenticated(req)
+  const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
+  if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
+  assertAccountRole(session, fontAsset.owner, 'admin')
+
+  const body = patchReqBody.returnValid(req.body, { name: 'body' })
+  body.name = body.name?.trim()
+  await mongo.fontAssets.updateOne({ _id: req.params.id }, { $set: body })
+
+  res.json({ ...fontAsset, ...body, data: undefined })
 })
 
 router.delete('/:id', async (req, res) => {

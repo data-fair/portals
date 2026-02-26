@@ -40,7 +40,7 @@ import type { Page, Group } from '#api/types/page'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
-const route = useRoute<'/pages/[groupId]/[pageId]/edit-config'>()
+const route = useRoute<'/pages/[pageId]/edit-config'>()
 
 const { pageFetch, patchPage } = usePageStore()
 
@@ -128,19 +128,11 @@ const saveDraft = useAsyncAction(async () => {
   await patchPage.execute({ draftConfig: editConfig.value })
 })
 
-const groupTitle = computed(() => {
-  const page = pageFetch.data.value
-  if (!page) return ''
-  if (page.type === 'generic' && page.config.genericMetadata?.group) return page.config.genericMetadata.group.title
-  return t('groupTitle.' + route.params.groupId)
-})
-
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([
     { text: t('pages'), to: '/pages' },
-    { text: groupTitle.value, to: `/pages/${route.params.groupId}` },
-    { text: page.title, to: `/pages/${route.params.groupId}/${route.params.pageId}` },
+    { text: page.title, to: `/pages/${route.params.pageId}` },
     { text: t('edit') }
   ])
 }, { immediate: true })
@@ -151,21 +143,11 @@ watch(pageFetch.data, (page) => {
   en:
     addItemMessage: Add a block to the page
     edit: Editing draft
-    groupTitle:
-      default: Other pages
-      event: Events
-      news: News
-      standard: Standard pages
     pages: Pages
 
   fr:
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon
-    groupTitle:
-      default: Autres pages
-      event: Événements
-      news: Actualités
-      standard: Pages standard
     pages: Pages
 
 </i18n>

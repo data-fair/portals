@@ -9,7 +9,7 @@
       cols="auto"
     >
       <v-chip
-        variant="outlined"
+        :variant="(!config?.variant || config.variant === 'default') ? 'flat' : config.variant"
         :color="config?.color"
         :density="config?.density"
         :elevation="config?.elevation"
@@ -26,11 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import type { TopicsElement } from '#api/types/page-config/index.js'
+import type { KeywordsConfig } from '#api/types/portal-config/index.ts'
 
 const { keywords } = defineProps<{
   keywords: string[]
-  config?: Pick < TopicsElement, 'color' | 'elevation' | 'density' | 'rounded'>
+  config?: Pick<KeywordsConfig, 'color' | 'elevation' | 'density' | 'rounded' | 'variant'>
 }>()
 
 </script>

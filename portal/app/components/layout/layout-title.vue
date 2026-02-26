@@ -1,0 +1,56 @@
+<template>
+  <component
+    :is="titleTag"
+    :class="[
+      'd-flex align-center',
+      element.centered ? 'justify-center' : undefined,
+      element.bold ? 'font-weight-bold' : undefined,
+      `text-${element.titleSize || 'h3'}`
+    ]"
+  >
+    <v-divider
+      v-if="element.line?.position === 'left'"
+      :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
+      class="border-opacity-100 mr-4"
+      thickness="4"
+      vertical
+    />
+    <v-icon
+      v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
+      :icon="element.icon.mdi?.svgPath || element.icon.custom"
+      :color="element.icon.color"
+      size="small"
+      class="mr-4"
+    />
+    <div :class="element.color ? `text-${element.color}` : undefined">
+      {{ element.content }}
+      <v-divider
+        v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
+        :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
+        :class="[
+          'border-opacity-100 mt-2',
+          element.centered ? 'mx-auto' : undefined
+        ]"
+        :length="element.line?.position === 'bottom-small' ? '80px' : '100%'"
+        thickness="4"
+      />
+    </div>
+  </component>
+
+  <v-divider
+    v-if="element.line?.position === 'bottom-large'"
+    :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
+    class="border-opacity-100 mt-2"
+    thickness="4"
+    length="100%"
+  />
+</template>
+
+<script setup lang="ts">
+import type { TitleElement } from '#api/types/page-config'
+
+const { element } = defineProps<{ element: TitleElement }>()
+
+const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
+
+</script>

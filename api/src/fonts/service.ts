@@ -18,9 +18,17 @@ const unicodeRanges = {
   vietnamese: 'U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB'
 }
 
+const fontFormatFromUrl = (url: string) => {
+  if (url.endsWith('.otf')) return 'opentype'
+  if (url.endsWith('.ttf')) return 'truetype'
+  return 'woff2'
+}
+
 export const makeFontCss = (font: Font) => {
   let css = ''
   for (const variant of font.variants) {
+    const fontUrl = variant.woff2Url
+    const format = fontFormatFromUrl(fontUrl)
     css += `
 /* ${variant.subset} */
 @font-face {
@@ -28,7 +36,7 @@ export const makeFontCss = (font: Font) => {
   font-style: ${variant.style};
   font-weight: ${variant.weightRange};
   font-display: swap;
-  src: url(${variant.woff2Url}) format('woff2');
+  src: url(${fontUrl}) format('${format}');
   unicode-range: ${unicodeRanges[variant.subset]};
 }
 `
@@ -52,10 +60,13 @@ export const getFontFamilyCss = async (owner: AccountKeys, familyName: string, m
     return makeFontCss(font)
   }
   const assets = (await mongo.fontAssets.find({ 'owner.type': owner.type, 'owner.id': owner.id, name: familyName })
-    .project({ _id: 1, subset: 1, weightRange: 1, style: 1 }).toArray()) as any[] as Pick<FontAsset, '_id' | 'subset' | 'weightRange' | 'style'>[]
+    .project({ _id: 1, subset: 1, weightRange: 1, style: 1, 'file.name': 1 }).toArray()) as any[] as Pick<FontAsset, '_id' | 'subset' | 'weightRange' | 'style' | 'file'>[]
   const font: Font = {
     name: familyName,
-    variants: assets.map(asset => ({ ...asset, woff2Url: managerUrl ? `/portals-manager/api/font-assets/${asset._id}/data` : `/portal/api/font-assets/${asset._id}` }))
+    variants: assets.map(asset => {
+      const encodedName = encodeURIComponent(asset.file.name)
+      return { ...asset, woff2Url: managerUrl ? `/portals-manager/api/font-assets/${asset._id}/data/${encodedName}` : `/portal/api/font-assets/${asset._id}/${encodedName}` }
+    })
   }
   return makeFontCss(font)
 }

@@ -6,16 +6,12 @@
     >
       <v-card-item class="text-primary">
         <template #title>
-          <span class="font-weight-bold">
+          <span
+            :title="portal.config.title"
+            class="font-weight-bold"
+          >
             {{ portal.config.title }}
           </span>
-          <v-tooltip
-            v-if="portal.config.title.length > 20"
-            activator="parent"
-            location="top left"
-            open-delay="300"
-            :text="portal.config.title"
-          />
         </template>
 
         <!-- Owner -->
@@ -32,11 +28,12 @@
           density="compact"
           style="background-color: inherit;"
         >
-          <!-- Description (wrapped after 2 lines)-->
-          <v-list-item v-if="portal.config.description">
-            <v-list-item-title style="white-space: unset; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;line-clamp: 2;">
-              {{ portal.config.description }}
-            </v-list-item-title>
+          <!-- Domain name -->
+          <v-list-item v-if="portal.ingress?.url">
+            <template #prepend>
+              <v-icon :icon="mdiWeb" />
+            </template>
+            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
           </v-list-item>
 
           <!-- Private / Public -->
@@ -53,12 +50,11 @@
             {{ t('public') }}
           </v-list-item>
 
-          <!-- Domain name -->
-          <v-list-item v-if="portal.ingress?.url">
-            <template #prepend>
-              <v-icon :icon="mdiWeb" />
-            </template>
-            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
+          <!-- Description (wrapped after 2 lines)-->
+          <v-list-item v-if="portal.config.description">
+            <v-list-item-title class="text-two-lines">
+              {{ portal.config.description }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-card-text>

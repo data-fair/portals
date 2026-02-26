@@ -153,12 +153,13 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              { key: 'color', cols: { md: 6 } },
-              { key: 'elevation', cols: { md: 6 } },
-              { key: 'density', cols: { md: 6 } },
-              { key: 'rounded', cols: { md: 6 } },
-              { key: 'showIcon', cols: { md: 6 } },
-              { key: 'iconColor', cols: { md: 6 } }
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } },
+              { key: 'showIcon', cols: { md: 4 } },
+              { key: 'iconColor', cols: { md: 4 } }
             ]
           }
         ]
@@ -180,6 +181,9 @@ export default {
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
         },
         showIcon: {
           type: 'boolean',
