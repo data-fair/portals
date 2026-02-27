@@ -160,21 +160,21 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
   const searchPageRefs: SearchPageRef[] = []
 
   if (searchTypes.includes('page')) {
-    const pages = await mongo.pages.find({
+    const pagesCursor = mongo.pages.find({
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
       portals: portal._id
-    }).toArray() as Page[]
+    })
 
-    for (const page of pages) {
+    for await (const page of pagesCursor) {
       const path = getPagePath(page)
       if (!path) continue
 
       searchPageRefs.push({
-        _id: `${portal._id}-page-${page._id}`,
+        _id: `${portal._id}-page-${(page as Page)._id}`,
         owner: portal.owner,
         portal: portal._id,
-        resource: { type: 'page', id: page._id },
+        resource: { type: 'page', id: (page as Page)._id },
         path,
         indexingStatus: 'toIndex'
       })
@@ -182,19 +182,19 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
   }
 
   if (searchTypes.includes('reuse')) {
-    const reuses = await mongo.reuses.find({
+    const reusesCursor = mongo.reuses.find({
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
       portals: portal._id
-    }).toArray() as Reuse[]
+    })
 
-    for (const reuse of reuses) {
+    for await (const reuse of reusesCursor) {
       searchPageRefs.push({
-        _id: `${portal._id}-reuse-${reuse._id}`,
+        _id: `${portal._id}-reuse-${(reuse)._id}`,
         owner: portal.owner,
         portal: portal._id,
-        resource: { type: 'reuse', id: reuse._id },
-        path: `/reuses/${reuse.slug || reuse._id}`,
+        resource: { type: 'reuse', id: (reuse)._id },
+        path: `/reuses/${(reuse as Reuse).slug || (reuse)._id}`,
         indexingStatus: 'toIndex'
       })
     }
@@ -206,24 +206,32 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
 
     if (searchTypes.includes('dataset')) {
       try {
-        const datasetsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/datasets`, {
-          params: {
-            size: 10000,
-            select: 'id,slug',
-            publicationSites: `data-fair-portals:${portal._id}`
-          }
-        })
-
-        for (const dataset of datasetsResponse.data.results || []) {
-          if (!dataset.slug) continue
-          searchPageRefs.push({
-            _id: `${portal._id}-dataset-${dataset.id}`,
-            owner: portal.owner,
-            portal: portal._id,
-            resource: { type: 'dataset', id: dataset.id },
-            path: `/datasets/${dataset.slug}`,
-            indexingStatus: 'toIndex'
+        let page = 1
+        let hasMore = true
+        while (hasMore) {
+          const datasetsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/datasets`, {
+            params: {
+              size: 20,
+              page,
+              select: 'id,slug',
+              publicationSites: `data-fair-portals:${portal._id}`
+            }
           })
+
+          for (const dataset of datasetsResponse.data.results || []) {
+            if (!dataset.slug) continue
+            searchPageRefs.push({
+              _id: `${portal._id}-dataset-${dataset.id}`,
+              owner: portal.owner,
+              portal: portal._id,
+              resource: { type: 'dataset', id: dataset.id },
+              path: `/datasets/${dataset.slug}`,
+              indexingStatus: 'toIndex'
+            })
+          }
+
+          hasMore = datasetsResponse.data.results && datasetsResponse.data.results.length === 20
+          page++
         }
       } catch (err) {
         console.error('Error fetching datasets for search indexing:', err)
@@ -232,24 +240,32 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
 
     if (searchTypes.includes('application')) {
       try {
-        const applicationsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/applications`, {
-          params: {
-            size: 10000,
-            select: 'id,slug',
-            publicationSites: `data-fair-portals:${portal._id}`
-          }
-        })
-
-        for (const application of applicationsResponse.data.results || []) {
-          if (!application.slug) continue
-          searchPageRefs.push({
-            _id: `${portal._id}-application-${application.id}`,
-            owner: portal.owner,
-            portal: portal._id,
-            resource: { type: 'application', id: application.id },
-            path: `/applications/${application.slug}`,
-            indexingStatus: 'toIndex'
+        let page = 1
+        let hasMore = true
+        while (hasMore) {
+          const applicationsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/applications`, {
+            params: {
+              size: 20,
+              page,
+              select: 'id,slug',
+              publicationSites: `data-fair-portals:${portal._id}`
+            }
           })
+
+          for (const application of applicationsResponse.data.results || []) {
+            if (!application.slug) continue
+            searchPageRefs.push({
+              _id: `${portal._id}-application-${application.id}`,
+              owner: portal.owner,
+              portal: portal._id,
+              resource: { type: 'application', id: application.id },
+              path: `/applications/${application.slug}`,
+              indexingStatus: 'toIndex'
+            })
+          }
+
+          hasMore = applicationsResponse.data.results && applicationsResponse.data.results.length === 20
+          page++
         }
       } catch (err) {
         console.error('Error fetching applications for search indexing:', err)
