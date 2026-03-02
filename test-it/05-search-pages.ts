@@ -41,7 +41,7 @@ describe('search page indexes', () => {
     assert.ok(page.portals.includes(portal._id), 'Page should be associated with portal')
 
     // 3. Query the search page indexes as admin of the org owner of portal
-    const { results: indexes } = (await user1.get('/api/search-page')).data
+    const { results: indexes } = (await user1.get('/api/search-pages')).data
     assert.ok(Array.isArray(indexes))
 
     const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
@@ -77,7 +77,7 @@ describe('search page indexes', () => {
     })
 
     // 3. Query the search page indexes - should not have this page
-    const { results: indexes } = (await user1.get('/api/search-page')).data
+    const { results: indexes } = (await user1.get('/api/search-pages')).data
     const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
     assert.equal(portalIndexes.length, 0, 'Should not have indexed pages')
   })
@@ -107,7 +107,7 @@ describe('search page indexes', () => {
     })).data
 
     // Verify page is indexed after creation
-    const { results: indexes } = (await user1.get('/api/search-page')).data
+    const { results: indexes } = (await user1.get('/api/search-pages')).data
     const portalIndexes = indexes.filter((idx: any) => idx.portal === portal._id)
     assert.ok(portalIndexes.length > 0, 'Page should be indexed after creation')
     assert.equal(portalIndexes[0].resource.id, createdPage._id)

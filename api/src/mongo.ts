@@ -43,7 +43,7 @@ export class PortalsMongo {
   }
 
   get searchPages () {
-    return mongo.db.collection<SearchPage>('search-page')
+    return mongo.db.collection<SearchPage>('search-pages')
   }
 
   async connect () {

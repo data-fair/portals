@@ -13,7 +13,7 @@ import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyCss } from '../fonts/service.ts'
-import { initSearchEngine } from '../search-page/service.ts'
+import { initSearchEngine } from '../search-pages/service.ts'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')

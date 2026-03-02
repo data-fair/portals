@@ -15,7 +15,7 @@ import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
 import fontsRouter from './fonts/router.ts'
 import fontAssetsRouter from './font-assets/router.ts'
-import searchPageRouter from './search-page/router.ts'
+import searchPagesRouter from './search-pages/router.ts'
 
 export const app = express()
 
@@ -49,7 +49,7 @@ app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
-app.use('/api/search-page', searchPageRouter)
+app.use('/api/search-pages', searchPagesRouter)
 
 app.get('/api/ping', async (req, res) => {
   const status = await getStatus(req)

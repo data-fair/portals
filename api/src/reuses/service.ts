@@ -7,7 +7,7 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
-import { deleteSearchPage } from '../search-page/service.ts'
+import { deleteSearchPage } from '../search-pages/service.ts'
 
 const debug = debugModule('reuses')
 

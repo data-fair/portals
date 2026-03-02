@@ -8,7 +8,7 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
-import { deleteSearchPage } from '../search-page/service.ts'
+import { deleteSearchPage } from '../search-pages/service.ts'
 
 const debug = debugModule('pages')
 
