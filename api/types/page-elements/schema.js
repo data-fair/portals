@@ -510,6 +510,11 @@ export default {
             }
           }
         },
+        scroll: {
+          type: 'boolean',
+          title: 'Activer le scroll',
+          description: "Permet de scroller dans le contenu de l'iframe"
+        },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
@@ -861,6 +866,16 @@ export default {
           title: 'Titre',
           type: 'string',
         },
+        contentAlign: {
+          type: 'string',
+          title: 'Alignement vertical des blocs dans la boite',
+          description: "Utile quand la boite est placée dans un bloc colonnes ou une grille avec l'option \"Étendre les blocs\" activée, cette option permet de choisir où se positionnent les blocs ajoutés à la boite dans l'espace disponible.",
+          oneOf: [
+            { const: 'start', title: 'En haut' },
+            { const: 'center', title: 'Au centre' },
+            { const: 'end', title: 'En bas' }
+          ]
+        },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
@@ -871,6 +886,56 @@ export default {
           title: 'Bordure',
           type: 'boolean',
           default: true
+        },
+        thumbnail: {
+          type: 'object',
+          title: "Configuration de l'image",
+          layout: { comp: 'card' },
+          properties: {
+            image: {
+              type: 'object',
+              title: 'Image',
+              required: ['_id', 'name', 'mimeType'],
+              layout: {
+                slots: {
+                  component: {
+                    name: 'image-upload',
+                    props: { width: 1280, label: 'Image' }
+                  }
+                }
+              },
+              properties: {
+                _id: {
+                  type: 'string'
+                },
+                name: {
+                  type: 'string'
+                },
+                mimeType: {
+                  type: 'string'
+                },
+                mobileAlt: {
+                  type: 'boolean'
+                }
+              }
+            },
+            location: {
+              type: 'string',
+              title: "Position de l'image sur la carte",
+              default: 'center',
+              oneOf: [
+                { const: 'top', title: 'En haut' },
+                { const: 'center', title: 'Sous le titre' }
+              ]
+            },
+            crop: {
+              type: 'boolean',
+              title: "Recadrer l'image pour un rendu uniforme",
+              description: "Si désactivé, l'image gardera son ratio d'origine",
+              layout: 'switch',
+              default: true
+            }
+          }
         },
         link: {
           $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/simpleLinkItem',
@@ -1960,7 +2025,7 @@ export default {
           description: 'Sélectionnez manuellement les jeux de données à afficher.',
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2042,7 +2107,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2084,7 +2149,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2162,7 +2227,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title&size=20',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2369,7 +2434,7 @@ export default {
           description: 'Sélectionnez manuellement les visualisations à afficher.',
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20',
+              url: '/data-fair/api/v1/applications?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -2439,7 +2504,7 @@ export default {
           required: ['id', 'title', 'slug'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug&size=20',
+              url: '/data-fair/api/v1/applications?mine=true&select=id,title,slug&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',

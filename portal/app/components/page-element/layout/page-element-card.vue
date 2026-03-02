@@ -27,10 +27,43 @@
       backgroundPosition: 'center',
     } : undefined"
   >
-    <v-card-title v-if="element.title">
+    <!-- Thumbnail (Top Location) -->
+    <v-img
+      v-if="element.thumbnail?.location === 'top' && element.thumbnail?.image"
+      :src="getPageImageSrc(element.thumbnail.image, false)"
+      :cover="element.thumbnail.crop"
+      class="flex-grow-0"
+      height="170"
+      aria-hidden="true"
+    />
+
+    <!--
+      white-space: unset; => remove default nowrap from v-card-title
+    -->
+    <v-card-title
+      v-if="element.title"
+      class="font-weight-bold"
+      style="white-space: unset;"
+    >
       {{ element.title }}
     </v-card-title>
-    <v-spacer />
+
+    <!-- Thumbnail (Center Location) -->
+    <v-img
+      v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
+      :src="getPageImageSrc(element.thumbnail.image, false)"
+      :cover="element.thumbnail.crop"
+      class="flex-grow-0"
+      height="170"
+      aria-hidden="true"
+    />
+
+    <!--
+      v-spacer works with "two columns stretch" layout
+      no contentAlign falls back to 'center' for backward compatibility.
+    -->
+    <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'end'" />
+
     <v-card-text class="flex-grow-0">
       <slot
         name="page-elements"
@@ -39,7 +72,9 @@
         add-item-message="Ajouter un bloc à la boite"
       />
     </v-card-text>
-    <v-spacer />
+
+    <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'start'" />
+
     <!--
       min-height: auto => remove default v-card-actions min-height
     -->
@@ -64,6 +99,7 @@
         />
       </v-defaults-provider>
     </v-card-actions>
+
   </v-card>
 </template>
 

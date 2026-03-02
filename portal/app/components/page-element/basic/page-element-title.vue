@@ -1,5 +1,5 @@
 <template>
-  <div :class="`my-${margins[element.titleSize] || '4'}`">
+  <div :class="marginClass">
     <a
       v-if="element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
@@ -27,10 +27,19 @@
 <script setup lang="ts">
 import type { TitleElement } from '#api/types/page-config'
 
-const { element } = defineProps<{ element: TitleElement }>()
+const { element, context } = defineProps<{
+  element: TitleElement
+  context?: { isRoot: boolean, index: number }
+}>()
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
+
+const marginClass = computed(() => {
+  const m = margins[element.titleSize] || '4'
+  const noTopMargin = !context?.isRoot && context?.index === 0
+  return noTopMargin ? `mb-${m}` : `my-${m}`
+})
 
 const margins = {
   h6: '2',

@@ -1,9 +1,11 @@
 <template>
+  <!-- Eager to prevent ARIA errors-->
   <v-menu
+    :close-on-content-click="false"
     max-height="400"
     max-width="500"
     width="100%"
-    :close-on-content-click="false"
+    eager
   >
     <template #activator="{ props }">
       <v-btn

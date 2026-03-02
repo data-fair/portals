@@ -27,10 +27,10 @@ export default defineEventHandler(async (event) => {
   const fullUrl = (path: string): string => { return baseUrl + path }
 
   // Helper function to resolve link from menu item
-  const resolveLink = (item: MenuItem | LinkItem): string | undefined => {
-    switch (item.type) {
+  const resolveLink = (link: LinkItem | MenuItem): string | undefined => {
+    switch (link.type) {
       case 'standard': {
-        switch (item.subtype) {
+        switch (link.subtype) {
           case 'home': return '/'
           case 'contact': return '/contact'
           case 'privacy-policy': return '/privacy-policy'
@@ -41,30 +41,18 @@ export default defineEventHandler(async (event) => {
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
+          case 'news': return '/news'
+          case 'event': return '/event'
+          case 'sitemap': return '/sitemap'
+          case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
         }
       }
-      case 'event': {
-        const slug = item.pageRef?.slug
-        if (!slug) return undefined
-        return `/events/${slug}`
-      }
-      case 'news': {
-        const slug = item.pageRef?.slug
-        if (!slug) return undefined
-        return `/news/${slug}`
-      }
-      case 'generic': {
-        const slug = item.pageRef?.slug
-        if (!slug) return undefined
-        const groupSlug = item.pageRef?.group?.slug
-        if (groupSlug) {
-          return `/groups/${groupSlug}/pages/${slug}`
-        }
-        return `/pages/${slug}`
-      }
-      default:
-        return undefined
+      case 'event': return link.pageRef ? `/event/${link.pageRef.slug}` : undefined
+      case 'news': return link.pageRef ? `/news/${link.pageRef.slug}` : undefined
+      case 'generic': return link.pageRef ? `/pages${link.pageRef.group ? `-${link.pageRef.group.slug}` : ''}/${link.pageRef.slug}` : undefined
+      case 'external': return link.href
+      default: return undefined
     }
   }
 

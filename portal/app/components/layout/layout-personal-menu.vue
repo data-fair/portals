@@ -40,7 +40,11 @@
       </v-btn>
     </template>
 
-    <v-menu :close-on-content-click="false">
+      <!-- Eager to prevent ARIA errors-->
+      <v-menu
+        :close-on-content-click="false"
+        eager
+      >
       <template #activator="{ props }">
         <v-btn
           v-bind="props"
