@@ -36,7 +36,7 @@
             <v-icon :icon="resourceTypeIcon(item.raw.resourceType)" />
           </template>
           <template #subtitle>
-            <span v-if="item.raw.description" v-html="item.raw.description" />
+            <span v-if="item.raw.summary">{{ item.raw.summary }}</span>
           </template>
         </v-list-item>
       </template>
@@ -88,7 +88,7 @@ const performSearch = async (query: string) => {
     })
     results.value = (data.results as any[]).map(hit => ({
       title: hit._source.title,
-      description: hit.highlight?.description?.[0] || hit._source.description?.slice(0, 100),
+      summary: hit._source.description?.slice(0, 100),
       path: hit._source.path,
       resourceType: hit._source.resourceType
     }))
@@ -140,10 +140,3 @@ en:
   searchLabel: Rechercher...
   noResults: Aucun résultat trouvé
 </i18n>
-
-<style scoped>
-:deep(.search-highlight) {
-  background-color: rgba(255, 255, 0, 0.3);
-  font-weight: bold;
-}
-</style>

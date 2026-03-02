@@ -30,15 +30,6 @@ const buildQuery = (query: string) => ({
         }
       ]
     }
-  },
-  highlight: {
-    pre_tags: ['<span class="search-highlight">'],
-    post_tags: ['</span>'],
-    fields: {
-      title: { number_of_fragments: 0 },
-      description: { number_of_fragments: 2, fragment_size: 100 },
-      content: { number_of_fragments: 1, fragment_size: 100 }
-    }
   }
 })
 
@@ -102,8 +93,7 @@ export default defineEventHandler(async (event) => {
     return {
       results: results.hits.hits.map((hit: any) => ({
         _id: hit._id,
-        _source: hit._source,
-        highlight: hit.highlight
+        _source: hit._source
       })),
       total: results.hits.total
     }
