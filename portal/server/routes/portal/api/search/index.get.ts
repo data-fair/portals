@@ -1,8 +1,9 @@
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { session } from '~~/server/plugins/session'
 import { portalEs } from '~~/server/plugins/es'
+import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
 
-const buildQuery = (query: string) => ({
+export const buildQuery = (query: string) => ({
   query: {
     bool: {
       should: [
@@ -91,9 +92,11 @@ export default defineEventHandler(async (event) => {
     } as any)
 
     return {
-      results: results.hits.hits.map((hit: any) => ({
-        _id: hit._id,
-        _source: hit._source
+      results: results.hits.hits.map((hit: any): SearchEngineResult => ({
+        path: hit._source.path,
+        title: hit._source.title,
+        description: hit._source.description?.slice(0, 100),
+        resourceType: hit._source.resourceType
       })),
       total: results.hits.total
     }

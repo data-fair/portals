@@ -36,7 +36,7 @@
             <v-icon :icon="resourceTypeIcon(item.raw.resourceType)" />
           </template>
           <template #subtitle>
-            <span v-if="item.raw.summary">{{ item.raw.summary }}</span>
+            <span v-if="item.raw.description">{{ item.raw.description }}</span>
           </template>
         </v-list-item>
       </template>
@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import { mdiMagnify, mdiFileDocument, mdiFolder, mdiDatabase, mdiApps } from '@mdi/js'
 import type { SearchElement } from '#api/types/page-elements/index.ts'
+import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
 
 const { element } = defineProps<{
   element: SearchElement
@@ -69,8 +70,8 @@ const portal = usePortal()
 const searchEngineActive = computed(() => portal.value?.config?.searchEngine?.active)
 
 const searchQuery = ref('')
-const selectedResult = ref<any>(null)
-const results = ref<any[]>([])
+const selectedResult = ref<SearchEngineResult | null>(null)
+const results = ref<SearchEngineResult[]>([])
 const loading = ref(false)
 
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null
@@ -83,15 +84,10 @@ const performSearch = async (query: string) => {
 
   loading.value = true
   try {
-    const data = await $fetch('/api/search', {
+    const data = await $fetch<{ results: SearchEngineResult[] }>('/api/search', {
       params: { q: query }
     })
-    results.value = (data.results as any[]).map(hit => ({
-      title: hit._source.title,
-      summary: hit._source.description?.slice(0, 100),
-      path: hit._source.path,
-      resourceType: hit._source.resourceType
-    }))
+    results.value = data.results
   } catch (e) {
     console.error('Search error:', e)
     results.value = []
@@ -111,7 +107,7 @@ watch(searchQuery, (newQuery) => {
   }, 300)
 })
 
-const onSelect = (result: any) => {
+const onSelect = (result: SearchEngineResult) => {
   if (!result || preview) return
 
   const baseUrl = portal.value?.ingress?.url || window.location.origin

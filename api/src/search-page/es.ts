@@ -62,34 +62,3 @@ export const indexDefinition = (portal: Portal, index: string): IndicesCreateReq
     }
   }
 })
-
-export const buildQuery = (query: string) => ({
-  query: {
-    bool: {
-      should: [
-        {
-          multi_match: {
-            query,
-            type: 'bool_prefix',
-            fields: [
-              'title^3',
-              'title._2gram^3',
-              'title._3gram^3',
-              'description^2',
-              'description._2gram^2',
-              'description._3gram^2'
-            ],
-            operator: 'and'
-          }
-        },
-        {
-          match: {
-            content: {
-              query
-            }
-          }
-        }
-      ]
-    }
-  }
-})
