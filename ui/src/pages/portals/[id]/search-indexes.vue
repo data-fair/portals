@@ -61,7 +61,7 @@ const route = useRoute<'/portals/[id]/search-indexes'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 
-const searchIndexesFetch = useFetch<{ results: any[], count: number }>($apiPath + '/search-page-indexes', {
+const searchIndexesFetch = useFetch<{ results: any[], count: number }>($apiPath + '/search-page', {
   query: {
     portal: route.params.id,
     size: 1000

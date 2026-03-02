@@ -1,7 +1,7 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/search-page-ref',
+  $id: 'https://github.com/data-fair/portals/search-page',
   'x-exports': ['types', 'validate'],
-  title: 'Search page ref',
+  title: 'Search page',
   type: 'object',
   additionalProperties: false,
   required: ['_id', 'owner', 'resource', 'portal', 'path'],

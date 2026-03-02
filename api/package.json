@@ -14,6 +14,7 @@
     "#types/*": "./types/*"
   },
   "dependencies": {
+    "@data-fair/types-portals": "*",
     "@data-fair/lib-express": "^1.20.8",
     "@data-fair/lib-node": "^2.9.1",
     "@data-fair/lib-utils": "^1.8.0",

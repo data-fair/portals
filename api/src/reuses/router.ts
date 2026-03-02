@@ -8,7 +8,7 @@ import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
-import { reindexReuse } from '../search-page-indexes/service.ts'
+import { reindexReuse } from '../search-page/service.ts'
 
 const router = Router()
 export default router

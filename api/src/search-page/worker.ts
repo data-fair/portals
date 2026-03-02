@@ -11,14 +11,14 @@ const loop = async () => {
   // eslint-disable-next-line no-unmodified-loop-condition
   while (!stopped) {
     if (!acquiredLock) {
-      acquiredLock = await locks.acquire('search-page-indexes-loop')
+      acquiredLock = await locks.acquire('search-page-loop')
       if (!acquiredLock) {
         await new Promise(resolve => setTimeout(resolve, 5000))
         continue
       }
     }
 
-    const ref = await mongo.searchPageRefs.findOne({ indexingStatus: { $in: ['toIndex', 'toDelete'] } })
+    const ref = await mongo.searchPages.findOne({ indexingStatus: { $in: ['toIndex', 'toDelete'] } })
 
     if (!ref) {
       await new Promise(resolve => setTimeout(resolve, 5000))
@@ -28,19 +28,19 @@ const loop = async () => {
     try {
       if (ref.indexingStatus === 'toIndex') {
         await indexPageRef(ref)
-        await mongo.searchPageRefs.updateOne(
+        await mongo.searchPages.updateOne(
           { _id: ref._id },
           { $set: { indexingStatus: 'ok', indexedAt: new Date().toISOString() } }
         )
       } else if (ref.indexingStatus === 'toDelete') {
         await deletePageRef(ref)
-        await mongo.searchPageRefs.deleteOne({ _id: ref._id })
+        await mongo.searchPages.deleteOne({ _id: ref._id })
       }
     } catch (err) {
-      internalError('search-page-indexes-worker', err)
+      internalError('search-page-worker', err)
     }
   }
-  await locks.release('search-page-indexes-loop')
+  await locks.release('search-page-loop')
 }
 
 export const startWorker = () => {

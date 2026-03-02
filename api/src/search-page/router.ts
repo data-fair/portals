@@ -3,8 +3,8 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import config from '#config'
-import * as reindexReqBody from '#doc/search-page-indexes/reindex-req-body/index.js'
-import { createOrUpdateSearchPageRef, deleteSearchPageRef } from './service.ts'
+import * as postSearchPage from '@data-fair/types-portals/post-search-page/index.js'
+import { createOrUpdateSearchPage } from './service.ts'
 
 const router = Router()
 export default router
@@ -34,33 +34,30 @@ router.get('', async (req, res, next) => {
   const queryWithFilters = { ...filters, ...query }
 
   const [count, results] = await Promise.all([
-    mongo.searchPageRefs.countDocuments(queryWithFilters),
-    mongo.searchPageRefs.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
+    mongo.searchPages.countDocuments(queryWithFilters),
+    mongo.searchPages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
   ])
 
   res.json({ results, count })
 })
 
-router.post('/reindex', async (req, res, next) => {
-  if (!config.secretKeys.searchPageIndex) throw new Error('searchPageIndex secret is missing')
-  assertReqInternalSecret(req, config.secretKeys.searchPageIndex)
+router.post('', async (req, res, next) => {
+  if (!config.secretKeys.searchPage) throw new Error('searchPage secret is missing')
+  assertReqInternalSecret(req, config.secretKeys.searchPage)
 
-  const body = reindexReqBody.returnValid(req.body, { name: 'body' })
+  const body = postSearchPage.returnValid(req.body, { name: 'body' })
 
-  if (body.delete) {
-    await deleteSearchPageRef(body.portal, body.resource.type, body.resource.id)
-  } else {
-    const path = `/${body.resource.type}s/${body.resource.id}`
+  const path = body.indexingStatus !== 'toDelete' ? `/${body.resource.type}s/${body.resource.id}` : undefined
 
-    await createOrUpdateSearchPageRef({
-      portal: body.portal,
-      owner: body.owner,
-      resource: body.resource,
-      path,
-      public: body.public,
-      privateAccess: body.privateAccess
-    })
-  }
+  await createOrUpdateSearchPage({
+    portal: body.portal,
+    owner: body.owner,
+    resource: body.resource,
+    path,
+    public: body.public,
+    privateAccess: body.privateAccess,
+    indexingStatus: body.indexingStatus
+  })
 
   res.status(204).send()
 })

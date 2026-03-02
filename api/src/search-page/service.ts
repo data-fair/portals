@@ -8,49 +8,53 @@ import es from '#es'
 import type { Portal } from '#types/portal/index.js'
 import type { Page } from '#types/page/index.js'
 import type { Reuse } from '#types/reuse/index.js'
-import type { SearchPageRef } from '#types/search-page-ref/index.js'
+import type { SearchPage } from '@data-fair/types-portals/index.ts'
 import { indexDefinition } from './es.ts'
 
 const newIndexName = (portalId: string) => `${aliasName(portalId)}--${Date.now()}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
 
-export type CreateSearchPageRefParams = {
+export type CreateSearchPageParams = {
   portal: string
-  owner: SearchPageRef['owner']
-  resource: SearchPageRef['resource']
-  path: string
+  owner: SearchPage['owner']
+  resource: SearchPage['resource']
+  path?: string
   public?: boolean
-  privateAccess?: SearchPageRef['privateAccess']
+  privateAccess?: SearchPage['privateAccess']
+  indexingStatus?: 'toIndex' | 'toDelete'
 }
 
-export const createOrUpdateSearchPageRef = async (params: CreateSearchPageRefParams): Promise<void> => {
+export const createOrUpdateSearchPage = async (params: CreateSearchPageParams): Promise<void> => {
   const refId = `${params.portal}-${params.resource.type}-${params.resource.id}`
 
-  await mongo.searchPageRefs.updateOne(
+  const updateFields: Record<string, any> = {
+    owner: params.owner,
+    portal: params.portal,
+    resource: params.resource,
+    public: params.public,
+    privateAccess: params.privateAccess,
+    indexingStatus: params.indexingStatus || 'toIndex'
+  }
+
+  if (params.path) {
+    updateFields.path = params.path
+  }
+
+  await mongo.searchPages.updateOne(
     { _id: refId },
-    {
-      $set: {
-        owner: params.owner,
-        portal: params.portal,
-        resource: params.resource,
-        path: params.path,
-        public: params.public,
-        privateAccess: params.privateAccess,
-        indexingStatus: 'toIndex'
-      }
-    },
+    { $set: updateFields },
     { upsert: true }
   )
 }
 
-export const deleteSearchPageRef = async (
+export const deleteSearchPage = async (
   portalId: string,
-  resourceType: SearchPageRef['resource']['type'],
+  resourceType: SearchPage['resource']['type'],
   resourceId: string
 ): Promise<void> => {
   const refId = `${portalId}-${resourceType}-${resourceId}`
 
-  await mongo.searchPageRefs.updateOne(
+  await mongo.searchPages.updateOne(
     { _id: refId },
     { $set: { indexingStatus: 'toDelete' } }
   )
@@ -66,7 +70,7 @@ export const reindexPage = async (page: Page, portalId: string): Promise<void> =
   const path = getPagePath(page)
   if (!path) return
 
-  await createOrUpdateSearchPageRef({
+  await createOrUpdateSearchPage({
     portal: portalId,
     owner: page.owner,
     resource: { type: 'page', id: page._id },
@@ -84,7 +88,7 @@ export const reindexReuse = async (reuse: Reuse, portalId: string): Promise<void
 
   const path = `/reuses/${reuse.slug || reuse._id}`
 
-  await createOrUpdateSearchPageRef({
+  await createOrUpdateSearchPage({
     portal: portalId,
     owner: reuse.owner,
     resource: { type: 'reuse', id: reuse._id },
@@ -101,7 +105,7 @@ const getPortalUrl = async (portalId: string): Promise<string> => {
   return portal.ingress?.url || config.portalUrlPattern.replace('{subdomain}', portalId)
 }
 
-const createPseudoSession = async (owner: SearchPageRef['owner']): Promise<AxiosInstance> => {
+const createPseudoSession = async (owner: SearchPage['owner']): Promise<AxiosInstance> => {
   const ax = axiosWithCookies({ globalCookies: true })
   await ax.post(
     `${config.privateDirectoryUrl}/api/auth/pseudo?key=${config.secretKeys.pseudoSession}`,
@@ -157,7 +161,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     }
   }
 
-  const searchPageRefs: SearchPageRef[] = []
+  const searchPages: SearchPage[] = []
 
   if (searchTypes.includes('page')) {
     const pagesCursor = mongo.pages.find({
@@ -170,7 +174,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
       const path = getPagePath(page)
       if (!path) continue
 
-      searchPageRefs.push({
+      searchPages.push({
         _id: `${portal._id}-page-${(page as Page)._id}`,
         owner: portal.owner,
         portal: portal._id,
@@ -189,7 +193,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     })
 
     for await (const reuse of reusesCursor) {
-      searchPageRefs.push({
+      searchPages.push({
         _id: `${portal._id}-reuse-${(reuse)._id}`,
         owner: portal.owner,
         portal: portal._id,
@@ -220,7 +224,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
 
           for (const dataset of datasetsResponse.data.results || []) {
             if (!dataset.slug) continue
-            searchPageRefs.push({
+            searchPages.push({
               _id: `${portal._id}-dataset-${dataset.id}`,
               owner: portal.owner,
               portal: portal._id,
@@ -254,7 +258,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
 
           for (const application of applicationsResponse.data.results || []) {
             if (!application.slug) continue
-            searchPageRefs.push({
+            searchPages.push({
               _id: `${portal._id}-application-${application.id}`,
               owner: portal.owner,
               portal: portal._id,
@@ -273,12 +277,12 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     }
   }
 
-  if (searchPageRefs.length > 0) {
-    await mongo.searchPageRefs.insertMany(searchPageRefs)
+  if (searchPages.length > 0) {
+    await mongo.searchPages.insertMany(searchPages)
   }
 }
 
-export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
+export const indexPageRef = async (ref: SearchPage): Promise<void> => {
   const portalUrl = await getPortalUrl(ref.portal)
   const headers: Record<string, string> = {
     'x-forwarded-host': new URL(portalUrl).host
@@ -346,7 +350,7 @@ export const indexPageRef = async (ref: SearchPageRef): Promise<void> => {
   })
 }
 
-export const deletePageRef = async (ref: SearchPageRef): Promise<void> => {
+export const deletePageRef = async (ref: SearchPage): Promise<void> => {
   try {
     await es.client.delete({
       index: aliasName(ref.portal),

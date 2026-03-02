@@ -7,7 +7,7 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
-import { deleteSearchPageRef } from '../search-page-indexes/service.ts'
+import { deleteSearchPage } from '../search-page/service.ts'
 
 const debug = debugModule('reuses')
 
@@ -128,7 +128,7 @@ export const deleteReuse = async (reuse: Reuse) => {
   })
 
   for (const portalId of reuse.portals) {
-    await deleteSearchPageRef(portalId, 'reuse', reuse._id)
+    await deleteSearchPage(portalId, 'reuse', reuse._id)
   }
 
   await mongo.reuses.deleteOne({ _id: reuse._id })

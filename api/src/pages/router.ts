@@ -7,7 +7,7 @@ import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
-import { reindexPage } from '../search-page-indexes/service.ts'
+import { reindexPage } from '../search-page/service.ts'
 import { pageFacets } from './aggregations.ts'
 
 const router = Router()
