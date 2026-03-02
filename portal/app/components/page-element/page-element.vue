@@ -1,19 +1,3 @@
-<script setup lang="ts">
-const props = defineProps<{
-  element: any
-  context: {
-    isRoot: boolean
-    index: number
-    parentLength: number
-  }
-}>()
-
-const { preview } = usePortalStore()
-const portal = usePortal()
-
-const useSearchEngine = computed(() => portal.value?.config?.searchEngine?.active)
-</script>
-
 <template>
   <!-- Basic elements -->
   <page-element-title
@@ -54,7 +38,7 @@ const useSearchEngine = computed(() => portal.value?.config?.searchEngine?.activ
 
   <!-- Functional blocks -->
   <page-element-search-engine
-    v-else-if="element.type === 'search' && useSearchEngine"
+    v-else-if="element.type === 'search' && searchEngineActive"
     :element="element"
     :context="context"
   />
@@ -242,6 +226,9 @@ defineProps<{
     parentLength: number
   }
 }>()
+
+const { portal } = usePortalStore()
+const searchEngineActive = computed(() => portal.value?.config?.searchEngine?.active)
 </script>
 
 <i18n lang="yaml">
