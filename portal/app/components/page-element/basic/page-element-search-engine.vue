@@ -131,8 +131,7 @@ const resourceTypeIcon = (type?: string) => {
 en:
   searchLabel: Search...
   noResults: No results found
-
-  fr:
+fr:
   searchLabel: Rechercher...
   noResults: Aucun résultat trouvé
 </i18n>
