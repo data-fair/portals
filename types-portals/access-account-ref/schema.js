@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/access-account-ref',
-  title: 'Access account reference',
+  title: 'Access account ref',
   'x-exports': ['types'],
   type: 'object',
   description: 'A flexible account reference used to grant permissions, private access, etc',
