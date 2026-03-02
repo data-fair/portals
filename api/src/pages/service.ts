@@ -324,6 +324,7 @@ const getElementsImageRefs = async (pageElements: PageElement[]) => {
     if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
     if (pageElement.type === 'card' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
+    if (pageElement.type === 'card' && pageElement.thumbnail?.image) imageRefs.push(pageElement.thumbnail.image)
     if (pageElement.type === 'datasets-list' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
   })
