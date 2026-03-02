@@ -18,7 +18,7 @@
           v-if="searchIndexesFetch.data.value.results.length"
           :headers="headers"
           :items="searchIndexesFetch.data.value.results"
-          :loading="searchIndexesFetch.pending.value"
+          :loading="searchIndexesFetch.loading.value"
           item-value="_id"
         >
           <template #item.path="{ item }">

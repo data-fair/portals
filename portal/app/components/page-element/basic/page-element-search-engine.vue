@@ -63,11 +63,7 @@ const { element } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const router = useRouter()
-const { preview } = usePortalStore()
-const portal = usePortal()
-
-const searchEngineActive = computed(() => portal.value?.config?.searchEngine?.active)
+const { preview, portal } = usePortalStore()
 
 const searchQuery = ref('')
 const selectedResult = ref<SearchEngineResult | null>(null)
@@ -108,9 +104,10 @@ watch(searchQuery, (newQuery) => {
 })
 
 const onSelect = (result: SearchEngineResult) => {
-  if (!result || preview) return
+  if (!result || !result.path || preview) return
 
-  const baseUrl = portal.value?.ingress?.url || window.location.origin
+  const portalAny = portal.value as any
+  const baseUrl = portalAny?.ingress?.url || window.location.origin
   const url = result.path.startsWith('http') ? result.path : `${baseUrl}${result.path}`
 
   window.location.href = url
