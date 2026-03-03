@@ -29,16 +29,26 @@ import type { TitleElement } from '#api/types/page-config'
 
 const { element, context } = defineProps<{
   element: TitleElement
-  context?: { isRoot: boolean, index: number }
+  context?: { isRoot: boolean, index: number, parentLength: number }
 }>()
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
 
+/**
+ * Computes the margin classes for the title based on its position
+ * - No margin if it's the only element in the list
+ * - Bottom margin only if it's the first element
+ * - Both top and bottom margin otherwise
+ */
 const marginClass = computed(() => {
   const m = margins[element.titleSize] || '4'
-  const noTopMargin = !context?.isRoot && context?.index === 0
-  return noTopMargin ? `mb-${m}` : `my-${m}`
+  const isSingleElement = context?.parentLength === 1
+  const isFirstElement = !context?.isRoot && context?.index === 0
+
+  if (isSingleElement) return ''
+  if (isFirstElement) return `mb-${m}`
+  return `my-${m}`
 })
 
 const margins = {
