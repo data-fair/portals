@@ -46,6 +46,7 @@ services:
       PUBLIC_URL: http://localhost:${NGINX_PORT}/simple-directory
       STORAGE_TYPE: file
       SECRET_SITES: secret-sites
+      SECRET_PSEUDO_SESSION: secret-pseudo-session
       # When we test permissions, we need to authenticate many users from the same IP.
       AUTHRATELIMIT_ATTEMPTS: 500
       AUTHRATELIMIT_DURATION: 30

@@ -1,6 +1,6 @@
 <template>
   <v-container data-iframe-height>
-    <v-card v-if="searchIndexesFetch.data.value">
+    <v-card v-if="searchPagesFetch.data.value">
       <v-card-title>
         {{ t('title') }}
       </v-card-title>
@@ -15,10 +15,10 @@
         </v-alert>
 
         <v-data-table
-          v-if="searchIndexesFetch.data.value.results.length"
+          v-if="searchPagesFetch.data.value.results.length"
           :headers="headers"
-          :items="searchIndexesFetch.data.value.results"
-          :loading="searchIndexesFetch.loading.value"
+          :items="searchPagesFetch.data.value.results"
+          :loading="searchPagesFetch.loading.value"
           item-value="_id"
         >
           <template #item.path="{ item }">
@@ -57,11 +57,11 @@ import { mdiMagnify } from '@mdi/js'
 import type { Portal } from '#api/types/portal'
 
 const { t } = useI18n()
-const route = useRoute<'/portals/[id]/search-indexes'>()
+const route = useRoute<'/portals/[id]/search-pages'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 
-const searchIndexesFetch = useFetch<{ results: any[], count: number }>($apiPath + '/search-page', {
+const searchPagesFetch = useFetch<{ results: any[], count: number }>($apiPath + '/search-pages', {
   query: {
     portal: route.params.id,
     size: 1000
@@ -77,7 +77,7 @@ watch(portalFetch.data, (portal) => {
     text: portal.config.title,
     to: '/portals/' + portal._id
   }, {
-    text: t('searchIndexes'),
+    text: t('title'),
   }])
 })
 
@@ -101,9 +101,8 @@ const statusColor = (status?: string) => {
 
 <i18n lang="yaml">
 en:
-  title: Search Page Indexes
+  title: Pages indexing
   portals: Portals
-  searchIndexes: Search indexes
   resourceType: Type
   path: Path
   status: Status
@@ -111,9 +110,8 @@ en:
   searchEngineNotActive: The search engine is not active for this portal
   noIndexes: No indexed pages
 fr:
-  title: Indexation des pages de recherche
+  title: Indexation des pages
   portals: Portails
-  searchIndexes: Indexation de recherche
   resourceType: Type
   path: Chemin
   status: Statut

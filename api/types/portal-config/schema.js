@@ -407,7 +407,6 @@ export default {
     },
     searchEngine: {
       type: 'object',
-      title: 'Moteur de recherche',
       unevaluatedProperties: false,
       properties: {
         active: {
@@ -419,9 +418,15 @@ export default {
         types: {
           type: 'array',
           title: 'Types de contenus à inclure',
+          default: ['dataset', 'application', 'page', 'reuse'],
           items: {
             type: 'string',
-            enum: ['dataset', 'application', 'page', 'reuse']
+            oneOf: [
+              { const: 'dataset', title: 'Jeux de données' },
+              { const: 'application', title: 'Application' },
+              { const: 'page', title: 'Pages' },
+              { const: 'reuse', title: 'Ré-utilisations' },
+            ]
           }
         }
       }

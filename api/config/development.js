@@ -19,7 +19,8 @@ export default {
     identities: 'secret-identities',
     events: 'secret-events',
     sites: 'secret-sites',
-    ingress: 'secret-ingress'
+    ingress: 'secret-ingress',
+    pseudoSession: 'secret-pseudo-session'
   },
   portalUrlPattern: `http://{subdomain}.portals.localhost:${process.env.NGINX_PORT}`,
   privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,

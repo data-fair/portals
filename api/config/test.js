@@ -18,7 +18,8 @@ export default {
   secretKeys: {
     identities: 'secret-identities',
     events: 'secret-events',
-    sites: 'secret-sites'
+    sites: 'secret-sites',
+    pseudoSession: 'secret-pseudo-session'
   },
   portalUrlPattern: `http://{subdomain}.localhost:${process.env.NGINX_PORT}`,
   upgradeRoot: './'

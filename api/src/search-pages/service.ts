@@ -106,10 +106,14 @@ const getPortalUrl = async (portalId: string): Promise<string> => {
 }
 
 const createPseudoSession = async (owner: SearchPage['owner']): Promise<AxiosInstance> => {
-  const ax = axiosWithCookies({ globalCookies: true })
+  const ax = axiosWithCookies({
+    globalCookies: true,
+    cookiesOrigin: config.privateDirectoryUrl
+  })
   await ax.post(
-    `${config.privateDirectoryUrl}/api/auth/pseudo?key=${config.secretKeys.pseudoSession}`,
-    { type: owner.type, id: owner.id }
+    `${config.privateDirectoryUrl}/api/auth/pseudo`,
+    { type: owner.type, id: owner.id },
+    { headers: { 'x-secret-key': config.secretKeys.pseudoSession } }
   )
   return ax
 }
