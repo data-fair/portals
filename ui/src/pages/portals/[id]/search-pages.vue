@@ -54,6 +54,7 @@
 
 <script lang="ts" setup>
 import { mdiMagnify } from '@mdi/js'
+import { useWS } from '@data-fair/lib-vue/ws.js'
 import type { Portal } from '#api/types/portal'
 
 const { t } = useI18n()
@@ -65,6 +66,22 @@ const searchPagesFetch = useFetch<{ results: any[], count: number }>($apiPath + 
   query: {
     portal: route.params.id,
     size: 1000
+  }
+})
+
+const ws = useWS($apiPath + '/')
+ws?.subscribe<{ _id: string; indexingStatus: string; indexedAt?: string }>(`search-pages/${route.params.id}`, (data) => {
+  if (!searchPagesFetch.data.value) return
+  const results = searchPagesFetch.data.value.results
+  const index = results.findIndex(r => r._id === data._id)
+  if (data.indexingStatus === 'deleted') {
+    if (index !== -1) {
+      results.splice(index, 1)
+    }
+  } else if (index !== -1) {
+    results[index] = { ...results[index], ...data }
+  } else {
+    searchPagesFetch.refresh()
   }
 })
 

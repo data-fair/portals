@@ -1,4 +1,6 @@
 import { createServer } from 'node:http'
+import * as wsServer from '@data-fair/lib-express/ws-server.js'
+import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import { session } from '@data-fair/lib-express/index.js'
 import { startObserver, stopObserver, internalError } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
@@ -40,11 +42,29 @@ export const start = async () => {
   server.listen(config.port)
   await eventPromise(server, 'listening')
 
+  await wsServer.start(server, mongo.db, async (channel, sessionState) => {
+    const [type, portalId] = channel.split('/')
+    if (type === 'search-pages' && portalId) {
+      if (!sessionState.user) return false
+      if (sessionState.user.adminMode) return true
+      const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { owner: 1 } })
+      if (!portal) return false
+      return (
+        portal.owner.type === sessionState.account?.type &&
+        portal.owner.id === sessionState.account?.id &&
+        sessionState.accountRole === 'admin'
+      )
+    }
+    return false
+  })
+  await wsEmitter.init(mongo.db)
+
   console.log(`API server listening on port ${config.port}`)
 }
 
 export const stop = async () => {
   await httpTerminator.terminate()
+  await wsServer.stop()
   if (config.observer.active) await stopObserver()
   await locks.stop()
   await mongo.client.close()
