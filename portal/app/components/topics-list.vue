@@ -91,8 +91,8 @@ const chipVariant = (topicId: string) => {
 
 // Keep surface background and consistent width (by adding transparent border) when filters are enabled and not selected.
 const chipStyle = (topicId: string, topicColor?: string): Record<string, string> | undefined => {
-  if (chipVariant(topicId) !== 'outlined') return undefined
   if (isSelected(topicId)) return { border: '1px solid transparent' }
+  if (chipVariant(topicId) !== 'outlined') return undefined
 
   const style: Record<string, string> = { backgroundColor: 'rgb(var(--v-theme-surface))' }
   if (!resolvedColor(topicColor)) style.color = 'rgb(var(--v-theme-on-surface))'

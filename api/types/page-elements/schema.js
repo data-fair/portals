@@ -1452,8 +1452,8 @@ export default {
         },
         redirectPage: {
           type: 'boolean',
-          title: 'Rediriger vers la page',
-          description: 'Si activé, cliquer sur une thématique redirigera vers la page sélectionnée (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
+          title: 'Rediriger vers le catalogue',
+          description: 'Si activé, cliquer sur une thématique redirigera vers le catalogue source des thématiques (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
           layout: 'switch'
         },
         centered: {
@@ -1464,6 +1464,10 @@ export default {
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          layout: { if: 'parent.data?.redirectPage' }
+        },
         showIcon: {
           type: 'boolean',
           title: "Afficher l'icône",
