@@ -25,7 +25,7 @@
     <a
       v-if="!element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
-      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+      :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       class="d-flex justify-center w-100"
@@ -40,7 +40,7 @@
     <NuxtLink
       v-else-if="!element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
-      :title="element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+      :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       class="d-flex justify-center w-100"
@@ -131,6 +131,13 @@ const imgStyle = computed(() => {
     ? `width:100%;height:${element.height ? `${element.height}px` : '100%'};`
     : (element.height ? `height:${element.height}px;` : '')
   return `${fit}${dims}`
+})
+
+const altLinkTitle = computed(() => {
+  if (!element.link || element.link.type === 'none') return ''
+  let linkTitle = element.link?.title || element.title || ''
+  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
+  return linkTitle
 })
 
 </script>

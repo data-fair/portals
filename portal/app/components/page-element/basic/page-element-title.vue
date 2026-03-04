@@ -3,7 +3,7 @@
     <a
       v-if="element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
-      :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       style="text-decoration: none; color: inherit;"
@@ -13,7 +13,7 @@
     <NuxtLink
       v-else-if="element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
-      :title="element.content && element.link?.target ? element.content + ' - ' + t('newWindow') : ''"
+      :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
       style="text-decoration: none; color: inherit;"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TitleElement } from '#api/types/page-config'
+import type { TitleElement } from '#api/types/page-elements/index.ts'
 
 const { element, context } = defineProps<{
   element: TitleElement
@@ -34,6 +34,13 @@ const { element, context } = defineProps<{
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
+
+const altLinkTitle = computed(() => {
+  if (!element.link || element.link.type === 'none') return ''
+  let linkTitle = element.link?.title || element.content || ''
+  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
+  return linkTitle
+})
 
 /**
  * Computes the margin classes for the title based on its position

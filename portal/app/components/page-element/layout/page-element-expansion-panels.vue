@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ExpansionPanelsElement, PageElement } from '#api/types/page-config'
+import type { ExpansionPanelsElement, PageElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps({
   element: { type: Object as () => ExpansionPanelsElement, required: true }

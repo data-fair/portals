@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DatasetTable } from '#api/types/page-config'
+import type { DatasetTable } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: DatasetTable }>()
 const { t } = useI18n()

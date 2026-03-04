@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
-import type { DatasetCardElement } from '#api/types/page-config'
+import type { DatasetCardElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: DatasetCardElement }>()
 const { preview, portalConfig } = usePortalStore()

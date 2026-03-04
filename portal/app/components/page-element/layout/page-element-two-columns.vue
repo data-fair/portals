@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, TwoColumnsElement } from '#api/types/page-config'
+import type { PageElement, TwoColumnsElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps({
   element: { type: Object as () => TwoColumnsElement, required: true }

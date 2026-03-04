@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TitleElement } from '#api/types/page-config'
+import type { TitleElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: TitleElement }>()
 

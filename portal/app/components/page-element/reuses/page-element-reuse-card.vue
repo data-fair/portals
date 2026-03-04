@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import type { Reuse } from '#api/types/reuse'
-import type { ReuseCardElement } from '#api/types/page-config'
+import type { ReuseCardElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: ReuseCardElement }>()
 const { portalConfig, preview } = usePortalStore()

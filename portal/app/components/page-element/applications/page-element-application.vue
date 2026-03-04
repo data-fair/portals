@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
-import type { ApplicationElement } from '#api/types/page-config'
+import type { ApplicationElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: ApplicationElement }>()
 const { t } = useI18n()

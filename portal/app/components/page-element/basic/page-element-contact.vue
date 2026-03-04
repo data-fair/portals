@@ -176,7 +176,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ContactElement } from '#api/types/page-config'
+import type { ContactElement } from '#api/types/page-elements/index.ts'
 import { useRules } from 'vuetify/labs/rules'
 import { useAsyncAction } from '@data-fair/lib-vue/async-action.js'
 import microTemplate from '@data-fair/lib-utils/micro-template.js'

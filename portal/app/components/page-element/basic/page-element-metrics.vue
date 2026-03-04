@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MetricsElement } from '#api/types/page-config'
+import type { MetricsElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps({
   element: { type: Object as () => MetricsElement, required: true }

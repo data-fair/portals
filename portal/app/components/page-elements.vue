@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement } from '#api/types/page-config'
+import type { PageElement } from '#api/types/page-elements/index.ts'
 
 withDefaults(defineProps<{ root?: boolean }>(), {
   root: true

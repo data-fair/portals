@@ -1,4 +1,4 @@
-import type { PageConfig, ImageElement } from '../api/types/page-config/index.ts'
+import type { PageConfig, ImageElement } from '../api/types/page/index.ts'
 import { strict as assert } from 'node:assert'
 import { it, describe, before, beforeEach, after } from 'node:test'
 import { createReadStream } from 'node:fs'
