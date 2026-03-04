@@ -210,7 +210,7 @@
   <!-- Portal preview selector -->
   <portal-preview-select class="mb-2" />
 
-  <!-- View portal pages list -->
+  <!-- View on portal links -->
   <template
     v-for="portal in page?.portals"
     :key="portal"
@@ -229,6 +229,15 @@
       {{ t('viewOn', { portalTitle: portalsById[portal]?.title }) }}
     </v-list-item>
   </template>
+
+  <!-- No publication warning -->
+  <v-alert
+    v-if="!page?.portals?.length"
+    :text="t('notPublishedOnAnyPortal')"
+    class="mx-4"
+    type="warning"
+    variant="outlined"
+  />
 </template>
 
 <script setup lang="ts">
@@ -326,6 +335,7 @@ const portalsById = computed(() => {
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
     viewOn: View on {portalTitle}
+    notPublishedOnAnyPortal: This page is not published on any portal
     yes: Yes
     no: No
   fr:
@@ -346,6 +356,7 @@ const portalsById = computed(() => {
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
     viewOn: Voir sur {portalTitle}
+    notPublishedOnAnyPortal: Cette page n'est publiée sur aucun portail
     yes: Oui
     no: Non
 

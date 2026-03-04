@@ -5,17 +5,6 @@
       link
     >
       <v-card-item class="text-primary">
-        <template
-          v-if="hasPendingPublicationRequest"
-          #prepend
-        >
-          <v-icon
-            :icon="mdiAlertCircle"
-            color="warning"
-            class="ml-1"
-          />
-        </template>
-
         <template #title>
           <span
             :title="reuse.title"
@@ -39,7 +28,18 @@
           density="compact"
           style="background-color: inherit;"
         >
-          <!-- TODO: Add a content -->
+          <!-- Pending publication request -->
+          <v-list-item v-if="hasPendingPublicationRequest">
+            <template #prepend>
+              <v-icon
+                :icon="mdiAlertCircle"
+                color="warning"
+              />
+            </template>
+            <v-list-item-title>
+              {{ t('pendingPublicationRequest') }}
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -51,6 +51,7 @@ import type { Reuse } from '#api/types/reuse/index'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiAlertCircle } from '@mdi/js'
 
+const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
@@ -60,5 +61,13 @@ const hasPendingPublicationRequest = computed(() => {
   const requestedPortals = reuse.requestedPortals
   return Array.isArray(requestedPortals) && requestedPortals.length > 0
 })
-
 </script>
+
+<i18n lang="yaml">
+  en:
+    pendingPublicationRequest: Pending publication request
+
+  fr:
+    pendingPublicationRequest: Demande de publication en attente
+
+</i18n>

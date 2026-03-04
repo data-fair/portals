@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, ResponsiveGridElement } from '#api/types/page-config'
+import type { PageElement, ResponsiveGridElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: ResponsiveGridElement }>()
 const { preview } = usePortalStore()

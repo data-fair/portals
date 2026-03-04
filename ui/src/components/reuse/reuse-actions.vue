@@ -211,9 +211,41 @@
       </v-card>
     </template>
   </v-menu>
+
+  <v-divider class="my-2" />
+
+  <!-- View on portal links -->
+  <template
+    v-for="portal in reuse?.portals"
+    :key="portal"
+  >
+    <v-list-item
+      :href="portalsById[portal]?.url + reuseUrl"
+      target="_blank"
+      rel="noopener"
+    >
+      <template #prepend>
+        <v-icon
+          color="primary"
+          :icon="mdiOpenInNew"
+        />
+      </template>
+      {{ t('viewOn', { portalTitle: portalsById[portal]?.title }) }}
+    </v-list-item>
+  </template>
+
+  <!-- No publication warning -->
+  <v-alert
+    v-if="!reuse?.portals?.length"
+    :text="t('notPublishedOnAnyPortal')"
+    class="mx-4"
+    type="warning"
+    variant="outlined"
+  />
 </template>
 
 <script setup lang="ts">
+import type { Portal } from '#api/types/portal/index.ts'
 import { mdiAccount, mdiFileEdit, mdiDelete, mdiFileReplace, mdiFileCancel, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
@@ -229,6 +261,7 @@ const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const { reuseId } = defineProps<{ reuseId: string }>()
+const reuseUrl = computed(() => reuse.value ? `/reuses/${reuse.value.slug}` : '')
 
 const validateDraft = useAsyncAction(
   async () => {
@@ -279,6 +312,20 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
   return !!org.departments?.length
 }, false)
 
+// For "View On" links
+type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress'>
+const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress', size: 10000 } })
+const portalsById = computed(() => {
+  const map: Record<string, { url: string; title: string }> = {}
+  for (const portal of portalsFetch.data.value?.results || []) {
+    map[portal._id] = {
+      url: portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id),
+      title: portal.title
+    }
+  }
+  return map
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -304,6 +351,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
     viewReuseLink: View reuse link
+    viewOn: View on {portalTitle}
+    notPublishedOnAnyPortal: This reuse is not published on any portal
     yes: Yes
   fr:
     cancel: Annuler
@@ -327,6 +376,8 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
     viewReuseLink: Visiter le lien de la réutilisation
+    viewOn: Voir sur {portalTitle}
+    notPublishedOnAnyPortal: Cette réutilisation n'est publiée sur aucun portail
     yes: Oui
 
 </i18n>

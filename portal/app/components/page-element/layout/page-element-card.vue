@@ -11,7 +11,7 @@
     :href="!preview && element.link && element.link.type !== 'none' && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
     :target="element.link && element.link.type !== 'none' && element.link?.target ? '_blank' : undefined"
     :rel="element.link && element.link.type !== 'none' && element.link?.target ? 'noopener' : undefined"
-    v-bind:title.attr="element.link && element.link.type !== 'none' && element.title ? (element.title + (element.link?.target ? ' - ' + t('newWindow') : '')) : undefined"
+    v-bind:title.attr="altLinkTitle"
 
     :border="element.border"
     :elevation="element.elevation"
@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, CardElement } from '#api/types/page-config'
+import type { PageElement, CardElement } from '#api/types/page-elements/index.ts'
 
 const { t } = useI18n()
 const { element } = defineProps({
@@ -114,6 +114,13 @@ const { element } = defineProps({
 const { preview, portalConfig } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const getPageImageSrc = usePageImageSrc()
+
+const altLinkTitle = computed(() => {
+  if (!element.link || element.link.type === 'none') return ''
+  let linkTitle = element.link?.title || element.title || ''
+  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
+  return linkTitle
+})
 
 </script>
 

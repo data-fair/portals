@@ -1402,12 +1402,22 @@ export default {
           title: 'Élévation du bouton',
           layout: { if: 'parent.data?.btnPosition !== "spaced"' }
         },
+        label: {
+          type: 'string',
+          title: 'Texte du label',
+          description: 'Texte personnalisé pour le label du champ de recherche. Si non renseigné, un texte par défaut sera utilisé.'
+        },
+        hideLabel: {
+          type: 'boolean',
+          title: 'Masquer le label au focus',
+          description: "Le label sera masqué lorsque l'utilisateur clique dans le champ de recherche",
+          layout: 'switch'
+        },
         border: {
           type: 'boolean',
           title: 'Bordure',
           description: 'Afficher une bordure autour de la barre de recherche',
-          layout: 'switch',
-          default: false
+          layout: 'switch'
         },
         fullWidth: {
           type: 'boolean',

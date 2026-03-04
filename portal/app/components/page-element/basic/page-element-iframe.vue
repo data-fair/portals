@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IFrame } from '#api/types/page-config'
+import type { IFrame } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: IFrame }>()
 const { t } = useI18n()

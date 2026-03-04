@@ -239,6 +239,11 @@ export default {
           ],
           layout: { cols: { md: 6 } }
         },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
         target: {
           type: 'boolean',
           title: 'Ouvrir dans un nouvel onglet'
@@ -276,6 +281,11 @@ export default {
             }
           }
         },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
         target: {
           type: 'boolean',
           title: 'Ouvrir dans un nouvel onglet'
@@ -299,6 +309,11 @@ export default {
             slug: { type: 'string' },
             title: { type: 'string' }
           }
+        },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
         },
         target: {
           type: 'boolean',
@@ -324,6 +339,11 @@ export default {
             title: { type: 'string' }
           }
         },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
         target: {
           type: 'boolean',
           title: 'Ouvrir dans un nouvel onglet'
@@ -340,22 +360,16 @@ export default {
           type: 'string',
           description: 'Si le lien est interne, privilégiez une URL commençant par /',
         },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
         target: {
           type: 'boolean',
           title: 'Ouvrir dans un nouvel onglet',
           default: true
         }
-      }
-    },
-
-    commonLinkProperties: {
-      properties: {
-        title: {
-          type: 'string',
-          title: 'Libellé',
-          layout: { cols: { md: 6 } }
-        },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
       }
     }
   }

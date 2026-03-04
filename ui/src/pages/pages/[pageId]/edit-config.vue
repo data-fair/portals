@@ -34,8 +34,7 @@
 
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
-import type { PageConfig } from '#api/types/page-config'
-import type { Page, Group } from '#api/types/page'
+import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 

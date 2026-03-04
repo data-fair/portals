@@ -7,7 +7,7 @@
   >
     <v-text-field
       v-model="searchQuery"
-      :label="t('searchLabel')"
+      :label="element.label || t('searchLabel')"
       :density="element.density"
       :rounded="element.btnPosition === 'attached' ? `e-0 s-${element.rounded}` : element.rounded"
       :color="element.color"
@@ -15,7 +15,7 @@
       :variant="element.border ? 'outlined' : 'solo'"
       :max-width="!element.fullWidth ? '400' : undefined"
       :append-inner-icon="element.btnPosition === 'included' ? mdiMagnify : undefined"
-      autofocus
+      :single-line="element.hideLabel"
       clearable
       flat
       hide-details
@@ -96,7 +96,7 @@ const onSearch = () => {
 
 <i18n lang="yaml">
   en:
-    searchLabel: Search datasets
+    searchLabel: Enter your search
     searchBtn: Search
 
   fr:

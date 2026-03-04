@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TopicsElement } from '#api/types/page-config'
+import type { TopicsElement } from '#api/types/page-elements/index.ts'
 import { mdiHome, mdiBook } from '@mdi/js'
 
 const { element } = defineProps({
