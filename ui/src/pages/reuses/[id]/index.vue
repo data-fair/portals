@@ -13,6 +13,7 @@
           <v-icon
             v-if="hasPendingPublicationRequest"
             :icon="mdiAlertCircle"
+            :title="t('pendingPublicationRequest')"
             color="warning"
             class="ml-1"
           />
@@ -86,6 +87,7 @@ watch(reuse, (reuse) => {
 <i18n lang="yaml">
   en:
     reuses: Reuses
+    pendingPublicationRequest: Pending publication request
     tabs:
       preview: Preview
       previewDraft: Preview (draft)
@@ -94,6 +96,7 @@ watch(reuse, (reuse) => {
 
   fr:
     reuses: Réutilisations
+    pendingPublicationRequest: Demande de publication en attente
     tabs:
       preview: Aperçu
       previewDraft: Aperçu (brouillon)

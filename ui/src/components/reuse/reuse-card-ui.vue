@@ -11,6 +11,7 @@
         >
           <v-icon
             :icon="mdiAlertCircle"
+            :title="t('pendingPublicationRequest')"
             color="warning"
             class="ml-1"
           />
@@ -51,6 +52,7 @@ import type { Reuse } from '#api/types/reuse/index'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiAlertCircle } from '@mdi/js'
 
+const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
@@ -60,5 +62,13 @@ const hasPendingPublicationRequest = computed(() => {
   const requestedPortals = reuse.requestedPortals
   return Array.isArray(requestedPortals) && requestedPortals.length > 0
 })
-
 </script>
+
+<i18n lang="yaml">
+  en:
+    pendingPublicationRequest: Pending publication request
+
+  fr:
+    pendingPublicationRequest: Demande de publication en attente
+
+</i18n>

@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageElement, BannerElement, PageConfig } from '#api/types/page-elements/index.ts'
+import type { PageConfig, PageElement, BannerElement } from '#api/types/page/index.ts'
 
 const { element } = defineProps<{
   element: BannerElement

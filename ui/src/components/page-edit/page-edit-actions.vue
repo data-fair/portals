@@ -66,7 +66,7 @@
   <!-- Portal preview selector -->
   <portal-preview-select class="mb-2" />
 
-  <!-- View portal pages list -->
+  <!-- View on portal links -->
   <template
     v-for="portal in page?.portals"
     :key="portal"
