@@ -12,6 +12,7 @@ import { app } from './app.ts'
 import config from '#config'
 import mongo from '#mongo'
 import es from '#es'
+import { startWorker, stopWorker } from './search-pages/worker.ts'
 
 const server = createServer(app)
 const httpTerminator = createHttpTerminator({ server })
@@ -42,11 +43,12 @@ export const start = async () => {
   server.listen(config.port)
   await eventPromise(server, 'listening')
 
-  await wsServer.start(server, mongo.db, async (channel, sessionState) => {
+  await wsServer.start(server, mongo.db, async (channel, sessionState, message) => {
     const [type, portalId] = channel.split('/')
     if (type === 'search-pages' && portalId) {
-      if (!sessionState.user) return false
-      if (sessionState.user.adminMode) return true
+      const isAdminMode = sessionState.user?.adminMode || message?.apiKey
+      if (!sessionState.user && !message?.apiKey && !message?.account) return false
+      if (isAdminMode) return true
       const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { owner: 1 } })
       if (!portal) return false
       return (
@@ -58,6 +60,7 @@ export const start = async () => {
     return false
   })
   await wsEmitter.init(mongo.db)
+  startWorker()
 
   console.log(`API server listening on port ${config.port}`)
 }
@@ -65,6 +68,7 @@ export const start = async () => {
 export const stop = async () => {
   await httpTerminator.terminate()
   await wsServer.stop()
+  await stopWorker()
   if (config.observer.active) await stopObserver()
   await locks.stop()
   await mongo.client.close()

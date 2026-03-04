@@ -13,5 +13,5 @@ npm run check-types  # Check typescript types
 ```sh
 npm run test-deps    # Start test dependencies
 npm run test       # Run all tests
-npm run test-only test-it/specific-test.ts  # Run specific test
+npm run test-base test-it/specific-test.ts  # Run specific test
 ```
