@@ -42,11 +42,12 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
   }
 
   const createdAt = new Date().toISOString()
+  const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8')
   const image: Image = {
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
     createdAt,
-    name: file.originalname,
+    name: originalName,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))
   }

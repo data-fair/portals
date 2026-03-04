@@ -320,7 +320,7 @@ const hasDepartments = computedAsync(async (): Promise<boolean> => {
     draftValidated: Brouillon validé !
     editConfig: Éditer la configuration
     errorCancelingDraft: Erreur lors de l'annulation du brouillon
-    errorChangingOwner: Erreur lors de le changement de propriétaire
+    errorChangingOwner: Erreur lors du changement de propriétaire
     errorValidatingDraft: Erreur lors de la validation du brouillon
     no: Non
     ownerChanged: Propriétaire changé !

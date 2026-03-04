@@ -1,10 +1,4 @@
 <template>
-  <v-alert
-    v-if="!elements?.length"
-    type="warning"
-    variant="outlined"
-    :text="t('noContent')"
-  />
   <page-element
     v-for="(element, i) of elements"
     :key="i"
@@ -33,14 +27,4 @@ withDefaults(defineProps<{ root?: boolean }>(), {
 
 const elements = defineModel<PageElement[]>()
 
-const { t } = useI18n()
-
 </script>
-
-<i18n lang="yaml">
-  en:
-    noContent: 'No content'
-
-  fr:
-    noContent: 'Aucun contenu'
-</i18n>

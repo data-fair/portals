@@ -1,5 +1,5 @@
 <template>
-  <div :class="`my-${margins[element.titleSize] || '4'}`">
+  <div :class="marginClass">
     <a
       v-if="element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
@@ -27,10 +27,29 @@
 <script setup lang="ts">
 import type { TitleElement } from '#api/types/page-config'
 
-const { element } = defineProps<{ element: TitleElement }>()
+const { element, context } = defineProps<{
+  element: TitleElement
+  context?: { isRoot: boolean, index: number, parentLength: number }
+}>()
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
+
+/**
+ * Computes the margin classes for the title based on its position
+ * - No margin if it's the only element in the list
+ * - Bottom margin only if it's the first element
+ * - Both top and bottom margin otherwise
+ */
+const marginClass = computed(() => {
+  const m = margins[element.titleSize] || '4'
+  const isSingleElement = context?.parentLength === 1
+  const isFirstElement = !context?.isRoot && context?.index === 0
+
+  if (isSingleElement) return ''
+  if (isFirstElement) return `mb-${m}`
+  return `my-${m}`
+})
 
 const margins = {
   h6: '2',

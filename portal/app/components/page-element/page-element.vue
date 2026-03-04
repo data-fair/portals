@@ -3,6 +3,7 @@
   <page-element-title
     v-if="element.type === 'title'"
     :element="element"
+    :context="context"
   />
   <page-element-text
     v-else-if="element.type === 'text'"

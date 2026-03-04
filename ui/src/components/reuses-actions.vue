@@ -79,11 +79,10 @@ const showAll = defineModel('showAll', { type: Boolean, default: false })
 const showNotifMenu = ref(false)
 
 const eventsSubscribeUrl = computed(() => {
-  const topics = [
-    { key: 'reuses:reuse-submit', title: t('reuseSubmittedForValidation') },
-  ]
-  const urlTemplate = window.parent.location.origin + '/reuses/{reuseId}'
-  return `/events/embed/subscribe?key=${encodeURIComponent(topics.map(t => t.key).join(','))}&title=${encodeURIComponent(topics.map(t => t.title).join(','))}&url-template=${encodeURIComponent(urlTemplate)}&register=false`
+  const topics = [{ key: 'reuses:reuse-submit', title: t('reuseSubmittedForValidation') }]
+  const urlTemplate = window.parent.location.origin + '/data-fair/reuses/{reuseId}'
+  const sender = encodeURIComponent(`${session.state.account.type}:${session.state.account.id}:*`)
+  return `/events/embed/subscribe?key=${encodeURIComponent(topics.map(t => t.key).join(','))}&title=${encodeURIComponent(topics.map(t => t.title).join(','))}&url-template=${encodeURIComponent(urlTemplate)}&&sender=${sender}register=false`
 })
 
 </script>
