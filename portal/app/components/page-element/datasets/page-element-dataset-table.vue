@@ -3,7 +3,7 @@
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :iframe-title="`${t('datasetTable')} - ${element.dataset.title}`"
     :src="url"
-    :sync-params="element.syncParams ? '*:' + element.dataset.id + '-table_' : undefined"
+    :sync-params="syncParams"
     scrolling="no"
     aspect-ratio
     emit-iframe-messages
@@ -16,6 +16,12 @@ import type { DatasetTable } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: DatasetTable }>()
 const { t } = useI18n()
+
+const syncParams = computed(() => {
+  if (element.syncParams === 'sandboxed') return `*:${element.uuid}_`
+  if (element.syncParams === 'shared-filters') return `_c*,*_*:_d_${element.dataset.id}_,*:${element.uuid}_`
+  return undefined
+})
 
 const url = computed(() => {
   let ret = `/data-fair/embed/dataset/${element.dataset.id}/table?interaction=${element.interactions}`

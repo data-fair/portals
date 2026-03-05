@@ -123,13 +123,16 @@ const items = computed(() => {
       reuse: "Reuse card preview"
     dataset:
       title: 'Dataset {i}'
+      longTitle: "Here is a dataset with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is a dataset preview example.
       keyword: Keyword {i}
     application:
       title: 'Application {i}'
+      longTitle: "Here is an application with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is an application preview example.
     reuse:
       title: 'Reuse {i}'
+      longTitle: "Here is a reuse with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is a reuse preview example.
       author: "John Doe"
   fr:

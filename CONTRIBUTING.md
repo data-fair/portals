@@ -57,7 +57,7 @@ docker build --progress=plain --target=portal -t data-fair/portals/portal:dev .
 
 ## Running the tests
 
-First, you need to start the development dependancies
+First, you need to start the development dependencies
 
 ```sh
 npm run dev-deps
