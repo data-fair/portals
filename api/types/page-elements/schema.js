@@ -21,9 +21,10 @@ export default {
   title: 'Page elements',
   type: 'array',
   layout: {
-    clipboardKey: 'elements',
     title: '',
-    listEditMode: 'dialog'
+    clipboardKey: 'elements',
+    listEditMode: 'dialog',
+    itemCopy: "{...item, uuid: crypto.randomUUID().split('-')[0]}"
   },
   items: {
     $ref: '#/$defs/element'
@@ -36,7 +37,8 @@ export default {
       layout: {
         switch: [
           { if: 'summary', slots: { component: 'page-preview-element' } }
-        ]
+        ],
+        getDefaultData: "{ uuid: crypto.randomUUID().split('-')[0], type: 'text' }"
       },
       oneOfLayout: {
         label: 'Type of element',
@@ -137,10 +139,6 @@ export default {
           { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
           { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
-      },
-      default: {
-        type: 'text',
-        content: ''
       },
       oneOf: [
         // Basic elements
@@ -290,9 +288,7 @@ export default {
       title: 'Texte',
       required: ['type'],
       properties: {
-        type: {
-          const: 'text'
-        },
+        type: { const: 'text' },
         content: {
           title: 'Contenu',
           type: 'string',
@@ -327,9 +323,7 @@ export default {
         ]
       },
       properties: {
-        type: {
-          const: 'alert'
-        },
+        type: { const: 'alert' },
         alertType: {
           type: 'string',
           title: 'Type prédéfini',
@@ -492,9 +486,7 @@ export default {
       title: 'IFrame',
       required: ['type', 'url'],
       properties: {
-        type: {
-          const: 'iframe'
-        },
+        type: { const: 'iframe' },
         title: {
           title: "Titre de l'iframe",
           description: "Recommandé pour l'accessibilité.",
@@ -2153,9 +2145,8 @@ export default {
       },
       required: ['type', 'dataset', 'interactions'],
       properties: {
-        type: {
-          const: 'dataset-table'
-        },
+        type: { const: 'dataset-table' },
+        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',
@@ -2177,10 +2168,14 @@ export default {
           }
         },
         syncParams: {
-          type: 'boolean',
-          layout: 'switch',
-          title: "Synchroniser les paramètres d'URL",
-          description: 'Si activé, les paramètres de la page seront transmis au tableau. Utile pour partager la page avec une vue spécifique du tableau.'
+          type: 'string',
+          title: "Synchronisation des paramètres d'URL",
+          default: 'none',
+          oneOf: [
+            { const: 'none', title: 'Aucune synchronisation' },
+            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
+            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
+          ]
         },
         display: {
           type: 'string',
@@ -2231,9 +2226,8 @@ export default {
       },
       required: ['type', 'dataset'],
       properties: {
-        type: {
-          const: 'dataset-form'
-        },
+        type: { const: 'dataset-form' },
+        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',
@@ -2505,9 +2499,8 @@ export default {
       },
       required: ['type', 'application'],
       properties: {
-        type: {
-          const: 'application'
-        },
+        type: { const: 'application' },
+        uuid: { type: 'string', layout: 'none' },
         application: {
           type: 'object',
           title: 'Application',
@@ -2538,10 +2531,14 @@ export default {
           }
         },
         syncParams: {
-          type: 'boolean',
-          layout: 'switch',
-          title: "Synchroniser les paramètres d'URL",
-          description: "Si activé, les paramètres de la page seront transmis à l'application. Utile pour partager la page avec une vue spécifique de l'application."
+          type: 'string',
+          title: "Synchronisation des paramètres d'URL",
+          default: 'none',
+          oneOf: [
+            { const: 'none', title: 'Aucune synchronisation' },
+            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
+            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
+          ]
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
