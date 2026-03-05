@@ -66,7 +66,7 @@
   <v-divider class="my-2" />
 
   <!-- Events -->
-  <custom-router-link :to="`/portals/${portal.id}/events`">
+  <custom-router-link :to="`/portals/${portal._id}/events`">
     <v-list-item link>
       <template #prepend>
         <v-icon
@@ -199,7 +199,7 @@
   <!-- Manage domain exposure -->
   <custom-router-link
     v-if="session.state.user?.adminMode"
-    :to="`/portals/${portal.id}/ingress`"
+    :to="`/portals/${portal._id}/ingress`"
   >
     <v-list-item link>
       <template #prepend>
@@ -214,8 +214,8 @@
 
   <!-- Search indexes -->
   <custom-router-link
-    v-if="session.state.user?.adminMode"
-    :to="`/portals/${portal.id}/search-pages`"
+    v-if="session.state.user?.adminMode && portal.config.searchEngine?.active"
+    :to="`/portals/${portal._id}/search-pages`"
   >
     <v-list-item link>
       <template #prepend>
@@ -280,7 +280,7 @@
 
   <!-- View draft link -->
   <v-list-item
-    :href="$uiConfig.portalUrlPattern.replace('{subdomain}', portal.id + '.draft')"
+    :href="$uiConfig.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')"
     target="_blank"
     rel="noopener"
   >
@@ -295,7 +295,7 @@
 
   <!-- View portal link -->
   <v-list-item
-    :href="portal.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal.id)"
+    :href="portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id)"
     target="_blank"
     rel="noopener"
   >
@@ -309,7 +309,7 @@
   </v-list-item>
 
   <!-- View portal pages list -->
-  <custom-router-link :to="`/pages?portal=${portal.id}`">
+  <custom-router-link :to="`/pages?portal=${portal._id}`">
     <v-list-item link>
       <template #prepend>
         <v-icon
@@ -326,6 +326,7 @@
 import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit, mdiProgressUpload } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { computedAsync } from '@vueuse/core'
+import { Portal } from '#api/types/portal/index.ts'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -341,30 +342,24 @@ const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
 const { portal } = defineProps<{
   hasDraftDiff: boolean
   isSavingDraft: boolean
-  portal: {
-    id: string
-    title: string
-    url: string | undefined
-    whiteLabel?: boolean
-    isReference?: boolean
-  }
+  portal: Portal
 }>()
 const showCancelDraftMenu = ref(false)
 
 const validateDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${portal.id}/draft`, { method: 'POST' })
+  await $fetch(`portals/${portal._id}/draft`, { method: 'POST' })
   emit('refresh-portal')
 })
 
 const cancelDraft = useAsyncAction(async () => {
-  await $fetch(`portals/${portal.id}/draft`, { method: 'DELETE' })
+  await $fetch(`portals/${portal._id}/draft`, { method: 'DELETE' })
   emit('refresh-portal')
   showCancelDraftMenu.value = false
 })
 
 const changeOwner = useAsyncAction(
   async () => {
-    await $fetch(`/portals/${portal.id}`, {
+    await $fetch(`/portals/${portal._id}`, {
       method: 'PATCH',
       body: JSON.stringify({ owner: newOwner.value })
     })
@@ -377,7 +372,7 @@ const changeOwner = useAsyncAction(
 )
 
 const deletePortal = useAsyncAction(async () => {
-  await $fetch(`portals/${portal.id}`, { method: 'DELETE' })
+  await $fetch(`portals/${portal._id}`, { method: 'DELETE' })
   router.replace('/portals')
 }, {
   success: t('portalDeleted'),
@@ -385,7 +380,7 @@ const deletePortal = useAsyncAction(async () => {
 })
 
 const updateWhiteLabel = useAsyncAction(async (value: boolean) => {
-  await $fetch(`/portals/${portal.id}`, {
+  await $fetch(`/portals/${portal._id}`, {
     method: 'PATCH',
     body: JSON.stringify({ whiteLabel: value })
   })
@@ -396,7 +391,7 @@ const updateWhiteLabel = useAsyncAction(async (value: boolean) => {
 })
 
 const updateIsReference = useAsyncAction(async (value: boolean) => {
-  await $fetch(`/portals/${portal.id}`, {
+  await $fetch(`/portals/${portal._id}`, {
     method: 'PATCH',
     body: JSON.stringify({ isReference: value })
   })

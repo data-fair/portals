@@ -10,6 +10,9 @@ import type { Page } from '#types/page/index.js'
 import type { Reuse } from '#types/reuse/index.js'
 import type { SearchPage } from '@data-fair/types-portals/index.ts'
 import { indexDefinition } from './es.ts'
+import debugModule from 'debug'
+
+const debug = debugModule('search-pages')
 
 const newIndexName = (portalId: string) => `${aliasName(portalId)}--${Date.now()}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
@@ -97,12 +100,8 @@ export const reindexReuse = async (reuse: Reuse, portalId: string): Promise<void
   })
 }
 
-const getPortalUrl = async (portalId: string): Promise<string> => {
-  const portal = await mongo.portals.findOne({ _id: portalId }) as Portal | null
-  if (!portal) {
-    throw new Error(`Portal not found: ${portalId}`)
-  }
-  return portal.ingress?.url || config.portalUrlPattern.replace('{subdomain}', portalId)
+const getPortalUrl = async (portal: Portal): Promise<string> => {
+  return portal.ingress?.url || config.portalUrlPattern.replace('{subdomain}', portal._id)
 }
 
 const createPseudoSession = async (owner: SearchPage['owner']): Promise<AxiosInstance> => {
@@ -157,13 +156,25 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
 
   await es.client.indices.create(indexDefinition(portal, index))
 
+  // TODO: only switch alias and delete old index when the worker has finished indexing the pages ?
+  let existingAlias
   try {
-    await es.client.indices.putAlias({ index, name: alias })
+    existingAlias = await es.client.indices.getAlias({ name: alias })
   } catch (err: any) {
-    if (err.meta?.body?.error?.type !== 'resource_already_exists_exception') {
-      throw err
+    if (err.statusCode !== 404) throw err
+  }
+
+  const actions = []
+  if (existingAlias) {
+    for (const existingIndex of Object.keys(existingAlias)) {
+      actions.push({ remove: { alias, index: existingIndex } })
+      await es.client.indices.delete({ index: existingIndex })
     }
   }
+  actions.push({ add: { alias, index } })
+
+  debug(`switch dataset index alias ${alias} -> ${index}`)
+  await es.client.indices.updateAliases({ actions, timeout: '60s' })
 
   const searchPages: SearchPage[] = []
 
@@ -209,7 +220,7 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
   }
 
   if (searchTypes.includes('dataset') || searchTypes.includes('application')) {
-    const portalUrl = await getPortalUrl(portal._id)
+    const portalUrl = await getPortalUrl(portal)
     const axiosInstance = await createPseudoSession(portal.owner)
 
     if (searchTypes.includes('dataset')) {
@@ -281,26 +292,48 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     }
   }
 
+  await mongo.searchPages.deleteMany({ portal: portal._id })
   if (searchPages.length > 0) {
     await mongo.searchPages.insertMany(searchPages)
   }
 }
 
-export const indexPageRef = async (ref: SearchPage): Promise<void> => {
-  const portalUrl = await getPortalUrl(ref.portal)
+export const deleteSearchEngine = async (portal: Portal) => {
+  const name = aliasName(portal._id)
+  let existingAlias
+  try {
+    existingAlias = await es.client.indices.getAlias({ name })
+  } catch (err: any) {
+    if (err.statusCode !== 404) throw err
+  }
+
+  if (existingAlias) {
+    await es.client.indices.deleteAlias({ name, index: '*' })
+    for (const existingIndex of Object.keys(existingAlias)) {
+      await es.client.indices.delete({ index: existingIndex })
+    }
+  }
+}
+
+export const indexSearchPage = async (searchPage: SearchPage): Promise<void> => {
+  const portal = await mongo.portals.findOne({ _id: searchPage.portal }) as Portal | null
+  if (!portal) throw new Error(`Portal not found: ${searchPage.portal}`)
+  const portalUrl = await getPortalUrl(portal)
   const headers: Record<string, string> = {
     'x-forwarded-host': new URL(portalUrl).host
   }
 
   let axiosInstance: AxiosInstance
 
-  if (ref.public) {
+  if (searchPage.public) {
     axiosInstance = axios
   } else {
-    axiosInstance = await createPseudoSession(ref.owner)
+    axiosInstance = await createPseudoSession(searchPage.owner)
   }
 
-  const url = `${portalUrl}${ref.path}`
+  const url = `${portalUrl}${searchPage.path}`
+
+  debug('indexSearchPage url: ', url)
 
   const response = await axiosInstance.get(url, { headers })
   const html = response.data as string
@@ -316,7 +349,7 @@ export const indexPageRef = async (ref: SearchPage): Promise<void> => {
   const description = $('meta[name="description"]').attr('content') || ''
   const text = $('body').text().replace(/\s+/g, ' ').trim()
 
-  const privateAccessStrings = (ref.privateAccess || []).map(access => {
+  const privateAccessStrings = (searchPage.privateAccess || []).map(access => {
     let id: string
     if (access.type === 'user') {
       if (!access.id && !access.email) {
@@ -338,23 +371,23 @@ export const indexPageRef = async (ref: SearchPage): Promise<void> => {
     title,
     description,
     text,
-    path: ref.path,
-    resourceType: ref.resource.type,
-    resourceId: ref.resource.id,
-    public: ref.public,
+    path: searchPage.path,
+    resourceType: searchPage.resource.type,
+    resourceId: searchPage.resource.id,
+    public: searchPage.public,
     privateAccess: privateAccessStrings,
-    owner: ref.owner,
-    portal: ref.portal
+    owner: searchPage.owner,
+    portal: searchPage.portal
   }
 
   await es.client.index({
-    index: aliasName(ref.portal),
-    id: ref._id,
+    index: aliasName(searchPage.portal),
+    id: searchPage._id,
     document: searchDoc
   })
 }
 
-export const deletePageRef = async (ref: SearchPage): Promise<void> => {
+export const deleteIndexedSearchPage = async (ref: SearchPage): Promise<void> => {
   try {
     await es.client.delete({
       index: aliasName(ref.portal),

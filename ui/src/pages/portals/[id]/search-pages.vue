@@ -1,54 +1,46 @@
 <template>
   <v-container data-iframe-height>
-    <v-card v-if="searchPagesFetch.data.value">
-      <v-card-title>
-        {{ t('title') }}
-      </v-card-title>
-      <v-card-text>
-        <v-alert
-          v-if="!portalFetch.data.value?.config.searchEngine?.active"
-          type="info"
-          variant="tonal"
-          class="mb-4"
-        >
-          {{ t('searchEngineNotActive') }}
-        </v-alert>
+    <v-alert
+      v-if="!portalFetch.data.value?.config.searchEngine?.active"
+      type="info"
+      variant="tonal"
+      class="mb-4"
+    >
+      {{ t('searchEngineNotActive') }}
+    </v-alert>
 
-        <v-data-table
-          v-if="searchPagesFetch.data.value.results.length"
-          :headers="headers"
-          :items="searchPagesFetch.data.value.results"
-          :loading="searchPagesFetch.loading.value"
-          item-value="_id"
-        >
-          <template #item.path="{ item }">
-            <code>{{ item.path }}</code>
-          </template>
-          <template #item.resource.type="{ item }">
-            <v-chip size="small">
-              {{ item.resource.type }}
-            </v-chip>
-          </template>
-          <template #item.indexingStatus="{ item }">
-            <v-chip
-              :color="statusColor(item.indexingStatus)"
-              size="small"
-            >
-              {{ item.indexingStatus }}
-            </v-chip>
-          </template>
-          <template #item.indexedAt="{ item }">
-            {{ item.indexedAt ? new Date(item.indexedAt).toLocaleString() : '-' }}
-          </template>
-        </v-data-table>
+    <template v-if="searchPagesFetch.data.value">
+      <v-data-table
+        v-if="searchPagesFetch.data.value.results.length"
+        :headers="headers"
+        :items="searchPagesFetch.data.value.results"
+        :loading="searchPagesFetch.loading.value"
+        item-value="_id"
+        :items-per-page="10000"
+        hide-default-footer
+      >
+        <template #item.path="{ item }">
+          <code>{{ item.path }}</code>
+        </template>
+        <template #item.resource.type="{ item }">
+          {{ item.resource.type }}
+        </template>
+        <template #item.indexingStatus="{ item }">
+          <v-chip :color="statusColor(item.indexingStatus)">
+            {{ item.indexingStatus }}
+          </v-chip>
+        </template>
+        <template #item.indexedAt="{ item }">
+          {{ item.indexedAt ? new Date(item.indexedAt).toLocaleString() : '-' }}
+        </template>
+      </v-data-table>
 
-        <v-empty-state
-          v-else
-          :icon="mdiMagnify"
-          :title="t('noIndexes')"
-        />
-      </v-card-text>
-    </v-card>
+      <v-empty-state
+        v-else
+        :icon="mdiMagnify"
+        :title="t('noIndexes')"
+      />
+    </template>
   </v-container>
 </template>
 
@@ -65,7 +57,7 @@ const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const searchPagesFetch = useFetch<{ results: any[], count: number }>($apiPath + '/search-pages', {
   query: {
     portal: route.params.id,
-    size: 1000
+    size: 10000
   }
 })
 
@@ -108,8 +100,9 @@ const headers = [
 const statusColor = (status?: string) => {
   switch (status) {
     case 'ok': return 'success'
-    case 'toIndex': return 'warning'
-    case 'toDelete': return 'error'
+    case 'toIndex': return 'primary'
+    case 'toDelete': return 'warning'
+    case 'error': return 'error'
     default: return 'grey'
   }
 }

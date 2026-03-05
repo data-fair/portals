@@ -27,6 +27,7 @@
     "@types/config": "^3.3.5",
     "@vitejs/plugin-vue": "^6.0.0",
     "dayjs": "^1.11.13",
+    "reconnecting-websocket": "^4.4.0",
     "sass-embedded": "^1.89.2",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",

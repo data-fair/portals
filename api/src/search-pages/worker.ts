@@ -2,7 +2,7 @@ import locks from '@data-fair/lib-node/locks.js'
 import { internalError } from '@data-fair/lib-node/observer.js'
 import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import mongo from '#mongo'
-import { indexPageRef, deletePageRef } from './service.ts'
+import { indexSearchPage, deleteIndexedSearchPage } from './service.ts'
 
 let loopPromise: Promise<void> | null = null
 let stopped = false
@@ -28,7 +28,7 @@ const loop = async () => {
 
     try {
       if (ref.indexingStatus === 'toIndex') {
-        await indexPageRef(ref)
+        await indexSearchPage(ref)
         await mongo.searchPages.updateOne(
           { _id: ref._id },
           { $set: { indexingStatus: 'ok', indexedAt: new Date().toISOString() } }
@@ -39,7 +39,7 @@ const loop = async () => {
           indexedAt: new Date().toISOString()
         })
       } else if (ref.indexingStatus === 'toDelete') {
-        await deletePageRef(ref)
+        await deleteIndexedSearchPage(ref)
         await mongo.searchPages.deleteOne({ _id: ref._id })
         await wsEmitter.emit(`search-pages/${ref.portal}`, {
           _id: ref._id,
@@ -48,6 +48,10 @@ const loop = async () => {
       }
     } catch (err) {
       internalError('search-page-worker', err)
+      await mongo.searchPages.updateOne(
+        { _id: ref._id },
+        { $set: { indexingStatus: 'error' } }
+      )
     }
   }
   await locks.release('search-page-loop')

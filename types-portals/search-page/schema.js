@@ -48,7 +48,7 @@ export default {
     },
     indexingStatus: {
       type: 'string',
-      enum: ['ok', 'toIndex', 'toDelete']
+      enum: ['ok', 'toIndex', 'toDelete', 'error']
     }
   }
 }

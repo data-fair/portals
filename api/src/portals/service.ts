@@ -13,7 +13,7 @@ import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyCss } from '../fonts/service.ts'
-import { initSearchEngine } from '../search-pages/service.ts'
+import { deleteSearchEngine, initSearchEngine } from '../search-pages/service.ts'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')
@@ -73,10 +73,6 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, cookie)
   await mongo.portals.updateOne({ _id: portal._id }, { $set: fullPatch })
 
-  if (!portal.config.searchEngine?.active && updatedPortal.config.searchEngine?.active) {
-    await initSearchEngine(updatedPortal)
-  }
-
   return updatedPortal
 }
 
@@ -113,6 +109,12 @@ export const validatePortalDraft = async (portal: Portal, session: SessionStateA
   debug('validatePortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], cookie)
   await cleanUnusedImages(updatedPortal)
+  if (!portal.config.searchEngine?.active && updatedPortal.config.searchEngine?.active) {
+    await initSearchEngine(updatedPortal)
+  }
+  if (portal.config.searchEngine?.active && !updatedPortal.config.searchEngine?.active) {
+    await deleteSearchEngine(updatedPortal)
+  }
   sendPortalEvent(portal, 'a été validé', 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
   return updatedPortal
 }
