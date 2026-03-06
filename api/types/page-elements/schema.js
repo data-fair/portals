@@ -123,9 +123,9 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 24, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 25, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 26, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 25, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 26, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 27, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
 
           {
             header: true,
@@ -135,9 +135,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 27, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
+          { key: 28, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 29, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 30, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
       },
       oneOf: [
@@ -174,6 +174,7 @@ export default {
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
+        { $ref: '#/$defs/element-dataset-download' },
 
         // Applications
         { $ref: '#/$defs/element-applications-catalog' },
@@ -198,6 +199,7 @@ export default {
       required: ['type', 'titleSize'],
       properties: {
         type: { const: 'title' },
+        uuid: { type: 'string', layout: 'none' },
         content: {
           title: 'Content',
           'x-i18n-title': {
@@ -289,6 +291,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'text' },
+        uuid: { type: 'string', layout: 'none' },
         content: {
           title: 'Contenu',
           type: 'string',
@@ -324,6 +327,7 @@ export default {
       },
       properties: {
         type: { const: 'alert' },
+        uuid: { type: 'string', layout: 'none' },
         alertType: {
           type: 'string',
           title: 'Type prédéfini',
@@ -370,6 +374,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'image' },
+        uuid: { type: 'string', layout: 'none' },
         banner: {
           type: 'boolean',
           title: 'Pleine largeur',
@@ -487,6 +492,7 @@ export default {
       required: ['type', 'url'],
       properties: {
         type: { const: 'iframe' },
+        uuid: { type: 'string', layout: 'none' },
         title: {
           title: "Titre de l'iframe",
           description: "Recommandé pour l'accessibilité.",
@@ -541,6 +547,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'button' },
+        uuid: { type: 'string', layout: 'none' },
         link: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
         usePortalConfig: {
           type: 'boolean',
@@ -587,6 +594,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'menu' },
+        uuid: { type: 'string', layout: 'none' },
         label: {
           type: 'string',
           title: 'Libellé du menu',
@@ -627,6 +635,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'breadcrumbs' },
+        uuid: { type: 'string', layout: 'none' },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
@@ -642,6 +651,7 @@ export default {
       required: ['type', 'opacity', 'thickness'],
       properties: {
         type: { const: 'divider' },
+        uuid: { type: 'string', layout: 'none' },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
         content: {
           title: 'Contenu',
@@ -711,9 +721,8 @@ export default {
         { if: '!parent.data?.overflowBottom', children: ['mb'] }
       ],
       properties: {
-        type: {
-          const: 'banner'
-        },
+        type: { const: 'banner' },
+        uuid: { type: 'string', layout: 'none' },
         children: {
           type: 'array',
           layout: 'none',
@@ -844,9 +853,8 @@ export default {
       },
       required: ['type', 'children', 'actions'],
       properties: {
-        type: {
-          const: 'card'
-        },
+        type: { const: 'card' },
+        uuid: { type: 'string', layout: 'none' },
         children: {
           type: 'array',
           layout: 'none',
@@ -1041,9 +1049,8 @@ export default {
       },
       required: ['type', 'disposition', 'gutter', 'children', 'children2'],
       properties: {
-        type: {
-          const: 'two-columns'
-        },
+        type: { const: 'two-columns' },
+        uuid: { type: 'string', layout: 'none' },
         disposition: {
           type: 'string',
           title: 'Disposition',
@@ -1128,6 +1135,7 @@ export default {
       required: ['type', 'children'],
       properties: {
         type: { const: 'responsive-grid' },
+        uuid: { type: 'string', layout: 'none' },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -1183,9 +1191,8 @@ export default {
       type: 'object',
       required: ['type', 'align', 'tabs'],
       properties: {
-        type: {
-          const: 'tabs'
-        },
+        type: { const: 'tabs' },
+        uuid: { type: 'string', layout: 'none' },
         grow: {
           type: 'boolean',
           title: 'Étendre'
@@ -1249,6 +1256,7 @@ export default {
       required: ['type', 'panels'],
       properties: {
         type: { const: 'expansion-panels' },
+        uuid: { type: 'string', layout: 'none' },
         // variant: {
         //   type: 'string',
         //   title: 'Variant',
@@ -1359,9 +1367,8 @@ export default {
       },
       required: ['type'],
       properties: {
-        type: {
-          const: 'search'
-        },
+        type: { const: 'search' },
+        uuid: { type: 'string', layout: 'none' },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
@@ -1443,6 +1450,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'topics' },
+        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Source des thématiques',
@@ -1561,9 +1569,8 @@ export default {
         'sendButton'
       ],
       properties: {
-        type: {
-          const: 'contact'
-        },
+        type: { const: 'contact' },
+        uuid: { type: 'string', layout: 'none' },
         defaultFields: {
           type: 'object',
           title: 'Default fields',
@@ -2005,9 +2012,8 @@ export default {
       },
       required: ['type', 'columns', 'limit', 'usePortalConfig'],
       properties: {
-        type: {
-          const: 'datasets-list'
-        },
+        type: { const: 'datasets-list' },
+        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -2103,9 +2109,8 @@ export default {
       },
       required: ['type', 'dataset', 'usePortalConfig'],
       properties: {
-        type: {
-          const: 'dataset-card'
-        },
+        type: { const: 'dataset-card' },
+        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',
@@ -2263,6 +2268,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'applications-catalog' },
+        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -2423,9 +2429,8 @@ export default {
       },
       required: ['type', 'columns', 'limit'],
       properties: {
-        type: {
-          const: 'applications-list'
-        },
+        type: { const: 'applications-list' },
+        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -2556,6 +2561,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'reuses-catalog' },
+        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -2712,9 +2718,8 @@ export default {
       },
       required: ['type', 'columns', 'limit'],
       properties: {
-        type: {
-          const: 'reuses-list'
-        },
+        type: { const: 'reuses-list' },
+        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -2809,9 +2814,8 @@ export default {
       },
       required: ['type', 'reuse', 'usePortalConfig'],
       properties: {
-        type: {
-          const: 'reuse-card'
-        },
+        type: { const: 'reuse-card' },
+        uuid: { type: 'string', layout: 'none' },
         reuse: {
           type: 'object',
           title: 'Réutilisation',

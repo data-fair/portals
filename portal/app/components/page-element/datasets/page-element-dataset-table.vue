@@ -18,8 +18,9 @@ const { element } = defineProps<{ element: DatasetTable }>()
 const { t } = useI18n()
 
 const syncParams = computed(() => {
-  if (element.syncParams === 'sandboxed') return `*:${element.uuid}_`
-  if (element.syncParams === 'shared-filters') return `_c*,*_*:_d_${element.dataset.id}_,*:${element.uuid}_`
+  const uuid = element.uuid || crypto.randomUUID().split('-')[0] // Prevent undefined uuid
+  if (element.syncParams === 'sandboxed') return `*:${uuid}_`
+  if (element.syncParams === 'shared-filters') return `_c*,*_*:_d_${element.dataset.id}_,*:${uuid}_`
   return undefined
 })
 
