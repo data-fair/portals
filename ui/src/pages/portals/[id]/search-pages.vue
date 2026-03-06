@@ -31,8 +31,15 @@
                 {{ item.indexingStatus }}
               </v-chip>
             </template>
+            <template #item.lastUpdate="{ item }">
+              {{ item.lastUpdate ? new Date(item.lastUpdate).toLocaleString() : '-' }}
+            </template>
             <template #item.indexedAt="{ item }">
               {{ item.indexedAt ? new Date(item.indexedAt).toLocaleString() : '-' }}
+            </template>
+            <template #item.etag="{ item }">
+              <code v-if="item.etag">{{ item.etag.slice(0, 20) }}...</code>
+              <span v-else>-</span>
             </template>
           </v-data-table>
         </v-card>
@@ -79,7 +86,9 @@ en:
   resourceType: Type
   path: Path
   status: Status
+  lastUpdate: Updated at
   indexedAt: Indexed at
+  etag: ETag
   searchEngineNotActive: The search engine is not active for this portal
   noIndexes: No indexed pages
   indexingState: Indexing state
@@ -90,7 +99,9 @@ fr:
   resourceType: Type
   path: Chemin
   status: Statut
+  lastUpdate: Modifié le
   indexedAt: Indexé le
+  etag: ETag
   searchEngineNotActive: Le moteur de recherche n'est pas actif pour ce portail
   noIndexes: Aucune page indexée
   indexingState: État de l'indexation
@@ -147,7 +158,7 @@ const resourceTypeIcon = (type?: string) => {
 }
 
 const ws = useWS($apiPath + '/')
-ws?.subscribe<{ _id: string; indexingStatus: string; indexedAt?: string }>(`search-pages/${route.params.id}`, (data) => {
+ws?.subscribe<{ _id: string; indexingStatus: string; indexedAt?: string; lastUpdate?: string }>(`search-pages/${route.params.id}`, (data) => {
   if (!searchPagesFetch.data.value) return
   const results = searchPagesFetch.data.value.results
   const index = results.findIndex(r => r._id === data._id)
@@ -179,7 +190,9 @@ const headers = [
   { title: t('resourceType'), key: 'resource.type', sortable: true },
   { title: t('path'), key: 'path', sortable: true },
   { title: t('status'), key: 'indexingStatus', sortable: true },
+  { title: t('lastUpdate'), key: 'lastUpdate', sortable: true },
   { title: t('indexedAt'), key: 'indexedAt', sortable: true },
+  { title: t('etag'), key: 'etag', sortable: false },
 ]
 
 const statusColor = (status?: string) => {

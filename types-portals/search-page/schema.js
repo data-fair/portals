@@ -11,9 +11,18 @@ export default {
       readOnly: true
     },
     owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    etag: {
+      type: 'string',
+      description: 'ETag of the last indexed HTML response'
+    },
     indexedAt: {
       type: 'string',
       description: 'Last indexing date of this page',
+      format: 'date-time'
+    },
+    lastUpdate: {
+      type: 'string',
+      description: 'Last update date of the MongoDB document',
       format: 'date-time'
     },
     portal: {

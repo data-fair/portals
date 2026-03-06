@@ -78,7 +78,8 @@ export class PortalsMongo {
       },
       'search-pages': {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, portal: 1, 'resource.type': 1, 'resource.id': 1 },
-        'indexing-status': { indexingStatus: 1 }
+        'indexing-status': { indexingStatus: 1 },
+        'portal-indexedAt': { portal: 1, indexedAt: -1 }
       }
     })
   }

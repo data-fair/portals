@@ -2,6 +2,7 @@ import axios from '@data-fair/lib-node/axios.js'
 import axiosWithCookies from '@data-fair/lib-node/axios-with-cookies.js'
 import type { AxiosInstance } from 'axios'
 import * as cheerio from 'cheerio'
+import { Histogram, register } from 'prom-client'
 import config from '#config'
 import mongo from '#mongo'
 import es from '#es'
@@ -13,6 +14,14 @@ import { indexDefinition } from './es.ts'
 import debugModule from 'debug'
 
 const debug = debugModule('search-pages')
+
+const indexingDelayHistogram = new Histogram({
+  name: 'search_page_indexing_delay_seconds',
+  help: 'Delay between lastUpdate and indexedAt for search pages',
+  buckets: [0, 1, 5, 10, 30, 60, 300, 600, 1800, 3600],
+  labelNames: ['portal'],
+  registers: [register]
+})
 
 const newIndexName = (portalId: string) => `${aliasName(portalId)}--${Date.now()}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
@@ -36,7 +45,8 @@ export const createOrUpdateSearchPage = async (params: CreateSearchPageParams): 
     resource: params.resource,
     public: params.public,
     privateAccess: params.privateAccess,
-    indexingStatus: params.indexingStatus || 'toIndex'
+    indexingStatus: params.indexingStatus || 'toIndex',
+    lastUpdate: new Date()
   }
 
   if (params.path) {
@@ -336,6 +346,24 @@ export const indexSearchPage = async (searchPage: SearchPage): Promise<void> => 
   debug('indexSearchPage url: ', url)
 
   const response = await axiosInstance.get(url, { headers })
+  const etag = response.headers['etag'] as string | undefined
+
+  if (!etag) {
+    console.warn('No ETag in response for', url, '- forcing indexing')
+  }
+
+  const storedPage = await mongo.searchPages.findOne({ _id: searchPage._id })
+
+  const etagChanged = !etag || storedPage?.etag !== etag
+  const visibilityChanged =
+    storedPage?.public !== searchPage.public ||
+    JSON.stringify(storedPage?.privateAccess) !== JSON.stringify(searchPage.privateAccess)
+
+  if (!etagChanged && !visibilityChanged) {
+    debug('Skipping indexing for', searchPage._id, '- etag and visibility unchanged')
+    return
+  }
+
   const html = response.data as string
 
   const $ = cheerio.load(html)
@@ -385,6 +413,18 @@ export const indexSearchPage = async (searchPage: SearchPage): Promise<void> => 
     id: searchPage._id,
     document: searchDoc
   })
+
+  const indexedAt = new Date().toISOString()
+
+  if (storedPage?.lastUpdate) {
+    const delaySeconds = (new Date(indexedAt).getTime() - new Date(storedPage.lastUpdate).getTime()) / 1000
+    indexingDelayHistogram.labels({ portal: searchPage.portal }).observe(delaySeconds)
+  }
+
+  await mongo.searchPages.updateOne(
+    { _id: searchPage._id },
+    { $set: { etag, indexedAt } }
+  )
 }
 
 export const deleteIndexedSearchPage = async (ref: SearchPage): Promise<void> => {
