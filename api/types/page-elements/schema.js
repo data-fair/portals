@@ -8,6 +8,8 @@ const mdiDatabaseOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0
 const mdiImageMultiple = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>image-multiple</title><path d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" /></svg>'
 const mdiPageNext = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>page-next</title><path d="M20,3H5A2,2 0 0,0 3,5V11H7V9L11,12L7,15V13H3V19A2,2 0 0,0 5,21H20A2,2 0 0,0 22,19V5A2,2 0 0,0 20,3M17,17H13V15H17V17M20,13H13V11H20V13M20,9H13V7H20V9M3,13H0V11H3V13Z" /></svg>'
 const mdiNavigationVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>navigation-variant</title><path d="M21 3L3 10.53V11.5L9.84 14.16L12.5 21H13.46L21 3Z" /></svg>'
+const mdiCalendar = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>calendar</title><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>'
+const mdiNewspaperVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>newspaper-variant</title><path d="M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M5 7H10V13H5V7M19 17H5V15H19V17M19 13H12V11H19V13M19 9H12V7H19V9Z" /></svg>'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-elements',
@@ -137,7 +139,31 @@ export default {
           },
           { key: 27, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
           { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
+          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } },
+
+          {
+            header: true,
+            title: 'Events',
+            'x-i18n-title': {
+              fr: 'Événements'
+            },
+            icon: mdiCalendar
+          },
+          { key: 30, title: 'Events catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+          { key: 31, title: 'Events list', 'x-i18n-title': { fr: "Liste d'événements" } },
+          { key: 32, title: 'Event card', 'x-i18n-title': { fr: "Vignette d'événement" } },
+
+          {
+            header: true,
+            title: 'News',
+            'x-i18n-title': {
+              fr: 'Actualité'
+            },
+            icon: mdiNewspaperVariant
+          },
+          { key: 33, title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
+          { key: 34, title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
+          { key: 35, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
         ]
       },
       oneOf: [
@@ -183,7 +209,17 @@ export default {
         // Reuses
         { $ref: '#/$defs/element-reuses-catalog' },
         { $ref: '#/$defs/element-reuses-list' },
-        { $ref: '#/$defs/element-reuse-card' }
+        { $ref: '#/$defs/element-reuse-card' },
+
+        // Events
+        { $ref: '#/$defs/element-event-catalog' },
+        { $ref: '#/$defs/element-event-list' },
+        { $ref: '#/$defs/element-event-card' },
+
+        // News
+        { $ref: '#/$defs/element-news-catalog' },
+        { $ref: '#/$defs/element-news-list' },
+        { $ref: '#/$defs/element-news-card' }
       ]
     },
 
@@ -2841,6 +2877,598 @@ export default {
           default: true
         },
         cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    // Events
+    'element-event-catalog': {
+      title: 'EventCatalogElement',
+      'x-i18n-title': {
+        en: 'Events catalog',
+        fr: "Catalogue d'événements"
+      },
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['type'],
+      properties: {
+        type: { const: 'event-catalog' },
+        uuid: { type: 'string', layout: 'none' },
+        // defaultSort: {
+        //   type: 'string',
+        //   title: 'Tri par défaut',
+        //   description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+        //   default: 'startDate:-1',
+        //   oneOf: [
+        //     { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
+        //     { const: 'startDate:-1', title: 'Date de début (du plus récent au plus ancien)' },
+        //     { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+        //   ]
+        // },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        eventCountPosition: {
+          type: 'string',
+          title: 'Position du nombre de résultats',
+          default: 'top',
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'top', title: 'Au dessus des filtres' },
+            { const: 'bottom', title: 'Au dessus des résultats' }
+          ]
+        },
+        showSortBesideCount: {
+          type: 'boolean',
+          title: 'Afficher le tri à droite du nombre de résultats.',
+          layout: {
+            if: 'parent.data?.eventCountPosition === "bottom"',
+            comp: 'switch'
+          }
+        },
+        showAdvancedFilters: {
+          type: 'boolean',
+          title: 'Activer les filtres avancés',
+          description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
+          layout: { comp: 'switch' }
+        },
+        filters: {
+          type: 'object',
+          title: 'Configuration des filtres',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position des filtres',
+              default: 'top',
+              oneOf: [
+                { const: 'top', title: 'Au dessus des résultats' },
+                { const: 'left', title: 'À gauche des résultats' }
+              ]
+            },
+            items: {
+              type: 'array',
+              title: 'Filtres à afficher',
+              description: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'search', title: 'Barre de recherche' },
+                  // { const: 'sort', title: 'Tri' }
+                ]
+              }
+            },
+            density: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+            },
+            rounded: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+            }
+          }
+        },
+        pagination: {
+          type: 'object',
+          title: 'Configuration de la pagination',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position',
+              description: 'Désactiver la pagination affichera les résultats en scroll infini.',
+              default: 'none',
+              oneOf: [
+                { const: 'none', title: 'Scroll infini' },
+                { const: 'before', title: 'Avant les résultats' },
+                { const: 'after', title: 'Après les résultats' },
+                { const: 'both', title: 'Les deux' }
+              ]
+            },
+            alignment: {
+              type: 'string',
+              title: 'Alignement',
+              default: 'center',
+              layout: { if: 'parent.data?.position !== "none"' },
+              oneOf: [
+                { const: 'left', title: 'Gauche' },
+                { const: 'center', title: 'Centré' },
+                { const: 'right', title: 'Droite' }
+              ]
+            }
+          }
+        },
+        advancedFilters: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-event-list': {
+      type: 'object',
+      title: 'EventListElement',
+      'x-i18n-title': {
+        en: 'Events list',
+        fr: "Liste d'événements"
+      },
+      layout: {
+        children: [
+          'type',
+          'mode',
+          {
+            if: 'data?.mode !== "custom"',
+            children: ['limit']
+          },
+          {
+            if: 'data?.mode === "custom"',
+            children: ['events']
+          },
+          'columns',
+          'mb',
+          {
+            title: 'Event Card',
+            'x-i18n-title': {
+              fr: 'Configuration des vignettes'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit'],
+      properties: {
+        type: { const: 'event-list' },
+        uuid: { type: 'string', layout: 'none' },
+        mode: {
+          type: 'string',
+          title: 'Type de liste',
+          default: 'upcoming',
+          oneOf: [
+            { const: 'upcoming', title: 'Upcoming', 'x-i18n-title': { fr: 'Les prochains événements' } },
+            { const: 'custom', title: 'Custom list', 'x-i18n-title': { fr: 'Liste libre' } }
+          ]
+        },
+        events: {
+          type: 'array',
+          title: 'Événements',
+          description: 'Sélectionnez manuellement les événements à afficher.',
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/events?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
+          items: {
+            type: 'object',
+            required: ['slug'],
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          maxItems: 100
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: "Nombre d'événements",
+          description: "Nombre total d'événements à afficher.",
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-event-card' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-event-card': {
+      type: 'object',
+      title: 'EventCardElement',
+      'x-i18n-title': {
+        en: 'Event card',
+        fr: "Vignette d'événement"
+      },
+      layout: {
+        children: [
+          'type',
+          'event',
+          'mb',
+          {
+            title: 'Event Card',
+            'x-i18n-title': {
+              fr: 'Configuration de la vignette'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'event', 'usePortalConfig'],
+      properties: {
+        type: { const: 'event-card' },
+        uuid: { type: 'string', layout: 'none' },
+        event: {
+          type: 'object',
+          title: 'Événement',
+          additionalProperties: false,
+          required: ['slug'],
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/events?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-event-card' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    // News
+    'element-news-catalog': {
+      title: 'NewsCatalogElement',
+      'x-i18n-title': {
+        en: 'News catalog',
+        fr: "Catalogue d'actualités"
+      },
+      type: 'object',
+      unevaluatedProperties: false,
+      required: ['type'],
+      properties: {
+        type: { const: 'news-catalog' },
+        uuid: { type: 'string', layout: 'none' },
+        // defaultSort: {
+        //   type: 'string',
+        //   title: 'Tri par défaut',
+        //   description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+        //   default: 'createdAt:-1',
+        //   oneOf: [
+        //     { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
+        //     { const: 'updatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
+        //     { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+        //   ]
+        // },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        newsCountPosition: {
+          type: 'string',
+          title: 'Position du nombre de résultats',
+          default: 'top',
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'top', title: 'Au dessus des filtres' },
+            { const: 'bottom', title: 'Au dessus des résultats' }
+          ]
+        },
+        showSortBesideCount: {
+          type: 'boolean',
+          title: 'Afficher le tri à droite du nombre de résultats.',
+          layout: {
+            if: 'parent.data?.newsCountPosition === "bottom"',
+            comp: 'switch'
+          }
+        },
+        showAdvancedFilters: {
+          type: 'boolean',
+          title: 'Activer les filtres avancés',
+          description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
+          layout: { comp: 'switch' }
+        },
+        filters: {
+          type: 'object',
+          title: 'Configuration des filtres',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position des filtres',
+              default: 'top',
+              oneOf: [
+                { const: 'top', title: 'Au dessus des résultats' },
+                // { const: 'left', title: 'À gauche des résultats' }
+              ]
+            },
+            items: {
+              type: 'array',
+              title: 'Filtres à afficher',
+              description: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'search', title: 'Barre de recherche' },
+                  { const: 'sort', title: 'Tri' }
+                ]
+              }
+            },
+            density: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+            },
+            rounded: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+            }
+          }
+        },
+        pagination: {
+          type: 'object',
+          title: 'Configuration de la pagination',
+          layout: 'card',
+          properties: {
+            position: {
+              type: 'string',
+              title: 'Position',
+              description: 'Désactiver la pagination affichera les résultats en scroll infini.',
+              default: 'none',
+              oneOf: [
+                { const: 'none', title: 'Scroll infini' },
+                { const: 'before', title: 'Avant les résultats' },
+                { const: 'after', title: 'Après les résultats' },
+                { const: 'both', title: 'Les deux' }
+              ]
+            },
+            alignment: {
+              type: 'string',
+              title: 'Alignement',
+              default: 'center',
+              layout: { if: 'parent.data?.position !== "none"' },
+              oneOf: [
+                { const: 'left', title: 'Gauche' },
+                { const: 'center', title: 'Centré' },
+                { const: 'right', title: 'Droite' }
+              ]
+            }
+          }
+        },
+        advancedFilters: {
+          type: 'array',
+          layout: 'none',
+          items: {
+            $ref: '#/$defs/element'
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-news-list': {
+      type: 'object',
+      title: 'NewsListElement',
+      'x-i18n-title': {
+        en: 'News list',
+        fr: "Liste d'actualités"
+      },
+      layout: {
+        children: [
+          'type',
+          'mode',
+          {
+            if: 'data?.mode !== "custom"',
+            children: ['limit']
+          },
+          {
+            if: 'data?.mode === "custom"',
+            children: ['news']
+          },
+          'columns',
+          'mb',
+          {
+            title: 'News Card',
+            'x-i18n-title': {
+              fr: 'Configuration des vignettes'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'columns', 'limit'],
+      properties: {
+        type: { const: 'news-list' },
+        uuid: { type: 'string', layout: 'none' },
+        mode: {
+          type: 'string',
+          title: 'Type de liste',
+          default: 'upcoming',
+          oneOf: [
+            { const: 'upcoming', title: 'Upcoming', 'x-i18n-title': { fr: 'À venir' } },
+            { const: 'custom', title: 'Custom list', 'x-i18n-title': { fr: 'Liste libre' } }
+          ]
+        },
+        news: {
+          type: 'array',
+          title: 'Actualités',
+          description: 'Sélectionnez manuellement les actualités à afficher.',
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/news?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            },
+            props: {
+              chips: true,
+              closableChips: true,
+              clearable: false
+            }
+          },
+          items: {
+            type: 'object',
+            required: ['slug'],
+            properties: {
+              slug: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          maxItems: 100
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          default: 2,
+          minimum: 1,
+          maximum: 3
+        },
+        limit: {
+          type: 'integer',
+          title: "Nombre d'actualités",
+          description: "Nombre total d'actualités à afficher.",
+          default: 3,
+          minimum: 1,
+          maximum: 12
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-news-card' },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+    'element-news-card': {
+      type: 'object',
+      title: 'NewsCardElement',
+      'x-i18n-title': {
+        en: 'News card',
+        fr: "Vignette d'actualité"
+      },
+      layout: {
+        children: [
+          'type',
+          'news',
+          'mb',
+          {
+            title: 'News Card',
+            'x-i18n-title': {
+              fr: 'Configuration de la vignette'
+            },
+            comp: 'card',
+            children: [
+              'usePortalConfig',
+              {
+                if: '!data?.usePortalConfig',
+                children: ['cardConfig']
+              }
+            ]
+          }
+        ]
+      },
+      required: ['type', 'news', 'usePortalConfig'],
+      properties: {
+        type: { const: 'news-card' },
+        uuid: { type: 'string', layout: 'none' },
+        news: {
+          type: 'object',
+          title: 'Actualité',
+          additionalProperties: false,
+          required: ['slug'],
+          layout: {
+            getItems: {
+              url: '/portals-manager/api/news?select=slug,title&size=20',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
+            }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
+        usePortalConfig: {
+          type: 'boolean',
+          title: 'Utiliser la configuration du portail',
+          layout: 'switch',
+          default: true
+        },
+        cardConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-news-card' },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     }

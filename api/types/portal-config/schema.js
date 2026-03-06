@@ -181,6 +181,8 @@ export default {
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
+      { title: 'Événements', children: ['events'] },
+      { title: 'Actualités', children: ['news'] },
       {
         if: 'data?.authentication !== "none"',
         title: 'Espace personnel',
@@ -188,7 +190,7 @@ export default {
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'breadcrumb', 'footer', 'datasets', 'applications', 'reuses', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'breadcrumb', 'footer', 'datasets', 'applications', 'reuses', 'events', 'news', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -387,6 +389,8 @@ export default {
     datasets: { $ref: 'https://github.com/data-fair/portals/portal-config-datasets' },
     applications: { $ref: 'https://github.com/data-fair/portals/portal-config-applications' },
     reuses: { $ref: 'https://github.com/data-fair/portals/portal-config-reuses' },
+    events: { $ref: 'https://github.com/data-fair/portals/portal-config-event' },
+    news: { $ref: 'https://github.com/data-fair/portals/portal-config-news' },
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialShares: { $ref: 'https://github.com/data-fair/portals/portal-config-social-shares' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
