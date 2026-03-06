@@ -55,7 +55,9 @@ export class PortalsMongo {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 },
         'unique-event-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.eventMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.eventMetadata.slug': { $exists: true } } }],
         'unique-news-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.newsMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.newsMetadata.slug': { $exists: true } } }],
-        'unique-generic-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.genericMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.genericMetadata.slug': { $exists: true } } }]
+        'unique-generic-slug': [{ 'owner.type': 1, 'owner.id': 1, 'config.genericMetadata.slug': 1 }, { unique: true, partialFilterExpression: { 'config.genericMetadata.slug': { $exists: true } } }],
+        'event-start-date': [{ 'owner.type': 1, 'owner.id': 1, 'config.eventMetadata.startDate': 1 }, { partialFilterExpression: { 'config.eventMetadata.startDate': { $exists: true } } }],
+        'news-date': [{ 'owner.type': 1, 'owner.id': 1, 'config.newsMetadata.date': 1 }, { partialFilterExpression: { 'config.newsMetadata.date': { $exists: true } } }]
       },
       reuses: {
         'main-keys': { 'owner.type': 1, 'owner.id': 1 },

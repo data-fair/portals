@@ -8,38 +8,35 @@
     >
       <catalog-filters
         :config="element"
-        catalog-type="applications"
+        catalog-type="events"
         drawer
       />
     </v-col>
 
-    <!-- Main Column: Main Content -->
+    <!-- Main Column -->
     <v-col>
-      <!-- Page Title / Count -->
+      <!-- Count top -->
       <component
         :is="headingTag"
-        v-if="element.reusesCountPosition === 'top'"
+        v-if="element.eventCountPosition === 'top'"
         class="text-h4 mb-4"
       >
-        {{ t('reusesCount', { count: reusesCount }) }}
+        {{ t('eventsCount', { count: eventsCount }) }}
       </component>
 
-      <!-- Standard Filters (only search + sort supported for now) -->
+      <!-- Standard Filters -->
       <v-row
         v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.smAndDown)"
         class="my-0"
       >
         <catalog-filters
           :config="element"
-          catalog-type="reuses"
+          catalog-type="events"
         />
       </v-row>
 
       <!-- Advanced Filters slot -->
-      <div
-        v-if="element.showAdvancedFilters"
-        class="mt-2"
-      >
+      <div v-if="element.showAdvancedFilters" class="mt-2">
         <slot
           name="page-elements"
           :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
@@ -50,12 +47,12 @@
 
       <!-- Count + Sort row -->
       <v-row
-        v-if="element.reusesCountPosition === 'bottom'"
+        v-if="element.eventCountPosition === 'bottom'"
         class="mt-2"
         align="end"
       >
         <v-col class="py-0">
-          {{ t('resultsCount', { count: reusesCount }) }}
+          {{ t('resultsCount', { count: eventsCount }) }}
         </v-col>
         <v-col
           v-if="element.showSortBesideCount"
@@ -111,27 +108,24 @@
         @update:page="goToPage"
       />
 
-      <!-- Reuses grid -->
+      <!-- Events grid -->
       <v-row class="d-flex align-stretch mt-2">
         <v-col
-          v-for="reuse in displayedReuses"
-          :key="reuse._id"
+          v-for="event in displayedEvents"
+          :key="event._id"
           :md="12 / (element.columns || 2)"
           cols="12"
         >
-          <reuse-card
-            :reuse="reuse"
-            :card-config="portalConfig.reuses.card"
+          <event-card
+            :page="event"
+            :card-config="portalConfig.events.card"
             is-portal-config
           />
         </v-col>
       </v-row>
 
       <!-- Loading spinner -->
-      <div
-        v-if="loading"
-        class="d-flex justify-center my-4"
-      >
+      <div v-if="loading" class="d-flex justify-center my-4">
         <v-progress-circular indeterminate color="primary" />
       </div>
 
@@ -155,14 +149,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Reuse } from '#api/types/reuse'
-import type { PageElement, ReusesCatalogElement } from '#api/types/page'
+import type { Page, PageElement } from '#api/types/page'
+import type { EventCatalogElement } from '#api/types/page-elements/index.ts'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
-type ReuseFetch = { count: number; results: Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>[] }
+type EventFetch = { count: number; results: Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>[] }
 
 const { element, context } = defineProps<{
-  element: ReusesCatalogElement
+  element: EventCatalogElement
   context?: { isRoot: boolean, index: number, parentLength: number }
 }>()
 const { portalConfig, preview } = usePortalStore()
@@ -177,25 +171,24 @@ const headingTag = computed(() => {
 
 const filters = {
   search: useStringSearchParam('q'),
-  sort: useStringSearchParam('sort', { default: element.defaultSort })
+  sort: useStringSearchParam('sort')
 }
 
 const sort = ref<string>()
 const order = ref<'-1' | '1'>()
 
-// Infinite scroll state / pagination state
 const paginationPosition = computed(() => element.pagination?.position || 'none')
 const currentPage = ref(1)
-const displayedReuses = ref<ReuseFetch['results']>([])
+const displayedEvents = ref<EventFetch['results']>([])
 const loading = ref(false)
 const pageSize = 20
 
-let reusesFetch: ReturnType<typeof useFetch<ReuseFetch | undefined>> | undefined
+let eventsFetch: ReturnType<typeof useFetch<EventFetch | undefined>> | undefined
 
 if (!preview) {
-  const reusesQuery = computed(() => {
+  const eventsQuery = computed(() => {
     const query: Record<string, string | number> = {
-      select: 'slug,config,updatedAt,-_id',
+      select: '_id,type,config,updatedAt',
       size: pageSize,
       page: currentPage.value
     }
@@ -203,122 +196,109 @@ if (!preview) {
     if (filters.sort.value) query.sort = filters.sort.value
     return query
   })
-  reusesFetch = useFetch<ReuseFetch>('/portal/api/reuses', { query: reusesQuery, watch: false })
+  eventsFetch = useFetch<EventFetch>('/portal/api/events', { query: eventsQuery, watch: false })
 }
 
-// Computed property to check if there are more reuses to load (for infinite scroll)
 const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
-  return displayedReuses.value.length < (reusesFetch?.data.value?.count || 0)
+  return displayedEvents.value.length < (eventsFetch?.data.value?.count || 0)
 })
 
-const reusesCount = computed(() => preview ? displayedReuses.value.length : (reusesFetch?.data.value?.count || 0))
+const eventsCount = computed(() => preview ? displayedEvents.value.length : (eventsFetch?.data.value?.count || 0))
 
-// Total pages for pagination
 const totalPages = computed(() => {
   if (preview) return 1
-  return Math.ceil((reusesFetch?.data.value?.count || 0) / pageSize)
+  return Math.ceil((eventsFetch?.data.value?.count || 0) / pageSize)
 })
 
-// Function to go to a specific page (for pagination)
 const goToPage = async (page: number) => {
-  if (preview || !reusesFetch) return
+  if (preview || !eventsFetch) return
   loading.value = true
   try {
     currentPage.value = page
-    await reusesFetch.refresh()
-    if (reusesFetch.data.value?.results) {
-      displayedReuses.value = [...reusesFetch.data.value.results]
+    await eventsFetch.refresh()
+    if (eventsFetch.data.value?.results) {
+      displayedEvents.value = [...eventsFetch.data.value.results]
     }
   } finally {
     loading.value = false
   }
 }
 
-// Function to load more reuses (for infinite scroll)
 const loadMore = async () => {
-  if (preview || loading.value || !hasMore.value || !reusesFetch || paginationPosition.value !== 'none') return
+  if (preview || loading.value || !hasMore.value || !eventsFetch || paginationPosition.value !== 'none') return
   loading.value = true
   try {
     currentPage.value++
-    await reusesFetch?.refresh()
-    if (reusesFetch?.data.value?.results) {
-      displayedReuses.value.push(...reusesFetch.data.value.results)
+    await eventsFetch.refresh()
+    if (eventsFetch.data.value?.results) {
+      displayedEvents.value.push(...eventsFetch.data.value.results)
     }
   } finally {
     loading.value = false
   }
 }
 
-// Initialize reuses on mount
 if (!preview) {
   onMounted(async () => {
-    await reusesFetch?.refresh()
-    if (reusesFetch?.data.value?.results) {
-      displayedReuses.value = [...reusesFetch.data.value.results]
+    await eventsFetch?.refresh()
+    if (eventsFetch?.data.value?.results) {
+      displayedEvents.value = [...eventsFetch.data.value.results]
     }
   })
 } else {
-  // Mock data for preview
-  displayedReuses.value = Array.from({ length: 6 }, (_, i) => ({
-    _id: `reuse-${i + 1}`,
-    slug: `reuse-${i + 1}`,
-    title: `Réutilisation ${i + 1}`,
+  displayedEvents.value = Array.from({ length: 6 }, (_, i) => ({
+    _id: `event-${i + 1}`,
+    type: 'event' as const,
     config: {
-      title: `Réutilisation ${i + 1}`,
-      summary: 'Exemple de réutilisation pour la prévisualisation.',
-      author: 'Auteur exemple'
+      title: `Événement ${i + 1}`,
+      description: 'Exemple d\'événement pour la prévisualisation.',
+      elements: [],
+      eventMetadata: { slug: `event-${i + 1}`, startDate: new Date().toISOString() }
     },
     updatedAt: new Date().toISOString()
   }))
 }
 
-// Reset reuses when filters change
 if (!preview) {
   watch([filters.search, filters.sort], async () => {
     currentPage.value = 1
-    await reusesFetch?.refresh()
-    if (reusesFetch?.data.value?.results) {
-      displayedReuses.value = [...reusesFetch.data.value.results]
-    }
-    // Track search event with analytics
-    if (filters.search.value) {
-      useAnalytics()?.track('search', { category: 'reuses', label: filters.search.value, resultsCount: reusesFetch?.data.value?.count ?? 0 })
+    await eventsFetch?.refresh()
+    if (eventsFetch?.data.value?.results) {
+      displayedEvents.value = [...eventsFetch.data.value.results]
     }
   })
 }
 
-// Update filters.sort param when sort or order change
 watch([sort, order], () => {
-  const [defaultField, defaultOrder] = element.defaultSort?.split(':') || ['updatedAt', '-1']
-  const field = sort.value || defaultField
-  const ord = order.value || defaultOrder as '-1' | '1'
+  const field = sort.value || 'startDate'
+  const ord = order.value || '-1'
   filters.sort.value = `${field}:${ord}`
 })
 
 const sortItems = [
   { title: t('sort.title'), value: 'title' },
-  { title: t('sort.updatedAt'), value: 'updatedAt' }
+  { title: t('sort.startDate'), value: 'startDate' }
 ]
 </script>
 
 <i18n lang="yaml">
   en:
-    reusesCount: 'No reuse | {count} reuse | {count} reuses'
+    eventsCount: 'No event | {count} event | {count} events'
     resultsCount: 'No result | {count} result | {count} results'
     ascending: Ascending order
     descending: Descending order
     sort:
       by: Sort by
       title: Alphabetical order
-      updatedAt: Update date
+      startDate: Start date
   fr:
-    reusesCount: 'Aucune réutilisation | {count} réutilisation | {count} réutilisations'
+    eventsCount: "Aucun événement | {count} événement | {count} événements"
     resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
     ascending: Ordre croissant
     descending: Ordre décroissant
     sort:
       by: Trier par
       title: Ordre alphabétique
-      updatedAt: Date de mise à jour
+      startDate: Date de début
 </i18n>

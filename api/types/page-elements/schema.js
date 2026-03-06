@@ -2894,17 +2894,16 @@ export default {
       properties: {
         type: { const: 'event-catalog' },
         uuid: { type: 'string', layout: 'none' },
-        // defaultSort: {
-        //   type: 'string',
-        //   title: 'Tri par défaut',
-        //   description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
-        //   default: 'startDate:-1',
-        //   oneOf: [
-        //     { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
-        //     { const: 'startDate:-1', title: 'Date de début (du plus récent au plus ancien)' },
-        //     { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
-        //   ]
-        // },
+        defaultSort: {
+          type: 'string',
+          title: 'Tri par défaut',
+          description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+          default: 'startDate:1',
+          oneOf: [
+            { const: 'startDate:1', title: 'Date de début (du plus ancien au plus récent)' },
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+          ]
+        },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -2959,7 +2958,7 @@ export default {
                 type: 'string',
                 oneOf: [
                   { const: 'search', title: 'Barre de recherche' },
-                  // { const: 'sort', title: 'Tri' }
+                  { const: 'sort', title: 'Tri' }
                 ]
               }
             },
@@ -3190,17 +3189,17 @@ export default {
       properties: {
         type: { const: 'news-catalog' },
         uuid: { type: 'string', layout: 'none' },
-        // defaultSort: {
-        //   type: 'string',
-        //   title: 'Tri par défaut',
-        //   description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
-        //   default: 'createdAt:-1',
-        //   oneOf: [
-        //     { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
-        //     { const: 'updatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
-        //     { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
-        //   ]
-        // },
+        defaultSort: {
+          type: 'string',
+          title: 'Tri par défaut',
+          description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+          default: 'date:-1',
+          oneOf: [
+            { const: 'date:-1', title: 'Date (du plus récent au plus ancien)' },
+            { const: 'date:1', title: 'Date (du plus ancien au plus récent)' },
+            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+          ]
+        },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -3244,7 +3243,7 @@ export default {
               default: 'top',
               oneOf: [
                 { const: 'top', title: 'Au dessus des résultats' },
-                // { const: 'left', title: 'À gauche des résultats' }
+                { const: 'left', title: 'À gauche des résultats' }
               ]
             },
             items: {

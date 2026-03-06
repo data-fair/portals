@@ -36,6 +36,18 @@
           :card-config="props.cardConfig"
           is-portal-config
         />
+        <event-card
+          v-else-if="props.type === 'event'"
+          :page="item as any"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
+        <news-card
+          v-else-if="props.type === 'news'"
+          :page="item as any"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
       </v-col>
     </v-row>
   </preview>
@@ -48,7 +60,7 @@ const session = useSessionAuthenticated()
 const props = defineProps<{
   appendTitle?: string
   cardConfig: any
-  type: 'dataset' | 'application' | 'reuse'
+  type: 'dataset' | 'application' | 'reuse' | 'event' | 'news'
 }>()
 
 const nbColumns = ref(2)

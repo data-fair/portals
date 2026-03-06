@@ -25,7 +25,7 @@ if (!preview) {
 } else {
   // Mock data for preview
   reuse = ref({
-    _id: 'reuse-i',
+    _id: 'reuse-preview',
     slug: element.reuse?.slug || 'reuse-1',
     config: {
       title: element.reuse?.title || 'Réutilisation 1',
