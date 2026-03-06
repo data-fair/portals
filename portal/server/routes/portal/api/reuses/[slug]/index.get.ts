@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
     [portal.staging ? 'requestedPortals' : 'portals']: portal._id
   }
 
-  const reuse = await portalMongo.reuses.findOne<Pick<Reuse, '_id' | 'slug' | 'config'>>(
+  const reuse = await portalMongo.reuses.findOne<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(
     mongoQuery,
-    { projection: { _id: 1, slug: 1, config: 1 } }
+    { projection: { _id: 1, slug: 1, config: 1, updatedAt: 1 } }
   )
 
   if (!reuse) throw createError({ status: 404, message: 'Reuse not found' })

@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
-  'x-exports': [],
+  'x-exports': ['types'],
   $defs: {
     'rendered-html': {
       type: 'string',
@@ -12,7 +12,6 @@ export default {
       type: 'string',
       title: 'Rounded',
       'x-i18n-title': { fr: 'Arrondi' },
-      default: 'default',
       oneOf: [
         { const: '0', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
         { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normal' } },
@@ -25,7 +24,6 @@ export default {
       type: 'integer',
       title: 'Elevation',
       'x-i18n-title': { fr: 'Élévation' },
-      default: 0,
       oneOf: [
         { const: 0, title: 'None', 'x-i18n-title': { fr: 'Aucune' } },
         { const: 1, title: 'Light', 'x-i18n-title': { fr: 'Légère' } },
@@ -38,11 +36,21 @@ export default {
       type: 'string',
       title: 'Density',
       'x-i18n-title': { fr: 'Densité' },
-      default: 'comfortable',
       oneOf: [
         { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normale' } },
         { const: 'comfortable', title: 'Comfortable', 'x-i18n-title': { fr: 'Confortable' } },
         { const: 'compact', title: 'Compact', 'x-i18n-title': { fr: 'Compacte' } }
+      ]
+    },
+
+    variant: {
+      type: 'string',
+      title: 'Variant',
+      'x-i18n-title': { fr: 'Variante' },
+      oneOf: [
+        { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Avec fond coloré' } },
+        { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
+        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
       ]
     },
 
@@ -85,6 +93,21 @@ export default {
       }
     },
 
+    // Title common configuration
+    linePosition: {
+      type: 'string',
+      title: 'Display a line',
+      'x-i18n-title': { fr: 'Afficher un trait' },
+      oneOf: [
+        { const: 'none', title: 'Aucun trait' },
+        { const: 'left', title: 'Trait à gauche du titre' },
+        { const: 'bottom-small', title: 'Petit trait sous le titre' },
+        { const: 'bottom-medium', title: 'Trait sous le titre (largeur du texte)' },
+        { const: 'bottom-large', title: 'Trait pleine largeur sous le titre' }
+      ],
+      default: 'none'
+    },
+
     // Standard color definition (Titles, texts,...)
     color: {
       type: 'string',
@@ -112,6 +135,12 @@ export default {
       type: 'string',
       title: 'Color',
       'x-i18n-title': { fr: 'Couleur' },
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        }
+      },
       oneOf: [
         { const: 'primary', title: 'Primary', 'x-i18n-title': { fr: 'Primaire' } },
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
@@ -127,6 +156,12 @@ export default {
       type: 'string',
       title: 'Color',
       'x-i18n-title': { fr: 'Couleur' },
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        }
+      },
       oneOf: [
         { const: 'primary', title: 'Primary', 'x-i18n-title': { fr: 'Primaire' } },
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
@@ -152,6 +187,71 @@ export default {
         { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
         { const: 'accent', title: 'Accent', 'x-i18n-title': { fr: 'Accentuée' } }
       ]
-    }
+    },
+
+    buttonConfig: {
+      type: 'object',
+      properties: {
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          layout: {
+            switch: [
+              {
+                if: '!parent.data?.variant || parent.data.variant === "default"',
+                props: { background: true },
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              },
+              {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                cols: { md: 4 }
+              }
+            ]
+          },
+
+        },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 4 } },
+          default: 1
+        },
+        density: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } }
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 4 } }
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          layout: { cols: { md: 4 } }
+        },
+        showIcon: {
+          type: 'boolean',
+          title: "Afficher l'icône",
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        },
+        uppercase: {
+          type: 'boolean',
+          title: 'Texte en majuscules',
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        }
+      }
+    },
   }
 }

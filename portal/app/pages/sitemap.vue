@@ -1,75 +1,89 @@
 <template>
-  <v-container>
-    <h1 class="text-h3 text-primary mb-6">
-      {{ t('sitemap') }}
-    </h1>
+  <layout-page>
+    <v-container>
+      <h1 class="text-h3 text-primary mb-6">
+        {{ t('sitemap') }}
+      </h1>
 
-    <ul style="list-style: none;">
-      <!-- Home always first -->
-      <li v-if="!allInternalPaths.has('/')" class="mb-2">
-        <NuxtLink to="/">{{ t('home') }}</NuxtLink>
-      </li>
+      <ul style="list-style: none;">
+        <!-- Home always first -->
+        <li
+          v-if="!allInternalPaths.has('/')"
+          class="mb-2"
+        >
+          <NuxtLink to="/">{{ t('home') }}</NuxtLink>
+        </li>
 
-      <!-- Navigation menu items -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalNavigationItems"
-        :key="`nav-${i}`"
-        :item="item"
-      />
+        <!-- Navigation menu items -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalNavigationItems"
+          :key="`nav-${i}`"
+          :item="item"
+        />
 
-      <!-- Footer links -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalFooterLinks"
-        :key="`footer-${i}`"
-        :item="item"
-      />
+        <!-- Footer links -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalFooterLinks"
+          :key="`footer-${i}`"
+          :item="item"
+        />
 
-      <!-- Footer important links -->
-      <sitemap-menu-item
-        v-for="(item, i) in internalFooterImportantLinks"
-        :key="`footer-important-${i}`"
-        :item="item"
-      />
+        <!-- Footer important links -->
+        <sitemap-menu-item
+          v-for="(item, i) in internalFooterImportantLinks"
+          :key="`footer-important-${i}`"
+          :item="item"
+        />
 
-      <!-- Standard pages at the end -->
-      <li v-if="pageExists(contactFetch) && !allInternalPaths.has('/contact')">
-        <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
-      </li>
-      <li v-if="pageExists(privacyPolicyFetch) && !allInternalPaths.has('/privacy-policy')">
-        <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
-      </li>
-      <li v-if="pageExists(accessibilityFetch) && !allInternalPaths.has('/accessibility')">
-        <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
-      </li>
-      <li v-if="pageExists(legalNoticeFetch) && !allInternalPaths.has('/legal-notice')">
-        <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
-      </li>
-      <li v-if="pageExists(cookiePolicyFetch) && !allInternalPaths.has('/cookie-policy')">
-        <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
-      </li>
-      <li v-if="pageExists(termsOfServiceFetch) && !allInternalPaths.has('/terms-of-service')">
-        <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
-      </li>
-    </ul>
-  </v-container>
+        <!-- Login page (only if not authenticated) -->
+        <li v-if="!session.user.value">
+          <a :href="session.loginUrl()">{{ t('login') }}</a>
+        </li>
+
+        <!-- Standard pages at the end -->
+        <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
+          <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
+          <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')">
+          <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
+          <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
+          <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
+          <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
+          <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
+          <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
+          <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
+        </li>
+      </ul>
+    </v-container>
+  </layout-page>
 </template>
 
 <script setup lang="ts">
-import type { PageConfig } from '#api/types/page'
 import type { MenuItem, LinkItem } from '#api/types/portal'
 
 const { t } = useI18n()
+const session = useSession()
 const { portalConfig } = usePortalStore()
-const { resolveLink, setBreadcrumbs } = useNavigationStore()
+const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
 
-// Check if standard pages exist - HEAD request to avoid fetching full content
-const contactFetch = await useFetch<PageConfig>('/portal/api/pages/contact/contact', { method: 'HEAD', watch: false })
-const privacyPolicyFetch = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { method: 'HEAD', watch: false })
-const accessibilityFetch = await useFetch<PageConfig>('/portal/api/pages/accessibility/accessibility', { method: 'HEAD', watch: false })
-const legalNoticeFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { method: 'HEAD', watch: false })
-const cookiePolicyFetch = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { method: 'HEAD', watch: false })
-const termsOfServiceFetch = await useFetch<PageConfig>('/portal/api/pages/terms-of-service/terms-of-service', { method: 'HEAD', watch: false })
-const pageExists = (pageFetch: Awaited<ReturnType<typeof useFetch<PageConfig | undefined>>>) => !!pageFetch.data.value && !pageFetch.error.value
+// Check which standard pages exist
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const standardPages = computed(() => standardPagesFetch.data.value || {})
 
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
@@ -78,7 +92,7 @@ const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
   const processItem = (item: MenuItem | LinkItem) => {
     if (item.type === 'submenu' && 'children' in item && item.children) {
       item.children.forEach(processItem)
-    } else if (item.type !== 'external') {
+    } else if (!isExternalLink(item)) {
       const path = resolveLink(item)
       if (path) paths.add(path)
     }
@@ -88,18 +102,27 @@ const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
   return paths
 }
 
-// Filter to get only internal items
+// Filter to get only internal items and exclude the sitemap route
 const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkItem)[] => {
-  return items.filter(item => {
-    if (item.type === 'submenu' && 'children' in item && item.children) {
-      return filterInternalItems(item.children).length > 0
-    }
-    return item.type !== 'external'
-  }).map(item => {
-    if (item.type === 'submenu' && 'children' in item && item.children) {
-      return { ...item, children: filterInternalItems(item.children) }
-    }
-    return item
+  const filtered = items
+    .map(item => {
+      if (item.type === 'submenu' && 'children' in item && item.children) {
+        const children = filterInternalItems(item.children)
+        if (children.length === 0) return null
+        return { ...item, children }
+      }
+      return item
+    })
+    .filter(Boolean) as (MenuItem | LinkItem)[]
+
+  // Remove external links and any links resolving to '/sitemap'
+  return filtered.filter(item => {
+    if (item.type === 'submenu') return true // keep submenus
+    if (isExternalLink(item)) return false
+    const path = resolveLink(item)
+    if (!path) return false
+    if (path === '/sitemap') return false
+    return true
   })
 }
 
@@ -110,7 +133,7 @@ const internalFooterImportantLinks = computed(() => filterInternalItems(portalCo
 // All internal paths (to avoid duplicates)
 const allInternalPaths = computed(() => {
   const paths = new Set<string>()
-  paths.add('/') // Always add home
+
   collectInternalPaths(portalConfig.value.menu.children).forEach(p => paths.add(p))
   if (portalConfig.value.footer.links) {
     collectInternalPaths(portalConfig.value.footer.links).forEach(p => paths.add(p))
@@ -121,9 +144,7 @@ const allInternalPaths = computed(() => {
   return paths
 })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'sitemap' }
-])
+setBreadcrumbs([{ type: 'standard', subtype: 'sitemap' }])
 
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,
@@ -135,6 +156,9 @@ usePageSeo({
   en:
     sitemap: Sitemap
     description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
+    datasets: Datasets
+    applications: Applications
+    reuses: Reuses
     home: Home
     contact: Contact
     privacyPolicy: Privacy Policy
@@ -142,9 +166,13 @@ usePageSeo({
     legalNotice: Legal Notice
     cookiePolicy: Cookie Policy
     termsOfService: Terms of Service
+    login: Login Page
   fr:
     sitemap: Plan du site
     description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
+    datasets: Jeux de données
+    applications: Visualisations
+    reuses: Réutilisations
     home: Accueil
     contact: Contact
     privacyPolicy: Politique de confidentialité
@@ -152,4 +180,5 @@ usePageSeo({
     legalNotice: Mentions légales
     cookiePolicy: Politique de cookies
     termsOfService: Conditions générales d'utilisation
+    login: Page de connexion
 </i18n>

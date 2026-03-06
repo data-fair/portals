@@ -16,63 +16,97 @@
     </template>
   </v-alert>
   <template v-else-if="reuse">
-    <v-list lines="three">
-      <v-list-item
-        v-for="(portal, i) in portals"
-        :key="i"
-      >
-        <v-list-item-title>
-          <a
-            :href="getPortalUrl(portal)"
-            target="_blank"
-          >{{ portal.title }}</a>
-        </v-list-item-title>
-        <v-list-item-subtitle
-          v-if="reuse.owner.department"
-          class="mb-2"
+    <v-table density="comfortable">
+      <thead>
+        <tr>
+          <th>{{ t('portalTitle') }}</th>
+          <th v-if="hasDepartmentPortals">
+            {{ t('department') }}
+          </th>
+          <th class="w-25">
+            {{ t('status') }}
+          </th>
+          <th>{{ t('actions') }}</th>
+          <th>{{ t('link') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="portal in portals"
+          :key="portal._id"
         >
-          <span>{{ reuse.owner.name }}</span>
-          <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
-        </v-list-item-subtitle>
-        <v-list-item-subtitle
-          v-if="reuse.portals.includes(portal._id)"
-          class="mb-2"
-        >
-          <a
-            :href="getPortalUrl(portal) + '/reuses/' + reuse.slug"
-            target="_blank"
-          >
-            {{ getPortalUrl(portal) + '/reuses/' + reuse.slug }}
-          </a>
-        </v-list-item-subtitle>
-        <v-list-item-subtitle>
-          <v-row class="my-0">
-            <v-switch
-              hide-details
-              density="compact"
-              :model-value="isPublished(portal)"
-              :label="t('published')"
-              class="mt-0 ml-6"
-              @update:model-value="togglePortals(portal)"
+          <td>
+            <a
+              :href="getPortalUrl(portal)"
+              target="_blank"
+            >{{ portal.title }}</a>
+          </td>
+          <td v-if="hasDepartmentPortals">
+            {{ portal.owner.departmentName || portal.owner.department || '-' }}
+          </td>
+          <td class="w-25">
+            <v-chip
+              v-if="reuse.portals.includes(portal._id)"
+              color="success"
+              size="small"
+            >
+              {{ t('published') }}
+            </v-chip>
+            <v-chip
+              v-else-if="reuse.requestedPortals.includes(portal._id)"
+              color="warning"
+              size="small"
+            >
+              {{ t('pending') }}
+            </v-chip>
+            <v-chip
+              v-else
+              color="default"
+              size="small"
+            >
+              {{ t('notPublished') }}
+            </v-chip>
+          </td>
+          <td class="w-25">
+            <v-btn
+              size="small"
+              color="primary"
+              :loading="publishAction.loading.value"
+              @click="publishAction.execute(portal)"
+            >
+              {{ reuse.portals.includes(portal._id) ? t('unpublish') : t('publish') }}
+            </v-btn>
+            <v-btn
+              v-if="reuse.requestedPortals.includes(portal._id)"
+              size="small"
+              color="warning"
+              class="ml-2"
+              :loading="refuseAction.loading.value"
+              @click="refuseAction.execute(portal)"
+            >
+              {{ t('refuse') }}
+            </v-btn>
+          </td>
+          <td style="width: 8.33%;">
+            <v-btn
+              v-if="reuse.portals.includes(portal._id)"
+              :href="getPortalUrl(portal) + '/reuses/' + reuse.slug"
+              :title="t('viewOn', { portalTitle: portal.title })"
+              target="_blank"
+              size="small"
+              variant="text"
+              :icon="mdiOpenInNew"
             />
-            <v-switch
-              v-if="reuse.owner.type === 'organization' && !portal.staging && !reuse.portals.includes(portal._id)"
-              hide-details
-              density="compact"
-              :model-value="reuse.requestedPortals.includes(portal._id)"
-              :label="t('publicationRequested')"
-              class="mt-0 ml-6"
-              @update:model-value="toggleRequestedPortals(portal._id)"
-            />
-          </v-row>
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
   </template>
 </template>
 
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal'
+import { mdiOpenInNew } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -82,24 +116,29 @@ type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'stagi
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
 const portals = computed(() => portalsFetch.data.value?.results)
 
-const isPublished = (portal: PartialPortal) => {
-  if (!reuse.value) return
-  return reuse.value.portals.includes(portal._id) || (portal.staging && reuse.value.requestedPortals.includes(portal._id))
-}
+const hasDepartmentPortals = computed(() => {
+  return portals.value?.some(p => p.owner.department) ?? false
+})
 
-const togglePortals = (portal: PartialPortal) => {
+const publishAction = useAsyncAction(async (portal: PartialPortal) => {
   if (!reuse.value) return
-  if (portal.staging) return toggleRequestedPortals(portal._id)
-  const id = portal._id
-  const portals = reuse.value.portals.includes(id) ? reuse.value.portals.filter(i => i !== id) : [...reuse.value.portals, id]
-  patchReuse.execute({ portals })
-}
+  if (reuse.value.portals.includes(portal._id)) {
+    // Unpublish
+    const portals = reuse.value.portals.filter(id => id !== portal._id)
+    await patchReuse.execute({ portals })
+  } else {
+    // Publish
+    const portals = [...reuse.value.portals, portal._id]
+    const requestedPortals = reuse.value.requestedPortals.filter(id => id !== portal._id)
+    await patchReuse.execute({ portals, requestedPortals })
+  }
+})
 
-const toggleRequestedPortals = (id: string) => {
+const refuseAction = useAsyncAction(async (portal: PartialPortal) => {
   if (!reuse.value) return
-  const requestedPortals = reuse.value.requestedPortals.includes(id) ? reuse.value.requestedPortals.filter(i => i !== id) : [...reuse.value.requestedPortals, id]
-  patchReuse.execute({ requestedPortals })
-}
+  const requestedPortals = reuse.value.requestedPortals.filter(id => id !== portal._id)
+  await patchReuse.execute({ requestedPortals })
+})
 
 const getPortalUrl = (portal: PartialPortal): string => {
   if (portal.ingress?.url) return portal.ingress.url
@@ -110,14 +149,36 @@ const getPortalUrl = (portal: PartialPortal): string => {
 
 <i18n lang="yaml">
   en:
+    actions: Actions
+    approve: Approve
     createPortal: Create a portal
+    department: Department
+    link: Link
     noPortal: You have not configured any portal yet.
-    publicationRequested: Publication requested by a contributor
+    notPublished: Not published
+    pending: Pending
+    portalTitle: Portal
+    publish: Publish
     published: Published
+    refuse: Refuse
+    status: Status
+    unpublish: Unpublish
+    viewOn: View on {portalTitle}
 
   fr:
+    actions: Actions
+    approve: Approuver
     createPortal: Créer un portail
+    department: Département
+    link: Lien
     noPortal: Vous n'avez pas encore configuré de portail.
-    publicationRequested: Publication demandée par un contributeur
+    notPublished: Non publié
+    pending: En attente
+    portalTitle: Portail
+    publish: Publier
     published: Publié
+    refuse: Refuser
+    status: Statut
+    unpublish: Dépublier
+    viewOn: Voir sur {portalTitle}
 </i18n>

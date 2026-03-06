@@ -1,7 +1,7 @@
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
+import type { Reuse } from '#api/types/reuse'
+import type { Image } from '#api/types/image'
 import { portalMongo } from '~~/server/plugins/mongo'
-import type { Reuse } from '~~/../api/types/reuse'
-import type { Image } from '~~/../api/types/image'
 
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal

@@ -8,14 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import uiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 
-provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portals-manager/api/images/${id}/data`
-})
 </script>
 
 <style>
@@ -23,4 +17,12 @@ provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
 
 /* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
 html { overflow-y: auto; }
+
+.text-two-lines {
+  white-space: unset !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 </style>

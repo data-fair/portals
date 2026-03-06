@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Pagination
-  const limit = Math.min(Math.max(parseInt(query.limit as string) || 10, 1), 100)
+  const limit = Math.min(Math.max(parseInt(query.size as string) || 10, 1), 100)
   const skip = Math.max(parseInt(query.skip as string) || 0, 0)
 
   // Tri (par défaut, les plus récentes en premier)

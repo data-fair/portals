@@ -66,8 +66,11 @@ export const duplicatePageElements = async (
     if (el.type === 'image') {
       updateImageId(el.image)
       updateImageId(el.wideImage)
-    } else if (el.type === 'banner' || el.type === 'card') {
+    } else if (el.type === 'banner') {
       updateImageId(el.background?.image)
+    } else if (el.type === 'card') {
+      updateImageId(el.background?.image)
+      updateImageId(el.thumbnail?.image)
     } else if (el.type === 'dataset-card') {
       updateImageId(el.cardConfig?.thumbnail?.default)
     }
@@ -141,7 +144,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   let standardReplacements: Record<string, string> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications'].includes(page.type)) {
+  if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type)) {
     if (addedPortals.length > 0) {
       standardReplacements = await switchStandardPages(page, addedPortals)
     }
@@ -308,6 +311,9 @@ const renderMarkdownElements = async (pageConfig: PageConfig) => {
     if (pageElement.type === 'text' || pageElement.type === 'alert') {
       pageElement._html = pageElement.content && renderMarkdown(pageElement.content)
     }
+    if (pageElement.type === 'contact' && pageElement.bodyTemplate) {
+      pageElement.bodyTemplate_html = renderMarkdown(pageElement.bodyTemplate)
+    }
   })
 }
 
@@ -318,6 +324,7 @@ const getElementsImageRefs = async (pageElements: PageElement[]) => {
     if (pageElement.type === 'image' && pageElement.wideImage) imageRefs.push(pageElement.wideImage)
     if (pageElement.type === 'banner' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
     if (pageElement.type === 'card' && pageElement.background?.image) imageRefs.push(pageElement.background.image)
+    if (pageElement.type === 'card' && pageElement.thumbnail?.image) imageRefs.push(pageElement.thumbnail.image)
     if (pageElement.type === 'datasets-list' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
   })
@@ -331,15 +338,25 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     if (element.type === 'card') await traversePageElements(element.children, callback)
     if (element.type === 'banner') await traversePageElements(element.children, callback)
     if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
+    if (element.type === 'datasets-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'applications-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'reuses-catalog') await traversePageElements(element.advancedFilters, callback)
+
+    if (element.type === 'two-columns') {
+      await traversePageElements(element.children, callback)
+      await traversePageElements(element.children2, callback)
+    }
 
     if (element.type === 'tabs') {
       for (const tab of element.tabs) {
         await traversePageElements(tab.children, callback)
       }
     }
-    if (element.type === 'two-columns') {
-      await traversePageElements(element.children, callback)
-      await traversePageElements(element.children2, callback)
+
+    if (element.type === 'expansion-panels') {
+      for (const tab of element.panels) {
+        await traversePageElements(tab.children, callback)
+      }
     }
   }
 }

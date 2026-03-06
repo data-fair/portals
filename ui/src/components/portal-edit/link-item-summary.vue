@@ -58,9 +58,11 @@ const standardPageLabel = computed(() => {
     'terms-of-service': 'termsOfServicePage',
     datasets: 'datasetsCatalog',
     applications: 'applicationsCatalog',
+    reuses: 'reusesCatalog',
     event: 'eventsList',
     news: 'newsList',
-    sitemap: 'sitemap'
+    sitemap: 'sitemap',
+    'catalog-api-doc': 'catalogApiDocPage'
   }
 
   return labelKeys[props.item.subtype] || 'standardPage'
@@ -84,6 +86,7 @@ const standardPageLabel = computed(() => {
     eventsList: Events list
     newsList: News list
     sitemap: Sitemap
+    catalogApiDocPage: API Documentation
     standardPage: Standard page
     event: Event
     news: News
@@ -104,10 +107,11 @@ const standardPageLabel = computed(() => {
     cookiePolicyPage: Page de politique de cookies
     termsOfServicePage: Page de conditions générales d'utilisation
     datasetsCatalog: Catalogue de données
-    applicationsCatalog: Catalogue de visualisation
-    eventsList: Liste des évènements
+    applicationsCatalog: Catalogue de visualisations
+    eventsList: Liste des événements
     newsList: Liste des actualités
     sitemap: Plan du site
+    catalogApiDocPage: Documentation d'API
     standardPage: Page standard
     event: Événement
     news: Actualité

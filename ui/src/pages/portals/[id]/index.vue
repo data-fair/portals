@@ -1,5 +1,7 @@
 <template>
   <v-container data-iframe-height>
+    <theme-loader v-if="editConfig" />
+
     <v-defaults-provider
       :defaults="{
         global: {
@@ -30,9 +32,7 @@
             />
           </template>
           <template #font-families-preview>
-            <preview>
-              <font-families-preview />
-            </preview>
+            <font-families-preview />
           </template>
           <template #nav-link-preview="{ node }">
             <nav-link-preview
@@ -40,8 +40,12 @@
               :config="node.data.navLinksConfig"
             />
           </template>
+
           <template #app-bar-preview="context">
-            <preview :append-title="context.home ? ' - Accueil' : ''">
+            <preview
+              :append-title="context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview')"
+              no-padding
+            >
               <layout-app-bar
                 v-if="formValid"
                 :home="context.home"
@@ -49,10 +53,73 @@
             </preview>
           </template>
           <template #footer-preview>
-            <preview>
+            <preview
+              :append-title="t('footer')"
+              no-padding
+            >
               <layout-footer v-if="formValid" />
             </preview>
           </template>
+          <template #breadcrumb-preview>
+            <preview
+              :append-title="t('breadcrumbs')"
+              no-padding
+            >
+              <layout-breadcrumbs v-if="formValid" />
+            </preview>
+          </template>
+
+          <template #dataset-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="dataset"
+            />
+          </template>
+          <template #application-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="application"
+            />
+          </template>
+          <template #reuse-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="reuse"
+            />
+          </template>
+
+          <template #color-select-item="context">
+            <v-theme-provider theme="preview-colors">
+              <v-list-item v-bind="context.props">
+                <template #prepend>
+                  <v-sheet
+                    :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+                    :height="20"
+                    :width="20"
+                    class="mr-4"
+                    rounded="circle"
+                    border
+                  />
+                </template>
+              </v-list-item>
+            </v-theme-provider>
+          </template>
+          <template #color-select-selection="context">
+            <v-theme-provider theme="preview-colors">
+              <span class="v-select__selection-text d-inline-flex align-center">
+                <v-sheet
+                  :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+                  :height="20"
+                  :width="20"
+                  class="mr-2"
+                  rounded="circle"
+                  border
+                />
+                {{ context.item.raw.title }}
+              </span>
+            </v-theme-provider>
+          </template>
+
           <!-- TODO: fix vjsf bug -->
           <!-- <template #link-item-summary="{ node }">
             <link-item-summary :item="node.data" />
@@ -63,28 +130,9 @@
               :label="label"
               :width="width"
               :height="height"
-              :resource="portalRef"
+              :resource="{ type: 'portal', _id: route.params.id }"
               @update:model-value="(data: any) => statefulLayout.input(node, data)"
             />
-          </template>
-          <template #color-select-item="context">
-            <v-list-item v-bind="context.props">
-              <template #prepend>
-                <v-icon
-                  :icon="mdiCircle"
-                  :color="context.item.raw.value"
-                />
-              </template>
-            </v-list-item>
-          </template>
-          <template #color-select-selection="context">
-            <span :class="'v-select__selection-text'">
-              <v-icon
-                :icon="mdiCircle"
-                :color="context.item.raw.value"
-                class="mr-3"
-              />{{ context.item.raw.title }}
-            </span>
           </template>
         </vjsf-portal-config>
       </v-form>
@@ -98,6 +146,8 @@
           id: route.params.id,
           title: portalFetch.data.value.config.title,
           url: portalFetch.data.value.ingress?.url,
+          whiteLabel: portalFetch.data.value.whiteLabel,
+          isReference: portalFetch.data.value.isReference
         }"
         @refresh-portal="portalFetch.refresh()"
       />
@@ -112,10 +162,9 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import equal from 'fast-deep-equal'
-import { mdiCircle } from '@mdi/js'
 
 const { t, locale } = useI18n()
-const session = useSession()
+const session = useSessionAuthenticated()
 const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
@@ -134,8 +183,6 @@ watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
 })
 
-const portalRef = { type: 'portal' as const, _id: route.params.id }
-
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
   await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
@@ -147,12 +194,7 @@ const hasDraftDiff = computed(() => {
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return
-  setBreadcrumbs([{
-    text: t('portals'),
-    to: '/portals'
-  }, {
-    text: portal.config.title
-  }])
+  setBreadcrumbs([{ text: t('portals'), to: '/portals' }, { text: portal.config.title }])
 })
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
@@ -160,7 +202,7 @@ const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
     portal: route.params.id,
     type: 'event,news,generic',
     select: '_id,type,title,config.title,config.eventMetadata,config.newsMetadata,config.genericMetadata',
-    limit: 1000,
+    size: 1000,
     sort: 'config.title'
   }
 })
@@ -220,9 +262,15 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
 
 <i18n lang="yaml">
   en:
+    appBarPreview: Header & Navigation Bar
+    breadcrumbs: Breadcrumbs
+    footer: Footer
+    home: Home
     portals: Portals
-    appBarPreview: App Bar Preview
   fr:
+    appBarPreview: Entête & Barre de navigation
+    breadcrumbs: Fil d'Ariane
+    footer: Pied de page
+    home: Accueil
     portals: Portails
-    appBarPreview: Aperçu du header et de la barre de navigation
 </i18n>

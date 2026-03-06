@@ -1,4 +1,5 @@
 import type { Reuse } from '#api/types/reuse'
+import equal from 'fast-deep-equal'
 
 // we do not use SSR, so we can use a simple module level singleton
 export type ReuseStore = ReturnType<typeof createReuseStore>
@@ -17,7 +18,12 @@ const createReuseStore = (id: string) => {
     if (reuse.value) reuse.value = { ...reuse.value, ...patch }
   })
 
-  return { reuseFetch, reuse, patchReuse }
+  const hasDraftDiff = computed(() => {
+    if (!reuse.value) return false
+    return !equal(reuse.value.draftConfig, reuse.value.config)
+  })
+
+  return { reuseFetch, reuse, patchReuse, hasDraftDiff }
 }
 
 export function provideReuseStore (reuseId: string) {

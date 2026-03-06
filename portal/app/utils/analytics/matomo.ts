@@ -41,7 +41,15 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
     },
     track: ({ payload }) => {
       debug('track', payload)
-      _window._paq.push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
+      if (payload.event === 'search') {
+        // https://developer.matomo.org/guides/tracking-javascript-guide#internal-search-tracking
+        _window._paq.push(['trackSiteSearch', payload.properties.label, payload.properties.category, payload.properties.resultsCount])
+      } else if (payload.event.startsWith('download')) {
+        const url = payload.properties.url || `${window.location.origin}/download/${payload.properties.label}`
+        _window._paq.push(['trackLink', url, 'download'])
+      } else {
+        _window._paq.push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
+      }
     }
   }
 

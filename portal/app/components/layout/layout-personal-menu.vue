@@ -23,7 +23,28 @@
   </template>
 
   <ClientOnly v-else>
-    <v-menu :close-on-content-click="false">
+    <template #fallback>
+      <v-btn
+        :title="t('openPersonalMenu')"
+        :class="backgroundColor"
+        stacked
+      >
+        <v-avatar
+          :size="40"
+          color="surface"
+          aria-hidden="true"
+        />
+        <template v-if="(showHeader && !$vuetify.display.smAndDown)">
+          <p class="ml-2">{{ session.user.value.name }}</p>
+        </template>
+      </v-btn>
+    </template>
+
+      <!-- Eager to prevent ARIA errors-->
+      <v-menu
+        :close-on-content-click="false"
+        eager
+      >
       <template #activator="{ props }">
         <v-btn
           v-bind="props"
@@ -31,11 +52,11 @@
           :append-icon="personal ? mdiMenuDown : undefined"
           :class="backgroundColor"
         >
-          <v-avatar
-            :image="avatarUrl"
-            class="bg-transparent"
+          <owner-avatar
+            :owner="{ type: 'user', id: session.user.value.id, name: session.user.value.name }"
+            :show-tooltip="false"
             :size="40"
-            alt=""
+            aria-hidden="true"
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
             <p class="ml-2">{{ session.user.value.name }}</p>
@@ -73,6 +94,7 @@
 
 <script setup lang="ts">
 import { mdiAccountCircle, mdiAccountKey, mdiLogout, mdiMenuDown, mdiWrench } from '@mdi/js'
+import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { loginColor, navBarColor } = defineProps<{
   loginColor?: string
@@ -85,24 +107,15 @@ const { t } = useI18n()
 const { portal, preview, siteInfo } = usePortalStore()
 const session = useSession()
 
-let avatarUrl: ComputedRef<string | undefined>
 let isPortalOwner: ComputedRef<boolean>
 let backOfficeUrl: ComputedRef<string>
 if (!preview) {
-  avatarUrl = computed(() => {
-    if (!session.user.value) return
-    return `/simple-directory/api/avatars/user/${session.user.value.id}/avatar.png`
-  })
-
   isPortalOwner = computed(() => {
-    const user = session.user.value
-    if (!user || !portal.value.owner) return false
+    const account = session.account.value
+    if (!account || !portal.value.owner) return false
     return (
-      (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
-      (
-        portal.value.owner.type === 'organization' &&
-        !!user.organizations.find(o => o.id === portal.value.owner.id && o.role !== 'user')
-      )
+      account.type === portal.value.owner.type &&
+      account.id === portal.value.owner.id
     )
   })
 
@@ -117,9 +130,9 @@ if (!preview) {
 }
 
 const backgroundColor = computed(() => {
-  if (loginColor && loginColor !== 'background') return loginColor
-  if (loginColor === 'background' && navBarColor !== 'background') return 'background'
-  if (!loginColor && navBarColor && navBarColor !== 'background') return navBarColor
+  if (loginColor && loginColor !== 'background') return 'bg-' + loginColor
+  if (loginColor === 'background' && navBarColor !== 'background') return 'bg-background'
+  if (!loginColor && navBarColor && navBarColor !== 'background') return 'bg-' + navBarColor
   return undefined
 })
 

@@ -1,24 +1,25 @@
 <template>
-  <!-- Error state -->
-  <page-error
-    v-if="pageConfigFetch.error.value"
-    :status-code="pageConfigFetch.error.value.statusCode || 500"
-    :title="errorTitle"
-    :link="{
-      type: 'standard',
-      subtype: 'event',
-      title: t('backToEvents')
-    }"
-  />
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
+    <!-- Error state -->
+    <page-error
+      v-if="pageConfigFetch.error.value"
+      :status-code="pageConfigFetch.error.value.statusCode || 500"
+      :title="errorTitle"
+      :link="{
+        type: 'standard',
+        subtype: 'event',
+        title: t('backToEvents')
+      }"
+    />
 
-  <page-elements
-    v-else-if="pageConfigFetch.data.value"
-    :model-value="pageConfigFetch.data.value.elements"
-  />
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
+  </layout-page>
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { PageConfig } from '#api/types/page'
 
 const route = useRoute()
@@ -26,11 +27,11 @@ const slug = route.params.slug as string
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
+providePageImageSrc('event', slug)
 
-const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, {
-  watch: false
-})
+const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, { watch: false })
+provide('page-config', pageConfigFetch)
 
 const errorTitle = computed(() => {
   const code = pageConfigFetch.error.value?.statusCode
@@ -39,17 +40,12 @@ const errorTitle = computed(() => {
   return t('eventError')
 })
 
-provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/event/${slug}/images/${id}`
-})
-
-watch(() => pageConfigFetch.data.value, () => {
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'event' },
-    { title: pageConfigFetch.data.value?.title || t('event') }
+    { title: pageConfig?.title || t('event') }
   ])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({

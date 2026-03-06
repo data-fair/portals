@@ -15,7 +15,7 @@ export default defineEventHandler((event) => {
 
   // Redirect /datasets/:id/full to /datasets/:id/table
   if (path.match(/^\/datasets\/[^/]+\/full$/)) {
-    const newPath = path.replace('/full', '/table')
+    const newPath = `${path.replace('/full', '/table')}${url.search}`
     return sendRedirect(event, newPath, 302)
   }
 })

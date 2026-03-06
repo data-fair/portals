@@ -14,4 +14,8 @@ export const jsonFromMultiPart = (req: Request, res: Response, next: NextFunctio
   next()
 }
 
-export const upload = multer({ dest: config.tmpDir })
+/**
+ * Multer upload middleware configured to store files in the temporary directory
+ * with a maximum file size of 50 MB.
+ */
+export const upload = multer({ dest: config.tmpDir, limits: { fileSize: 50 * 1024 * 1024 } })

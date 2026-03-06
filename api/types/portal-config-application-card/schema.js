@@ -2,12 +2,10 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-application-card',
   'x-exports': [],
   title: 'Application Card',
-  'x-i18n-title': {
-    fr: "Vignette d'une application"
-  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
+    title: null,
     children: [{
       comp: 'card',
       title: 'Options',
@@ -155,12 +153,13 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'color',
-              'elevation',
-              'density',
-              'rounded',
-              'showIcon',
-              'iconColor'
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } },
+              { key: 'showIcon', cols: { md: 4 } },
+              { key: 'iconColor', cols: { md: 4 } }
             ]
           }
         ]
@@ -172,36 +171,31 @@ export default {
           layout: 'switch',
         },
         color: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
         },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes',
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
+          title: "Afficher l'icône",
+          layout: { comp: 'switch' },
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur des icônes',
+          title: "Couleur de l'icône",
           layout: {
-            if: 'parent.data?.showIcon === true',
-            cols: { md: 6 }
+            if: 'parent.data?.showIcon === true'
           }
         }
       }

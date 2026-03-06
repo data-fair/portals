@@ -1,8 +1,9 @@
+import type { Image } from '#types/image/index.js'
+import type { ResizeInput, ResizeOutput } from './resize-image.ts'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
-import type { Image } from '#types/image/index.js'
+import { unlink } from 'node:fs/promises'
 import { Piscina } from 'piscina'
-import type { ResizeInput, ResizeOutput } from './resize-image.ts'
 import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { type Request, type Response, type NextFunction, Router } from 'express'
 import mongo from '#mongo'
@@ -41,11 +42,12 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
   }
 
   const createdAt = new Date().toISOString()
+  const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8')
   const image: Image = {
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
     createdAt,
-    name: file.originalname,
+    name: originalName,
     ...body,
     ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))
   }
@@ -62,6 +64,7 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
     await mongo.images.insertOne(imageMobile)
   }
   await mongo.images.insertOne(image)
+  await unlink(file.path)
 
   res.json({ ...image, data: undefined })
 })

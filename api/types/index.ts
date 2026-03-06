@@ -76,7 +76,7 @@ export type Dataset = {
     url: string
     title: string
     name: string
-    type: 'file' | 'remoteFile'
+    type: 'file' | 'remoteFile' | 'url'
     description: string
     size: string
     updatedAt: string
@@ -111,6 +111,11 @@ export type Dataset = {
       updatedAt: string
     }[]
   }
+
+  relatedDatasets?: {
+    id: string
+    title: string
+  }[]
 
   previews?: {
     id: string

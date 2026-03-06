@@ -1,17 +1,17 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 import type { ImageRef } from '#types/image-ref/index.ts'
 import type { IngressManagerIngressInfo } from '#types'
-import { duplicateImage } from '../images/service.ts'
 
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
-import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
+import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, httpError } from '@data-fair/lib-express'
 import axios from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
+import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyCss } from '../fonts/service.ts'
 
 const debug = debugModule('portals')
@@ -33,6 +33,10 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
+  // Change WhiteLabel or isReference by super admin only
+  if (patch.whiteLabel || patch.isReference) assertAdminMode(session)
+
+  // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
     await mongo.images.updateMany(
@@ -72,6 +76,23 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
   debug('deletePortal', portal)
   await syncPortalDelete(portal, reqOrigin, cookie)
+  // Remove portal reference from pages and delete images related to the portal
+  await mongo.pages.updateMany(
+    {
+      'owner.type': portal.owner.type,
+      'owner.id': portal.owner.id,
+      $or: [
+        { portals: portal._id },
+        { requestedPortals: portal._id }
+      ]
+    },
+    {
+      $pull: {
+        portals: portal._id,
+        requestedPortals: portal._id
+      }
+    }
+  )
   await mongo.images.deleteMany({
     'owner.type': portal.owner.type,
     'owner.id': portal.owner.id,
@@ -326,22 +347,23 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): s
 export const duplicatePortalConfig = async (
   sessionState: SessionStateAuthenticated,
   sourcePortalId: string,
-  _newPortalId: string,
-  _newOwner: Portal['owner']
+  newPortalId: string,
+  newOwner: Portal['owner']
 ): Promise<{ config: PortalConfig; eventDetails: string }> => {
-  const sourcePortal = await getPortalAsAdmin(sessionState, sourcePortalId)
+  const sourcePortal = await mongo.portals.findOne({ _id: sourcePortalId })
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
-  const eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
 
-  // Duplicate images referenced in the portal config and rewrite IDs
-  const imageIdMap = new Map<string, string>()
+  if (!sourcePortal.isReference) assertAccountRole(sessionState, sourcePortal.owner, 'admin')
+
   const duplicatedConfig = JSON.parse(JSON.stringify(sourcePortal.config)) as PortalConfig
+
+  const imageIdMap = new Map<string, string>()
   const imageRefs = getPortalConfigImageRefs(duplicatedConfig).filter((ref): ref is ImageRef => Boolean(ref))
 
   await Promise.all(
     imageRefs.map(async (imageRef) => {
       if (!imageIdMap.has(imageRef._id)) {
-        const newImageId = await duplicateImage(imageRef._id, 'portal', _newPortalId, _newOwner)
+        const newImageId = await duplicateImage(imageRef._id, 'portal', newPortalId, newOwner)
         imageIdMap.set(imageRef._id, newImageId)
       }
     })
@@ -373,6 +395,9 @@ export const duplicatePortalConfig = async (
   if (duplicatedConfig.topics) {
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
+
+  let eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
+  if (sourcePortal?.isReference) eventDetails = `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})`
 
   return { config: duplicatedConfig, eventDetails }
 }

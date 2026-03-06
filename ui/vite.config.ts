@@ -26,7 +26,7 @@ export default defineConfig({
   plugins: [
     VueRouter({
       dts: './dts/typed-router.d.ts',
-      exclude: process.env.NODE_ENV === 'development' ? [] : ['src/pages/dev.vue']
+      exclude: process.env.NODE_ENV === 'development' ? [] : ['src/pages/dev.vue', 'src/pages/topics.vue']
     }),
     Vue({ template: { compilerOptions: { isCustomElement: (tag) => ['d-frame'].includes(tag) } } }),
     VueI18nPlugin({ strictMessage: false }),
@@ -37,22 +37,7 @@ export default defineConfig({
       imports: [
         ...autoImports,
         {
-          '~/context': ['$uiConfig', '$sitePath', '$cspNonce', '$apiPath', '$fetch'],
-          '@mdi/js': [
-            'mdiBell',
-            'mdiRefresh',
-            'mdiSend',
-            'mdiDelete',
-            'mdiDevices',
-            'mdiEmail',
-            'mdiRss',
-            'mdiDotsVertical',
-            'mdiCheckCircle',
-            'mdiCancel',
-            'mdiAlertCircle',
-            'mdiCellphone',
-            'mdiWeb'
-          ]
+          '~/context': ['$uiConfig', '$sitePath', '$cspNonce', '$apiPath', '$fetch']
         }
       ],
       dirs: [

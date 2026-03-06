@@ -17,6 +17,18 @@ export default {
       title: 'Titre',
       readOnly: true
     },
+    whiteLabel: {
+      title: 'Marque blanche',
+      description: 'Si coché le portail n\'affichera aucune marque Koumoul',
+      type: 'boolean',
+      default: false,
+      readOnly: true
+    },
+    isReference: { // superadmin can set a page as reference page
+      type: 'boolean',
+      title: 'Reference Page',
+      readOnly: true
+    },
     staging: {
       title: 'Pré-production',
       description: 'Si coché les contributeurs pourront publier des ressources sans solliciter les administrateurs',

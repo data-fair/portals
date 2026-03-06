@@ -78,43 +78,76 @@
             />
           </template>
 
-          <!-- Init from other portal -->
-          <template v-if="portalsFetch.data.value?.results?.length">
-            <h2 class="text-h6">
-              {{ t('initFromOtherPortal.title') }}
-            </h2>
-            <p>{{ t('initFromOtherPortal.description') }}</p>
-            <v-row class="d-flex align-stretch mt-2">
-              <!-- Default -->
-              <v-col
-                md="4"
-                sm="6"
-                cols="12"
+          <!-- Default -->
+          <h2 class="text-h6">
+            {{ t('initFromOtherPortal.title') }}
+          </h2>
+          <v-row class="d-flex align-stretch mt-2">
+            <v-col
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="selectedPortal === undefined ? 'primary' : ''"
+                @click="selectPortal()"
               >
-                <v-card
-                  class="h-100"
-                  :color="selectedPortal === undefined ? 'primary' : ''"
-                  @click="selectPortal()"
-                >
-                  <template #title>
-                    <span :class="selectedPortal !== undefined ? 'text-primary' : ''">
-                      {{ t('blankPortal') }}
-                    </span>
-                  </template>
-                </v-card>
-              </v-col>
+                <template #title>
+                  <span :class="selectedPortal !== undefined ? 'text-primary' : ''">
+                    {{ t('blankPortal') }}
+                  </span>
+                </template>
+              </v-card>
+            </v-col>
+          </v-row>
 
-              <!-- Other portals -->
+          <!-- Reference portals -->
+          <template v-if="referencePortalsFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('useReferencePortal.title') }}
+            </h2>
+            <p>{{ t('useReferencePortal.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
               <v-col
-                v-for="portal in portalsFetch.data.value.results"
+                v-for="portal in referencePortalsFetch.data.value.results"
                 :key="portal._id"
                 md="4"
                 sm="6"
                 cols="12"
               >
                 <v-card
-                  :color="selectedPortal === portal._id ? 'primary' : ''"
                   class="h-100"
+                  :color="selectedPortal === portal._id ? 'primary' : ''"
+                  @click="selectPortal(portal._id)"
+                >
+                  <template #title>
+                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                      {{ portal.title }}
+                    </span>
+                  </template>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+
+          <!-- Duplicate existing portal -->
+          <template v-if="userPortalsFetch.data.value?.results?.length">
+            <h2 class="text-h6 mt-4">
+              {{ t('duplicatePortal.title') }}
+            </h2>
+            <p>{{ t('duplicatePortal.description') }}</p>
+            <v-row class="d-flex align-stretch mt-2">
+              <v-col
+                v-for="portal in userPortalsFetch.data.value.results"
+                :key="portal._id"
+                md="4"
+                sm="6"
+                cols="12"
+              >
+                <v-card
+                  class="h-100"
+                  :color="selectedPortal === portal._id ? 'primary' : ''"
                   @click="selectPortal(portal._id)"
                 >
                   <template #title>
@@ -480,7 +513,7 @@ const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applicat
 const generalInformations = {
   title: ref<string>(''),
   staging: ref<boolean>(false),
-  owner: ref<Account>()
+  owner: ref<Account>(session.state.account)
 }
 const selectedPortal = ref<string | undefined>(undefined)
 const selectedPages = {
@@ -489,11 +522,17 @@ const selectedPages = {
   applications: ref<string | undefined>(undefined)
 }
 
-const ownersReady = ref(false)
+const ownersReady = ref(true)
 const formValid = ref(false)
 
-// Fetch portals
-const portalsFetch = useFetch<{ results: Pick<Portal, '_id' | 'title'>[] }>(
+// Fetch reference portals
+const referencePortalsFetch = useFetch<{ results: Pick<Portal, '_id' | 'title'>[] }>(
+  $apiPath + '/portals',
+  { query: { select: '_id,title', isReference: true }, notifError: false }
+)
+
+// Fetch user's portals for duplication
+const userPortalsFetch = useFetch<{ results: Pick<Portal, '_id' | 'title'>[] }>(
   $apiPath + '/portals',
   { query: { select: '_id,title' }, notifError: false }
 )
@@ -606,8 +645,9 @@ const createPortal = useAsyncAction(
         type: 'home',
         sourcePageId: selectedPages.home.value !== 'blank' ? selectedPages.home.value : undefined, // Source page ID to duplicate (optional)
         portals: [portal._id],
+        title: t('pages.home') + ' - ' + portalTitle,
         config: {
-          title: t('pages.home') + ' - ' + portalTitle,
+          title: t('pages.home'),
           elements: []
         }
       }
@@ -622,8 +662,9 @@ const createPortal = useAsyncAction(
           type: 'datasets',
           sourcePageId: selectedPages.datasets.value !== 'blank' ? selectedPages.datasets.value : undefined, // Source catalog page ID to duplicate (optional)
           portals: [portal._id],
+          title: t('pages.datasetsCatalog') + ' - ' + portalTitle,
           config: {
-            title: t('pages.datasetsCatalog') + ' - ' + portalTitle,
+            title: t('pages.datasetsCatalog'),
             elements: []
           }
         }
@@ -639,8 +680,9 @@ const createPortal = useAsyncAction(
           type: 'applications',
           sourcePageId: selectedPages.applications.value !== 'blank' ? selectedPages.applications.value : undefined, // Source applications page ID to duplicate (optional)
           portals: [portal._id],
+          title: t('pages.applicationsCatalog') + ' - ' + portalTitle,
           config: {
-            title: t('pages.applicationsCatalog') + ' - ' + portalTitle,
+            title: t('pages.applicationsCatalog'),
             elements: []
           }
         }
@@ -677,6 +719,12 @@ setBreadcrumbs([
     initFromOtherPortal:
       title: Initialize configuration from an existing portal
       description: This will copy the styles, menu and permissions, but not the pages.
+    useReferencePortal:
+      title: Use a reference portal
+      description: Select a pre-designed portal configuration to save time.
+    duplicatePortal:
+      title: Duplicate one of your existing portals
+      description: Create a copy of a portal you already own.
     useReferenceTemplate:
       title: Use a reference template
       description: Select a pre-designed layout to save time.
@@ -717,6 +765,12 @@ setBreadcrumbs([
     initFromOtherPortal:
       title: Initialiser la configuration depuis un portail existant
       description: Cela copiera les styles, le menu et les permissions, mais pas les pages.
+    useReferencePortal:
+      title: Utiliser un portail de référence
+      description: Sélectionnez une configuration de portail pré-conçue pour gagner du temps.
+    duplicatePortal:
+      title: Dupliquer l'un de vos portails existants
+      description: Créez une copie d'un portail que vous possédez déjà.
     useReferenceTemplate:
       title: Utiliser un modèle de référence
       description: Sélectionnez une mise en page pré-conçue pour gagner du temps.

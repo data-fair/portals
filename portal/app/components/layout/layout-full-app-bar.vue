@@ -1,6 +1,7 @@
 <template>
   <v-app-bar
     ref="appBarRef"
+    :color="portalConfig.navBar.color"
     flat
   >
     <v-container
@@ -17,7 +18,7 @@
 
         <!-- Breadcrumbs -->
         <v-spacer />
-        <layout-breadcrumbs />
+        <LayoutBreadcrumbs is-layout-full/>
         <v-spacer />
 
       </v-row>

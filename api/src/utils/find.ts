@@ -8,9 +8,8 @@ export const filterPermissions = (reqQuery: Record<string, string>, sessionState
   const query: Record<string, any> = {}
 
   const showAll = reqQuery.showAll === 'true'
-  if (showAll && !sessionState.user.adminMode) {
-    throw httpError(403, 'Only super admins can use showAll parameter')
-  }
+  if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
+
   if (!showAll) {
     query['owner.type'] = sessionState.account.type
     query['owner.id'] = sessionState.account.id

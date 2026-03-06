@@ -1,40 +1,38 @@
 <template>
-  <tracking-consent v-if="privacyPolicyCheck.error.value && cookiePolicyCheck.error.value" />
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
+    <tracking-consent v-if="!privacyPolicyExist && !cookiePolicyExist" />
 
-  <!-- Error state -->
-  <page-error
-    v-if="pageConfigFetch.error.value"
-    :status-code="pageConfigFetch.error.value.statusCode || 500"
-  />
+    <!-- Error state -->
+    <page-error
+      v-if="pageConfigFetch.error.value"
+      :status-code="pageConfigFetch.error.value.statusCode || 500"
+    />
 
-  <page-elements
-    v-else-if="pageConfigFetch.data.value"
-    :model-value="pageConfigFetch.data.value.elements"
-  />
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
+  </layout-page>
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
+providePageImageSrc('legal-notice')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
-const privacyPolicyCheck = await useFetch<PageConfig>('/portal/api/pages/privacy-policy/privacy-policy', { watch: false })
-const cookiePolicyCheck = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
+provide('page-config', pageConfigFetch.data)
 
-provide('get-image-src', (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/legal-notice/legal-notice/images/${id}`
-})
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const privacyPolicyExist = computed(() => standardPagesFetch.data.value?.['privacy-policy'])
+const cookiePolicyExist = computed(() => standardPagesFetch.data.value?.['cookie-policy'])
 
-watch(() => pageConfigFetch.data.value, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'legal-notice', title: pageConfigFetch.data.value?.title }
-  ])
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  setBreadcrumbs([{ type: 'standard', subtype: 'legal-notice', title: pageConfig?.title }])
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 
 usePageSeo({

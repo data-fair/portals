@@ -7,20 +7,19 @@
     scrolling="no"
     sync-params
     emit-iframe-messages
-    @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
+    @iframe-message="(iframeMessage: CustomEvent) => onIframeTrackMessage(iframeMessage.detail)"
   />
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
-
 definePageMeta({ layout: 'full' })
 
-const { setBreadcrumbs } = useNavigationStore()
-const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 const route = useRoute()
 const { origin } = useRequestURL()
+const { setBreadcrumbs } = useNavigationStore()
+const { portal, portalConfig } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
 
 const datasetFetch = useLocalFetch<{
   title: string
@@ -38,12 +37,6 @@ const datasetFetch = useLocalFetch<{
   }
 })
 
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
-
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card
   const dataset = datasetFetch.data.value
@@ -60,11 +53,6 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const onIframeMessage = (message: any) => {
-  if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
-}
-
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
     { type: 'standard', subtype: 'datasets' },
@@ -76,7 +64,7 @@ watch(datasetFetch.data, () => {
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('dataset'),
   description: () => datasetFetch.data.value?.summary,
-  ogImage: thumbnailUrl
+  ogImage: () => thumbnailUrl.value
 })
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))

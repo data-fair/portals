@@ -6,44 +6,63 @@
       2. Stability: Manual rendering bypasses complex internal logic, ensuring a stable render cycle
         and better performance when breadcrumbs are updated reactively from a store.
   -->
-  <nav :aria-label="t('breadcrumb')">
-    <v-breadcrumbs
-      tag="ol"
-      density="compact"
-    >
-      <template
-        v-for="(item, index) in breadcrumbItems"
-        :key="index"
+  <component
+    :is="isLayoutFull ? 'div' : VContainer"
+    v-bind="isLayoutFull ? undefined : {
+      class: ['pa-0', { container: breadcrumbConfig.fluid === false }],
+      fluid: true
+    }"
+  >
+    <nav :aria-label="t('breadcrumb')">
+      <v-breadcrumbs
+        tag="ol"
+        density="compact"
+        :class="{ 'px-0 ml-n1': isElement }"
       >
+        <template
+          v-for="(item, index) in breadcrumbItems"
+          :key="index"
+        >
 
-        <v-breadcrumbs-item
-          v-bind="typeof item === 'object' ? item : { title: item }"
-          :aria-current="index === breadcrumbItems.length - 1 ? 'page' : undefined"
-        />
-
-        <v-breadcrumbs-divider v-if="index < breadcrumbItems.length - 1">
-          <v-icon
-            v-if="breadcrumbConfig.separator?.type === 'icon' && breadcrumbConfig.separator.icon?.svgPath"
-            :icon="breadcrumbConfig.separator.icon.svgPath"
-            :color="breadcrumbConfig.separator.color"
-            size="small"
+          <v-breadcrumbs-item
+            v-bind="typeof item === 'object' ? item : { title: item }"
+            :class="{ 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull }"
+            :aria-current="index === breadcrumbItems.length - 1 ? 'page' : undefined"
           />
-          <span
-            v-else
-            :class="breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined"
+
+          <v-breadcrumbs-divider
+            v-if="index < breadcrumbItems.length - 1"
+            :class="{ 'px-1': breadcrumbConfig.compact && !isLayoutFull }"
           >
-            {{ breadcrumbConfig.separator?.text || '/' }}
-          </span>
-        </v-breadcrumbs-divider>
-      </template>
-    </v-breadcrumbs>
-  </nav>
+            <v-icon
+              v-if="breadcrumbConfig.separator?.type === 'icon' && breadcrumbConfig.separator.icon?.svgPath"
+              :icon="breadcrumbConfig.separator.icon.svgPath"
+              :color="breadcrumbConfig.separator.color"
+              size="small"
+            />
+            <span
+              v-else
+              :class="[
+                breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined,
+                { 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull },
+              ]"
+            >
+              {{ breadcrumbConfig.separator?.text || '/' }}
+            </span>
+          </v-breadcrumbs-divider>
+        </template>
+      </v-breadcrumbs>
+    </nav>
+  </component>
 </template>
 
 <script setup lang="ts">
 import type { VBreadcrumbs } from 'vuetify/components'
+import { VContainer } from 'vuetify/components'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
+
+defineProps<{ isLayoutFull?: boolean, isElement?: boolean }>()
 
 const { portalConfig } = usePortalStore()
 const { breadcrumbs } = useNavigationStore()

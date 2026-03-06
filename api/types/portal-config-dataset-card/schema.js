@@ -2,28 +2,27 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-dataset-card',
   'x-exports': [],
   title: 'Dataset card',
-  'x-i18n-title': {
-    fr: "Vignette d'un jeu de données"
-  },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
-    children: [{
-      comp: 'card',
-      title: 'Options',
-      children: [
-        'actionsLocation',
-        'actionsStyle',
-        'elevation',
-        'rounded',
-        'titleLinesCount',
-        'showSummary',
-        'showDepartment'
-      ]
-    },
-    'thumbnail',
-    'topics',
-    'keywords'
+    title: null,
+    children: [
+      {
+        comp: 'card',
+        title: 'Options',
+        children: [
+          'actionsLocation',
+          'actionsStyle',
+          'elevation',
+          'rounded',
+          'titleLinesCount',
+          'showSummary',
+          'showDepartment'
+        ]
+      },
+      'thumbnail',
+      'topics',
+      'keywords'
     ]
   },
   properties: {
@@ -100,10 +99,11 @@ export default {
             if: 'data?.show === true',
             children: [
               { key: 'location', cols: { md: 6 } },
-              { key: 'crop', cols: { md: 6 } },
-              { key: 'default', cols: { md: 4 } },
+              { key: 'default', cols: { md: 6 } },
+              { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
-              { key: 'useApplication', cols: { md: 4 } }
+              { key: 'useApplication', cols: { md: 4 } },
+              { markdown: "**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de l'application** (si activé)\n4. **Image par défaut** (si définie)" }
             ]
           },
         ]
@@ -118,7 +118,6 @@ export default {
         location: {
           type: 'string',
           title: "Position de l'image sur la carte",
-          layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
             { const: 'left', title: 'À gauche' },
@@ -130,7 +129,7 @@ export default {
           type: 'boolean',
           title: "Recadrer l'image pour un rendu uniforme",
           description: "Si désactivé, l'image gardera son ratio d'origine",
-          layout: { comp: 'switch' },
+          layout: 'switch',
           default: true
         },
         default: {
@@ -165,21 +164,25 @@ export default {
           type: 'boolean',
           title: "Utiliser l'image de la première thématique",
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: { comp: 'switch', },
+          layout: 'switch',
           default: false
         },
         useApplication: {
           type: 'boolean',
           title: "Utiliser l'image de la première application",
           description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: { comp: 'switch', },
+          layout: 'switch',
           default: false
         }
       }
     },
     topics: {
       type: 'object',
-      title: 'Configuration des thématiques',
+      title: 'TopicsConfig',
+      'x-i18n-title': {
+        en: 'Topics configuration',
+        fr: 'Configuration des thématiques'
+      },
       layout: {
         comp: 'card',
         children: [
@@ -187,12 +190,13 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              { key: 'color', cols: { md: 6 } },
-              { key: 'elevation', cols: { md: 6 } },
-              { key: 'density', cols: { md: 6 } },
-              { key: 'rounded', cols: { md: 6 } },
-              { key: 'showIcon', cols: { md: 6 } },
-              { key: 'iconColor', cols: { md: 6 } }
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } },
+              { key: 'showIcon', cols: { md: 4 } },
+              { key: 'iconColor', cols: { md: 4 } }
             ]
           }
         ]
@@ -204,28 +208,29 @@ export default {
           layout: 'switch',
         },
         color: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
         },
         showIcon: {
           type: 'boolean',
-          title: 'Afficher les icônes',
-          layout: {
-            comp: 'switch',
-          },
+          title: "Afficher l'icône",
+          layout: { comp: 'switch' },
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur des icônes',
+          title: "Couleur de l'icône",
           layout: {
             if: 'parent.data?.showIcon === true',
           }
@@ -234,7 +239,11 @@ export default {
     },
     keywords: {
       type: 'object',
-      title: 'Configuration des mots-clés',
+      title: 'KeywordsConfig',
+      'x-i18n-title': {
+        en: 'Keywords configuration',
+        fr: 'Configuration des mots-clés'
+      },
       layout: {
         comp: 'card',
         children: [
@@ -242,10 +251,11 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              'color',
-              'elevation',
-              'density',
-              'rounded'
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } }
             ]
           }
         ]
@@ -257,26 +267,19 @@ export default {
           layout: 'switch'
         },
         color: {
-          type: 'string',
-          title: 'Couleur',
-          layout: { cols: { md: 6 } },
-          oneOf: [
-            { const: 'primary', title: 'Primaire' },
-            { const: 'secondary', title: 'Secondaire' },
-            { const: 'accent', title: 'Accentuée' }
-          ]
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
         }
       }
     }

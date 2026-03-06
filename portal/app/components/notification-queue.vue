@@ -1,9 +1,11 @@
 <template>
+  <!-- Eager to prevent ARIA errors-->
   <v-menu
+    :close-on-content-click="false"
     max-height="400"
     max-width="500"
     width="100%"
-    :close-on-content-click="false"
+    eager
   >
     <template #activator="{ props }">
       <v-btn
@@ -61,8 +63,8 @@
 
 <script setup lang="ts">
 import type { Emitter } from '@data-fair/lib-common-types/event'
-import { mdiBell } from '@mdi/js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiBell } from '@mdi/js'
 
 const session = useSession()
 const { dayjs } = useLocaleDayjs()

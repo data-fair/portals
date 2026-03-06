@@ -26,9 +26,11 @@
             :append-icon="mdiChevronDown"
             :value="i"
           >
-            <template #prepend>
+            <template
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              #prepend
+            >
               <v-icon
-                v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
                 :icon="link.icon.mdi?.svgPath || link.icon.custom"
                 :color="link.icon.color"
               />
@@ -51,9 +53,11 @@
         :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
         :value="i"
       >
-        <template #prepend>
+        <template
+          v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+          #prepend
+        >
           <v-icon
-            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
             :icon="link.icon.mdi?.svgPath || link.icon.custom"
             :color="link.icon.color"
           />

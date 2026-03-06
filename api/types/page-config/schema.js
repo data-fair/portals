@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-config',
-  'x-exports': ['types', 'vjsf'],
+  'x-exports': ['vjsf'],
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
@@ -17,7 +17,7 @@ export default {
       'x-i18n-title': {
         fr: 'Métadonnées'
       },
-      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs', 'fluid']
     }, {
       title: 'Content',
       'x-i18n-title': {
@@ -56,7 +56,7 @@ export default {
     },
     eventMetadata: {
       type: 'object',
-      required: ['slug', 'startDate'],
+      required: ['slug'],
       default: {},
       layout: { if: 'context.pageType === "event"' },
       properties: {
@@ -66,8 +66,9 @@ export default {
           format: 'date-time',
           title: 'Start Date',
           'x-i18n-title': {
-            fr: "Date de l'évènement"
-          }
+            fr: 'Date de debut'
+          },
+          layout: { cols: { md: 6 } }
         },
         endDate: {
           type: 'string',
@@ -75,7 +76,8 @@ export default {
           title: 'End Date',
           'x-i18n-title': {
             fr: 'Date de fin'
-          }
+          },
+          layout: { cols: { md: 6 } }
         }
       }
     },
@@ -122,6 +124,39 @@ export default {
           }
         }
       }
+    },
+    showBreadcrumbs: {
+      type: 'boolean',
+      title: 'Show breadcrumbs',
+      'x-i18n-title': {
+        fr: "Afficher le fil d'Ariane"
+      },
+      description: 'Display the breadcrumbs if they are enabled in the portal settings. If set to false, they will never be shown on this page. You can manually add the Breadcrumbs via the page block to position it wherever you want.',
+      'x-i18n-description': {
+        fr: "Affiche le fil d'Ariane si celui-ci est activé dans la configuration du portail. Si désactivé ici, il ne sera jamais affiché sur cette page. Vous pouvez ajouter manuellement le Fil d'Ariane via le bloc de pages pour le positionner où vous le souhaitez."
+      },
+      layout: {
+        if: 'context.pageType !== "home"', // Always hide on home page
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: true,
+    },
+    fluid: {
+      type: 'boolean',
+      title: '',
+      'x-i18n-title': {
+        fr: 'Page pleine largeur'
+      },
+      description: '',
+      'x-i18n-description': {
+        fr: 'Si activé, le contenu de la page utilisera toute la largeur disponible de l\'écran, sinon il sera contenu dans une largeur fixe pour une meilleure lisibilité.'
+      },
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: false
     },
     elements: {
       type: 'array',

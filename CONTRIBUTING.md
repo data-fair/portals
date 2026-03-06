@@ -44,6 +44,10 @@ npm run dev-zellij
 npm run stop-dev-deps
 ```
 
+## Working with Git Worktrees
+
+This project supports git worktrees with fully isolated port allocations, allowing multiple branches to run concurrently (useful for AI agents or parallel development). Run `./dev/worktree.sh <branch-name>` to create a new worktree with its own `.env`, Docker Compose project, and randomized port range. When setting up for the first time, not in a worktree, you can run `./dev/init-env.sh`.
+
 ## Building the Docker images
 
 ```sh
@@ -53,7 +57,7 @@ docker build --progress=plain --target=portal -t data-fair/portals/portal:dev .
 
 ## Running the tests
 
-First, you need to start the development dependancies
+First, you need to start the development dependencies
 
 ```sh
 npm run dev-deps

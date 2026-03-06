@@ -29,6 +29,7 @@ export default {
       },
       { comp: 'card', title: 'Image de fond', children: ['backgroundImage', 'backgroundImageLocation'] },
       { comp: 'card', title: 'Slogan', children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
+      { name: 'footer-preview' },
       { comp: 'card', title: 'Liens', children: ['linksMode', 'links'] },
       {
         comp: 'card',
@@ -44,6 +45,13 @@ export default {
     color: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: 'Couleur du pied de page',
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true }
+      }
     },
     copyright: {
       type: 'string',
@@ -161,7 +169,13 @@ export default {
     sloganColor: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
       title: 'Couleur du slogan',
-      layout: { cols: { md: 4 } }
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        cols: { md: 4 }
+      }
     },
     sloganPosition: {
       type: 'string',

@@ -27,12 +27,6 @@
         :title="t('myAccount')"
         to="/me/account"
       />
-      <!-- TODO: Add reuses -->
-      <!-- <v-list-item
-        to="/me/uses"
-        :prepend-icon="mdiShare"
-        title="Mes réutilisations"
-      /> -->
       <v-list-item
         v-if="!portalConfig.personal.hidePages.includes('notifications')"
         :prepend-icon="mdiBell"
@@ -64,6 +58,13 @@
       />
 
       <v-list-item
+        v-if="portalConfig.reuses?.allowUserReuses && !isPortalOwner"
+        :prepend-icon="mdiPageNext"
+        :title="t('myReuses')"
+        to="/me/reuses"
+      />
+
+      <v-list-item
         v-if="!session.account.value.department && session.accountRole.value === 'admin' && !portalConfig.personal.hidePages.includes('api-keys')"
         :prepend-icon="mdiCloudKey"
         :title="t('apiKeys')"
@@ -71,17 +72,24 @@
       />
 
       <v-list-item
-        v-if="!portalConfig.personal.hidePages.includes('contribute')"
+        v-if="(datasetsCount.rest || datasetsCount.file) && !portalConfig.personal.hidePages.includes('contribute')"
         :prepend-icon="mdiUpload"
         :title="t('contribute')"
         to="/me/update-dataset"
       />
 
       <v-list-item
-        v-if="!portalConfig.personal.hidePages.includes('processings')"
+        v-if="processingsCount && !portalConfig.personal.hidePages.includes('processings')"
         :prepend-icon="mdiCogTransferOutline"
         :title="t('processings')"
         to="/me/processings"
+      />
+
+      <v-list-item
+        v-if="isPortalOwner"
+        :prepend-icon="mdiWrench"
+        :href="backOfficeUrl"
+        :title="t('backOffice')"
       />
 
       <v-list-item
@@ -101,14 +109,24 @@
     </v-list>
 
     <!-- Copyright -->
-    <template #append>
+    <template
+      v-if="!portal.whiteLabel"
+      #append
+    >
+      <!--
+        Note that the `title` prop overrides the native `title` attribute,
+        which must be set using `v-bind:title.attr` instead.
+        See https://vuetifyjs.com/en/api/v-list-item/#props
+      -->
       <v-list-item
         href="https://koumoul.com"
         target="_blank"
         rel="noopener"
-        :title="t('publishYourData') + ' - ' + t('newWindow')"
+        v-bind="{ 'title': t('publishYourData') + ' - ' + t('newWindow') }"
       >
-        <span class="text-caption">{{ t('publishYourData') }}</span>
+        <template #title>
+          <span class="text-caption">{{ t('publishYourData') }}</span>
+        </template>
       </v-list-item>
     </template>
 
@@ -116,12 +134,15 @@
 </template>
 
 <script setup lang="ts">
-import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline } from '@mdi/js'
+import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline, mdiPageNext, mdiWrench } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { portal, portalConfig } = usePortalStore()
+const { portal, portalConfig, siteInfo } = usePortalStore()
 const { personalDrawer } = useNavigationStore()
+
+const datasetsCount = ref({ file: null as number | null, rest: null as number | null })
+const processingsCount = ref<number | null>(null)
 
 const accountValue = computed(() => {
   if (session.state.account.type === 'user') return null
@@ -129,19 +150,18 @@ const accountValue = computed(() => {
   else return session.state.account.id
 })
 
+// Check if active account is portal owner
+const isPortalOwner = computed(() =>
+  session.state.account.type === portal.value.owner.type &&
+  session.state.account.id === portal.value.owner.id
+)
+
 const accounts = computed(() => {
   const accounts = []
   const user = session.state.user
 
-  const isPortalOwner = (
-    (portal.value.owner.type === 'user' && portal.value.owner.id === user.id) ||
-    (
-      portal.value.owner.type === 'organization' &&
-      user.organizations.find(o => o.id === portal.value.owner.id)
-    )
-  )
-
-  if (!(isPortalOwner || user.ipa || user.organizations.length)) {
+  // IPA for ignore personal account
+  if (!user.ipa) {
     accounts.push({
       title: t('personalAccount'),
       value: null,
@@ -150,7 +170,6 @@ const accounts = computed(() => {
   }
 
   for (const org of user.organizations) {
-    if (isPortalOwner && org.id !== portal.value.owner.id) continue
     const account = {
       title: org.name,
       value: org.id,
@@ -176,6 +195,28 @@ const navigationTextStyle = computed(() => {
   return `color: rgba(var(--v-theme-on-${portalConfig.value.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
 })
 
+const requestUrl = useRequestURL()
+const backOfficeUrl = computed(() => {
+  if (siteInfo.authMode === 'onlyBackOffice' || siteInfo.authMode === 'onlyOtherSite') {
+    return `${requestUrl.protocol}//${siteInfo.authOnlyOtherSite}/data-fair/`
+  }
+  return '/data-fair/'
+})
+
+onMounted(async () => {
+  let ownerFilter = `${portal.value.owner.type}:${portal.value.owner.id}`
+  if (portal.value.owner.department) ownerFilter += `:${portal.value.owner.department}`
+  const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${portal.value._id}` }
+
+  try {
+    datasetsCount.value.file = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
+    datasetsCount.value.rest = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
+    processingsCount.value = (await $fetch<{ count: number }>('/processings/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
+  } catch (e) {
+    console.error('Failed to fetch datasets or processings counts:', e)
+  }
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -183,9 +224,11 @@ const navigationTextStyle = computed(() => {
     activeAccount: Active Account
     apiKeys: API Keys
     backToPortal: Back to portal
+    backOffice: Go to Back Office
     contribute: Contribute
     myAccount: My Account
     myNotifications: My Notifications
+    myReuses: My Reuses
     newWindow: New window
     organizationManagement: Organization Management
     personalAccount: Personal Account
@@ -197,9 +240,11 @@ const navigationTextStyle = computed(() => {
     activeAccount: Compte actif
     apiKeys: Clés d'API
     backToPortal: Retour au portail
+    backOffice: Aller au Back-Office
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
+    myReuses: Mes réutilisations (Bêta)
     newWindow: Nouvelle fenêtre
     organizationManagement: Gestion de l'organisation
     personalAccount: Compte personnel

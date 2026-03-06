@@ -2,6 +2,10 @@ import { resolve } from 'node:path'
 import { session, errorHandler, createSiteMiddleware, createSpaMiddleware } from '@data-fair/lib-express/index.js'
 import express from 'express'
 import helmet from 'helmet'
+import { uiConfig } from './ui-config.ts'
+import { getSiteHashes } from './utils/site.ts'
+import { getStatus } from './admin/status.ts'
+
 import identitiesRouter from './identities/router.ts'
 import groupRouter from './groups/router.ts'
 import portalsRouter from './portals/router.ts'
@@ -11,11 +15,8 @@ import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
 import fontsRouter from './fonts/router.ts'
 import fontAssetsRouter from './font-assets/router.ts'
-import { uiConfig } from './ui-config.ts'
-import { getSiteHashes } from './utils/site.ts'
 
-const app = express()
-export default app
+export const app = express()
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -31,10 +32,10 @@ app.use(helmet({
 
 // no fancy embedded arrays, just string and arrays of strings in req.query
 app.set('query parser', 'simple')
-app.use(express.json())
-
 app.use(createSiteMiddleware('portals-manager'))
 app.use(session.middleware())
+
+app.use(express.json())
 
 // TODO: tune cache headers, fonts files are public and immutable
 app.use('/api/assets', express.static(resolve(import.meta.dirname, '../assets')))
@@ -47,6 +48,13 @@ app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
+
+app.get('/api/ping', async (req, res) => {
+  const status = await getStatus(req)
+  if (status.status === 'error') res.status(500)
+  res.send(status.status)
+})
+
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
 app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {

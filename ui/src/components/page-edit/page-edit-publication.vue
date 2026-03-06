@@ -49,14 +49,14 @@
           <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
         </v-list-item-subtitle>
         <v-list-item-subtitle
-          v-if="page.portals.includes(portal._id) && getPageUrl(page)"
+          v-if="page.portals.includes(portal._id) && pageUrl"
           class="mb-2"
         >
           <a
-            :href="getPortalUrl(portal) + getPageUrl(page)"
+            :href="getPortalUrl(portal) + pageUrl"
             target="_blank"
           >
-            {{ getPortalUrl(portal) + getPageUrl(page) }}
+            {{ getPortalUrl(portal) + pageUrl }}
           </a>
         </v-list-item-subtitle>
         <v-list-item-subtitle>
@@ -71,7 +71,7 @@
           />
           <!-- Warning for conflicting standard page -->
           <v-alert
-            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
+            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
             class="mt-2"
             density="compact"
             type="warning"
@@ -112,7 +112,7 @@ import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { patchPage, page } = usePageStore()
+const { patchPage, page, pageUrl } = usePageStore()
 
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging'>
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
@@ -120,7 +120,7 @@ const portals = computed(() => portalsFetch.data.value?.results)
 
 // Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets', select: '_id,type,portals,config.title,title', size: 10000 }
+  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets,applications,reuses', select: '_id,type,portals,config.title,title', size: 10000 }
 })
 
 const warnings = computed(() => {
@@ -183,27 +183,6 @@ const getPortalUrl = (portal: PartialPortal): string => {
   return $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id)
 }
 
-const getPageUrl = (pageData: Page): string | undefined => {
-  switch (pageData.type) {
-    case 'home': return '/'
-    case 'contact': return '/contact'
-    case 'privacy-policy': return '/privacy-policy'
-    case 'accessibility': return '/accessibility'
-    case 'legal-notice': return '/legal-notice'
-    case 'cookie-policy': return '/cookie-policy'
-    case 'terms-of-service': return '/terms-of-service'
-    case 'datasets': return '/datasets'
-    case 'event': return pageData.config.eventMetadata?.slug ? `/event/${pageData.config.eventMetadata.slug}` : undefined
-    case 'news': return pageData.config.newsMetadata?.slug ? `/news/${pageData.config.newsMetadata.slug}` : undefined
-    case 'generic': {
-      const metadata = pageData.config.genericMetadata
-      if (!metadata?.slug) return undefined
-      return `/pages${metadata.group ? `-${metadata.group.slug}` : ''}/${metadata.slug}`
-    }
-    default: return undefined
-  }
-}
-
 </script>
 
 <i18n lang="yaml">
@@ -228,6 +207,7 @@ const getPageUrl = (pageData: Page): string | undefined => {
       terms-of-service: terms of service page
       datasets: datasets catalog page
       applications: applications catalog page
+      reuses: reuses catalog page
 
   fr:
     createPortal: Créer un portail
@@ -249,5 +229,6 @@ const getPageUrl = (pageData: Page): string | undefined => {
       cookie-policy: page de politique de cookies
       terms-of-service: page de conditions générales d'utilisation
       datasets: page de catalogue de données
-      applications: page de catalogue d'applications
+      applications: page de catalogue de visualisations
+      reuses: page de catalogue de réutilisations
 </i18n>

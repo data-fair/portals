@@ -1,0 +1,69 @@
+<template>
+  <v-card
+    :border="element.border"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  >
+    <v-tabs
+      v-model="activeTab"
+      color="primary"
+      :grow="element.grow"
+      :align-tabs="element.align"
+      show-arrows
+    >
+      <v-tab
+        v-for="(tab, i) of element.tabs.filter(Boolean)"
+        :key="i"
+        :value="i"
+      >
+        <template #prepend>
+          <v-icon
+            v-if="tab.icon && (tab.icon.mdi?.svgPath || tab.icon.custom)"
+            :icon="tab.icon.mdi?.svgPath || tab.icon.custom"
+            :color="tab.icon.color"
+          />
+        </template>
+        {{ tab.title }}
+      </v-tab>
+    </v-tabs>
+    <v-card-text>
+      <v-tabs-window v-model="activeTab">
+        <v-tabs-window-item
+          v-for="(tab, i) of element.tabs.filter(Boolean)"
+          :key="i"
+          :value="i"
+          :eager="!preview"
+        >
+          <slot
+            name="page-elements"
+            :on-update="(newElements: PageElement[]) => onTabsChildrenUpdate(newElements, i)"
+            :elements="tab.children"
+            add-item-message="Ajouter un bloc à l'onglet"
+          />
+        </v-tabs-window-item>
+      </v-tabs-window>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script setup lang="ts">
+import type { TabsElement, PageElement } from '#api/types/page-elements/index.ts'
+
+const { element } = defineProps({
+  element: { type: Object as () => TabsElement, required: true }
+})
+
+const { preview } = usePortalStore()
+const activeTab = ref(0)
+
+const onTabsChildrenUpdate = (newElements: PageElement[], i: number) => {
+  return {
+    ...element,
+    tabs: [
+      ...element.tabs.slice(0, i),
+      { ...element.tabs[i], children: newElements },
+      ...element.tabs.slice(i + 1, element.tabs.length)
+    ]
+  }
+}
+
+</script>

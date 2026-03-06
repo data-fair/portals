@@ -1,18 +1,23 @@
 import type { VBreadcrumbs } from 'vuetify/components'
-import type { LinkItem, MenuItem } from '#api/types/portal'
+import type { MenuItem } from '#api/types/portal/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
+type NavigationStoreOptions = { isIframe: Ref<boolean> }
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
 
-const createNavigationStore = () => {
+const createNavigationStore = (options: NavigationStoreOptions) => {
+  const { $portal } = useNuxtApp()
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
+  const isIframe = options.isIframe
+  const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
 
-  const setBreadcrumbs = (breadcrumbInputs: (LinkItem | BreadcrumbItem)[]) => {
+  const setBreadcrumbs = (breadcrumbInputs: (SimpleLinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
     const locale = $i18n.locale.value as 'fr' | 'en'
     _breadcrumbs.value = breadcrumbInputs.map(input => {
@@ -29,7 +34,7 @@ const createNavigationStore = () => {
       const breadcrumbItem: BreadcrumbItem = { title }
 
       // Use 'to' for internal links, 'href' for external
-      if (linkItem.type === 'external' && isExternalLink(linkItem)) breadcrumbItem.to = resolvedLink
+      if (linkItem.type === 'external' && isExternalLink(linkItem)) breadcrumbItem.href = resolvedLink
       else if (resolvedLink) breadcrumbItem.to = resolvedLink
       else breadcrumbItem.disabled = true
 
@@ -38,33 +43,28 @@ const createNavigationStore = () => {
   }
 
   const clearBreadcrumbs = () => { _breadcrumbs.value = [] }
-  const showBreadcrumbs = computed(() => _breadcrumbs.value.length > 0)
 
-  /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
-    if (item.type === 'external') return false
+  /** Allow to override breadcrumb visibility per page */
+  const setShowBreadcrumbs = (value?: boolean) => { showBreadcrumbsOverride.value = value }
 
-    // Check if any child of the submenu matches the route
-    if (item.type === 'submenu' && item.children) {
-      return item.children.some(child => isMenuItemActive(child, currentPath))
-    }
-
-    // Resolve the link to compare with the current route
-    const resolvedLink = resolveLink(item)
-    if (!resolvedLink) return false
-
-    // Exact match only - avoid activating parent routes
-    return resolvedLink === currentPath
+  /** Determine if breadcrumbs should be shown at a given place, always false for home page */
+  const showBreadcrumbs = (place: 'top' | 'bottom') => {
+    if (showBreadcrumbsOverride.value === false || isIframe.value) return false
+    const pos = $portal.config.breadcrumb.position
+    if (pos === 'both') return true
+    return place === 'top' ? pos === 'below-nav' : pos === 'above-footer'
   }
+  const showTopBreadcrumbs = computed(() => showBreadcrumbs('top'))
+  const showBottomBreadcrumbs = computed(() => showBreadcrumbs('bottom'))
 
   /** Check if a link is external (not internal and not starting with /) */
-  const isExternalLink = (link: LinkItem | MenuItem): boolean => {
-    if (link.type === 'external') return !link.href.startsWith('/')
+  const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
+    if (link.type === 'external') return !link.href?.startsWith('/')
     return false
   }
 
   /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = (link: LinkItem | MenuItem): string | undefined => {
+  const resolveLink = (link: SimpleLinkItem | MenuItem): string | undefined => {
     switch (link.type) {
       case 'standard': {
         switch (link.subtype) {
@@ -77,10 +77,11 @@ const createNavigationStore = () => {
           case 'terms-of-service': return '/terms-of-service'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
+          case 'reuses': return '/reuses'
           case 'news': return '/news'
           case 'event': return '/event'
-          case 'reuses': return '/reuses'
           case 'sitemap': return '/sitemap'
+          case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
         }
       }
@@ -106,10 +107,11 @@ const createNavigationStore = () => {
           case 'terms-of-service': return i18n[locale]['termsOfServicePage']
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
+          case 'reuses': return i18n[locale]['reusesPage']
           case 'news': return i18n[locale]['newsPage']
           case 'event': return i18n[locale]['eventPage']
-          case 'reuses': return i18n[locale]['reusesPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
+          case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
         }
       }
@@ -121,9 +123,25 @@ const createNavigationStore = () => {
     }
   }
 
+  /** Check if a menu item (or any of its children) matches the current route */
+  const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
+    if (item.type === 'external') return false
+
+    // Check if any child of the submenu matches the route
+    if (item.type === 'submenu' && item.children) {
+      return item.children.some(child => isMenuItemActive(child, currentPath))
+    }
+
+    // Resolve the link to compare with the current route
+    const resolvedLink = resolveLink(item)
+    if (!resolvedLink) return false
+
+    // Exact match only - avoid activating parent routes
+    return resolvedLink === currentPath
+  }
+
   return {
     breadcrumbs: _breadcrumbs,
-    showBreadcrumbs,
     setBreadcrumbs,
     clearBreadcrumbs,
     isMenuItemActive,
@@ -131,12 +149,16 @@ const createNavigationStore = () => {
     resolveLink,
     resolveLinkTitle,
     drawer,
-    personalDrawer
+    personalDrawer,
+    showTopBreadcrumbs,
+    showBottomBreadcrumbs,
+    setShowBreadcrumbs,
+    isIframe
   }
 }
 
-export const provideNavigationStore = () => {
-  const store = createNavigationStore()
+export const provideNavigationStore = (options: NavigationStoreOptions) => {
+  const store = createNavigationStore(options)
   provide(navigationStoreKey, store)
   return store
 }
@@ -158,10 +180,11 @@ const i18n = {
     termsOfServicePage: 'Terms of Service',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
+    reusesPage: 'Reuses',
     newsPage: 'News',
     eventPage: 'Event',
-    reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -175,10 +198,11 @@ const i18n = {
     termsOfServicePage: "Conditions générales d'utilisation",
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
+    reusesPage: 'Réutilisations',
     newsPage: 'Actualités',
     eventPage: 'Événement',
-    reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }

@@ -12,6 +12,7 @@
         :key="`item-${i}`"
         :item="item"
         :level="1"
+        :is-first="i === 0"
       />
     </v-list>
   </v-navigation-drawer>

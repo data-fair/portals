@@ -15,15 +15,16 @@ The system currently supports many page types:
 7. **terms-of-service** - Terms of service page (unique per portal)
 8. **datasets** - Datasets Catalog page (unique per portal)
 9. **applications** - Applications Catalog page (unique per portal)
-10. **event** - Event pages (multiple, with unique slug)
-11. **news** - News pages (multiple, with unique slug)
-12. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
+10. **reuses** - Reuses Catalog page (unique per portal)
+11. **event** - Event pages (multiple, with unique slug)
+12. **news** - News pages (multiple, with unique slug)
+13. **generic** - Generic pages (multiple, with or without group, with unique slug regardless of group)
 
 ### Organization in the Portals-Manager UI
 
 In the portals-manager UI, page types are organized into groups (UI concept only):
 
-- **'standard' Group**: Contains standard pages `home`, `contact`, `privacy-policy`, `accessibility`, `legal-notice`, `cookie-policy` and `terms-of-service`
+- **'standard' Group**: Contains standard pages `home`, `contact`, `privacy-policy`, `accessibility`, `legal-notice`, `cookie-policy`, `terms-of-service`, `datasets`, `applications` and `reuses`
 - **'default' Group**: Contains `generic` type pages that have no assigned group
 
 ## Portal Frontend Routes
@@ -39,6 +40,7 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 - `/terms-of-service` → `terms-of-service` type page
 - `/datasets` → `datasets` type page
 - `/applications` → `applications` type page
+- `/reuses` → `reuses` type page
 
 ### Multiple Pages - Events
 
@@ -115,6 +117,7 @@ Retrieves the configuration of a specific page.
 - `GET /portal/api/pages/terms-of-service/terms-of-service` → Terms of service page
 - `GET /portal/api/pages/datasets/datasets` → Datasets Catalog page
 - `GET /portal/api/pages/applications/applications` → Applications Catalog page
+- `GET /portal/api/pages/reuses/reuses` → Reuses Catalog page
 
 **Event/news pages**:
 

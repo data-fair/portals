@@ -3,20 +3,21 @@
 
 import type { AnalyticsPlugin } from 'analytics'
 import debugModule from 'debug'
-import { pianoAnalytics } from 'piano-analytics-js'
+// @ts-expect-error - Force import of browser version instead of browserless
+import { pianoAnalytics } from 'piano-analytics-js/dist/browser/piano-analytics.esm.js'
 
 const debug = debugModule('piano')
 
-type PianoPluginConfig = { site?: number }
+type PianoPluginConfig = { site?: number, collectDomain?: string, anonymized?: boolean }
 
 export default function pianoPlugin (params: PianoPluginConfig): AnalyticsPlugin {
   const plugin: AnalyticsPlugin = {
     name: 'piano',
     initialize: ({ config }) => {
       if (!params.site) throw new Error('Analytics : Please provide site option to Piano module')
-      // TODO: collect domain is required ? auto-fill with window.location ?
-      // if (!params.collectDomain) throw new Error('Analytics : Please provide collectDomain option to Piano module')
-      pianoAnalytics.setConfigurations(params)
+      if (!params.collectDomain) throw new Error('Analytics : Please provide collectDomain option to Piano module')
+      pianoAnalytics.privacy.setMode(params.anonymized ? 'exempt' : 'optin')
+      pianoAnalytics.setConfigurations({ ...params })
     },
     page: ({ payload }) => {
       debug('page', payload.properties)
@@ -24,11 +25,15 @@ export default function pianoPlugin (params: PianoPluginConfig): AnalyticsPlugin
     },
     track: ({ payload }) => {
       debug('track', payload)
-      pianoAnalytics.sendEvent('page.display', { page: payload.properties.title })
       if (payload.event === 'search') {
-        pianoAnalytics.sendEvent('internal_search_result.display', { ise_keyword: payload.properties.label })
+        pianoAnalytics.sendEvent('internal_search_result.display', {
+          ise_keyword: payload.properties.label,
+          ise_page: 1,
+          ...(payload.properties.resultsCount !== undefined && { ise_count: payload.properties.resultsCount })
+        })
       } else if (payload.event.startsWith('download')) {
-        pianoAnalytics.sendEvent('click.download', { click: payload.event, click_chapter1: payload.properties.label })
+        const url = payload.properties.url || `${window.location.origin}/download/${payload.properties.label}`
+        pianoAnalytics.sendEvent('click.download', { click: payload.event, click_chapter1: payload.properties.label, src_url: url })
       } else {
         pianoAnalytics.sendEvent('click.action', { click: payload.event, click_chapter1: payload.properties.label })
       }

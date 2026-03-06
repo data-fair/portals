@@ -10,19 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { useTheme } from 'vuetify'
 
 const { $portal, $siteInfo } = useNuxtApp()
 const session = useSession()
 const theme = useTheme()
-
-const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
+const getPortalImageSrc = usePortalImageSrc()
 
 // Detect if the page is displayed in an iframe via the Sec-Fetch-Dest header
 // useState allows sharing the value between server and client
@@ -34,17 +28,15 @@ const isIframe = useState('isIframe', () => {
   return false
 })
 
-provideNavigationStore()
 providePortalStore($portal, $siteInfo)
-provide('get-image-src', getImageSrc)
-provide('is-iframe', isIframe)
+provideNavigationStore({ isIframe })
 
 const meta = [
   { name: 'theme-color', content: theme.current.value.colors.primary },
   { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
 ]
 if ($portal.draft || !$portal.config.allowRobots) meta.push({ name: 'robots', content: 'noindex' })
-const link = $portal.config.favicon ? [{ rel: 'icon', type: 'image/png', href: getImageSrc($portal.config.favicon, false) }] : []
+const link = $portal.config.favicon ? [{ rel: 'icon', type: 'image/png', href: getPortalImageSrc($portal.config.favicon, false) }] : []
 
 useHead({
   title: $portal.config.title,
@@ -65,5 +57,13 @@ useHead({
   @media (max-width: #{$xl-threshold}) {
     max-width: map.get(v.$grid-breakpoints, 'lg') !important;
   }
+}
+
+.text-two-lines {
+  white-space: unset !important;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 </style>

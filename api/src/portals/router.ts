@@ -1,9 +1,9 @@
-import type { Filter } from 'mongodb'
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import mongo from '#mongo'
+import config from '#config'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
@@ -16,28 +16,27 @@ const router = Router()
 export default router
 
 router.get('', async (req, res, next) => {
-  const sessionState = reqSessionAuthenticated(req)
-  const { account, accountRole } = sessionState
-  if (accountRole !== 'admin') throw httpError(403, 'admin only')
+  const session = reqSessionAuthenticated(req)
+  assertAccountRole(session, session.account, 'admin')
 
-  // TODO: account filter for super admins ?
-  const showAll = req.query.showAll === 'true' || req.query.showAll === '1'
-  if (showAll && !sessionState.user.adminMode) throw httpError(403, 'only super admins can use showAll parameter')
-  const query: Filter<Portal> = showAll ? {} : { 'owner.type': account.type, 'owner.id': account.id }
-  // if (req.query.q && typeof req.query.q === 'string') query.$text = { $search: req.query.q, $language: lang || config.i18n.defaultLocale }
-
-  const project = findUtils.project(req.query.select)
+  const params = req.query as Record<string, string>
   const sort = findUtils.sort(req.query.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(req.query)
+  const project = findUtils.project(req.query.select)
+  const filters = findUtils.query(params)
 
-  const [count, portals] = await Promise.all([
-    mongo.portals.countDocuments(query),
-    mongo.portals.find(query).project(project).skip(skip).limit(size).sort(sort).toArray()
+  // If isReference=true, we get all references portals, without owner filter
+  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
+  const queryWithFilters = Object.assign(filters, query)
+
+  // TODO: account filter for super admins ?
+
+  const [count, results] = await Promise.all([
+    mongo.portals.countDocuments(queryWithFilters),
+    mongo.portals.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
   ])
 
-  const response: any = { count, results: portals }
-
-  res.json(response)
+  res.json({ results, count })
 })
 
 router.post('', async (req, res, next) => {
@@ -87,7 +86,7 @@ router.post('', async (req, res, next) => {
     contactInformations: {},
     personal: {
       navigationColor: 'primary',
-      hidePages: [],
+      hidePages: ['contribute', 'processings'],
       accountPages: []
     }
   }
@@ -129,6 +128,25 @@ router.post('', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   res.send(await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id))
+})
+
+/**
+ * Get public info about a portal (_id, title and url)
+ */
+router.get('/:id/public', async (req, res, next) => {
+  const portal = await mongo.portals.findOne({ _id: req.params.id })
+  if (!portal) throw httpError(404, 'portal not found')
+
+  let url = ''
+  if (portal.ingress?.url) url = portal.ingress.url
+  else url = config.portalUrlPattern.replace('{subdomain}', portal._id)
+
+  res.json({
+    _id: portal._id,
+    title: portal.config.title,
+    owner: portal.owner,
+    url
+  })
 })
 
 router.patch('/:id', async (req, res, next) => {

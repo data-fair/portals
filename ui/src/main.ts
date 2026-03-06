@@ -24,7 +24,7 @@ import App from './App.vue'
   const uiNotif = createUiNotif()
   const vuetify = createVuetify({
     ...vuetifySessionOptions(session, $cspNonce),
-    icons: { defaultSet: 'mdi', aliases, sets: { mdi, } }
+    icons: { defaultSet: 'mdi', aliases, sets: { mdi } }
   })
   const vuetifyRules = createRulesPlugin({}, vuetify.locale)
   vuetify.defaults.value!.VColorPicker = { mode: 'hex', modes: ['hex', 'rgb', 'hsl'] }

@@ -1,108 +1,50 @@
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-links',
-  'x-exports': [],
+  'x-exports': ['types'],
   $defs: {
-    linkConfig: {
-      type: 'object',
-      layout: {
-        children: [
-          { key: 'color', cols: { md: 6 } },
-          { key: 'elevation', cols: { md: 6 } },
-          { key: 'density', cols: { md: 6 } },
-          { key: 'rounded', cols: { md: 6 } },
-          { key: 'variant', cols: { md: 6 } },
-          { key: 'showIcon', cols: { md: 6 } },
-          { key: 'uppercase', cols: { md: 6 } }
-        ]
-      },
-      properties: {
-        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
-        elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          default: 1, // TODO: check if default can be overwrite the $ref
-        },
-        density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 4 } }
-        },
-        rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
-        },
-        variant: {
-          type: 'string',
-          title: 'Variante',
-          layout: { cols: { md: 4 } },
-          default: 'default',
-          oneOf: [
-            { const: 'default', title: 'Par défaut' },
-            { const: 'outlined', title: 'Avec bordure' },
-            { const: 'tonal', title: 'Tonale' }
-          ]
-        },
-        showIcon: {
-          type: 'boolean',
-          title: "Afficher l'icône",
-          layout: {
-            comp: 'switch',
-            cols: { md: 4 }
-          },
-          default: true
-        },
-        uppercase: {
-          type: 'boolean',
-          title: 'Texte en majuscules',
-          layout: {
-            comp: 'switch',
-            cols: { md: 4 }
-          },
-          default: true
-        }
-      }
-    },
-
-    // Link item present in footer or button element
     linkItem: {
       type: 'object',
-      unevaluatedProperties: false,
       oneOfLayout: { label: 'Type de page', emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
       ]
     },
 
     // Definitions of link item types
     standardPage: {
-      title: 'Page standard',
+      title: 'Page standard (Accueil, Contact,...)',
       required: ['type', 'subtype'],
       properties: {
-        type: {
-          const: 'standard'
-        },
+        type: { const: 'standard' },
         subtype: {
           type: 'string',
           title: 'Type de page',
           default: 'home',
-          oneOf: [{ const: 'home', title: 'Accueil' },
+          oneOf: [
+            // Editable pages
+            { const: 'home', title: 'Accueil' },
             { const: 'contact', title: 'Contact' },
             { const: 'privacy-policy', title: 'Politique de confidentialité' },
             { const: 'accessibility', title: 'Accessibilité' },
             { const: 'legal-notice', title: 'Mentions légales' },
             { const: 'cookie-policy', title: 'Politique de cookies' },
-            { const: 'terms-of-service', title: 'Conditions générales d\'utilisation' },
+            { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
             { const: 'datasets', title: 'Catalogue de données' },
-            { const: 'applications', title: 'Catalogue de visualisation' },
-            { const: 'reuses', title: 'Liste des réutilisations' },
+            { const: 'applications', title: 'Catalogue de visualisations' },
+            { const: 'reuses', title: 'Catalogue de réutilisations' },
+
+            // Fixed pages
             { const: 'event', title: 'Liste des événements' },
             { const: 'news', title: 'Liste des actualités' },
-            { const: 'sitemap', title: 'Plan du site' }
+            { const: 'sitemap', title: 'Plan du site' },
+            { const: 'catalog-api-doc', title: "Documentation d'API" }
           ],
           layout: { cols: { md: 6 } }
         },
@@ -111,7 +53,54 @@ export default {
           title: 'Libellé',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
+      }
+    },
+    genericPage: {
+      title: 'Page libre',
+      required: ['type', 'pageRef'],
+      properties: {
+        type: { const: 'generic' },
+        pageRef: {
+          type: 'object',
+          required: ['slug', 'title'],
+          title: 'Page',
+          layout: {
+            getItems: {
+              expr: 'options.context.pages.generic',
+              // eslint-disable-next-line no-template-curly-in-string
+              itemTitle: 'item.header ? item.title : `${item.titleBackOffice} (${item.slug})`'
+            },
+            comp: 'autocomplete',
+            cols: { md: 6 }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' },
+            group: {
+              type: 'object',
+              properties: {
+                _id: { type: 'string' },
+                title: { type: 'string' },
+                slug: { type: 'string' }
+              }
+            }
+          }
+        },
+        title: {
+          type: 'string',
+          title: 'Libellé',
+          layout: { cols: { md: 6 } }
+        },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
       }
     },
     eventPage: {
@@ -135,10 +124,13 @@ export default {
         title: {
           type: 'string',
           title: 'Libellé',
-          default: 'Événements',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
       }
     },
     newsPage: {
@@ -162,15 +154,105 @@ export default {
         title: {
           type: 'string',
           title: 'Libellé',
-          default: 'Actualités',
           layout: { cols: { md: 6 } }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
       }
     },
-    genericPage: {
-      title: 'Autre page',
-      required: ['type', 'pageRef'],
+    externalLink: {
+      title: 'Lien',
+      required: ['type', 'title', 'href'],
+      properties: {
+        type: { const: 'external' },
+        href: {
+          title: 'URL',
+          type: 'string',
+          description: 'Si le lien est interne, privilégiez une URL commençant par /',
+        },
+        title: {
+          type: 'string',
+          title: 'Libellé',
+          layout: { cols: { md: 6 } }
+        },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet',
+          default: true
+        },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
+      }
+    },
+
+    // Link item type used for links without title and icon  (used for title, image and card pages elements)
+    simpleLinkItem: {
+      type: 'object',
+      oneOfLayout: { label: 'Type de page', emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
+      discriminator: { propertyName: 'type' },
+      // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
+      layout: { switch: [{ if: 'summary', children: [] }] },
+      oneOf: [
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseStandardPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseGenericPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseEventPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseNewsPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseExternalLink' },
+        {
+          title: 'Aucun lien',
+          required: ['type'],
+          properties: { type: { const: 'none' } }
+        }
+      ]
+    },
+
+    // Definitions of link item types without title and icon (used for title, image and card pages elements)
+    baseStandardPage: {
+      title: 'Page standard (Accueil, Contact,...)',
+      required: ['type'],
+      properties: {
+        type: { const: 'standard' },
+        subtype: {
+          type: 'string',
+          title: 'Type de page',
+          default: 'home',
+          oneOf: [
+            // Editable pages
+            { const: 'home', title: 'Accueil' },
+            { const: 'contact', title: 'Contact' },
+            { const: 'privacy-policy', title: 'Politique de confidentialité' },
+            { const: 'accessibility', title: 'Accessibilité' },
+            { const: 'legal-notice', title: 'Mentions légales' },
+            { const: 'cookie-policy', title: 'Politique de cookies' },
+            { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
+            { const: 'datasets', title: 'Catalogue de données' },
+            { const: 'applications', title: 'Catalogue de visualisations' },
+            { const: 'reuses', title: 'Catalogue de réutilisations' },
+
+            // Fixed pages
+            { const: 'event', title: 'Liste des événements' },
+            { const: 'news', title: 'Liste des actualités' },
+            { const: 'sitemap', title: 'Plan du site' },
+            { const: 'catalog-api-doc', title: "Documentation d'API" }
+          ],
+          layout: { cols: { md: 6 } }
+        },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        }
+      }
+    },
+    baseGenericPage: {
+      title: 'Page libre',
+      required: ['type'],
       properties: {
         type: { const: 'generic' },
         pageRef: {
@@ -183,6 +265,7 @@ export default {
               // eslint-disable-next-line no-template-curly-in-string
               itemTitle: 'item.header ? item.title : `${item.titleBackOffice} (${item.slug})`'
             },
+            comp: 'autocomplete',
             cols: { md: 6 }
           },
           properties: {
@@ -200,31 +283,93 @@ export default {
         },
         title: {
           type: 'string',
-          title: 'Libellé',
-          layout: { cols: { md: 6 } }
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        }
       }
     },
-    externalLink: {
-      title: 'Lien',
-      required: ['type', 'title', 'href'],
+    baseEventPage: {
+      title: "Page d'événements",
+      required: ['type'],
       properties: {
-        type: { const: 'external' },
+        type: { const: 'event' },
+        pageRef: {
+          type: 'object',
+          required: ['slug', 'title'],
+          title: 'Page',
+          layout: {
+            getItems: 'options.context.pages.event',
+            cols: { md: 6 }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
         title: {
           type: 'string',
-          title: 'Libellé'
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
         },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        }
+      }
+    },
+    baseNewsPage: {
+      title: "Page d'actualités",
+      required: ['type'],
+      properties: {
+        type: { const: 'news' },
+        pageRef: {
+          type: 'object',
+          required: ['slug', 'title'],
+          title: 'Page',
+          layout: {
+            getItems: 'options.context.pages.news',
+            cols: { md: 6 }
+          },
+          properties: {
+            slug: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+        },
+        target: {
+          type: 'boolean',
+          title: 'Ouvrir dans un nouvel onglet'
+        }
+      }
+    },
+    baseExternalLink: {
+      title: 'Lien',
+      required: ['type'],
+      properties: {
+        type: { const: 'external' },
         href: {
           title: 'URL',
-          type: 'string'
+          type: 'string',
+          description: 'Si le lien est interne, privilégiez une URL commençant par /',
+        },
+        title: {
+          type: 'string',
+          title: 'Texte alternatif',
+          description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
         },
         target: {
           type: 'boolean',
           title: 'Ouvrir dans un nouvel onglet',
           default: true
-        },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        }
       }
     }
   }
@@ -234,18 +379,19 @@ export default {
 const linkItemTitleFn = (item) => {
   const standardPageTitles = {
     home: 'Page d\'accueil',
-    contact: 'Page de contact',
-    'privacy-policy': 'Page de politique de confidentialité',
+    contact: 'Contact',
+    'privacy-policy': 'Politique de confidentialité',
     accessibility: 'Accessibilité',
     'legal-notice': 'Mentions légales',
     'cookie-policy': 'Politique de cookies',
-    'terms-of-service': 'Conditions générales d\'utilisation',
+    'terms-of-service': "Conditions générales d'utilisation",
     datasets: 'Catalogue de données',
-    applications: 'Catalogue de visualisation',
-    reuses: 'Liste des réutilisations',
-    event: 'Liste des évènements',
+    applications: 'Catalogue de visualisations',
+    reuses: 'Catalogue de réutilisations',
+    event: 'Liste des événements',
     news: 'Liste des actualités',
-    sitemap: 'Plan du site'
+    sitemap: 'Plan du site',
+    'catalog-api-doc': "Documentation d'API"
   }
 
   // @ts-expect-error

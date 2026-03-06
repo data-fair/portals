@@ -3,6 +3,7 @@
     <v-form
       v-if="editIngress"
       v-model="formValid"
+      @submit.prevent
     >
       <vjsf-portal-ingress
         v-if="vjsfOptions"

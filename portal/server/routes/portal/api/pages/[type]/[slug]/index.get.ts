@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
   const type = getRouterParam(event, 'type') as string
   const slug = getRouterParam(event, 'slug') as string
 
-  // Requête de base
   const mongoQuery: Record<string, unknown> = {
     type,
     'owner.type': portal.owner.type,

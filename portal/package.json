@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "check-types": "nuxt typecheck",
-    "dev": "NUXT_MONGO_URL=mongodb://localhost:27017/data-fair-portals-development NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.localhost:5607 NUXT_PRIVATE_DIRECTORY_URL=http://localhost:8081 NUXT_FRAME_ANCESTORS=http://localhost:5607 nuxt dev",
+    "dev": "dotenv -v NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development -v NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.localhost:$NGINX_PORT -v NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT -v NUXT_FRAME_ANCESTORS=http://localhost:$NGINX_PORT nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
@@ -20,7 +20,7 @@
     "@analytics/google-tag-manager": "^0.6.0",
     "@data-fair/frame": "^0.17.0",
     "@data-fair/lib-node": "^2.8.2",
-    "@data-fair/lib-utils": "^1.6.1",
+    "@data-fair/lib-utils": "^1.8.0",
     "@data-fair/lib-vue": "^1.23.3",
     "@data-fair/portals-shared-markdown": "*",
     "@mdi/js": "^7.4.47",
@@ -29,7 +29,7 @@
     "analytics": "^0.8.19",
     "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
-    "nuxt": "^4.2.1",
+    "nuxt": "^4.2.2",
     "nuxt-security": "^2.3.0",
     "piano-analytics-js": "^6.16.4",
     "undici": "^7.14.0",
@@ -38,6 +38,6 @@
     "vue-router": "^4.5.1",
     "vue3-social-sharing": "^1.4.1",
     "vuetify": "^3.9.5",
-    "vuetify-nuxt-module": "^0.18.8"
+    "vuetify-nuxt-module": "^0.19.3"
   }
 }

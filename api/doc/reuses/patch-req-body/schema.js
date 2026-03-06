@@ -3,7 +3,7 @@ import reuseSchema from '#types/reuse/schema.js'
 
 export default {
   ...jsonSchema(reuseSchema)
-    .pickProperties(['config', 'portals', 'requestedPortals', 'owner'])
+    .pickProperties(['config', 'draftConfig', 'portals', 'requestedPortals', 'owner'])
     .removeRequired()
     .schema,
   $id: 'https://github.com/data-fair/reuses/reuses/patch-req-body',

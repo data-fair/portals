@@ -3,12 +3,35 @@ export default {
   'x-exports': [],
   type: 'object',
   layout: {
-    title: null,
-    comp: 'tabs'
+    children: [
+      'allowUserReuses',
+      {
+        comp: 'tabs',
+        children: [
+          {
+            title: 'Reuse Card',
+            'x-i18n-title': {
+              fr: "Vignette d'une réutilisation"
+            },
+            children: [
+              'card',
+              { name: 'reuse-card-preview' }
+            ]
+          },
+          'page'
+        ]
+      }
+    ]
   },
   unevaluatedProperties: false,
   required: ['card', 'page'],
   properties: {
+    allowUserReuses: {
+      type: 'boolean',
+      title: 'Permettre aux utilisateurs du portail de proposer des réutilisations',
+      layout: 'switch',
+      default: false
+    },
     card: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
     page: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-page' }
   }

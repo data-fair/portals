@@ -6,6 +6,7 @@
           v-if="portalConfig.errorImages?.notFound"
           :src="getErrorImageSrc('notFound')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-not-found v-else style="max-height: 300px" />
       </template>
@@ -14,6 +15,7 @@
           v-if="portalConfig.errorImages?.forbidden"
           :src="getErrorImageSrc('forbidden')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-forbidden v-else style="max-height: 300px" />
       </template>
@@ -22,6 +24,7 @@
           v-if="portalConfig.errorImages?.fallback"
           :src="getErrorImageSrc('fallback')"
           style="max-height: 300px; margin: auto"
+          aria-hidden="true"
         />
         <error-server v-else style="max-height: 300px" />
       </template>
@@ -44,15 +47,17 @@
 import type { LinkItem } from '#api/types/portal/index.js'
 import { mdiChevronLeft } from '@mdi/js'
 
-const { t } = useI18n()
-
 const props = defineProps<{
   statusCode: number
   title?: string
   link?: LinkItem
 }>()
 
+const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
+const event = useRequestEvent()
+if (event) setResponseStatus(event, props.statusCode)
 
 const defaultTitles: Record<number, string> = {
   404: t('notFound'),
@@ -65,7 +70,7 @@ const title = computed(() => props.title || defaultTitles[props.statusCode] || t
 const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
   const image = portalConfig.value.errorImages?.[type]
   if (!image) return ''
-  return `/portal/api/images/${image._id}`
+  return getPortalImageSrc(image, false)
 }
 </script>
 

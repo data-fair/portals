@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert'
 import { it, describe, before, beforeEach, after } from 'node:test'
+import 'dotenv/config'
 import { clean, startApiServer, stopApiServer, axiosAuth } from './utils/index.ts'
 
 const user1 = await axiosAuth('admin@test.com')

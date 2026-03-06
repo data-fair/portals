@@ -12,9 +12,11 @@ contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
 // strict-dynamic necessary for analytics
 contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
+console.log(process.env)
+
 export default defineNuxtConfig({
   devServer: {
-    port: 5657
+    port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -22,8 +24,8 @@ export default defineNuxtConfig({
     '#api/types': '../../api/types'
   },
   runtimeConfig: {
-    mainPublicUrl: 'http://localhost:5607',
-    privateDirectoryUrl: 'http://simple-directory:8080',
+    mainPublicUrl: 'http://localhost:5600',
+    privateDirectoryUrl: 'http://simple-directory:' + process.env.SD_PORT,
     mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
@@ -43,6 +45,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify']
   },
+  components: [
+    { path: '~/components', pathPrefix: false }
+  ],
   imports: {
     presets: [
       {
@@ -94,8 +99,7 @@ export default defineNuxtConfig({
   vuetify: {
     moduleOptions: {
       ssrClientHints: {
-        // disabled because broken with Brave unfortunately
-        // reloadOnFirstRequest: false,
+        // reloadOnFirstRequest: false, // disabled because broken with Brave unfortunately
         viewportSize: true
       }
     },

@@ -193,11 +193,13 @@
           mandatory
         >
           <v-btn
+            value="-1"
             :icon="mdiSortDescending"
             :title="t('descending')"
             stacked
           />
           <v-btn
+            value="1"
             :icon="mdiSortAscending"
             :title="t('ascending')"
             stacked
@@ -222,11 +224,13 @@
       mandatory
     >
       <v-btn
+        value="-1"
         :icon="mdiSortDescending"
         :title="t('descending')"
         class="flex-grow-1"
       />
       <v-btn
+        value="1"
         :icon="mdiSortAscending"
         :title="t('ascending')"
         class="flex-grow-1"

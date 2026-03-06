@@ -1,9 +1,14 @@
 <template>
+  <!--
+    :to => disabled in preview
+    link => simulate link style in preview
+  -->
   <v-card
-    :to="`/reuses/${reuse.slug}`"
-    class="h-100 d-flex flex-column"
+    :to="!preview ? `/reuses/${reuse.slug}` : undefined "
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
+    class="h-100 d-flex flex-column"
+    link
   >
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
@@ -19,8 +24,7 @@
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
-            role="img"
-            :aria-label="t('imageAlt', { title: reuse.config.title })"
+            aria-hidden="true"
             :style="leftThumbnailStyle"
           />
         </v-col>
@@ -38,36 +42,38 @@
       >
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
-          :alt="t('imageAlt', { title: reuse.config.title })"
+          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
+          aria-hidden="true"
         />
 
         <!--
-          title-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          text-two-lines and 'height': titleHeight=> truncate title to 2 lines
           white-space: unset; => remove default nowrap from v-card-title
         -->
         <v-card-title
-          :class="['font-weight-bold', { 'title-two-lines': cardConfig.titleLinesCount === 2 }]"
+          :class="['font-weight-bold', { 'text-two-lines': cardConfig.titleLinesCount === 2 }]"
           :style="[
-            cardConfig.titleLinesCount !== 1 ? { 'white-space': 'unset' } : {},
+            cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
+
           ]"
+          :title="reuse.config.title"
         >
-          {{ reuse.config.title }}
+            {{ reuse.config.title }}
         </v-card-title>
 
         <!-- Thumbnail (Center Location) -->
         <v-img
           v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          :alt="t('imageAlt', { title: reuse.config.title })"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
+          aria-hidden="true"
         />
 
         <v-card-text
@@ -108,18 +114,14 @@ const { reuse, cardConfig, isPortalConfig } = defineProps<{
 
 const { dayjs } = useLocaleDayjs()
 const { t } = useI18n()
+const { preview } = usePortalStore()
+const getPageImageSrc = usePageImageSrc()
+const getPortalImageSrc = usePortalImageSrc()
 
-const getPageImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
   return `/portal/api/reuses/${reuse.slug}/images/${id}`
-}
-
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
 }
 
 const thumbnailUrl = computed(() => {
@@ -145,7 +147,7 @@ const leftThumbnailStyle = computed(() => {
 // Height calculation for title with 2 lines
 const titleHeight = ref<string>()
 onMounted(() => {
-  const titleElement = document.querySelector('.title-two-lines')
+  const titleElement = document.querySelector('.text-two-lines')
   if (titleElement) {
     const styles = getComputedStyle(titleElement)
     const lineHeight = parseFloat(styles.lineHeight)
@@ -159,21 +161,10 @@ onMounted(() => {
 
 <i18n lang="yaml">
   en:
-    imageAlt: 'Thumbnail image for {title}'
     updatedAt: Updated at
     publishedBy: Published by {author}
   fr:
-    imageAlt: 'Image de couverture pour la réutilisation {title}'
     updatedAt: Mise à jour le
     publishedBy: Publié par {author}
 
 </i18n>
-
-<style scoped>
-.title-two-lines {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-</style>

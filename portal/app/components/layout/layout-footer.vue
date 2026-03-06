@@ -3,7 +3,7 @@
   <v-footer
     :color="portalConfig.footer.color"
     :style="portalConfig.footer.backgroundImage ? {
-      backgroundImage: `url(${getImageSrc(portalConfig.footer.backgroundImage, false)})`,
+      backgroundImage: `url(${getPortalImageSrc(portalConfig.footer.backgroundImage, false)})`,
       backgroundPosition: `bottom ${portalConfig.footer.backgroundImageLocation}`,
       backgroundRepeat: portalConfig.footer.backgroundImageLocation === 'repeat' ? 'repeat' : 'no-repeat'
     } : {}"
@@ -115,20 +115,20 @@
               >
                 <img
                   :alt="extraLogo.label"
-                  :src="getImageSrc(extraLogo.logo, false)"
+                  :src="getPortalImageSrc(extraLogo.logo, false)"
                   style="height:40px;"
                 >
               </a>
               <img
                 v-else
                 :alt="extraLogo.label"
-                :src="getImageSrc(extraLogo.logo, false)"
+                :src="getPortalImageSrc(extraLogo.logo, false)"
                 style="height:40px;"
               >
             </v-col>
             <!-- Copyright Logo -->
             <v-col
-              v-if="portalConfig.footer.copyright === 'logo'"
+              v-if="portalConfig.footer.copyright === 'logo' && !portal.whiteLabel"
               cols="auto"
             >
               <a
@@ -263,7 +263,7 @@
     </v-container>
 
     <!-- Copyright -->
-    <template v-if="portalConfig.footer.copyright === 'text'">
+    <template v-if="portalConfig.footer.copyright === 'text' && !portal.whiteLabel">
       <v-divider />
       <div class="text-center my-2">
         <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a
@@ -279,11 +279,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 const { t, locale } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portal, portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const getPortalImageSrc = usePortalImageSrc()
 
 const logo = computed(() => {
   const { footer, header, logo: defaultLogo } = portalConfig.value
@@ -328,8 +328,6 @@ const getLogoJustifyClass = (alignment?: string) => {
     default: return 'justify-start'
   }
 }
-
-const getImageSrc: ((imageRef: ImageRef, mobile: boolean) => string) = inject('get-image-src')!
 
 </script>
 

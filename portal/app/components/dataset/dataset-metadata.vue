@@ -14,7 +14,7 @@
       <!-- Records count / Size -->
       <v-col v-bind="metadataColProps">
         <div class="text-caption text-medium-emphasis">{{ t('size') }}</div>
-        {{ t('records', dataset.count || 0) }} {{ dataset.storage?.indexed?.size ? ' - ' +
+        {{ t('records', { count: (dataset.count || 0), formatted: (dataset.count || 0).toLocaleString('fr') }) }} {{ dataset.storage?.indexed?.size ? ' - ' +
         formatBytes(dataset.storage.indexed.size) : '' }}
       </v-col>
 
@@ -48,11 +48,9 @@
       >
         <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
-          <v-avatar
-            :image="avatarUrl"
-            :size="28"
-            alt=""
-            role="presentation"
+          <owner-avatar
+            :owner="dataset.owner"
+            :show-tooltip="false"
             aria-hidden="true"
           />
           {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
@@ -74,7 +72,7 @@
         v-if="dataset.license"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('license') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ t('license') }}</div>
         <a
           :href="dataset.license.href"
           rel="noopener"
@@ -90,7 +88,7 @@
         v-if="dataset.keywords?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('keywords') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
           :key="i"
@@ -102,18 +100,18 @@
       </v-col>
 
       <v-col
-        v-if="dataset.spatial"
+        v-if="formattedSpatial"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('spatial') }}</div>
-        {{ dataset.spatial }}
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('spatial') }}</div>
+        {{ formattedSpatial }}
       </v-col>
 
       <v-col
         v-if="dataset.temporal?.start"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('temporal') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('temporal') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
         </template>
@@ -126,7 +124,7 @@
         v-if="dataset.frequency"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ metadataLabel('frequency') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ metadataLabel('frequency') }}</div>
         {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
@@ -152,9 +150,19 @@
         v-if="metadataConfig.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis"> {{ t('attachments') }}</div>
+        <div class="text-caption text-medium-emphasis">{{ t('attachments') }}</div>
         <dataset-attachments :dataset="dataset" />
       </v-col>
+
+      <ClientOnly>
+        <v-col
+          v-if="dataset.public && metadataConfig.location !== 'right'"
+          v-bind="metadataColProps"
+        >
+          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <social-share :title="dataset.title" />
+        </v-col>
+      </ClientOnly>
     </v-row>
 
     <v-divider />
@@ -164,7 +172,7 @@
       class="ma-0"
       align="center"
     >
-      <v-col v-bind="metadataColProps">
+      <v-col class="py-0 my-2" cols="12">
         <template v-if="!dataset.isMetaOnly">
           <action-btn
             v-if="shouldShowActionButton('table')"
@@ -224,7 +232,7 @@
       </v-col> -->
 
       <ClientOnly>
-        <v-col v-if="dataset.public">
+        <v-col v-if="dataset.public && metadataConfig.location === 'right'">
           {{ t('share') }}
           <social-share :title="dataset.title" />
         </v-col>
@@ -237,11 +245,12 @@
 import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
 import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
+import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
@@ -251,12 +260,18 @@ const metadataColProps = computed(() => ({
   md: metadataConfig.value.location !== 'right' ? 4 : 12
 }))
 
-const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
+const formattedSpatial = computed(() => {
+  const spatial = dataset.spatial
+  if (!spatial) return ''
 
-const avatarUrl = computed(() => {
-  if (dataset.owner.department) return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/${dataset.owner.department}/avatar.png`
-  else return `/simple-directory/api/avatars/${dataset.owner.type}/${dataset.owner.id}/avatar.png`
+  const parts = spatial.split(';').map(part => part.trim()).filter(Boolean)
+  if (!parts.length) return spatial
+  if (parts.length === 1) return parts[0]
+
+  return new Intl.ListFormat(locale.value, { style: 'long', type: 'conjunction' }).format(parts)
 })
+
+const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
 
 const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
 
@@ -276,7 +291,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     creator: 'Creator:'
     dataFrom: 'Data from'
     dataProducedBy: 'Data produced by:'
-    records: '{count} record | {count} records'
+    records: '0 record | {formatted} record | {formatted} records'
     frequencyLabels:
       annual: 'Every year'
       biennial: 'Every 2 years'
@@ -297,9 +312,10 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       weekly: 'Every week'
     keywords: 'Keywords:'
     license: 'License:'
+    modified: 'Data last modified:'
+    newWindow: 'New window'
     owner: 'Owner:'
     ownerOverride: '{owner}:'
-    modified: 'Data last modified:'
     share: 'Share:'
     shortText:
       api: API
@@ -319,7 +335,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     creator: 'Producteur :'
     dataFrom: 'Données issues de'
     dataProducedBy: 'Provenance des données :'
-    records: '{count} enregistrement | {count} enregistrements'
+    records: '0 enregistrement | {formatted} enregistrement | {formatted} enregistrements'
     frequencyLabels:
       annual: 'Tous les ans'
       biennial: 'Tous les 2 ans'
@@ -341,6 +357,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     keywords: 'Mots-clés :'
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
+    newWindow: 'Nouvelle fenêtre'
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
     share: 'Partager :'

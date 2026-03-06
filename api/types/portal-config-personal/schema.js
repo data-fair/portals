@@ -27,6 +27,14 @@ export default {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
       title: "Couleur de la barre de navigation de l'espace personnel",
       default: 'primary',
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true },
+        cols: { md: 6 }
+      }
     },
     hidePages: {
       type: 'array',
@@ -52,6 +60,7 @@ export default {
           }
         ]
       },
+      layout: { cols: { md: 6 } },
       default: []
     },
     accountPages: {

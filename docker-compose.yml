@@ -10,8 +10,17 @@ services:
       - dev
     image: nginx:1.29.4-alpine
     network_mode: host
+    environment:
+      - NGINX_PORT=${NGINX_PORT}
+      - SD_PORT=${SD_PORT}
+      - DF_PORT=${DF_PORT}
+      - EVENTS_PORT=${EVENTS_PORT}
+      - PROCESSINGS_PORT=${PROCESSINGS_PORT}
+      - DEV_API_PORT=${DEV_API_PORT}
+      - DEV_UI_PORT=${DEV_UI_PORT}
+      - DEV_PORTAL_PORT=${DEV_PORTAL_PORT}
     volumes:
-      - ./dev/resources/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dev/resources/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
 
   #####
   # required services from the data-fair stack
@@ -19,34 +28,42 @@ services:
 
   simple-directory:
     profiles:
-      - test
       - dev
+      - test
     image: ghcr.io/data-fair/simple-directory:master
     network_mode: host
     depends_on:
       - mongo
     environment:
-      - PORT=8081
-      - ADMINS=["superadmin@test.com"]
-      - CIPHER_PASSWORD=dev
-      - CONTACT=contact@test.com
-      - MANAGE_SITES=true
-      - MONGO_URL=mongodb://localhost:27017/simple-directory
-      - OBSERVER_ACTIVE=false
-      - PUBLIC_URL=http://localhost:5607/simple-directory
-      - STORAGE_TYPE=file
-      - SECRET_SITES=secret-sites
+      PORT: ${SD_PORT}
+      ADMINS: |
+        ["superadmin@test.com"]
+      CIPHER_PASSWORD: dev
+      CONTACT: contact@test.com
+      MANAGE_SITES: true
+      MONGO_URL: mongodb://localhost:${MONGO_PORT}/simple-directory
+      OBSERVER_ACTIVE: false
+      PUBLIC_URL: http://localhost:${NGINX_PORT}/simple-directory
+      STORAGE_TYPE: file
+      SECRET_SITES: secret-sites
       # When we test permissions, we need to authenticate many users from the same IP.
-      - AUTHRATELIMIT_ATTEMPTS=500
-      - AUTHRATELIMIT_DURATION=30
+      AUTHRATELIMIT_ATTEMPTS: 500
+      AUTHRATELIMIT_DURATION: 30
+      # To test contact form
+      MAILDEV_ACTIVE: true
+      MAIL_DEV_URL: http://localhost:${MAILDEV_UI_PORT}
+      MAILS_TRANSPORT: |
+        {"port": "MAILDEV_SMTP_PORT","ignoreTLS": true,"host": "localhost"}
+      ANONYMOUS_CONTACT_FORM: true
+
     volumes:
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
 
   data-fair:
     profiles:
-      - test
       - dev
+      - test
     image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
@@ -56,18 +73,17 @@ services:
       elasticsearch:
         condition: service_healthy
     environment:
-      - PORT=8082
-      - MONGO_URL=mongodb://localhost:27017/data-fair
-      - DIRECTORY_URL=http://localhost:5607/simple-directory
-      - PRIVATE_EVENTS_URL=http://localhost:8083
-      - PRIVATE_DIRECTORY_URL=http://localhost:8081
-      - PUBLIC_URL=http://localhost:5607/data-fair
-      - WS_PUBLIC_URL=ws://localhost:5607/data-fair
+      - PORT=${DF_PORT}
+      - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair
+      - ES_HOST=localhost:${ES_PORT}
+      - DIRECTORY_URL=http://localhost:${NGINX_PORT}/simple-directory
+      - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
+      - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
+      - PUBLIC_URL=http://localhost:${NGINX_PORT}/data-fair
+      - WS_PUBLIC_URL=ws://localhost:${NGINX_PORT}/data-fair
       - OBSERVER_ACTIVE=false
-      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:8097
+      - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
       - SECRET_EVENTS=secret-events
-    volumes:
-      - data-fair-data:/data
 
   #####
   # optional services
@@ -78,66 +94,37 @@ services:
       - dev
     image: ghcr.io/data-fair/events:main
     network_mode: host
-    depends_on:
-      - mongo
     environment:
-      - PORT=8083
-      - MONGO_URL=mongodb://localhost:27017/data-fair-events
-      - PRIVATE_DIRECTORY_URL=http://localhost:5607/simple-directory
+      - PORT=${EVENTS_PORT}
+      - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair-events
+      - PRIVATE_DIRECTORY_URL=http://localhost:${NGINX_PORT}/simple-directory
       - SECRET_IDENTITIES=secret-identities
       - SECRET_EVENTS=secret-events
       - SECRET_SENDMAILS=secret-sendmails
       - OBSERVER_ACTIVE=false
 
-  # processings:
-  #   profiles:
-  #     - dev
-  #   image: ghcr.io/data-fair/processings:chore-add-dframecontent
-  #   network_mode: host
-  #   depends_on:
-  #     - mongo
-  #   environment:
-  #     - PORT=8084
-  #     - CIPHER_PASSWORD=test
-  #     - IGNORE_ASSERT_REQ_INTERNAL=true
-  #     - OBSERVER_ACTIVE=false
-  #     - PRIVATE_DIRECTORY_URL=http://localhost:8081
-  #     - PRIVATE_EVENTS_URL=http://localhost:8083
-  #     - SECRET_EVENTS=secret-events
-  #     - SECRET_IDENTITIES=secret-identities
-  #   volumes:
-  #     - ./data/processings:/app/data
-
-  # maildev:
-  #   profiles:
-  #     - dev
-  #     - test
-  #   image: maildev/maildev:2.2.1
-  #   ports:
-  #     - 1080:1080
-  #     - 1025:1025
+  maildev:
+    profiles:
+      - dev
+    image: maildev/maildev:2.1.0
+    ports:
+      - ${MAILDEV_UI_PORT}:1080
+      - ${MAILDEV_SMTP_PORT}:1025
+    # https://github.com/maildev/maildev/issues/484
+    healthcheck:
+      test: 'wget -O - http://127.0.0.1:$${MAILDEV_WEB_PORT}$${MAILDEV_BASE_PATHNAME}/healthz || exit 1'
   
   #####
   # db and search engine
   #####
 
-  mongo:
-    profiles:
-      - test
-      - dev
-    image: mongo:4.2
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo-data:/data/db
-
   elasticsearch:
     profiles:
       - dev
+      - test
     image: ghcr.io/data-fair/elasticsearch:7.x
     ports:
-      - 9200:9200
-      - 9300:9300
+      - ${ES_PORT}:9200
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -147,13 +134,22 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
-      start_period: 10s
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 10s
       timeout: 5s
-      interval: 2s
-      retries: 50
+      retries: 5
+      start_period: 30s
+
+  mongo:
+    profiles:
+      - test
+      - dev
+    image: mongo:4.2
+    ports:
+      - ${MONGO_PORT}:27017
+    volumes:
+      - mongo-data:/data/db
 
 volumes:
-  mongo-data:
   elasticsearch-data:
-  data-fair-data:
+  mongo-data:

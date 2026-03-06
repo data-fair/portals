@@ -1,7 +1,7 @@
 import type { Portal } from '#api/types/portal'
 import type { SiteInfo } from '@data-fair/lib-vue/session'
 
-export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
+export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging' | 'whiteLabel'> & { draft: boolean }
 
 export type PortalStore = ReturnType<typeof createPortalStore>
 const portalStoreKey = Symbol('portal-store')

@@ -102,7 +102,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options - accueil',
+                title: 'Options - Accueil',
                 children: ['headerHome']
               },
               {
@@ -143,7 +143,7 @@ export default {
               {
                 cols: { md: 6 },
                 comp: 'card',
-                title: 'Options - accueil',
+                title: 'Options - Accueil',
                 children: ['navBarHome']
               },
               {
@@ -175,13 +175,14 @@ export default {
           }
         ]
       },
-      { title: 'Fil d\'arianne', children: ['breadcrumb'] },
-      { title: 'Pied de page', children: ['footer', { name: 'footer-preview' }] },
+      { title: "Fil d'Ariane", children: ['breadcrumb'] },
+      { title: 'Pied de page', children: ['footer'] },
       { title: 'Contact', children: ['contactInformations'] },
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
       {
+        if: 'data?.authentication !== "none"',
         title: 'Espace personnel',
         children: ['personal']
       }
@@ -248,6 +249,7 @@ export default {
       type: 'string',
       title: 'Police principale',
       layout: {
+        comp: 'autocomplete',
         getItems: {
           url: '/portals-manager/api/fonts'
         }
@@ -258,12 +260,13 @@ export default {
       title: 'Police des titres',
       hint: 'laissez vide pour utiliser la police principale',
       layout: {
+        comp: 'autocomplete',
         getItems: {
           url: '/portals-manager/api/fonts'
         }
       }
     },
-    navLinksConfig: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkConfig' },
+    navLinksConfig: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
     logo: {
       type: 'object',
       title: 'Logo',
@@ -351,14 +354,14 @@ export default {
     headerHomeActive: {
       type: 'boolean',
       title: "Utiliser un rendu différent sur la page d'accueil",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
     header: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     headerHome: { $ref: 'https://github.com/data-fair/portals/portal-config-header' },
     navBarHomeActive: {
       type: 'boolean',
       title: "Utiliser un rendu différent sur la page d'accueil",
-      layout: { comp: 'switch' }
+      layout: 'switch'
     },
     navBar: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },
     navBarHome: { $ref: 'https://github.com/data-fair/portals/portal-config-nav-bar' },
@@ -411,9 +414,9 @@ export default {
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
         { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
         {
           title: 'Sous-menu',
           required: ['type', 'title', 'children'],

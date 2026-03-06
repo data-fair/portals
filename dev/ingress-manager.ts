@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import type { IngressManagerIngressInfo } from '../api/types/index.ts'
 import { assertReqInternalSecret } from '@data-fair/lib-express/index.js'
@@ -11,12 +12,12 @@ app.post('/api/ingress', (req, res, next) => {
   let hostAliases = ''
   for (const item of body) {
     const url = new URL(item.url)
-    if (url.port !== '5607') {
-      res.status(400).send('in dev env only 5607 port is allowed, for example "http://portal1.localhost:5607"')
+    if (url.port !== process.env.NGINX_PORT) {
+      res.status(400).send(`in dev env only ${process.env.NGINX_PORT} port is allowed, for example "http://portal1.localhost:${process.env.NGINX_PORT}"`)
       return
     }
     if (!url.hostname.endsWith('.localhost')) {
-      res.status(400).send('in dev env only *.localhost hostname is allowed, for example "http://portal1.localhost:5607"')
+      res.status(400).send(`in dev env only *.localhost hostname is allowed, for example "http://portal1.localhost:${process.env.NGINX_PORT}"`)
       return
     }
     hostAliases += `127.0.0.1 ${url.hostname}\n`
@@ -39,10 +40,10 @@ ${req.params.id}
   res.status(201).send()
 })
 
-app.listen(5697, (err) => {
+app.listen(process.env.DEV_INGRESS_PORT, (err) => {
   if (err) {
     console.error(err)
     process.exit(-1)
   }
-  console.log('Mock ingress manager listening on port 5697')
+  console.log(`Mock ingress manager listening on port ${process.env.DEV_INGRESS_PORT}`)
 })

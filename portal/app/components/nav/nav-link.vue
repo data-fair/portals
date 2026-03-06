@@ -5,8 +5,8 @@
   <v-btn
     :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
     :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
-    :target="link.type === 'external' && link.target ? '_blank' : undefined"
-    :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+    :target="link.target ? '_blank' : undefined"
+    :rel="link.target ? 'noopener' : undefined"
     :color="config?.color"
     :density="config?.density"
     :elevation="config?.elevation"
@@ -15,23 +15,31 @@
     :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
     :active="false"
   >
-    <v-icon
+    <!--
+      Show icon in prepend, not directly in default slot with start props
+      to align vertically with the text properly.
+    -->
+    <template
       v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-      :color="link.icon.color"
-      :icon="link.icon.mdi?.svgPath || link.icon.custom"
-      start
-    />
+      #prepend
+    >
+      <v-icon
+        :color="link.icon.color"
+        :icon="link.icon.mdi?.svgPath || link.icon.custom"
+      />
+    </template>
     <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
     <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
   </v-btn>
 </template>
 
 <script setup lang="ts">
-import type { LinkItem, LinkConfig } from '#api/types/page-elements/index.js'
+import type { LinkItem } from '#api/types/page-elements/index.ts'
+import type { ButtonConfig } from '#api/types/common-defs/index.ts'
 
 defineProps<{
   link: LinkItem
-  config?: LinkConfig
+  config?: ButtonConfig
 }>()
 
 const { locale } = useI18n()

@@ -28,4 +28,9 @@ export const usePageSeo = (meta: {
   if (meta.ogImage) { seoMeta.ogImage = () => toValue(meta.ogImage) }
 
   useSeoMeta(seoMeta)
+
+  // Add canonical link (always current URL without query params)
+  const requestUrl = useRequestURL()
+  const canonicalUrl = `${requestUrl.origin}${requestUrl.pathname}`
+  useHead({ link: [{ rel: 'canonical', href: canonicalUrl }] })
 }

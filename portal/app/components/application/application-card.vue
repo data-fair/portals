@@ -1,9 +1,14 @@
 <template>
+  <!--
+    :to => disabled in preview
+    link => simulate link style in preview
+  -->
   <v-card
-    :to="`/applications/${application.slug}`"
-    class="h-100 d-flex flex-column"
+    :to="!preview ? `/applications/${application.slug}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
+    class="h-100 d-flex flex-column"
+    link
   >
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
@@ -19,7 +24,6 @@
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
-            role="presentation"
             aria-hidden="true"
             :style="leftThumbnailStyle"
           />
@@ -38,26 +42,25 @@
       >
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || $vuetify.display.smAndDown) && thumbnailUrl"
+          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
-          alt=""
-          role="presentation"
           aria-hidden="true"
         />
 
         <!--
-          title-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          text-two-lines and 'height': titleHeight=> truncate title to 2 lines
           white-space: unset; => remove default nowrap from v-card-title
         -->
         <v-card-title
-          :class="['font-weight-bold', { 'title-two-lines': cardConfig.titleLinesCount === 2 }]"
+          :class="['font-weight-bold', { 'text-two-lines': cardConfig.titleLinesCount === 2 }]"
           :style="[
-            cardConfig.titleLinesCount !== 1 ? { 'white-space': 'unset' } : {},
+            cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
             cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
           ]"
+          :title="application.title"
         >
           {{ application.title }}
         </v-card-title>
@@ -69,8 +72,6 @@
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
           height="170"
-          alt=""
-          role="presentation"
           aria-hidden="true"
         />
 
@@ -92,18 +93,29 @@
         />
 
         <!-- Department / Updated At -->
-        <!-- TODO: Convert to v-row like topics and keywords -->
-        <v-list-item>
-          <template #prepend>
+        <v-row
+          no-gutters
+          class="px-4 py-2"
+        >
+          <v-col
+            v-if="cardConfig.showDepartment"
+            cols="auto"
+            class="d-flex align-center mr-2"
+          >
             <owner-avatar
-              v-if="cardConfig.showDepartment"
               :owner="application.owner"
+              omit-owner-name
             />
-          </template>
-          <span :class="['text-caption', cardConfig.showDepartment ? 'ml-2' : '']">
-            {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-          </span>
-        </v-list-item>
+          </v-col>
+          <v-col
+            cols="auto"
+            class="d-flex align-center"
+          >
+            <span class="text-caption">
+              {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+            </span>
+          </v-col>
+        </v-row>
 
         <!-- Actions (Bottom Location) -->
         <template v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown">
@@ -162,7 +174,6 @@
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationCard } from '#api/types/portal-config'
-import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiFullscreen } from '@mdi/js'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
@@ -172,14 +183,9 @@ const { application, cardConfig } = defineProps<{
 }>()
 
 const { dayjs } = useLocaleDayjs()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
+const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
-
-const getPortalImageSrc = (imageRef: ImageRef, mobile: boolean) => {
-  let id = imageRef._id
-  if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/images/${id}`
-}
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
@@ -207,7 +213,7 @@ const leftThumbnailStyle = computed(() => {
 // Height calculation for title with 2 lines
 const titleHeight = ref<string>()
 onMounted(() => {
-  const titleElement = document.querySelector('.title-two-lines')
+  const titleElement = document.querySelector('.text-two-lines')
   if (titleElement) {
     const styles = getComputedStyle(titleElement)
     const lineHeight = parseFloat(styles.lineHeight)
@@ -234,12 +240,3 @@ onMounted(() => {
       full: Plein écran
 
 </i18n>
-
-<style scoped>
-.title-two-lines {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-</style>

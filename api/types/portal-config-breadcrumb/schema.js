@@ -3,11 +3,32 @@ export default {
   'x-exports': [],
   title: 'Breadcrumb',
   type: 'object',
-  layout: { title: null },
+  layout: {
+    title: null,
+    children: [
+      'position',
+      {
+        comp: 'card',
+        title: 'Options',
+        if: 'parent.data?.position !== "none"',
+        children: [
+          'showHome',
+          'homeLabel',
+          'fluid',
+          'compact',
+          'separator'
+        ]
+      },
+      {
+        if: 'parent.data?.position !== "none"',
+        children: [{ name: 'breadcrumb-preview' }]
+      }
+    ]
+  },
   properties: {
     position: {
       type: 'string',
-      title: 'Position du fil d\'arianne',
+      title: "Position du fil d'Ariane",
       default: 'none',
       oneOf: [
         { const: 'none', title: 'Aucun' },
@@ -34,6 +55,28 @@ export default {
         cols: { md: 6 }
       },
       default: 'Accueil'
+    },
+    fluid: {
+      type: 'boolean',
+      title: "Aligner à gauche de l'écran",
+      description: "Le fil d'Ariane sera aligné au bord gauche de l'écran. Sinon, il sera aligné au contenu de la page.",
+      layout: {
+        if: 'parent.data?.position !== "none"',
+        comp: 'switch',
+        cols: { md: 6 }
+      },
+      default: true
+    },
+    compact: {
+      type: 'boolean',
+      title: 'Affichage compact',
+      description: "Le texte du fil d'Ariane sera affiché en plus petit.",
+      layout: {
+        if: 'parent.data?.position !== "none"',
+        comp: 'switch',
+        cols: { md: 6 }
+      },
+      default: true
     },
     separator: {
       type: 'object',
@@ -85,7 +128,13 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-          layout: { cols: { md: 4 } }
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
         }
       }
     }

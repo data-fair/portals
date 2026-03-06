@@ -1,20 +1,10 @@
-import type { LinkItem, MenuItem } from '#api/types/portal-config'
+import type { MenuItem } from '#api/types/portal/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
 
-const drawer = ref(false)
-const personalDrawer = ref(false)
-const setBreadcrumbs = () => {}
-const clearBreadcrumbs = () => {}
-const showBreadcrumbs = computed(() => {
-  console.warn('showBreadcrumbs is used in portals-manager')
-  return true
-})
-
-const isMenuItemActive = (_item: any, _currentPath: string): boolean => { return false }
-const isExternalLink = (link: LinkItem | MenuItem): boolean => {
-  if (link.type === 'external') return !link.href.startsWith('/')
+const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
+  if (link.type === 'external') return !link.href?.startsWith('/')
   return false
 }
-const resolveLink = (_link: any | any) => { return undefined }
 
 const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => {
   const lang = (locale !== 'en' && locale !== 'fr') ? 'en' : locale
@@ -37,6 +27,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
         case 'event': return i18n[lang]['eventPage']
         case 'reuses': return i18n[lang]['reusesPage']
         case 'sitemap': return i18n[lang]['sitemapPage']
+        case 'catalog-api-doc': return i18n[lang]['catalogApiDocPage']
         default: return i18n[lang]['standardPage']
       }
     }
@@ -50,16 +41,18 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
 
 export const useNavigationStore = () => {
   return {
-    breadcrumbs: ref([]),
-    showBreadcrumbs,
-    setBreadcrumbs,
-    clearBreadcrumbs,
-    isMenuItemActive,
+    breadcrumbs: ref([{ title: 'Page libre', to: '/my-page' }]),
+    setBreadcrumbs: () => { },
+    showTopBreadcrumbs: ref(false),
+    showBottomBreadcrumbs: ref(false),
+    clearBreadcrumbs: () => { },
+    isMenuItemActive: (_item: any, _currentPath: string): boolean => false,
     isExternalLink,
-    resolveLink,
+    resolveLink: (_link: any) => undefined,
     resolveLinkTitle,
-    drawer,
-    personalDrawer
+    drawer: ref(false),
+    personalDrawer: ref(false),
+    isIframe: ref(false)
   }
 }
 
@@ -78,6 +71,7 @@ const i18n = {
     eventPage: 'Event',
     reusesPage: 'Reuses',
     sitemapPage: 'Sitemap',
+    catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
     link: 'Link'
   },
@@ -95,6 +89,7 @@ const i18n = {
     eventPage: 'Événement',
     reusesPage: 'Réutilisations',
     sitemapPage: 'Plan du site',
+    catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
     link: 'Lien'
   }

@@ -6,7 +6,7 @@
     :resource-title="application.title"
     :text="t('preview')"
     :short-text="t('previewShort')"
-    :track-path="`/applications/${application.slug}/preview-dialog`"
+    :track-dialog="{ action: 'application-preview', label: application.slug }"
     :block="block"
   >
     <d-frame-wrapper

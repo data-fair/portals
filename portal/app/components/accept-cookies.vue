@@ -53,9 +53,7 @@ const { portal } = usePortalStore()
 const { requiresConsent, cookieTrack } = useAnalyticsInfo(portal.value)
 const hostname = window.location.hostname
 
-if (requiresConsent && cookieTrack.value === undefined) {
-  show.value = true
-}
+if (requiresConsent && cookieTrack.value === undefined) show.value = true
 
 const save = () => {
   cookieTrack.value = authorizeTracking.value ? 'yes' : 'no'

@@ -1,7 +1,4 @@
-import type { Portal } from '#api/types/portal'
 import type { SiteInfo } from '@data-fair/lib-vue/session'
-
-type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'staging'> & { draft: boolean }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const [portalRes, siteInfoRes] = await Promise.all([
