@@ -17,7 +17,7 @@ export default {
       'x-i18n-title': {
         fr: 'Métadonnées'
       },
-      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs', 'fluid']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'thumbnail', 'showBreadcrumbs', 'fluid']
     }, {
       title: 'Content',
       'x-i18n-title': {
@@ -78,34 +78,6 @@ export default {
             fr: 'Date de fin'
           },
           layout: { cols: { md: 6 } }
-        },
-        thumbnail: {
-          type: 'object',
-          title: 'Image',
-          description: "Image affichée sur la vignette d'un évènement et lors du partage.",
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 1280, label: 'Image' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
         }
       }
     },
@@ -120,34 +92,6 @@ export default {
           type: 'string',
           format: 'date-time',
           title: 'Date'
-        },
-        thumbnail: {
-          type: 'object',
-          title: 'Image',
-          description: "Image affichée sur la vignette d'un évènement et lors du partage.",
-          required: ['_id', 'name', 'mimeType'],
-          layout: {
-            slots: {
-              component: {
-                name: 'image-upload',
-                props: { width: 1280, label: 'Image' }
-              }
-            }
-          },
-          properties: {
-            _id: {
-              type: 'string'
-            },
-            name: {
-              type: 'string'
-            },
-            mimeType: {
-              type: 'string'
-            },
-            mobileAlt: {
-              type: 'boolean'
-            }
-          }
         }
       }
     },
@@ -178,6 +122,41 @@ export default {
             title: { type: 'string' },
             slug: { type: 'string' }
           }
+        }
+      }
+    },
+    thumbnail: {
+      type: 'object',
+      title: 'Thumbnail',
+      'x-i18n-title': {
+        fr: 'Image'
+      },
+      description: 'Image used for event and news thumbnails. If present, this image will be used for previews on social networks and search engines.',
+      'x-i18n-description': {
+        fr: "Image utilisée pour les vignettes d'événements et d'actualités. Si présente, cette image sera utilisée pour les aperçus sur les réseaux sociaux et les moteurs de recherche."
+      },
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280, label: 'Image' }
+          }
+        },
+        cols: { md: 4 }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        },
+        mobileAlt: {
+          type: 'boolean'
         }
       }
     },

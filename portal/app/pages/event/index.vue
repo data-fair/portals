@@ -70,7 +70,7 @@ import type { Page, PageConfig } from '#api/types/page'
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('event-catalog')
+const getPageImageSrc = providePageImageSrc('event-catalog')
 
 const route = useRoute()
 const router = useRouter()
@@ -106,12 +106,13 @@ const goToPage = (page: number) => router.push({ query: { page } })
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
-  setBreadcrumbs([{ type: 'standard', subtype: 'event', title: pageConfig?.title }])
+  setBreadcrumbs([{ type: 'standard', subtype: 'event-catalog', title: pageConfig?.title }])
 }, { immediate: true })
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('eventsTitle')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || t('seo.description')
+  description: () => pageConfigFetch.data.value?.description || t('seo.description'),
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 </script>
 

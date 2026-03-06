@@ -21,7 +21,7 @@ import type { PageConfig } from '#api/types/page'
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('cookie-policy')
+const getPageImageSrc = providePageImageSrc('cookie-policy')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/cookie-policy/cookie-policy', { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -33,7 +33,8 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('cookiePolicy')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description
+  description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 </script>
 

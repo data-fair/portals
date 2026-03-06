@@ -41,8 +41,8 @@ export default defineEventHandler(async (event) => {
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
-          case 'news': return '/news'
-          case 'event': return '/event'
+          case 'event-catalog': return '/event'
+          case 'news-catalog': return '/news'
           case 'sitemap': return '/sitemap'
           case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined

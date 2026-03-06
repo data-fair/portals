@@ -291,10 +291,8 @@ const cleanUnusedImages = async (page: Page) => {
     ...await getElementsImageRefs(page.config.elements),
     ...await getElementsImageRefs(page.draftConfig.elements)
   ]
-  if (page.config.eventMetadata?.thumbnail) imageRefs.push(page.config.eventMetadata.thumbnail)
-  if (page.draftConfig.eventMetadata?.thumbnail) imageRefs.push(page.draftConfig.eventMetadata.thumbnail)
-  if (page.config.newsMetadata?.thumbnail) imageRefs.push(page.config.newsMetadata.thumbnail)
-  if (page.draftConfig.newsMetadata?.thumbnail) imageRefs.push(page.draftConfig.newsMetadata.thumbnail)
+  if (page.config.thumbnail) imageRefs.push(page.config.thumbnail)
+  if (page.draftConfig.thumbnail) imageRefs.push(page.draftConfig.thumbnail)
 
   const imagesIds = []
   for (const imageRef of imageRefs) {

@@ -78,8 +78,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
-          case 'news': return '/news'
-          case 'event': return '/event'
+          case 'event-catalog': return '/event'
+          case 'news-catalog': return '/news'
           case 'sitemap': return '/sitemap'
           case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
@@ -108,8 +108,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
           case 'reuses': return i18n[locale]['reusesPage']
-          case 'news': return i18n[locale]['newsPage']
-          case 'event': return i18n[locale]['eventPage']
+          case 'event-catalog': return i18n[locale]['eventPage']
+          case 'news-catalog': return i18n[locale]['newsPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
           case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
