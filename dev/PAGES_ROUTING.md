@@ -8,11 +8,11 @@ The system currently supports many page types:
 
 1. **home** - Home page (unique per portal)
 2. **contact** - Contact page (unique per portal)
-3. **privacy-policy** - Privacy policy page (unique per portal)
-4. **accessibility** - Accessibility page (unique per portal)
+3. **accessibility** - Accessibility page (unique per portal)
+4. **terms-of-service** - Terms of service page (unique per portal)
 5. **legal-notice** - Legal notice page (unique per portal)
-6. **cookie-policy** - Cookie policy page (unique per portal)
-7. **terms-of-service** - Terms of service page (unique per portal)
+6. **privacy-policy** - Privacy policy page (unique per portal)
+7. **cookie-policy** - Cookie policy page (unique per portal)
 8. **datasets** - Datasets Catalog page (unique per portal)
 9. **applications** - Applications Catalog page (unique per portal)
 10. **reuses** - Reuses Catalog page (unique per portal)
@@ -24,7 +24,7 @@ The system currently supports many page types:
 
 In the portals-manager UI, page types are organized into groups (UI concept only):
 
-- **'standard' Group**: Contains standard pages `home`, `contact`, `privacy-policy`, `accessibility`, `legal-notice`, `cookie-policy`, `terms-of-service`, `datasets`, `applications` and `reuses`
+- **'standard' Group**: Contains standard pages `home`, `contact`, `accessibility`, `terms-of-service`, `legal-notice`, `privacy-policy`, `cookie-policy`, `datasets`, `applications` and `reuses`
 - **'default' Group**: Contains `generic` type pages that have no assigned group
 
 ## Portal Frontend Routes
@@ -33,14 +33,26 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 
 - `/` → `home` type page
 - `/contact` → `contact` type page
-- `/privacy-policy` → `privacy-policy` type page
 - `/accessibility` → `accessibility` type page
-- `/legal-notice` → `legal-notice` type page
-- `/cookie-policy` → `cookie-policy` type page
 - `/terms-of-service` → `terms-of-service` type page
-- `/datasets` → `datasets` type page
-- `/applications` → `applications` type page
-- `/reuses` → `reuses` type page
+- `/legal-notice` → `legal-notice` type page
+- `/privacy-policy` → `privacy-policy` type page
+- `/cookie-policy` → `cookie-policy` type page
+
+### Multiple Pages - Datasets
+
+- `/datasets` → List of `dataset` type pages
+- `/datasets/[ref]` → Detail of a `dataset` type page
+
+### Multiple Pages - Applications
+
+- `/applications` → List of `application` type pages
+- `/applications/[ref]` → Detail of a `application` type page
+
+### Multiple Pages - Reuses
+
+- `/reuses` → List of `reuse` type pages
+- `/reuses/[slug]` → Detail of a `reuse` type page
 
 ### Multiple Pages - Events
 
@@ -51,11 +63,6 @@ In the portals-manager UI, page types are organized into groups (UI concept only
 
 - `/news` → List of `news` type pages
 - `/news/[slug]` → Detail of a `news` type page
-
-### Multiple Pages - Reuses
-
-- `/reuses` → List of `reuse` type pages
-- `/reuses/[slug]` → Detail of a `reuse` type page
 
 ### Generic Pages
 
@@ -79,7 +86,7 @@ portal/server/routes/portal/api/pages/
 ### Unique Pattern
 
 All pages use **the same pattern**: `/portal/api/pages/[type]/[slug]`
-For unique pages (home, contact, privacy-policy,...), the `slug` is repeated and identical to the `type`.
+For unique pages (home, contact, accessibility,...), the `slug` is repeated and identical to the `type`.
 
 ```text
 /portal/api/pages/[type]          → Retrieves a list of pages (event/news only)
@@ -110,11 +117,11 @@ Retrieves the configuration of a specific page.
 
 - `GET /portal/api/pages/home/home` → Home page
 - `GET /portal/api/pages/contact/contact` → Contact page
-- `GET /portal/api/pages/privacy-policy/privacy-policy` → Privacy policy page
 - `GET /portal/api/pages/accessibility/accessibility` → Accessibility page
-- `GET /portal/api/pages/legal-notice/legal-notice` → Legal notice page
-- `GET /portal/api/pages/cookie-policy/cookie-policy` → Cookie policy page
 - `GET /portal/api/pages/terms-of-service/terms-of-service` → Terms of service page
+- `GET /portal/api/pages/legal-notice/legal-notice` → Legal notice page
+- `GET /portal/api/pages/privacy-policy/privacy-policy` → Privacy policy page
+- `GET /portal/api/pages/cookie-policy/cookie-policy` → Cookie policy page
 - `GET /portal/api/pages/datasets/datasets` → Datasets Catalog page
 - `GET /portal/api/pages/applications/applications` → Applications Catalog page
 - `GET /portal/api/pages/reuses/reuses` → Reuses Catalog page

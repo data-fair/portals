@@ -72,6 +72,7 @@
       <v-stepper-window>
         <!-- Step 0: Select page type -->
         <v-stepper-window-item value="type">
+          <!-- Group 1: Free content pages -->
           <v-row class="d-flex align-stretch">
             <!-- Generic page (first) -->
             <v-col
@@ -93,9 +94,64 @@
               </v-card>
             </v-col>
 
-            <!-- Standard page types -->
+            <v-col
+              v-for="pType in contentPageTypes"
+              :key="pType"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="pageType === pType ? 'primary' : ''"
+                @click="selectPageType(pType)"
+              >
+                <template #title>
+                  <span :class="pageType !== pType ? 'text-primary' : ''">
+                    {{ t('pageTypeTitle.' + pType) }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('pageTypeDesc.' + pType) }}</v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Group 2: Standard pages -->
+          <h2 class="text-h6 mt-6">
+            {{ t('pageGroupTitle.standard') }}
+          </h2>
+          <p>{{ t('pageGroupDesc.standard') }}</p>
+          <v-row class="d-flex align-stretch mt-2">
             <v-col
               v-for="pType in standardPageTypes"
+              :key="pType"
+              md="4"
+              sm="6"
+              cols="12"
+            >
+              <v-card
+                class="h-100"
+                :color="pageType === pType ? 'primary' : ''"
+                @click="selectPageType(pType)"
+              >
+                <template #title>
+                  <span :class="pageType !== pType ? 'text-primary' : ''">
+                    {{ t('pageTypeTitle.' + pType) }}
+                  </span>
+                </template>
+                <v-card-text>{{ t('pageTypeDesc.' + pType) }}</v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <!-- Group 3: Catalog pages -->
+          <h2 class="text-h6 mt-6">
+            {{ t('pageGroupTitle.catalog') }}
+          </h2>
+          <p>{{ t('pageGroupDesc.catalog') }}</p>
+          <v-row class="d-flex align-stretch mt-2">
+            <v-col
+              v-for="pType in catalogPageTypes"
               :key="pType"
               md="4"
               sm="6"
@@ -329,8 +385,10 @@ const customGroupsFetch = useFetch<{ results: Array<{ _id: string, title: string
 
 const customGroups = computed(() => customGroupsFetch.data.value?.results || [])
 
-// Available page types (standard types, generic is shown separately first)
-const standardPageTypes = ['home', 'event', 'news', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses']
+// Available page types split into groups (generic is shown separately first in group 1)
+const contentPageTypes = ['news', 'event']
+const standardPageTypes = ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy']
+const catalogPageTypes = ['datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog']
 
 const step = ref<'type' | 'group' | 'action' | 'source' | 'owner' | 'information'>('type')
 const pageType = ref<string | undefined>(undefined)
@@ -511,34 +569,44 @@ setBreadcrumbs([
     selectReference: Select a reference template
     selectPageToDuplicate: Select a page to duplicate
     selectOwner: Select owner
+    pageGroupTitle:
+      standard: Institutional Pages
+      catalog: Catalog Pages
+    pageGroupDesc:
+      standard: Pre-configured pages for mandatory or common institutional content (legal notices, accessibility statement, etc.).
+      catalog: Pages that automatically list and display content from your datasets, applications, reuses, events, or news.
     pageTypeTitle:
       generic: Free Page
       home: Home Page
-      contact: Contact Page
-      privacy-policy: Privacy Policy
+      news: News Page
+      event: Event Page
+      contact: Contact
       accessibility: Accessibility
-      legal-notice: Legal Notice
-      cookie-policy: Cookie Policy
       terms-of-service: Terms of Service
+      legal-notice: Legal Notices
+      privacy-policy: Privacy Policy
+      cookie-policy: Cookie Policy
       datasets: Datasets Catalog
       applications: Applications Catalog
       reuses: Reuses Catalog
-      event: Event Page
-      news: News Page
+      event-catalog: Events Catalog
+      news-catalog: News Catalog
     pageTypeDesc:
-      generic: Create a free-form page with custom content.
-      home: Create the main home page for your portal.
-      contact: Create a page to allow users to contact you.
-      privacy-policy: Create a page presenting your privacy policy.
-      accessibility: Create a page describing your accessibility level and commitments.
-      legal-notice: Create a page gathering your mandatory legal notices.
-      cookie-policy: Create a page detailing the use of cookies.
-      terms-of-service: Create a page presenting your terms of service.
-      datasets: Create a page listing your datasets.
-      applications: Create a page listing your applications.
-      reuses: Create a page listing your reuses.
-      event: Create an event page.
-      news: Create a news page.
+      generic: Build a fully custom page by composing content blocks freely.
+      home: The main entry point of your portal, welcoming visitors and highlighting key content.
+      news: A page dedicated to publishing news articles and updates.
+      event: A page to present and promote an upcoming or past event.
+      contact: A page allowing visitors to get in touch with your organization.
+      accessibility: A page describing your portal's accessibility level and commitments.
+      terms-of-service: A page presenting the general terms and conditions for using your portal.
+      legal-notice: A page listing the mandatory legal information about your organization and site.
+      privacy-policy: A page explaining how personal data is collected and processed.
+      cookie-policy: A page detailing which cookies are used and for what purposes.
+      datasets: A page automatically listing all datasets available on your portal.
+      applications: A page automatically listing all data visualizations and applications.
+      reuses: A page showcasing reuses and projects based on your open data.
+      event-catalog: A page automatically listing all events published on your portal.
+      news-catalog: A page automatically listing all news articles published on your portal.
 
   fr:
     pages: Pages
@@ -564,33 +632,43 @@ setBreadcrumbs([
     selectReference: Sélectionner un modèle de référence
     selectPageToDuplicate: Sélectionner une page à dupliquer
     selectOwner: Sélection du propriétaire
+    pageGroupTitle:
+      standard: Pages institutionnelles
+      catalog: Pages de catalogues
+    pageGroupDesc:
+      standard: Pages pré-configurées pour les contenus institutionnels obligatoires ou courants (mentions légales, accessibilité, etc.).
+      catalog: Pages qui listent et affichent automatiquement les contenus de vos jeux de données, applications, réutilisations, événements ou actualités.
     pageTypeTitle:
       generic: Page libre
       home: Page d'accueil
+      news: Page d'actualité
+      event: Page d'événement
       contact: Contact
-      privacy-policy: Politique de confidentialité
       accessibility: Accessibilité
-      legal-notice: Mentions légales
-      cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
+      legal-notice: Mentions légales
+      privacy-policy: Politique de confidentialité
+      cookie-policy: Politique de cookies
       datasets: Catalogue de données
       applications: Catalogue de visualisations
       reuses: Catalogue de réutilisations
-      event: Page d'événement
-      news: Page d'actualité
+      event-catalog: Catalogue d'événements
+      news-catalog: Catalogue d'actualités
     pageTypeDesc:
-      generic: Créer une page libre avec du contenu personnalisé.
-      home: Créer la page d'accueil principale de votre portail.
-      contact: Créer une page permettant aux utilisateurs de vous contacter.
-      privacy-policy: Créer une page présentant votre politique de confidentialité.
-      accessibility: Créer une page décrivant votre niveau et vos engagements d'accessibilité.
-      legal-notice: Créer une page regroupant vos mentions légales obligatoires.
-      cookie-policy: Créer une page détaillant l'usage des cookies.
-      terms-of-service: Créer une page présentant vos conditions générales d'utilisation.
-      datasets: Créer une page listant vos jeux de données.
-      applications: Créer une page listant vos applications.
-      reuses: Créer une page listant vos réutilisations.
-      event: Créer une page d'événement.
-      news: Créer une page d'actualité.
+      generic: Construisez une page entièrement personnalisée en composant librement des blocs de contenu.
+      home: Le point d'entrée principal de votre portail, accueillant les visiteurs et mettant en avant les contenus clés.
+      news: Une page dédiée à la publication d'articles et de mises à jour.
+      event: Une page pour présenter et promouvoir un événement à venir ou passé.
+      contact: Une page permettant aux visiteurs de prendre contact avec votre organisation.
+      accessibility: Une page décrivant le niveau d'accessibilité de votre portail et vos engagements.
+      terms-of-service: Une page présentant les conditions générales d'utilisation de votre portail.
+      legal-notice: Une page regroupant les informations légales obligatoires sur votre organisation et votre site.
+      privacy-policy: Une page expliquant comment les données personnelles sont collectées et traitées.
+      cookie-policy: Une page détaillant les cookies utilisés et leurs finalités.
+      datasets: Une page listant automatiquement tous les jeux de données disponibles sur votre portail.
+      applications: Une page listant automatiquement toutes les visualisations et applications de données.
+      reuses: Une page mettant en valeur les réutilisations et projets basés sur vos données ouvertes.
+      event-catalog: Une page listant automatiquement tous les événements publiés sur votre portail.
+      news-catalog: Une page listant automatiquement toutes les actualités publiées sur votre portail.
 
 </i18n>

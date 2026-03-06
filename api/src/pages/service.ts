@@ -144,7 +144,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   let standardReplacements: Record<string, string> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type)) {
+  if (patch.portals && ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog'].includes(page.type)) {
     if (addedPortals.length > 0) {
       standardReplacements = await switchStandardPages(page, addedPortals)
     }
@@ -291,6 +291,11 @@ const cleanUnusedImages = async (page: Page) => {
     ...await getElementsImageRefs(page.config.elements),
     ...await getElementsImageRefs(page.draftConfig.elements)
   ]
+  if (page.config.eventMetadata?.thumbnail) imageRefs.push(page.config.eventMetadata.thumbnail)
+  if (page.draftConfig.eventMetadata?.thumbnail) imageRefs.push(page.draftConfig.eventMetadata.thumbnail)
+  if (page.config.newsMetadata?.thumbnail) imageRefs.push(page.config.newsMetadata.thumbnail)
+  if (page.draftConfig.newsMetadata?.thumbnail) imageRefs.push(page.draftConfig.newsMetadata.thumbnail)
+
   const imagesIds = []
   for (const imageRef of imageRefs) {
     imagesIds.push(imageRef._id)

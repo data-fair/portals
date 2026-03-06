@@ -78,6 +78,34 @@ export default {
             fr: 'Date de fin'
           },
           layout: { cols: { md: 6 } }
+        },
+        thumbnail: {
+          type: 'object',
+          title: 'Image',
+          description: "Image affichée sur la vignette d'un évènement et lors du partage.",
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 1280, label: 'Image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
         }
       }
     },
@@ -92,6 +120,34 @@ export default {
           type: 'string',
           format: 'date-time',
           title: 'Date'
+        },
+        thumbnail: {
+          type: 'object',
+          title: 'Image',
+          description: "Image affichée sur la vignette d'un évènement et lors du partage.",
+          required: ['_id', 'name', 'mimeType'],
+          layout: {
+            slots: {
+              component: {
+                name: 'image-upload',
+                props: { width: 1280, label: 'Image' }
+              }
+            }
+          },
+          properties: {
+            _id: {
+              type: 'string'
+            },
+            name: {
+              type: 'string'
+            },
+            mimeType: {
+              type: 'string'
+            },
+            mobileAlt: {
+              type: 'boolean'
+            }
+          }
         }
       }
     },

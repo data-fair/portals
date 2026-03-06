@@ -71,7 +71,7 @@
           />
           <!-- Warning for conflicting standard page -->
           <v-alert
-            v-if="['home', 'contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service', 'datasets', 'applications', 'reuses'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
+            v-if="['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog'].includes(page.type) && !isPublished(portal) && getExistingPageOnPortal(portal)"
             class="mt-2"
             density="compact"
             type="warning"
@@ -118,9 +118,9 @@ type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'stagi
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
 const portals = computed(() => portalsFetch.data.value?.results)
 
-// Fetch all standard pages (home, contact, privacy-policy,...) to detect conflicts
+// Fetch all standard pages (home, contact, accessibility,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
-  query: { type: 'home,contact,privacy-policy,accessibility,legal-notice,cookie-policy,terms-of-service,datasets,applications,reuses', select: '_id,type,portals,config.title,title', size: 10000 }
+  query: { type: 'home,contact,accessibility,terms-of-service,legal-notice,privacy-policy,cookie-policy,datasets,applications,reuses,event-catalog,news-catalog', select: '_id,type,portals,config.title,title', size: 10000 }
 })
 
 const warnings = computed(() => {
@@ -208,6 +208,8 @@ const getPortalUrl = (portal: PartialPortal): string => {
       datasets: datasets catalog page
       applications: applications catalog page
       reuses: reuses catalog page
+      event-catalog: events catalog page
+      news-catalog: news catalog page
 
   fr:
     createPortal: Créer un portail
@@ -231,4 +233,6 @@ const getPortalUrl = (portal: PartialPortal): string => {
       datasets: page de catalogue de données
       applications: page de catalogue de visualisations
       reuses: page de catalogue de réutilisations
+      event-catalog: page de catalogue d'événements
+      news-catalog: page de catalogue d'actualités
 </i18n>

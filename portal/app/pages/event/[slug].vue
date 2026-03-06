@@ -57,12 +57,12 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
-    backToEvents: Back to Events List
+    backToEvents: Go to events list
     event: Event
     eventNotFound: The requested event was not found
     eventError: An error occurred while loading the event
   fr:
-    backToEvents: Retourner à la liste des événements
+    backToEvents: Aller à la liste des évènements
     event: Événement
     eventNotFound: L'événement demandé n'a pas été trouvé
     eventError: Une erreur est survenue lors du chargement de l'événement

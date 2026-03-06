@@ -53,20 +53,20 @@
         <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
           <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
         </li>
-        <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
-          <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
-        </li>
         <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
           <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+        </li>
+        <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
+          <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
         </li>
         <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
           <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
         </li>
+        <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
+          <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+        </li>
         <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
           <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
-          <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
         </li>
       </ul>
     </v-container>
@@ -161,11 +161,11 @@ usePageSeo({
     reuses: Reuses
     home: Home
     contact: Contact
-    privacyPolicy: Privacy Policy
     accessibility: Accessibility
-    legalNotice: Legal Notice
-    cookiePolicy: Cookie Policy
     termsOfService: Terms of Service
+    legalNotice: Legal Notice
+    privacyPolicy: Privacy Policy
+    cookiePolicy: Cookie Policy
     login: Login Page
   fr:
     sitemap: Plan du site
@@ -175,10 +175,10 @@ usePageSeo({
     reuses: Réutilisations
     home: Accueil
     contact: Contact
-    privacyPolicy: Politique de confidentialité
     accessibility: Accessibilité
-    legalNotice: Mentions légales
-    cookiePolicy: Politique de cookies
     termsOfService: Conditions générales d'utilisation
+    legalNotice: Mentions légales
+    privacyPolicy: Politique de confidentialité
+    cookiePolicy: Politique de cookies
     login: Page de connexion
 </i18n>

@@ -123,9 +123,9 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 25, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 26, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 27, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 24, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 25, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 26, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
 
           {
             header: true,
@@ -135,9 +135,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 28, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 29, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 30, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
+          { key: 27, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } }
         ]
       },
       oneOf: [
@@ -174,7 +174,6 @@ export default {
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
-        { $ref: '#/$defs/element-dataset-download' },
 
         // Applications
         { $ref: '#/$defs/element-applications-catalog' },

@@ -57,12 +57,12 @@ usePageSeo({
 
 <i18n lang="yaml">
   en:
-    backToNews: Back to News List
+    backToNews: Go to News List
     news: News
     newsNotFound: The requested news article was not found
     newsError: An error occurred while loading the news article
   fr:
-    backToNews: Retourner à la liste des actualités
+    backToNews: Aller à la liste des actualités
     news: Actualité
     newsNotFound: L'actualité demandée n'a pas été trouvée
     newsError: Une erreur est survenue lors du chargement de l'actualité

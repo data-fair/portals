@@ -1,65 +1,83 @@
 <template>
-  <layout-page>
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
     <div>
-      <h1 class="text-h4 mb-6">Événements</h1>
+      <page-error
+        v-if="pageConfigFetch.error.value && !missingCatalogPage"
+        :status-code="pageConfigFetch.error.value.statusCode || 500"
+      />
 
-      <div v-if="pending" class="text-center py-8">
-        <v-progress-circular indeterminate />
-      </div>
+      <template v-else>
+        <page-elements
+          v-if="pageConfigFetch.data.value"
+          :model-value="pageConfigFetch.data.value.elements"
+        />
 
-      <div v-else-if="error" class="text-error">
-        Erreur lors du chargement des événements
-      </div>
+        <h1 class="text-h4 mb-6">
+          {{ pageConfigFetch.data.value?.title || t('eventsTitle') }}
+        </h1>
 
-      <template v-else-if="events.data.value">
-        <div v-if="events.data.value.results.length === 0" class="text-center py-8">
-          Aucun événement disponible
+        <div v-if="pending" class="text-center py-8">
+          <v-progress-circular indeterminate />
         </div>
 
-        <div v-else class="mb-6">
-          <v-row>
-            <v-col
-              v-for="event in events.data.value.results"
-              :key="event._id"
-              cols="12"
-              md="6"
-              lg="4"
-            >
-              <v-card :to="`/event/${event.config.eventMetadata?.slug}`" hover>
-                <v-card-title>{{ event.config.title }}</v-card-title>
-                <v-card-subtitle v-if="event.config.description">
-                  {{ event.config.description }}
-                </v-card-subtitle>
-                <v-card-text v-if="event.updatedAt">
-                  <small>{{ new Date(event.updatedAt).toLocaleDateString() }}</small>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+        <div v-else-if="error" class="text-error">
+          {{ t('loadError') }}
+        </div>
 
-          <!-- Pagination -->
-          <div v-if="events.data.value.total > limit" class="d-flex justify-center mt-6">
-            <v-pagination
-              :model-value="currentPage"
-              :length="Math.ceil(events.data.value.total / limit)"
-              @update:model-value="goToPage"
-            />
+        <template v-else-if="events.data.value">
+          <div v-if="events.data.value.results.length === 0" class="text-center py-8">
+            {{ t('emptyList') }}
           </div>
-        </div>
+
+          <div v-else class="mb-6">
+            <v-row>
+              <v-col
+                v-for="event in events.data.value.results"
+                :key="event._id"
+                cols="12"
+                md="6"
+                lg="4"
+              >
+                <v-card :to="`/event/${event.config.eventMetadata?.slug}`" hover>
+                  <v-card-title>{{ event.config.title }}</v-card-title>
+                  <v-card-subtitle v-if="event.config.description">
+                    {{ event.config.description }}
+                  </v-card-subtitle>
+                  <v-card-text v-if="event.updatedAt">
+                    <small>{{ new Date(event.updatedAt).toLocaleDateString() }}</small>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <div v-if="events.data.value.total > limit" class="d-flex justify-center mt-6">
+              <v-pagination
+                :model-value="currentPage"
+                :length="Math.ceil(events.data.value.total / limit)"
+                @update:model-value="goToPage"
+              />
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </layout-page>
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
+import type { Page, PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
+providePageImageSrc('event-catalog')
 
 const route = useRoute()
 const router = useRouter()
+
+const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/event-catalog/event-catalog', { watch: false })
+provide('page-config', pageConfigFetch)
+const missingCatalogPage = computed(() => pageConfigFetch.error.value?.statusCode === 404)
 
 const limit = 12
 const currentPage = computed(() => {
@@ -86,23 +104,30 @@ const { pending, error } = events
 
 const goToPage = (page: number) => router.push({ query: { page } })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'event' }
-])
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
+  setBreadcrumbs([{ type: 'standard', subtype: 'event', title: pageConfig?.title }])
+}, { immediate: true })
 
 usePageSeo({
-  title: t('seo.title', { title: portalConfig.value.title }),
-  description: t('seo.description')
+  title: () => (pageConfigFetch.data.value?.title || t('eventsTitle')) + ' - ' + portalConfig.value.title,
+  description: () => pageConfigFetch.data.value?.description || t('seo.description')
 })
 </script>
 
 <i18n lang="yaml">
   en:
+    eventsTitle: Events
+    emptyList: No events available
+    loadError: Error while loading events
     seo:
       title: 'Events - {title}'
       description: 'Browse and discover events. Find information about upcoming and past events.'
 
   fr:
+    eventsTitle: Événements
+    emptyList: Aucun événement disponible
+    loadError: Erreur lors du chargement des événements
     seo:
       title: 'Événements - {title}'
       description: 'Parcourez et découvrez les événements. Trouvez des informations sur les événements à venir et passés.'

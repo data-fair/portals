@@ -111,14 +111,16 @@ const displayPages = computed(() => {
 const standardTypes = new Set([
   'home',
   'contact',
-  'privacy-policy',
   'accessibility',
-  'legal-notice',
-  'cookie-policy',
   'terms-of-service',
+  'legal-notice',
+  'privacy-policy',
+  'cookie-policy',
   'datasets',
   'applications',
-  'reuses'
+  'reuses',
+  'event-catalog',
+  'news-catalog'
 ])
 
 const getPageGroupId = (page: Page) => {

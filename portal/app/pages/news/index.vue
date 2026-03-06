@@ -1,65 +1,83 @@
 <template>
-  <layout-page>
+  <layout-page :is-fluid="pageConfigFetch.data.value?.fluid">
     <div>
-      <h1 class="text-h4 mb-6">Actualités</h1>
+      <page-error
+        v-if="pageConfigFetch.error.value && !missingCatalogPage"
+        :status-code="pageConfigFetch.error.value.statusCode || 500"
+      />
 
-      <div v-if="pending" class="text-center py-8">
-        <v-progress-circular indeterminate />
-      </div>
+      <template v-else>
+        <page-elements
+          v-if="pageConfigFetch.data.value"
+          :model-value="pageConfigFetch.data.value.elements"
+        />
 
-      <div v-else-if="error" class="text-error">
-        Erreur lors du chargement des actualités
-      </div>
+        <h1 class="text-h4 mb-6">
+          {{ pageConfigFetch.data.value?.title || t('newsTitle') }}
+        </h1>
 
-      <template v-else-if="news.data.value">
-        <div v-if="news.data.value.results.length === 0" class="text-center py-8">
-          Aucune actualité disponible
+        <div v-if="pending" class="text-center py-8">
+          <v-progress-circular indeterminate />
         </div>
 
-        <div v-else class="mb-6">
-          <v-row>
-            <v-col
-              v-for="article in news.data.value.results"
-              :key="article._id"
-              cols="12"
-              md="6"
-              lg="4"
-            >
-              <v-card :to="`/news/${article.config.newsMetadata?.slug}`" hover>
-                <v-card-title>{{ article.config.title }}</v-card-title>
-                <v-card-subtitle v-if="article.config.description">
-                  {{ article.config.description }}
-                </v-card-subtitle>
-                <v-card-text v-if="article.updatedAt">
-                  <small>{{ new Date(article.updatedAt).toLocaleDateString() }}</small>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+        <div v-else-if="error" class="text-error">
+          {{ t('loadError') }}
+        </div>
 
-          <!-- Pagination -->
-          <div v-if="news.data.value.total > limit" class="d-flex justify-center mt-6">
-            <v-pagination
-              :model-value="currentPage"
-              :length="Math.ceil(news.data.value.total / limit)"
-              @update:model-value="goToPage"
-            />
+        <template v-else-if="news.data.value">
+          <div v-if="news.data.value.results.length === 0" class="text-center py-8">
+            {{ t('emptyList') }}
           </div>
-        </div>
+
+          <div v-else class="mb-6">
+            <v-row>
+              <v-col
+                v-for="article in news.data.value.results"
+                :key="article._id"
+                cols="12"
+                md="6"
+                lg="4"
+              >
+                <v-card :to="`/news/${article.config.newsMetadata?.slug}`" hover>
+                  <v-card-title>{{ article.config.title }}</v-card-title>
+                  <v-card-subtitle v-if="article.config.description">
+                    {{ article.config.description }}
+                  </v-card-subtitle>
+                  <v-card-text v-if="article.updatedAt">
+                    <small>{{ new Date(article.updatedAt).toLocaleDateString() }}</small>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <div v-if="news.data.value.total > limit" class="d-flex justify-center mt-6">
+              <v-pagination
+                :model-value="currentPage"
+                :length="Math.ceil(news.data.value.total / limit)"
+                @update:model-value="goToPage"
+              />
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </layout-page>
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
+import type { Page, PageConfig } from '#api/types/page'
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
+providePageImageSrc('news-catalog')
 
 const route = useRoute()
 const router = useRouter()
+
+const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/news-catalog/news-catalog', { watch: false })
+provide('page-config', pageConfigFetch)
+const missingCatalogPage = computed(() => pageConfigFetch.error.value?.statusCode === 404)
 
 const limit = 12
 const currentPage = computed(() => {
@@ -80,23 +98,30 @@ const { pending, error } = news
 
 const goToPage = (page: number) => router.push({ query: { page } })
 
-setBreadcrumbs([
-  { type: 'standard', subtype: 'news' }
-])
+watch(() => pageConfigFetch.data.value, (pageConfig) => {
+  setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
+  setBreadcrumbs([{ type: 'standard', subtype: 'news', title: pageConfig?.title }])
+}, { immediate: true })
 
 usePageSeo({
-  title: t('seo.title', { title: portalConfig.value.title }),
-  description: t('seo.description')
+  title: () => (pageConfigFetch.data.value?.title || t('newsTitle')) + ' - ' + portalConfig.value.title,
+  description: () => pageConfigFetch.data.value?.description || t('seo.description')
 })
 </script>
 
 <i18n lang="yaml">
   en:
+    newsTitle: News
+    emptyList: No news available
+    loadError: Error while loading news
     seo:
       title: 'News - {title}'
       description: 'Browse and discover the latest news. Stay informed about recent updates and announcements.'
 
   fr:
+    newsTitle: Actualités
+    emptyList: Aucune actualité disponible
+    loadError: Erreur lors du chargement des actualités
     seo:
       title: 'Actualités - {title}'
       description: 'Parcourez et découvrez les dernières actualités. Restez informé des mises à jour et annonces récentes.'

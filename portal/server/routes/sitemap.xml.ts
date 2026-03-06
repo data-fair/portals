@@ -33,11 +33,11 @@ export default defineEventHandler(async (event) => {
         switch (link.subtype) {
           case 'home': return '/'
           case 'contact': return '/contact'
-          case 'privacy-policy': return '/privacy-policy'
           case 'accessibility': return '/accessibility'
-          case 'legal-notice': return '/legal-notice'
-          case 'cookie-policy': return '/cookie-policy'
           case 'terms-of-service': return '/terms-of-service'
+          case 'legal-notice': return '/legal-notice'
+          case 'privacy-policy': return '/privacy-policy'
+          case 'cookie-policy': return '/cookie-policy'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
@@ -202,10 +202,10 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Add standard pages (contact, privacy-policy, accessibility, etc.) if they exist
+  // Add standard pages (contact, accessibility, terms-of-service, etc.) if they exist
   const standardPages = await portalMongo.pages.find<Pick<Page, 'type' | 'configUpdatedAt'>>(
     {
-      type: { $in: ['contact', 'privacy-policy', 'accessibility', 'legal-notice', 'cookie-policy', 'terms-of-service'] },
+      type: { $in: ['contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy'] },
       'owner.type': portal.owner.type,
       'owner.id': portal.owner.id,
       [portal.staging ? 'requestedPortals' : 'portals']: portal._id
