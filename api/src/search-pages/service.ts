@@ -233,72 +233,22 @@ export const initSearchEngine = async (portal: Portal): Promise<void> => {
     const portalUrl = await getPortalUrl(portal)
     const axiosInstance = await createPseudoSession(portal.owner)
 
-    if (searchTypes.includes('dataset')) {
-      try {
-        let page = 1
-        let hasMore = true
-        while (hasMore) {
-          const datasetsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/datasets`, {
-            params: {
-              size: 20,
-              page,
-              select: 'id,slug',
-              publicationSites: `data-fair-portals:${portal._id}`
-            }
-          })
+    try {
+      const searchPagesResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/search-pages`)
 
-          for (const dataset of datasetsResponse.data.results || []) {
-            if (!dataset.slug) continue
-            searchPages.push({
-              _id: `${portal._id}-dataset-${dataset.id}`,
-              owner: portal.owner,
-              portal: portal._id,
-              resource: { type: 'dataset', id: dataset.id },
-              path: `/datasets/${dataset.slug}`,
-              indexingStatus: 'toIndex'
-            })
-          }
-
-          hasMore = datasetsResponse.data.results && datasetsResponse.data.results.length === 20
-          page++
-        }
-      } catch (err) {
-        console.error('Error fetching datasets for search indexing:', err)
+      for (const sp of searchPagesResponse.data || []) {
+        if (!sp.path) continue
+        searchPages.push({
+          _id: `${portal._id}-${sp.resource.type}-${sp.resource.id}`,
+          owner: sp.owner,
+          portal: portal._id,
+          resource: sp.resource,
+          path: sp.path,
+          indexingStatus: 'toIndex'
+        })
       }
-    }
-
-    if (searchTypes.includes('application')) {
-      try {
-        let page = 1
-        let hasMore = true
-        while (hasMore) {
-          const applicationsResponse = await axiosInstance.get(`${portalUrl}/data-fair/api/v1/applications`, {
-            params: {
-              size: 20,
-              page,
-              select: 'id,slug',
-              publicationSites: `data-fair-portals:${portal._id}`
-            }
-          })
-
-          for (const application of applicationsResponse.data.results || []) {
-            if (!application.slug) continue
-            searchPages.push({
-              _id: `${portal._id}-application-${application.id}`,
-              owner: portal.owner,
-              portal: portal._id,
-              resource: { type: 'application', id: application.id },
-              path: `/applications/${application.slug}`,
-              indexingStatus: 'toIndex'
-            })
-          }
-
-          hasMore = applicationsResponse.data.results && applicationsResponse.data.results.length === 20
-          page++
-        }
-      } catch (err) {
-        console.error('Error fetching applications for search indexing:', err)
-      }
+    } catch (err) {
+      console.error('Error fetching search pages for indexing:', err)
     }
   }
 

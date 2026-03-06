@@ -7,7 +7,8 @@ export default {
     identities: 'SECRET_IDENTITIES',
     events: 'SECRET_EVENTS',
     sites: 'SECRET_SITES',
-    ingress: 'SECRET_INGRESS'
+    ingress: 'SECRET_INGRESS',
+    searchPages: 'SECRET_SEARCH_PAGES'
   },
   observer: {
     active: 'OBSERVER_ACTIVE',

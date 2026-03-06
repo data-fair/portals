@@ -61,7 +61,7 @@
         "pseudoSession": {
           "type": "string"
         },
-        "searchPage": {
+        "searchPages": {
           "type": "string"
         }
       }

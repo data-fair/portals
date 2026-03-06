@@ -42,8 +42,8 @@ router.get('', async (req, res, next) => {
 })
 
 router.post('', async (req, res, next) => {
-  if (!config.secretKeys.searchPage) throw new Error('searchPage secret is missing')
-  assertReqInternalSecret(req, config.secretKeys.searchPage)
+  if (!config.secretKeys.searchPages) throw new Error('searchPage secret is missing')
+  assertReqInternalSecret(req, config.secretKeys.searchPages)
 
   const body = postSearchPage.returnValid(req.body, { name: 'body' })
 
