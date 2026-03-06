@@ -25,6 +25,7 @@ const indexingDelayHistogram = new Histogram({
 
 const newIndexName = (portalId: string) => `${aliasName(portalId)}--${Date.now()}`
 const aliasName = (portalId: string) => `portal-search-${portalId}`
+const searchPageId = (searchPage: Pick<SearchPage, 'portal' | 'resource'>) => `${searchPage.portal}-${searchPage.resource.type}-${searchPage.resource.id}`
 
 export type CreateSearchPageParams = {
   portal: string
@@ -36,26 +37,11 @@ export type CreateSearchPageParams = {
   indexingStatus?: 'toIndex' | 'toDelete'
 }
 
-export const createOrUpdateSearchPage = async (params: CreateSearchPageParams): Promise<void> => {
-  const refId = `${params.portal}-${params.resource.type}-${params.resource.id}`
-
-  const updateFields: Record<string, any> = {
-    owner: params.owner,
-    portal: params.portal,
-    resource: params.resource,
-    public: params.public,
-    privateAccess: params.privateAccess,
-    indexingStatus: params.indexingStatus || 'toIndex',
-    lastUpdate: new Date()
-  }
-
-  if (params.path) {
-    updateFields.path = params.path
-  }
-
+export const createOrUpdateSearchPage = async (searchPage: Omit<SearchPage, '_id'>): Promise<void> => {
+  const fullSearchPage: SearchPage = { ...searchPage, _id: searchPageId(searchPage) }
   await mongo.searchPages.updateOne(
-    { _id: refId },
-    { $set: updateFields },
+    { _id: fullSearchPage._id },
+    { $set: fullSearchPage },
     { upsert: true }
   )
 }

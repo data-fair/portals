@@ -1,10 +1,22 @@
 import { strict as assert } from 'node:assert'
 import { it, describe, before, beforeEach, after } from 'node:test'
 import { WsClient } from '@data-fair/lib-node/ws-client.js'
+import { axiosAuth } from '@data-fair/lib-node/axios-auth.js'
 import 'dotenv/config'
-import { clean, startApiServer, stopApiServer, axiosAuth, baseURL } from './utils/index.ts'
+import { clean, startApiServer, stopApiServer, axiosAuth as portalAxiosAuth, baseURL } from './utils/index.ts'
 
-const user1 = await axiosAuth('admin@test.com')
+const user1 = await portalAxiosAuth('admin@test.com')
+
+const dfBaseUrl = `http://localhost:${process.env.NGINX_PORT}/data-fair`
+const dfDirectoryUrl = `http://localhost:${process.env.NGINX_PORT}/simple-directory`
+
+const dfAx = await axiosAuth({
+  email: 'admin@test.com',
+  password: 'passwd',
+  directoryUrl: dfDirectoryUrl,
+  axiosOpts: { baseURL: dfBaseUrl },
+  // org: 'KWqAGZ4mG'
+})
 
 describe('search page indexes', () => {
   before(startApiServer)
@@ -184,5 +196,45 @@ describe('search page indexes', () => {
     assert.ok(error.message.includes('Permission') || error.message.includes('permission'), 'Should be a permission error')
 
     anonClient.close()
+  })
+
+  it('should create search page from data-fair dataset via initSearchEngine', async () => {
+    const portalConfig = {
+      title: 'Portal with data-fair integration',
+      menu: { children: [] },
+      searchEngine: {
+        active: true,
+        types: ['dataset']
+      }
+    }
+
+    const portal = (await user1.post('/api/portals', { config: portalConfig })).data
+    assert.equal(portal.config.searchEngine.active, true)
+
+    const publicationSite = {
+      type: 'data-fair-portals',
+      id: portal._id,
+      url: dfBaseUrl
+    }
+    await dfAx.post('/api/v1/settings/user/adminOrga/publication-sites', publicationSite)
+
+    const dataset = (await dfAx.post('/api/v1/datasets', {
+      isRest: true,
+      title: 'test dataset for search',
+      schema: [{ key: 'id', type: 'string' }]
+    })).data
+
+    await dfAx.patch(`/api/v1/datasets/${dataset.id}`, {
+      publicationSites: [`data-fair-portals:${portal._id}`]
+    })
+
+    const { results } = (await user1.get('/api/search-pages')).data
+    const portalSearchPages = results.filter((sp: any) => sp.portal === portal._id)
+
+    assert.ok(portalSearchPages.length > 0, 'Should have search pages from data-fair')
+
+    const datasetSp = portalSearchPages.find((sp: any) => sp.resource.type === 'dataset' && sp.resource.id === dataset.id)
+    assert.ok(datasetSp, 'Dataset should be indexed as search page')
+    assert.equal(datasetSp.indexingStatus, 'toIndex')
   })
 })

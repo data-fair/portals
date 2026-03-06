@@ -1,20 +1,13 @@
-import { Router, type Request } from 'express'
+import { Router } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
-import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
+import { reqSessionAuthenticated, assertAccountRole, assertReqInternalSecret } from '@data-fair/lib-express/index.js'
 import config from '#config'
 import * as postSearchPage from '@data-fair/types-portals/post-search-page/index.js'
 import { createOrUpdateSearchPage } from './service.ts'
 
 const router = Router()
 export default router
-
-const assertReqInternalSecret = (req: Request, knownSecret: string) => {
-  const secret = req.headers['x-internal-secret'] as string
-  if (!secret || secret !== knownSecret) {
-    throw httpError(403, 'invalid internal secret')
-  }
-}
 
 router.get('', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
@@ -46,18 +39,7 @@ router.post('', async (req, res, next) => {
   assertReqInternalSecret(req, config.secretKeys.searchPages)
 
   const body = postSearchPage.returnValid(req.body, { name: 'body' })
-
-  const path = body.indexingStatus !== 'toDelete' ? `/${body.resource.type}s/${body.resource.id}` : undefined
-
-  await createOrUpdateSearchPage({
-    portal: body.portal,
-    owner: body.owner,
-    resource: body.resource,
-    path,
-    public: body.public,
-    privateAccess: body.privateAccess,
-    indexingStatus: body.indexingStatus
-  })
+  await createOrUpdateSearchPage({ ...body, path: `/${body.resource.type}s/${body.resource.id}` })
 
   res.status(204).send()
 })

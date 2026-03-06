@@ -85,7 +85,7 @@ services:
       - OBSERVER_ACTIVE=false
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
       - SECRET_EVENTS=secret-events
-      - SECRET_SEARCh_PAGES=secret-search-pages
+      - SECRET_SEARCH_PAGES=secret-search-pages
 
   #####
   # optional services
