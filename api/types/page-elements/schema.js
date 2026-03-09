@@ -116,6 +116,7 @@ export default {
           { key: 21, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
           { key: 22, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
           { key: 23, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 24, title: 'Dataset download', 'x-i18n-title': { fr: "Téléchargement d'un jeu de données" } },
 
           {
             header: true,
@@ -2276,6 +2277,40 @@ export default {
           layout: {
             getItems: {
               url: '/data-fair/api/v1/datasets?mine=true&raw=true&rest=true&status=finalized&select=id,title&size=20&sort=updatedAt:-1',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: '`${item.title} (${item.id})`',
+              itemKey: 'item.id'
+            }
+          },
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' }
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
+
+    'element-dataset-download': {
+      type: 'object',
+      title: 'DatasetDownloadElement',
+      'x-i18n-title': {
+        en: 'Dataset download',
+        fr: 'Téléchargement d\'un jeu de données'
+      },
+      required: ['type', 'dataset'],
+      properties: {
+        type: { const: 'dataset-download' },
+        uuid: { type: 'string', layout: 'none' },
+        dataset: {
+          type: 'object',
+          title: 'Jeu de données',
+          additionalProperties: false,
+          required: ['id'],
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',

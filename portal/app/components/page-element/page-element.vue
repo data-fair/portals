@@ -85,6 +85,10 @@
     v-else-if="element.type === 'dataset-form'"
     :element="element"
   />
+  <page-element-dataset-download
+    v-else-if="element.type === 'dataset-download'"
+    :element="element"
+  />
 
   <!-- Applications -->
   <page-element-applications-catalog
