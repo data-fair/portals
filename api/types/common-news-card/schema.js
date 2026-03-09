@@ -1,7 +1,7 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-event-card',
+  $id: 'https://github.com/data-fair/portals/common-news-card',
   'x-exports': [],
-  title: 'Event Card',
+  title: 'News Card',
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -110,9 +110,9 @@ export default {
           'x-i18n-title': {
             fr: 'Image par défaut'
           },
-          description: 'Image to display if no image is set for the event.',
+          description: 'Image to display if no image is set for the news.',
           'x-i18n-description': {
-            fr: "Image à afficher si l'événement n'a pas d'image définie."
+            fr: "Image à afficher si l'actualité n'a pas d'image définie."
           },
           required: ['_id', 'name', 'mimeType'],
           layout: {

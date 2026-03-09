@@ -1,5 +1,5 @@
 import type { MenuItem } from '#api/types/portal/index.ts'
-import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 
 const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
   if (link.type === 'external') return !link.href?.startsWith('/')

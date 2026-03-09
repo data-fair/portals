@@ -1,4 +1,4 @@
-import { linkItemTitle } from '../portal-config-links/schema.js'
+import { linkItemTitle } from '../common-links/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
@@ -417,10 +417,10 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
         {
           title: 'Sous-menu',
           required: ['type', 'title', 'children'],
@@ -442,7 +442,7 @@ export default {
             }
           }
         },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
       ]
     }
   }

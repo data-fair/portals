@@ -1,5 +1,5 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-links',
+  $id: 'https://github.com/data-fair/portals/common-links',
   'x-exports': ['types'],
   $defs: {
     linkItem: {
@@ -9,11 +9,11 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
       ]
     },
 
@@ -195,11 +195,11 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseStandardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseGenericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseEventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseNewsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseExternalLink' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseStandardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseGenericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseEventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseNewsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseExternalLink' },
         {
           title: 'Aucun lien',
           required: ['type'],

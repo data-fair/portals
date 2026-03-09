@@ -1,7 +1,7 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-news-card',
+  $id: 'https://github.com/data-fair/portals/common-reuse-card',
   'x-exports': [],
-  title: 'News Card',
+  title: 'Reuse Card',
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -14,7 +14,8 @@ export default {
           { cols: { md: 6 }, key: 'elevation' },
           { cols: { md: 6 }, key: 'rounded' },
           { cols: { md: 6 }, key: 'titleLinesCount' },
-          { cols: { md: 6 }, key: 'showDescription' }
+          { cols: { md: 6 }, key: 'showSummary' },
+          { cols: { md: 6 }, key: 'showAuthor' }
         ]
       },
       'thumbnail'
@@ -49,11 +50,23 @@ export default {
         { const: 0, title: 'Sans limite de lignes' }
       ]
     },
-    showDescription: {
+    showSummary: {
       type: 'boolean',
-      title: 'Show description on card',
+      title: 'Show summary on card',
       'x-i18n-title': {
-        fr: 'Afficher la description'
+        fr: 'Afficher le résumé'
+      },
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      },
+      default: true
+    },
+    showAuthor: {
+      type: 'boolean',
+      title: 'Show author',
+      'x-i18n-title': {
+        fr: 'Afficher l\'auteur'
       },
       layout: {
         comp: 'switch',
@@ -110,9 +123,9 @@ export default {
           'x-i18n-title': {
             fr: 'Image par défaut'
           },
-          description: 'Image to display if no image is set for the news.',
+          description: 'Image to display if no image is set for the use.',
           'x-i18n-description': {
-            fr: "Image à afficher si l'actualité n'a pas d'image définie."
+            fr: "Image à afficher si la réutilisation n'a pas d'image définie."
           },
           required: ['_id', 'name', 'mimeType'],
           layout: {

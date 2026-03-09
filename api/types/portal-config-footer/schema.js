@@ -1,4 +1,4 @@
-import { linkItemTitle } from '../portal-config-links/schema.js'
+import { linkItemTitle } from '../common-links/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',
@@ -308,7 +308,7 @@ export default {
         itemTitle: linkItemTitle,
         messages: { addItem: 'Ajouter un lien' }
       },
-      items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
+      items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
       default: [],
     },
     importantLinks: {
@@ -319,7 +319,7 @@ export default {
         itemTitle: linkItemTitle,
         messages: { addItem: 'Ajouter un lien' }
       },
-      items: { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/linkItem' },
+      items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
       default: []
     }
   }

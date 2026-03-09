@@ -24,6 +24,6 @@ export default {
   unevaluatedProperties: false,
   required: ['card'],
   properties: {
-    card: { $ref: 'https://github.com/data-fair/portals/portal-config-event-card' }
+    card: { $ref: 'https://github.com/data-fair/portals/common-event-card' }
   }
 }

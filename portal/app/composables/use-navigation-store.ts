@@ -1,6 +1,6 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
-import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>

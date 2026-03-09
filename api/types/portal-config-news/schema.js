@@ -24,6 +24,6 @@ export default {
   unevaluatedProperties: false,
   required: ['card'],
   properties: {
-    card: { $ref: 'https://github.com/data-fair/portals/portal-config-news-card' }
+    card: { $ref: 'https://github.com/data-fair/portals/common-news-card' }
   }
 }

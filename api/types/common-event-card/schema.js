@@ -1,7 +1,7 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-reuse-card',
+  $id: 'https://github.com/data-fair/portals/common-event-card',
   'x-exports': [],
-  title: 'Reuse Card',
+  title: 'Event Card',
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -14,8 +14,7 @@ export default {
           { cols: { md: 6 }, key: 'elevation' },
           { cols: { md: 6 }, key: 'rounded' },
           { cols: { md: 6 }, key: 'titleLinesCount' },
-          { cols: { md: 6 }, key: 'showSummary' },
-          { cols: { md: 6 }, key: 'showAuthor' }
+          { cols: { md: 6 }, key: 'showDescription' }
         ]
       },
       'thumbnail'
@@ -50,23 +49,11 @@ export default {
         { const: 0, title: 'Sans limite de lignes' }
       ]
     },
-    showSummary: {
+    showDescription: {
       type: 'boolean',
-      title: 'Show summary on card',
+      title: 'Show description on card',
       'x-i18n-title': {
-        fr: 'Afficher le résumé'
-      },
-      layout: {
-        comp: 'switch',
-        cols: { md: 6 }
-      },
-      default: true
-    },
-    showAuthor: {
-      type: 'boolean',
-      title: 'Show author',
-      'x-i18n-title': {
-        fr: 'Afficher l\'auteur'
+        fr: 'Afficher la description'
       },
       layout: {
         comp: 'switch',
@@ -123,9 +110,9 @@ export default {
           'x-i18n-title': {
             fr: 'Image par défaut'
           },
-          description: 'Image to display if no image is set for the use.',
+          description: 'Image to display if no image is set for the event.',
           'x-i18n-description': {
-            fr: "Image à afficher si la réutilisation n'a pas d'image définie."
+            fr: "Image à afficher si l'événement n'a pas d'image définie."
           },
           required: ['_id', 'name', 'mimeType'],
           layout: {
