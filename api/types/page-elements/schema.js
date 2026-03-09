@@ -126,9 +126,9 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 24, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 25, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 26, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 25, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 26, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 27, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
 
           {
             header: true,
@@ -138,9 +138,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 27, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 28, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 29, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } },
+          { key: 28, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 29, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 30, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } },
 
           {
             header: true,
@@ -150,9 +150,9 @@ export default {
             },
             icon: mdiCalendar
           },
-          { key: 30, title: 'Events catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
-          { key: 31, title: 'Events list', 'x-i18n-title': { fr: "Liste d'événements" } },
-          { key: 32, title: 'Event card', 'x-i18n-title': { fr: "Vignette d'événement" } },
+          { key: 31, title: 'Events catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+          { key: 32, title: 'Events list', 'x-i18n-title': { fr: "Liste d'événements" } },
+          { key: 33, title: 'Event card', 'x-i18n-title': { fr: "Vignette d'événement" } },
 
           {
             header: true,
@@ -162,9 +162,9 @@ export default {
             },
             icon: mdiNewspaperVariant
           },
-          { key: 33, title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
-          { key: 34, title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
-          { key: 35, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
+          { key: 34, title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
+          { key: 35, title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
+          { key: 36, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
         ]
       },
       oneOf: [
@@ -201,6 +201,7 @@ export default {
         { $ref: '#/$defs/element-dataset-card' },
         { $ref: '#/$defs/element-dataset-table' },
         { $ref: '#/$defs/element-dataset-form' },
+        { $ref: '#/$defs/element-dataset-download' },
 
         // Applications
         { $ref: '#/$defs/element-applications-catalog' },
