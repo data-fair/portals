@@ -42,8 +42,8 @@
           {{ page.config.title }}
         </v-card-title>
 
-        <!-- Date de publication -->
-        <v-card-subtitle v-if="page.config.newsMetadata?.date">
+        <!-- Publication date -->
+        <v-card-subtitle v-if="page.config.newsMetadata?.date" class="pb-2">
           {{ t('publishedOn') }} {{ dayjs(page.config.newsMetadata.date).format('LL') }}
         </v-card-subtitle>
 
@@ -63,8 +63,6 @@
         >
           {{ page.config.description }}
         </v-card-text>
-
-        <v-spacer />
       </v-col>
     </v-row>
   </v-card>

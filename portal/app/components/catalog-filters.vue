@@ -165,6 +165,22 @@
     </v-autocomplete>
   </v-col>
 
+  <!-- Include past events filter -->
+  <v-col
+    v-if="showFilter('include-past')"
+    cols="12"
+    :md="colSize"
+  >
+    <v-checkbox
+      v-model="filters.includePast.value"
+      :label="t('filters.includePastEvents')"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
+      color="primary"
+      hide-details
+    />
+  </v-col>
+
   <!-- Sort/Order -->
   <v-col
     v-if="showFilter('sort')"
@@ -260,7 +276,7 @@ type BaseApplication = {
 }
 
 type CatalogType = 'datasets' | 'applications' | 'reuses' | 'events' | 'news'
-type FilterType = 'search' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
+type FilterType = 'search' | 'include-past' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
 
 const { t } = useI18n()
 const { portal, preview, portalConfig } = usePortalStore()
@@ -273,6 +289,7 @@ const { config, catalogType, drawer } = defineProps<{
 
 const filters = {
   search: useStringSearchParam('q'),
+  includePast: useBooleanSearchParam('include-past'),
   concepts: useStringsArraySearchParam('concepts'),
   baseApplication: useStringsArraySearchParam('base-application'),
   topics: useStringsArraySearchParam('topics'),
@@ -427,6 +444,7 @@ const sortItems = computed(() => {
       ]
     case 'events':
       return [
+        { title: t('sort.title'), value: 'title' },
         { title: t('sort.startDate'), value: 'startDate' }
       ]
     case 'news':
@@ -456,6 +474,7 @@ const sortItems = computed(() => {
       topics: Topics
       keywords: Keywords
       owners: Owners
+      includePastEvents: Include past events
       noConcepts: No concepts available
       noBaseApplication: No base applications available
       noTopics: No topics available
@@ -483,6 +502,7 @@ const sortItems = computed(() => {
       topics: Thématiques
       keywords: Mots-clés
       owners: Propriétaires
+      includePastEvents: Inclure les événements passés
       noConcepts: Aucun concept disponible
       noBaseApplication: Aucune application de base disponible
       noTopics: Aucune thématique disponible

@@ -171,6 +171,7 @@ const headingTag = computed(() => {
 
 const filters = {
   search: useStringSearchParam('q'),
+  includePast: useBooleanSearchParam('include-past'),
   sort: useStringSearchParam('sort')
 }
 
@@ -194,6 +195,8 @@ if (!preview) {
     }
     if (filters.search.value) query.q = filters.search.value
     if (filters.sort.value) query.sort = filters.sort.value
+    if (filters.includePast.value || element.includePast) query.includePast = 'true'
+
     return query
   })
   eventsFetch = useFetch<EventFetch>('/portal/api/events', { query: eventsQuery, watch: false })
@@ -261,7 +264,7 @@ if (!preview) {
 }
 
 if (!preview) {
-  watch([filters.search, filters.sort], async () => {
+  watch([filters.search, filters.includePast, filters.sort], async () => {
     currentPage.value = 1
     await eventsFetch?.refresh()
     if (eventsFetch?.data.value?.results) {

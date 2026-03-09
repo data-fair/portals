@@ -85,6 +85,7 @@
 
         <v-spacer />
 
+        <!-- Publication/update date -->
         <v-list-item>
           <p
             v-if="cardConfig.showAuthor && reuse.config.author"

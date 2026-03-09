@@ -2904,6 +2904,10 @@ export default {
             { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
           ]
         },
+        includePast: {
+          type: 'boolean',
+          title: 'Inclure les évènements passés'
+        },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -2958,6 +2962,7 @@ export default {
                 type: 'string',
                 oneOf: [
                   { const: 'search', title: 'Barre de recherche' },
+                  { const: 'include-past', title: 'Inclure les événements passés' },
                   { const: 'sort', title: 'Tri' }
                 ]
               }
@@ -3066,11 +3071,11 @@ export default {
           description: 'Sélectionnez manuellement les événements à afficher.',
           layout: {
             getItems: {
-              url: '/portals-manager/api/events?select=slug,title&size=20',
+              url: '/portals-manager/api/pages?type=event&select=title,config.eventMetadata.slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.slug})`',
-              itemKey: 'item.slug'
+              itemTitle: '`${item.title} (${item.config.eventMetadata.slug})`',
+              itemKey: 'item.config.eventMetadata.slug'
             },
             props: {
               chips: true,
@@ -3153,11 +3158,11 @@ export default {
           required: ['slug'],
           layout: {
             getItems: {
-              url: '/portals-manager/api/events?select=slug,title&size=20',
+              url: '/portals-manager/api/pages?type=event&select=title,config.eventMetadata.slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.slug})`',
-              itemKey: 'item.slug'
+              itemTitle: '`${item.title} (${item.config.eventMetadata.slug})`',
+              itemKey: 'item.config.eventMetadata.slug'
             }
           },
           properties: {
@@ -3362,11 +3367,11 @@ export default {
           description: 'Sélectionnez manuellement les actualités à afficher.',
           layout: {
             getItems: {
-              url: '/portals-manager/api/news?select=slug,title&size=20',
+              url: '/portals-manager/api/pages?type=news&select=title,config.newsMetadata.slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.slug})`',
-              itemKey: 'item.slug'
+              itemTitle: '`${item.title} (${item.config.newsMetadata.slug})`',
+              itemKey: 'item.config.newsMetadata.slug'
             },
             props: {
               chips: true,
@@ -3449,11 +3454,11 @@ export default {
           required: ['slug'],
           layout: {
             getItems: {
-              url: '/portals-manager/api/news?select=slug,title&size=20',
+              url: '/portals-manager/api/pages?type=news&select=title,config.newsMetadata.slug&size=20',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.slug})`',
-              itemKey: 'item.slug'
+              itemTitle: '`${item.title} (${item.config.newsMetadata.slug})`',
+              itemKey: 'item.config.newsMetadata.slug'
             }
           },
           properties: {

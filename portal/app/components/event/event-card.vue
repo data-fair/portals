@@ -43,10 +43,10 @@
         </v-card-title>
 
         <!-- Dates -->
-        <v-card-subtitle v-if="page.config.eventMetadata?.startDate">
+        <v-card-subtitle v-if="page.config.eventMetadata?.startDate" class="pb-2">
           <span>{{ dayjs(page.config.eventMetadata.startDate).format('L') }}</span>
           <template v-if="page.config.eventMetadata?.endDate">
-            &nbsp;–&nbsp;
+            &nbsp;-&nbsp;
             <span>{{ dayjs(page.config.eventMetadata.endDate).format('L') }}</span>
           </template>
         </v-card-subtitle>
@@ -67,8 +67,6 @@
         >
           {{ page.config.description }}
         </v-card-text>
-
-        <v-spacer />
       </v-col>
     </v-row>
   </v-card>

@@ -1,5 +1,18 @@
 <template>
   <v-row class="my-0">
+    <!-- Left Column: Filters (256px) -->
+    <v-col
+      v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.smAndDown"
+      style="max-width: 256px;"
+      class="pa-0"
+    >
+      <catalog-filters
+        :config="element"
+        catalog-type="news"
+        drawer
+      />
+    </v-col>
+
     <!-- Main Column -->
     <v-col>
       <!-- Count top -->
@@ -13,7 +26,7 @@
 
       <!-- Standard Filters -->
       <v-row
-        v-if="element.filters?.items?.length"
+        v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.smAndDown)"
         class="my-0"
       >
         <catalog-filters

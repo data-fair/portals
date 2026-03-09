@@ -63,7 +63,7 @@ usePageSeo({
     eventNotFound: The requested event was not found
     eventError: An error occurred while loading the event
   fr:
-    backToEvents: Aller à la liste des évènements
+    backToEvents: Aller à la liste des événements
     event: Événement
     eventNotFound: L'événement demandé n'a pas été trouvé
     eventError: Une erreur est survenue lors du chargement de l'événement
