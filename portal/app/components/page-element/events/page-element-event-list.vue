@@ -19,7 +19,7 @@
 import type { Page } from '#api/types/page'
 import type { EventListElement } from '#api/types/page-elements/index.ts'
 
-type EventFetch = { count: number; results: Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>[] }
+type EventFetch = { count: number; results: Omit<Page, 'title' | 'draftConfig' | 'config.elements' | 'createdAt' | 'portals' | 'requestedPortals'>[] }
 
 const { element } = defineProps<{ element: EventListElement }>()
 const { portalConfig, preview } = usePortalStore()
@@ -42,6 +42,8 @@ if (!preview) {
     return results
   })
 } else {
+  const session = useSessionAuthenticated()
+
   displayedEvents = computed(() => {
     return Array.from({ length: element.mode === 'custom' ? (element.events?.length || 1) : element.limit }, (_, i) => ({
       _id: `event-${i + 1}`,
@@ -52,7 +54,8 @@ if (!preview) {
         elements: [],
         eventMetadata: { slug: element.events?.[i]?.slug || `event-${i + 1}`, startDate: new Date().toISOString() }
       },
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      owner: session.account.value
     }))
   })
 }

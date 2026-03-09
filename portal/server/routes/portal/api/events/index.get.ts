@@ -40,13 +40,13 @@ export default defineEventHandler(async (event) => {
   const sort = mongoSort(`${mongoSortField}:${sortOrder ?? '1'}`)
 
   const { skip, size } = mongoPagination(query)
-  const projection = { draftConfig: 0, 'config.elements': 0 }
+  const projection = { draftConfig: 0, 'config.elements': 0, portals: 0, requestedPortals: 0 }
 
   const [count, results] = await Promise.all([
     portalMongo.pages.countDocuments(mongoQuery),
-    portalMongo.pages.find<Omit<Page, 'draftConfig'>>(mongoQuery,
-      { projection, sort, limit: size, skip }
-    ).toArray()
+    portalMongo.pages.find<Omit<Page, 'draftConfig' | 'config.elements' | 'portals' | 'requestedPortals'>>(mongoQuery, {
+      projection, sort, limit: size, skip
+    }).toArray()
   ])
 
   return { results, count }

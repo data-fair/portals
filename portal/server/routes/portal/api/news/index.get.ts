@@ -34,14 +34,12 @@ export default defineEventHandler(async (event) => {
     query.sort === 'date:1' ? { 'config.newsMetadata.date': 1 } : { 'config.newsMetadata.date': -1 }
 
   const { skip, size } = mongoPagination(query)
+  const projection = { draftConfig: 0, 'config.elements': 0, portals: 0, requestedPortals: 0 }
 
   const [count, results] = await Promise.all([
     portalMongo.pages.countDocuments(mongoQuery),
-    portalMongo.pages.find<Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>>(mongoQuery, {
-      projection: { _id: 1, type: 1, config: 1, updatedAt: 1 },
-      sort,
-      limit: size,
-      skip
+    portalMongo.pages.find<Omit<Page, 'draftConfig' | 'config.elements' | 'portals' | 'requestedPortals'>>(mongoQuery, {
+      projection, sort, limit: size, skip
     }).toArray()
   ])
 

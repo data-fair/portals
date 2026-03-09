@@ -13,7 +13,7 @@ import type { Dataset } from '#api/types/index.ts'
 import type { DatasetCardElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps<{ element: DatasetCardElement }>()
-const { preview, portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 
 const fetch = preview ? useFetch<Dataset> : useLocalFetch<Dataset>
 const datasetFetch = fetch(() => element.dataset?.id ? '/data-fair/api/v1/datasets/' + element.dataset?.id : '', { immediate: false })

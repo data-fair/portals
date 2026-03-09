@@ -15,7 +15,7 @@ import type { EventCardElement } from '#api/types/page-elements/index.ts'
 const { element } = defineProps<{ element: EventCardElement }>()
 const { portalConfig, preview } = usePortalStore()
 
-let eventPage: Ref<Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'> | null | undefined>
+let eventPage: Ref<Omit<Page, 'title' | 'draftConfig' | 'config.elements' | 'createdAt' | 'portals' | 'requestedPortals'> | null | undefined>
 if (!preview) {
   const eventFetch = useFetch<Page>(() => element.event?.slug ? '/portal/api/pages/event/' + element.event.slug : '', { immediate: false })
   eventPage = eventFetch.data
@@ -23,6 +23,8 @@ if (!preview) {
     if (slug) eventFetch.refresh()
   }, { immediate: true })
 } else {
+  const session = useSessionAuthenticated()
+
   eventPage = ref({
     _id: 'event-preview',
     type: 'event' as const,
@@ -32,7 +34,8 @@ if (!preview) {
       elements: [],
       eventMetadata: { slug: element.event?.slug || 'event-1', startDate: new Date().toISOString() }
     },
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    owner: session.account.value
   })
 }
 </script>

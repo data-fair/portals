@@ -3073,9 +3073,9 @@ export default {
             getItems: {
               url: '/portals-manager/api/pages?type=event&select=title,config.eventMetadata.slug&size=20',
               qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.config.eventMetadata.slug})`',
-              itemKey: 'item.config.eventMetadata.slug'
+              itemsResults: 'data.results?.map(item => ({ title: item.title, slug: item.config?.eventMetadata?.slug })) ?? []',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
             },
             props: {
               chips: true,
@@ -3160,9 +3160,9 @@ export default {
             getItems: {
               url: '/portals-manager/api/pages?type=event&select=title,config.eventMetadata.slug&size=20',
               qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.config.eventMetadata.slug})`',
-              itemKey: 'item.config.eventMetadata.slug'
+              itemsResults: 'data.results?.map(item => ({ title: item.title, slug: item.config?.eventMetadata?.slug })) ?? []',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
             }
           },
           properties: {
@@ -3369,9 +3369,9 @@ export default {
             getItems: {
               url: '/portals-manager/api/pages?type=news&select=title,config.newsMetadata.slug&size=20',
               qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.config.newsMetadata.slug})`',
-              itemKey: 'item.config.newsMetadata.slug'
+              itemsResults: 'data.results?.map(item => ({ title: item.title, slug: item.config?.newsMetadata?.slug })) ?? []',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
             },
             props: {
               chips: true,
@@ -3456,9 +3456,9 @@ export default {
             getItems: {
               url: '/portals-manager/api/pages?type=news&select=title,config.newsMetadata.slug&size=20',
               qSearchParam: 'q',
-              itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.config.newsMetadata.slug})`',
-              itemKey: 'item.config.newsMetadata.slug'
+              itemsResults: 'data.results?.map(item => ({ title: item.title, slug: item.config?.newsMetadata?.slug })) ?? []',
+              itemTitle: '`${item.title} (${item.slug})`',
+              itemKey: 'item.slug'
             }
           },
           properties: {

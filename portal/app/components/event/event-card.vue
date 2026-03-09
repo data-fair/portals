@@ -61,10 +61,7 @@
           aria-hidden="true"
         />
 
-        <v-card-text
-          v-if="cardConfig.showDescription && page.config.description?.length"
-          class="pb-0"
-        >
+        <v-card-text v-if="cardConfig.showDescription && page.config.description?.length">
           {{ page.config.description }}
         </v-card-text>
       </v-col>
@@ -78,7 +75,7 @@ import type { EventCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
 const { page, cardConfig, isPortalConfig } = defineProps<{
-  page: Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>
+  page: Omit<Page, 'title' | 'draftConfig' | 'config.elements' | 'createdAt' | 'portals' | 'requestedPortals'>
   cardConfig: EventCard
   isPortalConfig?: boolean
 }>()
