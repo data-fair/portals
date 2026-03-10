@@ -43,7 +43,7 @@ export default {
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
           title: 'Élévation du bouton',
-          layout: { if: 'parent.data?.btnPosition !== "spaced"' }
+          layout: { if: 'parent.data?.btnPosition === "spaced"' }
         },
         label: {
           type: 'string',

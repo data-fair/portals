@@ -657,7 +657,7 @@ setBreadcrumbs([
     pageTypeDesc:
       generic: Construisez une page entièrement personnalisée en composant librement des blocs de contenu.
       home: Le point d'entrée principal de votre portail, accueillant les visiteurs et mettant en avant les contenus clés.
-      news: Une page dédiée à la publication d'articles et de mises à jour.
+      news: Une page dédiée à la publication d'actualités et de mises à jour.
       event: Une page pour présenter et promouvoir un événement à venir ou passé.
       contact: Une page permettant aux visiteurs de prendre contact avec votre organisation.
       accessibility: Une page décrivant le niveau d'accessibilité de votre portail et vos engagements.

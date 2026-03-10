@@ -287,7 +287,7 @@ const sortItems = [
       title: Alphabetical order
       date: Publication date
   fr:
-    newsCount: "Aucun article | {count} article | {count} articles"
+    newsCount: "Aucune actualité | {count} actualité | {count} actualités"
     resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
     ascending: Ordre croissant
     descending: Ordre décroissant
