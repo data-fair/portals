@@ -551,14 +551,16 @@ const deleteGroup = useAsyncAction(
       title: Page Type
       home: Home
       contact: Contact
-      privacy-policy: Privacy policy
       accessibility: Accessibility
-      legal-notice: Legal Notice
-      cookie-policy: Cookie Policy
       terms-of-service: Terms of Service
+      legal-notice: Legal Notice
+      privacy-policy: Privacy policy
+      cookie-policy: Cookie Policy
       datasets: Datasets Catalog
       applications: Applications Catalog
       reuses: Reuses Catalog
+      event-catalog: Events Catalog
+      news-catalog: News Catalog
       event: Event
       news: News
       generic: Custom content
@@ -609,14 +611,16 @@ const deleteGroup = useAsyncAction(
       title: Type de page
       home: Accueil
       contact: Contact
-      privacy-policy: Politique de confidentialité
       accessibility: Accessibilité
-      legal-notice: Mentions légales
-      cookie-policy: Politique de cookies
       terms-of-service: Conditions générales d'utilisation
+      legal-notice: Mentions légales
+      privacy-policy: Politique de confidentialité
+      cookie-policy: Politique de cookies
       datasets: Catalogue de données
       applications: Catalogue de visualisations
       reuses: Catalogue de réutilisations
+      event-catalog: Catalogue d'événements
+      news-catalog: Catalogue d'actualités
       event: Événement
       news: Actualité
       generic: Contenu libre

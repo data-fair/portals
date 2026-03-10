@@ -191,7 +191,7 @@ export default {
           default: true
         },
         card: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-application-card'
+          $ref: 'https://github.com/data-fair/portals/common-application-card'
         }
       }
     },
@@ -242,7 +242,7 @@ export default {
           default: true
         },
         card: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card'
+          $ref: 'https://github.com/data-fair/portals/common-reuse-card'
         }
       }
     },
@@ -293,7 +293,7 @@ export default {
           default: true
         },
         card: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card'
+          $ref: 'https://github.com/data-fair/portals/common-dataset-card'
         }
       }
     }

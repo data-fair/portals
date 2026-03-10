@@ -137,7 +137,7 @@ export default {
           default: true
         },
         card: {
-          $ref: 'https://github.com/data-fair/portals/portal-config-dataset-card'
+          $ref: 'https://github.com/data-fair/portals/common-dataset-card'
         }
       }
     }

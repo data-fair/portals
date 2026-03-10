@@ -3,14 +3,16 @@ import { portalMongo } from '~~/server/plugins/mongo'
 
 const STANDARD_PAGE_TYPES = [
   'contact',
-  'privacy-policy',
   'accessibility',
-  'legal-notice',
-  'cookie-policy',
   'terms-of-service',
+  'legal-notice',
+  'privacy-policy',
+  'cookie-policy',
   'applications',
   'datasets',
-  'reuses'
+  'reuses',
+  'event-catalog',
+  'news-catalog'
 ] as const
 
 type StandardPageType = typeof STANDARD_PAGE_TYPES[number]
@@ -33,14 +35,16 @@ export default defineEventHandler(async (event) => {
   // Return an object with each standard page type as key and boolean as value
   const result: Record<StandardPageType, boolean> = {
     contact: false,
-    'privacy-policy': false,
     accessibility: false,
-    'legal-notice': false,
-    'cookie-policy': false,
     'terms-of-service': false,
+    'legal-notice': false,
+    'privacy-policy': false,
+    'cookie-policy': false,
     applications: false,
     datasets: false,
-    reuses: false
+    reuses: false,
+    'event-catalog': false,
+    'news-catalog': false
   }
 
   pages.forEach(page => {

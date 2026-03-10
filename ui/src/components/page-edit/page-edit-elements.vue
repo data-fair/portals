@@ -49,7 +49,7 @@
       </v-theme-provider>
     </template>
 
-    <template #image-upload="{node, statefulLayout, width, height, label}">
+    <template #image-upload="{ node, statefulLayout, width, height, label }">
       <image-upload
         :model-value="node.data"
         :label="label"

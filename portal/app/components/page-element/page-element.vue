@@ -134,6 +134,50 @@
     :element="element"
   />
 
+  <!-- Events -->
+  <page-element-event-catalog
+    v-else-if="element.type === 'event-catalog'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-event-catalog>
+  <page-element-event-list
+    v-else-if="element.type === 'event-list'"
+    :element="element"
+  />
+  <page-element-event-card
+    v-else-if="element.type === 'event-card'"
+    :element="element"
+  />
+
+  <!-- News -->
+  <page-element-news-catalog
+    v-else-if="element.type === 'news-catalog'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-news-catalog>
+  <page-element-news-list
+    v-else-if="element.type === 'news-list'"
+    :element="element"
+  />
+  <page-element-news-card
+    v-else-if="element.type === 'news-card'"
+    :element="element"
+  />
+
   <!-- Layout & structure elements -->
   <page-element-divider
     v-else-if="element.type === 'divider'"

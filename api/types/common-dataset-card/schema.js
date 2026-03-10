@@ -1,5 +1,5 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-dataset-card',
+  $id: 'https://github.com/data-fair/portals/common-dataset-card',
   'x-exports': [],
   title: 'Dataset card',
   type: 'object',

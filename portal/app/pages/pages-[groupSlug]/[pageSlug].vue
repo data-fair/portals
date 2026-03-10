@@ -19,7 +19,7 @@ import type { PageConfig } from '#api/types/page'
 const route = useRoute<'/pages/pages-[groupSlug]/[pageSlug]'>()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('generic', route.params.pageSlug as string)
+const getPageImageSrc = providePageImageSrc('generic', route.params.pageSlug as string)
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${route.params.pageSlug}`, { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -38,6 +38,7 @@ usePageSeo({
   title: () => pageConfigFetch.data.value?.title
     ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
     : portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description
+  description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 </script>

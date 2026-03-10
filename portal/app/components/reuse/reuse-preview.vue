@@ -42,7 +42,7 @@
   <!-- Image -->
   <v-img
     v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
-    :src="getReuseImageSrc(reuseConfig.image, false)"
+    :src="getReuseImageSrc(reuseConfig.image)"
     class="mb-4"
     max-height="400"
     aria-hidden="true"
@@ -108,7 +108,7 @@ const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
 
-const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
+const getReuseImageSrc = (imageRef: ImageRef, mobile?: boolean) => {
   let id = imageRef._id
   if (preview) return `/portals-manager/api/images/${id}/data`
   if (mobile && imageRef.mobileAlt) id += '-mobile'

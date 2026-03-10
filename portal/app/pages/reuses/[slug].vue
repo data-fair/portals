@@ -24,15 +24,15 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/portal'
 import type { Reuse } from '#api/types/reuse'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { VBreadcrumbs } from 'vuetify/components'
 
 const route = useRoute()
 const slug = route.params.slug as string
 
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
-providePageImageSrc('reuses', slug)
 
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
@@ -51,6 +51,13 @@ const errorTitle = computed(() => {
   return t('reuseError')
 })
 
+const getReuseImageSrc = (imageRef: ImageRef, mobile?: boolean) => {
+  let id = imageRef._id
+  if (preview) return `/portals-manager/api/images/${id}/data`
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/reuses/${slug}/images/${id}`
+}
+
 watch([reusesCatalogExists, reuseConfig], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (reusesCatalogExists.value) { items.push({ type: 'standard', subtype: 'reuses' }) }
@@ -61,6 +68,7 @@ watch([reusesCatalogExists, reuseConfig], () => {
 usePageSeo({
   title: () => (reuseConfig.value?.title || t('reuse')) + ' - ' + portalConfig.value.title,
   description: () => reuseConfig.value?.summary,
+  ogImage: () => reuseConfig.value?.image ? getReuseImageSrc(reuseConfig.value.image) : undefined,
   ogType: 'article'
 })
 

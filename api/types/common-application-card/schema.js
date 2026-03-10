@@ -1,5 +1,5 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-application-card',
+  $id: 'https://github.com/data-fair/portals/common-application-card',
   'x-exports': [],
   title: 'Application Card',
   type: 'object',

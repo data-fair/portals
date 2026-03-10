@@ -1,6 +1,6 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
-import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -70,16 +70,16 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
         switch (link.subtype) {
           case 'home': return '/'
           case 'contact': return '/contact'
-          case 'privacy-policy': return '/privacy-policy'
           case 'accessibility': return '/accessibility'
-          case 'legal-notice': return '/legal-notice'
-          case 'cookie-policy': return '/cookie-policy'
           case 'terms-of-service': return '/terms-of-service'
+          case 'legal-notice': return '/legal-notice'
+          case 'privacy-policy': return '/privacy-policy'
+          case 'cookie-policy': return '/cookie-policy'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
-          case 'news': return '/news'
-          case 'event': return '/event'
+          case 'event-catalog': return '/event'
+          case 'news-catalog': return '/news'
           case 'sitemap': return '/sitemap'
           case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
@@ -100,16 +100,16 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
         switch (link.subtype) {
           case 'home': return i18n[locale]['homePage']
           case 'contact': return i18n[locale]['contactPage']
-          case 'privacy-policy': return i18n[locale]['privacyPolicyPage']
           case 'accessibility': return i18n[locale]['accessibilityPage']
-          case 'legal-notice': return i18n[locale]['legalNoticePage']
-          case 'cookie-policy': return i18n[locale]['cookiePolicyPage']
           case 'terms-of-service': return i18n[locale]['termsOfServicePage']
+          case 'legal-notice': return i18n[locale]['legalNoticePage']
+          case 'privacy-policy': return i18n[locale]['privacyPolicyPage']
+          case 'cookie-policy': return i18n[locale]['cookiePolicyPage']
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
           case 'reuses': return i18n[locale]['reusesPage']
-          case 'news': return i18n[locale]['newsPage']
-          case 'event': return i18n[locale]['eventPage']
+          case 'event-catalog': return i18n[locale]['eventPage']
+          case 'news-catalog': return i18n[locale]['newsPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
           case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
@@ -173,11 +173,11 @@ const i18n = {
   en: {
     homePage: 'Home',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Privacy Policy',
     accessibilityPage: 'Accessibility',
-    legalNoticePage: 'Legal Notice',
-    cookiePolicyPage: 'Cookie Policy',
     termsOfServicePage: 'Terms of Service',
+    legalNoticePage: 'Legal Notice',
+    privacyPolicyPage: 'Privacy Policy',
+    cookiePolicyPage: 'Cookie Policy',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
     reusesPage: 'Reuses',
@@ -191,11 +191,11 @@ const i18n = {
   fr: {
     homePage: 'Accueil',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Politique de confidentialité',
     accessibilityPage: 'Accessibilité',
-    legalNoticePage: 'Mentions légales',
-    cookiePolicyPage: 'Politique de cookies',
     termsOfServicePage: "Conditions générales d'utilisation",
+    legalNoticePage: 'Mentions légales',
+    privacyPolicyPage: 'Politique de confidentialité',
+    cookiePolicyPage: 'Politique de cookies',
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     reusesPage: 'Réutilisations',

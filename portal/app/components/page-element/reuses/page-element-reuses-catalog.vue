@@ -7,7 +7,7 @@
       class="pa-0"
     >
       <catalog-filters
-        :config="element as any"
+        :config="element"
         catalog-type="applications"
         drawer
       />
@@ -30,8 +30,8 @@
         class="my-0"
       >
         <catalog-filters
-          :config="element as any"
-          catalog-type="applications"
+          :config="element"
+          catalog-type="reuses"
         />
       </v-row>
 

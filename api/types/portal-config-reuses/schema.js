@@ -32,7 +32,7 @@ export default {
       layout: 'switch',
       default: false
     },
-    card: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-card' },
+    card: { $ref: 'https://github.com/data-fair/portals/common-reuse-card' },
     page: { $ref: 'https://github.com/data-fair/portals/portal-config-reuse-page' }
   }
 }
