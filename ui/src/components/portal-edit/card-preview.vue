@@ -38,13 +38,13 @@
         />
         <event-card
           v-else-if="props.type === 'event'"
-          :page="item as any"
+          :page-config="(item as any).config"
           :card-config="props.cardConfig"
           is-portal-config
         />
         <news-card
           v-else-if="props.type === 'news'"
-          :page="item as any"
+          :page-config="(item as any).config"
           :card-config="props.cardConfig"
           is-portal-config
         />
@@ -116,6 +116,28 @@ const items = computed(() => {
           author: t('reuse.author')
         },
         updatedAt: new Date().toISOString()
+      }
+    }
+
+    if (props.type === 'event') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          eventMetadata: { slug: baseItem.slug, startDate: new Date().toISOString() }
+        }
+      }
+    }
+
+    if (props.type === 'news') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          newsMetadata: { slug: baseItem.slug, date: new Date().toISOString() }
+        }
       }
     }
 

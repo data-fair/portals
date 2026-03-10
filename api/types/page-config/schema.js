@@ -1,13 +1,13 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-config',
-  'x-exports': ['vjsf'],
+  'x-exports': ['types', 'vjsf'],
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true
   },
   'x-vjsf-locales': ['en', 'fr'],
-  title: 'Page config',
+  title: 'PageConfig',
   type: 'object',
   unevaluatedProperties: false,
   layout: {

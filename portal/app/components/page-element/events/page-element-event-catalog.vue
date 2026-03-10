@@ -111,13 +111,13 @@
       <!-- Events grid -->
       <v-row class="d-flex align-stretch mt-2">
         <v-col
-          v-for="event in displayedEvents"
-          :key="event._id"
+          v-for="eventPageConfig in displayedEvents"
+          :key="eventPageConfig.eventMetadata?.slug"
           :md="12 / (element.columns || 2)"
           cols="12"
         >
           <event-card
-            :page="event"
+            :page-config="eventPageConfig"
             :card-config="portalConfig.events.card"
             is-portal-config
           />
@@ -149,11 +149,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Page, PageElement } from '#api/types/page'
+import type { PageConfig, PageElement } from '#api/types/page-config'
 import type { EventCatalogElement } from '#api/types/page-elements/index.ts'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
-type EventFetch = { count: number; results: Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>[] }
+type EventFetch = { count: number; results: Omit<PageConfig, 'elements'>[] }
 
 const { element, context } = defineProps<{
   element: EventCatalogElement
@@ -251,15 +251,9 @@ if (!preview) {
   })
 } else {
   displayedEvents.value = Array.from({ length: 6 }, (_, i) => ({
-    _id: `event-${i + 1}`,
-    type: 'event' as const,
-    config: {
-      title: `Événement ${i + 1}`,
-      description: 'Exemple d\'événement pour la prévisualisation.',
-      elements: [],
-      eventMetadata: { slug: `event-${i + 1}`, startDate: new Date().toISOString() }
-    },
-    updatedAt: new Date().toISOString()
+    title: `Événement ${i + 1}`,
+    description: 'Exemple d\'événement pour la prévisualisation.',
+    eventMetadata: { slug: `event-${i + 1}`, startDate: new Date().toISOString() }
   }))
 }
 

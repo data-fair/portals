@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :to="!preview ? `/news/${page.config.newsMetadata?.slug}` : undefined"
+    :to="!preview ? `/news/${pageConfig.newsMetadata?.slug}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
     class="h-100 d-flex flex-column"
@@ -37,14 +37,14 @@
             cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
             cardConfig.titleLinesCount === 2 ? { height: titleHeight } : {}
           ]"
-          :title="page.config.title"
+          :title="pageConfig.title"
         >
-          {{ page.config.title }}
+          {{ pageConfig.title }}
         </v-card-title>
 
         <!-- Publication date -->
-        <v-card-subtitle v-if="page.config.newsMetadata?.date" class="pb-2">
-          {{ t('publishedOn') }} {{ dayjs(page.config.newsMetadata.date).format('LL') }}
+        <v-card-subtitle v-if="pageConfig.newsMetadata?.date" class="pb-2">
+          {{ t('publishedOn') }} {{ dayjs(pageConfig.newsMetadata.date).format('LL') }}
         </v-card-subtitle>
 
         <!-- Thumbnail (Center Location) -->
@@ -57,8 +57,8 @@
           aria-hidden="true"
         />
 
-        <v-card-text v-if="cardConfig.showDescription && page.config.description?.length">
-          {{ page.config.description }}
+        <v-card-text v-if="cardConfig.showDescription && pageConfig.description?.length">
+          {{ pageConfig.description }}
         </v-card-text>
       </v-col>
     </v-row>
@@ -66,12 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
+import type { PageConfig } from '#api/types/page-config'
 import type { NewsCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
-const { page, cardConfig, isPortalConfig } = defineProps<{
-  page: Omit<Page, 'title' | 'draftConfig' | 'config.elements' | 'createdAt' | 'portals' | 'requestedPortals'>
+const { pageConfig, cardConfig, isPortalConfig } = defineProps<{
+  pageConfig: Omit<PageConfig, 'elements'>
   cardConfig: NewsCard
   isPortalConfig?: boolean
 }>()
@@ -85,12 +85,12 @@ const getPortalImageSrc = usePortalImageSrc()
 const getNewsImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/news/${page.config.newsMetadata?.slug}/images/${id}`
+  return `/portal/api/pages/news/${pageConfig.newsMetadata?.slug}/images/${id}`
 }
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
-  if (page.config.thumbnail) return getNewsImageSrc(page.config.thumbnail, false)
+  if (pageConfig.thumbnail) return getNewsImageSrc(pageConfig.thumbnail, false)
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
 })

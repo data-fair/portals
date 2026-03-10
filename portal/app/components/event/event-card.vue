@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :to="!preview ? `/event/${page.config.eventMetadata?.slug}` : undefined"
+    :to="!preview ? `/event/${pageConfig.eventMetadata?.slug}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
     class="h-100 d-flex flex-column"
@@ -37,17 +37,17 @@
             cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
             cardConfig.titleLinesCount === 2 ? { height: titleHeight } : {}
           ]"
-          :title="page.config.title"
+          :title="pageConfig.title"
         >
-          {{ page.config.title }}
+          {{ pageConfig.title }}
         </v-card-title>
 
         <!-- Dates -->
-        <v-card-subtitle v-if="page.config.eventMetadata?.startDate" class="pb-2">
-          <span>{{ dayjs(page.config.eventMetadata.startDate).format('L') }}</span>
-          <template v-if="page.config.eventMetadata?.endDate">
+        <v-card-subtitle v-if="pageConfig.eventMetadata?.startDate" class="pb-2">
+          <span>{{ dayjs(pageConfig.eventMetadata.startDate).format('L') }}</span>
+          <template v-if="pageConfig.eventMetadata?.endDate">
             &nbsp;-&nbsp;
-            <span>{{ dayjs(page.config.eventMetadata.endDate).format('L') }}</span>
+            <span>{{ dayjs(pageConfig.eventMetadata.endDate).format('L') }}</span>
           </template>
         </v-card-subtitle>
 
@@ -61,8 +61,8 @@
           aria-hidden="true"
         />
 
-        <v-card-text v-if="cardConfig.showDescription && page.config.description?.length">
-          {{ page.config.description }}
+        <v-card-text v-if="cardConfig.showDescription && pageConfig.description?.length">
+          {{ pageConfig.description }}
         </v-card-text>
       </v-col>
     </v-row>
@@ -70,12 +70,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Page } from '#api/types/page'
+import type { PageConfig } from '#api/types/page-config'
 import type { EventCard } from '#api/types/portal-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 
-const { page, cardConfig, isPortalConfig } = defineProps<{
-  page: Omit<Page, 'title' | 'draftConfig' | 'config.elements' | 'createdAt' | 'portals' | 'requestedPortals'>
+const { pageConfig, cardConfig, isPortalConfig } = defineProps<{
+  pageConfig: Omit<PageConfig, 'elements'>
   cardConfig: EventCard
   isPortalConfig?: boolean
 }>()
@@ -88,12 +88,12 @@ const getPortalImageSrc = usePortalImageSrc()
 const getEventImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
   if (mobile && imageRef.mobileAlt) id += '-mobile'
-  return `/portal/api/pages/event/${page.config.eventMetadata?.slug}/images/${id}`
+  return `/portal/api/pages/event/${pageConfig.eventMetadata?.slug}/images/${id}`
 }
 
 const thumbnailUrl = computed(() => {
   if (!cardConfig.thumbnail?.show) return undefined
-  if (page.config.thumbnail) return getEventImageSrc(page.config.thumbnail, false)
+  if (pageConfig.thumbnail) return getEventImageSrc(pageConfig.thumbnail, false)
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined
 })

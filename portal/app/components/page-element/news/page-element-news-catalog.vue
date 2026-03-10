@@ -111,13 +111,13 @@
       <!-- News grid -->
       <v-row class="d-flex align-stretch mt-2">
         <v-col
-          v-for="article in displayedNews"
-          :key="article._id"
+          v-for="newsPageConfig in displayedNews"
+          :key="newsPageConfig.newsMetadata?.slug"
           :md="12 / (element.columns || 2)"
           cols="12"
         >
           <news-card
-            :page="article"
+            :page-config="newsPageConfig"
             :card-config="portalConfig.news.card"
             is-portal-config
           />
@@ -149,11 +149,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Page, PageElement } from '#api/types/page'
+import type { PageConfig, PageElement } from '#api/types/page-config'
 import type { NewsCatalogElement } from '#api/types/page-elements/index.ts'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
-type NewsFetch = { count: number; results: Pick<Page, '_id' | 'type' | 'config' | 'updatedAt'>[] }
+type NewsFetch = { count: number; results: Omit<PageConfig, 'elements'>[] }
 
 const { element, context } = defineProps<{
   element: NewsCatalogElement
@@ -174,15 +174,8 @@ const filters = {
   sort: useStringSearchParam('sort')
 }
 
-const parseSortParam = (sortParam: string | undefined) => {
-  if (!sortParam) return { field: 'date', order: '-1' as const }
-  const parts = sortParam.split(':')
-  return { field: parts[0], order: (parts[1] || '-1') as '-1' | '1' }
-}
-
-const initialSort = parseSortParam(filters.sort.value)
-const sort = ref<string>(initialSort.field)
-const order = ref<'-1' | '1'>(initialSort.order)
+const sort = ref<string>()
+const order = ref<'-1' | '1'>()
 
 const paginationPosition = computed(() => element.pagination?.position || 'none')
 const currentPage = ref(1)
@@ -255,15 +248,9 @@ if (!preview) {
   })
 } else {
   displayedNews.value = Array.from({ length: 6 }, (_, i) => ({
-    _id: `news-${i + 1}`,
-    type: 'news' as const,
-    config: {
-      title: `Actualité ${i + 1}`,
-      description: 'Exemple d\'actualité pour la prévisualisation.',
-      elements: [],
-      newsMetadata: { slug: `news-${i + 1}`, date: new Date().toISOString() }
-    },
-    updatedAt: new Date().toISOString()
+    title: `Actualité ${i + 1}`,
+    description: 'Exemple d\'actualité pour la prévisualisation.',
+    newsMetadata: { slug: `news-${i + 1}`, date: new Date().toISOString() }
   }))
 }
 

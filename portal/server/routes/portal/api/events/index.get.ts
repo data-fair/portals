@@ -1,4 +1,4 @@
-import type { Page } from '#api/types/page'
+import type { PageConfig } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
 import { mongoPagination, mongoSort } from '@data-fair/lib-express'
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     type: 'event',
     'owner.type': portal.owner.type,
     'owner.id': portal.owner.id,
-    [portal.staging ? 'requestedPortals' : 'portals']: portal._id
+    portals: portal._id
   }
 
   if (query.q) mongoQuery.$text = { $search: query.q }
@@ -38,15 +38,20 @@ export default defineEventHandler(async (event) => {
   const [sortField = 'startDate', sortOrder = '1'] = (query.sort || 'startDate:1').split(':')
   const mongoSortField = fieldMap[sortField] ?? 'config.eventMetadata.startDate'
   const sort = mongoSort(`${mongoSortField}:${sortOrder ?? '1'}`)
-
   const { skip, size } = mongoPagination(query)
-  const projection = { draftConfig: 0, 'config.elements': 0, portals: 0, requestedPortals: 0 }
+
+  const pipeline = [
+    { $match: mongoQuery },
+    { $sort: sort },
+    { $skip: skip },
+    { $limit: size },
+    { $project: { _id: 0, 'config.elements': 0 } },
+    { $replaceRoot: { newRoot: '$config' } }
+  ]
 
   const [count, results] = await Promise.all([
     portalMongo.pages.countDocuments(mongoQuery),
-    portalMongo.pages.find<Omit<Page, 'draftConfig' | 'config.elements' | 'portals' | 'requestedPortals'>>(mongoQuery, {
-      projection, sort, limit: size, skip
-    }).toArray()
+    portalMongo.pages.aggregate<Omit<PageConfig, 'elements'>>(pipeline).toArray()
   ])
 
   return { results, count }
