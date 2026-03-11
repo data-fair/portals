@@ -23,8 +23,18 @@ export const useJsonLd = (schema: MaybeRefOrGetter<JsonLdGraph | JsonLdGraph[]>)
         {
           type: 'application/ld+json',
           innerHTML: JSON.stringify(rawSchema)
+            .replace(/<\/script/gi, '<\\/script')
+            .replace(/<!--/g, '<\\!--')
         }
       ]
+    })
+  }
+
+  // Remove JSON-LD scripts on client-side navigation to prevent unsynced content
+  if (import.meta.client) {
+    const router = useRouter()
+    router.beforeEach(() => {
+      document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove())
     })
   }
 }

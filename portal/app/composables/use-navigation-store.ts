@@ -20,6 +20,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   // Emit BreadcrumbList JSON-LD from resolved breadcrumbs (SSR only)
   if (import.meta.server) {
     const origin = useRequestURL().origin
+    const router = useRouter()
     const breadcrumbJsonLd = computed(() => {
       if (!_breadcrumbs.value.length) return undefined
       const homeLabel = $portal.config.breadcrumb.showHome
@@ -32,13 +33,17 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
       for (const item of _breadcrumbs.value) {
         if (typeof item === 'string') {
           items.push({ name: item, url: origin })
-        } else {
+        } else if (!item.disabled) {
           const title = item.title || ''
-          const path = (item.to as string) || item.href || ''
+          let path: string
+          if (item.to) path = typeof item.to === 'string' ? item.to : router.resolve(item.to).href
+          else path = item.href || ''
+          if (!path) continue
           const url = path.startsWith('http') ? path : `${origin}${path}`
           items.push({ name: title, url })
         }
       }
+      // Escape </script sequences to prevent the JSON-LD from breaking out of the script tag
       return JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -48,13 +53,21 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
           name: entry.name,
           item: entry.url
         }))
-      })
+      }).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--')
     })
 
     useHead({
       script: computed(() => breadcrumbJsonLd.value
         ? [{ type: 'application/ld+json', innerHTML: breadcrumbJsonLd.value, key: 'breadcrumb-jsonld' }]
         : [])
+    })
+  }
+
+  // Remove JSON-LD scripts on client-side navigation to prevent unsynced content
+  if (import.meta.client) {
+    const router = useRouter()
+    router.beforeEach(() => {
+      document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove())
     })
   }
 
