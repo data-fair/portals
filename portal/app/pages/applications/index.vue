@@ -39,12 +39,11 @@ usePageSeo({
 
 useJsonLd(() => {
   const base = useRequestURL()
-  return createDataCatalogSchema({
+  return createCollectionPageSchema({
     id: `${base.origin}/applications`,
     title: pageConfigFetch.data.value?.title || t('applications'),
     description: pageConfigFetch.data.value?.description || t('seoDescription'),
-    url: base.href,
-    creator: { name: portalConfig.value.title }
+    url: base.href
   })
 })
 </script>

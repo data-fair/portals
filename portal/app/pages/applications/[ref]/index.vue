@@ -207,7 +207,7 @@ useJsonLd(() => {
   if (!app) return []
 
   return createWebApplicationSchema({
-    id: app.id,
+    id: requestURL.origin + `/applications/${app.slug}`,
     title: app.title,
     description: app.description || app.summary,
     owner: app.owner,
@@ -218,7 +218,7 @@ useJsonLd(() => {
     screenshot: `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`,
     keywords: app.topics?.map(t => t.title) || [],
     datasets: datasets.value.map(d => ({
-      id: d.id,
+      id: requestURL.origin + `/datasets/${d.slug}`,
       url: requestURL.origin + `/datasets/${d.slug}`,
       name: d.title
     }))

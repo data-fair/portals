@@ -523,7 +523,7 @@ useJsonLd(() => {
   if (!d) return []
 
   const ds = createDatasetSchema({
-    id: d.id,
+    id: requestURL.origin + `/datasets/${d.slug}`,
     title: d.title,
     description: d.description || d.summary,
     url: requestURL.href,
@@ -536,7 +536,11 @@ useJsonLd(() => {
     ],
     creator: {
       name: portalConfig.value.title
-    }
+    },
+    isRelatedTo: relatedDatasets.value.map(rd => ({
+      id: requestURL.origin + `/datasets/${rd.slug}`,
+      name: rd.title
+    }))
   })
 
   // Link subjectOf to related WebApplications (visualizations) and CreativeWorks (reuses)
@@ -544,7 +548,7 @@ useJsonLd(() => {
   for (const app of orderedApplications.value) {
     subjectOf.push({
       '@type': 'WebApplication',
-      '@id': app.id,
+      '@id': requestURL.origin + `/applications/${app.slug}`,
       name: app.title,
       url: requestURL.origin + `/applications/${app.slug}`,
       applicationCategory: 'DataVisualization'
@@ -553,6 +557,7 @@ useJsonLd(() => {
   for (const r of reuses.value) {
     subjectOf.push({
       '@type': 'CreativeWork',
+      '@id': requestURL.origin + `/reuses/${r.slug}`,
       name: r.config.title,
       url: requestURL.origin + `/reuses/${r.slug}`
     })

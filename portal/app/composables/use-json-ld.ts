@@ -13,12 +13,11 @@ export interface JsonLdGraph {
  * Supports multiple schemas: DataCatalog, Dataset, WebApplication, CreativeWork, Event, ItemList
  */
 export const useJsonLd = (schema: MaybeRefOrGetter<JsonLdGraph | JsonLdGraph[]>) => {
-  const rawSchema = toValue(schema)
-
   // Only add JSON-LD on server-side rendering
   // Don't refresh or duplicate on client-side navigations
-  // Because is useless
   if (import.meta.server) {
+    const rawSchema = toValue(schema)
+    if (!rawSchema || (Array.isArray(rawSchema) && !rawSchema.length)) return
     useHead({
       script: [
         {
@@ -54,15 +53,16 @@ export const createDatasetSchema = (options: {
   temporalCoverage?: string
   spatialCoverage?: string
   isBasedOn?: Array<{ id: string; url: string; name: string }>
+  isRelatedTo?: Array<{ id: string; name: string }>
   subjectOf?: Array<{ id: string; url: string; name: string; type: 'WebApplication' | 'CreativeWork' }>
 }): JsonLdGraph => {
   const schema: JsonLdGraph = {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
     '@id': options.id,
-    name: options.title,
-    description: options.description || ''
+    name: options.title
   }
+  if (options.description) schema.description = options.description
 
   if (options.url) schema.url = options.url
   if (options.image) schema.image = options.image
@@ -92,6 +92,13 @@ export const createDatasetSchema = (options: {
       '@id': b.id,
       url: b.url,
       name: b.name
+    }))
+  }
+  if (options.isRelatedTo?.length) {
+    schema.isRelatedTo = options.isRelatedTo.map(r => ({
+      '@type': 'Dataset',
+      '@id': r.id,
+      name: r.name
     }))
   }
   if (options.subjectOf?.length) {
@@ -130,17 +137,15 @@ export const createWebApplicationSchema = (options: {
     '@id': options.id,
     url: options.url,
     name: options.title,
-    description: options.description,
-
     applicationCategory: 'ReferenceApplication',
     applicationSubCategory: 'DataVisualization',
     operatingSystem: 'All',
-
     author: {
       '@type': options.owner.type === 'user' ? 'Person' : 'Organization',
       name: options.owner.name
     }
   }
+  if (options.description) schema.description = options.description
 
   if (options.createdAt) schema.dateCreated = options.createdAt
   if (options.updatedAt) schema.dateModified = options.updatedAt
@@ -183,9 +188,9 @@ export const createReuseSchema = (options: {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     '@id': options.id,
-    name: options.title,
-    description: options.description || ''
+    name: options.title
   }
+  if (options.description) schema.description = options.description
 
   if (options.url) schema.url = options.url
   if (options.image) schema.image = options.image
@@ -222,7 +227,6 @@ export const createEventSchema = (options: {
   image?: string
   startDate: string
   endDate?: string
-  location?: string
   organizer?: {
     name: string
     url?: string
@@ -232,15 +236,14 @@ export const createEventSchema = (options: {
     '@context': 'https://schema.org',
     '@type': 'Event',
     '@id': options.id,
-    name: options.title,
-    description: options.description || ''
+    name: options.title
   }
+  if (options.description) schema.description = options.description
 
   if (options.url) schema.url = options.url
   if (options.image) schema.image = options.image
   schema.startDate = options.startDate
   if (options.endDate) schema.endDate = options.endDate
-  if (options.location) schema.location = options.location
   if (options.organizer) {
     schema.organizer = {
       '@type': 'Organization',
@@ -272,9 +275,9 @@ export const createDataCatalogSchema = (options: {
     '@context': 'https://schema.org',
     '@type': 'DataCatalog',
     '@id': options.id,
-    name: options.title,
-    description: options.description || ''
+    name: options.title
   }
+  if (options.description) schema.description = options.description
 
   if (options.url) schema.url = options.url
   if (options.image) schema.image = options.image
@@ -343,9 +346,9 @@ export const createNewsArticleSchema = (options: {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
     '@id': options.id,
-    headline: options.title,
-    description: options.description || ''
+    headline: options.title
   }
+  if (options.description) schema.description = options.description
 
   if (options.url) schema.url = options.url
   if (options.image) schema.image = options.image
@@ -379,6 +382,26 @@ export const createWebSiteSchema = (options: {
     url: options.url
   }
   if (options.description) schema.description = options.description
+  return schema
+}
+
+/**
+ * Create a CollectionPage schema for paginated/infinite-scroll list pages
+ */
+export const createCollectionPageSchema = (options: {
+  id: string
+  title: string
+  description?: string
+  url?: string
+}): JsonLdGraph => {
+  const schema: JsonLdGraph = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': options.id,
+    name: options.title
+  }
+  if (options.description) schema.description = options.description
+  if (options.url) schema.url = options.url
   return schema
 }
 

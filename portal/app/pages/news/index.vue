@@ -39,7 +39,7 @@ usePageSeo({
 
 useJsonLd(() => {
   const base = useRequestURL()
-  return createWebPageSchema({
+  return createCollectionPageSchema({
     id: `${base.origin}/news`,
     title: pageConfigFetch.data.value?.title || t('news'),
     description: pageConfigFetch.data.value?.description || t('seoDescription'),

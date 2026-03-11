@@ -77,14 +77,14 @@ useJsonLd(() => {
   const base = useRequestURL()
 
   return createReuseSchema({
-    id: reuseFetch.data.value?._id || slug,
+    id: `${base.origin}/reuses/${slug}`,
     title: config.title,
     description: config._descriptionHtml || config.description,
     url: base.href,
     dateModified: reuseFetch.data.value?.updatedAt,
     author: config.author ? { name: config.author } : undefined,
     basedOnDatasets: config.datasets?.map(d => ({
-      id: d.id,
+      id: `${base.origin}/datasets/${d.id}`,
       url: `${base.origin}/datasets/${d.id}`,
       name: d.title || d.id
     }))
