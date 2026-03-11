@@ -24,7 +24,7 @@ const { setBreadcrumbs } = useNavigationStore()
 const { t } = useI18n()
 const route = useRoute()
 
-const datasetFetch = useLocalFetch<{ title: string, summary: string, description: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+const datasetFetch = await useLocalFetch<{ title: string, summary: string, description: string, updatedAt?: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
 
 watch(datasetFetch.data, () => {
   setBreadcrumbs([
@@ -38,6 +38,10 @@ usePageSeo({
   title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
   description: () => datasetFetch.data.value?.summary
 })
+
+// Set Last-Modified header based on updatedAt
+const header = useResponseHeader('Last-Modified')
+if (datasetFetch.data.value?.updatedAt) header.value = new Date(datasetFetch.data.value.updatedAt).toUTCString()
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>

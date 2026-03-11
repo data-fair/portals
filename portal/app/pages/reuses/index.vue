@@ -34,6 +34,16 @@ usePageSeo({
   description: () => pageConfigFetch.data.value?.description || t('seoDescription'),
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
+
+useJsonLd(() => {
+  const base = useRequestURL()
+  return createCollectionPageSchema({
+    id: `${base.origin}/reuses`,
+    title: pageConfigFetch.data.value?.title || t('reuses'),
+    description: pageConfigFetch.data.value?.description || t('seoDescription'),
+    url: base.href
+  })
+})
 </script>
 
 <i18n lang="yaml">

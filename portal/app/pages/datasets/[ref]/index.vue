@@ -450,7 +450,7 @@ const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
@@ -516,6 +516,56 @@ usePageSeo({
 // Set Last-Modified header based on updatedAt
 const header = useResponseHeader('Last-Modified')
 if (dataset.value?.updatedAt) header.value = new Date(dataset.value?.updatedAt).toUTCString()
+
+const requestURL = useRequestURL()
+useJsonLd(() => {
+  const d = dataset.value
+  if (!d) return []
+
+  const ds = createDatasetSchema({
+    id: requestURL.origin + `/datasets/${d.slug}`,
+    title: d.title,
+    description: d.description || d.summary,
+    url: requestURL.href,
+    image: d.image || thumbnailUrl.value,
+    datePublished: d.createdAt,
+    dateModified: d.updatedAt,
+    keywords: [
+      ...(d.keywords || []),
+      ...(d.topics?.map(t => t.title) || [])
+    ],
+    creator: {
+      name: portalConfig.value.title
+    },
+    isRelatedTo: relatedDatasets.value.map(rd => ({
+      id: requestURL.origin + `/datasets/${rd.slug}`,
+      name: rd.title
+    }))
+  })
+
+  // Link subjectOf to related WebApplications (visualizations) and CreativeWorks (reuses)
+  const subjectOf = []
+  for (const app of orderedApplications.value) {
+    subjectOf.push({
+      '@type': 'WebApplication',
+      '@id': requestURL.origin + `/applications/${app.slug}`,
+      name: app.title,
+      url: requestURL.origin + `/applications/${app.slug}`,
+      applicationCategory: 'DataVisualization'
+    })
+  }
+  for (const r of reuses.value) {
+    subjectOf.push({
+      '@type': 'CreativeWork',
+      '@id': requestURL.origin + `/reuses/${r.slug}`,
+      name: r.config.title,
+      url: requestURL.origin + `/reuses/${r.slug}`
+    })
+  }
+  if (subjectOf.length) ds.subjectOf = subjectOf
+
+  return ds
+})
 
 </script>
 

@@ -39,4 +39,17 @@ usePageSeo({
   description: () => pageConfigFetch.data.value?.description,
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
+
+useJsonLd(() => {
+  const pageConfig = pageConfigFetch.data.value
+  if (!pageConfig) return []
+  const base = useRequestURL()
+
+  return createWebPageSchema({
+    id: base.href,
+    title: pageConfig.title,
+    description: pageConfig.description,
+    url: base.href
+  })
+})
 </script>

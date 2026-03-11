@@ -29,4 +29,13 @@ usePageSeo({
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 
+useJsonLd(() => {
+  const base = useRequestURL()
+  return createWebSiteSchema({
+    id: base.origin,
+    title: portalConfig.value.title,
+    description: portalConfig.value.description,
+    url: base.origin
+  })
+})
 </script>

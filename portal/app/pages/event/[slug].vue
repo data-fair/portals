@@ -54,6 +54,23 @@ usePageSeo({
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined,
   ogType: 'article'
 })
+
+useJsonLd(() => {
+  const pageConfig = pageConfigFetch.data.value
+  if (!pageConfig) return []
+  const base = useRequestURL()
+
+  return createEventSchema({
+    id: `${base.origin}/event/${slug}`,
+    title: pageConfig.title,
+    description: pageConfig.description,
+    url: base.href,
+    image: pageConfig.thumbnail ? getPageImageSrc(pageConfig.thumbnail) : undefined,
+    startDate: pageConfig.eventMetadata?.startDate || '',
+    endDate: pageConfig.eventMetadata?.endDate,
+    organizer: { name: portalConfig.value.title, url: base.origin }
+  })
+})
 </script>
 
 <i18n lang="yaml">
