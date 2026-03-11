@@ -544,7 +544,7 @@ useJsonLd(() => {
   })
 
   // Link subjectOf to related WebApplications (visualizations) and CreativeWorks (reuses)
-  const subjectOf: any[] = []
+  const subjectOf = []
   for (const app of orderedApplications.value) {
     subjectOf.push({
       '@type': 'WebApplication',
@@ -562,7 +562,7 @@ useJsonLd(() => {
       url: requestURL.origin + `/reuses/${r.slug}`
     })
   }
-  if (subjectOf.length) (ds as any).subjectOf = subjectOf
+  if (subjectOf.length) ds.subjectOf = subjectOf
 
   return ds
 })

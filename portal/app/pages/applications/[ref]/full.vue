@@ -17,7 +17,7 @@ const { setBreadcrumbs } = useNavigationStore()
 const { portalConfig } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
 
-const applicationFetch = useLocalFetch<{
+const applicationFetch = await useLocalFetch<{
   title: string
   summary?: string
   description?: string
@@ -52,6 +52,10 @@ usePageSeo({
   description: () => applicationFetch.data.value?.summary,
   ogImage: () => thumbnailUrl.value
 })
+
+// Set Last-Modified header based on updatedAt
+const header = useResponseHeader('Last-Modified')
+if (applicationFetch.data.value?.updatedAt) header.value = new Date(applicationFetch.data.value.updatedAt).toUTCString()
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>
