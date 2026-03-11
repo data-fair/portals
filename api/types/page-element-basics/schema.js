@@ -329,5 +329,43 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
+    'element-icon': {
+      type: 'object',
+      title: 'IconElement',
+      'x-i18n-title': {
+        en: 'Icon',
+        fr: 'Icône'
+      },
+      required: ['type'],
+      properties: {
+        type: { const: 'icon' },
+        uuid: { type: 'string', layout: 'none' },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        size: {
+          type: 'integer',
+          title: 'Size (px)',
+          'x-i18n-title': { fr: 'Taille (px)' },
+          minimum: 16,
+          maximum: 128,
+          default: 48,
+          layout: {
+            comp: 'slider',
+            // TODO: add it when VJSF are fixed
+            // props: {
+            //   step: 8,
+            //   showTicks: 'always',
+            //   thumbLabel: true
+            // }
+          }
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Center the icon',
+          'x-i18n-title': { fr: "Centrer l'icône" },
+          default: false
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    }
   }
 }

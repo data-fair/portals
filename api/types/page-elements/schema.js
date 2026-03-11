@@ -58,6 +58,7 @@ export default {
           { key: 2, title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
           { key: 3, title: 'Image', 'x-i18n-title': { fr: 'Image' } },
           { key: 4, title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
+          { key: 5, title: 'Icon', 'x-i18n-title': { fr: 'Icône' } },
 
           {
             header: true,
@@ -67,9 +68,9 @@ export default {
             },
             icon: mdiNavigationVariant
           },
-          { key: 5, title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
-          { key: 6, title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
-          { key: 7, title: 'Breadcrumbs', 'x-i18n-title': { fr: 'Fil d\'Ariane' } },
+          { key: 6, title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
+          { key: 7, title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
+          { key: 8, title: 'Breadcrumbs', 'x-i18n-title': { fr: 'Fil d\'Ariane' } },
 
           {
             header: true,
@@ -79,13 +80,13 @@ export default {
             },
             icon: mdiViewGridOutline
           },
-          { key: 8, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
-          { key: 9, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
-          { key: 10, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
-          { key: 11, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-          { key: 12, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
-          { key: 13, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
-          { key: 14, title: 'Expansion panels', 'x-i18n-title': { fr: 'Accordéons' } },
+          { key: 9, title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
+          { key: 10, title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
+          { key: 11, title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
+          { key: 12, title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
+          { key: 13, title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
+          { key: 14, title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
+          { key: 15, title: 'Expansion panels', 'x-i18n-title': { fr: 'Accordéons' } },
 
           {
             header: true,
@@ -95,10 +96,10 @@ export default {
             },
             icon: mdiPuzzleOutline
           },
-          { key: 15, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
-          { key: 16, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
-          // { key: 17, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
-          { key: 18, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+          { key: 16, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
+          { key: 17, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
+          // { key: 18, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
+          { key: 19, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
 
           {
             header: true,
@@ -108,12 +109,12 @@ export default {
             },
             icon: mdiDatabaseOutline
           },
-          { key: 19, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
-          { key: 20, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
-          { key: 21, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
-          { key: 22, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
-          { key: 23, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
-          { key: 24, title: 'Dataset download', 'x-i18n-title': { fr: "Téléchargement d'un jeu de données" } },
+          { key: 20, title: 'Datasets catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+          { key: 21, title: 'Datasets list', 'x-i18n-title': { fr: 'Liste de jeux de données' } },
+          { key: 22, title: 'Dataset card', 'x-i18n-title': { fr: "Vignette d'un jeu de données" } },
+          { key: 23, title: 'Dataset table', 'x-i18n-title': { fr: "Tableau d'un jeu de données" } },
+          { key: 24, title: 'Dataset form', 'x-i18n-title': { fr: "Formulaire d'un jeu de données" } },
+          { key: 25, title: 'Dataset download', 'x-i18n-title': { fr: "Téléchargement d'un jeu de données" } },
 
           {
             header: true,
@@ -123,9 +124,9 @@ export default {
             },
             icon: mdiImageMultiple
           },
-          { key: 25, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-          { key: 26, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
-          { key: 27, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
+          { key: 26, title: 'Applications catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+          { key: 27, title: 'Applications list', 'x-i18n-title': { fr: 'Liste de visualisations' } },
+          { key: 28, title: 'Application', 'x-i18n-title': { fr: 'Visualisation' } },
 
           {
             header: true,
@@ -135,9 +136,9 @@ export default {
             },
             icon: mdiPageNext
           },
-          { key: 28, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-          { key: 29, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
-          { key: 30, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } },
+          { key: 29, title: 'Reuses catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+          { key: 30, title: 'Reuses list', 'x-i18n-title': { fr: 'Liste de réutilisations' } },
+          { key: 31, title: 'Reuse card', 'x-i18n-title': { fr: 'Vignette de réutilisation' } },
 
           {
             header: true,
@@ -147,9 +148,9 @@ export default {
             },
             icon: mdiCalendar
           },
-          { key: 31, title: 'Events catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
-          { key: 32, title: 'Events list', 'x-i18n-title': { fr: "Liste d'événements" } },
-          { key: 33, title: 'Event card', 'x-i18n-title': { fr: "Vignette d'événement" } },
+          { key: 32, title: 'Events catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+          { key: 33, title: 'Events list', 'x-i18n-title': { fr: "Liste d'événements" } },
+          { key: 34, title: 'Event card', 'x-i18n-title': { fr: "Vignette d'événement" } },
 
           {
             header: true,
@@ -159,9 +160,9 @@ export default {
             },
             icon: mdiNewspaperVariant
           },
-          { key: 34, title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
-          { key: 35, title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
-          { key: 36, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
+          { key: 35, title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
+          { key: 36, title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
+          { key: 37, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
         ]
       },
       oneOf: [
@@ -171,6 +172,7 @@ export default {
         { $ref: 'https://github.com/data-fair/portals/page-element-basics#/$defs/element-alert' },
         { $ref: 'https://github.com/data-fair/portals/page-element-basics#/$defs/element-image' },
         { $ref: 'https://github.com/data-fair/portals/page-element-basics#/$defs/element-iframe' },
+        { $ref: 'https://github.com/data-fair/portals/page-element-basics#/$defs/element-icon' },
 
         // Navigation elements
         { $ref: 'https://github.com/data-fair/portals/page-element-navigation#/$defs/element-button' },

@@ -22,6 +22,10 @@
     v-else-if="element.type === 'iframe'"
     :element="element"
   />
+  <page-element-icon
+    v-else-if="element.type === 'icon'"
+    :element="element"
+  />
 
   <!-- Navigation elements -->
   <page-element-button
