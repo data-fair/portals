@@ -1,5 +1,5 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-links',
+  $id: 'https://github.com/data-fair/portals/common-links',
   'x-exports': ['types'],
   $defs: {
     linkItem: {
@@ -9,11 +9,11 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
       ]
     },
 
@@ -31,18 +31,18 @@ export default {
             // Editable pages
             { const: 'home', title: 'Accueil' },
             { const: 'contact', title: 'Contact' },
-            { const: 'privacy-policy', title: 'Politique de confidentialité' },
             { const: 'accessibility', title: 'Accessibilité' },
-            { const: 'legal-notice', title: 'Mentions légales' },
-            { const: 'cookie-policy', title: 'Politique de cookies' },
             { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
+            { const: 'legal-notice', title: 'Mentions légales' },
+            { const: 'privacy-policy', title: 'Politique de confidentialité' },
+            { const: 'cookie-policy', title: 'Politique de cookies' },
             { const: 'datasets', title: 'Catalogue de données' },
             { const: 'applications', title: 'Catalogue de visualisations' },
             { const: 'reuses', title: 'Catalogue de réutilisations' },
+            { const: 'event-catalog', title: "Catalogue d'événements" },
+            { const: 'news-catalog', title: "Catalogue d'actualités" },
 
             // Fixed pages
-            { const: 'event', title: 'Liste des événements' },
-            { const: 'news', title: 'Liste des actualités' },
             { const: 'sitemap', title: 'Plan du site' },
             { const: 'catalog-api-doc', title: "Documentation d'API" }
           ],
@@ -195,11 +195,11 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseStandardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseGenericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseEventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseNewsPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/baseExternalLink' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseStandardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseGenericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseEventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseNewsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/baseExternalLink' },
         {
           title: 'Aucun lien',
           required: ['type'],
@@ -222,18 +222,18 @@ export default {
             // Editable pages
             { const: 'home', title: 'Accueil' },
             { const: 'contact', title: 'Contact' },
-            { const: 'privacy-policy', title: 'Politique de confidentialité' },
             { const: 'accessibility', title: 'Accessibilité' },
-            { const: 'legal-notice', title: 'Mentions légales' },
-            { const: 'cookie-policy', title: 'Politique de cookies' },
             { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
+            { const: 'legal-notice', title: 'Mentions légales' },
+            { const: 'privacy-policy', title: 'Politique de confidentialité' },
+            { const: 'cookie-policy', title: 'Politique de cookies' },
             { const: 'datasets', title: 'Catalogue de données' },
             { const: 'applications', title: 'Catalogue de visualisations' },
             { const: 'reuses', title: 'Catalogue de réutilisations' },
+            { const: 'event-catalog', title: "Catalogue d'événements" },
+            { const: 'news-catalog', title: "Catalogue d'actualités" },
 
             // Fixed pages
-            { const: 'event', title: 'Liste des événements' },
-            { const: 'news', title: 'Liste des actualités' },
             { const: 'sitemap', title: 'Plan du site' },
             { const: 'catalog-api-doc', title: "Documentation d'API" }
           ],
@@ -380,16 +380,16 @@ const linkItemTitleFn = (item) => {
   const standardPageTitles = {
     home: 'Page d\'accueil',
     contact: 'Contact',
-    'privacy-policy': 'Politique de confidentialité',
     accessibility: 'Accessibilité',
-    'legal-notice': 'Mentions légales',
-    'cookie-policy': 'Politique de cookies',
     'terms-of-service': "Conditions générales d'utilisation",
+    'legal-notice': 'Mentions légales',
+    'privacy-policy': 'Politique de confidentialité',
+    'cookie-policy': 'Politique de cookies',
     datasets: 'Catalogue de données',
     applications: 'Catalogue de visualisations',
     reuses: 'Catalogue de réutilisations',
-    event: 'Liste des événements',
-    news: 'Liste des actualités',
+    'event-catalog': "Catalogue d'événements",
+    'news-catalog': "Catalogue d'actualités",
     sitemap: 'Plan du site',
     'catalog-api-doc': "Documentation d'API"
   }

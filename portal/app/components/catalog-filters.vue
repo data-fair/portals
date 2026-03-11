@@ -165,6 +165,22 @@
     </v-autocomplete>
   </v-col>
 
+  <!-- Include past events filter -->
+  <v-col
+    v-if="showFilter('include-past')"
+    cols="12"
+    :md="colSize"
+  >
+    <v-checkbox
+      v-model="filters.includePast.value"
+      :label="t('filters.includePastEvents')"
+      :density="config.filters?.density || 'comfortable'"
+      :rounded="config.filters?.rounded"
+      color="primary"
+      hide-details
+    />
+  </v-col>
+
   <!-- Sort/Order -->
   <v-col
     v-if="showFilter('sort')"
@@ -240,7 +256,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DatasetsCatalogElement, ApplicationsCatalogElement } from '#api/types/page'
+import type { DatasetsCatalogElement, ApplicationsCatalogElement, ReusesCatalogElement, EventCatalogElement, NewsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-vue/session'
 import { mdiMagnify, mdiSortAscending, mdiSortDescending, mdiHome, mdiBook } from '@mdi/js'
 
@@ -259,20 +275,21 @@ type BaseApplication = {
   title: string
 }
 
-type CatalogType = 'datasets' | 'applications'
-type FilterType = 'search' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
+type CatalogType = 'datasets' | 'applications' | 'reuses' | 'events' | 'news'
+type FilterType = 'search' | 'include-past' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
 
 const { t } = useI18n()
 const { portal, preview, portalConfig } = usePortalStore()
 
 const { config, catalogType, drawer } = defineProps<{
-  config: DatasetsCatalogElement | ApplicationsCatalogElement
+  config: DatasetsCatalogElement | ApplicationsCatalogElement | ReusesCatalogElement | EventCatalogElement | NewsCatalogElement
   catalogType: CatalogType
   drawer?: boolean
 }>()
 
 const filters = {
   search: useStringSearchParam('q'),
+  includePast: useBooleanSearchParam('include-past'),
   concepts: useStringsArraySearchParam('concepts'),
   baseApplication: useStringsArraySearchParam('base-application'),
   topics: useStringsArraySearchParam('topics'),
@@ -288,16 +305,11 @@ const order = ref<'-1' | '1'>()
 const showFilter = (filter: FilterType) => ((config.filters?.items ?? []) as FilterType[]).includes(filter)
 
 // Compute best column size based on number of filters shown
+const colSizeByCount: Record<number, number> = { 2: 6, 3: 4, 4: 6, 5: 4, 6: 4 }
 const colSize = computed(() => {
   if (drawer) return 12
-
   const count = config.filters?.items?.length || 0
-  if (count === 2) return 6
-  if (count === 3) return 4
-  if (count === 4) return 6
-  if (count === 5) return 4
-  if (count === 6) return 4
-  return 6
+  return colSizeByCount[count] ?? 6
 })
 
 type Facets = {
@@ -310,7 +322,7 @@ type Facets = {
 
 let catalogFetch: ReturnType<typeof useLocalFetch<{ facets: Facets }>> | undefined
 let conceptsFetch: ReturnType<typeof useLocalFetch<Concept[]>> | undefined
-if (!preview) {
+if (!preview && (catalogType === 'datasets' || catalogType === 'applications')) {
   const facetsToFetch = []
   if (showFilter('concepts')) facetsToFetch.push('concepts')
   if (showFilter('base-application')) facetsToFetch.push('base-application')
@@ -327,9 +339,7 @@ if (!preview) {
     }
   })
 
-  if (showFilter('concepts')) {
-    conceptsFetch = useLocalFetch<Concept[]>('/data-fair/api/v1/vocabulary')
-  }
+  if (showFilter('concepts')) conceptsFetch = useLocalFetch<Concept[]>('/data-fair/api/v1/vocabulary')
 }
 
 const previewFacets: Facets = {
@@ -418,20 +428,36 @@ watch([sort, order], () => {
 
 // Sort items depend on catalog type
 const sortItems = computed(() => {
-  if (catalogType === 'datasets') {
-    return [
-      { title: t('sort.createdAt'), value: 'createdAt' },
-      { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
-      { title: t('sort.title'), value: 'title' },
-      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
-    ]
-  } else {
-    return [
-      { title: t('sort.createdAt'), value: 'createdAt' },
-      { title: t('sort.updatedAt'), value: 'updatedAt' },
-      { title: t('sort.title'), value: 'title' },
-      { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
-    ]
+  const ownerLabel = portalConfig.value?.labelsOverrides?.owner || t('sort.owner')
+  switch (catalogType) {
+    case 'datasets':
+      return [
+        { title: t('sort.createdAt'), value: 'createdAt' },
+        { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+        { title: t('sort.title'), value: 'title' },
+        { title: ownerLabel, value: 'owner.departmentName' }
+      ]
+    case 'reuses':
+      return [
+        { title: t('sort.updatedAt'), value: 'updatedAt' },
+        { title: t('sort.title'), value: 'title' }
+      ]
+    case 'events':
+      return [
+        { title: t('sort.title'), value: 'title' },
+        { title: t('sort.startDate'), value: 'startDate' }
+      ]
+    case 'news':
+      return [
+        { title: t('sort.date'), value: 'date' }
+      ]
+    default:
+      return [
+        { title: t('sort.createdAt'), value: 'createdAt' },
+        { title: t('sort.updatedAt'), value: 'updatedAt' },
+        { title: t('sort.title'), value: 'title' },
+        { title: ownerLabel, value: 'owner.departmentName' }
+      ]
   }
 })
 
@@ -448,6 +474,7 @@ const sortItems = computed(() => {
       topics: Topics
       keywords: Keywords
       owners: Owners
+      includePastEvents: Include past events
       noConcepts: No concepts available
       noBaseApplication: No base applications available
       noTopics: No topics available
@@ -462,6 +489,8 @@ const sortItems = computed(() => {
       updatedAt: Update date
       title: Alphabetical order
       owner: Owner
+      startDate: Start date
+      date: Publication date
 
   fr:
     ascending: Ordre croissant
@@ -473,6 +502,7 @@ const sortItems = computed(() => {
       topics: Thématiques
       keywords: Mots-clés
       owners: Propriétaires
+      includePastEvents: Inclure les événements passés
       noConcepts: Aucun concept disponible
       noBaseApplication: Aucune application de base disponible
       noTopics: Aucune thématique disponible
@@ -487,4 +517,6 @@ const sortItems = computed(() => {
       updatedAt: Date de mise à jour
       title: Ordre alphabétique
       owner: Propriétaire
+      startDate: Date de début
+      date: Date de publication
 </i18n>

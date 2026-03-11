@@ -21,7 +21,7 @@ import type { PageConfig } from '#api/types/page'
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('legal-notice')
+const getPageImageSrc = providePageImageSrc('legal-notice')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/legal-notice/legal-notice', { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -37,7 +37,8 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('legalNotice')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description
+  description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 </script>
 

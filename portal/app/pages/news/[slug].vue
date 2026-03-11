@@ -7,7 +7,7 @@
       :title="errorTitle"
       :link="{
         type: 'standard',
-        subtype: 'news',
+        subtype: 'news-catalog',
         title: t('backToNews')
       }"
     />
@@ -28,7 +28,7 @@ const slug = route.params.slug as string
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('news', slug)
+const getPageImageSrc = providePageImageSrc('news', slug)
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/news/${slug}`, { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -42,7 +42,7 @@ const errorTitle = computed(() => {
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
-    { type: 'standard', subtype: 'news' },
+    { type: 'standard', subtype: 'news-catalog' },
     { title: pageConfig?.title || t('news') }
   ])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
@@ -51,18 +51,19 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('news')) + ' - ' + portalConfig.value.title,
   description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined,
   ogType: 'article'
 })
 </script>
 
 <i18n lang="yaml">
   en:
-    backToNews: Back to News List
+    backToNews: Go to News List
     news: News
     newsNotFound: The requested news article was not found
     newsError: An error occurred while loading the news article
   fr:
-    backToNews: Retourner à la liste des actualités
+    backToNews: Aller à la liste des actualités
     news: Actualité
     newsNotFound: L'actualité demandée n'a pas été trouvée
     newsError: Une erreur est survenue lors du chargement de l'actualité

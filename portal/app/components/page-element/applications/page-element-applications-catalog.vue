@@ -157,7 +157,7 @@
 
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
-import type { PageElement, ApplicationsCatalogElement } from '#api/types/page'
+import type { PageElement, ApplicationsCatalogElement } from '#api/types/page-config'
 import { mdiSortAscending, mdiSortDescending } from '@mdi/js'
 
 type ApplicationFetch = { count: number; results: Application[] }

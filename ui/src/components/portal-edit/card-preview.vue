@@ -36,6 +36,18 @@
           :card-config="props.cardConfig"
           is-portal-config
         />
+        <event-card
+          v-else-if="props.type === 'event'"
+          :page-config="(item as any).config"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
+        <news-card
+          v-else-if="props.type === 'news'"
+          :page-config="(item as any).config"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
       </v-col>
     </v-row>
   </preview>
@@ -48,7 +60,7 @@ const session = useSessionAuthenticated()
 const props = defineProps<{
   appendTitle?: string
   cardConfig: any
-  type: 'dataset' | 'application' | 'reuse'
+  type: 'dataset' | 'application' | 'reuse' | 'event' | 'news'
 }>()
 
 const nbColumns = ref(2)
@@ -104,6 +116,28 @@ const items = computed(() => {
           author: t('reuse.author')
         },
         updatedAt: new Date().toISOString()
+      }
+    }
+
+    if (props.type === 'event') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          eventMetadata: { slug: baseItem.slug, startDate: new Date().toISOString() }
+        }
+      }
+    }
+
+    if (props.type === 'news') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          newsMetadata: { slug: baseItem.slug, date: new Date().toISOString() }
+        }
       }
     }
 

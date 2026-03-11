@@ -1,5 +1,5 @@
 import type { MenuItem } from '#api/types/portal/index.ts'
-import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 
 const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
   if (link.type === 'external') return !link.href?.startsWith('/')
@@ -16,15 +16,15 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
       switch (link.subtype) {
         case 'home': return i18n[lang]['homePage']
         case 'contact': return i18n[lang]['contactPage']
-        case 'privacy-policy': return i18n[lang]['privacyPolicyPage']
         case 'accessibility': return i18n[lang]['accessibilityPage']
-        case 'legal-notice': return i18n[lang]['legalNoticePage']
-        case 'cookie-policy': return i18n[lang]['cookiePolicyPage']
         case 'terms-of-service': return i18n[lang]['termsOfServicePage']
+        case 'legal-notice': return i18n[lang]['legalNoticePage']
+        case 'privacy-policy': return i18n[lang]['privacyPolicyPage']
+        case 'cookie-policy': return i18n[lang]['cookiePolicyPage']
         case 'datasets': return i18n[lang]['datasetsPage']
         case 'applications': return i18n[lang]['applicationsPage']
-        case 'news': return i18n[lang]['newsPage']
-        case 'event': return i18n[lang]['eventPage']
+        case 'news-catalog': return i18n[lang]['newsPage']
+        case 'event-catalog': return i18n[lang]['eventPage']
         case 'reuses': return i18n[lang]['reusesPage']
         case 'sitemap': return i18n[lang]['sitemapPage']
         case 'catalog-api-doc': return i18n[lang]['catalogApiDocPage']
@@ -60,11 +60,11 @@ const i18n = {
   en: {
     homePage: 'Home',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Privacy Policy',
     accessibilityPage: 'Accessibility',
-    legalNoticePage: 'Legal Notice',
-    cookiePolicyPage: 'Cookie Policy',
     termsOfServicePage: 'Terms of Service',
+    legalNoticePage: 'Legal Notice',
+    privacyPolicyPage: 'Privacy Policy',
+    cookiePolicyPage: 'Cookie Policy',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
     newsPage: 'News',
@@ -78,11 +78,11 @@ const i18n = {
   fr: {
     homePage: 'Accueil',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Politique de confidentialité',
     accessibilityPage: 'Accessibilité',
-    legalNoticePage: 'Mentions légales',
-    cookiePolicyPage: 'Politique de cookies',
     termsOfServicePage: "Conditions générales d'utilisation",
+    legalNoticePage: 'Mentions légales',
+    privacyPolicyPage: 'Politique de confidentialité',
+    cookiePolicyPage: 'Politique de cookies',
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     newsPage: 'Actualités',

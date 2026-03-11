@@ -100,7 +100,7 @@ const baseApplicationFetch = useLocalFetch<{
   title: string
 }>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
 
-const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
+const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,

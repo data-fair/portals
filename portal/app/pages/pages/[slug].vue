@@ -21,7 +21,7 @@ const slug = route.params.slug as string
 
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('generic', slug)
+const getPageImageSrc = providePageImageSrc('generic', slug)
 
 // Les pages génériques sans groupe (type='generic', pas de config.group)
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${slug}`, { watch: false })
@@ -36,6 +36,7 @@ usePageSeo({
   title: () => pageConfigFetch.data.value?.title
     ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
     : portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description
+  description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 </script>

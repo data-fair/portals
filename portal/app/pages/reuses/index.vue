@@ -19,7 +19,7 @@ import type { PageConfig } from '#api/types/page'
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('reuses')
+const getPageImageSrc = providePageImageSrc('reuses')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/reuses/reuses', { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -31,7 +31,8 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('reuses')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || t('seoDescription')
+  description: () => pageConfigFetch.data.value?.description || t('seoDescription'),
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 
 useJsonLd(() => {

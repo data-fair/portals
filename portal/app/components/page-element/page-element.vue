@@ -22,6 +22,10 @@
     v-else-if="element.type === 'iframe'"
     :element="element"
   />
+  <page-element-icon
+    v-else-if="element.type === 'icon'"
+    :element="element"
+  />
 
   <!-- Navigation elements -->
   <page-element-button
@@ -85,6 +89,10 @@
     v-else-if="element.type === 'dataset-form'"
     :element="element"
   />
+  <page-element-dataset-download
+    v-else-if="element.type === 'dataset-download'"
+    :element="element"
+  />
 
   <!-- Applications -->
   <page-element-applications-catalog
@@ -127,6 +135,50 @@
   />
   <page-element-reuse-card
     v-else-if="element.type === 'reuse-card'"
+    :element="element"
+  />
+
+  <!-- Events -->
+  <page-element-event-catalog
+    v-else-if="element.type === 'event-catalog'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-event-catalog>
+  <page-element-event-list
+    v-else-if="element.type === 'event-list'"
+    :element="element"
+  />
+  <page-element-event-card
+    v-else-if="element.type === 'event-card'"
+    :element="element"
+  />
+
+  <!-- News -->
+  <page-element-news-catalog
+    v-else-if="element.type === 'news-catalog'"
+    :element="element"
+    :context="context"
+  >
+    <template #page-elements="vjsfContext">
+      <slot
+        name="page-elements"
+        v-bind="vjsfContext"
+      />
+    </template>
+  </page-element-news-catalog>
+  <page-element-news-list
+    v-else-if="element.type === 'news-list'"
+    :element="element"
+  />
+  <page-element-news-card
+    v-else-if="element.type === 'news-card'"
     :element="element"
   />
 

@@ -24,8 +24,9 @@ const { t } = useI18n()
 const { preview } = usePortalStore()
 
 const syncParams = computed(() => {
-  if (element.syncParams === 'sandboxed') return `*:${element.uuid}_`
-  if (element.syncParams === 'shared-filters') return `_c*,_d*,*:${element.uuid}_`
+  const uuid = element.uuid || crypto.randomUUID().split('-')[0] // Prevent undefined uuid
+  if (element.syncParams === 'sandboxed') return `*:${uuid}_`
+  if (element.syncParams === 'shared-filters') return `_c*,_d*,*:${uuid}_`
   return undefined
 })
 

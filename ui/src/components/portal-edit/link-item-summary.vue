@@ -51,16 +51,16 @@ const standardPageLabel = computed(() => {
   const labelKeys: Record<string, string> = {
     home: 'homePage',
     contact: 'contactPage',
-    'privacy-policy': 'privacyPolicyPage',
     accessibility: 'accessibilityPage',
-    'legal-notice': 'legalNoticePage',
-    'cookie-policy': 'cookiePolicyPage',
     'terms-of-service': 'termsOfServicePage',
+    'legal-notice': 'legalNoticePage',
+    'privacy-policy': 'privacyPolicyPage',
+    'cookie-policy': 'cookiePolicyPage',
     datasets: 'datasetsCatalog',
     applications: 'applicationsCatalog',
     reuses: 'reusesCatalog',
-    event: 'eventsList',
-    news: 'newsList',
+    event: 'eventCatalog',
+    news: 'newsCatalog',
     sitemap: 'sitemap',
     'catalog-api-doc': 'catalogApiDocPage'
   }
@@ -76,15 +76,15 @@ const standardPageLabel = computed(() => {
     openNewTab: Opens in a new tab
     homePage: Home page
     contactPage: Contact page
-    privacyPolicyPage: Privacy policy page
     accessibilityPage: Accessibility page
-    legalNoticePage: Legal notice page
-    cookiePolicyPage: Cookie policy page
     termsOfServicePage: Terms of service page
+    legalNoticePage: Legal notice page
+    privacyPolicyPage: Privacy policy page
+    cookiePolicyPage: Cookie policy page
     datasetsCatalog: Datasets catalog
     applicationsCatalog: Applications catalog
-    eventsList: Events list
-    newsList: News list
+    eventCatalog: Event catalog
+    newsCatalog: News catalog
     sitemap: Sitemap
     catalogApiDocPage: API Documentation
     standardPage: Standard page
@@ -101,15 +101,15 @@ const standardPageLabel = computed(() => {
     openNewTab: S'ouvre dans un nouvel onglet
     homePage: Page d'accueil
     contactPage: Page de contact
-    privacyPolicyPage: Page de politique de confidentialité
     accessibilityPage: Page d'accessibilité
-    legalNoticePage: Page de mentions légales
-    cookiePolicyPage: Page de politique de cookies
     termsOfServicePage: Page de conditions générales d'utilisation
+    legalNoticePage: Page de mentions légales
+    privacyPolicyPage: Page de politique de confidentialité
+    cookiePolicyPage: Page de politique de cookies
     datasetsCatalog: Catalogue de données
     applicationsCatalog: Catalogue de visualisations
-    eventsList: Liste des événements
-    newsList: Liste des actualités
+    eventCatalog: Catalogue d'événements
+    newsCatalog: Catalogue d'actualités
     sitemap: Plan du site
     catalogApiDocPage: Documentation d'API
     standardPage: Page standard

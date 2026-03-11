@@ -7,7 +7,7 @@
       :title="errorTitle"
       :link="{
         type: 'standard',
-        subtype: 'event',
+        subtype: 'event-catalog',
         title: t('backToEvents')
       }"
     />
@@ -28,7 +28,7 @@ const slug = route.params.slug as string
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('event', slug)
+const getPageImageSrc = providePageImageSrc('event', slug)
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, { watch: false })
 provide('page-config', pageConfigFetch)
@@ -42,7 +42,7 @@ const errorTitle = computed(() => {
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
   setBreadcrumbs([
-    { type: 'standard', subtype: 'event' },
+    { type: 'standard', subtype: 'event-catalog' },
     { title: pageConfig?.title || t('event') }
   ])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
@@ -51,18 +51,19 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('event')) + ' - ' + portalConfig.value.title,
   description: () => pageConfigFetch.data.value?.description,
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined,
   ogType: 'article'
 })
 </script>
 
 <i18n lang="yaml">
   en:
-    backToEvents: Back to Events List
+    backToEvents: Go to events list
     event: Event
     eventNotFound: The requested event was not found
     eventError: An error occurred while loading the event
   fr:
-    backToEvents: Retourner à la liste des événements
+    backToEvents: Aller à la liste des événements
     event: Événement
     eventNotFound: L'événement demandé n'a pas été trouvé
     eventError: Une erreur est survenue lors du chargement de l'événement

@@ -22,6 +22,18 @@
               />
             </v-defaults-provider>
           </template>
+
+          <template #image-upload="{ node, statefulLayout, width, height, label }">
+            <image-upload
+              :model-value="node.data"
+              :label="label"
+              :width="width"
+              :height="height"
+              :resource="pageRef"
+              hide-details="auto"
+              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+            />
+          </template>
         </vjsf-page-config>
       </v-form>
     </portal-preview-provider>
@@ -40,6 +52,7 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
+const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
 const { pageFetch, patchPage } = usePageStore()
 
