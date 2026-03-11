@@ -54,6 +54,22 @@ usePageSeo({
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined,
   ogType: 'article'
 })
+
+useJsonLd(() => {
+  const pageConfig = pageConfigFetch.data.value
+  if (!pageConfig) return []
+  const base = useRequestURL()
+
+  return createNewsArticleSchema({
+    id: `${base.origin}/news/${slug}`,
+    title: pageConfig.title,
+    description: pageConfig.description,
+    url: base.href,
+    image: pageConfig.thumbnail ? getPageImageSrc(pageConfig.thumbnail) : undefined,
+    datePublished: pageConfig.newsMetadata?.date,
+    author: { name: portalConfig.value.title, url: base.origin }
+  })
+})
 </script>
 
 <i18n lang="yaml">

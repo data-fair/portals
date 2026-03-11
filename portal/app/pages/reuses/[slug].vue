@@ -36,9 +36,7 @@ const { setBreadcrumbs } = useNavigationStore()
 
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
-const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, {
-  watch: false
-})
+const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, { watch: false })
 const reuseConfig = computed(() => reuseFetch.data.value?.config)
 
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
@@ -76,33 +74,21 @@ usePageSeo({
 useJsonLd(() => {
   const config = reuseConfig.value
   if (!config) return []
-  
-  const schemas: JsonLdGraph[] = [
-    createReuseSchema({
-      id: reuseFetch.data.value?._id || slug,
-      title: config.title,
-      description: config._descriptionHtml || config.description,
-      url: useRequestURL().href,
-      datePublished: reuseFetch.data.value?.createdAt,
-      dateModified: reuseFetch.data.value?.updatedAt,
-      author: config.author ? { name: config.author } : undefined,
-      keywords: config.keywords || [],
-      basedOnDatasets: datasets.value.map(d => ({
-        id: d.id,
-        url: useRequestURL().origin + `/datasets/${d.slug}`,
-        name: d.title
-      }))
-    })
-  ]
-  
-  // Add breadcrumb schema
-  schemas.push(createBreadcrumbSchema([
-    { name: portalConfig.value.title, url: useRequestURL().origin },
-    { name: t('reuse'), url: useRequestURL().origin + '/reuses' },
-    { name: config.title, url: useRequestURL().href }
-  ]))
-  
-  return schemas
+  const base = useRequestURL()
+
+  return createReuseSchema({
+    id: reuseFetch.data.value?._id || slug,
+    title: config.title,
+    description: config._descriptionHtml || config.description,
+    url: base.href,
+    dateModified: reuseFetch.data.value?.updatedAt,
+    author: config.author ? { name: config.author } : undefined,
+    basedOnDatasets: config.datasets?.map(d => ({
+      id: d.id,
+      url: `${base.origin}/datasets/${d.id}`,
+      name: d.title || d.id
+    }))
+  })
 })
 
 // Set Last-Modified header based on updatedAt

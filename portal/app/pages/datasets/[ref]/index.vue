@@ -450,7 +450,7 @@ const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
@@ -517,6 +517,7 @@ usePageSeo({
 const header = useResponseHeader('Last-Modified')
 if (dataset.value?.updatedAt) header.value = new Date(dataset.value?.updatedAt).toUTCString()
 
+const requestURL = useRequestURL()
 useJsonLd(() => {
   const d = dataset.value
   if (!d) return []
@@ -525,7 +526,7 @@ useJsonLd(() => {
     id: d.id,
     title: d.title,
     description: d.description || d.summary,
-    url: useRequestURL().href,
+    url: requestURL.href,
     image: d.image || thumbnailUrl.value,
     datePublished: d.createdAt,
     dateModified: d.updatedAt,
@@ -545,7 +546,7 @@ useJsonLd(() => {
       '@type': 'WebApplication',
       '@id': app.id,
       name: app.title,
-      url: useRequestURL().origin + `/applications/${app.slug}`,
+      url: requestURL.origin + `/applications/${app.slug}`,
       applicationCategory: 'DataVisualization'
     })
   }
@@ -553,21 +554,12 @@ useJsonLd(() => {
     subjectOf.push({
       '@type': 'CreativeWork',
       name: r.config.title,
-      url: useRequestURL().origin + `/reuses/${r.slug}`
+      url: requestURL.origin + `/reuses/${r.slug}`
     })
   }
   if (subjectOf.length) (ds as any).subjectOf = subjectOf
 
-  const schemas = [ds]
-
-  // Add breadcrumb schema
-  schemas.push(createBreadcrumbSchema([
-    { name: portalConfig.value.title, url: useRequestURL().origin },
-    { name: t('dataset'), url: useRequestURL().origin + '/datasets' },
-    { name: d.title, url: useRequestURL().href }
-  ]))
-
-  return schemas
+  return ds
 })
 
 </script>

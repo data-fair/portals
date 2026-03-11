@@ -37,15 +37,15 @@ usePageSeo({
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 
+const requestURL = useRequestURL()
 useJsonLd(() => createDataCatalogSchema({
-  id: `${useRequestURL().origin}/datasets`,
+  id: `${requestURL.origin}/datasets`,
   title: pageConfigFetch.data.value?.title || t('datasets'),
   description: pageConfigFetch.data.value?.description || t('seoDescription'),
-  url: useRequestURL().href,
+  url: requestURL.href,
   creator: {
     name: portalConfig.value.title
-  },
-  datePublished: new Date().toISOString()
+  }
 }))
 
 </script>

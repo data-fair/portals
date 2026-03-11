@@ -17,6 +17,47 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const isIframe = options.isIframe
   const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
 
+  // Emit BreadcrumbList JSON-LD from resolved breadcrumbs (SSR only)
+  if (import.meta.server) {
+    const origin = useRequestURL().origin
+    const breadcrumbJsonLd = computed(() => {
+      if (!_breadcrumbs.value.length) return undefined
+      const homeLabel = $portal.config.breadcrumb.showHome
+        ? ($portal.config.breadcrumb.homeLabel || 'Home')
+        : undefined
+
+      const items: Array<{ name: string; url: string }> = []
+      if (homeLabel) items.push({ name: homeLabel, url: origin })
+
+      for (const item of _breadcrumbs.value) {
+        if (typeof item === 'string') {
+          items.push({ name: item, url: origin })
+        } else {
+          const title = item.title || ''
+          const path = (item.to as string) || item.href || ''
+          const url = path.startsWith('http') ? path : `${origin}${path}`
+          items.push({ name: title, url })
+        }
+      }
+      return JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: items.map((entry, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: entry.name,
+          item: entry.url
+        }))
+      })
+    })
+
+    useHead({
+      script: computed(() => breadcrumbJsonLd.value
+        ? [{ type: 'application/ld+json', innerHTML: breadcrumbJsonLd.value, key: 'breadcrumb-jsonld' }]
+        : [])
+    })
+  }
+
   const setBreadcrumbs = (breadcrumbInputs: (SimpleLinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
     const locale = $i18n.locale.value as 'fr' | 'en'

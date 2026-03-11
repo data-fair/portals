@@ -201,36 +201,28 @@ usePageSeo({
 const header = useResponseHeader('Last-Modified')
 if (application.value?.updatedAt) header.value = new Date(application.value?.updatedAt).toUTCString()
 
+const requestURL = useRequestURL()
 useJsonLd(() => {
   const app = application.value
   if (!app) return []
 
-  const schemas = [
-    createWebApplicationSchema({
-      id: app.id,
-      title: app.title,
-      description: app.description || app.summary,
-      owner: app.owner,
-      url: useRequestURL().href,
-      createdAt: app.createdAt,
-      updatedAt: app.updatedAt,
-      image: thumbnailUrl.value,
-      screenshot: `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`,
-      keywords: app.topics?.map(t => t.title) || [],
-      datasets: datasets.value.map(d => ({
-        id: d.id,
-        url: useRequestURL().origin + `/datasets/${d.slug}`,
-        name: d.title
-      }))
-    }),
-    createBreadcrumbSchema([
-      { name: portalConfig.value.title, url: useRequestURL().origin },
-      { name: t('application'), url: useRequestURL().origin + '/applications' },
-      { name: app.title, url: useRequestURL().href }
-    ])
-  ]
-
-  return schemas
+  return createWebApplicationSchema({
+    id: app.id,
+    title: app.title,
+    description: app.description || app.summary,
+    owner: app.owner,
+    url: requestURL.href,
+    createdAt: app.createdAt,
+    updatedAt: app.updatedAt,
+    image: thumbnailUrl.value,
+    screenshot: `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`,
+    keywords: app.topics?.map(t => t.title) || [],
+    datasets: datasets.value.map(d => ({
+      id: d.id,
+      url: requestURL.origin + `/datasets/${d.slug}`,
+      name: d.title
+    }))
+  })
 })
 
 </script>

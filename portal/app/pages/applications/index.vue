@@ -37,6 +37,16 @@ usePageSeo({
   ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 
+useJsonLd(() => {
+  const base = useRequestURL()
+  return createDataCatalogSchema({
+    id: `${base.origin}/applications`,
+    title: pageConfigFetch.data.value?.title || t('applications'),
+    description: pageConfigFetch.data.value?.description || t('seoDescription'),
+    url: base.href,
+    creator: { name: portalConfig.value.title }
+  })
+})
 </script>
 
 <i18n lang="yaml">

@@ -36,16 +36,13 @@ usePageSeo({
 })
 
 useJsonLd(() => {
-  if (!reuses.data.value) return []
   const base = useRequestURL()
-  return createItemListSchema({
+  return createDataCatalogSchema({
     id: `${base.origin}/reuses`,
-    title: t('reuses'),
-    numberOfItems: reuses.data.value.total || reuses.data.value.results.length,
-    items: reuses.data.value.results.map(r => ({
-      name: r.config.title,
-      url: `${base.origin}/reuses/${r.slug}`
-    }))
+    title: pageConfigFetch.data.value?.title || t('reuses'),
+    description: pageConfigFetch.data.value?.description || t('seoDescription'),
+    url: base.href,
+    creator: { name: portalConfig.value.title }
   })
 })
 </script>

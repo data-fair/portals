@@ -18,7 +18,7 @@ export type Application = {
   title: string
   summary?: string
   description?: string
-  createdAt: string
+  createdAt?: string
   updatedAt: string
   image?: string
   url: string
@@ -46,6 +46,7 @@ export type Dataset = {
   title: string
   summary?: string
   description?: string
+  createdAt?: string
   updatedAt: string
   dataUpdatedAt?: string
   owner: Account

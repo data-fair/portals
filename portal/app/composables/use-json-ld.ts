@@ -324,17 +324,80 @@ export const createItemListSchema = (options: {
 }
 
 /**
- * Create a BreadcrumbList schema for navigation
+ * Create a NewsArticle schema for news detail pages
  */
-export const createBreadcrumbSchema = (items: Array<{ name: string; url: string }>): JsonLdGraph => {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: item.url
-    }))
+export const createNewsArticleSchema = (options: {
+  id: string
+  title: string
+  description?: string
+  url?: string
+  image?: string
+  datePublished?: string
+  dateModified?: string
+  author?: {
+    name: string
+    url?: string
   }
+}): JsonLdGraph => {
+  const schema: JsonLdGraph = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    '@id': options.id,
+    headline: options.title,
+    description: options.description || ''
+  }
+
+  if (options.url) schema.url = options.url
+  if (options.image) schema.image = options.image
+  if (options.datePublished) schema.datePublished = options.datePublished
+  if (options.dateModified) schema.dateModified = options.dateModified
+  if (options.author) {
+    schema.author = {
+      '@type': 'Organization',
+      name: options.author.name,
+      ...(options.author.url && { url: options.author.url })
+    }
+  }
+
+  return schema
+}
+
+/**
+ * Create a WebSite schema for the home page
+ */
+export const createWebSiteSchema = (options: {
+  id: string
+  title: string
+  description?: string
+  url: string
+}): JsonLdGraph => {
+  const schema: JsonLdGraph = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': options.id,
+    name: options.title,
+    url: options.url
+  }
+  if (options.description) schema.description = options.description
+  return schema
+}
+
+/**
+ * Create a WebPage schema for generic content pages
+ */
+export const createWebPageSchema = (options: {
+  id: string
+  title: string
+  description?: string
+  url?: string
+}): JsonLdGraph => {
+  const schema: JsonLdGraph = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': options.id,
+    name: options.title
+  }
+  if (options.description) schema.description = options.description
+  if (options.url) schema.url = options.url
+  return schema
 }
