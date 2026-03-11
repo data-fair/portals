@@ -632,7 +632,7 @@ export default {
         // },
         // notStatic: {
         //   title: 'Agrandissement des titres',
-        //   description: 'Si activé, les titres des panneaux actifs s’agrandissent.'
+        //   description: 'Si activé, les titres des panneaux actifs s'agrandissent.'
         //   type: 'boolean',
         //   default: false
         // },

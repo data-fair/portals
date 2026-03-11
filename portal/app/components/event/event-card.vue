@@ -1,8 +1,8 @@
 <template>
   <v-card
     :to="!preview ? `/event/${pageConfig.eventMetadata?.slug}` : undefined"
-    :elevation="cardConfig.elevation ?? 0"
-    :rounded="cardConfig.rounded ?? 'default'"
+    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
+    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
     class="h-100 d-flex flex-column"
     link
   >
@@ -81,7 +81,7 @@ const { pageConfig, cardConfig, isPortalConfig } = defineProps<{
 }>()
 
 const { dayjs } = useLocaleDayjs()
-const { preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 
