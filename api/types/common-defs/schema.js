@@ -218,8 +218,7 @@ export default {
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } },
-          default: 1
+          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',

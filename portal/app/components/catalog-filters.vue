@@ -9,8 +9,8 @@
       v-model="search"
       :append-inner-icon="mdiMagnify"
       :label="t('search')"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       autofocus
       clearable
@@ -32,8 +32,8 @@
       :items="conceptsItems"
       :label="t('filters.concepts')"
       :no-data-text="t('filters.noConcepts')"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
       clearable
@@ -54,8 +54,8 @@
       :items="baseApplicationItems"
       :label="t('filters.baseApplication')"
       :no-data-text="t('filters.noBaseApplication')"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
       clearable
@@ -78,8 +78,8 @@
       :items="facets.topics"
       :item-title="(item) => `${item.value.title} (${item.count})`"
       :item-value="(item) => item.value.id"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
       clearable
@@ -118,8 +118,8 @@
       :items="facets.keywords"
       :item-title="(item) => `${item.value} (${item.count})`"
       item-value="value"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
       clearable
@@ -140,8 +140,8 @@
       :label="portalConfig.labelsOverrides?.owner || t('filters.owners')"
       :no-data-text="t(`filters.${portalConfig.labelsOverrides?.owner ? 'noChoices' : 'noOwners'}`)"
       :items="ownersItems"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
       clearable
@@ -174,8 +174,8 @@
     <v-checkbox
       v-model="filters.includePast.value"
       :label="t('filters.includePastEvents')"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       color="primary"
       hide-details
     />
@@ -191,8 +191,8 @@
       v-model="sort"
       :items="sortItems"
       :label="t('sort.by')"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       hide-details
       clearable
@@ -201,8 +201,8 @@
         <!-- Order toggle -->
         <v-btn-toggle
           v-model="order"
-          :density="config.filters?.density || 'comfortable'"
-          :rounded="config.filters?.rounded"
+          :density="config.filters?.density ?? portalConfig.defaults?.density"
+          :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
           variant="outlined"
           class="h-100"
           divided
@@ -232,8 +232,8 @@
   >
     <v-btn-toggle
       v-model="order"
-      :density="config.filters?.density || 'comfortable'"
-      :rounded="config.filters?.rounded"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       class="w-100"
       divided

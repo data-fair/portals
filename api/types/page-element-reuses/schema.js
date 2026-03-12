@@ -85,12 +85,8 @@ export default {
                 ]
               }
             },
-            density: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
-            },
-            rounded: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
-            }
+            density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
+            rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' }
           }
         },
         pagination: {

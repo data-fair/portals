@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :rounded="metadataConfig.rounded"
-    :elevation="metadataConfig.elevation"
+    :rounded="metadataConfig.rounded ?? portalConfig.defaults?.rounded"
+    :elevation="metadataConfig.elevation ?? portalConfig.defaults?.elevation"
   >
     <!-- Application Metadata -->
     <v-row class="ma-0">
