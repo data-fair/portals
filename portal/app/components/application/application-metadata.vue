@@ -69,6 +69,10 @@
           v-if="!$vuetify.display.smAndDown"
           :application="application"
         />
+        <application-install
+          v-if="$vuetify.display.smAndDown"
+          :application="application"
+        />
         <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
