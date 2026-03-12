@@ -411,7 +411,7 @@ const type = computed(() => {
 const referencesFetch = useFetch<{ results: Array<{ _id: string, title: string, config: { description?: string } }> }>(
   $apiPath + '/pages',
   {
-    query: computed(() => ({ type: type.value, isReference: true, select: '_id,title,config.description' })),
+    query: computed(() => ({ type: type.value, isReference: true, select: '_id,title,config.description', size: 1000 })),
     notifError: false,
     immediate: false
   }
@@ -421,7 +421,7 @@ const referencesFetch = useFetch<{ results: Array<{ _id: string, title: string, 
 const userPagesFetch = useFetch<{ results: Array<{ _id: string, title: string, config: { description?: string } }> }>(
   $apiPath + '/pages',
   {
-    query: computed(() => ({ type: type.value, select: '_id,title,config.description' })),
+    query: computed(() => ({ type: type.value, select: '_id,title,config.description', size: 1000 })),
     notifError: false,
     immediate: false
   }
