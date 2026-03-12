@@ -7,7 +7,7 @@ export default {
     owner: {
       type: 'string',
       title: 'Propriétaire',
-      description: 'Surcharge le terme `propriétaire`, utilisé dans les métadonnées des jeux de données et des applications ainsi que dans les filtres associés.',
+      description: 'Surcharge le terme `propriétaire`, utilisé dans les métadonnées des jeux de données et des visualisations ainsi que dans les filtres associés.',
     }
   }
 }

@@ -8,7 +8,7 @@ export default {
       {
         title: 'Application Card',
         'x-i18n-title': {
-          fr: "Vignette d'une application"
+          fr: "Vignette d'une visualisation"
         },
         children: [
           'card',
