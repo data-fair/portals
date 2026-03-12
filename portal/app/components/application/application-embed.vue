@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('embed') + ' - ' + application.title"
-    :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
+    :action-style="portalConfig.applications.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
     :resource-title="application.title"
     :text="t('embed')"
