@@ -43,7 +43,7 @@ export default {
         mode: { type: 'string', const: 'member' },
         type: { type: 'string', const: 'organization' },
         department: { type: 'string', const: '*' },
-        roles: { type: 'array', items: { type: 'string' }, maxItems: 0 },
+        roles: { type: 'array', const: [] },
         id: {
           type: 'string',
           layout: {
@@ -71,7 +71,7 @@ export default {
           layout: {
             getItems: {
               url: '/simple-directory/api/organization/${context.owner.id}/departments',
-              itemsResults: '[...data.results, {id: "*", name: "Tous les départements"}]',
+              itemsResults: '[...data.results, {id: "*", name: "Tous les départements"}, {id: "-", name: "Racine de l\'organisation uniquement"}]',
               itemTitle: 'item.name',
               itemValue: 'item.id'
             }
