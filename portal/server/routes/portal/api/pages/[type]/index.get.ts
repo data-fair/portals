@@ -1,6 +1,8 @@
 import type { Page } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
+import { session } from '~~/server/plugins/session'
+import { buildPortalPagePermissionQuery } from '~~/server/utils/page-permissions'
 
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal
@@ -13,12 +15,18 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event)
 
+  // Read session for permission filtering
+  const cookieHeader = getRequestHeader(event, 'cookie')
+  const sessionState = await session.readStateFromCookie(cookieHeader).catch(() => null)
+  const permissionQuery = buildPortalPagePermissionQuery(sessionState)
+
   // Requête de base
   const mongoQuery: Record<string, unknown> = {
     type,
     'owner.type': portal.owner.type,
     'owner.id': portal.owner.id,
-    [portal.staging ? 'requestedPortals' : 'portals']: portal._id
+    [portal.staging ? 'requestedPortals' : 'portals']: portal._id,
+    ...permissionQuery
   }
 
   // Pagination

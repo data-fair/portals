@@ -1,5 +1,7 @@
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
+import { session } from '~~/server/plugins/session'
+import { buildPortalPagePermissionQuery } from '~~/server/utils/page-permissions'
 
 const STANDARD_PAGE_TYPES = [
   'contact',
@@ -20,11 +22,17 @@ type StandardPageType = typeof STANDARD_PAGE_TYPES[number]
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal
 
+  // Read session for permission filtering
+  const cookieHeader = getRequestHeader(event, 'cookie')
+  const sessionState = await session.readStateFromCookie(cookieHeader).catch(() => null)
+  const permissionQuery = buildPortalPagePermissionQuery(sessionState)
+
   const mongoQuery = {
     'owner.type': portal.owner.type,
     'owner.id': portal.owner.id,
     [portal.staging ? 'requestedPortals' : 'portals']: portal._id,
-    type: { $in: [...STANDARD_PAGE_TYPES] }
+    type: { $in: [...STANDARD_PAGE_TYPES] },
+    ...permissionQuery
   }
 
   const pages = await portalMongo.pages.find(

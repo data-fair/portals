@@ -2,6 +2,8 @@ import type { Page } from '#api/types/page'
 import type { Image } from '#api/types/image'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
+import { session } from '~~/server/plugins/session'
+import { checkPageAccess } from '~~/server/utils/page-permissions'
 
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal
@@ -18,12 +20,24 @@ export default defineEventHandler(async (event) => {
   // Standard types do not have a slug
   if (['event', 'news', 'generic'].includes(type)) mongoQuery[`config.${type}Metadata.slug`] = slug
 
-  const page = await portalMongo.pages.findOne<Pick<Page, '_id'>>(
+  const page = await portalMongo.pages.findOne<Pick<Page, '_id' | 'public' | 'permissions'>>(
     mongoQuery,
-    { projection: { _id: 1 } }
+    { projection: { _id: 1, public: 1, permissions: 1 } }
   )
 
   if (!page) throw createError({ status: 404, message: 'Page not found' })
+
+  if (!page.public) {
+    const cookieHeader = getRequestHeader(event, 'cookie')
+    const sessionState = await session.readStateFromCookie(cookieHeader).catch(() => null)
+    const access = checkPageAccess(sessionState, page)
+    if (access === 'unauthenticated') {
+      throw createError({ status: 401, message: 'Authentication required' })
+    }
+    if (access === 'forbidden') {
+      throw createError({ status: 403, message: 'Access denied' })
+    }
+  }
 
   const imageId = getRouterParam(event, 'id')
   const image = await portalMongo.images.findOne<Pick<Image, 'mimeType' | 'data'>>(
