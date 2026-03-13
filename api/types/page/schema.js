@@ -47,6 +47,27 @@ export default {
     requestedPortals: {
       type: 'array',
       items: { type: 'string' }
+    },
+    public: {
+      type: 'boolean',
+      default: true,
+      title: 'Public'
+    },
+    permissions: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['access', 'operation'],
+        properties: {
+          access: { $ref: 'https://github.com/data-fair/portals/access-ref' },
+          operation: {
+            type: 'array',
+            items: { type: 'string', enum: ['read', 'write'] }
+          }
+        }
+      },
+      default: []
     }
   }
 }
