@@ -7,7 +7,7 @@ export default {
   oneOf: [
     {
       title: "Un membre de l'organisation",
-      layout: { if: "${context.owner.type} === 'organization'" },
+      layout: { if: "context.owner.type === 'organization'" },
       required: ['mode', 'type', 'id'],
       properties: {
         mode: { type: 'string', const: 'member' },
@@ -20,7 +20,7 @@ export default {
               itemsResults: 'data.results',
               itemTitle: 'item.name',
               itemValue: 'item.id',
-              itemIcon: '/simple-directory/api/avatars/user/${item.id}/avatar.png'
+              itemIcon: '`/simple-directory/api/avatars/user/${item.id}/avatar.png`'
             }
           }
         }
@@ -37,7 +37,7 @@ export default {
     },
     {
       title: 'Une organisation partenaire',
-      layout: { if: "${context.owner.type} === 'organization'" },
+      layout: { if: "context.owner.type === 'organization'" },
       required: ['mode', 'type', 'id'],
       properties: {
         mode: { type: 'string', const: 'member' },
@@ -52,7 +52,7 @@ export default {
               itemsResults: 'data.results',
               itemTitle: 'item.name',
               itemValue: 'item.id',
-              itemIcon: '/simple-directory/api/avatars/organization/${item.id}/avatar.png'
+              itemIcon: '`/simple-directory/api/avatars/organization/${item.id}/avatar.png`'
             }
           }
         }
@@ -60,7 +60,7 @@ export default {
     },
     {
       title: 'Un role ou département de mon organisation',
-      layout: { if: "${context.owner.type} === 'organization'" },
+      layout: { if: "context.owner.type === 'organization'" },
       required: ['mode', 'type', 'id'],
       properties: {
         mode: { type: 'string', const: 'internal' },

@@ -112,7 +112,7 @@ import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { patchPage, page, pageUrl } = usePageStore()
+const { patchPage, page, pageUrl, canAdminPage, canWritePage } = usePageStore()
 
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging'>
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
@@ -146,10 +146,11 @@ const isPublished = (portal: PartialPortal) => {
   return page.value.portals.includes(portal._id) || (portal.staging && page.value.requestedPortals.includes(portal._id))
 }
 
+// Restricted to contrib that have write access (or admin)
 const canPublish = (portal: PartialPortal) => {
-  const role = getAccountRole(session.state, portal.owner)
-  if (role === 'contrib' && portal.staging) return true
-  return role === 'admin'
+  if (!page.value) return
+  if (portal.staging) return canWritePage.value && getAccountRole(session.state, page.value.owner) === 'contrib'
+  return canAdminPage.value
 }
 
 // Check if unpublishing is allowed (cannot unpublish home page)
@@ -159,9 +160,8 @@ const canUnpublish = (portal: PartialPortal) => {
   return true
 }
 
-const canRequestPublication = (portal: PartialPortal) => {
-  const role = getAccountRole(session.state, portal.owner)
-  return role === 'contrib' || role === 'admin'
+const canRequestPublication = (_portal: PartialPortal) => {
+  return canWritePage.value
 }
 
 const togglePortals = (portal: PartialPortal) => {

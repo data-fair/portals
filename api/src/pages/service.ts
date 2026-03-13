@@ -8,7 +8,7 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
-import { canReadPage, canWritePage, traversePageElements } from './operations.ts'
+import { canReadPage, canWritePage, traversePageElements, getUserPermissions } from './operations.ts'
 
 const debug = debugModule('pages')
 
@@ -19,8 +19,9 @@ export const getPage = async (sessionState: SessionStateAuthenticated, id: strin
     throw httpError(403, `you don't have read access to page "${id}"`)
   }
   const accountRole = getAccountRole(sessionState, page.owner, { acceptDepAsRoot: true })
+  const userPermissions = getUserPermissions(sessionState, page)
   if (accountRole !== 'admin') delete page.permissions
-  return page
+  return { ...page, userPermissions }
 }
 
 export const assertPageWrite = (session: SessionStateAuthenticated, page: Page) => {

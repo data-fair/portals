@@ -6,8 +6,8 @@
         :items="[
           { text: t('tabs.preview'), value: 'preview' },
           { text: t('tabs.previewDraft'), value: 'preview-draft' },
-          // { text: t('tabs.permissions'), value: 'permissions' },
-          { text: t('tabs.publications'), value: 'publications' },
+          ...(canAdminPage ? [{ text: t('tabs.permissions'), value: 'permissions' }] : []),
+          ...(canWritePage ? [{ text: t('tabs.publications'), value: 'publications' }] : []),
           { text: t('tabs.informations'), value: 'informations' }
         ]"
       />
@@ -24,9 +24,9 @@
             </v-tabs-window-item>
           </portal-preview-provider>
 
-          <!-- <v-tabs-window-item value="permissions">
-              TODO: add permissions management
-            </v-tabs-window-item> -->
+          <v-tabs-window-item value="permissions">
+            <page-edit-permissions />
+          </v-tabs-window-item>
 
           <v-tabs-window-item value="publications">
             <page-edit-publication />
@@ -48,7 +48,7 @@
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
-const { pageFetch } = usePageStore()
+const { pageFetch, canAdminPage, canWritePage } = usePageStore()
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 watch(pageFetch.data, (page) => {

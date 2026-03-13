@@ -19,7 +19,7 @@ export default {
     },
     results: {
       type: 'array',
-      items: { $ref: 'https://github.com/data-fair/portals/page' }
+      items: { $ref: 'https://github.com/data-fair/portals/pages/get-page-res' }
     }
   },
   $defs: {

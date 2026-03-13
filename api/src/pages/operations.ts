@@ -54,6 +54,19 @@ export const canWritePage = (session: SessionStateAuthenticated, page: Page): bo
   )
 }
 
+export const getUserPermissions = (session: SessionStateAuthenticated, page: Page): ('read' | 'write')[] => {
+  const accountRole = getAccountRole(session, page.owner, { acceptDepAsRoot: true })
+  if (accountRole === 'admin') return ['read', 'write']
+  const ops = new Set<'read' | 'write'>()
+  if (page.public) ops.add('read')
+  for (const perm of page.permissions ?? []) {
+    if (matchAccessRef(session, perm.access)) {
+      for (const op of perm.operation) ops.add(op as 'read' | 'write')
+    }
+  }
+  return [...ops]
+}
+
 export const buildPageAccessFilter = (session: SessionStateAuthenticated): Record<string, any> => {
   return {
     $or: [

@@ -1,4 +1,6 @@
 import type { Page } from '#api/types/page'
+import type { PageEnriched } from '#api/doc/pages/get-page-res'
+import { getAccountRole } from '@data-fair/lib-vue/session'
 import equal from 'fast-deep-equal'
 
 // we do not use SSR, so we can use a simple module level singleton
@@ -6,9 +8,10 @@ export type PageStore = ReturnType<typeof createPageStore>
 const pageStoreKey = Symbol('page-store')
 
 const createPageStore = (id: string) => {
-  const pageFetch = useFetch<Page>($apiPath + '/pages/' + id)
+  const pageFetch = useFetch<PageEnriched>($apiPath + '/pages/' + id)
+  const session = useSessionAuthenticated()
 
-  const page = ref<Page | null>()
+  const page = ref<PageEnriched | null>()
   watch(pageFetch.data, () => {
     page.value = pageFetch.data.value
   })
@@ -48,7 +51,18 @@ const createPageStore = (id: string) => {
     }
   })
 
-  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl }
+  const canAdminPage = computed(() => {
+    if (!page.value) return false
+    return getAccountRole(session.state, page.value.owner) === 'admin' || !!session.state.user?.adminMode
+  })
+
+  const canWritePage = computed(() => {
+    if (!page.value) return false
+    if (canAdminPage.value) return true
+    return page.value.userPermissions?.includes('write') ?? false
+  })
+
+  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl, canAdminPage, canWritePage }
 }
 
 export const providePageStore = (id: string) => {

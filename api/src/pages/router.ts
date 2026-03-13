@@ -8,7 +8,7 @@ import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, getAccountRole } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPage, assertPageWrite, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
-import { buildDefaultPermissions, buildPageAccessFilter } from './operations.ts'
+import { buildDefaultPermissions, buildPageAccessFilter, getUserPermissions } from './operations.ts'
 import { pageFacets } from './aggregations.ts'
 
 const router = Router()
@@ -65,7 +65,14 @@ router.get('', async (req, res, next) => {
     mongo.pages.aggregate(pageFacets(query, showAll)).toArray()
   ])
 
-  res.json({ results, count, facets: facets[0] })
+  const enrichedResults = results.map(page => {
+    const userPermissions = getUserPermissions(session, page as Page)
+    const accountRole = getAccountRole(session, (page as Page).owner, { acceptDepAsRoot: true })
+    if (accountRole !== 'admin') delete (page as any).permissions
+    return { ...page, userPermissions }
+  })
+
+  res.json({ results: enrichedResults, count, facets: facets[0] })
 })
 
 router.post('', async (req, res, next) => {
