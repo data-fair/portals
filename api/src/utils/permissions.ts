@@ -28,7 +28,7 @@ export const matchAccessRef = (session: SessionStateAuthenticated, accessRef: Ac
     if (
       accessRef.roles &&
       accessRef.roles.length > 0 &&
-      accessRef.roles.includes(session.accountRole)
+      !accessRef.roles.includes(session.accountRole)
     ) return false
 
     return true

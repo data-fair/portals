@@ -2,20 +2,29 @@ import type { ImageRef } from '#types/image-ref/index.ts'
 import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
 import debugModule from 'debug'
 import slug from 'slugify'
-import { assertAccountRole, httpError, type SessionStateAuthenticated } from '@data-fair/lib-express'
+import { assertAccountRole, getAccountRole, httpError, type SessionStateAuthenticated } from '@data-fair/lib-express'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
+import { canReadPage, canWritePage, traversePageElements } from './operations.ts'
 
 const debug = debugModule('pages')
 
-export const getPageAsContrib = async (sessionState: SessionStateAuthenticated, id: string) => {
+export const getPage = async (sessionState: SessionStateAuthenticated, id: string) => {
   const page = await mongo.pages.findOne({ _id: id })
   if (!page) throw httpError(404, `page "${id}" not found`)
-  assertAccountRole(sessionState, page.owner, ['admin', 'contrib'])
+  if (!canReadPage(sessionState, page)) {
+    throw httpError(403, `you don't have read access to page "${id}"`)
+  }
+  const accountRole = getAccountRole(sessionState, page.owner, { acceptDepAsRoot: true })
+  if (accountRole !== 'admin') delete page.permissions
   return page
+}
+
+export const assertPageWrite = (session: SessionStateAuthenticated, page: Page) => {
+  if (!canWritePage(session, page)) throw httpError(403, `you don't have write access to page "${page._id}"`)
 }
 
 /**
@@ -332,36 +341,6 @@ const getElementsImageRefs = async (pageElements: PageElement[]) => {
     if (pageElement.type === 'dataset-card' && pageElement.cardConfig?.thumbnail?.default) imageRefs.push(pageElement.cardConfig.thumbnail.default)
   })
   return imageRefs
-}
-
-const traversePageElements = async (pageElements: PageElement[] | undefined, callback: (pageElement: PageElement) => Promise<void> | void) => {
-  if (!pageElements) return
-  for (const element of pageElements) {
-    await callback(element)
-    if (element.type === 'card') await traversePageElements(element.children, callback)
-    if (element.type === 'banner') await traversePageElements(element.children, callback)
-    if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
-    if (element.type === 'datasets-catalog') await traversePageElements(element.advancedFilters, callback)
-    if (element.type === 'applications-catalog') await traversePageElements(element.advancedFilters, callback)
-    if (element.type === 'reuses-catalog') await traversePageElements(element.advancedFilters, callback)
-
-    if (element.type === 'two-columns') {
-      await traversePageElements(element.children, callback)
-      await traversePageElements(element.children2, callback)
-    }
-
-    if (element.type === 'tabs') {
-      for (const tab of element.tabs) {
-        await traversePageElements(tab.children, callback)
-      }
-    }
-
-    if (element.type === 'expansion-panels') {
-      for (const tab of element.panels) {
-        await traversePageElements(tab.children, callback)
-      }
-    }
-  }
 }
 
 const validateMetadata = (page: Page, patch?: Partial<Page>) => {
