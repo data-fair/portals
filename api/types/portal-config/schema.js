@@ -22,7 +22,7 @@ export default {
         children: [{
           title: 'Métadonnées',
           comp: 'card',
-          children: ['title', 'description']
+          children: ['title', 'description', 'llmsFullText']
         },
         {
           title: 'Thématiques',
@@ -208,6 +208,12 @@ export default {
           placeholder: 'Une brève description du portail utilisée par les moteurs de recherche et lors du partage sur les réseaux sociaux.'
         }
       }
+    },
+    llmsFullText: {
+      type: 'string',
+      title: 'Contenu llms.txt',
+      description: 'Contenu markdown qui sera servi sur /llms.txt pour les agents IA. Laissez vide pour ne pas servir ce fichier.',
+      layout: 'markdown'
     },
     allowRobots: {
       type: 'boolean',
