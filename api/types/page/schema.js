@@ -50,7 +50,6 @@ export default {
     },
     public: {
       type: 'boolean',
-      default: true,
       title: 'Public'
     },
     permissions: {

@@ -45,7 +45,7 @@ export const matchAccessRef = (session: SessionStateAuthenticated, accessRef: Ac
  *   { permissions: { $elemMatch: { ...mongoFilterAccessRef(session), operation: 'read' } } }
  */
 export const mongoFilterAccessRef = (session: SessionStateAuthenticated): Record<string, any> => {
-  const userFilter: Record<'$or', Record<string, any>> = {
+  const userFilter: { $or: Record<string, any>[] } = {
     $or: [
       { 'access.type': 'user', 'access.id': session.user.id },
       { 'access.type': 'user', 'access.email': session.user.email }

@@ -75,7 +75,7 @@ export const buildPageAccessFilter = (session: SessionStateAuthenticated): Recor
         permissions: {
           $elemMatch: {
             ...mongoFilterAccessRef(session),
-            operation: 'read'
+            operation: { $in: ['read'] }
           }
         }
       }
