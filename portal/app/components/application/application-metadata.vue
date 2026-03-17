@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :rounded="metadataConfig.rounded"
-    :elevation="metadataConfig.elevation"
+    :rounded="metadataConfig.rounded ?? portalConfig.defaults?.rounded"
+    :elevation="metadataConfig.elevation ?? portalConfig.defaults?.elevation"
   >
     <!-- Application Metadata -->
     <v-row class="ma-0">
@@ -69,6 +69,10 @@
           v-if="!$vuetify.display.smAndDown"
           :application="application"
         />
+        <application-install
+          v-if="$vuetify.display.smAndDown"
+          :application="application"
+        />
         <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
@@ -100,7 +104,7 @@ const baseApplicationFetch = useLocalFetch<{
   title: string
 }>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
 
-const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
+const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const metadataColProps = computed(() => ({
   class: 'py-0 my-2',
   cols: 12,

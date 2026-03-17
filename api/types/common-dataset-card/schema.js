@@ -1,5 +1,5 @@
 export default {
-  $id: 'https://github.com/data-fair/portals/portal-config-dataset-card',
+  $id: 'https://github.com/data-fair/portals/common-dataset-card',
   'x-exports': [],
   title: 'Dataset card',
   type: 'object',
@@ -103,7 +103,7 @@ export default {
               { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
               { key: 'useApplication', cols: { md: 4 } },
-              { markdown: "**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de l'application** (si activé)\n4. **Image par défaut** (si définie)" }
+              { markdown: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de la visualisation** (si activé)\n4. **Image par défaut** (si définie)' }
             ]
           },
         ]
@@ -169,8 +169,8 @@ export default {
         },
         useApplication: {
           type: 'boolean',
-          title: "Utiliser l'image de la première application",
-          description: "Permet d'utiliser l'image de la première application qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
+          title: "Utiliser l'image de la première visualisation",
+          description: "Permet d'utiliser l'image de la première visualisation qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
           layout: 'switch',
           default: false
         }

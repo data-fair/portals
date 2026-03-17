@@ -27,14 +27,16 @@ const createPageStore = (id: string) => {
     switch (page.value?.type) {
       case 'home': return '/'
       case 'contact': return '/contact'
-      case 'privacy-policy': return '/privacy-policy'
       case 'accessibility': return '/accessibility'
-      case 'legal-notice': return '/legal-notice'
-      case 'cookie-policy': return '/cookie-policy'
       case 'terms-of-service': return '/terms-of-service'
+      case 'legal-notice': return '/legal-notice'
+      case 'privacy-policy': return '/privacy-policy'
+      case 'cookie-policy': return '/cookie-policy'
       case 'datasets': return '/datasets'
       case 'applications': return '/applications'
       case 'reuses': return '/reuses'
+      case 'event-catalog': return '/event'
+      case 'news-catalog': return '/news'
       case 'event': return page.value.config.eventMetadata?.slug ? `/event/${page.value.config.eventMetadata.slug}` : undefined
       case 'news': return page.value.config.newsMetadata?.slug ? `/news/${page.value.config.newsMetadata.slug}` : undefined
       case 'generic': {

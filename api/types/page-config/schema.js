@@ -1,13 +1,13 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-config',
-  'x-exports': ['vjsf'],
+  'x-exports': ['types', 'vjsf'],
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true
   },
   'x-vjsf-locales': ['en', 'fr'],
-  title: 'Page config',
+  title: 'PageConfig',
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -17,7 +17,7 @@ export default {
       'x-i18n-title': {
         fr: 'Métadonnées'
       },
-      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'showBreadcrumbs', 'fluid']
+      children: ['title', 'description', 'eventMetadata', 'newsMetadata', 'genericMetadata', 'thumbnail', 'showBreadcrumbs', 'fluid']
     }, {
       title: 'Content',
       'x-i18n-title': {
@@ -122,6 +122,41 @@ export default {
             title: { type: 'string' },
             slug: { type: 'string' }
           }
+        }
+      }
+    },
+    thumbnail: {
+      type: 'object',
+      title: 'Thumbnail',
+      'x-i18n-title': {
+        fr: 'Image'
+      },
+      description: 'Image used for event and news thumbnails. If present, this image will be used for previews on social networks and search engines.',
+      'x-i18n-description': {
+        fr: "Image utilisée pour les vignettes d'événements et d'actualités. Si présente, cette image sera utilisée pour les aperçus sur les réseaux sociaux et les moteurs de recherche."
+      },
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280, label: 'Image' }
+          }
+        },
+        cols: { md: 4 }
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        },
+        mobileAlt: {
+          type: 'boolean'
         }
       }
     },

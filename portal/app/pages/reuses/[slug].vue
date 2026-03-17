@@ -24,21 +24,19 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/portal'
 import type { Reuse } from '#api/types/reuse'
+import type { ImageRef } from '#api/types/image-ref/index.ts'
 import type { VBreadcrumbs } from 'vuetify/components'
 
 const route = useRoute()
 const slug = route.params.slug as string
 
 const { t } = useI18n()
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
-providePageImageSrc('reuses', slug)
 
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
-const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, {
-  watch: false
-})
+const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, { watch: false })
 const reuseConfig = computed(() => reuseFetch.data.value?.config)
 
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
@@ -51,6 +49,13 @@ const errorTitle = computed(() => {
   return t('reuseError')
 })
 
+const getReuseImageSrc = (imageRef: ImageRef, mobile?: boolean) => {
+  let id = imageRef._id
+  if (preview) return `/portals-manager/api/images/${id}/data`
+  if (mobile && imageRef.mobileAlt) id += '-mobile'
+  return `/portal/api/reuses/${slug}/images/${id}`
+}
+
 watch([reusesCatalogExists, reuseConfig], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (reusesCatalogExists.value) { items.push({ type: 'standard', subtype: 'reuses' }) }
@@ -61,7 +66,29 @@ watch([reusesCatalogExists, reuseConfig], () => {
 usePageSeo({
   title: () => (reuseConfig.value?.title || t('reuse')) + ' - ' + portalConfig.value.title,
   description: () => reuseConfig.value?.summary,
+  ogImage: () => reuseConfig.value?.image ? getReuseImageSrc(reuseConfig.value.image) : undefined,
   ogType: 'article'
+})
+
+// Add JSON-LD for reuse
+useJsonLd(() => {
+  const config = reuseConfig.value
+  if (!config) return []
+  const base = useRequestURL()
+
+  return createReuseSchema({
+    id: `${base.origin}/reuses/${slug}`,
+    title: config.title,
+    description: config._descriptionHtml || config.description,
+    url: base.href,
+    dateModified: reuseFetch.data.value?.updatedAt,
+    author: config.author ? { name: config.author } : undefined,
+    basedOnDatasets: config.datasets?.map(d => ({
+      id: `${base.origin}/datasets/${d.id}`,
+      url: `${base.origin}/datasets/${d.id}`,
+      name: d.title || d.id
+    }))
+  })
 })
 
 // Set Last-Modified header based on updatedAt

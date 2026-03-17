@@ -6,7 +6,7 @@ export default {
     fr: 'Réseaux sociaux proposés pour le partage'
   },
   type: 'array',
-  description: 'Ces réseaux sociaux seront proposés aux utilisateurs pour le partage de jeux de données et applications qui sont publiques.',
+  description: 'Ces réseaux sociaux seront proposés aux utilisateurs pour le partage de jeux de données et de visualisations qui sont publiques.',
   items: {
     type: 'string',
     oneOf: [

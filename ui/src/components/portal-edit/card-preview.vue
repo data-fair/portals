@@ -36,6 +36,18 @@
           :card-config="props.cardConfig"
           is-portal-config
         />
+        <event-card
+          v-else-if="props.type === 'event'"
+          :page-config="(item as any).config"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
+        <news-card
+          v-else-if="props.type === 'news'"
+          :page-config="(item as any).config"
+          :card-config="props.cardConfig"
+          is-portal-config
+        />
       </v-col>
     </v-row>
   </preview>
@@ -48,7 +60,7 @@ const session = useSessionAuthenticated()
 const props = defineProps<{
   appendTitle?: string
   cardConfig: any
-  type: 'dataset' | 'application' | 'reuse'
+  type: 'dataset' | 'application' | 'reuse' | 'event' | 'news'
 }>()
 
 const nbColumns = ref(2)
@@ -107,6 +119,28 @@ const items = computed(() => {
       }
     }
 
+    if (props.type === 'event') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          eventMetadata: { slug: baseItem.slug, startDate: new Date().toISOString() }
+        }
+      }
+    }
+
+    if (props.type === 'news') {
+      return {
+        ...baseItem,
+        config: {
+          title: baseItem.title,
+          description: baseItem.summary,
+          newsMetadata: { slug: baseItem.slug, date: new Date().toISOString() }
+        }
+      }
+    }
+
     return baseItem
   })
 })
@@ -123,13 +157,16 @@ const items = computed(() => {
       reuse: "Reuse card preview"
     dataset:
       title: 'Dataset {i}'
+      longTitle: "Here is a dataset with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is a dataset preview example.
       keyword: Keyword {i}
     application:
       title: 'Application {i}'
+      longTitle: "Here is an application with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is an application preview example.
     reuse:
       title: 'Reuse {i}'
+      longTitle: "Here is a reuse with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is a reuse preview example.
       author: "John Doe"
   fr:

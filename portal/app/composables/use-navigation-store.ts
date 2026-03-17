@@ -1,6 +1,6 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
-import type { SimpleLinkItem, LinkItem } from '#api/types/portal-config-links/index.ts'
+import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -16,6 +16,60 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
   const isIframe = options.isIframe
   const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
+
+  // Emit BreadcrumbList JSON-LD from resolved breadcrumbs (SSR only)
+  if (import.meta.server) {
+    const origin = useRequestURL().origin
+    const router = useRouter()
+    const breadcrumbJsonLd = computed(() => {
+      if (!_breadcrumbs.value.length) return undefined
+      const homeLabel = $portal.config.breadcrumb.showHome
+        ? ($portal.config.breadcrumb.homeLabel || 'Home')
+        : undefined
+
+      const items: Array<{ name: string; url: string }> = []
+      if (homeLabel) items.push({ name: homeLabel, url: origin })
+
+      for (const item of _breadcrumbs.value) {
+        if (typeof item === 'string') {
+          items.push({ name: item, url: origin })
+        } else if (!item.disabled) {
+          const title = item.title || ''
+          let path: string
+          if (item.to) path = typeof item.to === 'string' ? item.to : router.resolve(item.to).href
+          else path = item.href || ''
+          if (!path) continue
+          const url = path.startsWith('http') ? path : `${origin}${path}`
+          items.push({ name: title, url })
+        }
+      }
+      // Escape </script sequences to prevent the JSON-LD from breaking out of the script tag
+      return JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: items.map((entry, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: entry.name,
+          item: entry.url
+        }))
+      }).replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--')
+    })
+
+    useHead({
+      script: computed(() => breadcrumbJsonLd.value
+        ? [{ type: 'application/ld+json', innerHTML: breadcrumbJsonLd.value, key: 'breadcrumb-jsonld' }]
+        : [])
+    })
+  }
+
+  // Remove JSON-LD scripts on client-side navigation to prevent unsynced content
+  if (import.meta.client) {
+    const router = useRouter()
+    router.beforeEach(() => {
+      document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove())
+    })
+  }
 
   const setBreadcrumbs = (breadcrumbInputs: (SimpleLinkItem | BreadcrumbItem)[]) => {
     const { $i18n } = useNuxtApp()
@@ -70,16 +124,16 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
         switch (link.subtype) {
           case 'home': return '/'
           case 'contact': return '/contact'
-          case 'privacy-policy': return '/privacy-policy'
           case 'accessibility': return '/accessibility'
-          case 'legal-notice': return '/legal-notice'
-          case 'cookie-policy': return '/cookie-policy'
           case 'terms-of-service': return '/terms-of-service'
+          case 'legal-notice': return '/legal-notice'
+          case 'privacy-policy': return '/privacy-policy'
+          case 'cookie-policy': return '/cookie-policy'
           case 'datasets': return '/datasets'
           case 'applications': return '/applications'
           case 'reuses': return '/reuses'
-          case 'news': return '/news'
-          case 'event': return '/event'
+          case 'event-catalog': return '/event'
+          case 'news-catalog': return '/news'
           case 'sitemap': return '/sitemap'
           case 'catalog-api-doc': return '/catalog-api-doc'
           default: return undefined
@@ -100,16 +154,16 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
         switch (link.subtype) {
           case 'home': return i18n[locale]['homePage']
           case 'contact': return i18n[locale]['contactPage']
-          case 'privacy-policy': return i18n[locale]['privacyPolicyPage']
           case 'accessibility': return i18n[locale]['accessibilityPage']
-          case 'legal-notice': return i18n[locale]['legalNoticePage']
-          case 'cookie-policy': return i18n[locale]['cookiePolicyPage']
           case 'terms-of-service': return i18n[locale]['termsOfServicePage']
+          case 'legal-notice': return i18n[locale]['legalNoticePage']
+          case 'privacy-policy': return i18n[locale]['privacyPolicyPage']
+          case 'cookie-policy': return i18n[locale]['cookiePolicyPage']
           case 'datasets': return i18n[locale]['datasetsPage']
           case 'applications': return i18n[locale]['applicationsPage']
           case 'reuses': return i18n[locale]['reusesPage']
-          case 'news': return i18n[locale]['newsPage']
-          case 'event': return i18n[locale]['eventPage']
+          case 'event-catalog': return i18n[locale]['eventPage']
+          case 'news-catalog': return i18n[locale]['newsPage']
           case 'sitemap': return i18n[locale]['sitemapPage']
           case 'catalog-api-doc': return i18n[locale]['catalogApiDocPage']
           default: return i18n[locale]['standardPage']
@@ -173,11 +227,11 @@ const i18n = {
   en: {
     homePage: 'Home',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Privacy Policy',
     accessibilityPage: 'Accessibility',
-    legalNoticePage: 'Legal Notice',
-    cookiePolicyPage: 'Cookie Policy',
     termsOfServicePage: 'Terms of Service',
+    legalNoticePage: 'Legal Notice',
+    privacyPolicyPage: 'Privacy Policy',
+    cookiePolicyPage: 'Cookie Policy',
     datasetsPage: 'Datasets',
     applicationsPage: 'Applications',
     reusesPage: 'Reuses',
@@ -191,11 +245,11 @@ const i18n = {
   fr: {
     homePage: 'Accueil',
     contactPage: 'Contact',
-    privacyPolicyPage: 'Politique de confidentialité',
     accessibilityPage: 'Accessibilité',
-    legalNoticePage: 'Mentions légales',
-    cookiePolicyPage: 'Politique de cookies',
     termsOfServicePage: "Conditions générales d'utilisation",
+    legalNoticePage: 'Mentions légales',
+    privacyPolicyPage: 'Politique de confidentialité',
+    cookiePolicyPage: 'Politique de cookies',
     datasetsPage: 'Catalogue de données',
     applicationsPage: 'Catalogue de visualisations',
     reusesPage: 'Réutilisations',

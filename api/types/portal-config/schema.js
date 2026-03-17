@@ -1,4 +1,4 @@
-import { linkItemTitle } from '../portal-config-links/schema.js'
+import { linkItemTitle } from '../common-links/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
@@ -80,6 +80,12 @@ export default {
               { cols: 6, children: ['bodyFontFamily', 'headingFontFamily'] },
               { cols: 6, name: 'font-families-preview' }
             ]
+          },
+          {
+            title: 'Style visuel par défaut',
+            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis.",
+            comp: 'card',
+            children: ['defaults']
           },
           {
             title: 'Rendu des liens de navigation',
@@ -187,6 +193,8 @@ export default {
       { title: 'Jeux de données', children: ['datasets'] },
       { title: 'Visualisations', children: ['applications'] },
       { title: 'Réutilisations', children: ['reuses'] },
+      { title: 'Événements', children: ['events'] },
+      { title: 'Actualités', children: ['news'] },
       {
         if: 'data?.authentication !== "none"',
         title: 'Espace personnel',
@@ -194,7 +202,7 @@ export default {
       }
     ]
   },
-  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'breadcrumb', 'footer', 'datasets', 'applications', 'reuses', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
+  required: ['title', 'authentication', 'theme', 'header', 'navBar', 'menu', 'breadcrumb', 'footer', 'datasets', 'applications', 'reuses', 'events', 'news', 'contactInformations', 'socialShares', 'socialLinks', 'personal'],
   properties: {
     title: {
       type: 'string',
@@ -393,6 +401,8 @@ export default {
     datasets: { $ref: 'https://github.com/data-fair/portals/portal-config-datasets' },
     applications: { $ref: 'https://github.com/data-fair/portals/portal-config-applications' },
     reuses: { $ref: 'https://github.com/data-fair/portals/portal-config-reuses' },
+    events: { $ref: 'https://github.com/data-fair/portals/portal-config-event' },
+    news: { $ref: 'https://github.com/data-fair/portals/portal-config-news' },
     contactInformations: { $ref: 'https://github.com/data-fair/portals/portal-config-contact-informations' },
     socialShares: { $ref: 'https://github.com/data-fair/portals/portal-config-social-shares' },
     socialLinks: { $ref: 'https://github.com/data-fair/portals/portal-config-social-links' },
@@ -434,7 +444,27 @@ export default {
     },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
     topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' },
-    labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' }
+    labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' },
+    defaults: {
+      type: 'object',
+      properties: {
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 4 } },
+          default: 1
+        },
+        density: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } },
+          default: 'comfortable'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 4 } },
+          default: 'default'
+        }
+      }
+    }
   },
   $defs: {
     menuItem: {
@@ -445,10 +475,10 @@ export default {
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/newsPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
         {
           title: 'Sous-menu',
           required: ['type', 'title', 'children'],
@@ -470,7 +500,7 @@ export default {
             }
           }
         },
-        { $ref: 'https://github.com/data-fair/portals/portal-config-links#/$defs/externalLink' }
+        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
       ]
     }
   }

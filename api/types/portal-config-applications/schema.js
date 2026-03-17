@@ -8,7 +8,7 @@ export default {
       {
         title: 'Application Card',
         'x-i18n-title': {
-          fr: "Vignette d'une application"
+          fr: "Vignette d'une visualisation"
         },
         children: [
           'card',
@@ -21,7 +21,7 @@ export default {
   unevaluatedProperties: false,
   required: ['card', 'page'],
   properties: {
-    card: { $ref: 'https://github.com/data-fair/portals/portal-config-application-card' },
+    card: { $ref: 'https://github.com/data-fair/portals/common-application-card' },
     page: { $ref: 'https://github.com/data-fair/portals/portal-config-application-page' }
   }
 }

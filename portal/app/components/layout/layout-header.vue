@@ -44,16 +44,28 @@ const { headerConfig } = defineProps<{ headerConfig: Header }>()
 const { portalConfig } = usePortalStore()
 const display = useDisplay()
 
+/**
+ * Logo selection rules:
+ * - If primary type is hidden: no logo.
+ * - On mobile:
+ *   - with title: use only logoPrimaryMobile (no fallback to primary logo)
+ *   - without title: use logoPrimaryMobile, fallback to primary logo
+ * - On desktop: use primary logo only.
+ */
 const logo = computed(() => {
-  if (headerConfig.logoPrimaryType !== 'hidden' && display.xs.value) {
-    if (headerConfig.logoPrimaryMobile) return headerConfig.logoPrimaryMobile
-    else return null
-  } else if (headerConfig.logoPrimaryType === 'local' && headerConfig.logoPrimary) {
-    return headerConfig.logoPrimary
-  } else if (headerConfig.logoPrimaryType === 'default' && portalConfig.value.logo) {
-    return portalConfig.value.logo
+  if (headerConfig.logoPrimaryType === 'hidden') return null
+
+  const primaryLogo = headerConfig.logoPrimaryType === 'local'
+    ? headerConfig.logoPrimary || null
+    : headerConfig.logoPrimaryType === 'default'
+      ? portalConfig.value.logo || null
+      : null
+
+  if (display.xs.value) {
+    return headerConfig.logoPrimaryMobile || (headerConfig.showTitle ? null : primaryLogo)
   }
-  return null
+
+  return primaryLogo
 })
 
 </script>

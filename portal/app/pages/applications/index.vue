@@ -21,7 +21,7 @@ import type { PageConfig } from '#api/types/page'
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
-providePageImageSrc('applications')
+const getPageImageSrc = providePageImageSrc('applications')
 
 const pageConfigFetch = await useFetch<PageConfig>('/portal/api/pages/applications/applications', { watch: false })
 provide('page-config', pageConfigFetch)
@@ -33,9 +33,19 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
 
 usePageSeo({
   title: () => (pageConfigFetch.data.value?.title || t('applications')) + ' - ' + portalConfig.value.title,
-  description: () => pageConfigFetch.data.value?.description || t('seoDescription')
+  description: () => pageConfigFetch.data.value?.description || t('seoDescription'),
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
 })
 
+useJsonLd(() => {
+  const base = useRequestURL()
+  return createCollectionPageSchema({
+    id: `${base.origin}/applications`,
+    title: pageConfigFetch.data.value?.title || t('applications'),
+    description: pageConfigFetch.data.value?.description || t('seoDescription'),
+    url: base.href
+  })
+})
 </script>
 
 <i18n lang="yaml">

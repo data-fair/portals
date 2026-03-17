@@ -86,7 +86,7 @@ export default {
           title: 'Custom icon',
           'x-i18n-title': { fr: 'Icône personnalisée' },
           description: 'Only SVG Path are supported.',
-          'x-i18n-description': { fr: 'Seul les SVG Path sont supportés.' },
+          'x-i18n-description': { fr: 'Seul les SVG Path carrés sont supportés.' },
           layout: { cols: { md: 6 } }
         },
         color: { $ref: '#/$defs/color' }
@@ -218,8 +218,7 @@ export default {
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } },
-          default: 1
+          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',

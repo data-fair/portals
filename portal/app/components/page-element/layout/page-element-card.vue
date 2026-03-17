@@ -14,8 +14,8 @@
     v-bind:title.attr="altLinkTitle"
 
     :border="element.border"
-    :elevation="element.elevation"
-    :rounded="element.rounded"
+    :rounded="element.rounded ?? portalConfig.defaults?.rounded"
+    :elevation="element.elevation ?? portalConfig.defaults?.elevation"
     :variant="element.background?.tonal ? 'tonal' : undefined"
     :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
     :color="element.background?.color"

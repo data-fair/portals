@@ -201,6 +201,30 @@ usePageSeo({
 const header = useResponseHeader('Last-Modified')
 if (application.value?.updatedAt) header.value = new Date(application.value?.updatedAt).toUTCString()
 
+const requestURL = useRequestURL()
+useJsonLd(() => {
+  const app = application.value
+  if (!app) return []
+
+  return createWebApplicationSchema({
+    id: requestURL.origin + `/applications/${app.slug}`,
+    title: app.title,
+    description: app.description || app.summary,
+    owner: app.owner,
+    url: requestURL.href,
+    createdAt: app.createdAt,
+    updatedAt: app.updatedAt,
+    image: thumbnailUrl.value,
+    screenshot: `${application.value.href}/capture?updatedAt=${application.value.updatedAt}`,
+    keywords: app.topics?.map(t => t.title) || [],
+    datasets: datasets.value.map(d => ({
+      id: requestURL.origin + `/datasets/${d.slug}`,
+      url: requestURL.origin + `/datasets/${d.slug}`,
+      name: d.title
+    }))
+  })
+})
+
 </script>
 
 <i18n lang="yaml">
