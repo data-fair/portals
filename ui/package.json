@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@data-fair/frame": "^0.17.0",
-    "@data-fair/lib-common-types": "^1.19.4",
     "@data-fair/lib-vue": "^1.24.2",
     "@data-fair/lib-vuetify": "^1.13.3",
     "@data-fair/portals-shared-markdown": "*",

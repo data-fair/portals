@@ -29,7 +29,7 @@ export default {
       },
       readOnly: true
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     configUpdatedAt: {
@@ -59,7 +59,7 @@ export default {
         additionalProperties: false,
         required: ['access', 'operation'],
         properties: {
-          access: { $ref: 'https://github.com/data-fair/portals/access-ref' },
+          access: { $ref: 'https://github.com/data-fair/lib/access-ref' },
           operation: {
             type: 'array',
             items: { type: 'string', enum: ['read', 'write'] }

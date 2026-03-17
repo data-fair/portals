@@ -9,8 +9,7 @@
     "generate": "nuxt generate",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "nuxt preview"
   },
   "imports": {
     "#api/types/*": "../api/types/*"

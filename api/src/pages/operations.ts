@@ -1,6 +1,6 @@
 import type { Page, PageElement } from '#types/page/index.ts'
 import { getAccountRole, type SessionStateAuthenticated } from '@data-fair/lib-express'
-import { matchAccessRef, mongoFilterAccessRef } from '../utils/permissions.ts'
+import { matchAccessRef, mongoFilterAccessRef } from '@data-fair/lib-common-types/access-ref/index.js'
 
 export const traversePageElements = async (
   pageElements: PageElement[] | undefined,
