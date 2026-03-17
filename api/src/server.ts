@@ -1,4 +1,6 @@
 import { createServer } from 'node:http'
+import * as wsServer from '@data-fair/lib-express/ws-server.js'
+import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import { session } from '@data-fair/lib-express/index.js'
 import { startObserver, stopObserver, internalError } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
@@ -9,6 +11,8 @@ import { createHttpTerminator } from 'http-terminator'
 import { app } from './app.ts'
 import config from '#config'
 import mongo from '#mongo'
+import es from '#es'
+import { startWorker, stopWorker } from './search-pages/worker.ts'
 
 const server = createServer(app)
 const httpTerminator = createHttpTerminator({ server })
@@ -23,6 +27,7 @@ export const start = async () => {
   if (config.observer.active) await startObserver(config.observer.port)
   session.init(config.privateDirectoryUrl)
   await mongo.init()
+  await es.init()
   await locks.start(mongo.db)
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
 
@@ -38,11 +43,32 @@ export const start = async () => {
   server.listen(config.port)
   await eventPromise(server, 'listening')
 
+  await wsServer.start(server, mongo.db, async (channel, sessionState, message) => {
+    const [type, portalId] = channel.split('/')
+    if (type === 'search-pages' && portalId) {
+      const isAdminMode = sessionState.user?.adminMode || message?.apiKey
+      if (!sessionState.user && !message?.apiKey && !message?.account) return false
+      if (isAdminMode) return true
+      const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { owner: 1 } })
+      if (!portal) return false
+      return (
+        portal.owner.type === sessionState.account?.type &&
+        portal.owner.id === sessionState.account?.id &&
+        sessionState.accountRole === 'admin'
+      )
+    }
+    return false
+  })
+  await wsEmitter.init(mongo.db)
+  startWorker()
+
   console.log(`API server listening on port ${config.port}`)
 }
 
 export const stop = async () => {
   await httpTerminator.terminate()
+  await wsServer.stop()
+  await stopWorker()
   if (config.observer.active) await stopObserver()
   await locks.stop()
   await mongo.client.close()

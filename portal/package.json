@@ -9,8 +9,7 @@
     "generate": "nuxt generate",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "nuxt preview"
   },
   "imports": {
     "#api/types/*": "../api/types/*"
@@ -18,7 +17,8 @@
   "dependencies": {
     "@analytics/google-analytics": "^1.1.0",
     "@analytics/google-tag-manager": "^0.6.0",
-    "@data-fair/frame": "^0.17.0",
+    "@data-fair/frame": "^0.18.1",
+    "@data-fair/lib-common-types": "^1.20.1",
     "@data-fair/lib-node": "^2.8.2",
     "@data-fair/lib-utils": "^1.8.0",
     "@data-fair/lib-vue": "^1.23.3",
@@ -35,7 +35,7 @@
     "undici": "^7.14.0",
     "vite-plugin-vuetify": "^2.1.2",
     "vue": "^3.5.18",
-    "vue-router": "^4.5.1",
+    "vue-router": "^5.0.3",
     "vue3-social-sharing": "^1.4.1",
     "vuetify": "^3.9.5",
     "vuetify-nuxt-module": "^0.19.3"
