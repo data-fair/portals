@@ -243,6 +243,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   context: {
     pages: pages.value,
     owner: session.account.value,
+    adminMode: session.user.value.adminMode,
     // used by schema https://github.com/data-fair/lib/theme to hide some parts
     simplifiedTheme: true
   },

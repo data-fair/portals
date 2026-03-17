@@ -55,7 +55,8 @@ export default {
         {
           title: 'Moteur de recherche',
           comp: 'card',
-          children: ['searchEngine']
+          children: ['searchEngine'],
+          if: 'context.adminMode'
         }]
       },
       {
