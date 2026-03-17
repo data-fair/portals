@@ -16,5 +16,8 @@
     "**.ts",
     "**/.type/**"
   ],
-  "license": "AGPL-3.0-only"
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "@data-fair/lib-common-types": "^1.20.1"
+  }
 }

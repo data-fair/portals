@@ -10,10 +10,33 @@ import type { Portal } from '#types/portal/index.js'
 import type { Page } from '#types/page/index.js'
 import type { Reuse } from '#types/reuse/index.js'
 import type { SearchPage } from '@data-fair/types-portals/index.ts'
+import type { AccessRef } from '@data-fair/lib-common-types/access-ref/index.js'
 import { indexDefinition } from './es.ts'
 import debugModule from 'debug'
 
 const debug = debugModule('search-pages')
+
+const accessRefToStrings = (access: AccessRef): string[] => {
+  let id: string
+  if (access.type === 'user') {
+    if ('id' in access && typeof access.id === 'string') {
+      id = access.id
+    } else if ('email' in access && typeof access.email === 'string') {
+      id = `email:${access.email}`
+    } else {
+      throw new Error('privateAccess user must have id or email')
+    }
+  } else {
+    id = access.id
+  }
+  const department = ('department' in access && typeof access.department === 'string') ? access.department : '*'
+  const roles = ('roles' in access && Array.isArray(access.roles) && access.roles.length > 0) ? access.roles as string[] : ['*']
+  return roles.map(role => `${access.type}:${id}:${department}:${role}`)
+}
+
+const accessRefsToStrings = (accessRefs: AccessRef[]): string[] => {
+  return accessRefs.flatMap(accessRefToStrings)
+}
 
 const indexingDelayHistogram = new Histogram({
   name: 'search_page_indexing_delay_seconds',
@@ -313,23 +336,7 @@ export const indexSearchPage = async (searchPage: SearchPage): Promise<void> => 
   const description = $('meta[name="description"]').attr('content') || ''
   const text = $('body').text().replace(/\s+/g, ' ').trim()
 
-  const privateAccessStrings = (searchPage.privateAccess || []).map(access => {
-    let id: string
-    if (access.type === 'user') {
-      if (!access.id && !access.email) {
-        throw new Error('privateAccess user must have id or email')
-      }
-      id = access.id || `email:${access.email}`
-    } else {
-      if (!access.id) {
-        throw new Error('privateAccess organization must have id')
-      }
-      id = access.id
-    }
-    const department = access.department || '*'
-    const role = access.role || '*'
-    return `${access.type}:${id}:${department}:${role}`
-  })
+  const privateAccessStrings = accessRefsToStrings(searchPage.privateAccess || [])
 
   const searchDoc = {
     title,

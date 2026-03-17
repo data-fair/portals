@@ -3,6 +3,8 @@ import { session } from '~~/server/plugins/session'
 import { portalEs } from '~~/server/plugins/es'
 import { portalMongo } from '~~/server/plugins/mongo'
 import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
+import type { SessionStateAuthenticated } from '@data-fair/lib-common-types/session/index.js'
+import { matchAccessRef } from '@data-fair/lib-common-types/access-ref/index.js'
 
 const getLastIndexDate = async (portalId: string): Promise<string | null> => {
   const result = await portalMongo.searchPages
@@ -81,12 +83,24 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     must.push({ term: { public: true } })
   } else {
-    const privateAccessTerms: string[] = [`user:${user.id}:*:*`]
+    const privateAccessTerms: string[] = [
+      `user:${user.id}:*:*`,
+      `user:email:${user.email}:*:*`
+    ]
 
     for (const org of user.organizations || []) {
       const department = org.department || '*'
-      const roles = org.role ? org.role : '*'
-      privateAccessTerms.push(`organization:${org.id}:${department}:${roles}`)
+      const role = org.role || '*'
+      privateAccessTerms.push(`organization:${org.id}:${department}:${role}`)
+      if (role !== '*') {
+        privateAccessTerms.push(`organization:${org.id}:${department}:*`)
+      }
+      if (department !== '*') {
+        privateAccessTerms.push(`organization:${org.id}:*:${role}`)
+        if (role !== '*') {
+          privateAccessTerms.push(`organization:${org.id}:*:*`)
+        }
+      }
     }
 
     must.push({

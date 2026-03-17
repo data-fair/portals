@@ -30,7 +30,7 @@ export default {
     privateAccess: {
       type: 'array',
       items: {
-        $ref: 'https://github.com/data-fair/portals/access-account-ref'
+        $ref: 'https://github.com/data-fair/lib/access-ref'
       }
     },
     indexingStatus: {
