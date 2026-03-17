@@ -19,9 +19,9 @@
       -->
       <v-chip
         :color="resolvedColor(topic.color)"
-        :density="config?.density"
-        :elevation="config?.elevation"
-        :rounded="config?.rounded"
+        :density="config?.density ?? portalConfig.defaults?.density"
+        :elevation="config?.elevation ?? portalConfig.defaults?.elevation"
+        :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
         :link="isFilters || !!link"
         :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
         :variant="chipVariant(topic.id)"
@@ -43,10 +43,9 @@
 </template>
 
 <script setup lang="ts">
-import type { TopicsElement } from '#api/types/page-elements/index.ts'
-import type { LinkItem } from '#api/types/page-elements/index.ts'
+import type { TopicsElement, LinkItem } from '#api/types/page-elements/index.ts'
 
-const { preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const selected = useStringsArraySearchParam('topics')
 

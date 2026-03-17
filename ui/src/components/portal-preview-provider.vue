@@ -80,6 +80,11 @@ const portalConfigDefault: PortalConfig = {
   },
   navLinksConfig: {
     showIcon: true
+  },
+  defaults: {
+    elevation: 1,
+    density: 'comfortable',
+    rounded: 'default'
   }
 }
 

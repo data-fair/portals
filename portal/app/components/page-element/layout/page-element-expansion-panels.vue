@@ -2,8 +2,8 @@
   <v-expansion-panels
     v-model="activePanels"
     :multiple="element.multiple"
-    :rounded="element.rounded"
-    :elevation="element.elevation"
+    :rounded="element.rounded ?? portalConfig.defaults?.rounded"
+    :elevation="element.elevation ?? portalConfig.defaults?.elevation"
     :color="element.titleBackgroundColor ?? 'surface'"
     :bg-color="element.textBackgroundColor"
 
@@ -47,7 +47,7 @@ const { element } = defineProps({
   element: { type: Object as () => ExpansionPanelsElement, required: true }
 })
 
-const { preview } = usePortalStore()
+const { preview, portalConfig } = usePortalStore()
 const activePanels = ref<number[] | number | null>(element.multiple ? [] : null)
 
 const count = element.panels.filter(Boolean).length
