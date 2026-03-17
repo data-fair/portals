@@ -148,12 +148,12 @@
 
           <!-- Links in single line -->
           <v-row
-            v-if="filteredFooterLinks.length && portalConfig.footer.linksMode === 'lines'"
+            v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'lines'"
             class="my-2"
             justify="center"
           >
             <v-col
-              v-for="(link, key) in filteredFooterLinks"
+              v-for="(link, key) in portalConfig.footer.links"
               :key="key"
               cols="auto"
               class="text-center"
@@ -178,11 +178,11 @@
 
           <!-- Links in columns -->
           <v-row
-            v-if="filteredFooterLinks.length && portalConfig.footer.linksMode === 'columns'"
+            v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'columns'"
             class="my-2"
           >
             <v-col
-              v-for="(link, key) in filteredFooterLinks"
+              v-for="(link, key) in portalConfig.footer.links"
               :key="key"
               cols="10"
               sm="4"
@@ -213,7 +213,7 @@
       </v-row>
 
       <!-- Important Links-->
-      <template v-if="filteredImportantLinks.length">
+      <template v-if="portalConfig.footer.importantLinks.length">
         <v-divider class="my-2" />
         <v-row>
           <v-col
@@ -221,7 +221,7 @@
             class="text-center"
           >
             <template
-              v-for="(link, index) in filteredImportantLinks"
+              v-for="(link, index) in portalConfig.footer.importantLinks"
               :key="index"
             >
               <v-btn
@@ -284,10 +284,6 @@ const { t, locale } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
-const { filterLinks } = useAccessibleLinks()
-
-const filteredFooterLinks = computed(() => filterLinks(portalConfig.value.footer.links))
-const filteredImportantLinks = computed(() => filterLinks(portalConfig.value.footer.importantLinks))
 
 const logo = computed(() => {
   const { footer, header, logo: defaultLogo } = portalConfig.value

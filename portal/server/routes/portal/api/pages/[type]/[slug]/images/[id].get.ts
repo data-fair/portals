@@ -28,8 +28,7 @@ export default defineEventHandler(async (event) => {
   if (!page) throw createError({ status: 404, message: 'Page not found' })
 
   if (!page.public) {
-    const cookieHeader = getRequestHeader(event, 'cookie')
-    const sessionState = await session.readStateFromCookie(cookieHeader).catch(() => null)
+    const sessionState = await session.readStateFromCookie(getRequestHeader(event, 'cookie'))
     const access = checkPageAccess(sessionState, page)
     if (access === 'unauthenticated') {
       throw createError({ status: 401, message: 'Authentication required' })

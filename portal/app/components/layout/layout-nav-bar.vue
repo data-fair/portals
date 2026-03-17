@@ -27,7 +27,7 @@
         />
 
         <nav-tabs-or-drawer
-          :navigation="filteredNavigation"
+          :navigation="portalConfig.menu.children"
           :nav-bar-config="navBarConfig"
         />
 
@@ -56,9 +56,6 @@ const { navBarConfig } = defineProps<{
 
 const { portalConfig } = usePortalStore()
 const display = useDisplay()
-const { filterMenuItems } = useAccessibleLinks()
-
-const filteredNavigation = computed(() => filterMenuItems(portalConfig.value.menu.children))
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
