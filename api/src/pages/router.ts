@@ -195,7 +195,7 @@ router.delete('/:id', async (req, res, next) => {
   assertPageWrite(session, page)
   await deletePage(page)
   sendPageEvent(page, 'a été supprimée', 'delete', session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
@@ -204,7 +204,7 @@ router.post('/:id/draft', async (req, res, next) => {
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertPageWrite(session, page)
   await validatePageDraft(page, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
@@ -213,5 +213,5 @@ router.delete('/:id/draft', async (req, res, next) => {
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertPageWrite(session, page)
   await cancelPageDraft(page, session)
-  res.status(201).send()
+  res.status(204).send()
 })

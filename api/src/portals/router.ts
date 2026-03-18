@@ -171,21 +171,21 @@ router.delete('/:id', async (req, res, next) => {
   const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), req.headers.cookie)
   sendPortalEvent(portal, 'a été supprimé', 'delete', session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await validatePortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await cancelPortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/ingress', async (req, res, next) => {
@@ -194,7 +194,7 @@ router.post('/:id/ingress', async (req, res, next) => {
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
   await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.get('/:id/search', async (req, res, next) => {
