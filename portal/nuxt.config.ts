@@ -13,6 +13,10 @@ contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
 contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
 export default defineNuxtConfig({
+  // TODO: remove when nitropack properly calls esbuild.stop() after build
+  hooks: {
+    close: () => { process.exit(0) }
+  },
   devServer: {
     port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
