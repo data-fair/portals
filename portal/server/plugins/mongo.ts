@@ -42,7 +42,8 @@ export class PortalMongo {
 
 export const portalMongo = new PortalMongo()
 
-export default defineNitroPlugin(async () => {
+export default defineNitroPlugin(async (nitroApp) => {
   const config = useRuntimeConfig()
   await mongo.connect(config.mongoUrl)
+  nitroApp.hooks.hook('close', async () => await mongo.client.close())
 })
