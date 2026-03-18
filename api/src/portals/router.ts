@@ -13,7 +13,7 @@ import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 import dfEs from '../es.ts'
 import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
-import { type SearchRequest } from '@elastic/elasticsearch/lib/api/types'
+import type { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
 
 const router = Router()
 export default router
