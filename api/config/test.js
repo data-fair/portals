@@ -1,4 +1,5 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
+dotenv.config({ path: import.meta.resolve('../../.env').replace('file://', '') })
 
 if (!process.env.DEV_API_PORT) throw new Error('missing DEV_API_PORT env variable, use "source dev/init-env.sh" to init .env file')
 
@@ -7,9 +8,9 @@ export default {
   privateDirectoryUrl: `http://localhost:${process.env.SD_PORT}`,
   privateEventsUrl: `http://localhost:${process.env.EVENTS_PORT}`,
   mongoUrl: `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-test`,
-  /* elasticsearch: {
-    nodes: [`http://localhost:${esPort}`]
-  }, */
+  elasticsearch: {
+    nodes: [`http://localhost:${process.env.ES_PORT}`]
+  },
   tmpDir: './tmp',
   observer: {
     active: false,
@@ -18,7 +19,9 @@ export default {
   secretKeys: {
     identities: 'secret-identities',
     events: 'secret-events',
-    sites: 'secret-sites'
+    sites: 'secret-sites',
+    pseudoSession: 'secret-pseudo-session',
+    searchPages: 'secret-search-pages'
   },
   portalUrlPattern: `http://{subdomain}.localhost:${process.env.NGINX_PORT}`,
   upgradeRoot: './'

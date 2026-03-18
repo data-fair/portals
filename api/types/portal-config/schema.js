@@ -51,6 +51,12 @@ export default {
           title: 'Sécurité',
           comp: 'card',
           children: ['allowRobots', 'authentication', 'allowedFrameAncestors', 'allowedFrameSources']
+        },
+        {
+          title: 'Moteur de recherche',
+          comp: 'card',
+          children: ['searchEngine'],
+          if: 'context.adminMode'
         }]
       },
       {
@@ -74,6 +80,12 @@ export default {
               { cols: 6, children: ['bodyFontFamily', 'headingFontFamily'] },
               { cols: 6, name: 'font-families-preview' }
             ]
+          },
+          {
+            title: 'Style visuel par défaut',
+            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis.",
+            comp: 'card',
+            children: ['defaults']
           },
           {
             title: 'Rendu des liens de navigation',
@@ -404,9 +416,55 @@ export default {
         }
       }
     },
+    searchEngine: {
+      type: 'object',
+      unevaluatedProperties: false,
+      properties: {
+        active: {
+          type: 'boolean',
+          title: 'Activer le moteur de recherche',
+          default: false,
+          layout: 'switch'
+        },
+        types: {
+          type: 'array',
+          title: 'Types de contenus à inclure',
+          default: ['dataset', 'application', 'page', 'reuse'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'dataset', title: 'Jeux de données' },
+              { const: 'application', title: 'Application' },
+              { const: 'page', title: 'Pages' },
+              { const: 'reuse', title: 'Ré-utilisations' },
+            ]
+          }
+        }
+      }
+    },
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
     topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' },
-    labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' }
+    labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' },
+    defaults: {
+      type: 'object',
+      properties: {
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { cols: { md: 4 } },
+          default: 1
+        },
+        density: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { cols: { md: 4 } },
+          default: 'comfortable'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { cols: { md: 4 } },
+          default: 'default'
+        }
+      }
+    }
   },
   $defs: {
     menuItem: {

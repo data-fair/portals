@@ -94,9 +94,9 @@
             <div class="d-flex justify-center">
               <v-btn
                 :color="buttonConfig?.color"
-                :density="buttonConfig?.density"
-                :elevation="buttonConfig?.elevation"
-                :rounded="buttonConfig?.rounded"
+                :density="buttonConfig?.density ?? portalConfig.defaults?.density"
+                :elevation="buttonConfig?.elevation ?? portalConfig.defaults?.elevation"
+                :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
                 :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
                 :class="{ 'text-none': !buttonConfig?.uppercase }"
                 :text="t('send')"

@@ -9,6 +9,7 @@ import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, getAccountRole } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPage, assertPageWrite, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
 import { buildDefaultPermissions, buildPageAccessFilter, getUserPermissions } from './operations.ts'
+import { reindexPage } from '../search-pages/service.ts'
 import { pageFacets } from './aggregations.ts'
 
 const router = Router()
@@ -124,6 +125,11 @@ router.post('', async (req, res, next) => {
 
   const creationDetails = await createPage(page, body.sourcePageId)
   sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
+
+  for (const portalId of page.portals) {
+    await reindexPage(page, portalId)
+  }
+
   res.status(201).json(page)
 })
 
@@ -174,6 +180,11 @@ router.patch('/:id', async (req, res, next) => {
   }
 
   const updatedPage = await patchPage(page, body, session)
+
+  for (const portalId of updatedPage.portals) {
+    await reindexPage(updatedPage, portalId)
+  }
+
   res.send({ ...updatedPage, body })
 })
 
