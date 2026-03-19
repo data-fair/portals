@@ -30,6 +30,13 @@
       </p>
     </v-alert>
 
+    <v-alert
+      v-if="page && !page.public"
+      type="info"
+      variant="outlined"
+      :text="visibility === 'protected' ? t('warning.protected') : t('warning.private')"
+    />
+
     <v-list lines="three">
       <v-list-item
         v-for="(portal,i) in portals"
@@ -112,7 +119,7 @@ import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
-const { patchPage, page, pageUrl, canAdminPage, canWritePage } = usePageStore()
+const { patchPage, page, pageUrl, canAdminPage, canWritePage, visibility } = usePageStore()
 
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging'>
 const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
@@ -194,6 +201,8 @@ const getPortalUrl = (portal: PartialPortal): string => {
     warning:
       title: Cannot publish until these warnings are fixed
       content: The page is empty
+      private: This page is private and will only be visible to its owner.
+      protected: This page is protected and will only be visible to authorized users.
     standardPage:
       cannotUnpublishHome: You cannot unpublish a home page. You can only replace it with another home page.
       willReplace: 'Publishing this {pageType} on this portal will replace the page "{pageTitle}" with this one.'
@@ -219,6 +228,8 @@ const getPortalUrl = (portal: PartialPortal): string => {
     warning:
       title: Publication impossible tant que ces avertissements ne sont pas corrigés
       content: Le contenu de la page est vide
+      private: Cette page est privée et ne sera visible que par son propriétaire.
+      protected: Cette page est protégée et ne sera visible que par les utilisateurs autorisés.
     standardPage:
       cannotUnpublishHome: Vous ne pouvez pas dépublier une page d'accueil. Vous pouvez seulement la remplacer par une autre page d'accueil.
       willReplace: 'Publier cette {pageType} sur ce portail remplacera la page "{pageTitle}" par celle-ci.'

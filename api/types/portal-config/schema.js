@@ -434,9 +434,9 @@ export default {
             type: 'string',
             oneOf: [
               { const: 'dataset', title: 'Jeux de données' },
-              { const: 'application', title: 'Application' },
+              { const: 'application', title: 'Visualisations' },
               { const: 'page', title: 'Pages' },
-              { const: 'reuse', title: 'Ré-utilisations' },
+              { const: 'reuse', title: 'Réutilisations' },
             ]
           }
         }

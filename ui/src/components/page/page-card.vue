@@ -54,6 +54,26 @@
             </v-list-item-title>
           </v-list-item>
 
+          <!-- Visibility -->
+          <v-list-item v-if="visibility === 'public'">
+            <template #prepend>
+              <v-icon :icon="mdiLockOpen" />
+            </template>
+            <v-list-item-title>{{ t('public') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-else-if="visibility === 'protected'">
+            <template #prepend>
+              <v-icon :icon="mdiLockPlus" />
+            </template>
+            <v-list-item-title>{{ t('protected') }}</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-else>
+            <template #prepend>
+              <v-icon :icon="mdiLock" />
+            </template>
+            <v-list-item-title>{{ t('private') }}</v-list-item-title>
+          </v-list-item>
+
           <!-- Description (wrapped after 2 lines)-->
           <v-list-item v-if="page.config.description">
             <v-list-item-title class="text-two-lines">
@@ -69,11 +89,12 @@
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
-import { mdiFolderInformationOutline, mdiInformationOutline } from '@mdi/js'
+import { mdiFolderInformationOutline, mdiInformationOutline, mdiLock, mdiLockOpen, mdiLockPlus } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
+const { visibility } = usePageStore()
 
 const { page, portalId } = defineProps<{
   page: Page
@@ -89,6 +110,9 @@ const pageLink = computed(() => {
 
 <i18n lang="yaml">
   en:
+    public: Public
+    protected: Protected
+    private: Private
     pageType:
       title: Page Type
       group: Group
@@ -108,6 +132,9 @@ const pageLink = computed(() => {
       news: News
       generic: Custom content
   fr:
+    public: Public
+    protected: Protégée
+    private: Privée
     pageType:
       title: Type de page
       group: Groupe

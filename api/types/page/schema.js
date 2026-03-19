@@ -54,19 +54,35 @@ export default {
     },
     permissions: {
       type: 'array',
+      title: 'Permissions',
+      layout: {
+        messages: {
+          addItem: 'Ajouter une permission',
+        },
+        listEditMode: 'inline'
+      },
       items: {
         type: 'object',
         additionalProperties: false,
         required: ['access', 'operation'],
         properties: {
-          access: { $ref: 'https://github.com/data-fair/lib/access-ref' },
+          access: {
+            $ref: 'https://github.com/data-fair/lib/access-ref',
+            layout: { title: null }
+          },
           operation: {
             type: 'array',
-            items: { type: 'string', enum: ['read', 'write'] }
+            title: 'Opérations autorisées',
+            items: {
+              type: 'string',
+              oneOf: [
+                { const: 'read', title: 'Lecture' },
+                { const: 'write', title: 'Écriture' }
+              ]
+            }
           }
         }
-      },
-      default: []
+      }
     }
   }
 }

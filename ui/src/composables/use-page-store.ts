@@ -62,7 +62,21 @@ const createPageStore = (id: string) => {
     return page.value.userPermissions?.includes('write') ?? false
   })
 
-  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl, canAdminPage, canWritePage }
+  /**
+   * Visibility is determined as follows:
+   * - if page is public, then visibility is 'public'
+   * - if page is not public and permissions is undefined, then visibility is 'protected' => user can see the page, so it cannot be private
+   * - if page is not public and permissions includes 'read', then visibility is 'protected' => admin
+   * - otherwise, visibility is 'private' => admin
+   */
+  const visibility = computed(() => {
+    if (page.value?.public) return 'public'
+    if (!page.value?.permissions) return 'protected'
+    if (page.value?.permissions.some(p => p.operation.includes('read'))) return 'protected'
+    return 'private'
+  })
+
+  return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl, canAdminPage, canWritePage, visibility }
 }
 
 export const providePageStore = (id: string) => {
