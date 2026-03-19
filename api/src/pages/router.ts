@@ -34,7 +34,7 @@ router.get('', async (req, res, next) => {
   } else {
     query = findUtils.filterPermissions(params, session)
     // Non-admins: further filter by public or explicit read permission
-    const accountRole = getAccountRole(session, session.account, { acceptDepAsRoot: true })
+    const accountRole = getAccountRole(session, session.account)
     if (accountRole !== 'admin') {
       Object.assign(query, buildPageAccessFilter(session))
     }
@@ -68,7 +68,7 @@ router.get('', async (req, res, next) => {
 
   const enrichedResults = results.map(page => {
     const userPermissions = getUserPermissions(session, page as Page)
-    const accountRole = getAccountRole(session, (page as Page).owner, { acceptDepAsRoot: true })
+    const accountRole = getAccountRole(session, (page as Page).owner)
     if (accountRole !== 'admin') delete (page as any).permissions
     return { ...page, userPermissions }
   })
@@ -147,7 +147,7 @@ router.patch('/:id', async (req, res, next) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   if (body.isReference !== undefined) assertAdminMode(session)
 
-  const ownerRole = getAccountRole(session, page.owner, { acceptDepAsRoot: true })
+  const ownerRole = getAccountRole(session, page.owner)
 
   // Restrict admin-only fields: owner, permissions, public
   if (body.owner !== undefined || body.permissions !== undefined || body.public !== undefined) {

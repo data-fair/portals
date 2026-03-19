@@ -36,7 +36,7 @@ export const traversePageElements = async (
 }
 
 export const canReadPage = (session: SessionStateAuthenticated, page: Page): boolean => {
-  const accountRole = getAccountRole(session, page.owner, { acceptDepAsRoot: true })
+  const accountRole = getAccountRole(session, page.owner)
   if (accountRole === 'admin') return true
   if (page.public) return true
   const permissions = page.permissions ?? []
@@ -46,7 +46,7 @@ export const canReadPage = (session: SessionStateAuthenticated, page: Page): boo
 }
 
 export const canWritePage = (session: SessionStateAuthenticated, page: Page): boolean => {
-  const accountRole = getAccountRole(session, page.owner, { acceptDepAsRoot: true })
+  const accountRole = getAccountRole(session, page.owner)
   if (accountRole === 'admin') return true
   const permissions = page.permissions ?? []
   return permissions.some(perm =>
@@ -55,7 +55,7 @@ export const canWritePage = (session: SessionStateAuthenticated, page: Page): bo
 }
 
 export const getUserPermissions = (session: SessionStateAuthenticated, page: Page): ('read' | 'write')[] => {
-  const accountRole = getAccountRole(session, page.owner, { acceptDepAsRoot: true })
+  const accountRole = getAccountRole(session, page.owner)
   if (accountRole === 'admin') return ['read', 'write']
   const ops = new Set<'read' | 'write'>()
   if (page.public) ops.add('read')
@@ -87,7 +87,7 @@ export const buildDefaultPermissions = (
   session: SessionStateAuthenticated,
   owner: SessionStateAuthenticated['account']
 ): Page['permissions'] => {
-  const ownerRole = getAccountRole(session, owner, { acceptDepAsRoot: true })
+  const ownerRole = getAccountRole(session, owner)
   if (ownerRole === 'contrib' && owner.type === 'organization') {
     return [{
       access: {

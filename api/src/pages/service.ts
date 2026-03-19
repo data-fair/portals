@@ -19,7 +19,7 @@ export const getPage = async (sessionState: SessionStateAuthenticated, id: strin
   if (!canReadPage(sessionState, page)) {
     throw httpError(403, `you don't have read access to page "${id}"`)
   }
-  const accountRole = getAccountRole(sessionState, page.owner, { acceptDepAsRoot: true })
+  const accountRole = getAccountRole(sessionState, page.owner)
   const userPermissions = getUserPermissions(sessionState, page)
   if (accountRole !== 'admin') delete page.permissions
   return { ...page, userPermissions }

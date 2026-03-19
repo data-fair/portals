@@ -3,6 +3,20 @@ import type { PageEnriched } from '#api/doc/pages/get-page-res'
 import { getAccountRole } from '@data-fair/lib-vue/session'
 import equal from 'fast-deep-equal'
 
+/**
+ * Visibility is determined as follows:
+ * - if page is public, then visibility is 'public'
+ * - if page is not public and permissions is undefined, then visibility is 'protected' => user can see the page, so it cannot be private
+ * - if page is not public and permissions includes 'read', then visibility is 'protected' => admin
+ * - otherwise, visibility is 'private' => admin
+ */
+export const getPageVisibility = (page: Pick<Page, 'public' | 'permissions'>): 'public' | 'protected' | 'private' => {
+  if (page.public) return 'public'
+  if (!page.permissions) return 'protected'
+  if (page.permissions.some(p => p.operation.includes('read'))) return 'protected'
+  return 'private'
+}
+
 // we do not use SSR, so we can use a simple module level singleton
 export type PageStore = ReturnType<typeof createPageStore>
 const pageStoreKey = Symbol('page-store')
@@ -62,19 +76,7 @@ const createPageStore = (id: string) => {
     return page.value.userPermissions?.includes('write') ?? false
   })
 
-  /**
-   * Visibility is determined as follows:
-   * - if page is public, then visibility is 'public'
-   * - if page is not public and permissions is undefined, then visibility is 'protected' => user can see the page, so it cannot be private
-   * - if page is not public and permissions includes 'read', then visibility is 'protected' => admin
-   * - otherwise, visibility is 'private' => admin
-   */
-  const visibility = computed(() => {
-    if (page.value?.public) return 'public'
-    if (!page.value?.permissions) return 'protected'
-    if (page.value?.permissions.some(p => p.operation.includes('read'))) return 'protected'
-    return 'private'
-  })
+  const visibility = computed(() => page.value ? getPageVisibility(page.value) : 'private')
 
   return { pageFetch, page, patchPage, hasDraftDiff, pageId: id, pageUrl, canAdminPage, canWritePage, visibility }
 }

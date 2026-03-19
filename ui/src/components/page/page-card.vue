@@ -88,18 +88,20 @@
 
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
+import { getPageVisibility } from '~/composables/use-page-store'
 import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiFolderInformationOutline, mdiInformationOutline, mdiLock, mdiLockOpen, mdiLockPlus } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
-const { visibility } = usePageStore()
 
 const { page, portalId } = defineProps<{
   page: Page
   portalId?: string
 }>()
+
+const visibility = getPageVisibility(page)
 
 const pageLink = computed(() => {
   const base = `/pages/${page._id}`

@@ -88,7 +88,7 @@ const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
     sort: 'updatedAt:-1',
-    select: '_id,title,type,owner,config.description,config.genericMetadata'
+    select: '_id,title,type,owner,config.description,config.genericMetadata,public,permissions'
   }
   if (types.value.length) params.type = types.value.join(',')
   if (portals.value.length) params.portal = portals.value.join(',')
