@@ -29,7 +29,7 @@ export default {
       },
       readOnly: true
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     configUpdatedAt: {
@@ -47,6 +47,42 @@ export default {
     requestedPortals: {
       type: 'array',
       items: { type: 'string' }
+    },
+    public: {
+      type: 'boolean',
+      title: 'Public'
+    },
+    permissions: {
+      type: 'array',
+      title: 'Permissions',
+      layout: {
+        messages: {
+          addItem: 'Ajouter une permission',
+        },
+        listEditMode: 'inline'
+      },
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['access', 'operation'],
+        properties: {
+          access: {
+            $ref: 'https://github.com/data-fair/lib/access-ref',
+            layout: { title: null }
+          },
+          operation: {
+            type: 'array',
+            title: 'Opérations autorisées',
+            items: {
+              type: 'string',
+              oneOf: [
+                { const: 'read', title: 'Lecture' },
+                { const: 'write', title: 'Écriture' }
+              ]
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 import type { Page } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 import { portalMongo } from '~~/server/plugins/mongo'
+import { session } from '~~/server/plugins/session'
+import { checkPageAccess } from '~~/server/utils/page-permissions'
 
 export default defineEventHandler(async (event) => {
   const portal: RequestPortal = event.context.portal
@@ -17,11 +19,23 @@ export default defineEventHandler(async (event) => {
   // Standard types do not have a slug
   if (['event', 'news', 'generic'].includes(type)) mongoQuery[`config.${type}Metadata.slug`] = slug
 
-  const page = await portalMongo.pages.findOne<Pick<Page, 'config'>>(
+  const page = await portalMongo.pages.findOne<Pick<Page, 'config' | 'public' | 'permissions'>>(
     mongoQuery,
-    { projection: { config: 1 } }
+    { projection: { config: 1, public: 1, permissions: 1 } }
   )
 
   if (!page) throw createError({ status: 404, message: 'Page not found' })
+
+  if (!page.public) {
+    const sessionState = await session.readStateFromCookie(getRequestHeader(event, 'cookie'))
+    const access = checkPageAccess(sessionState, page, portal.owner)
+    if (access === 'unauthenticated') {
+      throw createError({ status: 401, message: 'Authentication required to access this page' })
+    }
+    if (access === 'forbidden') {
+      throw createError({ status: 403, message: 'Access denied' })
+    }
+  }
+
   return page.config
 })

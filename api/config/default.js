@@ -20,7 +20,7 @@ export default {
   ingressControllers: [],
   upgradeRoot: '/app/',
   elasticsearch: {
-    nodes: ['localhost:9200'],
+    nodes: ['http://localhost:9200'],
     // auth: {},
     // ca: '', // the central authority for the ES cluster certificates
   },

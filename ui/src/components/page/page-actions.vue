@@ -1,6 +1,9 @@
 <template>
   <!-- Edit draft -->
-  <custom-router-link :to="editDraftLink">
+  <custom-router-link
+    v-if="canWritePage"
+    :to="editDraftLink"
+  >
     <v-list-item link>
       <template #prepend>
         <v-icon
@@ -14,6 +17,7 @@
 
   <!-- Validate draft -->
   <v-list-item
+    v-if="canWritePage"
     :loading="validateDraft.loading.value"
     :disabled="cancelDraft.loading.value || !hasDraftDiff"
     :title="t('validateDraft')"
@@ -29,6 +33,7 @@
 
   <!-- Cancel draft -->
   <v-menu
+    v-if="canWritePage"
     v-model="showCancelDraftMenu"
     :close-on-content-click="false"
     max-width="500"
@@ -76,24 +81,26 @@
     </template>
   </v-menu>
 
-  <v-divider class="my-2" />
+  <template v-if="canWritePage">
+    <v-divider class="my-2" />
 
-  <!-- Events -->
-  <custom-router-link :to="`/pages/${pageId}/events`">
-    <v-list-item link>
-      <template #prepend>
-        <v-icon
-          color="primary"
-          :icon="mdiClipboardTextClock"
-        />
-      </template>
-      {{ t('events') }}
-    </v-list-item>
-  </custom-router-link>
+    <!-- Events -->
+    <custom-router-link :to="`/pages/${pageId}/events`">
+      <v-list-item link>
+        <template #prepend>
+          <v-icon
+            color="primary"
+            :icon="mdiClipboardTextClock"
+          />
+        </template>
+        {{ t('events') }}
+      </v-list-item>
+    </custom-router-link>
+  </template>
 
   <!-- Change owner -->
   <v-menu
-    v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
+    v-if="hasDepartments && canAdminPage"
     v-model="showChangeOwnerMenu"
     :close-on-content-click="false"
     max-width="500"
@@ -160,6 +167,7 @@
 
   <!-- Delete page -->
   <v-menu
+    v-if="canWritePage"
     :close-on-content-click="false"
     max-width="500"
   >
@@ -249,7 +257,7 @@ import { computedAsync } from '@vueuse/core'
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const router = useRouter()
-const { pageFetch, hasDraftDiff, pageId, page, pageUrl } = usePageStore()
+const { pageFetch, hasDraftDiff, pageId, page, pageUrl, canWritePage, canAdminPage } = usePageStore()
 const { previewPortalId } = usePreviewPortal()
 const showChangeOwnerMenu = ref(false)
 const showCancelDraftMenu = ref(false)

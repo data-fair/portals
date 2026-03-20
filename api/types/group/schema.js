@@ -24,7 +24,7 @@ export default {
       title: 'Description',
       description: 'Une zone de texte libre pour décrire le groupe. Elle sera affichée sur la vignette du groupe.'
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' }
   }

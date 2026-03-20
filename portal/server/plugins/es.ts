@@ -24,11 +24,12 @@ export class PortalEs {
 
 export const portalEs = new PortalEs()
 
-export default defineNitroPlugin(async () => {
+export default defineNitroPlugin(async (nitroApp) => {
   const config = useRuntimeConfig()
   await portalEs.connect({
     nodes: config.elasticsearchNodes,
     auth: config.elasticsearchAuth ? { username: config.elasticsearchAuth.split(':')[0]!, password: config.elasticsearchAuth.split(':')[1]! } : undefined,
     ca: config.elasticsearchCA
   })
+  nitroApp.hooks.hook('close', async () => await portalEs.client.close())
 })
