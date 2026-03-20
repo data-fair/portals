@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
   // Read session for permission filtering
   const sessionState = await session.readStateFromCookie(getRequestHeader(event, 'cookie'))
-  const permissionQuery = buildPortalPagePermissionQuery(sessionState)
+  const permissionQuery = buildPortalPagePermissionQuery(sessionState, portal.owner)
 
   const mongoQuery = {
     'owner.type': portal.owner.type,

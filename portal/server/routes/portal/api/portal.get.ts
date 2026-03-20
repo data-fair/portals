@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
   const config = portal.config
 
   const sessionState = await session.readStateFromCookie(getRequestHeader(event, 'cookie'))
-  const permissionQuery = buildPortalPagePermissionQuery(sessionState)
+  const permissionQuery = buildPortalPagePermissionQuery(sessionState, portal.owner)
 
   const baseQuery = {
     'owner.type': portal.owner.type,

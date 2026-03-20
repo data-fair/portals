@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
   if (!page.public) {
     const sessionState = await session.readStateFromCookie(getRequestHeader(event, 'cookie'))
-    const access = checkPageAccess(sessionState, page)
+    const access = checkPageAccess(sessionState, page, portal.owner)
     if (access === 'unauthenticated') {
       throw createError({ status: 401, message: 'Authentication required' })
     }
