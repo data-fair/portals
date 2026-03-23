@@ -89,11 +89,11 @@
         <v-list-item>
           <p
             v-if="cardConfig.showAuthor && reuse.config.author"
-            class="text-caption"
+            class="text-body-small"
           >
             {{ t('publishedBy', { author: reuse.config.author }) }}
           </p>
-          <p class="text-caption">
+          <p class="text-body-small">
             {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
           </p>
         </v-list-item>

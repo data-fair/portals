@@ -10,13 +10,12 @@
   >
     <v-container
       :fluid="navBarConfig.fluid !== false"
-      :class="{ 'container px-4': navBarConfig.fluid === false }"
+      :class="{ 'px-4': navBarConfig.fluid === false }"
       class="pa-0 h-100"
     >
       <v-row
-        align="center"
         no-gutters
-        class="h-100 flex-nowrap"
+        class="h-100 flex-nowrap align-center"
       >
         <layout-header-logo
           v-if="logo"

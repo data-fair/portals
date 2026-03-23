@@ -62,7 +62,7 @@
     >
     <div
       v-if="element.legend"
-      class="text-center text-caption font-italic mt-2"
+      class="text-center text-body-small font-italic mt-2"
     >
       {{ element.legend }}
     </div>

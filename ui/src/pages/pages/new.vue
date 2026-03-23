@@ -117,7 +117,7 @@
           </v-row>
 
           <!-- Group 2: Standard pages -->
-          <h2 class="text-h6 mt-6">
+          <h2 class="text-title-large mt-6">
             {{ t('pageGroupTitle.standard') }}
           </h2>
           <p>{{ t('pageGroupDesc.standard') }}</p>
@@ -145,7 +145,7 @@
           </v-row>
 
           <!-- Group 3: Catalog pages -->
-          <h2 class="text-h6 mt-6">
+          <h2 class="text-title-large mt-6">
             {{ t('pageGroupTitle.catalog') }}
           </h2>
           <p>{{ t('pageGroupDesc.catalog') }}</p>

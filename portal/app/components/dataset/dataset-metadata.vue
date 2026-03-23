@@ -13,7 +13,7 @@
 
       <!-- Records count / Size -->
       <v-col v-bind="metadataColProps">
-        <div class="text-caption text-medium-emphasis">{{ t('size') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ t('size') }}</div>
         {{ t('records', { count: (dataset.count || 0), formatted: (dataset.count || 0).toLocaleString('fr') }) }} {{ dataset.storage?.indexed?.size ? ' - ' +
         formatBytes(dataset.storage.indexed.size) : '' }}
       </v-col>
@@ -36,7 +36,7 @@
           </a>
         </template>
         <template v-else>
-          <div class="text-caption text-medium-emphasis">{{ t('dataProducedBy') }}</div>
+          <div class="text-body-small text-medium-emphasis">{{ t('dataProducedBy') }}</div>
           {{ dataset.origin }}
         </template>
       </v-col>
@@ -46,7 +46,7 @@
         v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <owner-avatar
             :owner="dataset.owner"
@@ -62,7 +62,7 @@
         v-if="dataset.creator"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('creator') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('creator') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dataset.creator }}
         </div>
@@ -72,7 +72,7 @@
         v-if="dataset.license"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('license') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ t('license') }}</div>
         <a
           :href="dataset.license.href"
           rel="noopener"
@@ -88,7 +88,7 @@
         v-if="dataset.keywords?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('keywords') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('keywords') }}</div>
         <v-chip
           v-for="(keyword,i) in dataset.keywords"
           :key="i"
@@ -103,7 +103,7 @@
         v-if="formattedSpatial"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('spatial') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('spatial') }}</div>
         {{ formattedSpatial }}
       </v-col>
 
@@ -111,7 +111,7 @@
         v-if="dataset.temporal?.start"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('temporal') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('temporal') }}</div>
         <template v-if="dataset.temporal.end">
           {{ dayjs(dataset.temporal.start).format('LL') }} - {{ dayjs(dataset.temporal.end).format('LL') }}
         </template>
@@ -124,13 +124,13 @@
         v-if="dataset.frequency"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('frequency') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('frequency') }}</div>
         {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
       <!-- Modified or dataUpdatedAt -->
       <v-col v-bind="metadataColProps">
-        <div class="text-caption text-medium-emphasis">{{ metadataLabel('modified') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('modified') }}</div>
         <div class="d-flex align-center ga-2">
           {{ dayjs(dataset.modified || dataset.dataUpdatedAt).format('LL') }}
         </div>
@@ -142,7 +142,7 @@
         :key="customMeta.key"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
         <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
       </v-col>
 
@@ -150,7 +150,7 @@
         v-if="metadataConfig.showAttachments && dataset.attachments?.filter(a => a.url !== dataset!.image).length"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ t('attachments') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ t('attachments') }}</div>
         <dataset-attachments :dataset="dataset" />
       </v-col>
 
@@ -159,7 +159,7 @@
           v-if="dataset.public && metadataConfig.location !== 'right'"
           v-bind="metadataColProps"
         >
-          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <div class="text-body-small text-medium-emphasis">{{ t('share') }}</div>
           <social-share :title="dataset.title" />
         </v-col>
       </ClientOnly>
@@ -169,8 +169,7 @@
 
     <!-- Actions, update date and share -->
     <v-row
-      class="ma-0"
-      align="center"
+      class="ma-0 align-center"
     >
       <v-col class="py-0 my-2" cols="12">
         <template v-if="!dataset.isMetaOnly">

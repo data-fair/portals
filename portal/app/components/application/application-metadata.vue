@@ -13,7 +13,7 @@
 
       <!-- Base application -->
       <v-col v-bind="metadataColProps">
-        <div class="text-caption text-medium-emphasis"> {{ t('application') }}</div>
+        <div class="text-body-small text-medium-emphasis"> {{ t('application') }}</div>
         {{ baseApplicationFetch.data.value?.title || application.url.split('/').slice(-3,-2).pop() }}
       </v-col>
 
@@ -22,7 +22,7 @@
         v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <owner-avatar
             :owner="application.owner"
@@ -39,7 +39,7 @@
           v-if="application.public && metadataConfig.location !== 'right'"
           v-bind="metadataColProps"
         >
-          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <div class="text-body-small text-medium-emphasis">{{ t('share') }}</div>
           <social-share :title="application.title" />
         </v-col>
       </ClientOnly>
@@ -49,8 +49,7 @@
 
     <!-- Actions, update date and share -->
     <v-row
-      class="ma-0"
-      align="center"
+      class="ma-0 align-center"
     >
       <v-col v-bind="metadataColProps">
         <action-btn

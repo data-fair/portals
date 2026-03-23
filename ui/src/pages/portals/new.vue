@@ -68,7 +68,7 @@
 
           <!-- Select owner -->
           <template v-if="hasDepartments">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('form.owner') }}
             </h2>
             <owner-pick
@@ -79,7 +79,7 @@
           </template>
 
           <!-- Default -->
-          <h2 class="text-h6">
+          <h2 class="text-title-large">
             {{ t('initFromOtherPortal.title') }}
           </h2>
           <v-row class="d-flex align-stretch mt-2">
@@ -104,7 +104,7 @@
 
           <!-- Reference portals -->
           <template v-if="referencePortalsFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferencePortal.title') }}
             </h2>
             <p>{{ t('useReferencePortal.description') }}</p>
@@ -133,7 +133,7 @@
 
           <!-- Duplicate existing portal -->
           <template v-if="userPortalsFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePortal.title') }}
             </h2>
             <p>{{ t('duplicatePortal.description') }}</p>
@@ -189,7 +189,7 @@
 
           <!-- Reference templates -->
           <template v-if="homeReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -221,7 +221,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="homePagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>
@@ -300,7 +300,7 @@
 
           <!-- Reference templates -->
           <template v-if="datasetsReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -332,7 +332,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="datasetsPagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>
@@ -411,7 +411,7 @@
 
           <!-- Reference templates -->
           <template v-if="applicationsReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -443,7 +443,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="applicationsPagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>

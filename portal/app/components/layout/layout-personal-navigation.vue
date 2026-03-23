@@ -125,7 +125,7 @@
         v-bind="{ 'title': t('publishYourData') + ' - ' + t('newWindow') }"
       >
         <template #title>
-          <span class="text-caption">{{ t('publishYourData') }}</span>
+          <span class="text-body-small">{{ t('publishYourData') }}</span>
         </template>
       </v-list-item>
     </template>

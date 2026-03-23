@@ -10,17 +10,17 @@
       :style="fontFamiliesVariables"
     >
       <p
-        class="text-h3 mb-4"
+        class="text-headline-large mb-4"
       >
         {{ t('titleExample') }}
       </p>
       <p
-        class="text-body-1 mb-4"
+        class="text-body-large mb-4"
       >
         {{ t('paragraphExample') }}
       </p>
       <v-btn
-        class="text-body-1"
+        class="text-body-large"
         color="primary"
       >
         {{ t('buttonExample') }}

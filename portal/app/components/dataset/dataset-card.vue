@@ -104,7 +104,7 @@
         <v-row
           v-if="cardConfig.showDepartment"
           class="px-4 my-2"
-          dense
+          density="comfortable"
         >
           <v-col
             v-if="cardConfig.showDepartment"
@@ -121,7 +121,7 @@
             class="d-flex align-center"
             :class="{ 'ml-2': cardConfig.showDepartment }"
           >
-            <span class="text-caption">
+            <span class="text-body-small">
               {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
             </span>
           </v-col> -->

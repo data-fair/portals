@@ -32,7 +32,7 @@ providePortalStore($portal, $siteInfo)
 provideNavigationStore({ isIframe })
 
 const meta = [
-  { name: 'theme-color', content: theme.current.value.colors.primary },
+  { name: 'theme-color', content: String(theme.current.value.colors.primary) },
   { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
 ]
 if ($portal.draft || !$portal.config.allowRobots) meta.push({ name: 'robots', content: 'noindex' })
@@ -46,19 +46,7 @@ useHead({
 })
 </script>
 
-<style lang="scss">
-@use 'sass:map';
-@use 'vuetify/settings' as v;
-
-// When the screen is exactly 1280px (xl threshold), keep the lg width
-.container {
-  $xl-threshold: map.get(v.$grid-breakpoints, 'xl') + 1px;
-
-  @media (max-width: #{$xl-threshold}) {
-    max-width: map.get(v.$grid-breakpoints, 'lg') !important;
-  }
-}
-
+<style>
 .text-two-lines {
   white-space: unset !important;
   display: -webkit-box;

@@ -9,7 +9,7 @@
   <v-row
     v-else
     :align="element.align === 'stretch' ? 'stretch' : undefined"
-    :dense="element.gutter === 'dense'"
+    :density="element.gutter === 'dense' ? 'comfortable' : undefined"
     :no-gutters="element.gutter === 'none'"
     :justify="element.centered ? 'center' : undefined"
     :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`]"

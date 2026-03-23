@@ -56,9 +56,9 @@
 
           <!-- Description (wrapped after 2 lines)-->
           <v-list-item v-if="page.config.description">
-            <v-list-item-title class="text-two-lines">
+            <span class="text-two-lines">
               {{ page.config.description }}
-            </v-list-item-title>
+            </span>
           </v-list-item>
         </v-list>
       </v-card-text>

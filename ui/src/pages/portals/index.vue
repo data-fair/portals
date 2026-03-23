@@ -24,14 +24,14 @@
     <!-- No portals created -->
     <span
       v-else-if="!portalsFetch.data.value?.results.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noPortalsCreated') }}
     </span>
     <!-- No portals displayed (filters) -->
     <span
       v-else-if="!displayPortals.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noPortalsDisplayed') }}
     </span>

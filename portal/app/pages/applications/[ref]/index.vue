@@ -93,8 +93,7 @@
       <!-- Back to applications link -->
       <v-row
         v-if="applicationsCatalogExists"
-        class="my-4"
-        justify="center"
+        class="my-4 justify-center"
       >
         <nav-link
           :link="{

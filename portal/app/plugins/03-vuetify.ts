@@ -1,6 +1,5 @@
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
 import { fr, en } from 'vuetify/locale'
-import { createRulesPlugin } from 'vuetify/labs/rules'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const themeCookie = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
@@ -48,8 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   })
 
-  nuxtApp.hook('vuetify:ready', (vuetify) => {
-    nuxtApp.vueApp.use(createRulesPlugin({ }, vuetify.locale))
+  nuxtApp.hook('vuetify:ready', () => {
     nuxtApp.vueApp.use(createUiNotif())
   })
 })

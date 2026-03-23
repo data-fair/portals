@@ -90,16 +90,14 @@
       <template #chip="{ props, item }">
         <v-chip
           v-bind="props"
-          :prepend-icon="item.raw.value.icon?.svgPath"
-          :text="item.title"
+          :prepend-icon="item.value.icon?.svgPath"
         />
       </template>
 
       <template #item="{ props, item }">
         <v-list-item
           v-bind="props"
-          :prepend-icon="item.raw.value.icon?.svgPath"
-          :title="item.title"
+          :prepend-icon="item.value.icon?.svgPath"
         />
       </template>
     </v-autocomplete>
@@ -152,14 +150,14 @@
       <template #chip="{ props, item }">
         <v-chip
           v-bind="props"
-          :prepend-avatar="item.raw.avatar"
+          :prepend-avatar="item.avatar"
         />
       </template>
 
       <template #item="{ props, item }">
         <v-list-item
           v-bind="props"
-          :prepend-avatar="item.raw.avatar"
+          :prepend-avatar="item.avatar"
         />
       </template>
     </v-autocomplete>
@@ -187,42 +185,14 @@
     cols="12"
     :md="colSize"
   >
-    <v-select
-      v-model="sort"
+    <catalog-sort
+      v-model:sort="sort"
+      v-model:order="order"
       :items="sortItems"
-      :label="t('sort.by')"
       :density="config.filters?.density ?? portalConfig.defaults?.density"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
-      variant="outlined"
-      hide-details
-      clearable
-    >
-      <template v-if="!drawer" #append>
-        <!-- Order toggle -->
-        <v-btn-toggle
-          v-model="order"
-          :density="config.filters?.density ?? portalConfig.defaults?.density"
-          :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
-          variant="outlined"
-          class="h-100"
-          divided
-          mandatory
-        >
-          <v-btn
-            value="-1"
-            :icon="mdiSortDescending"
-            :title="t('descending')"
-            stacked
-          />
-          <v-btn
-            value="1"
-            :icon="mdiSortAscending"
-            :title="t('ascending')"
-            stacked
-          />
-        </v-btn-toggle>
-      </template>
-    </v-select>
+      :hide-order="drawer"
+    />
   </v-col>
 
   <!-- Order toggle (drawer) -->
@@ -465,8 +435,6 @@ const sortItems = computed(() => {
 
 <i18n lang="yaml">
   en:
-    ascending: Ascending order
-    descending: Descending order
     export: Export filtered data as CSV
     filters:
       concepts: Concepts
@@ -481,9 +449,10 @@ const sortItems = computed(() => {
       noKeywords: No keywords available
       noOwners: No owners available
       noChoices: No choices available # When a label is overridden
+    ascending: Ascending order
+    descending: Descending order
     search: Search
     sort:
-      by: Sort by
       createdAt: Creation date
       dataUpdatedAt: Data update date
       updatedAt: Update date
@@ -493,8 +462,6 @@ const sortItems = computed(() => {
       date: Publication date
 
   fr:
-    ascending: Ordre croissant
-    descending: Ordre décroissant
     export: Exporter les données filtrées au format CSV
     filters:
       concepts: Concepts
@@ -509,9 +476,10 @@ const sortItems = computed(() => {
       noKeywords: Aucun mot-clé disponible
       noOwners: Aucun propriétaire disponible
       noChoices: Aucun choix disponible # When a label is overridden
+    ascending: Ordre croissant
+    descending: Ordre décroissant
     search: Rechercher
     sort:
-      by: Trier par
       createdAt: Date de création
       dataUpdatedAt: Date de mise à jour des données
       updatedAt: Date de mise à jour

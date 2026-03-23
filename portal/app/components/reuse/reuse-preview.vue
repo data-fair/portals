@@ -27,7 +27,7 @@
   <!-- Author -->
   <p
     v-if="reuseConfig.author"
-    class="text-subtitle-1 mb-4"
+    class="text-title-medium mb-4"
   >
     {{ t('publishedBy', { author: reuseConfig.author }) }}
   </p>
@@ -77,8 +77,7 @@
   <!-- Back to reuses link -->
   <v-row
     v-if="reusesCatalogExists"
-    class="my-4"
-    justify="center"
+    class="my-4 justify-center"
   >
     <nav-link
       :link="{

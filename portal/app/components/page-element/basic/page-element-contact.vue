@@ -98,7 +98,7 @@
                 :elevation="buttonConfig?.elevation ?? portalConfig.defaults?.elevation"
                 :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
                 :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
-                :class="{ 'text-none': !buttonConfig?.uppercase }"
+                :class="{ 'text-uppercase': buttonConfig?.uppercase }"
                 :text="t('send')"
                 :readonly="!valid"
                 :loading="sendMessage.loading.value"
@@ -165,7 +165,7 @@
                 v-if="element.showInfo"
                 class="my-2"
               />
-              <p class="text-caption">{{ t('socialMedia') }}</p>
+              <p class="text-body-small">{{ t('socialMedia') }}</p>
               <social-links :links="portalConfig.socialLinks" />
             </template>
           </v-card-text>

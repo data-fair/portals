@@ -49,7 +49,7 @@
           <!-- Social links in left column -->
           <div
             v-if="showSocialLinks && portalConfig.footer.socialPosition === 'left'"
-            class="w-100 text-center text-caption"
+            class="w-100 text-center text-body-small"
           >
             <div>{{ t('socialMedia') }}</div>
             <social-links :links="portalConfig.socialLinks" />
@@ -89,7 +89,7 @@
           <!-- Social links in main column -->
           <div
             v-if="showSocialLinks && portalConfig.footer.socialPosition === 'main'"
-            class="mb-4 text-caption"
+            class="mb-4 text-body-small"
             :class="getAlignmentClass('center')"
           >
             <div>{{ t('socialMedia') }}</div>
@@ -99,7 +99,7 @@
           <!-- Extra logos -->
           <v-row
             v-if="portalConfig.footer.extraLogos.length || portalConfig.footer.copyright === 'logo'"
-            justify="center"
+            class="justify-center"
           >
             <v-col
               v-for="(extraLogo, index) in portalConfig.footer.extraLogos"
@@ -149,8 +149,7 @@
           <!-- Links in single line -->
           <v-row
             v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'lines'"
-            class="my-2"
-            justify="center"
+            class="my-2 justify-center"
           >
             <v-col
               v-for="(link, key) in portalConfig.footer.links"

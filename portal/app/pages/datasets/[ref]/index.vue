@@ -57,8 +57,7 @@
         <v-row
           v-for="attachment in urlAttachments"
           :key="attachment.url"
-          align="center"
-          class="mb-4"
+          class="mb-4 align-center"
         >
           <v-col cols="12">
             <NuxtLink
@@ -187,7 +186,7 @@
           <v-row
             v-for="app in orderedApplications"
             :key="app.id"
-            align="center"
+            class="align-center"
           >
             <v-col cols="12">
               <NuxtLink
@@ -217,8 +216,7 @@
           <v-row
             v-for="(app, index) in orderedApplications"
             :key="app.id"
-            align="center"
-            class="mb-4"
+            class="mb-4 align-center"
           >
             <!-- Large display: title, description and visualization full width -->
             <template v-if="app.preferLargeDisplay">
@@ -345,8 +343,7 @@
       <!-- Back to datasets link -->
       <v-row
         v-if="datasetsCatalogExists"
-        class="my-4"
-        justify="center"
+        class="my-4 justify-center"
       >
         <nav-link
           :link="{

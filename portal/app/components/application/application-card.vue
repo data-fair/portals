@@ -111,7 +111,7 @@
             cols="auto"
             class="d-flex align-center"
           >
-            <span class="text-caption">
+            <span class="text-body-small">
               {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
             </span>
           </v-col>

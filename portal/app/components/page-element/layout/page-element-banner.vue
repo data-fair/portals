@@ -19,7 +19,7 @@
       backgroundPosition: 'center',
     } : undefined"
   >
-    <v-container :class="[{ 'container': !pageConfig?.fluid }, 'pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4), 'pl-' + (element.pl ?? 4), 'pr-' + (element.pr ?? 4)]">
+    <v-container :class="['pt-' + (element.pt ?? 4), 'pb-' + (element.pb ?? 4), 'pl-' + (element.pl ?? 4), 'pr-' + (element.pr ?? 4)]">
       <slot
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageConfig, PageElement, BannerElement } from '#api/types/page/index.ts'
+import type { PageElement, BannerElement } from '#api/types/page/index.ts'
 
 const { element } = defineProps<{
   element: BannerElement
@@ -46,7 +46,7 @@ const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
 const { showTopBreadcrumbs } = useNavigationStore()
-const pageConfig = inject<Ref<PageConfig>>('page-config')
+// const pageConfig = inject<Ref<PageConfig>>('page-config')
 
 </script>
 

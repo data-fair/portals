@@ -1,7 +1,7 @@
 <template>
   <div :class="element.mb !== 0 && `mb-${element.mb ?? 4}`">
     <v-row
-      :dense="element.gutter === 'dense'"
+      :density="element.gutter === 'dense' ? 'comfortable' : undefined"
       :no-gutters="element.gutter === 'none'"
       :align="isStretch ? 'stretch' : undefined"
     >

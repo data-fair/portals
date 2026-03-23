@@ -2,10 +2,8 @@
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
     <LayoutBreadcrumbs v-if="!isHome && showTopBreadcrumbs" />
     <v-container
-      :class="{
-        'container': !isFluid,
-        'pt-0': showTopBreadcrumbs
-      }"
+      :class="{ 'pt-0': showTopBreadcrumbs }"
+      :fluid="isFluid"
     >
       <slot />
     </v-container>

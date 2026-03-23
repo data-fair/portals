@@ -8,7 +8,6 @@
           hideDetails: 'auto'
         },
         VjsfVerticalTabs: {
-          VBtn: { class: 'text-none' },
           VTabs: { color: 'primary' }
         }
       }"

@@ -18,7 +18,7 @@
     </component>
 
     <v-row
-      dense
+      density="comfortable"
       class="ma-0"
     >
       <v-col>

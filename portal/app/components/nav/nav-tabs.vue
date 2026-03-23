@@ -18,7 +18,7 @@
           <v-tab
             v-bind="menuProps"
             :class="[
-              !navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined,
+              navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-uppercase' : undefined,
               navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
             ]"
             :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"
@@ -42,7 +42,7 @@
       <v-tab
         v-else
         :class="[
-          !navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-none' : undefined,
+          navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-uppercase' : undefined,
           navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
         ]"
         :style="navBarConfig.tabsStyle?.includes('largerFont') ? 'font-size: 1rem' : undefined"

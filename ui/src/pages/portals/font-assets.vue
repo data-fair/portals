@@ -11,7 +11,7 @@
           v-if="!addToggle"
           class="mb-4"
         >
-          <p class="mb-3 text-body-2 text-medium-emphasis">
+          <p class="mb-3 text-body-medium text-medium-emphasis">
             {{ t('msg') }}
           </p>
           <v-btn
