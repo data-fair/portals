@@ -1,5 +1,4 @@
 import type { AxiosAuthOptions } from '@data-fair/lib-node/axios-auth.js'
-
 import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { axiosAuth as _axiosAuth } from '@data-fair/lib-node/axios-auth.js'
 import mongo from '@data-fair/lib-node/mongo.js'

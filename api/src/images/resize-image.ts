@@ -26,7 +26,9 @@ export default async (input: ResizeInput): Promise<ResizeOutput> => {
       ? sharp(buf)
       : sharp(buf, { raw: { width: largest.width, height: largest.height, channels: 4 } })
   } else {
-    sharpImage = sharp(input.filePath)
+    const metadata = await sharp(input.filePath).metadata()
+    const isAnimated = (metadata.pages ?? 0) > 1
+    sharpImage = sharp(input.filePath, { animated: isAnimated })
   }
 
   const resized = sharpImage.resize(input.width, input.height, { withoutEnlargement: true }).webp()
