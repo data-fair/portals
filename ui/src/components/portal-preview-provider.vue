@@ -36,14 +36,8 @@ try {
 
 // @ts-ignore
 const portalConfigDefault: PortalConfig = {
-  datasets: {
-    card: {},
-    page: {}
-  },
-  applications: {
-    card: {},
-    page: {}
-  },
+  datasets: { card: {}, page: {} },
+  applications: { card: {}, page: {} },
   reuses: {
     card: {},
     page: {
@@ -51,6 +45,8 @@ const portalConfigDefault: PortalConfig = {
       showImage: true
     }
   },
+  events: { card: {} },
+  news: { card: {} },
   socialShares: ['bluesky', 'x', 'facebook', 'linkedin', 'reddit', 'sms', 'whatsapp'],
   contactInformations: {
     infos: t('contactInfoExample'),

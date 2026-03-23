@@ -13,7 +13,7 @@ import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 import dfEs from '../es.ts'
 import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
-import { type SearchRequest } from '@elastic/elasticsearch/lib/api/types'
+import type { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
 
 const router = Router()
 export default router
@@ -171,21 +171,21 @@ router.delete('/:id', async (req, res, next) => {
   const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), req.headers.cookie)
   sendPortalEvent(portal, 'a été supprimé', 'delete', session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await validatePortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await cancelPortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/ingress', async (req, res, next) => {
@@ -194,7 +194,7 @@ router.post('/:id/ingress', async (req, res, next) => {
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
   await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], req.headers.cookie)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.get('/:id/search', async (req, res, next) => {

@@ -1,5 +1,4 @@
 /* eslint-disable no-template-curly-in-string */
-
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-datasets',
   'x-exports': [],

@@ -19,7 +19,8 @@
     "prepare": "husky || true",
     "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.ts",
     "quality": "npm run dev-deps && npm run lint && npm run build-types && npm -w ui run build && npm run check-types && npm run test && npm audit --omit=dev --audit-level=critical",
-    "test-base": "NODE_CONFIG_DIR=./api/config/ NODE_ENV=test EVENTS_LOG_LEVEL=alert node --disable-warning=ExperimentalWarning --test-force-exit --test-concurrency=1 --test",
+    "test-base": "NODE_ENV=test EVENTS_LOG_LEVEL=alert node --disable-warning=ExperimentalWarning --test-force-exit --test-concurrency=1 --test",
+    "test-only": "npm run test-base -- --test-only test-it/*.ts",
     "test": "npm run test-base test-it/*.ts"
   },
   "workspaces": [
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
+    "@data-fair/lib-common-types": "^1.20.1",
     "@koumoul/vjsf-compiler": "^1.2.3",
     "@types/config": "^3.3.5",
     "@types/debug": "^4.1.12",

@@ -35,7 +35,7 @@ export default {
       type: 'boolean',
       default: false
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },
     config: { $ref: 'https://github.com/data-fair/portals/portal-config' },

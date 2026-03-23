@@ -7,7 +7,6 @@ import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
-import { reindexPage } from '../search-pages/service.ts'
 import { pageFacets } from './aggregations.ts'
 
 const router = Router()
@@ -48,7 +47,14 @@ router.get('', async (req, res, next) => {
     mongo.pages.aggregate(pageFacets(query, showAll)).toArray()
   ])
 
-  res.json({ results, count, facets: facets[0] })
+  const enrichedResults = results.map(page => {
+    const userPermissions = getUserPermissions(session, page as Page)
+    const accountRole = getAccountRole(session, (page as Page).owner)
+    if (accountRole !== 'admin') delete (page as any).permissions
+    return { ...page, userPermissions }
+  })
+
+  res.json({ results: enrichedResults, count, facets: facets[0] })
 })
 
 router.post('', async (req, res, next) => {
@@ -130,19 +136,19 @@ router.delete('/:id', async (req, res, next) => {
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
   sendPageEvent(page, 'a été supprimée', 'delete', session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await validatePageDraft(page, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await cancelPageDraft(page, session)
-  res.status(201).send()
+  res.status(204).send()
 })

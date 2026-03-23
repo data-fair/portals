@@ -119,21 +119,21 @@ router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await validateReuseDraft(reuse, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await cancelReuseDraft(reuse, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/submit', async (req, res, next) => {
@@ -143,5 +143,5 @@ router.post('/:id/submit', async (req, res, next) => {
 
   if (!portalId) throw httpError(400, 'portalId is required')
   await submitReuse(reuse, portalId, session)
-  res.status(201).send()
+  res.status(204).send()
 })

@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Emitter } from '@data-fair/lib-common-types/event'
+import type { Emitter } from '@data-fair/lib-common-types/event/index.js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiBell } from '@mdi/js'
 

@@ -30,6 +30,7 @@ COPY --from=package-strip /app/package-lock.json package-lock.json
 ADD ui/package.json ui/package.json
 ADD api/package.json api/package.json
 ADD portal/package.json portal/package.json
+ADD types-portals/package.json types-portals/package.json
 ADD patches patches
 # full deps install used for types and ui building
 # also used to fill the npm cache for faster install of api deps
@@ -45,6 +46,7 @@ FROM installer AS types
 ADD api/config api/config
 ADD api/types api/types
 ADD api/doc api/doc
+ADD types-portals types-portals
 RUN npm run build-types
 
 # =============================
@@ -124,6 +126,7 @@ ADD /api api
 COPY --from=types /app/api/types api/types
 COPY --from=types /app/api/doc api/doc
 COPY --from=types /app/api/config api/config
+COPY --from=types /app/types-portals types-portals
 COPY --from=api-installer /app/shared/node_modules shared/node_modules
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist

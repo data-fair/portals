@@ -16,10 +16,10 @@ export default {
       title: 'Slug',
       readOnly: true
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     submitter: {
       allOf: [
-        { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+        { $ref: 'https://github.com/data-fair/lib/account' },
         {
           type: 'object',
           additionalProperties: false,

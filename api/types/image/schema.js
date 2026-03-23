@@ -11,7 +11,7 @@ export default {
       title: 'Identifiant',
       readOnly: true
     },
-    owner: { $ref: 'https://github.com/data-fair/lib/session-state#/$defs/account' },
+    owner: { $ref: 'https://github.com/data-fair/lib/account' },
     resource: {
       type: 'object',
       additionalProperties: false,
