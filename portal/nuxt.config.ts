@@ -12,9 +12,11 @@ contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
 // strict-dynamic necessary for analytics
 contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
-console.log(process.env)
-
 export default defineNuxtConfig({
+  // TODO: remove when nitropack properly calls esbuild.stop() after build
+  hooks: {
+    close: () => { process.exit(0) }
+  },
   devServer: {
     port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
@@ -24,12 +26,15 @@ export default defineNuxtConfig({
     '#api/types': '../../api/types'
   },
   runtimeConfig: {
-    mainPublicUrl: 'http://localhost:5600',
-    privateDirectoryUrl: 'http://simple-directory:' + process.env.SD_PORT,
-    mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
+    mainPublicUrl: 'http://localhost:5610',
+    privateDirectoryUrl: 'http://simple-directory:8081',
+    mongoUrl: 'mongodb://localhost:27022/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
-    secretIgnoreRateLimiting: ''
+    secretIgnoreRateLimiting: '',
+    elasticsearchNodes: 'http://localhost:9205',
+    elasticsearchAuth: '',
+    elasticsearchCA: ''
   },
   security: {
     nonce: true,

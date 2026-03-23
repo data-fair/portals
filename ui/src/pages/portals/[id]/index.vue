@@ -142,13 +142,7 @@
       <portal-actions
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
-        :portal="{
-          id: route.params.id,
-          title: portalFetch.data.value.config.title,
-          url: portalFetch.data.value.ingress?.url,
-          whiteLabel: portalFetch.data.value.whiteLabel,
-          isReference: portalFetch.data.value.isReference
-        }"
+        :portal="portalFetch.data.value"
         @refresh-portal="portalFetch.refresh()"
       />
     </navigation-right>
@@ -249,6 +243,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   context: {
     pages: pages.value,
     owner: session.account.value,
+    adminMode: session.user.value.adminMode,
     // used by schema https://github.com/data-fair/lib/theme to hide some parts
     simplifiedTheme: true
   },

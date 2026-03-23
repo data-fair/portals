@@ -89,25 +89,13 @@ All pages use **the same pattern**: `/portal/api/pages/[type]/[slug]`
 For unique pages (home, contact, accessibility,...), the `slug` is repeated and identical to the `type`.
 
 ```text
-/portal/api/pages/[type]          → Retrieves a list of pages (event/news only)
 /portal/api/pages/[type]/[slug]   → Retrieves a specific page
 /portal/api/pages/[type]/[slug]/images/[id] → Retrieves an image from this page
 /portal/api/images                → Retrieves a portal image
 /portal/api/portal                → Retrieves portal information
 ```
 
-### 1. Route `/portal/api/pages/[type]` - GET
-
-This route **lists only** pages of type `event` or `news`.
-
-**Query Parameters:**
-
-- `limit` (optional): Number of results (1-100, default: 10)
-- `skip` (optional): Number of results to skip for pagination (default: 0)
-- `sort` (optional): `"asc"` or `"desc"` (default: desc, by update date)
-- `group` (optional): Group slug for filtering
-
-### 2. Route `/portal/api/pages/[type]/[slug]` - GET
+### 1. Route `/portal/api/pages/[type]/[slug]` - GET
 
 Retrieves the configuration of a specific page.
 

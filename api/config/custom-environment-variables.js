@@ -7,7 +7,8 @@ export default {
     identities: 'SECRET_IDENTITIES',
     events: 'SECRET_EVENTS',
     sites: 'SECRET_SITES',
-    ingress: 'SECRET_INGRESS'
+    ingress: 'SECRET_INGRESS',
+    searchPages: 'SECRET_SEARCH_PAGES'
   },
   observer: {
     active: 'OBSERVER_ACTIVE',
@@ -19,5 +20,16 @@ export default {
     __name: 'INGRESS_CONTROLLERS',
     __format: 'json'
   },
-  upgradeRoot: 'UPGRADE_ROOT'
+  upgradeRoot: 'UPGRADE_ROOT',
+  elasticsearch: {
+    nodes: {
+      __name: 'ES_NODES',
+      __format: 'json'
+    },
+    auth: {
+      __name: 'ES_AUTH',
+      __format: 'json'
+    },
+    ca: 'ES_CA'
+  },
 }
