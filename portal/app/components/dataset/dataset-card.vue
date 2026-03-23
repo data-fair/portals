@@ -5,8 +5,8 @@
   -->
   <v-card
     :to="!preview ? `/datasets/${dataset.slug}` : undefined"
-    :elevation="cardConfig.elevation ?? 0"
-    :rounded="cardConfig.rounded ?? 'default'"
+    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
+    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
     class="h-100 d-flex flex-column"
     link
   >

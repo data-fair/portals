@@ -19,9 +19,10 @@ export const axiosAuth = (opts: string | Omit<AxiosAuthOptions, 'directoryUrl' |
 }
 
 export const clean = async () => {
-  for (const name of ['portals', 'pages']) {
+  for (const name of ['portals', 'pages', 'reuses', 'search-pages', 'groups', 'font-assets', 'images']) {
     await mongo.db.collection(name).deleteMany({})
   }
+  await es.client.indices.delete({ index: 'portal-search-test-*', ignore_unavailable: true }).catch(err => { console.log(err) })
 }
 
 export const startApiServer = async () => {

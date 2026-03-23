@@ -8,6 +8,7 @@ import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
+import { reindexReuse } from '../search-pages/service.ts'
 
 const router = Router()
 export default router
@@ -107,6 +108,10 @@ router.patch('/:id', async (req, res, next) => {
     }
   }
 
+  for (const portalId of updatedReuse.portals) {
+    await reindexReuse(updatedReuse, portalId)
+  }
+
   res.send(updatedReuse)
 })
 
@@ -114,21 +119,21 @@ router.delete('/:id', async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
   sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await validateReuseDraft(reuse, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.delete('/:id/draft', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await cancelReuseDraft(reuse, session)
-  res.status(201).send()
+  res.status(204).send()
 })
 
 router.post('/:id/submit', async (req, res, next) => {
@@ -138,5 +143,5 @@ router.post('/:id/submit', async (req, res, next) => {
 
   if (!portalId) throw httpError(400, 'portalId is required')
   await submitReuse(reuse, portalId, session)
-  res.status(201).send()
+  res.status(204).send()
 })

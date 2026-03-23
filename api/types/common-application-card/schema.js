@@ -170,21 +170,11 @@ export default {
           title: 'Afficher les thématiques',
           layout: 'switch',
         },
-        color: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics'
-        },
-        elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
-        },
-        density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
-        },
-        rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
-        },
-        variant: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
-        },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' },
         showIcon: {
           type: 'boolean',
           title: "Afficher l'icône",

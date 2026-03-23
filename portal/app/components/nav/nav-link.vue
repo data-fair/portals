@@ -8,9 +8,9 @@
     :target="link.target ? '_blank' : undefined"
     :rel="link.target ? 'noopener' : undefined"
     :color="config?.color"
-    :density="config?.density"
-    :elevation="config?.elevation"
-    :rounded="config?.rounded"
+    :density="config?.density ?? portalConfig.defaults?.density"
+    :elevation="config?.elevation ?? portalConfig.defaults?.elevation"
+    :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
     :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
     :active="false"
@@ -44,7 +44,7 @@ defineProps<{
 
 const { locale } = useI18n()
 
-const { preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 </script>
