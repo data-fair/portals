@@ -28,7 +28,6 @@ export const clean = async () => {
 export const startApiServer = async () => {
   // Before tests
   process.env.SUPPRESS_NO_CONFIG_WARNING = '1'
-  process.env.NODE_CONFIG_DIR = 'api/config/'
   const apiServer = await import('../../api/src/server.ts')
   await apiServer.start()
 }

@@ -1,5 +1,4 @@
 import type { WritableComputedRef } from 'vue'
-import type { UseFetchOptions } from 'nuxt/app'
 
 type FetchResult<T> = { count: number; results: T[] }
 
@@ -44,14 +43,8 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
 
   const query = computed(() => config.buildQuery(filters, sortFilter.value, currentPage.value, pageSize))
 
-  const fetchOptions: UseFetchOptions<FetchResult<T>> = { query, watch: false }
-  if (config.useLocalFetch) {
-    fetchOptions.$fetch = useNuxtApp().$localFetch
-  }
-  const itemsFetch = useFetch<FetchResult<T>>(config.endpoint, fetchOptions)
-
+  const itemsFetch = useFetch<FetchResult<T>>(config.endpoint, { query, watch: false })
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
-
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
 
   const goToPage = async (page: number) => {

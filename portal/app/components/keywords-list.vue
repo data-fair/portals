@@ -1,7 +1,7 @@
 <template>
   <v-row
     v-if="keywords.length"
-    density="comfortable"
+    density="compact"
   >
     <v-col
       v-for="keyword in keywords"

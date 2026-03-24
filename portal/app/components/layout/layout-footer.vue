@@ -179,6 +179,7 @@
           <v-row
             v-if="portalConfig.footer.links.length && portalConfig.footer.linksMode === 'columns'"
             class="my-2"
+            density="compact"
           >
             <v-col
               v-for="(link, key) in portalConfig.footer.links"

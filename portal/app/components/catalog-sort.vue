@@ -20,7 +20,7 @@
         class="h-100"
         divided
         mandatory
-        @update:model-value="$emit('update:order', $event)"
+        @update:model-value="onOrderChange"
       >
         <v-btn
           value="-1"
@@ -47,7 +47,7 @@
     class="w-100 mt-6"
     divided
     mandatory
-    @update:model-value="$emit('update:order', $event)"
+    @update:model-value="onOrderChange"
   >
     <v-btn
       value="-1"
@@ -76,12 +76,14 @@ defineProps<{
   drawer?: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   'update:sort': [value: string]
-  'update:order': [value: '-1' | '1']
+  'update:order': [value: '-1' | '1' | undefined]
 }>()
 
+const onOrderChange = (val: string) => emit('update:order', val as '-1' | '1')
 const { t } = useI18n({ useScope: 'local' })
+
 </script>
 
 <i18n lang="yaml">

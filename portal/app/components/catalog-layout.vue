@@ -145,7 +145,7 @@ defineEmits<{
   'go-to-page': [page: number]
   'load-more': []
   'update:sort': [value: string]
-  'update:order': [value: '-1' | '1']
+  'update:order': [value: '-1' | '1' | undefined]
 }>()
 
 defineSlots<{

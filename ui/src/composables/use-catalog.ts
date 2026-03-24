@@ -1,8 +1,9 @@
-import type { CatalogReturn } from '../../../portal/app/composables/use-catalog'
+import type { CatalogReturn, CatalogConfig } from '../../../portal/app/composables/use-catalog'
+import type { WritableComputedRef } from 'vue'
 
-export function useCatalog<T, F> (
+export function useCatalog<T, F extends Record<string, WritableComputedRef<string, string> | WritableComputedRef<string[], string[]> | WritableComputedRef<boolean, boolean>>> (
   _element: { defaultSort?: string },
-  config: { mockDataFactory?: () => T[] }
+  config: CatalogConfig<T, F>
 ): CatalogReturn<T, F> {
   const displayedItems = ref(config.mockDataFactory?.() ?? []) as Ref<T[]>
 

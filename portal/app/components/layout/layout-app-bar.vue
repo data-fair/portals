@@ -1,7 +1,6 @@
 <template>
   <component
     :is="preview ? VToolbar : VAppBar"
-    ref="appBarRef"
     :color="headerConfig.show && headerConfig.color ? headerConfig.color : navBarConfig.color"
     :class="[
       (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
@@ -31,7 +30,6 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
-const appBarRef = ref()
 const isScrolled = ref(false)
 
 onMounted(() => {
