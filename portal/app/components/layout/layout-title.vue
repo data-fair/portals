@@ -63,7 +63,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.015625em !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 .text-h2 {
@@ -71,7 +71,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.0083333333em !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 .text-h3 {
@@ -79,7 +79,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: normal !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 .text-h4 {
@@ -87,7 +87,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 400;
   line-height: 1.175;
   letter-spacing: .0073529412em !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 .text-h5 {
@@ -95,7 +95,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 400;
   line-height: 1.333;
   letter-spacing: normal !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 .text-h6 {
@@ -103,7 +103,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-weight: 500;
   line-height: 1.6;
   letter-spacing: .0125em !important;
-  font-family: var(--d-heading-font-family, var(--v-font-heading, 'Roboto', sans-serif));
+  font-family: var(--d-heading-font-family);
   text-transform: none;
 }
 </style>

@@ -155,6 +155,8 @@ const items = computed(() => {
       dataset: "Dataset card preview"
       application: "Application card preview"
       reuse: "Reuse card preview"
+      event: "Event card preview"
+      news: "News card preview"
     dataset:
       title: 'Dataset {i}'
       longTitle: "Here is a dataset with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
@@ -169,25 +171,43 @@ const items = computed(() => {
       longTitle: "Here is a reuse with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
       summary: This is a reuse preview example.
       author: "John Doe"
+    event:
+      title: 'Event {i}'
+      longTitle: "Here is an event with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
+      summary: This is an event preview example.
+    news:
+      title: 'News {i}'
+      longTitle: "Here is a news with a particularly long title, specifically designed to test the preview and observe precisely how the card truncates the text according to the different configurations of the number of lines."
+      summary: This is a news preview example.
   fr:
     nbColumns: 'Nombre de colonnes'
     topic: Thématique {i}
     title:
       dataset: "Vignette d'un jeu de données"
-      application: "Vignette d'une application"
+      application: "Vignette d'une visualisation"
       reuse: "Vignette d'une réutilisation"
+      event: "Vignette d'un événement"
+      news: "Vignette d'une actualité"
     dataset:
       title: 'Jeu de données {i}'
       longTitle: "Voici un jeu de données doté d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
       summary: "Ceci est un exemple de jeu de données pour la prévisualisation."
       keyword: Mot-cle {i}
     application:
-      title: 'Application {i}'
-      longTitle: "Voici une application dotée d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
-      summary: "Ceci est un exemple d'application pour la prévisualisation."
+      title: 'Visualisation {i}'
+      longTitle: "Voici une visualisation dotée d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
+      summary: "Ceci est un exemple de visualisation pour la prévisualisation."
     reuse:
       title: 'Réutilisation {i}'
       longTitle: "Voici une réutilisation dotée d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
       summary: "Ceci est un exemple de réutilisation pour la prévisualisation."
       author: "Jean Dupont"
+    event:
+      title: 'Événement {i}'
+      longTitle: "Voici un événement doté d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
+      summary: "Ceci est un exemple d'événement pour la prévisualisation."
+    news:
+      title: 'Actualité {i}'
+      longTitle: "Voici une actualité dotée d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
+      summary: "Ceci est un exemple d'actualité pour la prévisualisation."
 </i18n>

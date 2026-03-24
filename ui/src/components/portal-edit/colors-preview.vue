@@ -17,10 +17,7 @@
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
 
-    <v-row
-      density="comfortable"
-      class="ma-0"
-    >
+    <v-row density="comfortable">
       <v-col>
         <v-card
           :title="t('cardExample.title')"
@@ -39,7 +36,7 @@
       v-for="color of colorKeys"
       :key="color"
     >
-      <v-row class="ma-0">
+      <v-row>
         <template
           v-for="variant of buttonVariants"
           :key="variant"

@@ -86,6 +86,18 @@
               type="reuse"
             />
           </template>
+          <template #event-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="event"
+            />
+          </template>
+          <template #news-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="news"
+            />
+          </template>
 
           <template #color-select-item="context">
             <v-theme-provider theme="preview-colors">

@@ -1,15 +1,9 @@
 <template>
   <v-container class="h-100 d-flex flex-column justify-center pb-0">
-    <v-row
-      v-if="headerConfig.showSocial"
-      class="ma-0"
-    >
-      <v-spacer />
+    <v-row v-if="headerConfig.showSocial" class="no-gutters justify-end">
       <social-links :links="portalConfig.socialLinks" />
     </v-row>
-    <v-row
-      class="ma-0 align-center"
-    >
+    <v-row class="align-center">
       <layout-header-logo
         v-if="logo"
         :logo="logo"
