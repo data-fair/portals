@@ -191,44 +191,15 @@
       :items="sortItems"
       :density="config.filters?.density ?? portalConfig.defaults?.density"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
-      :hide-order="drawer"
+      :drawer="drawer"
     />
-  </v-col>
-
-  <!-- Order toggle (drawer) -->
-  <v-col
-    v-if="drawer && showFilter('sort')"
-    cols="12"
-  >
-    <v-btn-toggle
-      v-model="order"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
-      :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
-      variant="outlined"
-      class="w-100"
-      divided
-      mandatory
-    >
-      <v-btn
-        value="-1"
-        :icon="mdiSortDescending"
-        :title="t('descending')"
-        class="flex-grow-1"
-      />
-      <v-btn
-        value="1"
-        :icon="mdiSortAscending"
-        :title="t('ascending')"
-        class="flex-grow-1"
-      />
-    </v-btn-toggle>
   </v-col>
 </template>
 
 <script setup lang="ts">
 import type { DatasetsCatalogElement, ApplicationsCatalogElement, ReusesCatalogElement, EventCatalogElement, NewsCatalogElement } from '#api/types/page'
 import type { Account } from '@data-fair/lib-vue/session'
-import { mdiMagnify, mdiSortAscending, mdiSortDescending, mdiHome, mdiBook } from '@mdi/js'
+import { mdiMagnify, mdiHome, mdiBook } from '@mdi/js'
 
 type Concept = {
   id: string
@@ -449,8 +420,6 @@ const sortItems = computed(() => {
       noKeywords: No keywords available
       noOwners: No owners available
       noChoices: No choices available # When a label is overridden
-    ascending: Ascending order
-    descending: Descending order
     search: Search
     sort:
       createdAt: Creation date
@@ -476,8 +445,6 @@ const sortItems = computed(() => {
       noKeywords: Aucun mot-clé disponible
       noOwners: Aucun propriétaire disponible
       noChoices: Aucun choix disponible # When a label is overridden
-    ascending: Ordre croissant
-    descending: Ordre décroissant
     search: Rechercher
     sort:
       createdAt: Date de création

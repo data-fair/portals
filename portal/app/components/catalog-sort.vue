@@ -9,8 +9,9 @@
     hide-details
     clearable
     @update:model-value="$emit('update:sort', $event)"
+    @click:clear="$emit('update:order', undefined)"
   >
-    <template v-if="!hideOrder" #append>
+    <template v-if="!drawer" #append>
       <v-btn-toggle
         :model-value="order"
         :density="density"
@@ -36,6 +37,31 @@
       </v-btn-toggle>
     </template>
   </v-select>
+
+  <v-btn-toggle
+    v-if="drawer"
+    :model-value="order"
+    :density="density"
+    :rounded="rounded"
+    variant="outlined"
+    class="w-100 mt-6"
+    divided
+    mandatory
+    @update:model-value="$emit('update:order', $event)"
+  >
+    <v-btn
+      value="-1"
+      :icon="mdiSortDescending"
+      :title="t('descending')"
+      class="flex-grow-1"
+    />
+    <v-btn
+      value="1"
+      :icon="mdiSortAscending"
+      :title="t('ascending')"
+      class="flex-grow-1"
+    />
+  </v-btn-toggle>
 </template>
 
 <script setup lang="ts">
@@ -47,7 +73,7 @@ defineProps<{
   items: unknown[]
   density?: 'default' | 'comfortable' | 'compact'
   rounded?: string | number | boolean
-  hideOrder?: boolean
+  drawer?: boolean
 }>()
 
 defineEmits<{
