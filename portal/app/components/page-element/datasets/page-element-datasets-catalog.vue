@@ -48,7 +48,7 @@ import { mdiCog } from '@mdi/js'
 
 type DatasetResult = Omit<Dataset, 'userPermissions'>
 
-interface DatasetFilters {
+type DatasetFilters = {
   search: ReturnType<typeof useStringSearchParam>
   concepts: ReturnType<typeof useStringsArraySearchParam>
   topics: ReturnType<typeof useStringsArraySearchParam>

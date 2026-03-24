@@ -33,7 +33,7 @@
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationsCatalogElement } from '#api/types/page-config'
 
-interface ApplicationFilters {
+type ApplicationFilters = {
   search: ReturnType<typeof useStringSearchParam>
   baseApplication: ReturnType<typeof useStringsArraySearchParam>
   topics: ReturnType<typeof useStringsArraySearchParam>

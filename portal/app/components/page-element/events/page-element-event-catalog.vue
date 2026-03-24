@@ -34,7 +34,7 @@
 import type { PageConfig } from '#api/types/page-config'
 import type { EventCatalogElement } from '#api/types/page-elements/index.ts'
 
-interface EventFilters {
+type EventFilters = {
   search: ReturnType<typeof useStringSearchParam>
   includePast: ReturnType<typeof useBooleanSearchParam>
 }
