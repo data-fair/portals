@@ -200,7 +200,7 @@ if (!preview) {
       page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
-    if (filters.sort.value) query.sort = filters.sort.value
+    if (filters.sort.value && !(filters.search.value && filters.sort.value === element.defaultSort)) query.sort = filters.sort.value
     return query
   })
   reusesFetch = useFetch<ReuseFetch>('/portal/api/reuses', { query: reusesQuery, watch: false })

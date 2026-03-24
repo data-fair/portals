@@ -171,7 +171,7 @@ const headingTag = computed(() => {
 
 const filters = {
   search: useStringSearchParam('q'),
-  sort: useStringSearchParam('sort')
+  sort: useStringSearchParam('sort', { default: element.defaultSort })
 }
 
 const sort = ref<string>()
@@ -193,7 +193,7 @@ if (!preview) {
       page: currentPage.value
     }
     if (filters.search.value) query.q = filters.search.value
-    if (filters.sort.value) query.sort = filters.sort.value
+    if (filters.sort.value && !(filters.search.value && filters.sort.value === element.defaultSort)) query.sort = filters.sort.value
     return query
   })
   newsFetch = useFetch<NewsFetch>('/portal/api/news', { query: newsQuery, watch: false })

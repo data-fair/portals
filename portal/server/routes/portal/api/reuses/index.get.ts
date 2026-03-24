@@ -17,9 +17,15 @@ export default defineEventHandler(async (event) => {
   if (query.slugs) mongoQuery.slug = { $in: query.slugs.split(',') }
   if (query.dataset) mongoQuery['config.datasets.id'] = query.dataset
 
-  const sort = mongoSort(query.sort || 'updatedAt:-1')
   const { skip, size } = mongoPagination(query)
-  const projection = mongoProjection(query.select)
+  const projection: Record<string, 0 | 1 | { $meta: string }> = mongoProjection(query.select) || {}
+  let sort
+  if (query.q && !query.sort) {
+    sort = { score: { $meta: 'textScore' } }
+    projection.score = { $meta: 'textScore' }
+  } else {
+    sort = mongoSort(query.sort || 'updatedAt:-1')
+  }
 
   const [count, results] = await Promise.all([
     portalMongo.reuses.countDocuments(mongoQuery),

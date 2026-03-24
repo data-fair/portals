@@ -208,7 +208,7 @@ if (!preview) {
     if (filters.baseApplication.value?.length) query['base-application'] = filters.baseApplication.value.join(',')
     if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
-    if (filters.sort.value) query.sort = filters.sort.value
+    if (filters.sort.value && !(filters.search.value && filters.sort.value === element.defaultSort)) query.sort = filters.sort.value
     return query
   })
   applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery, watch: false })
