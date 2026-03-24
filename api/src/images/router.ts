@@ -43,13 +43,20 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
 
   const createdAt = new Date().toISOString()
   const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8')
+  let resizeOutput: ResizeOutput
+  try {
+    resizeOutput = await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string })
+  } catch (err: any) {
+    if (err?.message === 'IMAGE_EXCEEDS_PIXEL_LIMIT') throw httpError(400, 'image exceeds maximum pixel limit')
+    throw httpError(500, `image processing failed: ${err?.message ?? err}`)
+  }
   const image: Image = {
     _id: randomUUID(),
     owner: { ...session.account, department: undefined, departmentName: undefined },
     createdAt,
     name: originalName,
     ...body,
-    ...(await resizePiscina.run({ filePath: file.path, width: query.width, height: query.height, mimetype: file.mimetype as string }))
+    ...resizeOutput
   }
 
   // prepare mobile variant if necessary
