@@ -91,7 +91,7 @@ const {
     if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
     if (filters.keywords.value?.length) query.keywords = filters.keywords.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
-    if (sortValue) query.sort = sortValue
+    if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
     return query
   },
   mockDataFactory: () => {

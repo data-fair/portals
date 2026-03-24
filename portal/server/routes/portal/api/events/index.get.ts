@@ -35,19 +35,29 @@ export default defineEventHandler(async (event) => {
     startDate: 'config.eventMetadata.startDate',
     title: 'config.title'
   }
-  const [sortField = 'startDate', sortOrder = '1'] = (query.sort || 'startDate:1').split(':')
-  const mongoSortField = fieldMap[sortField] ?? 'config.eventMetadata.startDate'
-  const sort = mongoSort(`${mongoSortField}:${sortOrder ?? '1'}`)
   const { skip, size } = mongoPagination(query)
 
-  const pipeline = [
-    { $match: mongoQuery },
+  let sort
+  const pipeline: Record<string, unknown>[] = [
+    { $match: mongoQuery }
+  ]
+
+  if (query.q && !query.sort) {
+    sort = { score: { $meta: 'textScore' } }
+    pipeline.push({ $addFields: { score: { $meta: 'textScore' } } })
+  } else {
+    const [sortField = 'startDate', sortOrder = '-1'] = (query.sort || 'startDate:-1').split(':')
+    const mongoSortField = fieldMap[sortField] ?? 'config.eventMetadata.startDate'
+    sort = mongoSort(`${mongoSortField}:${sortOrder}`)
+  }
+
+  pipeline.push(
     { $sort: sort },
     { $skip: skip },
     { $limit: size },
-    { $project: { _id: 0, 'config.elements': 0 } },
+    { $project: { _id: 0, 'config.elements': 0, score: 0 } },
     { $replaceRoot: { newRoot: '$config' } }
-  ]
+  )
 
   const [count, results] = await Promise.all([
     portalMongo.pages.countDocuments(mongoQuery),

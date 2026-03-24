@@ -17,25 +17,34 @@ export default defineEventHandler(async (event) => {
 
   if (query.q) mongoQuery.$text = { $search: query.q }
   if (query.slugs) mongoQuery['config.newsMetadata.slug'] = { $in: query.slugs.split(',') }
+  const { skip, size } = mongoPagination(query)
 
   // Sort: remap URL field names to MongoDB paths, then delegate to mongoSort for typing
   const fieldMap: Record<string, string> = {
     date: 'config.newsMetadata.date',
     title: 'config.title'
   }
-  const [sortField = 'date', sortOrder = '1'] = (query.sort || 'date:1').split(':')
-  const mongoSortField = fieldMap[sortField] ?? 'config.newsMetadata.date'
-  const sort = mongoSort(`${mongoSortField}:${sortOrder ?? '1'}`)
-  const { skip, size } = mongoPagination(query)
+  let sort
+  const pipeline: Record<string, unknown>[] = [
+    { $match: mongoQuery }
+  ]
 
-  const pipeline = [
-    { $match: mongoQuery },
+  if (query.q && !query.sort) {
+    sort = { score: { $meta: 'textScore' } }
+    pipeline.push({ $addFields: { score: { $meta: 'textScore' } } })
+  } else {
+    const [sortField = 'date', sortOrder = '-1'] = (query.sort || 'date:-1').split(':')
+    const mongoSortField = fieldMap[sortField] ?? 'config.newsMetadata.date'
+    sort = mongoSort(`${mongoSortField}:${sortOrder}`)
+  }
+
+  pipeline.push(
     { $sort: sort },
     { $skip: skip },
     { $limit: size },
-    { $project: { _id: 0, 'config.elements': 0 } },
+    { $project: { _id: 0, 'config.elements': 0, score: 0 } },
     { $replaceRoot: { newRoot: '$config' } }
-  ]
+  )
 
   const [count, results] = await Promise.all([
     portalMongo.pages.countDocuments(mongoQuery),

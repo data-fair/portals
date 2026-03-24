@@ -57,7 +57,7 @@ const {
       page
     }
     if (filters.search.value) query.q = filters.search.value
-    if (sortValue) query.sort = sortValue
+    if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
     return query
   },
   mockDataFactory: () => Array.from({ length: 6 }, (_, i) => ({
