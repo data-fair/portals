@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "postinstall": "nuxt prepare",
     "check-types": "nuxt typecheck",
     "dev": "dotenv -v NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development -v NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.localhost:$NGINX_PORT -v NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT -v NUXT_FRAME_ANCESTORS=http://localhost:$NGINX_PORT nuxt dev",
     "generate": "nuxt generate",
