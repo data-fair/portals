@@ -1,9 +1,13 @@
 <template>
   <v-container class="h-100 d-flex flex-column justify-center pb-0">
-    <v-row v-if="headerConfig.showSocial" class="no-gutters justify-end">
+    <v-row
+      v-if="headerConfig.showSocial"
+      class="justify-end align-center"
+      no-gutters
+    >
       <social-links :links="portalConfig.socialLinks" />
     </v-row>
-    <v-row class="align-center">
+    <v-row class="align-center mt-0">
       <layout-header-logo
         v-if="logo"
         :logo="logo"
@@ -81,7 +85,6 @@ This way, the correct styles are applied server-side from the start.
 @use 'vuetify/settings' as v;
 
 // Responsive font size for portal title based on Vuetify typography settings
-// Vuetify 4 MD3 mapping: h5 → headline-small, h4 → headline-medium
 .portal-title {
   @media #{map.get(v.$display-breakpoints, 'sm-and-down')} {
     font-size: map.get(map.get(v.$typography, 'headline-small'), 'size');

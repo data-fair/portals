@@ -71,6 +71,9 @@
     "neostandard": "^0.12.2",
     "tough-cookie": "^5.1.2"
   },
+  "overrides": {
+    "vue": "3.5.30"
+  },
   "relativeDependencies": {
     "@data-fair/lib-vuetify": "../lib/packages/vuetify"
   }
