@@ -368,11 +368,10 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/session'
-
 import { mdiAccount, mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
-import { computedAsync } from '@vueuse/core'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
+const hasDepartments = useHasDepartments()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
@@ -426,13 +425,6 @@ const userPagesFetch = useFetch<{ results: Array<{ _id: string, title: string, c
     immediate: false
   }
 )
-
-/** `True` if the active account isn't in a department and his organization has departments */
-const hasDepartments = computedAsync(async (): Promise<boolean> => {
-  if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath }) // Fetch the organization departments
-  return !!org.departments?.length // Check if the organization has departments
-}, false)
 
 // Pages list for step 2 (references or user pages)
 const pagesListForStep2 = computed(() => {

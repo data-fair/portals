@@ -17,45 +17,48 @@
       {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
     </component>
 
-    <v-row density="comfortable">
+    <v-row density="compact">
       <v-col>
         <v-card
+          class="h-100"
           :title="t('cardExample.title')"
           :text="t('cardExample.text')"
         />
       </v-col>
       <v-col>
         <v-card
+          class="h-100"
           :title="t('cardExample.title')"
           :text="t('cardExample.textInverse')"
           color="surface-inverse"
         />
       </v-col>
     </v-row>
-    <template
+
+    <v-row
       v-for="color of colorKeys"
       :key="color"
+      density="compact"
     >
-      <v-row>
-        <template
-          v-for="variant of buttonVariants"
-          :key="variant"
+      <v-col
+        v-for="variant of buttonVariants"
+        :key="variant"
+      >
+        <v-btn
+          :color="color"
+          :variant="variant"
+          block
         >
-          <v-btn
-            :color="color"
-            :variant="variant"
-            class="ma-2"
-          >
-            {{ color }}
-          </v-btn>
-        </template>
+          {{ color }}
+        </v-btn>
+      </v-col>
+      <v-col>
         <v-icon
           :icon="mdiEmoticonKissOutline"
           :color="color"
-          class="ma-2"
         />
-      </v-row>
-    </template>
+      </v-col>
+    </v-row>
   </preview>
 </template>
 
@@ -118,7 +121,7 @@ const colorsWarnings = computed(() => {
 
   fr:
     cardExample:
-      title: Une carte
+      title: Vignette
       text: Couleur des surfaces.
       textInverse: Couleur inversée des surfaces.
 

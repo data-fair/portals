@@ -244,13 +244,13 @@
 import type { Portal } from '#api/types/portal/index.ts'
 import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
-import { computedAsync } from '@vueuse/core'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const { pageFetch, hasDraftDiff, pageId, page, pageUrl } = usePageStore()
 const { previewPortalId } = usePreviewPortal()
+const hasDepartments = useHasDepartments()
 const showChangeOwnerMenu = ref(false)
 const showCancelDraftMenu = ref(false)
 
@@ -292,13 +292,6 @@ const deletePage = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}`, { method: 'DELETE' })
   router.push('/pages')
 })
-
-/** `True` if the active account isn't in a department and his organization has departments */
-const hasDepartments = computedAsync(async (): Promise<boolean> => {
-  if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
-  return !!org.departments?.length
-}, false)
 
 // For "View On" links
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress'>

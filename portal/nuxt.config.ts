@@ -96,13 +96,13 @@ export default defineNuxtConfig({
     '@data-fair/portals-shared-markdown/style.css',
     'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
-  vue: {
-    compilerOptions: {
-      isCustomElement: (tag) => tag === 'd-frame'
-    }
-  },
+  vue: { compilerOptions: { isCustomElement: (tag) => tag === 'd-frame' } },
   vuetify: {
     moduleOptions: {
+      styles: {
+        colors: false,
+        configFile: '@data-fair/lib-vuetify/style/settings.scss'
+      },
       ssrClientHints: {
         // reloadOnFirstRequest: false, // disabled because broken with Brave unfortunately
         viewportSize: true

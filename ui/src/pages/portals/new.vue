@@ -501,9 +501,9 @@ import type { Page } from '#api/types/page/index.ts'
 import type { Account } from '@data-fair/lib-common-types/session/index.js'
 
 import { mdiDatabase, mdiHome, mdiImageMultiple, mdiTextBox } from '@mdi/js'
-import { computedAsync } from '@vueuse/core'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
+const hasDepartments = useHasDepartments()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
@@ -604,13 +604,6 @@ const goToNext = () => {
   else if (step.value === 'datasets-catalog') step.value = 'applications-catalog'
   else if (step.value === 'applications-catalog') createPortal.execute()
 }
-
-/** `True` if the active account isn't in a department and his organization has departments */
-const hasDepartments = computedAsync(async (): Promise<boolean> => {
-  if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
-  return !!org.departments?.length
-}, false)
 
 const createPortal = useAsyncAction(
   async () => {

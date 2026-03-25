@@ -70,5 +70,8 @@
     "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "tough-cookie": "^5.1.2"
+  },
+  "relativeDependencies": {
+    "@data-fair/lib-vuetify": "../lib/packages/vuetify"
   }
 }

@@ -21,8 +21,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     dark = true
   }
 
-  // https://nuxt.vuetifyjs.com/guide/nuxt-runtime-hooks.html
-
+  // https://nuxt.vuetifyjs.com/guide/advanced/runtime-hooks.html
   nuxtApp.hook('vuetify:before-create', ({ vuetifyOptions }) => {
     vuetifyOptions.locale = {
       locale: langCookie.value,

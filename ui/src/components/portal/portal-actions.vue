@@ -325,12 +325,12 @@
 <script setup lang="ts">
 import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit, mdiProgressUpload } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
-import { computedAsync } from '@vueuse/core'
 import { Portal } from '#api/types/portal/index.ts'
 
 const { t } = useI18n()
-const session = useSessionAuthenticated()
 const router = useRouter()
+const session = useSessionAuthenticated()
+const hasDepartments = useHasDepartments()
 const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
 const showWhiteLabelMenu = ref(false)
@@ -400,13 +400,6 @@ const updateIsReference = useAsyncAction(async (value: boolean) => {
   success: t('isReferenceUpdated'),
   error: t('errorUpdatingIsReference'),
 })
-
-/** `True` if the active account isn't in a department and his organization has departments */
-const hasDepartments = computedAsync(async (): Promise<boolean> => {
-  if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
-  return !!org.departments?.length
-}, false)
 
 </script>
 
