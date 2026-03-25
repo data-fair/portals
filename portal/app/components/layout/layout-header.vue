@@ -1,8 +1,8 @@
 <template>
-  <v-container class="h-100 d-flex flex-column justify-center pb-0">
+  <v-container class="h-100 pb-0">
     <v-row
       v-if="headerConfig.showSocial"
-      class="justify-end align-center"
+      class="justify-end"
       no-gutters
     >
       <social-links :links="portalConfig.socialLinks" />
