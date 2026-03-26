@@ -29,13 +29,14 @@
           :md="portalConfig.applications.page.metadata?.location === 'right' ? 8 : 12"
           cols="12"
         >
-          <img
+          <v-img
             v-if="portalConfig.applications.page.showImage && application.image"
             :alt="application.title"
             :src="application.image"
             class="mb-4"
-            style="max-height:300px"
-          >
+            max-height="300"
+            max-width="100%"
+          />
           <div
             class="text-break"
             v-html="/*eslint-disable-line vue/no-v-html*/application.description"

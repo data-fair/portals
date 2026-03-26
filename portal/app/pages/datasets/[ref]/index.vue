@@ -29,13 +29,14 @@
           :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
           cols="12"
         >
-          <img
+          <v-img
             v-if="portalConfig.datasets.page.showImage && dataset.image"
             :alt="dataset.title"
             :src="dataset.image"
             class="mb-4"
-            style="max-height:300px"
-          >
+            max-height="300"
+            max-width="100%"
+          />
           <div
             class="text-break"
             v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
