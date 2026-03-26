@@ -166,6 +166,7 @@ import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
@@ -261,7 +262,13 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   density: 'comfortable',
   initialValidation: 'always',
   titleDepth: 4,
-  updateOn: 'blur'
+  updateOn: 'blur',
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
+  }
 }))
 
 </script>

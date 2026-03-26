@@ -84,9 +84,8 @@ const vjsfOptions: VjsfOptions = {
   },
   pluginsOptions: {
     markdown: {
-      easyMDEOptions: {
-        previewRender: renderMarkdown
-      }
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
     }
   },
   icons: {

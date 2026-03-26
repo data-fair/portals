@@ -260,6 +260,7 @@
 </template>
 
 <script setup lang="ts">
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { mdiPageNext } from '@mdi/js'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Reuse } from '#api/types/reuse/index'
@@ -292,7 +293,13 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   density: 'compact',
   updateOn: 'blur',
   initialValidation: 'always',
-  context: { isEmbed: true }
+  context: { isEmbed: true },
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
+  }
 }))
 
 const getStatusColor = (status: string) => {

@@ -48,6 +48,7 @@
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
 
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
@@ -120,6 +121,12 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   context: {
     pageType: pageFetch.data.value?.type,
     pages: pages.value
+  },
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
   }
 }))
 const vjsfDefaults = {
