@@ -1,5 +1,4 @@
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
-import { useNonce } from '#imports'
 import { fr, en } from 'vuetify/locale'
 
 export default defineNuxtPlugin((nuxtApp) => {

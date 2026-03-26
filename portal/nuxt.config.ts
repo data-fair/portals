@@ -6,7 +6,9 @@ const contentSecurityPolicy: Record<string, string[]> = {}
 for (const [name, value] of Object.entries(defaultNonceCSPDirectives)) {
   contentSecurityPolicy[name] = value.replace('{NONCE}', '{{nonce}}').split(' ')
 }
-
+// unsafe-inline is required for vuetify inline style attributes (style="...") on elements
+// nonces only work on <style> tags, not on element style attributes
+contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
 // strict-dynamic necessary for analytics
 contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
