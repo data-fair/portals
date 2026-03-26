@@ -10,7 +10,7 @@
     :is="isLayoutFull ? 'div' : VContainer"
     v-bind="isLayoutFull ? undefined : {
       class: 'pa-0',
-      fluid: true
+      fluid: breadcrumbConfig.fluid,
     }"
   >
     <nav :aria-label="t('breadcrumb')">

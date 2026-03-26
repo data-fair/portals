@@ -22,7 +22,7 @@
       size="small"
       class="mr-4"
     />
-    <div :class="element.color ? `text-${element.color}` : undefined">
+    <div :class="[element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]">
       {{ element.content }}
       <v-divider
         v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
