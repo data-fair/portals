@@ -39,10 +39,6 @@ usePageSeo({
   description: () => datasetFetch.data.value?.summary
 })
 
-// Set Last-Modified header based on updatedAt
-const header = useResponseHeader('Last-Modified')
-if (datasetFetch.data.value?.updatedAt) header.value = new Date(datasetFetch.data.value.updatedAt).toUTCString()
-
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
 </script>
 

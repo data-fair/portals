@@ -91,10 +91,6 @@ useJsonLd(() => {
   })
 })
 
-// Set Last-Modified header based on updatedAt
-const header = useResponseHeader('Last-Modified')
-if (reuseFetch.data.value?.updatedAt) header.value = new Date(reuseFetch.data.value?.updatedAt).toUTCString()
-
 </script>
 
 <i18n lang="yaml">

@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
 import { defaultNonceCSPDirectives } from '@data-fair/lib-express/serve-spa'
 
 // cf https://nuxt-security.vercel.app/headers/csp
@@ -45,10 +44,6 @@ export default defineNuxtConfig({
     },
     // we use rate-limiting on reverse proxy instead
     rateLimiter: false
-  },
-  // cf https://vuetifyjs.com/en/getting-started/installation/#using-nuxt-3
-  build: {
-    transpile: ['vuetify']
   },
   components: [
     { path: '~/components', pathPrefix: false }
@@ -96,7 +91,7 @@ export default defineNuxtConfig({
     '@data-fair/portals-shared-markdown/style.css',
     'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
-  vue: { compilerOptions: { isCustomElement: (tag) => tag === 'd-frame' } },
+  vue: { compilerOptions: { isCustomElement: (tag: string) => tag === 'd-frame' } },
   vuetify: {
     moduleOptions: {
       styles: {
@@ -119,5 +114,10 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+  // recommended by vuetify-nuxt-module
+  // https://nuxt.vuetifyjs.com/guide/features/ssr.html#vuetify-sass-variables
+  features: {
+    inlineStyles: false
   }
 })
