@@ -4,7 +4,10 @@
     :elevation="metadataConfig.elevation ?? portalConfig.defaults?.elevation"
   >
     <!-- Application Metadata -->
-    <v-row class="ma-0">
+    <v-row
+      class="px-3 py-2"
+      density="compact"
+    >
       <!--
         All fields are wrapped in v-cols for responsive grid layout
         that adapts to screen size and metadataLocation setting
@@ -49,7 +52,8 @@
 
     <!-- Actions, update date and share -->
     <v-row
-      class="ma-0 align-center"
+      density="compact"
+      class="align-center px-3 py-2"
     >
       <v-col v-bind="metadataColProps">
         <action-btn
@@ -105,7 +109,7 @@ const baseApplicationFetch = useLocalFetch<{
 
 const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const metadataColProps = computed(() => ({
-  class: 'py-0 my-2',
+  class: 'py-0',
   cols: 12,
   md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))

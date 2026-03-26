@@ -4,7 +4,10 @@
     :elevation="metadataConfig.elevation ?? portalConfig.defaults?.elevation"
   >
     <!-- Dataset Metadata -->
-    <v-row class="ma-0">
+    <v-row
+      class="px-3 py-2"
+      density="compact"
+    >
       <!--
         All fields are wrapped in v-cols for responsive grid layout
         that adapts to screen size and metadata.location setting
@@ -169,9 +172,10 @@
 
     <!-- Actions, update date and share -->
     <v-row
-      class="ma-0 align-center"
+      density="compact"
+      class="align-center px-3 py-2"
     >
-      <v-col class="py-0 my-2" cols="12">
+      <v-col cols="12">
         <template v-if="!dataset.isMetaOnly">
           <action-btn
             v-if="shouldShowActionButton('table')"
@@ -254,7 +258,7 @@ const { dayjs } = useLocaleDayjs()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const metadataColProps = computed(() => ({
-  class: 'py-0 my-2',
+  class: 'py-0',
   cols: 12,
   md: metadataConfig.value.location !== 'right' ? 4 : 12
 }))
