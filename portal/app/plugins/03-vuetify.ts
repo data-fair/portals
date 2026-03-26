@@ -1,7 +1,9 @@
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
+import { useNonce } from '#imports'
 import { fr, en } from 'vuetify/locale'
 
 export default defineNuxtPlugin((nuxtApp) => {
+  const cspNonce = useNonce()
   const themeCookie = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
   const langCookie = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
 
@@ -29,7 +31,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       messages: { fr, en }
     }
     vuetifyOptions.theme = {
-      // TODO: cspNonce
+      cspNonce,
       defaultTheme: themeCookie.value,
       themes: {
         [themeCookie.value]: {
