@@ -28,7 +28,7 @@
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
-      class="d-flex justify-center w-100"
+      :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img
         ref="img"
@@ -43,7 +43,7 @@
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
-      class="d-flex justify-center w-100"
+      :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img
         ref="img"
