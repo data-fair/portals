@@ -92,6 +92,27 @@ export default defineNuxtConfig({
     '@data-fair/portals-shared-markdown/style.css',
     'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
+  // pre-bundle dependencies to avoid full page reloads during dev
+  // cf https://vite.dev/guide/dep-pre-bundling.html
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@analytics/google-analytics',
+        '@data-fair/lib-vue/session.js',
+        '@data-fair/lib-vue/ui-notif.js',
+        '@data-fair/lib-vue/locale-dayjs.js',
+        '@data-fair/lib-vue/async-action.js',
+        '@data-fair/lib-utils/micro-template.js',
+        '@data-fair/lib-vue/reactive-search-params.js',
+        '@data-fair/frame/lib/d-frame.js',
+        '@data-fair/frame/lib/vue-router/d-frame-content.js',
+        '@data-fair/frame/lib/vue-router/state-change-adapter.js',
+        '@vueuse/core',
+        '@mdi/js',
+        'analytics'
+      ]
+    }
+  },
   vue: { compilerOptions: { isCustomElement: (tag: string) => tag === 'd-frame' } },
   vuetify: {
     moduleOptions: {

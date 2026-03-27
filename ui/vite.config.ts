@@ -7,13 +7,34 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Vuetify from 'vite-plugin-vuetify'
 import microTemplate from '@data-fair/lib-utils/micro-template.js'
-import { autoImports, settingsPath } from '@data-fair/lib-vuetify/vite.js'
+import { autoImports } from '@data-fair/lib-vue/vite.js'
+import { settingsPath } from '@data-fair/lib-vuetify/vite.js'
 import { commonjsDeps } from '@koumoul/vjsf/utils/build.js'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/portals-manager',
-  optimizeDeps: { include: ['debug', 'easymde', ...commonjsDeps] },
+  // pre-bundle dependencies to avoid full page reloads during dev
+  // cf https://vite.dev/guide/dep-pre-bundling.html
+  optimizeDeps: {
+    include: [
+      'debug',
+      'easymde',
+      ...commonjsDeps,
+      '@data-fair/frame/lib/d-frame.js',
+      '@data-fair/frame/lib/vue-router/use-parent-url.js',
+      '@data-fair/lib-common-types/theme/index.js',
+      '@data-fair/lib-utils/micro-template.js',
+      '@data-fair/lib-utils/marked-vuetify.js',
+      '@data-fair/lib-utils/sanitize-html.js',
+      '@koumoul/vjsf/composables/use-vjsf.js',
+      '@vueuse/core',
+      'fast-deep-equal',
+      'sanitize-html',
+      'marked',
+      'ofetch'
+    ]
+  },
   resolve: {
     alias: {
       '#portal': path.resolve(__dirname, '../portal'),
