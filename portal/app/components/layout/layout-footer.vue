@@ -231,6 +231,7 @@
                 target="_blank"
                 rel="noopener"
                 variant="text"
+                class="text-uppercase"
               >
                 <template #prepend>
                   <v-icon

@@ -1,9 +1,9 @@
 <template>
   <v-bottom-sheet
     v-model="show"
+    :max-width="600"
     persistent
     inset
-    :max-width="600"
   >
     <v-sheet
       rounded
@@ -16,12 +16,12 @@
         <v-spacer />
         <v-col
           :cols="12"
-          :sm="7"
+          :sm="8"
         >
           <v-switch
             v-model="authorizeTracking"
-            color="primary"
             :label="t('authorizeTracking')"
+            color="primary"
           />
         </v-col>
         <v-spacer />
@@ -61,8 +61,6 @@ const save = () => {
 }
 
 </script>
-
-<style lang="css"></style>
 
 <i18n lang="yaml">
   en:
