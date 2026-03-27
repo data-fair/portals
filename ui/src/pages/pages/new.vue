@@ -49,16 +49,6 @@
             :icon="mdiFile"
           />
         </template>
-        <template v-if="hasDepartments">
-          <v-divider />
-          <v-stepper-item
-            value="owner"
-            :title="t('selectOwner')"
-            :color="step === 'owner' ? 'primary' : ''"
-            :editable="actionType === 'blank' || selectedPageId !== undefined"
-            :icon="mdiAccount"
-          />
-        </template>
         <v-divider />
         <v-stepper-item
           value="information"
@@ -319,15 +309,7 @@
           </v-row>
         </v-stepper-window-item>
 
-        <!-- Step 4: Select owner (optional) -->
-        <v-stepper-window-item value="owner">
-          <owner-pick
-            v-model="newOwner"
-            v-model:ready="ownersReady"
-          />
-        </v-stepper-window-item>
-
-        <!-- Step 5: Page information -->
+        <!-- Step 4: Page information -->
         <v-stepper-window-item value="information">
           <v-form
             v-model="valid"
@@ -342,6 +324,16 @@
               required
             />
           </v-form>
+          <template v-if="hasDepartments">
+            <h2 class="text-title-large mt-4">
+              {{ t('selectOwner') }}
+            </h2>
+            <owner-pick
+              v-model="newOwner"
+              v-model:ready="ownersReady"
+              message=" "
+            />
+          </template>
         </v-stepper-window-item>
       </v-stepper-window>
 
@@ -368,7 +360,7 @@
 
 <script setup lang="ts">
 import type { Account } from '@data-fair/lib-common-types/session'
-import { mdiAccount, mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
+import { mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
 const hasDepartments = useHasDepartments()
@@ -389,7 +381,7 @@ const contentPageTypes = ['news', 'event']
 const standardPageTypes = ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy']
 const catalogPageTypes = ['datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog']
 
-const step = ref<'type' | 'group' | 'action' | 'source' | 'owner' | 'information'>('type')
+const step = ref<'type' | 'group' | 'action' | 'source' | 'information'>('type')
 const pageType = ref<string | undefined>(undefined)
 const selectedGroupId = ref<string | undefined>(undefined)
 const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
@@ -432,8 +424,10 @@ const pagesListForStep2 = computed(() => {
 })
 
 const isNextButtonDisabled = computed(() => {
+  if (step.value === 'group') return selectedGroupId.value === undefined
+  if (step.value === 'action') return actionType.value === undefined
   if (step.value === 'source') return selectedPageId.value === undefined
-  if (step.value === 'information') return !valid.value
+  if (step.value === 'information') return !valid.value || (hasDepartments.value && !ownersReady.value)
   return false
 })
 
@@ -464,8 +458,8 @@ const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
   actionType.value = type
   selectedPageId.value = undefined
 
-  if (type === 'blank') { // Skip source step, go directly to owner or information
-    step.value = hasDepartments.value ? 'owner' : 'information'
+  if (type === 'blank') { // Skip source step, go directly to information
+    step.value = 'information'
   } else { // Go to source step to select a page
     step.value = 'source'
   }
@@ -473,7 +467,7 @@ const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
 
 const selectPage = (pageId: string) => {
   selectedPageId.value = pageId
-  step.value = hasDepartments.value ? 'owner' : 'information' // Go to next step (owner or information)
+  step.value = 'information'
 }
 
 const goToPreviousStep = () => {
@@ -484,20 +478,19 @@ const goToPreviousStep = () => {
     else step.value = 'type'
   } else if (step.value === 'source') {
     step.value = 'action'
-  } else if (step.value === 'owner') {
-    if (actionType.value === 'blank') step.value = 'action'
-    else step.value = 'source'
   } else if (step.value === 'information') {
-    if (hasDepartments.value) step.value = 'owner'
-    else if (actionType.value === 'blank') step.value = 'action'
+    if (actionType.value === 'blank') step.value = 'action'
     else step.value = 'source'
   }
 }
 
 const goToNextStep = () => {
-  if (step.value === 'information') createPage.execute()
-  else if (step.value === 'source') step.value = hasDepartments.value ? 'owner' : 'information'
-  else if (step.value === 'owner') step.value = 'information'
+  if (step.value === 'group') step.value = 'action'
+  else if (step.value === 'action') {
+    if (actionType.value === 'blank') step.value = 'information'
+    else if (actionType.value) step.value = 'source'
+  } else if (step.value === 'source') step.value = 'information'
+  else if (step.value === 'information') createPage.execute()
 }
 
 const createPage = useAsyncAction(
