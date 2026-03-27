@@ -1,0 +1,32 @@
+# Configure GitHub auto-generated release notes
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+# Labels are assigned automatically based on PR titles, see workflows/conventional-label.yaml
+# Full release notes guide: dev/RELEASES.md
+
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+    authors: []
+  categories:
+    - title: 🛠 Breaking Changes
+      labels:
+        - breaking
+    - title: 🚀 Features
+      labels:
+        - feature
+    - title: 🔧 Bug Fixes
+      labels:
+        - fix
+    - title: 🔬 Code Refactoring
+      labels:
+        - refactor
+    - title: ⚡ Performance
+      labels:
+        - perf
+    - title: 🔧 Chores
+      labels:
+        - chore
+    - title: Other Changes
+      labels:
+        - "*"
