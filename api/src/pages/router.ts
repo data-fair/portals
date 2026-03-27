@@ -6,7 +6,7 @@ import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
-import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, sendPageEvent } from './service.ts'
+import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, initCatalogPageElements, sendPageEvent } from './service.ts'
 import { pageFacets } from './aggregations.ts'
 import { reindexPage } from '../search-pages/service.ts'
 
@@ -78,6 +78,12 @@ router.post('', async (req, res, next) => {
   // Handle page duplication if sourcePageId is provided
   if (body.sourcePageId) {
     config.elements = await duplicatePageElements(session, body.sourcePageId, pageId, owner)
+  }
+
+  // Insert default catalog element for catalog page types if no elements provided
+  if (!config.elements || config.elements.length === 0) {
+    const defaultElements = initCatalogPageElements(body.type)
+    if (defaultElements) config.elements = defaultElements
   }
 
   const page: Page = {

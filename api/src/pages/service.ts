@@ -80,6 +80,20 @@ export const duplicatePageElements = async (
   return clonedElements
 }
 
+const catalogElementTypes: Record<string, PageElement['type']> = {
+  datasets: 'datasets-catalog',
+  applications: 'applications-catalog',
+  reuses: 'reuses-catalog',
+  'event-catalog': 'event-catalog',
+  'news-catalog': 'news-catalog'
+}
+
+export const initCatalogPageElements = (pageType: string): PageElement[] | null => {
+  const elementType = catalogElementTypes[pageType]
+  if (!elementType) return null
+  return [{ type: elementType } as PageElement]
+}
+
 export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 'news' | 'generic', owner: { type: string, id: string }) => {
   const metadataKey = pageType + 'Metadata'
   const baseSlug = slug.default(baseTitle, { lower: true, strict: true })
