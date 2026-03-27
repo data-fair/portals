@@ -402,9 +402,7 @@ const valid = ref(false)
 const isGenericPage = computed(() => pageType.value === 'generic')
 
 // Computed query for fetching pages based on selected type
-const type = computed(() => {
-  return pageType.value || 'generic'
-})
+const type = computed(() => pageType.value || 'generic')
 
 // Fetch reference pages (isReference: true)
 const referencesFetch = useFetch<{ results: Array<{ _id: string, title: string, config: { description?: string } }> }>(

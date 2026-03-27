@@ -382,10 +382,7 @@ providePageImageSrc('datasets', route.params.ref as string)
 const dataTab = ref<string | undefined>()
 
 const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
-  params: {
-    html: 'vuetify',
-    publicationSites: 'data-fair-portals:' + portal.value._id
-  }
+  params: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
 
@@ -447,12 +444,11 @@ const reusesCardConfig = computed(() => {
 const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
-  return withQuery('/data-fair/api/v1/datasets', {
+  return withQuery('/data-fair/api/v1/catalog/datasets', {
     select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
-    publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
 const relatedDatasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(relatedDatasetsUrl)

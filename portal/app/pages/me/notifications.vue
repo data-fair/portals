@@ -53,12 +53,11 @@ const notifyUrl = computed(() => {
 })
 
 const topicsFetch = useLocalFetch<{ results: [], count: number, facets: { topics: { count: string, value: { id: string, title: string } }[] } }>(
-  '/data-fair/api/v1/datasets',
+  '/data-fair/api/v1/catalog/datasets',
   {
     query: {
       facets: 'topics',
       mine: true,
-      publicationSites: 'data-fair-portals:' + portal.value._id,
       size: 0
     }
   })

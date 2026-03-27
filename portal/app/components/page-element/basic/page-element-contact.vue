@@ -225,12 +225,11 @@ type DatasetsFetchResult = { results: { id: string, title: string }[] }
 let datasetsFetch: ReturnType<typeof useLocalFetch<DatasetsFetchResult>> | undefined
 if (element.additionalFields?.some(field => field.type === 'dataset') && !preview) {
   datasetsFetch = useLocalFetch<DatasetsFetchResult>(
-    '/data-fair/api/v1/datasets',
+    '/data-fair/api/v1/catalog/datasets',
     {
       query: {
         select: 'id,title',
-        size: 1000,
-        publicationSites: 'data-fair-portals:' + portal.value._id,
+        size: 10000
       },
       watch: false
     }

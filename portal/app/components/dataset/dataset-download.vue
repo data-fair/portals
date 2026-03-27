@@ -114,7 +114,7 @@ if (!dataset.isVirtual && !dataset.isRest && !dataset.isMetaOnly) {
 }
 
 if (dataset.virtual?.children) {
-  const childrenFetch = await useLocalFetch<{ results: Dataset[] }>('/data-fair/api/v1/datasets', {
+  const childrenFetch = await useLocalFetch<{ results: Dataset[] }>('/data-fair/api/v1/catalog/datasets', {
     params: {
       id: dataset.virtual.children.join(','),
       select: 'id,isVirtual,isRest,isMetaOnly'

@@ -22,7 +22,7 @@ import type { DatasetsListElement } from '#api/types/page-elements/index.ts'
 type DatasetFetch = { count: number; results: Omit<Dataset, 'userPermissions'>[] }
 
 const { element } = defineProps<{ element: DatasetsListElement }>()
-const { portal, portalConfig, preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 
 let displayedDatasets: ComputedRef<DatasetFetch['results']>
 
@@ -31,13 +31,12 @@ if (!preview) {
   const datasetsQuery = computed(() => ({
     select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
-    publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,
     size: element.mode !== 'custom' ? element.limit : undefined,
     sort: element.mode === 'lastUpdated' ? 'dataUpdatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
-  const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery })
+  const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/catalog/datasets', { query: datasetsQuery })
   displayedDatasets = computed(() => {
     const results = datasetsFetch.data.value?.results || []
     if (element.mode === 'custom') return [...results].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)) // order by element.datasets

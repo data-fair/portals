@@ -18,7 +18,7 @@ const { t } = useI18n()
 const route = useRoute()
 const { origin } = useRequestURL()
 const { setBreadcrumbs } = useNavigationStore()
-const { portal, portalConfig } = usePortalStore()
+const { portalConfig } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
 
 const datasetFetch = await useLocalFetch<{
@@ -32,11 +32,7 @@ const datasetFetch = await useLocalFetch<{
   extras?: {
     applications?: { id: string; slug: string; updatedAt: string }[]
   }
-}>(`/data-fair/api/v1/datasets/${route.params.ref}`, {
-  params: {
-    publicationSites: 'data-fair-portals:' + portal.value._id
-  }
-})
+}>(`/data-fair/api/v1/datasets/${route.params.ref}`)
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card

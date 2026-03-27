@@ -220,6 +220,13 @@ const getIngressInfos = (portal: Portal) => {
 
 type SyncPart = 'ingress' | 'sd' | 'df'
 
+const formatSyncError = (service: string, err: any) => {
+  const status = err.response?.status
+  const data = err.response?.data
+  const message = typeof data === 'string' ? data : (data?.message || data?.msg || err.message)
+  throw httpError(status || 500, `${service} error${status ? ` (${status})` : ''}: ${message}`)
+}
+
 // portals are synced to settings.publicationSites in data-fair and to a dataset containing images
 export async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], cookie?: string) {
   debugSyncPortal('sync portal update', portal)
@@ -230,11 +237,15 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   } else {
     debugSyncPortal('sync to data-fair', publicationSite)
     const ownerId = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
-    await axios.post(
-      `${reqOrigin}/data-fair/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites`,
-      publicationSite,
-      { headers: { cookie } }
-    )
+    try {
+      await axios.post(
+        `${reqOrigin}/data-fair/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites`,
+        publicationSite,
+        { headers: { cookie } }
+      )
+    } catch (err: any) {
+      formatSyncError('data-fair', err)
+    }
   }
 
   const sdSites = await getSDSites(portal)
@@ -243,11 +254,15 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   } else {
     for (const site of sdSites) {
       debugSyncPortal('sync to SD', site)
-      await axios.post(
-        `${config.privateDirectoryUrl}/api/sites`,
-        site,
-        { params: { key: config.secretKeys.sites } }
-      )
+      try {
+        await axios.post(
+          `${config.privateDirectoryUrl}/api/sites`,
+          site,
+          { params: { key: config.secretKeys.sites } }
+        )
+      } catch (err: any) {
+        formatSyncError('simple-directory', err)
+      }
     }
   }
 
@@ -257,11 +272,15 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
       debugSyncPortal('nothing new to sync to ingress manager', ingressInfos)
     } else {
       debugSyncPortal('sync to ingress manager', ingressInfos)
-      await axios.post(
-          `${config.privateIngressManagerUrl}/api/ingress`,
-          ingressInfos,
-          { headers: { 'x-secret-key': config.secretKeys.ingress } }
-      )
+      try {
+        await axios.post(
+            `${config.privateIngressManagerUrl}/api/ingress`,
+            ingressInfos,
+            { headers: { 'x-secret-key': config.secretKeys.ingress } }
+        )
+      } catch (err: any) {
+        formatSyncError('ingress-manager', err)
+      }
     }
   }
 }

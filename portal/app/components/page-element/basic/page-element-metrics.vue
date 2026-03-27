@@ -34,11 +34,10 @@ const { t } = useI18n()
 let metrics: { datasets: number, records: number, applications: number } | ComputedRef<{ datasets: number, records: number, applications: number }>
 if (!preview) {
   // TODO: stats for private user ? (owner and visibility)
-  const datasetsMetricsFetch = useLocalFetch<{ count: number, sums: { count: number } }>('/data-fair/api/v1/datasets', {
+  const datasetsMetricsFetch = useLocalFetch<{ count: number, sums: { count: number } }>('/data-fair/api/v1/catalog/datasets', {
     query: {
       sums: 'count',
-      size: 0,
-      publicationSites: 'data-fair-portals:' + portal.value._id,
+      size: 0
     }
   })
   const applicationsMetricsFetch = useLocalFetch<{ count: number, sums: { count: number } }>('/data-fair/api/v1/applications', {
