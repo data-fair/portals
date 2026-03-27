@@ -206,12 +206,12 @@ const backOfficeUrl = computed(() => {
 onMounted(async () => {
   let ownerFilter = `${portal.value.owner.type}:${portal.value.owner.id}`
   if (portal.value.owner.department) ownerFilter += `:${portal.value.owner.department}`
-  const baseParams = { size: 0, owner: ownerFilter, publicationSites: `data-fair-portals:${portal.value._id}` }
+  const baseParams = { size: 0, owner: ownerFilter }
 
   try {
-    datasetsCount.value.file = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
-    datasetsCount.value.rest = (await $fetch<{ count: number }>('/data-fair/api/v1/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
-    processingsCount.value = (await $fetch<{ count: number }>('/processings/api/v1/processings', { params: { size: 0, owner: baseParams.owner } })).count
+    datasetsCount.value.file = (await $fetch<{ count: number }>('/data-fair/api/v1/catalog/datasets', { params: { ...baseParams, file: true, can: 'writeData' } })).count
+    datasetsCount.value.rest = (await $fetch<{ count: number }>('/data-fair/api/v1/catalog/datasets', { params: { ...baseParams, rest: true, can: 'createLine,updateLine' } })).count
+    processingsCount.value = (await $fetch<{ count: number }>('/processings/api/v1/processings', { params: baseParams })).count
   } catch (e) {
     console.error('Failed to fetch datasets or processings counts:', e)
   }

@@ -324,18 +324,21 @@ let catalogFetch: ReturnType<typeof useLocalFetch<{ facets: Facets }>> | undefin
 let conceptsFetch: ReturnType<typeof useLocalFetch<Concept[]>> | undefined
 if (!preview && (catalogType === 'datasets' || catalogType === 'applications')) {
   const facetsToFetch = []
-  if (showFilter('concepts')) facetsToFetch.push('concepts')
-  if (showFilter('base-application')) facetsToFetch.push('base-application')
+  // Common
   if (showFilter('topics')) facetsToFetch.push('topics')
-  if (showFilter('keywords')) facetsToFetch.push('keywords')
+  if (showFilter('concepts')) facetsToFetch.push('concepts')
   if (showFilter('owners')) facetsToFetch.push('owner')
 
-  const endpoint = catalogType === 'datasets' ? '/data-fair/api/v1/datasets' : '/data-fair/api/v1/applications'
+  // Specific
+  if (showFilter('base-application')) facetsToFetch.push('base-application')
+  if (showFilter('keywords')) facetsToFetch.push('keywords')
+
+  const endpoint = catalogType === 'datasets' ? '/data-fair/api/v1/catalog/datasets' : '/data-fair/api/v1/applications'
   catalogFetch = useLocalFetch<{ facets: Facets }>(endpoint, {
     query: {
+      publicationSites: 'data-fair-portals:' + portal.value._id, // Only used by /applications
       facets: facetsToFetch.join(','),
       size: 0,
-      publicationSites: 'data-fair-portals:' + portal.value._id,
     }
   })
 
@@ -508,7 +511,7 @@ const sortItems = computed(() => {
       noTopics: Aucune thématique disponible
       noKeywords: Aucun mot-clé disponible
       noOwners: Aucun propriétaire disponible
-      noChoices: Aucun choix disponible # When a label is overridden
+      noChoices: Aucun choix disponible # When owner label is overridden
     search: Rechercher
     sort:
       by: Trier par

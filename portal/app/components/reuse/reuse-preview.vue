@@ -106,7 +106,7 @@ const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { portal, portalConfig, preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 
 const getReuseImageSrc = (imageRef: ImageRef, mobile?: boolean) => {
   let id = imageRef._id
@@ -125,12 +125,11 @@ const datasetCardConfig = computed(() => {
 
 const datasetsUrl = computed(() => {
   if (!reuseConfig?.datasets?.length) return ''
-  return withQuery('/data-fair/api/v1/datasets', {
+  return withQuery('/data-fair/api/v1/catalog/datasets', {
     select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: reuseConfig?.datasets?.map(d => d.id).join(','),
-    publicationSites: !preview ? 'data-fair-portals:' + portal.value._id : undefined
   })
 })
 

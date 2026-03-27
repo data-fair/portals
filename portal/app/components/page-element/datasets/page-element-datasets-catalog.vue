@@ -187,7 +187,7 @@ const { element, context } = defineProps<{
   element: DatasetsCatalogElement
   context?: { isRoot: boolean, index: number, parentLength: number }
 }>()
-const { portal, portalConfig, preview } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
 
 const headingTag = computed(() => {
@@ -222,7 +222,6 @@ if (!preview) {
   const datasetsQuery = computed(() => {
     const query: Record<string, string | number> = {
       select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
-      publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
       size: pageSize,
       page: currentPage.value
@@ -235,7 +234,7 @@ if (!preview) {
     if (filters.sort.value && !(filters.search.value && filters.sort.value === element.defaultSort)) query.sort = filters.sort.value
     return query
   })
-  datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery, watch: false })
+  datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/catalog/datasets', { query: datasetsQuery, watch: false })
 }
 
 // Computed property to check if there are more datasets to load (for infinite scroll)

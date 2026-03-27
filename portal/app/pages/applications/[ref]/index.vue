@@ -123,16 +123,13 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
 const route = useRoute<'/applications/[ref]'>()
-const { portal, portalConfig } = usePortalStore()
+const { portalConfig } = usePortalStore()
 const { setBreadcrumbs } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('applications', route.params.ref as string)
 
 const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
-  params: {
-    html: 'vuetify',
-    publicationSites: 'data-fair-portals:' + portal.value._id
-  }
+  params: { html: 'vuetify' }
 })
 
 // Check if applications catalog page exists
@@ -147,12 +144,11 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
 const datasetsUrl = computed(() => {
   const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
   if (!datasetsIds || datasetsIds.length === 0) return ''
-  return withQuery('/data-fair/api/v1/datasets', {
+  return withQuery('/data-fair/api/v1/catalog/datasets', {
     select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
-    publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
