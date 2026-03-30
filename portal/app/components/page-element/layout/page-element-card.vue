@@ -1,17 +1,11 @@
-<!-- eslint-disable vue/v-bind-style -->
 <template>
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
-  <!--
-    Note that the `title` prop overrides the native `title` attribute,
-    which must be set using `v-bind:title.attr` instead.
-    See https://vuetifyjs.com/en/api/v-list-item/#props
-  -->
   <v-card
+    ref="card"
     :to="!preview && element.link && element.link.type !== 'none' && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
     :href="!preview && element.link && element.link.type !== 'none' && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
     :target="element.link && element.link.type !== 'none' && element.link?.target ? '_blank' : undefined"
     :rel="element.link && element.link.type !== 'none' && element.link?.target ? 'noopener' : undefined"
-    v-bind:title.attr="altLinkTitle"
 
     :border="element.border"
     :rounded="element.rounded ?? portalConfig.defaults?.rounded"
@@ -27,6 +21,7 @@
       backgroundPosition: 'center',
     } : undefined"
   >
+
     <!-- Thumbnail (Top Location) -->
     <v-img
       v-if="element.thumbnail?.location === 'top' && element.thumbnail?.image"
@@ -120,6 +115,19 @@ const altLinkTitle = computed(() => {
   let linkTitle = element.link?.title || element.title || ''
   if (element.link?.target) linkTitle += ' - ' + t('newWindow')
   return linkTitle
+})
+
+// v-bind:title.attr causes SSR hydration mismatch with Vuetify 4
+// (title is interpreted as v-card prop in SSR, creating an extra v-card-item)
+const card = useTemplateRef('card')
+watchEffect(() => {
+  const el = card.value?.$el
+  if (!el) return
+  if (altLinkTitle.value) {
+    el.setAttribute('title', altLinkTitle.value)
+  } else {
+    el.removeAttribute('title')
+  }
 })
 
 </script>
