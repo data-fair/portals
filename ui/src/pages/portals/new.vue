@@ -130,7 +130,10 @@
                   @click="selectPortal(portal._id)"
                 >
                   <template #title>
-                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPortal !== portal._id ? 'text-primary' : ''"
+                      :title="portal.title"
+                    >
                       {{ portal.title }}
                     </span>
                   </template>
@@ -159,7 +162,10 @@
                   @click="selectPortal(portal._id)"
                 >
                   <template #title>
-                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPortal !== portal._id ? 'text-primary' : ''"
+                      :title="portal.title"
+                    >
                       {{ portal.title }}
                     </span>
                   </template>
@@ -215,7 +221,10 @@
                   @click="selectPage('home', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.home.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -247,7 +256,10 @@
                   @click="selectPage('home', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.home.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -326,7 +338,10 @@
                   @click="selectPage('datasets', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -358,7 +373,10 @@
                   @click="selectPage('datasets', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -437,7 +455,10 @@
                   @click="selectPage('applications', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -469,7 +490,10 @@
                   @click="selectPage('applications', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>

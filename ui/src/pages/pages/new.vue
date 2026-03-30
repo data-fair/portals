@@ -297,7 +297,10 @@
                 @click="selectPage(page._id)"
               >
                 <template #title>
-                  <span :class="selectedPageId !== page._id ? 'text-primary' : ''">
+                  <span
+                    :class="selectedPageId !== page._id ? 'text-primary' : ''"
+                    :title="page.title"
+                  >
                     {{ page.title }}
                   </span>
                 </template>
