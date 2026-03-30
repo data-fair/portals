@@ -40,6 +40,7 @@
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { ReuseConfig } from '#api/types/reuse-config'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t, locale } = useI18n()
@@ -59,7 +60,13 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
-  initialValidation: 'always'
+  initialValidation: 'always',
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
+  }
 }))
 
 const saveConfig = useAsyncAction(async () => {

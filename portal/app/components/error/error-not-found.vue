@@ -149,7 +149,7 @@
 import { useTheme } from 'vuetify'
 
 const theme = useTheme()
-const colors = computed(() => theme.global.current.value.colors)
+const colors = computed(() => Object.fromEntries(Object.entries(theme.global.current.value.colors).map(([k, v]) => [k, String(v)])))
 const BODY_COLOR = '#fbbebe'
 
 </script>

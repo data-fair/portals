@@ -2,7 +2,7 @@
   <v-row
     v-if="topics.length"
     :justify="config?.centered ? 'center' : undefined"
-    dense
+    density="compact"
   >
     <v-col
       v-for="topic in topics"

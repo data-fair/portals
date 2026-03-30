@@ -29,13 +29,14 @@
           :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
           cols="12"
         >
-          <img
+          <v-img
             v-if="portalConfig.datasets.page.showImage && dataset.image"
             :alt="dataset.title"
             :src="dataset.image"
             class="mb-4"
-            style="max-height:300px"
-          >
+            max-height="300"
+            max-width="100%"
+          />
           <div
             class="text-break"
             v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
@@ -57,8 +58,7 @@
         <v-row
           v-for="attachment in urlAttachments"
           :key="attachment.url"
-          align="center"
-          class="mb-4"
+          class="mb-4 align-center"
         >
           <v-col cols="12">
             <NuxtLink
@@ -187,7 +187,7 @@
           <v-row
             v-for="app in orderedApplications"
             :key="app.id"
-            align="center"
+            class="align-center"
           >
             <v-col cols="12">
               <NuxtLink
@@ -217,8 +217,7 @@
           <v-row
             v-for="(app, index) in orderedApplications"
             :key="app.id"
-            align="center"
-            class="mb-4"
+            class="mb-4 align-center"
           >
             <!-- Large display: title, description and visualization full width -->
             <template v-if="app.preferLargeDisplay">
@@ -345,8 +344,7 @@
       <!-- Back to datasets link -->
       <v-row
         v-if="datasetsCatalogExists"
-        class="my-4"
-        justify="center"
+        class="my-4 justify-center"
       >
         <nav-link
           :link="{
@@ -508,10 +506,6 @@ usePageSeo({
   ogImage: () => thumbnailUrl.value,
   ogType: 'article'
 })
-
-// Set Last-Modified header based on updatedAt
-const header = useResponseHeader('Last-Modified')
-if (dataset.value?.updatedAt) header.value = new Date(dataset.value?.updatedAt).toUTCString()
 
 const requestURL = useRequestURL()
 useJsonLd(() => {

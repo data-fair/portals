@@ -39,7 +39,7 @@ const handleCapture = () => {
     width: application.baseApplication?.meta?.['df:capture-width'] || '1280',
     height: application.baseApplication?.meta?.['df:capture-height'] || '720',
     updatedAt: application.updatedAt,
-    app_primary: theme.current.value.colors.primary
+    app_primary: String(theme.current.value.colors.primary)
   }
 
   for (const [key, value] of Object.entries(route.query)) {

@@ -13,8 +13,8 @@
         :color="element.color"
       >
         <v-card-text>
-          <div class="text-h4 font-weight-bold">{{ metrics[key] }}</div>
-          <div class="text-h5 font-weight-light">{{ t('title.' + key) }}</div>
+          <div class="text-headline-medium font-weight-bold">{{ metrics[key] }}</div>
+          <div class="text-headline-small font-weight-light">{{ t('title.' + key) }}</div>
         </v-card-text>
       </v-card>
     </v-col>

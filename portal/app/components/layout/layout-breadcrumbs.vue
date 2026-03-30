@@ -9,8 +9,8 @@
   <component
     :is="isLayoutFull ? 'div' : VContainer"
     v-bind="isLayoutFull ? undefined : {
-      class: ['pa-0', { container: breadcrumbConfig.fluid === false }],
-      fluid: true
+      class: 'pa-0',
+      fluid: breadcrumbConfig.fluid,
     }"
   >
     <nav :aria-label="t('breadcrumb')">
@@ -26,7 +26,7 @@
 
           <v-breadcrumbs-item
             v-bind="typeof item === 'object' ? item : { title: item }"
-            :class="{ 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull }"
+            :class="{ 'text-body-medium': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull }"
             :aria-current="index === breadcrumbItems.length - 1 ? 'page' : undefined"
           />
 
@@ -44,7 +44,7 @@
               v-else
               :class="[
                 breadcrumbConfig.separator?.color ? `text-${breadcrumbConfig.separator.color}` : undefined,
-                { 'text-body-2': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull },
+                { 'text-body-medium': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull },
               ]"
             >
               {{ breadcrumbConfig.separator?.text || '/' }}

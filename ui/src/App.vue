@@ -24,5 +24,7 @@ html { overflow-y: auto; }
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
+  overflow: hidden;
+  min-height: 2lh;
 }
 </style>

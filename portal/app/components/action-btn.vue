@@ -13,6 +13,7 @@
     :size="actionStyle !== 'icon' ? 'small' : undefined"
     :block="block"
     :class="{ 'justify-start': actionStyle !== 'icon' }"
+    class="text-uppercase"
     variant="text"
   />
 </template>

@@ -113,19 +113,14 @@
       v-if="!portal.whiteLabel"
       #append
     >
-      <!--
-        Note that the `title` prop overrides the native `title` attribute,
-        which must be set using `v-bind:title.attr` instead.
-        See https://vuetifyjs.com/en/api/v-list-item/#props
-      -->
       <v-list-item
+        ref="copyrightItem"
         href="https://koumoul.com"
         target="_blank"
         rel="noopener"
-        v-bind="{ 'title': t('publishYourData') + ' - ' + t('newWindow') }"
       >
         <template #title>
-          <span class="text-caption">{{ t('publishYourData') }}</span>
+          <span class="text-body-small">{{ t('publishYourData') }}</span>
         </template>
       </v-list-item>
     </template>
@@ -193,6 +188,14 @@ const ownerAvatar = computed(() => {
 
 const navigationTextStyle = computed(() => {
   return `color: rgba(var(--v-theme-on-${portalConfig.value.personal.navigationColor}), var(--v-medium-emphasis-opacity));`
+})
+
+// v-bind:title.attr causes SSR hydration mismatch with Vuetify 4
+const copyrightItem = useTemplateRef('copyrightItem')
+watchEffect(() => {
+  const el = copyrightItem.value?.$el
+  if (!el) return
+  el.setAttribute('title', t('publishYourData') + ' - ' + t('newWindow'))
 })
 
 const requestUrl = useRequestURL()

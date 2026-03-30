@@ -1,6 +1,6 @@
 <template>
   <v-container max-width="600">
-    <h1 class="text-h4 mt-4">
+    <h1 class="text-headline-medium mt-4">
       <v-icon
         size="large"
         color="primary"

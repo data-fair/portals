@@ -3,7 +3,7 @@
     max-width="600"
     data-iframe-height
   >
-    <h1 class="text-h4 mt-4">
+    <h1 class="text-headline-medium mt-4">
       <v-icon
         size="large"
         color="primary"
@@ -174,7 +174,7 @@
                           color="warning"
                         >
                           <strong>{{ t('submitConfirm.line2') }}</strong>
-                          <ul class="text-body-2 pl-4 mt-2">
+                          <ul class="text-body-medium pl-4 mt-2">
                             <li class="mb-1">
                               <strong>{{ t('submitConfirm.line3.label') }}</strong> {{ t('submitConfirm.line3.body') }}
                             </li>
@@ -185,7 +185,7 @@
                               <strong>{{ t('submitConfirm.line5.label') }}</strong> {{ t('submitConfirm.line5.body') }}
                             </li>
                           </ul>
-                          <p class="text-info mt-2 text-body-2">
+                          <p class="text-info mt-2 text-body-medium">
                             {{ t('submitConfirm.line6') }}
                           </p>
                         </v-alert>
@@ -218,7 +218,7 @@
         <!-- Empty state -->
         <div
           v-else
-          class="text-center text-medium-emphasis text-caption py-6"
+          class="text-center text-medium-emphasis text-body-small py-6"
         >
           {{ t('noDrafts') }}
         </div>
@@ -250,7 +250,7 @@
         <!-- Empty state -->
         <div
           v-else
-          class="text-center text-medium-emphasis text-caption py-6"
+          class="text-center text-medium-emphasis text-body-small py-6"
         >
           {{ t('noSubmitted') }}
         </div>
@@ -260,6 +260,7 @@
 </template>
 
 <script setup lang="ts">
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { mdiPageNext } from '@mdi/js'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Reuse } from '#api/types/reuse/index'
@@ -292,7 +293,13 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   density: 'compact',
   updateOn: 'blur',
   initialValidation: 'always',
-  context: { isEmbed: true }
+  context: { isEmbed: true },
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
+  }
 }))
 
 const getStatusColor = (status: string) => {

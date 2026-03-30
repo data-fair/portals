@@ -8,7 +8,6 @@
           hideDetails: 'auto'
         },
         VjsfVerticalTabs: {
-          VBtn: { class: 'text-none' },
           VTabs: { color: 'primary' }
         }
       }"
@@ -87,13 +86,25 @@
               type="reuse"
             />
           </template>
+          <template #event-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="event"
+            />
+          </template>
+          <template #news-card-preview="{ node }">
+            <card-preview
+              :card-config="node.data.card"
+              type="news"
+            />
+          </template>
 
           <template #color-select-item="context">
             <v-theme-provider theme="preview-colors">
               <v-list-item v-bind="context.props">
                 <template #prepend>
                   <v-sheet
-                    :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+                    :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.value}))` : `rgb(var(--v-theme-text-${context.item.value}, var(--v-theme-${context.item.value})))` }"
                     :height="20"
                     :width="20"
                     class="mr-4"
@@ -108,14 +119,14 @@
             <v-theme-provider theme="preview-colors">
               <span class="v-select__selection-text d-inline-flex align-center">
                 <v-sheet
-                  :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+                  :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.value}))` : `rgb(var(--v-theme-text-${context.item.value}, var(--v-theme-${context.item.value})))` }"
                   :height="20"
                   :width="20"
                   class="mr-2"
                   rounded="circle"
                   border
                 />
-                {{ context.item.raw.title }}
+                {{ context.item.title }}
               </span>
             </v-theme-provider>
           </template>
@@ -155,6 +166,7 @@ import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
@@ -250,7 +262,13 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   density: 'comfortable',
   initialValidation: 'always',
   titleDepth: 4,
-  updateOn: 'blur'
+  updateOn: 'blur',
+  pluginsOptions: {
+    markdown: {
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
+    }
+  }
 }))
 
 </script>

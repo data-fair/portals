@@ -41,7 +41,8 @@
         :href="notif.url"
         :title="notif.title"
         :subtitle="dayjs(notif.date).format('lll')"
-        :value="notif.new"
+        :value="notif._id"
+        :active="notif.new"
         active-class="text-pink"
         lines="three"
       >

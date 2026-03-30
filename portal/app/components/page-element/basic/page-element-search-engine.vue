@@ -33,10 +33,10 @@
       <template #item="{ item, props: itemProps }">
         <v-list-item v-bind="itemProps">
           <template #prepend>
-            <v-icon :icon="resourceTypeIcon(item.raw.resourceType)" />
+            <v-icon :icon="resourceTypeIcon(item.resourceType)" />
           </template>
           <template #subtitle>
-            <span v-if="item.raw.description">{{ item.raw.description }}</span>
+            <span v-if="item.description">{{ item.description }}</span>
           </template>
         </v-list-item>
       </template>

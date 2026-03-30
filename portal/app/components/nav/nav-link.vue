@@ -12,7 +12,7 @@
     :elevation="config?.elevation ?? portalConfig.defaults?.elevation"
     :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
-    :class="{ 'text-none': !config?.uppercase, 'bg-surface': true }"
+    :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': true }"
     :active="false"
   >
     <!--

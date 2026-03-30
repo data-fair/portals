@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-row class="justify-center">
     <v-col class="text-center">
       <template v-if="statusCode === 404">
         <v-img
@@ -28,7 +28,7 @@
         />
         <error-server v-else style="max-height: 300px" />
       </template>
-      <div class="text-h5 my-4">
+      <div class="text-headline-small my-4">
         {{ title }}
       </div>
       <nav-link

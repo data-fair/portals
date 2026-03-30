@@ -41,6 +41,14 @@
           :color="step === 'applications-catalog' ? 'primary' : ''"
           editable
         />
+        <v-divider />
+        <v-stepper-item
+          value="summary"
+          :title="t('step.summary')"
+          :icon="mdiCheckAll"
+          :color="step === 'summary' ? 'primary' : ''"
+          editable
+        />
       </v-stepper-header>
 
       <v-stepper-window>
@@ -68,7 +76,7 @@
 
           <!-- Select owner -->
           <template v-if="hasDepartments">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('form.owner') }}
             </h2>
             <owner-pick
@@ -79,7 +87,7 @@
           </template>
 
           <!-- Default -->
-          <h2 class="text-h6">
+          <h2 class="text-title-large">
             {{ t('initFromOtherPortal.title') }}
           </h2>
           <v-row class="d-flex align-stretch mt-2">
@@ -104,7 +112,7 @@
 
           <!-- Reference portals -->
           <template v-if="referencePortalsFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferencePortal.title') }}
             </h2>
             <p>{{ t('useReferencePortal.description') }}</p>
@@ -122,7 +130,10 @@
                   @click="selectPortal(portal._id)"
                 >
                   <template #title>
-                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPortal !== portal._id ? 'text-primary' : ''"
+                      :title="portal.title"
+                    >
                       {{ portal.title }}
                     </span>
                   </template>
@@ -133,7 +144,7 @@
 
           <!-- Duplicate existing portal -->
           <template v-if="userPortalsFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePortal.title') }}
             </h2>
             <p>{{ t('duplicatePortal.description') }}</p>
@@ -151,7 +162,10 @@
                   @click="selectPortal(portal._id)"
                 >
                   <template #title>
-                    <span :class="selectedPortal !== portal._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPortal !== portal._id ? 'text-primary' : ''"
+                      :title="portal.title"
+                    >
                       {{ portal.title }}
                     </span>
                   </template>
@@ -189,7 +203,7 @@
 
           <!-- Reference templates -->
           <template v-if="homeReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -207,7 +221,10 @@
                   @click="selectPage('home', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.home.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -221,7 +238,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="homePagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>
@@ -239,7 +256,10 @@
                   @click="selectPage('home', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.home.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.home.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -300,7 +320,7 @@
 
           <!-- Reference templates -->
           <template v-if="datasetsReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -318,7 +338,10 @@
                   @click="selectPage('datasets', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -332,7 +355,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="datasetsPagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>
@@ -350,7 +373,10 @@
                   @click="selectPage('datasets', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.datasets.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -411,7 +437,7 @@
 
           <!-- Reference templates -->
           <template v-if="applicationsReferencesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('useReferenceTemplate.title') }}
             </h2>
             <p>{{ t('useReferenceTemplate.description') }}</p>
@@ -429,7 +455,10 @@
                   @click="selectPage('applications', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -443,7 +472,7 @@
 
           <!-- Duplicate existing page -->
           <template v-if="applicationsPagesFetch.data.value?.results?.length">
-            <h2 class="text-h6 mt-4">
+            <h2 class="text-title-large mt-4">
               {{ t('duplicatePage.title') }}
             </h2>
             <p>{{ t('duplicatePage.description') }}</p>
@@ -461,7 +490,10 @@
                   @click="selectPage('applications', page._id)"
                 >
                   <template #title>
-                    <span :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''">
+                    <span
+                      :class="selectedPages.applications.value !== page._id ? 'text-primary' : ''"
+                      :title="page.title"
+                    >
                       {{ page.title }}
                     </span>
                   </template>
@@ -472,6 +504,41 @@
               </v-col>
             </v-row>
           </template>
+        </v-stepper-window-item>
+
+        <!-- Step 5: Summary -->
+        <v-stepper-window-item value="summary">
+          <v-list bg-color="background">
+            <v-list-item
+              :title="t('summary.title')"
+              :subtitle="generalInformations.title.value"
+            />
+            <v-list-item
+              :title="t('summary.owner')"
+              :subtitle="generalInformations.owner.value.name"
+            />
+            <v-list-item
+              v-if="generalInformations.staging.value"
+              :title="t('summary.staging')"
+              :subtitle="t('summary.yes')"
+            />
+            <v-list-item
+              :title="t('summary.sourcePortal')"
+              :subtitle="selectedPortalLabel"
+            />
+            <v-list-item
+              :title="t('summary.homePage')"
+              :subtitle="selectedPageLabel('home')"
+            />
+            <v-list-item
+              :title="t('summary.datasetsCatalog')"
+              :subtitle="selectedPageLabel('datasets')"
+            />
+            <v-list-item
+              :title="t('summary.applicationsCatalog')"
+              :subtitle="selectedPageLabel('applications')"
+            />
+          </v-list>
         </v-stepper-window-item>
       </v-stepper-window>
 
@@ -487,7 +554,7 @@
             :loading="createPortal.loading.value"
             @click="goToNext()"
           >
-            {{ step === 'applications-catalog' ? t('create') : t('next') }}
+            {{ step === 'summary' ? t('create') : t('next') }}
           </v-btn>
         </template>
       </v-stepper-actions>
@@ -500,15 +567,15 @@ import type { Portal } from '#api/types/portal/index.ts'
 import type { Page } from '#api/types/page/index.ts'
 import type { Account } from '@data-fair/lib-common-types/session/index.js'
 
-import { mdiDatabase, mdiHome, mdiImageMultiple, mdiTextBox } from '@mdi/js'
-import { computedAsync } from '@vueuse/core'
+import { mdiCheckAll, mdiDatabase, mdiHome, mdiImageMultiple, mdiTextBox } from '@mdi/js'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 
+const hasDepartments = useHasDepartments()
 const session = useSessionAuthenticated()
 const router = useRouter()
 const { t } = useI18n()
 
-const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applications-catalog'>('general-information')
+const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applications-catalog' | 'summary'>('general-information')
 
 const generalInformations = {
   title: ref<string>(''),
@@ -573,6 +640,30 @@ const applicationsPagesFetch = useFetch<{ results: Page[] }>(
   { query: { type: 'applications' }, notifError: false }
 )
 
+const selectedPortalLabel = computed(() => {
+  if (!selectedPortal.value) return t('summary.none')
+  const portal = referencePortalsFetch.data.value?.results?.find(p => p._id === selectedPortal.value) ??
+    userPortalsFetch.data.value?.results?.find(p => p._id === selectedPortal.value)
+  return portal?.title ?? t('summary.none')
+})
+
+const selectedPageLabel = (type: 'home' | 'datasets' | 'applications') => {
+  const value = selectedPages[type].value
+  if (!value || value === 'none') return t('summary.none')
+  if (value === 'blank') return t('blankPage.title')
+
+  const fetches = {
+    home: [homeReferencesFetch, homePagesFetch],
+    datasets: [datasetsReferencesFetch, datasetsPagesFetch],
+    applications: [applicationsReferencesFetch, applicationsPagesFetch]
+  }
+  for (const fetch of fetches[type]) {
+    const page = fetch.data.value?.results?.find(p => p._id === value)
+    if (page) return page.title
+  }
+  return value
+}
+
 const selectPortal = (portalId?: string) => {
   selectedPortal.value = portalId
   if (formValid.value) step.value = 'home'
@@ -582,6 +673,7 @@ const selectPage = (type: 'home' | 'datasets' | 'applications', pageId: string) 
   selectedPages[type].value = pageId
   if (type === 'home' && formValid.value) step.value = 'datasets-catalog'
   else if (type === 'datasets' && formValid.value) step.value = 'applications-catalog'
+  else if (type === 'applications' && formValid.value) step.value = 'summary'
 }
 
 const isNextButtonDisabled = computed(() => {
@@ -589,6 +681,7 @@ const isNextButtonDisabled = computed(() => {
   else if (step.value === 'home') return !selectedPages.home.value
   else if (step.value === 'datasets-catalog') return !selectedPages.datasets.value
   else if (step.value === 'applications-catalog') return !selectedPages.applications.value
+  else if (step.value === 'summary') return false
   return false
 })
 
@@ -596,21 +689,16 @@ const goToPrev = () => {
   if (step.value === 'home') step.value = 'general-information'
   else if (step.value === 'datasets-catalog') step.value = 'home'
   else if (step.value === 'applications-catalog') step.value = 'datasets-catalog'
+  else if (step.value === 'summary') step.value = 'applications-catalog'
 }
 
 const goToNext = () => {
   if (step.value === 'general-information') step.value = 'home'
   else if (step.value === 'home') step.value = 'datasets-catalog'
   else if (step.value === 'datasets-catalog') step.value = 'applications-catalog'
-  else if (step.value === 'applications-catalog') createPortal.execute()
+  else if (step.value === 'applications-catalog') step.value = 'summary'
+  else if (step.value === 'summary') createPortal.execute()
 }
-
-/** `True` if the active account isn't in a department and his organization has departments */
-const hasDepartments = computedAsync(async (): Promise<boolean> => {
-  if (session.state.account.department || session.state.account.type === 'user') return false
-  const org = await $fetch<{ departments?: any[] }>(`/simple-directory/api/organizations/${session.state.account.id}`, { baseURL: $sitePath })
-  return !!org.departments?.length
-}, false)
 
 const createPortal = useAsyncAction(
   async () => {
@@ -711,6 +799,7 @@ setBreadcrumbs([
       homePage: Home Page
       datasetsCatalog: Datasets Catalog
       applicationsCatalog: Applications Catalog
+      summary: Summary
     form:
       title: Portal Title
       titleRequired: Portal title is required
@@ -749,6 +838,16 @@ setBreadcrumbs([
       applications: Visualizations
       datasetsCatalog: Datasets Catalog
       applicationsCatalog: Applications Catalog
+    summary:
+      title: Portal Title
+      owner: Owner
+      staging: Staging
+      yes: "Yes"
+      sourcePortal: Source Portal
+      homePage: Home Page
+      datasetsCatalog: Datasets Catalog
+      applicationsCatalog: Applications Catalog
+      none: None
     errorCreatingPortal: An error occurred while creating the portal.
 
   fr:
@@ -757,6 +856,7 @@ setBreadcrumbs([
       homePage: Page d'accueil
       datasetsCatalog: Catalogue de données
       applicationsCatalog: Catalogue de visualisations
+      summary: Récapitulatif
     form:
       title: Titre du portail
       titleRequired: Le titre du portail est obligatoire
@@ -795,5 +895,15 @@ setBreadcrumbs([
       applications: Visualisations
       datasetsCatalog: Catalogue de données
       applicationsCatalog: Catalogue de visualisations
+    summary:
+      title: Titre du portail
+      owner: Propriétaire
+      staging: Pré-production
+      yes: "Oui"
+      sourcePortal: Portail source
+      homePage: Page d'accueil
+      datasetsCatalog: Catalogue de données
+      applicationsCatalog: Catalogue de visualisations
+      none: Aucun
     errorCreatingPortal: Une erreur est survenue lors de la création du portail.
 </i18n>

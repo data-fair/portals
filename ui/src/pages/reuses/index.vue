@@ -24,14 +24,14 @@
     <!-- No reuses created -->
     <span
       v-else-if="!reusesFetch.data.value?.results.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noReusesCreated') }}
     </span>
     <!-- No reuses displayed (filters) -->
     <span
       v-else-if="!displayReuses.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noReusesDisplayed') }}
     </span>

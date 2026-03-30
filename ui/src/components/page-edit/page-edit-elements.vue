@@ -22,7 +22,7 @@
         <v-list-item v-bind="context.props">
           <template #prepend>
             <v-sheet
-              :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+              :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.value}))` : `rgb(var(--v-theme-text-${context.item.value}, var(--v-theme-${context.item.value})))` }"
               :height="20"
               :width="20"
               class="mr-4"
@@ -37,14 +37,14 @@
       <v-theme-provider theme="preview-colors">
         <span class="v-select__selection-text d-inline-flex align-center">
           <v-sheet
-            :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.raw.value}))` : `rgb(var(--v-theme-text-${context.item.raw.value}, var(--v-theme-${context.item.raw.value})))` }"
+            :style="{ backgroundColor: context.node.props?.background ? `rgb(var(--v-theme-${context.item.value}))` : `rgb(var(--v-theme-text-${context.item.value}, var(--v-theme-${context.item.value})))` }"
             :height="20"
             :width="20"
             class="mr-2"
             rounded="circle"
             border
           />
-          {{ context.item.raw.title }}
+          {{ context.item.title }}
         </span>
       </v-theme-provider>
     </template>
@@ -84,9 +84,8 @@ const vjsfOptions: VjsfOptions = {
   },
   pluginsOptions: {
     markdown: {
-      easyMDEOptions: {
-        previewRender: renderMarkdown
-      }
+      cspNonce: $cspNonce,
+      easyMDEOptions: { previewRender: renderMarkdown }
     }
   },
   icons: {

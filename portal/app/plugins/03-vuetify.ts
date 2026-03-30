@@ -1,8 +1,8 @@
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
 import { fr, en } from 'vuetify/locale'
-import { createRulesPlugin } from 'vuetify/labs/rules'
 
 export default defineNuxtPlugin((nuxtApp) => {
+  const cspNonce = useNonce()
   const themeCookie = useCookie<'default' | 'hc' | 'dark' | 'hc-dark'>('theme', { default: () => 'default' })
   const langCookie = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
 
@@ -22,8 +22,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     dark = true
   }
 
-  // https://nuxt.vuetifyjs.com/guide/nuxt-runtime-hooks.html
-
+  // https://nuxt.vuetifyjs.com/guide/advanced/runtime-hooks.html
   nuxtApp.hook('vuetify:before-create', ({ vuetifyOptions }) => {
     vuetifyOptions.locale = {
       locale: langCookie.value,
@@ -31,7 +30,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       messages: { fr, en }
     }
     vuetifyOptions.theme = {
-      // TODO: cspNonce
+      cspNonce,
       defaultTheme: themeCookie.value,
       themes: {
         [themeCookie.value]: {
@@ -48,8 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   })
 
-  nuxtApp.hook('vuetify:ready', (vuetify) => {
-    nuxtApp.vueApp.use(createRulesPlugin({ }, vuetify.locale))
+  nuxtApp.hook('vuetify:ready', () => {
     nuxtApp.vueApp.use(createUiNotif())
   })
 })

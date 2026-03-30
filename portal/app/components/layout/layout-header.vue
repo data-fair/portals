@@ -1,16 +1,13 @@
 <template>
-  <v-container class="h-100 d-flex flex-column justify-center pb-0 container">
+  <v-container class="h-100 pb-0">
     <v-row
       v-if="headerConfig.showSocial"
-      class="ma-0"
+      class="justify-end"
+      no-gutters
     >
-      <v-spacer />
       <social-links :links="portalConfig.socialLinks" />
     </v-row>
-    <v-row
-      align="center"
-      class="ma-0"
-    >
+    <v-row class="align-center mt-0">
       <layout-header-logo
         v-if="logo"
         :logo="logo"
@@ -90,15 +87,15 @@ This way, the correct styles are applied server-side from the start.
 // Responsive font size for portal title based on Vuetify typography settings
 .portal-title {
   @media #{map.get(v.$display-breakpoints, 'sm-and-down')} {
-    font-size: map.get(map.get(v.$typography, 'h5'), 'size');
-    line-height: map.get(map.get(v.$typography, 'h5'), 'line-height');
-    letter-spacing: map.get(map.get(v.$typography, 'h5'), 'letter-spacing');
+    font-size: map.get(map.get(v.$typography, 'headline-small'), 'size');
+    line-height: map.get(map.get(v.$typography, 'headline-small'), 'line-height');
+    letter-spacing: map.get(map.get(v.$typography, 'headline-small'), 'letter-spacing');
   }
 
   @media #{map.get(v.$display-breakpoints, 'md-and-up')} {
-    font-size: map.get(map.get(v.$typography, 'h4'), 'size');
-    line-height: map.get(map.get(v.$typography, 'h4'), 'line-height');
-    letter-spacing: map.get(map.get(v.$typography, 'h4'), 'letter-spacing');
+    font-size: map.get(map.get(v.$typography, 'headline-medium'), 'size');
+    line-height: map.get(map.get(v.$typography, 'headline-medium'), 'line-height');
+    letter-spacing: map.get(map.get(v.$typography, 'headline-medium'), 'letter-spacing');
   }
 }
 </style>

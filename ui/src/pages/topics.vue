@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <h1 class="text-h4 text-center">
+    <h1 class="text-headline-medium text-center">
       Topics list config matrix
     </h1>
 
@@ -9,7 +9,7 @@
       :key="bg.key"
       class="mb-12"
     >
-      <h2 class="text-h5 mb-4">
+      <h2 class="text-headline-small mb-4">
         {{ bg.label }}
       </h2>
 
@@ -18,12 +18,12 @@
         :key="variant.key"
         class="mb-4"
       >
-        <h3 class="text-subtitle-1 mb-2">
+        <h3 class="text-title-medium mb-2">
           {{ variant.label }}
         </h3>
 
         <v-row
-          dense
+          density="comfortable"
           class="mb-2"
         >
           <v-col
@@ -35,7 +35,7 @@
             cols="12"
             md="3"
             lg="3"
-            class="text-caption"
+            class="text-body-small"
           >
             Icon: same as text (unset) (text if selected)
           </v-col>
@@ -43,7 +43,7 @@
             cols="12"
             md="3"
             lg="3"
-            class="text-caption"
+            class="text-body-small"
           >
             Icon: thematic (text if selected)
           </v-col>
@@ -51,7 +51,7 @@
             cols="12"
             md="3"
             lg="3"
-            class="text-caption"
+            class="text-body-small"
           >
             Icon: primary (text if selected)
           </v-col>
@@ -60,13 +60,13 @@
         <v-row
           v-for="rowColor in colorOptions"
           :key="variant.key + '-' + rowColor.key"
-          dense
+          density="comfortable"
           class="mb-3"
         >
           <v-col
             cols="12"
             md="2"
-            class="text-caption text-right align-self-center"
+            class="text-body-small text-right align-self-center"
           >
             {{ rowColor.rowLabel }}
           </v-col>

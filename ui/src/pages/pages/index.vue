@@ -24,7 +24,7 @@
     <!-- No pages created -->
     <span
       v-else-if="!pagesFetch.data.value?.results.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noPagesCreated') }}
     </span>
@@ -32,7 +32,7 @@
     <!-- No pages displayed (filters) -->
     <span
       v-else-if="!displayPages.length"
-      class="d-flex justify-center text-h6 mt-4"
+      class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noPagesDisplayed') }}
     </span>

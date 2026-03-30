@@ -34,7 +34,7 @@ export default {
           minimum: 1,
           maximum: 3
         },
-        applicationsCountPosition: {
+        countPosition: {
           type: 'string',
           title: 'Position du nombre de résultats',
           default: 'top',
@@ -48,7 +48,7 @@ export default {
           type: 'boolean',
           title: 'Afficher le tri à droite du nombre de résultats.',
           layout: {
-            if: 'parent.data?.applicationsCountPosition === "bottom"',
+            if: 'parent.data?.countPosition === "bottom"',
             comp: 'switch'
           }
         },

@@ -13,7 +13,7 @@
           :rounded="config?.rounded"
           :variant="config?.variant !== 'default' ? config?.variant : undefined"
           :append-icon="mdiChevronDown"
-          :class="{ 'text-none': !config?.uppercase }"
+          :class="{ 'text-uppercase': config?.uppercase }"
         >
           <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
           <span class="text-truncate">{{ element.label || 'Menu' }}</span>

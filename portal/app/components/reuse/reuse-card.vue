@@ -51,16 +51,12 @@
         />
 
         <!--
-          text-two-lines and 'height': titleHeight=> truncate title to 2 lines
+          text-two-lines => truncate title to 2 lines
           white-space: unset; => remove default nowrap from v-card-title
         -->
         <v-card-title
-          :class="['font-weight-bold', { 'text-two-lines': cardConfig.titleLinesCount === 2 }]"
-          :style="[
-            cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {},
-            cardConfig.titleLinesCount === 2 ? { 'height': titleHeight } : {}
-
-          ]"
+          :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
+          :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
           :title="reuse.config.title"
         >
             {{ reuse.config.title }}
@@ -89,11 +85,11 @@
         <v-list-item>
           <p
             v-if="cardConfig.showAuthor && reuse.config.author"
-            class="text-caption"
+            class="text-body-small"
           >
             {{ t('publishedBy', { author: reuse.config.author }) }}
           </p>
-          <p class="text-caption">
+          <p class="text-body-small">
             {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
           </p>
         </v-list-item>
@@ -142,19 +138,6 @@ const leftThumbnailStyle = computed(() => {
     backgroundRepeat: 'no-repeat',
     minHeight: '200px',
     height: '100%'
-  }
-})
-
-// Height calculation for title with 2 lines
-const titleHeight = ref<string>()
-onMounted(() => {
-  const titleElement = document.querySelector('.text-two-lines')
-  if (titleElement) {
-    const styles = getComputedStyle(titleElement)
-    const lineHeight = parseFloat(styles.lineHeight)
-    const paddingTop = parseFloat(styles.paddingTop)
-    const paddingBottom = parseFloat(styles.paddingBottom)
-    titleHeight.value = `${lineHeight * 2 + paddingTop + paddingBottom}px`
   }
 })
 

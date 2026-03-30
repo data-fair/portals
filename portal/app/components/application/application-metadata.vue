@@ -4,7 +4,10 @@
     :elevation="metadataConfig.elevation ?? portalConfig.defaults?.elevation"
   >
     <!-- Application Metadata -->
-    <v-row class="ma-0">
+    <v-row
+      class="px-3 py-2"
+      density="compact"
+    >
       <!--
         All fields are wrapped in v-cols for responsive grid layout
         that adapts to screen size and metadataLocation setting
@@ -13,7 +16,7 @@
 
       <!-- Base application -->
       <v-col v-bind="metadataColProps">
-        <div class="text-caption text-medium-emphasis"> {{ t('application') }}</div>
+        <div class="text-body-small text-medium-emphasis"> {{ t('application') }}</div>
         {{ baseApplicationFetch.data.value?.title || application.url.split('/').slice(-3,-2).pop() }}
       </v-col>
 
@@ -22,7 +25,7 @@
         v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
-        <div class="text-caption text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
         <div class="d-flex align-center ga-2">
           <owner-avatar
             :owner="application.owner"
@@ -39,7 +42,7 @@
           v-if="application.public && metadataConfig.location !== 'right'"
           v-bind="metadataColProps"
         >
-          <div class="text-caption text-medium-emphasis">{{ t('share') }}</div>
+          <div class="text-body-small text-medium-emphasis">{{ t('share') }}</div>
           <social-share :title="application.title" />
         </v-col>
       </ClientOnly>
@@ -49,8 +52,8 @@
 
     <!-- Actions, update date and share -->
     <v-row
-      class="ma-0"
-      align="center"
+      density="compact"
+      class="align-center px-3 py-2"
     >
       <v-col v-bind="metadataColProps">
         <action-btn
@@ -106,7 +109,7 @@ const baseApplicationFetch = useLocalFetch<{
 
 const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const metadataColProps = computed(() => ({
-  class: 'py-0 my-2',
+  class: 'py-0',
   cols: 12,
   md: metadataConfig.value?.location !== 'right' ? 4 : 12
 }))

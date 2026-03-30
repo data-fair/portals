@@ -8,7 +8,7 @@
       class="mx-2"
       fluid
     >
-      <v-row align="center">
+      <v-row class="align-center">
         <!-- Logo -->
         <layout-header-logo
           v-if="portalConfig.logo"

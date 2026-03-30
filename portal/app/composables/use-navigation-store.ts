@@ -190,8 +190,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     const resolvedLink = resolveLink(item)
     if (!resolvedLink) return false
 
-    // Exact match only - avoid activating parent routes
-    return resolvedLink === currentPath
+    // Exact match or child route (e.g. /datasets matches /datasets/datasetid)
+    return currentPath === resolvedLink || currentPath.startsWith(resolvedLink + '/')
   }
 
   return {

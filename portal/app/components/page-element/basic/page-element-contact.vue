@@ -98,7 +98,7 @@
                 :elevation="buttonConfig?.elevation ?? portalConfig.defaults?.elevation"
                 :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
                 :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
-                :class="{ 'text-none': !buttonConfig?.uppercase }"
+                :class="{ 'text-uppercase': buttonConfig?.uppercase }"
                 :text="t('send')"
                 :readonly="!valid"
                 :loading="sendMessage.loading.value"
@@ -135,15 +135,10 @@
                 class="my-2"
               />
 
-              <!--
-                Note that the `title` prop overrides the native `title` attribute,
-                which must be set using `v-bind:title.attr` instead.
-                See https://vuetifyjs.com/en/api/v-list-item/#props
-              -->
               <v-list-item
                 v-if="portalConfig.contactInformations.phone"
+                ref="phoneItem"
                 :prepend-icon="mdiPhone"
-                v-bind="{ 'title': (portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone) + ' - ' + t('newWindow') }"
                 :title="portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone"
                 :href="`tel:${portalConfig.contactInformations.phone}`"
                 target="_blank"
@@ -151,8 +146,8 @@
               />
               <v-list-item
                 v-if="portalConfig.contactInformations.website"
+                ref="websiteItem"
                 :prepend-icon="mdiWeb"
-                v-bind="{ 'title': (portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website) + ' - ' + t('newWindow') }"
                 :title="portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website"
                 :href="portalConfig.contactInformations.website"
                 target="_blank"
@@ -165,7 +160,7 @@
                 v-if="element.showInfo"
                 class="my-2"
               />
-              <p class="text-caption">{{ t('socialMedia') }}</p>
+              <p class="text-body-small">{{ t('socialMedia') }}</p>
               <social-links :links="portalConfig.socialLinks" />
             </template>
           </v-card-text>
@@ -187,6 +182,22 @@ const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
 const url = !preview ? useRequestURL() : null
+
+// v-bind:title.attr causes SSR hydration mismatch with Vuetify 4
+const phoneItem = useTemplateRef('phoneItem')
+watchEffect(() => {
+  const el = phoneItem.value?.$el
+  if (!el) return
+  const title = (portalConfig.value.contactInformations.phoneLabel || portalConfig.value.contactInformations.phone) + ' - ' + t('newWindow')
+  el.setAttribute('title', title)
+})
+const websiteItem = useTemplateRef('websiteItem')
+watchEffect(() => {
+  const el = websiteItem.value?.$el
+  if (!el) return
+  const title = (portalConfig.value.contactInformations.websiteLabel || portalConfig.value.contactInformations.website) + ' - ' + t('newWindow')
+  el.setAttribute('title', title)
+})
 
 const formRef = ref()
 const newMessage = { from: '', subject: '', text: '' }
