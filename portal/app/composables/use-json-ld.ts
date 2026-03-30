@@ -54,12 +54,17 @@ export const createDatasetSchema = (options: {
     name: string
     url?: string
   }
+  publisher?: {
+    name: string
+    url?: string
+  }
   keywords?: string[]
   distribution?: {
     name?: string
     encodingFormat?: string
     contentUrl?: string
   }[]
+  license?: string
   temporalCoverage?: string
   spatialCoverage?: string
   isBasedOn?: Array<{ id: string; url: string; name: string }>
@@ -85,7 +90,15 @@ export const createDatasetSchema = (options: {
       ...(options.creator.url && { url: options.creator.url })
     }
   }
+  if (options.publisher) {
+    schema.publisher = {
+      '@type': 'Organization',
+      name: options.publisher.name,
+      ...(options.publisher.url && { url: options.publisher.url })
+    }
+  }
   if (options.keywords?.length) schema.keywords = options.keywords.join(', ')
+  if (options.license) schema.license = options.license
   if (options.distribution?.length) {
     schema.distribution = options.distribution.map(d => ({
       '@type': 'DataDownload',

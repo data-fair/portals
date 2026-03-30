@@ -524,9 +524,15 @@ useJsonLd(() => {
       ...(d.keywords || []),
       ...(d.topics?.map(t => t.title) || [])
     ],
-    creator: {
-      name: portalConfig.value.title
-    },
+    license: d.license?.href,
+    creator: d.creator ? { name: d.creator } : undefined,
+    publisher: { name: portal.value.owner.name },
+    temporalCoverage: d.temporal?.start
+      ? d.temporal.end
+        ? `${d.temporal.start}/${d.temporal.end}`
+        : `${d.temporal.start}/..`
+      : undefined,
+    spatialCoverage: d.spatial || undefined,
     isRelatedTo: relatedDatasets.value.map(rd => ({
       id: requestURL.origin + `/datasets/${rd.slug}`,
       name: rd.title
