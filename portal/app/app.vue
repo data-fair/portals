@@ -47,6 +47,10 @@ useHead({
 </script>
 
 <style>
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .text-two-lines {
   white-space: unset !important;
   display: -webkit-box;

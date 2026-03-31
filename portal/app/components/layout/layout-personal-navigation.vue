@@ -1,5 +1,7 @@
 <template>
   <v-navigation-drawer
+    id="sidebar-navigation"
+    tabindex="-1"
     v-model="personalDrawer"
     :color="portalConfig.personal.navigationColor"
     :temporary="$vuetify.display.smAndDown"

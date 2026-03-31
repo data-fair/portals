@@ -1,6 +1,8 @@
 <template>
   <!-- <layout-footer-contact v-if="portalConfig.footer.showContactInformations" /> -->
   <v-footer
+    id="footer"
+    tabindex="-1"
     :color="portalConfig.footer.color"
     :style="portalConfig.footer.backgroundImage ? {
       backgroundImage: `url(${getPortalImageSrc(portalConfig.footer.backgroundImage, false)})`,
