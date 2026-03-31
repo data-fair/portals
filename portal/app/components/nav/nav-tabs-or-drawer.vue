@@ -1,14 +1,19 @@
 <template>
-  <!-- Smaller screens: navigation in drawer -->
-  <nav-drawer-activator v-if="$vuetify.display.smAndDown || tabsOverflowing" />
+  <div
+    id="header-navigation"
+    tabindex="-1"
+  >
+    <!-- Smaller screens: navigation in drawer -->
+    <nav-drawer-activator v-if="$vuetify.display.smAndDown || tabsOverflowing" />
 
-  <!-- Larger screens: navigation in tabs -->
-  <nav-tabs
-    v-else
-    v-model:overflowing="tabsOverflowing"
-    :navigation="navigation"
-    :nav-bar-config="navBarConfig"
-  />
+    <!-- Larger screens: navigation in tabs -->
+    <nav-tabs
+      v-else
+      v-model:overflowing="tabsOverflowing"
+      :navigation="navigation"
+      :nav-bar-config="navBarConfig"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

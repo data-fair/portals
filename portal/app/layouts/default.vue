@@ -1,4 +1,8 @@
 <template>
+  <LayoutSkipLinks
+    v-if="!isIframe"
+    :targets="skipLinkTargets"
+  />
   <LayoutAppBar
     v-if="!isIframe"
     :home="isHome"
@@ -13,5 +17,11 @@
 const { isIframe } = useNavigationStore()
 const route = useRoute()
 const isHome = computed(() => route.path === '/')
+
+const skipLinkTargets = [
+  { id: 'contenu', labelKey: 'content' },
+  { id: 'header-navigation', labelKey: 'navigation' },
+  { id: 'footer', labelKey: 'footer' }
+]
 
 </script>

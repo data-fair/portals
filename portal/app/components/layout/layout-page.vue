@@ -1,12 +1,17 @@
 <template>
   <v-main :style="`position: relative; padding-top: ${headerPadding}px;`">
-    <LayoutBreadcrumbs v-if="!isHome && showTopBreadcrumbs" />
-    <v-container
-      :class="{ 'pt-0': showTopBreadcrumbs }"
-      :fluid="isFluid"
+    <div
+      id="contenu"
+      tabindex="-1"
     >
-      <slot />
-    </v-container>
+      <LayoutBreadcrumbs v-if="!isHome && showTopBreadcrumbs" />
+      <v-container
+        :class="{ 'pt-0': showTopBreadcrumbs }"
+        :fluid="isFluid"
+      >
+        <slot />
+      </v-container>
+    </div>
   </v-main>
 
   <!-- Do not put bottom breadcrumbs in main, ensuring they stay just above the footer even when main content is short. -->
