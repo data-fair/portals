@@ -12,7 +12,7 @@ export default defineConfig({
   expect: { timeout: 5_000 },
 
   use: {
-    baseURL: `http://localhost:${process.env.NGINX_PORT}/portals-manager`,
+    baseURL: `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/portals-manager`,
     actionTimeout: 5_000,
     navigationTimeout: 5_000,
   },

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "check-types": "nuxt typecheck",
-    "dev": "dotenv -v NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development -v NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.localhost:$NGINX_PORT -v NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT -v NUXT_FRAME_ANCESTORS=http://localhost:$NGINX_PORT nuxt dev",
+    "dev": "dotenv -v NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development -v NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.$DEV_HOST:$NGINX_PORT -v NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT -v NUXT_FRAME_ANCESTORS=http://$DEV_HOST:$NGINX_PORT nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",

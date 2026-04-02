@@ -11,6 +11,7 @@ services:
     image: nginx:1.29.4-alpine
     network_mode: host
     environment:
+      - DEV_HOST=${DEV_HOST}
       - NGINX_PORT=${NGINX_PORT}
       - SD_PORT=${SD_PORT}
       - DF_PORT=${DF_PORT}
@@ -43,7 +44,7 @@ services:
       MANAGE_SITES: true
       MONGO_URL: mongodb://localhost:${MONGO_PORT}/simple-directory
       OBSERVER_ACTIVE: false
-      PUBLIC_URL: http://localhost:${NGINX_PORT}/simple-directory
+      PUBLIC_URL: http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       STORAGE_TYPE: file
       SECRET_SITES: secret-sites
       SECRET_PSEUDO_SESSION: secret-pseudo-session
@@ -77,11 +78,11 @@ services:
       - PORT=${DF_PORT}
       - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair
       - ES_HOST=localhost:${ES_PORT}
-      - DIRECTORY_URL=http://localhost:${NGINX_PORT}/simple-directory
+      - DIRECTORY_URL=http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
       - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
-      - PUBLIC_URL=http://localhost:${NGINX_PORT}/data-fair
-      - WS_PUBLIC_URL=ws://localhost:${NGINX_PORT}/data-fair
+      - PUBLIC_URL=http://${DEV_HOST}:${NGINX_PORT}/data-fair
+      - WS_PUBLIC_URL=ws://${DEV_HOST}:${NGINX_PORT}/data-fair
       - OBSERVER_ACTIVE=false
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
       - SECRET_EVENTS=secret-events
@@ -99,7 +100,7 @@ services:
     environment:
       - PORT=${EVENTS_PORT}
       - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair-events
-      - PRIVATE_DIRECTORY_URL=http://localhost:${NGINX_PORT}/simple-directory
+      - PRIVATE_DIRECTORY_URL=http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       - SECRET_IDENTITIES=secret-identities
       - SECRET_EVENTS=secret-events
       - SECRET_SENDMAILS=secret-sendmails

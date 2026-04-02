@@ -23,6 +23,6 @@ export default {
     pseudoSession: 'secret-pseudo-session',
     searchPages: 'secret-search-pages'
   },
-  portalUrlPattern: `http://{subdomain}.localhost:${process.env.NGINX_PORT}`,
+  portalUrlPattern: `http://{subdomain}.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   upgradeRoot: './'
 }

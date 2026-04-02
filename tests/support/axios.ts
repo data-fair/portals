@@ -2,9 +2,9 @@ import type { AxiosAuthOptions } from '@data-fair/lib-node/axios-auth.js'
 import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { axiosAuth as _axiosAuth } from '@data-fair/lib-node/axios-auth.js'
 
-export const directoryUrl = `http://localhost:${process.env.NGINX_PORT}/simple-directory`
+export const directoryUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/simple-directory`
 export const apiUrl = `http://localhost:${process.env.DEV_API_PORT}/portals-manager`
-export const baseURL = `http://localhost:${process.env.NGINX_PORT}/portals-manager`
+export const baseURL = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/portals-manager`
 
 const axiosOpts = { baseURL }
 
