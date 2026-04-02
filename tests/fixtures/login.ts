@@ -4,7 +4,7 @@ const cookieCache = new Map<string, Awaited<ReturnType<import('@playwright/test'
 
 async function performLogin (page: any, context: any, baseUrl: string, url: string, user: string) {
   const fullUrl = `${baseUrl}${url}`
-  const password = user === 'superadmin' ? 'superpasswd' : 'passwd'
+  const password = user === 'test_superadmin' ? 'superpasswd' : 'passwd'
   const loginUrl = `${baseUrl}/simple-directory/login?redirect=${encodeURIComponent(fullUrl)}`
   await page.goto(loginUrl)
   await page.getByLabel('Adresse mail').fill(`${user}@test.com`)

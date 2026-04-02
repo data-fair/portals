@@ -38,7 +38,7 @@ services:
     environment:
       PORT: ${SD_PORT}
       ADMINS: |
-        ["superadmin@test.com"]
+        ["test_superadmin@test.com"]
       CIPHER_PASSWORD: dev
       CONTACT: contact@test.com
       MANAGE_SITES: true

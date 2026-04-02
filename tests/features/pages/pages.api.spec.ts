@@ -6,7 +6,7 @@ import FormData from 'form-data'
 import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('admin@test.com')
+const user1 = await axiosAuth('test_admin@test.com')
 
 test.describe('pages management', () => {
   test.beforeEach(clean)
@@ -14,7 +14,7 @@ test.describe('pages management', () => {
   test('should create a page', async () => {
     const pageConfig = { title: 'My page', elements: [] }
     const page = (await user1.post('/api/pages', { type: 'home', config: pageConfig })).data
-    assert.equal(page.owner.id, 'adminOrga')
+    assert.equal(page.owner.id, 'test_admin')
     assert.deepEqual(page.config, pageConfig)
     assert.deepEqual(page.draftConfig, pageConfig)
   })
@@ -53,7 +53,7 @@ test.describe('pages management', () => {
       config: { title: 'Duplicated page', elements: [] }
     })).data
 
-    assert.equal(duplicatedPage.owner.id, 'adminOrga')
+    assert.equal(duplicatedPage.owner.id, 'test_admin')
     assert.equal(duplicatedPage.config.title, 'Duplicated page')
     assert.equal(duplicatedPage.config.elements.length, 1, 'Duplicated page should have one element')
     assert.equal(duplicatedPage.config.elements[0].type, 'image')

@@ -12,7 +12,7 @@ export const axios = (opts = {}) => axiosBuilder({ ...axiosOpts, ...opts })
 
 export const axiosAuth = (opts: string | Omit<AxiosAuthOptions, 'directoryUrl' | 'axiosOpts' | 'password'>) => {
   opts = typeof opts === 'string' ? { email: opts } : opts
-  const password = opts.email === 'superadmin@test.com' ? 'superpasswd' : 'passwd'
+  const password = opts.email === 'test_superadmin@test.com' ? 'superpasswd' : 'passwd'
   return _axiosAuth({ ...opts, password, axiosOpts, directoryUrl })
 }
 

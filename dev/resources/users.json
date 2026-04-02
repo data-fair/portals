@@ -1,79 +1,79 @@
 [
   {
-    "id": "superadmin",
+    "id": "test_superadmin",
     "firstName": "Super",
     "lastName": "Admin",
-    "email": "superadmin@test.com",
+    "email": "test_superadmin@test.com",
     "password": {
       "clear": "superpasswd"
     }
   },
   {
-    "id": "adminOrga",
-    "email": "admin@test.com",
+    "id": "test_admin",
+    "email": "test_admin@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "contribOrga",
+    "id": "test_contrib",
     "firstName": "Contrib Organization",
     "lastName": "",
-    "email": "contrib@test.com",
+    "email": "test_contrib@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "adminDep",
+    "id": "test_admin_dep",
     "firstName": "Admin Department",
     "lastName": "",
-    "email": "admin.dep@test.com",
+    "email": "test_admin_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "contribDep",
+    "id": "test_contrib_dep",
     "firstName": "Contrib Department",
     "lastName": "",
-    "email": "contrib.dep@test.com",
+    "email": "test_contrib_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "userOrga",
+    "id": "test_user",
     "firstName": "User Organization",
     "lastName": "",
-    "email": "user@test.com",
+    "email": "test_user@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "dmeadus",
+    "id": "test_dmeadus",
     "firstName": "Danna",
     "lastName": "Meadus",
-    "email": "dmeadus@answers.com",
+    "email": "test_dmeadus@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "alone",
+    "id": "test_alone",
     "firstName": "I am",
     "lastName": "Alone",
-    "email": "alone@no.org",
+    "email": "test_alone@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "albanm",
+    "id": "test_albanm",
     "firstName": "Alban",
     "lastName": "Mouton",
-    "email": "alban.mouton@koumoul.com",
+    "email": "test_albanm@test.com",
     "password": {
       "clear": "passwd"
     }

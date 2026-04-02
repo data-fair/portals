@@ -5,7 +5,7 @@ import FormData from 'form-data'
 import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('admin@test.com')
+const user1 = await axiosAuth('test_admin@test.com')
 
 test.describe('images management', () => {
   test.beforeEach(clean)

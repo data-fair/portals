@@ -5,13 +5,13 @@ import { axiosAuth as dfAxiosAuth } from '@data-fair/lib-node/axios-auth.js'
 import 'dotenv/config'
 import { clean, axiosAuth, baseURL } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('admin@test.com')
+const user1 = await axiosAuth('test_admin@test.com')
 
-const dfBaseUrl = `http://localhost:${process.env.NGINX_PORT}/data-fair`
-const dfDirectoryUrl = `http://localhost:${process.env.NGINX_PORT}/simple-directory`
+const dfBaseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/data-fair`
+const dfDirectoryUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/simple-directory`
 
 const dfAx = await dfAxiosAuth({
-  email: 'admin@test.com',
+  email: 'test_admin@test.com',
   password: 'passwd',
   directoryUrl: dfDirectoryUrl,
   axiosOpts: { baseURL: dfBaseUrl },
@@ -212,7 +212,7 @@ test.describe('search page indexes', () => {
       id: portal._id,
       url: dfBaseUrl
     }
-    await dfAx.post('/api/v1/settings/user/adminOrga/publication-sites', publicationSite)
+    await dfAx.post('/api/v1/settings/user/test_admin/publication-sites', publicationSite)
 
     const dataset = (await dfAx.post('/api/v1/datasets', {
       isRest: true,
