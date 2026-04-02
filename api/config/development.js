@@ -24,7 +24,7 @@ export default {
     pseudoSession: 'secret-pseudo-session',
     searchPages: 'secret-search-pages'
   },
-  portalUrlPattern: `http://{subdomain}.portals.localhost:${process.env.NGINX_PORT}`,
+  portalUrlPattern: `http://{subdomain}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,
   ingressControllers: ['nginx'],
   upgradeRoot: '../'

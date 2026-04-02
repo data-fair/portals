@@ -1,7 +1,7 @@
 
     server {
         listen ${NGINX_PORT};
-        server_name _;
+        server_name ${DEV_HOST} *.${DEV_HOST};
         http2 on;
         client_max_body_size 0;
 
@@ -21,7 +21,7 @@
         proxy_read_timeout 86400;
 
         location = / {
-          if ($host = "localhost") {
+          if ($host = "${DEV_HOST}") {
             return 302 /portals-manager/dev;
           }
           proxy_pass http://localhost:${DEV_PORTAL_PORT};

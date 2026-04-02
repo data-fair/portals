@@ -1,6 +1,6 @@
 [
   {
-    "id": "KWqAGZ4mG",
+    "id": "test_org1",
     "name": "Fivechat",
     "departments": [
       {
@@ -14,75 +14,75 @@
     ],
     "members": [
       {
-        "id": "adminOrga",
+        "id": "test_admin",
         "role": "admin"
       },
       {
-        "id": "contribOrga",
+        "id": "test_contrib",
         "role": "contrib"
       },
       {
-        "id": "userOrga",
+        "id": "test_user",
         "role": "user"
       },
       {
-        "id": "adminDep",
+        "id": "test_admin_dep",
         "role": "admin",
         "department": "dep1"
       },
       {
-        "id": "contribDep",
+        "id": "test_contrib_dep",
         "role": "contrib",
         "department": "dep1"
       }
     ]
   },
   {
-    "id": "EnTgB2UbH",
+    "id": "test_org2",
     "name": "Livefish",
     "members": [
       {
-        "id": "dmeadus",
+        "id": "test_dmeadus",
         "role": "admin"
       },
       {
-        "id": "albanm",
+        "id": "test_albanm",
         "role": "contrib"
       },
       {
-        "id": "superadmin",
+        "id": "test_superadmin",
         "role": "user"
       }
     ]
   },
   {
-    "id": "koumoul",
+    "id": "test_org3",
     "name": "Koumoul",
     "members": [
       {
-        "id": "superadmin",
+        "id": "test_superadmin",
         "role": "admin"
       },
       {
-        "id": "albanm",
+        "id": "test_albanm",
         "role": "admin"
       },
       {
-        "id": "adminOrg",
+        "id": "test_admin",
         "role": "admin"
       },
       {
-        "id": "userOrg",
+        "id": "test_user",
         "role": "user"
       },
       {
-        "id": "contribOrg",
+        "id": "test_contrib",
         "role": "contrib"
       }
     ],
     "partners": [
       {
-        "id": "KWqAGZ4mG",
+        "id": "test_org1",
         "name": "Fivechat"
       }
     ]
