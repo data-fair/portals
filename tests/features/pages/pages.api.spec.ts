@@ -1,19 +1,17 @@
-import type { PageConfig, ImageElement } from '../api/types/page/index.ts'
-import { strict as assert } from 'node:assert'
-import { it, describe, before, beforeEach, after } from 'node:test'
+import type { PageConfig, ImageElement } from '../../../api/types/page/index.ts'
+import { test } from '@playwright/test'
+import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
 import FormData from 'form-data'
 import 'dotenv/config'
-import { clean, startApiServer, stopApiServer, axiosAuth } from './utils/index.ts'
+import { clean, axiosAuth } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('admin@test.com')
 
-describe('pages management', () => {
-  before(startApiServer)
-  beforeEach(clean)
-  after(stopApiServer)
+test.describe('pages management', () => {
+  test.beforeEach(clean)
 
-  it('should create a page', async () => {
+  test('should create a page', async () => {
     const pageConfig = { title: 'My page', elements: [] }
     const page = (await user1.post('/api/pages', { type: 'home', config: pageConfig })).data
     assert.equal(page.owner.id, 'adminOrga')
@@ -21,7 +19,7 @@ describe('pages management', () => {
     assert.deepEqual(page.draftConfig, pageConfig)
   })
 
-  it('should duplicate a page with an image', async () => {
+  test('should duplicate a page with an image', async () => {
     const sourcePageConfig: PageConfig = {
       title: 'Source page',
       elements: []
@@ -31,7 +29,7 @@ describe('pages management', () => {
     // Upload an image for the source page
     const form = new FormData()
     form.append('body', JSON.stringify({ resource: { type: 'page', _id: sourcePage._id } }))
-    form.append('image', createReadStream('test-it/resources/logo.png'))
+    form.append('image', createReadStream('tests/resources/logo.png'))
     const sourceImage = await user1.post('/api/images', form).then(r => r.data)
 
     // Add image element to the source page

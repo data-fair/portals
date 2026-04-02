@@ -19,9 +19,10 @@
     "prepare": "husky || true",
     "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.ts",
     "quality": "npm run dev-deps && npm run lint && npm run build-types && npm -w ui run build && npm run check-types && npm run test && npm audit --omit=dev --audit-level=critical",
-    "test-base": "NODE_CONFIG_DIR=./api/config/ NODE_ENV=test EVENTS_LOG_LEVEL=alert node --disable-warning=ExperimentalWarning --test-force-exit --test-concurrency=1 --test",
-    "test-only": "npm run test-base -- --test-only test-it/*.ts",
-    "test": "npm run test-base test-it/*.ts"
+    "test": "NODE_CONFIG_DIR=./api/config/ NODE_ENV=test EVENTS_LOG_LEVEL=alert playwright test --max-failures=1",
+    "test-unit": "npm run test -- --project unit",
+    "test-api": "npm run test -- --project api",
+    "test-e2e": "npm run test -- --project e2e"
   },
   "workspaces": [
     "api",
@@ -52,6 +53,7 @@
     "@data-fair/lib-common-types": "^1.20.2",
     "@koumoul/vjsf-compiler": "^1.2.3",
     "@koumoul/vjsf-markdown": "^0.5.0",
+    "@playwright/test": "^1.59.1",
     "@types/config": "^3.3.5",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.3",

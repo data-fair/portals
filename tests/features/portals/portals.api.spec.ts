@@ -1,16 +1,14 @@
-import { strict as assert } from 'node:assert'
-import { it, describe, before, beforeEach, after } from 'node:test'
+import { test } from '@playwright/test'
+import assert from 'node:assert/strict'
 import 'dotenv/config'
-import { clean, startApiServer, stopApiServer, axiosAuth } from './utils/index.ts'
+import { clean, axiosAuth } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('admin@test.com')
 
-describe('portals management', () => {
-  before(startApiServer)
-  beforeEach(clean)
-  after(stopApiServer)
+test.describe('portals management', () => {
+  test.beforeEach(clean)
 
-  it('should create a portal', async () => {
+  test('should create a portal', async () => {
     const portalConfig = { title: 'Portal 1', menu: { children: [] } }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
     assert.equal(portal.owner.id, 'adminOrga')

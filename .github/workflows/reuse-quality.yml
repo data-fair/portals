@@ -22,5 +22,8 @@ jobs:
     - name: Init .env
       run: ./dev/init-env.sh
 
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
+
     - name: Run quality checks
       run: npm run quality

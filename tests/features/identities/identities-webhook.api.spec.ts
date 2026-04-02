@@ -1,24 +1,22 @@
-import { strict as assert } from 'node:assert'
-import { describe, it, before, beforeEach, after } from 'node:test'
+import { test } from '@playwright/test'
+import assert from 'node:assert/strict'
 import 'dotenv/config'
-import { axios, axiosAuth, clean, startApiServer, stopApiServer } from './utils/index.ts'
+import { axios, axiosAuth, clean } from '../../support/axios.ts'
 
 const axIdentities = axios({ params: { key: 'secret-identities' }, baseURL: `http://localhost:${process.env.DEV_API_PORT}/portals-manager` })
 const user1 = await axiosAuth('admin@test.com')
 
-describe('identities webhooks', () => {
-  before(startApiServer)
-  beforeEach(clean)
-  after(stopApiServer)
+test.describe('identities webhooks', () => {
+  test.beforeEach(clean)
 
-  it('should update owner name', async () => {
+  test('should update owner name', async () => {
     let portal = (await user1.post('/api/portals', { config: { title: 'Portal 1', menu: { children: [] } } })).data
     await axIdentities.post('/api/identities/user/adminOrga', { name: 'New name' })
     portal = (await user1.get('/api/portals/' + portal._id)).data
     assert.equal(portal.owner.name, 'New name')
   })
 
-  it('should remove resources', async () => {
+  test('should remove resources', async () => {
     // TODO
   })
 })

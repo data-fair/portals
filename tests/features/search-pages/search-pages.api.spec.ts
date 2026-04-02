@@ -1,29 +1,26 @@
-import { strict as assert } from 'node:assert'
-import { it, describe, before, beforeEach, after } from 'node:test'
+import { test } from '@playwright/test'
+import assert from 'node:assert/strict'
 import { WsClient } from '@data-fair/lib-node/ws-client.js'
-import { axiosAuth } from '@data-fair/lib-node/axios-auth.js'
+import { axiosAuth as dfAxiosAuth } from '@data-fair/lib-node/axios-auth.js'
 import 'dotenv/config'
-import { clean, startApiServer, stopApiServer, axiosAuth as portalAxiosAuth, baseURL } from './utils/index.ts'
+import { clean, axiosAuth, baseURL } from '../../support/axios.ts'
 
-const user1 = await portalAxiosAuth('admin@test.com')
+const user1 = await axiosAuth('admin@test.com')
 
 const dfBaseUrl = `http://localhost:${process.env.NGINX_PORT}/data-fair`
 const dfDirectoryUrl = `http://localhost:${process.env.NGINX_PORT}/simple-directory`
 
-const dfAx = await axiosAuth({
+const dfAx = await dfAxiosAuth({
   email: 'admin@test.com',
   password: 'passwd',
   directoryUrl: dfDirectoryUrl,
   axiosOpts: { baseURL: dfBaseUrl },
-  // org: 'KWqAGZ4mG'
 })
 
-describe('search page indexes', () => {
-  before(startApiServer)
-  beforeEach(clean)
-  after(stopApiServer)
+test.describe('search page indexes', () => {
+  test.beforeEach(clean)
 
-  it('should index a page when search engine is activated', async () => {
+  test('should index a page when search engine is activated', async () => {
     // 1. Create a portal and activate the search engine in its config
     const portalConfig = {
       title: 'Portal with search',
@@ -65,7 +62,7 @@ describe('search page indexes', () => {
     assert.equal(indexedPage.path, '/pages/test-page')
   })
 
-  it('should not index pages when search engine is not activated', async () => {
+  test('should not index pages when search engine is not activated', async () => {
     // 1. Create a portal without search engine activation
     const portalConfig = {
       title: 'Portal without search',
@@ -95,7 +92,7 @@ describe('search page indexes', () => {
     assert.equal(portalIndexes.length, 0, 'Should not have indexed pages')
   })
 
-  it('should automatically index pages when created', async () => {
+  test('should automatically index pages when created', async () => {
     // Create portal with search engine
     const portalConfig = {
       title: 'Portal for reindex test',
@@ -126,7 +123,7 @@ describe('search page indexes', () => {
     assert.equal(portalIndexes[0].resource.id, createdPage._id)
   })
 
-  it('should allow authenticated users to subscribe to realtime updates', async () => {
+  test('should allow authenticated users to subscribe to realtime updates', async () => {
     // 1. Create a portal with search engine
     const portalConfig = {
       title: 'Portal for realtime test',
@@ -140,13 +137,12 @@ describe('search page indexes', () => {
 
     // 2. Connect to websocket using apiKey for admin access
     const wsClient = new WsClient({
-      url: baseURL.replace('portals-manager', 'portals-manager').replace('http', 'ws') + '/api/',
+      url: baseURL.replace('http', 'ws') + '/api/',
       apiKey: 'test-api-key',
       account: portal.owner
     })
 
     // 3. Subscribe to the search-pages channel - this should succeed
-    // If authorization fails, this will throw "Permission manquante"
     await wsClient.subscribe(`search-pages/${portal._id}`)
 
     // 4. Verify we can create a page (worker will eventually index it)
@@ -161,13 +157,13 @@ describe('search page indexes', () => {
       owner: portal.owner
     })
 
-    // Give worker some time to process (but don't wait for it - test is about websocket subscription)
+    // Give worker some time to process
     await new Promise(resolve => setTimeout(resolve, 2000))
 
     wsClient.close()
   })
 
-  it('should not receive updates without authorization', async () => {
+  test('should not receive updates without authorization', async () => {
     // Create a portal with search engine
     const portalConfig = {
       title: 'Portal for auth test',
@@ -181,7 +177,7 @@ describe('search page indexes', () => {
 
     // Connect without any authentication
     const anonClient = new WsClient({
-      url: baseURL.replace('portals-manager', 'portals-manager').replace('http', 'ws') + '/api/'
+      url: baseURL.replace('http', 'ws') + '/api/'
     })
 
     // Subscribe should throw a permission error
@@ -198,7 +194,7 @@ describe('search page indexes', () => {
     anonClient.close()
   })
 
-  it('should create search page from data-fair dataset via initSearchEngine', async () => {
+  test('should create search page from data-fair dataset via initSearchEngine', async () => {
     const portalConfig = {
       title: 'Portal with data-fair integration',
       menu: { children: [] },
