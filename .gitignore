@@ -7,3 +7,4 @@ tmp/
 data/
 .env
 .vscode
+dev/logs/

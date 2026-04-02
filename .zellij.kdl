@@ -3,33 +3,33 @@ layout {
       split_direction "vertical"
       pane name="portals" borderless=true {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && bash"
+        args "-ic" "nvm use && bash"
       }
       pane name="deps" {
         command "bash"
-        args "-ic" "npm run dev-deps && watch -n 4 \"docker compose ps --all --format 'table {{.Name}}\t{{.Status}}'\""
+        args "-ic" "npm run dev-deps"
       }
       pane name="mock ingress manager" {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
+        args "-ic" "nvm use && npm run dev-ingress-manager"
       }
     }
     pane {
       split_direction "vertical"
       pane name="manager ui" {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && npm -w ui run dev"
+        args "-ic" "nvm use && npm -w ui run dev"
       }
       pane name="manager api" {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && npm -w api run dev"
+        args "-ic" "nvm use && npm -w api run dev"
       }
       pane name="portal" {
         command "bash"
-        args "-ic" "nvm use > /dev/null 2>&1 && npm -w portal run dev"
+        args "-ic" "nvm use && npm -w portal run dev"
       }
     }
-    pane size=2 borderless=true {
+    pane size=1 borderless=true {
         command "bash"
         args "-ic" "echo -n -e \"Dev server available at \\e[1;96mhttp://$DEV_HOST:$NGINX_PORT/portals-manager/dev\\033[0m\""
     }
