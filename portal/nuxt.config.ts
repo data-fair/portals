@@ -109,7 +109,7 @@ export default defineNuxtConfig({
         '@data-fair/frame/lib/vue-router/state-change-adapter.js',
         '@vueuse/core',
         '@mdi/js',
-        'analytics'
+        'analytics',
       ]
     }
   },

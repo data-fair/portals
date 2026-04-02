@@ -199,6 +199,11 @@ export default {
         if: 'data?.authentication !== "none"',
         title: 'Espace personnel',
         children: ['personal']
+      },
+      {
+        if: 'context.adminMode',
+        title: 'Assistant IA',
+        children: ['agentChat']
       }
     ]
   },
@@ -462,6 +467,101 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
           layout: { cols: { md: 4 } },
           default: 'default'
+        }
+      }
+    },
+    agentChat: {
+      type: 'object',
+      unevaluatedProperties: false,
+      properties: {
+        active: {
+          type: 'boolean',
+          title: 'Activer l\'assistant IA',
+          default: false,
+          layout: 'switch'
+        },
+        type: {
+          type: 'string',
+          title: 'Mode d\'affichage',
+          default: 'menu',
+          oneOf: [
+            { const: 'drawer', title: 'Panneau latéral (drawer)' },
+            { const: 'menu', title: 'Menu flottant' }
+          ],
+          layout: { if: 'parent.data?.active' }
+        },
+        togglePosition: {
+          type: 'string',
+          title: 'Position du bouton',
+          default: 'fab',
+          oneOf: [
+            { const: 'fab', title: 'Bouton flottant (coin inférieur droit)' },
+            { const: 'appBar', title: 'Dans la barre de navigation' }
+          ],
+          layout: { if: 'parent.data?.active' }
+        },
+        chatTitle: {
+          type: 'string',
+          title: 'Titre de l\'assistant',
+          layout: { if: 'parent.data?.active' }
+        },
+        systemPrompt: {
+          type: 'string',
+          title: 'Prompt système',
+          layout: {
+            comp: 'textarea',
+            props: { autoGrow: true, rows: 3 },
+            if: 'parent.data?.active'
+          }
+        },
+        drawerProps: {
+          type: 'object',
+          title: 'Options du panneau latéral',
+          unevaluatedProperties: false,
+          layout: { if: "parent.data?.active && parent.data?.type === 'drawer'" },
+          properties: {
+            width: { type: 'number', title: 'Largeur (px)', default: 400 },
+            temporary: { type: 'boolean', title: 'Temporaire (se ferme au clic extérieur)', default: true, layout: 'switch' }
+          }
+        },
+        menuProps: {
+          type: 'object',
+          title: 'Options du menu',
+          unevaluatedProperties: false,
+          layout: { if: "parent.data?.active && parent.data?.type === 'menu'" },
+          properties: {
+            width: { type: 'number', title: 'Largeur (px)', default: 400, layout: { cols: 6 } },
+            height: { type: 'number', title: 'Hauteur (px)', default: 500, layout: { cols: 6 } }
+          }
+        },
+        cardProps: {
+          type: 'object',
+          title: 'Options de la carte (menu)',
+          unevaluatedProperties: false,
+          layout: { if: "parent.data?.active && parent.data?.type === 'menu'" },
+          properties: {
+            color: { type: 'string', title: 'Couleur de fond' }
+          }
+        },
+        btnProps: {
+          type: 'object',
+          title: 'Options du bouton',
+          unevaluatedProperties: false,
+          layout: { if: 'parent.data?.active' },
+          properties: {
+            size: {
+              type: 'string',
+              title: 'Taille',
+              default: 'default',
+              oneOf: [
+                { const: 'x-small', title: 'Très petit' },
+                { const: 'small', title: 'Petit' },
+                { const: 'default', title: 'Normal' },
+                { const: 'large', title: 'Grand' },
+                { const: 'x-large', title: 'Très grand' }
+              ]
+            }
+          }
         }
       }
     }
