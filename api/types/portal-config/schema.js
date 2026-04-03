@@ -5,7 +5,8 @@ export default {
   'x-exports': ['types', 'vjsf'],
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
-    xI18n: true
+    xI18n: true,
+    webmcp: true
   },
   'x-vjsf-locales': ['en', 'fr'],
   'x-jstt': { additionalProperties: false },
