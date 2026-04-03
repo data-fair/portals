@@ -202,7 +202,7 @@ export default {
       },
       {
         if: 'context.adminMode',
-        title: 'Assistant IA',
+        title: 'Assistant IA (bêta)',
         children: ['agentChat']
       }
     ]

@@ -54,7 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose } from 'vue'
+import { useAgentDatasetTools } from '~/composables/agent/dataset-tools'
+import { useAgentDatasetDataTools } from '~/composables/agent/dataset-data-tools'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -62,7 +64,23 @@ const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetif
 
 const { $portal } = useNuxtApp()
 const { portalConfig } = usePortalStore()
+const { locale } = useI18n()
 
 const agentChat = computed(() => portalConfig.value.agentChat)
 const owner = computed(() => $portal.owner)
+
+let toolsScope: ReturnType<typeof effectScope> | null = null
+watchEffect(() => {
+  if (agentChat.value?.active && !toolsScope) {
+    toolsScope = effectScope()
+    toolsScope.run(() => {
+      useAgentDatasetTools(locale)
+      useAgentDatasetDataTools(locale)
+    })
+  } else if (!agentChat.value?.active && toolsScope) {
+    toolsScope.stop()
+    toolsScope = null
+  }
+})
+onScopeDispose(() => { toolsScope?.stop() })
 </script>
