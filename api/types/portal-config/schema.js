@@ -488,7 +488,7 @@ export default {
             { const: 'drawer', title: 'Panneau latéral (drawer)' },
             { const: 'menu', title: 'Menu flottant' }
           ],
-          layout: { if: 'parent.data?.active' }
+          layout: { if: 'parent.data?.active', cols: 6 }
         },
         togglePosition: {
           type: 'string',
@@ -498,19 +498,20 @@ export default {
             { const: 'fab', title: 'Bouton flottant (coin inférieur droit)' },
             { const: 'appBar', title: 'Dans la barre de navigation' }
           ],
-          layout: { if: 'parent.data?.active' }
+          layout: { if: 'parent.data?.active', cols: 6 }
         },
         chatTitle: {
           type: 'string',
           title: 'Titre de l\'assistant',
+          default: 'Assistant IA',
           layout: { if: 'parent.data?.active' }
         },
         systemPrompt: {
           type: 'string',
           title: 'Prompt système',
+          default: 'Vous êtes un assistant IA intégré à un portail de données. Aidez les utilisateurs à trouver et comprendre les jeux de données disponibles.',
           layout: {
             comp: 'textarea',
-            props: { autoGrow: true, rows: 3 },
             if: 'parent.data?.active'
           }
         },
@@ -534,20 +535,11 @@ export default {
             height: { type: 'number', title: 'Hauteur (px)', default: 500, layout: { cols: 6 } }
           }
         },
-        cardProps: {
-          type: 'object',
-          title: 'Options de la carte (menu)',
-          unevaluatedProperties: false,
-          layout: { if: "parent.data?.active && parent.data?.type === 'menu'" },
-          properties: {
-            color: { type: 'string', title: 'Couleur de fond' }
-          }
-        },
         btnProps: {
           type: 'object',
           title: 'Options du bouton',
           unevaluatedProperties: false,
-          layout: { if: 'parent.data?.active' },
+          layout: { if: 'parent.data?.active', cols: 6 },
           properties: {
             size: {
               type: 'string',

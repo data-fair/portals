@@ -34,7 +34,6 @@
           :system-prompt="agentChat.systemPrompt"
           :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
-          :card-props="agentChat.cardProps"
         />
       </Teleport>
       <div
@@ -48,7 +47,6 @@
           :system-prompt="agentChat.systemPrompt"
           :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
-          :card-props="agentChat.cardProps"
         />
       </div>
     </template>
