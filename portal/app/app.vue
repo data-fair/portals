@@ -5,7 +5,7 @@
       <NuxtPage />
       <ClientOnly><UiNotif /></ClientOnly>
       <ClientOnly><AcceptCookies /></ClientOnly>
-    <ClientOnly><AgentChat /></ClientOnly>
+      <ClientOnly><AgentChat /></ClientOnly>
     </NuxtLayout>
   </v-app>
 </template>

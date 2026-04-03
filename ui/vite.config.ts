@@ -68,10 +68,7 @@ export default defineConfig({
     }),
     Components({
       dts: './dts/components.d.ts',
-      dirs: [
-        'src/components',
-        '../portal/app/components'
-      ]
+      dirs: ['src/components']
     }),
     {
       name: 'inject-site-context',

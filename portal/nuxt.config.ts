@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     { path: '~/components', pathPrefix: false }
   ],
   imports: {
+    dirs: ['composables', 'composables/agent'],
     presets: [
       {
         from: '@data-fair/lib-vue/session.js',
