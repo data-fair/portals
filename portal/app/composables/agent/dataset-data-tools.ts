@@ -1,11 +1,11 @@
 import type { Ref } from 'vue'
 import { useAgentTool, useAgentSubAgent } from '@data-fair/lib-vue-agents'
-import * as searchData from '@data-fair/agent-tools-data-fair/search-data.ts'
-import * as aggregateData from '@data-fair/agent-tools-data-fair/aggregate-data.ts'
-import * as calculateMetric from '@data-fair/agent-tools-data-fair/calculate-metric.ts'
-import * as getFieldValues from '@data-fair/agent-tools-data-fair/get-field-values.ts'
-import * as getDatasetSchema from '@data-fair/agent-tools-data-fair/get-dataset-schema.ts'
-import * as datasetDataSubagent from '@data-fair/agent-tools-data-fair/dataset-data-subagent.ts'
+import * as searchData from '@data-fair/agent-tools-data-fair/search-data'
+import * as aggregateData from '@data-fair/agent-tools-data-fair/aggregate-data'
+import * as calculateMetric from '@data-fair/agent-tools-data-fair/calculate-metric'
+import * as getFieldValues from '@data-fair/agent-tools-data-fair/get-field-values'
+import * as getDatasetSchema from '@data-fair/agent-tools-data-fair/get-dataset-schema'
+import * as datasetDataSubagent from '@data-fair/agent-tools-data-fair/dataset-data-subagent'
 
 const apiBase = '/data-fair/api/v1/'
 
@@ -38,7 +38,8 @@ export function useAgentDatasetDataTools (locale: Ref<string>) {
         const { path, query } = searchData.buildQuery(params)
         data = await localFetch<any>(apiBase + path, { query })
       }
-      return searchData.formatResult(data, params)
+      const result = searchData.formatResult(data, params)
+      return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
   })
 
@@ -48,7 +49,8 @@ export function useAgentDatasetDataTools (locale: Ref<string>) {
     execute: async (params) => {
       const { path, query } = aggregateData.buildQuery(params)
       const data = await localFetch<any>(apiBase + path, { query })
-      return aggregateData.formatResult(data, params.metric)
+      const result = aggregateData.formatResult(data, params)
+      return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
   })
 
@@ -58,7 +60,8 @@ export function useAgentDatasetDataTools (locale: Ref<string>) {
     execute: async (params) => {
       const { path, query } = calculateMetric.buildQuery(params)
       const data = await localFetch<any>(apiBase + path, { query })
-      return calculateMetric.formatResult(data, params)
+      const result = calculateMetric.formatResult(data, params)
+      return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
   })
 
@@ -68,7 +71,8 @@ export function useAgentDatasetDataTools (locale: Ref<string>) {
     execute: async (params) => {
       const { path, query } = getFieldValues.buildQuery(params)
       const values = await localFetch<any>(apiBase + path, { query })
-      return getFieldValues.formatResult(values, params.fieldKey)
+      const result = getFieldValues.formatResult(values, params)
+      return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
   })
 
