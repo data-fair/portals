@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import type { $Fetch } from 'ofetch'
 import { useAgentTool, useAgentSubAgent } from '@data-fair/lib-vue-agents'
 import * as searchData from '@data-fair/agent-tools-data-fair/search-data'
 import * as aggregateData from '@data-fair/agent-tools-data-fair/aggregate-data'
@@ -9,8 +10,7 @@ import * as datasetDataSubagent from '@data-fair/agent-tools-data-fair/dataset-d
 
 const apiBase = '/data-fair/api/v1/'
 
-export function useAgentDatasetDataTools (locale: Ref<string>) {
-  const localFetch = useNuxtApp().$localFetch
+export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetch) {
   const localeVal = locale.value as 'fr' | 'en'
 
   useAgentTool({

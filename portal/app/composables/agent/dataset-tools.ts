@@ -1,12 +1,12 @@
 import type { Ref } from 'vue'
+import type { $Fetch } from 'ofetch'
 import { useAgentTool } from '@data-fair/lib-vue-agents'
 import * as listDatasets from '@data-fair/agent-tools-data-fair/list-datasets'
 import * as describeDataset from '@data-fair/agent-tools-data-fair/describe-dataset'
 
 export { formatResult as serializeDatasetInfo } from '@data-fair/agent-tools-data-fair/describe-dataset'
 
-export function useAgentDatasetTools (locale: Ref<string>) {
-  const localFetch = useNuxtApp().$localFetch
+export function useAgentDatasetTools (locale: Ref<string>, localFetch: $Fetch) {
   const localeVal = locale.value as 'fr' | 'en'
 
   useAgentTool({

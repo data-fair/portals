@@ -54,28 +54,34 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose } from 'vue'
-import { useAgentDatasetTools } from '~/composables/agent/dataset-tools'
-import { useAgentDatasetDataTools } from '~/composables/agent/dataset-data-tools'
+import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose, computed } from 'vue'
+import type { Ref } from 'vue'
+import type { $Fetch } from 'ofetch'
+import type { PortalConfig } from '#api/types/portal-config'
+import { useAgentDatasetTools } from '../composables/agent/dataset-tools'
+import { useAgentDatasetDataTools } from '../composables/agent/dataset-data-tools'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
 const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatMenu.vue'))
 
-const { $portal } = useNuxtApp()
-const { portalConfig } = usePortalStore()
-const { locale } = useI18n()
+const props = defineProps<{
+  portalConfig: PortalConfig
+  owner: { type: string, id: string }
+  locale: Ref<string>
+  localFetch: $Fetch
+}>()
 
-const agentChat = computed(() => portalConfig.value.agentChat)
-const owner = computed(() => $portal.owner)
+const agentChat = computed(() => props.portalConfig.agentChat)
+const owner = computed(() => props.owner)
 
 let toolsScope: ReturnType<typeof effectScope> | null = null
 watchEffect(() => {
   if (agentChat.value?.active && !toolsScope) {
     toolsScope = effectScope()
     toolsScope.run(() => {
-      useAgentDatasetTools(locale)
-      useAgentDatasetDataTools(locale)
+      useAgentDatasetTools(props.locale, props.localFetch)
+      useAgentDatasetDataTools(props.locale, props.localFetch)
     })
   } else if (!agentChat.value?.active && toolsScope) {
     toolsScope.stop()
