@@ -11,7 +11,7 @@ import * as datasetDataSubagent from '@data-fair/agent-tools-data-fair/dataset-d
 const apiBase = '/data-fair/api/v1/'
 
 export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetch) {
-  const localeVal = locale.value as 'fr' | 'en'
+  const localeVal = (locale.value === 'fr' || locale.value === 'en') ? locale.value : 'fr'
 
   useAgentTool({
     ...getDatasetSchema.schema,

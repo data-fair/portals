@@ -7,7 +7,7 @@ import * as describeDataset from '@data-fair/agent-tools-data-fair/describe-data
 export { formatResult as serializeDatasetInfo } from '@data-fair/agent-tools-data-fair/describe-dataset'
 
 export function useAgentDatasetTools (locale: Ref<string>, localFetch: $Fetch) {
-  const localeVal = locale.value as 'fr' | 'en'
+  const localeVal = (locale.value === 'fr' || locale.value === 'en') ? locale.value : 'fr'
 
   useAgentTool({
     ...listDatasets.schema,
