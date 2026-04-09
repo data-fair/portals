@@ -178,6 +178,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
+import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
@@ -198,6 +199,16 @@ watch(portalFetch.data, () => {
 // Synchronize editConfig changes back to portalConfig
 watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
+})
+// When switching from assisted to manual mode, expand assisted colors into the full palette
+watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
+  if (oldVal === true && newVal === false && editConfig.value?.theme) {
+    const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
+    editConfig.value.theme.colors = filled.colors
+    editConfig.value.theme.darkColors = filled.darkColors
+    editConfig.value.theme.hcColors = filled.hcColors
+    editConfig.value.theme.hcDarkColors = filled.hcDarkColors
+  }
 })
 
 const saveDraft = useAsyncAction(async () => {

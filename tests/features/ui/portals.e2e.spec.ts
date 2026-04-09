@@ -26,4 +26,32 @@ test.describe('portals UI', () => {
     // The portal settings page shows a vjsf form, wait for it to load
     await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
   })
+
+  test('should preserve assisted mode colors when switching to manual mode', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Theme Color Test', menu: { children: [] } }
+    })).data
+
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
+
+    // Navigate to the "Apparence" tab
+    await page.getByRole('tab', { name: 'Apparence' }).click()
+
+    // In assisted mode, change the primary color in the browser
+    const assistedPrimaryInput = page.getByLabel('Couleur principale')
+    await assistedPrimaryInput.click()
+    await assistedPrimaryInput.fill('#FF0000')
+    await assistedPrimaryInput.press('Tab')
+    // Wait for blur-based VJSF update
+    await page.waitForTimeout(500)
+
+    // Switch assisted mode off (without saving first)
+    await page.getByLabel('mode de gestion des couleurs simplifié').click()
+    await page.waitForTimeout(500)
+
+    // In manual mode, the primary color should reflect the assisted mode value
+    const manualPrimaryInput = page.getByLabel('Couleur principale').first()
+    await expect(manualPrimaryInput).toHaveValue('#FF0000')
+  })
 })

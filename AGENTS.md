@@ -45,7 +45,6 @@ Test users are defined in dev/resources/users.json
 ### Testing
 
 ```bash
-npm run test-deps                 # start test dependencies
 npm test                          # all tests
 npm run test-unit                 # unit tests only
 npm run test-api                  # API tests only
@@ -69,3 +68,11 @@ npm run check-types      # TypeScript type checking
 npm run build-types      # Build type definitions from schemas
 npm -w ui run build      # Build UI
 ```
+
+### Performance profiling
+
+The edit-config page (page editor) has known performance sensitivity due to the complex VJSF oneOf schema (38 element types). A Playwright seed file exists for interactive profiling:
+
+- **Seed file**: `tests/perf-seed.e2e.spec.ts`
+- **Key schema**: `api/types/page-elements/schema.js` (uses `discriminator: { propertyName: 'type' }` to optimize oneOf resolution in `@json-layout/core`)
+- **Profiling method**: Use Playwright MCP `generator_setup_page` with the seed file, then `browser_evaluate` to inject `PerformanceObserver` for long tasks and measure interaction latency

@@ -1,8 +1,8 @@
 [
   {
     "id": "test_superadmin",
-    "firstName": "Super",
-    "lastName": "Admin",
+    "firstName": "Test",
+    "lastName": "Superadmin",
     "email": "test_superadmin@test.com",
     "password": {
       "clear": "superpasswd"
@@ -10,6 +10,8 @@
   },
   {
     "id": "test_admin",
+    "firstName": "Test",
+    "lastName": "Admin",
     "email": "test_admin@test.com",
     "password": {
       "clear": "passwd"
@@ -17,8 +19,8 @@
   },
   {
     "id": "test_contrib",
-    "firstName": "Contrib Organization",
-    "lastName": "",
+    "firstName": "Test",
+    "lastName": "Contrib",
     "email": "test_contrib@test.com",
     "password": {
       "clear": "passwd"
@@ -26,8 +28,8 @@
   },
   {
     "id": "test_admin_dep",
-    "firstName": "Admin Department",
-    "lastName": "",
+    "firstName": "Test",
+    "lastName": "Admin Dep",
     "email": "test_admin_dep@test.com",
     "password": {
       "clear": "passwd"
@@ -35,8 +37,8 @@
   },
   {
     "id": "test_contrib_dep",
-    "firstName": "Contrib Department",
-    "lastName": "",
+    "firstName": "Test",
+    "lastName": "Contrib Dep",
     "email": "test_contrib_dep@test.com",
     "password": {
       "clear": "passwd"
@@ -44,25 +46,16 @@
   },
   {
     "id": "test_user",
-    "firstName": "User Organization",
-    "lastName": "",
+    "firstName": "Test",
+    "lastName": "User",
     "email": "test_user@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_dmeadus",
-    "firstName": "Danna",
-    "lastName": "Meadus",
-    "email": "test_dmeadus@test.com",
-    "password": {
-      "clear": "passwd"
-    }
-  },
-  {
     "id": "test_alone",
-    "firstName": "I am",
+    "firstName": "Test",
     "lastName": "Alone",
     "email": "test_alone@test.com",
     "password": {
@@ -70,7 +63,7 @@
     }
   },
   {
-    "id": "alban",
+    "id": "albanm",
     "firstName": "Alban",
     "lastName": "Mouton",
     "email": "alban.mouton@koumoul.com",

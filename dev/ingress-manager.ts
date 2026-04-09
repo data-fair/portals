@@ -6,6 +6,8 @@ import { assertReqInternalSecret } from '@data-fair/lib-express/index.js'
 const app = express()
 app.use(express.json())
 
+app.get('/ping', (req, res) => res.send('ok'))
+
 app.post('/api/ingress', (req, res, next) => {
   assertReqInternalSecret(req, 'secret-ingress')
   const body = req.body as IngressManagerIngressInfo[]
