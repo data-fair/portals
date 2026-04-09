@@ -5,7 +5,7 @@
         :account-type="owner.type"
         :account-id="owner.id"
         :chat-title="agentChat.chatTitle"
-        :system-prompt="agentChat.systemPrompt"
+        :system-prompt="systemPrompt"
         :drawer-props="agentChat.drawerProps"
       />
       <Teleport
@@ -31,7 +31,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="agentChat.systemPrompt"
+          :system-prompt="systemPrompt"
           :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
@@ -44,7 +44,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="agentChat.systemPrompt"
+          :system-prompt="systemPrompt"
           :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
@@ -72,13 +72,23 @@ const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetif
 const props = defineProps<{
   portalConfig: PortalConfig
   portalId: string
-  owner: { type: string, id: string }
+  owner: { type: string, id: string, name: string }
   locale: Ref<string>
   localFetch: $Fetch
 }>()
 
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
+
+const systemPrompt = computed(() => {
+  const base = agentChat.value?.systemPrompt || ''
+  const domain = import.meta.client ? window.location.hostname : ''
+  const parts = [base]
+  if (domain) parts.push(`Le nom de domaine de ce portail est "${domain}".`)
+  if (props.owner.name) parts.push(`Ce portail est géré par "${props.owner.name}".`)
+  if (props.portalConfig.title) parts.push(`Le titre de ce portail est "${props.portalConfig.title}".`)
+  return parts.join('\n')
+})
 
 let toolsScope: ReturnType<typeof effectScope> | null = null
 watchEffect(() => {
