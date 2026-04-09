@@ -63,6 +63,10 @@
             proxy_pass http://localhost:${PROCESSINGS_PORT};
         }
 
+        location /agents/ {
+            proxy_pass http://localhost:${AGENTS_PORT};
+        }
+
         location /openapi-viewer/ {
             return 200 "Service openapi-viewer (inactif en dev)\nUrl = $scheme://$http_host$request_uri";
             add_header Content-Type text/plain;

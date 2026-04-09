@@ -5,6 +5,7 @@
       <NuxtPage />
       <ClientOnly><UiNotif /></ClientOnly>
       <ClientOnly><AcceptCookies /></ClientOnly>
+      <ClientOnly><AgentChat :portal-config="$portal.config" :owner="$portal.owner" :locale="locale" :local-fetch="$localFetch" /></ClientOnly>
     </NuxtLayout>
   </v-app>
 </template>
@@ -13,8 +14,9 @@
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { useTheme } from 'vuetify'
 
-const { $portal, $siteInfo } = useNuxtApp()
+const { $portal, $siteInfo, $localFetch } = useNuxtApp()
 const session = useSession()
+const { locale } = useI18n()
 const theme = useTheme()
 const getPortalImageSrc = usePortalImageSrc()
 
