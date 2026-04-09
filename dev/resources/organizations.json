@@ -1,7 +1,7 @@
 [
   {
     "id": "test_org1",
-    "name": "Fivechat",
+    "name": "Test Org 1",
     "departments": [
       {
         "id": "dep1",
@@ -39,14 +39,14 @@
   },
   {
     "id": "test_org2",
-    "name": "Livefish",
+    "name": "Test Org 2",
     "members": [
       {
-        "id": "test_dmeadus",
+        "id": "test_alone",
         "role": "admin"
       },
       {
-        "id": "test_albanm",
+        "id": "albanm",
         "role": "contrib"
       },
       {
@@ -57,14 +57,14 @@
   },
   {
     "id": "test_org3",
-    "name": "Koumoul",
+    "name": "Test Org 3",
     "members": [
       {
         "id": "test_superadmin",
         "role": "admin"
       },
       {
-        "id": "test_albanm",
+        "id": "albanm",
         "role": "admin"
       },
       {
@@ -83,7 +83,7 @@
     "partners": [
       {
         "id": "test_org1",
-        "name": "Fivechat"
+        "name": "Test Org 1"
       }
     ]
   }

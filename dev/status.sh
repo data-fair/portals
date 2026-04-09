@@ -63,10 +63,10 @@ echo ""
 
 # --- Dev processes ---
 echo -e "${BOLD}Dev processes:${RESET}"
-check_http "dev-api" "${NGINX}/portals-manager/api/"
+check_http "dev-api" "${NGINX}/portals-manager/api/ping"
 check_http "dev-ui" "http://localhost:${DEV_UI_PORT}"
-check_http "portal" "http://localhost:${DEV_PORTAL_PORT}"
-check_http "ingress-manager" "http://localhost:${DEV_INGRESS_PORT}"
+check_http "portal" "http://localhost:${DEV_PORTAL_PORT}/ping"
+check_http "ingress-manager" "http://localhost:${DEV_INGRESS_PORT}/ping"
 echo ""
 
 # --- Docker compose services ---

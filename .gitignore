@@ -8,3 +8,4 @@ data/
 .env
 .vscode
 dev/logs/
+.playwright-mcp

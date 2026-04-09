@@ -9,6 +9,7 @@ const portalUrlRegexp = new RegExp('^' + escapeRegExp(config.portalUrlPattern).r
 export type RequestPortal = Pick<Portal, '_id' | 'config' | 'owner' | 'whiteLabel' | 'staging'> & { draft: boolean }
 
 export default defineEventHandler(async (event) => {
+  if (getRequestURL(event).pathname === '/ping') return
   if (!config.portalUrlPattern) throw new Error('config.portalUrlPattern is required')
   const mongo = portalMongo
   const origin = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true }).origin
