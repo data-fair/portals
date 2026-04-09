@@ -54,4 +54,35 @@ test.describe('portals UI', () => {
     const manualPrimaryInput = page.getByLabel('Couleur principale').first()
     await expect(manualPrimaryInput).toHaveValue('#FF0000')
   })
+
+  test('should preserve manual mode colors when switching to assisted mode', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Theme Manual to Assisted Test', menu: { children: [] } }
+    })).data
+
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
+
+    // Navigate to the "Apparence" tab
+    await page.getByRole('tab', { name: 'Apparence' }).click()
+
+    // Switch assisted mode off to enter manual mode
+    await page.getByLabel('mode de gestion des couleurs simplifié').click()
+    await page.waitForTimeout(500)
+
+    // In manual mode, change the primary color
+    const manualPrimaryInput = page.getByLabel('Couleur principale').first()
+    await manualPrimaryInput.click()
+    await manualPrimaryInput.fill('#00FF00')
+    await manualPrimaryInput.press('Tab')
+    await page.waitForTimeout(500)
+
+    // Switch assisted mode back on (without saving first)
+    await page.getByLabel('mode de gestion des couleurs simplifié').click()
+    await page.waitForTimeout(500)
+
+    // In assisted mode, the primary color should reflect the manual mode value
+    const assistedPrimaryInput = page.getByLabel('Couleur principale')
+    await expect(assistedPrimaryInput).toHaveValue('#00FF00')
+  })
 })

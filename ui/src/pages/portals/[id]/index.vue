@@ -201,6 +201,7 @@ watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
 })
 // When switching from assisted to manual mode, expand assisted colors into the full palette
+// When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
 watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
   if (oldVal === true && newVal === false && editConfig.value?.theme) {
     const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
@@ -208,6 +209,13 @@ watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
     editConfig.value.theme.darkColors = filled.darkColors
     editConfig.value.theme.hcColors = filled.hcColors
     editConfig.value.theme.hcDarkColors = filled.hcDarkColors
+  }
+  if (oldVal === false && newVal === true && editConfig.value?.theme) {
+    editConfig.value.theme.assistedModeColors = {
+      primary: editConfig.value.theme.colors?.primary ?? defaultTheme.colors.primary,
+      secondary: editConfig.value.theme.colors?.secondary ?? defaultTheme.colors.secondary,
+      accent: editConfig.value.theme.colors?.accent ?? defaultTheme.colors.accent
+    }
   }
 })
 
