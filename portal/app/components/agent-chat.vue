@@ -60,6 +60,7 @@ import type { $Fetch } from 'ofetch'
 import type { PortalConfig } from '#api/types/portal-config'
 import { useAgentDatasetTools } from '../composables/agent/dataset-tools'
 import { useAgentDatasetDataTools } from '../composables/agent/dataset-data-tools'
+import { useFrameServer } from '@data-fair/lib-vue-agents'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -80,6 +81,7 @@ watchEffect(() => {
   if (agentChat.value?.active && !toolsScope) {
     toolsScope = effectScope()
     toolsScope.run(() => {
+      useFrameServer('portal')
       useAgentDatasetTools(props.locale, props.localFetch)
       useAgentDatasetDataTools(props.locale, props.localFetch)
     })
