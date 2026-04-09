@@ -5,7 +5,7 @@
       <NuxtPage />
       <ClientOnly><UiNotif /></ClientOnly>
       <ClientOnly><AcceptCookies /></ClientOnly>
-      <ClientOnly><AgentChat :portal-config="$portal.config" :owner="$portal.owner" :locale="locale" :local-fetch="$localFetch" /></ClientOnly>
+      <ClientOnly><AgentChat :portal-config="$portal.config" :portal-id="$portal._id" :owner="$portal.owner" :locale="locale" :local-fetch="$localFetch" /></ClientOnly>
     </NuxtLayout>
   </v-app>
 </template>

@@ -60,6 +60,9 @@ import type { $Fetch } from 'ofetch'
 import type { PortalConfig } from '#api/types/portal-config'
 import { useAgentDatasetTools } from '../composables/agent/dataset-tools'
 import { useAgentDatasetDataTools } from '../composables/agent/dataset-data-tools'
+import { useAgentNavigationTools } from '../composables/agent/navigation-tools'
+import { useAgentGeoTools } from '../composables/agent/geo-tools'
+import { useAgentPortalContentTools } from '../composables/agent/portal-content-tools'
 import { useFrameServer } from '@data-fair/lib-vue-agents'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
@@ -68,6 +71,7 @@ const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetif
 
 const props = defineProps<{
   portalConfig: PortalConfig
+  portalId: string
   owner: { type: string, id: string }
   locale: Ref<string>
   localFetch: $Fetch
@@ -84,6 +88,13 @@ watchEffect(() => {
       useFrameServer('portal')
       useAgentDatasetTools(props.locale, props.localFetch)
       useAgentDatasetDataTools(props.locale, props.localFetch)
+      useAgentNavigationTools({
+        locale: props.locale,
+        portalConfig: props.portalConfig,
+        navigationStore: useNavigationStore()
+      })
+      useAgentGeoTools(props.locale)
+      useAgentPortalContentTools(props.locale, props.localFetch, props.portalId)
     })
   } else if (!agentChat.value?.active && toolsScope) {
     toolsScope.stop()
