@@ -16,11 +16,21 @@
         v-if="editConfig"
         v-model="formValid"
       >
+        <div class="d-flex justify-end mb-1">
+          <df-agent-chat-action
+            action-id="configure-portal"
+            :visible-prompt="t('configurePrompt')"
+            :hidden-context="configureContext"
+          />
+        </div>
         <vjsf-portal-config
           v-if="vjsfOptions"
           v-model="editConfig"
           :locale="locale"
           :options="vjsfOptions"
+          :data-title="t('portalConfig')"
+          prefix-name="portalConfig_"
+          :sub-agent="true"
           @update:model-value="saveDraft.execute()"
         >
           <template #colors-preview="context">
@@ -166,6 +176,7 @@ import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import equal from 'fast-deep-equal'
 
@@ -251,6 +262,16 @@ const pages = computed(() => {
   return result
 })
 
+const configureContext = computed(() => {
+  const lines = [
+    'Use the subagent tool portalConfig_form to help the user configure the current portal.',
+    'Start the session by asking the user what they want to achieve.',
+  ]
+  if (editConfig.value?.title) lines.push(`The portal title is "${editConfig.value.title}".`)
+  if (editConfig.value?.description) lines.push(`Description: ${editConfig.value.description}`)
+  return lines.join(' ')
+})
+
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
   context: {
     pages: pages.value,
@@ -280,10 +301,14 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     footer: Footer
     home: Home
     portals: Portals
+    portalConfig: Portal configuration
+    configurePrompt: Help me configure this portal
   fr:
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     footer: Pied de page
     home: Accueil
     portals: Portails
+    portalConfig: Configuration du portail
+    configurePrompt: Aide-moi à configurer ce portail
 </i18n>

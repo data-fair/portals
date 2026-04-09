@@ -20,6 +20,7 @@ services:
       - DEV_API_PORT=${DEV_API_PORT}
       - DEV_UI_PORT=${DEV_UI_PORT}
       - DEV_PORTAL_PORT=${DEV_PORTAL_PORT}
+      - AGENTS_PORT=${AGENTS_PORT}
     volumes:
       - ./dev/resources/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
 
@@ -38,7 +39,7 @@ services:
     environment:
       PORT: ${SD_PORT}
       ADMINS: |
-        ["test_superadmin@test.com"]
+        ["test_superadmin@test.com", "alban.mouton@koumoul.com"]
       CIPHER_PASSWORD: dev
       CONTACT: contact@test.com
       MANAGE_SITES: true
@@ -61,6 +62,23 @@ services:
     volumes:
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
+
+  agents:
+    profiles:
+      - dev
+      - test
+    image: ghcr.io/data-fair/agents:main
+    network_mode: host
+    depends_on:
+      - mongo
+    environment:
+      - PORT=${AGENTS_PORT}
+      - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair-agents
+      - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
+      - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
+      - OBSERVER_ACTIVE=false
+      - SECRET_EVENTS=secret-events
+      - CIPHER_PASSWORD=dev
 
   data-fair:
     profiles:

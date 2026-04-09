@@ -70,10 +70,10 @@
     }
   },
   {
-    "id": "test_albanm",
+    "id": "alban",
     "firstName": "Alban",
     "lastName": "Mouton",
-    "email": "test_albanm@test.com",
+    "email": "alban.mouton@koumoul.com",
     "password": {
       "clear": "passwd"
     }

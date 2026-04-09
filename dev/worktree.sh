@@ -37,9 +37,6 @@ npm run build-types
 echo "npm -w ui run build"
 npm -w ui run build
 
-echo "npm run test-deps"
-npm run test-deps
-
 echo "-----------------------------------------------"
 echo "✅ Setup Complete!"
 echo "Location: $TARGET_DIR"
@@ -47,4 +44,3 @@ echo "Branch:   $BRANCH_NAME"
 echo "-----------------------------------------------"
 echo "Next step:"
 echo "   cd $TARGET_DIR"
-echo "   source dev/env.sh"

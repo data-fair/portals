@@ -12,6 +12,7 @@
       color="primary"
       class="ma-4"
       size="large"
+      :style="hasAgentChatFab ? 'margin-bottom: 72px !important' : ''"
       @click="scrollToTop"
     />
   </v-fab-transition>
@@ -25,6 +26,12 @@ const route = useRoute()
 const router = useRouter()
 const goTo = useGoTo()
 const { t } = useI18n()
+
+const { portalConfig } = usePortalStore()
+const hasAgentChatFab = computed(() => {
+  const ac = portalConfig.value.agentChat
+  return ac?.active && ac.togglePosition !== 'appBar'
+})
 
 const showButton = ref(false)
 const scrollThreshold = 200
