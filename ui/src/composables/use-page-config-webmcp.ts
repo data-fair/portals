@@ -1,27 +1,12 @@
 import { computed, shallowRef, watch, toRaw, type Ref } from 'vue'
-import { compile } from '@json-layout/core/compile'
 import { StatefulLayout } from '@json-layout/core/state'
 import { WebMCP } from '@json-layout/core/webmcp'
 import equal from 'fast-deep-equal'
 import type { PageConfig } from '#api/types/page/index.ts'
-// @ts-ignore — schema is a plain JS module, no type declarations
-import pageConfigSchema from '#api/types/page-config/schema.js'
 
-// Minimal schema for WebMCP: only metadata fields, no elements
-// (elements use external $ref schemas that compile() cannot resolve at runtime)
-const metadataLayout = pageConfigSchema.layout.children[0] // "Metadata" section only
-const pageConfigMetaSchema = {
-  $id: 'https://github.com/data-fair/portals/page-config-meta',
-  'x-vjsf': { xI18n: true },
-  title: pageConfigSchema.title,
-  type: 'object',
-  layout: { title: null, children: [metadataLayout] },
-  required: (pageConfigSchema.required as string[]).filter(k => k !== 'elements'),
-  properties: Object.fromEntries(
-    Object.entries(pageConfigSchema.properties as Record<string, unknown>)
-      .filter(([key]) => key !== 'elements')
-  ),
-  $defs: pageConfigSchema.$defs
+const compiledLayoutImports: Record<string, () => Promise<any>> = {
+  fr: () => import('#api/types/page-config-simple/.type/compiled-layout-fr.js'),
+  en: () => import('#api/types/page-config-simple/.type/compiled-layout-en.js')
 }
 
 export function usePageConfigWebMCP (
@@ -29,15 +14,12 @@ export function usePageConfigWebMCP (
   locale: Ref<string>,
   onData: (data: any) => void
 ) {
-  const compiledLayout = computed(() => {
-    return compile(pageConfigMetaSchema, { locale: locale.value, xI18n: true })
-  })
-
+  const compiledLayout = shallowRef<any>(null)
   const statefulLayout = shallowRef<StatefulLayout | null>(null)
   const webMCP = shallowRef<WebMCP | null>(null)
   let setupInProgress = false
 
-  async function setup (cl: ReturnType<typeof compile>, config: PageConfig) {
+  async function setup (cl: any, config: PageConfig) {
     if (setupInProgress) return
     setupInProgress = true
     try {
@@ -71,7 +53,14 @@ export function usePageConfigWebMCP (
     }
   }
 
-  // Re-create StatefulLayout + WebMCP only when compiled layout (locale) changes
+  // Load compiled layout when locale changes
+  watch(locale, async (loc) => {
+    const importFn = compiledLayoutImports[loc] ?? compiledLayoutImports.fr
+    const mod = await importFn()
+    compiledLayout.value = mod.compiledLayout
+  }, { immediate: true })
+
+  // Re-create StatefulLayout + WebMCP when compiled layout changes
   watch(compiledLayout, async (cl) => {
     const config = editConfig.value
     if (!cl || !config) {
@@ -83,15 +72,14 @@ export function usePageConfigWebMCP (
       return
     }
     await setup(cl, config)
-  }, { immediate: true })
+  })
 
   // Initialize when editConfig first becomes available, and sync external changes
   watch(editConfig, async (config) => {
     if (config && compiledLayout.value && !webMCP.value) {
       await setup(compiledLayout.value, config)
     }
-    // Sync external changes (user edits via main form) → agent StatefulLayout
-    // Use deep-equal to prevent feedback loops when onData triggers editConfig updates
+    // Sync external changes (user edits via main form) -> agent StatefulLayout
     if (statefulLayout.value && config && !equal(statefulLayout.value.data, toRaw(config))) {
       statefulLayout.value.data = toRaw(config)
     }
