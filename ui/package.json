@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@data-fair/lib-vue-agents": "^0.3.0",
-    "@data-fair/lib-vuetify-agents": "^0.3.1",
+    "@data-fair/lib-vuetify-agents": "^0.5.2",
     "@data-fair/frame": "^0.18.1",
     "@data-fair/lib-common-types": "^1.20.2",
     "@data-fair/lib-vue": "^1.27.1",
