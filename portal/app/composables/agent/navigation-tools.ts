@@ -107,8 +107,8 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       sections.push(
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs/refs):\n' +
         '- Dataset detail: /datasets/{ref}\n' +
-        '- Dataset table: /datasets/{ref}/table\n' +
-        '- Dataset map: /datasets/{ref}/map\n' +
+        '- Dataset table: /datasets/{ref}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts q (full-text search), sort, select, bbox, geo_distance, date_match. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
+        '- Dataset map: /datasets/{ref}/map — for geolocalized datasets, accepts the same filter query params as the table page\n' +
         '- Dataset API doc: /datasets/{ref}/api-doc\n' +
         '- Application detail: /applications/{ref}\n' +
         '- Application full view: /applications/{ref}/full\n' +
@@ -137,7 +137,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'navigate',
-    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs. Optionally pass query parameters.',
+    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, always offer to navigate the user to the filtered table view by passing the same filter parameters as query params to /datasets/{ref}/table.',
     annotations: { title: t('navigateToPage') },
     inputSchema: {
       type: 'object' as const,
@@ -147,16 +147,16 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
           description: 'The path to navigate to (e.g. "/datasets", "/datasets/my-dataset", "/event/my-event")'
         },
         query: {
-          type: 'object' as const,
-          description: 'Optional query parameters as key-value string pairs to add to the URL.',
-          properties: {}
+          type: 'string' as const,
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table pages, use the filterQuery from the dataset_data subagent Context. Example: "nom_search=Jean&age_lte=30&q=Paris"'
         }
       },
       required: ['path'] as const
     },
     execute: async (params) => {
       try {
-        await router.push(params.query ? { path: params.path, query: params.query as Record<string, string> } : params.path)
+        const query = params.query ? Object.fromEntries(new URLSearchParams(params.query as string)) : undefined
+        await router.push(query ? { path: params.path, query } : params.path)
         await new Promise(resolve => setTimeout(resolve, 500))
         const currentRoute = router.currentRoute.value
         return {

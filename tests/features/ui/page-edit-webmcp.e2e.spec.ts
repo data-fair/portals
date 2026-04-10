@@ -30,8 +30,8 @@ test.describe('page edit WebMCP agent integration', () => {
     // Wait for VJSF form to render
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 10000 })
 
-    // Verify agent action button exists
-    await expect(page.locator('[data-action-id="configure-page"]')).toBeVisible()
+    // Verify agent action button exists (hidden until a chat drawer responds via BroadcastChannel)
+    await expect(page.locator('[data-action-id="configure-page"]')).toBeAttached()
 
     // Verify WebMCP tools are registered via navigator.modelContext
     const hasTools = await page.evaluate(() => {

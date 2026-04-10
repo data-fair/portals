@@ -87,6 +87,7 @@ const systemPrompt = computed(() => {
   if (domain) parts.push(`Le nom de domaine de ce portail est "${domain}".`)
   if (props.owner.name) parts.push(`Ce portail est géré par "${props.owner.name}".`)
   if (props.portalConfig.title) parts.push(`Le titre de ce portail est "${props.portalConfig.title}".`)
+  parts.push('Quand tu effectues une recherche ou un filtrage de données dans un jeu de données, propose systématiquement à l\'utilisateur de naviguer vers une vue filtrée. Le sous-agent dataset_data inclut dans sa section Context un champ filterQuery (query string URL) et un champ columns (colonnes pertinentes). Utilise l\'outil navigate avec la filterQuery comme paramètre query en y ajoutant select=col1,col2,col3 à partir des clés de columns. Propose la vue tableau /datasets/{datasetId}/table, et si les données sont géolocalisées (présence de bbox, geo_distance dans la filterQuery, ou colonnes géographiques dans columns) propose également la vue carte /datasets/{datasetId}/map.')
   return parts.join('\n')
 })
 
