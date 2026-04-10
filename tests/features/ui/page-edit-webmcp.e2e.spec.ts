@@ -73,4 +73,43 @@ test.describe('page edit WebMCP agent integration', () => {
     // The StatefulLayout should reflect the form edit
     expect((slData as any)?.structuredContent?.data?.title).toBe('Edited in form')
   })
+
+  test('should give the agent access to page elements via WebMCP', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'WebMCP Elements Portal', menu: { children: [] } }
+    })).data
+
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Elements Test Page',
+        elements: [{ uuid: 'test1', type: 'title', titleSize: 'h2' }],
+        genericMetadata: { slug: 'elements-test' }
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+
+    await goToWithAuth(
+      `/portals-manager/pages/${createdPage._id}/edit-config`,
+      'test_admin'
+    )
+
+    // Wait for VJSF form and WebMCP tools to be ready
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 10000 })
+    await page.waitForFunction(() => {
+      const mc = (navigator as any).modelContext
+      return mc && typeof mc.listTools === 'function' && mc.listTools().some((t: any) => t.name === 'pageConfig_getData')
+    }, { timeout: 10000 })
+
+    // Verify getData returns elements
+    const getData = await page.evaluate(async () => {
+      const mc = (navigator as any).modelContext
+      return await mc.callTool({ name: 'pageConfig_getData', arguments: {} })
+    })
+    const data = (getData as any)?.structuredContent?.data
+    expect(data.elements).toBeDefined()
+    expect(data.elements).toHaveLength(1)
+    expect(data.elements[0].type).toBe('title')
+  })
 })
