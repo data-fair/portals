@@ -12,7 +12,7 @@ const element = {
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-config-simple',
-  'x-exports': ['vjsf'],
+  'x-exports': ['vjsf', 'compiledLayout'],
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
