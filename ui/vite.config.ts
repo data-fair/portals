@@ -17,6 +17,8 @@ export default defineConfig({
   // pre-bundle dependencies to avoid full page reloads during dev
   // cf https://vite.dev/guide/dep-pre-bundling.html
   optimizeDeps: {
+    // no discovery to prevent page reloads that break e2e tests
+    noDiscovery: true,
     include: [
       'debug',
       'easymde',
