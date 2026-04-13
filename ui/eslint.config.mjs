@@ -1,7 +1,7 @@
 import neostandard from 'neostandard'
 import pluginVue from 'eslint-plugin-vue'
-import dfLibRecommended from '@data-fair/lib-utils/eslint/recommended.js'
 import pluginVuetify from 'eslint-plugin-vuetify'
+import dfLibRecommended from '@data-fair/lib-utils/eslint/recommended.js'
 
 export default [
   ...dfLibRecommended,
