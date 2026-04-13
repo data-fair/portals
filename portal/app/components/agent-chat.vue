@@ -1,5 +1,5 @@
 <template>
-  <template v-if="agentChat?.active && owner">
+  <template v-if="agentChat?.active && canSee && owner">
     <template v-if="agentChat.type === 'drawer'">
       <DfAgentChatDrawer
         :account-type="owner.type"
@@ -80,6 +80,27 @@ const props = defineProps<{
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
 
+const session = useSession()
+
+const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
+  const user = session.user.value
+  if (!user) return 'anonymous'
+  const account = session.account.value
+  if (account && account.type === props.owner.type && account.id === props.owner.id) {
+    const role = session.accountRole.value
+    if (role === 'admin') return 'admin'
+    if (role === 'contrib') return 'contrib'
+    return 'user'
+  }
+  return 'external'
+})
+
+const canSee = computed(() => {
+  const visibleTo = agentChat.value?.visibleTo
+  if (!visibleTo) return true
+  return visibleTo.includes(viewerBucket.value)
+})
+
 const systemPrompt = computed(() => {
   const base = agentChat.value?.systemPrompt || ''
   const domain = import.meta.client ? window.location.hostname : ''
@@ -93,7 +114,7 @@ const systemPrompt = computed(() => {
 
 let toolsScope: ReturnType<typeof effectScope> | null = null
 watchEffect(() => {
-  if (agentChat.value?.active && !toolsScope) {
+  if (agentChat.value?.active && canSee.value && !toolsScope) {
     toolsScope = effectScope()
     toolsScope.run(() => {
       useFrameServer('portal')
@@ -107,7 +128,7 @@ watchEffect(() => {
       useAgentGeoTools(props.locale)
       useAgentPortalContentTools(props.locale, props.localFetch, props.portalId)
     })
-  } else if (!agentChat.value?.active && toolsScope) {
+  } else if ((!agentChat.value?.active || !canSee.value) && toolsScope) {
     toolsScope.stop()
     toolsScope = null
   }
