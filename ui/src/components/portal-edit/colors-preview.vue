@@ -1,128 +1,23 @@
 <template>
-  <v-alert
-    v-for="(warning, i) of colorsWarnings"
-    :key="i"
-    type="warning"
-    variant="outlined"
-    class="mb-2"
-  >
-    {{ warning }}
-  </v-alert>
   <preview :colors-key="colorsKey">
-    <component
-      :is="'style'"
-      v-if="colors"
-      :nonce="$cspNonce"
-    >
-      {{ getTextColorsCss(colors, 'preview-' + colorsKey) }}
-    </component>
-
-    <v-row density="compact">
-      <v-col>
-        <v-card
-          class="h-100"
-          :title="t('cardExample.title')"
-          :text="t('cardExample.text')"
-        />
-      </v-col>
-      <v-col>
-        <v-card
-          class="h-100"
-          :title="t('cardExample.title')"
-          :text="t('cardExample.textInverse')"
-          color="surface-inverse"
-        />
-      </v-col>
-    </v-row>
-
-    <v-row
-      v-for="color of colorKeys"
-      :key="color"
-      density="compact"
-    >
-      <v-col
-        v-for="variant of buttonVariants"
-        :key="variant"
-      >
-        <v-btn
-          :color="color"
-          :variant="variant"
-          block
-        >
-          {{ color }}
-        </v-btn>
-      </v-col>
-      <v-col>
-        <v-icon
-          :icon="mdiEmoticonKissOutline"
-          :color="color"
-        />
-      </v-col>
-    </v-row>
+    <lib-colors-preview
+      :colors-key="colorsKey"
+      :theme="theme"
+      :default-theme="defaultTheme"
+      :dark="dark"
+      :csp-nonce="$cspNonce"
+    />
   </preview>
 </template>
 
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
-import type { VBtn } from 'vuetify/components/VBtn'
-import type { Colors, Theme } from '@data-fair/lib-common-types/theme/index.js'
-import { mdiEmoticonKissOutline } from '@mdi/js'
-import { defaultTheme, fillTheme, getTextColorsCss, getColorsWarnings, readableOptions, hcReadableOptions } from '@data-fair/lib-common-types/theme/index.js'
+import LibColorsPreview from '@data-fair/lib-vuetify/colors-preview.vue'
+import type { Theme } from '@data-fair/lib-common-types/theme/index.js'
+import { defaultTheme } from '@data-fair/lib-common-types/theme/index.js'
 
-const { t } = useI18n()
-const vuetifyTheme = useTheme()
-const { colorsKey, theme, dark } = defineProps({
+defineProps({
   colorsKey: { type: String as () => 'colors' | 'darkColors' | 'hcColors' | 'hcDarkColors', required: true },
   theme: { type: Object as () => Theme, required: true },
   dark: { type: Boolean, default: false }
 })
-
-const fullTheme = computed(() => {
-  return fillTheme(theme, defaultTheme)
-})
-
-const colors = computed(() => fullTheme.value?.[colorsKey])
-
-watch(fullTheme, () => {
-  if (!fullTheme.value) return
-  const key = 'preview-' + colorsKey
-  const colors = fullTheme.value[colorsKey]
-  if (vuetifyTheme.themes.value[key]) {
-    for (const color of Object.keys(vuetifyTheme.themes.value[key].colors)) {
-      if (colors[color as keyof Colors] === undefined) delete vuetifyTheme.themes.value[key].colors[color]
-    }
-    Object.assign(vuetifyTheme.themes.value[key].colors, colors)
-  } else {
-    vuetifyTheme.themes.value[key] = { dark, colors, variables: dark ? vuetifyTheme.themes.value.dark.variables : vuetifyTheme.themes.value.light.variables }
-  }
-}, { immediate: true })
-
-const buttonVariants: VBtn['variant'][] = ['flat', 'text']
-const colorKeys = ['primary', 'secondary', 'accent', 'info', 'success', 'error', 'warning']
-
-const themeNames = {
-  colors: 'default',
-  darkColors: 'dark',
-  hcColors: 'hc',
-  hcDarkColors: 'hcDark'
-}
-
-const colorsWarnings = computed(() => {
-  return getColorsWarnings('fr', colors.value, themeNames[colorsKey], colorsKey.startsWith('hc') ? hcReadableOptions : readableOptions)
-})
 </script>
-
-<i18n lang="yaml">
-  en:
-    cardExample:
-      title: Card example
-      text: Surface color.
-      textInverse: Inverse surface color.
-
-  fr:
-    cardExample:
-      title: Vignette
-      text: Couleur des surfaces.
-      textInverse: Couleur inversée des surfaces.
-
-</i18n>

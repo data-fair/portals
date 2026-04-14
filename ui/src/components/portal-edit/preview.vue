@@ -18,7 +18,7 @@
             <slot name="prepend" />
           </template>
         </v-card-title>
-        <v-card-text :class="noPadding ? 'pa-0 bg-background' : 'pt-4 bg-background'">
+        <v-card-text :class="noPadding ? 'pa-0 bg-background' : 'pa-2 bg-background'">
           <slot />
         </v-card-text>
       </v-card>
