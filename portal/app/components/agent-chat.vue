@@ -64,6 +64,7 @@ import { useAgentNavigationTools } from '../composables/agent/navigation-tools'
 import { useAgentGeoTools } from '../composables/agent/geo-tools'
 import { useAgentPortalContentTools } from '../composables/agent/portal-content-tools'
 import { useFrameServer } from '@data-fair/lib-vue-agents'
+import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -72,7 +73,7 @@ const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetif
 const props = defineProps<{
   portalConfig: PortalConfig
   portalId: string
-  owner: { type: string, id: string, name: string }
+  owner: Account
   locale: Ref<string>
   localFetch: $Fetch
 }>()
@@ -83,16 +84,9 @@ const owner = computed(() => props.owner)
 const session = useSession()
 
 const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
-  const user = session.user.value
-  if (!user) return 'anonymous'
-  const account = session.account.value
-  if (account && account.type === props.owner.type && account.id === props.owner.id) {
-    const role = session.accountRole.value
-    if (role === 'admin') return 'admin'
-    if (role === 'contrib') return 'contrib'
-    return 'user'
-  }
-  return 'external'
+  if (!session.state.user) return 'anonymous'
+  const role = getAccountRole(session.state, props.owner, { acceptDepAsRoot: true }) as 'user' | 'contrib' | 'admin' | undefined
+  return role ?? 'external'
 })
 
 const canSee = computed(() => {

@@ -23,6 +23,8 @@ export default defineConfig({
       'debug',
       'easymde',
       ...commonjsDeps,
+      'ajv-i18n/localize/en/index.js',
+      'ajv-i18n/localize/fr/index.js',
       '@data-fair/frame/lib/d-frame.js',
       '@data-fair/frame/lib/vue-router/use-parent-url.js',
       '@data-fair/lib-common-types/theme/index.js',
