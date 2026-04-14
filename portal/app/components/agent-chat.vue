@@ -1,5 +1,5 @@
 <template>
-  <template v-if="agentChat?.active && owner">
+  <template v-if="agentChat?.active && canSee && owner">
     <template v-if="agentChat.type === 'drawer'">
       <DfAgentChatDrawer
         :account-type="owner.type"
@@ -64,6 +64,7 @@ import { useAgentNavigationTools } from '../composables/agent/navigation-tools'
 import { useAgentGeoTools } from '../composables/agent/geo-tools'
 import { useAgentPortalContentTools } from '../composables/agent/portal-content-tools'
 import { useFrameServer } from '@data-fair/lib-vue-agents'
+import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -72,13 +73,27 @@ const DfAgentChatMenu = defineAsyncComponent(() => import('@data-fair/lib-vuetif
 const props = defineProps<{
   portalConfig: PortalConfig
   portalId: string
-  owner: { type: string, id: string, name: string }
+  owner: Account
   locale: Ref<string>
   localFetch: $Fetch
 }>()
 
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
+
+const session = useSession()
+
+const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
+  if (!session.state.user) return 'anonymous'
+  const role = getAccountRole(session.state, props.owner, { acceptDepAsRoot: true }) as 'user' | 'contrib' | 'admin' | undefined
+  return role ?? 'external'
+})
+
+const canSee = computed(() => {
+  const visibleTo = agentChat.value?.visibleTo
+  if (!visibleTo) return true
+  return visibleTo.includes(viewerBucket.value)
+})
 
 const systemPrompt = computed(() => {
   const base = agentChat.value?.systemPrompt || ''
@@ -93,7 +108,7 @@ const systemPrompt = computed(() => {
 
 let toolsScope: ReturnType<typeof effectScope> | null = null
 watchEffect(() => {
-  if (agentChat.value?.active && !toolsScope) {
+  if (agentChat.value?.active && canSee.value && !toolsScope) {
     toolsScope = effectScope()
     toolsScope.run(() => {
       useFrameServer('portal')
@@ -107,7 +122,7 @@ watchEffect(() => {
       useAgentGeoTools(props.locale)
       useAgentPortalContentTools(props.locale, props.localFetch, props.portalId)
     })
-  } else if (!agentChat.value?.active && toolsScope) {
+  } else if ((!agentChat.value?.active || !canSee.value) && toolsScope) {
     toolsScope.stop()
     toolsScope = null
   }

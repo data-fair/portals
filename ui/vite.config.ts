@@ -17,10 +17,14 @@ export default defineConfig({
   // pre-bundle dependencies to avoid full page reloads during dev
   // cf https://vite.dev/guide/dep-pre-bundling.html
   optimizeDeps: {
+    // no discovery to prevent page reloads that break e2e tests
+    noDiscovery: true,
     include: [
       'debug',
       'easymde',
       ...commonjsDeps,
+      'ajv-i18n/localize/en/index.js',
+      'ajv-i18n/localize/fr/index.js',
       '@data-fair/frame/lib/d-frame.js',
       '@data-fair/frame/lib/vue-router/use-parent-url.js',
       '@data-fair/lib-common-types/theme/index.js',
