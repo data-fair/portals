@@ -481,6 +481,22 @@ export default {
           default: false,
           layout: 'switch'
         },
+        visibleTo: {
+          type: 'array',
+          title: 'Visible pour',
+          default: ['admin', 'contrib', 'user', 'external', 'anonymous'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'admin', title: 'Administrateurs de l\'organisation' },
+              { const: 'contrib', title: 'Contributeurs de l\'organisation' },
+              { const: 'user', title: 'Autres membres de l\'organisation' },
+              { const: 'external', title: 'Utilisateurs externes authentifiés' },
+              { const: 'anonymous', title: 'Visiteurs anonymes' }
+            ]
+          },
+          layout: { if: 'parent.data?.active' }
+        },
         type: {
           type: 'string',
           title: 'Mode d\'affichage',

@@ -46,10 +46,6 @@
         "role": "admin"
       },
       {
-        "id": "albanm",
-        "role": "contrib"
-      },
-      {
         "id": "test_superadmin",
         "role": "user"
       }
@@ -61,10 +57,6 @@
     "members": [
       {
         "id": "test_superadmin",
-        "role": "admin"
-      },
-      {
-        "id": "albanm",
         "role": "admin"
       },
       {
@@ -84,6 +76,16 @@
       {
         "id": "test_org1",
         "name": "Test Org 1"
+      }
+    ]
+  },
+  {
+    "id": "dev_org",
+    "name": "Dev Org",
+    "members": [
+      {
+        "id": "albanm",
+        "role": "admin"
       }
     ]
   }
