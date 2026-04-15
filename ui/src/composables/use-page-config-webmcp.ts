@@ -18,6 +18,13 @@ export function usePageConfigWebMCP (
   const statefulLayout = shallowRef<StatefulLayout | null>(null)
   const webMCP = shallowRef<WebMCP | null>(null)
   let setupInProgress = false
+  // Prevents feedback loop: when we sync editConfig → statefulLayout externally,
+  // the StatefulLayout synchronously calls onData; we must ignore that echo.
+  let ignoringOnData = false
+  const wrappedOnData = (data: any) => {
+    if (ignoringOnData) return
+    onData(data)
+  }
 
   async function setup (cl: any, config: PageConfig) {
     if (setupInProgress) return
@@ -34,7 +41,7 @@ export function usePageConfigWebMCP (
         {
           width: 600,
           updateOn: 'input',
-          onData
+          onData: wrappedOnData
         },
         toRaw(config)
       )
@@ -79,9 +86,12 @@ export function usePageConfigWebMCP (
     if (config && compiledLayout.value && !webMCP.value) {
       await setup(compiledLayout.value, config)
     }
-    // Sync external changes (user edits via main form) -> agent StatefulLayout
+    // Sync external changes (user edits via main form) -> agent StatefulLayout.
+    // StatefulLayout.set data calls onData synchronously; use the flag to ignore that echo.
     if (statefulLayout.value && config && !equal(statefulLayout.value.data, toRaw(config))) {
+      ignoringOnData = true
       statefulLayout.value.data = toRaw(config)
+      ignoringOnData = false
     }
   })
 
