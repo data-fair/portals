@@ -78,7 +78,7 @@ export default {
             title: 'Polices de caractères',
             comp: 'card',
             children: [
-              { cols: 6, children: ['bodyFontFamily', 'headingFontFamily'] },
+              { cols: 6, children: ['headingFontFamily', 'bodyFontFamily'] },
               { cols: 6, name: 'font-families-preview' }
             ]
           },

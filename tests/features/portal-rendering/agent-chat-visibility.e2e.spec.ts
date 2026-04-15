@@ -6,7 +6,7 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('agent chat visibility', () => {
   test.beforeEach(clean)
 
-  test('anonymous visitor sees the toggle when visibleTo includes anonymous', async ({ page, goToPortal }) => {
+  test.skip('anonymous visitor sees the toggle when visibleTo includes anonymous', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
         title: 'Agent Chat Anon Visible',

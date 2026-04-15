@@ -26,7 +26,7 @@ defineProps<{
   /** Button destination */
   to?: RouteLocationRaw
   /** Button style */
-  actionStyle: DatasetCard['actionsStyle']
+  actionStyle?: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
   /** Resource title */
