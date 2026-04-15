@@ -96,6 +96,7 @@ useJsonLd(() => {
 
 <i18n lang="yaml">
   en:
+    backToReuses: Go to reuses catalog
     reuse: Reuse
     reuseNotFound: The requested reuse was not found
     reuseError: An error occurred while loading the reuse
@@ -103,4 +104,5 @@ useJsonLd(() => {
     reuse: Réutilisation
     reuseNotFound: La réutilisation demandée n'a pas été trouvée
     reuseError: Une erreur est survenue lors du chargement de la réutilisation
+    backToReuses: Aller au catalogue de réutilisations
 </i18n>
