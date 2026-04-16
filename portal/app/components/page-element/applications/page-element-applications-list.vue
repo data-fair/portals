@@ -28,7 +28,7 @@ let displayedApplications: Application[] | ComputedRef<Application[]>
 if (!preview) {
   const ids = element.applications?.map(app => app.id) || []
   const applicationsQuery = computed(() => ({
-    select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
+    select: 'id,slug,title,summary,updatedAt,image,url,topics,owner,-userPermissions',
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
     size: element.mode !== 'custom' ? element.limit : undefined,

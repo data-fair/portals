@@ -35,8 +35,8 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 }
 
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
-  // Change WhiteLabel, isReference or legacyLayout by super admin only
-  if (patch.whiteLabel || patch.isReference || patch.legacyLayout) assertAdminMode(session)
+  // Change WhiteLabel, isReference or md2Compat by super admin only
+  if (patch.whiteLabel || patch.isReference || patch.md2Compat) assertAdminMode(session)
 
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {

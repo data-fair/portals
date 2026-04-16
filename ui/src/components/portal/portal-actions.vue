@@ -273,13 +273,13 @@
           @update:model-value="(value) => updateAdminConfig.execute('isReference', !!value)"
         />
         <v-checkbox
-          :model-value="portal.legacyLayout"
-          :label="t('enableLegacyLayout')"
+          :model-value="portal.md2Compat"
+          :label="t('enableMd2Compat')"
           :disabled="updateAdminConfig.loading.value"
           color="admin"
           density="comfortable"
           hide-details
-          @update:model-value="(value) => updateAdminConfig.execute('legacyLayout', !!value)"
+          @update:model-value="(value) => updateAdminConfig.execute('md2Compat', !!value)"
         />
       </v-card-text>
     </v-card>
@@ -416,7 +416,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     defineIsReference: Define as reference template
     deletePortal: Delete portal
     deletingPortal: Deleting portal
-    enableLegacyLayout: Legacy layout (Vuetify 3 container widths)
+    enableMd2Compat: MD2 compatibility
     enableWhiteLabel: Enable white label
     errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
@@ -449,7 +449,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     defineIsReference: Définir comme modèle de référence
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
-    enableLegacyLayout: Mise en page legacy (largeurs de conteneur Vuetify 3)
+    enableMd2Compat: Compatibilité MD2
     enableWhiteLabel: Activer la marque blanche
     errorChangingOwner: Erreur lors du changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail

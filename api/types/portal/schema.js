@@ -29,9 +29,9 @@ export default {
       title: 'Reference Page',
       readOnly: true
     },
-    legacyLayout: {
+    md2Compat: {
       type: 'boolean',
-      title: 'Mise en page legacy',
+      title: 'Compatibilité MD2',
       default: false,
       readOnly: true
     },

@@ -29,7 +29,7 @@ let displayedDatasets: ComputedRef<DatasetFetch['results']>
 if (!preview) {
   const ids = element.datasets?.map(d => d.id) || []
   const datasetsQuery = computed(() => ({
-    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
+    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
     truncate: 250,
     size: element.mode !== 'custom' ? element.limit : undefined,

@@ -43,9 +43,15 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
 
   const query = computed(() => config.buildQuery(filters, sortFilter.value, currentPage.value, pageSize))
 
-  const itemsFetch = useFetch<FetchResult<T>>(config.endpoint, { query, watch: false })
+  const fetchFn = config.useLocalFetch ? useLocalFetch : useFetch
+  const itemsFetch = fetchFn<FetchResult<T>>(config.endpoint, { query, watch: false })
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
+
+  // Initialize displayedItems with SSR data (available via Nuxt payload)
+  if (itemsFetch.data.value?.results) {
+    displayedItems.value = [...itemsFetch.data.value.results]
+  }
 
   const goToPage = async (page: number) => {
     loading.value = true
@@ -74,13 +80,6 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
       loading.value = false
     }
   }
-
-  onMounted(async () => {
-    await itemsFetch.refresh()
-    if (itemsFetch.data.value?.results) {
-      displayedItems.value = [...itemsFetch.data.value.results]
-    }
-  })
 
   // Watch all filters + sort to reset pagination
   const filterRefs = [...Object.values(filters), sortFilter]

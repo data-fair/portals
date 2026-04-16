@@ -1,5 +1,5 @@
 <template>
-  <v-app :class="{ 'v-app--legacy-layout': $portal.legacyLayout }">
+  <v-app :class="{ 'v-app--legacy-layout': $portal.md2Compat }">
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
@@ -79,5 +79,9 @@ useHead({
 /* Force 1280px for most desktop screens (same as prod override) */
 @media (max-width: 1921px) {
   .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1280px !important; }
+}
+/* Legacy typography: restore Vuetify 3 MD2 letter-spacing on buttons/tabs */
+.v-app--legacy-layout .v-btn {
+  letter-spacing: 0.0892857143em;
 }
 </style>
