@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :class="{ 'v-app--legacy-layout': $portal.legacyLayout }">
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
@@ -61,5 +61,23 @@ useHead({
   line-clamp: 2;
   overflow: hidden;
   min-height: 2lh;
+}
+
+/* Legacy layout: restore Vuetify 3-like container max-widths */
+@media (min-width: 840px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 900px; }
+}
+@media (min-width: 1145px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1200px; }
+}
+@media (min-width: 1545px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1800px; }
+}
+@media (min-width: 2138px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 2400px; }
+}
+/* Force 1280px for most desktop screens (same as prod override) */
+@media (max-width: 1921px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1280px !important; }
 }
 </style>

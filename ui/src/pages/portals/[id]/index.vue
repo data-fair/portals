@@ -193,7 +193,9 @@ const { portalConfig } = providePortalStore()
 // Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {
   if (!portalFetch.data.value) return
-  editConfig.value = portalFetch.data.value.draftConfig
+  if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
+    editConfig.value = portalFetch.data.value.draftConfig
+  }
   portalConfig.value = editConfig.value
 })
 // Synchronize editConfig changes back to portalConfig

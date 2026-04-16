@@ -29,6 +29,12 @@ export default {
       title: 'Reference Page',
       readOnly: true
     },
+    legacyLayout: {
+      type: 'boolean',
+      title: 'Mise en page legacy',
+      default: false,
+      readOnly: true
+    },
     staging: {
       title: 'Pré-production',
       description: 'Si coché les contributeurs pourront publier des ressources sans solliciter les administrateurs',

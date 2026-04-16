@@ -3,7 +3,7 @@ import portalSchema from '#types/portal/schema.js'
 
 export default {
   ...jsonSchema(portalSchema)
-    .pickProperties(['draftConfig', 'owner', 'isReference', 'whiteLabel'])
+    .pickProperties(['draftConfig', 'owner', 'isReference', 'whiteLabel', 'legacyLayout'])
     .removeRequired()
     .schema,
   $id: 'https://github.com/data-fair/portals/portals/patch-req-body',

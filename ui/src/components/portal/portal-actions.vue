@@ -251,26 +251,35 @@
       rounded="lg"
       variant="text"
       :title="t('administrationConfiguration')"
-      :loading="updateWhiteLabel.loading.value ? 'admin' : undefined"
+      :loading="updateAdminConfig.loading.value ? 'admin' : undefined"
     >
       <v-card-text>
         <v-checkbox
           :model-value="portal.whiteLabel"
           :label="t('enableWhiteLabel')"
-          :disabled="updateWhiteLabel.loading.value"
+          :disabled="updateAdminConfig.loading.value"
           color="admin"
           density="comfortable"
           hide-details
-          @update:model-value="(value) => updateWhiteLabel.execute(!!value)"
+          @update:model-value="(value) => updateAdminConfig.execute('whiteLabel', !!value)"
         />
         <v-checkbox
           :model-value="portal.isReference"
           :label="t('defineIsReference')"
-          :disabled="updateIsReference.loading.value"
+          :disabled="updateAdminConfig.loading.value"
           color="admin"
           density="comfortable"
           hide-details
-          @update:model-value="(value) => updateIsReference.execute(!!value)"
+          @update:model-value="(value) => updateAdminConfig.execute('isReference', !!value)"
+        />
+        <v-checkbox
+          :model-value="portal.legacyLayout"
+          :label="t('enableLegacyLayout')"
+          :disabled="updateAdminConfig.loading.value"
+          color="admin"
+          density="comfortable"
+          hide-details
+          @update:model-value="(value) => updateAdminConfig.execute('legacyLayout', !!value)"
         />
       </v-card-text>
     </v-card>
@@ -379,26 +388,15 @@ const deletePortal = useAsyncAction(async () => {
   error: t('errorDeletingPortal'),
 })
 
-const updateWhiteLabel = useAsyncAction(async (value: boolean) => {
+const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => {
   await $fetch(`/portals/${portal._id}`, {
     method: 'PATCH',
-    body: JSON.stringify({ whiteLabel: value })
+    body: JSON.stringify({ [key]: value })
   })
   emit('refresh-portal')
 }, {
-  success: t('whiteLabelUpdated'),
-  error: t('errorUpdatingWhiteLabel'),
-})
-
-const updateIsReference = useAsyncAction(async (value: boolean) => {
-  await $fetch(`/portals/${portal._id}`, {
-    method: 'PATCH',
-    body: JSON.stringify({ isReference: value })
-  })
-  emit('refresh-portal')
-}, {
-  success: t('isReferenceUpdated'),
-  error: t('errorUpdatingIsReference'),
+  success: t('adminConfigUpdated'),
+  error: t('errorUpdatingAdminConfig'),
 })
 
 </script>
@@ -418,13 +416,12 @@ const updateIsReference = useAsyncAction(async (value: boolean) => {
     defineIsReference: Define as reference template
     deletePortal: Delete portal
     deletingPortal: Deleting portal
+    enableLegacyLayout: Legacy layout (Vuetify 3 container widths)
     enableWhiteLabel: Enable white label
     errorChangingOwner: Error while changing the owner
     errorDeletingPortal: Error while deleting the portal
-    errorUpdatingIsReference: Error while updating reference status
-    errorUpdatingWhiteLabel: Error while updating white label
+    errorUpdatingAdminConfig: Error while updating admin configuration
     events: Events
-    isReferenceUpdated: Reference status updated!
     manageDomainExposure: Manage domain exposure
     searchIndexes: Pages indexing
     no: No
@@ -435,7 +432,7 @@ const updateIsReference = useAsyncAction(async (value: boolean) => {
     viewDraft: View draft
     viewPortal: View portal
     viewPortalPages: View published pages on this portal
-    whiteLabelUpdated: White label updated!
+    adminConfigUpdated: Admin configuration updated!
     yes: Yes
 
   fr:
@@ -452,13 +449,12 @@ const updateIsReference = useAsyncAction(async (value: boolean) => {
     defineIsReference: Définir comme modèle de référence
     deletePortal: Supprimer le portail
     deletingPortal: Suppression du portail
+    enableLegacyLayout: Mise en page legacy (largeurs de conteneur Vuetify 3)
     enableWhiteLabel: Activer la marque blanche
     errorChangingOwner: Erreur lors du changement de propriétaire
     errorDeletingPortal: Erreur lors de la suppression du portail
-    errorUpdatingIsReference: Erreur lors de la mise à jour du statut de modèle de référence
-    errorUpdatingWhiteLabel: Erreur lors de la mise à jour de la marque blanche
+    errorUpdatingAdminConfig: Erreur lors de la mise à jour de la configuration administrateur
     events: Traçabilité
-    isReferenceUpdated: Statut de référence mis à jour !
     manageDomainExposure: Exposition du domaine
     searchIndexes: Indexation des pages
     no: Non
@@ -469,7 +465,7 @@ const updateIsReference = useAsyncAction(async (value: boolean) => {
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail
     viewPortalPages: Voir les pages publiées sur ce portail
-    whiteLabelUpdated: Marque blanche mise à jour !
+    adminConfigUpdated: Configuration administrateur mise à jour !
     yes: Oui
 
 </i18n>
