@@ -20,7 +20,7 @@
     >
       <!-- Thumbnail (Left Location) -->
       <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
@@ -42,7 +42,7 @@
       >
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -64,7 +64,7 @@
 
         <!-- Thumbnail (Center Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -228,13 +228,12 @@ const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 
 const thumbnailUrl = computed(() => {
-  if (!cardConfig.thumbnail?.show) return undefined
   if (dataset.image) return dataset.image
-  if (cardConfig.thumbnail.useTopic && dataset.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && dataset.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
-  if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
+  if (cardConfig.thumbnail?.useApplication && dataset.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)

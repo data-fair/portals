@@ -8,7 +8,7 @@
   >
     <v-row class="flex-nowrap" no-gutters>
       <!-- Thumbnail (Left Location) -->
-      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
@@ -23,7 +23,7 @@
       <v-col class="d-flex flex-column" style="min-width: 0">
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -50,7 +50,7 @@
 
         <!-- Thumbnail (Center Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -90,7 +90,6 @@ const getNewsImageSrc = (imageRef: ImageRef, mobile: boolean) => {
 }
 
 const thumbnailUrl = computed(() => {
-  if (!cardConfig.thumbnail?.show) return undefined
   if (pageConfig.thumbnail) return getNewsImageSrc(pageConfig.thumbnail, false)
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined

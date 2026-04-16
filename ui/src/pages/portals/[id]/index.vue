@@ -196,7 +196,7 @@ watch(portalFetch.data, () => {
   if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
     editConfig.value = portalFetch.data.value.draftConfig
   }
-  portalConfig.value = editConfig.value
+  if (editConfig.value) portalConfig.value = editConfig.value
 })
 // Synchronize editConfig changes back to portalConfig
 watch(editConfig, (newConfig) => {
