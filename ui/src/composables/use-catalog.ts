@@ -13,8 +13,8 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
     loading: ref(false),
     currentPage: ref(1),
     totalPages: computed(() => 1),
-    sort: ref<string>(),
-    order: ref<'-1' | '1'>(),
+    sort: computed({ get: () => undefined as string | undefined, set: () => {} }),
+    order: computed({ get: () => undefined as '-1' | '1' | undefined, set: () => {} }),
     goToPage: async () => { },
     loadMore: async () => { },
     filters: {} as F

@@ -8,8 +8,8 @@ export interface CatalogReturn<T, F> {
   loading: Ref<boolean>
   currentPage: Ref<number>
   totalPages: ComputedRef<number>
-  sort: Ref<string | undefined>
-  order: Ref<'-1' | '1' | undefined>
+  sort: WritableComputedRef<string | undefined>
+  order: WritableComputedRef<'-1' | '1' | undefined>
   goToPage: (page: number) => Promise<void>
   loadMore: (paginationPosition?: string) => Promise<void>
   filters: F
@@ -30,12 +30,44 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
   config: CatalogConfig<T, F>
 ): CatalogReturn<T, F> {
   const pageSize = 20
+  const defaultSort = element.defaultSort ?? config.defaultSortFallback
+  const defaultSortParts = defaultSort.split(':')
+  const defaultField = defaultSortParts[0]
+  const defaultOrder = defaultSortParts[1] as '-1' | '1'
 
   const filters = config.filterDefs()
-  const sortFilter = useStringSearchParam('sort', { default: element.defaultSort })
+  const sortFilter = useStringSearchParam('sort', { default: defaultSort })
 
-  const sort = ref<string>()
-  const order = ref<'-1' | '1'>()
+  // sort and order are derived from sortFilter (URL source of truth)
+  const sort = computed({
+    get: () => {
+      const val = sortFilter.value
+      if (!val) return undefined
+      const idx = val.lastIndexOf(':')
+      return idx > 0 ? val.substring(0, idx) : undefined
+    },
+    set: (v: string | undefined) => {
+      const ord = order.value ?? defaultOrder
+      sortFilter.value = v ? `${v}:${ord}` : defaultSort
+    }
+  })
+
+  const order = computed({
+    get: () => {
+      const val = sortFilter.value
+      if (!val) return undefined
+      const idx = val.lastIndexOf(':')
+      if (idx > 0) {
+        const o = val.substring(idx + 1)
+        return (o === '1' || o === '-1') ? o as '-1' | '1' : undefined
+      }
+      return undefined
+    },
+    set: (v: '-1' | '1' | undefined) => {
+      const field = sort.value ?? defaultField
+      sortFilter.value = `${field}:${v ?? defaultOrder}`
+    }
+  })
 
   const currentPage = ref(1)
   const displayedItems = ref<T[]>([]) as Ref<T[]>
@@ -81,13 +113,18 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
     }
   }
 
-  // Watch all filters + sort to reset pagination
+  // Watch all filters + sort to reset pagination and re-fetch
   const filterRefs = [...Object.values(filters), sortFilter]
   watch(filterRefs, async () => {
     currentPage.value = 1
-    await itemsFetch.refresh()
-    if (itemsFetch.data.value?.results) {
-      displayedItems.value = [...itemsFetch.data.value.results]
+    loading.value = true
+    try {
+      await itemsFetch.refresh()
+      if (itemsFetch.data.value?.results) {
+        displayedItems.value = [...itemsFetch.data.value.results]
+      }
+    } finally {
+      loading.value = false
     }
     if (config.analyticsCategory && filters.search) {
       const searchRef = filters.search as WritableComputedRef<string, string>
@@ -100,14 +137,6 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
       }
     }
   })
-
-  // Update sort param when sort/order change
-  watch([sort, order], () => {
-    const [defaultField, defaultOrder] = element.defaultSort?.split(':') || config.defaultSortFallback.split(':')
-    const field = sort.value || defaultField
-    const ord = order.value || defaultOrder
-    sortFilter.value = `${field}:${ord}`
-  }, { immediate: true })
 
   return {
     displayedItems,
