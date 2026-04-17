@@ -145,6 +145,66 @@
     </v-card>
   </v-menu>
 
+  <!-- Manage shared departments -->
+  <v-menu
+    v-if="hasDepartments && !portal.owner.department && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
+    v-model="showSharedDeptsMenu"
+    :close-on-content-click="false"
+    max-width="500"
+  >
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        rounded
+      >
+        <template #prepend>
+          <v-icon
+            color="primary"
+            :icon="mdiAccountGroup"
+          />
+        </template>
+        {{ t('manageSharedDepartments') }}
+      </v-list-item>
+    </template>
+    <v-card
+      rounded="lg"
+      variant="elevated"
+      :title="t('manageSharedDepartments')"
+      :loading="updateSharedDepartments.loading.value ? 'primary' : undefined"
+    >
+      <v-card-text>
+        <p class="mb-2">
+          {{ t('sharedDepartmentsHelp') }}
+        </p>
+        <v-combobox
+          v-model="editedSharedDepartments"
+          :label="t('sharedDepartments')"
+          multiple
+          chips
+          closable-chips
+          hide-details="auto"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          :disabled="updateSharedDepartments.loading.value"
+          @click="showSharedDeptsMenu = false"
+        >
+          {{ t('cancel') }}
+        </v-btn>
+        <v-btn
+          color="primary"
+          variant="flat"
+          :loading="updateSharedDepartments.loading.value"
+          @click="updateSharedDepartments.execute()"
+        >
+          {{ t('confirm') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+
   <!-- Delete portal -->
   <v-menu
     v-model="showDeleteMenu"
@@ -316,7 +376,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
+import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiAccountGroup, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { Portal } from '#api/types/portal/index.ts'
 
@@ -327,6 +387,8 @@ const hasDepartments = useHasDepartments()
 const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
 const showWhiteLabelMenu = ref(false)
+const showSharedDeptsMenu = ref(false)
+const editedSharedDepartments = ref<string[]>([])
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
@@ -383,6 +445,22 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
   error: t('errorUpdatingAdminConfig'),
 })
 
+watch(() => showSharedDeptsMenu.value, (open) => {
+  if (open) editedSharedDepartments.value = [...(portal.sharedWithDepartments || [])]
+})
+
+const updateSharedDepartments = useAsyncAction(async () => {
+  await $fetch(`/portals/${portal._id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ sharedWithDepartments: editedSharedDepartments.value })
+  })
+  showSharedDeptsMenu.value = false
+  emit('refresh-portal')
+}, {
+  success: t('sharedDepartmentsUpdated'),
+  error: t('errorUpdatingSharedDepartments'),
+})
+
 </script>
 
 <i18n lang="yaml">
@@ -406,7 +484,12 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorDeletingPortal: Error while deleting the portal
     errorUpdatingAdminConfig: Error while updating admin configuration
     events: Events
+    errorUpdatingSharedDepartments: Error while updating shared departments
     manageDomainExposure: Manage domain exposure
+    manageSharedDepartments: Manage shared departments
+    sharedDepartments: Shared departments
+    sharedDepartmentsHelp: Add the id of every department of your organisation whose admins should be allowed to publish on this portal. Type the id and press Enter.
+    sharedDepartmentsUpdated: Shared departments updated!
     no: No
     ownerChanged: Owner changed!
     portalDeleted: Portal deleted!
@@ -438,7 +521,12 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorDeletingPortal: Erreur lors de la suppression du portail
     errorUpdatingAdminConfig: Erreur lors de la mise à jour de la configuration administrateur
     events: Traçabilité
+    errorUpdatingSharedDepartments: Erreur lors de la mise à jour des départements partagés
     manageDomainExposure: Exposition du domaine
+    manageSharedDepartments: Gérer les départements partagés
+    sharedDepartments: Départements partagés
+    sharedDepartmentsHelp: Ajoutez l'identifiant de chaque département de votre organisation dont les administrateurs peuvent publier sur ce portail. Tapez l'identifiant puis Entrée.
+    sharedDepartmentsUpdated: Départements partagés mis à jour !
     no: Non
     ownerChanged: Propriétaire changé !
     portalDeleted: Portail supprimé !
