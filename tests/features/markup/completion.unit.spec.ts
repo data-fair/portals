@@ -49,3 +49,29 @@ test.describe('markup completion — tag names', () => {
     assert.ok(typeof title!.detail === 'string' && title!.detail.length > 0, 'has a detail')
   })
 })
+
+test.describe('markup completion — attribute names', () => {
+  test('suggests attributes of a real tag', () => {
+    const r = runCompletion('<title |')
+    const found = labels(r)
+    assert.ok(found.includes('titleSize'), 'titleSize present')
+    assert.ok(found.includes('centered'), 'centered present')
+  })
+
+  test('does not suggest attributes of unrelated tags', () => {
+    const r = runCompletion('<title |')
+    const found = labels(r)
+    assert.equal(found.includes('elevation'), false)
+  })
+
+  test('suggests itemAttributes for a virtual tag', () => {
+    const r = runCompletion('<tabs>\n  <tab |\n</tabs>')
+    const found = labels(r)
+    assert.ok(found.includes('title'), 'virtual <tab> exposes its title attr')
+  })
+
+  test('returns null for unknown tag', () => {
+    const r = runCompletion('<nonsense |')
+    assert.equal(r, null)
+  })
+})
