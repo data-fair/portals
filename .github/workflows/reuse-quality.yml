@@ -41,8 +41,7 @@ jobs:
       run: npm run test-deps
 
     - name: Start dev API
-      working-directory: api
-      run: NODE_CONFIG_DIR=./config/ NODE_ENV=test node index.ts &
+      run: NODE_CONFIG_DIR=./api/config/ NODE_ENV=test node api/index.ts &
 
     - name: Wait for API to be ready
       run: |
