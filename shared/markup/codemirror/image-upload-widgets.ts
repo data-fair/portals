@@ -201,9 +201,14 @@ export function portalMarkupImageUploadWidgets (opts: ImageUploadWidgetsOptions)
       const builder = new RangeSetBuilder<Decoration>()
       ranges.sort((a, b) => a.from - b.from)
       for (const r of ranges) {
-        builder.add(r.from, r.to, Decoration.replace({
-          widget: new ImageUploadWidgetType({ elementPointer: r.elementPointer, group: r.group }, opts.mountWidget)
-        }))
+        const widget = new ImageUploadWidgetType({ elementPointer: r.elementPointer, group: r.group }, opts.mountWidget)
+        // Point ranges are insertions inside an otherwise bare tag; CM6's
+        // Decoration.widget handles those. Non-empty ranges replace existing
+        // attribute text with the widget.
+        const deco = r.from === r.to
+          ? Decoration.widget({ widget, side: 1 })
+          : Decoration.replace({ widget })
+        builder.add(r.from, r.to, deco)
       }
       return builder.finish()
     }
