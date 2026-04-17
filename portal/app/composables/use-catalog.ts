@@ -2,6 +2,8 @@ import type { WritableComputedRef } from 'vue'
 
 type FetchResult<T> = { count: number; results: T[] }
 
+type CatalogError = { statusCode?: number; message?: string }
+
 export type FilterRef =
   | WritableComputedRef<string, string>
   | WritableComputedRef<string[], string[]>
@@ -15,6 +17,7 @@ export interface CatalogReturn<T, F> {
   totalPages: ComputedRef<number>
   sort: Ref<string | undefined>
   order: Ref<'-1' | '1' | undefined>
+  error: Ref<CatalogError | undefined>
   goToPage: (page: number) => Promise<void>
   loadMore: (paginationPosition?: string) => Promise<void>
   filters: F
@@ -27,6 +30,9 @@ export interface CatalogConfig<T, F extends Record<string, FilterRef>> {
   filterDefs: () => F
   defaultSortFallback: string
   analyticsCategory?: string
+  /** Used by the UI workspace mock (ui/src/composables/use-catalog.ts) to
+   *  render placeholder items in the page editor preview. Ignored at runtime
+   *  by the portal implementation which fetches real data. */
   mockDataFactory?: () => T[]
 }
 
@@ -41,10 +47,19 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
   const filters = config.filterDefs()
   const sortFilter = useStringSearchParam('sort', { default: defaultSort })
 
-  // sort and order stay empty by default in the UI (like catalog-filters),
-  // sortFilter holds the actual value used for the query
-  const sort = ref<string>()
-  const order = ref<'-1' | '1'>()
+  // Sort strategy:
+  //   - Default sort is invisible: not shown in the UI (dropdown stays empty)
+  //     and not in the URL (useStringSearchParam deletes the key when value
+  //     equals its default).
+  //   - On text search, consumers drop `sort` from the query when it matches
+  //     the default so data-fair can rank by relevance.
+  // Seed sort/order from the URL only when the active sort differs from the
+  // default, so the dropdown reflects a user-chosen non-default value on load.
+  const [initialField, initialOrder] = sortFilter.value !== defaultSort
+    ? (sortFilter.value.split(':') as [string, '-1' | '1'])
+    : [undefined, undefined]
+  const sort = ref<string | undefined>(initialField)
+  const order = ref<'-1' | '1' | undefined>(initialOrder)
 
   const currentPage = ref(1)
   const displayedItems = ref<T[]>([]) as Ref<T[]>
@@ -57,18 +72,20 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
 
-  // Initialize displayedItems once data resolves. Sync flush is required so
-  // the watcher fires during SSR (when Suspense awaits the fetch) and on
-  // client-side nav. After first init we stop to avoid clobbering loadMore pushes.
-  let initialized = false
-  const stop = watch(() => itemsFetch.data.value, (newData) => {
-    if (initialized) return
-    if (newData?.results) {
-      displayedItems.value = [...newData.results]
-      initialized = true
-      stop()
-    }
-  }, { immediate: true, flush: 'sync' })
+  // Initialize displayedItems from fetched data. On hydration the payload is
+  // synchronously available; on client-side nav we wait for the fetch to resolve.
+  // Using a conditional watcher avoids the TDZ that an immediate+sync watcher
+  // would hit when calling its own `stop` handle during setup.
+  const initFromData = () => {
+    const results = itemsFetch.data.value?.results
+    if (results) displayedItems.value = [...results]
+    return !!results
+  }
+  if (!initFromData()) {
+    const stop = watch(() => itemsFetch.data.value, () => {
+      if (initFromData()) stop()
+    })
+  }
 
   const refreshItems = async (mode: 'replace' | 'append') => {
     loading.value = true
@@ -127,6 +144,7 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
     totalPages,
     sort,
     order,
+    error: itemsFetch.error,
     goToPage,
     loadMore,
     filters

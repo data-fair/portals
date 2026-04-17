@@ -38,7 +38,7 @@ export const test = base.extend<{
           const cached = cookieCache.get(user)
           if (cached) {
             await context.addCookies(cached)
-            await page.goto(url)
+            await page.goto(url, { timeout: 10_000 })
             // Safety: if redirected to login, cache was stale
             if (page.url().includes('/simple-directory/login')) {
               cookieCache.delete(user)
