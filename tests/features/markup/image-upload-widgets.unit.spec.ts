@@ -52,4 +52,27 @@ test.describe('image-upload widget range computation', () => {
     const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
     assert.equal(ranges.length, 0)
   })
+
+  test('inserts point widgets for every empty image-upload group on a bare tag', () => {
+    const src = '<image />'
+    const { sourceMap } = deserializeElements(src)
+    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    // Both `image` and `wideImage` groups on <image> are empty ⇒ two point
+    // widgets at distinct positions inside the tag.
+    assert.equal(ranges.length, 2)
+    for (const r of ranges) {
+      assert.equal(r.from, r.to, 'bare-tag widgets are point decorations')
+      assert.ok(r.from > 0 && r.from < src.length, 'within the tag')
+    }
+    const paths = ranges.map(r => r.group.jsonPath.join('.')).sort()
+    assert.deepEqual(paths, ['image', 'wideImage'])
+  })
+
+  test('does not insert bare-tag widgets when any image-upload attr is present', () => {
+    // wideImage is empty, but `image` has a partial attr — the tag is not bare.
+    const src = '<image image._id="abc" />'
+    const { sourceMap } = deserializeElements(src)
+    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    assert.equal(ranges.length, 0)
+  })
 })

@@ -103,15 +103,12 @@ export function toCmDiagnostic (
   const pointer = toRelativePointer(prefix, err.path)
   if (pointer === null) return null
   const range = resolveRange(sourceMap, pointer)
-  if (!range) {
-    return {
-      from: 0,
-      to: Math.min(1, docLength),
-      severity: 'error',
-      message: err.message,
-      source: 'schema'
-    }
-  }
+  // An unresolved range used to fall back to [0, 1], which visually anchored
+  // root-level errors (e.g. pointer === '/') to the first tag in the document
+  // and misled the user into thinking the first tag was the problem. Drop the
+  // diagnostic instead — form mode still surfaces the error and the user can
+  // address it there.
+  if (!range) return null
   const from = Math.max(0, Math.min(range.from, docLength))
   const to = Math.max(from + 1, Math.min(range.to, docLength))
   return { from, to, severity: 'error', message: err.message, source: 'schema' }

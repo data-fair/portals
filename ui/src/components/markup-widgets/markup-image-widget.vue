@@ -1,7 +1,9 @@
 <template>
-  <span class="markup-image-widget">
+  <span
+    v-if="node && resource"
+    class="markup-image-widget"
+  >
     <image-upload
-      v-if="node && resource"
       :model-value="node.data"
       :label="label"
       :width="group.width"
@@ -10,12 +12,6 @@
       hide-details="auto"
       @update:model-value="onChange"
     />
-    <span
-      v-else
-      class="markup-image-widget__placeholder"
-    >
-      {{ group.label ?? group.jsonPath.join('.') }}
-    </span>
   </span>
 </template>
 
@@ -60,9 +56,5 @@ function onChange (data: any) {
   vertical-align: middle;
   margin: 0 2px;
   max-width: 360px;
-}
-.markup-image-widget__placeholder {
-  color: rgba(var(--v-theme-on-surface), 0.6);
-  font-style: italic;
 }
 </style>

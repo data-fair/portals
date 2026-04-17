@@ -43,15 +43,32 @@ export function computeImageUploadRanges (
       elementAttrs.push({ path: attr.jsonPath, from: range.from, to: range.to })
     }
 
-    for (const group of descriptor.imageUploadGroups) {
+    // When the whole tag has no image-related attrs across any of its
+    // image-upload groups, insert an upload-prompt widget per group just
+    // before the closing `/>` (or `>`). This covers the "bare tag" case like
+    // `<image />` where the user hasn't typed any image attrs yet. For
+    // partial states (some attrs present), we skip insertion and let the
+    // linter nudge the user to finish the attribute set.
+    const isBareTag = descriptor.imageUploadGroups.every(g =>
+      !elementAttrs.some(a => startsWithPath(a.path, g.jsonPath))
+    )
+
+    descriptor.imageUploadGroups.forEach((group, groupIdx) => {
       const prefix = group.jsonPath
       const inGroup = elementAttrs.filter(a => startsWithPath(a.path, prefix))
       const outsideGroup = elementAttrs.filter(a => !startsWithPath(a.path, prefix))
 
+      if (inGroup.length === 0) {
+        if (!isBareTag) return
+        const pos = insideTagEndPosition(doc, elementRange.to, groupIdx)
+        if (pos !== null) out.push({ from: pos, to: pos, elementPointer, group })
+        return
+      }
+
       // Need at least _id, name, mimeType under the prefix to render.
       const leafNames = new Set(inGroup.map(a => a.path[prefix.length]).filter(Boolean))
       const required = ['_id', 'name', 'mimeType']
-      if (!required.every(r => leafNames.has(r))) continue
+      if (!required.every(r => leafNames.has(r))) return
 
       // Attribute ranges point at the *value* span (between quotes). Extend
       // each to cover `name="value"` plus trailing whitespace so the widget
@@ -63,10 +80,10 @@ export function computeImageUploadRanges (
       // Contiguity check: any outside-group attribute whose value range
       // falls inside [min, max] means the group is interleaved.
       const interleaved = outsideGroup.some(a => a.from >= min && a.to <= max)
-      if (interleaved) continue
+      if (interleaved) return
 
       out.push({ from: min, to: max, elementPointer, group })
-    }
+    })
   }
 
   return out
@@ -78,6 +95,23 @@ function startsWithPath (path: string[], prefix: string[]): boolean {
     if (path[i] !== prefix[i]) return false
   }
   return true
+}
+
+/**
+ * Pick a character position inside the open-tag syntax just before the closing
+ * `/>` (or `>`), shifted by `groupIdx` characters so that multiple empty
+ * groups on the same element get distinct insertion points the RangeSetBuilder
+ * can order. Returns null if the tag is too short for the requested offset
+ * (e.g. a pathological malformed tag).
+ */
+function insideTagEndPosition (doc: string, openTagEnd: number, groupIdx: number): number | null {
+  // openTagEnd is one past the final '>'. Walk back past '>' and an optional '/'.
+  let pos = openTagEnd - 1
+  if (pos < 0 || doc[pos] !== '>') return null
+  if (pos > 0 && doc[pos - 1] === '/') pos--
+  pos -= groupIdx
+  if (pos < 0) return null
+  return pos
 }
 
 /** Read the tag name from an opening-tag range (e.g. `<image ...` → `image`). */
