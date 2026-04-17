@@ -1,0 +1,14 @@
+[
+  {
+    "type": "responsive-grid",
+    "align": "center",
+    "centered": true,
+    "columns": 4,
+    "gutter": "none",
+    "mb": 3,
+    "children": [
+      { "type": "divider" },
+      { "type": "divider" }
+    ]
+  }
+]

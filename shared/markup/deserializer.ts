@@ -240,6 +240,22 @@ function coerceAttr (raw: string, attr: AttributeDescriptor, tag: ParsedTag, p: 
       }
       return n
     }
+    case 'string-array': {
+      const items = raw === '' ? [] : raw.split(',').map(s => s.trim())
+      if (attr.enumValues) {
+        for (const item of items) {
+          if (!attr.enumValues.includes(item)) {
+            error(
+              p,
+              `attribute '${attr.name}' on <${tag.name}> has item '${item}' not in enum [${attr.enumValues.join(', ')}]`,
+              tag.startLine,
+              tag.startCol
+            )
+          }
+        }
+      }
+      return items
+    }
     case 'string':
     default:
       if (attr.enumValues && !attr.enumValues.includes(raw)) {

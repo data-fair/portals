@@ -1,0 +1,29 @@
+[
+  {
+    "type": "expansion-panels",
+    "elevation": 2,
+    "mb": 2,
+    "multiple": true,
+    "openFirst": true,
+    "rounded": "lg",
+    "titleBackgroundColor": "primary",
+    "panels": [
+      {
+        "title": "First panel",
+        "children": [
+          { "type": "text", "content": "Panel one body." }
+        ]
+      },
+      {
+        "title": "Second panel",
+        "icon": {
+          "color": "secondary",
+          "mdi": { "name": "alert" }
+        },
+        "children": [
+          { "type": "divider" }
+        ]
+      }
+    ]
+  }
+]

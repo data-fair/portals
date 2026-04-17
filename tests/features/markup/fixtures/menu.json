@@ -1,0 +1,35 @@
+[
+  {
+    "type": "menu",
+    "label": "Navigation",
+    "usePortalConfig": false,
+    "config": {
+      "color": "secondary",
+      "variant": "outlined"
+    },
+    "centered": false,
+    "mb": 3,
+    "links": [
+      {
+        "type": "url",
+        "subtype": "applications",
+        "title": "Apps",
+        "href": "https://example.com/apps",
+        "pageRef": {
+          "slug": "apps",
+          "title": "Apps"
+        }
+      },
+      {
+        "type": "url",
+        "subtype": "datasets",
+        "title": "Datasets",
+        "href": "https://example.com/datasets",
+        "pageRef": {
+          "slug": "datasets",
+          "title": "Datasets"
+        }
+      }
+    ]
+  }
+]

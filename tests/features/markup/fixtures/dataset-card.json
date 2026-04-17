@@ -1,0 +1,18 @@
+[
+  {
+    "type": "dataset-card",
+    "dataset": {
+      "id": "my-dataset",
+      "title": "My Dataset"
+    },
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "actionsLocation": "right",
+      "actionsStyle": "text",
+      "elevation": 1,
+      "rounded": "xl",
+      "showDepartment": false
+    }
+  }
+]

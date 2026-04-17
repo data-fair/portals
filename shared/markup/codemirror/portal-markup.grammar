@@ -1,0 +1,51 @@
+// Lezer grammar for the Portals page-edit markup language.
+// Lenient on purpose — accepts any tag/attribute name; semantic validation
+// (unknown tags, unknown attributes, type coercion, raw-text constraints, etc.)
+// is handled by the hand-written deserializer in `../deserializer.ts` and
+// surfaced as CM6 lint diagnostics.
+
+@top Document { (Element | Text)* }
+
+@skip { space }
+
+Element {
+  SelfClosingTag |
+  (OpenTag (Element | Text)* CloseTag)
+}
+
+SelfClosingTag { "<" TagName Attribute* "/>" }
+OpenTag        { "<" TagName Attribute* ">" }
+CloseTag       { "</" TagName ">" }
+
+TagName { Name }
+
+Attribute { AttributeName ("=" AttributeValue)? }
+AttributeName  { Name }
+AttributeValue { String }
+
+@tokens {
+  // Tag and attribute identifier. Allows dot-notation (e.g. "background.color")
+  // on attribute names; the TagName non-terminal still wraps the same token,
+  // so in practice tag names just don't contain dots.
+  Name   { $[A-Za-z_] ($[A-Za-z0-9_\-] | "." $[A-Za-z_])* }
+
+  // Attribute value: always double-quoted with backslash-escapes allowed.
+  String { '"' (!["\\] | "\\" _)* '"' }
+
+  // Free text between tags. Must start with a non-whitespace, non-"<" char so
+  // that inter-token whitespace (inside tags) can be skipped by `@skip`.
+  Text   { ![< \t\n\r] (![<])* }
+
+  space  { $[ \t\n\r]+ }
+
+  "<"
+  ">"
+  "/>"
+  "</"
+  "="
+
+  // Prefer the longer multi-char delimiters over the single "<" / ">".
+  @precedence { "</", "/>", "<", ">" }
+}
+
+@detectDelim

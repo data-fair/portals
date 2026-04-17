@@ -1,0 +1,10 @@
+[
+  {
+    "type": "image",
+    "url": "https://example.com/image.png",
+    "legend": "An example image",
+    "cover": true,
+    "height": 200,
+    "zoomable": true
+  }
+]

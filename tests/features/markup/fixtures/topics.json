@@ -1,0 +1,15 @@
+[
+  {
+    "type": "topics",
+    "centered": true,
+    "color": "primary",
+    "density": "comfortable",
+    "elevation": 1,
+    "iconColor": "secondary",
+    "mb": 2,
+    "mode": "applications",
+    "rounded": "lg",
+    "showIcon": false,
+    "variant": "outlined"
+  }
+]

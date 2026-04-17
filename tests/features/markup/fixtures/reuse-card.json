@@ -1,0 +1,16 @@
+[
+  {
+    "type": "reuse-card",
+    "reuse": {
+      "slug": "my-reuse",
+      "title": "My Reuse"
+    },
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "elevation": 1,
+      "rounded": "lg",
+      "showAuthor": false
+    }
+  }
+]

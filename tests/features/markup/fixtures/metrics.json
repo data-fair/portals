@@ -1,0 +1,12 @@
+[
+  {
+    "type": "metrics",
+    "metrics": ["datasets", "records"],
+    "border": false,
+    "color": "primary",
+    "elevation": 2,
+    "fullWidth": true,
+    "mb": 2,
+    "rounded": "lg"
+  }
+]

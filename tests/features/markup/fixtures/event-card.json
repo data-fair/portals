@@ -1,0 +1,16 @@
+[
+  {
+    "type": "event-card",
+    "event": {
+      "slug": "my-event",
+      "title": "My Event"
+    },
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "elevation": 1,
+      "rounded": "lg",
+      "showDescription": false
+    }
+  }
+]

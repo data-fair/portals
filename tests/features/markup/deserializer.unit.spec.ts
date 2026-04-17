@@ -228,4 +228,25 @@ test.describe('markup deserializer', () => {
       assert.notEqual(right.uuid, 'dup')
     })
   })
+
+  test.describe('string-array attributes', () => {
+    test('splits comma-separated values and trims whitespace', () => {
+      const { elements, errors } = deserializeElements(
+        '<metrics metrics="datasets, records" />'
+      )
+      assert.deepEqual(errors, [])
+      assert.deepEqual(elements, [
+        { type: 'metrics', metrics: ['datasets', 'records'] }
+      ])
+    })
+
+    test('reports items that are not in the enum', () => {
+      const { elements, errors } = deserializeElements(
+        '<metrics metrics="datasets,bogus" />'
+      )
+      assert.equal(elements, null)
+      assert.equal(errors.length, 1)
+      assert.match(errors[0].message, /item 'bogus' not in enum/)
+    })
+  })
 })

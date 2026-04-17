@@ -22,8 +22,9 @@ export interface AttributeDescriptor {
   name: string
   /** Path in the JSON object (e.g. ["background", "color"]) */
   jsonPath: string[]
-  /** The JSON Schema type of the leaf value */
-  type: 'string' | 'number' | 'integer' | 'boolean'
+  /** The JSON Schema type of the leaf value. `string-array` is a closed-enum
+   * array of strings, encoded in markup as a comma-separated list. */
+  type: 'string' | 'number' | 'integer' | 'boolean' | 'string-array'
   /** For enum attributes: the allowed values */
   enumValues?: (string | number)[]
   /** Whether the property is required */

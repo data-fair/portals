@@ -1,0 +1,8 @@
+[
+  {
+    "type": "text",
+    "content": "Some descriptive text content.",
+    "centered": true,
+    "mb": 4
+  }
+]

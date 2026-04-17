@@ -1,0 +1,16 @@
+[
+  {
+    "type": "reuses-list",
+    "mode": "lastCreated",
+    "limit": 6,
+    "columns": 3,
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "elevation": 2,
+      "rounded": "xl",
+      "showAuthor": false,
+      "showSummary": false
+    }
+  }
+]

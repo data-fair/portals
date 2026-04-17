@@ -1,0 +1,21 @@
+[
+  {
+    "type": "datasets-catalog",
+    "columns": 3,
+    "countPosition": "bottom",
+    "defaultSort": "title:1",
+    "filters": {
+      "density": "compact",
+      "position": "left",
+      "rounded": "lg"
+    },
+    "mb": 2,
+    "pagination": {
+      "alignment": "left",
+      "position": "before"
+    },
+    "showAdvancedFilters": true,
+    "showApiButton": false,
+    "showSortBesideCount": true
+  }
+]

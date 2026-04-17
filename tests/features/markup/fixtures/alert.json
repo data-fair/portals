@@ -1,0 +1,10 @@
+[
+  {
+    "type": "alert",
+    "content": "Important notice for users.",
+    "alertType": "warning",
+    "title": "Heads up",
+    "color": "warning",
+    "mb": 2
+  }
+]

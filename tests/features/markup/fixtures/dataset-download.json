@@ -1,0 +1,10 @@
+[
+  {
+    "type": "dataset-download",
+    "dataset": {
+      "id": "my-dataset",
+      "title": "My Dataset"
+    },
+    "mb": 2
+  }
+]

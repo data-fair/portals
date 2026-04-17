@@ -1,0 +1,16 @@
+[
+  {
+    "type": "news-card",
+    "news": {
+      "slug": "my-news",
+      "title": "My News"
+    },
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "elevation": 1,
+      "rounded": "lg",
+      "showDescription": false
+    }
+  }
+]

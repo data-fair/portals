@@ -1,0 +1,19 @@
+[
+  {
+    "type": "contact",
+    "defaultFields": {
+      "enableMessage": false,
+      "enableSubject": false,
+      "messageMaxLength": 1000,
+      "messageMinLength": 20,
+      "requiredMessage": false,
+      "requiredSubject": false
+    },
+    "subjectTemplate": "Inquiry from portal",
+    "elevation": 2,
+    "rounded": "lg",
+    "showInfo": true,
+    "showSocial": true,
+    "mb": 2
+  }
+]

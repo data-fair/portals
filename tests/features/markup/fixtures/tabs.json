@@ -1,0 +1,27 @@
+[
+  {
+    "type": "tabs",
+    "align": "center",
+    "border": false,
+    "grow": true,
+    "mb": 2,
+    "tabs": [
+      {
+        "title": "First tab",
+        "children": [
+          { "type": "title", "content": "Inside tab one", "titleSize": "h4" }
+        ]
+      },
+      {
+        "title": "Second tab",
+        "icon": {
+          "color": "primary",
+          "mdi": { "name": "star" }
+        },
+        "children": [
+          { "type": "divider" }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "type": "two-columns",
+    "disposition": "left",
+    "gutter": "dense",
+    "align": {
+      "left": "center",
+      "right": "stretch"
+    },
+    "mb": 2,
+    "children": [
+      { "type": "divider" }
+    ],
+    "children2": [
+      { "type": "title", "content": "Right column", "titleSize": "h4" }
+    ]
+  }
+]

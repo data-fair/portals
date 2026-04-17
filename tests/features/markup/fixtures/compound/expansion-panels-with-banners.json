@@ -1,0 +1,45 @@
+[
+  {
+    "type": "expansion-panels",
+    "elevation": 2,
+    "mb": 2,
+    "multiple": true,
+    "openFirst": true,
+    "rounded": "lg",
+    "panels": [
+      {
+        "title": "First panel",
+        "icon": {
+          "color": "primary",
+          "mdi": { "name": "information" }
+        },
+        "children": [
+          {
+            "type": "banner",
+            "fullWidth": true,
+            "background": { "color": "primary", "tintStrength": 0.3 },
+            "children": [
+              { "type": "title", "content": "Inside panel one", "titleSize": "h4" },
+              { "type": "text", "content": "Panel one banner text." }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Second panel",
+        "children": [
+          {
+            "type": "banner",
+            "background": { "color": "secondary", "tintStrength": 0.6 },
+            "pt": 3,
+            "pb": 3,
+            "children": [
+              { "type": "divider", "thickness": 2, "opacity": 0.5 },
+              { "type": "text", "content": "Panel two banner text." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

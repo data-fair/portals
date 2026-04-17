@@ -1,0 +1,46 @@
+[
+  {
+    "type": "tabs",
+    "align": "center",
+    "border": false,
+    "mb": 2,
+    "tabs": [
+      {
+        "title": "Overview",
+        "children": [
+          { "type": "title", "content": "Overview heading", "titleSize": "h4" },
+          { "type": "divider", "thickness": 2, "opacity": 0.4 }
+        ]
+      },
+      {
+        "title": "Highlights",
+        "icon": {
+          "color": "primary",
+          "mdi": { "name": "star" }
+        },
+        "children": [
+          {
+            "type": "banner",
+            "fullWidth": true,
+            "background": { "color": "primary", "tintStrength": 0.3 },
+            "children": [
+              { "type": "text", "content": "Highlighted content." }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Media",
+        "children": [
+          { "type": "text", "content": "Some media description." },
+          {
+            "type": "image",
+            "url": "https://example.com/photo.png",
+            "legend": "A photo",
+            "cover": true
+          }
+        ]
+      }
+    ]
+  }
+]

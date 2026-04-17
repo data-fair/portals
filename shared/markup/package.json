@@ -1,5 +1,21 @@
 {
   "name": "@data-fair/portals-shared-markup",
   "type": "module",
-  "main": "index.ts"
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./codemirror": "./codemirror/index.ts"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.6.0",
+    "@codemirror/language": "^6.10.2",
+    "@codemirror/lint": "^6.8.0",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.28.0",
+    "@lezer/highlight": "^1.2.0",
+    "@lezer/lr": "^1.4.0"
+  },
+  "devDependencies": {
+    "@lezer/generator": "^1.7.0"
+  }
 }

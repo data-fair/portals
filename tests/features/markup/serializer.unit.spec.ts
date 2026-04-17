@@ -142,4 +142,18 @@ test.describe('markup serializer', () => {
     ])
     assert.equal(out, '<title>A</title>\n<divider />')
   })
+
+  test('joins string-array attributes with commas', () => {
+    const out = serializeElements([
+      { type: 'metrics', metrics: ['datasets', 'records'] }
+    ])
+    assert.ok(out.includes('metrics="datasets,records"'), `unexpected output: ${out}`)
+  })
+
+  test('omits string-array attribute when value deep-equals default', () => {
+    const out = serializeElements([
+      { type: 'metrics', metrics: ['datasets', 'records', 'applications'] }
+    ])
+    assert.equal(out, '<metrics />')
+  })
 })

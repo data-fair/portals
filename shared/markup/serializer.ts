@@ -27,15 +27,26 @@ function formatAttrValue (value: unknown, attr: AttributeDescriptor): string {
     case 'number':
     case 'integer':
       return String(value)
+    case 'string-array':
+      return escapeAttr(Array.isArray(value) ? value.map(String).join(',') : String(value))
     case 'string':
     default:
       return escapeAttr(String(value))
   }
 }
 
+function sameArray (a: unknown, b: unknown): boolean {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false
+  return true
+}
+
 function shouldEmitAttr (value: unknown, attr: AttributeDescriptor): boolean {
   if (value === undefined || value === null) return false
-  if (attr.default !== undefined && value === attr.default) return false
+  if (attr.default !== undefined) {
+    if (attr.type === 'string-array' ? sameArray(value, attr.default) : value === attr.default) return false
+  }
   return true
 }
 

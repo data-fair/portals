@@ -1,0 +1,17 @@
+[
+  {
+    "type": "banner",
+    "fullWidth": true,
+    "background": {
+      "color": "primary",
+      "tintStrength": 0.5
+    },
+    "pt": 4,
+    "pb": 4,
+    "mb": 2,
+    "children": [
+      { "type": "title", "content": "Welcome", "titleSize": "h1" },
+      { "type": "divider" }
+    ]
+  }
+]

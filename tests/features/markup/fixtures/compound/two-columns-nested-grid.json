@@ -1,0 +1,40 @@
+[
+  {
+    "type": "two-columns",
+    "disposition": "left",
+    "gutter": "dense",
+    "mb": 2,
+    "children": [
+      { "type": "title", "content": "Left column", "titleSize": "h4" }
+    ],
+    "children2": [
+      {
+        "type": "responsive-grid",
+        "columns": 3,
+        "gutter": "none",
+        "children": [
+          {
+            "type": "card",
+            "title": "First card",
+            "border": false,
+            "elevation": 1,
+            "rounded": "lg",
+            "children": [
+              { "type": "text", "content": "First card body." }
+            ]
+          },
+          {
+            "type": "card",
+            "title": "Second card",
+            "border": false,
+            "elevation": 2,
+            "rounded": "xl",
+            "children": [
+              { "type": "text", "content": "Second card body." }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

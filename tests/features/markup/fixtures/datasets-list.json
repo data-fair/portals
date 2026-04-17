@@ -1,0 +1,18 @@
+[
+  {
+    "type": "datasets-list",
+    "mode": "lastCreated",
+    "limit": 5,
+    "columns": 2,
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "actionsLocation": "right",
+      "actionsStyle": "icon",
+      "elevation": 2,
+      "rounded": "lg",
+      "showDepartment": false,
+      "showSummary": false
+    }
+  }
+]

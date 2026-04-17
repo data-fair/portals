@@ -323,7 +323,7 @@ function getSchemaType (schema: Schema): string | undefined {
   return undefined
 }
 
-function getLeafType (schema: Schema): 'string' | 'number' | 'integer' | 'boolean' | null {
+function getLeafType (schema: Schema): 'string' | 'number' | 'integer' | 'boolean' | 'string-array' | null {
   const t = getSchemaType(schema)
   if (t === 'string') return 'string'
   if (t === 'number') return 'number'
@@ -342,15 +342,17 @@ function getLeafType (schema: Schema): 'string' | 'number' | 'integer' | 'boolea
       }
     }
   }
-  // Arrays of primitives — treat as string (will be comma-separated)
-  if (t === 'array' && schema.items?.type === 'string') return 'string'
+  // Arrays of strings — comma-separated in markup
+  if (t === 'array' && schema.items?.type === 'string') return 'string-array'
   return null
 }
 
 function extractEnumValues (schema: Schema): (string | number)[] | undefined {
-  if (!schema.oneOf) return undefined
+  // For string-array, enums live on the items schema, not the outer one.
+  const source = schema.type === 'array' ? schema.items : schema
+  if (!source?.oneOf) return undefined
   const values: (string | number)[] = []
-  for (const branch of schema.oneOf) {
+  for (const branch of source.oneOf) {
     if (branch.const !== undefined) values.push(branch.const)
   }
   return values.length > 0 ? values : undefined

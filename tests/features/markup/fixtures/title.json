@@ -1,0 +1,14 @@
+[
+  {
+    "type": "title",
+    "content": "My Page Title",
+    "titleSize": "h2",
+    "bold": true,
+    "centered": true,
+    "color": "secondary",
+    "line": {
+      "position": "left",
+      "color": "primary"
+    }
+  }
+]

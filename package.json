@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build-types": "mkdir -p ui/src/components/vjsf && df-build-types . --vjsf-dir ui/src/components/vjsf && npx tsx build/markup/generate-descriptors.ts",
+    "build-types": "mkdir -p ui/src/components/vjsf && df-build-types . --vjsf-dir ui/src/components/vjsf && npx tsx build/markup/generate-descriptors.ts && npx tsx build/markup/generate-grammar.ts",
     "check-types": "tsc && npm -w portal run check-types && npm -w ui run check-types",
     "dev-api": "npm -w api run dev",
     "dev-deps": "mkdir -p dev/logs && docker compose --profile dev up -d --wait && docker compose --profile dev logs -f 2>&1 | tee dev/logs/docker-compose.log",

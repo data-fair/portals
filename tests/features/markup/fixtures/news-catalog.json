@@ -1,0 +1,18 @@
+[
+  {
+    "type": "news-catalog",
+    "columns": 3,
+    "countPosition": "bottom",
+    "defaultSort": "title:1",
+    "filters": {
+      "density": "compact",
+      "position": "left"
+    },
+    "mb": 2,
+    "pagination": {
+      "alignment": "right",
+      "position": "both"
+    },
+    "showAdvancedFilters": true
+  }
+]

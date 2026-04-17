@@ -1,0 +1,42 @@
+[
+  {
+    "type": "responsive-grid",
+    "columns": 3,
+    "gutter": "dense",
+    "align": "center",
+    "centered": true,
+    "children": [
+      {
+        "type": "card",
+        "title": "One",
+        "border": false,
+        "elevation": 1,
+        "rounded": "lg",
+        "children": [
+          { "type": "text", "content": "Card one body." }
+        ]
+      },
+      {
+        "type": "card",
+        "title": "Two",
+        "border": false,
+        "elevation": 2,
+        "rounded": "xl",
+        "children": [
+          { "type": "text", "content": "Card two body." }
+        ]
+      },
+      {
+        "type": "card",
+        "title": "Three",
+        "border": false,
+        "elevation": 3,
+        "rounded": "lg",
+        "contentAlign": "center",
+        "children": [
+          { "type": "text", "content": "Card three body." }
+        ]
+      }
+    ]
+  }
+]

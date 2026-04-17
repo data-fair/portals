@@ -1,0 +1,14 @@
+[
+  {
+    "type": "search",
+    "border": true,
+    "btnPosition": "attached",
+    "centered": true,
+    "color": "primary",
+    "density": "compact",
+    "elevation": 2,
+    "fullWidth": true,
+    "label": "Search the catalog",
+    "mb": 2
+  }
+]

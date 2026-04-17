@@ -1,0 +1,13 @@
+[
+  {
+    "type": "application",
+    "uuid": "app12345",
+    "application": {
+      "id": "my-app",
+      "slug": "my-app",
+      "title": "My Application"
+    },
+    "mb": 2,
+    "syncParams": "shared-filters"
+  }
+]

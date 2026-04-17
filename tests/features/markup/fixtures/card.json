@@ -1,0 +1,14 @@
+[
+  {
+    "type": "card",
+    "title": "My Card",
+    "border": false,
+    "contentAlign": "center",
+    "elevation": 2,
+    "rounded": "lg",
+    "mb": 3,
+    "children": [
+      { "type": "text", "content": "Card body text." }
+    ]
+  }
+]

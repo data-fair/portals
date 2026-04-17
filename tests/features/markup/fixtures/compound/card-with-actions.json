@@ -1,0 +1,37 @@
+[
+  {
+    "type": "card",
+    "title": "Featured card",
+    "border": false,
+    "elevation": 2,
+    "rounded": "lg",
+    "mb": 3,
+    "children": [
+      { "type": "title", "content": "Inner heading", "titleSize": "h4" },
+      { "type": "text", "content": "Some descriptive text inside the card." }
+    ],
+    "actions": [
+      {
+        "type": "url",
+        "subtype": "datasets",
+        "title": "Browse datasets",
+        "href": "https://example.com/datasets",
+        "pageRef": {
+          "slug": "datasets",
+          "title": "Datasets"
+        }
+      },
+      {
+        "type": "url",
+        "subtype": "applications",
+        "title": "Browse apps",
+        "target": true,
+        "href": "https://example.com/apps",
+        "pageRef": {
+          "slug": "apps",
+          "title": "Apps"
+        }
+      }
+    ]
+  }
+]

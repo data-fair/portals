@@ -1,0 +1,19 @@
+[
+  {
+    "type": "event-catalog",
+    "columns": 3,
+    "countPosition": "bottom",
+    "defaultSort": "title:1",
+    "filters": {
+      "density": "compact",
+      "position": "left"
+    },
+    "includePast": true,
+    "mb": 2,
+    "pagination": {
+      "alignment": "right",
+      "position": "both"
+    },
+    "showAdvancedFilters": true
+  }
+]

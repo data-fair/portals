@@ -1,0 +1,17 @@
+[
+  {
+    "type": "applications-list",
+    "mode": "lastCreated",
+    "limit": 6,
+    "columns": 2,
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "actionsLocation": "right",
+      "actionsStyle": "icon",
+      "elevation": 1,
+      "rounded": "lg",
+      "showDepartment": false
+    }
+  }
+]

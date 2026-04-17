@@ -1,0 +1,18 @@
+[
+  {
+    "type": "button",
+    "link": {
+      "href": "https://example.com",
+      "title": "Click me",
+      "type": "url",
+      "target": true
+    },
+    "usePortalConfig": false,
+    "config": {
+      "color": "primary",
+      "variant": "outlined"
+    },
+    "centered": false,
+    "mb": 3
+  }
+]

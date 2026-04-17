@@ -3112,8 +3112,13 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         "jsonPath": [
           "metrics"
         ],
-        "type": "string",
+        "type": "string-array",
         "required": true,
+        "enumValues": [
+          "datasets",
+          "records",
+          "applications"
+        ],
         "default": [
           "datasets",
           "records",
@@ -3460,8 +3465,16 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "filters",
           "items"
         ],
-        "type": "string",
-        "required": false
+        "type": "string-array",
+        "required": false,
+        "enumValues": [
+          "search",
+          "concepts",
+          "topics",
+          "keywords",
+          "owners",
+          "sort"
+        ]
       },
       {
         "name": "filters.position",
@@ -4490,7 +4503,7 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         "jsonPath": [
           "cols"
         ],
-        "type": "string",
+        "type": "string-array",
         "required": false
       },
       {
@@ -4706,8 +4719,15 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "filters",
           "items"
         ],
-        "type": "string",
-        "required": false
+        "type": "string-array",
+        "required": false,
+        "enumValues": [
+          "search",
+          "base-application",
+          "topics",
+          "owners",
+          "sort"
+        ]
       },
       {
         "name": "filters.position",
@@ -5248,8 +5268,12 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "filters",
           "items"
         ],
-        "type": "string",
-        "required": false
+        "type": "string-array",
+        "required": false,
+        "enumValues": [
+          "search",
+          "sort"
+        ]
       },
       {
         "name": "filters.position",
@@ -5802,8 +5826,13 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "filters",
           "items"
         ],
-        "type": "string",
-        "required": false
+        "type": "string-array",
+        "required": false,
+        "enumValues": [
+          "search",
+          "include-past",
+          "sort"
+        ]
       },
       {
         "name": "filters.position",
@@ -6344,8 +6373,12 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "filters",
           "items"
         ],
-        "type": "string",
-        "required": false
+        "type": "string-array",
+        "required": false,
+        "enumValues": [
+          "search",
+          "sort"
+        ]
       },
       {
         "name": "filters.position",

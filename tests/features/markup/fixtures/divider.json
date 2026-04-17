@@ -1,0 +1,10 @@
+[
+  {
+    "type": "divider",
+    "color": "primary",
+    "inset": true,
+    "opacity": 0.5,
+    "rounded": false,
+    "thickness": 3
+  }
+]

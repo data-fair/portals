@@ -1,0 +1,15 @@
+[
+  {
+    "type": "news-list",
+    "mode": "custom",
+    "limit": 6,
+    "columns": 3,
+    "mb": 2,
+    "usePortalConfig": false,
+    "cardConfig": {
+      "elevation": 2,
+      "rounded": "xl",
+      "showDescription": false
+    }
+  }
+]

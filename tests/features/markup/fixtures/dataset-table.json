@@ -1,0 +1,14 @@
+[
+  {
+    "type": "dataset-table",
+    "uuid": "tbl12345",
+    "dataset": {
+      "id": "my-dataset",
+      "title": "My Dataset"
+    },
+    "display": "table-dense",
+    "interactions": false,
+    "mb": 2,
+    "syncParams": "sandboxed"
+  }
+]

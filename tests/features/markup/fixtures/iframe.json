@@ -1,0 +1,9 @@
+[
+  {
+    "type": "iframe",
+    "url": "https://example.com/embed",
+    "title": "Embedded Frame",
+    "scroll": true,
+    "mb": 3
+  }
+]

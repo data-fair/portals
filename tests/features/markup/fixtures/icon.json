@@ -1,0 +1,14 @@
+[
+  {
+    "type": "icon",
+    "size": 64,
+    "centered": true,
+    "icon": {
+      "color": "primary",
+      "mdi": {
+        "name": "home"
+      }
+    },
+    "mb": 2
+  }
+]
