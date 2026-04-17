@@ -6,7 +6,7 @@
  * validation, and CodeMirror language support.
  */
 
-import type { TagDescriptor, ChildrenSlot, AttributeDescriptor } from '../../shared/markup/types.ts'
+import type { TagDescriptor, ChildrenSlot, AttributeDescriptor, ImageUploadGroup } from '../../shared/markup/types.ts'
 
 const ELEMENT_REF = '#/$defs/element'
 const LINK_ITEM_REFS = new Set([
@@ -20,6 +20,17 @@ const VIRTUAL_TAG_NAMES: Record<string, string> = {
   links: 'link',
   tabs: 'tab',
   panels: 'panel'
+}
+
+function getImageUploadSlotProps (schema: Schema): { width?: number, height?: number, label?: string } | null {
+  const slot = schema.layout?.slots?.component
+  if (!slot || slot.name !== 'image-upload') return null
+  const props = slot.props ?? {}
+  const out: { width?: number, height?: number, label?: string } = {}
+  if (typeof props.width === 'number') out.width = props.width
+  if (typeof props.height === 'number') out.height = props.height
+  if (typeof props.label === 'string') out.label = props.label
+  return out
 }
 
 type Schema = Record<string, any>
@@ -113,6 +124,9 @@ function analyzeElement (elementSchema: Schema, rootSchema: Schema): TagDescript
   const attributes: AttributeDescriptor[] = []
   let contentProperty: string | null = null
 
+  const imageUploadGroups: ImageUploadGroup[] = []
+  const pushGroup = (g: ImageUploadGroup) => imageUploadGroups.push(g)
+
   for (const [propName, rawPropSchema] of Object.entries(properties)) {
     if (propName === 'type') continue
 
@@ -139,7 +153,16 @@ function analyzeElement (elementSchema: Schema, rootSchema: Schema): TagDescript
 
     // --- Object attributes (flatten with dot notation) ---
     if (isObjectSchema(propSchema)) {
-      attributes.push(...flattenObjectAttributes(propName, [propName], propSchema, requiredSet.has(propName), rootSchema))
+      // Top-level object may itself be an image-upload slot.
+      const slotProps = getImageUploadSlotProps(propSchema)
+      if (slotProps) {
+        const g: ImageUploadGroup = { jsonPath: [propName] }
+        if (slotProps.width !== undefined) g.width = slotProps.width
+        if (slotProps.height !== undefined) g.height = slotProps.height
+        if (slotProps.label !== undefined) g.label = slotProps.label
+        imageUploadGroups.push(g)
+      }
+      attributes.push(...flattenObjectAttributes(propName, [propName], propSchema, requiredSet.has(propName), rootSchema, 0, pushGroup))
       continue
     }
 
@@ -153,6 +176,7 @@ function analyzeElement (elementSchema: Schema, rootSchema: Schema): TagDescript
   const descriptor: TagDescriptor = { tagName, contentProperty, childrenSlots, attributes, hiddenProperties }
   const titles = extractTitles(elementSchema)
   if (titles) descriptor.titles = titles
+  if (imageUploadGroups.length > 0) descriptor.imageUploadGroups = imageUploadGroups
   return descriptor
 }
 
@@ -285,9 +309,23 @@ function flattenObjectAttributes (
   objectSchema: Schema,
   parentRequired: boolean,
   rootSchema: Schema,
-  depth = 0
+  depth = 0,
+  onImageUploadGroup?: (group: ImageUploadGroup) => void
 ): AttributeDescriptor[] {
   const attrs: AttributeDescriptor[] = []
+
+  // If this object itself declares an image-upload slot, record a group.
+  // The depth > 0 guard avoids duplicating the top-level detection already
+  // done inside analyzeElement, which holds the authoritative jsonPath for
+  // top-level object attributes.
+  const slotProps = getImageUploadSlotProps(objectSchema)
+  if (slotProps && onImageUploadGroup && depth > 0) {
+    const group: ImageUploadGroup = { jsonPath: [...basePath] }
+    if (slotProps.width !== undefined) group.width = slotProps.width
+    if (slotProps.height !== undefined) group.height = slotProps.height
+    if (slotProps.label !== undefined) group.label = slotProps.label
+    onImageUploadGroup(group)
+  }
 
   // For discriminated unions (oneOf with branches), collect properties from all branches
   if (objectSchema.oneOf && !objectSchema.properties) {
@@ -305,7 +343,7 @@ function flattenObjectAttributes (
         const jsonPath = [...basePath, propName]
         const isReq = parentRequired && branchRequired.has(propName)
         if (isObjectSchema(propSchema) && depth < 3) {
-          attrs.push(...flattenObjectAttributes(attrName, jsonPath, propSchema, isReq, rootSchema, depth + 1))
+          attrs.push(...flattenObjectAttributes(attrName, jsonPath, propSchema, isReq, rootSchema, depth + 1, onImageUploadGroup))
         } else {
           const attr = makeAttributeDescriptor(attrName, jsonPath, propSchema, isReq)
           if (attr) attrs.push(attr)
@@ -325,7 +363,7 @@ function flattenObjectAttributes (
     const isReq = parentRequired && requiredSet.has(propName)
 
     if (isObjectSchema(propSchema) && depth < 3) {
-      attrs.push(...flattenObjectAttributes(attrName, jsonPath, propSchema, isReq, rootSchema, depth + 1))
+      attrs.push(...flattenObjectAttributes(attrName, jsonPath, propSchema, isReq, rootSchema, depth + 1, onImageUploadGroup))
     } else {
       const attr = makeAttributeDescriptor(attrName, jsonPath, propSchema, isReq)
       if (attr) attrs.push(attr)

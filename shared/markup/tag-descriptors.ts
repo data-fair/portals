@@ -1156,7 +1156,23 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Image",
       "fr": "Image"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "image"
+        ],
+        "width": 2400,
+        "label": "Chargez une image"
+      },
+      {
+        "jsonPath": [
+          "wideImage"
+        ],
+        "width": 2560,
+        "label": "Chargez une image"
+      }
+    ]
   },
   "iframe": {
     "tagName": "iframe",
@@ -2811,7 +2827,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Colored background section",
       "fr": "Section sur fond coloré"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "background",
+          "image"
+        ],
+        "width": 2560,
+        "label": "Chargez une image"
+      }
+    ]
   },
   "card": {
     "tagName": "card",
@@ -3846,7 +3872,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Card",
       "fr": "Boite"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "thumbnail",
+          "image"
+        ],
+        "width": 1280,
+        "label": "Image"
+      },
+      {
+        "jsonPath": [
+          "background",
+          "image"
+        ],
+        "width": 2400,
+        "label": "Chargez une image"
+      }
+    ]
   },
   "two-columns": {
     "tagName": "two-columns",
@@ -7138,7 +7182,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Datasets list",
       "fr": "Liste de jeux de données"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "dataset-card": {
     "tagName": "dataset-card",
@@ -7962,7 +8017,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Dataset card",
       "fr": "Vignette d'un jeu de données"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "dataset-table": {
     "tagName": "dataset-table",
@@ -9807,7 +9873,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Reuses list",
       "fr": "Liste de réutilisations"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "reuse-card": {
     "tagName": "reuse-card",
@@ -10100,7 +10177,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Reuse card",
       "fr": "Vignette de réutilisation"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "event-catalog": {
     "tagName": "event-catalog",
@@ -10722,7 +10810,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Events list",
       "fr": "Liste d'événements"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "event-card": {
     "tagName": "event-card",
@@ -11001,7 +11100,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "Event card",
       "fr": "Vignette d'événement"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "news-catalog": {
     "tagName": "news-catalog",
@@ -11612,7 +11722,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "News list",
       "fr": "Liste d'actualités"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   },
   "news-card": {
     "tagName": "news-card",
@@ -11891,6 +12012,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
     "titles": {
       "en": "News card",
       "fr": "Vignette d'actualité"
-    }
+    },
+    "imageUploadGroups": [
+      {
+        "jsonPath": [
+          "cardConfig",
+          "thumbnail",
+          "default"
+        ],
+        "width": 1280,
+        "label": "Image par défaut"
+      }
+    ]
   }
 }
