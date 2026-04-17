@@ -4,6 +4,8 @@ export interface TagDescriptor {
   childrenSlots: ChildrenSlot[]
   attributes: AttributeDescriptor[]
   hiddenProperties: string[]
+  /** Locale → title, e.g. { en: "Banner", fr: "Bannière" }. Omitted when no title is declared in the schema. */
+  titles?: Record<string, string>
 }
 
 export interface ChildrenSlot {
@@ -15,6 +17,8 @@ export interface ChildrenSlot {
   itemAttributes?: AttributeDescriptor[]
   /** Whether items in this slot are page elements (true) or structured objects with a children sub-property (false for tabs/panels) or link items */
   kind: 'direct' | 'structured' | 'link'
+  /** Locale → title, taken from the array property's schema when available. Omitted otherwise. */
+  titles?: Record<string, string>
 }
 
 export interface AttributeDescriptor {
@@ -31,4 +35,8 @@ export interface AttributeDescriptor {
   required: boolean
   /** Default value from the schema */
   default?: unknown
+  /** Locale → title for the attribute itself. Omitted when no title is declared in the schema. */
+  titles?: Record<string, string>
+  /** For enum attributes: per-value localized titles, keyed by value coerced to string. Omitted when no branch carries a title. */
+  enumTitles?: Record<string, Record<string, string>>
 }
