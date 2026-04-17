@@ -8,8 +8,8 @@ export interface CatalogReturn<T, F> {
   loading: Ref<boolean>
   currentPage: Ref<number>
   totalPages: ComputedRef<number>
-  sort: WritableComputedRef<string | undefined>
-  order: WritableComputedRef<'-1' | '1' | undefined>
+  sort: Ref<string | undefined>
+  order: Ref<'-1' | '1' | undefined>
   goToPage: (page: number) => Promise<void>
   loadMore: (paginationPosition?: string) => Promise<void>
   filters: F
@@ -31,43 +31,15 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
 ): CatalogReturn<T, F> {
   const pageSize = 20
   const defaultSort = element.defaultSort ?? config.defaultSortFallback
-  const defaultSortParts = defaultSort.split(':')
-  const defaultField = defaultSortParts[0]
-  const defaultOrder = defaultSortParts[1] as '-1' | '1'
+  const [defaultField, defaultOrder] = defaultSort.split(':') as [string, '-1' | '1']
 
   const filters = config.filterDefs()
   const sortFilter = useStringSearchParam('sort', { default: defaultSort })
 
-  // sort and order are derived from sortFilter (URL source of truth)
-  const sort = computed({
-    get: () => {
-      const val = sortFilter.value
-      if (!val) return undefined
-      const idx = val.lastIndexOf(':')
-      return idx > 0 ? val.substring(0, idx) : undefined
-    },
-    set: (v: string | undefined) => {
-      const ord = order.value ?? defaultOrder
-      sortFilter.value = v ? `${v}:${ord}` : defaultSort
-    }
-  })
-
-  const order = computed({
-    get: () => {
-      const val = sortFilter.value
-      if (!val) return undefined
-      const idx = val.lastIndexOf(':')
-      if (idx > 0) {
-        const o = val.substring(idx + 1)
-        return (o === '1' || o === '-1') ? o as '-1' | '1' : undefined
-      }
-      return undefined
-    },
-    set: (v: '-1' | '1' | undefined) => {
-      const field = sort.value ?? defaultField
-      sortFilter.value = `${field}:${v ?? defaultOrder}`
-    }
-  })
+  // sort and order stay empty by default in the UI (like catalog-filters),
+  // sortFilter holds the actual value used for the query
+  const sort = ref<string>()
+  const order = ref<'-1' | '1'>()
 
   const currentPage = ref(1)
   const displayedItems = ref<T[]>([]) as Ref<T[]>
@@ -80,9 +52,22 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
 
-  // Initialize displayedItems with SSR data (available via Nuxt payload)
-  if (itemsFetch.data.value?.results) {
-    displayedItems.value = [...itemsFetch.data.value.results]
+  // Initialize displayedItems from fetched data. On SSR/hydration the payload
+  // is available synchronously; on client-side nav we wait for the promise.
+  let initialized = false
+  const initFromData = () => {
+    if (initialized) return
+    if (itemsFetch.data.value?.results) {
+      displayedItems.value = [...itemsFetch.data.value.results]
+      initialized = true
+    }
+  }
+  initFromData()
+  if (!initialized) {
+    const stop = watch(() => itemsFetch.data.value, () => {
+      initFromData()
+      if (initialized) stop()
+    })
   }
 
   const goToPage = async (page: number) => {
@@ -112,6 +97,13 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
       loading.value = false
     }
   }
+
+  // When user changes sort/order in UI, update the URL-bound sortFilter
+  watch([sort, order], () => {
+    const field = sort.value || defaultField
+    const ord = order.value || defaultOrder
+    sortFilter.value = `${field}:${ord}`
+  })
 
   // Watch all filters + sort to reset pagination and re-fetch
   const filterRefs = [...Object.values(filters), sortFilter]
