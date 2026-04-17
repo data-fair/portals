@@ -28,6 +28,9 @@ jobs:
     - name: Use localhost as DEV_HOST in CI
       run: sed -i 's/^DEV_HOST=.*/DEV_HOST=localhost/' .env
 
+    - name: Build types
+      run: npm run build-types
+
     - name: Start dev API
       run: NODE_CONFIG_DIR=./api/config/ NODE_ENV=test dotenv -- npm -w api run dev &
 
