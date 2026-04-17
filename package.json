@@ -26,8 +26,7 @@
     "api",
     "ui",
     "portal",
-    "shared/markdown",
-    "types-portals"
+    "shared/markdown"
   ],
   "repository": {
     "type": "git",

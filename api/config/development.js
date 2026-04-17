@@ -8,9 +8,6 @@ export default {
   privateDirectoryUrl: `http://localhost:${process.env.SD_PORT}`,
   privateEventsUrl: `http://localhost:${process.env.EVENTS_PORT}`,
   mongoUrl: `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`,
-  elasticsearch: {
-    nodes: [`http://localhost:${process.env.ES_PORT}`]
-  },
   tmpDir: './tmp',
   observer: {
     active: false,
@@ -20,9 +17,7 @@ export default {
     identities: 'secret-identities',
     events: 'secret-events',
     sites: 'secret-sites',
-    ingress: 'secret-ingress',
-    pseudoSession: 'secret-pseudo-session',
-    searchPages: 'secret-search-pages'
+    ingress: 'secret-ingress'
   },
   portalUrlPattern: `http://{subdomain}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,
