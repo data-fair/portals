@@ -5,6 +5,30 @@ import { syntaxTree } from '@codemirror/language'
 import { tagDescriptors } from '../tag-descriptors.ts'
 import type { AttributeDescriptor } from '../types.ts'
 
+/**
+ * Context describing an attribute-value cursor position, passed to a
+ * user-provided `asyncValueCompletions` callback. The callback is expected to
+ * return CodeMirror completion items (or `null`/empty array for no
+ * suggestions). The markup bundle takes care of merging them with static
+ * schema-derived options (enum / boolean).
+ */
+export interface AttributeValueContext {
+  /** Current tag name (real or virtual). */
+  tagName: string
+  /** Attribute name as it appears in markup (may contain dots). */
+  attributeName: string
+  /** JSON path within the element, e.g. `["background", "color"]`. */
+  attributePath: string[]
+  /** Value already typed between the quotes. */
+  currentValue: string
+  /** Start offset of the value content (just inside the opening quote). */
+  from: number
+  /** End offset of the value content (just before the closing quote). */
+  to: number
+}
+
+export type AsyncValueCompletions = (ctx: AttributeValueContext) => Promise<Completion[] | null>
+
 function localized (titles: Record<string, string> | undefined, locale: string): string | undefined {
   if (!titles) return undefined
   return titles[locale] ?? titles.en ?? Object.values(titles)[0]
@@ -76,7 +100,7 @@ function findAttributeDescriptor (tagName: string, attrName: string): AttributeD
   return attrs.find(a => a.name === attrName) ?? null
 }
 
-function valueOptionsFor (attr: AttributeDescriptor, locale: string): Completion[] | null {
+function valueOptionsFor (attr: AttributeDescriptor, locale: string): Completion[] {
   if (attr.enumValues && attr.enumValues.length > 0) {
     return attr.enumValues.map(v => {
       const s = String(v)
@@ -93,7 +117,19 @@ function valueOptionsFor (attr: AttributeDescriptor, locale: string): Completion
       { label: 'false', type: 'constant' as const }
     ]
   }
-  return null
+  return []
+}
+
+function mergeCompletions (primary: Completion[], secondary: Completion[]): Completion[] {
+  if (secondary.length === 0) return primary
+  const seen = new Set(primary.map(o => o.label))
+  const merged = primary.slice()
+  for (const o of secondary) {
+    if (seen.has(o.label)) continue
+    seen.add(o.label)
+    merged.push(o)
+  }
+  return merged
 }
 
 type Context =
@@ -155,22 +191,48 @@ function detectContext (ctx: CompletionContext): Context | null {
   return null
 }
 
-export function portalMarkupCompletion (locale: string): CompletionSource {
-  return (ctx: CompletionContext): CompletionResult | null => {
+export function portalMarkupCompletion (
+  locale: string,
+  opts: { asyncValueCompletions?: AsyncValueCompletions } = {}
+): CompletionSource {
+  const asyncValueCompletions = opts.asyncValueCompletions
+  return (ctx: CompletionContext): CompletionResult | Promise<CompletionResult | null> | null => {
     const which = detectContext(ctx)
     if (!which) return null
 
     if (which.kind === 'attrvalue') {
       const attr = findAttributeDescriptor(which.tagName, which.attrName)
       if (!attr) return null
-      const options = valueOptionsFor(attr, locale)
-      if (!options) return null
-      return {
-        from: which.valueFrom,
-        to: which.valueTo,
-        options,
-        validFor: /^[^"]*$/
+      const staticOptions = valueOptionsFor(attr, locale)
+      if (!asyncValueCompletions) {
+        if (staticOptions.length === 0) return null
+        return {
+          from: which.valueFrom,
+          to: which.valueTo,
+          options: staticOptions,
+          validFor: /^[^"]*$/
+        }
       }
+      const attrCtx: AttributeValueContext = {
+        tagName: which.tagName,
+        attributeName: which.attrName,
+        attributePath: attr.jsonPath,
+        currentValue: ctx.state.sliceDoc(which.valueFrom, which.valueTo),
+        from: which.valueFrom,
+        to: which.valueTo
+      }
+      return Promise.resolve(asyncValueCompletions(attrCtx))
+        .catch(() => null)
+        .then(asyncOptions => {
+          const merged = mergeCompletions(staticOptions, asyncOptions ?? [])
+          if (merged.length === 0) return null
+          return {
+            from: which.valueFrom,
+            to: which.valueTo,
+            options: merged,
+            validFor: /^[^"]*$/
+          }
+        })
     }
 
     if (which.kind === 'tagname') {

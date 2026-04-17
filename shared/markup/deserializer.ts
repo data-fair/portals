@@ -1,4 +1,4 @@
-import type { AttributeDescriptor, ChildrenSlot, TagDescriptor } from './types.ts'
+import type { AttributeDescriptor, ChildrenSlot, MarkupRange, MarkupSourceMap, TagDescriptor } from './types.ts'
 import { tagDescriptors } from './tag-descriptors.ts'
 import { walkElements } from './walker.ts'
 
@@ -38,6 +38,13 @@ export interface DeserializeError {
 export interface DeserializeResult {
   elements: any[] | null
   errors: DeserializeError[]
+  /**
+   * Mapping from JSON pointer (relative to the elements-array root) to markup
+   * character ranges. Populated on a best-effort basis — entries exist for
+   * every fully-parsed tag/attribute regardless of whether the overall parse
+   * succeeded.
+   */
+  sourceMap: MarkupSourceMap
 }
 
 interface Parser {
@@ -81,7 +88,12 @@ function parseIdent (p: Parser): string {
   return p.src.slice(start, p.pos)
 }
 
-function parseAttributes (p: Parser): Record<string, string> {
+interface AttrRange {
+  name: MarkupRange
+  value: MarkupRange
+}
+
+function parseAttributes (p: Parser, attrRanges: Record<string, AttrRange>): Record<string, string> {
   const attrs: Record<string, string> = {}
   for (;;) {
     skipWhitespace(p)
@@ -90,7 +102,9 @@ function parseAttributes (p: Parser): Record<string, string> {
     if (ch === '>' || ch === '/') return attrs
     const nameLine = p.line
     const nameCol = p.col
+    const nameFrom = p.pos
     const name = parseIdent(p)
+    const nameTo = p.pos
     if (!name) {
       error(p, `unexpected character '${ch}' in attributes`, nameLine, nameCol)
       advance(p, 1)
@@ -108,15 +122,20 @@ function parseAttributes (p: Parser): Record<string, string> {
       continue
     }
     advance(p, 1) // opening "
-    const valStart = p.pos
+    const valFrom = p.pos
     while (p.pos < p.src.length && p.src[p.pos] !== '"') advance(p, 1)
-    const rawValue = p.src.slice(valStart, p.pos)
+    const valTo = p.pos
+    const rawValue = p.src.slice(valFrom, valTo)
     if (p.src[p.pos] !== '"') {
       error(p, `unterminated attribute value for '${name}'`, nameLine, nameCol)
       return attrs
     }
     advance(p, 1) // closing "
     attrs[name] = unescapeAttr(rawValue)
+    attrRanges[name] = {
+      name: { from: nameFrom, to: nameTo },
+      value: { from: valFrom, to: valTo }
+    }
   }
 }
 
@@ -128,6 +147,15 @@ interface ParsedTag {
   rawContent?: string
   startLine: number
   startCol: number
+  /** Offset of the leading `<`. */
+  tagStart: number
+  /** Offset one past the `>` that closes the opening tag (or `/>` for self-closing). */
+  openTagEnd: number
+  /** Offset of the first character after the open tag's `>`. Undefined for self-closing. */
+  contentStart?: number
+  /** Offset of the `<` that starts the closing tag. Undefined for self-closing. */
+  contentEnd?: number
+  attrRanges: Record<string, AttrRange>
 }
 
 type ParsedNode = ParsedTag
@@ -148,6 +176,7 @@ function readRawContent (p: Parser, closingTag: string): string {
 function parseTag (p: Parser, allowRawContentFor?: Set<string>): ParsedTag | null {
   const startLine = p.line
   const startCol = p.col
+  const tagStart = p.pos
   if (p.src[p.pos] !== '<') {
     error(p, 'expected \'<\'', startLine, startCol)
     advance(p, 1)
@@ -166,7 +195,8 @@ function parseTag (p: Parser, allowRawContentFor?: Set<string>): ParsedTag | nul
     error(p, 'expected tag name after \'<\'', startLine, startCol)
     return null
   }
-  const attrs = parseAttributes(p)
+  const attrRanges: Record<string, AttrRange> = {}
+  const attrs = parseAttributes(p, attrRanges)
   skipWhitespace(p)
   let selfClosing = false
   if (p.src[p.pos] === '/') {
@@ -177,31 +207,42 @@ function parseTag (p: Parser, allowRawContentFor?: Set<string>): ParsedTag | nul
       advance(p, 1)
     }
     selfClosing = true
-    return { name, attrs, selfClosing, children: [], startLine, startCol }
+    const openTagEnd = p.pos
+    return { name, attrs, selfClosing, children: [], startLine, startCol, tagStart, openTagEnd, attrRanges }
   }
   if (p.src[p.pos] !== '>') {
     error(p, `expected '>' to close opening tag <${name}>`, p.line, p.col)
-    return { name, attrs, selfClosing: true, children: [], startLine, startCol }
+    const openTagEnd = p.pos
+    return { name, attrs, selfClosing: true, children: [], startLine, startCol, tagStart, openTagEnd, attrRanges }
   }
   advance(p, 1) // >
+  const openTagEnd = p.pos
 
-  const tag: ParsedTag = { name, attrs, selfClosing: false, children: [], startLine, startCol }
+  const tag: ParsedTag = { name, attrs, selfClosing: false, children: [], startLine, startCol, tagStart, openTagEnd, attrRanges }
 
   if (allowRawContentFor && allowRawContentFor.has(name)) {
+    const contentStart = p.pos
     tag.rawContent = readRawContent(p, name)
+    tag.contentStart = contentStart
+    tag.contentEnd = p.pos
     // consume closing tag
     if (p.src.startsWith(`</${name}>`, p.pos)) advance(p, `</${name}>`.length)
     return tag
   }
 
+  const contentStart = p.pos
   // parse children until </name>
   for (;;) {
     skipWhitespace(p)
     if (p.pos >= p.src.length) {
       error(p, `missing closing tag </${name}>`, startLine, startCol)
+      tag.contentStart = contentStart
+      tag.contentEnd = p.pos
       break
     }
     if (p.src.startsWith(`</${name}>`, p.pos)) {
+      tag.contentStart = contentStart
+      tag.contentEnd = p.pos
       advance(p, `</${name}>`.length)
       break
     }
@@ -382,11 +423,104 @@ function contentPropertyTags (): Set<string> {
   return out
 }
 
+function newSourceMap (): MarkupSourceMap {
+  return { byPointer: new Map(), byElementPointer: new Map() }
+}
+
+function recordElementPosition (tag: ParsedTag, pointer: string, sourceMap: MarkupSourceMap): void {
+  const openRange: MarkupRange = { from: tag.tagStart, to: tag.openTagEnd }
+  sourceMap.byElementPointer.set(pointer, openRange)
+  if (!sourceMap.byPointer.has(pointer)) sourceMap.byPointer.set(pointer, openRange)
+}
+
+function recordAttributes (
+  tag: ParsedTag,
+  pointer: string,
+  attrs: AttributeDescriptor[],
+  sourceMap: MarkupSourceMap
+): void {
+  const attrsByName = new Map(attrs.map(a => [a.name, a]))
+  for (const [attrName, ranges] of Object.entries(tag.attrRanges)) {
+    const attr = attrsByName.get(attrName)
+    if (!attr) continue
+    const attrPointer = `${pointer}/${attr.jsonPath.join('/')}`
+    sourceMap.byPointer.set(attrPointer, ranges.value)
+  }
+}
+
+function populateElementSourceMap (tag: ParsedTag, pointer: string, sourceMap: MarkupSourceMap): void {
+  const descriptor = tagDescriptors[tag.name]
+  if (!descriptor) return
+  recordElementPosition(tag, pointer, sourceMap)
+  recordAttributes(tag, pointer, descriptor.attributes, sourceMap)
+
+  if (descriptor.contentProperty) {
+    if (tag.contentStart !== undefined && tag.contentEnd !== undefined) {
+      sourceMap.byPointer.set(
+        `${pointer}/${descriptor.contentProperty}`,
+        { from: tag.contentStart, to: tag.contentEnd }
+      )
+    }
+    return
+  }
+
+  if (descriptor.childrenSlots.length === 0) return
+
+  const slotsByVirtualTag = new Map<string, ChildrenSlot>()
+  let directSlot: ChildrenSlot | null = null
+  for (const slot of descriptor.childrenSlots) {
+    if (slot.virtualTag) slotsByVirtualTag.set(slot.virtualTag, slot)
+    else directSlot = slot
+  }
+
+  const indexByProperty: Record<string, number> = {}
+
+  for (const child of tag.children) {
+    const virtualSlot = slotsByVirtualTag.get(child.name)
+    if (virtualSlot) {
+      const slotProp = virtualSlot.property
+      if (virtualSlot.kind === 'direct') {
+        // Virtual wrapper has no JSON correspondence; each grandchild is an element.
+        for (const grandchild of child.children) {
+          indexByProperty[slotProp] ??= 0
+          const gcPointer = `${pointer}/${slotProp}/${indexByProperty[slotProp]++}`
+          populateElementSourceMap(grandchild, gcPointer, sourceMap)
+        }
+      } else if (virtualSlot.kind === 'structured') {
+        indexByProperty[slotProp] ??= 0
+        const itemIdx = indexByProperty[slotProp]++
+        const itemPointer = `${pointer}/${slotProp}/${itemIdx}`
+        recordElementPosition(child, itemPointer, sourceMap)
+        recordAttributes(child, itemPointer, virtualSlot.itemAttributes ?? [], sourceMap)
+        for (let i = 0; i < child.children.length; i++) {
+          const gcPointer = `${itemPointer}/children/${i}`
+          populateElementSourceMap(child.children[i], gcPointer, sourceMap)
+        }
+      } else {
+        // link — self-closing item
+        indexByProperty[slotProp] ??= 0
+        const itemIdx = indexByProperty[slotProp]++
+        const itemPointer = `${pointer}/${slotProp}/${itemIdx}`
+        recordElementPosition(child, itemPointer, sourceMap)
+        recordAttributes(child, itemPointer, virtualSlot.itemAttributes ?? [], sourceMap)
+      }
+      continue
+    }
+    if (directSlot) {
+      const slotProp = directSlot.property
+      indexByProperty[slotProp] ??= 0
+      const childPointer = `${pointer}/${slotProp}/${indexByProperty[slotProp]++}`
+      populateElementSourceMap(child, childPointer, sourceMap)
+    }
+  }
+}
+
 /**
  * Parse markup text into a page-elements array.
  *
- * Returns `{ elements, errors }`. When `errors.length > 0`, `elements` is `null`
- * and callers must leave underlying data untouched.
+ * Returns `{ elements, errors, sourceMap }`. When `errors.length > 0`,
+ * `elements` is `null` and callers must leave underlying data untouched, but
+ * `sourceMap` is still populated on a best-effort basis for whatever parsed.
  */
 export function deserializeElements (src: string): DeserializeResult {
   const p = makeParser(src)
@@ -405,14 +539,19 @@ export function deserializeElements (src: string): DeserializeResult {
     if (tag) roots.push(tag)
   }
 
-  if (p.errors.length > 0) return { elements: null, errors: p.errors }
+  const sourceMap = newSourceMap()
+  for (let i = 0; i < roots.length; i++) {
+    populateElementSourceMap(roots[i], `/${i}`, sourceMap)
+  }
+
+  if (p.errors.length > 0) return { elements: null, errors: p.errors, sourceMap }
 
   const elements: any[] = []
   for (const tag of roots) {
     const el = buildElement(tag, p)
     if (el) elements.push(el)
   }
-  if (p.errors.length > 0) return { elements: null, errors: p.errors }
+  if (p.errors.length > 0) return { elements: null, errors: p.errors, sourceMap }
   healUuids(elements)
-  return { elements, errors: [] }
+  return { elements, errors: [], sourceMap }
 }

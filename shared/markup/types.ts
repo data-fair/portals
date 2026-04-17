@@ -80,4 +80,13 @@ export interface ImageUploadGroup {
   height?: number
   /** label prop from the slot (raw schema value — not localized today). */
   label?: string
+  /**
+   * Raw `layout.if` JavaScript expression from the schema (e.g.
+   * "!parent.data?.banner"). The markup widget evaluates it against the
+   * containing element's data to decide whether to render — json-layout's
+   * own evaluator isn't reachable here because the outer StatefulLayout
+   * delegates `/elements` to a custom slot and never materializes child
+   * StateNodes that would carry the evaluated visibility.
+   */
+  ifExpression?: string
 }

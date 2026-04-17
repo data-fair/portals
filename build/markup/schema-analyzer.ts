@@ -22,14 +22,15 @@ const VIRTUAL_TAG_NAMES: Record<string, string> = {
   panels: 'panel'
 }
 
-function getImageUploadSlotProps (schema: Schema): { width?: number, height?: number, label?: string } | null {
+function getImageUploadSlotProps (schema: Schema): { width?: number, height?: number, label?: string, ifExpression?: string } | null {
   const slot = schema.layout?.slots?.component
   if (!slot || slot.name !== 'image-upload') return null
   const props = slot.props ?? {}
-  const out: { width?: number, height?: number, label?: string } = {}
+  const out: { width?: number, height?: number, label?: string, ifExpression?: string } = {}
   if (typeof props.width === 'number') out.width = props.width
   if (typeof props.height === 'number') out.height = props.height
   if (typeof props.label === 'string') out.label = props.label
+  if (typeof schema.layout?.if === 'string') out.ifExpression = schema.layout.if
   return out
 }
 
@@ -160,6 +161,7 @@ function analyzeElement (elementSchema: Schema, rootSchema: Schema): TagDescript
         if (slotProps.width !== undefined) g.width = slotProps.width
         if (slotProps.height !== undefined) g.height = slotProps.height
         if (slotProps.label !== undefined) g.label = slotProps.label
+        if (slotProps.ifExpression !== undefined) g.ifExpression = slotProps.ifExpression
         imageUploadGroups.push(g)
       }
       attributes.push(...flattenObjectAttributes(propName, [propName], propSchema, requiredSet.has(propName), rootSchema, 0, pushGroup))
@@ -324,6 +326,7 @@ function flattenObjectAttributes (
     if (slotProps.width !== undefined) group.width = slotProps.width
     if (slotProps.height !== undefined) group.height = slotProps.height
     if (slotProps.label !== undefined) group.label = slotProps.label
+    if (slotProps.ifExpression !== undefined) group.ifExpression = slotProps.ifExpression
     onImageUploadGroup(group)
   }
 

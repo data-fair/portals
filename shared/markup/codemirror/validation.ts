@@ -1,18 +1,38 @@
 import { linter, type Diagnostic } from '@codemirror/lint'
+import { StateEffect, StateField, type Extension } from '@codemirror/state'
 import type { EditorView } from '@codemirror/view'
 import { deserializeElements } from '../deserializer.ts'
 
 /**
- * CM6 lint extension. On each (debounced) document change, runs the
- * hand-written markup deserializer and surfaces each parse/shape error as an
- * inline Diagnostic anchored at the reported line/col.
- *
- * Scope: deserializer errors only (unknown tags, malformed attributes,
- * mismatched close tags, type-coercion failures, etc.). JSON Schema / ajv
- * validation is intentionally not run here; it will be added later when the
- * markup editor shares a StatefulLayout with the form editor.
+ * Dispatch to replace the externally-provided diagnostics (e.g. JSON-Schema
+ * validation errors distributed from a StatefulLayout). Use:
+ *   view.dispatch({ effects: setMarkupExternalDiagnostics.of(diagnostics) })
  */
-export const portalMarkupLinter = linter((view: EditorView): Diagnostic[] => {
+export const setMarkupExternalDiagnostics = StateEffect.define<Diagnostic[]>()
+
+/**
+ * Holds the last-dispatched external diagnostics. Merged with deserializer
+ * diagnostics by `portalMarkupLinter`.
+ */
+const markupExternalDiagnosticsField = StateField.define<Diagnostic[]>({
+  create: () => [],
+  update (value, tr) {
+    for (const effect of tr.effects) {
+      if (effect.is(setMarkupExternalDiagnostics)) return effect.value
+    }
+    return value
+  }
+})
+
+/**
+ * CM6 lint extension. Merges:
+ *  - deserializer diagnostics (parse/shape errors: unknown tags, malformed
+ *    attributes, type-coercion failures, etc.), anchored at the reported
+ *    line/col;
+ *  - external diagnostics set via `setMarkupExternalDiagnostics` (e.g. ajv
+ *    errors translated through a source map by a StatefulLayout adapter).
+ */
+const deserializerLinter = linter((view: EditorView): Diagnostic[] => {
   const text = view.state.doc.toString()
   if (text === '') return []
   const { errors } = deserializeElements(text)
@@ -32,3 +52,14 @@ export const portalMarkupLinter = linter((view: EditorView): Diagnostic[] => {
   }
   return diagnostics
 }, { delay: 300 })
+
+const externalDiagnosticsLinter = linter(
+  (view: EditorView): Diagnostic[] => view.state.field(markupExternalDiagnosticsField),
+  { needsRefresh: (update) => update.transactions.some(tr => tr.effects.some(e => e.is(setMarkupExternalDiagnostics))) }
+)
+
+export const portalMarkupLinter: Extension = [
+  markupExternalDiagnosticsField,
+  deserializerLinter,
+  externalDiagnosticsLinter
+]

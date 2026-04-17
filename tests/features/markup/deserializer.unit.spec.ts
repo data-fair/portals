@@ -10,6 +10,15 @@ test.describe('markup deserializer', () => {
     assert.deepEqual(elements, [{ type: 'divider' }])
   })
 
+  test('result always includes a source map', () => {
+    const ok = deserializeElements('<divider />')
+    assert.ok(ok.sourceMap.byElementPointer.has('/0'))
+    const bad = deserializeElements('<not-a-tag />')
+    // elements is null but the source map is still populated on a best-effort basis
+    assert.equal(bad.elements, null)
+    assert.ok(bad.sourceMap, 'source map is always defined')
+  })
+
   test('parses content property as inner text', () => {
     const { elements, errors } = deserializeElements(
       '<title titleSize="h2">Hello world</title>'

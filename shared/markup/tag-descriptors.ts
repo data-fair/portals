@@ -1163,14 +1163,16 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "image"
         ],
         "width": 2400,
-        "label": "Chargez une image"
+        "label": "Chargez une image",
+        "ifExpression": "!parent.data?.banner"
       },
       {
         "jsonPath": [
           "wideImage"
         ],
         "width": 2560,
-        "label": "Chargez une image"
+        "label": "Chargez une image",
+        "ifExpression": "parent.data?.banner"
       }
     ]
   },

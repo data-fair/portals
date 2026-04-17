@@ -3,15 +3,27 @@
     ref="editorEl"
     :class="['markup-editor', hasErrors ? 'markup-editor--error' : '']"
   />
+  <teleport
+    v-for="w in activeWidgets"
+    :key="w.key"
+    :to="w.host"
+  >
+    <markup-image-widget
+      :element-pointer="w.elementPointer"
+      :group="w.group"
+      :elements-node="node ?? null"
+      :stateful-layout="statefulLayout ?? null"
+      :resource="pageRef"
+    />
+  </teleport>
 </template>
 
 <script setup lang="ts">
 import type { PageElement } from '#api/types/page-elements/index.ts'
 import type { StatefulLayout } from '@json-layout/core/state'
 import type { Completion } from '@codemirror/autocomplete'
-import { createApp } from 'vue'
-import { serializeElements, deserializeElements, tagDescriptors } from '@data-fair/portals-shared-markup'
-import type { MarkupSourceMap } from '@data-fair/portals-shared-markup'
+import { shallowRef } from 'vue'
+import { serializeElements, deserializeElements, tagDescriptors, type ImageUploadGroup, type MarkupSourceMap } from '@data-fair/portals-shared-markup'
 import {
   portalMarkupExtensions,
   portalMarkupImageUploadWidgets,
@@ -53,6 +65,15 @@ const hasErrors = ref(false)
 let view: EditorView | null = null
 let lastExternalText = ''
 let lastSourceMap: MarkupSourceMap = { byPointer: new Map(), byElementPointer: new Map() }
+
+interface ActiveWidget {
+  key: string
+  host: HTMLElement
+  elementPointer: string
+  group: ImageUploadGroup
+}
+const activeWidgets = shallowRef<ActiveWidget[]>([])
+let widgetSeq = 0
 
 function elementsDataPath (): string {
   return (props.node?.dataPath ?? '') as string
@@ -117,13 +138,16 @@ function buildExtensions (locale: string) {
     portalMarkupExtensions({ locale, asyncValueCompletions }),
     portalMarkupImageUploadWidgets({
       tagDescriptors,
+      // Instead of createApp-per-widget (which loses access to the main app's
+      // Vuetify + uiNotif + session plugins), we register the mount site as a
+      // Teleport target in the parent template. The widget renders as part of
+      // this component's tree and inherits all plugins/providers.
       mountWidget: (container, { elementPointer, group }) => {
-        const app = createApp(MarkupImageWidget, { elementPointer, group })
-        app.provide('markup-stateful-layout', props.statefulLayout)
-        app.provide('markup-elements-data-path', elementsDataPath())
-        app.provide('markup-resource', pageRef)
-        app.mount(container)
-        return () => app.unmount()
+        const key = `${elementPointer}:${group.jsonPath.join('/')}:${widgetSeq++}`
+        activeWidgets.value = [...activeWidgets.value, { key, host: container, elementPointer, group }]
+        return () => {
+          activeWidgets.value = activeWidgets.value.filter(w => w.key !== key)
+        }
       }
     }),
     EditorView.updateListener.of((update) => {

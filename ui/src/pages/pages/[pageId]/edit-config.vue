@@ -49,6 +49,8 @@
               />
               <page-edit-elements-markup
                 v-else
+                :node="node"
+                :stateful-layout="statefulLayout"
                 :model-value="node.data"
                 @update:model-value="(data: any) => statefulLayout.input(node, data)"
               />
