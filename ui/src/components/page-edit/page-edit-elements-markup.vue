@@ -18,6 +18,9 @@ import { completionKeymap } from '@codemirror/autocomplete'
 
 const elements = defineModel<PageElement[]>({ required: true })
 
+// The CodeMirror autocomplete captures this locale at mount time. Locale
+// changes mid-session don't propagate — the Form↔Markup toggle remounts this
+// component, which re-reads `locale.value`.
 const { locale } = useI18n()
 
 const editorEl = ref<HTMLElement | null>(null)

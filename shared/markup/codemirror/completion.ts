@@ -1,4 +1,5 @@
 import type { CompletionContext, CompletionResult, CompletionSource, Completion } from '@codemirror/autocomplete'
+import type { EditorView } from '@codemirror/view'
 import type { SyntaxNode } from '@lezer/common'
 import { syntaxTree } from '@codemirror/language'
 import { tagDescriptors } from '../tag-descriptors.ts'
@@ -60,7 +61,7 @@ function attributeNameOptions (attrs: AttributeDescriptor[], locale: string): Co
     detail: localized(attr.titles, locale),
     type: 'property' as const,
     info: attr.required ? 'required' : undefined,
-    apply: (view: any, _c: Completion, from: number, to: number) => {
+    apply: (view: EditorView, _c: Completion, from: number, to: number) => {
       view.dispatch({
         changes: { from, to, insert: `${attr.name}=""` },
         selection: { anchor: from + attr.name.length + 2 }
