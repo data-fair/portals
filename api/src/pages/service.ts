@@ -8,7 +8,6 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
-import { deleteSearchPage } from '../search-pages/service.ts'
 
 const debug = debugModule('pages')
 
@@ -248,10 +247,6 @@ export const deletePage = async (page: Page) => {
     'resource.type': 'page',
     'resource._id': page._id
   })
-
-  for (const portalId of page.portals) {
-    await deleteSearchPage(portalId, 'page', page._id)
-  }
 
   await mongo.pages.deleteOne({ _id: page._id })
 }
