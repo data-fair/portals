@@ -21,10 +21,11 @@ export interface ImageUploadRange {
 
 export function computeImageUploadRanges (
   doc: string,
-  sourceMap: MarkupSourceMap,
+  sourceMap: MarkupSourceMap | null | undefined,
   tagDescriptors: Record<string, TagDescriptor>
 ): ImageUploadRange[] {
   const out: ImageUploadRange[] = []
+  if (!sourceMap?.byElementPointer || !sourceMap?.byPointer) return out
 
   for (const [elementPointer, elementRange] of sourceMap.byElementPointer) {
     const tagName = readTagName(doc, elementRange.from)
