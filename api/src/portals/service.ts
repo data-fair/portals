@@ -135,6 +135,7 @@ const getPublicationSite = (portal: Portal) => {
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
   }
+  publicationSite.sharedWithDepartments = portal.sharedWithDepartments || []
   return publicationSite
 }
 
