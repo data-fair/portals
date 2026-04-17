@@ -41,7 +41,8 @@ jobs:
       run: npm run test-deps
 
     - name: Start dev API
-      run: NODE_CONFIG_DIR=./api/config/ NODE_ENV=test dotenv -- npm -w api run dev &
+      working-directory: api
+      run: NODE_CONFIG_DIR=./config/ NODE_ENV=test node index.ts &
 
     - name: Wait for API to be ready
       run: |
@@ -54,7 +55,7 @@ jobs:
       run: npx playwright install --with-deps chromium
 
     - name: Run tests
-      run: NODE_CONFIG_DIR=./api/config/ NODE_ENV=test EVENTS_LOG_LEVEL=alert playwright test --max-failures=1
+      run: npm run test
 
     - name: Audit
       run: npm audit --omit=dev --audit-level=critical
