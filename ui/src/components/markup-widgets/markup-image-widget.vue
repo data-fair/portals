@@ -1,6 +1,6 @@
 <template>
   <span
-    v-if="node && resource"
+    v-if="visible && resource"
     class="markup-image-widget"
   >
     <image-upload
@@ -41,6 +41,13 @@ const node = computed(() => {
   if (!treeRoot) return null
   return findNodeByDataPath<any>(treeRoot, targetPath.value)
 })
+
+// json-layout keeps every schema property as a StateNode regardless of
+// visibility; the node's `layout.comp` switches between 'slot' (active) and
+// 'none' (hidden by a layout.if). That's the signal we use to avoid
+// rendering widgets for the inactive branch of a banner-gated image/wideImage
+// pair. See tests/features/markup/stateful-layout-bridge.unit.spec.ts.
+const visible = computed(() => !!node.value && (node.value as any).layout?.comp !== 'none')
 
 const label = computed(() => props.group.label ?? props.group.jsonPath.join('.'))
 
