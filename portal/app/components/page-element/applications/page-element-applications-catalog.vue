@@ -52,7 +52,6 @@ const {
   sort, order, goToPage, loadMore
 } = useCatalog<Application, ApplicationFilters>(element, {
   endpoint: '/data-fair/api/v1/applications',
-  useLocalFetch: true,
   defaultSortFallback: 'createdAt:-1',
   analyticsCategory: 'applications',
   filterDefs: () => ({

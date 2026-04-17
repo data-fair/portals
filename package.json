@@ -9,6 +9,7 @@
     "check-types": "tsc && npm -w portal run check-types && npm -w ui run check-types",
     "dev-api": "npm -w api run dev",
     "dev-deps": "mkdir -p dev/logs && docker compose --profile dev up -d --wait && docker compose --profile dev logs -f 2>&1 | tee dev/logs/docker-compose.log",
+    "test-deps": "docker compose --profile test up -d --wait",
     "dev-ui": "mkdir -p dev/logs && npm -w ui run dev 2>&1 | tee dev/logs/dev-ui.log",
     "dev-ingress-manager": "mkdir -p dev/logs && NODE_ENV=development node --disable-warning=ExperimentalWarning --watch dev/ingress-manager.ts 2>&1 | tee dev/logs/dev-ingress-manager.log",
     "dev-zellij": "dotenv -v DEV_SHELL=$(basename \"$SHELL\") -- zellij --layout .zellij.kdl",

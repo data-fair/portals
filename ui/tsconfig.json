@@ -23,6 +23,7 @@
     "paths": {
       "#api/types/*": ["../api/types/*"],
       "#api/doc/*": ["../api/doc/*"],
+      "#portal/*": ["../portal/*"],
       "~/*": ["./src/*"]
     },
 
