@@ -25,8 +25,25 @@ jobs:
     - name: Start test dependencies
       run: npm run test-deps
 
+    - name: Use localhost as DEV_HOST in CI
+      run: sed -i 's/^DEV_HOST=.*/DEV_HOST=localhost/' .env
+
+    - name: Start dev API
+      run: NODE_CONFIG_DIR=./api/config/ NODE_ENV=test dotenv -- npm -w api run dev &
+
+    - name: Wait for API to be ready
+      run: |
+        for i in $(seq 1 30); do
+          curl -s http://localhost:$(grep DEV_API_PORT .env | cut -d= -f2)/api/ping && break
+          sleep 2
+        done
+
     - name: Install Playwright browsers
       run: npx playwright install --with-deps chromium
 
     - name: Run quality checks
       run: npm run quality
+
+    - name: Stop test services
+      if: always()
+      run: docker compose --profile test down
