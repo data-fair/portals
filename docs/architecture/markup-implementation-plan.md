@@ -16,7 +16,7 @@ Everything depends on correctly classifying each element's properties from the J
 - `build/markup/schema-analyzer.ts` — walks the `oneOf` array from `page-elements` schema, resolves `$ref`s, classifies properties:
   - `_*` → hidden
   - `type` → tag name (implicit)
-  - `uuid` → always-first attribute
+  - `uuid` → first attribute (only on `application` and `dataset-table`, where it disambiguates iframe `syncParams`)
   - Array of `$ref` to element → children container
   - `content` (string) → text content
   - `type: 'object'` with `properties` → object attributes (dot-notation)
@@ -60,7 +60,7 @@ Everything depends on correctly classifying each element's properties from the J
 
 **Algorithm per element:**
 1. Look up `TagDescriptor` by `element.type`
-2. Emit `<{tagName}` then `uuid="..."` first
+2. Emit `<{tagName}` (with `uuid="..."` first, for `application` / `dataset-table`)
 3. Emit attributes in layout order, skip undefined values, use dot-notation for objects
 4. If has `contentProperty` and no children: `>{content}</{tagName}>`
 5. If has children slots: `>`, recurse into each slot (wrapping in virtual tags as needed), `</{tagName}>`

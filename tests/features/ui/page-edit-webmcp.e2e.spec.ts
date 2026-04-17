@@ -83,7 +83,7 @@ test.describe('page edit WebMCP agent integration', () => {
       type: 'generic',
       config: {
         title: 'Elements Test Page',
-        elements: [{ uuid: 'test1', type: 'title', titleSize: 'h2' }],
+        elements: [{ type: 'title', titleSize: 'h2' }],
         genericMetadata: { slug: 'elements-test' }
       },
       portals: [portal._id],

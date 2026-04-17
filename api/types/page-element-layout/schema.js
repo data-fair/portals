@@ -14,7 +14,6 @@ export default {
       required: ['type', 'opacity', 'thickness'],
       properties: {
         type: { const: 'divider' },
-        uuid: { type: 'string', layout: 'none' },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full' },
         content: {
           title: 'Contenu',
@@ -85,7 +84,6 @@ export default {
       ],
       properties: {
         type: { const: 'banner' },
-        uuid: { type: 'string', layout: 'none' },
         children: {
           type: 'array',
           layout: 'none',
@@ -217,7 +215,6 @@ export default {
       required: ['type', 'children', 'actions'],
       properties: {
         type: { const: 'card' },
-        uuid: { type: 'string', layout: 'none' },
         children: {
           type: 'array',
           layout: 'none',
@@ -413,7 +410,6 @@ export default {
       required: ['type', 'disposition', 'gutter', 'children', 'children2'],
       properties: {
         type: { const: 'two-columns' },
-        uuid: { type: 'string', layout: 'none' },
         disposition: {
           type: 'string',
           title: 'Disposition',
@@ -498,7 +494,6 @@ export default {
       required: ['type', 'children'],
       properties: {
         type: { const: 'responsive-grid' },
-        uuid: { type: 'string', layout: 'none' },
         columns: {
           type: 'integer',
           title: 'Nombre de colonnes',
@@ -555,7 +550,6 @@ export default {
       required: ['type', 'align', 'tabs'],
       properties: {
         type: { const: 'tabs' },
-        uuid: { type: 'string', layout: 'none' },
         grow: {
           type: 'boolean',
           title: 'Étendre'
@@ -619,7 +613,6 @@ export default {
       required: ['type', 'panels'],
       properties: {
         type: { const: 'expansion-panels' },
-        uuid: { type: 'string', layout: 'none' },
         // variant: {
         //   type: 'string',
         //   title: 'Variant',

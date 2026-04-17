@@ -14,7 +14,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'news-catalog' },
-        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -172,7 +171,6 @@ export default {
       required: ['type', 'columns', 'limit'],
       properties: {
         type: { const: 'news-list' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -267,7 +265,6 @@ export default {
       required: ['type', 'news', 'usePortalConfig'],
       properties: {
         type: { const: 'news-card' },
-        uuid: { type: 'string', layout: 'none' },
         news: {
           type: 'object',
           title: 'Actualité',

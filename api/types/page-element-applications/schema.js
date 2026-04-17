@@ -14,7 +14,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'applications-catalog' },
-        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -176,7 +175,6 @@ export default {
       required: ['type', 'columns', 'limit'],
       properties: {
         type: { const: 'applications-list' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',

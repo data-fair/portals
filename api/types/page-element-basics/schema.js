@@ -12,7 +12,6 @@ export default {
       required: ['type', 'titleSize'],
       properties: {
         type: { const: 'title' },
-        uuid: { type: 'string', layout: 'none' },
         content: {
           title: 'Content',
           'x-i18n-title': {
@@ -104,7 +103,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'text' },
-        uuid: { type: 'string', layout: 'none' },
         content: {
           title: 'Contenu',
           type: 'string',
@@ -140,7 +138,6 @@ export default {
       },
       properties: {
         type: { const: 'alert' },
-        uuid: { type: 'string', layout: 'none' },
         alertType: {
           type: 'string',
           title: 'Type prédéfini',
@@ -187,7 +184,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'image' },
-        uuid: { type: 'string', layout: 'none' },
         banner: {
           type: 'boolean',
           title: 'Pleine largeur',
@@ -305,7 +301,6 @@ export default {
       required: ['type', 'url'],
       properties: {
         type: { const: 'iframe' },
-        uuid: { type: 'string', layout: 'none' },
         title: {
           title: "Titre de l'iframe",
           description: "Recommandé pour l'accessibilité.",
@@ -339,7 +334,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'icon' },
-        uuid: { type: 'string', layout: 'none' },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         size: {
           type: 'integer',

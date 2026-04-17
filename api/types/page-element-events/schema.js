@@ -14,7 +14,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'event-catalog' },
-        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -176,7 +175,6 @@ export default {
       required: ['type', 'columns', 'limit'],
       properties: {
         type: { const: 'event-list' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -271,7 +269,6 @@ export default {
       required: ['type', 'event', 'usePortalConfig'],
       properties: {
         type: { const: 'event-card' },
-        uuid: { type: 'string', layout: 'none' },
         event: {
           type: 'object',
           title: 'Événement',

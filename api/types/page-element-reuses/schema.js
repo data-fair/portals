@@ -14,7 +14,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'reuses-catalog' },
-        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
@@ -168,7 +167,6 @@ export default {
       required: ['type', 'columns', 'limit'],
       properties: {
         type: { const: 'reuses-list' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -264,7 +262,6 @@ export default {
       required: ['type', 'reuse', 'usePortalConfig'],
       properties: {
         type: { const: 'reuse-card' },
-        uuid: { type: 'string', layout: 'none' },
         reuse: {
           type: 'object',
           title: 'Réutilisation',

@@ -26,9 +26,11 @@ The proposal: offer a secondary **markup editing mode** — a pseudo-HTML syntax
 Each element `type` becomes a tag name. The JSON `type` field is implicit in the tag name and not serialized as an attribute.
 
 ```html
-<!-- JSON: { "type": "title", "uuid": "a1b2c3d4", "content": "Hello", "titleSize": "h2" } -->
-<title uuid="a1b2c3d4" titleSize="h2" content="Hello" />
+<!-- JSON: { "type": "title", "content": "Hello", "titleSize": "h2" } -->
+<title titleSize="h2" content="Hello" />
 ```
+
+Only `application` and `dataset-table` carry a `uuid` attribute. It namespaces iframe URL parameters when `syncParams` is enabled so multiple embeds on the same page do not collide. The deserializer auto-heals this field: missing or duplicate uuids are regenerated at parse time.
 
 ### Property categories
 
@@ -410,7 +412,7 @@ The markup mode covers `config.elements` only — the page-level metadata (title
 
 ### Serialization details
 
-- **Attribute ordering:** derived from the VJSF `layout.children` annotations in the schema. Flatten the layout tree in order to get the canonical attribute sequence. `uuid` always comes first (identity), then the rest follows the layout order (which groups structural before styling). This ensures markup order matches what users see in form mode.
+- **Attribute ordering:** derived from the VJSF `layout.children` annotations in the schema. Flatten the layout tree in order to get the canonical attribute sequence. On the two element types that carry it (`application`, `dataset-table`), `uuid` comes first (identity); the rest follows the layout order (which groups structural before styling). This ensures markup order matches what users see in form mode.
 - **Whitespace / formatting:** 2-space indentation. Line breaks between sibling elements. Long attribute lists wrap one-per-line when exceeding ~100 characters, with continuation attributes indented to align with the first attribute. Blank line between top-level element blocks for readability.
 - **Default value omission:** preserve explicit values. The JSON model tracks whether a value was explicitly set by the user (even if it equals the schema default), so the serializer emits all values present in the JSON. This ensures lossless round-tripping.
 - **Image attributes:** use standard dot-notation (`image._id`, `image.name`, `image.mimeType`). No shorthand. If verbosity is a problem, the schema itself should be simplified (remove unnecessary object layers) rather than adding type-specific serialization.

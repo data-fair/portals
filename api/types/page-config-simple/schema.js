@@ -33,7 +33,7 @@ export default {
         title: '',
         clipboardKey: 'elements',
         listEditMode: 'dialog',
-        itemCopy: "{...item, uuid: crypto.randomUUID().split('-')[0]}"
+        itemCopy: "(item.type === 'application' || item.type === 'dataset-table') ? {...item, uuid: crypto.randomUUID().split('-')[0]} : {...item}"
       },
       items: {
         $ref: '#/$defs/element'

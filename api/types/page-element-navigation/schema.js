@@ -33,7 +33,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'button' },
-        uuid: { type: 'string', layout: 'none' },
         link: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
         usePortalConfig: {
           type: 'boolean',
@@ -80,7 +79,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'menu' },
-        uuid: { type: 'string', layout: 'none' },
         label: {
           type: 'string',
           title: 'Libellé du menu',
@@ -121,7 +119,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'breadcrumbs' },
-        uuid: { type: 'string', layout: 'none' },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },

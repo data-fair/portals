@@ -3,3 +3,4 @@ export type { TagDescriptor, ChildrenSlot, AttributeDescriptor } from './types.t
 export { serializeElements } from './serializer.ts'
 export { deserializeElements } from './deserializer.ts'
 export type { DeserializeError, DeserializeResult } from './deserializer.ts'
+export { walkElements } from './walker.ts'

@@ -12,7 +12,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'search' },
-        uuid: { type: 'string', layout: 'none' },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
         },
@@ -94,7 +93,6 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'topics' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Source des thématiques',
@@ -214,7 +212,6 @@ export default {
       ],
       properties: {
         type: { const: 'contact' },
-        uuid: { type: 'string', layout: 'none' },
         defaultFields: {
           type: 'object',
           title: 'Default fields',

@@ -5,30 +5,29 @@ import { deserializeElements } from '../../../shared/markup/deserializer.ts'
 
 test.describe('markup deserializer', () => {
   test('parses a self-closing element', () => {
-    const { elements, errors } = deserializeElements('<divider uuid="a1" />')
+    const { elements, errors } = deserializeElements('<divider />')
     assert.deepEqual(errors, [])
-    assert.deepEqual(elements, [{ type: 'divider', uuid: 'a1' }])
+    assert.deepEqual(elements, [{ type: 'divider' }])
   })
 
   test('parses content property as inner text', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="u1" titleSize="h2">Hello world</title>'
+      '<title titleSize="h2">Hello world</title>'
     )
     assert.deepEqual(errors, [])
     assert.deepEqual(elements, [
-      { type: 'title', uuid: 'u1', titleSize: 'h2', content: 'Hello world' }
+      { type: 'title', titleSize: 'h2', content: 'Hello world' }
     ])
   })
 
   test('expands dot-notation into nested objects', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="u1" icon.color="primary" icon.mdi.name="home">Hi</title>'
+      '<title icon.color="primary" icon.mdi.name="home">Hi</title>'
     )
     assert.deepEqual(errors, [])
     assert.deepEqual(elements, [
       {
         type: 'title',
-        uuid: 'u1',
         content: 'Hi',
         icon: { color: 'primary', mdi: { name: 'home' } }
       }
@@ -37,25 +36,17 @@ test.describe('markup deserializer', () => {
 
   test('coerces boolean and integer attributes', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="u1" bold="true" centered="false">T</title>'
+      '<title bold="true" centered="false">T</title>'
     )
     assert.deepEqual(errors, [])
     assert.deepEqual(elements, [
-      { type: 'title', uuid: 'u1', bold: true, centered: false, content: 'T' }
+      { type: 'title', bold: true, centered: false, content: 'T' }
     ])
   })
 
-  test('unescapes & and " in attribute values', () => {
+  test('unescapes & and " in content', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="a&amp;b&quot;c">x</title>'
-    )
-    assert.deepEqual(errors, [])
-    assert.equal(elements?.[0].uuid, 'a&b"c')
-  })
-
-  test('unescapes < and & in content', () => {
-    const { elements, errors } = deserializeElements(
-      '<title uuid="u1">1 &lt; 2 &amp; 3</title>'
+      '<title>1 &lt; 2 &amp; 3</title>'
     )
     assert.deepEqual(errors, [])
     assert.equal(elements?.[0].content, '1 < 2 & 3')
@@ -63,12 +54,12 @@ test.describe('markup deserializer', () => {
 
   test('parses virtualTag direct wrappers (two-columns)', () => {
     const src = [
-      '<two-columns uuid="c1">',
+      '<two-columns>',
       '  <left>',
-      '    <divider uuid="L" />',
+      '    <divider />',
       '  </left>',
       '  <right>',
-      '    <divider uuid="R" />',
+      '    <divider />',
       '  </right>',
       '</two-columns>'
     ].join('\n')
@@ -77,18 +68,17 @@ test.describe('markup deserializer', () => {
     assert.deepEqual(elements, [
       {
         type: 'two-columns',
-        uuid: 'c1',
-        children: [{ type: 'divider', uuid: 'L' }],
-        children2: [{ type: 'divider', uuid: 'R' }]
+        children: [{ type: 'divider' }],
+        children2: [{ type: 'divider' }]
       }
     ])
   })
 
   test('parses structured slot items (tabs)', () => {
     const src = [
-      '<tabs uuid="t1">',
+      '<tabs>',
       '  <tab title="One">',
-      '    <divider uuid="d1" />',
+      '    <divider />',
       '  </tab>',
       '  <tab title="Two" />',
       '</tabs>'
@@ -98,9 +88,8 @@ test.describe('markup deserializer', () => {
     assert.deepEqual(elements, [
       {
         type: 'tabs',
-        uuid: 't1',
         tabs: [
-          { title: 'One', children: [{ type: 'divider', uuid: 'd1' }] },
+          { title: 'One', children: [{ type: 'divider' }] },
           { title: 'Two', children: [] }
         ]
       }
@@ -116,7 +105,7 @@ test.describe('markup deserializer', () => {
 
   test('reports unknown attribute as error', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="u1" nope="x">Hi</title>'
+      '<title nope="x">Hi</title>'
     )
     assert.equal(elements, null)
     assert.equal(errors.length, 1)
@@ -124,14 +113,14 @@ test.describe('markup deserializer', () => {
   })
 
   test('reports missing closing tag', () => {
-    const { elements, errors } = deserializeElements('<banner uuid="b1"><divider />')
+    const { elements, errors } = deserializeElements('<banner><divider />')
     assert.equal(elements, null)
     assert.ok(errors.some(e => /missing closing tag/.test(e.message)), JSON.stringify(errors))
   })
 
   test('reports enum violation', () => {
     const { elements, errors } = deserializeElements(
-      '<title uuid="u1" color="not-a-color">x</title>'
+      '<title color="not-a-color">x</title>'
     )
     assert.equal(elements, null)
     assert.ok(errors.some(e => /not in enum/.test(e.message)))
@@ -141,12 +130,11 @@ test.describe('markup deserializer', () => {
     const original = [
       {
         type: 'two-columns',
-        uuid: 'c1',
         children: [
-          { type: 'title', uuid: 'u1', content: 'Left', titleSize: 'h2' }
+          { type: 'title', content: 'Left', titleSize: 'h2' }
         ],
         children2: [
-          { type: 'divider', uuid: 'd1' }
+          { type: 'divider' }
         ]
       }
     ]
@@ -160,9 +148,8 @@ test.describe('markup deserializer', () => {
     const original = [
       {
         type: 'tabs',
-        uuid: 't1',
         tabs: [
-          { title: 'One', children: [{ type: 'divider', uuid: 'd1' }] },
+          { title: 'One', children: [{ type: 'divider' }] },
           { title: 'Two', children: [] }
         ]
       }
@@ -175,17 +162,70 @@ test.describe('markup deserializer', () => {
 
   test('round-trips markup -> JSON -> markup (stable formatting)', () => {
     const markup = [
-      '<two-columns uuid="c1">',
+      '<two-columns>',
       '  <left>',
-      '    <title uuid="u1">Left</title>',
+      '    <title>Left</title>',
       '  </left>',
       '  <right>',
-      '    <divider uuid="d1" />',
+      '    <divider />',
       '  </right>',
       '</two-columns>'
     ].join('\n')
     const { elements, errors } = deserializeElements(markup)
     assert.deepEqual(errors, [])
     assert.equal(serializeElements(elements ?? []), markup)
+  })
+
+  test.describe('uuid auto-heal', () => {
+    test('preserves a unique uuid on dataset-table', () => {
+      const { elements, errors } = deserializeElements(
+        '<dataset-table uuid="abcd1234" dataset.id="ds1" interactions="true" />'
+      )
+      assert.deepEqual(errors, [])
+      assert.equal(elements?.[0].uuid, 'abcd1234')
+    })
+
+    test('fills a missing uuid on dataset-table', () => {
+      const { elements, errors } = deserializeElements(
+        '<dataset-table dataset.id="ds1" interactions="true" />'
+      )
+      assert.deepEqual(errors, [])
+      assert.equal(typeof elements?.[0].uuid, 'string')
+      assert.ok((elements?.[0].uuid as string).length > 0)
+    })
+
+    test('regenerates duplicate uuids across copy-pasted elements', () => {
+      const src = [
+        '<dataset-table uuid="same" dataset.id="ds1" interactions="true" />',
+        '<dataset-table uuid="same" dataset.id="ds2" interactions="true" />',
+        '<application uuid="same" application.id="a1" application.slug="a1" application.title="A1" />'
+      ].join('\n')
+      const { elements, errors } = deserializeElements(src)
+      assert.deepEqual(errors, [])
+      const uuids = elements?.map((el: any) => el.uuid)
+      assert.equal(uuids?.[0], 'same', 'first occurrence keeps the uuid')
+      assert.notEqual(uuids?.[1], 'same', 'second occurrence gets a fresh uuid')
+      assert.notEqual(uuids?.[2], 'same', 'third occurrence gets a fresh uuid')
+      assert.notEqual(uuids?.[1], uuids?.[2], 'regenerated uuids are distinct')
+    })
+
+    test('heals uuids inside nested containers', () => {
+      const src = [
+        '<two-columns>',
+        '  <left>',
+        '    <dataset-table uuid="dup" dataset.id="ds1" interactions="true" />',
+        '  </left>',
+        '  <right>',
+        '    <dataset-table uuid="dup" dataset.id="ds2" interactions="true" />',
+        '  </right>',
+        '</two-columns>'
+      ].join('\n')
+      const { elements, errors } = deserializeElements(src)
+      assert.deepEqual(errors, [])
+      const left = elements?.[0].children?.[0]
+      const right = elements?.[0].children2?.[0]
+      assert.equal(left.uuid, 'dup')
+      assert.notEqual(right.uuid, 'dup')
+    })
   })
 })

@@ -185,7 +185,6 @@ export default {
       required: ['type', 'columns', 'limit', 'usePortalConfig'],
       properties: {
         type: { const: 'datasets-list' },
-        uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
           title: 'Type de liste',
@@ -282,7 +281,6 @@ export default {
       required: ['type', 'dataset', 'usePortalConfig'],
       properties: {
         type: { const: 'dataset-card' },
-        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',
@@ -404,7 +402,6 @@ export default {
       required: ['type', 'dataset'],
       properties: {
         type: { const: 'dataset-form' },
-        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',
@@ -438,7 +435,6 @@ export default {
       required: ['type', 'dataset'],
       properties: {
         type: { const: 'dataset-download' },
-        uuid: { type: 'string', layout: 'none' },
         dataset: {
           type: 'object',
           title: 'Jeu de données',

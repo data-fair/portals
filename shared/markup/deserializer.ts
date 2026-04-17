@@ -1,5 +1,33 @@
 import type { AttributeDescriptor, ChildrenSlot, TagDescriptor } from './types.ts'
 import { tagDescriptors } from './tag-descriptors.ts'
+import { walkElements } from './walker.ts'
+
+const UUID_TYPES = new Set(['application', 'dataset-table'])
+
+function newShortUuid (): string {
+  return globalThis.crypto.randomUUID().split('-')[0]
+}
+
+/**
+ * Fill missing uuids and regenerate duplicates for element types that depend on
+ * uuid uniqueness (iframe-hosting elements). Runs after a successful parse so
+ * copy-pasted markup yields elements with distinct uuids.
+ */
+function healUuids (elements: any[]): void {
+  const seen = new Set<string>()
+  walkElements(elements, (element) => {
+    if (!UUID_TYPES.has(element.type)) return
+    const current = element.uuid
+    if (typeof current !== 'string' || current === '' || seen.has(current)) {
+      let next = newShortUuid()
+      while (seen.has(next)) next = newShortUuid()
+      element.uuid = next
+      seen.add(next)
+    } else {
+      seen.add(current)
+    }
+  })
+}
 
 export interface DeserializeError {
   line: number
@@ -369,5 +397,6 @@ export function deserializeElements (src: string): DeserializeResult {
     if (el) elements.push(el)
   }
   if (p.errors.length > 0) return { elements: null, errors: p.errors }
+  healUuids(elements)
   return { elements, errors: [] }
 }
