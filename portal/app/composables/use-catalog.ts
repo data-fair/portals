@@ -25,7 +25,6 @@ export interface CatalogReturn<T, F> {
 
 export interface CatalogConfig<T, F extends Record<string, FilterRef>> {
   endpoint: string
-  useLocalFetch?: boolean
   buildQuery: (filters: F, sortValue: string | undefined, page: number, pageSize: number) => Record<string, string | number>
   filterDefs: () => F
   defaultSortFallback: string
@@ -67,25 +66,9 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
 
   const query = computed(() => config.buildQuery(filters, sortFilter.value, currentPage.value, pageSize))
 
-  const fetchFn = (config.useLocalFetch ? useLocalFetch : useFetch) as typeof useFetch
-  const itemsFetch = fetchFn<FetchResult<T>>(config.endpoint, { query, watch: false })
+  const itemsFetch = useFetch<FetchResult<T>>(config.endpoint, { query, watch: false })
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
-
-  // Initialize displayedItems from fetched data. On hydration the payload is
-  // synchronously available; on client-side nav we wait for the fetch to resolve.
-  // Using a conditional watcher avoids the TDZ that an immediate+sync watcher
-  // would hit when calling its own `stop` handle during setup.
-  const initFromData = () => {
-    const results = itemsFetch.data.value?.results
-    if (results) displayedItems.value = [...results]
-    return !!results
-  }
-  if (!initFromData()) {
-    const stop = watch(() => itemsFetch.data.value, () => {
-      if (initFromData()) stop()
-    })
-  }
 
   const refreshItems = async (mode: 'replace' | 'append') => {
     loading.value = true
@@ -111,6 +94,8 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
     currentPage.value++
     await refreshItems('append')
   }
+
+  onMounted(async () => await refreshItems('replace'))
 
   // When user changes sort/order in UI, update the URL-bound sortFilter
   watch([sort, order], () => {

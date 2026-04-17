@@ -68,7 +68,6 @@ const {
   sort, order, goToPage, loadMore
 } = useCatalog<DatasetResult, DatasetFilters>(element, {
   endpoint: '/data-fair/api/v1/datasets',
-  useLocalFetch: true,
   defaultSortFallback: 'createdAt:-1',
   analyticsCategory: 'datasets',
   filterDefs: () => ({
