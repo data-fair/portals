@@ -15,7 +15,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bold"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Bold text",
+          "fr": "Texte en gras"
+        }
       },
       {
         "name": "centered",
@@ -23,7 +27,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "centered"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Center the title",
+          "fr": "Centrer le titre"
+        }
       },
       {
         "name": "color",
@@ -40,7 +48,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "icon.color",
@@ -58,7 +100,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "icon.custom",
@@ -67,7 +143,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "custom"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Custom icon",
+          "fr": "Icône personnalisée"
+        }
       },
       {
         "name": "icon.mdi.name",
@@ -115,7 +195,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Line color",
+          "fr": "Couleur du trait"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "line.position",
@@ -132,7 +246,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bottom-medium",
           "bottom-large"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Display a line",
+          "fr": "Afficher un trait"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun trait"
+          },
+          "left": {
+            "en": "Trait à gauche du titre"
+          },
+          "bottom-small": {
+            "en": "Petit trait sous le titre"
+          },
+          "bottom-medium": {
+            "en": "Trait sous le titre (largeur du texte)"
+          },
+          "bottom-large": {
+            "en": "Trait pleine largeur sous le titre"
+          }
+        }
       },
       {
         "name": "link.href",
@@ -141,7 +276,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "href"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "URL"
+        }
       },
       {
         "name": "link.pageRef.group._id",
@@ -220,7 +358,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sitemap",
           "catalog-api-doc"
         ],
-        "default": "home"
+        "default": "home",
+        "titles": {
+          "en": "Type de page"
+        },
+        "enumTitles": {
+          "home": {
+            "en": "Accueil"
+          },
+          "contact": {
+            "en": "Contact"
+          },
+          "accessibility": {
+            "en": "Accessibilité"
+          },
+          "terms-of-service": {
+            "en": "Conditions générales d'utilisation"
+          },
+          "legal-notice": {
+            "en": "Mentions légales"
+          },
+          "privacy-policy": {
+            "en": "Politique de confidentialité"
+          },
+          "cookie-policy": {
+            "en": "Politique de cookies"
+          },
+          "datasets": {
+            "en": "Catalogue de données"
+          },
+          "applications": {
+            "en": "Catalogue de visualisations"
+          },
+          "reuses": {
+            "en": "Catalogue de réutilisations"
+          },
+          "event-catalog": {
+            "en": "Catalogue d'événements"
+          },
+          "news-catalog": {
+            "en": "Catalogue d'actualités"
+          },
+          "sitemap": {
+            "en": "Plan du site"
+          },
+          "catalog-api-doc": {
+            "en": "Documentation d'API"
+          }
+        }
       },
       {
         "name": "link.target",
@@ -229,7 +414,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "target"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir dans un nouvel onglet"
+        }
       },
       {
         "name": "link.title",
@@ -238,7 +426,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Texte alternatif"
+        }
       },
       {
         "name": "link.type",
@@ -264,7 +455,31 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "h5",
           "h6"
         ],
-        "default": "h3"
+        "default": "h3",
+        "titles": {
+          "en": "Title size",
+          "fr": "Taille du titre"
+        },
+        "enumTitles": {
+          "h1": {
+            "en": "Titre principal"
+          },
+          "h2": {
+            "en": "Très grand"
+          },
+          "h3": {
+            "en": "Grand"
+          },
+          "h4": {
+            "en": "Moyen"
+          },
+          "h5": {
+            "en": "Petit"
+          },
+          "h6": {
+            "en": "Très petit"
+          }
+        }
       },
       {
         "name": "titleTag",
@@ -281,10 +496,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "h5",
           "h6",
           "div"
-        ]
+        ],
+        "titles": {
+          "en": "Heading tag",
+          "fr": "Balise"
+        },
+        "enumTitles": {
+          "h1": {
+            "en": "H1"
+          },
+          "h2": {
+            "en": "H2"
+          },
+          "h3": {
+            "en": "H3"
+          },
+          "h4": {
+            "en": "H4"
+          },
+          "h5": {
+            "en": "H5"
+          },
+          "h6": {
+            "en": "H6"
+          },
+          "div": {
+            "en": "Div"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Title",
+      "fr": "Titre"
+    }
   },
   "text": {
     "tagName": "text",
@@ -298,7 +544,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Centrer le contenu"
+        }
       },
       {
         "name": "mb",
@@ -307,12 +556,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
     "hiddenProperties": [
       "_html"
-    ]
+    ],
+    "titles": {
+      "en": "Texte"
+    }
   },
   "alert": {
     "tagName": "alert",
@@ -335,7 +590,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "icon.custom",
@@ -344,7 +633,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "custom"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Custom icon",
+          "fr": "Icône personnalisée"
+        }
       },
       {
         "name": "icon.mdi.name",
@@ -394,7 +687,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "alertType",
@@ -410,7 +749,27 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "error",
           "warning"
         ],
-        "default": "info"
+        "default": "info",
+        "titles": {
+          "en": "Type prédéfini"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "info": {
+            "en": "Information"
+          },
+          "success": {
+            "en": "Succès"
+          },
+          "error": {
+            "en": "Erreur"
+          },
+          "warning": {
+            "en": "Avertissement"
+          }
+        }
       },
       {
         "name": "title",
@@ -418,7 +777,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Titre"
+        }
       },
       {
         "name": "mb",
@@ -427,12 +789,19 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
     "hiddenProperties": [
       "_html"
-    ]
+    ],
+    "titles": {
+      "en": "Accented text",
+      "fr": "Texte accentué"
+    }
   },
   "image": {
     "tagName": "image",
@@ -445,7 +814,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "banner"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Pleine largeur"
+        }
       },
       {
         "name": "cover",
@@ -453,7 +825,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "cover"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Recadrer l'image pour remplir l'espace"
+        }
       },
       {
         "name": "height",
@@ -461,7 +836,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "height"
         ],
         "type": "integer",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Hauteur fixe (px)"
+        }
       },
       {
         "name": "image._id",
@@ -505,7 +883,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "isPresentation"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Image de présentation (décorative)"
+        }
       },
       {
         "name": "legend",
@@ -513,7 +894,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "legend"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Légende de l'image"
+        }
       },
       {
         "name": "link.href",
@@ -522,7 +906,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "href"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "URL"
+        }
       },
       {
         "name": "link.pageRef.group._id",
@@ -601,7 +988,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sitemap",
           "catalog-api-doc"
         ],
-        "default": "home"
+        "default": "home",
+        "titles": {
+          "en": "Type de page"
+        },
+        "enumTitles": {
+          "home": {
+            "en": "Accueil"
+          },
+          "contact": {
+            "en": "Contact"
+          },
+          "accessibility": {
+            "en": "Accessibilité"
+          },
+          "terms-of-service": {
+            "en": "Conditions générales d'utilisation"
+          },
+          "legal-notice": {
+            "en": "Mentions légales"
+          },
+          "privacy-policy": {
+            "en": "Politique de confidentialité"
+          },
+          "cookie-policy": {
+            "en": "Politique de cookies"
+          },
+          "datasets": {
+            "en": "Catalogue de données"
+          },
+          "applications": {
+            "en": "Catalogue de visualisations"
+          },
+          "reuses": {
+            "en": "Catalogue de réutilisations"
+          },
+          "event-catalog": {
+            "en": "Catalogue d'événements"
+          },
+          "news-catalog": {
+            "en": "Catalogue d'actualités"
+          },
+          "sitemap": {
+            "en": "Plan du site"
+          },
+          "catalog-api-doc": {
+            "en": "Documentation d'API"
+          }
+        }
       },
       {
         "name": "link.target",
@@ -610,7 +1044,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "target"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir dans un nouvel onglet"
+        }
       },
       {
         "name": "link.title",
@@ -619,7 +1056,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Texte alternatif"
+        }
       },
       {
         "name": "link.type",
@@ -637,7 +1077,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "title",
@@ -645,7 +1088,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Titre de l'image (Accessibilité)"
+        }
       },
       {
         "name": "url",
@@ -653,7 +1099,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "url"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "URL vers l'image"
+        }
       },
       {
         "name": "wideImage._id",
@@ -697,10 +1146,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "zoomable"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Zoom au clic"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Image",
+      "fr": "Image"
+    }
   },
   "iframe": {
     "tagName": "iframe",
@@ -714,7 +1170,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "scroll",
@@ -722,7 +1181,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "scroll"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer le scroll"
+        }
       },
       {
         "name": "title",
@@ -730,7 +1192,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Titre de l'iframe"
+        }
       },
       {
         "name": "url",
@@ -738,10 +1203,16 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "url"
         ],
         "type": "string",
-        "required": true
+        "required": true,
+        "titles": {
+          "en": "URL de l'iframe"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "IFrame"
+    }
   },
   "icon": {
     "tagName": "icon",
@@ -755,7 +1226,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Center the icon",
+          "fr": "Centrer l'icône"
+        }
       },
       {
         "name": "icon.color",
@@ -773,7 +1248,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "icon.custom",
@@ -782,7 +1291,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "custom"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Custom icon",
+          "fr": "Icône personnalisée"
+        }
       },
       {
         "name": "icon.mdi.name",
@@ -821,7 +1334,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "size",
@@ -830,10 +1346,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 48
+        "default": 48,
+        "titles": {
+          "en": "Size (px)",
+          "fr": "Taille (px)"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Icon",
+      "fr": "Icône"
+    }
   },
   "button": {
     "tagName": "button",
@@ -847,7 +1371,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "href"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "URL"
+        }
       },
       {
         "name": "link.icon.color",
@@ -866,7 +1393,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "link.icon.custom",
@@ -876,7 +1437,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "custom"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Custom icon",
+          "fr": "Icône personnalisée"
+        }
       },
       {
         "name": "link.icon.mdi.name",
@@ -988,7 +1553,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sitemap",
           "catalog-api-doc"
         ],
-        "default": "home"
+        "default": "home",
+        "titles": {
+          "en": "Type de page"
+        },
+        "enumTitles": {
+          "home": {
+            "en": "Accueil"
+          },
+          "contact": {
+            "en": "Contact"
+          },
+          "accessibility": {
+            "en": "Accessibilité"
+          },
+          "terms-of-service": {
+            "en": "Conditions générales d'utilisation"
+          },
+          "legal-notice": {
+            "en": "Mentions légales"
+          },
+          "privacy-policy": {
+            "en": "Politique de confidentialité"
+          },
+          "cookie-policy": {
+            "en": "Politique de cookies"
+          },
+          "datasets": {
+            "en": "Catalogue de données"
+          },
+          "applications": {
+            "en": "Catalogue de visualisations"
+          },
+          "reuses": {
+            "en": "Catalogue de réutilisations"
+          },
+          "event-catalog": {
+            "en": "Catalogue d'événements"
+          },
+          "news-catalog": {
+            "en": "Catalogue d'actualités"
+          },
+          "sitemap": {
+            "en": "Plan du site"
+          },
+          "catalog-api-doc": {
+            "en": "Documentation d'API"
+          }
+        }
       },
       {
         "name": "link.target",
@@ -997,7 +1609,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "target"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir dans un nouvel onglet"
+        }
       },
       {
         "name": "link.title",
@@ -1006,7 +1621,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Libellé"
+        }
       },
       {
         "name": "link.type",
@@ -1024,7 +1642,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "config.color",
@@ -1042,7 +1663,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "config.density",
@@ -1056,7 +1711,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "config.elevation",
@@ -1071,7 +1744,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "config.rounded",
@@ -1086,7 +1781,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "config.showIcon",
@@ -1096,7 +1813,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "config.uppercase",
@@ -1106,7 +1826,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Texte en majuscules"
+        }
       },
       {
         "name": "config.variant",
@@ -1120,7 +1843,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "centered",
@@ -1129,7 +1870,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Centré"
+        }
       },
       {
         "name": "mb",
@@ -1138,10 +1882,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Navigation button",
+      "fr": "Bouton de navigation"
+    }
   },
   "menu": {
     "tagName": "menu",
@@ -1183,7 +1934,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "sitemap",
               "catalog-api-doc"
             ],
-            "default": "home"
+            "default": "home",
+            "titles": {
+              "en": "Type de page"
+            },
+            "enumTitles": {
+              "home": {
+                "en": "Accueil"
+              },
+              "contact": {
+                "en": "Contact"
+              },
+              "accessibility": {
+                "en": "Accessibilité"
+              },
+              "terms-of-service": {
+                "en": "Conditions générales d'utilisation"
+              },
+              "legal-notice": {
+                "en": "Mentions légales"
+              },
+              "privacy-policy": {
+                "en": "Politique de confidentialité"
+              },
+              "cookie-policy": {
+                "en": "Politique de cookies"
+              },
+              "datasets": {
+                "en": "Catalogue de données"
+              },
+              "applications": {
+                "en": "Catalogue de visualisations"
+              },
+              "reuses": {
+                "en": "Catalogue de réutilisations"
+              },
+              "event-catalog": {
+                "en": "Catalogue d'événements"
+              },
+              "news-catalog": {
+                "en": "Catalogue d'actualités"
+              },
+              "sitemap": {
+                "en": "Plan du site"
+              },
+              "catalog-api-doc": {
+                "en": "Documentation d'API"
+              }
+            }
           },
           {
             "name": "title",
@@ -1191,7 +1989,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "title"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Libellé"
+            }
           },
           {
             "name": "target",
@@ -1199,7 +2000,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "target"
             ],
             "type": "boolean",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Ouvrir dans un nouvel onglet"
+            }
           },
           {
             "name": "icon.mdi.name",
@@ -1238,7 +2042,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "custom"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Custom icon",
+              "fr": "Icône personnalisée"
+            }
           },
           {
             "name": "icon.color",
@@ -1256,7 +2064,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "success",
               "error",
               "warning"
-            ]
+            ],
+            "titles": {
+              "en": "Color",
+              "fr": "Couleur"
+            },
+            "enumTitles": {
+              "primary": {
+                "en": "Primary",
+                "fr": "Primaire"
+              },
+              "secondary": {
+                "en": "Secondary",
+                "fr": "Secondaire"
+              },
+              "accent": {
+                "en": "Accent",
+                "fr": "Accentuée"
+              },
+              "info": {
+                "en": "Info",
+                "fr": "Information"
+              },
+              "success": {
+                "en": "Success",
+                "fr": "Succès"
+              },
+              "error": {
+                "en": "Error",
+                "fr": "Erreur"
+              },
+              "warning": {
+                "en": "Warning",
+                "fr": "Avertissement"
+              }
+            }
           },
           {
             "name": "pageRef.slug",
@@ -1312,9 +2154,15 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "href"
             ],
             "type": "string",
-            "required": true
+            "required": true,
+            "titles": {
+              "en": "URL"
+            }
           }
-        ]
+        ],
+        "titles": {
+          "en": "Liens"
+        }
       }
     ],
     "attributes": [
@@ -1325,7 +2173,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "string",
         "required": false,
-        "default": "Menu"
+        "default": "Menu",
+        "titles": {
+          "en": "Libellé du menu"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -1334,7 +2185,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "config.color",
@@ -1352,7 +2206,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "config.density",
@@ -1366,7 +2254,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "config.elevation",
@@ -1381,7 +2287,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "config.rounded",
@@ -1396,7 +2324,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "config.showIcon",
@@ -1406,7 +2356,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "config.uppercase",
@@ -1416,7 +2369,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Texte en majuscules"
+        }
       },
       {
         "name": "config.variant",
@@ -1430,7 +2386,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "centered",
@@ -1439,7 +2413,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Centré"
+        }
       },
       {
         "name": "mb",
@@ -1448,10 +2425,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Navigation menu",
+      "fr": "Menu de navigation"
+    }
   },
   "breadcrumbs": {
     "tagName": "breadcrumbs",
@@ -1465,10 +2449,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Breadcrumbs",
+      "fr": "Fil d'Ariane"
+    }
   },
   "divider": {
     "tagName": "divider",
@@ -1493,7 +2484,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "inset",
@@ -1501,7 +2538,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "inset"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ajouter une indentation"
+        }
       },
       {
         "name": "opacity",
@@ -1510,7 +2550,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "number",
         "required": true,
-        "default": 0.1
+        "default": 0.1,
+        "titles": {
+          "en": "Opacité"
+        }
       },
       {
         "name": "rounded",
@@ -1519,7 +2562,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Bords arrondis"
+        }
       },
       {
         "name": "thickness",
@@ -1528,10 +2574,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 1
+        "default": 1,
+        "titles": {
+          "en": "Épaisseur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Divider",
+      "fr": "Séparateur horizontal"
+    }
   },
   "banner": {
     "tagName": "banner",
@@ -1550,7 +2603,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "fullWidth"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Pleine largeur"
+        }
       },
       {
         "name": "background.color",
@@ -1571,7 +2627,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "background.image._id",
@@ -1621,7 +2723,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "number",
         "required": false,
-        "default": 0.8
+        "default": 0.8,
+        "titles": {
+          "en": "Intensité de la teinte"
+        }
       },
       {
         "name": "pt",
@@ -1629,7 +2734,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "pt"
         ],
         "type": "integer",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Marge supérieur"
+        }
       },
       {
         "name": "pb",
@@ -1637,7 +2745,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "pb"
         ],
         "type": "integer",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Marge inférieur"
+        }
       },
       {
         "name": "pl",
@@ -1645,7 +2756,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "pl"
         ],
         "type": "integer",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Marge gauche"
+        }
       },
       {
         "name": "pr",
@@ -1653,7 +2767,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "pr"
         ],
         "type": "integer",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Marge droite"
+        }
       },
       {
         "name": "overflowTop",
@@ -1661,7 +2778,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "overflowTop"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Débordement supérieur"
+        }
       },
       {
         "name": "overflowBottom",
@@ -1669,7 +2789,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "overflowBottom"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Débordement inférieur"
+        }
       },
       {
         "name": "mb",
@@ -1678,10 +2801,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Colored background section",
+      "fr": "Section sur fond coloré"
+    }
   },
   "card": {
     "tagName": "card",
@@ -1728,7 +2858,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "sitemap",
               "catalog-api-doc"
             ],
-            "default": "home"
+            "default": "home",
+            "titles": {
+              "en": "Type de page"
+            },
+            "enumTitles": {
+              "home": {
+                "en": "Accueil"
+              },
+              "contact": {
+                "en": "Contact"
+              },
+              "accessibility": {
+                "en": "Accessibilité"
+              },
+              "terms-of-service": {
+                "en": "Conditions générales d'utilisation"
+              },
+              "legal-notice": {
+                "en": "Mentions légales"
+              },
+              "privacy-policy": {
+                "en": "Politique de confidentialité"
+              },
+              "cookie-policy": {
+                "en": "Politique de cookies"
+              },
+              "datasets": {
+                "en": "Catalogue de données"
+              },
+              "applications": {
+                "en": "Catalogue de visualisations"
+              },
+              "reuses": {
+                "en": "Catalogue de réutilisations"
+              },
+              "event-catalog": {
+                "en": "Catalogue d'événements"
+              },
+              "news-catalog": {
+                "en": "Catalogue d'actualités"
+              },
+              "sitemap": {
+                "en": "Plan du site"
+              },
+              "catalog-api-doc": {
+                "en": "Documentation d'API"
+              }
+            }
           },
           {
             "name": "title",
@@ -1736,7 +2913,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "title"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Libellé"
+            }
           },
           {
             "name": "target",
@@ -1744,7 +2924,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "target"
             ],
             "type": "boolean",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Ouvrir dans un nouvel onglet"
+            }
           },
           {
             "name": "icon.mdi.name",
@@ -1783,7 +2966,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "custom"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Custom icon",
+              "fr": "Icône personnalisée"
+            }
           },
           {
             "name": "icon.color",
@@ -1801,7 +2988,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "success",
               "error",
               "warning"
-            ]
+            ],
+            "titles": {
+              "en": "Color",
+              "fr": "Couleur"
+            },
+            "enumTitles": {
+              "primary": {
+                "en": "Primary",
+                "fr": "Primaire"
+              },
+              "secondary": {
+                "en": "Secondary",
+                "fr": "Secondaire"
+              },
+              "accent": {
+                "en": "Accent",
+                "fr": "Accentuée"
+              },
+              "info": {
+                "en": "Info",
+                "fr": "Information"
+              },
+              "success": {
+                "en": "Success",
+                "fr": "Succès"
+              },
+              "error": {
+                "en": "Error",
+                "fr": "Erreur"
+              },
+              "warning": {
+                "en": "Warning",
+                "fr": "Avertissement"
+              }
+            }
           },
           {
             "name": "pageRef.slug",
@@ -1857,9 +3078,15 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "href"
             ],
             "type": "string",
-            "required": true
+            "required": true,
+            "titles": {
+              "en": "URL"
+            }
           }
-        ]
+        ],
+        "titles": {
+          "en": "Boutons de navigation"
+        }
       }
     ],
     "attributes": [
@@ -1880,7 +3107,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "actionStyle.config.density",
@@ -1895,7 +3156,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "actionStyle.config.elevation",
@@ -1911,7 +3190,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "actionStyle.config.rounded",
@@ -1927,7 +3228,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "actionStyle.config.showIcon",
@@ -1938,7 +3261,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "actionStyle.config.uppercase",
@@ -1949,7 +3275,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Texte en majuscules"
+        }
       },
       {
         "name": "actionStyle.config.variant",
@@ -1964,7 +3293,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "actionStyle.usePortalConfig",
@@ -1974,7 +3321,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "background.color",
@@ -1995,7 +3345,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "background.image._id",
@@ -2045,7 +3441,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "number",
         "required": false,
-        "default": 0.8
+        "default": 0.8,
+        "titles": {
+          "en": "Intensité de la teinte"
+        }
       },
       {
         "name": "background.tonal",
@@ -2054,7 +3453,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "tonal"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Utiliser une variante tonale de la couleur de fond"
+        }
       },
       {
         "name": "border",
@@ -2063,7 +3465,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Bordure"
+        }
       },
       {
         "name": "contentAlign",
@@ -2076,7 +3481,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "start",
           "center",
           "end"
-        ]
+        ],
+        "titles": {
+          "en": "Alignement vertical des blocs dans la boite"
+        },
+        "enumTitles": {
+          "start": {
+            "en": "En haut"
+          },
+          "center": {
+            "en": "Au centre"
+          },
+          "end": {
+            "en": "En bas"
+          }
+        }
       },
       {
         "name": "elevation",
@@ -2090,7 +3509,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "link.href",
@@ -2099,7 +3540,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "href"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "URL"
+        }
       },
       {
         "name": "link.pageRef.group._id",
@@ -2178,7 +3622,54 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sitemap",
           "catalog-api-doc"
         ],
-        "default": "home"
+        "default": "home",
+        "titles": {
+          "en": "Type de page"
+        },
+        "enumTitles": {
+          "home": {
+            "en": "Accueil"
+          },
+          "contact": {
+            "en": "Contact"
+          },
+          "accessibility": {
+            "en": "Accessibilité"
+          },
+          "terms-of-service": {
+            "en": "Conditions générales d'utilisation"
+          },
+          "legal-notice": {
+            "en": "Mentions légales"
+          },
+          "privacy-policy": {
+            "en": "Politique de confidentialité"
+          },
+          "cookie-policy": {
+            "en": "Politique de cookies"
+          },
+          "datasets": {
+            "en": "Catalogue de données"
+          },
+          "applications": {
+            "en": "Catalogue de visualisations"
+          },
+          "reuses": {
+            "en": "Catalogue de réutilisations"
+          },
+          "event-catalog": {
+            "en": "Catalogue d'événements"
+          },
+          "news-catalog": {
+            "en": "Catalogue d'actualités"
+          },
+          "sitemap": {
+            "en": "Plan du site"
+          },
+          "catalog-api-doc": {
+            "en": "Documentation d'API"
+          }
+        }
       },
       {
         "name": "link.target",
@@ -2187,7 +3678,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "target"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir dans un nouvel onglet"
+        }
       },
       {
         "name": "link.title",
@@ -2196,7 +3690,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Texte alternatif"
+        }
       },
       {
         "name": "link.type",
@@ -2214,7 +3711,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "rounded",
@@ -2228,7 +3728,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "thumbnail.crop",
@@ -2238,7 +3760,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "thumbnail.image._id",
@@ -2292,7 +3817,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "En haut"
+          },
+          "center": {
+            "en": "Sous le titre"
+          }
+        }
       },
       {
         "name": "title",
@@ -2300,10 +3836,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Titre"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Card",
+      "fr": "Boite"
+    }
   },
   "two-columns": {
     "tagName": "two-columns",
@@ -2334,7 +3877,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "end",
           "stretch"
-        ]
+        ],
+        "titles": {
+          "en": "Colonne 1"
+        },
+        "enumTitles": {
+          "start": {
+            "en": "Aligné en haut"
+          },
+          "center": {
+            "en": "Aligné au centre"
+          },
+          "end": {
+            "en": "Aligné en bas"
+          },
+          "stretch": {
+            "en": "Étendre les éléments"
+          }
+        }
       },
       {
         "name": "align.right",
@@ -2349,7 +3909,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "end",
           "stretch"
-        ]
+        ],
+        "titles": {
+          "en": "Colonne 2"
+        },
+        "enumTitles": {
+          "start": {
+            "en": "Aligné en haut"
+          },
+          "center": {
+            "en": "Aligné au centre"
+          },
+          "end": {
+            "en": "Aligné en bas"
+          },
+          "stretch": {
+            "en": "Étendre les éléments"
+          }
+        }
       },
       {
         "name": "disposition",
@@ -2363,7 +3940,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "left",
           "right"
         ],
-        "default": "equal"
+        "default": "equal",
+        "titles": {
+          "en": "Disposition"
+        },
+        "enumTitles": {
+          "equal": {
+            "en": "Largeur de même taille"
+          },
+          "left": {
+            "en": "Colonne gauche large"
+          },
+          "right": {
+            "en": "Colonne droite large"
+          }
+        }
       },
       {
         "name": "gutter",
@@ -2377,7 +3968,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "dense",
           "default"
         ],
-        "default": "default"
+        "default": "default",
+        "titles": {
+          "en": "Espacement entre les colonnes"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun espacement"
+          },
+          "dense": {
+            "en": "Petit espacement"
+          },
+          "default": {
+            "en": "Espacement normal"
+          }
+        }
       },
       {
         "name": "mb",
@@ -2386,10 +3991,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Two columns",
+      "fr": "Deux colonnes"
+    }
   },
   "responsive-grid": {
     "tagName": "responsive-grid",
@@ -2414,7 +4026,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "end",
           "stretch"
-        ]
+        ],
+        "titles": {
+          "en": "Alignement vertical des blocs"
+        },
+        "enumTitles": {
+          "start": {
+            "en": "Aligné en haut"
+          },
+          "center": {
+            "en": "Aligné au centre"
+          },
+          "end": {
+            "en": "Aligné en bas"
+          },
+          "stretch": {
+            "en": "Étendre les blocs"
+          }
+        }
       },
       {
         "name": "centered",
@@ -2422,7 +4051,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "centered"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Centrer les blocs sur les lignes incomplètes"
+        }
       },
       {
         "name": "columns",
@@ -2437,7 +4069,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           4,
           6
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        },
+        "enumTitles": {
+          "2": {
+            "en": "2"
+          },
+          "3": {
+            "en": "3"
+          },
+          "4": {
+            "en": "4"
+          },
+          "6": {
+            "en": "6"
+          }
+        }
       },
       {
         "name": "gutter",
@@ -2451,7 +4100,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "dense",
           "default"
         ],
-        "default": "default"
+        "default": "default",
+        "titles": {
+          "en": "Espacement entre les blocs"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun espacement"
+          },
+          "dense": {
+            "en": "Petit espacement"
+          },
+          "default": {
+            "en": "Espacement normal"
+          }
+        }
       },
       {
         "name": "mb",
@@ -2460,10 +4123,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Responsive Grid",
+      "fr": "Grille responsive"
+    }
   },
   "tabs": {
     "tagName": "tabs",
@@ -2480,7 +4150,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "title"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Titre onglet"
+            }
           },
           {
             "name": "icon.mdi.name",
@@ -2519,7 +4192,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "custom"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Custom icon",
+              "fr": "Icône personnalisée"
+            }
           },
           {
             "name": "icon.color",
@@ -2537,9 +4214,46 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "success",
               "error",
               "warning"
-            ]
+            ],
+            "titles": {
+              "en": "Color",
+              "fr": "Couleur"
+            },
+            "enumTitles": {
+              "primary": {
+                "en": "Primary",
+                "fr": "Primaire"
+              },
+              "secondary": {
+                "en": "Secondary",
+                "fr": "Secondaire"
+              },
+              "accent": {
+                "en": "Accent",
+                "fr": "Accentuée"
+              },
+              "info": {
+                "en": "Info",
+                "fr": "Information"
+              },
+              "success": {
+                "en": "Success",
+                "fr": "Succès"
+              },
+              "error": {
+                "en": "Error",
+                "fr": "Erreur"
+              },
+              "warning": {
+                "en": "Warning",
+                "fr": "Avertissement"
+              }
+            }
           }
-        ]
+        ],
+        "titles": {
+          "en": "Onglets"
+        }
       }
     ],
     "attributes": [
@@ -2555,7 +4269,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "end"
         ],
-        "default": "start"
+        "default": "start",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "start": {
+            "en": "Début"
+          },
+          "center": {
+            "en": "Centre"
+          },
+          "end": {
+            "en": "Fin"
+          }
+        }
       },
       {
         "name": "border",
@@ -2564,7 +4292,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Bordure"
+        }
       },
       {
         "name": "grow",
@@ -2572,7 +4303,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "grow"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Étendre"
+        }
       },
       {
         "name": "mb",
@@ -2581,10 +4315,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Tabs",
+      "fr": "Onglets"
+    }
   },
   "expansion-panels": {
     "tagName": "expansion-panels",
@@ -2601,7 +4342,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "title"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Titre du panneau"
+            }
           },
           {
             "name": "icon.mdi.name",
@@ -2640,7 +4384,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "custom"
             ],
             "type": "string",
-            "required": false
+            "required": false,
+            "titles": {
+              "en": "Custom icon",
+              "fr": "Icône personnalisée"
+            }
           },
           {
             "name": "icon.color",
@@ -2658,9 +4406,46 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
               "success",
               "error",
               "warning"
-            ]
+            ],
+            "titles": {
+              "en": "Color",
+              "fr": "Couleur"
+            },
+            "enumTitles": {
+              "primary": {
+                "en": "Primary",
+                "fr": "Primaire"
+              },
+              "secondary": {
+                "en": "Secondary",
+                "fr": "Secondaire"
+              },
+              "accent": {
+                "en": "Accent",
+                "fr": "Accentuée"
+              },
+              "info": {
+                "en": "Info",
+                "fr": "Information"
+              },
+              "success": {
+                "en": "Success",
+                "fr": "Succès"
+              },
+              "error": {
+                "en": "Error",
+                "fr": "Erreur"
+              },
+              "warning": {
+                "en": "Warning",
+                "fr": "Avertissement"
+              }
+            }
           }
-        ]
+        ],
+        "titles": {
+          "en": "Panneaux"
+        }
       }
     ],
     "attributes": [
@@ -2676,7 +4461,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "mb",
@@ -2685,7 +4492,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "multiple",
@@ -2693,7 +4503,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "multiple"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Permettre l'ouverture multiple"
+        }
       },
       {
         "name": "openAll",
@@ -2701,7 +4514,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "openAll"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir tous les panneaux par défaut"
+        }
       },
       {
         "name": "openFirst",
@@ -2709,7 +4525,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "openFirst"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Ouvrir le premier panneau par défaut"
+        }
       },
       {
         "name": "rounded",
@@ -2723,7 +4542,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "textBackgroundColor",
@@ -2743,7 +4584,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de fond du contenu",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "titleBackgroundColor",
@@ -2763,10 +4650,60 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de fond des titres",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Expansion panels",
+      "fr": "Accordéons"
+    }
   },
   "search": {
     "tagName": "search",
@@ -2779,7 +4716,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "border"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Bordure"
+        }
       },
       {
         "name": "btnPosition",
@@ -2793,7 +4733,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "attached",
           "spaced"
         ],
-        "default": "included"
+        "default": "included",
+        "titles": {
+          "en": "Position du bouton"
+        },
+        "enumTitles": {
+          "included": {
+            "en": "Included",
+            "fr": "Inclus"
+          },
+          "attached": {
+            "en": "Attached",
+            "fr": "Collé"
+          },
+          "spaced": {
+            "en": "Spaced",
+            "fr": "Espacé"
+          }
+        }
       },
       {
         "name": "centered",
@@ -2801,7 +4758,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "centered"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Centrer le champ de recherche"
+        }
       },
       {
         "name": "color",
@@ -2818,7 +4778,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "density",
@@ -2831,7 +4825,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "elevation",
@@ -2845,7 +4857,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Élévation du bouton",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "fullWidth",
@@ -2853,7 +4887,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "fullWidth"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Pleine largeur"
+        }
       },
       {
         "name": "hideLabel",
@@ -2861,7 +4898,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "hideLabel"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Masquer le label au focus"
+        }
       },
       {
         "name": "label",
@@ -2869,7 +4909,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "label"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Texte du label"
+        }
       },
       {
         "name": "mb",
@@ -2878,7 +4921,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "redirectPage",
@@ -2886,7 +4932,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "redirectPage"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Rediriger vers la page de jeux de données"
+        }
       },
       {
         "name": "rounded",
@@ -2900,10 +4949,36 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Search",
+      "fr": "Barre de recherche"
+    }
   },
   "topics": {
     "tagName": "topics",
@@ -2916,7 +4991,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "centered"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Centrer les thématiques"
+        }
       },
       {
         "name": "color",
@@ -2930,7 +5008,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "density",
@@ -2943,7 +5043,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "elevation",
@@ -2957,7 +5075,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "iconColor",
@@ -2971,7 +5111,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de l'icône",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "mb",
@@ -2980,7 +5142,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "mode",
@@ -2993,7 +5158,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "datasets",
           "applications"
         ],
-        "default": "datasets"
+        "default": "datasets",
+        "titles": {
+          "en": "Source des thématiques"
+        },
+        "enumTitles": {
+          "datasets": {
+            "en": "Jeux de données"
+          },
+          "applications": {
+            "en": "Visualisations"
+          }
+        }
       },
       {
         "name": "redirectPage",
@@ -3001,7 +5177,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "redirectPage"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Rediriger vers le catalogue"
+        }
       },
       {
         "name": "rounded",
@@ -3015,7 +5194,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "showIcon",
@@ -3024,7 +5225,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "variant",
@@ -3037,10 +5241,32 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Topics list",
+      "fr": "Liste de thématiques"
+    }
   },
   "metrics": {
     "tagName": "metrics",
@@ -3054,7 +5280,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Bordure"
+        }
       },
       {
         "name": "color",
@@ -3074,7 +5303,53 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "surface",
           "surface-inverse",
           "background"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          },
+          "surface": {
+            "en": "Surface color",
+            "fr": "Couleur des surfaces"
+          },
+          "surface-inverse": {
+            "en": "Inverse surface color",
+            "fr": "Couleur inversée des surfaces"
+          },
+          "background": {
+            "en": "Background color",
+            "fr": "Couleur du fond de page"
+          }
+        }
       },
       {
         "name": "elevation",
@@ -3088,7 +5363,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "fullWidth",
@@ -3096,7 +5393,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "fullWidth"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Pleine largeur"
+        }
       },
       {
         "name": "mb",
@@ -3105,7 +5405,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "metrics",
@@ -3123,7 +5426,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "datasets",
           "records",
           "applications"
-        ]
+        ],
+        "titles": {
+          "en": "Chiffres à afficher"
+        },
+        "enumTitles": {
+          "datasets": {
+            "en": "Jeux de données"
+          },
+          "records": {
+            "en": "Enregistrements"
+          },
+          "applications": {
+            "en": "Visualisations"
+          }
+        }
       },
       {
         "name": "rounded",
@@ -3139,10 +5456,40 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "xl",
           "shaped"
         ],
-        "default": "default"
+        "default": "default",
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          },
+          "shaped": {
+            "en": "Opposite corners",
+            "fr": "Coins opposés"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Key metrics",
+      "fr": "Chiffres clés"
+    }
   },
   "contact": {
     "tagName": "contact",
@@ -3157,7 +5504,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le champ message"
+        }
       },
       {
         "name": "defaultFields.enableSubject",
@@ -3167,7 +5517,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le champ sujet"
+        }
       },
       {
         "name": "defaultFields.messageMaxLength",
@@ -3177,7 +5530,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2000
+        "default": 2000,
+        "titles": {
+          "en": "Max. caractères"
+        }
       },
       {
         "name": "defaultFields.messageMinLength",
@@ -3187,7 +5543,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 50
+        "default": 50,
+        "titles": {
+          "en": "Min. caractères"
+        }
       },
       {
         "name": "defaultFields.requiredMessage",
@@ -3197,7 +5556,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Message obligatoire"
+        }
       },
       {
         "name": "defaultFields.requiredSubject",
@@ -3207,7 +5569,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Sujet obligatoire"
+        }
       },
       {
         "name": "subjectTemplate",
@@ -3215,7 +5580,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "subjectTemplate"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Format de l'objet de l'email"
+        }
       },
       {
         "name": "bodyTemplate",
@@ -3223,7 +5591,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bodyTemplate"
         ],
         "type": "string",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Format du corps de l'email"
+        }
       },
       {
         "name": "elevation",
@@ -3237,7 +5608,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "rounded",
@@ -3251,7 +5644,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "showInfo",
@@ -3259,7 +5674,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showInfo"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les informations de contact"
+        }
       },
       {
         "name": "showSocial",
@@ -3267,7 +5685,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSocial"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les liens de réseaux sociaux"
+        }
       },
       {
         "name": "mb",
@@ -3276,7 +5697,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "sendButton.config.color",
@@ -3295,7 +5719,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "sendButton.config.density",
@@ -3310,7 +5768,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "sendButton.config.elevation",
@@ -3326,7 +5802,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "sendButton.config.rounded",
@@ -3342,7 +5840,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "sendButton.config.showIcon",
@@ -3353,7 +5873,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "sendButton.config.uppercase",
@@ -3364,7 +5887,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Texte en majuscules"
+        }
       },
       {
         "name": "sendButton.config.variant",
@@ -3379,7 +5905,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "sendButton.usePortalConfig",
@@ -3389,12 +5933,19 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       }
     ],
     "hiddenProperties": [
       "bodyTemplate_html"
-    ]
+    ],
+    "titles": {
+      "en": "Contact form",
+      "fr": "Formulaire de contact"
+    }
   },
   "datasets-catalog": {
     "tagName": "datasets-catalog",
@@ -3414,7 +5965,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "countPosition",
@@ -3428,7 +5982,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "bottom"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position du nombre de résultats"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "top": {
+            "en": "Au dessus des filtres"
+          },
+          "bottom": {
+            "en": "Au dessus des résultats"
+          }
+        }
       },
       {
         "name": "defaultSort",
@@ -3443,7 +6011,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "title:1",
           "owner.departmentName:1"
         ],
-        "default": "createdAt:-1"
+        "default": "createdAt:-1",
+        "titles": {
+          "en": "Tri par défaut"
+        },
+        "enumTitles": {
+          "createdAt:-1": {
+            "en": "Date de création (du plus récent au plus ancien)"
+          },
+          "dataUpdatedAt:-1": {
+            "en": "Date de mise à jour (du plus récent au plus ancien)"
+          },
+          "title:1": {
+            "en": "Ordre alphabétique (A à Z)"
+          },
+          "owner.departmentName:1": {
+            "en": "Propriétaire"
+          }
+        }
       },
       {
         "name": "filters.density",
@@ -3457,7 +6042,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "filters.items",
@@ -3474,7 +6077,30 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "keywords",
           "owners",
           "sort"
-        ]
+        ],
+        "titles": {
+          "en": "Filtres à afficher"
+        },
+        "enumTitles": {
+          "search": {
+            "en": "Barre de recherche"
+          },
+          "concepts": {
+            "en": "Filtres par concepts"
+          },
+          "topics": {
+            "en": "Filtres par thématiques"
+          },
+          "keywords": {
+            "en": "Filtres par mots-clés"
+          },
+          "owners": {
+            "en": "Filtres par propriétaires"
+          },
+          "sort": {
+            "en": "Tri"
+          }
+        }
       },
       {
         "name": "filters.position",
@@ -3488,7 +6114,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "left"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position des filtres"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "Au dessus des résultats"
+          },
+          "left": {
+            "en": "À gauche des résultats"
+          }
+        }
       },
       {
         "name": "filters.rounded",
@@ -3503,7 +6140,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "mb",
@@ -3512,7 +6171,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "pagination.alignment",
@@ -3527,7 +6189,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "right"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Gauche"
+          },
+          "center": {
+            "en": "Centré"
+          },
+          "right": {
+            "en": "Droite"
+          }
+        }
       },
       {
         "name": "pagination.position",
@@ -3543,7 +6219,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "after",
           "both"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Position"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Scroll infini"
+          },
+          "before": {
+            "en": "Avant les résultats"
+          },
+          "after": {
+            "en": "Après les résultats"
+          },
+          "both": {
+            "en": "Les deux"
+          }
+        }
       },
       {
         "name": "showAdvancedFilters",
@@ -3551,7 +6244,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showAdvancedFilters"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer les filtres avancés"
+        }
       },
       {
         "name": "showApiButton",
@@ -3560,7 +6256,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le bouton d'accès à la documentation API"
+        }
       },
       {
         "name": "showSortBesideCount",
@@ -3568,10 +6267,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSortBesideCount"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher le tri à droite du nombre de résultats."
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Datasets catalog",
+      "fr": "Catalogue de données"
+    }
   },
   "datasets-list": {
     "tagName": "datasets-list",
@@ -3590,7 +6296,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "lastCreated",
           "custom"
         ],
-        "default": "lastUpdated"
+        "default": "lastUpdated",
+        "titles": {
+          "en": "Type de liste"
+        },
+        "enumTitles": {
+          "lastUpdated": {
+            "en": "Last updated",
+            "fr": "Les derniers modifiés"
+          },
+          "lastCreated": {
+            "en": "Last created",
+            "fr": "Les derniers créés"
+          },
+          "custom": {
+            "en": "Custom list",
+            "fr": "Liste libre"
+          }
+        }
       },
       {
         "name": "limit",
@@ -3599,7 +6322,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre de jeux de données"
+        }
       },
       {
         "name": "columns",
@@ -3608,7 +6334,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "mb",
@@ -3617,7 +6346,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -3626,7 +6358,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.actionsLocation",
@@ -3641,7 +6376,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bottom",
           "none"
         ],
-        "default": "bottom"
+        "default": "bottom",
+        "titles": {
+          "en": "Position des boutons d'actions sur la carte"
+        },
+        "enumTitles": {
+          "right": {
+            "en": "À droite"
+          },
+          "bottom": {
+            "en": "En bas"
+          },
+          "none": {
+            "en": "Aucun"
+          }
+        }
       },
       {
         "name": "cardConfig.actionsStyle",
@@ -3656,7 +6405,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "full",
           "text"
         ],
-        "default": "full"
+        "default": "full",
+        "titles": {
+          "en": "Style des boutons d'actions"
+        },
+        "enumTitles": {
+          "icon": {
+            "en": "Icône seulement"
+          },
+          "full": {
+            "en": "Icône et texte"
+          },
+          "text": {
+            "en": "Texte seulement"
+          }
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -3671,7 +6434,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Élévation de la carte",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.color",
@@ -3690,7 +6475,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.density",
@@ -3705,7 +6524,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.elevation",
@@ -3721,7 +6558,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.rounded",
@@ -3737,7 +6596,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.show",
@@ -3747,7 +6628,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "show"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les mots-clés"
+        }
       },
       {
         "name": "cardConfig.keywords.variant",
@@ -3762,7 +6646,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -3777,7 +6679,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Arrondi de la carte",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDepartment",
@@ -3787,7 +6711,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le propriétaire"
+        }
       },
       {
         "name": "cardConfig.showSummary",
@@ -3797,7 +6724,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le résumé"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -3808,7 +6738,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -3868,7 +6801,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "À gauche"
+          },
+          "top": {
+            "en": "En haut"
+          },
+          "center": {
+            "en": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -3879,7 +6826,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.thumbnail.useApplication",
@@ -3890,7 +6840,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Utiliser l'image de la première visualisation"
+        }
       },
       {
         "name": "cardConfig.thumbnail.useTopic",
@@ -3901,7 +6854,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Utiliser l'image de la première thématique"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -3916,7 +6872,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.color",
@@ -3932,7 +6902,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.density",
@@ -3947,7 +6939,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.elevation",
@@ -3963,7 +6973,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.iconColor",
@@ -3979,7 +7011,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de l'icône",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.rounded",
@@ -3995,7 +7049,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.show",
@@ -4005,7 +7081,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "show"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les thématiques"
+        }
       },
       {
         "name": "cardConfig.topics.showIcon",
@@ -4016,7 +7095,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "cardConfig.topics.variant",
@@ -4031,10 +7113,32 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Datasets list",
+      "fr": "Liste de jeux de données"
+    }
   },
   "dataset-card": {
     "tagName": "dataset-card",
@@ -4066,7 +7170,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -4075,7 +7182,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.actionsLocation",
@@ -4090,7 +7200,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bottom",
           "none"
         ],
-        "default": "bottom"
+        "default": "bottom",
+        "titles": {
+          "en": "Position des boutons d'actions sur la carte"
+        },
+        "enumTitles": {
+          "right": {
+            "en": "À droite"
+          },
+          "bottom": {
+            "en": "En bas"
+          },
+          "none": {
+            "en": "Aucun"
+          }
+        }
       },
       {
         "name": "cardConfig.actionsStyle",
@@ -4105,7 +7229,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "full",
           "text"
         ],
-        "default": "full"
+        "default": "full",
+        "titles": {
+          "en": "Style des boutons d'actions"
+        },
+        "enumTitles": {
+          "icon": {
+            "en": "Icône seulement"
+          },
+          "full": {
+            "en": "Icône et texte"
+          },
+          "text": {
+            "en": "Texte seulement"
+          }
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -4120,7 +7258,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Élévation de la carte",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.color",
@@ -4139,7 +7299,41 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "success",
           "error",
           "warning"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          },
+          "info": {
+            "en": "Info",
+            "fr": "Information"
+          },
+          "success": {
+            "en": "Success",
+            "fr": "Succès"
+          },
+          "error": {
+            "en": "Error",
+            "fr": "Erreur"
+          },
+          "warning": {
+            "en": "Warning",
+            "fr": "Avertissement"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.density",
@@ -4154,7 +7348,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.elevation",
@@ -4170,7 +7382,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.rounded",
@@ -4186,7 +7420,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.keywords.show",
@@ -4196,7 +7452,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "show"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les mots-clés"
+        }
       },
       {
         "name": "cardConfig.keywords.variant",
@@ -4211,7 +7470,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -4226,7 +7503,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Arrondi de la carte",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDepartment",
@@ -4236,7 +7535,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le propriétaire"
+        }
       },
       {
         "name": "cardConfig.showSummary",
@@ -4246,7 +7548,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le résumé"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -4257,7 +7562,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -4317,7 +7625,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "À gauche"
+          },
+          "top": {
+            "en": "En haut"
+          },
+          "center": {
+            "en": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -4328,7 +7650,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.thumbnail.useApplication",
@@ -4339,7 +7664,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Utiliser l'image de la première visualisation"
+        }
       },
       {
         "name": "cardConfig.thumbnail.useTopic",
@@ -4350,7 +7678,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Utiliser l'image de la première thématique"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -4365,7 +7696,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.color",
@@ -4381,7 +7726,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.density",
@@ -4396,7 +7763,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.elevation",
@@ -4412,7 +7797,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.iconColor",
@@ -4428,7 +7835,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de l'icône",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.rounded",
@@ -4444,7 +7873,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.show",
@@ -4454,7 +7905,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "show"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les thématiques"
+        }
       },
       {
         "name": "cardConfig.topics.showIcon",
@@ -4465,7 +7919,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "cardConfig.topics.variant",
@@ -4480,10 +7937,32 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Dataset card",
+      "fr": "Vignette d'un jeu de données"
+    }
   },
   "dataset-table": {
     "tagName": "dataset-table",
@@ -4504,7 +7983,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "cols"
         ],
         "type": "string-array",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Colonnes visibles par défaut"
+        }
       },
       {
         "name": "dataset.href",
@@ -4544,7 +8026,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "table",
           "table-dense",
           "list"
-        ]
+        ],
+        "titles": {
+          "en": "Mode d'affichage par défaut"
+        },
+        "enumTitles": {
+          "table": {
+            "en": "Table"
+          },
+          "table-dense": {
+            "en": "Table dense"
+          },
+          "list": {
+            "en": "Liste de vignettes"
+          }
+        }
       },
       {
         "name": "interactions",
@@ -4553,7 +8049,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Autoriser les interactions"
+        }
       },
       {
         "name": "mb",
@@ -4562,7 +8061,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "syncParams",
@@ -4576,10 +8078,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sandboxed",
           "shared-filters"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Synchronisation des paramètres d'URL"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucune synchronisation"
+          },
+          "sandboxed": {
+            "en": "Synchronisation cloisonnée"
+          },
+          "shared-filters": {
+            "en": "Synchronisation avec partage des filtres"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Dataset table",
+      "fr": "Tableau d'un jeu de données"
+    }
   },
   "dataset-form": {
     "tagName": "dataset-form",
@@ -4611,10 +8131,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Dataset form",
+      "fr": "Formulaire d'un jeu de données"
+    }
   },
   "dataset-download": {
     "tagName": "dataset-download",
@@ -4646,10 +8173,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Dataset download",
+      "fr": "Téléchargement d'un jeu de données"
+    }
   },
   "applications-catalog": {
     "tagName": "applications-catalog",
@@ -4669,7 +8203,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "countPosition",
@@ -4683,7 +8220,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "bottom"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position du nombre de résultats"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "top": {
+            "en": "Au dessus des filtres"
+          },
+          "bottom": {
+            "en": "Au dessus des résultats"
+          }
+        }
       },
       {
         "name": "defaultSort",
@@ -4697,7 +8248,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "updatedAt:-1",
           "title:1"
         ],
-        "default": "createdAt:-1"
+        "default": "createdAt:-1",
+        "titles": {
+          "en": "Tri par défaut"
+        },
+        "enumTitles": {
+          "createdAt:-1": {
+            "en": "Date de création (du plus récent au plus ancien)"
+          },
+          "updatedAt:-1": {
+            "en": "Date de mise à jour (du plus récent au plus ancien)"
+          },
+          "title:1": {
+            "en": "Ordre alphabétique (A à Z)"
+          }
+        }
       },
       {
         "name": "filters.density",
@@ -4711,7 +8276,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "filters.items",
@@ -4727,7 +8310,27 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "topics",
           "owners",
           "sort"
-        ]
+        ],
+        "titles": {
+          "en": "Filtres à afficher"
+        },
+        "enumTitles": {
+          "search": {
+            "en": "Barre de recherche"
+          },
+          "base-application": {
+            "en": "Filtres par applications"
+          },
+          "topics": {
+            "en": "Filtres par thématiques"
+          },
+          "owners": {
+            "en": "Filtres par propriétaires"
+          },
+          "sort": {
+            "en": "Tri"
+          }
+        }
       },
       {
         "name": "filters.position",
@@ -4741,7 +8344,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "left"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position des filtres"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "Au dessus des résultats"
+          },
+          "left": {
+            "en": "À gauche des résultats"
+          }
+        }
       },
       {
         "name": "filters.rounded",
@@ -4756,7 +8370,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "mb",
@@ -4765,7 +8401,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "pagination.alignment",
@@ -4780,7 +8419,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "right"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Gauche"
+          },
+          "center": {
+            "en": "Centré"
+          },
+          "right": {
+            "en": "Droite"
+          }
+        }
       },
       {
         "name": "pagination.position",
@@ -4796,7 +8449,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "after",
           "both"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Position"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Scroll infini"
+          },
+          "before": {
+            "en": "Avant les résultats"
+          },
+          "after": {
+            "en": "Après les résultats"
+          },
+          "both": {
+            "en": "Les deux"
+          }
+        }
       },
       {
         "name": "showAdvancedFilters",
@@ -4804,7 +8474,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showAdvancedFilters"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer les filtres avancés"
+        }
       },
       {
         "name": "showSortBesideCount",
@@ -4812,10 +8485,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSortBesideCount"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher le tri à droite du nombre de résultats."
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Applications catalog",
+      "fr": "Catalogue de visualisations"
+    }
   },
   "applications-list": {
     "tagName": "applications-list",
@@ -4834,7 +8514,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "lastCreated",
           "custom"
         ],
-        "default": "lastUpdated"
+        "default": "lastUpdated",
+        "titles": {
+          "en": "Type de liste"
+        },
+        "enumTitles": {
+          "lastUpdated": {
+            "en": "Last updated",
+            "fr": "Les derniers modifiés"
+          },
+          "lastCreated": {
+            "en": "Last created",
+            "fr": "Les derniers créés"
+          },
+          "custom": {
+            "en": "Custom list",
+            "fr": "Liste libre"
+          }
+        }
       },
       {
         "name": "limit",
@@ -4843,7 +8540,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre de visualisations"
+        }
       },
       {
         "name": "columns",
@@ -4852,7 +8552,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "mb",
@@ -4861,7 +8564,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -4870,7 +8576,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.actionsLocation",
@@ -4885,7 +8594,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "bottom",
           "none"
         ],
-        "default": "bottom"
+        "default": "bottom",
+        "titles": {
+          "en": "Position des boutons d'actions sur la carte"
+        },
+        "enumTitles": {
+          "right": {
+            "en": "À droite"
+          },
+          "bottom": {
+            "en": "En bas"
+          },
+          "none": {
+            "en": "Aucun"
+          }
+        }
       },
       {
         "name": "cardConfig.actionsStyle",
@@ -4900,7 +8623,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "full",
           "text"
         ],
-        "default": "full"
+        "default": "full",
+        "titles": {
+          "en": "Style des boutons d'actions"
+        },
+        "enumTitles": {
+          "icon": {
+            "en": "Icône seulement"
+          },
+          "full": {
+            "en": "Icône et texte"
+          },
+          "text": {
+            "en": "Texte seulement"
+          }
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -4915,7 +8652,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Élévation de la carte",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -4930,7 +8689,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Arrondi de la carte",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDepartment",
@@ -4940,7 +8721,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le propriétaire"
+        }
       },
       {
         "name": "cardConfig.showSummary",
@@ -4950,7 +8734,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher le résumé"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -4961,7 +8748,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.location",
@@ -4977,7 +8767,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "À gauche"
+          },
+          "top": {
+            "en": "En haut"
+          },
+          "center": {
+            "en": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -4988,7 +8792,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.thumbnail.useTopic",
@@ -4999,7 +8806,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": false
+        "default": false,
+        "titles": {
+          "en": "Utiliser l'image de la première thématique"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -5014,7 +8824,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.color",
@@ -5030,7 +8854,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Color",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.density",
@@ -5045,7 +8891,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.elevation",
@@ -5061,7 +8925,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Elevation",
+          "fr": "Élévation"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.iconColor",
@@ -5077,7 +8963,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "primary",
           "secondary",
           "accent"
-        ]
+        ],
+        "titles": {
+          "en": "Couleur de l'icône",
+          "fr": "Couleur"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default topic color",
+            "fr": "Couleur de la thématique"
+          },
+          "primary": {
+            "en": "Primary",
+            "fr": "Primaire"
+          },
+          "secondary": {
+            "en": "Secondary",
+            "fr": "Secondaire"
+          },
+          "accent": {
+            "en": "Accent",
+            "fr": "Accentuée"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.rounded",
@@ -5093,7 +9001,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.topics.show",
@@ -5103,7 +9033,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "show"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher les thématiques"
+        }
       },
       {
         "name": "cardConfig.topics.showIcon",
@@ -5114,7 +9047,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Afficher l'icône"
+        }
       },
       {
         "name": "cardConfig.topics.variant",
@@ -5129,10 +9065,32 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "outlined",
           "tonal"
-        ]
+        ],
+        "titles": {
+          "en": "Variant",
+          "fr": "Variante"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Default",
+            "fr": "Avec fond coloré"
+          },
+          "outlined": {
+            "en": "Outlined",
+            "fr": "Avec bordure"
+          },
+          "tonal": {
+            "en": "Tonal",
+            "fr": "Tonale"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Applications list",
+      "fr": "Liste de visualisations"
+    }
   },
   "application": {
     "tagName": "application",
@@ -5181,7 +9139,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "syncParams",
@@ -5195,10 +9156,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "sandboxed",
           "shared-filters"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Synchronisation des paramètres d'URL"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucune synchronisation"
+          },
+          "sandboxed": {
+            "en": "Synchronisation cloisonnée"
+          },
+          "shared-filters": {
+            "en": "Synchronisation avec partage des filtres"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Application",
+      "fr": "Visualisation"
+    }
   },
   "reuses-catalog": {
     "tagName": "reuses-catalog",
@@ -5218,7 +9197,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "countPosition",
@@ -5232,7 +9214,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "bottom"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position du nombre de résultats"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "top": {
+            "en": "Au dessus des filtres"
+          },
+          "bottom": {
+            "en": "Au dessus des résultats"
+          }
+        }
       },
       {
         "name": "defaultSort",
@@ -5246,7 +9242,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "updatedAt:-1",
           "title:1"
         ],
-        "default": "updatedAt:-1"
+        "default": "updatedAt:-1",
+        "titles": {
+          "en": "Tri par défaut"
+        },
+        "enumTitles": {
+          "createdAt:-1": {
+            "en": "Date de création (du plus récent au plus ancien)"
+          },
+          "updatedAt:-1": {
+            "en": "Date de mise à jour (du plus récent au plus ancien)"
+          },
+          "title:1": {
+            "en": "Ordre alphabétique (A à Z)"
+          }
+        }
       },
       {
         "name": "filters.density",
@@ -5260,7 +9270,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "filters.items",
@@ -5273,7 +9301,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         "enumValues": [
           "search",
           "sort"
-        ]
+        ],
+        "titles": {
+          "en": "Filtres à afficher"
+        },
+        "enumTitles": {
+          "search": {
+            "en": "Barre de recherche"
+          },
+          "sort": {
+            "en": "Tri"
+          }
+        }
       },
       {
         "name": "filters.position",
@@ -5287,7 +9326,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "left"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position des filtres"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "Au dessus des résultats"
+          },
+          "left": {
+            "en": "À gauche des résultats"
+          }
+        }
       },
       {
         "name": "filters.rounded",
@@ -5302,7 +9352,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "mb",
@@ -5311,7 +9383,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "pagination.alignment",
@@ -5326,7 +9401,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "right"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Gauche"
+          },
+          "center": {
+            "en": "Centré"
+          },
+          "right": {
+            "en": "Droite"
+          }
+        }
       },
       {
         "name": "pagination.position",
@@ -5342,7 +9431,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "after",
           "both"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Position"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Scroll infini"
+          },
+          "before": {
+            "en": "Avant les résultats"
+          },
+          "after": {
+            "en": "Après les résultats"
+          },
+          "both": {
+            "en": "Les deux"
+          }
+        }
       },
       {
         "name": "showAdvancedFilters",
@@ -5350,7 +9456,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showAdvancedFilters"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer les filtres avancés"
+        }
       },
       {
         "name": "showSortBesideCount",
@@ -5358,10 +9467,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSortBesideCount"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher le tri à droite du nombre de résultats."
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Reuses catalog",
+      "fr": "Catalogue de réutilisations"
+    }
   },
   "reuses-list": {
     "tagName": "reuses-list",
@@ -5380,7 +9496,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "lastCreated",
           "custom"
         ],
-        "default": "lastUpdated"
+        "default": "lastUpdated",
+        "titles": {
+          "en": "Type de liste"
+        },
+        "enumTitles": {
+          "lastUpdated": {
+            "en": "Last updated",
+            "fr": "Les derniers modifiés"
+          },
+          "lastCreated": {
+            "en": "Last created",
+            "fr": "Les derniers créés"
+          },
+          "custom": {
+            "en": "Custom list",
+            "fr": "Liste libre"
+          }
+        }
       },
       {
         "name": "limit",
@@ -5389,7 +9522,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre de réutilisations"
+        }
       },
       {
         "name": "columns",
@@ -5398,7 +9534,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "mb",
@@ -5407,7 +9546,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -5416,7 +9558,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -5431,7 +9576,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -5446,7 +9613,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showAuthor",
@@ -5456,7 +9645,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show author",
+          "fr": "Afficher l'auteur"
+        }
       },
       {
         "name": "cardConfig.showSummary",
@@ -5466,7 +9659,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show summary on card",
+          "fr": "Afficher le résumé"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -5477,7 +9674,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -5537,7 +9738,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -5548,7 +9767,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -5563,10 +9786,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Reuses list",
+      "fr": "Liste de réutilisations"
+    }
   },
   "reuse-card": {
     "tagName": "reuse-card",
@@ -5598,7 +9839,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -5607,7 +9851,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -5622,7 +9869,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -5637,7 +9906,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showAuthor",
@@ -5647,7 +9938,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show author",
+          "fr": "Afficher l'auteur"
+        }
       },
       {
         "name": "cardConfig.showSummary",
@@ -5657,7 +9952,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show summary on card",
+          "fr": "Afficher le résumé"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -5668,7 +9967,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -5728,7 +10031,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -5739,7 +10060,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -5754,10 +10079,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Reuse card",
+      "fr": "Vignette de réutilisation"
+    }
   },
   "event-catalog": {
     "tagName": "event-catalog",
@@ -5777,7 +10120,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "countPosition",
@@ -5791,7 +10137,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "bottom"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position du nombre de résultats"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "top": {
+            "en": "Au dessus des filtres"
+          },
+          "bottom": {
+            "en": "Au dessus des résultats"
+          }
+        }
       },
       {
         "name": "defaultSort",
@@ -5804,7 +10164,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "startDate:1",
           "title:1"
         ],
-        "default": "startDate:1"
+        "default": "startDate:1",
+        "titles": {
+          "en": "Tri par défaut"
+        },
+        "enumTitles": {
+          "startDate:1": {
+            "en": "Date de début (du plus ancien au plus récent)"
+          },
+          "title:1": {
+            "en": "Ordre alphabétique (A à Z)"
+          }
+        }
       },
       {
         "name": "filters.density",
@@ -5818,7 +10189,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "filters.items",
@@ -5832,7 +10221,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "search",
           "include-past",
           "sort"
-        ]
+        ],
+        "titles": {
+          "en": "Filtres à afficher"
+        },
+        "enumTitles": {
+          "search": {
+            "en": "Barre de recherche"
+          },
+          "include-past": {
+            "en": "Inclure les événements passés"
+          },
+          "sort": {
+            "en": "Tri"
+          }
+        }
       },
       {
         "name": "filters.position",
@@ -5846,7 +10249,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "left"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position des filtres"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "Au dessus des résultats"
+          },
+          "left": {
+            "en": "À gauche des résultats"
+          }
+        }
       },
       {
         "name": "filters.rounded",
@@ -5861,7 +10275,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "includePast",
@@ -5869,7 +10305,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "includePast"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Inclure les évènements passés"
+        }
       },
       {
         "name": "mb",
@@ -5878,7 +10317,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "pagination.alignment",
@@ -5893,7 +10335,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "right"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Gauche"
+          },
+          "center": {
+            "en": "Centré"
+          },
+          "right": {
+            "en": "Droite"
+          }
+        }
       },
       {
         "name": "pagination.position",
@@ -5909,7 +10365,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "after",
           "both"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Position"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Scroll infini"
+          },
+          "before": {
+            "en": "Avant les résultats"
+          },
+          "after": {
+            "en": "Après les résultats"
+          },
+          "both": {
+            "en": "Les deux"
+          }
+        }
       },
       {
         "name": "showAdvancedFilters",
@@ -5917,7 +10390,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showAdvancedFilters"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer les filtres avancés"
+        }
       },
       {
         "name": "showSortBesideCount",
@@ -5925,10 +10401,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSortBesideCount"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher le tri à droite du nombre de résultats."
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Events catalog",
+      "fr": "Catalogue d'événements"
+    }
   },
   "event-list": {
     "tagName": "event-list",
@@ -5946,7 +10429,20 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "upcoming",
           "custom"
         ],
-        "default": "upcoming"
+        "default": "upcoming",
+        "titles": {
+          "en": "Type de liste"
+        },
+        "enumTitles": {
+          "upcoming": {
+            "en": "Upcoming",
+            "fr": "Les prochains événements"
+          },
+          "custom": {
+            "en": "Custom list",
+            "fr": "Liste libre"
+          }
+        }
       },
       {
         "name": "limit",
@@ -5955,7 +10451,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre d'événements"
+        }
       },
       {
         "name": "columns",
@@ -5964,7 +10463,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "mb",
@@ -5973,7 +10475,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -5982,7 +10487,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -5997,7 +10505,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -6012,7 +10542,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDescription",
@@ -6022,7 +10574,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show description on card",
+          "fr": "Afficher la description"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -6033,7 +10589,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -6093,7 +10653,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -6104,7 +10682,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -6119,10 +10701,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Events list",
+      "fr": "Liste d'événements"
+    }
   },
   "event-card": {
     "tagName": "event-card",
@@ -6154,7 +10754,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -6163,7 +10766,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -6178,7 +10784,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -6193,7 +10821,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDescription",
@@ -6203,7 +10853,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show description on card",
+          "fr": "Afficher la description"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -6214,7 +10868,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -6274,7 +10932,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -6285,7 +10961,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -6300,10 +10980,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "Event card",
+      "fr": "Vignette d'événement"
+    }
   },
   "news-catalog": {
     "tagName": "news-catalog",
@@ -6323,7 +11021,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "countPosition",
@@ -6337,7 +11038,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "bottom"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position du nombre de résultats"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Aucun"
+          },
+          "top": {
+            "en": "Au dessus des filtres"
+          },
+          "bottom": {
+            "en": "Au dessus des résultats"
+          }
+        }
       },
       {
         "name": "defaultSort",
@@ -6351,7 +11066,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "date:1",
           "title:1"
         ],
-        "default": "date:-1"
+        "default": "date:-1",
+        "titles": {
+          "en": "Tri par défaut"
+        },
+        "enumTitles": {
+          "date:-1": {
+            "en": "Date (du plus récent au plus ancien)"
+          },
+          "date:1": {
+            "en": "Date (du plus ancien au plus récent)"
+          },
+          "title:1": {
+            "en": "Ordre alphabétique (A à Z)"
+          }
+        }
       },
       {
         "name": "filters.density",
@@ -6365,7 +11094,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "comfortable",
           "compact"
-        ]
+        ],
+        "titles": {
+          "en": "Density",
+          "fr": "Densité"
+        },
+        "enumTitles": {
+          "default": {
+            "en": "Normal",
+            "fr": "Normale"
+          },
+          "comfortable": {
+            "en": "Comfortable",
+            "fr": "Confortable"
+          },
+          "compact": {
+            "en": "Compact",
+            "fr": "Compacte"
+          }
+        }
       },
       {
         "name": "filters.items",
@@ -6378,7 +11125,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         "enumValues": [
           "search",
           "sort"
-        ]
+        ],
+        "titles": {
+          "en": "Filtres à afficher"
+        },
+        "enumTitles": {
+          "search": {
+            "en": "Barre de recherche"
+          },
+          "sort": {
+            "en": "Tri"
+          }
+        }
       },
       {
         "name": "filters.position",
@@ -6392,7 +11150,18 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "left"
         ],
-        "default": "top"
+        "default": "top",
+        "titles": {
+          "en": "Position des filtres"
+        },
+        "enumTitles": {
+          "top": {
+            "en": "Au dessus des résultats"
+          },
+          "left": {
+            "en": "À gauche des résultats"
+          }
+        }
       },
       {
         "name": "filters.rounded",
@@ -6407,7 +11176,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Rounded",
+          "fr": "Arrondi"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "mb",
@@ -6416,7 +11207,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "pagination.alignment",
@@ -6431,7 +11225,21 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "center",
           "right"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Alignement"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Gauche"
+          },
+          "center": {
+            "en": "Centré"
+          },
+          "right": {
+            "en": "Droite"
+          }
+        }
       },
       {
         "name": "pagination.position",
@@ -6447,7 +11255,24 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "after",
           "both"
         ],
-        "default": "none"
+        "default": "none",
+        "titles": {
+          "en": "Position"
+        },
+        "enumTitles": {
+          "none": {
+            "en": "Scroll infini"
+          },
+          "before": {
+            "en": "Avant les résultats"
+          },
+          "after": {
+            "en": "Après les résultats"
+          },
+          "both": {
+            "en": "Les deux"
+          }
+        }
       },
       {
         "name": "showAdvancedFilters",
@@ -6455,7 +11280,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showAdvancedFilters"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Activer les filtres avancés"
+        }
       },
       {
         "name": "showSortBesideCount",
@@ -6463,10 +11291,17 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "showSortBesideCount"
         ],
         "type": "boolean",
-        "required": false
+        "required": false,
+        "titles": {
+          "en": "Afficher le tri à droite du nombre de résultats."
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "News catalog",
+      "fr": "Catalogue d'actualités"
+    }
   },
   "news-list": {
     "tagName": "news-list",
@@ -6484,7 +11319,20 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "upcoming",
           "custom"
         ],
-        "default": "upcoming"
+        "default": "upcoming",
+        "titles": {
+          "en": "Type de liste"
+        },
+        "enumTitles": {
+          "upcoming": {
+            "en": "Upcoming",
+            "fr": "À venir"
+          },
+          "custom": {
+            "en": "Custom list",
+            "fr": "Liste libre"
+          }
+        }
       },
       {
         "name": "limit",
@@ -6493,7 +11341,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 3
+        "default": 3,
+        "titles": {
+          "en": "Nombre d'actualités"
+        }
       },
       {
         "name": "columns",
@@ -6502,7 +11353,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": true,
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de colonnes"
+        }
       },
       {
         "name": "mb",
@@ -6511,7 +11365,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -6520,7 +11377,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -6535,7 +11395,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -6550,7 +11432,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDescription",
@@ -6560,7 +11464,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show description on card",
+          "fr": "Afficher la description"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -6571,7 +11479,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -6631,7 +11543,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -6642,7 +11572,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -6657,10 +11591,28 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "News list",
+      "fr": "Liste d'actualités"
+    }
   },
   "news-card": {
     "tagName": "news-card",
@@ -6692,7 +11644,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "integer",
         "required": false,
-        "default": 0
+        "default": 0,
+        "titles": {
+          "en": "Espacement inférieur"
+        }
       },
       {
         "name": "usePortalConfig",
@@ -6701,7 +11656,10 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": true,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Utiliser la configuration du portail"
+        }
       },
       {
         "name": "cardConfig.elevation",
@@ -6716,7 +11674,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           1,
           2,
           3
-        ]
+        ],
+        "titles": {
+          "en": "Card elevation",
+          "fr": "Élévation de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucune"
+          },
+          "1": {
+            "en": "Light",
+            "fr": "Légère"
+          },
+          "2": {
+            "en": "Moderate",
+            "fr": "Modérée"
+          },
+          "3": {
+            "en": "Strong",
+            "fr": "Forte"
+          }
+        }
       },
       {
         "name": "cardConfig.rounded",
@@ -6731,7 +11711,29 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "default",
           "lg",
           "xl"
-        ]
+        ],
+        "titles": {
+          "en": "Card rounded corners",
+          "fr": "Arrondi de la carte"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "None",
+            "fr": "Aucun"
+          },
+          "default": {
+            "en": "Normal",
+            "fr": "Normal"
+          },
+          "lg": {
+            "en": "Medium",
+            "fr": "Moyen"
+          },
+          "xl": {
+            "en": "Large",
+            "fr": "Grand"
+          }
+        }
       },
       {
         "name": "cardConfig.showDescription",
@@ -6741,7 +11743,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show description on card",
+          "fr": "Afficher la description"
+        }
       },
       {
         "name": "cardConfig.thumbnail.crop",
@@ -6752,7 +11758,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Crop image for uniform appearance",
+          "fr": "Recadrer l'image pour un rendu uniforme"
+        }
       },
       {
         "name": "cardConfig.thumbnail.default._id",
@@ -6812,7 +11822,25 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           "top",
           "center"
         ],
-        "default": "center"
+        "default": "center",
+        "titles": {
+          "en": "Image position on card",
+          "fr": "Position de l'image sur la carte"
+        },
+        "enumTitles": {
+          "left": {
+            "en": "Left",
+            "fr": "À gauche"
+          },
+          "top": {
+            "en": "Top",
+            "fr": "En haut"
+          },
+          "center": {
+            "en": "Below title",
+            "fr": "Sous le titre"
+          }
+        }
       },
       {
         "name": "cardConfig.thumbnail.show",
@@ -6823,7 +11851,11 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
         ],
         "type": "boolean",
         "required": false,
-        "default": true
+        "default": true,
+        "titles": {
+          "en": "Show image",
+          "fr": "Afficher l'image"
+        }
       },
       {
         "name": "cardConfig.titleLinesCount",
@@ -6838,9 +11870,27 @@ export const tagDescriptors: Record<string, TagDescriptor> = {
           2,
           0
         ],
-        "default": 2
+        "default": 2,
+        "titles": {
+          "en": "Nombre de lignes pour le titre"
+        },
+        "enumTitles": {
+          "0": {
+            "en": "Sans limite de lignes"
+          },
+          "1": {
+            "en": "1 ligne"
+          },
+          "2": {
+            "en": "2 lignes"
+          }
+        }
       }
     ],
-    "hiddenProperties": []
+    "hiddenProperties": [],
+    "titles": {
+      "en": "News card",
+      "fr": "Vignette d'actualité"
+    }
   }
 }
