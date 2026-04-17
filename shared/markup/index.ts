@@ -1,0 +1,5 @@
+export { tagDescriptors } from './tag-descriptors.ts'
+export type { TagDescriptor, ChildrenSlot, AttributeDescriptor } from './types.ts'
+export { serializeElements } from './serializer.ts'
+export { deserializeElements } from './deserializer.ts'
+export type { DeserializeError, DeserializeResult } from './deserializer.ts'

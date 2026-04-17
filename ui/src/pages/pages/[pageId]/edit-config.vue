@@ -20,11 +20,36 @@
         >
           <template #page-elements="{node, statefulLayout}">
             <v-defaults-provider :defaults="vjsfDefaults">
+              <div
+                v-if="markupEnabled"
+                class="d-flex justify-end mb-2"
+              >
+                <v-btn-toggle
+                  v-model="editMode"
+                  density="compact"
+                  mandatory
+                  variant="outlined"
+                  divided
+                >
+                  <v-btn value="form">
+                    {{ t('formMode') }}
+                  </v-btn>
+                  <v-btn value="markup">
+                    {{ t('markupMode') }}
+                  </v-btn>
+                </v-btn-toggle>
+              </div>
               <page-edit-elements
+                v-if="editMode === 'form'"
                 :model-value="node.data"
                 :add-item-message="t('addItemMessage')"
                 :pages="pages"
                 root
+                @update:model-value="(data: any) => statefulLayout.input(node, data)"
+              />
+              <page-edit-elements-markup
+                v-else
+                :model-value="node.data"
                 @update:model-value="(data: any) => statefulLayout.input(node, data)"
               />
             </v-defaults-provider>
@@ -161,6 +186,12 @@ const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any)
   saveDraft.execute()
 })
 
+const markupEnabled = computed(() => {
+  if (typeof window === 'undefined') return false
+  return window.localStorage?.getItem('df-markup-edit') === '1'
+})
+const editMode = ref<'form' | 'markup'>('form')
+
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([
@@ -179,6 +210,8 @@ watch(pageFetch.data, (page) => {
     pages: Pages
     pageConfig: Page configuration
     configurePrompt: Help me configure this page
+    formMode: Form
+    markupMode: Markup
 
   fr:
     addItemMessage: Ajouter un bloc à la page
@@ -186,6 +219,8 @@ watch(pageFetch.data, (page) => {
     pages: Pages
     pageConfig: Configuration de la page
     configurePrompt: Aide-moi à configurer cette page
+    formMode: Formulaire
+    markupMode: Balisage
 
 </i18n>
 
