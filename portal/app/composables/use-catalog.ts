@@ -2,6 +2,11 @@ import type { WritableComputedRef } from 'vue'
 
 type FetchResult<T> = { count: number; results: T[] }
 
+export type FilterRef =
+  | WritableComputedRef<string, string>
+  | WritableComputedRef<string[], string[]>
+  | WritableComputedRef<boolean, boolean>
+
 export interface CatalogReturn<T, F> {
   displayedItems: Ref<T[]>
   itemsCount: ComputedRef<number>
@@ -15,7 +20,7 @@ export interface CatalogReturn<T, F> {
   filters: F
 }
 
-export interface CatalogConfig<T, F extends Record<string, WritableComputedRef<string, string> | WritableComputedRef<string[], string[]> | WritableComputedRef<boolean, boolean>>> {
+export interface CatalogConfig<T, F extends Record<string, FilterRef>> {
   endpoint: string
   useLocalFetch?: boolean
   buildQuery: (filters: F, sortValue: string | undefined, page: number, pageSize: number) => Record<string, string | number>
@@ -25,7 +30,7 @@ export interface CatalogConfig<T, F extends Record<string, WritableComputedRef<s
   mockDataFactory?: () => T[]
 }
 
-export function useCatalog<T, F extends Record<string, WritableComputedRef<string, string> | WritableComputedRef<string[], string[]> | WritableComputedRef<boolean, boolean>>> (
+export function useCatalog<T, F extends Record<string, FilterRef>> (
   element: { defaultSort?: string },
   config: CatalogConfig<T, F>
 ): CatalogReturn<T, F> {
@@ -47,55 +52,47 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
 
   const query = computed(() => config.buildQuery(filters, sortFilter.value, currentPage.value, pageSize))
 
-  const fetchFn = config.useLocalFetch ? useLocalFetch : useFetch
+  const fetchFn = (config.useLocalFetch ? useLocalFetch : useFetch) as typeof useFetch
   const itemsFetch = fetchFn<FetchResult<T>>(config.endpoint, { query, watch: false })
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
 
-  // Initialize displayedItems from fetched data. On SSR/hydration the payload
-  // is available synchronously; on client-side nav we wait for the promise.
+  // Initialize displayedItems once data resolves. Sync flush is required so
+  // the watcher fires during SSR (when Suspense awaits the fetch) and on
+  // client-side nav. After first init we stop to avoid clobbering loadMore pushes.
   let initialized = false
-  const initFromData = () => {
+  const stop = watch(() => itemsFetch.data.value, (newData) => {
     if (initialized) return
-    if (itemsFetch.data.value?.results) {
-      displayedItems.value = [...itemsFetch.data.value.results]
+    if (newData?.results) {
+      displayedItems.value = [...newData.results]
       initialized = true
+      stop()
     }
-  }
-  initFromData()
-  if (!initialized) {
-    const stop = watch(() => itemsFetch.data.value, () => {
-      initFromData()
-      if (initialized) stop()
-    })
-  }
+  }, { immediate: true, flush: 'sync' })
 
-  const goToPage = async (page: number) => {
+  const refreshItems = async (mode: 'replace' | 'append') => {
     loading.value = true
     try {
-      currentPage.value = page
       await itemsFetch.refresh()
-      if (itemsFetch.data.value?.results) {
-        displayedItems.value = [...itemsFetch.data.value.results]
-      }
+      const results = itemsFetch.data.value?.results
+      if (!results) return
+      if (mode === 'append') displayedItems.value.push(...results)
+      else displayedItems.value = [...results]
     } finally {
       loading.value = false
     }
+  }
+
+  const goToPage = async (page: number) => {
+    currentPage.value = page
+    await refreshItems('replace')
   }
 
   const loadMore = async (paginationPosition: string = 'none') => {
     if (loading.value || paginationPosition !== 'none') return
     if (displayedItems.value.length >= (itemsFetch.data.value?.count || 0)) return
-    loading.value = true
-    try {
-      currentPage.value++
-      await itemsFetch.refresh()
-      if (itemsFetch.data.value?.results) {
-        displayedItems.value.push(...itemsFetch.data.value.results)
-      }
-    } finally {
-      loading.value = false
-    }
+    currentPage.value++
+    await refreshItems('append')
   }
 
   // When user changes sort/order in UI, update the URL-bound sortFilter
@@ -109,15 +106,7 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
   const filterRefs = [...Object.values(filters), sortFilter]
   watch(filterRefs, async () => {
     currentPage.value = 1
-    loading.value = true
-    try {
-      await itemsFetch.refresh()
-      if (itemsFetch.data.value?.results) {
-        displayedItems.value = [...itemsFetch.data.value.results]
-      }
-    } finally {
-      loading.value = false
-    }
+    await refreshItems('replace')
     if (config.analyticsCategory && filters.search) {
       const searchRef = filters.search as WritableComputedRef<string, string>
       if (searchRef.value) {

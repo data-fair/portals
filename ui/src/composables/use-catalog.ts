@@ -1,7 +1,6 @@
-import type { CatalogReturn, CatalogConfig } from '../../../portal/app/composables/use-catalog'
-import type { WritableComputedRef } from 'vue'
+import type { CatalogReturn, CatalogConfig, FilterRef } from '#portal/app/composables/use-catalog'
 
-export function useCatalog<T, F extends Record<string, WritableComputedRef<string, string> | WritableComputedRef<string[], string[]> | WritableComputedRef<boolean, boolean>>> (
+export function useCatalog<T, F extends Record<string, FilterRef>> (
   _element: { defaultSort?: string },
   config: CatalogConfig<T, F>
 ): CatalogReturn<T, F> {
