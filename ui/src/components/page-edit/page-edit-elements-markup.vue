@@ -14,15 +14,18 @@ import { EditorView, keymap, lineNumbers, highlightActiveLine } from '@codemirro
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { bracketMatching, foldGutter, indentOnInput, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
 import { forEachDiagnostic, lintKeymap } from '@codemirror/lint'
+import { completionKeymap } from '@codemirror/autocomplete'
 
 const elements = defineModel<PageElement[]>({ required: true })
+
+const { locale } = useI18n()
 
 const editorEl = ref<HTMLElement | null>(null)
 const hasErrors = ref(false)
 let view: EditorView | null = null
 let lastExternalText = ''
 
-function buildExtensions () {
+function buildExtensions (locale: string) {
   return [
     lineNumbers(),
     foldGutter(),
@@ -31,8 +34,8 @@ function buildExtensions () {
     bracketMatching(),
     highlightActiveLine(),
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-    keymap.of([...defaultKeymap, ...historyKeymap, ...lintKeymap, indentWithTab]),
-    portalMarkupExtensions(),
+    keymap.of([...defaultKeymap, ...historyKeymap, ...lintKeymap, ...completionKeymap, indentWithTab]),
+    portalMarkupExtensions({ locale }),
     EditorView.updateListener.of((update) => {
       if (!update.docChanged && !update.transactions.some(tr => tr.effects.length)) return
       let count = 0
@@ -83,7 +86,7 @@ onMounted(() => {
   const initial = serializeElements(elements.value ?? [])
   lastExternalText = initial
   view = new EditorView({
-    state: EditorState.create({ doc: initial, extensions: buildExtensions() }),
+    state: EditorState.create({ doc: initial, extensions: buildExtensions(locale.value) }),
     parent: editorEl.value!
   })
 })
