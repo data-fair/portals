@@ -49,7 +49,7 @@ app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
   const testEnvRouter = (await import('./test-env.ts')).default
   app.use('/api/test-env', testEnvRouter)
 }

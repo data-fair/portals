@@ -50,11 +50,8 @@ jobs:
           sleep 2
         done
 
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps chromium
-
     - name: Run tests
-      run: npm run test
+      run: npm run test-unit && npm run test-api
 
     - name: Audit
       run: npm audit --omit=dev --audit-level=critical
