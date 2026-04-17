@@ -25,6 +25,34 @@ const VIRTUAL_TAG_NAMES: Record<string, string> = {
 type Schema = Record<string, any>
 
 // ---------------------------------------------------------------------------
+// Title extraction
+// ---------------------------------------------------------------------------
+
+function extractTitles (schema: Schema): Record<string, string> | undefined {
+  const out: Record<string, string> = {}
+  if (typeof schema.title === 'string' && schema.title !== '') out.en = schema.title
+  const i18n = schema['x-i18n-title']
+  if (i18n && typeof i18n === 'object') {
+    for (const [loc, value] of Object.entries(i18n as Record<string, unknown>)) {
+      if (typeof value === 'string' && value !== '') out[loc] = value
+    }
+  }
+  return Object.keys(out).length > 0 ? out : undefined
+}
+
+function extractEnumTitles (schema: Schema): Record<string, Record<string, string>> | undefined {
+  const source = schema.type === 'array' ? schema.items : schema
+  if (!source?.oneOf) return undefined
+  const out: Record<string, Record<string, string>> = {}
+  for (const branch of source.oneOf) {
+    if (branch.const === undefined) continue
+    const titles = extractTitles(branch)
+    if (titles) out[String(branch.const)] = titles
+  }
+  return Object.keys(out).length > 0 ? out : undefined
+}
+
+// ---------------------------------------------------------------------------
 // Ref resolution helpers (all refs are internal #/$defs/... after makeLocalDefs)
 // ---------------------------------------------------------------------------
 
@@ -122,7 +150,10 @@ function analyzeElement (elementSchema: Schema, rootSchema: Schema): TagDescript
 
   sortAttributes(attributes, layoutOrder)
 
-  return { tagName, contentProperty, childrenSlots, attributes, hiddenProperties }
+  const descriptor: TagDescriptor = { tagName, contentProperty, childrenSlots, attributes, hiddenProperties }
+  const titles = extractTitles(elementSchema)
+  if (titles) descriptor.titles = titles
+  return descriptor
 }
 
 // ---------------------------------------------------------------------------
@@ -147,10 +178,14 @@ function classifyAsChildrenSlot (
   const items = propSchema.items
   if (!items) return null
 
+  const slotTitles = extractTitles(propSchema)
+
   // Case 1: Array of page elements (items ref to page-elements#/$defs/element)
   if (isElementRef(items)) {
     const virtualTag = getChildrenVirtualTag(propName, hasBothChildrenSlots)
-    return { property: propName, virtualTag, kind: 'direct' }
+    const slot: ChildrenSlot = { property: propName, virtualTag, kind: 'direct' }
+    if (slotTitles) slot.titles = slotTitles
+    return slot
   }
 
   // Case 2: Structured container — items are objects with a `children` sub-prop holding elements
@@ -160,7 +195,9 @@ function classifyAsChildrenSlot (
     if (childrenProp.items && isElementRef(childrenProp.items)) {
       const virtualTag = VIRTUAL_TAG_NAMES[propName] || propName
       const itemAttributes = extractItemAttributes(resolvedItems, rootSchema)
-      return { property: propName, virtualTag, kind: 'structured', itemAttributes }
+      const slot: ChildrenSlot = { property: propName, virtualTag, kind: 'structured', itemAttributes }
+      if (slotTitles) slot.titles = slotTitles
+      return slot
     }
   }
 
@@ -169,7 +206,9 @@ function classifyAsChildrenSlot (
     const virtualTag = VIRTUAL_TAG_NAMES[propName] || propName
     const linkSchema = resolveRef(rootSchema, items.$ref)
     const itemAttributes = extractLinkItemAttributes(linkSchema, rootSchema)
-    return { property: propName, virtualTag, kind: 'link', itemAttributes }
+    const slot: ChildrenSlot = { property: propName, virtualTag, kind: 'link', itemAttributes }
+    if (slotTitles) slot.titles = slotTitles
+    return slot
   }
 
   return null
@@ -192,7 +231,7 @@ function extractItemAttributes (
 ): AttributeDescriptor[] {
   const attrs: AttributeDescriptor[] = []
   const required = new Set<string>(itemSchema.required || [])
-  for (const [propName, rawPropSchema] of Object.entries(itemSchema.properties || {} as Record<string, Schema>)) {
+  for (const [propName, rawPropSchema] of Object.entries((itemSchema.properties || {}) as Record<string, Schema>)) {
     if (propName === 'children') continue
     const propSchema = resolveProperty(rootSchema, rawPropSchema)
     if (isObjectSchema(propSchema)) {
@@ -216,7 +255,7 @@ function extractLinkItemAttributes (
       ? resolveRef(rootSchema, branch.$ref)
       : branch
     const required = new Set<string>(branchSchema.required || [])
-    for (const [propName, rawPropSchema] of Object.entries(branchSchema.properties || {} as Record<string, Schema>)) {
+    for (const [propName, rawPropSchema] of Object.entries((branchSchema.properties || {}) as Record<string, Schema>)) {
       if (seen.has(propName)) continue
       const propSchema = resolveProperty(rootSchema, rawPropSchema)
       if (isObjectSchema(propSchema)) {
@@ -258,7 +297,7 @@ function flattenObjectAttributes (
         ? resolveRef(rootSchema, branch.$ref)
         : branch
       const branchRequired = new Set<string>(branchSchema.required || [])
-      for (const [propName, rawPropSchema] of Object.entries(branchSchema.properties || {} as Record<string, Schema>)) {
+      for (const [propName, rawPropSchema] of Object.entries((branchSchema.properties || {}) as Record<string, Schema>)) {
         if (seen.has(propName)) continue
         seen.add(propName)
         const propSchema = resolveProperty(rootSchema, rawPropSchema)
@@ -312,6 +351,10 @@ function makeAttributeDescriptor (
   const enumValues = extractEnumValues(propSchema)
   if (enumValues) attr.enumValues = enumValues
   if (propSchema.default !== undefined) attr.default = propSchema.default
+  const titles = extractTitles(propSchema)
+  if (titles) attr.titles = titles
+  const enumTitles = extractEnumTitles(propSchema)
+  if (enumTitles) attr.enumTitles = enumTitles
 
   return attr
 }
