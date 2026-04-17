@@ -69,9 +69,36 @@ function attributeNameOptions (attrs: AttributeDescriptor[], locale: string): Co
   }))
 }
 
+function findAttributeDescriptor (tagName: string, attrName: string): AttributeDescriptor | null {
+  const attrs = attributesForTag(tagName)
+  if (!attrs) return null
+  return attrs.find(a => a.name === attrName) ?? null
+}
+
+function valueOptionsFor (attr: AttributeDescriptor, locale: string): Completion[] | null {
+  if (attr.enumValues && attr.enumValues.length > 0) {
+    return attr.enumValues.map(v => {
+      const s = String(v)
+      return {
+        label: s,
+        detail: localized(attr.enumTitles?.[s], locale),
+        type: 'enum' as const
+      }
+    })
+  }
+  if (attr.type === 'boolean') {
+    return [
+      { label: 'true', type: 'constant' as const },
+      { label: 'false', type: 'constant' as const }
+    ]
+  }
+  return null
+}
+
 type Context =
   | { kind: 'tagname' }
   | { kind: 'attrname', tagName: string }
+  | { kind: 'attrvalue', tagName: string, attrName: string, valueFrom: number, valueTo: number }
 
 function textOf (state: { sliceDoc: (from: number, to: number) => string }, node: SyntaxNode): string {
   return state.sliceDoc(node.from, node.to)
@@ -90,11 +117,29 @@ function detectContext (ctx: CompletionContext): Context | null {
   // --- Tag-name context ---
   if (findAncestor(node, ['TagName'])) return { kind: 'tagname' }
 
+  // --- Attribute-value context ---
+  // Cursor sits inside an AttributeValue (between the quotes).
+  const valueNode = findAncestor(node, ['AttributeValue', 'String'])
+  const openTagForValue = findAncestor(node, ['OpenTag', 'SelfClosingTag'])
+  if (valueNode && openTagForValue) {
+    const attrNode = findAncestor(valueNode, ['Attribute'])
+    if (attrNode) {
+      const nameNode = attrNode.getChild('AttributeName')
+      if (nameNode) {
+        const attrName = textOf(state, nameNode)
+        // The AttributeValue's text is `"..."` — offsets +1 / -1 to narrow to just inside the quotes.
+        const valueFrom = valueNode.from + 1
+        const valueTo = valueNode.to - 1
+        const tagName = findTagNameText(state, openTagForValue)
+        if (tagName) return { kind: 'attrvalue', tagName, attrName, valueFrom, valueTo }
+      }
+    }
+  }
+
   // --- Attribute-name context ---
   // We're inside an OpenTag/SelfClosingTag but outside its TagName and outside
   // any AttributeValue (which handles the value branch).
   const openTag = findAncestor(node, ['OpenTag', 'SelfClosingTag'])
-  const valueNode = findAncestor(node, ['AttributeValue', 'String'])
   if (openTag && !valueNode) {
     const tagName = findTagNameText(state, openTag)
     if (tagName) return { kind: 'attrname', tagName }
@@ -113,6 +158,19 @@ export function portalMarkupCompletion (locale: string): CompletionSource {
   return (ctx: CompletionContext): CompletionResult | null => {
     const which = detectContext(ctx)
     if (!which) return null
+
+    if (which.kind === 'attrvalue') {
+      const attr = findAttributeDescriptor(which.tagName, which.attrName)
+      if (!attr) return null
+      const options = valueOptionsFor(attr, locale)
+      if (!options) return null
+      return {
+        from: which.valueFrom,
+        to: which.valueTo,
+        options,
+        validFor: /^[^"]*$/
+      }
+    }
 
     if (which.kind === 'tagname') {
       const partial = ctx.matchBefore(/<[A-Za-z0-9_-]*/)

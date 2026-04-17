@@ -75,3 +75,28 @@ test.describe('markup completion — attribute names', () => {
     assert.equal(r, null)
   })
 })
+
+test.describe('markup completion — attribute values', () => {
+  test('suggests enum values for enum attribute', () => {
+    const r = runCompletion('<title titleSize="|"')
+    const found = labels(r)
+    assert.ok(found.includes('h1'), 'h1 present')
+    assert.ok(found.includes('h2'), 'h2 present')
+  })
+
+  test('suggests true/false for boolean attribute', () => {
+    const r = runCompletion('<title centered="|"')
+    const found = labels(r)
+    assert.deepEqual(found.sort(), ['false', 'true'])
+  })
+
+  test('returns null for free-text (non-enum, non-boolean) attribute', () => {
+    const r = runCompletion('<title content="|"')
+    assert.equal(r, null)
+  })
+
+  test('returns null for unknown tag in value context', () => {
+    const r = runCompletion('<nonsense foo="|"')
+    assert.equal(r, null)
+  })
+})
