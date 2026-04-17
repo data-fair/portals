@@ -212,22 +212,6 @@
     </v-list-item>
   </custom-router-link>
 
-  <!-- Search indexes -->
-  <custom-router-link
-    v-if="session.state.user?.adminMode && portal.config.searchEngine?.active"
-    :to="`/portals/${portal._id}/search-pages`"
-  >
-    <v-list-item link>
-      <template #prepend>
-        <v-icon
-          color="admin"
-          :icon="mdiProgressUpload"
-        />
-      </template>
-      {{ t('searchIndexes') }}
-    </v-list-item>
-  </custom-router-link>
-
   <!-- Manage whiteLabel -->
   <v-menu
     v-if="session.state.user?.adminMode"
@@ -332,7 +316,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit, mdiProgressUpload } from '@mdi/js'
+import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { Portal } from '#api/types/portal/index.ts'
 
@@ -423,7 +407,6 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorUpdatingAdminConfig: Error while updating admin configuration
     events: Events
     manageDomainExposure: Manage domain exposure
-    searchIndexes: Pages indexing
     no: No
     ownerChanged: Owner changed!
     portalDeleted: Portal deleted!
@@ -456,7 +439,6 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorUpdatingAdminConfig: Erreur lors de la mise à jour de la configuration administrateur
     events: Traçabilité
     manageDomainExposure: Exposition du domaine
-    searchIndexes: Indexation des pages
     no: Non
     ownerChanged: Propriétaire changé !
     portalDeleted: Portail supprimé !

@@ -48,7 +48,6 @@ services:
       PUBLIC_URL: http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       STORAGE_TYPE: file
       SECRET_SITES: secret-sites
-      SECRET_PSEUDO_SESSION: secret-pseudo-session
       # When we test permissions, we need to authenticate many users from the same IP.
       AUTHRATELIMIT_ATTEMPTS: 500
       AUTHRATELIMIT_DURATION: 30
@@ -84,7 +83,7 @@ services:
     profiles:
       - dev
       - test
-    image: ghcr.io/data-fair/data-fair:feat-search-pages
+    image: ghcr.io/data-fair/data-fair:master
     restart: on-failure:10
     network_mode: host
     depends_on:
@@ -104,7 +103,6 @@ services:
       - OBSERVER_ACTIVE=false
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
       - SECRET_EVENTS=secret-events
-      - SECRET_SEARCH_PAGES=secret-search-pages
 
   #####
   # optional services

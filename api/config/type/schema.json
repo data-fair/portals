@@ -18,8 +18,7 @@
     "observer",
     "secretKeys",
     "portalUrlPattern",
-    "ingressControllers",
-    "elasticsearch"
+    "ingressControllers"
   ],
   "properties": {
     "mongoUrl": {
@@ -57,12 +56,6 @@
         },
         "ingress": {
           "type": "string"
-        },
-        "pseudoSession": {
-          "type": "string"
-        },
-        "searchPages": {
-          "type": "string"
         }
       }
     },
@@ -91,39 +84,6 @@
     },
     "upgradeRoot": {
       "type": "string"
-    },
-    "elasticsearch": {
-      "additionalProperties": false,
-      "required": [
-        "nodes"
-      ],
-      "properties": {
-        "nodes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "auth": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "username",
-            "password"
-          ],
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            }
-          }
-        },
-        "ca": {
-          "type": "string"
-        }
-      }
     },
     "util": {},
     "get": {},

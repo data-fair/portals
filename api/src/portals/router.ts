@@ -11,9 +11,6 @@ import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
-import dfEs from '../es.ts'
-import type { SearchEngineResult } from '@data-fair/types-portals/index.ts'
-import type { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
 
 const router = Router()
 export default router
@@ -195,53 +192,4 @@ router.post('/:id/ingress', async (req, res, next) => {
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
   await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], req.headers.cookie)
   res.status(204).send()
-})
-
-router.get('/:id/search', async (req, res, next) => {
-  const session = reqSessionAuthenticated(req)
-  await getPortalAsAdmin(session, req.params.id)
-
-  const query = (req.query.q ?? '') as string
-
-  const esQuery: SearchRequest = {
-    size: 100,
-    query: query
-      ? {
-          bool: {
-            should: [
-              {
-                multi_match: {
-                  query,
-                  type: 'bool_prefix',
-                  fields: ['title^3', 'title._2gram^3', 'title._3gram^3', 'description^2', 'description._2gram^2', 'description._3gram^2'],
-                  operator: 'and'
-                }
-              },
-              { match: { content: { query } } }
-            ],
-            minimum_should_match: 0
-          }
-        }
-      : undefined
-  }
-  const indexName = `portal-search-${req.params.id}`
-
-  try {
-    const results = await dfEs.client.search({ index: indexName, ...esQuery })
-
-    return res.json({
-      results: results.hits.hits.map((hit: any): SearchEngineResult => ({
-        path: hit._source.path,
-        title: hit._source.title,
-        description: hit._source.description?.slice(0, 100),
-        resourceType: hit._source.resourceType
-      })),
-      total: results.hits.total
-    })
-  } catch (err: any) {
-    if (err.meta?.statusCode === 404) {
-      return res.json({ results: [], total: 0 })
-    }
-    throw err
-  }
 })

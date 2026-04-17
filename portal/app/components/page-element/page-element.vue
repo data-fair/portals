@@ -42,11 +42,6 @@
   />
 
   <!-- Functional blocks -->
-  <page-element-search-engine
-    v-else-if="element.type === 'search' && searchEngineActive"
-    :element="element"
-    :context="context"
-  />
   <page-element-search
     v-else-if="element.type === 'search'"
     :element="element"
@@ -279,9 +274,6 @@ defineProps<{
     parentLength: number
   }
 }>()
-
-const { portal } = usePortalStore()
-const searchEngineActive = computed(() => portal.value?.config?.searchEngine?.active)
 </script>
 
 <i18n lang="yaml">

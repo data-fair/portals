@@ -3,7 +3,6 @@ import type { Page } from '../../../api/types/page'
 import type { Reuse } from '../../../api/types/reuse'
 import type { Image } from '../../../api/types/image'
 import type { FontAsset } from '../../../api/types/font-asset'
-import type { SearchPage } from '@data-fair/types-portals/index.ts'
 import mongo from '@data-fair/lib-node/mongo.js'
 
 export class PortalMongo {
@@ -33,10 +32,6 @@ export class PortalMongo {
 
   get fontAssets () {
     return mongo.db.collection<FontAsset>('font-assets')
-  }
-
-  get searchPages () {
-    return mongo.db.collection<SearchPage>('search-pages')
   }
 }
 

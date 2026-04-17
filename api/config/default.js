@@ -19,9 +19,4 @@ export default {
   privateIngressManagerUrl: undefined,
   ingressControllers: [],
   upgradeRoot: '/app/',
-  elasticsearch: {
-    nodes: ['http://localhost:9200'],
-    // auth: {},
-    // ca: '', // the central authority for the ES cluster certificates
-  },
 }
