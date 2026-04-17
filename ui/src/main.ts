@@ -13,6 +13,7 @@ import { createLocaleDayjs } from '@data-fair/lib-vue/locale-dayjs.js'
 import { createSession } from '@data-fair/lib-vue/session.js'
 import { createUiNotif } from '@data-fair/lib-vue/ui-notif.js'
 import { createI18n } from 'vue-i18n'
+import { useFrameServer } from '@data-fair/lib-vue-agents'
 import App from './App.vue'
 
 (async function () {
@@ -44,4 +45,5 @@ import App from './App.vue'
     .use(vuetifyRules)
     .use(i18n)
     .mount('#app')
+  useFrameServer('portals-manager')
 })()

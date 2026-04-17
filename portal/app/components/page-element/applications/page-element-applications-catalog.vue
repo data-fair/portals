@@ -63,7 +63,7 @@ const {
   }),
   buildQuery: (filters, sortValue, page, pageSize) => {
     const query: Record<string, string | number> = {
-      select: 'id,slug,title,summary,updatedAt,image,url,topics,-userPermissions',
+      select: 'id,slug,title,summary,updatedAt,image,url,topics,owner,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
       size: pageSize,

@@ -6,6 +6,8 @@ import { assertReqInternalSecret } from '@data-fair/lib-express/index.js'
 const app = express()
 app.use(express.json())
 
+app.get('/ping', (req, res) => res.send('ok'))
+
 app.post('/api/ingress', (req, res, next) => {
   assertReqInternalSecret(req, 'secret-ingress')
   const body = req.body as IngressManagerIngressInfo[]
@@ -13,11 +15,11 @@ app.post('/api/ingress', (req, res, next) => {
   for (const item of body) {
     const url = new URL(item.url)
     if (url.port !== process.env.NGINX_PORT) {
-      res.status(400).send(`in dev env only ${process.env.NGINX_PORT} port is allowed, for example "http://portal1.localhost:${process.env.NGINX_PORT}"`)
+      res.status(400).send(`in dev env only ${process.env.NGINX_PORT} port is allowed, for example "http://portal1.${process.env.DEV_HOST}:${process.env.NGINX_PORT}"`)
       return
     }
     if (!url.hostname.endsWith('.localhost')) {
-      res.status(400).send(`in dev env only *.localhost hostname is allowed, for example "http://portal1.localhost:${process.env.NGINX_PORT}"`)
+      res.status(400).send(`in dev env only *.localhost hostname is allowed, for example "http://portal1.${process.env.DEV_HOST}:${process.env.NGINX_PORT}"`)
       return
     }
     hostAliases += `127.0.0.1 ${url.hostname}\n`

@@ -3,11 +3,17 @@
 RANDOM_NB=$((1024 + RANDOM % 48000))
 echo "Use random base port $RANDOM_NB"
 
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/[^a-zA-Z0-9-]/-/g')
+DEV_HOST="${BRANCH:-portals}.localhost"
+
 cat <<EOF > ".env"
+DEV_HOST=${DEV_HOST}
+
 NGINX_PORT=$((RANDOM_NB))
 
 DEV_API_PORT=$((RANDOM_NB + 10))
 DEV_UI_PORT=$((RANDOM_NB + 11))
+DEV_UI_HMR_PORT=$((RANDOM_NB + 17))
 DEV_PORTAL_PORT=$((RANDOM_NB + 12))
 DEV_OBSERVER_PORT=$((RANDOM_NB + 13))
 MAILDEV_UI_PORT=$((RANDOM_NB + 14))
@@ -21,4 +27,5 @@ SD_PORT=$((RANDOM_NB + 30))
 DF_PORT=$((RANDOM_NB + 31))
 EVENTS_PORT=$((RANDOM_NB + 32))
 PROCESSINGS_PORT=$((RANDOM_NB + 33))
+AGENTS_PORT=$((RANDOM_NB + 34))
 EOF

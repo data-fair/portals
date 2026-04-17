@@ -1,70 +1,63 @@
 [
   {
-    "id": "superadmin",
-    "firstName": "Super",
-    "lastName": "Admin",
-    "email": "superadmin@test.com",
+    "id": "test_superadmin",
+    "firstName": "Test",
+    "lastName": "Superadmin",
+    "email": "test_superadmin@test.com",
     "password": {
       "clear": "superpasswd"
     }
   },
   {
-    "id": "adminOrga",
-    "email": "admin@test.com",
+    "id": "test_admin",
+    "firstName": "Test",
+    "lastName": "Admin",
+    "email": "test_admin@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "contribOrga",
-    "firstName": "Contrib Organization",
-    "lastName": "",
-    "email": "contrib@test.com",
+    "id": "test_contrib",
+    "firstName": "Test",
+    "lastName": "Contrib",
+    "email": "test_contrib@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "adminDep",
-    "firstName": "Admin Department",
-    "lastName": "",
-    "email": "admin.dep@test.com",
+    "id": "test_admin_dep",
+    "firstName": "Test",
+    "lastName": "Admin Dep",
+    "email": "test_admin_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "contribDep",
-    "firstName": "Contrib Department",
-    "lastName": "",
-    "email": "contrib.dep@test.com",
+    "id": "test_contrib_dep",
+    "firstName": "Test",
+    "lastName": "Contrib Dep",
+    "email": "test_contrib_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "userOrga",
-    "firstName": "User Organization",
-    "lastName": "",
-    "email": "user@test.com",
+    "id": "test_user",
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test_user@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "dmeadus",
-    "firstName": "Danna",
-    "lastName": "Meadus",
-    "email": "dmeadus@answers.com",
-    "password": {
-      "clear": "passwd"
-    }
-  },
-  {
-    "id": "alone",
-    "firstName": "I am",
+    "id": "test_alone",
+    "firstName": "Test",
     "lastName": "Alone",
-    "email": "alone@no.org",
+    "email": "test_alone@test.com",
     "password": {
       "clear": "passwd"
     }

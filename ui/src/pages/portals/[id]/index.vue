@@ -16,11 +16,21 @@
         v-if="editConfig"
         v-model="formValid"
       >
+        <div class="d-flex justify-end mb-1">
+          <df-agent-chat-action
+            action-id="configure-portal"
+            :visible-prompt="t('configurePrompt')"
+            :hidden-context="configureContext"
+          />
+        </div>
         <vjsf-portal-config
           v-if="vjsfOptions"
           v-model="editConfig"
           :locale="locale"
           :options="vjsfOptions"
+          :data-title="t('portalConfig')"
+          prefix-name="portalConfig_"
+          :sub-agent="true"
           @update:model-value="saveDraft.execute()"
         >
           <template #colors-preview="context">
@@ -166,7 +176,9 @@ import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
+import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
@@ -181,12 +193,32 @@ const { portalConfig } = providePortalStore()
 // Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {
   if (!portalFetch.data.value) return
-  editConfig.value = portalFetch.data.value.draftConfig
-  portalConfig.value = editConfig.value
+  if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
+    editConfig.value = portalFetch.data.value.draftConfig
+  }
+  if (editConfig.value) portalConfig.value = editConfig.value
 })
 // Synchronize editConfig changes back to portalConfig
 watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
+})
+// When switching from assisted to manual mode, expand assisted colors into the full palette
+// When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
+watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
+  if (oldVal === true && newVal === false && editConfig.value?.theme) {
+    const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
+    editConfig.value.theme.colors = filled.colors
+    editConfig.value.theme.darkColors = filled.darkColors
+    editConfig.value.theme.hcColors = filled.hcColors
+    editConfig.value.theme.hcDarkColors = filled.hcDarkColors
+  }
+  if (oldVal === false && newVal === true && editConfig.value?.theme) {
+    editConfig.value.theme.assistedModeColors = {
+      primary: editConfig.value.theme.colors?.primary ?? defaultTheme.colors.primary,
+      secondary: editConfig.value.theme.colors?.secondary ?? defaultTheme.colors.secondary,
+      accent: editConfig.value.theme.colors?.accent ?? defaultTheme.colors.accent
+    }
+  }
 })
 
 const saveDraft = useAsyncAction(async () => {
@@ -251,6 +283,16 @@ const pages = computed(() => {
   return result
 })
 
+const configureContext = computed(() => {
+  const lines = [
+    'Use the subagent tool portalConfig_form to help the user configure the current portal.',
+    'Start the session by asking the user what they want to achieve.',
+  ]
+  if (editConfig.value?.title) lines.push(`The portal title is "${editConfig.value.title}".`)
+  if (editConfig.value?.description) lines.push(`Description: ${editConfig.value.description}`)
+  return lines.join(' ')
+})
+
 const vjsfOptions = computed<VjsfOptions | null>(() => ({
   context: {
     pages: pages.value,
@@ -280,10 +322,14 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     footer: Footer
     home: Home
     portals: Portals
+    portalConfig: Portal configuration
+    configurePrompt: Help me configure this portal
   fr:
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     footer: Pied de page
     home: Accueil
     portals: Portails
+    portalConfig: Configuration du portail
+    configurePrompt: Aide-moi à configurer ce portail
 </i18n>

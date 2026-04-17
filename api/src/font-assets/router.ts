@@ -74,7 +74,7 @@ router.delete('/:id', async (req, res) => {
   res.status(204).send()
 })
 
-router.get('/:id/data', async (req, res) => {
+router.get('/:id/data/:filename', async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)

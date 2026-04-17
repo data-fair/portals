@@ -15,6 +15,7 @@
     <v-breadcrumbs :items="breadcrumbs" />
 
     <v-spacer />
+    <div id="agent-chat-appbar" class="d-flex align-center" />
     <v-toolbar-items>
       <notification-queue />
 

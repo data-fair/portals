@@ -1,11 +1,12 @@
 <template>
-  <v-app>
+  <v-app :class="{ 'v-app--legacy-layout': $portal.md2Compat }">
     <NuxtLayout>
       <NuxtRouteAnnouncer />
       <NuxtPage />
       <ClientOnly><UiNotif /></ClientOnly>
       <ClientOnly><AcceptCookies /></ClientOnly>
     </NuxtLayout>
+    <ClientOnly><AgentChat :portal-config="$portal.config" :portal-id="$portal._id" :owner="$portal.owner" :locale="locale" :local-fetch="$localFetch" /></ClientOnly>
   </v-app>
 </template>
 
@@ -13,8 +14,9 @@
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
 import { useTheme } from 'vuetify'
 
-const { $portal, $siteInfo } = useNuxtApp()
+const { $portal, $siteInfo, $localFetch } = useNuxtApp()
 const session = useSession()
+const { locale } = useI18n()
 const theme = useTheme()
 const getPortalImageSrc = usePortalImageSrc()
 
@@ -59,5 +61,27 @@ useHead({
   line-clamp: 2;
   overflow: hidden;
   min-height: 2lh;
+}
+
+/* Legacy layout: restore Vuetify 3-like container max-widths */
+@media (min-width: 840px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 900px; }
+}
+@media (min-width: 1145px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1200px; }
+}
+@media (min-width: 1545px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1800px; }
+}
+@media (min-width: 2138px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 2400px; }
+}
+/* Force 1280px for most desktop screens (same as prod override) */
+@media (max-width: 1921px) {
+  .v-app--legacy-layout .v-container:not(.v-container--fluid) { max-width: 1280px !important; }
+}
+/* Legacy typography: restore Vuetify 3 MD2 letter-spacing on buttons/tabs */
+.v-app--legacy-layout .v-btn {
+  letter-spacing: 0.0892857143em;
 }
 </style>

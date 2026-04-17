@@ -1,5 +1,4 @@
 <template>
-  <v-spacer v-if="!navBarConfig.align || navBarConfig.align === 'center'" />
   <v-tabs
     v-model="modelTab"
     :slider-color="navBarConfig.sliderColor"

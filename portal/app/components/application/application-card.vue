@@ -20,7 +20,7 @@
     >
       <!-- Thumbnail (Left Location) -->
       <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
@@ -42,7 +42,7 @@
       >
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -64,7 +64,7 @@
 
         <!-- Thumbnail (Center Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -185,9 +185,8 @@ const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
 
 const thumbnailUrl = computed(() => {
-  if (!cardConfig.thumbnail?.show) return undefined
   if (application.image) return application.image
-  if (cardConfig.thumbnail.useTopic && application.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && application.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }

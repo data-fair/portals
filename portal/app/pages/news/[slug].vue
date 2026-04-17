@@ -21,6 +21,10 @@
 
 <script setup lang="ts">
 import type { PageConfig } from '#api/types/page'
+import type { LinkItem } from '#api/types/portal'
+import type { VBreadcrumbs } from 'vuetify/components'
+
+type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -29,6 +33,9 @@ const { t } = useI18n()
 const { portalConfig } = usePortalStore()
 const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
 const getPageImageSrc = providePageImageSrc('news', slug)
+
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const newsCatalogExists = computed(() => standardPagesFetch.data.value?.['news-catalog'] || false)
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/news/${slug}`, { watch: false })
 provide('page-config', pageConfigFetch.data)
@@ -40,11 +47,11 @@ const errorTitle = computed(() => {
   return t('newsError')
 })
 
-watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'news-catalog' },
-    { title: pageConfig?.title || t('news') }
-  ])
+watch([() => pageConfigFetch.data.value, newsCatalogExists], ([pageConfig]) => {
+  const items: (LinkItem | BreadcrumbItem)[] = []
+  if (newsCatalogExists.value) { items.push({ type: 'standard', subtype: 'news-catalog' }) }
+  items.push({ title: pageConfig?.title || t('news') })
+  setBreadcrumbs(items)
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

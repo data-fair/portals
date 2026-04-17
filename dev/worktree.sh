@@ -17,6 +17,14 @@ git worktree add -b "$BRANCH_NAME" "$TARGET_DIR" $SOURCE_BRANCH
 
 cd $TARGET_DIR
 
+if [ -d "$OLDPWD/.claude" ]; then
+    echo "Copy local Claude settings"
+    mkdir -p .claude
+    for f in "$OLDPWD/.claude"/*.json; do
+        [ -f "$f" ] && cp "$f" .claude/
+    done
+fi
+
 echo "Create .env file"
 ./dev/init-env.sh
 
@@ -26,8 +34,8 @@ npm ci
 echo "npm run build-types"
 npm run build-types
 
-echo "npm run test-deps"
-npm run test-deps
+echo "npm -w ui run build"
+npm -w ui run build
 
 echo "-----------------------------------------------"
 echo "✅ Setup Complete!"
@@ -36,4 +44,3 @@ echo "Branch:   $BRANCH_NAME"
 echo "-----------------------------------------------"
 echo "Next step:"
 echo "   cd $TARGET_DIR"
-echo "   source dev/env.sh"

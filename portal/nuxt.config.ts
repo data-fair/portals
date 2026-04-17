@@ -50,6 +50,7 @@ export default defineNuxtConfig({
     { path: '~/components', pathPrefix: false }
   ],
   imports: {
+    dirs: ['composables', 'composables/agent'],
     presets: [
       {
         from: '@data-fair/lib-vue/session.js',
@@ -109,7 +110,7 @@ export default defineNuxtConfig({
         '@data-fair/frame/lib/vue-router/state-change-adapter.js',
         '@vueuse/core',
         '@mdi/js',
-        'analytics'
+        'analytics',
       ]
     }
   },

@@ -44,7 +44,7 @@ const { trackDialog } = defineProps<{
   /** Dialog title */
   title?: string
   /** Button action style */
-  actionStyle: DatasetCard['actionsStyle']
+  actionStyle?: DatasetCard['actionsStyle']
   /** Button icon */
   icon: string
   /** Resource title */

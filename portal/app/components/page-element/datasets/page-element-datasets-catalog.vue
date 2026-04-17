@@ -80,7 +80,7 @@ const {
   }),
   buildQuery: (filters, sortValue, page, pageSize) => {
     const query: Record<string, string | number> = {
-      select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,-userPermissions',
+      select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
       truncate: 250,
       size: pageSize,
       page

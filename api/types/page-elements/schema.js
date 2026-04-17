@@ -165,6 +165,7 @@ export default {
           { key: 37, title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
         ]
       },
+      discriminator: { propertyName: 'type' },
       oneOf: [
         // Basic elements
         { $ref: 'https://github.com/data-fair/portals/page-element-basics#/$defs/element-title' },

@@ -29,6 +29,12 @@ export default {
       title: 'Reference Page',
       readOnly: true
     },
+    md2Compat: {
+      type: 'boolean',
+      title: 'Compatibilité MD2',
+      default: false,
+      readOnly: true
+    },
     staging: {
       title: 'Pré-production',
       description: 'Si coché les contributeurs pourront publier des ressources sans solliciter les administrateurs',

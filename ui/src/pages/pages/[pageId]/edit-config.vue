@@ -5,6 +5,13 @@
         v-if="editConfig"
         v-model="formValid"
       >
+        <div class="d-flex justify-end mb-1">
+          <df-agent-chat-action
+            action-id="configure-page"
+            :visible-prompt="t('configurePrompt')"
+            :hidden-context="configureContext"
+          />
+        </div>
         <vjsf-page-config
           v-model="editConfig"
           :locale="locale"
@@ -50,6 +57,8 @@ import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
 
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
+import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
@@ -147,6 +156,11 @@ const saveDraft = useAsyncAction(async () => {
   await patchPage.execute({ draftConfig: editConfig.value })
 })
 
+const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
+  editConfig.value = { ...editConfig.value, ...data } as PageConfig
+  saveDraft.execute()
+})
+
 watch(pageFetch.data, (page) => {
   if (!page) return
   setBreadcrumbs([
@@ -163,11 +177,15 @@ watch(pageFetch.data, (page) => {
     addItemMessage: Add a block to the page
     edit: Editing draft
     pages: Pages
+    pageConfig: Page configuration
+    configurePrompt: Help me configure this page
 
   fr:
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon
     pages: Pages
+    pageConfig: Configuration de la page
+    configurePrompt: Aide-moi à configurer cette page
 
 </i18n>
 

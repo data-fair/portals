@@ -20,7 +20,7 @@
     >
       <!-- Thumbnail (Left Location) -->
       <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
         <v-col cols="4">
           <div
             v-if="thumbnailUrl"
@@ -42,7 +42,7 @@
       >
         <!-- Thumbnail (Top Location) -->
         <v-img
-          v-if="cardConfig.thumbnail && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -64,7 +64,7 @@
 
         <!-- Thumbnail (Center Location) -->
         <v-img
-          v-if="cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           :src="thumbnailUrl"
           :cover="cardConfig.thumbnail.crop"
           class="flex-grow-0"
@@ -122,7 +122,6 @@ const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
 }
 
 const thumbnailUrl = computed(() => {
-  if (!cardConfig.thumbnail?.show) return undefined
   if (reuse.config.image) return getReuseImageSrc(reuse.config.image, false)
   if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
   return undefined

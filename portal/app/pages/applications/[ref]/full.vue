@@ -9,6 +9,11 @@
 </template>
 
 <script setup lang="ts">
+import type { LinkItem } from '#api/types/portal'
+import type { VBreadcrumbs } from 'vuetify/components'
+
+type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
+
 definePageMeta({ layout: 'full' })
 
 const { t } = useI18n()
@@ -16,6 +21,9 @@ const route = useRoute()
 const { setBreadcrumbs } = useNavigationStore()
 const { portalConfig } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
+
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const applicationsCatalogExists = computed(() => standardPagesFetch.data.value?.applications || false)
 
 const applicationFetch = await useLocalFetch<{
   title: string
@@ -39,12 +47,12 @@ const thumbnailUrl = computed(() => {
   return `${application.href}/capture?updatedAt=${application.updatedAt}`
 })
 
-watch(applicationFetch.data, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'applications' },
-    { title: applicationFetch.data.value?.title || t('application'), to: { path: '/applications/' + route.params.ref, query: route.query } },
-    { title: t('fullscreen') }
-  ])
+watch([applicationFetch.data, applicationsCatalogExists], () => {
+  const items: (LinkItem | BreadcrumbItem)[] = []
+  if (applicationsCatalogExists.value) { items.push({ type: 'standard', subtype: 'applications' }) }
+  items.push({ title: applicationFetch.data.value?.title || t('application'), to: { path: '/applications/' + route.params.ref, query: route.query } })
+  items.push({ title: t('fullscreen') })
+  setBreadcrumbs(items)
 }, { immediate: true })
 
 usePageSeo({

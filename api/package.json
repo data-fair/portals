@@ -2,7 +2,7 @@
   "name": "api",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development DEBUG=search-pages,upgrade* node --watch index.ts"
+    "dev": "mkdir -p ../dev/logs && NODE_ENV=development DEBUG=search-pages,upgrade* node --watch index.ts 2>&1 | tee ../dev/logs/dev-api.log"
   },
   "imports": {
     "#config": "./src/config.ts",

@@ -51,6 +51,11 @@ app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
 app.use('/api/search-pages', searchPagesRouter)
 
+if (process.env.NODE_ENV === 'development') {
+  const testEnvRouter = (await import('./test-env.ts')).default
+  app.use('/api/test-env', testEnvRouter)
+}
+
 app.get('/api/ping', async (req, res) => {
   const status = await getStatus(req)
   if (status.status === 'error') res.status(500)

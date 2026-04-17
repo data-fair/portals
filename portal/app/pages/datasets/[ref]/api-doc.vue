@@ -18,20 +18,28 @@
 </template>
 
 <script setup lang="ts">
+import type { LinkItem } from '#api/types/portal'
+import type { VBreadcrumbs } from 'vuetify/components'
+
+type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
+
 definePageMeta({ layout: 'full' })
 
 const { setBreadcrumbs } = useNavigationStore()
 const { t } = useI18n()
 const route = useRoute()
 
+const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
+const datasetsCatalogExists = computed(() => standardPagesFetch.data.value?.datasets || false)
+
 const datasetFetch = await useLocalFetch<{ title: string, summary: string, description: string, updatedAt?: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
 
-watch(datasetFetch.data, () => {
-  setBreadcrumbs([
-    { type: 'standard', subtype: 'datasets' },
-    { title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref },
-    { title: t('apiDoc') }
-  ])
+watch([datasetFetch.data, datasetsCatalogExists], () => {
+  const items: (LinkItem | BreadcrumbItem)[] = []
+  if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
+  items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
+  items.push({ title: t('apiDoc') })
+  setBreadcrumbs(items)
 }, { immediate: true })
 
 usePageSeo({

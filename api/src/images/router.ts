@@ -52,7 +52,7 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
   }
   const image: Image = {
     _id: randomUUID(),
-    owner: { ...session.account, department: undefined, departmentName: undefined },
+    owner: session.account,
     createdAt,
     name: originalName,
     ...body,

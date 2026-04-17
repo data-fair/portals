@@ -1,7 +1,7 @@
 [
   {
-    "id": "KWqAGZ4mG",
-    "name": "Fivechat",
+    "id": "test_org1",
+    "name": "Test Org 1",
     "departments": [
       {
         "id": "dep1",
@@ -14,76 +14,78 @@
     ],
     "members": [
       {
-        "id": "adminOrga",
+        "id": "test_admin",
         "role": "admin"
       },
       {
-        "id": "contribOrga",
+        "id": "test_contrib",
         "role": "contrib"
       },
       {
-        "id": "userOrga",
+        "id": "test_user",
         "role": "user"
       },
       {
-        "id": "adminDep",
+        "id": "test_admin_dep",
         "role": "admin",
         "department": "dep1"
       },
       {
-        "id": "contribDep",
+        "id": "test_contrib_dep",
         "role": "contrib",
         "department": "dep1"
       }
     ]
   },
   {
-    "id": "EnTgB2UbH",
-    "name": "Livefish",
+    "id": "test_org2",
+    "name": "Test Org 2",
     "members": [
       {
-        "id": "dmeadus",
+        "id": "test_alone",
         "role": "admin"
       },
       {
-        "id": "albanm",
-        "role": "contrib"
-      },
-      {
-        "id": "superadmin",
+        "id": "test_superadmin",
         "role": "user"
       }
     ]
   },
   {
-    "id": "koumoul",
-    "name": "Koumoul",
+    "id": "test_org3",
+    "name": "Test Org 3",
     "members": [
       {
-        "id": "superadmin",
+        "id": "test_superadmin",
         "role": "admin"
       },
       {
-        "id": "albanm",
+        "id": "test_admin",
         "role": "admin"
       },
       {
-        "id": "adminOrg",
-        "role": "admin"
-      },
-      {
-        "id": "userOrg",
+        "id": "test_user",
         "role": "user"
       },
       {
-        "id": "contribOrg",
+        "id": "test_contrib",
         "role": "contrib"
       }
     ],
     "partners": [
       {
-        "id": "KWqAGZ4mG",
-        "name": "Fivechat"
+        "id": "test_org1",
+        "name": "Test Org 1"
+      }
+    ]
+  },
+  {
+    "id": "dev_org",
+    "name": "Dev Org",
+    "members": [
+      {
+        "id": "albanm",
+        "role": "admin"
       }
     ]
   }

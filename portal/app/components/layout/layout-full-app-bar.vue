@@ -20,7 +20,7 @@
         <v-spacer />
         <LayoutBreadcrumbs is-layout-full/>
         <v-spacer />
-
+        <div id="agent-chat-appbar" class="d-flex align-center" />
       </v-row>
     </v-container>
   </v-app-bar>
