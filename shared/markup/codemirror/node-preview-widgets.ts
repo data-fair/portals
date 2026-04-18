@@ -1,9 +1,9 @@
-import { RangeSetBuilder, StateEffect, StateField, type EditorState, type Extension } from '@codemirror/state'
+import { RangeSetBuilder, StateEffect, StateField, type Extension } from '@codemirror/state'
 import {
   Decoration, EditorView, WidgetType,
   type DecorationSet
 } from '@codemirror/view'
-import { deserializeElements } from '../deserializer.ts'
+import { deserializeElements, type DeserializeError } from '../deserializer.ts'
 import type { MarkupSourceMap } from '../types.ts'
 
 /**
@@ -33,6 +33,29 @@ export function computeNodePreviewRanges (
   }
   out.sort((a, b) => a.from - b.from)
   return out
+}
+
+/**
+ * Shared parse state used by both the decoration field and the gutter.
+ * Consolidates parsing so we don't deserialize the document multiple times
+ * per transaction.
+ */
+interface MarkupParseState {
+  sourceMap: MarkupSourceMap
+  errors: ReadonlyArray<DeserializeError>
+}
+
+const markupParseStateField = StateField.define<MarkupParseState>({
+  create: (state) => parseDoc(state.doc.toString()),
+  update (value, tr) {
+    if (!tr.docChanged) return value
+    return parseDoc(tr.state.doc.toString())
+  }
+})
+
+function parseDoc (doc: string): MarkupParseState {
+  const { sourceMap, errors } = deserializeElements(doc)
+  return { sourceMap, errors }
 }
 
 /**
@@ -102,15 +125,11 @@ class NodePreviewWidgetType extends WidgetType {
 }
 
 function buildDecorations (
-  state: EditorState,
+  parsed: MarkupParseState,
   toggled: ReadonlySet<string>,
   mount: MountPreview
 ): DecorationSet | null {
-  const doc = state.doc.toString()
-  // Parse inline: the decoration field is recomputed on every transaction
-  // BEFORE updateListener fires, so any externally-maintained source map
-  // would still be stale here.
-  const { sourceMap, errors } = deserializeElements(doc)
+  const { sourceMap, errors } = parsed
   // If the document failed to parse (no element pointers AND the parser
   // reported errors) but the user has toggles on, return null as a
   // sentinel so the caller preserves the widget. A clean empty doc (no
@@ -119,7 +138,10 @@ function buildDecorations (
   if (sourceMap.byElementPointer.size === 0 && errors.length > 0 && toggled.size > 0) {
     return null
   }
-  const ranges = computeNodePreviewRanges(doc, sourceMap, toggled)
+  // NOTE: computeNodePreviewRanges's first parameter (`_doc`) is unused, so we
+  // can pass an empty string. Keeping the param preserves the sibling-file
+  // symmetry with computeImageUploadRanges.
+  const ranges = computeNodePreviewRanges('', sourceMap, toggled)
   const builder = new RangeSetBuilder<Decoration>()
   for (const r of ranges) {
     builder.add(r.from, r.to, Decoration.widget({
@@ -141,16 +163,17 @@ function buildDecorations (
 function nodePreviewDecorationsField (mount: MountPreview) {
   return StateField.define<DecorationSet>({
     create (state) {
-      const built = buildDecorations(state, state.field(nodePreviewState), mount)
+      const built = buildDecorations(state.field(markupParseStateField), state.field(nodePreviewState), mount)
       return built ?? Decoration.none
     },
     update (value, tr) {
       // Keep existing decoration positions in sync with doc changes.
       const mapped = tr.docChanged ? value.map(tr.changes) : value
       const toggled = tr.state.field(nodePreviewState)
+      const parseChanged = tr.startState.field(markupParseStateField) !== tr.state.field(markupParseStateField)
       const toggleChanged = tr.startState.field(nodePreviewState) !== toggled
-      if (!tr.docChanged && !toggleChanged) return mapped
-      const built = buildDecorations(tr.state, toggled, mount)
+      if (!parseChanged && !toggleChanged) return mapped
+      const built = buildDecorations(tr.state.field(markupParseStateField), toggled, mount)
       // Sentinel: on transient parse failure, keep the previously-mapped
       // decoration set so any already-mounted widget stays in the DOM
       // until the parser recovers. CM6's PointDecoration maps with
@@ -173,6 +196,7 @@ export function portalMarkupNodePreviewWidgets (
   opts: NodePreviewWidgetsOptions
 ): Extension[] {
   return [
+    markupParseStateField,
     nodePreviewState,
     nodePreviewDecorationsField(opts.mountPreview)
   ]
