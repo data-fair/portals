@@ -1,4 +1,9 @@
-import { StateEffect, StateField, type Extension } from '@codemirror/state'
+import { RangeSetBuilder, StateEffect, StateField, type EditorState, type Extension } from '@codemirror/state'
+import {
+  Decoration, EditorView, WidgetType,
+  type DecorationSet
+} from '@codemirror/view'
+import { deserializeElements } from '../deserializer.ts'
 import type { MarkupSourceMap } from '../types.ts'
 
 /**
@@ -67,13 +72,108 @@ export interface MountPreviewArgs { elementPointer: string }
 export type MountPreview = (container: HTMLElement, args: MountPreviewArgs) => () => void
 export interface NodePreviewWidgetsOptions { mountPreview: MountPreview }
 
+class NodePreviewWidgetType extends WidgetType {
+  private unmount: (() => void) | null = null
+  constructor (
+    readonly elementPointer: string,
+    readonly mount: MountPreview
+  ) { super() }
+
+  toDOM (): HTMLElement {
+    const el = document.createElement('div')
+    el.className = 'markup-node-preview-widget'
+    el.setAttribute('data-markup-preview-pointer', this.elementPointer)
+    this.unmount = this.mount(el, { elementPointer: this.elementPointer })
+    return el
+  }
+
+  destroy (): void {
+    this.unmount?.()
+    this.unmount = null
+  }
+
+  eq (other: WidgetType): boolean {
+    return other instanceof NodePreviewWidgetType &&
+      other.elementPointer === this.elementPointer
+  }
+
+  get estimatedHeight (): number { return 80 }
+  ignoreEvent (): boolean { return false }
+}
+
+function buildDecorations (
+  state: EditorState,
+  toggled: ReadonlySet<string>,
+  mount: MountPreview
+): DecorationSet | null {
+  const doc = state.doc.toString()
+  // Parse inline: the decoration field is recomputed on every transaction
+  // BEFORE updateListener fires, so any externally-maintained source map
+  // would still be stale here.
+  const { sourceMap, errors } = deserializeElements(doc)
+  // If the document failed to parse (no element pointers AND the parser
+  // reported errors) but the user has toggles on, return null as a
+  // sentinel so the caller preserves the widget. A clean empty doc (no
+  // errors, no pointers) is NOT a parse failure and falls through so
+  // stale widgets unmount.
+  if (sourceMap.byElementPointer.size === 0 && errors.length > 0 && toggled.size > 0) {
+    return null
+  }
+  const ranges = computeNodePreviewRanges(doc, sourceMap, toggled)
+  const builder = new RangeSetBuilder<Decoration>()
+  for (const r of ranges) {
+    builder.add(r.from, r.to, Decoration.widget({
+      widget: new NodePreviewWidgetType(r.elementPointer, mount),
+      block: true,
+      side: 1
+    }))
+  }
+  return builder.finish()
+}
+
 /**
- * Bundle extension. Step 3 exports only the state plumbing; the gutter and
- * ViewPlugin are added by later tasks. Returning an array of `Extension`
- * from day one keeps the public shape stable.
+ * StateField that tracks the current decoration set for preview widgets.
+ * Block decorations are not allowed via ViewPlugin in CM6, so we recompute
+ * them here on every doc or toggle-state change and expose them through
+ * `EditorView.decorations`. On transient parse failure, the previous
+ * decoration set is preserved (so the widget stays visible mid-edit).
+ */
+function nodePreviewDecorationsField (mount: MountPreview) {
+  return StateField.define<DecorationSet>({
+    create (state) {
+      const built = buildDecorations(state, state.field(nodePreviewState), mount)
+      return built ?? Decoration.none
+    },
+    update (value, tr) {
+      // Keep existing decoration positions in sync with doc changes.
+      const mapped = tr.docChanged ? value.map(tr.changes) : value
+      const toggled = tr.state.field(nodePreviewState)
+      const toggleChanged = tr.startState.field(nodePreviewState) !== toggled
+      if (!tr.docChanged && !toggleChanged) return mapped
+      const built = buildDecorations(tr.state, toggled, mount)
+      // Sentinel: on transient parse failure, keep the previously-mapped
+      // decoration set so any already-mounted widget stays in the DOM
+      // until the parser recovers. CM6's PointDecoration maps with
+      // TrackDel, which drops points whose range is wholly deleted, so in
+      // the pathological case of a full-doc replace the widget will still
+      // be re-mounted when the parser picks up again.
+      if (built === null) return mapped
+      return built
+    },
+    provide: f => EditorView.decorations.from(f)
+  })
+}
+
+/**
+ * Bundle extension. Combines the toggle state field with a decoration
+ * StateField that renders a block widget at each toggled element's end
+ * offset.
  */
 export function portalMarkupNodePreviewWidgets (
-  _opts: NodePreviewWidgetsOptions
+  opts: NodePreviewWidgetsOptions
 ): Extension[] {
-  return [nodePreviewState]
+  return [
+    nodePreviewState,
+    nodePreviewDecorationsField(opts.mountPreview)
+  ]
 }
