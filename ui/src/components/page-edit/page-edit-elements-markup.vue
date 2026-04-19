@@ -303,4 +303,29 @@ function resolvePreviewElement (pointer: string): PageElement | undefined {
   background: transparent;
   border-right: 1px solid rgba(var(--v-theme-on-surface), 0.12);
 }
+
+.markup-editor :deep(.cm-gutter-node-preview) {
+  width: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.markup-editor :deep(.cm-gutter-node-preview-btn) {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: rgba(var(--v-theme-on-surface), 0.38);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.markup-editor :deep(.cm-gutter-node-preview-btn:hover) {
+  color: rgba(var(--v-theme-on-surface), 0.87);
+}
+
+.markup-editor :deep(.cm-gutter-node-preview-on) {
+  color: rgb(var(--v-theme-primary));
+}
 </style>
