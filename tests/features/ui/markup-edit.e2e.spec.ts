@@ -175,4 +175,50 @@ test.describe('markup edit mode', () => {
       expect(editorText).toContain('image.mimeType="image/png"')
     }).toPass({ timeout: 10000 })
   })
+
+  test('toggles a node preview on and off via the gutter marker', async ({ page, goToWithAuth, context }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Preview Toggle Portal', menu: { children: [] } }
+    })).data
+
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Preview Toggle Page',
+        elements: [
+          { type: 'title', titleSize: 'h2', content: 'Preview Hello' }
+        ],
+        genericMetadata: { slug: 'preview-toggle' }
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+
+    await context.addInitScript(() => {
+      try { window.localStorage.setItem('df-markup-edit', '1') } catch { /* ignore */ }
+    })
+
+    await goToWithAuth(
+      `/portals-manager/pages/${createdPage._id}/edit-config`,
+      'test_admin'
+    )
+
+    await expect(page.getByRole('button', { name: 'Balisage' })).toBeVisible({ timeout: 10000 })
+    await page.getByRole('button', { name: 'Balisage' }).click()
+    await expect(page.locator('.markup-editor .cm-content')).toBeVisible({ timeout: 5000 })
+
+    // Toggle preview on for the first element (`/0`).
+    const toggleBtn = page.locator('.cm-gutter-node-preview-btn[data-markup-preview-pointer="/0"]')
+    await expect(toggleBtn).toBeVisible({ timeout: 5000 })
+    await toggleBtn.click()
+
+    // Preview widget should appear and render the title text.
+    const widget = page.locator('.markup-preview-widget-frame')
+    await expect(widget).toBeVisible({ timeout: 5000 })
+    await expect(widget).toContainText('Preview Hello')
+
+    // Toggle off — widget must disappear.
+    await toggleBtn.click()
+    await expect(widget).toHaveCount(0, { timeout: 5000 })
+  })
 })
