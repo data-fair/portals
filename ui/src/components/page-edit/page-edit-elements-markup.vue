@@ -4,7 +4,7 @@
     :class="['markup-editor', hasErrors ? 'markup-editor--error' : '']"
   />
   <teleport
-    v-for="w in activeWidgets"
+    v-for="w in imageWidgets"
     :key="w.key"
     :to="w.host"
   >
@@ -16,6 +16,17 @@
       :resource="pageRef"
     />
   </teleport>
+  <teleport
+    v-for="w in previewWidgets"
+    :key="w.key"
+    :to="w.host"
+  >
+    <markup-preview-widget
+      :element-pointer="w.elementPointer"
+      :element="resolvePreviewElement(w.elementPointer)"
+      :pages="null"
+    />
+  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -23,10 +34,11 @@ import type { PageElement } from '#api/types/page-elements/index.ts'
 import type { StatefulLayout } from '@json-layout/core/state'
 import type { Completion } from '@codemirror/autocomplete'
 import { shallowRef } from 'vue'
-import { serializeElements, deserializeElements, tagDescriptors, type ImageUploadGroup, type MarkupSourceMap } from '@data-fair/portals-shared-markup'
+import { serializeElements, deserializeElements, tagDescriptors, findElementByPointer, type ImageUploadGroup, type MarkupSourceMap } from '@data-fair/portals-shared-markup'
 import {
   portalMarkupExtensions,
   portalMarkupImageUploadWidgets,
+  portalMarkupNodePreviewWidgets,
   setMarkupExternalDiagnostics,
   collectErrorsByDataPath,
   findNodeByDataPath,
@@ -35,6 +47,7 @@ import {
   type AttributeValueContext
 } from '@data-fair/portals-shared-markup/codemirror'
 import MarkupImageWidget from '~/components/markup-widgets/markup-image-widget.vue'
+import MarkupPreviewWidget from '~/components/markup-widgets/markup-preview-widget.vue'
 import { EditorState } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers, highlightActiveLine } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
@@ -66,14 +79,13 @@ let view: EditorView | null = null
 let lastExternalText = ''
 let lastSourceMap: MarkupSourceMap = { byPointer: new Map(), byElementPointer: new Map() }
 
-interface ActiveWidget {
-  key: string
-  host: HTMLElement
-  elementPointer: string
-  group: ImageUploadGroup
-}
+type ActiveWidget =
+  | { kind: 'image', key: string, host: HTMLElement, elementPointer: string, group: ImageUploadGroup }
+  | { kind: 'preview', key: string, host: HTMLElement, elementPointer: string }
 const activeWidgets = shallowRef<ActiveWidget[]>([])
 let widgetSeq = 0
+
+const draftElements = shallowRef<PageElement[] | null>(null)
 
 function elementsDataPath (): string {
   return (props.node?.dataPath ?? '') as string
@@ -143,8 +155,17 @@ function buildExtensions (locale: string) {
       // Teleport target in the parent template. The widget renders as part of
       // this component's tree and inherits all plugins/providers.
       mountWidget: (container, { elementPointer, group }) => {
-        const key = `${elementPointer}:${group.jsonPath.join('/')}:${widgetSeq++}`
-        activeWidgets.value = [...activeWidgets.value, { key, host: container, elementPointer, group }]
+        const key = `image:${elementPointer}:${group.jsonPath.join('/')}:${widgetSeq++}`
+        activeWidgets.value = [...activeWidgets.value, { kind: 'image', key, host: container, elementPointer, group }]
+        return () => {
+          activeWidgets.value = activeWidgets.value.filter(w => w.key !== key)
+        }
+      }
+    }),
+    portalMarkupNodePreviewWidgets({
+      mountPreview: (container, { elementPointer }) => {
+        const key = `preview:${elementPointer}:${widgetSeq++}`
+        activeWidgets.value = [...activeWidgets.value, { kind: 'preview', key, host: container, elementPointer }]
         return () => {
           activeWidgets.value = activeWidgets.value.filter(w => w.key !== key)
         }
@@ -154,7 +175,13 @@ function buildExtensions (locale: string) {
       if (update.docChanged) {
         // Keep the source map fresh so async completions and diagnostics land
         // at the right offsets while the user types.
-        lastSourceMap = deserializeElements(update.state.doc.toString()).sourceMap
+        const parsed = deserializeElements(update.state.doc.toString())
+        lastSourceMap = parsed.sourceMap
+        if (parsed.elements != null && parsed.errors.length === 0) {
+          draftElements.value = parsed.elements as PageElement[]
+        }
+        // On parse failure: leave draftElements at its last-good snapshot so
+        // previews stay visible.
       }
       if (!update.docChanged && !update.transactions.some(tr => tr.effects.length)) return
       let count = 0
@@ -186,6 +213,7 @@ function applyChange () {
   }
   lastExternalText = view.state.doc.toString()
   elements.value = result.elements as PageElement[]
+  draftElements.value = null
 }
 
 function refreshFromElements () {
@@ -229,6 +257,14 @@ onBeforeUnmount(() => {
   view?.destroy()
   view = null
 })
+
+const imageWidgets = computed(() => activeWidgets.value.filter(w => w.kind === 'image') as Extract<ActiveWidget, { kind: 'image' }>[])
+const previewWidgets = computed(() => activeWidgets.value.filter(w => w.kind === 'preview') as Extract<ActiveWidget, { kind: 'preview' }>[])
+
+function resolvePreviewElement (pointer: string): PageElement | undefined {
+  const tree = draftElements.value ?? elements.value ?? []
+  return findElementByPointer(tree, pointer) as PageElement | undefined
+}
 </script>
 
 <style scoped>
