@@ -19,6 +19,18 @@ export {
 export type { ErrorNodeLike, MarkupError } from './bridge.ts'
 export { portalMarkupImageUploadWidgets, computeImageUploadRanges } from './image-upload-widgets.ts'
 export type { ImageUploadRange, ImageUploadWidgetsOptions, MountWidget, MountWidgetArgs } from './image-upload-widgets.ts'
+export {
+  portalMarkupNodePreviewWidgets,
+  computeNodePreviewRanges,
+  toggleNodePreview,
+  nodePreviewState
+} from './node-preview-widgets.ts'
+export type {
+  NodePreviewRange,
+  NodePreviewWidgetsOptions,
+  MountPreview,
+  MountPreviewArgs
+} from './node-preview-widgets.ts'
 
 /**
  * Bundle of extensions for the page-edit markup editor:
