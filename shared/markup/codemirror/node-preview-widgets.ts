@@ -1,6 +1,6 @@
 import { RangeSetBuilder, StateEffect, StateField, type Extension } from '@codemirror/state'
 import {
-  Decoration, EditorView, WidgetType,
+  Decoration, EditorView, WidgetType, gutter, GutterMarker,
   type DecorationSet
 } from '@codemirror/view'
 import { deserializeElements, type DeserializeError } from '../deserializer.ts'
@@ -124,6 +124,37 @@ class NodePreviewWidgetType extends WidgetType {
   ignoreEvent (): boolean { return false }
 }
 
+class NodePreviewGutterMarker extends GutterMarker {
+  constructor (
+    readonly elementPointer: string,
+    readonly isOn: boolean,
+    private view?: EditorView
+  ) { super() }
+
+  toDOM (): HTMLElement {
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'cm-gutter-node-preview-btn' + (this.isOn ? ' cm-gutter-node-preview-on' : '')
+    btn.setAttribute('data-markup-preview-pointer', this.elementPointer)
+    btn.setAttribute('aria-label', this.isOn ? 'Hide preview' : 'Show preview')
+    btn.setAttribute('aria-pressed', this.isOn ? 'true' : 'false')
+    btn.textContent = this.isOn ? '\u25CF' : '\u25CB'
+    btn.addEventListener('mousedown', (ev) => {
+      ev.preventDefault()
+      ev.stopPropagation()
+      const view = this.view || EditorView.findFromDOM(btn)
+      view?.dispatch({ effects: toggleNodePreview.of({ elementPointer: this.elementPointer }) })
+    })
+    return btn
+  }
+
+  eq (other: GutterMarker): boolean {
+    return other instanceof NodePreviewGutterMarker &&
+      other.elementPointer === this.elementPointer &&
+      other.isOn === this.isOn
+  }
+}
+
 function buildDecorations (
   parsed: MarkupParseState,
   toggled: ReadonlySet<string>,
@@ -187,6 +218,34 @@ function nodePreviewDecorationsField (mount: MountPreview) {
   })
 }
 
+function buildGutterMarkers (view: EditorView): ReturnType<RangeSetBuilder<GutterMarker>['finish']> {
+  const { sourceMap } = view.state.field(markupParseStateField)
+  const toggled = view.state.field(nodePreviewState)
+  const perLine = new Map<number, { pos: number, pointer: string }>()
+  for (const [pointer, range] of sourceMap.byElementPointer) {
+    const line = view.state.doc.lineAt(range.from)
+    if (!perLine.has(line.number)) {
+      perLine.set(line.number, { pos: line.from, pointer })
+    }
+  }
+  const builder = new RangeSetBuilder<GutterMarker>()
+  for (const { pos, pointer } of [...perLine.values()].sort((a, b) => a.pos - b.pos)) {
+    builder.add(pos, pos, new NodePreviewGutterMarker(pointer, toggled.has(pointer), view))
+  }
+  return builder.finish()
+}
+
+function nodePreviewGutterExtension () {
+  return gutter({
+    class: 'cm-gutter-node-preview',
+    markers: (view) => buildGutterMarkers(view),
+    lineMarkerChange: (u) =>
+      u.docChanged ||
+      u.startState.field(markupParseStateField) !== u.state.field(markupParseStateField) ||
+      u.startState.field(nodePreviewState) !== u.state.field(nodePreviewState)
+  })
+}
+
 /**
  * Bundle extension. Combines the toggle state field with a decoration
  * StateField that renders a block widget at each toggled element's end
@@ -198,6 +257,7 @@ export function portalMarkupNodePreviewWidgets (
   return [
     markupParseStateField,
     nodePreviewState,
-    nodePreviewDecorationsField(opts.mountPreview)
+    nodePreviewDecorationsField(opts.mountPreview),
+    nodePreviewGutterExtension()
   ]
 }

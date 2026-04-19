@@ -162,3 +162,74 @@ test.describe('node-preview widget plugin', () => {
     })
   })
 })
+
+test.describe('node-preview gutter', () => {
+  test('renders one gutter marker per element open-tag line', () => {
+    withDom(() => {
+      const view = new EditorView({
+        state: EditorState.create({
+          doc: [
+            '<title titleSize="h2">A</title>',
+            '<text>B</text>',
+            '<divider />'
+          ].join('\n'),
+          extensions: portalMarkupNodePreviewWidgets({ mountPreview: () => () => {} })
+        }),
+        parent: document.body
+      })
+      try {
+        const markers = view.dom.querySelectorAll('.cm-gutter-node-preview button')
+        assert.equal(markers.length, 3)
+      } finally {
+        view.destroy()
+      }
+    })
+  })
+
+  test('clicking a gutter marker dispatches toggleNodePreview for that pointer', () => {
+    withDom(() => {
+      const view = new EditorView({
+        state: EditorState.create({
+          doc: '<title titleSize="h2">A</title>\n<text>B</text>',
+          extensions: portalMarkupNodePreviewWidgets({ mountPreview: () => () => {} })
+        }),
+        parent: document.body
+      })
+      try {
+        const markers = Array.from(
+          view.dom.querySelectorAll('.cm-gutter-node-preview button')
+        ) as HTMLButtonElement[]
+        assert.equal(markers.length, 2)
+        assert.equal(markers[0].getAttribute('data-markup-preview-pointer'), '/0')
+        assert.equal(markers[1].getAttribute('data-markup-preview-pointer'), '/1')
+        markers[1].dispatchEvent(new window.MouseEvent('mousedown', { bubbles: true }))
+        const toggled = view.state.field(nodePreviewState)
+        assert.ok(toggled.has('/1'))
+        assert.ok(!toggled.has('/0'))
+      } finally {
+        view.destroy()
+      }
+    })
+  })
+
+  test('marker reflects the toggled-on state via a CSS class', () => {
+    withDom(() => {
+      const view = new EditorView({
+        state: EditorState.create({
+          doc: '<title titleSize="h2">A</title>',
+          extensions: portalMarkupNodePreviewWidgets({ mountPreview: () => () => {} })
+        }),
+        parent: document.body
+      })
+      try {
+        const before = view.dom.querySelector('.cm-gutter-node-preview button')!
+        assert.ok(!before.classList.contains('cm-gutter-node-preview-on'))
+        view.dispatch({ effects: toggleNodePreview.of({ elementPointer: '/0' }) })
+        const after = view.dom.querySelector('.cm-gutter-node-preview button')!
+        assert.ok(after.classList.contains('cm-gutter-node-preview-on'))
+      } finally {
+        view.destroy()
+      }
+    })
+  })
+})
