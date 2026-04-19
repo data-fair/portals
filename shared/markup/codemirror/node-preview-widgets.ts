@@ -127,8 +127,7 @@ class NodePreviewWidgetType extends WidgetType {
 class NodePreviewGutterMarker extends GutterMarker {
   constructor (
     readonly elementPointer: string,
-    readonly isOn: boolean,
-    private view?: EditorView
+    readonly isOn: boolean
   ) { super() }
 
   toDOM (): HTMLElement {
@@ -142,7 +141,7 @@ class NodePreviewGutterMarker extends GutterMarker {
     btn.addEventListener('mousedown', (ev) => {
       ev.preventDefault()
       ev.stopPropagation()
-      const view = this.view || EditorView.findFromDOM(btn)
+      const view = EditorView.findFromDOM(btn)
       view?.dispatch({ effects: toggleNodePreview.of({ elementPointer: this.elementPointer }) })
     })
     return btn
@@ -230,7 +229,7 @@ function buildGutterMarkers (view: EditorView): ReturnType<RangeSetBuilder<Gutte
   }
   const builder = new RangeSetBuilder<GutterMarker>()
   for (const { pos, pointer } of [...perLine.values()].sort((a, b) => a.pos - b.pos)) {
-    builder.add(pos, pos, new NodePreviewGutterMarker(pointer, toggled.has(pointer), view))
+    builder.add(pos, pos, new NodePreviewGutterMarker(pointer, toggled.has(pointer)))
   }
   return builder.finish()
 }
@@ -241,7 +240,6 @@ function nodePreviewGutterExtension () {
     markers: (view) => buildGutterMarkers(view),
     lineMarkerChange: (u) =>
       u.docChanged ||
-      u.startState.field(markupParseStateField) !== u.state.field(markupParseStateField) ||
       u.startState.field(nodePreviewState) !== u.state.field(nodePreviewState)
   })
 }
