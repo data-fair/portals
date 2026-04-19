@@ -24,7 +24,7 @@
     <markup-preview-widget
       :element-pointer="w.elementPointer"
       :element="resolvePreviewElement(w.elementPointer)"
-      :pages="null"
+      :pages="props.pages ?? null"
     />
   </teleport>
 </template>
@@ -62,6 +62,7 @@ import { completionKeymap } from '@codemirror/autocomplete'
 const props = defineProps<{
   node?: any | null
   statefulLayout?: StatefulLayout | null
+  pages?: unknown
 }>()
 
 const elements = defineModel<PageElement[]>({ required: true })

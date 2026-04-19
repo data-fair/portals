@@ -12,13 +12,17 @@
     >
       {{ t('elementUnavailable') }}
     </div>
-    <page-preview-element
+    <div
       v-else
-      :key="elementPointer"
-      :model-value="element"
-      :context="context"
-      :pages="pages"
-    />
+      class="markup-preview-widget-content"
+    >
+      <page-preview-element
+        :key="elementPointer"
+        :model-value="element"
+        :context="context"
+        :pages="pages"
+      />
+    </div>
   </div>
 </template>
 
@@ -36,7 +40,10 @@ const { t } = useI18n()
 
 const context = computed(() => ({ isRoot: false, index: 0, parentLength: 1 }))
 
+// Resets on element change so a transient render failure doesn't
+// permanently mark the widget as broken once the user fixes the markup.
 const failed = ref(false)
+watch(() => [props.element, props.elementPointer], () => { failed.value = false })
 onErrorCaptured((err) => {
   failed.value = true
   console.error('[markup-preview-widget] render failed for', props.elementPointer, err)
@@ -67,5 +74,13 @@ fr:
   color: rgba(var(--v-theme-on-surface), 0.6);
   font-style: italic;
   font-size: 0.875rem;
+}
+
+/* Preview is a read-only rendering — children of containers include
+   editing UI (add/remove, input fields) whose update events the preview
+   has no plumbing for. Disable interaction to avoid silent data loss. */
+.markup-preview-widget-content {
+  pointer-events: none;
+  user-select: none;
 }
 </style>

@@ -52,6 +52,7 @@
                 :node="node"
                 :stateful-layout="statefulLayout"
                 :model-value="node.data"
+                :pages="pages"
                 @update:model-value="(data: any) => statefulLayout.input(node, data)"
               />
             </v-defaults-provider>
