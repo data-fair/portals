@@ -127,7 +127,14 @@ class NodePreviewWidgetType extends WidgetType {
 class NodePreviewGutterMarker extends GutterMarker {
   constructor (
     readonly elementPointer: string,
-    readonly isOn: boolean
+    readonly isOn: boolean,
+    // Captured at build time so the mousedown handler can dispatch without
+    // walking the DOM. `EditorView.findFromDOM(btn)` is not reliable here —
+    // it fails in jsdom and can return null if the button is clicked before
+    // CM6 has fully attached the gutter to the editor root. Held by
+    // reference, not by identity: excluded from `eq()` so CM6 can still
+    // reuse the rendered DOM node across identical states.
+    readonly view: EditorView
   ) { super() }
 
   toDOM (): HTMLElement {
@@ -141,8 +148,7 @@ class NodePreviewGutterMarker extends GutterMarker {
     btn.addEventListener('mousedown', (ev) => {
       ev.preventDefault()
       ev.stopPropagation()
-      const view = EditorView.findFromDOM(btn)
-      view?.dispatch({ effects: toggleNodePreview.of({ elementPointer: this.elementPointer }) })
+      this.view.dispatch({ effects: toggleNodePreview.of({ elementPointer: this.elementPointer }) })
     })
     return btn
   }
@@ -229,7 +235,7 @@ function buildGutterMarkers (view: EditorView): ReturnType<RangeSetBuilder<Gutte
   }
   const builder = new RangeSetBuilder<GutterMarker>()
   for (const { pos, pointer } of [...perLine.values()].sort((a, b) => a.pos - b.pos)) {
-    builder.add(pos, pos, new NodePreviewGutterMarker(pointer, toggled.has(pointer)))
+    builder.add(pos, pos, new NodePreviewGutterMarker(pointer, toggled.has(pointer), view))
   }
   return builder.finish()
 }
