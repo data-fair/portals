@@ -55,6 +55,7 @@
     "@types/config": "^3.3.5",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.3",
+    "@types/jsdom": "^28.0.1",
     "@types/memoizee": "^0.4.12",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.0.14",
