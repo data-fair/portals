@@ -237,4 +237,72 @@ test.describe('markup edit mode', () => {
     await toggleBtn.click()
     await expect(widget).toHaveCount(0, { timeout: 5000 })
   })
+
+  test('edits an element via the inline form and reflects it in the markup text', async ({ page, goToWithAuth, context }) => {
+    // The gutter preview also mounts a per-element VJSF form
+    // (markup-element-form-widget) next to the preview. Edits in that form must
+    // round-trip through the outer StatefulLayout and re-serialize into the CM6
+    // doc — this guards the write-back path in markup-element-form-widget.vue.
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Inline Form Portal', menu: { children: [] } }
+    })).data
+
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Inline Form Page',
+        elements: [
+          { type: 'title', titleSize: 'h2', content: 'Hello' }
+        ],
+        genericMetadata: { slug: 'inline-form' }
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+
+    await context.addInitScript(() => {
+      try { window.localStorage.setItem('df-markup-edit', '1') } catch { /* ignore */ }
+    })
+
+    await goToWithAuth(
+      `/portals-manager/pages/${createdPage._id}/edit-config`,
+      'test_admin'
+    )
+
+    await expect(page.getByRole('button', { name: 'Balisage' })).toBeVisible({ timeout: 10000 })
+    await page.getByRole('button', { name: 'Balisage' }).click()
+    await expect(page.locator('.markup-editor .cm-content')).toBeVisible({ timeout: 5000 })
+
+    const toggleBtn = page.locator('.cm-gutter-node-preview-btn[data-markup-preview-pointer="/0"]')
+    await expect(toggleBtn).toBeVisible({ timeout: 5000 })
+    await toggleBtn.click()
+
+    // The inline form mounts alongside the preview (same gutter widget host).
+    const formWidget = page.locator('.markup-element-form-widget').first()
+    await expect(formWidget).toBeVisible({ timeout: 5000 })
+
+    // The `content` field is a plain string input; the VJSF tree renders it as
+    // the first text input inside the form. Seed value should be 'Hello'.
+    const contentInput = formWidget.locator('input[type="text"]').first()
+    await expect(contentInput).toHaveValue('Hello', { timeout: 5000 })
+
+    // VJSF runs with `updateOn: 'blur'`, so change-and-blur is required to
+    // commit the edit back into the outer StatefulLayout.
+    await contentInput.fill('Updated Title')
+    await contentInput.blur()
+
+    // The CM6 doc must now carry the new content. `content` is serialized as
+    // the tag body (contentProperty in tag-descriptors), so assert it appears
+    // between the opening and closing <title> tags. Read the underlying doc
+    // through the editor view to bypass decoration rendering.
+    await expect(async () => {
+      const docText = await page.evaluate(() => {
+        const content = document.querySelector('.markup-editor .cm-content') as any
+        const tile = content?.cmTile ?? (document.querySelector('.markup-editor .cm-editor') as any)?.cmTile
+        return tile?.root?.view?.state?.doc?.toString?.() ?? ''
+      })
+      expect(docText).toMatch(/<title[^>]*>Updated Title<\/title>/)
+      expect(docText).not.toMatch(/<title[^>]*>Hello<\/title>/)
+    }).toPass({ timeout: 10000 })
+  })
 })

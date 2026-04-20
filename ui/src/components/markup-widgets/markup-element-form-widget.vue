@@ -1,18 +1,19 @@
 <template>
   <div
-    v-if="element && wrappedCompiledLayout && innerStatefulLayout && stateTree"
+    ref="el"
     class="markup-element-form-widget vjsf"
   >
     <tree
+      v-if="element && wrappedCompiledLayout && innerStatefulLayout && stateTree"
       :model-value="stateTree"
       :stateful-layout="innerStatefulLayout"
     />
-  </div>
-  <div
-    v-else-if="!element"
-    class="markup-element-form-widget markup-element-form-widget--placeholder"
-  >
-    {{ t('elementUnavailable') }}
+    <div
+      v-else-if="!element"
+      class="markup-element-form-widget--placeholder"
+    >
+      {{ t('elementUnavailable') }}
+    </div>
   </div>
 </template>
 
@@ -22,6 +23,8 @@ import type { StatefulLayout } from '@json-layout/core/state'
 import type { ShallowRef } from 'vue'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import Tree from '@koumoul/vjsf/components/tree.vue'
+// @ts-expect-error package only ships types as `nodes/index.d.ts`, not `.js.d.ts`
+import { nodeComponents as defaultVjsfNodeComponents } from '@koumoul/vjsf/components/nodes/index.js'
 import { useVjsf } from '@koumoul/vjsf/composables/use-vjsf.js'
 import MarkupOneOfSelectPassthrough from '~/components/markup-widgets/markup-one-of-select-passthrough.vue'
 
@@ -88,14 +91,19 @@ const emit = defineEmits<{
   (e: 'update:state', state: any): void
 }>()
 
+// `el` is the template ref useVjsf expects for width measurement
+// (useElementSize). Without binding it to a rendered DOM element the internal
+// width stays 0 and `initStatefulLayout` never runs — so we bind it to the
+// always-rendered wrapper div above.
 const {
+  el,
   statefulLayout: innerStatefulLayout,
   stateTree
 } = useVjsf(
   ref(null) as any,
   elementModel as any,
   vjsfOptions as any,
-  {},
+  defaultVjsfNodeComponents,
   (eventName: string, payload: any) => {
     if (eventName === 'update:modelValue') onChange(payload)
     else emit(eventName as any, payload)
@@ -104,6 +112,10 @@ const {
   null as any,
   wrappedCompiledLayout as any
 )
+// `el` is bound via `ref="el"` in the template — vue-tsc doesn't track
+// destructured template refs as reads, so touch it here to silence
+// noUnusedLocals without a blanket `@ts-nocheck`.
+el
 
 // Write-back: the outer StatefulLayout owns the elements array; this widget pushes
 // the edited element back into it along the known JSON pointer. Same protocol as
