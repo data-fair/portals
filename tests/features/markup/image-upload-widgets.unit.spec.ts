@@ -75,6 +75,7 @@ test.describe('image-upload widget range computation', () => {
     }
     const paths = points.map(r => r.group.jsonPath.join('.')).sort()
     assert.deepEqual(paths, ['image', 'wideImage'])
+    assert.notEqual(points[0].from, points[1].from, 'each group should get its own insertion position')
   })
 
   test('ignores tags without image-upload groups', () => {

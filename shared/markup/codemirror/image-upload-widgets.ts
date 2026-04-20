@@ -156,7 +156,10 @@ export function portalMarkupImageUploadWidgets (opts: ImageUploadWidgetsOptions)
       const { sourceMap } = deserializeElements(doc)
       const ranges = computeImageUploadRanges(doc, sourceMap, opts.tagDescriptors)
       const builder = new RangeSetBuilder<Decoration>()
-      ranges.sort((a, b) => a.from - b.from || (a.kind === 'hide' ? 1 : -1))
+      // RangeSetBuilder requires non-decreasing `from`, then non-decreasing
+      // `to`. At the same offset (zero-width collisions only in theory), order
+      // widget before hide so the widget claims the position.
+      ranges.sort((a, b) => a.from - b.from || a.to - b.to || (a.kind === 'hide' ? 1 : -1))
       for (const r of ranges) {
         let deco: Decoration
         if (r.kind === 'widget') {
