@@ -1,66 +1,31 @@
 /**
- * Inline image-upload widgets for the markup editor. The widget is only shown
- * when the set of image attributes (`_id`, `name`, `mimeType`) is both
- * complete AND textually contiguous — otherwise we fall back to plain text
- * and let the linter nudge the user, or the next serialize cycle normalize
- * ordering. A bare-tag case (no image attrs at all) gets an insertion-point
- * widget instead so users can click to upload.
+ * Inline image-upload widgets for the markup editor.
+ *
+ * For each image-upload group declared on an element's descriptor, we emit
+ * up to three CM6 decorations:
+ *
+ *   - `widget` range covering the `<group>._id` attribute — replaced with an
+ *     inline image-upload control.
+ *   - `hide` ranges covering `<group>.name` and `<group>.mimeType` attributes
+ *     — replaced with empty decorations so the user never sees them.
+ *   - A `point` widget at the open-tag's end when the group has no attributes
+ *     at all (bare `<image />`) — click-to-upload affordance.
+ *
+ * Markup text on disk is unchanged: serializer still emits all three
+ * attributes and deserializer still reads them. The decoration layer only
+ * changes how the attributes render in CM6.
  */
 import { Decoration, ViewPlugin, WidgetType, type EditorView, type DecorationSet, type ViewUpdate } from '@codemirror/view'
 import { RangeSetBuilder } from '@codemirror/state'
 import { deserializeElements } from '../deserializer.ts'
 import type { ImageUploadGroup, MarkupSourceMap, TagDescriptor } from '../types.ts'
 
-export interface ImageUploadRange {
-  from: number
-  to: number
-  elementPointer: string
-  group: ImageUploadGroup
-}
+const AUX_LEAVES = ['name', 'mimeType'] as const
 
-/** Attribute positioned inside an element's open tag, with its full textual span. */
-interface ElementAttr {
-  path: string[]
-  from: number
-  to: number
-}
-
-const REQUIRED_LEAVES = ['_id', 'name', 'mimeType'] as const
-
-/**
- * Compute the textual span covering every in-group attribute, or `null` when
- * the group cannot be rendered as a widget. Returns null when:
- *  - the required leaves aren't all present (partial state);
- *  - any outside-group attribute falls textually inside the group's span
- *    (interleaved attrs).
- */
-export function contiguousGroupSpan (
-  doc: string,
-  inGroup: ElementAttr[],
-  outsideGroup: ElementAttr[],
-  prefix: string[]
-): { from: number, to: number } | null {
-  const leafNames = new Set(inGroup.map(a => a.path[prefix.length]).filter(Boolean))
-  if (!REQUIRED_LEAVES.every(r => leafNames.has(r))) return null
-
-  // Attribute ranges point at the *value* span (between quotes). Extend each
-  // to cover `name="value"` plus trailing whitespace so the widget hides the
-  // whole attribute text.
-  const spans = inGroup.map(a => attributeFullSpan(doc, a.from, a.to))
-  let from = Number.POSITIVE_INFINITY
-  let to = 0
-  for (const s of spans) {
-    if (s.from < from) from = s.from
-    if (s.to > to) to = s.to
-  }
-
-  // Any outside-group attribute whose value range falls inside [from, to]
-  // means the group is interleaved with unrelated attrs.
-  for (const a of outsideGroup) {
-    if (a.from >= from && a.to <= to) return null
-  }
-  return { from, to }
-}
+export type ImageUploadRange =
+  | { kind: 'widget', from: number, to: number, elementPointer: string, group: ImageUploadGroup }
+  | { kind: 'hide', from: number, to: number, elementPointer: string, group: ImageUploadGroup }
+  | { kind: 'point', from: number, to: number, elementPointer: string, group: ImageUploadGroup }
 
 export function computeImageUploadRanges (
   doc: string,
@@ -76,61 +41,40 @@ export function computeImageUploadRanges (
     const descriptor = tagDescriptors[tagName]
     if (!descriptor?.imageUploadGroups?.length) continue
 
-    const elementAttrs: ElementAttr[] = []
-    for (const attr of descriptor.attributes) {
-      const pointer = `${elementPointer}/${attr.jsonPath.join('/')}`
-      const range = sourceMap.byPointer.get(pointer)
-      if (!range) continue
-      elementAttrs.push({ path: attr.jsonPath, from: range.from, to: range.to })
-    }
-
-    // When the whole tag has no image-related attrs across any of its
-    // image-upload groups, insert an upload-prompt widget per group just
-    // before the closing `/>` (or `>`). This covers the "bare tag" case
-    // like `<image />`. For partial states (some attrs present), widgets
-    // are skipped and the linter nudges the user to finish the set.
-    const isBareTag = descriptor.imageUploadGroups.every(g =>
-      !elementAttrs.some(a => startsWithPath(a.path, g.jsonPath))
-    )
-
     descriptor.imageUploadGroups.forEach((group, groupIdx) => {
-      const prefix = group.jsonPath
-      const inGroup = elementAttrs.filter(a => startsWithPath(a.path, prefix))
-      const outsideGroup = elementAttrs.filter(a => !startsWithPath(a.path, prefix))
+      const basePath = group.jsonPath.join('/')
+      const idRange = sourceMap.byPointer.get(`${elementPointer}/${basePath}/_id`)
+      const auxRanges = AUX_LEAVES
+        .map(leaf => sourceMap.byPointer.get(`${elementPointer}/${basePath}/${leaf}`))
+        .filter((r): r is { from: number, to: number } => r != null)
 
-      if (inGroup.length === 0) {
-        if (!isBareTag) return
-        const pos = insideTagEndPosition(doc, elementRange.to, groupIdx)
-        if (pos !== null) out.push({ from: pos, to: pos, elementPointer, group })
-        return
+      if (idRange) {
+        const widgetSpan = attributeFullSpan(doc, idRange.from, idRange.to)
+        out.push({ kind: 'widget', from: widgetSpan.from, to: widgetSpan.to, elementPointer, group })
+      }
+      for (const r of auxRanges) {
+        const hideSpan = attributeFullSpan(doc, r.from, r.to)
+        out.push({ kind: 'hide', from: hideSpan.from, to: hideSpan.to, elementPointer, group })
       }
 
-      const span = contiguousGroupSpan(doc, inGroup, outsideGroup, prefix)
-      if (!span) return
-      out.push({ from: span.from, to: span.to, elementPointer, group })
+      // Bare-tag fallback: no _id AND no aux attrs → emit a point widget.
+      if (!idRange && auxRanges.length === 0) {
+        const pos = insideTagEndPosition(doc, elementRange.to, groupIdx)
+        if (pos !== null) out.push({ kind: 'point', from: pos, to: pos, elementPointer, group })
+      }
     })
   }
 
   return out
 }
 
-function startsWithPath (path: string[], prefix: string[]): boolean {
-  if (path.length <= prefix.length) return false
-  for (let i = 0; i < prefix.length; i++) {
-    if (path[i] !== prefix[i]) return false
-  }
-  return true
-}
-
 /**
  * Pick a character position inside the open-tag syntax just before the closing
- * `/>` (or `>`), shifted by `groupIdx` characters so that multiple empty
- * groups on the same element get distinct insertion points the RangeSetBuilder
- * can order. Returns null if the tag is too short for the requested offset
- * (e.g. a pathological malformed tag).
+ * `/>` (or `>`), shifted by `groupIdx` characters so multiple empty groups on
+ * the same element get distinct insertion points the RangeSetBuilder can
+ * order. Returns null if the tag is too short for the requested offset.
  */
 function insideTagEndPosition (doc: string, openTagEnd: number, groupIdx: number): number | null {
-  // openTagEnd is one past the final '>'. Walk back past '>' and an optional '/'.
   let pos = openTagEnd - 1
   if (pos < 0 || doc[pos] !== '>') return null
   if (pos > 0 && doc[pos - 1] === '/') pos--
@@ -150,28 +94,19 @@ function readTagName (doc: string, openTagStart: number): string | null {
 
 /**
  * Given an attribute-value range (tight between the quotes), walk backwards
- * to the attribute name and forwards past the closing quote + trailing
- * whitespace. Used to compute the full span to hide.
+ * to include the attribute name and forwards past the closing quote plus
+ * trailing whitespace. Used so the widget/hide decoration covers the whole
+ * `name="value"` text and no stray space is left behind.
  */
 function attributeFullSpan (doc: string, valueFrom: number, valueTo: number): { from: number, to: number } {
-  // valueFrom is one past the opening quote. Walk back past `"`, `=`, the name.
-  let start = valueFrom - 1 // the opening quote
-  // before the quote: walk back past `=` and the name until whitespace.
+  let start = valueFrom - 1
   while (start > 0 && doc[start - 1] !== ' ' && doc[start - 1] !== '\t' && doc[start - 1] !== '\n') start--
-  // include one leading whitespace if present so we don't leave a stray space.
   if (start > 0 && /\s/.test(doc[start - 1])) start--
-  let end = valueTo + 1 // past the closing quote
+  let end = valueTo + 1
   while (end < doc.length && (doc[end] === ' ' || doc[end] === '\t')) end++
   return { from: start, to: end }
 }
 
-/**
- * Framework-agnostic CM6 ViewPlugin. Each time the document changes, it
- * rebuilds `Decoration.replace` widgets for every image-upload group
- * detected by `computeImageUploadRanges`. `mountWidget` is a host-provided
- * callback that mounts UI framework code (Vue, React, etc.) into the
- * widget's DOM container and returns an unmount function.
- */
 export interface MountWidgetArgs {
   elementPointer: string
   group: ImageUploadGroup
@@ -218,21 +153,21 @@ export function portalMarkupImageUploadWidgets (opts: ImageUploadWidgetsOptions)
 
     build (view: EditorView): DecorationSet {
       const doc = view.state.doc.toString()
-      // Parse a fresh source map here: ViewPlugin.update() runs BEFORE
-      // updateListeners, so any source map maintained by the editor via
-      // EditorView.updateListener would still be stale when we read it.
       const { sourceMap } = deserializeElements(doc)
       const ranges = computeImageUploadRanges(doc, sourceMap, opts.tagDescriptors)
       const builder = new RangeSetBuilder<Decoration>()
-      ranges.sort((a, b) => a.from - b.from)
+      ranges.sort((a, b) => a.from - b.from || (a.kind === 'hide' ? 1 : -1))
       for (const r of ranges) {
-        const widget = new ImageUploadWidgetType({ elementPointer: r.elementPointer, group: r.group }, opts.mountWidget)
-        // Point ranges are insertions inside an otherwise bare tag; CM6's
-        // Decoration.widget handles those. Non-empty ranges replace existing
-        // attribute text with the widget.
-        const deco = r.from === r.to
-          ? Decoration.widget({ widget, side: 1 })
-          : Decoration.replace({ widget })
+        let deco: Decoration
+        if (r.kind === 'widget') {
+          const widget = new ImageUploadWidgetType({ elementPointer: r.elementPointer, group: r.group }, opts.mountWidget)
+          deco = Decoration.replace({ widget })
+        } else if (r.kind === 'point') {
+          const widget = new ImageUploadWidgetType({ elementPointer: r.elementPointer, group: r.group }, opts.mountWidget)
+          deco = Decoration.widget({ widget, side: 1 })
+        } else {
+          deco = Decoration.replace({})
+        }
         builder.add(r.from, r.to, deco)
       }
       return builder.finish()

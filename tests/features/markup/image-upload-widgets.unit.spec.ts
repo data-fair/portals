@@ -2,38 +2,86 @@ import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { deserializeElements } from '../../../shared/markup/deserializer.ts'
 import { tagDescriptors } from '../../../shared/markup/tag-descriptors.ts'
-import {
-  computeImageUploadRanges,
-  contiguousGroupSpan
-} from '../../../shared/markup/codemirror/image-upload-widgets.ts'
+import { computeImageUploadRanges } from '../../../shared/markup/codemirror/image-upload-widgets.ts'
 
 test.describe('image-upload widget range computation', () => {
-  test('detects a contiguous image group and returns its span', () => {
+  test('emits a widget range on _id and hide ranges on name/mimeType when all three are present', () => {
     const src = '<image image._id="abc" image.name="photo.jpg" image.mimeType="image/jpeg" />'
     const { sourceMap } = deserializeElements(src)
     const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    assert.equal(ranges.length, 1, `expected one range, got ${ranges.length}`)
-    const [r] = ranges
-    assert.equal(r.elementPointer, '/0')
-    assert.equal(r.group.jsonPath.join('.'), 'image')
-    // The range should cover the attribute text.
-    const covered = src.slice(r.from, r.to)
-    assert.ok(covered.includes('image._id'))
-    assert.ok(covered.includes('image.mimeType'))
+
+    const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
+    assert.equal(imageGroup.length, 3, 'one widget + two hides for the image group')
+
+    const widgetRanges = imageGroup.filter(r => r.kind === 'widget')
+    const hideRanges = imageGroup.filter(r => r.kind === 'hide')
+    assert.equal(widgetRanges.length, 1)
+    assert.equal(hideRanges.length, 2)
+
+    const covered = src.slice(widgetRanges[0].from, widgetRanges[0].to)
+    assert.ok(covered.includes('image._id'), `widget range should cover the _id attribute, got: ${covered}`)
+
+    const hiddenTexts = hideRanges.map(r => src.slice(r.from, r.to)).sort()
+    assert.match(hiddenTexts[0], /image\.mimeType=/)
+    assert.match(hiddenTexts[1], /image\.name=/)
   })
 
-  test('returns no range when attributes are interleaved with unrelated ones', () => {
+  test('tolerates interleaved attributes (no contiguity requirement)', () => {
     const src = '<image image._id="abc" banner="true" image.name="photo.jpg" image.mimeType="image/jpeg" />'
     const { sourceMap } = deserializeElements(src)
     const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    assert.equal(ranges.length, 0, 'interleaved attrs should skip the group')
+
+    const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
+    assert.equal(imageGroup.length, 3, 'interleaving no longer suppresses the widget')
+    assert.equal(imageGroup.filter(r => r.kind === 'widget').length, 1)
+    assert.equal(imageGroup.filter(r => r.kind === 'hide').length, 2)
+
+    // banner range is NOT among the hide ranges
+    const hideCovered = imageGroup.filter(r => r.kind === 'hide').map(r => src.slice(r.from, r.to)).join('|')
+    assert.ok(!hideCovered.includes('banner'))
   })
 
-  test('returns no range when not all required leaf attributes are present', () => {
+  test('emits the widget even when only _id is present (partial state, no hides needed)', () => {
     const src = '<image image._id="abc" />'
     const { sourceMap } = deserializeElements(src)
     const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    assert.equal(ranges.length, 0, 'missing leaves should skip the group')
+    const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
+    assert.equal(imageGroup.filter(r => r.kind === 'widget').length, 1)
+    assert.equal(imageGroup.filter(r => r.kind === 'hide').length, 0)
+  })
+
+  test('hides name/mimeType even when _id is absent but widget is not emitted (avoid showing orphan attrs)', () => {
+    // This matches the "partial state where user forgot _id" case. The widget
+    // falls back to the point-upload affordance ONLY when the whole group is
+    // empty; a partial state shows no widget but still hides the stray attrs.
+    const src = '<image image.name="photo.jpg" image.mimeType="image/jpeg" />'
+    const { sourceMap } = deserializeElements(src)
+    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
+    // No widget (no _id), no point widget (group is not bare), but two hide ranges.
+    assert.equal(imageGroup.filter(r => r.kind === 'widget').length, 0)
+    assert.equal(imageGroup.filter(r => r.kind === 'point').length, 0)
+    assert.equal(imageGroup.filter(r => r.kind === 'hide').length, 2)
+  })
+
+  test('emits a point widget for each empty image-upload group on a bare tag', () => {
+    const src = '<image />'
+    const { sourceMap } = deserializeElements(src)
+    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const points = ranges.filter(r => r.kind === 'point')
+    assert.equal(points.length, 2, 'image + wideImage groups each contribute a point widget')
+    for (const r of points) {
+      assert.equal(r.from, r.to, 'point widgets are zero-width')
+    }
+    const paths = points.map(r => r.group.jsonPath.join('.')).sort()
+    assert.deepEqual(paths, ['image', 'wideImage'])
+  })
+
+  test('ignores tags without image-upload groups', () => {
+    const src = '<title titleSize="h2">Hi</title>'
+    const { sourceMap } = deserializeElements(src)
+    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    assert.equal(ranges.length, 0)
   })
 
   test('handles two groups on the same element (image and wideImage)', () => {
@@ -45,81 +93,8 @@ test.describe('image-upload widget range computation', () => {
     ].join('\n')
     const { sourceMap } = deserializeElements(src)
     const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    const paths = ranges.map(r => r.group.jsonPath.join('.')).sort()
-    assert.deepEqual(paths, ['image', 'wideImage'])
-  })
-
-  test('ignores tags without image-upload groups', () => {
-    const src = '<title titleSize="h2">Hi</title>'
-    const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    assert.equal(ranges.length, 0)
-  })
-
-  test('inserts point widgets for every empty image-upload group on a bare tag', () => {
-    const src = '<image />'
-    const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    // Both `image` and `wideImage` groups on <image> are empty ⇒ two point
-    // widgets at distinct positions inside the tag.
-    assert.equal(ranges.length, 2)
-    for (const r of ranges) {
-      assert.equal(r.from, r.to, 'bare-tag widgets are point decorations')
-      assert.ok(r.from > 0 && r.from < src.length, 'within the tag')
-    }
-    const paths = ranges.map(r => r.group.jsonPath.join('.')).sort()
-    assert.deepEqual(paths, ['image', 'wideImage'])
-  })
-
-  test('does not insert bare-tag widgets when any image-upload attr is present', () => {
-    // wideImage is empty, but `image` has a partial attr — the tag is not bare.
-    const src = '<image image._id="abc" />'
-    const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
-    assert.equal(ranges.length, 0)
-  })
-})
-
-test.describe('contiguousGroupSpan (pure helper)', () => {
-  const prefix = ['image']
-  // Build attribute ranges by hand so tests don't depend on the deserializer.
-  const makeAttr = (doc: string, name: string): { path: string[], from: number, to: number } => {
-    const match = new RegExp(`${name.replace('.', '\\.')}="([^"]*)"`).exec(doc)
-    if (!match) throw new Error(`attr ${name} not found in ${doc}`)
-    const valFrom = match.index + match[0].indexOf('"') + 1
-    const valTo = valFrom + match[1].length
-    return { path: name.split('.'), from: valFrom, to: valTo }
-  }
-
-  test('returns span covering all in-group attrs when required leaves present', () => {
-    const doc = '<image image._id="a" image.name="b" image.mimeType="c" />'
-    const inGroup = ['image._id', 'image.name', 'image.mimeType'].map(n => makeAttr(doc, n))
-    const span = contiguousGroupSpan(doc, inGroup, [], prefix)
-    assert.ok(span)
-    assert.ok(doc.slice(span.from, span.to).includes('image._id'))
-    assert.ok(doc.slice(span.from, span.to).includes('image.mimeType'))
-  })
-
-  test('returns null when a required leaf is missing', () => {
-    const doc = '<image image._id="a" image.name="b" />'
-    const inGroup = ['image._id', 'image.name'].map(n => makeAttr(doc, n))
-    assert.equal(contiguousGroupSpan(doc, inGroup, [], prefix), null)
-  })
-
-  test('returns null when an outside-group attr falls inside the span', () => {
-    const doc = '<image image._id="a" banner="true" image.name="b" image.mimeType="c" />'
-    const inGroup = ['image._id', 'image.name', 'image.mimeType'].map(n => makeAttr(doc, n))
-    const outsideGroup = [makeAttr(doc, 'banner')]
-    assert.equal(contiguousGroupSpan(doc, inGroup, outsideGroup, prefix), null)
-  })
-
-  test('ignores outside-group attrs that sit outside the span', () => {
-    const doc = '<image banner="true" image._id="a" image.name="b" image.mimeType="c" />'
-    const inGroup = ['image._id', 'image.name', 'image.mimeType'].map(n => makeAttr(doc, n))
-    const outsideGroup = [makeAttr(doc, 'banner')]
-    const span = contiguousGroupSpan(doc, inGroup, outsideGroup, prefix)
-    assert.ok(span)
-    // banner is before the group, not inside it.
-    assert.ok(span.from > doc.indexOf('banner'))
+    const widgetPaths = ranges.filter(r => r.kind === 'widget').map(r => r.group.jsonPath.join('.')).sort()
+    assert.deepEqual(widgetPaths, ['image', 'wideImage'])
+    assert.equal(ranges.filter(r => r.kind === 'hide').length, 4, '2 groups × 2 hidden leaves')
   })
 })
