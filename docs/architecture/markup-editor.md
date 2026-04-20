@@ -310,13 +310,13 @@ Two widget families; both are framework-agnostic (the CM6 side takes a
 the actual mounting).
 
 **`image-upload-widgets.ts`.** Inline `<image-upload>` rendered in place of
-the `image._id` / `image.name` / `image.mimeType` attribute triple. A group
-is widgetized only when all three leaves are present AND textually
-contiguous (no other attribute falls inside the span). This predictability
-matters: the next serialize normalizes ordering, so a partial or
-interleaved state is transient. Bare tags (`<image />`) get a point widget
-as a click-to-upload affordance instead. The contiguity check lives in
-`contiguousGroupSpan` — a pure function with its own unit tests.
+the `image._id` attribute. The widget binds to one attribute range (the
+`_id` leaf); the two auxiliary attributes `image.name` and `image.mimeType`
+are emitted in markup by the serializer and parsed by the deserializer as
+usual, but hidden from view via CM6 empty-replace decorations. Ordering is
+irrelevant — each leaf has its own decoration. Bare tags (`<image />`) get a
+point widget as a click-to-upload affordance. The range computation lives
+in `computeImageUploadRanges` — a pure function with its own unit tests.
 
 **`node-preview-widgets.ts`.** Per-element preview toggled from a gutter
 button. Three coordinated CM6 pieces:
@@ -405,13 +405,6 @@ could replace `parse.ts` with a walker over the Lezer tree — we'd get
 incremental parsing and free character ranges, at the cost of duplicating
 the recoverable-error behaviour the hand-rolled parser has today. Tracked
 as a candidate simplification; not part of this branch.
-
-**Contiguity logic for image-upload widgets.** The predictability rule
-(all three required leaves present AND textually contiguous, else plain
-text) is simple to state but surprising in practice — a user who types
-attributes in an unusual order won't see a widget until the next save
-normalizes the text. This is intentional but worth flagging; the linter
-today doesn't specifically guide the user to fix interleaving.
 
 **`tag-descriptors.ts` is 12k lines of generated code.** Fine for the
 bundle, but noisy in diffs. Marked `linguist-generated=true` in
