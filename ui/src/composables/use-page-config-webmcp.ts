@@ -5,8 +5,8 @@ import equal from 'fast-deep-equal'
 import type { PageConfig } from '#api/types/page/index.ts'
 
 const compiledLayoutImports: Record<string, () => Promise<any>> = {
-  fr: () => import('#api/types/page-config-simple/.type/compiled-layout-fr.js'),
-  en: () => import('#api/types/page-config-simple/.type/compiled-layout-en.js')
+  fr: () => import('#api/types/page-config/.type/compiled-layout-fr.js'),
+  en: () => import('#api/types/page-config/.type/compiled-layout-en.js')
 }
 
 export function usePageConfigWebMCP (
@@ -41,6 +41,10 @@ export function usePageConfigWebMCP (
         {
           width: 600,
           updateOn: 'input',
+          // `webmcp` context tells the page-config schema to skip the `page-elements`
+          // slot directive so the elements array materializes as a standard list —
+          // required for the agent's structured form tools to drive edits.
+          context: { mode: 'webmcp' },
           onData: wrappedOnData
         },
         toRaw(config)

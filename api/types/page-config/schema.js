@@ -1,6 +1,6 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-config',
-  'x-exports': ['types', 'vjsf'],
+  'x-exports': ['types', 'vjsf', 'compiledLayout'],
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
@@ -196,7 +196,14 @@ export default {
     elements: {
       type: 'array',
       layout: {
-        slots: { component: 'page-elements' }
+        // The `page-elements` slot is only active in the page editor UI (edit-config.vue);
+        // other consumers of this compiled layout (e.g. WebMCP agent tools in
+        // use-page-config-webmcp.ts) pass a different context.mode, falling through to
+        // the normalizer's implicit default case where the array materializes as a
+        // normal list — which is what WebMCP needs to drive structured edits.
+        switch: [
+          { if: "context.mode === 'page-editor'", slots: { component: 'page-elements' } }
+        ]
       },
       items: {
         $ref: 'https://github.com/data-fair/portals/page-elements#/$defs/element'

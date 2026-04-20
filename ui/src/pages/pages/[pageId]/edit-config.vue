@@ -87,6 +87,17 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
+import { shallowRef, watch } from 'vue'
+
+// The same compiled layout backs: (a) the main <vjsf-page-config> mount on this page,
+// (b) the inline per-element VJSF instance inside markup-element-form-widget.vue, and
+// (c) the WebMCP agent StatefulLayout in use-page-config-webmcp.ts. All three share
+// AJV validators, normalized layouts, expressions and skeleton trees; only
+// options.context differs to select the right rendering behavior.
+const pageConfigCompiledLayoutImports: Record<string, () => Promise<any>> = {
+  fr: () => import('#api/types/page-config/.type/compiled-layout-fr.js'),
+  en: () => import('#api/types/page-config/.type/compiled-layout-en.js')
+}
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
@@ -156,6 +167,10 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   updateOn: 'blur',
   initialValidation: 'always',
   context: {
+    // `page-editor` activates the `page-elements` slot delegation on `/elements`,
+    // which is what powers the Form/Markup toggle below. Other consumers of this
+    // compiled layout (WebMCP, the markup-inline element form) pass different modes.
+    mode: 'page-editor',
     pageType: pageFetch.data.value?.type,
     pages: pages.value
   },
@@ -166,6 +181,17 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
     }
   }
 }))
+
+// Expose the outer compiled layout to descendants (via provide) so the markup inline
+// form in markup-element-form-widget.vue can reuse it — no recompile, no duplicated
+// schema, no duplicated AJV validators.
+const pageConfigCompiledLayout = shallowRef<any>(null)
+watch(locale, async (loc) => {
+  const importFn = pageConfigCompiledLayoutImports[loc] ?? pageConfigCompiledLayoutImports.fr
+  const mod = await importFn()
+  pageConfigCompiledLayout.value = mod.compiledLayout
+}, { immediate: true })
+provide('vjsf:page-config-compiled-layout', pageConfigCompiledLayout)
 const vjsfDefaults = {
   'VjsfList-Edit-VDialog': {
     minHeight: '100%',
