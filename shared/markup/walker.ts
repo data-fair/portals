@@ -1,3 +1,12 @@
+/**
+ * Descriptor-driven traversal over page-element JSON trees. Two entry points:
+ *  - `walkElements`: depth-first visit of every real page element (structured
+ *    slot wrappers like tab/panel are skipped; their `.children` arrays are
+ *    recursed into instead). Used by `deserializer.healUuids` and anywhere a
+ *    callback needs every element in a page.
+ *  - `findElementByPointer`: tolerant JSON-pointer resolver used by the
+ *    markup preview widget, which can race against mid-edit tree shapes.
+ */
 import type { ChildrenSlot } from './types.ts'
 import { tagDescriptors } from './tag-descriptors.ts'
 

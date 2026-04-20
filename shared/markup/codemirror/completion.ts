@@ -1,3 +1,17 @@
+/**
+ * CM6 autocomplete source for portal markup. Uses the Lezer syntax tree to
+ * detect the cursor context and returns suggestions across three branches:
+ *
+ *   - Tag name context (inside `<` or at top level) — every real tag plus
+ *     virtual slot tags (collected via `collectVirtualTags`).
+ *   - Attribute name context — leaf attribute paths for the enclosing tag,
+ *     excluding ones already written.
+ *   - Attribute value context — schema-derived enum/boolean values, merged
+ *     with host-provided async completions (dataset ids, etc.).
+ *
+ * Descriptor titles are resolved against the editor's locale (captured at
+ * mount because `useI18n().locale` is not reactive once CM6 is running).
+ */
 import type { CompletionContext, CompletionResult, CompletionSource, Completion } from '@codemirror/autocomplete'
 import type { EditorView } from '@codemirror/view'
 import type { SyntaxNode } from '@lezer/common'

@@ -1,3 +1,14 @@
+/**
+ * Serialize a page-elements JSON array to portal markup text. Uses the
+ * generated `tagDescriptors` to emit attributes (flattened leaf paths back to
+ * dotted names), virtual slot wrappers (`<tab>`, `<panel>`, `<action>`,
+ * ...), and content properties. Inverse of `deserializer.ts`: the pair is
+ * round-trippable for any elements that match the descriptor schema.
+ *
+ * Attributes equal to their schema default are dropped to keep markup
+ * compact; on save, the editor re-serializes the canonical form so markup
+ * stays normalized.
+ */
 import type { AttributeDescriptor, ChildrenSlot, TagDescriptor } from './types.ts'
 import { tagDescriptors } from './tag-descriptors.ts'
 

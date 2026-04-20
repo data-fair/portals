@@ -1,22 +1,65 @@
+/**
+ * Inline image-upload widgets for the markup editor. The widget is only shown
+ * when the set of image attributes (`_id`, `name`, `mimeType`) is both
+ * complete AND textually contiguous — otherwise we fall back to plain text
+ * and let the linter nudge the user, or the next serialize cycle normalize
+ * ordering. A bare-tag case (no image attrs at all) gets an insertion-point
+ * widget instead so users can click to upload.
+ */
 import { Decoration, ViewPlugin, WidgetType, type EditorView, type DecorationSet, type ViewUpdate } from '@codemirror/view'
 import { RangeSetBuilder } from '@codemirror/state'
 import { deserializeElements } from '../deserializer.ts'
 import type { ImageUploadGroup, MarkupSourceMap, TagDescriptor } from '../types.ts'
 
-/**
- * Pure helper: given the current document text, its source map, and the tag
- * descriptors, return the character ranges to replace with image-upload
- * widgets. A group is reported only when all of its leaf attributes are
- * present in the source map AND the min→max span contains only those
- * attributes plus whitespace (i.e. they are contiguous in the markup). This
- * keeps the behavior predictable: interleaved or partial attrs fall back to
- * plain text, and the next serialize cycle normalizes ordering.
- */
 export interface ImageUploadRange {
   from: number
   to: number
   elementPointer: string
   group: ImageUploadGroup
+}
+
+/** Attribute positioned inside an element's open tag, with its full textual span. */
+interface ElementAttr {
+  path: string[]
+  from: number
+  to: number
+}
+
+const REQUIRED_LEAVES = ['_id', 'name', 'mimeType'] as const
+
+/**
+ * Compute the textual span covering every in-group attribute, or `null` when
+ * the group cannot be rendered as a widget. Returns null when:
+ *  - the required leaves aren't all present (partial state);
+ *  - any outside-group attribute falls textually inside the group's span
+ *    (interleaved attrs).
+ */
+export function contiguousGroupSpan (
+  doc: string,
+  inGroup: ElementAttr[],
+  outsideGroup: ElementAttr[],
+  prefix: string[]
+): { from: number, to: number } | null {
+  const leafNames = new Set(inGroup.map(a => a.path[prefix.length]).filter(Boolean))
+  if (!REQUIRED_LEAVES.every(r => leafNames.has(r))) return null
+
+  // Attribute ranges point at the *value* span (between quotes). Extend each
+  // to cover `name="value"` plus trailing whitespace so the widget hides the
+  // whole attribute text.
+  const spans = inGroup.map(a => attributeFullSpan(doc, a.from, a.to))
+  let from = Number.POSITIVE_INFINITY
+  let to = 0
+  for (const s of spans) {
+    if (s.from < from) from = s.from
+    if (s.to > to) to = s.to
+  }
+
+  // Any outside-group attribute whose value range falls inside [from, to]
+  // means the group is interleaved with unrelated attrs.
+  for (const a of outsideGroup) {
+    if (a.from >= from && a.to <= to) return null
+  }
+  return { from, to }
 }
 
 export function computeImageUploadRanges (
@@ -33,9 +76,7 @@ export function computeImageUploadRanges (
     const descriptor = tagDescriptors[tagName]
     if (!descriptor?.imageUploadGroups?.length) continue
 
-    // Collect every attribute range that belongs to this element, keyed by
-    // the jsonPath prefix relative to the element pointer.
-    const elementAttrs: Array<{ path: string[], from: number, to: number }> = []
+    const elementAttrs: ElementAttr[] = []
     for (const attr of descriptor.attributes) {
       const pointer = `${elementPointer}/${attr.jsonPath.join('/')}`
       const range = sourceMap.byPointer.get(pointer)
@@ -45,10 +86,9 @@ export function computeImageUploadRanges (
 
     // When the whole tag has no image-related attrs across any of its
     // image-upload groups, insert an upload-prompt widget per group just
-    // before the closing `/>` (or `>`). This covers the "bare tag" case like
-    // `<image />` where the user hasn't typed any image attrs yet. For
-    // partial states (some attrs present), we skip insertion and let the
-    // linter nudge the user to finish the attribute set.
+    // before the closing `/>` (or `>`). This covers the "bare tag" case
+    // like `<image />`. For partial states (some attrs present), widgets
+    // are skipped and the linter nudges the user to finish the set.
     const isBareTag = descriptor.imageUploadGroups.every(g =>
       !elementAttrs.some(a => startsWithPath(a.path, g.jsonPath))
     )
@@ -65,24 +105,9 @@ export function computeImageUploadRanges (
         return
       }
 
-      // Need at least _id, name, mimeType under the prefix to render.
-      const leafNames = new Set(inGroup.map(a => a.path[prefix.length]).filter(Boolean))
-      const required = ['_id', 'name', 'mimeType']
-      if (!required.every(r => leafNames.has(r))) return
-
-      // Attribute ranges point at the *value* span (between quotes). Extend
-      // each to cover `name="value"` plus trailing whitespace so the widget
-      // hides the whole attribute text.
-      const spans = inGroup.map(a => attributeFullSpan(doc, a.from, a.to))
-      const min = spans.reduce((m, s) => Math.min(m, s.from), Number.POSITIVE_INFINITY)
-      const max = spans.reduce((m, s) => Math.max(m, s.to), 0)
-
-      // Contiguity check: any outside-group attribute whose value range
-      // falls inside [min, max] means the group is interleaved.
-      const interleaved = outsideGroup.some(a => a.from >= min && a.to <= max)
-      if (interleaved) return
-
-      out.push({ from: min, to: max, elementPointer, group })
+      const span = contiguousGroupSpan(doc, inGroup, outsideGroup, prefix)
+      if (!span) return
+      out.push({ from: span.from, to: span.to, elementPointer, group })
     })
   }
 
