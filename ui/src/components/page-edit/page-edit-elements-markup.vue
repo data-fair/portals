@@ -21,9 +21,11 @@
     :key="w.key"
     :to="w.host"
   >
-    <markup-preview-widget
+    <markup-element-widget
       :element-pointer="w.elementPointer"
       :element="resolvePreviewElement(w.elementPointer)"
+      :elements-node="node ?? null"
+      :stateful-layout="statefulLayout ?? null"
       :pages="props.pages ?? null"
     />
   </teleport>
@@ -48,7 +50,7 @@ import {
   type AttributeValueContext
 } from '@data-fair/portals-shared-markup/codemirror'
 import MarkupImageWidget from '~/components/markup-widgets/markup-image-widget.vue'
-import MarkupPreviewWidget from '~/components/markup-widgets/markup-preview-widget.vue'
+import MarkupElementWidget from '~/components/markup-widgets/markup-element-widget.vue'
 import { EditorState } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers, highlightActiveLine } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
