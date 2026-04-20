@@ -1,18 +1,18 @@
 <template>
   <div class="markup-element-widget">
-    <div class="markup-element-widget__preview">
-      <markup-preview-widget
-        :element-pointer="elementPointer"
-        :element="element"
-        :pages="pages"
-      />
-    </div>
     <div class="markup-element-widget__form">
       <markup-element-form-widget
         :element-pointer="elementPointer"
         :element="element"
         :elements-node="elementsNode"
         :stateful-layout="statefulLayout"
+        :pages="pages"
+      />
+    </div>
+    <div class="markup-element-widget__preview">
+      <markup-preview-widget
+        :element-pointer="elementPointer"
+        :element="element"
         :pages="pages"
       />
     </div>
@@ -37,7 +37,7 @@ defineProps<{
 <style scoped>
 .markup-element-widget {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
   gap: 12px;
   margin: 4px 0;
   container-type: inline-size;
