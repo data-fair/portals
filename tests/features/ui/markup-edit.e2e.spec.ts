@@ -139,7 +139,7 @@ test.describe('markup edit mode', () => {
     // saved Image record, and later be served back via /images/:_id/data.
     // For this test we only care that the widget round-trips an image ref
     // through the StatefulLayout → CM6 text sync.
-    await context.route('**/portals-manager/api/images', async (route) => {
+    await context.route(/\/portals-manager\/api\/images(\?|$)/, async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -169,10 +169,26 @@ test.describe('markup edit mode', () => {
     })
 
     await expect(async () => {
-      const editorText = await page.locator('.markup-editor .cm-content').textContent() ?? ''
-      expect(editorText).toContain('image._id="img-stub"')
-      expect(editorText).toContain('image.name="stub.png"')
-      expect(editorText).toContain('image.mimeType="image/png"')
+      // Widget hides name/mimeType in the rendered view. Read the underlying
+      // doc via the EditorView so we can assert the full attribute triple is
+      // still present in the source and round-trips correctly.
+      const docText = await page.evaluate(() => {
+        const content = document.querySelector('.markup-editor .cm-content') as any
+        const tile = content?.cmTile ?? (document.querySelector('.markup-editor .cm-editor') as any)?.cmTile
+        return tile?.root?.view?.state?.doc?.toString?.() ?? ''
+      })
+      expect(docText).toContain('image._id="img-stub"')
+      expect(docText).toContain('image.name="stub.png"')
+      expect(docText).toContain('image.mimeType="image/png"')
+
+      // And verify the widget/hide decorations apply: the rendered view
+      // replaces the `_id` attribute with the upload widget and hides
+      // `name`/`mimeType` entirely, so none of the three attribute literals
+      // should appear in the rendered text.
+      const renderedText = await page.locator('.markup-editor .cm-content').textContent() ?? ''
+      expect(renderedText).not.toContain('image._id="img-stub"')
+      expect(renderedText).not.toContain('image.name="stub.png"')
+      expect(renderedText).not.toContain('image.mimeType="image/png"')
     }).toPass({ timeout: 10000 })
   })
 
