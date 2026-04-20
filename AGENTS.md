@@ -69,6 +69,10 @@ npm run build-types      # Build type definitions from schemas
 npm -w ui run build      # Build UI
 ```
 
+### Markup editor
+
+The page markup editor (CodeMirror-based) has a dedicated architecture doc: `docs/architecture/markup-editor.md`. Consult it before making changes to markup editing, node-preview widgets, or related gutter/decoration code.
+
 ### Performance profiling
 
 The edit-config page (page editor) has known performance sensitivity due to the complex VJSF oneOf schema (38 element types). A Playwright seed file exists for interactive profiling:

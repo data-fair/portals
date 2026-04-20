@@ -3,16 +3,9 @@ import {
   Decoration, EditorView, WidgetType, gutter, GutterMarker,
   type DecorationSet
 } from '@codemirror/view'
-import { deserializeElements, type DeserializeError } from '../deserializer.ts'
 import type { MarkupSourceMap } from '../types.ts'
+import { markupParseStateField, type MarkupParseState } from './parse-state.ts'
 
-/**
- * Pure helper: given the current document, its source map, and the set of
- * pointers the user has toggled "preview on", return the CM6 ranges where a
- * block widget should render. Each range is a zero-width point at the end
- * offset of the toggled element (`byElementPointer[pointer].to`). Ordered by
- * `from` so RangeSetBuilder accepts them in sequence.
- */
 export interface NodePreviewRange {
   from: number
   to: number
@@ -20,12 +13,11 @@ export interface NodePreviewRange {
 }
 
 export function computeNodePreviewRanges (
-  _doc: string,
-  sourceMap: MarkupSourceMap | null | undefined,
+  sourceMap: MarkupSourceMap,
   toggled: ReadonlySet<string>
 ): NodePreviewRange[] {
   const out: NodePreviewRange[] = []
-  if (!sourceMap?.byElementPointer || toggled.size === 0) return out
+  if (toggled.size === 0) return out
   for (const pointer of toggled) {
     const range = sourceMap.byElementPointer.get(pointer)
     if (!range) continue
@@ -33,29 +25,6 @@ export function computeNodePreviewRanges (
   }
   out.sort((a, b) => a.from - b.from)
   return out
-}
-
-/**
- * Shared parse state used by both the decoration field and the gutter.
- * Consolidates parsing so we don't deserialize the document multiple times
- * per transaction.
- */
-interface MarkupParseState {
-  sourceMap: MarkupSourceMap
-  errors: ReadonlyArray<DeserializeError>
-}
-
-const markupParseStateField = StateField.define<MarkupParseState>({
-  create: (state) => parseDoc(state.doc.toString()),
-  update (value, tr) {
-    if (!tr.docChanged) return value
-    return parseDoc(tr.state.doc.toString())
-  }
-})
-
-function parseDoc (doc: string): MarkupParseState {
-  const { sourceMap, errors } = deserializeElements(doc)
-  return { sourceMap, errors }
 }
 
 /**
@@ -166,18 +135,13 @@ function buildDecorations (
   mount: MountPreview
 ): DecorationSet | null {
   const { sourceMap, errors } = parsed
-  // If the document failed to parse (no element pointers AND the parser
-  // reported errors) but the user has toggles on, return null as a
-  // sentinel so the caller preserves the widget. A clean empty doc (no
-  // errors, no pointers) is NOT a parse failure and falls through so
-  // stale widgets unmount.
+  // Transient-parse sentinel: return null so the caller preserves the existing
+  // (mapped) widget set. A clean empty doc (no errors, no pointers) still
+  // falls through, letting stale widgets unmount.
   if (sourceMap.byElementPointer.size === 0 && errors.length > 0 && toggled.size > 0) {
     return null
   }
-  // NOTE: computeNodePreviewRanges's first parameter (`_doc`) is unused, so we
-  // can pass an empty string. Keeping the param preserves the sibling-file
-  // symmetry with computeImageUploadRanges.
-  const ranges = computeNodePreviewRanges('', sourceMap, toggled)
+  const ranges = computeNodePreviewRanges(sourceMap, toggled)
   const builder = new RangeSetBuilder<Decoration>()
   for (const r of ranges) {
     builder.add(r.from, r.to, Decoration.widget({
@@ -189,13 +153,9 @@ function buildDecorations (
   return builder.finish()
 }
 
-/**
- * StateField that tracks the current decoration set for preview widgets.
- * Block decorations are not allowed via ViewPlugin in CM6, so we recompute
- * them here on every doc or toggle-state change and expose them through
- * `EditorView.decorations`. On transient parse failure, the previous
- * decoration set is preserved (so the widget stays visible mid-edit).
- */
+// Block decorations aren't allowed via ViewPlugin in CM6, so we drive the
+// decoration set through a StateField. On transient parse failure the
+// previous (mapped) set is preserved so the widget stays visible mid-edit.
 function nodePreviewDecorationsField (mount: MountPreview) {
   return StateField.define<DecorationSet>({
     create (state) {
@@ -203,19 +163,12 @@ function nodePreviewDecorationsField (mount: MountPreview) {
       return built ?? Decoration.none
     },
     update (value, tr) {
-      // Keep existing decoration positions in sync with doc changes.
       const mapped = tr.docChanged ? value.map(tr.changes) : value
       const toggled = tr.state.field(nodePreviewState)
       const parseChanged = tr.startState.field(markupParseStateField) !== tr.state.field(markupParseStateField)
       const toggleChanged = tr.startState.field(nodePreviewState) !== toggled
       if (!parseChanged && !toggleChanged) return mapped
       const built = buildDecorations(tr.state.field(markupParseStateField), toggled, mount)
-      // Sentinel: on transient parse failure, keep the previously-mapped
-      // decoration set so any already-mounted widget stays in the DOM
-      // until the parser recovers. CM6's PointDecoration maps with
-      // TrackDel, which drops points whose range is wholly deleted, so in
-      // the pathological case of a full-doc replace the widget will still
-      // be re-mounted when the parser picks up again.
       if (built === null) return mapped
       return built
     },

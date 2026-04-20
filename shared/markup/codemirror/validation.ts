@@ -1,19 +1,15 @@
 import { linter, type Diagnostic } from '@codemirror/lint'
 import { StateEffect, StateField, type Extension } from '@codemirror/state'
 import type { EditorView } from '@codemirror/view'
-import { deserializeElements } from '../deserializer.ts'
+import { markupParseStateField } from './parse-state.ts'
 
 /**
- * Dispatch to replace the externally-provided diagnostics (e.g. JSON-Schema
+ * Dispatch to replace externally-provided diagnostics (e.g. JSON-Schema
  * validation errors distributed from a StatefulLayout). Use:
  *   view.dispatch({ effects: setMarkupExternalDiagnostics.of(diagnostics) })
  */
 export const setMarkupExternalDiagnostics = StateEffect.define<Diagnostic[]>()
 
-/**
- * Holds the last-dispatched external diagnostics. Merged with deserializer
- * diagnostics by `portalMarkupLinter`.
- */
 const markupExternalDiagnosticsField = StateField.define<Diagnostic[]>({
   create: () => [],
   update (value, tr) {
@@ -24,18 +20,8 @@ const markupExternalDiagnosticsField = StateField.define<Diagnostic[]>({
   }
 })
 
-/**
- * CM6 lint extension. Merges:
- *  - deserializer diagnostics (parse/shape errors: unknown tags, malformed
- *    attributes, type-coercion failures, etc.), anchored at the reported
- *    line/col;
- *  - external diagnostics set via `setMarkupExternalDiagnostics` (e.g. ajv
- *    errors translated through a source map by a StatefulLayout adapter).
- */
 const deserializerLinter = linter((view: EditorView): Diagnostic[] => {
-  const text = view.state.doc.toString()
-  if (text === '') return []
-  const { errors } = deserializeElements(text)
+  const { errors } = view.state.field(markupParseStateField)
   const diagnostics: Diagnostic[] = []
   for (const err of errors) {
     const lineNo = Math.max(1, Math.min(err.line, view.state.doc.lines))

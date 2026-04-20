@@ -131,13 +131,23 @@ function setAt (target: any, path: string[], value: unknown): void {
   cur[path[path.length - 1]] = value
 }
 
+const attrsByNameCache = new WeakMap<AttributeDescriptor[], Map<string, AttributeDescriptor>>()
+function attrsByName (attrs: AttributeDescriptor[]): Map<string, AttributeDescriptor> {
+  let cached = attrsByNameCache.get(attrs)
+  if (!cached) {
+    cached = new Map(attrs.map(a => [a.name, a]))
+    attrsByNameCache.set(attrs, cached)
+  }
+  return cached
+}
+
 function applyAttributes (
   tag: ParsedTag,
   target: Record<string, any>,
   attrs: AttributeDescriptor[],
   p: Parser
 ): void {
-  const byName = new Map(attrs.map(a => [a.name, a]))
+  const byName = attrsByName(attrs)
   for (const [name, rawValue] of Object.entries(tag.attrs)) {
     const attr = byName.get(name)
     if (!attr) {
@@ -228,13 +238,9 @@ function buildElement (tag: ParsedTag, p: Parser): any | null {
   return result
 }
 
-function contentPropertyTags (): Set<string> {
-  const out = new Set<string>()
-  for (const [name, desc] of Object.entries(tagDescriptors)) {
-    if (desc.contentProperty) out.add(name)
-  }
-  return out
-}
+const CONTENT_PROPERTY_TAGS: Set<string> = new Set(
+  Object.entries(tagDescriptors).filter(([, d]) => d.contentProperty).map(([name]) => name)
+)
 
 /**
  * Parse markup text into a page-elements array.
@@ -245,8 +251,7 @@ function contentPropertyTags (): Set<string> {
  */
 export function deserializeElements (src: string): DeserializeResult {
   const parser = makeParser(src)
-  const rawTags = contentPropertyTags()
-  const roots = parseRootTags(parser, rawTags)
+  const roots = parseRootTags(parser, CONTENT_PROPERTY_TAGS)
 
   const sourceMap = newSourceMap()
   for (let i = 0; i < roots.length; i++) {

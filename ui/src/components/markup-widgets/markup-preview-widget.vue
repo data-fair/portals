@@ -38,10 +38,10 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const context = computed(() => ({ isRoot: false, index: 0, parentLength: 1 }))
+const context = { isRoot: false, index: 0, parentLength: 1 }
 
-// Resets on element change so a transient render failure doesn't
-// permanently mark the widget as broken once the user fixes the markup.
+// Reset on element change so a transient render failure doesn't permanently
+// mark the widget broken once the user fixes the markup.
 const failed = ref(false)
 watch(() => [props.element, props.elementPointer], () => { failed.value = false })
 onErrorCaptured((err) => {

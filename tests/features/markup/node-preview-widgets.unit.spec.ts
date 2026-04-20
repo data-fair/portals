@@ -7,14 +7,14 @@ test.describe('computeNodePreviewRanges', () => {
   test('returns no ranges when the toggle set is empty', () => {
     const src = '<title titleSize="h2">Hi</title>'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set())
+    const ranges = computeNodePreviewRanges(sourceMap, new Set())
     assert.equal(ranges.length, 0)
   })
 
   test('returns a range at the element end for a toggled top-level element', () => {
     const src = '<title titleSize="h2">Hi</title>'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set(['/0']))
+    const ranges = computeNodePreviewRanges(sourceMap, new Set(['/0']))
     assert.equal(ranges.length, 1)
     assert.equal(ranges[0].elementPointer, '/0')
     const expected = sourceMap.byElementPointer.get('/0')!
@@ -25,7 +25,7 @@ test.describe('computeNodePreviewRanges', () => {
   test('supports self-closing tags', () => {
     const src = '<divider />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set(['/0']))
+    const ranges = computeNodePreviewRanges(sourceMap, new Set(['/0']))
     assert.equal(ranges.length, 1)
     const expected = sourceMap.byElementPointer.get('/0')!
     assert.equal(ranges[0].from, expected.to)
@@ -38,7 +38,7 @@ test.describe('computeNodePreviewRanges', () => {
       '</card>'
     ].join('\n')
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set(['/0/children/0']))
+    const ranges = computeNodePreviewRanges(sourceMap, new Set(['/0/children/0']))
     assert.equal(ranges.length, 1)
     assert.equal(ranges[0].elementPointer, '/0/children/0')
     const expected = sourceMap.byElementPointer.get('/0/children/0')!
@@ -48,7 +48,7 @@ test.describe('computeNodePreviewRanges', () => {
   test('omits ranges for pointers missing from the source map', () => {
     const src = '<title titleSize="h2">Hi</title>'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set(['/0', '/99']))
+    const ranges = computeNodePreviewRanges(sourceMap, new Set(['/0', '/99']))
     assert.equal(ranges.length, 1)
     assert.equal(ranges[0].elementPointer, '/0')
   })
@@ -60,7 +60,7 @@ test.describe('computeNodePreviewRanges', () => {
       '<divider />'
     ].join('\n')
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeNodePreviewRanges(src, sourceMap, new Set(['/2', '/0', '/1']))
+    const ranges = computeNodePreviewRanges(sourceMap, new Set(['/2', '/0', '/1']))
     assert.equal(ranges.length, 3)
     assert.ok(ranges[0].from <= ranges[1].from)
     assert.ok(ranges[1].from <= ranges[2].from)

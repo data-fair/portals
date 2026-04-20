@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageUploadGroup } from '@data-fair/portals-shared-markup'
+import { findElementByPointer, type ImageUploadGroup } from '@data-fair/portals-shared-markup'
 import type { StatefulLayout } from '@json-layout/core/state'
 
 const props = defineProps<{
@@ -28,48 +28,28 @@ const props = defineProps<{
   resource: { type: 'page', _id: string } | null
 }>()
 
-// Why we don't look up a StateNode for /elements/N/image:
-// the page-config schema delegates `/elements` rendering to a custom slot
-// component, so the outer StatefulLayout never materializes children under
-// `/elements`. We read/write the raw elements array via the `elementsNode`
-// (= the editor's `props.node`) which IS a real StateNode we can call
-// `statefulLayout.input` on.
+// We read/write the raw elements array via `elementsNode` (the editor's
+// `props.node`) because the page-config schema delegates `/elements` to a
+// custom slot, so the outer StatefulLayout never materializes children
+// under `/elements` as real StateNodes we could drive directly.
 
-/** Parse '/N' out of the element pointer '/N[/maybe/more]'. */
-const elementIndex = computed(() => {
-  const m = /^\/(\d+)/.exec(props.elementPointer)
-  return m ? Number(m[1]) : -1
-})
-
-function getAt (obj: any, path: string[]): any {
-  let cur = obj
-  for (const seg of path) {
-    if (cur == null || typeof cur !== 'object') return undefined
-    cur = cur[seg]
-  }
-  return cur
-}
-
-const currentElement = computed(() => {
-  const elements = props.elementsNode?.data
-  if (!Array.isArray(elements)) return undefined
-  return elements[elementIndex.value]
-})
+const currentElement = computed(() =>
+  findElementByPointer(props.elementsNode?.data, props.elementPointer)
+)
 
 const currentImage = computed(() => {
   const element = currentElement.value
   if (!element) return undefined
-  return getAt(element, props.group.jsonPath)
+  let cur: any = element
+  for (const seg of props.group.jsonPath) {
+    if (cur == null || typeof cur !== 'object') return undefined
+    cur = cur[seg]
+  }
+  return cur
 })
 
-/**
- * Evaluate the group's schema `layout.if` expression against the containing
- * element. The expression uses json-layout's evaluator convention —
- * `parent.data` refers to the element that owns this property. We wrap it in
- * a Function once per group.
- *
- * When no `ifExpression` is declared, the widget is always visible.
- */
+// Malformed expression falls back to visible — a broken `if` should not
+// silently hide a slot the user would expect to see.
 const visible = computed(() => {
   const expr = props.group.ifExpression
   if (!expr) return true
@@ -80,8 +60,6 @@ const visible = computed(() => {
     const fn = new Function('parent', `return (${expr})`)
     return !!fn({ data: element })
   } catch {
-    // Malformed expression falls back to visible — a broken if should not
-    // silently hide a slot the user would expect to see.
     return true
   }
 })
@@ -90,27 +68,33 @@ const label = computed(() => props.group.label ?? props.group.jsonPath.join('.')
 
 function onChange (data: any) {
   if (!props.statefulLayout || !props.elementsNode) return
-  const current = props.elementsNode.data
-  if (!Array.isArray(current)) return
-  const idx = elementIndex.value
-  if (idx < 0 || idx >= current.length) return
+  const root = props.elementsNode.data
+  if (!Array.isArray(root)) return
+  const segments = props.elementPointer.split('/').filter(Boolean)
+  if (segments.length === 0) return
 
-  // Clone along the mutation path so StatefulLayout observes fresh refs.
-  const nextArray = current.slice()
-  const nextElement: any = { ...current[idx] }
+  // Clone along the pointer so StatefulLayout sees fresh refs at every step.
+  const nextRoot = root.slice()
+  let cur: any = nextRoot
+  for (const seg of segments) {
+    const key: any = Array.isArray(cur) ? Number(seg) : seg
+    const prev = cur[key]
+    if (prev == null || typeof prev !== 'object') return
+    cur[key] = Array.isArray(prev) ? prev.slice() : { ...prev }
+    cur = cur[key]
+  }
   const path = props.group.jsonPath
-  let owner: any = nextElement
+  let owner: any = cur
   for (let i = 0; i < path.length - 1; i++) {
-    const key = path[i]
-    owner[key] = { ...(owner[key] ?? {}) }
-    owner = owner[key]
+    const k = path[i]
+    owner[k] = { ...(owner[k] ?? {}) }
+    owner = owner[k]
   }
   const leaf = path[path.length - 1]
   if (data == null) delete owner[leaf]
   else owner[leaf] = data
-  nextArray[idx] = nextElement
 
-  props.statefulLayout.input(props.elementsNode, nextArray)
+  props.statefulLayout.input(props.elementsNode, nextRoot)
 }
 </script>
 

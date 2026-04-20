@@ -62,8 +62,7 @@ export function toRelativePointer (prefix: string, fullPath: string): string | n
  * the given char offset. Used to derive "which element is the cursor in?" for
  * attribute-value autocomplete.
  */
-export function offsetToElementPointer (sourceMap: MarkupSourceMap | null | undefined, offset: number): string | null {
-  if (!sourceMap) return null
+export function offsetToElementPointer (sourceMap: MarkupSourceMap, offset: number): string | null {
   let best: { pointer: string, size: number } | null = null
   for (const [pointer, range] of sourceMap.byElementPointer) {
     if (offset < range.from || offset > range.to) continue
@@ -74,12 +73,11 @@ export function offsetToElementPointer (sourceMap: MarkupSourceMap | null | unde
 }
 
 /**
- * Look up the best range for a JSON pointer: tightest (attribute value /
- * content) first, then element tag, then walk up ancestors (handles ajv
- * "required" errors whose instancePath ends at the parent object).
+ * Best range for a JSON pointer: tightest (attribute value / content) first,
+ * then element tag, then walk up ancestors — handles ajv "required" errors
+ * whose instancePath ends at the parent object.
  */
-export function resolveRange (sourceMap: MarkupSourceMap | null | undefined, pointer: string): MarkupRange | null {
-  if (!sourceMap) return null
+export function resolveRange (sourceMap: MarkupSourceMap, pointer: string): MarkupRange | null {
   const tight = sourceMap.byPointer.get(pointer)
   if (tight) return tight
   const elementRange = sourceMap.byElementPointer.get(pointer)
@@ -96,18 +94,15 @@ export function resolveRange (sourceMap: MarkupSourceMap | null | undefined, poi
 
 export function toCmDiagnostic (
   err: MarkupError,
-  sourceMap: MarkupSourceMap | null | undefined,
+  sourceMap: MarkupSourceMap,
   prefix: string,
   docLength: number
 ): Diagnostic | null {
   const pointer = toRelativePointer(prefix, err.path)
   if (pointer === null) return null
   const range = resolveRange(sourceMap, pointer)
-  // An unresolved range used to fall back to [0, 1], which visually anchored
-  // root-level errors (e.g. pointer === '/') to the first tag in the document
-  // and misled the user into thinking the first tag was the problem. Drop the
-  // diagnostic instead — form mode still surfaces the error and the user can
-  // address it there.
+  // Drop unresolved diagnostics: anchoring them at [0, 1] misleads the user
+  // into thinking the first tag is broken. Form mode still surfaces them.
   if (!range) return null
   const from = Math.max(0, Math.min(range.from, docLength))
   const to = Math.max(from + 1, Math.min(range.to, docLength))

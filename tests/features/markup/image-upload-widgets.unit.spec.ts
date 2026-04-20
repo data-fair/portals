@@ -1,14 +1,13 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { deserializeElements } from '../../../shared/markup/deserializer.ts'
-import { tagDescriptors } from '../../../shared/markup/tag-descriptors.ts'
 import { computeImageUploadRanges } from '../../../shared/markup/codemirror/image-upload-widgets.ts'
 
 test.describe('image-upload widget range computation', () => {
   test('emits a widget range on _id and hide ranges on name/mimeType when all three are present', () => {
     const src = '<image image._id="abc" image.name="photo.jpg" image.mimeType="image/jpeg" />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
 
     const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
     assert.equal(imageGroup.length, 3, 'one widget + two hides for the image group')
@@ -29,7 +28,7 @@ test.describe('image-upload widget range computation', () => {
   test('tolerates interleaved attributes (no contiguity requirement)', () => {
     const src = '<image image._id="abc" banner="true" image.name="photo.jpg" image.mimeType="image/jpeg" />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
 
     const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
     assert.equal(imageGroup.length, 3, 'interleaving no longer suppresses the widget')
@@ -44,7 +43,7 @@ test.describe('image-upload widget range computation', () => {
   test('emits the widget even when only _id is present (partial state, no hides needed)', () => {
     const src = '<image image._id="abc" />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
     const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
     assert.equal(imageGroup.filter(r => r.kind === 'widget').length, 1)
     assert.equal(imageGroup.filter(r => r.kind === 'hide').length, 0)
@@ -56,7 +55,7 @@ test.describe('image-upload widget range computation', () => {
     // empty; a partial state shows no widget but still hides the stray attrs.
     const src = '<image image.name="photo.jpg" image.mimeType="image/jpeg" />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
     const imageGroup = ranges.filter(r => r.group.jsonPath.join('.') === 'image')
     // No widget (no _id), no point widget (group is not bare), but two hide ranges.
     assert.equal(imageGroup.filter(r => r.kind === 'widget').length, 0)
@@ -67,7 +66,7 @@ test.describe('image-upload widget range computation', () => {
   test('emits a point widget for each empty image-upload group on a bare tag', () => {
     const src = '<image />'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
     const points = ranges.filter(r => r.kind === 'point')
     assert.equal(points.length, 2, 'image + wideImage groups each contribute a point widget')
     for (const r of points) {
@@ -81,7 +80,7 @@ test.describe('image-upload widget range computation', () => {
   test('ignores tags without image-upload groups', () => {
     const src = '<title titleSize="h2">Hi</title>'
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
     assert.equal(ranges.length, 0)
   })
 
@@ -93,7 +92,7 @@ test.describe('image-upload widget range computation', () => {
       '/>'
     ].join('\n')
     const { sourceMap } = deserializeElements(src)
-    const ranges = computeImageUploadRanges(src, sourceMap, tagDescriptors)
+    const ranges = computeImageUploadRanges(src, sourceMap)
     const widgetPaths = ranges.filter(r => r.kind === 'widget').map(r => r.group.jsonPath.join('.')).sort()
     assert.deepEqual(widgetPaths, ['image', 'wideImage'])
     assert.equal(ranges.filter(r => r.kind === 'hide').length, 4, '2 groups × 2 hidden leaves')

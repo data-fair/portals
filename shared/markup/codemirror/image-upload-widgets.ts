@@ -1,24 +1,17 @@
 /**
- * Inline image-upload widgets for the markup editor.
+ * For each image-upload group declared on an element's descriptor, emit up to
+ * three CM6 decorations: a `widget` replacing the `_id` attribute, `hide`
+ * ranges erasing the `name`/`mimeType` attributes, and a `point` widget on
+ * bare tags with no group attributes at all.
  *
- * For each image-upload group declared on an element's descriptor, we emit
- * up to three CM6 decorations:
- *
- *   - `widget` range covering the `<group>._id` attribute — replaced with an
- *     inline image-upload control.
- *   - `hide` ranges covering `<group>.name` and `<group>.mimeType` attributes
- *     — replaced with empty decorations so the user never sees them.
- *   - A `point` widget at the open-tag's end when the group has no attributes
- *     at all (bare `<image />`) — click-to-upload affordance.
- *
- * Markup text on disk is unchanged: serializer still emits all three
- * attributes and deserializer still reads them. The decoration layer only
- * changes how the attributes render in CM6.
+ * Markup text on disk is unchanged — the decoration layer only changes how
+ * attributes render in CM6.
  */
 import { Decoration, ViewPlugin, WidgetType, type EditorView, type DecorationSet, type ViewUpdate } from '@codemirror/view'
 import { RangeSetBuilder } from '@codemirror/state'
-import { deserializeElements } from '../deserializer.ts'
-import type { ImageUploadGroup, MarkupSourceMap, TagDescriptor } from '../types.ts'
+import { tagDescriptors } from '../tag-descriptors.ts'
+import type { ImageUploadGroup, MarkupSourceMap } from '../types.ts'
+import { markupParseStateField } from './parse-state.ts'
 
 const AUX_LEAVES = ['name', 'mimeType'] as const
 
@@ -29,11 +22,9 @@ export type ImageUploadRange =
 
 export function computeImageUploadRanges (
   doc: string,
-  sourceMap: MarkupSourceMap | null | undefined,
-  tagDescriptors: Record<string, TagDescriptor>
+  sourceMap: MarkupSourceMap
 ): ImageUploadRange[] {
   const out: ImageUploadRange[] = []
-  if (!sourceMap?.byElementPointer || !sourceMap?.byPointer) return out
 
   for (const [elementPointer, elementRange] of sourceMap.byElementPointer) {
     const tagName = readTagName(doc, elementRange.from)
@@ -57,7 +48,6 @@ export function computeImageUploadRanges (
         out.push({ kind: 'hide', from: hideSpan.from, to: hideSpan.to, elementPointer, group })
       }
 
-      // Bare-tag fallback: no _id AND no aux attrs → emit a point widget.
       if (!idRange && auxRanges.length === 0) {
         const pos = insideTagEndPosition(doc, elementRange.to, groupIdx)
         if (pos !== null) out.push({ kind: 'point', from: pos, to: pos, elementPointer, group })
@@ -68,12 +58,8 @@ export function computeImageUploadRanges (
   return out
 }
 
-/**
- * Pick a character position inside the open-tag syntax just before the closing
- * `/>` (or `>`), shifted by `groupIdx` characters so multiple empty groups on
- * the same element get distinct insertion points the RangeSetBuilder can
- * order. Returns null if the tag is too short for the requested offset.
- */
+// `groupIdx` offset gives each empty group on the same element a distinct
+// insertion position so RangeSetBuilder can order them deterministically.
 function insideTagEndPosition (doc: string, openTagEnd: number, groupIdx: number): number | null {
   let pos = openTagEnd - 1
   if (pos < 0 || doc[pos] !== '>') return null
@@ -83,7 +69,6 @@ function insideTagEndPosition (doc: string, openTagEnd: number, groupIdx: number
   return pos
 }
 
-/** Read the tag name from an opening-tag range (e.g. `<image ...` → `image`). */
 function readTagName (doc: string, openTagStart: number): string | null {
   if (doc[openTagStart] !== '<') return null
   let i = openTagStart + 1
@@ -92,12 +77,8 @@ function readTagName (doc: string, openTagStart: number): string | null {
   return i > start ? doc.slice(start, i) : null
 }
 
-/**
- * Given an attribute-value range (tight between the quotes), walk backwards
- * to include the attribute name and forwards past the closing quote plus
- * trailing whitespace. Used so the widget/hide decoration covers the whole
- * `name="value"` text and no stray space is left behind.
- */
+// Widen an attribute-value range to cover the whole `name="value"` span plus
+// adjacent whitespace, so replace-decorations don't leave stray gaps.
 function attributeFullSpan (doc: string, valueFrom: number, valueTo: number): { from: number, to: number } {
   let start = valueFrom - 1
   while (start > 0 && doc[start - 1] !== ' ' && doc[start - 1] !== '\t' && doc[start - 1] !== '\n') start--
@@ -114,7 +95,6 @@ export interface MountWidgetArgs {
 export type MountWidget = (container: HTMLElement, args: MountWidgetArgs) => () => void
 
 export interface ImageUploadWidgetsOptions {
-  tagDescriptors: Record<string, TagDescriptor>
   mountWidget: MountWidget
 }
 
@@ -148,18 +128,20 @@ export function portalMarkupImageUploadWidgets (opts: ImageUploadWidgetsOptions)
     decorations: DecorationSet
     constructor (view: EditorView) { this.decorations = this.build(view) }
     update (u: ViewUpdate) {
-      if (u.docChanged) this.decorations = this.build(u.view)
+      const parseChanged = u.startState.field(markupParseStateField) !== u.state.field(markupParseStateField)
+      if (parseChanged) this.decorations = this.build(u.view)
+      else if (u.docChanged) this.decorations = this.decorations.map(u.changes)
     }
 
     build (view: EditorView): DecorationSet {
+      const { sourceMap } = view.state.field(markupParseStateField)
       const doc = view.state.doc.toString()
-      const { sourceMap } = deserializeElements(doc)
-      const ranges = computeImageUploadRanges(doc, sourceMap, opts.tagDescriptors)
-      const builder = new RangeSetBuilder<Decoration>()
+      const ranges = computeImageUploadRanges(doc, sourceMap)
       // RangeSetBuilder requires non-decreasing `from`, then non-decreasing
-      // `to`. At the same offset (zero-width collisions only in theory), order
-      // widget before hide so the widget claims the position.
+      // `to`. At the same offset, order widget before hide so the widget
+      // claims the position.
       ranges.sort((a, b) => a.from - b.from || a.to - b.to || (a.kind === 'hide' ? 1 : -1))
+      const builder = new RangeSetBuilder<Decoration>()
       for (const r of ranges) {
         let deco: Decoration
         if (r.kind === 'widget') {

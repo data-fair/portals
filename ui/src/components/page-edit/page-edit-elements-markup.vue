@@ -34,12 +34,13 @@ import type { PageElement } from '#api/types/page-elements/index.ts'
 import type { StatefulLayout } from '@json-layout/core/state'
 import type { Completion } from '@codemirror/autocomplete'
 import { shallowRef } from 'vue'
-import { serializeElements, deserializeElements, tagDescriptors, findElementByPointer, type ImageUploadGroup, type MarkupSourceMap } from '@data-fair/portals-shared-markup'
+import { serializeElements, findElementByPointer, type ImageUploadGroup } from '@data-fair/portals-shared-markup'
 import {
   portalMarkupExtensions,
   portalMarkupImageUploadWidgets,
   portalMarkupNodePreviewWidgets,
   setMarkupExternalDiagnostics,
+  markupParseStateField,
   collectErrorsByDataPath,
   findNodeByDataPath,
   offsetToElementPointer,
@@ -55,10 +56,10 @@ import { bracketMatching, foldGutter, indentOnInput, syntaxHighlighting, default
 import { forEachDiagnostic, lintKeymap, type Diagnostic } from '@codemirror/lint'
 import { completionKeymap } from '@codemirror/autocomplete'
 
-// `node` is the VJSF StateNode for the elements array; `statefulLayout` is the
-// form-mode instance that already runs ajv validation and knows how to resolve
-// suggestions (schema enums, oneOf items, URL-fetched lists). We piggy-back on
-// both so validation and completion stay in sync with form mode.
+// `node` is the VJSF StateNode for the elements array; `statefulLayout` is
+// the form-mode instance running ajv validation and resolving suggestions.
+// We piggy-back on both so validation and completion stay in sync with form
+// mode.
 const props = defineProps<{
   node?: any | null
   statefulLayout?: StatefulLayout | null
@@ -67,9 +68,8 @@ const props = defineProps<{
 
 const elements = defineModel<PageElement[]>({ required: true })
 
-// The CodeMirror autocomplete captures this locale at mount time. Locale
-// changes mid-session don't propagate — the Form↔Markup toggle remounts this
-// component, which re-reads `locale.value`.
+// Captured at mount — useI18n().locale isn't reactive once CM6 is running.
+// The Form↔Markup toggle remounts this component, which re-reads it.
 const { locale } = useI18n()
 
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
@@ -78,15 +78,10 @@ const editorEl = ref<HTMLElement | null>(null)
 const hasErrors = ref(false)
 let view: EditorView | null = null
 let lastExternalText = ''
-let lastSourceMap: MarkupSourceMap = { byPointer: new Map(), byElementPointer: new Map() }
 
-type ActiveWidget =
-  | { kind: 'image', key: string, host: HTMLElement, elementPointer: string, group: ImageUploadGroup }
-  | { kind: 'preview', key: string, host: HTMLElement, elementPointer: string }
-const activeWidgets = shallowRef<ActiveWidget[]>([])
+const imageWidgets = shallowRef<Array<{ key: string, host: HTMLElement, elementPointer: string, group: ImageUploadGroup }>>([])
+const previewWidgets = shallowRef<Array<{ key: string, host: HTMLElement, elementPointer: string }>>([])
 let widgetSeq = 0
-
-const draftElements = shallowRef<PageElement[] | null>(null)
 
 function elementsDataPath (): string {
   return (props.node?.dataPath ?? '') as string
@@ -98,12 +93,13 @@ function refreshExternalDiagnostics (): void {
     view.dispatch({ effects: setMarkupExternalDiagnostics.of([]) })
     return
   }
+  const { sourceMap } = view.state.field(markupParseStateField)
   const errors = collectErrorsByDataPath(props.node)
   const docLength = view.state.doc.length
   const prefix = elementsDataPath()
   const diagnostics: Diagnostic[] = []
   for (const err of errors) {
-    const d = toCmDiagnostic(err, lastSourceMap, prefix, docLength)
+    const d = toCmDiagnostic(err, sourceMap, prefix, docLength)
     if (d) diagnostics.push(d)
   }
   view.dispatch({ effects: setMarkupExternalDiagnostics.of(diagnostics) })
@@ -112,8 +108,9 @@ function refreshExternalDiagnostics (): void {
 async function asyncValueCompletions (ctx: AttributeValueContext): Promise<Completion[] | null> {
   const sl = props.statefulLayout
   const rootNode = props.node
-  if (!sl || !rootNode) return null
-  const elementPointer = offsetToElementPointer(lastSourceMap, ctx.from)
+  if (!sl || !rootNode || !view) return null
+  const { sourceMap } = view.state.field(markupParseStateField)
+  const elementPointer = offsetToElementPointer(sourceMap, ctx.from)
   if (!elementPointer) return null
   const attrSuffix = ctx.attributePath.map(seg => '/' + seg).join('')
   const targetPath = elementsDataPath() + elementPointer + attrSuffix
@@ -149,41 +146,24 @@ function buildExtensions (locale: string) {
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     keymap.of([...defaultKeymap, ...historyKeymap, ...lintKeymap, ...completionKeymap, indentWithTab]),
     portalMarkupExtensions({ locale, asyncValueCompletions }),
+    // Widgets mount via Teleport into the parent template so they inherit the
+    // main app's Vuetify/uiNotif/session plugins — createApp-per-widget loses
+    // those.
     portalMarkupImageUploadWidgets({
-      tagDescriptors,
-      // Instead of createApp-per-widget (which loses access to the main app's
-      // Vuetify + uiNotif + session plugins), we register the mount site as a
-      // Teleport target in the parent template. The widget renders as part of
-      // this component's tree and inherits all plugins/providers.
       mountWidget: (container, { elementPointer, group }) => {
         const key = `image:${elementPointer}:${group.jsonPath.join('/')}:${widgetSeq++}`
-        activeWidgets.value = [...activeWidgets.value, { kind: 'image', key, host: container, elementPointer, group }]
-        return () => {
-          activeWidgets.value = activeWidgets.value.filter(w => w.key !== key)
-        }
+        imageWidgets.value = [...imageWidgets.value, { key, host: container, elementPointer, group }]
+        return () => { imageWidgets.value = imageWidgets.value.filter(w => w.key !== key) }
       }
     }),
     portalMarkupNodePreviewWidgets({
       mountPreview: (container, { elementPointer }) => {
         const key = `preview:${elementPointer}:${widgetSeq++}`
-        activeWidgets.value = [...activeWidgets.value, { kind: 'preview', key, host: container, elementPointer }]
-        return () => {
-          activeWidgets.value = activeWidgets.value.filter(w => w.key !== key)
-        }
+        previewWidgets.value = [...previewWidgets.value, { key, host: container, elementPointer }]
+        return () => { previewWidgets.value = previewWidgets.value.filter(w => w.key !== key) }
       }
     }),
     EditorView.updateListener.of((update) => {
-      if (update.docChanged) {
-        // Keep the source map fresh so async completions and diagnostics land
-        // at the right offsets while the user types.
-        const parsed = deserializeElements(update.state.doc.toString())
-        lastSourceMap = parsed.sourceMap
-        if (parsed.elements != null && parsed.errors.length === 0) {
-          draftElements.value = parsed.elements as PageElement[]
-        }
-        // On parse failure: leave draftElements at its last-good snapshot so
-        // previews stay visible.
-      }
       if (!update.docChanged && !update.transactions.some(tr => tr.effects.length)) return
       let count = 0
       forEachDiagnostic(update.state, () => { count++ })
@@ -198,23 +178,20 @@ function buildExtensions (locale: string) {
 function applyChange () {
   if (!view) return
   const text = view.state.doc.toString()
-  const result = deserializeElements(text)
-  lastSourceMap = result.sourceMap
+  const { elements: parsedElements, errors } = view.state.field(markupParseStateField)
   refreshExternalDiagnostics()
-  if (result.errors.length > 0 || result.elements == null) {
+  if (errors.length > 0 || parsedElements == null) {
     // leave model untouched — diagnostics are already inline via the linter
     return
   }
-  const reserialized = serializeElements(result.elements)
+  const reserialized = serializeElements(parsedElements)
   if (reserialized !== text) {
     view.dispatch({
       changes: { from: 0, to: view.state.doc.length, insert: reserialized }
     })
-    lastSourceMap = deserializeElements(reserialized).sourceMap
   }
   lastExternalText = view.state.doc.toString()
-  elements.value = result.elements as PageElement[]
-  draftElements.value = null
+  elements.value = parsedElements as PageElement[]
 }
 
 function refreshFromElements () {
@@ -223,7 +200,6 @@ function refreshFromElements () {
   const current = view.state.doc.toString()
   if (current === next) {
     lastExternalText = next
-    lastSourceMap = deserializeElements(next).sourceMap
     refreshExternalDiagnostics()
     return
   }
@@ -233,14 +209,12 @@ function refreshFromElements () {
     changes: { from: 0, to: view.state.doc.length, insert: next }
   })
   lastExternalText = next
-  lastSourceMap = deserializeElements(next).sourceMap
   refreshExternalDiagnostics()
 }
 
 onMounted(() => {
   const initial = serializeElements(elements.value ?? [])
   lastExternalText = initial
-  lastSourceMap = deserializeElements(initial).sourceMap
   view = new EditorView({
     state: EditorState.create({ doc: initial, extensions: buildExtensions(locale.value) }),
     parent: editorEl.value!
@@ -250,20 +224,17 @@ onMounted(() => {
 
 watch(elements, refreshFromElements, { deep: true })
 // StatefulLayout rebuilds produce a new `node` identity — re-dispatch errors
-// whenever either identity changes so stale diagnostics get cleared.
-watch(() => props.node, refreshExternalDiagnostics)
-watch(() => props.statefulLayout, refreshExternalDiagnostics)
+// so stale diagnostics get cleared.
+watch([() => props.node, () => props.statefulLayout], refreshExternalDiagnostics)
 
 onBeforeUnmount(() => {
   view?.destroy()
   view = null
 })
 
-const imageWidgets = computed(() => activeWidgets.value.filter(w => w.kind === 'image') as Extract<ActiveWidget, { kind: 'image' }>[])
-const previewWidgets = computed(() => activeWidgets.value.filter(w => w.kind === 'preview') as Extract<ActiveWidget, { kind: 'preview' }>[])
-
 function resolvePreviewElement (pointer: string): PageElement | undefined {
-  const tree = draftElements.value ?? elements.value ?? []
+  const parsed = view?.state.field(markupParseStateField)
+  const tree = parsed?.elements ?? elements.value ?? []
   return findElementByPointer(tree, pointer) as PageElement | undefined
 }
 </script>

@@ -57,9 +57,7 @@ function findAncestor (node: SyntaxNode | null, names: string[]): SyntaxNode | n
   return null
 }
 
-let _virtualTagsCache: Array<{ name: string, titles?: Record<string, string> }> | null = null
-function virtualTagList () {
-  if (_virtualTagsCache) return _virtualTagsCache
+const virtualTags: ReadonlyArray<{ name: string, titles?: Record<string, string> }> = (() => {
   const seen = new Map<string, Record<string, string> | undefined>()
   for (const desc of Object.values(tagDescriptors)) {
     for (const slot of desc.childrenSlots) {
@@ -67,34 +65,50 @@ function virtualTagList () {
       seen.set(slot.virtualTag, slot.titles)
     }
   }
-  _virtualTagsCache = [...seen.entries()].map(([name, titles]) => ({ name, titles }))
-  return _virtualTagsCache
-}
+  return [...seen.entries()].map(([name, titles]) => ({ name, titles }))
+})()
 
+const tagNameOptionsCache = new Map<string, Completion[]>()
 function tagNameOptions (locale: string): Completion[] {
+  let cached = tagNameOptionsCache.get(locale)
+  if (cached) return cached
   const out: Completion[] = []
   for (const [name, desc] of Object.entries(tagDescriptors)) {
     out.push({ label: name, detail: localized(desc.titles, locale), type: 'class' })
   }
-  for (const vt of virtualTagList()) {
+  for (const vt of virtualTags) {
     out.push({ label: vt.name, detail: localized(vt.titles, locale), type: 'keyword' })
   }
+  cached = out
+  tagNameOptionsCache.set(locale, cached)
+  return cached
+}
+
+const attributesForTagCache = new Map<string, AttributeDescriptor[] | null>()
+function attributesForTag (tagName: string): AttributeDescriptor[] | null {
+  if (attributesForTagCache.has(tagName)) return attributesForTagCache.get(tagName)!
+  const real = tagDescriptors[tagName]
+  let out: AttributeDescriptor[] | null = null
+  if (real) out = real.attributes
+  else {
+    for (const desc of Object.values(tagDescriptors)) {
+      for (const slot of desc.childrenSlots) {
+        if (slot.virtualTag === tagName && slot.itemAttributes) { out = slot.itemAttributes; break }
+      }
+      if (out) break
+    }
+  }
+  attributesForTagCache.set(tagName, out)
   return out
 }
 
-function attributesForTag (tagName: string): AttributeDescriptor[] | null {
-  const real = tagDescriptors[tagName]
-  if (real) return real.attributes
-  for (const desc of Object.values(tagDescriptors)) {
-    for (const slot of desc.childrenSlots) {
-      if (slot.virtualTag === tagName && slot.itemAttributes) return slot.itemAttributes
-    }
-  }
-  return null
-}
-
+const attributeNameOptionsCache = new WeakMap<AttributeDescriptor[], Map<string, Completion[]>>()
 function attributeNameOptions (attrs: AttributeDescriptor[], locale: string): Completion[] {
-  return attrs.map(attr => ({
+  let byLocale = attributeNameOptionsCache.get(attrs)
+  if (!byLocale) { byLocale = new Map(); attributeNameOptionsCache.set(attrs, byLocale) }
+  let cached = byLocale.get(locale)
+  if (cached) return cached
+  cached = attrs.map(attr => ({
     label: attr.name,
     detail: localized(attr.titles, locale),
     type: 'property' as const,
@@ -106,6 +120,8 @@ function attributeNameOptions (attrs: AttributeDescriptor[], locale: string): Co
       })
     }
   }))
+  byLocale.set(locale, cached)
+  return cached
 }
 
 function findAttributeDescriptor (tagName: string, attrName: string): AttributeDescriptor | null {
