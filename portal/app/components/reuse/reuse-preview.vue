@@ -41,13 +41,17 @@
   />
 
   <!-- Image -->
-  <v-img
+  <div
     v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
-    :src="getReuseImageSrc(reuseConfig.image)"
-    class="mb-4"
-    max-height="400"
     aria-hidden="true"
-  />
+    class="mb-4"
+  >
+    <v-img
+      :src="getReuseImageSrc(reuseConfig.image)"
+      max-height="400"
+      alt=""
+    />
+  </div>
 
   <!-- Datasets -->
   <template v-if="portalConfig.reuses.page.datasets?.display === 'card' && datasets.length">

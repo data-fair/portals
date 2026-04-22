@@ -22,14 +22,18 @@
       <!-- Main column -->
       <v-col class="d-flex flex-column" style="min-width: 0">
         <!-- Thumbnail (Top Location) -->
-        <v-img
+        <div
           v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="flex-grow-0"
-          height="170"
           aria-hidden="true"
-        />
+          class="flex-grow-0"
+        >
+          <v-img
+            :src="thumbnailUrl"
+            :cover="cardConfig.thumbnail.crop"
+            height="170"
+            alt=""
+          />
+        </div>
 
         <!--
           text-two-lines => truncate title to 2 lines
@@ -49,14 +53,18 @@
         </v-card-subtitle>
 
         <!-- Thumbnail (Center Location) -->
-        <v-img
+        <div
           v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          :src="thumbnailUrl"
-          :cover="cardConfig.thumbnail.crop"
-          class="flex-grow-0"
-          height="170"
           aria-hidden="true"
-        />
+          class="flex-grow-0"
+        >
+          <v-img
+            :src="thumbnailUrl"
+            :cover="cardConfig.thumbnail.crop"
+            height="170"
+            alt=""
+          />
+        </div>
 
         <v-card-text v-if="cardConfig.showDescription && pageConfig.description?.length">
           {{ pageConfig.description }}

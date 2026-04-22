@@ -23,14 +23,18 @@
   >
 
     <!-- Thumbnail (Top Location) -->
-    <v-img
+    <div
       v-if="element.thumbnail?.location === 'top' && element.thumbnail?.image"
-      :src="getPageImageSrc(element.thumbnail.image, false)"
-      :cover="element.thumbnail.crop"
-      class="flex-grow-0"
-      height="170"
       aria-hidden="true"
-    />
+      class="flex-grow-0"
+    >
+      <v-img
+        :src="getPageImageSrc(element.thumbnail.image, false)"
+        :cover="element.thumbnail.crop"
+        height="170"
+        alt=""
+      />
+    </div>
 
     <!--
       white-space: unset; => remove default nowrap from v-card-title
@@ -44,14 +48,18 @@
     </v-card-title>
 
     <!-- Thumbnail (Center Location) -->
-    <v-img
+    <div
       v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
-      :src="getPageImageSrc(element.thumbnail.image, false)"
-      :cover="element.thumbnail.crop"
-      class="flex-grow-0"
-      height="170"
       aria-hidden="true"
-    />
+      class="flex-grow-0"
+    >
+      <v-img
+        :src="getPageImageSrc(element.thumbnail.image, false)"
+        :cover="element.thumbnail.crop"
+        height="170"
+        alt=""
+      />
+    </div>
 
     <!--
       v-spacer works with "two columns stretch" layout
