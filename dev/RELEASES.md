@@ -32,7 +32,7 @@ type(scope): description
 | `api` | Backend API changes |
 | `ui` | UI component library (portals-manager) |
 | `portal` | Nuxt SSR portal (pages, layouts, middleware) |
-| `portal-config` | Portal configuration (header, footer, navbar, theme) |
+| `portal-config` | Portal configuration schema and superadmin options (header, footer, navbar, theme, advanced toggles like `md2Compat`) |
 | `page-element` | Page element components |
 | `types` | Shared type definitions |
 | `deps` | Dependency updates |
