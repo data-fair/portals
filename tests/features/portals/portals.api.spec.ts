@@ -19,25 +19,40 @@ test.describe('portals management', () => {
     assert.deepEqual(portal.config, portal.draftConfig)
   })
 
-  test('org-root admin can set sharedWithDepartments on an org-root portal', async () => {
+  test('org-root admin can set contributorDepartments on an org-root portal', async () => {
     const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
-    const patched = (await orgAdmin.patch(`/api/portals/${portal._id}`, { sharedWithDepartments: ['dep1'] })).data
-    assert.deepEqual(patched.sharedWithDepartments, ['dep1'])
+    const patched = (await orgAdmin.patch(`/api/portals/${portal._id}`, { contributorDepartments: ['dep1'] })).data
+    assert.deepEqual(patched.contributorDepartments, ['dep1'])
   })
 
-  test('dept admin cannot set sharedWithDepartments on an org-root portal', async () => {
+  test('dept admin cannot set contributorDepartments on an org-root portal', async () => {
     const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     await assert.rejects(
-      deptAdmin.patch(`/api/portals/${portal._id}`, { sharedWithDepartments: ['dep1'] }),
+      deptAdmin.patch(`/api/portals/${portal._id}`, { contributorDepartments: ['dep1'] }),
       (err: any) => err.status === 403 || err.status === 401
     )
   })
 
-  test('setting sharedWithDepartments on a dept-scoped portal is refused', async () => {
+  test('org-root admin can toggle staging after creation', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
+    assert.equal(portal.staging, false)
+    const patched = (await orgAdmin.patch(`/api/portals/${portal._id}`, { staging: true })).data
+    assert.equal(patched.staging, true)
+  })
+
+  test('dept admin cannot toggle staging on an org-root portal', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
+    await assert.rejects(
+      deptAdmin.patch(`/api/portals/${portal._id}`, { staging: true }),
+      (err: any) => err.status === 403 || err.status === 401
+    )
+  })
+
+  test('setting contributorDepartments on a dept-scoped portal is refused', async () => {
     const portal = (await deptAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     assert.equal(portal.owner.department, 'dep1')
     await assert.rejects(
-      deptAdmin.patch(`/api/portals/${portal._id}`, { sharedWithDepartments: ['dep2'] }),
+      deptAdmin.patch(`/api/portals/${portal._id}`, { contributorDepartments: ['dep2'] }),
       (err: any) => err.status === 400
     )
   })

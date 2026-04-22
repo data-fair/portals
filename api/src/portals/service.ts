@@ -36,8 +36,8 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   // Change WhiteLabel, isReference or md2Compat by super admin only
   if (patch.whiteLabel || patch.isReference || patch.md2Compat) assertAdminMode(session)
 
-  if (patch.sharedWithDepartments && patch.sharedWithDepartments.length && portal.owner.department) {
-    throw httpError(400, 'sharedWithDepartments is only allowed when the portal owner is the organisation root')
+  if (patch.contributorDepartments && patch.contributorDepartments.length && portal.owner.department) {
+    throw httpError(400, 'contributorDepartments is only allowed when the portal owner is the organisation root')
   }
 
   // Change of ownership - Check permissions and propagate to images
@@ -139,7 +139,8 @@ const getPublicationSite = (portal: Portal) => {
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
   }
-  publicationSite.sharedWithDepartments = portal.sharedWithDepartments || []
+  publicationSite.contributorDepartments = portal.contributorDepartments || []
+  publicationSite.settings = { staging: !!portal.staging }
   return publicationSite
 }
 
