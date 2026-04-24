@@ -16,11 +16,24 @@
 
     <!-- Main Column -->
     <v-col>
+      <!-- Action announcements for screen readers (sort, pagination) -->
+      <div
+        class="visually-hidden"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {{ actionAnnouncement }}
+      </div>
+
       <!-- Count (top) -->
       <component
         :is="headingTag"
         v-if="countPosition === 'top'"
         class="text-headline-medium mb-4"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
       >
         {{ countLabel }}
         <slot name="count-extra" />
@@ -52,7 +65,11 @@
         v-if="countPosition === 'bottom' && element.showSortBesideCount"
         class="align-end mb-4"
       >
-        <v-col>
+        <v-col
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {{ t('resultsCount', { count: itemsCount }) }}
           <slot name="count-extra" />
         </v-col>
@@ -99,8 +116,12 @@
       </v-row>
 
       <!-- Loading spinner -->
-      <div v-if="loading" class="d-flex justify-center">
-        <v-progress-circular indeterminate color="primary" />
+      <div v-if="loading" class="d-flex justify-center" role="status">
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          :aria-label="t('loading')"
+        />
       </div>
 
       <!-- Pagination below results -->
@@ -172,11 +193,60 @@ const hasMore = computed(() => {
   if (preview || paginationPosition.value !== 'none') return false
   return props.displayedItems.length < props.itemsCount
 })
+
+// Live-region announcement for sort and pagination changes (RGAA 7.5).
+// The result count is already announced via its own aria-live region; this
+// covers actions that don't modify the count (sort, page navigation).
+const actionAnnouncement = ref('')
+
+const currentSortTitle = computed(() => {
+  if (!props.sort) return undefined
+  return props.sortItems.find(i => i.value === props.sort)?.title
+})
+
+watch(() => [props.sort, props.order], () => {
+  if (!currentSortTitle.value) return
+  const orderLabel = props.order === '1' ? t('sortAscending') : t('sortDescending')
+  actionAnnouncement.value = t('sortAnnouncement', { sort: currentSortTitle.value, order: orderLabel })
+})
+
+// Announce only user-initiated page navigation in paginated mode. Skip infinite
+// scroll (paginationPosition === 'none'), where the page counter is an
+// implementation detail invisible to the user. Skip newPage === 1 too, which
+// occurs on filter reset (handled by the count announcement).
+watch(() => props.currentPage, (newPage) => {
+  if (paginationPosition.value === 'none' || newPage <= 1) return
+  actionAnnouncement.value = t('pageAnnouncement', { current: newPage, total: props.totalPages })
+})
 </script>
 
 <i18n lang="yaml">
   en:
     resultsCount: 'No result | {count} result | {count} results'
+    loading: Loading results
+    sortAscending: ascending order
+    sortDescending: descending order
+    sortAnnouncement: 'Sorted by {sort}, {order}'
+    pageAnnouncement: 'Page {current} of {total}'
   fr:
     resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
+    loading: Chargement des résultats
+    sortAscending: ordre croissant
+    sortDescending: ordre décroissant
+    sortAnnouncement: 'Tri par {sort}, {order}'
+    pageAnnouncement: 'Page {current} sur {total}'
 </i18n>
+
+<style scoped>
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
