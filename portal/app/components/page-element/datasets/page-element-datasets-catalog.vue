@@ -60,15 +60,14 @@ const { element, context } = defineProps<{
   element: DatasetsCatalogElement
   context?: { isRoot: boolean, index: number, parentLength: number }
 }>()
-const { portalConfig } = usePortalStore()
+const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
 
 const {
   displayedItems, itemsCount, loading, currentPage, totalPages,
   sort, order, goToPage, loadMore
 } = useCatalog<DatasetResult, DatasetFilters>(element, {
-  endpoint: '/data-fair/api/v1/catalog/datasets',
-  useLocalFetch: true,
+  endpoint: '/data-fair/api/v1/datasets',
   defaultSortFallback: 'createdAt:-1',
   analyticsCategory: 'datasets',
   filterDefs: () => ({
@@ -81,6 +80,7 @@ const {
   buildQuery: (filters, sortValue, page, pageSize) => {
     const query: Record<string, string | number> = {
       select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+      publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
       size: pageSize,
       page

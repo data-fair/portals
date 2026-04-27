@@ -1,7 +1,6 @@
-import type { CatalogReturn, CatalogConfig } from '../../../portal/app/composables/use-catalog'
-import type { WritableComputedRef } from 'vue'
+import type { CatalogReturn, CatalogConfig, FilterRef } from '#portal/app/composables/use-catalog'
 
-export function useCatalog<T, F extends Record<string, WritableComputedRef<string, string> | WritableComputedRef<string[], string[]> | WritableComputedRef<boolean, boolean>>> (
+export function useCatalog<T, F extends Record<string, FilterRef>> (
   _element: { defaultSort?: string },
   config: CatalogConfig<T, F>
 ): CatalogReturn<T, F> {
@@ -13,8 +12,9 @@ export function useCatalog<T, F extends Record<string, WritableComputedRef<strin
     loading: ref(false),
     currentPage: ref(1),
     totalPages: computed(() => 1),
-    sort: ref<string>(),
-    order: ref<'-1' | '1'>(),
+    sort: computed({ get: () => undefined as string | undefined, set: () => {} }),
+    order: computed({ get: () => undefined as '-1' | '1' | undefined, set: () => {} }),
+    error: ref(undefined),
     goToPage: async () => { },
     loadMore: async () => { },
     filters: {} as F

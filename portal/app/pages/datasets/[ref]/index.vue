@@ -17,6 +17,7 @@
         :element="{
           type: 'title',
           content: dataset.title,
+          titleTag: mainTitleTag,
           titleSize: 'h4',
           line: portalConfig.datasets.page.titleStyle
         }"
@@ -89,6 +90,7 @@
             :element="{
               type: 'title',
               content: t('sections.data'),
+              titleTag: sectionTitleTag,
               titleSize: 'h5',
               line: portalConfig.datasets.page.titleStyle
             }"
@@ -159,6 +161,7 @@
           :element="{
             type: 'title',
             content: t('sections.application', { count: orderedApplications.length }),
+            titleTag: sectionTitleTag,
             titleSize: 'h5',
             line: portalConfig.datasets.page.titleStyle
           }"
@@ -291,6 +294,7 @@
           :element="{
             type: 'title',
             content: t('sections.reuse', { count: reuses.length }),
+            titleTag: sectionTitleTag,
             titleSize: 'h5',
             line: portalConfig.datasets.page.titleStyle
           }"
@@ -320,6 +324,7 @@
           :element="{
             type: 'title',
             content: t('sections.relatedDatasets', { count: relatedDatasets.length }),
+            titleTag: sectionTitleTag,
             titleSize: 'h5',
             line: portalConfig.datasets.page.titleStyle
           }"
@@ -365,6 +370,7 @@
 <script setup lang="ts">
 import type { Application, Dataset } from '#api/types/index.ts'
 import type { Reuse } from '#api/types/reuse/index.js'
+import type { HeadingTag } from '#api/types/page-elements/index.ts'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
 import { mdiOpenInNew, mdiChevronLeft } from '@mdi/js'
@@ -375,6 +381,9 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 const { t } = useI18n()
 const route = useRoute<'/datasets/[ref]'>()
 const { portal, portalConfig } = usePortalStore()
+const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
+const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 const { setBreadcrumbs } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('datasets', route.params.ref as string)

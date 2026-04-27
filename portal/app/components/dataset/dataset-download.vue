@@ -22,7 +22,9 @@
       </v-list-item-subtitle>
       <template #append>
         <v-btn
-          :title="file.title"
+          :title="file.key === 'normalized' || file.key.startsWith('export-')
+            ? t('downloadExport', { format: file.format.toUpperCase() })
+            : t('downloadFile', { name: file.name })"
           :icon="mdiDownload"
           :href="file.url"
           variant="text"
@@ -40,7 +42,7 @@
     >
       <template #append>
         <v-btn
-          :title="t('export', { format: format.toUpperCase() })"
+          :title="t('downloadExport', { format: format.toUpperCase() })"
           :icon="mdiDownload"
           :href="`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${format}`"
           variant="text"
@@ -148,6 +150,8 @@ const clickDownload = (url: string, format: string) => {
     dataTooLargeAlertTitle: This dataset contains more than 10,000 rows.
     dataTooLargeAlertText: "Export in the { formats } formats is only possible from the table view"
     export: Export { format }
+    downloadExport: "Download the export in { format } format"
+    downloadFile: "Download the file { name }"
     formatSubtitle:
       csv: Text format for all spreadsheet software (separator ",")
       xlsx: Format suitable for Excel
@@ -162,6 +166,8 @@ const clickDownload = (url: string, format: string) => {
     dataTooLargeAlertTitle: Ce jeu de données contient plus de 10 000 lignes.
     dataTooLargeAlertText: "L'export dans les formats { formats } n'est possible qu'à partir de la vue tableau."
     export: Export { format }
+    downloadExport: "Téléchargement de l'export au format { format }"
+    downloadFile: "Téléchargement du fichier { name }"
     formatSubtitle:
       csv: Format textuel pour tous logiciels tableurs (séparateur ",")
       xlsx: Format adapté pour Excel

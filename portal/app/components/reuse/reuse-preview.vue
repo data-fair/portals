@@ -5,6 +5,7 @@
       :element="{
         type: 'title',
         content: reuseConfig.title,
+        titleTag: mainTitleTag,
         titleSize: 'h4',
         line: portalConfig.reuses.page.titleStyle
       }"
@@ -40,13 +41,17 @@
   />
 
   <!-- Image -->
-  <v-img
+  <div
     v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
-    :src="getReuseImageSrc(reuseConfig.image)"
-    class="mb-4"
-    max-height="400"
     aria-hidden="true"
-  />
+    class="mb-4"
+  >
+    <v-img
+      :src="getReuseImageSrc(reuseConfig.image)"
+      max-height="400"
+      alt=""
+    />
+  </div>
 
   <!-- Datasets -->
   <template v-if="portalConfig.reuses.page.datasets?.display === 'card' && datasets.length">
@@ -54,6 +59,7 @@
       :element="{
         type: 'title',
         content: t('datasetsUsed', datasets.length),
+        titleTag: sectionTitleTag,
         titleSize: 'h5',
         line: portalConfig.reuses.page.titleStyle
       }"
@@ -93,6 +99,7 @@
 
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
+import type { HeadingTag } from '#api/types/page-elements/index.ts'
 import type { ReuseConfig } from '#api/types/reuse-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
@@ -106,6 +113,9 @@ const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
 
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
+const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
+const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 
 const getReuseImageSrc = (imageRef: ImageRef, mobile?: boolean) => {
   let id = imageRef._id
