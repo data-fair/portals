@@ -82,10 +82,25 @@
   {
     "id": "dev_org",
     "name": "Dev Org",
+    "departments": [
+      {
+        "id": "dev_dep1",
+        "name": "Department 1"
+      },
+      {
+        "id": "dev_dep2",
+        "name": "Department 2"
+      }
+    ],
     "members": [
       {
         "id": "albanm",
         "role": "admin"
+      },
+      {
+        "id": "dev_admin_dep",
+        "role": "admin",
+        "department": "dev_dep1"
       }
     ]
   }

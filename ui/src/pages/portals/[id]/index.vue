@@ -1,9 +1,6 @@
 <template>
-  <v-container
-    v-if="portal"
-    data-iframe-height
-  >
-    <theme-loader />
+  <v-container data-iframe-height>
+    <theme-loader v-if="editConfig" />
 
     <v-defaults-provider
       :defaults="{
@@ -15,36 +12,10 @@
         }
       }"
     >
-      <v-form v-model="formValid">
-        <v-card
-          v-if="canEditContributions"
-          class="mb-4"
-          variant="outlined"
-          :title="t('contributionManagementTitle')"
-          :subtitle="t('contributionManagementSubtitle')"
-        >
-          <v-card-text>
-            <v-checkbox
-              v-model="portal.staging"
-              :label="t('stagingLabel')"
-              :hint="t('stagingHint')"
-              persistent-hint
-              color="primary"
-              density="comfortable"
-            />
-            <v-combobox
-              v-if="hasDepartments && !portal.owner.department"
-              v-model="portal.contributorDepartments"
-              class="mt-4"
-              :label="t('contributorDepartmentsLabel')"
-              :hint="t('contributorDepartmentsHint')"
-              persistent-hint
-              multiple
-              chips
-              closable-chips
-            />
-          </v-card-text>
-        </v-card>
+      <v-form
+        v-if="editConfig"
+        v-model="formValid"
+      >
         <div class="d-flex justify-end mb-1">
           <df-agent-chat-action
             action-id="configure-portal"
@@ -54,12 +25,13 @@
         </div>
         <vjsf-portal-config
           v-if="vjsfOptions"
-          v-model="portal.draftConfig"
+          v-model="editConfig"
           :locale="locale"
           :options="vjsfOptions"
           :data-title="t('portalConfig')"
           prefix-name="portalConfig_"
           :sub-agent="true"
+          @update:model-value="saveDraft.execute()"
         >
           <template #colors-preview="context">
             <colors-preview
@@ -187,35 +159,19 @@
       </v-form>
     </v-defaults-provider>
 
-    <navigation-right>
-      <v-list
-        v-if="portalEditFetch.hasDiff.value"
-        bg-color="background"
-      >
-        <v-list-item>
-          <v-btn
-            width="100%"
-            color="accent"
-            :disabled="!formValid"
-            :loading="portalEditFetch.save.loading.value"
-            @click="portalEditFetch.save.execute()"
-          >
-            {{ t('save') }}
-          </v-btn>
-        </v-list-item>
-      </v-list>
+    <navigation-right v-if="portalFetch.data.value">
       <portal-actions
         :has-draft-diff="hasDraftDiff"
-        :is-saving-draft="portalEditFetch.save.loading.value"
-        :portal="portal"
-        @refresh-portal="portalEditFetch.fetch.refresh()"
+        :is-saving-draft="saveDraft.loading.value"
+        :portal="portalFetch.data.value"
+        @refresh-portal="portalFetch.refresh()"
       />
     </navigation-right>
   </v-container>
 </template>
 
 <script lang="ts" setup>
-import type { Portal } from '#api/types/portal'
+import type { Portal, PortalConfig } from '#api/types/portal'
 import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
@@ -227,54 +183,56 @@ import equal from 'fast-deep-equal'
 
 const { t, locale } = useI18n()
 const session = useSessionAuthenticated()
-const hasDepartments = useHasDepartments()
 const route = useRoute<'/portals/[id]/'>()
 
-const portalEditFetch = useEditFetch<Portal>(`${$apiPath}/portals/${route.params.id}`, {
-  patch: true,
-  saveOptions: { success: t('saved'), error: t('errorSaving') }
-})
-useLeaveGuard(portalEditFetch.hasDiff, { locale })
-
-const portal = portalEditFetch.data
+const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
+const editConfig = ref<PortalConfig>()
 const formValid = ref(false)
 const { portalConfig } = providePortalStore()
 
-const canEditContributions = computed(() => session.state.accountRole === 'admin' || session.state.user.adminMode)
-
-const hasDraftDiff = computed(() => {
-  const server = portalEditFetch.serverData.value
-  return !!server && !equal(server.draftConfig, server.config)
-})
-
-// Feed the preview store from the live edited draftConfig
-watch(() => portal.value?.draftConfig, (draftConfig) => {
-  if (draftConfig) portalConfig.value = draftConfig
-}, { deep: true, immediate: true })
-
-// When switching assisted <-> manual, rebuild / carry over the theme palette
-watch(() => portal.value?.draftConfig?.theme?.assistedMode, (newVal, oldVal) => {
-  const theme = portal.value?.draftConfig?.theme
-  if (!theme) return
-  if (oldVal === true && newVal === false) {
-    const filled = fillTheme({ ...theme, assistedMode: true }, defaultTheme)
-    theme.colors = filled.colors
-    theme.darkColors = filled.darkColors
-    theme.hcColors = filled.hcColors
-    theme.hcDarkColors = filled.hcDarkColors
+// Initialize editConfig and portalStore when init portal config is fetched
+watch(portalFetch.data, () => {
+  if (!portalFetch.data.value) return
+  if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
+    editConfig.value = portalFetch.data.value.draftConfig
   }
-  if (oldVal === false && newVal === true) {
-    theme.assistedModeColors = {
-      primary: theme.colors?.primary ?? defaultTheme.colors.primary,
-      secondary: theme.colors?.secondary ?? defaultTheme.colors.secondary,
-      accent: theme.colors?.accent ?? defaultTheme.colors.accent
+  if (editConfig.value) portalConfig.value = editConfig.value
+})
+// Synchronize editConfig changes back to portalConfig
+watch(editConfig, (newConfig) => {
+  if (newConfig) portalConfig.value = newConfig
+})
+// When switching from assisted to manual mode, expand assisted colors into the full palette
+// When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
+watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
+  if (oldVal === true && newVal === false && editConfig.value?.theme) {
+    const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
+    editConfig.value.theme.colors = filled.colors
+    editConfig.value.theme.darkColors = filled.darkColors
+    editConfig.value.theme.hcColors = filled.hcColors
+    editConfig.value.theme.hcDarkColors = filled.hcDarkColors
+  }
+  if (oldVal === false && newVal === true && editConfig.value?.theme) {
+    editConfig.value.theme.assistedModeColors = {
+      primary: editConfig.value.theme.colors?.primary ?? defaultTheme.colors.primary,
+      secondary: editConfig.value.theme.colors?.secondary ?? defaultTheme.colors.secondary,
+      accent: editConfig.value.theme.colors?.accent ?? defaultTheme.colors.accent
     }
   }
 })
 
-watch(portal, (p) => {
-  if (!p) return
-  setBreadcrumbs([{ text: t('portals'), to: '/portals' }, { text: p.config.title }])
+const saveDraft = useAsyncAction(async () => {
+  if (!formValid.value) return
+  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+})
+
+const hasDraftDiff = computed(() => {
+  return !equal(editConfig.value, portalFetch.data.value?.config)
+})
+
+watch(portalFetch.data, (portal) => {
+  if (!portal) return
+  setBreadcrumbs([{ text: t('portals'), to: '/portals' }, { text: portal.config.title }])
 })
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
@@ -330,8 +288,8 @@ const configureContext = computed(() => {
     'Use the subagent tool portalConfig_form to help the user configure the current portal.',
     'Start the session by asking the user what they want to achieve.',
   ]
-  if (portal.value?.draftConfig?.title) lines.push(`The portal title is "${portal.value.draftConfig.title}".`)
-  if (portal.value?.draftConfig?.description) lines.push(`Description: ${portal.value.draftConfig.description}`)
+  if (editConfig.value?.title) lines.push(`The portal title is "${editConfig.value.title}".`)
+  if (editConfig.value?.description) lines.push(`Description: ${editConfig.value.description}`)
   return lines.join(' ')
 })
 
@@ -366,15 +324,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     portals: Portals
     portalConfig: Portal configuration
     configurePrompt: Help me configure this portal
-    contributionManagementTitle: Contribution management
-    contributionManagementSubtitle: Who can publish datasets and applications on this portal
-    stagingLabel: Staging portal
-    stagingHint: If enabled, any organisation contributor may publish directly on this portal without admin approval.
-    contributorDepartmentsLabel: Contributor departments
-    contributorDepartmentsHint: Admins of the listed departments may publish on this portal as if it were owned by their department. Type a department id and press Enter.
-    save: Save
-    saved: Changes saved
-    errorSaving: Error while saving
   fr:
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
@@ -383,13 +332,4 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     portals: Portails
     portalConfig: Configuration du portail
     configurePrompt: Aide-moi à configurer ce portail
-    contributionManagementTitle: Gestion des contributions
-    contributionManagementSubtitle: Qui peut publier des jeux de données et des applications sur ce portail
-    stagingLabel: Portail de pré-production
-    stagingHint: Si activé, tout contributeur de l'organisation peut publier directement sur ce portail sans validation par un administrateur.
-    contributorDepartmentsLabel: Départements contributeurs
-    contributorDepartmentsHint: Les administrateurs des départements listés pourront publier sur ce portail comme s'ils en étaient propriétaires. Tapez un identifiant de département puis Entrée.
-    save: Enregistrer
-    saved: Modifications enregistrées
-    errorSaving: Erreur lors de l'enregistrement
 </i18n>

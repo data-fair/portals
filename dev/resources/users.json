@@ -70,5 +70,14 @@
     "password": {
       "clear": "passwd"
     }
+  },
+  {
+    "id": "dev_admin_dep",
+    "firstName": "Dev",
+    "lastName": "Admin Dep",
+    "email": "dev_admin_dep@test.com",
+    "password": {
+      "clear": "passwd"
+    }
   }
 ]

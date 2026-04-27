@@ -66,12 +66,6 @@
               autofocus
               required
             />
-            <v-checkbox
-              v-model="generalInformations.staging.value"
-              :label="t('form.staging')"
-              density="comfortable"
-              hide-details
-            />
           </v-form>
 
           <!-- Select owner -->
@@ -518,11 +512,6 @@
               :subtitle="generalInformations.owner.value.name"
             />
             <v-list-item
-              v-if="generalInformations.staging.value"
-              :title="t('summary.staging')"
-              :subtitle="t('summary.yes')"
-            />
-            <v-list-item
               :title="t('summary.sourcePortal')"
               :subtitle="selectedPortalLabel"
             />
@@ -579,7 +568,6 @@ const step = ref<'general-information' | 'home' | 'datasets-catalog' | 'applicat
 
 const generalInformations = {
   title: ref<string>(''),
-  staging: ref<boolean>(false),
   owner: ref<Account>(session.state.account)
 }
 const selectedPortal = ref<string | undefined>(undefined)
@@ -719,7 +707,6 @@ const createPortal = useAsyncAction(
       method: 'POST',
       body: {
         owner,
-        staging: generalInformations.staging.value,
         sourcePortalId: selectedPortal.value !== 'blank' ? selectedPortal.value : undefined, // Source page ID to duplicate (optional)
         config: { title: portalTitle, menu: selectedPortal.value !== 'blank' ? undefined : menu } // Init menu only if not duplicating from another portal
       }
@@ -803,7 +790,6 @@ setBreadcrumbs([
     form:
       title: Portal Title
       titleRequired: Portal title is required
-      staging: Staging Portal
       owner: Choose the portal owner
     initFromOtherPortal:
       title: Initialize configuration from an existing portal
@@ -841,8 +827,6 @@ setBreadcrumbs([
     summary:
       title: Portal Title
       owner: Owner
-      staging: Staging
-      yes: "Yes"
       sourcePortal: Source Portal
       homePage: Home Page
       datasetsCatalog: Datasets Catalog
@@ -860,7 +844,6 @@ setBreadcrumbs([
     form:
       title: Titre du portail
       titleRequired: Le titre du portail est obligatoire
-      staging: Portail de pré-production
       owner: Choisir le propriétaire du portail
     initFromOtherPortal:
       title: Initialiser la configuration depuis un portail existant
@@ -898,8 +881,6 @@ setBreadcrumbs([
     summary:
       title: Titre du portail
       owner: Propriétaire
-      staging: Pré-production
-      yes: "Oui"
       sourcePortal: Portail source
       homePage: Page d'accueil
       datasetsCatalog: Catalogue de données

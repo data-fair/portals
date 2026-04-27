@@ -139,8 +139,10 @@ const getPublicationSite = (portal: Portal) => {
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
   }
-  publicationSite.contributorDepartments = portal.contributorDepartments || []
-  publicationSite.settings = { staging: !!portal.staging }
+  publicationSite.settings = {
+    staging: !!portal.staging,
+    contributorDepartments: portal.contributorDepartments || []
+  }
   return publicationSite
 }
 
