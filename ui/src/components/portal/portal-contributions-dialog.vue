@@ -103,22 +103,22 @@ const save = useAsyncAction(
 <i18n lang="yaml">
   en:
     contributionManagementTitle: Contribution management
-    contributionManagementSubtitle: Who can publish datasets and applications on this portal
+    contributionManagementSubtitle: Define who can publish content on this portal
     stagingLabel: Staging portal
-    stagingHint: If enabled, any organisation contributor may publish directly on this portal without admin approval.
+    stagingHint: When enabled, the contributor role is enough to publish on the portal. When disabled, the admin role is required.
     contributorDepartmentsLabel: Contributor departments
-    contributorDepartmentsHint: Admins of the selected departments may publish on this portal as if it were owned by their department.
+    contributorDepartmentsHint: Members of the selected departments can contribute to this portal with the role they hold in their department.
     cancel: Cancel
     save: Save
     contributionsUpdated: Contribution settings updated
     errorUpdatingContributions: Error while updating contribution settings
   fr:
     contributionManagementTitle: Gestion des contributions
-    contributionManagementSubtitle: Qui peut publier des jeux de données et des applications sur ce portail
+    contributionManagementSubtitle: Définir qui peut publier du contenu sur ce portail
     stagingLabel: Portail de pré-production
-    stagingHint: Si activé, tout contributeur de l'organisation peut publier directement sur ce portail sans validation par un administrateur.
+    stagingHint: Si activé, le rôle de contributeur suffit pour publier sur le portail. Sinon, le rôle d'administrateur est requis.
     contributorDepartmentsLabel: Départements contributeurs
-    contributorDepartmentsHint: Les administrateurs des départements sélectionnés pourront publier sur ce portail comme s'ils en étaient propriétaires.
+    contributorDepartmentsHint: Les membres des départements sélectionnés peuvent contribuer à ce portail avec le rôle qu'ils ont dans leur département.
     cancel: Annuler
     save: Enregistrer
     contributionsUpdated: Paramètres de contribution mis à jour
