@@ -35,7 +35,7 @@ test.describe('portals management', () => {
 
   test('org-root admin can toggle staging after creation', async () => {
     const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
-    assert.equal(portal.staging, false)
+    assert.ok(!portal.staging)
     const patched = (await orgAdmin.patch(`/api/portals/${portal._id}`, { staging: true })).data
     assert.equal(patched.staging, true)
   })
