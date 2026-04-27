@@ -26,7 +26,7 @@ router.get('', async (req, res, next) => {
   const filters = findUtils.query(params)
 
   // If isReference=true, we get all references portals, without owner filter
-  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
+  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session, { contributorDepartments: true })
   const queryWithFilters = Object.assign(filters, query)
 
   // TODO: account filter for super admins ?

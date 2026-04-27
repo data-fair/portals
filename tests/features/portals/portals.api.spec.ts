@@ -56,4 +56,39 @@ test.describe('portals management', () => {
       (err: any) => err.status === 400
     )
   })
+
+  test('dept admin lists org-root portal when their department is in contributorDepartments', async () => {
+    const sharedPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Shared', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep1'] })
+    const otherPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Other', menu: { children: [] } } })).data
+    const ownPortal = (await deptAdmin.post('/api/portals', { config: { title: 'Own', menu: { children: [] } } })).data
+
+    const list = (await deptAdmin.get('/api/portals')).data
+    const ids = list.results.map((p: any) => p._id)
+    assert.ok(ids.includes(sharedPortal._id), 'shared org-root portal should be visible')
+    assert.ok(ids.includes(ownPortal._id), 'own dept portal should still be visible')
+    assert.ok(!ids.includes(otherPortal._id), 'unrelated org-root portal should not be visible')
+  })
+
+  test('dept admin does not list org-root portal sharing a different department', async () => {
+    const sharedPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Shared', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep2'] })
+
+    const list = (await deptAdmin.get('/api/portals')).data
+    const ids = list.results.map((p: any) => p._id)
+    assert.ok(!ids.includes(sharedPortal._id), 'dep1 admin must not see a portal shared only with dep2')
+  })
+
+  test('org-root admin listing is unaffected by contributorDepartments', async () => {
+    const sharedPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Shared', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep1'] })
+    const plainPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Plain', menu: { children: [] } } })).data
+    const deptPortal = (await deptAdmin.post('/api/portals', { config: { title: 'Dept', menu: { children: [] } } })).data
+
+    const list = (await orgAdmin.get('/api/portals')).data
+    const ids = list.results.map((p: any) => p._id)
+    assert.ok(ids.includes(sharedPortal._id))
+    assert.ok(ids.includes(plainPortal._id))
+    assert.ok(ids.includes(deptPortal._id), 'org-root admin sees dept-scoped portals too')
+  })
 })

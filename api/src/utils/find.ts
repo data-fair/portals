@@ -2,9 +2,15 @@ import { mongoPagination, mongoProjection, mongoSort, type SessionStateAuthentic
 import { httpError } from '@data-fair/lib-utils/http-errors.js'
 
 /**
- * Show all if super admin, otherwise filter by owner
+ * Show all if super admin, otherwise filter by owner.
+ * When `contributorDepartments` is true, also include org-root resources whose
+ * `contributorDepartments` array contains the session's department.
  */
-export const filterPermissions = (reqQuery: Record<string, string>, sessionState: SessionStateAuthenticated) => {
+export const filterPermissions = (
+  reqQuery: Record<string, string>,
+  sessionState: SessionStateAuthenticated,
+  options: { contributorDepartments?: boolean } = {}
+) => {
   const query: Record<string, any> = {}
 
   const showAll = reqQuery.showAll === 'true'
@@ -13,7 +19,16 @@ export const filterPermissions = (reqQuery: Record<string, string>, sessionState
   if (!showAll) {
     query['owner.type'] = sessionState.account.type
     query['owner.id'] = sessionState.account.id
-    if (sessionState.account.department) query['owner.department'] = sessionState.account.department
+    if (sessionState.account.department) {
+      if (options.contributorDepartments) {
+        query.$or = [
+          { 'owner.department': sessionState.account.department },
+          { 'owner.department': { $exists: false }, contributorDepartments: sessionState.account.department }
+        ]
+      } else {
+        query['owner.department'] = sessionState.account.department
+      }
+    }
   }
   return query
 }

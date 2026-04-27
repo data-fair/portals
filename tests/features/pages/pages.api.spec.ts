@@ -7,6 +7,9 @@ import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
+const deptAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1' })
 
 test.describe('pages management', () => {
   test.beforeEach(clean)
@@ -65,5 +68,58 @@ test.describe('pages management', () => {
     // Verify the duplicated image exists in database
     const duplicatedImageData = await user1.get(`/api/images/${duplicatedImageId}/data`)
     assert.equal(duplicatedImageData.status, 200, 'Duplicated image should be accessible')
+  })
+})
+
+test.describe('contributorDepartments page publication', () => {
+  test.beforeEach(clean)
+
+  test('dept admin publishes a dept-owned page on a non-staging org-root portal listed via contributorDepartments', async () => {
+    const sharedPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Shared', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep1'] })
+
+    const page = (await deptAdmin.post('/api/pages', { type: 'generic', title: 'Dept page', config: { title: 'Dept page', elements: [], genericMetadata: { slug: 'dept-page' } } })).data
+    assert.equal(page.owner.department, 'dep1')
+
+    const patched = (await deptAdmin.patch(`/api/pages/${page._id}`, { portals: [sharedPortal._id] })).data
+    assert.deepEqual(patched.portals, [sharedPortal._id])
+    assert.deepEqual(patched.requestedPortals, [])
+  })
+
+  test('dept admin requests publication of a dept-owned page on a staging org-root portal listed via contributorDepartments', async () => {
+    const stagingPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Staging', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${stagingPortal._id}`, { staging: true, contributorDepartments: ['dep1'] })
+
+    const page = (await deptAdmin.post('/api/pages', { type: 'generic', title: 'Dept page', config: { title: 'Dept page', elements: [], genericMetadata: { slug: 'dept-page' } } })).data
+
+    const patched = (await deptAdmin.patch(`/api/pages/${page._id}`, { requestedPortals: [stagingPortal._id] })).data
+    assert.deepEqual(patched.requestedPortals, [stagingPortal._id])
+    assert.deepEqual(patched.portals, [])
+
+    // org-root admin moves the request into actual publication
+    const accepted = (await orgAdmin.patch(`/api/pages/${page._id}`, { portals: [stagingPortal._id], requestedPortals: [] })).data
+    assert.deepEqual(accepted.portals, [stagingPortal._id])
+    assert.deepEqual(accepted.requestedPortals, [])
+  })
+})
+
+test.describe('staging publication flow', () => {
+  test.beforeEach(clean)
+
+  test('contrib can request publication via requestedPortals but cannot publish directly', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Staging', menu: { children: [] } } })).data
+    await orgAdmin.patch(`/api/portals/${portal._id}`, { staging: true })
+    const page = (await orgAdmin.post('/api/pages', { type: 'generic', title: 'P', config: { title: 'P', elements: [], genericMetadata: { slug: 'p' } } })).data
+
+    // Contrib cannot patch portals directly
+    await assert.rejects(
+      orgContrib.patch(`/api/pages/${page._id}`, { portals: [portal._id] }),
+      (err: any) => err.status === 403 || err.status === 401
+    )
+
+    // Contrib can request publication
+    const requested = (await orgContrib.patch(`/api/pages/${page._id}`, { requestedPortals: [portal._id] })).data
+    assert.deepEqual(requested.requestedPortals, [portal._id])
+    assert.deepEqual(requested.portals, [])
   })
 })
