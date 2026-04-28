@@ -41,6 +41,13 @@ export default {
       type: 'boolean',
       default: false
     },
+    contributorDepartments: {
+      type: 'array',
+      title: 'Départements contributeurs',
+      description: 'Départements dont les administrateurs peuvent publier sur ce portail, comme s\'ils en étaient propriétaires.',
+      items: { type: 'string' },
+      default: []
+    },
     owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     updatedAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/updatedAt' },

@@ -43,6 +43,7 @@ services:
       CIPHER_PASSWORD: dev
       CONTACT: contact@test.com
       MANAGE_SITES: true
+      MANAGE_DEPARTMENTS: true
       MONGO_URL: mongodb://localhost:${MONGO_PORT}/simple-directory
       OBSERVER_ACTIVE: false
       PUBLIC_URL: http://${DEV_HOST}:${NGINX_PORT}/simple-directory
@@ -83,7 +84,7 @@ services:
     profiles:
       - dev
       - test
-    image: ghcr.io/data-fair/data-fair:master
+    image: ghcr.io/data-fair/data-fair:feat-publication-sites-permissions-mode
     restart: on-failure:10
     network_mode: host
     depends_on:

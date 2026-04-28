@@ -8,7 +8,7 @@ const configSchema = jsonSchema(portalConfigSchema)
   .schema
 
 const schema = jsonSchema(portalSchema)
-  .pickProperties(['staging', 'owner', 'config'])
+  .pickProperties(['owner', 'config'])
   .removeFromRequired(['owner'])
   .addProperty('config', configSchema)
   .addProperty('sourcePortalId', { type: 'string', description: 'ID of the portal to duplicate' })

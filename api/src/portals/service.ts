@@ -4,7 +4,7 @@ import type { IngressManagerIngressInfo } from '#types'
 
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
-import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, httpError } from '@data-fair/lib-express'
+import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, getAccountRole, httpError } from '@data-fair/lib-express'
 import axios from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
@@ -24,6 +24,30 @@ export const getPortalAsAdmin = async (sessionState: SessionStateAuthenticated, 
   return portal
 }
 
+// Like getPortalAsAdmin but also accepts contrib role and contributorDepartments
+// inheritance (a department member with admin/contrib role can read an org-root
+// portal whose contributorDepartments includes their department).
+// Used for read-only routes — write routes still require getPortalAsAdmin.
+export const getPortal = async (sessionState: SessionStateAuthenticated, id: string) => {
+  const portal = await mongo.portals.findOne({ _id: id })
+  if (!portal) throw httpError(404, `portal "${id}" not found`)
+
+  const directRole = getAccountRole(sessionState, portal.owner)
+  if (directRole === 'admin' || directRole === 'contrib') return portal
+
+  if (
+    !portal.owner.department &&
+    portal.contributorDepartments?.length &&
+    sessionState.account.type === portal.owner.type &&
+    sessionState.account.id === portal.owner.id &&
+    sessionState.account.department &&
+    portal.contributorDepartments.includes(sessionState.account.department) &&
+    (sessionState.accountRole === 'admin' || sessionState.accountRole === 'contrib')
+  ) return portal
+
+  throw httpError(403, 'requires admin, contrib role(s)')
+}
+
 export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
   debug('createPortal', portal)
   renderPortalConfigMarkdown(portal.config)
@@ -35,6 +59,10 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
   // Change WhiteLabel, isReference or md2Compat by super admin only
   if (patch.whiteLabel || patch.isReference || patch.md2Compat) assertAdminMode(session)
+
+  if (patch.contributorDepartments && patch.contributorDepartments.length && portal.owner.department) {
+    throw httpError(400, 'contributorDepartments is only allowed when the portal owner is the organisation root')
+  }
 
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
@@ -134,6 +162,10 @@ const getPublicationSite = (portal: Portal) => {
   }
   if (portal.config && portal.config.authentication === 'required') {
     publicationSite.private = true
+  }
+  publicationSite.settings = {
+    staging: !!portal.staging,
+    contributorDepartments: portal.contributorDepartments || []
   }
   return publicationSite
 }

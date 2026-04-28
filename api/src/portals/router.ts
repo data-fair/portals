@@ -10,7 +10,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 
 const router = Router()
 export default router
@@ -26,7 +26,7 @@ router.get('', async (req, res, next) => {
   const filters = findUtils.query(params)
 
   // If isReference=true, we get all references portals, without owner filter
-  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session)
+  const query = params.isReference === 'true' ? { isReference: true } : findUtils.filterPermissions(params, session, { contributorDepartments: true })
   const queryWithFilters = Object.assign(filters, query)
 
   // TODO: account filter for super admins ?
@@ -126,7 +126,7 @@ router.post('', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-  res.send(await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id))
+  res.send(await getPortal(reqSessionAuthenticated(req), req.params.id))
 })
 
 /**

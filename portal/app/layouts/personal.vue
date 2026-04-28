@@ -11,6 +11,12 @@
   </ClientOnly>
 </template>
 
+<script setup lang="ts">
+useHead({
+  meta: [{ name: 'robots', content: 'noindex' }]
+})
+</script>
+
 <style>
 /* https://stackoverflow.com/questions/56973002/vuetify-adds-scrollbar-when-its-not-needed */
 html { overflow-y: auto; }

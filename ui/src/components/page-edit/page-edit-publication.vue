@@ -114,9 +114,20 @@ const { t } = useI18n()
 const session = useSessionAuthenticated()
 const { patchPage, page, pageUrl } = usePageStore()
 
-type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging'>
-const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner', size: 10000 } })
+type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress' | 'owner' | 'staging' | 'contributorDepartments'>
+const portalsFetch = useFetch<{ results: PartialPortal[] }>($apiPath + '/portals', { query: { select: '_id,title,ingress,owner,staging,contributorDepartments', size: 10000 } })
 const portals = computed(() => portalsFetch.data.value?.results)
+
+// A user who is contrib/admin in a department listed in contributorDepartments inherits that role on the portal.
+const portalRole = (portal: PartialPortal): string | null => {
+  const role = getAccountRole(session.state, portal.owner)
+  if (role) return role
+  if (!portal.contributorDepartments?.length) return null
+  for (const org of session.state.user.organizations) {
+    if (org.id === portal.owner.id && org.department && portal.contributorDepartments.includes(org.department)) return org.role
+  }
+  return null
+}
 
 // Fetch all standard pages (home, contact, accessibility,...) to detect conflicts
 const standardPagesFetch = useFetch<{ results: Pick<Page, '_id' | 'type' | 'portals' | 'config' | 'title'>[] }>($apiPath + '/pages', {
@@ -147,7 +158,7 @@ const isPublished = (portal: PartialPortal) => {
 }
 
 const canPublish = (portal: PartialPortal) => {
-  const role = getAccountRole(session.state, portal.owner)
+  const role = portalRole(portal)
   if (role === 'contrib' && portal.staging) return true
   return role === 'admin'
 }
@@ -160,7 +171,7 @@ const canUnpublish = (portal: PartialPortal) => {
 }
 
 const canRequestPublication = (portal: PartialPortal) => {
-  const role = getAccountRole(session.state, portal.owner)
+  const role = portalRole(portal)
   return role === 'contrib' || role === 'admin'
 }
 

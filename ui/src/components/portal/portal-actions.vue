@@ -78,6 +78,26 @@
     </v-list-item>
   </custom-router-link>
 
+  <!-- Manage contributions -->
+  <v-list-item
+    v-if="canEditContributions"
+    @click="showContributionsDialog = true"
+  >
+    <template #prepend>
+      <v-icon
+        color="primary"
+        :icon="mdiAccountGroup"
+      />
+    </template>
+    {{ t('manageContributions') }}
+  </v-list-item>
+  <portal-contributions-dialog
+    v-if="canEditContributions"
+    v-model="showContributionsDialog"
+    :portal="portal"
+    @refresh-portal="emit('refresh-portal')"
+  />
+
   <!-- Change owner -->
   <v-menu
     v-if="hasDepartments && (session.state.accountRole === 'admin' || session.state.user.adminMode)"
@@ -316,7 +336,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
+import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiAccountGroup, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { Portal } from '#api/types/portal/index.ts'
 
@@ -327,6 +347,9 @@ const hasDepartments = useHasDepartments()
 const showChangeOwnerMenu = ref(false)
 const showDeleteMenu = ref(false)
 const showWhiteLabelMenu = ref(false)
+const showContributionsDialog = ref(false)
+
+const canEditContributions = computed(() => session.state.accountRole === 'admin' || session.state.user.adminMode)
 
 const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
@@ -406,6 +429,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorDeletingPortal: Error while deleting the portal
     errorUpdatingAdminConfig: Error while updating admin configuration
     events: Events
+    manageContributions: Contribution management
     manageDomainExposure: Manage domain exposure
     no: No
     ownerChanged: Owner changed!
@@ -438,6 +462,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     errorDeletingPortal: Erreur lors de la suppression du portail
     errorUpdatingAdminConfig: Erreur lors de la mise à jour de la configuration administrateur
     events: Traçabilité
+    manageContributions: Gestion des contributions
     manageDomainExposure: Exposition du domaine
     no: Non
     ownerChanged: Propriétaire changé !
