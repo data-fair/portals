@@ -73,13 +73,26 @@ const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
 const { t } = useI18n()
 
+// Restrict to portals actually owned by the session's account: drops portals
+// that are only contribute-shared via contributorDepartments.
+const ownerFilter = computed(() => {
+  const a = session.state.account
+  let o = a.type + ':' + a.id
+  if (a.department) o += ':' + a.department
+  return o
+})
+
 const portalsParams = computed(() => {
   const params: Record<string, any> = {
     size: 10000,
     sort: 'updatedAt:-1',
-    select: '_id,config.title,config.description,config.authentication,ingress.url,owner'
+    select: '_id,config.title,config.description,config.authentication,ingress.url,owner',
+    owner: ownerFilter.value
   }
-  if (showAll.value) params.showAll = true
+  if (showAll.value) {
+    params.showAll = true
+    delete params.owner
+  }
   return params
 })
 
