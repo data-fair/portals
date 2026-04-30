@@ -5,7 +5,7 @@
     :icon="mdiCellphoneArrowDown"
     :resource-title="application.title"
     :text="t('text')"
-    :short-text="t('shortText')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'application-install', label: application.slug }"
   >
     <v-card-text>
@@ -158,8 +158,8 @@ onMounted(() => {
 <i18n lang="yaml">
   en:
     title: Install application
-    text: Install on your device
-    shortText: Install
+    text: Install
+    tooltip: Open the install instructions in a dialog
     description: Open the link below, then follow the instructions to add it to your home screen.
     downloadAvailable: This application is available for download!
     chrome:
@@ -185,8 +185,8 @@ onMounted(() => {
     other: 'Look for an "Install" or "Add to Home Screen" option in your browser menu.'
   fr:
     title: Installer l'application
-    text: Installer sur l'appareil
-    shortText: Installer
+    text: Installer
+    tooltip: Ouvrir les instructions d'installation dans une boîte de dialogue
     description: Ouvrez le lien ci-dessous, puis suivez les instructions pour l'ajouter à votre écran d'accueil.
     downloadAvailable: Cette application est disponible en téléchargement !
     chrome:

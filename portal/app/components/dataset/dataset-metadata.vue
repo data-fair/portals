@@ -187,6 +187,7 @@
             :icon="mdiTableLarge"
             :resource-title="dataset.title"
             :text="t('text.table')"
+            :tooltip="t('tooltip.table')"
           />
           <action-btn
             v-if="dataset.bbox?.length && shouldShowActionButton('map')"
@@ -195,6 +196,7 @@
             :icon="mdiMapMarker"
             :resource-title="dataset.title"
             :text="t('text.map')"
+            :tooltip="t('tooltip.map')"
           />
           <action-btn
             v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
@@ -203,7 +205,7 @@
             :icon="mdiCog"
             :resource-title="dataset.title"
             :text="t('text.api')"
-            :short-text="t('shortText.api')"
+            :tooltip="t('tooltip.api')"
           />
 
           <dataset-download
@@ -231,6 +233,7 @@
         <edit-resource-btn
           kind="dataset"
           :resource="dataset"
+          :action-style="metadataConfig.actionsStyle"
         />
       </v-col>
 
@@ -324,16 +327,18 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     owner: 'Owner:'
     ownerOverride: '{owner}:'
     share: 'Share:'
-    shortText:
-      api: API
     size: 'Size:'
     spatial: 'Spatial coverage:'
     temporal: 'Temporal coverage:'
     temporalStart: 'From'
     text:
-      api: API documentation
+      api: API
       map: Map
       table: Table
+    tooltip:
+      map: Open the map view in full page
+      table: Open the table view in full page
+      api: Open the API documentation in full page
     thisSource: 'this source'
     frequency: 'Update frequency:'
     updatedAt: Updated at
@@ -368,16 +373,18 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
     share: 'Partager :'
-    shortText:
-      api: API
     size: 'Taille :'
     spatial: 'Couverture géographique :'
     temporal: 'Couverture temporelle :'
     temporalStart: 'À partir de'
     text:
-      api: Documentation d'API
+      api: API
       map: Carte
       table: Tableau
+    tooltip:
+      map: Ouvrir la vue carte en pleine page
+      table: Ouvrir la vue tableau en pleine page
+      api: Ouvrir la documentation d'API en pleine page
     thisSource: 'cette source'
     frequency: 'Fréquence de mise à jour :'
     updatedAt: Mis à jour le

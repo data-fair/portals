@@ -1,11 +1,11 @@
 <template>
   <layout-preview
-    :title="t('embed') + ' - ' + application.title"
+    :title="t('title') + ' - ' + application.title"
     :action-style="portalConfig.applications.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
     :resource-title="application.title"
-    :text="t('embed')"
-    :short-text="t('embedShort')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'application-embed', label: application.slug }"
   >
     <v-card-text class="py-0">
@@ -16,7 +16,7 @@
       </v-code>
     </v-card-text>
     <d-frame-wrapper
-      :iframe-title="t('embed') + ' - ' + application.title"
+      :iframe-title="t('title') + ' - ' + application.title"
       :src="application.exposedUrl + '?d-frame=true&primary=' + $vuetify.theme.current.colors.primary"
       scrolling="no"
       resize="no"
@@ -51,11 +51,13 @@ const storeState = (state: { detail: [string, string] }) => {
 
 <i18n lang="yaml">
   en:
-    embed: Embed in a website
-    embedShort: Embed
+    title: Embed in a website
+    text: Embed
+    tooltip: Open the embed code in a dialog
     description: To embed a preview of this application in a website you can copy the following code or similar code in the HTML source.
   fr:
-    embed: Intégrer dans un site
-    embedShort: Intégrer
+    title: Intégrer dans un site
+    text: Intégrer
+    tooltip: Ouvrir le code d'intégration dans une boîte de dialogue
     description: Pour intégrer une prévisualisation de ce jeu de données dans un site vous pouvez copier le code suivant ou un code similaire dans le code source HTML.
 </i18n>

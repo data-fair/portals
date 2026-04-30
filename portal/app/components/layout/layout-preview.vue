@@ -11,7 +11,7 @@
         :icon="icon"
         :resource-title="resourceTitle"
         :text="text"
-        :short-text="shortText"
+        :tooltip="tooltip"
         :block="block"
         @click.prevent
       />
@@ -49,10 +49,10 @@ const { trackDialog } = defineProps<{
   icon: string
   /** Resource title */
   resourceTitle: string
-  /** Button text */
+  /** Short button label */
   text: string
-  /** Button short text */
-  shortText?: string
+  /** Longer descriptive text used for tooltip and aria-label */
+  tooltip?: string
   /** Used to track a dialog open event */
   trackDialog?: { action: string, label: string }
   /** Whether the button should take the full width of its container */

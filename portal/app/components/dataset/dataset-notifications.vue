@@ -1,14 +1,15 @@
 <template>
   <layout-preview
-    :title="t('preview') + ' - ' + dataset.title"
+    :title="t('title') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiBell"
     :resource-title="dataset.title"
-    :text="t('preview')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'dataset-notifications', label: dataset.slug }"
   >
     <d-frame-wrapper
-      :iframe-title="t('preview') + ' - ' + dataset.title"
+      :iframe-title="t('title') + ' - ' + dataset.title"
       :src="src"
       scrolling="no"
       aspect-ratio
@@ -46,7 +47,11 @@ const src = computed(() => {
 
 <i18n lang="yaml">
   en:
-    preview: Notifications
+    title: Notifications
+    text: Notifications
+    tooltip: Open the notification settings in a dialog
   fr:
-    preview: Notifications
+    title: Notifications
+    text: Notifications
+    tooltip: Ouvrir les notifications dans une boîte de dialogue
 </i18n>

@@ -6,9 +6,9 @@
     :to="to"
     :icon="actionStyle === 'icon' ? icon : undefined"
     :prepend-icon="actionStyle === 'full' ? icon : undefined"
-    :title="actionStyle === 'icon' ? text : undefined"
-    :aria-label="resourceTitle + ' - ' + text"
-    :text="actionStyle !== 'icon' ? shortText || text : undefined"
+    :title="tooltip || text"
+    :aria-label="resourceTitle ? resourceTitle + ' - ' + (tooltip || text) : (tooltip || text)"
+    :text="actionStyle !== 'icon' ? text : undefined"
     :density="actionStyle === 'icon' ? 'comfortable' : undefined"
     :size="actionStyle !== 'icon' ? 'small' : undefined"
     :block="block"
@@ -30,11 +30,11 @@ defineProps<{
   /** Button icon */
   icon: string
   /** Resource title */
-  resourceTitle: string
-  /** Button text */
+  resourceTitle?: string
+  /** Short button label (always shown when actionStyle !== 'icon') */
   text: string
-  /** Button short text */
-  shortText?: string
+  /** Longer descriptive text used for the native tooltip and aria-label */
+  tooltip?: string
   /** Whether the button should take the full width of its container */
   block?: boolean
 }>()

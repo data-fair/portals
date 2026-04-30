@@ -1,10 +1,11 @@
 <template>
   <layout-preview
-    :title="t('preview') + ' - ' + dataset.title"
+    :title="t('title') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiAttachment"
     :resource-title="dataset.title"
-    :text="t('preview')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'dataset-attachments', label: dataset.slug }"
   >
     <dataset-attachments :dataset="dataset" />
@@ -22,7 +23,11 @@ const { portalConfig } = usePortalStore()
 
 <i18n lang="yaml">
   en:
-    preview: Attachments
+    title: Attachments
+    text: Attachments
+    tooltip: Open the attachments in a dialog
   fr:
-    preview: Pièces jointes
+    title: Pièces jointes
+    text: Pièces jointes
+    tooltip: Ouvrir les pièces jointes dans une boîte de dialogue
 </i18n>

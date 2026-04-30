@@ -1,16 +1,16 @@
 <template>
   <layout-preview
-    :title="t('preview') + ' - ' + application.title"
+    :title="t('title') + ' - ' + application.title"
     :action-style="portalConfig.applications.card.actionsStyle"
     :icon="mdiFlipToFront"
     :resource-title="application.title"
-    :text="t('preview')"
-    :short-text="t('previewShort')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'application-preview', label: application.slug }"
     :block="block"
   >
     <d-frame-wrapper
-      :iframe-title="t('preview') + ' - ' + application.title"
+      :iframe-title="t('title') + ' - ' + application.title"
       :src="`${application.exposedUrl}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
       aspect-ratio
     />
@@ -35,9 +35,11 @@ const { portalConfig } = usePortalStore()
 
 <i18n lang="yaml">
   en:
-    preview: Application preview
-    previewShort: Preview
+    title: Application preview
+    text: Preview
+    tooltip: Open the application preview in a dialog
   fr:
-    preview: Aperçu de la visualisation
-    previewShort: Aperçu
+    title: Aperçu de la visualisation
+    text: Aperçu
+    tooltip: Ouvrir l'aperçu de la visualisation dans une boîte de dialogue
 </i18n>

@@ -64,8 +64,8 @@
           :action-style="metadataConfig.actionsStyle"
           :icon="mdiFullscreen"
           :resource-title="application.title"
-          :text="t('text.full')"
-          :short-text="t('shortText.full')"
+          :text="t('text')"
+          :tooltip="t('tooltip')"
         />
         <application-capture :application="application" />
         <application-embed
@@ -79,6 +79,7 @@
         <edit-resource-btn
           kind="application"
           :resource="application"
+          :action-style="metadataConfig.actionsStyle"
         />
         <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
@@ -128,19 +129,15 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
     owner: 'Owner:'
     ownerOverride: '{owner}:'
     share: 'Share:'
-    shortText:
-      full: Fullscreen
-    text:
-      full: Fullscreen application
+    text: Fullscreen
+    tooltip: Open the application in full page
     updatedAt: Updated at
   fr:
     application: 'Application :'
     owner: 'Propriétaire :'
     ownerOverride: '{owner} :'
     share: 'Partager :'
-    shortText:
-      full: Plein écran
-    text:
-      full: Visualisation plein écran
+    text: Plein écran
+    tooltip: Ouvrir la visualisation en pleine page
     updatedAt: Mise à jour le
 </i18n>

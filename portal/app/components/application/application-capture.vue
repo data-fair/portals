@@ -3,8 +3,8 @@
     :action-style="portalConfig.applications.page.metadata?.actionsStyle"
     :icon="mdiCamera"
     :resource-title="application.title"
-    :text="t('text.capture')"
-    :short-text="t('shortText.capture')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     @click="handleCapture"
   />
 </template>
@@ -55,13 +55,9 @@ const handleCapture = () => {
 
 <i18n lang="yaml">
   en:
-    text:
-      capture: Capture application
-    shortText:
-      capture: Capture
+    text: Capture
+    tooltip: Download a capture of the application
   fr:
-    text:
-      capture: Capturer la visualisation
-    shortText:
-      capture: Capturer
+    text: Capturer
+    tooltip: Télécharger une capture de la visualisation
 </i18n>

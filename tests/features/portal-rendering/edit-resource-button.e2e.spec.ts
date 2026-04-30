@@ -85,5 +85,7 @@ test.describe('edit resource button', () => {
     await expect(link).toBeVisible({ timeout: 10000 })
     await expect(link).toHaveAttribute('href', new RegExp(`/data-fair/page/${newsPage._id}$`))
     await expect(link).toHaveAttribute('target', '_blank')
+    // pencil icon should be rendered alongside the label
+    await expect(link.locator('i.v-icon')).toBeVisible()
   })
 })
