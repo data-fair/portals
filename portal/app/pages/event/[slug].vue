@@ -12,10 +12,15 @@
       }"
     />
 
-    <page-elements
-      v-else-if="pageConfigFetch.data.value"
-      :model-value="pageConfigFetch.data.value.elements"
-    />
+    <template v-else-if="pageConfigFetch.data.value">
+      <div class="d-flex justify-end mb-2">
+        <edit-resource-btn
+          kind="page"
+          :resource="pageConfigFetch.data.value"
+        />
+      </div>
+      <page-elements :model-value="pageConfigFetch.data.value.elements" />
+    </template>
   </layout-page>
 </template>
 

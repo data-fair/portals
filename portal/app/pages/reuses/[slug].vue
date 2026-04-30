@@ -13,7 +13,8 @@
     />
 
     <reuse-preview
-      v-else-if="reuseConfig"
+      v-else-if="reuseConfig && reuseFetch.data.value"
+      :reuse-id="reuseFetch.data.value._id"
       :reuse-config="reuseConfig"
       :slug="slug"
       :reuses-catalog-exists="reusesCatalogExists"

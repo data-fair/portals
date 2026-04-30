@@ -228,6 +228,10 @@
           v-if="portalConfig.authentication !== 'none' && shouldShowActionButton('notifications')"
           :dataset="dataset"
         />
+        <edit-resource-btn
+          kind="dataset"
+          :resource="dataset"
+        />
       </v-col>
 
       <!-- <v-col v-bind="metadataColProps">

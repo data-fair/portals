@@ -76,6 +76,10 @@
           v-if="$vuetify.display.smAndDown"
           :application="application"
         />
+        <edit-resource-btn
+          kind="application"
+          :resource="application"
+        />
         <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
