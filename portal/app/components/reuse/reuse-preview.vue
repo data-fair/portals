@@ -23,12 +23,6 @@
       }"
       :config="portalConfig.navLinksConfig"
     />
-    <edit-resource-btn
-      v-if="!preview"
-      kind="reuse"
-      :resource="{ _id: reuseId }"
-      class="ml-2"
-    />
   </div>
 
   <!-- Author -->
@@ -111,8 +105,7 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
 import { withQuery } from 'ufo'
 
-const { reuseId = '', reuseConfig, slug, reusesCatalogExists } = defineProps<{
-  reuseId?: string
+const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
   reuseConfig: ReuseConfig
   slug: string
   reusesCatalogExists?: boolean

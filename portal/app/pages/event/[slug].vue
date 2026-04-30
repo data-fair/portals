@@ -12,15 +12,10 @@
       }"
     />
 
-    <template v-else-if="pageConfigFetch.data.value">
-      <div class="d-flex justify-end mb-2">
-        <edit-resource-btn
-          kind="page"
-          :resource="pageConfigFetch.data.value"
-        />
-      </div>
-      <page-elements :model-value="pageConfigFetch.data.value.elements" />
-    </template>
+    <page-elements
+      v-else-if="pageConfigFetch.data.value"
+      :model-value="pageConfigFetch.data.value.elements"
+    />
   </layout-page>
 </template>
 
@@ -42,7 +37,7 @@ const getPageImageSrc = providePageImageSrc('event', slug)
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const eventCatalogExists = computed(() => standardPagesFetch.data.value?.['event-catalog'] || false)
 
-const pageConfigFetch = await useFetch<PageConfig & { _id: string }>(`/portal/api/pages/event/${slug}`, { watch: false })
+const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, { watch: false })
 provide('page-config', pageConfigFetch)
 
 const errorTitle = computed(() => {
