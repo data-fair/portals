@@ -17,11 +17,11 @@ export default defineEventHandler(async (event) => {
   // Standard types do not have a slug
   if (['event', 'news', 'generic'].includes(type)) mongoQuery[`config.${type}Metadata.slug`] = slug
 
-  const page = await portalMongo.pages.findOne<Pick<Page, 'config'>>(
+  const page = await portalMongo.pages.findOne<Pick<Page, '_id' | 'config'>>(
     mongoQuery,
-    { projection: { config: 1 } }
+    { projection: { _id: 1, config: 1 } }
   )
 
   if (!page) throw createError({ status: 404, message: 'Page not found' })
-  return page.config
+  return { _id: page._id, ...page.config }
 })

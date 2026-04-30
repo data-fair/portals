@@ -37,7 +37,7 @@ const getPageImageSrc = providePageImageSrc('event', slug)
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const eventCatalogExists = computed(() => standardPagesFetch.data.value?.['event-catalog'] || false)
 
-const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/event/${slug}`, { watch: false })
+const pageConfigFetch = await useFetch<PageConfig & { _id: string }>(`/portal/api/pages/event/${slug}`, { watch: false })
 provide('page-config', pageConfigFetch)
 
 const errorTitle = computed(() => {

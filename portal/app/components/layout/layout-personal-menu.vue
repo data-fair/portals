@@ -104,7 +104,7 @@ const { loginColor, navBarColor } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { portal, preview, siteInfo } = usePortalStore()
+const { portal, preview } = usePortalStore()
 const session = useSession()
 
 let isPortalOwner: ComputedRef<boolean>
@@ -119,14 +119,8 @@ if (!preview) {
     )
   })
 
-  const requestUrl = useRequestURL()
-
-  backOfficeUrl = computed(() => {
-    if (siteInfo.authMode === 'onlyBackOffice' || siteInfo.authMode === 'onlyOtherSite') {
-      return `${requestUrl.protocol}//${siteInfo.authOnlyOtherSite}/data-fair/`
-    }
-    return '/data-fair/'
-  })
+  const baseBackOfficeUrl = useBackOfficeUrl()
+  backOfficeUrl = computed(() => `${baseBackOfficeUrl.value}/`)
 }
 
 const backgroundColor = computed(() => {
