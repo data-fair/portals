@@ -23,6 +23,18 @@
       }"
       :config="portalConfig.navLinksConfig"
     />
+    <nav-link
+      v-if="!preview && editLink.visible.value"
+      :link="{
+        type: 'external',
+        target: true,
+        href: editLink.href.value,
+        title: t('edit'),
+        icon: { custom: mdiPencil }
+      }"
+      :config="portalConfig.navLinksConfig"
+      class="ml-2"
+    />
   </div>
 
   <!-- Author -->
@@ -102,14 +114,17 @@ import type { Dataset } from '#api/types/index.ts'
 import type { HeadingTag } from '#api/types/page-elements/index.ts'
 import type { ReuseConfig } from '#api/types/reuse-config'
 import type { ImageRef } from '#api/types/image-ref/index.ts'
-import { mdiChevronLeft, mdiArrowTopRight } from '@mdi/js'
+import { mdiChevronLeft, mdiArrowTopRight, mdiPencil } from '@mdi/js'
 import { withQuery } from 'ufo'
 
-const { reuseConfig, slug, reusesCatalogExists } = defineProps<{
+const { reuseId, reuseConfig, slug, reusesCatalogExists } = defineProps<{
+  reuseId: string
   reuseConfig: ReuseConfig
   slug: string
   reusesCatalogExists?: boolean
 }>()
+
+const editLink = useEditResourceLink('reuse', toRef(() => ({ _id: reuseId })))
 
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
@@ -152,11 +167,13 @@ const datasets = computed(() => datasetsFetch.data.value?.results || [])
   en:
     backToReuses: Go to reuses catalog
     visitLink: View reuse
+    edit: Edit
     publishedBy: Published by {author}
     datasetsUsed: Dataset used | Datasets used
   fr:
     backToReuses: Aller au catalogue de réutilisations
     visitLink: Voir la réutilisation
+    edit: Éditer
     publishedBy: Publié par {author}
     datasetsUsed: Jeu de données utilisé | Jeux de données utilisés
 </i18n>

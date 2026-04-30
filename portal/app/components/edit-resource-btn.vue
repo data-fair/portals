@@ -1,6 +1,6 @@
 <template>
   <action-btn
-    v-if="link.visible.value"
+    v-if="!preview && link.visible.value"
     :href="link.href.value"
     target="_blank"
     rel="noopener"
@@ -23,6 +23,7 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { preview } = usePortalStore()
 const link = useEditResourceLink(props.kind, toRef(props, 'resource'))
 </script>
 
