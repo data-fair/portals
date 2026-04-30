@@ -25,7 +25,7 @@ export const test = base.extend<{
       goToPortal: async ({ page }, use) => {
         const goToPortal = async (portalId: string, path?: string) => {
           const url = portalUrl(portalId) + (path || '/')
-          await page.goto(url)
+          await page.goto(url, { waitUntil: 'domcontentloaded' })
         }
         await use(goToPortal)
       }
