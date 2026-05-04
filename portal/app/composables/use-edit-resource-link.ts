@@ -27,7 +27,8 @@ export const useEditResourceLink = (
 
   const href = computed(() => {
     if (!resourceId.value) return ''
-    return `${baseBackOfficeUrl.value}/${kind}/${resourceId.value}`
+    const path = isDataFairKind(kind) ? kind : `${kind}s`
+    return `${baseBackOfficeUrl.value}/${path}/${resourceId.value}`
   })
 
   if (isDataFairKind(kind)) {

@@ -24,11 +24,11 @@
       :config="portalConfig.navLinksConfig"
     />
     <nav-link
-      v-if="!preview && editLink.visible.value"
+      v-if="!preview && editHref"
       :link="{
         type: 'external',
         target: true,
-        href: editLink.href.value,
+        href: editHref,
         title: t('edit'),
         icon: { custom: mdiPencil }
       }"
@@ -117,14 +117,12 @@ import type { ImageRef } from '#api/types/image-ref/index.ts'
 import { mdiChevronLeft, mdiArrowTopRight, mdiPencil } from '@mdi/js'
 import { withQuery } from 'ufo'
 
-const { reuseId, reuseConfig, slug, reusesCatalogExists } = defineProps<{
-  reuseId: string
+const { reuseConfig, slug, reusesCatalogExists, editHref } = defineProps<{
   reuseConfig: ReuseConfig
   slug: string
   reusesCatalogExists?: boolean
+  editHref?: string
 }>()
-
-const editLink = useEditResourceLink('reuse', toRef(() => ({ _id: reuseId })))
 
 const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
