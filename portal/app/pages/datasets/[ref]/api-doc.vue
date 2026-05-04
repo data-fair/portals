@@ -44,7 +44,8 @@ watch([datasetFetch.data, datasetsCatalogExists], () => {
 
 usePageSeo({
   title: () => t('apiDoc') + ' - ' + (datasetFetch.data.value?.title || t('dataset')),
-  description: () => datasetFetch.data.value?.summary
+  description: () => datasetFetch.data.value?.summary,
+  noindex: true
 })
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))

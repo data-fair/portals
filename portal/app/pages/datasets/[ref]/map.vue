@@ -67,7 +67,8 @@ watch([datasetFetch.data, datasetsCatalogExists], () => {
 usePageSeo({
   title: () => datasetFetch.data.value?.title || t('dataset'),
   description: () => datasetFetch.data.value?.summary,
-  ogImage: () => thumbnailUrl.value
+  ogImage: () => thumbnailUrl.value,
+  noindex: true
 })
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))

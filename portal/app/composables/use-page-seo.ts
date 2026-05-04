@@ -14,6 +14,7 @@ export const usePageSeo = (meta: {
   description?: MaybeRefOrGetter<string | undefined>
   ogType?: 'website' | 'article'
   ogImage?: MaybeRefOrGetter<string | undefined>
+  noindex?: boolean
 }) => {
   const { portalConfig } = usePortalStore()
 
@@ -26,6 +27,7 @@ export const usePageSeo = (meta: {
     ogUrl: useRequestURL().href
   }
   if (meta.ogImage) { seoMeta.ogImage = () => toValue(meta.ogImage) }
+  if (meta.noindex) { seoMeta.robots = 'noindex' }
 
   useSeoMeta(seoMeta)
 

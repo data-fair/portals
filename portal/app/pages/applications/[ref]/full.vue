@@ -58,7 +58,8 @@ watch([applicationFetch.data, applicationsCatalogExists], () => {
 usePageSeo({
   title: () => applicationFetch.data.value?.title || t('application'),
   description: () => applicationFetch.data.value?.summary,
-  ogImage: () => thumbnailUrl.value
+  ogImage: () => thumbnailUrl.value,
+  noindex: true
 })
 
 onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
