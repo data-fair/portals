@@ -147,8 +147,8 @@ const datasetCardConfig = computed(() => {
 
 const datasetsUrl = computed(() => {
   if (!reuseConfig?.datasets?.length) return ''
-  return withQuery('/data-fair/api/v1/catalog/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: reuseConfig?.datasets?.map(d => d.id).join(','),

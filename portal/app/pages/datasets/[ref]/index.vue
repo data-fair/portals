@@ -401,7 +401,7 @@ const datasetsCatalogExists = computed(() => standardPagesFetch.data.value?.data
 
 // Applications linked to the dataset
 const applicationsUrl = computed(() => withQuery('/data-fair/api/v1/applications', {
-  select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay',
+  select: 'id,slug,title,summary,description,url,updatedAt,topics,preferLargeDisplay,owner',
   size: 100,
   html: 'vuetify',
   dataset: datasetFetch.data.value?.id,
@@ -453,8 +453,8 @@ const reusesCardConfig = computed(() => {
 const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
-  return withQuery('/data-fair/api/v1/catalog/datasets', {
-    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
