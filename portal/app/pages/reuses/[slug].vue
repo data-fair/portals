@@ -13,10 +13,11 @@
     />
 
     <reuse-preview
-      v-else-if="reuseConfig"
+      v-else-if="reuseConfig && reuseFetch.data.value"
       :reuse-config="reuseConfig"
       :slug="slug"
       :reuses-catalog-exists="reusesCatalogExists"
+      :edit-href="reuseEditLink.visible.value ? reuseEditLink.href.value : undefined"
     />
   </layout-page>
 </template>
@@ -38,6 +39,7 @@ providePageImageSrc('reuses', slug)
 type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const reuseFetch = await useFetch<Pick<Reuse, '_id' | 'slug' | 'config' | 'updatedAt'>>(`/portal/api/reuses/${slug}`, { watch: false })
+const reuseEditLink = useEditResourceLink('reuse', computed(() => reuseFetch.data.value))
 const reuseConfig = computed(() => reuseFetch.data.value?.config)
 
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })

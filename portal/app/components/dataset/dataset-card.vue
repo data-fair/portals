@@ -152,6 +152,7 @@
               :icon="mdiTableLarge"
               :resource-title="dataset.title"
               :text="t('text.table')"
+              :tooltip="t('tooltip.table')"
             />
             <action-btn
               v-if="dataset.bbox?.length"
@@ -160,6 +161,7 @@
               :icon="mdiMapMarker"
               :resource-title="dataset.title"
               :text="t('text.map')"
+              :tooltip="t('tooltip.map')"
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
@@ -167,7 +169,7 @@
               :icon="mdiCog"
               :resource-title="dataset.title"
               :text="t('text.api')"
-              :short-text="t('shortText.api')"
+              :tooltip="t('tooltip.api')"
             />
           </v-card-actions>
         </template>
@@ -191,6 +193,7 @@
             :icon="mdiTableLarge"
             :resource-title="dataset.title"
             :text="t('text.table')"
+            :tooltip="t('tooltip.table')"
             block
           />
           <action-btn
@@ -200,6 +203,7 @@
             :icon="mdiMapMarker"
             :resource-title="dataset.title"
             :text="t('text.map')"
+            :tooltip="t('tooltip.map')"
             block
           />
           <action-btn
@@ -208,7 +212,7 @@
             :icon="mdiCog"
             :resource-title="dataset.title"
             :text="t('text.api')"
-            :short-text="t('shortText.api')"
+            :tooltip="t('tooltip.api')"
             block
           />
         </v-col>
@@ -269,17 +273,21 @@ const leftThumbnailStyle = computed(() => {
     text:
       table: Table
       map: Map
-      api: API documentation
-    shortText:
       api: API
+    tooltip:
+      table: Open the table view in full page
+      map: Open the map view in full page
+      api: Open the API documentation in full page
 
   fr:
     updatedAt: Mis à jour le
     text:
       table: Tableau
       map: Carte
-      api: Documentation d'API
-    shortText:
       api: API
+    tooltip:
+      table: Ouvrir la vue tableau en pleine page
+      map: Ouvrir la vue carte en pleine page
+      api: Ouvrir la documentation d'API en pleine page
 
 </i18n>

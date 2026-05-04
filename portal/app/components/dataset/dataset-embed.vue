@@ -1,11 +1,11 @@
 <template>
   <layout-preview
-    :title="t('embed') + ' - ' + dataset.title"
+    :title="t('title') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
     :resource-title="dataset.title"
-    :text="t('embed')"
-    :short-text="t('embedShort')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'dataset-embed', label: dataset.slug }"
   >
     <v-card-text class="py-0">
@@ -36,7 +36,7 @@
       </v-code>
     </v-card-text>
     <d-frame-wrapper
-      :iframe-title="t('embed') + ' - ' + dataset.title"
+      :iframe-title="t('title') + ' - ' + dataset.title"
       :src="selectedPreview"
       scrolling="no"
       resize="no"
@@ -74,8 +74,9 @@ const storeState = (state: { detail: [string, string] }) => {
 
 <i18n lang="yaml">
   en:
-    embed: Embed in a website
-    embedShort: Embed
+    title: Embed in a website
+    text: Embed
+    tooltip: Open the embed code in a dialog
     description: To embed a preview of this dataset in a website you can copy the following code or similar code in the HTML source.
     previewType: Preview type
     result: Result
@@ -84,8 +85,9 @@ const storeState = (state: { detail: [string, string] }) => {
       map: Map
       mapBounds: Geographic envelope
   fr:
-    embed: Intégrer dans un site
-    embedShort: Intégrer
+    title: Intégrer dans un site
+    text: Intégrer
+    tooltip: Ouvrir le code d'intégration dans une boîte de dialogue
     description: Pour intégrer une prévisualisation de ce jeu de données dans un site vous pouvez copier le code suivant ou un code similaire dans le code source HTML.
     previewType: Type de prévisualisation
     result: Résultat

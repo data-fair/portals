@@ -1,11 +1,11 @@
 <template>
   <layout-preview
-    :title="t('preview') + ' - ' + dataset.title"
+    :title="t('title') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiDownload"
     :resource-title="dataset.title"
-    :text="t('preview')"
-    :short-text="t('previewShort')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'dataset-download', label: dataset.slug }"
   >
     <!-- direct links to files-->
@@ -158,8 +158,9 @@ const clickDownload = (url: string, format: string) => {
       ods: Format suitable for Libre Office and other free spreadsheet software
       geojson: Portable format for geographic data
       shapefile: GIS format for geographic data
-    preview: Data download
-    previewShort: Download
+    title: Data download
+    text: Download
+    tooltip: Open the data download in a dialog
     table: Open table view
   fr:
 
@@ -174,7 +175,8 @@ const clickDownload = (url: string, format: string) => {
       ods: Format adapté pour Libre Office et autres logiciels tableurs libres
       geojson: Format portable pour données géographiques
       shapefile: Format SIG pour données géographiques
-    preview: Téléchargement des données
-    previewShort: Télécharger
+    title: Téléchargement des données
+    text: Télécharger
+    tooltip: Ouvrir le téléchargement des données dans une boîte de dialogue
     table: Ouvrir la vue tableau
 </i18n>

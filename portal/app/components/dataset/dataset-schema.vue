@@ -1,15 +1,15 @@
 <template>
   <layout-preview
-    :title="t('preview') + ' - ' + dataset.title"
+    :title="t('title') + ' - ' + dataset.title"
     :action-style="portalConfig.datasets.page.metadata?.actionsStyle"
     :icon="mdiViewList"
     :resource-title="dataset.title"
-    :text="t('preview')"
-    :short-text="t('previewShort')"
+    :text="t('text')"
+    :tooltip="t('tooltip')"
     :track-dialog="{ action: 'dataset-schema', label: dataset.slug }"
   >
     <d-frame-wrapper
-      :iframe-title="t('preview') + ' - ' + dataset.title"
+      :iframe-title="t('title') + ' - ' + dataset.title"
       :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
       aspect-ratio
     />
@@ -32,9 +32,11 @@ const { portalConfig } = usePortalStore()
 
 <i18n lang="yaml">
   en:
-    preview: Field description
-    previewShort: Schema
+    title: Field description
+    text: Schema
+    tooltip: Open the field description in a dialog
   fr:
-    preview: Description des champs
-    previewShort: Schéma
+    title: Description des champs
+    text: Schéma
+    tooltip: Ouvrir la description des champs dans une boîte de dialogue
 </i18n>

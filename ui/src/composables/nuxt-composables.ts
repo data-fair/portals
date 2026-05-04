@@ -38,3 +38,11 @@ export function useRequestEvent (): any {
 export function setResponseStatus (_event: any, _statusCode: number): void {
   throw new Error('setResponseStatus should only be called from portal, not portals-manager')
 }
+
+export function useBackOfficeUrl (): any {
+  throw new Error('useBackOfficeUrl should only be called from portal, not portals-manager')
+}
+
+export function useEditResourceLink (_kind: any, _resource: any): any {
+  throw new Error('useEditResourceLink should only be called from portal, not portals-manager')
+}

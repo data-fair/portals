@@ -150,8 +150,8 @@ const appConfigFetch = useLocalFetch<{ datasets: { id: string, href: string }[] 
 const datasetsUrl = computed(() => {
   const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
   if (!datasetsIds || datasetsIds.length === 0) return ''
-  return withQuery('/data-fair/api/v1/catalog/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,-userPermissions',
+  return withQuery('/data-fair/api/v1/datasets', {
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),

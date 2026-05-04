@@ -141,8 +141,8 @@
               :action-style="cardConfig.actionsStyle"
               :icon="mdiFullscreen"
               :resource-title="application.title"
-              :text="t('text.full')"
-              :short-text="t('shortText.full')"
+              :text="t('text')"
+              :tooltip="t('tooltip')"
             />
           </v-card-actions>
         </template>
@@ -166,8 +166,8 @@
             :action-style="cardConfig.actionsStyle"
             :icon="mdiFullscreen"
             :resource-title="application.title"
-            :text="t('text.full')"
-            :short-text="t('shortText.full')"
+            :text="t('text')"
+            :tooltip="t('tooltip')"
             block
           />
         </v-col>
@@ -219,15 +219,11 @@ const leftThumbnailStyle = computed(() => {
 <i18n lang="yaml">
   en:
     updatedAt: Updated at
-    text:
-      full: Fullscreen application
-    shortText:
-      full: Fullscreen
+    text: Fullscreen
+    tooltip: Open the application in full page
   fr:
     updatedAt: Mise à jour le
-    text:
-      full: Visualisation plein écran
-    shortText:
-      full: Plein écran
+    text: Plein écran
+    tooltip: Ouvrir la visualisation en pleine page
 
 </i18n>
