@@ -112,7 +112,7 @@ const {
 
 const sortItems = [
   { title: t('sort.createdAt'), value: 'createdAt' },
-  { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+  { title: t('sort.modified'), value: 'modified' },
   { title: t('sort.title'), value: 'title' },
   { title: portalConfig.value?.labelsOverrides?.owner || t('sort.owner'), value: 'owner.departmentName' }
 ]
@@ -124,7 +124,7 @@ const sortItems = [
     datasetsCount: 'No dataset | {count} dataset | {count} datasets'
     sort:
       createdAt: Creation date
-      dataUpdatedAt: Data update date
+      modified: Update date
       title: Alphabetical order
       owner: Owner
 
@@ -133,7 +133,7 @@ const sortItems = [
     datasetsCount: 'Aucun jeu de données | {count} jeu de données | {count} jeux de données'
     sort:
       createdAt: Date de création
-      dataUpdatedAt: Date de mise à jour des données
+      modified: Date de mise à jour
       title: Ordre alphabétique
       owner: Propriétaire
 </i18n>

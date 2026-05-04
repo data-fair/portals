@@ -21,7 +21,7 @@ export default {
           default: 'createdAt:-1',
           oneOf: [
             { const: 'createdAt:-1', title: 'Date de création (du plus récent au plus ancien)' },
-            { const: 'dataUpdatedAt:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
+            { const: 'modified:-1', title: 'Date de mise à jour (du plus récent au plus ancien)' },
             { const: 'title:1', title: 'Ordre alphabétique (A à Z)' },
             { const: 'owner.departmentName:1', title: 'Propriétaire' }
           ]
