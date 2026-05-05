@@ -377,7 +377,7 @@ const sortItems = computed(() => {
     case 'datasets':
       return [
         { title: t('sort.createdAt'), value: 'createdAt' },
-        { title: t('sort.dataUpdatedAt'), value: 'dataUpdatedAt' },
+        { title: t('sort.modified'), value: 'modified' },
         { title: t('sort.title'), value: 'title' },
         { title: ownerLabel, value: 'owner.departmentName' }
       ]
@@ -426,7 +426,7 @@ const sortItems = computed(() => {
     search: Search
     sort:
       createdAt: Creation date
-      dataUpdatedAt: Data update date
+      modified: Update date
       updatedAt: Update date
       title: Alphabetical order
       owner: Owner
@@ -451,7 +451,7 @@ const sortItems = computed(() => {
     search: Rechercher
     sort:
       createdAt: Date de création
-      dataUpdatedAt: Date de mise à jour des données
+      modified: Date de mise à jour
       updatedAt: Date de mise à jour
       title: Ordre alphabétique
       owner: Propriétaire

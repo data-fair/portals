@@ -32,7 +32,7 @@ if (!preview) {
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
     size: element.mode !== 'custom' ? element.limit : undefined,
-    sort: element.mode === 'lastUpdated' ? 'dataUpdatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
+    sort: element.mode === 'lastUpdated' ? 'updatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
   const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
