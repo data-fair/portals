@@ -19,7 +19,7 @@
           :iframe-title="'Documentation de l\'API du jeu de données : ' + dataset.title"
           :src="iframeSrc"
           :height="`${windowHeight - 64}px`"
-          scrolling="no"
+          scrolling="yes"
           resize="no"
         />
       </client-only>
