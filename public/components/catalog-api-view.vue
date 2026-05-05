@@ -37,6 +37,7 @@
         <d-frame-wrapper
           :src="`${openapiViewerUrl}/?urlType=catalog`"
           iframe-title="Documentation de l'API du catalogue"
+          scrolling="yes"
         />
       </client-only>
     </v-card>
