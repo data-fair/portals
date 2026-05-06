@@ -15,6 +15,7 @@ export default {
         { cols: { md: 6 }, key: 'elevation' },
         { cols: { md: 6 }, key: 'rounded' },
         { cols: { md: 6 }, key: 'titleLinesCount' },
+        { cols: { md: 6 }, key: 'openInFullPage' },
         { cols: { md: 6 }, key: 'showSummary' },
         { cols: { md: 6 }, key: 'showDepartment' }
       ]
@@ -67,6 +68,16 @@ export default {
         { const: 2, title: '2 lignes' },
         { const: 0, title: 'Sans limite de lignes' }
       ]
+    },
+    openInFullPage: {
+      type: 'boolean',
+      title: 'Ouvrir la visualisation en plein écran',
+      description: 'Au clic sur la vignette, l\'application s\'ouvre en plein écran au lieu d\'afficher la page de détail. Les boutons "Aperçu" et "Plein écran" de la carte sont alors masqués.',
+      layout: {
+        comp: 'switch',
+        cols: { md: 4 }
+      },
+      default: false
     },
     showSummary: {
       type: 'boolean',
