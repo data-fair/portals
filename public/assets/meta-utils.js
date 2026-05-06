@@ -16,7 +16,7 @@ export const datasetPageHead = (dataset, applications, pageUrl, noindex = false)
       name: dataset.owner.name
     },
     dateCreated: dataset.createdAt,
-    dateModified: dataset.dataUpdatedAt,
+    dateModified: dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt,
     sdPublisher: require('~/assets/organization.json'),
     sdDatePublished: dataset.createdAt,
     encodingFormat: 'application/json',
@@ -46,7 +46,7 @@ export const datasetPageHead = (dataset, applications, pageUrl, noindex = false)
     { property: 'og:description', content: description },
     { property: 'og:type', content: 'article' },
     { property: 'article:author', content: dataset.owner.name },
-    { property: 'article:modified_time', content: dataset.dataUpdatedAt },
+    { property: 'article:modified_time', content: dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt },
     { property: 'article:published_time', content: dataset.createdAt }
   ]
   if (noindex) meta.push({ name: 'robots', content: 'noindex, nofollow' })

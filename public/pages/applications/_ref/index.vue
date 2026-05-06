@@ -157,7 +157,7 @@ export default {
     this.datasets = await this.$axios.$get(this.dataFairUrl + '/api/v1/datasets', {
       params: {
         ids: (config.datasets || []).map(d => d.id || d.href.split('/').pop()).join(','),
-        select: 'id,slug,title,description,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
+        select: 'id,slug,title,description,modified,updatedAt,dataUpdatedAt,extras,bbox,topics,image,-userPermissions',
         size: 1000,
         html: true,
         publicationSites: 'data-fair-portals:' + this.portal._id

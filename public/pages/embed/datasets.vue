@@ -124,7 +124,7 @@ export default {
       value: 'createdAt'
     }, {
       text: 'Date de mise à jour',
-      value: 'dataUpdatedAt'
+      value: 'modified'
     }, {
       text: 'Ordre alphabétique',
       value: 'title'
@@ -136,7 +136,8 @@ export default {
     ...mapGetters(['owner', 'dataFairUrl'])
   },
   mounted () {
-    this.sort = this.config.datasetsDefaultSort || 'createdAt'
+    const sort = this.config.datasetsDefaultSort || 'createdAt'
+    this.sort = sort === 'dataUpdatedAt' ? 'modified' : sort
     // case where SSR already fetched the first page
     this.refresh()
   },

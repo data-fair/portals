@@ -278,8 +278,8 @@ export default {
         params: {
           ...baseFilter,
           size: (this.config.homeDatasets && this.config.homeDatasets.size) || 3,
-          select: 'id,slug,title,description,topics,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
-          sort: (this.config.datasetsDefaultSort || 'createdAt') + ':-1',
+          select: 'id,slug,title,description,topics,modified,dataUpdatedAt,updatedAt,createdAt,extras,bbox,image,-userPermissions',
+          sort: ((this.config.datasetsDefaultSort === 'dataUpdatedAt' ? 'modified' : this.config.datasetsDefaultSort) || 'createdAt') + ':-1',
           html: true,
           truncate: 600,
           sums: 'count',

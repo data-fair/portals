@@ -139,7 +139,7 @@
             :cols="6"
             class="py-0"
           >
-            <v-subheader>Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}</v-subheader>
+            <v-subheader>Mis à jour le {{ dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}</v-subheader>
           </v-col>
         </v-row>
 

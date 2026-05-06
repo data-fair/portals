@@ -253,7 +253,8 @@ export default {
       else return { xl: 3, md: 4, sm: 6, cols: 12 }
     },
     defaultSort () {
-      return this.config.applicationsDefaultSort || 'createdAt'
+      const sort = this.config.applicationsDefaultSort || 'createdAt'
+      return sort === 'dataUpdatedAt' ? 'updatedAt' : sort
     }
   },
   watch: {

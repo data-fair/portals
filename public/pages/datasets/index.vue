@@ -240,7 +240,7 @@ export default {
         value: 'createdAt'
       }, {
         text: 'Date de mise à jour',
-        value: 'dataUpdatedAt'
+        value: 'modified'
       }, {
         text: 'Ordre alphabétique',
         value: 'title'
@@ -287,7 +287,8 @@ export default {
         .map(tf => ({ ...tf, filtered: !!this.filters.topics.find(t => t === tf.value.id) }))
     },
     defaultSort () {
-      return this.config.datasetsDefaultSort || 'createdAt'
+      const sort = this.config.datasetsDefaultSort || 'createdAt'
+      return sort === 'dataUpdatedAt' ? 'modified' : sort
     },
     showOwnersFacets () {
       return (!this.config.datasetsOwnerFilter || this.config.datasetsOwnerFilter.type !== 'none') && this.datasets && this.datasets.facets.owner.find(o => !!o.value.department)
@@ -337,7 +338,7 @@ export default {
       console.log(this.defaultSort, params.sort)
       params.size = this.size
       params.page = this.page
-      params.select = 'id,slug,title,description,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
+      params.select = 'id,slug,title,description,modified,dataUpdatedAt,updatedAt,extras,bbox,topics,image,isMetaOnly,-userPermissions'
       if (append) params.count = false
       else params.facets = 'concepts,topics,owner'
       params.owner = query.owner || this.owner

@@ -19,7 +19,7 @@
           class="text-caption px-1"
           style="line-height:1rem"
         >
-          Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
+          Mis à jour le {{ (dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
         </span>
         <owner-department v-if="!config.datasetHideDepartment" :owner="dataset.owner" />
       </v-card-actions>
@@ -85,7 +85,7 @@
             class="text-caption px-1"
             style="line-height:1rem"
           >
-            Mis à jour le {{ (dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
+            Mis à jour le {{ (dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt) | date('L') }}
           </span>
           <owner-department v-if="!config.datasetHideDepartment" :owner="dataset.owner" />
         </template>

@@ -394,7 +394,7 @@
                         class="pa-0"
                         :style="`height:${config.datasetActionsDisplay === 'button' ? 48 : 26}px`"
                       >
-                        Mis à jour le {{ dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}
+                        Mis à jour le {{ dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt | date("LL") }}
                       </v-subheader>
                     </v-list-item-title>
                   </v-list-item-content>
