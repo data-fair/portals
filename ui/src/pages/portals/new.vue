@@ -76,12 +76,12 @@
             <owner-pick
               v-model="generalInformations.owner.value"
               v-model:ready="ownersReady"
-              message=" "
+              hide-message
             />
           </template>
 
           <!-- Default -->
-          <h2 class="text-title-large">
+          <h2 class="text-title-large mt-2">
             {{ t('initFromOtherPortal.title') }}
           </h2>
           <v-row class="d-flex align-stretch mt-2">
