@@ -4,7 +4,7 @@
     link => simulate link style in preview
   -->
   <v-card
-    :to="!preview ? `/applications/${application.slug}` : undefined"
+    :to="!preview ? `/applications/${application.slug}${cardConfig.openInFullPage ? '/full' : ''}` : undefined"
     :elevation="cardConfig.elevation ?? 0"
     :rounded="cardConfig.rounded ?? 'default'"
     class="h-100 d-flex flex-column"
@@ -123,7 +123,7 @@
         </v-row>
 
         <!-- Actions (Bottom Location) -->
-        <template v-if="cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown">
+        <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown)">
           <v-divider />
           <!--
             cursor-default and @click.prevent => disable card link on action buttons
@@ -149,7 +149,7 @@
       </v-col>
 
       <!-- Actions (Right Location) -->
-      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+      <template v-if="!cardConfig.openInFullPage && cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
         <v-divider vertical />
         <!--
           cols=auto => fit column width to largest button

@@ -128,7 +128,7 @@
         <owner-pick
           v-model="newOwner"
           v-model:ready="ownersReady"
-          message=" "
+          hide-message
         />
         <v-alert
           type="warning"
