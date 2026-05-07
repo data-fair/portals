@@ -54,6 +54,7 @@ type DatasetFilters = {
   topics: ReturnType<typeof useStringsArraySearchParam>
   keywords: ReturnType<typeof useStringsArraySearchParam>
   owners: ReturnType<typeof useStringsArraySearchParam>
+  ids: ReturnType<typeof useStringsArraySearchParam>
 }
 
 const { element, context } = defineProps<{
@@ -75,7 +76,8 @@ const {
     concepts: useStringsArraySearchParam('concepts'),
     topics: useStringsArraySearchParam('topics'),
     keywords: useStringsArraySearchParam('keywords'),
-    owners: useStringsArraySearchParam('owner')
+    owners: useStringsArraySearchParam('owner'),
+    ids: useStringsArraySearchParam('ids')
   }),
   buildQuery: (filters, sortValue, page, pageSize) => {
     const query: Record<string, string | number> = {
@@ -90,6 +92,7 @@ const {
     if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
     if (filters.keywords.value?.length) query.keywords = filters.keywords.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
+    if (filters.ids.value?.length) query.ids = filters.ids.value.join(',')
     if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
     return query
   },

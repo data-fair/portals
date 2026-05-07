@@ -291,6 +291,59 @@ export default {
             { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
           ]
         },
+        actionButtons: {
+          type: 'object',
+          title: 'Boutons d\'actions',
+          layout: 'card',
+          properties: {
+            items: {
+              type: 'array',
+              title: 'Boutons à afficher',
+              description: 'Boutons d\'action à afficher au-dessus de la visualisation.',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'fullscreen', title: 'Plein écran' },
+                  { const: 'capture', title: 'Capture' },
+                  { const: 'embed', title: 'Intégration' },
+                  { const: 'datasets', title: 'Sources de données' }
+                ]
+              }
+            },
+            style: {
+              type: 'string',
+              title: 'Style',
+              default: 'full',
+              layout: { if: 'parent.data?.items?.length > 0', cols: { md: 4 } },
+              oneOf: [
+                { const: 'icon', title: 'Icône seulement' },
+                { const: 'full', title: 'Icône et texte' },
+                { const: 'text', title: 'Texte seulement' }
+              ]
+            },
+            position: {
+              type: 'string',
+              title: 'Position',
+              default: 'top',
+              layout: { if: 'parent.data?.items?.length > 0', cols: { md: 4 } },
+              oneOf: [
+                { const: 'top', title: 'Au dessus de la visualisation' },
+                { const: 'bottom', title: 'En dessous de la visualisation' }
+              ]
+            },
+            alignment: {
+              type: 'string',
+              title: 'Alignement',
+              default: 'start',
+              layout: { if: 'parent.data?.items?.length > 0', cols: { md: 4 } },
+              oneOf: [
+                { const: 'start', title: 'Gauche' },
+                { const: 'center', title: 'Centré' },
+                { const: 'end', title: 'Droite' }
+              ]
+            }
+          }
+        },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },

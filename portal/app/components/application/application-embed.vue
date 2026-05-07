@@ -1,7 +1,7 @@
 <template>
   <layout-preview
     :title="t('title') + ' - ' + application.title"
-    :action-style="portalConfig.applications.page.metadata?.actionsStyle"
+    :action-style="actionStyle ?? portalConfig.applications.page.metadata?.actionsStyle"
     :icon="mdiCodeTags"
     :resource-title="application.title"
     :text="t('text')"
@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DatasetCard } from '#api/types/portal/index.js'
 import { mdiCodeTags } from '@mdi/js'
 
 const { application } = defineProps<{
@@ -37,6 +38,7 @@ const { application } = defineProps<{
     title: string
     exposedUrl: string
   }
+  actionStyle?: DatasetCard['actionsStyle']
 }>()
 
 const { t } = useI18n()
