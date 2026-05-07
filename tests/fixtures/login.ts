@@ -4,11 +4,10 @@ const cookieCache = new Map<string, Awaited<ReturnType<import('@playwright/test'
 
 async function performLogin (page: any, context: any, baseUrl: string, url: string, user: string) {
   const fullUrl = `${baseUrl}${url}`
-  const password = user === 'test_superadmin' ? 'superpasswd' : 'passwd'
   const loginUrl = `${baseUrl}/simple-directory/login?redirect=${encodeURIComponent(fullUrl)}`
   await page.goto(loginUrl)
   await page.getByLabel('Adresse mail').fill(`${user}@test.com`)
-  await page.getByLabel('Mot de passe').fill(password)
+  await page.getByLabel('Mot de passe').fill('passwd')
   await page.getByRole('button', { name: 'Se connecter' }).click()
   await page.waitForURL(fullUrl, { timeout: 10000 })
   const cookies = await context.cookies()

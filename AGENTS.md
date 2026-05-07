@@ -19,6 +19,7 @@ This shows the health of all services (nginx, API, UI, portal, docker services, 
 ### Log files
 
 All dev processes write to `dev/logs/`:
+
 - `dev-api.log` — API server
 - `dev-ui.log` — UI dev server (Vite)
 - `dev-portal.log` — Portal (Nuxt)
@@ -35,12 +36,32 @@ All dev processes write to `dev/logs/`:
 
 Port numbers are defined in `.env`. Do not modify port assignments.
 
+### Git worktrees
+
+To work on a separate branch in an isolated environment (own `.env`, own
+docker compose project, randomized ports so it doesn't clash with the main
+checkout), **always use the project scripts** — never `git worktree add` by
+hand:
+
+```bash
+bash dev/worktree.sh <branch-name>     # create worktree + .env + npm ci + build-types + ui build
+bash dev/delete-worktree.sh <branch>   # stops/removes containers + volumes + images, then removes the worktree
+```
+
+`dev/worktree.sh` does the full setup the manual `git worktree add` skips
+(env file, dependencies, type and UI builds). `dev/delete-worktree.sh` runs
+`docker compose --profile dev --profile test down -v --remove-orphans
+--rmi local` so a deleted worktree leaves no leftover containers, named
+volumes, or locally-built images.
+
 ### Test and dev environment
 
 The environment allows for integration testing thanks to docker containers (see docker-compose.yml).
 Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
 Test users are defined in dev/resources/users.json
+
+The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.
 
 ### Testing
 

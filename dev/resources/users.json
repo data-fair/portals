@@ -5,7 +5,7 @@
     "lastName": "Superadmin",
     "email": "test_superadmin@test.com",
     "password": {
-      "clear": "superpasswd"
+      "clear": "passwd"
     }
   },
   {
@@ -76,6 +76,15 @@
     "firstName": "Dev",
     "lastName": "Admin Dep",
     "email": "dev_admin_dep@test.com",
+    "password": {
+      "clear": "passwd"
+    }
+  },
+  {
+    "id": "dev_superadmin",
+    "firstName": "Dev",
+    "lastName": "Superadmin",
+    "email": "superadmin@dev.com",
     "password": {
       "clear": "passwd"
     }
