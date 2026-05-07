@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import type { $Fetch } from 'ofetch'
+import type { $Fetch } from 'nitropack/types'
 import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { createAgentTranslator, agentToolError } from './utils'
 
