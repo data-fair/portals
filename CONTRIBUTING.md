@@ -4,21 +4,35 @@
 
 - A Javascript/Typescript IDE with [Vue.js](https://vuejs.org/) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) support.
 - A recent [Docker](https://docs.docker.com/engine/install/) installation.
-- [Node.js v24+](https://nodejs.org/)
+- [Node.js v24+](https://nodejs.org/) — the project ships an `.nvmrc`, so if you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use` from the project root to switch to the right version.
 
 ## Install dependencies
 
-1. Install npm dependencies for all workspaces :
+1. Generate the `.env` file (random ports, dev host) — only needed once on the main checkout, worktrees created via `./dev/worktree.sh` do this automatically :
+
+```sh
+./dev/init-env.sh
+```
+
+2. Install npm dependencies for all workspaces :
 
 ```sh
 npm i
 ```
 
-2. Build / Update the types based on schemas :
+3. Build / Update the types based on schemas :
 
 ```sh
 npm run build-types
 ```
+
+4. Build the UI once :
+
+```sh
+npm -w ui run build
+```
+
+> Known bug: the API currently fails to start without a built UI bundle, so this initial build is required even for pure API/dev work. It only needs to be re-run if you blow away `ui/dist`.
 
 ## Start the development environment
 
@@ -31,10 +45,11 @@ npm run dev-zellij
 <details>
 <summary>Services</summary>
 
-- **Dev dependencies** : `npm run dev-deps`
-- **Api** : `npm run dev-api`
+- **Dev dependencies** (docker compose stack) : `npm run dev-deps`
+- **API** : `npm run dev-api`
 - **UI** : `npm run dev-ui`
 - **Portal** : `npm run dev-portal`
+- **Mock ingress manager** : `npm run dev-ingress-manager`
 
 </details>
 
@@ -57,27 +72,28 @@ docker build --progress=plain --target=portal -t data-fair/portals/portal:dev .
 
 ## Running the tests
 
-First, you need to start the development dependencies
+First, you need the full dev environment up (the test suite hits the API/UI/portal as well as the docker compose services) :
 
 ```sh
-npm run dev-deps
+npm run dev-zellij
 ```
 
-Then, you can run the tests.
+Then, you can run the tests :
 
 ```sh
-npm run test
+npm run test           # full suite
+npm run test-unit      # unit tests only
+npm run test-api       # API tests only
+npm run test-e2e       # e2e tests only
 ```
 
-To run a specific test, you can mark it with `it.only` or `describe.only` in the test file, then run the tests with :
+To run a specific test file :
 
 ```sh
-npm run test-only test-it/file-name.ts
+npm run test -- path/to/file.spec.ts
 ```
 
-## Setup the development environment
-
-TODO
+You can also mark a test with `.only` (e.g. `it.only`, `test.only`, `describe.only`) and run the project it belongs to.
 
 ## Random information
 
