@@ -67,7 +67,7 @@ const datasets = computed(() => {
   if (!items) return []
   return items
     .map(d => ({ id: d.id || d.href.split('/').pop(), slug: d.slug }))
-    .filter((d): d is { id: string; slug?: string } => !!d.id)
+    .filter((d): d is { id: string; slug: string | undefined } => !!d.id)
 })
 const datasetsCount = computed(() => datasets.value.length)
 const datasetsLink = computed<RouteLocationRaw | undefined>(() => {
