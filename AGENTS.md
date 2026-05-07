@@ -11,7 +11,7 @@ The dev environment is managed by zellij (terminal multiplexer) and docker compo
 ### Checking status
 
 ```bash
-bash dev/status.sh
+bash dev/scripts/status.sh
 ```
 
 This shows the health of all services (nginx, API, UI, portal, docker services, databases) and lists log files with sizes and timestamps.
@@ -28,7 +28,7 @@ All dev processes write to `dev/logs/`:
 
 ### Troubleshooting
 
-1. Run `bash dev/status.sh` to identify which services are down
+1. Run `bash dev/scripts/status.sh` to identify which services are down
 2. Read the relevant log file in `dev/logs/` for error details
 3. Report findings to the user — do not attempt to fix infrastructure issues yourself
 
