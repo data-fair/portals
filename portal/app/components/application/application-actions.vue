@@ -43,7 +43,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import { mdiDatabaseOutline, mdiFullscreen } from '@mdi/js'
 
 type ApplicationAction = NonNullable<NonNullable<ApplicationElement['actionButtons']>['items']>[number]
-type AppConfig = { datasets?: { id: string; href: string }[] }
+type AppConfig = { datasets?: { id?: string; slug?: string; href: string }[] }
 
 const { application, actions = [] } = defineProps<{
   application: Application
@@ -62,19 +62,19 @@ const appConfigFetch = showAction('datasets')
   ? fetcher(() => application.id ? `/data-fair/api/v1/applications/${application.id}/configuration` : '')
   : undefined
 
-const datasetIds = computed(() => {
-  const datasets = appConfigFetch?.data.value?.datasets
-  if (!datasets) return []
-  return datasets
-    .map(d => d.id || d.href.split('/').pop())
-    .filter((id): id is string => !!id)
+const datasets = computed(() => {
+  const items = appConfigFetch?.data.value?.datasets
+  if (!items) return []
+  return items
+    .map(d => ({ id: d.id || d.href.split('/').pop(), slug: d.slug }))
+    .filter((d): d is { id: string; slug?: string } => !!d.id)
 })
-const datasetsCount = computed(() => datasetIds.value.length)
+const datasetsCount = computed(() => datasets.value.length)
 const datasetsLink = computed<RouteLocationRaw | undefined>(() => {
-  const ids = datasetIds.value
-  if (ids.length === 0) return undefined
-  if (ids.length === 1) return `/datasets/${ids[0]}`
-  return { path: '/datasets', query: { ids: ids.join(',') } }
+  const items = datasets.value
+  if (items.length === 0) return undefined
+  if (items.length === 1) return `/datasets/${items[0].slug || items[0].id}`
+  return { path: '/datasets', query: { ids: items.map(d => d.id).join(',') } }
 })
 </script>
 
