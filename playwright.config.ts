@@ -14,7 +14,7 @@ export default defineConfig({
   use: {
     baseURL: `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/portals-manager`,
     actionTimeout: 5_000,
-    navigationTimeout: 5_000,
+    navigationTimeout: 10_000,
   },
 
   projects: [
@@ -37,9 +37,16 @@ export default defineConfig({
       dependencies: ['state-setup'],
     },
     {
+      name: 'e2e-warmup',
+      testMatch: /e2e-warmup\.ts/,
+      dependencies: ['state-setup'],
+      timeout: 120_000,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
       name: 'e2e',
       testMatch: /.*\.e2e\.spec\.ts/,
-      dependencies: ['state-setup'],
+      dependencies: ['e2e-warmup'],
       use: { ...devices['Desktop Chrome'] },
     },
   ],

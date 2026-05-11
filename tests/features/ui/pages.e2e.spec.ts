@@ -8,7 +8,7 @@ test.describe('pages UI', () => {
 
   test('should display empty state when no pages exist', async ({ page, goToWithAuth }) => {
     await goToWithAuth('/portals-manager/pages', 'test_admin')
-    await expect(page.getByText('Vous n\'avez pas encore créé de page')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Vous n\'avez pas encore créé de page')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should display pages list', async ({ page, goToWithAuth }) => {
@@ -22,7 +22,7 @@ test.describe('pages UI', () => {
     })
 
     await goToWithAuth('/portals-manager/pages', 'test_admin')
-    await expect(page.getByText('Home Page E2E')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Home Page E2E')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should load page detail view', async ({ page, goToWithAuth }) => {
@@ -36,6 +36,6 @@ test.describe('pages UI', () => {
 
     await goToWithAuth(`/portals-manager/pages/${createdPage._id}`, 'test_admin')
     // The page detail view shows tabs for preview, publications, etc.
-    await expect(page.getByRole('tab', { name: 'Aperçu', exact: true })).toBeVisible({ timeout: 10000 })
+    await expect(page.getByRole('tab', { name: 'Aperçu', exact: true })).toBeVisible({ timeout: 10_000 })
   })
 })

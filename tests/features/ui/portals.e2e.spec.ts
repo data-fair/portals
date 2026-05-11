@@ -8,7 +8,7 @@ test.describe('portals UI', () => {
 
   test('should display empty state when no portals exist', async ({ page, goToWithAuth }) => {
     await goToWithAuth('/portals-manager/portals', 'test_admin')
-    await expect(page.getByText('Vous n\'avez pas encore créé de portail')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Vous n\'avez pas encore créé de portail')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should display portals list', async ({ page, goToWithAuth }) => {
@@ -16,7 +16,7 @@ test.describe('portals UI', () => {
     await user1.post('/api/portals', { config: { title: 'Test Portal E2E', menu: { children: [] } } })
 
     await goToWithAuth('/portals-manager/portals', 'test_admin')
-    await expect(page.getByText('Test Portal E2E')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Test Portal E2E')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should load portal settings page', async ({ page, goToWithAuth }) => {
@@ -24,7 +24,7 @@ test.describe('portals UI', () => {
 
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
     // The portal settings page shows a vjsf form, wait for it to load
-    await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('form')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should preserve assisted mode colors when switching to manual mode', async ({ page, goToWithAuth }) => {
@@ -33,7 +33,7 @@ test.describe('portals UI', () => {
     })).data
 
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('form')).toBeVisible({ timeout: 10_000 })
 
     // Navigate to the "Apparence" tab
     await page.getByRole('tab', { name: 'Apparence' }).click()
@@ -61,7 +61,7 @@ test.describe('portals UI', () => {
     })).data
 
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect(page.locator('form')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('form')).toBeVisible({ timeout: 10_000 })
 
     // Navigate to the "Apparence" tab
     await page.getByRole('tab', { name: 'Apparence' }).click()

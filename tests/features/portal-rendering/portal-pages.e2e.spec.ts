@@ -18,7 +18,7 @@ test.describe('portal rendering', () => {
     })
 
     await goToPortal(portal._id)
-    await expect(page.getByText('Hello E2E Portal')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Hello E2E Portal')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should render navigation menu and navigate', async ({ page, goToPortal }) => {
@@ -51,13 +51,13 @@ test.describe('portal rendering', () => {
 
     await goToPortal(portal._id)
     // Menu items should be visible as tabs (French labels since i18n_lang=fr)
-    await expect(page.getByRole('tab', { name: 'Catalogue de données' })).toBeVisible({ timeout: 10000 })
-    await expect(page.getByRole('tab', { name: 'Contact' })).toBeVisible({ timeout: 10000 })
+    await expect(page.getByRole('tab', { name: 'Catalogue de données' })).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByRole('tab', { name: 'Contact' })).toBeVisible({ timeout: 10_000 })
 
     // Click contact tab and verify navigation
     await page.getByRole('tab', { name: 'Contact' }).click()
     await expect(page).toHaveURL(/\/contact/)
-    await expect(page.getByText('Contactez-nous')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Contactez-nous')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should render generic page with title element', async ({ page, goToPortal }) => {
@@ -76,7 +76,7 @@ test.describe('portal rendering', () => {
     })
 
     await goToPortal(portal._id, '/pages/about-us')
-    await expect(page.getByText('About Our Organization')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('About Our Organization')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should render app bar and footer', async ({ page, goToPortal }) => {
@@ -92,9 +92,9 @@ test.describe('portal rendering', () => {
 
     await goToPortal(portal._id)
     // App bar should be present
-    await expect(page.locator('.v-app-bar, .v-toolbar')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('.v-app-bar, .v-toolbar')).toBeVisible({ timeout: 10_000 })
     // Footer should be present
-    await expect(page.locator('#footer')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('#footer')).toBeVisible({ timeout: 10_000 })
   })
 
   test('should render contact page', async ({ page, goToPortal }) => {
@@ -115,6 +115,6 @@ test.describe('portal rendering', () => {
     })
 
     await goToPortal(portal._id, '/contact')
-    await expect(page.getByText('Formulaire de contact')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Formulaire de contact')).toBeVisible({ timeout: 10_000 })
   })
 })
