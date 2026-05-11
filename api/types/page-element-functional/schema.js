@@ -143,6 +143,7 @@ export default {
         en: 'Key metrics',
         fr: 'Chiffres clés'
       },
+      layout: { if: 'context.adminMode' },
       required: ['type', 'metrics'],
       properties: {
         type: {

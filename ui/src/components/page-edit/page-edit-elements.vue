@@ -91,7 +91,7 @@ const vjsfOptions: VjsfOptions = {
   icons: {
     close: '$tableGroupExpand'
   },
-  context: { pages }
+  context: { pages, adminMode: session.user.value.adminMode }
 }
 </script>
 
