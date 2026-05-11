@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "SUPPRESS_NO_CONFIG_WARNING=true vite build",
     "check-types": "vue-tsc",
     "dev": "bash ../dev/scripts/log-tee.sh ../dev/logs/dev-ui.log -- env NODE_CONFIG_DIR=../api/config/ vite --port $DEV_UI_PORT",
     "lint": "eslint .",
