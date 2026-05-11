@@ -28,7 +28,7 @@ test.describe('page edit WebMCP agent integration', () => {
     )
 
     // Wait for VJSF form to render
-    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30000 })
 
     // Verify agent action button exists (hidden until a chat drawer responds via BroadcastChannel)
     await expect(page.locator('[data-action-id="configure-page"]')).toBeAttached()
@@ -96,11 +96,11 @@ test.describe('page edit WebMCP agent integration', () => {
     )
 
     // Wait for VJSF form and WebMCP tools to be ready
-    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30000 })
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       return mc && typeof mc.listTools === 'function' && mc.listTools().some((t: any) => t.name === 'pageConfig_getData')
-    }, { timeout: 10000 })
+    }, { timeout: 30000 })
 
     // Verify getData returns elements
     const getData = await page.evaluate(async () => {

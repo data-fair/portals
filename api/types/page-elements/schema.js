@@ -23,6 +23,7 @@ export default {
     title: '',
     clipboardKey: 'elements',
     listEditMode: 'dialog',
+    listActions: ['add', 'edit', 'delete', 'sort', 'duplicate', 'insertAfter', 'copy', 'paste'],
     itemCopy: "{...item, uuid: crypto.randomUUID().split('-')[0]}"
   },
   items: {
@@ -44,6 +45,7 @@ export default {
         'x-i18n-label': {
           fr: "Type d'élément"
         },
+        autocomplete: true,
         oneOfItems: [
           {
             header: true,
@@ -98,7 +100,7 @@ export default {
           },
           { key: 16, title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
           { key: 17, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
-          // { key: 18, title: 'Key metrics', 'x-i18n-title': { fr: 'Chiffres clés' } }, // Deprecated
+          { key: 18, title: 'Key metrics (deprecated)', 'x-i18n-title': { fr: 'Chiffres clés (déprécié)' } },
           { key: 19, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
 
           {

@@ -1,18 +1,40 @@
 <template>
-  <!-- In preview, we just show a screenshot -->
-  <v-img
-    v-if="preview && applicationFetch?.data?.value"
-    :src="`${applicationFetch.data?.value.href}/capture?updatedAt=${applicationFetch.data?.value.updatedAt}`"
-  />
-
-  <d-frame-wrapper
-    v-if="!preview && element.application?.slug"
+  <div
+    v-if="element.application?.slug"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
-    :iframe-title="`${t('application')} - ${element.application.title}`"
-    :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
-    :sync-params="syncParams"
-    aspect-ratio
-  />
+  >
+    <application-actions
+      v-if="hasActions && application && element.actionButtons?.position !== 'bottom'"
+      :application="application"
+      :actions="element.actionButtons?.items"
+      :action-style="element.actionButtons?.style"
+      :alignment="element.actionButtons?.alignment ?? 'start'"
+    />
+
+    <!-- In preview, we just show a screenshot for performance reasons -->
+    <v-img
+      v-if="preview && application"
+      :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
+      :title="t('previewTooltip')"
+      :alt="application.title"
+    />
+
+    <d-frame-wrapper
+      v-else
+      :iframe-title="`${t('application')} - ${element.application.title}`"
+      :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+      :sync-params="syncParams"
+      aspect-ratio
+    />
+
+    <application-actions
+      v-if="hasActions && application && element.actionButtons?.position === 'bottom'"
+      :application="application"
+      :actions="element.actionButtons?.items"
+      :action-style="element.actionButtons?.style"
+      :alignment="element.actionButtons?.alignment ?? 'start'"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,16 +52,18 @@ const syncParams = computed(() => {
   return undefined
 })
 
-let applicationFetch
-if (preview) {
-  applicationFetch = useFetch<Application>(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application?.id : '')
-}
+const hasActions = computed(() => (element.actionButtons?.items ?? []).length > 0)
 
+const applicationFetcher = preview ? useFetch<Application> : useLocalFetch<Application>
+const applicationFetch = applicationFetcher(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application.id : '')
+const application = computed(() => applicationFetch.data.value)
 </script>
 
 <i18n lang="yaml">
   en:
     application: Application
+    previewTooltip: For performance reasons, the preview only shows a screenshot of the visualization
   fr:
     application: Application
+    previewTooltip: Pour des raisons de performance, l'aperçu affiche uniquement une capture de la visualisation
 </i18n>
