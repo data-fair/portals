@@ -3,7 +3,7 @@ layout {
       split_direction "vertical"
       pane name="portals" borderless=true {
         command "bash"
-        args "-ic" "nvm use && bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && bash"
       }
       pane name="deps" {
         command "bash"
@@ -11,22 +11,22 @@ layout {
       }
       pane name="mock ingress manager" {
         command "bash"
-        args "-ic" "nvm use && npm run dev-ingress-manager"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
       }
     }
     pane {
       split_direction "vertical"
       pane name="manager ui" {
         command "bash"
-        args "-ic" "nvm use && npm -w ui run dev"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ui"
       }
       pane name="manager api" {
         command "bash"
-        args "-ic" "nvm use && npm -w api run dev"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-api"
       }
       pane name="portal" {
         command "bash"
-        args "-ic" "nvm use && npm -w portal run dev"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-portal"
       }
     }
     pane size=1 borderless=true {

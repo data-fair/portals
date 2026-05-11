@@ -2,7 +2,7 @@
   "name": "api",
   "type": "module",
   "scripts": {
-    "dev": "mkdir -p ../dev/logs && NODE_ENV=development DEBUG=upgrade* node --watch index.ts 2>&1 | tee ../dev/logs/dev-api.log"
+    "dev": "bash ../dev/scripts/log-tee.sh ../dev/logs/dev-api.log -- env NODE_ENV=development DEBUG=upgrade* node --watch index.ts"
   },
   "imports": {
     "#config": "./src/config.ts",

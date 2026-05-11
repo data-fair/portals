@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import type { $Fetch } from 'ofetch'
+import type { $Fetch } from 'nitropack/types'
 import { useAgentTool } from '@data-fair/lib-vue-agents'
 import * as listDatasets from '@data-fair/agent-tools-data-fair/list-datasets'
 import * as describeDataset from '@data-fair/agent-tools-data-fair/describe-dataset'

@@ -14,8 +14,11 @@ contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
 export default defineNuxtConfig({
   // TODO: remove when nitropack properly calls esbuild.stop() after build
+  // Note: during `nuxt prepare`, close fires before writeTypes runs, so an
+  // immediate exit would skip generation of .nuxt/tsconfig.app.json. We defer
+  // the exit to let writeTypes finish; the small delay is harmless for builds.
   hooks: {
-    close: () => { process.exit(0) }
+    close: (nuxt) => { setTimeout(() => process.exit(0), nuxt.options._prepare ? 1000 : 0) }
   },
   devServer: {
     port: parseInt(process.env.DEV_PORTAL_PORT!)

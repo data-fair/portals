@@ -7,7 +7,7 @@ type Messages = Record<string, Record<string, string>>
  * Falls back to English, then to the key itself.
  */
 export function createAgentTranslator (messages: Messages, locale: Ref<string>) {
-  return (key: string) => messages[locale.value]?.[key] ?? messages.en[key] ?? key
+  return (key: string) => messages[locale.value]?.[key] ?? messages.en?.[key] ?? key
 }
 
 /**

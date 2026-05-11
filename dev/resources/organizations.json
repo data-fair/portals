@@ -98,6 +98,10 @@
         "role": "admin"
       },
       {
+        "id": "dev_superadmin",
+        "role": "admin"
+      },
+      {
         "id": "dev_admin_dep",
         "role": "admin",
         "department": "dev_dep1"

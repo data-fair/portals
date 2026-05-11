@@ -6,6 +6,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('agent chat visibility', () => {
   test.beforeEach(clean)
 
+  // TODO: the agent chat toggle never renders for anonymous visitors even when
+  // `visibleTo: ['anonymous']` — separate functional bug, not a timing issue.
   test.skip('anonymous visitor sees the toggle when visibleTo includes anonymous', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
@@ -22,8 +24,8 @@ test.describe('agent chat visibility', () => {
     })
 
     await goToPortal(portal._id)
-    await expect(page.getByText('Hello')).toBeVisible({ timeout: 10000 })
-    await expect(page.locator('.df-agent-chat-toggle')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Hello')).toBeVisible({ timeout: 10_000 })
+    await expect(page.locator('.df-agent-chat-toggle')).toBeVisible({ timeout: 10_000 })
   })
 
   test('anonymous visitor does not see the toggle when visibleTo excludes anonymous', async ({ page, goToPortal }) => {
@@ -42,7 +44,7 @@ test.describe('agent chat visibility', () => {
     })
 
     await goToPortal(portal._id)
-    await expect(page.getByText('Hello')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Hello')).toBeVisible({ timeout: 10_000 })
     await expect(page.locator('.df-agent-chat-toggle')).toHaveCount(0)
   })
 })

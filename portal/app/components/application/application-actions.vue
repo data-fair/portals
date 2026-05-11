@@ -72,8 +72,9 @@ const datasets = computed(() => {
 const datasetsCount = computed(() => datasets.value.length)
 const datasetsLink = computed<RouteLocationRaw | undefined>(() => {
   const items = datasets.value
-  if (items.length === 0) return undefined
-  if (items.length === 1) return `/datasets/${items[0].slug || items[0].id}`
+  const first = items[0]
+  if (!first) return undefined
+  if (items.length === 1) return `/datasets/${first.slug || first.id}`
   return { path: '/datasets', query: { ids: items.map(d => d.id).join(',') } }
 })
 </script>

@@ -54,9 +54,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose, computed } from 'vue'
-import type { Ref } from 'vue'
-import type { $Fetch } from 'ofetch'
+import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose, computed, toRef } from 'vue'
+import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
 import { useAgentDatasetTools } from '../composables/agent/dataset-tools'
 import { useAgentDatasetDataTools } from '../composables/agent/dataset-data-tools'
@@ -74,9 +73,11 @@ const props = defineProps<{
   portalConfig: PortalConfig
   portalId: string
   owner: Account
-  locale: Ref<string>
+  locale: string
   localFetch: $Fetch
 }>()
+
+const localeRef = toRef(() => props.locale)
 
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
@@ -112,15 +113,15 @@ watchEffect(() => {
     toolsScope = effectScope()
     toolsScope.run(() => {
       useFrameServer('portal')
-      useAgentDatasetTools(props.locale, props.localFetch)
-      useAgentDatasetDataTools(props.locale, props.localFetch)
+      useAgentDatasetTools(localeRef, props.localFetch)
+      useAgentDatasetDataTools(localeRef, props.localFetch)
       useAgentNavigationTools({
-        locale: props.locale,
+        locale: localeRef,
         portalConfig: props.portalConfig,
         navigationStore: useNavigationStore()
       })
-      useAgentGeoTools(props.locale)
-      useAgentPortalContentTools(props.locale, props.localFetch, props.portalId)
+      useAgentGeoTools(localeRef)
+      useAgentPortalContentTools(localeRef, props.localFetch, props.portalId)
     })
   } else if ((!agentChat.value?.active || !canSee.value) && toolsScope) {
     toolsScope.stop()
