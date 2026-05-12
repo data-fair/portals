@@ -1,94 +1,178 @@
 <template>
   <layout-page>
     <v-container>
-      <h1 class="text-headline-large text-primary mb-6">
+      <component
+        :is="mainTitleTag"
+        class="text-headline-large text-primary mb-2"
+      >
         {{ t('sitemap') }}
-      </h1>
+      </component>
+      <p class="text-body-large text-medium-emphasis mb-6">
+        {{ pageDescription }}
+      </p>
 
-      <ul style="list-style: none;">
-        <!-- Home always first -->
-        <li
-          v-if="!allInternalPaths.has('/')"
-          class="mb-2"
+      <section
+        v-if="hasMainNavSection"
+        class="mb-6"
+        aria-labelledby="sitemap-nav-title"
+      >
+        <component
+          :is="sectionTitleTag"
+          id="sitemap-nav-title"
+          class="text-title-large text-primary mb-3"
         >
-          <NuxtLink to="/">{{ t('home') }}</NuxtLink>
-        </li>
+          {{ t('sitemapSections.mainNav') }}
+        </component>
+        <ul style="list-style: none; padding-left: 0;">
+          <li
+            v-if="!allInternalPaths.has('/')"
+            class="mb-2"
+          >
+            <NuxtLink to="/">{{ t('home') }}</NuxtLink>
+          </li>
+          <sitemap-menu-item
+            v-for="(item, i) in internalNavigationItems"
+            :key="`nav-${i}`"
+            :item="item"
+          />
+        </ul>
+      </section>
 
-        <!-- Navigation menu items -->
-        <sitemap-menu-item
-          v-for="(item, i) in internalNavigationItems"
-          :key="`nav-${i}`"
-          :item="item"
-        />
+      <section
+        v-if="hasServicesSection"
+        class="mb-6"
+        aria-labelledby="sitemap-services-title"
+      >
+        <component
+          :is="sectionTitleTag"
+          id="sitemap-services-title"
+          class="text-title-large text-primary mb-3"
+        >
+          {{ t('sitemapSections.services') }}
+        </component>
+        <ul style="list-style: none; padding-left: 0;">
+          <li
+            v-if="!session.user.value"
+            class="mb-2"
+          >
+            <a :href="session.loginUrl()">{{ t('login') }}</a>
+          </li>
+          <li
+            v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')"
+            class="mb-2"
+          >
+            <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['applications'] && !allInternalPaths.has('/applications')"
+            class="mb-2"
+          >
+            <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')"
+            class="mb-2"
+          >
+            <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
+          </li>
+        </ul>
+      </section>
 
-        <!-- Footer links -->
-        <sitemap-menu-item
-          v-for="(item, i) in internalFooterLinks"
-          :key="`footer-${i}`"
-          :item="item"
-        />
-
-        <!-- Footer important links -->
-        <sitemap-menu-item
-          v-for="(item, i) in internalFooterImportantLinks"
-          :key="`footer-important-${i}`"
-          :item="item"
-        />
-
-        <!-- Login page (only if not authenticated) -->
-        <li v-if="!session.user.value">
-          <a :href="session.loginUrl()">{{ t('login') }}</a>
-        </li>
-
-        <!-- Standard pages at the end -->
-        <li v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')">
-          <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['applications'] && !allInternalPaths.has('/applications')">
-          <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')">
-          <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages.contact && !allInternalPaths.has('/contact')">
-          <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')">
-          <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')">
-          <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')">
-          <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')">
-          <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
-        </li>
-        <li v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')">
-          <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
-        </li>
-      </ul>
+      <section
+        v-if="hasLegalSection"
+        class="mb-6"
+        aria-labelledby="sitemap-legal-title"
+      >
+        <component
+          :is="sectionTitleTag"
+          id="sitemap-legal-title"
+          class="text-title-large text-primary mb-3"
+        >
+          {{ t('sitemapSections.legal') }}
+        </component>
+        <ul style="list-style: none; padding-left: 0;">
+          <sitemap-menu-item
+            v-for="(item, i) in internalFooterLinks"
+            :key="`footer-${i}`"
+            :item="item"
+          />
+          <sitemap-menu-item
+            v-for="(item, i) in internalFooterImportantLinks"
+            :key="`footer-important-${i}`"
+            :item="item"
+          />
+          <li
+            v-if="standardPages.contact && !allInternalPaths.has('/contact')"
+            class="mb-2"
+          >
+            <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')"
+            class="mb-2"
+          >
+            <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')"
+            class="mb-2"
+          >
+            <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')"
+            class="mb-2"
+          >
+            <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')"
+            class="mb-2"
+          >
+            <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+          </li>
+          <li
+            v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')"
+            class="mb-2"
+          >
+            <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
+          </li>
+        </ul>
+      </section>
     </v-container>
   </layout-page>
 </template>
 
 <script setup lang="ts">
 import type { MenuItem, LinkItem } from '#api/types/portal'
+import type { HeadingTag } from '#api/types/page-elements/index.ts'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const session = useSession()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
+
+const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
+const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 
 // Check which standard pages exist
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const standardPages = computed(() => standardPagesFetch.data.value || {})
 
+const pageDescription = computed(() => {
+  const items: string[] = []
+  if (standardPages.value['datasets']) items.push(t('descriptionItems.datasets'))
+  if (standardPages.value['applications']) items.push(t('descriptionItems.applications'))
+  if (standardPages.value['reuses']) items.push(t('descriptionItems.reuses'))
+  if (items.length === 0) return t('description')
+  const list = new Intl.ListFormat(locale.value, { style: 'long', type: 'conjunction' }).format(items)
+  return t('descriptionWithCatalogs', { list })
+})
+
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
   const paths = new Set<string>()
-
   const processItem = (item: MenuItem | LinkItem) => {
     if (item.type === 'submenu' && 'children' in item && item.children) {
       item.children.forEach(processItem)
@@ -97,7 +181,6 @@ const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
       if (path) paths.add(path)
     }
   }
-
   items.forEach(processItem)
   return paths
 }
@@ -114,7 +197,6 @@ const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkIt
       return item
     })
     .filter(Boolean) as (MenuItem | LinkItem)[]
-
   // Remove external links and any links resolving to '/sitemap'
   return filtered.filter(item => {
     if (item.type === 'submenu') return true // keep submenus
@@ -133,7 +215,6 @@ const internalFooterImportantLinks = computed(() => filterInternalItems(portalCo
 // All internal paths (to avoid duplicates)
 const allInternalPaths = computed(() => {
   const paths = new Set<string>()
-
   collectInternalPaths(portalConfig.value.menu.children).forEach(p => paths.add(p))
   if (portalConfig.value.footer.links) {
     collectInternalPaths(portalConfig.value.footer.links).forEach(p => paths.add(p))
@@ -144,18 +225,46 @@ const allInternalPaths = computed(() => {
   return paths
 })
 
+// Section visibility (avoid orphan <h2> with empty <ul>)
+const hasMainNavSection = computed(() =>
+  !allInternalPaths.value.has('/') || internalNavigationItems.value.length > 0
+)
+
+const hasServicesSection = computed(() =>
+  !session.user.value ||
+  (standardPages.value['datasets'] && !allInternalPaths.value.has('/datasets')) ||
+  (standardPages.value['applications'] && !allInternalPaths.value.has('/applications')) ||
+  (standardPages.value['reuses'] && !allInternalPaths.value.has('/reuses'))
+)
+
+const hasLegalSection = computed(() =>
+  internalFooterLinks.value.length > 0 ||
+  internalFooterImportantLinks.value.length > 0 ||
+  (standardPages.value.contact && !allInternalPaths.value.has('/contact')) ||
+  (standardPages.value.accessibility && !allInternalPaths.value.has('/accessibility')) ||
+  (standardPages.value['terms-of-service'] && !allInternalPaths.value.has('/terms-of-service')) ||
+  (standardPages.value['legal-notice'] && !allInternalPaths.value.has('/legal-notice')) ||
+  (standardPages.value['privacy-policy'] && !allInternalPaths.value.has('/privacy-policy')) ||
+  (standardPages.value['cookie-policy'] && !allInternalPaths.value.has('/cookie-policy'))
+)
+
 setBreadcrumbs([{ type: 'standard', subtype: 'sitemap' }])
 
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,
-  description: t('description')
+  description: pageDescription.value
 })
 </script>
 
 <i18n lang="yaml">
   en:
     sitemap: Sitemap
-    description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
+    description: Discover the complete structure of the site.
+    descriptionWithCatalogs: Discover the complete structure of the site and directly access the {list} pages.
+    descriptionItems:
+      datasets: dataset
+      applications: visualization
+      reuses: reuse
     datasets: Datasets
     applications: Applications
     reuses: Reuses
@@ -167,9 +276,18 @@ usePageSeo({
     privacyPolicy: Privacy Policy
     cookiePolicy: Cookie Policy
     login: Login Page
+    sitemapSections:
+      mainNav: Main Navigation
+      services: Data & Services
+      legal: Legal & Informational Links
   fr:
     sitemap: Plan du site
-    description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
+    description: Découvrez la structure complète du site.
+    descriptionWithCatalogs: Découvrez la structure complète du site et accédez directement aux pages {list}.
+    descriptionItems:
+      datasets: de jeux de données
+      applications: de visualisations
+      reuses: de réutilisations
     datasets: Jeux de données
     applications: Visualisations
     reuses: Réutilisations
@@ -181,4 +299,8 @@ usePageSeo({
     privacyPolicy: Politique de confidentialité
     cookiePolicy: Politique de cookies
     login: Page de connexion
+    sitemapSections:
+      mainNav: Navigation principale
+      services: Services et données
+      legal: Informations légales et contact
 </i18n>
