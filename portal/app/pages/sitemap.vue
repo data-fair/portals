@@ -1,9 +1,12 @@
 <template>
   <layout-page>
     <v-container>
-      <h1 class="text-headline-large text-primary mb-2">
+      <component
+        :is="mainTitleTag"
+        class="text-headline-large text-primary mb-2"
+      >
         {{ t('sitemap') }}
-      </h1>
+      </component>
       <p class="text-body-large text-medium-emphasis mb-6">
         {{ pageDescription }}
       </p>
@@ -13,12 +16,13 @@
         class="mb-6"
         aria-labelledby="sitemap-nav-title"
       >
-        <h2
+        <component
+          :is="sectionTitleTag"
           id="sitemap-nav-title"
           class="text-title-large text-primary mb-3"
         >
           {{ t('sitemapSections.mainNav') }}
-        </h2>
+        </component>
         <ul style="list-style: none; padding-left: 0;">
           <li
             v-if="!allInternalPaths.has('/')"
@@ -39,12 +43,13 @@
         class="mb-6"
         aria-labelledby="sitemap-services-title"
       >
-        <h2
+        <component
+          :is="sectionTitleTag"
           id="sitemap-services-title"
           class="text-title-large text-primary mb-3"
         >
           {{ t('sitemapSections.services') }}
-        </h2>
+        </component>
         <ul style="list-style: none; padding-left: 0;">
           <li
             v-if="!session.user.value"
@@ -78,12 +83,13 @@
         class="mb-6"
         aria-labelledby="sitemap-legal-title"
       >
-        <h2
+        <component
+          :is="sectionTitleTag"
           id="sitemap-legal-title"
           class="text-title-large text-primary mb-3"
         >
           {{ t('sitemapSections.legal') }}
-        </h2>
+        </component>
         <ul style="list-style: none; padding-left: 0;">
           <sitemap-menu-item
             v-for="(item, i) in internalFooterLinks"
@@ -139,11 +145,16 @@
 
 <script setup lang="ts">
 import type { MenuItem, LinkItem } from '#api/types/portal'
+import type { HeadingTag } from '#api/types/page-elements/index.ts'
 
 const { t, locale } = useI18n()
 const session = useSession()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
+
+const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
+const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 
 // Check which standard pages exist
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
