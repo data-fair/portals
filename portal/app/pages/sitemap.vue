@@ -5,7 +5,7 @@
         {{ t('sitemap') }}
       </h1>
       <p class="text-body-large text-medium-emphasis mb-6">
-        {{ t('description') }}
+        {{ pageDescription }}
       </p>
 
       <section
@@ -140,7 +140,7 @@
 <script setup lang="ts">
 import type { MenuItem, LinkItem } from '#api/types/portal'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const session = useSession()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
@@ -148,6 +148,16 @@ const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
 // Check which standard pages exist
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const standardPages = computed(() => standardPagesFetch.data.value || {})
+
+const pageDescription = computed(() => {
+  const items: string[] = []
+  if (standardPages.value['datasets']) items.push(t('descriptionItems.datasets'))
+  if (standardPages.value['applications']) items.push(t('descriptionItems.applications'))
+  if (standardPages.value['reuses']) items.push(t('descriptionItems.reuses'))
+  if (items.length === 0) return t('description')
+  const list = new Intl.ListFormat(locale.value, { style: 'long', type: 'conjunction' }).format(items)
+  return t('descriptionWithCatalogs', { list })
+})
 
 // Collect all internal paths recursively
 const collectInternalPaths = (items: (MenuItem | LinkItem)[]): Set<string> => {
@@ -231,14 +241,19 @@ setBreadcrumbs([{ type: 'standard', subtype: 'sitemap' }])
 
 usePageSeo({
   title: t('sitemap') + ' - ' + portalConfig.value.title,
-  description: t('description')
+  description: pageDescription.value
 })
 </script>
 
 <i18n lang="yaml">
   en:
     sitemap: Sitemap
-    description: Discover the complete structure of the site and directly access dataset, visualization, event, and news pages.
+    description: Discover the complete structure of the site.
+    descriptionWithCatalogs: Discover the complete structure of the site and directly access the {list} pages.
+    descriptionItems:
+      datasets: dataset
+      applications: visualization
+      reuses: reuse
     datasets: Datasets
     applications: Applications
     reuses: Reuses
@@ -256,7 +271,12 @@ usePageSeo({
       legal: Legal & Informational Links
   fr:
     sitemap: Plan du site
-    description: Découvrez la structure complète du site et accédez directement aux pages de jeux de données, de visualisations, d'événements et d'actualités.
+    description: Découvrez la structure complète du site.
+    descriptionWithCatalogs: Découvrez la structure complète du site et accédez directement aux pages {list}.
+    descriptionItems:
+      datasets: de jeux de données
+      applications: de visualisations
+      reuses: de réutilisations
     datasets: Jeux de données
     applications: Visualisations
     reuses: Réutilisations
