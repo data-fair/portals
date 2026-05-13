@@ -6,11 +6,11 @@
     <topics-list
       :config="element"
       :topics="topicsItems"
-      :link="element.redirectPage ? {
+      :link="redirectPage ? {
         type: 'standard',
-        subtype: mode
+        subtype: modes[0]
       } : undefined"
-      :is-filters="!element.redirectPage"
+      :is-filters="!redirectPage"
     />
   </div>
 </template>
@@ -19,10 +19,28 @@
 import type { TopicsElement } from '#api/types/page-elements/index.ts'
 import { mdiHome, mdiBook } from '@mdi/js'
 
+type TopicMode = 'datasets' | 'applications'
+
 const { element } = defineProps({
   element: { type: Object as () => TopicsElement, required: true }
 })
-const mode = element.mode || 'datasets'
+
+/*
+ * Backward compatibility: `mode` was a single string ('datasets' | 'applications')
+ * before becoming a non-empty array. Old portals (or API patches written against the
+ * legacy shape) may still send a string — normalize to an array here.
+ */
+// @ts-ignore - legacy data shape: mode may be a string instead of an array
+const rawMode: TopicMode | TopicMode[] | undefined = element.mode
+let modes: [TopicMode, ...TopicMode[]]
+if (Array.isArray(rawMode) && rawMode.length > 0) modes = rawMode as [TopicMode, ...TopicMode[]]
+else if (typeof rawMode === 'string') modes = [rawMode]
+else modes = ['datasets']
+
+// Redirection only makes sense with a single source: when multiple modes are selected
+// the option is hidden in the editor, but we also enforce it at runtime in case the
+// config was patched via the API with redirectPage=true and several modes.
+const redirectPage = !!element.redirectPage && modes.length === 1
 
 const { portal, preview } = usePortalStore()
 
@@ -40,21 +58,32 @@ type TopicItem = {
 let topicsItems: TopicItem[] | ComputedRef<TopicItem[]>
 
 if (!preview) {
-  const datasetsFetch = useLocalFetch<{
+  const fetches = modes.map(m => useLocalFetch<{
     facets: {
       topics: {
         value: Omit<TopicItem, 'count'>,
         count: number
       }[]
     }
-  }>(`/data-fair/api/v1/${mode}`, {
+  }>(`/data-fair/api/v1/${m}`, {
     query: {
       facets: 'topics',
       size: 0,
       publicationSites: 'data-fair-portals:' + portal.value._id,
     }
+  }))
+  topicsItems = computed(() => {
+    // Merge topics from every source, summing counts for topics that appear in several catalogs.
+    const merged = new Map<string, TopicItem>()
+    for (const fetch of fetches) {
+      for (const facet of fetch.data.value?.facets.topics ?? []) {
+        const existing = merged.get(facet.value.id)
+        if (existing) existing.count += facet.count
+        else merged.set(facet.value.id, { ...facet.value, count: facet.count })
+      }
+    }
+    return Array.from(merged.values())
   })
-  topicsItems = computed(() => datasetsFetch.data.value?.facets.topics.map(facet => ({ ...facet.value, count: facet.count })) || [])
 } else {
   topicsItems = [
     { id: 'topic-1', title: 'Topic 1', count: 10, icon: { svgPath: mdiHome } },
