@@ -96,19 +96,29 @@ export default {
         type: { const: 'topics' },
         uuid: { type: 'string', layout: 'none' },
         mode: {
-          type: 'string',
-          title: 'Source des thématiques',
-          default: 'datasets',
-          oneOf: [
-            { const: 'datasets', title: 'Jeux de données' },
-            { const: 'applications', title: 'Visualisations' }
-          ]
+          type: 'array',
+          title: 'Sources des thématiques',
+          description: 'Sélectionnez une ou plusieurs sources. Lorsque plusieurs sources sont sélectionnées, les thématiques sont fusionnées (les compteurs sont additionnés) et la redirection vers le catalogue est désactivée.',
+          default: ['datasets'],
+          minItems: 1,
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'datasets', title: 'Jeux de données' },
+              { const: 'applications', title: 'Visualisations' }
+            ]
+          }
         },
         redirectPage: {
           type: 'boolean',
           title: 'Rediriger vers le catalogue',
           description: 'Si activé, cliquer sur une thématique redirigera vers le catalogue source des thématiques (Jeux de données ou Visualisations) avec le filtre de thématique. Sinon, les thématiques agiront en tant que filtres sur la page actuelle.',
-          layout: 'switch'
+          layout: {
+            comp: 'switch',
+            // Masqué quand plusieurs sources sont sélectionnées : on ne peut rediriger que vers un seul catalogue.
+            if: '!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1'
+          }
         },
         centered: {
           type: 'boolean',
@@ -120,7 +130,7 @@ export default {
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
-          layout: { if: 'parent.data?.redirectPage' }
+          layout: { if: 'parent.data?.redirectPage && (!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1)' }
         },
         showIcon: {
           type: 'boolean',
