@@ -25,18 +25,7 @@ const { element } = defineProps({
   element: { type: Object as () => TopicsElement, required: true }
 })
 
-/*
- * Backward compatibility: `mode` was a single string ('datasets' | 'applications')
- * before becoming a non-empty array. Old portals (or API patches written against the
- * legacy shape) may still send a string — normalize to a non-empty tuple here.
- */
-const modes = computed<[TopicMode, ...TopicMode[]]>(() => {
-  // @ts-ignore - legacy data shape: mode may be a string instead of an array
-  const rawMode: TopicMode | TopicMode[] | undefined = element.mode
-  if (Array.isArray(rawMode) && rawMode.length > 0) return rawMode as [TopicMode, ...TopicMode[]]
-  if (typeof rawMode === 'string') return [rawMode]
-  return ['datasets']
-})
+const modes = computed<[TopicMode, ...TopicMode[]]>(() => element.mode ?? ['datasets'])
 
 // Redirection only makes sense with a single source: when multiple modes are selected
 // the option is hidden in the editor, but we also enforce it at runtime in case the
