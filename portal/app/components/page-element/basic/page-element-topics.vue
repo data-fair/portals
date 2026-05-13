@@ -28,19 +28,20 @@ const { element } = defineProps({
 /*
  * Backward compatibility: `mode` was a single string ('datasets' | 'applications')
  * before becoming a non-empty array. Old portals (or API patches written against the
- * legacy shape) may still send a string — normalize to an array here.
+ * legacy shape) may still send a string — normalize to a non-empty tuple here.
  */
-// @ts-ignore - legacy data shape: mode may be a string instead of an array
-const rawMode: TopicMode | TopicMode[] | undefined = element.mode
-let modes: [TopicMode, ...TopicMode[]]
-if (Array.isArray(rawMode) && rawMode.length > 0) modes = rawMode as [TopicMode, ...TopicMode[]]
-else if (typeof rawMode === 'string') modes = [rawMode]
-else modes = ['datasets']
+const modes = computed<[TopicMode, ...TopicMode[]]>(() => {
+  // @ts-ignore - legacy data shape: mode may be a string instead of an array
+  const rawMode: TopicMode | TopicMode[] | undefined = element.mode
+  if (Array.isArray(rawMode) && rawMode.length > 0) return rawMode as [TopicMode, ...TopicMode[]]
+  if (typeof rawMode === 'string') return [rawMode]
+  return ['datasets']
+})
 
 // Redirection only makes sense with a single source: when multiple modes are selected
 // the option is hidden in the editor, but we also enforce it at runtime in case the
 // config was patched via the API with redirectPage=true and several modes.
-const redirectPage = !!element.redirectPage && modes.length === 1
+const redirectPage = computed(() => !!element.redirectPage && modes.value.length === 1)
 
 const { portal, preview } = usePortalStore()
 
@@ -58,7 +59,7 @@ type TopicItem = {
 let topicsItems: TopicItem[] | ComputedRef<TopicItem[]>
 
 if (!preview) {
-  const fetches = modes.map(m => useLocalFetch<{
+  const fetches = modes.value.map(m => useLocalFetch<{
     facets: {
       topics: {
         value: Omit<TopicItem, 'count'>,
