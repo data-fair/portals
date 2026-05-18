@@ -126,7 +126,7 @@ export default defineEventHandler(async (event) => {
   for (const event of eventsResponse) {
     if (event.config.eventMetadata?.slug) {
       sitemapUrls.push({
-        loc: fullUrl(`/events/${event.config.eventMetadata.slug}`),
+        loc: fullUrl(`/event/${event.config.eventMetadata.slug}`),
         lastmod: event.configUpdatedAt ? formatDate(event.configUpdatedAt) : undefined,
         priority: '0.5'
       })
