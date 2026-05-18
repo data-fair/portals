@@ -120,12 +120,17 @@ test.describe('SEO / indexation', () => {
     await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [hidden._id], owner: hidden.owner })
 
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
-    expect(okRobots).toContain('Allow: /')
+    // Indexable portals use an Allow-list of public sections, then a final
+    // Disallow: / as fallback to keep everything else out.
+    expect(okRobots).toContain('Allow: /$')
+    expect(okRobots).toContain('Allow: /datasets')
     expect(okRobots).toContain('Sitemap:')
-    expect(okRobots).not.toContain('Disallow: /')
 
     const koRobots = await (await request.get(portalUrl(hidden._id) + '/robots.txt')).text()
+    // Hidden portals expose a minimal blanket Disallow with no Allow rules
+    // and no Sitemap.
     expect(koRobots).toContain('Disallow: /')
+    expect(koRobots).not.toContain('Allow:')
     expect(koRobots).not.toContain('Sitemap:')
   })
 
