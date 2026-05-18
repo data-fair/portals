@@ -135,19 +135,32 @@ test.describe('SEO / indexation', () => {
   })
 
   test('.well-known/security.txt is always served and well-formed (RFC 9116)', async ({ request }) => {
-    const indexable = (await user1.post('/api/portals', {
+    const withContact = (await user1.post('/api/portals', {
       config: { title: 'Sec A', allowRobots: true, menu: { children: [] } }
     })).data
-    const hidden = (await user1.post('/api/portals', {
-      config: { title: 'Sec B', allowRobots: false, menu: { children: [] } }
+    const withoutContact = (await user1.post('/api/portals', {
+      config: { title: 'Sec B', allowRobots: false, menu: { children: [] }, contactInformations: { email: 'private@example.com' } }
     })).data
 
-    for (const portal of [indexable, hidden]) {
-      const res = await request.get(portalUrl(portal._id) + '/.well-known/security.txt')
-      expect(res.status()).toBe(200)
-      expect(res.headers()['content-type']).toContain('text/plain')
-      const body = await res.text()
-      expect(body).toMatch(/^Contact:\s+mailto:/m)
+    await user1.post('/api/pages', { type: 'contact', config: { title: 'Contact', elements: [] }, portals: [withContact._id], owner: withContact.owner })
+
+    const okWith = await request.get(portalUrl(withContact._id) + '/.well-known/security.txt')
+    expect(okWith.status()).toBe(200)
+    expect(okWith.headers()['content-type']).toContain('text/plain')
+    const withBody = await okWith.text()
+    expect(withBody).toContain('Contact: https://github.com/data-fair')
+    expect(withBody).toContain(`Contact: ${portalUrl(withContact._id)}/contact`)
+
+    const okWithout = await request.get(portalUrl(withoutContact._id) + '/.well-known/security.txt')
+    expect(okWithout.status()).toBe(200)
+    const withoutBody = await okWithout.text()
+    expect(withoutBody).toContain('Contact: https://github.com/data-fair')
+    expect(withoutBody).not.toContain(`${portalUrl(withoutContact._id)}/contact`)
+
+    for (const body of [withBody, withoutBody]) {
+      // contactInformations.email is private and must never leak via security.txt.
+      expect(body).not.toMatch(/Contact:\s+mailto:/)
+      expect(body).not.toContain('private@example.com')
       const expiresMatch = body.match(/^Expires:\s+(\S+)/m)
       expect(expiresMatch, 'Expires field required by RFC 9116').toBeTruthy()
       const expiresAt = new Date(expiresMatch![1])
