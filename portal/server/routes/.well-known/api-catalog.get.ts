@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
         publicationSites: `data-fair-portals:${portal._id}`
       }
     }
-  ).catch(() => null)
+  )
 
   if (datasetsResponse?.results) {
     for (const dataset of datasetsResponse.results) {
