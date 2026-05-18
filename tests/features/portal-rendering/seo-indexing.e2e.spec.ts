@@ -129,6 +129,73 @@ test.describe('SEO / indexation', () => {
     expect(koRobots).not.toContain('Sitemap:')
   })
 
+  test('.well-known/security.txt is always served and well-formed (RFC 9116)', async ({ request }) => {
+    const indexable = (await user1.post('/api/portals', {
+      config: { title: 'Sec A', allowRobots: true, menu: { children: [] } }
+    })).data
+    const hidden = (await user1.post('/api/portals', {
+      config: { title: 'Sec B', allowRobots: false, menu: { children: [] } }
+    })).data
+
+    for (const portal of [indexable, hidden]) {
+      const res = await request.get(portalUrl(portal._id) + '/.well-known/security.txt')
+      expect(res.status()).toBe(200)
+      expect(res.headers()['content-type']).toContain('text/plain')
+      const body = await res.text()
+      expect(body).toMatch(/^Contact:\s+mailto:/m)
+      const expiresMatch = body.match(/^Expires:\s+(\S+)/m)
+      expect(expiresMatch, 'Expires field required by RFC 9116').toBeTruthy()
+      const expiresAt = new Date(expiresMatch![1])
+      const now = Date.now()
+      const oneYearFromNow = now + 366 * 24 * 60 * 60 * 1000
+      expect(expiresAt.getTime()).toBeGreaterThan(now)
+      expect(expiresAt.getTime()).toBeLessThanOrEqual(oneYearFromNow)
+      expect(body).toMatch(/^Canonical:\s+http/m)
+    }
+  })
+
+  test('.well-known/change-password redirects when auth is enabled, 404 otherwise', async ({ request }) => {
+    const withAuth = (await user1.post('/api/portals', {
+      config: { title: 'Auth Optional', authentication: 'optional', allowRobots: true, menu: { children: [] } }
+    })).data
+    const noAuth = (await user1.post('/api/portals', {
+      config: { title: 'Auth None', authentication: 'none', allowRobots: true, menu: { children: [] } }
+    })).data
+
+    const redirected = await request.get(portalUrl(withAuth._id) + '/.well-known/change-password', { maxRedirects: 0 })
+    expect(redirected.status()).toBe(302)
+    expect(redirected.headers().location).toContain('/simple-directory/login')
+    expect(redirected.headers().location).toContain('changePassword')
+
+    const gated = await request.get(portalUrl(noAuth._id) + '/.well-known/change-password', { maxRedirects: 0 })
+    expect(gated.status()).toBe(404)
+  })
+
+  test('.well-known/api-catalog exposes a valid linkset when allowRobots=true, 404 otherwise (RFC 9727)', async ({ request }) => {
+    const indexable = (await user1.post('/api/portals', {
+      config: { title: 'Cat A', allowRobots: true, menu: { children: [] } }
+    })).data
+    const hidden = (await user1.post('/api/portals', {
+      config: { title: 'Cat B', allowRobots: false, menu: { children: [] } }
+    })).data
+
+    const ok = await request.get(portalUrl(indexable._id) + '/.well-known/api-catalog')
+    expect(ok.status()).toBe(200)
+    expect(ok.headers()['content-type']).toContain('application/linkset+json')
+    const body = await ok.json()
+    expect(Array.isArray(body.linkset)).toBe(true)
+    expect(body.linkset.length).toBeGreaterThanOrEqual(1)
+    const root = body.linkset[0]
+    expect(root.anchor).toContain('/data-fair/api/v1')
+    expect(root['service-desc'][0].href).toContain('/api-docs.json')
+    expect(root['service-doc'][0].href).toContain('/catalog-api-doc')
+    expect(root.status[0].href).toContain('/ping')
+    expect(root.collection[0].href).toContain('/datasets')
+
+    const ko = await request.get(portalUrl(hidden._id) + '/.well-known/api-catalog')
+    expect(ko.status()).toBe(404)
+  })
+
   test('open graph + canonical + JSON-LD on home', async ({ request }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
