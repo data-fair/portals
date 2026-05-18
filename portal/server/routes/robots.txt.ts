@@ -15,6 +15,7 @@ export default defineEventHandler((event) => {
   }
   return [
     'User-agent: *',
+    'Content-Signal: search=yes, ai-train=no, ai-input=yes',
     '',
     '# public portal pages',
     'Allow: /$',

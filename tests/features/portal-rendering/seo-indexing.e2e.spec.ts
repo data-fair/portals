@@ -120,13 +120,98 @@ test.describe('SEO / indexation', () => {
     await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [hidden._id], owner: hidden.owner })
 
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
-    expect(okRobots).toContain('Allow: /')
+    // Indexable portals use an Allow-list of public sections, then a final
+    // Disallow: / as fallback to keep everything else out.
+    expect(okRobots).toContain('Allow: /$')
+    expect(okRobots).toContain('Allow: /datasets')
     expect(okRobots).toContain('Sitemap:')
-    expect(okRobots).not.toContain('Disallow: /')
 
     const koRobots = await (await request.get(portalUrl(hidden._id) + '/robots.txt')).text()
+    // Hidden portals expose a minimal blanket Disallow with no Allow rules
+    // and no Sitemap.
     expect(koRobots).toContain('Disallow: /')
+    expect(koRobots).not.toContain('Allow:')
     expect(koRobots).not.toContain('Sitemap:')
+  })
+
+  test('.well-known/security.txt is always served and well-formed (RFC 9116)', async ({ request }) => {
+    const withContact = (await user1.post('/api/portals', {
+      config: { title: 'Sec A', allowRobots: true, menu: { children: [] } }
+    })).data
+    const withoutContact = (await user1.post('/api/portals', {
+      config: { title: 'Sec B', allowRobots: false, menu: { children: [] }, contactInformations: { email: 'private@example.com' } }
+    })).data
+
+    await user1.post('/api/pages', { type: 'contact', config: { title: 'Contact', elements: [] }, portals: [withContact._id], owner: withContact.owner })
+
+    const okWith = await request.get(portalUrl(withContact._id) + '/.well-known/security.txt')
+    expect(okWith.status()).toBe(200)
+    expect(okWith.headers()['content-type']).toContain('text/plain')
+    const withBody = await okWith.text()
+    expect(withBody).toContain('Contact: https://github.com/data-fair')
+    expect(withBody).toContain(`Contact: ${portalUrl(withContact._id)}/contact`)
+
+    const okWithout = await request.get(portalUrl(withoutContact._id) + '/.well-known/security.txt')
+    expect(okWithout.status()).toBe(200)
+    const withoutBody = await okWithout.text()
+    expect(withoutBody).toContain('Contact: https://github.com/data-fair')
+    expect(withoutBody).not.toContain(`${portalUrl(withoutContact._id)}/contact`)
+
+    for (const body of [withBody, withoutBody]) {
+      // contactInformations.email is private and must never leak via security.txt.
+      expect(body).not.toMatch(/Contact:\s+mailto:/)
+      expect(body).not.toContain('private@example.com')
+      const expiresMatch = body.match(/^Expires:\s+(\S+)/m)
+      expect(expiresMatch, 'Expires field required by RFC 9116').toBeTruthy()
+      const expiresAt = new Date(expiresMatch![1])
+      const now = Date.now()
+      const oneYearFromNow = now + 366 * 24 * 60 * 60 * 1000
+      expect(expiresAt.getTime()).toBeGreaterThan(now)
+      expect(expiresAt.getTime()).toBeLessThanOrEqual(oneYearFromNow)
+      expect(body).toMatch(/^Canonical:\s+http/m)
+    }
+  })
+
+  test('.well-known/change-password redirects when auth is enabled, 404 otherwise', async ({ request }) => {
+    const withAuth = (await user1.post('/api/portals', {
+      config: { title: 'Auth Optional', authentication: 'optional', allowRobots: true, menu: { children: [] } }
+    })).data
+    const noAuth = (await user1.post('/api/portals', {
+      config: { title: 'Auth None', authentication: 'none', allowRobots: true, menu: { children: [] } }
+    })).data
+
+    const redirected = await request.get(portalUrl(withAuth._id) + '/.well-known/change-password', { maxRedirects: 0 })
+    expect(redirected.status()).toBe(302)
+    expect(redirected.headers().location).toContain('/simple-directory/login')
+    expect(redirected.headers().location).toContain('changePassword')
+
+    const gated = await request.get(portalUrl(noAuth._id) + '/.well-known/change-password', { maxRedirects: 0 })
+    expect(gated.status()).toBe(404)
+  })
+
+  test('.well-known/api-catalog exposes a valid linkset when allowRobots=true, 404 otherwise (RFC 9727)', async ({ request }) => {
+    const indexable = (await user1.post('/api/portals', {
+      config: { title: 'Cat A', allowRobots: true, menu: { children: [] } }
+    })).data
+    const hidden = (await user1.post('/api/portals', {
+      config: { title: 'Cat B', allowRobots: false, menu: { children: [] } }
+    })).data
+
+    const ok = await request.get(portalUrl(indexable._id) + '/.well-known/api-catalog')
+    expect(ok.status()).toBe(200)
+    expect(ok.headers()['content-type']).toContain('application/linkset+json')
+    const body = await ok.json()
+    expect(Array.isArray(body.linkset)).toBe(true)
+    expect(body.linkset.length).toBeGreaterThanOrEqual(1)
+    const root = body.linkset[0]
+    expect(root.anchor).toContain('/data-fair/api/v1')
+    expect(root['service-desc'][0].href).toContain('/api-docs.json')
+    expect(root['service-doc'][0].href).toContain('/catalog-api-doc')
+    expect(root.status[0].href).toContain('/ping')
+    expect(root.collection[0].href).toContain('/datasets')
+
+    const ko = await request.get(portalUrl(hidden._id) + '/.well-known/api-catalog')
+    expect(ko.status()).toBe(404)
   })
 
   test('open graph + canonical + JSON-LD on home', async ({ request }) => {
