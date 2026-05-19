@@ -198,6 +198,7 @@ const thumbnailUrl = computed(() => {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
+  if (cardConfig.thumbnail?.useSummary && application.summary?.length) return undefined
   return `${application.href}/capture?updatedAt=${application.updatedAt}`
 })
 

@@ -146,7 +146,7 @@ export default {
         useTopic: {
           type: 'boolean',
           title: "Utiliser l'image de la première thématique",
-          description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
+          description: "Permet d'utiliser l'image de la première thématique de la visualisation si aucune image n'est définie pour cette dernière.",
           layout: {
             comp: 'switch',
             cols: { md: 6 }
