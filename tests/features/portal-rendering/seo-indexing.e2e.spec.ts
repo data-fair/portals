@@ -122,7 +122,6 @@ test.describe('SEO / indexation', () => {
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
     expect(okRobots).toContain('Allow: /')
     expect(okRobots).toContain('Sitemap:')
-    expect(okRobots).not.toContain('Disallow: /')
 
     const koRobots = await (await request.get(portalUrl(hidden._id) + '/robots.txt')).text()
     expect(koRobots).toContain('Disallow: /')

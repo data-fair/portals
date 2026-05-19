@@ -98,14 +98,15 @@ export default {
           {
             if: 'data?.show === true',
             children: [
-              { key: 'location', cols: { md: 6 } },
-              { key: 'default', cols: { md: 6 } },
+              { key: 'location', cols: { md: 4 } },
+              { key: 'default', cols: { md: 4 } },
               { key: 'crop', cols: { md: 4 } },
               { key: 'useTopic', cols: { md: 4 } },
               { key: 'useApplication', cols: { md: 4 } },
-              { markdown: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de la visualisation** (si activé)\n4. **Image par défaut** (si définie)' }
+              { key: 'useSummary', cols: { md: 4 } },
+              { markdown: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur le jeu de données)\n2. **Image de la thématique** (si activé)\n3. **Image de la visualisation** (si activé)\n4. **Image par défaut** (si définie)\n5. **Résumé du jeu de données** (si activé)' }
             ]
-          },
+          }
         ]
       },
       properties: {
@@ -164,15 +165,19 @@ export default {
           type: 'boolean',
           title: "Utiliser l'image de la première thématique",
           description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: 'switch',
-          default: false
+          layout: 'switch'
         },
         useApplication: {
           type: 'boolean',
           title: "Utiliser l'image de la première visualisation",
           description: "Permet d'utiliser l'image de la première visualisation qui utilise ce jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: 'switch',
-          default: false
+          layout: 'switch'
+        },
+        useSummary: {
+          type: 'boolean',
+          title: 'Utiliser le résumé du jeu de données',
+          description: "Permet d'utiliser le résumé du jeu de données si aucune image n'est définie pour ce dernier et si l'option 'Afficher le résumé' n'est pas activée.",
+          layout: 'switch'
         }
       }
     },

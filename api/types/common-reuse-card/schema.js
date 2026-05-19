@@ -83,13 +83,14 @@ export default {
       layout: {
         comp: 'card',
         children: [
-          'show',
+          { key: 'show', cols: { md: 6 } },
           {
             if: 'data?.show === true',
             children: [
               { key: 'location', cols: { md: 6 } },
               { key: 'default', cols: { md: 6 } },
-              { key: 'crop', cols: { md: 6 } }
+              { key: 'crop', cols: { md: 6 } },
+              { key: 'useSummary', cols: { md: 4 } },
             ]
           }
         ]
@@ -163,6 +164,21 @@ export default {
           },
           layout: { comp: 'switch' },
           default: true
+        },
+        useSummary: {
+          type: 'boolean',
+          title: 'Use dataset summary',
+          'x-i18n-title': {
+            fr: 'Utiliser le résumé du jeu de données'
+          },
+          description: "Use the dataset's summary when no image is set for it and when 'Show summary' is not enabled.",
+          'x-i18n-description': {
+            fr: "Permet d'utiliser le résumé du jeu de données si aucune image n'est définie pour cette dernière et si l'option 'Afficher le résumé' n'est pas activée."
+          },
+          layout: {
+            comp: 'switch',
+            cols: { md: 4 }
+          }
         }
       }
     }

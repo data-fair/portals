@@ -81,7 +81,7 @@
         </div>
 
         <v-card-text
-          v-if="cardConfig.showSummary && application.summary?.length"
+          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && application.summary?.length"
           class="pb-0"
         >
           {{ application.summary }}

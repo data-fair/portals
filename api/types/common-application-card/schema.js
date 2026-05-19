@@ -109,9 +109,10 @@ export default {
             children: [
               'location',
               'crop',
-              'useTopic'
+              'useTopic',
+              'useSummary',
             ]
-          },
+          }
         ]
       },
       properties: {
@@ -132,16 +133,6 @@ export default {
             { const: 'center', title: 'Sous le titre' }
           ]
         },
-        useTopic: {
-          type: 'boolean',
-          title: "Utiliser l'image de la première thématique",
-          description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
-          layout: {
-            comp: 'switch',
-            cols: { md: 6 }
-          },
-          default: false
-        },
         crop: {
           type: 'boolean',
           title: "Recadrer l'image pour un rendu uniforme",
@@ -151,7 +142,25 @@ export default {
             cols: { md: 6 }
           },
           default: true
-        }
+        },
+        useTopic: {
+          type: 'boolean',
+          title: "Utiliser l'image de la première thématique",
+          description: "Permet d'utiliser l'image de la première thématique du jeu de données si aucune image n'est définie pour ce dernier.",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          }
+        },
+        useSummary: {
+          type: 'boolean',
+          title: 'Utiliser le résumé de la visualisation',
+          description: "Permet d'utiliser le résumé de la visualisation si aucune image n'est définie pour cette dernière et si l'option 'Afficher le résumé' n'est pas activée.",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          }
+        },
       }
     },
     topics: {
