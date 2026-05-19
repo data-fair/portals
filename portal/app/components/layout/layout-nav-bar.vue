@@ -36,6 +36,7 @@
 
         <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
           <notification-queue />
+          <theme-switcher :theme="portalConfig.theme" />
           <layout-personal-menu
             :login-color="navBarConfig.loginColor"
             :nav-bar-color="navBarConfig.color"
@@ -50,6 +51,7 @@
 import type { NavBar } from '#api/types/portal-config'
 import { useDisplay } from 'vuetify'
 import { useElementSize } from '@vueuse/core'
+import themeSwitcher from '@data-fair/lib-vuetify/theme-switcher.vue'
 
 const { navBarConfig } = defineProps<{
   navBarConfig: NavBar
