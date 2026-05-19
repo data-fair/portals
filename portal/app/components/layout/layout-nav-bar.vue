@@ -51,6 +51,7 @@
             v-else
             events-url="/events"
           />
+          <theme-switcher :theme="portalConfig.theme" />
           <layout-personal-menu
             :login-color="navBarConfig.loginColor"
             :nav-bar-color="navBarConfig.color"
@@ -67,6 +68,7 @@ import { DfNotificationQueue } from '@data-fair/lib-vuetify-events'
 import { useDisplay } from 'vuetify'
 import { useElementSize } from '@vueuse/core'
 import { mdiBell } from '@mdi/js'
+import themeSwitcher from '@data-fair/lib-vuetify/theme-switcher.vue'
 
 const { navBarConfig } = defineProps<{
   navBarConfig: NavBar
