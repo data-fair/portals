@@ -47,7 +47,12 @@ export default defineNuxtPlugin(async () => {
       // from.name is absent on initial page load
       if (!from.name || from.path !== to.path) {
         // using path instead of title meta as it is what we did historically
-        analytics?.page({ title: to.path })
+        let pagePath = to.path
+        if (portal.config.analytics?.mergeDatasetAppPaths) {
+          const match = pagePath.match(/^\/(datasets|applications)\/[^/]+/)
+          if (match) pagePath = match[0]
+        }
+        analytics?.page({ title: pagePath })
       }
     })
   }

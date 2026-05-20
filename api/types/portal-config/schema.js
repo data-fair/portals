@@ -413,6 +413,12 @@ export default {
       properties: {
         tracker: {
           $ref: 'https://github.com/data-fair/portals/portal-config-analytics-tracker'
+        },
+        mergeDatasetAppPaths: {
+          type: 'boolean',
+          title: 'Fusionner les pages datasets/applications',
+          description: "Si activé, les sous-pages d'un dataset ou d'une application (ex: /datasets/123/table) seront comptabilisées comme la page parent (/datasets/123) dans les statistiques.",
+          default: false
         }
       }
     },
