@@ -131,6 +131,34 @@
         {{ t('frequencyLabels.' + dataset.frequency) }}
       </v-col>
 
+      <v-col
+        v-if="dataset.conformsTo && (dataset.conformsTo.title || dataset.conformsTo.url || dataset.conformsTo.version)"
+        v-bind="metadataColProps"
+      >
+        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('conformsTo') }}</div>
+        <div class="d-flex align-center ga-2 flex-wrap">
+          <a
+            v-if="dataset.conformsTo.url"
+            :href="dataset.conformsTo.url"
+            rel="noopener"
+            target="_blank"
+            :title="(dataset.conformsTo.title || dataset.conformsTo.url) + ' - ' + t('newWindow')"
+            class="simple-link"
+          >
+            {{ dataset.conformsTo.title || dataset.conformsTo.url }}
+          </a>
+          <template v-else-if="dataset.conformsTo.title">
+            {{ dataset.conformsTo.title }}
+          </template>
+          <v-chip
+            v-if="dataset.conformsTo.version"
+            :text="dataset.conformsTo.version"
+            color="secondary"
+            size="small"
+          />
+        </div>
+      </v-col>
+
       <!-- Modified or dataUpdatedAt -->
       <v-col v-bind="metadataColProps">
         <div class="text-body-small text-medium-emphasis">{{ metadataLabel('modified') }}</div>
@@ -285,7 +313,7 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
 
 const shouldShowActionButton = (button: ActionButtons[number]) => metadataConfig.value.actionButtons?.includes(button)
 
-type BaseMetadataSettings = Partial<Record<'keywords' | 'frequency' | 'temporal' | 'spatial' | 'modified' | 'creator',
+type BaseMetadataSettings = Partial<Record<'keywords' | 'frequency' | 'temporal' | 'spatial' | 'modified' | 'creator' | 'conformsTo',
   { active?: boolean; title?: string }
 >>
 
@@ -320,6 +348,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       threeTimesAYear: '3 times a year'
       triennial: 'Every 3 years'
       weekly: 'Every week'
+    conformsTo: 'Schema:'
     keywords: 'Keywords:'
     license: 'License:'
     modified: 'Data last modified:'
@@ -366,6 +395,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       threeTimesAYear: '3 fois par an'
       triennial: 'Tous les 3 ans'
       weekly: 'Chaque semaine'
+    conformsTo: 'Schéma :'
     keywords: 'Mots-clés :'
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
