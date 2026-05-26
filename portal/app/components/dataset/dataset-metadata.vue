@@ -153,7 +153,7 @@
           <v-chip
             v-if="dataset.conformsTo.version"
             :text="dataset.conformsTo.version"
-            color="secondary"
+            :prepend-icon="mdiLabel"
             size="small"
           />
         </div>
@@ -282,7 +282,7 @@
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
-import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
+import { mdiCog, mdiLabel, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
