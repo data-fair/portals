@@ -70,13 +70,14 @@ export default {
       layout: {
         comp: 'card',
         children: [
-          'show',
+          { key: 'show', cols: { md: 6 } },
           {
             if: 'data?.show === true',
             children: [
               { key: 'location', cols: { md: 6 } },
               { key: 'default', cols: { md: 6 } },
-              { key: 'crop', cols: { md: 6 } }
+              { key: 'crop', cols: { md: 6 } },
+              { key: 'useDescription', cols: { md: 6 } }
             ]
           }
         ]
@@ -150,6 +151,19 @@ export default {
           },
           layout: { comp: 'switch' },
           default: true
+        },
+        useDescription: {
+          type: 'boolean',
+          title: 'Use description',
+          'x-i18n-title': {
+            fr: 'Utiliser la description de l\'actualité'
+          },
+          description: "Use the news' description when no image is set for it and when 'Show description' is not enabled.",
+          'x-i18n-description': {
+            fr: "Permet d'utiliser la description de l'actualité si aucune image n'est définie pour cette dernière et si l'option 'Afficher la description' n'est pas activée."
+          },
+          layout: { comp: 'switch', cols: { md: 4 } },
+          default: false
         }
       }
     }

@@ -70,7 +70,7 @@
           />
         </div>
 
-        <v-card-text v-if="cardConfig.showDescription && pageConfig.description?.length">
+        <v-card-text v-if="(cardConfig.showDescription || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useDescription && !thumbnailUrl)) && pageConfig.description?.length">
           {{ pageConfig.description }}
         </v-card-text>
       </v-col>
