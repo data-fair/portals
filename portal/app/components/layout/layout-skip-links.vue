@@ -1,7 +1,6 @@
 <template>
   <div class="layout-skip-links">
     <nav
-      role="navigation"
       :aria-label="t('quickAccess')"
       class="bg-surface d-flex ga-4 pa-2 justify-center"
     >
