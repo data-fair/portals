@@ -31,3 +31,22 @@ index db5aad7..380c6d1 100644
        'aria-current': toRef(() => isActive.value ? 'page' : undefined),
        'aria-disabled': toRef(() => props.disabled && isLink.value ? 'true' : undefined),
        tabindex: toRef(() => props.disabled && isLink.value ? '-1' : undefined)
+diff --git a/node_modules/vuetify/lib/composables/theme.js b/node_modules/vuetify/lib/composables/theme.js
+index 30a5de2..c747a9f 100644
+--- a/node_modules/vuetify/lib/composables/theme.js
++++ b/node_modules/vuetify/lib/composables/theme.js
+@@ -280,10 +280,11 @@ export function createTheme(options) {
+       function getHead() {
+         return {
+           style: [{
+-            textContent: styles.value,
++            // Pre-declare canonical layer order so the theme stylesheet can stay in <head>
++            // (HTML-valid) without depending on parse order vs. main.css.
++            textContent: '@layer vuetify-core, vuetify-components, vuetify-overrides, vuetify-utilities, vuetify-final;\n' + styles.value,
+             id: parsedOptions.stylesheetId,
+-            nonce: parsedOptions.cspNonce || false,
+-            tagPosition: 'bodyOpen'
++            nonce: parsedOptions.cspNonce || false
+           }]
+         };
+       }
