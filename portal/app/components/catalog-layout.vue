@@ -27,17 +27,21 @@
       </div>
 
       <!-- Count (top) -->
-      <component
-        :is="headingTag"
+      <!-- role/aria-live live on the wrapper because role="status" is invalid on heading elements (W3C) -->
+      <div
         v-if="countPosition === 'top'"
-        class="text-headline-medium mb-4"
         role="status"
         aria-live="polite"
         aria-atomic="true"
       >
-        {{ countLabel }}
-        <slot name="count-extra" />
-      </component>
+        <component
+          :is="headingTag"
+          class="text-headline-medium mb-4"
+        >
+          {{ countLabel }}
+          <slot name="count-extra" />
+        </component>
+      </div>
 
       <!-- Standard Filters -->
       <v-row
@@ -65,13 +69,15 @@
         v-if="countPosition === 'bottom' && element.showSortBesideCount"
         class="align-end mb-4"
       >
-        <v-col
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {{ t('resultsCount', { count: itemsCount }) }}
-          <slot name="count-extra" />
+        <v-col>
+          <div
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {{ t('resultsCount', { count: itemsCount }) }}
+            <slot name="count-extra" />
+          </div>
         </v-col>
         <v-col
           cols="12"

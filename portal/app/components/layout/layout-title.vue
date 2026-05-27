@@ -8,12 +8,12 @@
       `text-${element.titleSize || 'h3'}`
     ]"
   >
-    <v-divider
+    <!-- decorative <span>s instead of <v-divider>/<div> so the heading only contains phrasing content (HTML spec) -->
+    <span
       v-if="element.line?.position === 'left'"
-      :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
-      class="border-opacity-100 mr-4"
-      thickness="4"
-      vertical
+      class="d-block align-self-stretch mr-4"
+      :style="{ borderLeft: `4px solid rgb(var(--v-theme-${element.line?.color}))` }"
+      aria-hidden="true"
     />
     <v-icon
       v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
@@ -22,19 +22,18 @@
       size="small"
       class="mr-4"
     />
-    <div :class="[element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]">
+    <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]">
       {{ element.content }}
-      <v-divider
+      <span
         v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
-        :style="{ borderColor: `rgb(var(--v-theme-${element.line?.color}))` }"
-        :class="[
-          'border-opacity-100 mt-2',
-          element.centered ? 'mx-auto' : undefined
-        ]"
-        :length="element.line?.position === 'bottom-small' ? '80px' : '100%'"
-        thickness="4"
+        :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
+        :style="{
+          borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
+          width: element.line?.position === 'bottom-small' ? '80px' : '100%'
+        }"
+        aria-hidden="true"
       />
-    </div>
+    </span>
   </component>
 
   <v-divider

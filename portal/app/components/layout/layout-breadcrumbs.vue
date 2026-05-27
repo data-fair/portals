@@ -83,6 +83,16 @@ const breadcrumbItems = computed(() => {
     })
   }
 
+  // The current page (last item) must not be a link: an <a href> with aria-disabled is
+  // invalid HTML (W3C) and the v-breadcrumbs-item--disabled class already conveys the visual state.
+  // Stripping `to`/`href` makes Vuetify render it as plain text inside the <li> while keeping the
+  // disabled class and aria-current="page".
+  const last = items[items.length - 1]
+  if (last && typeof last === 'object') {
+    const { to: _to, href: _href, ...rest } = last
+    items[items.length - 1] = rest
+  }
+
   return items
 })
 </script>
@@ -110,11 +120,6 @@ const breadcrumbItems = computed(() => {
 :deep(.v-breadcrumbs-item--link:not([aria-current="page"]):hover),
 :deep(.v-breadcrumbs-item--link:not([aria-current="page"]):active) {
   background-size: 100% 2px;
-}
-
-:deep(.v-breadcrumbs-item--link[aria-current="page"]) {
-  pointer-events: none;
-  text-decoration: none;
 }
 
 :deep(.v-breadcrumbs-divider) {
