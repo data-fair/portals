@@ -90,6 +90,11 @@ npm run build-types      # Build type definitions from schemas
 npm -w ui run build      # Build UI
 ```
 
+### Commits & release notes
+
+- Commit message convention (allowed types and scopes, ambiguous cases): see `dev/COMMITS.md`. The `scope-enum` rule is enforced as error — an unknown scope rejects the commit.
+- Release notes format and category mapping: see `dev/RELEASES.md`.
+
 ### Performance profiling
 
 The edit-config page (page editor) has known performance sensitivity due to the complex VJSF oneOf schema (38 element types). A Playwright seed file exists for interactive profiling:

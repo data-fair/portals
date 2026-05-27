@@ -1,46 +1,7 @@
 # Release Notes Guide
 
-## Commit Convention
-
-This project uses [Conventional Commits](https://www.conventionalcommits.org/). Commits are validated by commitlint via Husky hooks.
-
-### Format
-
-```
-type(scope): description
-```
-
-### Types
-
-| Type | Description |
-|------|-------------|
-| `feat` | New feature or capability |
-| `fix` | Bug fix |
-| `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `perf` | Performance improvement |
-| `chore` | Maintenance task (CI, configs, cleanup) |
-| `design` | Visual/UI design change |
-| `docs` | Documentation only |
-| `test` | Adding or updating tests |
-| `build` | Build system or external dependencies |
-| `revert` | Revert a previous commit |
-
-### Scopes
-
-| Scope | Usage |
-|-------|-------|
-| `api` | Backend API changes |
-| `ui` | UI component library (portals-manager) |
-| `portal` | Nuxt SSR portal (pages, layouts, middleware) |
-| `portal-config` | Portal configuration schema and superadmin options (header, footer, navbar, theme, advanced toggles like `md2Compat`) |
-| `page-element` | Page element components |
-| `types` | Shared type definitions |
-| `deps` | Dependency updates |
-| `analytics` | Analytics/tracking (Matomo, Piano) |
-| `reuses` | Content reuse system |
-| `seo` | SEO improvements |
-
-Scopes are optional. If a change spans multiple workspaces, use the most significant scope or omit it.
+> For the commit message convention (types, scopes, examples), see `dev/COMMITS.md`.
+> Scopes used in release notes can be **rewritten** from the committed scope when a more editorial scope fits better (e.g. `feat(portal)` touching `robots.txt` → published as `**seo:**`).
 
 ## Release Notes Format
 

@@ -1,7 +1,7 @@
 export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
-    'scope-enum': [1, 'always', [
+    'scope-enum': [2, 'always', [
       'api',
       'ui',
       'portal',
@@ -13,5 +13,6 @@ export default {
       'reuses',
       'seo',
     ]],
+    'scope-empty': [1, 'never'],
   },
 }
