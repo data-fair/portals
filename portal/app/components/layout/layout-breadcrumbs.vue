@@ -122,11 +122,6 @@ const breadcrumbItems = computed(() => {
   background-size: 100% 2px;
 }
 
-:deep(.v-breadcrumbs-item--link[aria-current="page"]) {
-  pointer-events: none;
-  text-decoration: none;
-}
-
 :deep(.v-breadcrumbs-divider) {
   pointer-events: none;
   user-select: none;

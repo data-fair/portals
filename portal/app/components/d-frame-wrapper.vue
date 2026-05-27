@@ -13,8 +13,7 @@ import createDFrameAdapter from '@data-fair/frame/lib/vue-router/state-change-ad
 // inheritAttrs:false keeps unknown attrs (iframe-title, src, aspect-ratio) off the SSR <ClientOnly> placeholder
 defineOptions({ inheritAttrs: false })
 
-// d-frame.js calls customElements.define() at module top level — browser-only
-if (import.meta.client) import('@data-fair/frame/lib/d-frame.js')
-
+// <d-frame> is registered globally by plugins/dframe.client.ts — must run before any <d-frame> is created,
+// otherwise Vue's `.adapter` IDL binding is set on a not-yet-upgraded element and the constructor overwrites it.
 const dFrameAdapter = createDFrameAdapter(useRouter())
 </script>
