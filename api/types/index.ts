@@ -71,6 +71,11 @@ export type Dataset = {
     end?: string
   }
   frequency?: string
+  conformsTo?: {
+    title?: string
+    version?: string
+    url?: string
+  }
   customMetadata?: Record<string, string>
 
   attachments?: {
