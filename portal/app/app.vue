@@ -7,7 +7,6 @@
       <ClientOnly><AcceptCookies /></ClientOnly>
     </NuxtLayout>
     <ClientOnly>
-      <PortalAgentHost :portal-config="$portal.config" :portal-id="$portal._id" :locale="locale" :local-fetch="$localFetch" />
       <AgentChat :portal-config="$portal.config" :portal-id="$portal._id" :owner="$portal.owner" :locale="locale" :local-fetch="$localFetch" />
     </ClientOnly>
   </v-app>
@@ -15,7 +14,9 @@
 
 <script setup lang="ts">
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
+import { toRef } from 'vue'
 import { useTheme } from 'vuetify'
+import { usePortalAgentHost } from './composables/agent/use-portal-agent-host'
 
 const { $portal, $siteInfo, $localFetch } = useNuxtApp()
 const session = useSession()
@@ -35,6 +36,17 @@ const isIframe = useState('isIframe', () => {
 
 providePortalStore($portal, $siteInfo)
 provideNavigationStore({ isIframe })
+
+// Register the portal-level WebMCP host (frame server + base tools) so agent
+// tools are available on the tab BroadcastChannel before any page renders.
+if (import.meta.client) {
+  usePortalAgentHost({
+    locale: toRef(() => locale.value),
+    localFetch: $localFetch,
+    portalConfig: $portal.config,
+    portalId: $portal._id
+  })
+}
 
 const meta = [
   { name: 'theme-color', content: String(theme.current.value.colors.primary) },
