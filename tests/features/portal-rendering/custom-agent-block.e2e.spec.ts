@@ -44,7 +44,7 @@ test.describe('custom agent block', () => {
     const stored = await page.evaluate(async () => {
       // give the block a moment to run setAgentInitConfig on mount
       for (let i = 0; i < 30; i++) {
-        const raw = sessionStorage.getItem('df-agent-init-config:block')
+        const raw = sessionStorage.getItem('df-agent-init-config:ca1')
         if (raw) return JSON.parse(raw)
         await new Promise(resolve => setTimeout(resolve, 200))
       }
