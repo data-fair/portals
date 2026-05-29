@@ -64,16 +64,18 @@ block — they are declared in the context of the page and therefore available t
   `_c*,*_*:_d_<datasetId>_,*:<uuid>_` (concept filters `_c*` + per-dataset
   filters `_d_<id>_` + element-scoped `<uuid>_`).
 
-> Note: portals has **no** `reactiveSearchParams` object (that lives in
-> data-fair: `@data-fair/lib-vue/reactive-search-params.js`, used by
-> `data-fair/public/composables/use-search-params-agent.ts` — the conceptual
-> model for our tools: `set_dataset_filters` / `get_dataset_filters` mutating a
-> reactive param store). **Confirmed** by reading the d-frame adapter source
-> (`@data-fair/frame/lib/vue-router/state-change-adapter.js`): in portals the
-> backing store is the **vue-router query** —
-> `get state () { return router.currentRoute.value.query }`. So the page-params
-> tools operate on the router query via `useRouter()`, mirroring data-fair's
-> set/get shape but with the router query as the store.
+> Note: portals **does** provide a `reactiveSearchParams` object — the same
+> `@data-fair/lib-vue/reactive-search-params.js` data-fair uses. It is installed
+> app-wide by `portal/app/plugins/reactive-search-params.ts`
+> (`createReactiveSearchParams(router)`) and injectable via the exported
+> `reactiveSearchParamsKey` symbol. It is a flat **reactive `{ key: value }`
+> object** seeded from and two-way-synced with the vue-router query: mutating a
+> key writes through to the router, and the d-frame adapter
+> (`@data-fair/frame/lib/vue-router/state-change-adapter.js`) propagates router
+> changes to the embedded apps/previews. **The page-params tools operate on this
+> injected `reactiveSearchParams` object** (per user direction), mirroring
+> data-fair's table-page search-param agent tools, rather than poking the router
+> directly.
 
 ## Decisions (from brainstorming)
 
@@ -89,9 +91,9 @@ block — they are declared in the context of the page and therefore available t
 - **Page-params tools home:** registered page-scoped, from the page-render root.
 - **Block schema home:** in `api/types/page-element-functional/schema.js`.
 - **Param tools scope:** all useful operations (describe / get / set+clear),
-  operating on the router query (portals' reactive params equivalent), modeled
-  after data-fair's
-  `data-fair/public/composables/use-search-params-agent.ts`.
+  operating on the injected `reactiveSearchParams` object (provided app-wide by
+  `portal/app/plugins/reactive-search-params.ts`), modeled after data-fair's
+  table-page search-param agent tools.
 
 ## Architecture
 
@@ -118,10 +120,15 @@ regardless of the global chat toggle.
 
 - **New** `portal/app/composables/agent/page-params-tools.ts` using
   `useAgentTool` from `@data-fair/lib-vue-agents`, modeled on data-fair's
-  `dataset-table-agent-tools.ts`. Operates on `useRouter()` / `useRoute().query`.
+  table-page search-param agent tools. Operates on the injected
+  `reactiveSearchParams` object (`inject(reactiveSearchParamsKey)`): reads keys
+  for get/describe, assigns/deletes keys for set+clear. The reactive object
+  handles the router + d-frame propagation.
 - **Registered from** `portal/app/components/page-elements.vue` when `root`
   (so it mounts/unmounts with the page and only the active page's filters are
   exposed). It receives the page `elements` array to know what's filterable.
+  Because it `inject`s `reactiveSearchParams`, registration must happen inside a
+  component setup with the plugin installed (page-elements.vue qualifies).
 - Tools (mirroring data-fair's `use-search-params-agent.ts` set/get shape; set
   and clear are combined into one tool, where an empty/null value deletes the
   key — exactly as data-fair does):
@@ -131,11 +138,12 @@ regardless of the global chat toggle.
     the piece data-fair doesn't have (it knows its single dataset's schema
     statically); here we derive it from the page's elements.
   - `get_page_filters` — read current `_c_*` and `_d_<id>_*` keys/values from
-    the router query (`useRoute().query`).
+    the injected `reactiveSearchParams`.
   - `set_page_filters` — accept a `params` map (`{ key: value }`); for each
-    entry, push a router-query update via `useRouter()` (empty/null value
-    removes the key — covers both **set** and **clear**). The d-frame adapter
-    propagates changes to all embeds bound to those params.
+    entry, assign the key on `reactiveSearchParams` (empty/null value `delete`s
+    the key — covers both **set** and **clear**). The reactive object writes
+    through to the router and the d-frame adapter propagates to all embeds bound
+    to those params.
 
   Tool names are namespaced (e.g. `pageFilters_*` or kept distinct from the
   base `*_dataset_*` names) to avoid collision with the base tools and with
@@ -192,8 +200,9 @@ Register in `api/types/page-elements/schema.js`:
 3. A custom-agent block renders its own chat iframe → its
    `FrameClientAggregator` discovers the host server + sees base tools + page
    filter tools (same as the global agent would).
-4. Agent calls `set_page_filter` → router query updated → d-frame adapter
-   propagates to embedded previews/apps bound to `_c_*` / `_d_<id>_*`.
+4. Agent calls `set_page_filters` → keys assigned on `reactiveSearchParams` →
+   router query updated → d-frame adapter propagates to embedded previews/apps
+   bound to `_c_*` / `_d_<id>_*`.
 
 ## Risks / validations
 
