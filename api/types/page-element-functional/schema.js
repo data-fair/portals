@@ -21,7 +21,7 @@ export default {
         systemPrompt: {
           title: 'Instructions (prompt)',
           'x-i18n-title': { en: 'Instructions (prompt)' },
-          description: "Décrivez le rôle de cet assistant et le sujet sur lequel il aide.",
+          description: 'Décrivez le rôle de cet assistant et le sujet sur lequel il aide.',
           type: 'string',
           layout: 'textarea'
         },
@@ -44,7 +44,7 @@ export default {
               url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
-              itemTitle: '`${item.title} (${item.id})`',
+              itemTitle: 'item.title + " (" + item.id + ")"',
               itemKey: 'item.id'
             }
           }
