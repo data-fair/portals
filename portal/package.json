@@ -34,7 +34,7 @@
     "analytics": "^0.8.19",
     "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
-    "nuxt": "^4.2.2",
+    "nuxt": "4.4.5",
     "nuxt-security": "^2.3.0",
     "piano-analytics-js": "^6.16.4",
     "undici": "^7.14.0",
