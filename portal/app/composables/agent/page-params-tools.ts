@@ -33,7 +33,8 @@ export function usePageParamsTools (locale: Ref<string>) {
     execute: async () => {
       const current: Record<string, string> = {}
       for (const k of Object.keys(searchParams)) {
-        if (isFilterKey(k)) current[k] = searchParams[k]
+        const v = searchParams[k]
+        if (isFilterKey(k) && v != null) current[k] = v
       }
       const text = Object.keys(current).length
         ? Object.entries(current).map(([k, v]) => `- \`${k}\` = ${v}`).join('\n')

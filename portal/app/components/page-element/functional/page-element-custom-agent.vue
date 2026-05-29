@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from 'vue'
-import type { CustomAgent } from '#api/types/page-elements/index.ts'
+import type { CustomAgentElement } from '#api/types/page-elements/index.ts'
 import { portalPromptContext } from '../../../composables/agent/portal-prompt-context'
 
 const DfAgentChatBlock = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatBlock.vue'))
 
-const { element } = defineProps<{ element: CustomAgent }>()
+const { element } = defineProps<{ element: CustomAgentElement }>()
 const { portal, portalConfig } = usePortalStore()
 const owner = computed(() => portal.value.owner)
 
@@ -32,7 +32,7 @@ const owner = computed(() => portal.value.owner)
 const systemPrompt = computed(() => {
   const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name)]
   if (element.focusDatasets?.length) {
-    const list = element.focusDatasets.map(d => `"${d.title ?? d.id}" (id: ${d.id})`).join(', ')
+    const list = element.focusDatasets.map((d: { id: string, title?: string }) => `"${d.title ?? d.id}" (id: ${d.id})`).join(', ')
     parts.push(`Concentre tes explorations de données sur ces jeux de données : ${list}. Tu peux explorer le reste du catalogue uniquement si l'utilisateur le demande explicitement.`)
   }
   parts.push("Ton travail est limité au contexte de cette page. N'utilise pas l'outil de navigation pour quitter la page, sauf si l'utilisateur le demande explicitement.")
