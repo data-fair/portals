@@ -425,9 +425,15 @@ git commit -m "feat(portal): add page filter get/set agent tools on shared searc
 **Files:**
 - Create: `portal/app/composables/agent/page-filter-describe-tool.ts`
 - Modify: `portal/app/components/page-element/datasets/page-element-dataset-table.vue`
-- Modify: `portal/app/components/page-element/datasets/page-element-dataset-download.vue`
 - Modify: `portal/app/components/page-element/applications/page-element-application.vue`
 - Test: add a case to `tests/features/portal-rendering/page-filter-tools.e2e.spec.ts`
+
+> **Note:** only two block types support `shared-filters` via a schema enum and a
+> reactive `syncParams` computed: `dataset-table` and `application`. The
+> `dataset-download` element has **no** `syncParams` property (schema has only
+> `type`/`uuid`/`dataset`/`mb`; the component passes a static `sync-params`
+> attr), so it does **not** get a describe tool. Earlier design text mentioning
+> download here is superseded.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -512,23 +518,7 @@ if (element.syncParams === 'shared-filters' && element.dataset?.id && element.uu
 }
 ```
 
-- [ ] **Step 5: Register it from the dataset-download block**
-
-In `portal/app/components/page-element/datasets/page-element-dataset-download.vue`, add the same import and an analogous guarded call (same prefixes; label "Téléchargement : <title>"). If this component does not already destructure `element` with a `dataset` and `uuid`, mirror the destructuring used in `page-element-dataset-table.vue`. Use:
-
-```typescript
-import { usePageFilterDescribeTool } from '../../../composables/agent/page-filter-describe-tool'
-
-if (element.syncParams === 'shared-filters' && element.dataset?.id && element.uuid) {
-  usePageFilterDescribeTool({
-    uuid: element.uuid,
-    title: `Filtres : ${element.dataset.title}`,
-    description: `This page has a dataset download block for "${element.dataset.title}" (id: ${element.dataset.id}). It honors page concept filters (keys starting with "_c") and its own dataset filters (keys starting with "_d_${element.dataset.id}_").`
-  })
-}
-```
-
-- [ ] **Step 6: Register it from the application block**
+- [ ] **Step 5: Register it from the application block**
 
 In `portal/app/components/page-element/applications/page-element-application.vue`, add after the `syncParams` computed (this block reflects **all** page filters, not one dataset):
 
@@ -544,12 +534,12 @@ if (element.syncParams === 'shared-filters' && element.uuid) {
 }
 ```
 
-- [ ] **Step 7: Run the test to verify it passes**
+- [ ] **Step 6: Run the test to verify it passes**
 
 Run: `npm run test -- tests/features/portal-rendering/page-filter-tools.e2e.spec.ts`
 Expected: PASS — `describe_filters_shared1` present, `describe_filters_sand1` absent.
 
-- [ ] **Step 8: Type-check and commit**
+- [ ] **Step 7: Type-check and commit**
 
 Run: `npm run check-types`
 Expected: no new errors.
@@ -557,7 +547,6 @@ Expected: no new errors.
 ```bash
 git add portal/app/composables/agent/page-filter-describe-tool.ts \
         portal/app/components/page-element/datasets/page-element-dataset-table.vue \
-        portal/app/components/page-element/datasets/page-element-dataset-download.vue \
         portal/app/components/page-element/applications/page-element-application.vue \
         tests/features/portal-rendering/page-filter-tools.e2e.spec.ts
 git commit -m "feat(portal): per-block describe tool for shared-filters page elements"
@@ -918,5 +907,5 @@ git add -A && git commit -m "test(portal): integration pass for custom AI assist
   - `page-element-dataset-download.vue` destructures `element` with `dataset`/`uuid` like the table component — confirm in Task 3 Step 5 and mirror if different.
   - `usePortalStore()` (verified in `portal/app/composables/use-portal-store.ts`) returns `{ portal: Ref<RequestPortal>, portalConfig: ComputedRef<config>, preview, siteInfo }` — there is **no** `config`/`owner` key. Task 5 uses `portalConfig.value` and `portal.value.owner`.
   - `resolveAgentChatUrl` is **not** re-exported from the `@data-fair/lib-vuetify-agents` index (only the Df* components + drawer/menu composables are). Task 5 imports it from `@data-fair/lib-vuetify-agents/useAgentChatBase.js` (verified present).
-  - `page-element-dataset-download.vue` uses type `DatasetDownloadElement` and its schema **does** include the `syncParams` enum (`none`/`sandboxed`/`shared-filters`), so the Task 3 Step 5 guard `element.syncParams === 'shared-filters'` is valid. Note: the current download component passes a static `sync-params` attr to `d-frame-wrapper` and does not yet wire the enum to actual sync behavior — that pre-existing gap is out of scope here; the describe tool only advertises.
+  - `page-element-dataset-download.vue` is intentionally **excluded** from Task 3: its schema has no `syncParams` enum (only `type`/`uuid`/`dataset`/`mb`) and the component passes a static `sync-params` attr, so there is no `shared-filters` mode to advertise. Only `dataset-table` and `application` get describe tools.
 ```
