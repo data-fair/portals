@@ -258,8 +258,6 @@ Register in `api/types/page-elements/schema.js`:
 - `portal/app/components/page-elements.vue` (register global get/set at root)
 - `portal/app/components/page-element/datasets/page-element-dataset-table.vue`
   (register describe tool when shared-filters)
-- `portal/app/components/page-element/datasets/page-element-dataset-download.vue`
-  (register describe tool when shared-filters)
 - `portal/app/components/page-element/applications/page-element-application.vue`
   (register describe tool when shared-filters)
 - `portal/app/components/page-element/page-element.vue` (map `custom-agent`)
