@@ -87,12 +87,21 @@ block — they are declared in the context of the page and therefore available t
 - **Tool availability vs. display:** tools are **always** registered via WebMCP
   (always-mounted host). The `agentChat.active` toggle gates **only** the global
   chat's display, not tool availability.
-- **Page-params tools home:** registered page-scoped, from the page-render root.
+- **Page-params tools split:**
+  - **`describe` is per-block** — each `shared-filters`-enabled block registers
+    one tool describing itself (the block + the filter keys it honors). This
+    replaces a central element-scanning `describe_page_filters` and co-locates
+    discovery with the block that already knows its `uuid` / dataset id.
+  - **`get` / `set` are global** — two page-scoped tools on
+    `reactiveSearchParams` (provided app-wide by
+    `portal/app/plugins/reactive-search-params.ts`), registered once. Modeled on
+    data-fair's table-page search-param agent tools (get + set, where an
+    empty/null value in set clears the key).
+- **Concept filters:** per-element only — no separate page-wide concept tool.
+  Each block's describe covers both its concept (`_c_*`) and per-dataset
+  (`_d_<id>_*`) keys; setting a `_c_` key via the global set tool naturally
+  affects every block honoring it (it's shared).
 - **Block schema home:** in `api/types/page-element-functional/schema.js`.
-- **Param tools scope:** all useful operations (describe / get / set+clear),
-  operating on the injected `reactiveSearchParams` object (provided app-wide by
-  `portal/app/plugins/reactive-search-params.ts`), modeled after data-fair's
-  table-page search-param agent tools.
 
 ## Architecture
 
@@ -117,38 +126,41 @@ regardless of the global chat toggle.
 
 ### Piece 2 — Page-context param tools
 
-- **New** `portal/app/composables/agent/page-params-tools.ts` using
-  `useAgentTool` from `@data-fair/lib-vue-agents`, modeled on data-fair's
-  table-page search-param agent tools. Gets the params object via the lib's
-  public composable `useReactiveSearchParams()`
-  (from `@data-fair/lib-vue/reactive-search-params.js`): reads keys for
-  get/describe, assigns/deletes keys for set+clear. The reactive object handles
-  the router + d-frame propagation.
-- **Registered from** `portal/app/components/page-elements.vue` when `root`
-  (so it mounts/unmounts with the page and only the active page's filters are
-  exposed). It receives the page `elements` array to know what's filterable.
-  Because it calls `useReactiveSearchParams()` (which injects), registration must
-  happen inside a component setup with the plugin installed (page-elements.vue
-  qualifies).
-- Tools (mirroring the set/get shape of data-fair's table-page search-param
-  agent tools; set and clear are combined into one tool, where an empty/null
-  value deletes the key):
-  - `describe_page_filters` — scan `elements` for blocks using `shared-filters`
-    syncParams; report the filterable datasets (`_d_<id>_`) and that page-wide
-    concept filters (`_c_*`) are available, with the dataset ids/titles. This is
-    the piece data-fair doesn't have (it knows its single dataset's schema
-    statically); here we derive it from the page's elements.
-  - `get_page_filters` — read current `_c_*` and `_d_<id>_*` keys/values from
-    the injected `reactiveSearchParams`.
-  - `set_page_filters` — accept a `params` map (`{ key: value }`); for each
-    entry, assign the key on `reactiveSearchParams` (empty/null value `delete`s
-    the key — covers both **set** and **clear**). The reactive object writes
-    through to the router and the d-frame adapter propagates to all embeds bound
-    to those params.
+Two parts: **global get/set** (registered once per page) and **per-block
+describe** (each `shared-filters` block self-registers).
 
-  Tool names are namespaced (e.g. `pageFilters_*` or kept distinct from the
-  base `*_dataset_*` names) to avoid collision with the base tools and with
-  data-fair's own tools should both ever appear.
+**Global get/set** — new
+`portal/app/composables/agent/page-params-tools.ts` using `useAgentTool` from
+`@data-fair/lib-vue-agents`, modeled on data-fair's table-page search-param
+agent tools. Gets the params object via `useReactiveSearchParams()`
+(from `@data-fair/lib-vue/reactive-search-params.js`); the reactive object
+handles router + d-frame propagation.
+- Registered from `portal/app/components/page-elements.vue` when `root` (mounts/
+  unmounts with the page). Because it calls `useReactiveSearchParams()` (which
+  injects), registration must happen in a component setup with the plugin
+  installed (page-elements.vue qualifies).
+- `get_page_filters` — return the current `_c_*` and `_d_<id>_*` keys/values
+  from `reactiveSearchParams`.
+- `set_page_filters` — accept a `params` map (`{ key: value }`); for each entry
+  assign the key on `reactiveSearchParams` (empty/null value `delete`s the key —
+  covers both **set** and **clear**).
+
+**Per-block describe** — new composable
+`portal/app/composables/agent/page-filter-describe-tool.ts` (`useAgentTool`),
+called by each `shared-filters`-capable block component **only when**
+`element.syncParams === 'shared-filters'`:
+- `page-element-dataset-table.vue` and `page-element-dataset-download.vue` —
+  honor `_c_*` + their own `_d_<datasetId>_*`; describe = block type + dataset
+  title/id + those key prefixes.
+- `page-element-application.vue` — honors `_c_*` + all `_d_*`; describe = app
+  title + that it reflects all page concept/dataset filters.
+- Each tool is uniquely named per block (e.g. `describe_filters_<uuid>`, with a
+  human `title` annotation) so multiple describe tools on one page don't
+  collide. The tool returns a short static description (block label + the filter
+  keys it accepts) so the agent knows what to pass to `set_page_filters`.
+
+**Naming:** global tools namespaced (e.g. `pageFilters_get` / `pageFilters_set`)
+to avoid collision with the base `*_dataset_*` tools.
 
 ### Piece 3 — Custom-agent block
 
@@ -196,14 +208,17 @@ Register in `api/types/page-elements/schema.js`:
 
 1. Portal loads → `app.vue` mounts `usePortalAgentHost` → base tools live on the
    tab BroadcastChannel (independent of `agentChat.active`).
-2. User opens a page → `page-elements.vue` (root) mounts `page-params-tools` →
-   page filter tools added to the channel; unmounted on page leave.
+2. User opens a page → `page-elements.vue` (root) registers global
+   `pageFilters_get` / `pageFilters_set`; each `shared-filters` block registers
+   its own `describe_filters_<uuid>`. All added to the channel; unmounted on
+   page leave / block removal.
 3. A custom-agent block renders its own chat iframe → its
-   `FrameClientAggregator` discovers the host server + sees base tools + page
-   filter tools (same as the global agent would).
-4. Agent calls `set_page_filters` → keys assigned on `reactiveSearchParams` →
-   router query updated → d-frame adapter propagates to embedded previews/apps
-   bound to `_c_*` / `_d_<id>_*`.
+   `FrameClientAggregator` discovers the host server + sees base tools + the
+   global filter tools + the per-block describe tools (same as the global agent).
+4. Agent calls a block's `describe_filters_<uuid>` to learn the keys, then
+   `pageFilters_set` → keys assigned on `reactiveSearchParams` → router query
+   updated → d-frame adapter propagates to embedded previews/apps bound to
+   `_c_*` / `_d_<id>_*`.
 
 ## Risks / validations
 
@@ -217,8 +232,8 @@ Register in `api/types/page-elements/schema.js`:
   to posting the prompt to the iframe via d-frame message after load (defer
   unless needed).
 - **Prompt-only focus & containment are soft** by design (accepted).
-- **Tool name collisions** across base + page-params tools — namespace the new
-  tools.
+- **Tool name collisions** across base + page-params + per-block describe tools
+  — namespace the global tools; suffix describe tools with the block `uuid`.
 - **Always-on host cost** on tool-less pages — negligible, but confirm no SSR
   issues (host runs client-only).
 
@@ -233,13 +248,20 @@ Register in `api/types/page-elements/schema.js`:
 
 **Portals — new**
 - `portal/app/composables/agent/use-portal-agent-host.ts`
-- `portal/app/composables/agent/page-params-tools.ts`
+- `portal/app/composables/agent/page-params-tools.ts` (global get/set)
+- `portal/app/composables/agent/page-filter-describe-tool.ts` (per-block describe)
 - `portal/app/components/page-element/functional/page-element-custom-agent.vue`
 
 **Portals — modified**
 - `portal/app/app.vue` (mount host)
 - `portal/app/components/agent-chat.vue` (remove tool registration; keep display)
-- `portal/app/components/page-elements.vue` (register page-params tools at root)
+- `portal/app/components/page-elements.vue` (register global get/set at root)
+- `portal/app/components/page-element/datasets/page-element-dataset-table.vue`
+  (register describe tool when shared-filters)
+- `portal/app/components/page-element/datasets/page-element-dataset-download.vue`
+  (register describe tool when shared-filters)
+- `portal/app/components/page-element/applications/page-element-application.vue`
+  (register describe tool when shared-filters)
 - `portal/app/components/page-element/page-element.vue` (map `custom-agent`)
 - `api/types/page-element-functional/schema.js` (new `element-custom-agent` def)
 - `api/types/page-elements/schema.js` (oneOf `$ref` + oneOfItems label)
