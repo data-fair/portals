@@ -54,16 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, effectScope, watchEffect, onScopeDispose, computed, toRef } from 'vue'
+import { defineAsyncComponent, computed } from 'vue'
 import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
-import { useAgentDatasetTools } from '../composables/agent/dataset-tools'
-import { useAgentDatasetDataTools } from '../composables/agent/dataset-data-tools'
-import { useAgentNavigationTools } from '../composables/agent/navigation-tools'
-import { useAgentGeoTools } from '../composables/agent/geo-tools'
-import { useAgentPortalContentTools } from '../composables/agent/portal-content-tools'
-import { useFrameServer } from '@data-fair/lib-vue-agents'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
+import { portalPromptContext, navigateToFilteredViewHint } from '../composables/agent/portal-prompt-context'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -76,8 +71,6 @@ const props = defineProps<{
   locale: string
   localFetch: $Fetch
 }>()
-
-const localeRef = toRef(() => props.locale)
 
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
@@ -98,35 +91,9 @@ const canSee = computed(() => {
 
 const systemPrompt = computed(() => {
   const base = agentChat.value?.systemPrompt || ''
-  const domain = import.meta.client ? window.location.hostname : ''
-  const parts = [base]
-  if (domain) parts.push(`Le nom de domaine de ce portail est "${domain}".`)
-  if (props.owner.name) parts.push(`Ce portail est géré par "${props.owner.name}".`)
-  if (props.portalConfig.title) parts.push(`Le titre de ce portail est "${props.portalConfig.title}".`)
-  parts.push('Quand tu effectues une recherche ou un filtrage de données dans un jeu de données, propose systématiquement à l\'utilisateur de naviguer vers une vue filtrée. Le sous-agent dataset_data inclut dans sa section Context un champ filterQuery (query string URL) et un champ columns (colonnes pertinentes). Utilise l\'outil navigate avec la filterQuery comme paramètre query en y ajoutant select=col1,col2,col3 à partir des clés de columns. Propose la vue tableau /datasets/{datasetId}/table, et si les données sont géolocalisées (présence de bbox, geo_distance dans la filterQuery, ou colonnes géographiques dans columns) propose également la vue carte /datasets/{datasetId}/map.')
+  const parts = [base, ...portalPromptContext(props.portalConfig, props.owner.name)]
+  parts.push(navigateToFilteredViewHint)
   return parts.join('\n')
 })
 
-let toolsScope: ReturnType<typeof effectScope> | null = null
-watchEffect(() => {
-  if (agentChat.value?.active && canSee.value && !toolsScope) {
-    toolsScope = effectScope()
-    toolsScope.run(() => {
-      useFrameServer('portal')
-      useAgentDatasetTools(localeRef, props.localFetch)
-      useAgentDatasetDataTools(localeRef, props.localFetch)
-      useAgentNavigationTools({
-        locale: localeRef,
-        portalConfig: props.portalConfig,
-        navigationStore: useNavigationStore()
-      })
-      useAgentGeoTools(localeRef)
-      useAgentPortalContentTools(localeRef, props.localFetch, props.portalId)
-    })
-  } else if ((!agentChat.value?.active || !canSee.value) && toolsScope) {
-    toolsScope.stop()
-    toolsScope = null
-  }
-})
-onScopeDispose(() => { toolsScope?.stop() })
 </script>
