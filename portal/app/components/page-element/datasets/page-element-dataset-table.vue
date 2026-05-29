@@ -14,10 +14,20 @@
 
 <script setup lang="ts">
 import type { DatasetTable } from '#api/types/page-elements/index.ts'
+import { usePageFilterDescribeTool } from '../../../composables/agent/page-filter-describe-tool'
 
 const { element } = defineProps<{ element: DatasetTable }>()
 const { t } = useI18n()
 const { preview } = usePortalStore()
+
+// A shared-filters dataset table reflects all page filters (concept + dataset-specific).
+if (element.syncParams === 'shared-filters' && element.uuid) {
+  usePageFilterDescribeTool({
+    uuid: element.uuid,
+    title: `Filtres : ${element.dataset?.title ?? 'tableau'}`,
+    description: `This page has a dataset table "${element.dataset?.title ?? ''}" that reflects all page filters: concept filters (keys starting with "_c") and dataset-specific filters (keys starting with "_d_${element.dataset?.id}_"). Use pageFilters_set to drive it.`
+  })
+}
 
 const syncParams = computed(() => {
   const uuid = element.uuid || crypto.randomUUID().split('-')[0] // Prevent undefined uuid

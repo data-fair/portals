@@ -59,6 +59,10 @@
     v-else-if="element.type === 'contact'"
     :element="element"
   />
+  <page-element-custom-agent
+    v-else-if="element.type === 'custom-agent'"
+    :element="element"
+  />
 
   <!-- Datasets -->
   <page-element-datasets-catalog

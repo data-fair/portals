@@ -2,6 +2,79 @@ export default {
   $id: 'https://github.com/data-fair/portals/page-element-functional',
   'x-exports': [],
   $defs: {
+    'element-custom-agent': {
+      type: 'object',
+      title: 'CustomAgentElement',
+      'x-i18n-title': {
+        en: 'Custom AI assistant (beta)',
+        fr: 'Assistant IA personnalisé (bêta)'
+      },
+      required: ['type'],
+      properties: {
+        type: { const: 'custom-agent' },
+        uuid: { type: 'string', layout: 'none' },
+        title: {
+          title: "Titre de l'assistant",
+          'x-i18n-title': { en: 'Assistant title' },
+          type: 'string'
+        },
+        systemPrompt: {
+          title: 'Instructions (prompt)',
+          'x-i18n-title': { en: 'Instructions (prompt)' },
+          description: 'Décrivez le rôle de cet assistant et le sujet sur lequel il aide.',
+          type: 'string',
+          layout: 'textarea'
+        },
+        focusDatasets: {
+          title: 'Jeux de données prioritaires',
+          'x-i18n-title': { en: 'Focus datasets' },
+          description: "L'assistant concentre ses explorations sur ces jeux de données (sans s'y limiter strictement).",
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id'],
+            properties: {
+              id: { type: 'string' },
+              title: { type: 'string' }
+            }
+          },
+          layout: {
+            getItems: {
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
+              qSearchParam: 'q',
+              itemsResults: 'data.results',
+              itemTitle: 'item.title + " (" + item.id + ")"',
+              itemKey: 'item.id'
+            }
+          }
+        },
+        visibleTo: {
+          type: 'array',
+          title: 'Visible pour',
+          'x-i18n-title': { en: 'Visible to' },
+          default: ['admin', 'contrib', 'user', 'external', 'anonymous'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'admin', title: 'Administrateurs de l\'organisation' },
+              { const: 'contrib', title: 'Contributeurs de l\'organisation' },
+              { const: 'user', title: 'Autres membres de l\'organisation' },
+              { const: 'external', title: 'Utilisateurs externes authentifiés' },
+              { const: 'anonymous', title: 'Visiteurs anonymes' }
+            ]
+          }
+        },
+        height: {
+          title: 'Hauteur (px)',
+          'x-i18n-title': { en: 'Height (px)' },
+          type: 'integer',
+          minimum: 200,
+          default: 500
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
     'element-search': {
       type: 'object',
       title: 'SearchElement',

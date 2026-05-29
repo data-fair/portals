@@ -102,6 +102,7 @@ export default {
           { key: 17, title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
           { key: 18, title: 'Key metrics (deprecated)', 'x-i18n-title': { fr: 'Chiffres clés (déprécié)' } },
           { key: 19, title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
+          { key: 38, title: 'Custom AI assistant (beta)', 'x-i18n-title': { fr: 'Assistant IA personnalisé (bêta)' } },
 
           {
             header: true,
@@ -223,7 +224,10 @@ export default {
         // News
         { $ref: 'https://github.com/data-fair/portals/page-element-news#/$defs/element-news-catalog' },
         { $ref: 'https://github.com/data-fair/portals/page-element-news#/$defs/element-news-list' },
-        { $ref: 'https://github.com/data-fair/portals/page-element-news#/$defs/element-news-card' }
+        { $ref: 'https://github.com/data-fair/portals/page-element-news#/$defs/element-news-card' },
+
+        // Functional (appended last to keep existing discriminator indices stable)
+        { $ref: 'https://github.com/data-fair/portals/page-element-functional#/$defs/element-custom-agent' }
       ]
     }
   }
