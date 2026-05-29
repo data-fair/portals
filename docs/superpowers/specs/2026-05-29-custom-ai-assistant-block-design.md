@@ -185,7 +185,8 @@ Register in `api/types/page-elements/schema.js`:
   'x-i18n-title': { fr: 'Assistant IA personnalisé' } }` under the existing
   "Functional blocks" header.
 
-**Component** — `portal/app/components/page-element/functional/page-element-custom-agent.vue`:
+**Component** — `portal/app/components/page-element/functional/page-element-custom-agent.vue`
+(thin wrapper; rendering/URL/navigation live in the lib's `DfAgentChatBlock`):
 - Compose the effective system prompt:
   block `systemPrompt`
   + shared portal context (domain / owner name / portal title — same suffix the
@@ -194,11 +195,11 @@ Register in `api/types/page-elements/schema.js`:
     unless explicitly asked to look beyond them")
   + containment line ("your work is contained in this page; do not navigate away
     unless the user explicitly asks").
-- Build URL via `resolveAgentChatUrl({ accountType: owner.type,
-  accountId: owner.id, chatTitle: title, systemPrompt })`.
-- Render a flat `<d-frame>` (not a drawer) at the configured `height`, with `mb`
-  spacing, and route the iframe's `navigate` message to the router (reuse the
-  handling pattern from `useAgentChatBase.ts`).
+- Render `<DfAgentChatBlock :account-type="owner.type" :account-id="owner.id"
+  :chat-title="title" :system-prompt="systemPrompt" :height="height">` in a
+  `mb`-spaced wrapper. The lib component resolves the chat URL and handles the
+  iframe's `navigate` message internally — the portal carries no raw `<d-frame>`
+  / `resolveAgentChatUrl` / navigate logic.
 - Wire into `page-element.vue`:
   `<page-element-custom-agent v-else-if="element.type === 'custom-agent'" :element="element" />`
   in the Functional blocks group.
