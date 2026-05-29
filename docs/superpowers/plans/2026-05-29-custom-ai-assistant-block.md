@@ -35,8 +35,7 @@ Design doc: `docs/superpowers/specs/2026-05-29-custom-ai-assistant-block-design.
 - `portal/app/app.vue` — mount the host wrapper.
 - `portal/app/components/page-elements.vue` — register global filter tools at root.
 - `portal/app/components/page-element/datasets/page-element-dataset-table.vue` — register describe tool when `shared-filters`.
-- `portal/app/components/page-element/datasets/page-element-dataset-download.vue` — same.
-- `portal/app/components/page-element/applications/page-element-application.vue` — same (advertises all `_d_*`).
+- `portal/app/components/page-element/applications/page-element-application.vue` — register describe tool when `shared-filters` (advertises all `_d_*`).
 - `portal/app/components/page-element/page-element.vue` — map `custom-agent` type.
 - `api/types/page-element-functional/schema.js` — new `element-custom-agent` def.
 - `api/types/page-elements/schema.js` — `oneOf` `$ref` + `oneOfItems` label.
