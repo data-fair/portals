@@ -149,9 +149,10 @@ handles router + d-frame propagation.
 `portal/app/composables/agent/page-filter-describe-tool.ts` (`useAgentTool`),
 called by each `shared-filters`-capable block component **only when**
 `element.syncParams === 'shared-filters'`:
-- `page-element-dataset-table.vue` and `page-element-dataset-download.vue` —
-  honor `_c_*` + their own `_d_<datasetId>_*`; describe = block type + dataset
-  title/id + those key prefixes.
+- `page-element-dataset-table.vue` — honors `_c_*` + its own
+  `_d_<datasetId>_*`; describe = block type + dataset title/id + those key
+  prefixes. (`page-element-dataset-download.vue` is excluded: no `syncParams`
+  enum in its schema, so no `shared-filters` mode to advertise.)
 - `page-element-application.vue` — honors `_c_*` + all `_d_*`; describe = app
   title + that it reflects all page concept/dataset filters.
 - Each tool is uniquely named per block (e.g. `describe_filters_<uuid>`, with a
