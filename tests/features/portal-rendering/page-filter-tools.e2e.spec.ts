@@ -61,6 +61,7 @@ test.describe('page filter tools', () => {
       config: {
         title: 'Home',
         elements: [
+          { uuid: 't1', type: 'title', content: 'Filterable page', titleSize: 'h2' },
           { uuid: 'shared1', type: 'dataset-table', dataset: { id: 'ds-shared', title: 'Shared DS' }, syncParams: 'shared-filters', interactions: 'all' },
           { uuid: 'sand1', type: 'dataset-table', dataset: { id: 'ds-sandboxed', title: 'Sandboxed DS' }, syncParams: 'sandboxed', interactions: 'all' }
         ]
@@ -70,9 +71,12 @@ test.describe('page filter tools', () => {
     })
 
     await goToPortal(portal._id)
+    await expect(page.getByText('Filterable page')).toBeVisible({ timeout: 15_000 })
+
+    // The shared-filters table self-registers a describe tool; the sandboxed one does not.
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
-      return mc?.listTools?.().some((t: any) => t.name === 'pageFilters_get')
+      return mc?.listTools?.().some((t: any) => t.name === 'describe_filters_shared1')
     }, { timeout: 15_000 })
 
     const toolNames = await page.evaluate(() =>

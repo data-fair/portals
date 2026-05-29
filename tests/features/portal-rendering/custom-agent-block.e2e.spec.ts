@@ -14,33 +14,39 @@ test.describe('custom agent block', () => {
       type: 'home',
       config: {
         title: 'Home',
-        elements: [{
-          uuid: 'ca1',
-          type: 'custom-agent',
-          title: 'Health helper',
-          systemPrompt: 'You help explore health data.',
-          focusDatasets: [{ id: 'ds-health', title: 'Health DS' }],
-          height: 480
-        }]
+        elements: [
+          { uuid: 't1', type: 'title', content: 'Assistant page', titleSize: 'h2' },
+          {
+            uuid: 'ca1',
+            type: 'custom-agent',
+            title: 'Health helper',
+            systemPrompt: 'You help explore health data.',
+            focusDatasets: [{ id: 'ds-health', title: 'Health DS' }],
+            height: 480
+          }
+        ]
       },
       portals: [portal._id],
       owner: portal.owner
     })
 
     await goToPortal(portal._id)
+    await expect(page.getByText('Assistant page')).toBeVisible({ timeout: 15_000 })
 
-    const frame = page.locator('iframe[src*="/agents/"][src*="/chat"]')
-    await expect(frame).toBeVisible({ timeout: 15_000 })
+    // The block renders the lib's <d-frame> chat component.
+    await expect(page.locator('d-frame')).toBeVisible({ timeout: 15_000 })
 
     // DfAgentChatBlock (lib 0.6.0) does NOT pass title/prompt via URL query.
-    // It calls setAgentInitConfig(key, { prompt, title }) -> sessionStorage
-    // ['agent-init-config-block'] and adds ?initConfig=block to the iframe src.
-    const src = await frame.getAttribute('src')
-    expect(src).toContain('initConfig=')
-
-    const stored = await page.evaluate(() => {
-      const raw = sessionStorage.getItem('agent-init-config-block')
-      return raw ? JSON.parse(raw) : null
+    // It calls setAgentInitConfig('block', { prompt, title }) -> sessionStorage,
+    // which is the reliable signal that the block composed and forwarded the prompt.
+    const stored = await page.evaluate(async () => {
+      // give the block a moment to run setAgentInitConfig on mount
+      for (let i = 0; i < 30; i++) {
+        const raw = sessionStorage.getItem('agent-init-config-block')
+        if (raw) return JSON.parse(raw)
+        await new Promise(resolve => setTimeout(resolve, 200))
+      }
+      return null
     })
     expect(stored?.title).toBe('Health helper')
     expect(stored?.prompt).toContain('You help explore health data.')
