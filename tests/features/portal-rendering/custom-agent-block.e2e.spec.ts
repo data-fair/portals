@@ -37,12 +37,14 @@ test.describe('custom agent block', () => {
     await expect(page.locator('d-frame')).toBeVisible({ timeout: 15_000 })
 
     // DfAgentChatBlock (lib 0.6.0) does NOT pass title/prompt via URL query.
-    // It calls setAgentInitConfig('block', { prompt, title }) -> sessionStorage,
-    // which is the reliable signal that the block composed and forwarded the prompt.
+    // It calls setAgentInitConfig('block', { prompt, title }), which stores under
+    // sessionStorage key 'df-agent-init-config:block' (INIT_CONFIG_PREFIX
+    // 'df-agent-init-config:' + default initConfigKey 'block') — the reliable
+    // signal that the block composed and forwarded the prompt.
     const stored = await page.evaluate(async () => {
       // give the block a moment to run setAgentInitConfig on mount
       for (let i = 0; i < 30; i++) {
-        const raw = sessionStorage.getItem('agent-init-config-block')
+        const raw = sessionStorage.getItem('df-agent-init-config:block')
         if (raw) return JSON.parse(raw)
         await new Promise(resolve => setTimeout(resolve, 200))
       }

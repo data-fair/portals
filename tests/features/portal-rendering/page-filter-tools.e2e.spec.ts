@@ -23,7 +23,7 @@ test.describe('page filter tools', () => {
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       return mc?.listTools?.().some((t: any) => t.name === 'pageFilters_set')
-    }, { timeout: 15_000 })
+    }, undefined, { timeout: 15_000 })
 
     await page.evaluate(async () => {
       await (navigator as any).modelContext.callTool({
@@ -62,8 +62,8 @@ test.describe('page filter tools', () => {
         title: 'Home',
         elements: [
           { uuid: 't1', type: 'title', content: 'Filterable page', titleSize: 'h2' },
-          { uuid: 'shared1', type: 'dataset-table', dataset: { id: 'ds-shared', title: 'Shared DS' }, syncParams: 'shared-filters', interactions: 'all' },
-          { uuid: 'sand1', type: 'dataset-table', dataset: { id: 'ds-sandboxed', title: 'Sandboxed DS' }, syncParams: 'sandboxed', interactions: 'all' }
+          { uuid: 'shared1', type: 'dataset-table', dataset: { id: 'ds-shared', title: 'Shared DS' }, syncParams: 'shared-filters', interactions: true },
+          { uuid: 'sand1', type: 'dataset-table', dataset: { id: 'ds-sandboxed', title: 'Sandboxed DS' }, syncParams: 'sandboxed', interactions: true }
         ]
       },
       portals: [portal._id],
@@ -77,7 +77,7 @@ test.describe('page filter tools', () => {
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       return mc?.listTools?.().some((t: any) => t.name === 'describe_filters_shared1')
-    }, { timeout: 15_000 })
+    }, undefined, { timeout: 15_000 })
 
     const toolNames = await page.evaluate(() =>
       (navigator as any).modelContext.listTools().map((t: any) => t.name))
