@@ -4,7 +4,7 @@
 
 **Goal:** Add a Custom AI Assistant page block — a topical agent embedded inline in a page — plus page-context filter tools shared by both the block and the global portal agent, by making the WebMCP tool host always-on.
 
-**Architecture:** Three independent pieces. (1) Lift the WebMCP frame server + base tool registration out of `agent-chat.vue` into an always-mounted host so tools exist regardless of the global-chat display toggle. (2) Add global `get`/`set` filter tools on the shared `reactiveSearchParams` object plus a per-block `describe` tool self-registered by each `shared-filters` block. (3) A new `custom-agent` page element rendering a flat `<d-frame>` chat.
+**Architecture:** Three independent pieces, plus an agents-lib prerequisite (Task 0). (1) Lift the WebMCP frame server + base tool registration out of `agent-chat.vue` into an always-mounted host so tools exist regardless of the global-chat display toggle. (2) Add global `get`/`set` filter tools on the shared `reactiveSearchParams` object plus a per-block `describe` tool self-registered by each `shared-filters` block. (3) A new `custom-agent` page element that renders a reusable `DfAgentChatBlock` (added to `@data-fair/lib-vuetify-agents` alongside drawer/menu) and only composes the prompt.
 
 **Tech Stack:** Nuxt 3 / Vue 3, `@data-fair/lib-vue-agents` (`useAgentTool`, `useFrameServer`), `@data-fair/lib-vue/reactive-search-params.js`, `@data-fair/frame` (`<d-frame>`), JSON-schema page-element definitions (`api/types/*`), Playwright e2e.
 
@@ -23,12 +23,17 @@ Design doc: `docs/superpowers/specs/2026-05-29-custom-ai-assistant-block-design.
 
 ## File structure
 
-**New files**
+**New files (agents lib — Task 0, done in `agents_feat-custom-agent` worktree)**
+- `lib-vuetify/DfAgentChatBlock.vue` — reusable always-visible inline chat (flat `<d-frame>` + `resolveAgentChatUrl` + navigate-message routing), sibling to `DfAgentChatDrawer.vue` / `DfAgentChatMenu.vue`.
+- `lib-vuetify/index.ts` — export `DfAgentChatBlock`.
+
+**New files (portal)**
 - `portal/app/composables/agent/use-portal-agent-host.ts` — always-on host: frame server + the 5 base tool composables.
 - `portal/app/composables/agent/page-params-tools.ts` — global `pageFilters_get` / `pageFilters_set` over `reactiveSearchParams`.
 - `portal/app/composables/agent/page-filter-describe-tool.ts` — per-block `describe_filters_<uuid>` tool.
+- `portal/app/composables/agent/portal-prompt-context.ts` — shared portal-context prompt helper (Task 5).
 - `portal/app/components/agent/portal-agent-host.client.vue` — tiny client-only wrapper component that calls `usePortalAgentHost` (gives it a setup scope, mounts in `app.vue`).
-- `portal/app/components/page-element/functional/page-element-custom-agent.vue` — the block renderer.
+- `portal/app/components/page-element/functional/page-element-custom-agent.vue` — the block renderer (thin wrapper over `DfAgentChatBlock`).
 
 **Modified files**
 - `portal/app/components/agent-chat.vue` — remove tool registration, keep display.
@@ -761,37 +766,41 @@ const systemPrompt = computed(() => {
 })
 ```
 
-- [ ] **Step 5: Create the block component**
+- [ ] **Step 5: Create the block component (thin wrapper over `DfAgentChatBlock`)**
 
-Create `portal/app/components/page-element/functional/page-element-custom-agent.vue`:
+> Prerequisite: the lib component `DfAgentChatBlock` from Task 0 must be
+> available in `node_modules/@data-fair/lib-vuetify-agents` (merged + published +
+> `npm install` bumped). The portal does **not** symlink the agents checkout — it
+> consumes the published package.
+
+Create `portal/app/components/page-element/functional/page-element-custom-agent.vue`. It only composes the prompt and delegates rendering, URL resolution, and navigate-message handling to `DfAgentChatBlock`:
 
 ```vue
 <template>
   <ClientOnly>
-    <d-frame
-      v-if="src"
+    <DfAgentChatBlock
+      v-if="owner"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
-      :src="src"
-      :iframe-title="element.title || t('assistant')"
-      resize="no"
-      :style="{ height: `${element.height ?? 500}px`, width: '100%' }"
-      @message="onMessage"
+      :account-type="owner.type"
+      :account-id="owner.id"
+      :chat-title="element.title"
+      :system-prompt="systemPrompt"
+      :height="element.height ?? 500"
     />
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
 import type { CustomAgent } from '#api/types/page-elements/index.ts'
-import('@data-fair/frame/lib/d-frame.js')
-import { resolveAgentChatUrl } from '@data-fair/lib-vuetify-agents/useAgentChatBase.js'
 import { portalPromptContext } from '../../../composables/agent/portal-prompt-context'
 
+const DfAgentChatBlock = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatBlock.vue'))
+
 const { element } = defineProps<{ element: CustomAgent }>()
-const { t } = useI18n()
 // usePortalStore exposes { portal: Ref, portalConfig: ComputedRef, preview, siteInfo }
 const { portal, portalConfig } = usePortalStore()
 const owner = computed(() => portal.value.owner)
-const router = useRouter()
 
 const systemPrompt = computed(() => {
   const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name)]
@@ -802,33 +811,10 @@ const systemPrompt = computed(() => {
   parts.push("Ton travail est limité au contexte de cette page. N'utilise pas l'outil de navigation pour quitter la page, sauf si l'utilisateur le demande explicitement.")
   return parts.join('\n')
 })
-
-const src = computed(() => owner.value && resolveAgentChatUrl({
-  accountType: owner.value.type,
-  accountId: owner.value.id,
-  chatTitle: element.title,
-  systemPrompt: systemPrompt.value
-}))
-
-// Route in-iframe navigation requests to the portal router (same pattern as
-// lib-vuetify-agents useAgentChatBase onDFrameMessage).
-const onMessage = (event: CustomEvent<{ type: string, url?: string }>) => {
-  const msg = event.detail
-  if (msg?.type === 'navigate' && msg.url) {
-    const parsed = new URL(msg.url, window.location.origin)
-    if (parsed.origin === window.location.origin) router.push(parsed.pathname + parsed.search + parsed.hash)
-    else window.location.href = msg.url
-  }
-}
 </script>
-
-<i18n lang="yaml">
-  en:
-    assistant: AI assistant
-  fr:
-    assistant: Assistant IA
-</i18n>
 ```
+
+(The drawer/menu components are imported the same way — `defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChat*.vue'))` — see `agent-chat.vue` lines 68-70. `DfAgentChatBlock` resolves the chat URL via `resolveAgentChatUrl` and routes the iframe `navigate` message internally, so the portal carries none of that.)
 
 - [ ] **Step 6: Map the type in page-element.vue**
 
@@ -865,6 +851,9 @@ git add portal/app/components/page-element/functional/page-element-custom-agent.
 git commit -m "feat(portal): custom AI assistant page block"
 ```
 
+> If the published lib bump also requires a `package.json` change, include
+> `portal/package.json` (and the lockfile) in this commit.
+
 ---
 
 ## Task 6: Final integration verification
@@ -900,7 +889,7 @@ git add -A && git commit -m "test(portal): integration pass for custom AI assist
 
 ## Self-review notes (resolved)
 
-- **Spec coverage:** always-on host (Task 1) ✓; reactiveSearchParams get/set (Task 2) ✓; per-block describe replacing central scanner (Task 3) ✓; block schema in functional file + oneOf key 38 (Task 4) ✓; flat d-frame block with composed prompt/focus/containment + shared prompt helper (Task 5) ✓; navigation included-but-instructed-against via prompt (Task 5 containment line) ✓; integration (Task 6) ✓.
+- **Spec coverage:** agents-lib `DfAgentChatBlock` (Task 0) ✓; always-on host (Task 1) ✓; reactiveSearchParams get/set (Task 2) ✓; per-block describe replacing central scanner (Task 3) ✓; block schema in functional file + oneOf key 38 (Task 4) ✓; thin block wrapper over `DfAgentChatBlock` with composed prompt/focus/containment + shared prompt helper (Task 5) ✓; navigation included-but-instructed-against via prompt (Task 5 containment line) ✓; integration (Task 6) ✓.
 - **Naming consistency:** `usePortalAgentHost`, `usePageParamsTools`, `usePageFilterDescribeTool`, `portalPromptContext`, tools `pageFilters_get`/`pageFilters_set`/`describe_filters_<uuid>` used identically across tasks.
 - **Open assumptions to verify during execution (do not block):**
   - `usePortalStore()` (verified in `portal/app/composables/use-portal-store.ts`) returns `{ portal: Ref<RequestPortal>, portalConfig: ComputedRef<config>, preview, siteInfo }` — there is **no** `config`/`owner` key. Task 5 uses `portalConfig.value` and `portal.value.owner`.

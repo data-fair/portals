@@ -243,7 +243,9 @@ Register in `api/types/page-elements/schema.js`:
 - Per-agent tool isolation / dedicated BroadcastChannel per agent.
 - Hard dataset restriction at the tool or iframe level.
 - Config toggle to disable navigation for the block.
-- Any agents-service code change.
+- Any agents-**service** (runtime) code change. (The agents **lib**
+  `@data-fair/lib-vuetify-agents` does get a new `DfAgentChatBlock` component —
+  see Piece 3 — but the chat runtime/embed page is unchanged.)
 
 ## Affected files
 
@@ -265,5 +267,10 @@ Register in `api/types/page-elements/schema.js`:
 - `api/types/page-element-functional/schema.js` (new `element-custom-agent` def)
 - `api/types/page-elements/schema.js` (oneOf `$ref` + oneOfItems label)
 
-**Agents service**
+**Agents lib (`@data-fair/lib-vuetify-agents`, via `agents_feat-custom-agent` worktree)**
+- `lib-vuetify/DfAgentChatBlock.vue` (new inline chat component)
+- `lib-vuetify/index.ts` (export it)
+- version bump + publish; portal `package.json` bumps the dependency
+
+**Agents service (runtime / embed page)**
 - None.
