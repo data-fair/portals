@@ -64,10 +64,16 @@ block — they are declared in the context of the page and therefore available t
   `_c*,*_*:_d_<datasetId>_,*:<uuid>_` (concept filters `_c*` + per-dataset
   filters `_d_<id>_` + element-scoped `<uuid>_`).
 
-> Note: portals has **no** `reactiveSearchParams` composable (unlike data-fair's
-> `dataset-table-agent-tools.ts`). The equivalent reactive params object in
-> portals is the **vue-router query**, synced by the d-frame adapter. The
-> page-params tools therefore operate on the router query.
+> Note: portals has **no** `reactiveSearchParams` object (that lives in
+> data-fair: `@data-fair/lib-vue/reactive-search-params.js`, used by
+> `data-fair/public/composables/use-search-params-agent.ts` — the conceptual
+> model for our tools: `set_dataset_filters` / `get_dataset_filters` mutating a
+> reactive param store). **Confirmed** by reading the d-frame adapter source
+> (`@data-fair/frame/lib/vue-router/state-change-adapter.js`): in portals the
+> backing store is the **vue-router query** —
+> `get state () { return router.currentRoute.value.query }`. So the page-params
+> tools operate on the router query via `useRouter()`, mirroring data-fair's
+> set/get shape but with the router query as the store.
 
 ## Decisions (from brainstorming)
 
@@ -82,9 +88,10 @@ block — they are declared in the context of the page and therefore available t
   chat's display, not tool availability.
 - **Page-params tools home:** registered page-scoped, from the page-render root.
 - **Block schema home:** in `api/types/page-element-functional/schema.js`.
-- **Param tools scope:** all useful operations (read/describe/set/clear),
+- **Param tools scope:** all useful operations (describe / get / set+clear),
   operating on the router query (portals' reactive params equivalent), modeled
-  after data-fair's `dataset-table-agent-tools.ts`.
+  after data-fair's
+  `data-fair/public/composables/use-search-params-agent.ts`.
 
 ## Architecture
 
@@ -115,19 +122,24 @@ regardless of the global chat toggle.
 - **Registered from** `portal/app/components/page-elements.vue` when `root`
   (so it mounts/unmounts with the page and only the active page's filters are
   exposed). It receives the page `elements` array to know what's filterable.
-- Tools:
+- Tools (mirroring data-fair's `use-search-params-agent.ts` set/get shape; set
+  and clear are combined into one tool, where an empty/null value deletes the
+  key — exactly as data-fair does):
   - `describe_page_filters` — scan `elements` for blocks using `shared-filters`
     syncParams; report the filterable datasets (`_d_<id>_`) and that page-wide
-    concept filters (`_c_*`) are available, with the dataset ids/titles.
+    concept filters (`_c_*`) are available, with the dataset ids/titles. This is
+    the piece data-fair doesn't have (it knows its single dataset's schema
+    statically); here we derive it from the page's elements.
   - `get_page_filters` — read current `_c_*` and `_d_<id>_*` keys/values from
-    the router query.
-  - `set_page_filter` — push a router-query update for a concept (`_c_…`) or a
-    per-dataset (`_d_<id>_…`) filter; the d-frame adapter propagates it to all
-    embeds bound to that param.
-  - `clear_page_filter` — remove a specific filter key (or all page filters).
+    the router query (`useRoute().query`).
+  - `set_page_filters` — accept a `params` map (`{ key: value }`); for each
+    entry, push a router-query update via `useRouter()` (empty/null value
+    removes the key — covers both **set** and **clear**). The d-frame adapter
+    propagates changes to all embeds bound to those params.
 
-  Tool names are namespaced (e.g. `pageFilters_*`) to avoid collision with the
-  base tools.
+  Tool names are namespaced (e.g. `pageFilters_*` or kept distinct from the
+  base `*_dataset_*` names) to avoid collision with the base tools and with
+  data-fair's own tools should both ever appear.
 
 ### Piece 3 — Custom-agent block
 
