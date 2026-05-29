@@ -120,15 +120,17 @@ regardless of the global chat toggle.
 
 - **New** `portal/app/composables/agent/page-params-tools.ts` using
   `useAgentTool` from `@data-fair/lib-vue-agents`, modeled on data-fair's
-  table-page search-param agent tools. Operates on the injected
-  `reactiveSearchParams` object (`inject(reactiveSearchParamsKey)`): reads keys
-  for get/describe, assigns/deletes keys for set+clear. The reactive object
-  handles the router + d-frame propagation.
+  table-page search-param agent tools. Gets the params object via the lib's
+  public composable `useReactiveSearchParams()`
+  (from `@data-fair/lib-vue/reactive-search-params.js`): reads keys for
+  get/describe, assigns/deletes keys for set+clear. The reactive object handles
+  the router + d-frame propagation.
 - **Registered from** `portal/app/components/page-elements.vue` when `root`
   (so it mounts/unmounts with the page and only the active page's filters are
   exposed). It receives the page `elements` array to know what's filterable.
-  Because it `inject`s `reactiveSearchParams`, registration must happen inside a
-  component setup with the plugin installed (page-elements.vue qualifies).
+  Because it calls `useReactiveSearchParams()` (which injects), registration must
+  happen inside a component setup with the plugin installed (page-elements.vue
+  qualifies).
 - Tools (mirroring data-fair's `use-search-params-agent.ts` set/get shape; set
   and clear are combined into one tool, where an empty/null value deletes the
   key — exactly as data-fair does):
