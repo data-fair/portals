@@ -6,8 +6,8 @@ export default {
       type: 'object',
       title: 'CustomAgentElement',
       'x-i18n-title': {
-        en: 'Custom AI assistant',
-        fr: 'Assistant IA personnalisé'
+        en: 'Custom AI assistant (beta)',
+        fr: 'Assistant IA personnalisé (bêta)'
       },
       required: ['type'],
       properties: {
@@ -47,6 +47,22 @@ export default {
               itemTitle: 'item.title + " (" + item.id + ")"',
               itemKey: 'item.id'
             }
+          }
+        },
+        visibleTo: {
+          type: 'array',
+          title: 'Visible pour',
+          'x-i18n-title': { en: 'Visible to' },
+          default: ['admin', 'contrib', 'user', 'external', 'anonymous'],
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'admin', title: 'Administrateurs de l\'organisation' },
+              { const: 'contrib', title: 'Contributeurs de l\'organisation' },
+              { const: 'user', title: 'Autres membres de l\'organisation' },
+              { const: 'external', title: 'Utilisateurs externes authentifiés' },
+              { const: 'anonymous', title: 'Visiteurs anonymes' }
+            ]
           }
         },
         height: {

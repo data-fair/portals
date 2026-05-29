@@ -32,7 +32,7 @@ test.describe('agent tools are always on', () => {
       const mc = (navigator as any).modelContext
       return mc && typeof mc.listTools === 'function' &&
         mc.listTools().some((t: any) => t.name === 'list_datasets')
-    }, { timeout: 15_000 })
+    }, undefined, { timeout: 15_000 })
 
     const toolNames = await page.evaluate(() =>
       (navigator as any).modelContext.listTools().map((t: any) => t.name))

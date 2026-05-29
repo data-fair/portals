@@ -2,7 +2,7 @@ import type { PortalConfig } from '#api/types/portal-config'
 
 /** Portal context appended to every agent's system prompt (domain/owner/title). */
 export function portalPromptContext (portalConfig: PortalConfig, ownerName?: string): string[] {
-  const parts: string[] = []
+  const parts: string[] = ['Tu es un assistant IA intégré à un portail de données Data Fair.']
   const domain = import.meta.client ? window.location.hostname : ''
   if (domain) parts.push(`Le nom de domaine de ce portail est "${domain}".`)
   if (ownerName) parts.push(`Ce portail est géré par "${ownerName}".`)
