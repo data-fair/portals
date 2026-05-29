@@ -356,8 +356,12 @@ const traversePageElements = async (pageElements: PageElement[] | undefined, cal
     if (element.type === 'card') await traversePageElements(element.children, callback)
     if (element.type === 'banner') await traversePageElements(element.children, callback)
     if (element.type === 'responsive-grid') await traversePageElements(element.children, callback)
-    if (element.type === 'datasets-catalog') await traversePageElements(element.advancedFilters, callback)
+
+    // Catalog blocks can host arbitrary elements (incl. topics) as custom "advanced filters".
     if (element.type === 'applications-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'datasets-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'event-catalog') await traversePageElements(element.advancedFilters, callback)
+    if (element.type === 'news-catalog') await traversePageElements(element.advancedFilters, callback)
     if (element.type === 'reuses-catalog') await traversePageElements(element.advancedFilters, callback)
 
     if (element.type === 'two-columns') {
