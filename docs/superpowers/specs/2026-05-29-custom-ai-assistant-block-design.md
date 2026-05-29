@@ -67,15 +67,14 @@ block — they are declared in the context of the page and therefore available t
 > Note: portals **does** provide a `reactiveSearchParams` object — the same
 > `@data-fair/lib-vue/reactive-search-params.js` data-fair uses. It is installed
 > app-wide by `portal/app/plugins/reactive-search-params.ts`
-> (`createReactiveSearchParams(router)`) and injectable via the exported
-> `reactiveSearchParamsKey` symbol. It is a flat **reactive `{ key: value }`
+> (`createReactiveSearchParams(router)`) and accessed via the exported composable
+> `useReactiveSearchParams()`. It is a flat **reactive `{ key: value }`
 > object** seeded from and two-way-synced with the vue-router query: mutating a
 > key writes through to the router, and the d-frame adapter
 > (`@data-fair/frame/lib/vue-router/state-change-adapter.js`) propagates router
 > changes to the embedded apps/previews. **The page-params tools operate on this
-> injected `reactiveSearchParams` object** (per user direction), mirroring
-> data-fair's table-page search-param agent tools, rather than poking the router
-> directly.
+> `reactiveSearchParams` object** (per user direction), mirroring data-fair's
+> table-page search-param agent tools, rather than poking the router directly.
 
 ## Decisions (from brainstorming)
 
@@ -131,9 +130,9 @@ regardless of the global chat toggle.
   Because it calls `useReactiveSearchParams()` (which injects), registration must
   happen inside a component setup with the plugin installed (page-elements.vue
   qualifies).
-- Tools (mirroring data-fair's `use-search-params-agent.ts` set/get shape; set
-  and clear are combined into one tool, where an empty/null value deletes the
-  key — exactly as data-fair does):
+- Tools (mirroring the set/get shape of data-fair's table-page search-param
+  agent tools; set and clear are combined into one tool, where an empty/null
+  value deletes the key):
   - `describe_page_filters` — scan `elements` for blocks using `shared-filters`
     syncParams; report the filterable datasets (`_d_<id>_`) and that page-wide
     concept filters (`_c_*`) are available, with the dataset ids/titles. This is
