@@ -35,7 +35,7 @@ const isIframe = useState('isIframe', () => {
 })
 
 providePortalStore($portal, $siteInfo)
-provideNavigationStore({ isIframe })
+const navigationStore = provideNavigationStore({ isIframe })
 
 // Register the portal-level WebMCP host (frame server + base tools) so agent
 // tools are available on the tab BroadcastChannel before any page renders.
@@ -44,7 +44,8 @@ if (import.meta.client) {
     locale: toRef(() => locale.value),
     localFetch: $localFetch,
     portalConfig: $portal.config,
-    portalId: $portal._id
+    portalId: $portal._id,
+    navigationStore
   })
 }
 

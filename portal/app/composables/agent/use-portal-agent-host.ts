@@ -1,6 +1,7 @@
 import type { Ref } from 'vue'
 import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
+import type { NavigationStore } from '../use-navigation-store'
 import { useFrameServer } from '@data-fair/lib-vue-agents'
 import { useAgentDatasetTools } from './dataset-tools'
 import { useAgentDatasetDataTools } from './dataset-data-tools'
@@ -18,12 +19,17 @@ import { useAgentPortalContentTools } from './portal-content-tools'
  * relies on onScopeDispose for cleanup, and useFrameServer touches
  * navigator/BroadcastChannel. Order matters: useFrameServer first (installs the
  * BrowserMcpServer on navigator.modelContext), then the tool composables.
+ *
+ * The navigation store must be passed explicitly because this composable runs
+ * in app.vue's own setup — inject() would search the parent (NuxtRoot) where
+ * the store has not been provided.
  */
 export function usePortalAgentHost (opts: {
   locale: Ref<string>
   localFetch: $Fetch
   portalConfig: PortalConfig
   portalId: string
+  navigationStore: NavigationStore
 }) {
   useFrameServer('portal')
   useAgentDatasetTools(opts.locale, opts.localFetch)
@@ -31,7 +37,7 @@ export function usePortalAgentHost (opts: {
   useAgentNavigationTools({
     locale: opts.locale,
     portalConfig: opts.portalConfig,
-    navigationStore: useNavigationStore()
+    navigationStore: opts.navigationStore
   })
   useAgentGeoTools(opts.locale)
   useAgentPortalContentTools(opts.locale, opts.localFetch, opts.portalId)
