@@ -40,10 +40,20 @@
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationElement } from '#api/types/page-elements/index.ts'
+import { usePageFilterDescribeTool } from '../../../composables/agent/page-filter-describe-tool'
 
 const { element } = defineProps<{ element: ApplicationElement }>()
 const { t } = useI18n()
 const { preview } = usePortalStore()
+
+// A shared-filters application reflects all page filters (concept + every dataset).
+if (element.syncParams === 'shared-filters' && element.uuid) {
+  usePageFilterDescribeTool({
+    uuid: element.uuid,
+    title: `Filtres : ${element.application?.title ?? 'visualisation'}`,
+    description: `This page has a visualization "${element.application?.title ?? ''}" that reflects all page filters: concept filters (keys starting with "_c") and every dataset filter (keys starting with "_d_"). Use pageFilters_set to drive it.`
+  })
+}
 
 const syncParams = computed(() => {
   const uuid = element.uuid || crypto.randomUUID().split('-')[0] // Prevent undefined uuid
