@@ -795,17 +795,18 @@ Create `portal/app/components/page-element/functional/page-element-custom-agent.
 <script setup lang="ts">
 import type { CustomAgent } from '#api/types/page-elements/index.ts'
 import('@data-fair/frame/lib/d-frame.js')
-import { resolveAgentChatUrl } from '@data-fair/lib-vuetify-agents'
+import { resolveAgentChatUrl } from '@data-fair/lib-vuetify-agents/useAgentChatBase.js'
 import { portalPromptContext } from '../../../composables/agent/portal-prompt-context'
 
 const { element } = defineProps<{ element: CustomAgent }>()
 const { t } = useI18n()
-// usePortalStore exposes computed refs: config, owner, preview, ...
-const { config, owner } = usePortalStore()
+// usePortalStore exposes { portal: Ref, portalConfig: ComputedRef, preview, siteInfo }
+const { portal, portalConfig } = usePortalStore()
+const owner = computed(() => portal.value.owner)
 const router = useRouter()
 
 const systemPrompt = computed(() => {
-  const parts = [element.systemPrompt || '', ...portalPromptContext(config.value, owner.value?.name)]
+  const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name)]
   if (element.focusDatasets?.length) {
     const list = element.focusDatasets.map(d => `"${d.title ?? d.id}" (id: ${d.id})`).join(', ')
     parts.push(`Concentre tes explorations de données sur ces jeux de données : ${list}. Tu peux explorer le reste du catalogue uniquement si l'utilisateur le demande explicitement.`)
@@ -915,7 +916,7 @@ git add -A && git commit -m "test(portal): integration pass for custom AI assist
 - **Naming consistency:** `usePortalAgentHost`, `usePageParamsTools`, `usePageFilterDescribeTool`, `portalPromptContext`, tools `pageFilters_get`/`pageFilters_set`/`describe_filters_<uuid>` used identically across tasks.
 - **Open assumptions to verify during execution (do not block):**
   - `page-element-dataset-download.vue` destructures `element` with `dataset`/`uuid` like the table component — confirm in Task 3 Step 5 and mirror if different.
-  - `usePortalStore()` exposes `config` and `owner` as computed refs (verified in `portal/app/composables/store-portal.ts`); Task 5 uses `config.value`/`owner.value`.
-  - `resolveAgentChatUrl` is exported from the `@data-fair/lib-vuetify-agents` index (verified); Task 5 imports it from there.
-  - `page-element-dataset-download.vue` destructures `const { element } = defineProps<{ element: DatasetDownload }>()` and has `element.dataset`/`element.uuid` (verified) — Task 3 Step 5 call works as written.
+  - `usePortalStore()` (verified in `portal/app/composables/use-portal-store.ts`) returns `{ portal: Ref<RequestPortal>, portalConfig: ComputedRef<config>, preview, siteInfo }` — there is **no** `config`/`owner` key. Task 5 uses `portalConfig.value` and `portal.value.owner`.
+  - `resolveAgentChatUrl` is **not** re-exported from the `@data-fair/lib-vuetify-agents` index (only the Df* components + drawer/menu composables are). Task 5 imports it from `@data-fair/lib-vuetify-agents/useAgentChatBase.js` (verified present).
+  - `page-element-dataset-download.vue` uses type `DatasetDownloadElement` and its schema **does** include the `syncParams` enum (`none`/`sandboxed`/`shared-filters`), so the Task 3 Step 5 guard `element.syncParams === 'shared-filters'` is valid. Note: the current download component passes a static `sync-params` attr to `d-frame-wrapper` and does not yet wire the enum to actual sync behavior — that pre-existing gap is out of scope here; the describe tool only advertises.
 ```
