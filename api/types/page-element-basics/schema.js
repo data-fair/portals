@@ -350,12 +350,11 @@ export default {
           default: 48,
           layout: {
             comp: 'slider',
-            // TODO: add it when VJSF are fixed
-            // props: {
-            //   step: 8,
-            //   showTicks: 'always',
-            //   thumbLabel: true
-            // }
+            step: 8,
+            props: {
+              showTicks: 'always',
+              thumbLabel: true
+            }
           }
         },
         centered: {
