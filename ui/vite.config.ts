@@ -75,7 +75,8 @@ export default defineConfig({
       dirs: [
         'src/components',
         '../portal/app/components'
-      ]
+      ],
+      globsExclude: ['../portal/app/components/d-frame-wrapper.vue']
     }),
     {
       name: 'inject-site-context',
