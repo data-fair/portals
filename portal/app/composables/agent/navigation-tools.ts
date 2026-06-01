@@ -116,7 +116,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       sections.push(
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs/refs):\n' +
         '- Dataset detail: /datasets/{ref}\n' +
-        '- Dataset table: /datasets/{ref}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts q (full-text search), sort, select, bbox, geo_distance, date_match. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
+        '- Dataset table: /datasets/{ref}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts _c_q (full-text search), sort, select, _c_bbox, _c_geo_distance, _c_date_match. The `_c_` prefix on q/bbox/geo_distance/date_match is required for URL sync. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
         '- Dataset map: /datasets/{ref}/map — for geolocalized datasets, accepts the same filter query params as the table page\n' +
         '- Dataset API doc: /datasets/{ref}/api-doc\n' +
         '- Application detail: /applications/{ref}\n' +
@@ -157,7 +157,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         },
         query: {
           type: 'string' as const,
-          description: 'Optional query string to append to the URL (without leading "?"). For dataset table pages, use the filterQuery from the dataset_data subagent Context. Example: "nom_search=Jean&age_lte=30&q=Paris"'
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table pages, use the filterQuery from the dataset_data subagent Context. Geo/full-text filters need the `_c_` prefix. Example: "nom_search=Jean&_c_q=Paris&_c_geo_distance=2.35,48.85,10km"'
         }
       },
       required: ['path'] as const

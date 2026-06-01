@@ -42,7 +42,7 @@ export function useAgentGeoTools (locale: Ref<string>) {
 
   useAgentTool({
     name: 'get_user_geolocation',
-    description: 'Get the current geographic position of the user using the browser Geolocation API. Returns latitude, longitude, and accuracy. The user may be prompted to grant location permission.',
+    description: 'Get the current geographic position of the user using the browser Geolocation API. Returns longitude, latitude, and accuracy (for geo_distance/bbox filters use lon,lat order). The user may be prompted to grant location permission.',
     annotations: { title: getUserGeolocationTitle[locale.value] ?? getUserGeolocationTitle.en, readOnlyHint: true },
     inputSchema: {
       type: 'object' as const,
@@ -67,8 +67,8 @@ export function useAgentGeoTools (locale: Ref<string>) {
 
         const { latitude, longitude, accuracy, altitude, altitudeAccuracy } = position.coords
         const parts = [
-          `**Latitude**: ${latitude}`,
           `**Longitude**: ${longitude}`,
+          `**Latitude**: ${latitude}`,
           `**Accuracy**: ${Math.round(accuracy)} m`
         ]
         if (altitude != null) {
