@@ -6,7 +6,7 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
   const origin = import.meta.client ? window.location.origin : ''
   if (origin) {
     parts.push(`Le nom de domaine de ce portail est "${window.location.hostname}".`)
-    parts.push(`Présente les liens vers les pages du portail en URL absolue, préfixée par "${origin}", jamais en chemin relatif.`)
+    parts.push(`Présente toujours les liens vers les pages du portail comme des liens markdown avec une URL absolue, par exemple \`[Voir la carte](${origin}/datasets/mon-jeu/map)\` — jamais un chemin relatif ni une URL brute non formatée.`)
   }
   if (ownerName) parts.push(`Ce portail est géré par "${ownerName}".`)
   if (portalConfig.title) parts.push(`Le titre de ce portail est "${portalConfig.title}".`)
