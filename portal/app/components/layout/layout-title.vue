@@ -105,4 +105,8 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
   font-family: var(--d-heading-font-family);
   text-transform: none;
 }
+/* Vuetify 4 moved .font-weight-bold into the `vuetify-utilities` cascade @layer and dropped its !important. */
+.font-weight-bold {
+  font-weight: 700 !important;
+}
 </style>
