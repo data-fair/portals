@@ -116,8 +116,8 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       sections.push(
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists:\n' +
         '- Dataset detail: /datasets/{slug}\n' +
-        '- Dataset table: /datasets/{slug}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts _c_q (full-text search), sort, select, _c_bbox, _c_geo_distance, _c_date_match. The `_c_` prefix on q/bbox/geo_distance/date_match is required for URL sync. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
-        '- Dataset map: /datasets/{slug}/map — for geolocalized datasets, accepts the same filter query params as the table page\n' +
+        '- Dataset table: /datasets/{slug}/table — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n' +
+        '- Dataset map: /datasets/{slug}/map — for geolocalized datasets, accepts the same filterQuery as the table page\n' +
         '- Dataset API doc: /datasets/{slug}/api-doc\n' +
         '- Application detail: /applications/{slug}\n' +
         '- Application full view: /applications/{slug}/full\n' +
@@ -157,7 +157,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         },
         query: {
           type: 'string' as const,
-          description: 'Optional query string to append to the URL (without leading "?"). For dataset table pages, use the filterQuery from the dataset_data subagent Context. Geo/full-text filters need the `_c_` prefix. Example: "nom_search=Jean&_c_q=Paris&_c_geo_distance=2.35,48.85,10km"'
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself.'
         }
       },
       required: ['path'] as const
