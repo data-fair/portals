@@ -14,4 +14,4 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
 }
 
 /** Hint shared with the global agent about offering filtered navigation views. */
-export const navigateToFilteredViewHint = 'Quand tu proposes un lien vers une vue filtrée d\'un jeu de données, privilégie fortement le champ filterQuery renvoyé par le sous-agent dataset_data (déjà validé et préfixé "_c_", en y ajoutant select=<clés de columns>) plutôt que des filtres assemblés à la main, et vérifie que totalResults > 0 avant de proposer le lien. Vue tableau : /datasets/{datasetId}/table ; vue carte (si géolocalisé) : /datasets/{datasetId}/map.'
+export const navigateToFilteredViewHint = 'Quand tu proposes un lien vers une vue filtrée d\'un jeu de données, privilégie fortement le champ filterQuery renvoyé par le sous-agent dataset_data (déjà validé et préfixé "_c_", en y ajoutant select=<clés de columns>) plutôt que des filtres assemblés à la main, et vérifie que totalResults > 0 avant de proposer le lien. Utilise de préférence le slug du jeu de données plutôt que son id dans le chemin. Vue tableau : /datasets/{slug}/table ; vue carte (si géolocalisé) : /datasets/{slug}/map.'

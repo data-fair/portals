@@ -114,13 +114,13 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       }
 
       sections.push(
-        '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs/refs):\n' +
-        '- Dataset detail: /datasets/{ref}\n' +
-        '- Dataset table: /datasets/{ref}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts _c_q (full-text search), sort, select, _c_bbox, _c_geo_distance, _c_date_match. The `_c_` prefix on q/bbox/geo_distance/date_match is required for URL sync. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
-        '- Dataset map: /datasets/{ref}/map — for geolocalized datasets, accepts the same filter query params as the table page\n' +
-        '- Dataset API doc: /datasets/{ref}/api-doc\n' +
-        '- Application detail: /applications/{ref}\n' +
-        '- Application full view: /applications/{ref}/full\n' +
+        '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists:\n' +
+        '- Dataset detail: /datasets/{slug}\n' +
+        '- Dataset table: /datasets/{slug}/table — accepts filter query params (same format as search_data filters: column_key + suffix like nom_search, age_lte, ville_eq). Also accepts _c_q (full-text search), sort, select, _c_bbox, _c_geo_distance, _c_date_match. The `_c_` prefix on q/bbox/geo_distance/date_match is required for URL sync. Use the filterQuery from dataset_data subagent Context directly as the query parameter.\n' +
+        '- Dataset map: /datasets/{slug}/map — for geolocalized datasets, accepts the same filter query params as the table page\n' +
+        '- Dataset API doc: /datasets/{slug}/api-doc\n' +
+        '- Application detail: /applications/{slug}\n' +
+        '- Application full view: /applications/{slug}/full\n' +
         '- Event detail: /event/{slug}\n' +
         '- News detail: /news/{slug}\n' +
         '- Reuse detail: /reuses/{slug}'
@@ -146,7 +146,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'navigate',
-    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, always offer to navigate the user to the filtered table view by passing the same filter parameters as query params to /datasets/{ref}/table.',
+    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs — prefer the human-readable `slug` over the `id` when building dataset and application paths. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, always offer to navigate the user to the filtered table view by passing the same filter parameters as query params to /datasets/{slug}/table.',
     annotations: { title: t('navigateToPage') },
     inputSchema: {
       type: 'object' as const,
