@@ -54,12 +54,12 @@ const canSee = computed(() => {
 // the chat URL and routes navigate-messages internally. We only compose the
 // effective prompt: block prompt + portal context + focus datasets + containment.
 const systemPrompt = computed(() => {
-  const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name)]
+  const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name, !!element.systemPrompt)]
   if (element.focusDatasets?.length) {
     const list = element.focusDatasets.map((d: { id: string, title?: string }) => `"${d.title ?? d.id}" (id: ${d.id})`).join(', ')
     parts.push(`Concentre tes explorations de données sur ces jeux de données : ${list}. Tu peux explorer le reste du catalogue uniquement si l'utilisateur le demande explicitement.`)
   }
   parts.push("Ton travail est limité au contexte de cette page. N'utilise pas l'outil de navigation pour quitter la page, sauf si l'utilisateur le demande explicitement.")
-  return parts.join('\n')
+  return parts.filter(Boolean).join('\n')
 })
 </script>

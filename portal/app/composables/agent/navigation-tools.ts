@@ -147,7 +147,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'navigate',
-    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs — prefer the human-readable `slug` over the `id` when building dataset and application paths. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, always offer to navigate the user to the filtered table view by passing the same filter parameters as query params to /datasets/{slug}/table.',
+    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs — prefer the human-readable `slug` over the `id` when building dataset and application paths. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, offer to navigate the user to the filtered table view at /datasets/{slug}/table by passing the same filter parameters as query params — but only when the search returned results (totalResults > 0).',
     annotations: { title: t('navigateToPage') },
     inputSchema: {
       type: 'object' as const,
@@ -158,7 +158,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         },
         query: {
           type: 'string' as const,
-          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself.'
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself. You may additionally append `select=<column keys>` to choose which columns are displayed, but do not otherwise alter the filter syntax.'
         }
       },
       required: ['path'] as const
