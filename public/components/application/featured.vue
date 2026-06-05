@@ -26,8 +26,6 @@
         :src="`${dataFairUrl}/app/${applicationRef}?d-frame=true&primary=${readablePrimaryColor}`"
         :iframe-title="application.title"
         :style="iframeStyle"
-        scrolling="no"
-        resize="no"
         aspect-ratio
         state-change-events
         @state-change="s => syncedState = s.detail[1]"
