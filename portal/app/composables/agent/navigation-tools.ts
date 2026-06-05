@@ -5,6 +5,7 @@ import type { LinkItem } from '#api/types/common-links/index.ts'
 import type { PortalConfig } from '#api/types/portal-config'
 import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { useReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
+import { unwrapFilterQuery } from '@data-fair/agent-tools-data-fair/_utils'
 import { createAgentTranslator } from './utils'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -166,16 +167,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       try {
         // Defensive unwrap: the agent is told to pass the dataset_data subagent's filterQuery
         // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
-        // Detect that single-param case and use the inner string as the actual query.
-        // TODO: replace with unwrapFilterQuery from @data-fair/agent-tools-data-fair/_utils
-        // once that package is bumped to a version that exports it.
-        let queryString = params.query as string | undefined
-        if (queryString) {
-          const match = /^filterQuery=(.+)$/s.exec(queryString.trim())
-          if (match) {
-            try { queryString = decodeURIComponent(match[1]) } catch { queryString = match[1] }
-          }
-        }
+        const queryString = unwrapFilterQuery(params.query as string | undefined)
         const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
         await router.push(query ? { path: params.path, query } : params.path)
         await new Promise(resolve => setTimeout(resolve, 500))
