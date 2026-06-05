@@ -58,7 +58,7 @@ import { defineAsyncComponent, computed } from 'vue'
 import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
-import { portalPromptContext, navigateToFilteredViewHint } from '../composables/agent/portal-prompt-context'
+import { portalPromptContext } from '../composables/agent/portal-prompt-context'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -91,9 +91,8 @@ const canSee = computed(() => {
 
 const systemPrompt = computed(() => {
   const base = agentChat.value?.systemPrompt || ''
-  const parts = [base, ...portalPromptContext(props.portalConfig, props.owner.name)]
-  parts.push(navigateToFilteredViewHint)
-  return parts.join('\n')
+  const parts = [base, ...portalPromptContext(props.portalConfig, props.owner.name, !!base)]
+  return parts.filter(Boolean).join('\n')
 })
 
 </script>

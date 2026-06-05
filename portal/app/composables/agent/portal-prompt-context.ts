@@ -1,17 +1,31 @@
 import type { PortalConfig } from '#api/types/portal-config'
 
-/** Portal context appended to every agent's system prompt (domain/owner/title). */
-export function portalPromptContext (portalConfig: PortalConfig, ownerName?: string): string[] {
-  const parts: string[] = ['Tu es un assistant IA intégré à un portail de données Data Fair.']
+/**
+ * Portal context appended to every agent's system prompt.
+ *
+ * `hasCustomBase` tells us whether the caller already prepended a portal-configured
+ * base prompt: when it did, that base establishes the assistant's identity, so we
+ * skip our own generic identity line to avoid repeating it. When it did not, we
+ * provide the canonical identity line ourselves (the downstream agents component
+ * only falls back to its default base prompt when the whole prompt is empty, which
+ * it never is here — so identity must come from us).
+ */
+export function portalPromptContext (portalConfig: PortalConfig, ownerName?: string, hasCustomBase = false): string[] {
+  const parts: string[] = []
+  if (!hasCustomBase) parts.push('Tu es un assistant IA intégré à un portail de données Data Fair.')
+
+  // Single fact line (title / owner / domain) instead of three sentences: shorter
+  // and keeps the prompt prefix homogeneous across users for better prompt caching.
+  const hostname = import.meta.client ? window.location.hostname : ''
+  const descr: string[] = []
+  if (portalConfig.title) descr.push(`intitulé « ${portalConfig.title} »`)
+  if (ownerName) descr.push(`géré par « ${ownerName} »`)
+  if (hostname) descr.push(`accessible sur ${hostname}`)
+  if (descr.length) parts.push(`Ce portail est ${descr.join(', ')}.`)
+
   const origin = import.meta.client ? window.location.origin : ''
   if (origin) {
-    parts.push(`Le nom de domaine de ce portail est "${window.location.hostname}".`)
     parts.push(`Présente toujours les liens vers les pages du portail comme des liens markdown avec une URL absolue, par exemple \`[Voir la carte](${origin}/datasets/mon-jeu/map)\` — jamais un chemin relatif ni une URL brute non formatée.`)
   }
-  if (ownerName) parts.push(`Ce portail est géré par "${ownerName}".`)
-  if (portalConfig.title) parts.push(`Le titre de ce portail est "${portalConfig.title}".`)
   return parts
 }
-
-/** Hint shared with the global agent about offering filtered navigation views. */
-export const navigateToFilteredViewHint = 'Quand tu proposes un lien vers une vue filtrée d\'un jeu de données, utilise le champ filterQuery renvoyé par le sous-agent dataset_data tel quel ; ne fabrique pas de filtres à la main et ne modifie pas la syntaxe de ses paramètres (tu peux seulement y ajouter select=<clés de columns>). Vérifie que totalResults > 0 avant de proposer le lien. Utilise de préférence le slug du jeu de données plutôt que son id dans le chemin. Vue tableau : /datasets/{slug}/table ; vue carte (si géolocalisé) : /datasets/{slug}/map.'
