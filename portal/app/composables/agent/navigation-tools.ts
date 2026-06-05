@@ -164,7 +164,19 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
     },
     execute: async (params) => {
       try {
-        const query = params.query ? Object.fromEntries(new URLSearchParams(params.query as string)) : undefined
+        // Defensive unwrap: the agent is told to pass the dataset_data subagent's filterQuery
+        // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
+        // Detect that single-param case and use the inner string as the actual query.
+        // TODO: replace with unwrapFilterQuery from @data-fair/agent-tools-data-fair/_utils
+        // once that package is bumped to a version that exports it.
+        let queryString = params.query as string | undefined
+        if (queryString) {
+          const match = /^filterQuery=(.+)$/s.exec(queryString.trim())
+          if (match) {
+            try { queryString = decodeURIComponent(match[1]) } catch { queryString = match[1] }
+          }
+        }
+        const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
         await router.push(query ? { path: params.path, query } : params.path)
         await new Promise(resolve => setTimeout(resolve, 500))
         const currentRoute = router.currentRoute.value
