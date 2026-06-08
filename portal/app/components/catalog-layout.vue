@@ -90,6 +90,7 @@
             :items="sortItems"
             :density="element.filters?.density || 'comfortable'"
             :rounded="element.filters?.rounded"
+            :disabled="!!search"
             @update:sort="$emit('update:sort', $event)"
             @update:order="$emit('update:order', $event)"
           />
@@ -183,6 +184,9 @@ defineSlots<{
 
 const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
+
+// Active text search disables the sort control (results are ranked by relevance)
+const search = useStringSearchParam('q')
 
 const headingTag = computed(() => {
   let level = 1

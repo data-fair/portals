@@ -50,8 +50,9 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
   //   - Default sort is invisible: not shown in the UI (dropdown stays empty)
   //     and not in the URL (useStringSearchParam deletes the key when value
   //     equals its default).
-  //   - On text search, consumers drop `sort` from the query when it matches
-  //     the default so data-fair can rank by relevance.
+  //   - On text search, consumers drop `sort` from the query entirely and the
+  //     UI disables the sort control, so data-fair ranks by relevance. The
+  //     chosen sort is kept in the URL and restored once the search is cleared.
   // Seed sort/order from the URL only when the active sort differs from the
   // default, so the dropdown reflects a user-chosen non-default value on load.
   const [initialField, initialOrder] = sortFilter.value !== defaultSort

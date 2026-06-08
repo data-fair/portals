@@ -192,6 +192,7 @@
       :density="config.filters?.density ?? portalConfig.defaults?.density"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       :drawer="drawer"
+      :disabled="!!filters.search.value"
     />
   </v-col>
 </template>

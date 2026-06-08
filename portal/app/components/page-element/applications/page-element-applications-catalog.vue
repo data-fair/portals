@@ -72,7 +72,8 @@ const {
     if (filters.baseApplication.value?.length) query['base-application'] = filters.baseApplication.value.join(',')
     if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
-    if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
+    // No sort during a text search: let data-fair rank results by relevance
+    if (sortValue && !filters.search.value) query.sort = sortValue
     return query
   },
   mockDataFactory: () => {
