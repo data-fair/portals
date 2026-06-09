@@ -7,7 +7,7 @@
       "NotebookEdit",
       "WebFetch",
       "WebSearch",
-      "mcp__*"
+      "mcp__playwright-test"
     ],
     "deny": []
   },

@@ -8,7 +8,6 @@ export default {
       layout: {
         comp: 'slider',
         props: {
-          step: 1,
           thumbLabel: true,
           showTicks: 'always'
         }

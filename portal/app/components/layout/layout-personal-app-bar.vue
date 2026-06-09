@@ -18,6 +18,7 @@
     <div id="agent-chat-appbar" class="d-flex align-center" />
     <v-toolbar-items>
       <notification-queue />
+      <theme-switcher :theme="portalConfig.theme" />
 
       <!-- Personal Menu -->
       <layout-personal-menu personal />
@@ -28,8 +29,9 @@
 <script setup lang="ts">
 import { VToolbar, VAppBar } from 'vuetify/components'
 import { mdiMenu, mdiMenuOpen } from '@mdi/js'
+import themeSwitcher from '@data-fair/lib-vuetify/theme-switcher.vue'
 
-const { preview } = usePortalStore()
+const { preview, portalConfig } = usePortalStore()
 const { personalDrawer, breadcrumbs } = useNavigationStore()
 const { t } = useI18n()
 

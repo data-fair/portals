@@ -36,7 +36,6 @@ export default {
           layout: {
             comp: 'slider',
             props: {
-              step: 0.1,
               thumbLabel: true,
               showTicks: 'always'
             }
@@ -51,7 +50,6 @@ export default {
           layout: {
             comp: 'slider',
             props: {
-              step: 1,
               thumbLabel: true,
               showTicks: 'always'
             }
@@ -147,7 +145,6 @@ export default {
                 if: 'parent.data?.color && parent.data?.image',
                 comp: 'slider',
                 props: {
-                  step: 0.1,
                   thumbLabel: true,
                   showTicks: 'always'
                 }
@@ -384,7 +381,6 @@ export default {
                 if: 'parent.data?.color && parent.data?.image',
                 comp: 'slider',
                 props: {
-                  step: 0.1,
                   thumbLabel: true,
                   showTicks: 'always'
                 }

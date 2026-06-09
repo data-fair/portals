@@ -66,7 +66,13 @@ export default {
           {
             title: 'Couleurs',
             comp: 'card',
-            children: ['theme']
+            children: [
+              {
+                if: 'data?.theme?.dark || data?.theme?.hc || data?.theme?.hcDark',
+                children: [{ name: 'theme-beta-warning' }]
+              },
+              'theme'
+            ]
           },
           {
             title: 'Polices de caractères',
