@@ -100,35 +100,29 @@ export default {
             if: 'data?.headerHomeActive',
             children: [
               {
-
                 cols: { md: 6 },
-                comp: 'card',
-                title: 'Options',
+                title: 'Toutes les pages',
                 children: ['header']
               },
               {
                 cols: { md: 6 },
-                comp: 'card',
-                title: 'Options - Accueil',
+                title: "Page d'accueil",
                 children: ['headerHome']
               },
               {
-                name: 'app-bar-preview'
+                name: 'app-bar-preview',
+                props: { title: 'Toutes les pages' }
               },
               {
                 name: 'app-bar-preview',
-                props: { home: true }
+                props: { home: true, title: "Page d'accueil" }
               }
             ]
           },
           {
             if: '!data?.headerHomeActive',
             children: [
-              {
-                comp: 'card',
-                title: 'Options',
-                children: ['header']
-              },
+              'header',
               { name: 'app-bar-preview' }
             ]
           },

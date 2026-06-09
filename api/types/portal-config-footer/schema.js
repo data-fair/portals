@@ -72,6 +72,7 @@ export default {
     socialPosition: {
       type: 'string',
       title: 'Position des réseaux sociaux',
+      description: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Paramètres généraux › Réseaux sociaux ».",
       default: 'none',
       oneOf: [
         { const: 'none', title: 'Aucun' },

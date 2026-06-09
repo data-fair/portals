@@ -536,7 +536,8 @@ export default {
         showSocial: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Afficher les liens de réseaux sociaux'
+          title: 'Afficher les liens de réseaux sociaux',
+          description: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans la configuration du portail (« Paramètres généraux › Réseaux sociaux »)."
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         sendButton: {
