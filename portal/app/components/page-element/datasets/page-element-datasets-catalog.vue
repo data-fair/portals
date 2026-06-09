@@ -93,7 +93,8 @@ const {
     if (filters.keywords.value?.length) query.keywords = filters.keywords.value.join(',')
     if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
     if (filters.ids.value?.length) query.ids = filters.ids.value.join(',')
-    if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
+    // No sort during a text search: let data-fair rank results by relevance
+    if (sortValue && !filters.search.value) query.sort = sortValue
     return query
   },
   mockDataFactory: () => {

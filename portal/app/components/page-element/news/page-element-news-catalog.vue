@@ -57,7 +57,8 @@ const {
       page
     }
     if (filters.search.value) query.q = filters.search.value
-    if (sortValue && !(filters.search.value && sortValue === element.defaultSort)) query.sort = sortValue
+    // No sort during a text search: let data-fair rank results by relevance
+    if (sortValue && !filters.search.value) query.sort = sortValue
     return query
   },
   mockDataFactory: () => Array.from({ length: 6 }, (_, i) => ({
