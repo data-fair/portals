@@ -247,7 +247,7 @@ onMounted(async () => {
     contribute: Contribuer
     myAccount: Mon compte
     myNotifications: Mes notifications
-    myReuses: Mes réutilisations (Bêta)
+    myReuses: Mes réutilisations
     newWindow: Nouvelle fenêtre
     organizationManagement: Gestion de l'organisation
     personalAccount: Compte personnel

@@ -33,6 +33,14 @@
           :sub-agent="true"
           @update:model-value="saveDraft.execute()"
         >
+          <template #theme-beta-warning>
+            <v-alert
+              :text="t('themeBetaWarning')"
+              type="warning"
+              variant="outlined"
+              density="compact"
+            />
+          </template>
           <template #colors-preview="context">
             <colors-preview
               :colors-key="context.colorsKey"
@@ -324,6 +332,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     portals: Portals
     portalConfig: Portal configuration
     configurePrompt: Help me configure this portal
+    themeBetaWarning: Offering several themes to users is still a beta feature. If you notice display issues on a theme other than the default one, please report it to us through support.
   fr:
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
@@ -332,4 +341,5 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     portals: Portails
     portalConfig: Configuration du portail
     configurePrompt: Aide-moi à configurer ce portail
+    themeBetaWarning: Proposer plusieurs thèmes aux utilisateurs est une fonctionnalité encore en version bêta. Si vous constatez des problèmes d'affichage sur un thème autre que le thème par défaut, merci de nous le signaler via l'assistance.
 </i18n>
