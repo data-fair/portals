@@ -7,27 +7,29 @@
     >
       <social-links :links="portalConfig.socialLinks" />
     </v-row>
-    <v-row class="align-center mt-0">
+    <v-row :class="['align-center mt-0', { 'justify-center': logoCentered }]">
       <layout-header-logo
         v-if="logo"
         :logo="logo"
         :link="headerConfig.logoPrimaryLink"
       />
-      <v-spacer v-if="!headerConfig.showTitle" />
-      <v-col
-        v-else
-        class="text-center"
-      >
-        <h1 class="font-weight-bold portal-title">
-          {{ portalConfig.title }}
-        </h1>
-      </v-col>
-      <layout-header-logo
-        v-if="headerConfig.logoSecondary && !$vuetify.display.mdAndDown"
-        :logo="headerConfig.logoSecondary"
-        :link="headerConfig.logoSecondaryLink"
-        is-secondary
-      />
+      <template v-if="!logoCentered">
+        <v-spacer v-if="!headerConfig.showTitle" />
+        <v-col
+          v-else
+          class="text-center"
+        >
+          <h1 class="font-weight-bold portal-title">
+            {{ portalConfig.title }}
+          </h1>
+        </v-col>
+        <layout-header-logo
+          v-if="headerConfig.logoSecondary && !$vuetify.display.mdAndDown"
+          :logo="headerConfig.logoSecondary"
+          :link="headerConfig.logoSecondaryLink"
+          is-secondary
+        />
+      </template>
     </v-row>
   </v-container>
 </template>
@@ -45,8 +47,9 @@ const display = useDisplay()
  * Logo selection rules:
  * - If primary type is hidden: no logo.
  * - On mobile:
- *   - with title: use only logoPrimaryMobile (no fallback to primary logo)
- *   - without title: use logoPrimaryMobile, fallback to primary logo
+ *   - with title shown: use only logoPrimaryMobile (no fallback to primary logo)
+ *   - with title hidden (showTitle off or centering on): use logoPrimaryMobile,
+ *     fallback to primary logo so the centered logo stays visible.
  * - On desktop: use primary logo only.
  */
 const logo = computed(() => {
@@ -58,12 +61,22 @@ const logo = computed(() => {
       ? portalConfig.value.logo || null
       : null
 
+  // Centering hides the title, so treat it as "title hidden" for the mobile fallback.
+  const titleHidden = headerConfig.logoPrimaryCentered || !headerConfig.showTitle
+
   if (display.xs.value) {
-    return headerConfig.logoPrimaryMobile || (headerConfig.showTitle ? null : primaryLogo)
+    return headerConfig.logoPrimaryMobile || (titleHidden ? primaryLogo : null)
   }
 
   return primaryLogo
 })
+
+/**
+ * Center the primary logo when explicitly enabled and a logo is displayed.
+ * In that case the portal title and the secondary logo are not rendered
+ * (the config form hides those options when centering is on).
+ */
+const logoCentered = computed(() => !!logo.value && headerConfig.logoPrimaryCentered)
 
 </script>
 

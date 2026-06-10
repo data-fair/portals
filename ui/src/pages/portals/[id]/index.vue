@@ -52,7 +52,7 @@
 
           <template #app-bar-preview="context">
             <preview
-              :append-title="context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview')"
+              :append-title="context.title ?? (context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview'))"
               no-padding
             >
               <layout-app-bar
