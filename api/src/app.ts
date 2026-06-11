@@ -3,7 +3,7 @@ import { session, errorHandler, createSiteMiddleware, createSpaMiddleware } from
 import express from 'express'
 import helmet from 'helmet'
 import { uiConfig } from './ui-config.ts'
-import { getSiteHashes } from './utils/site.ts'
+import config from '#config'
 import { getStatus } from './admin/status.ts'
 
 import identitiesRouter from './identities/router.ts'
@@ -64,7 +64,7 @@ app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
 app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
   csp: { nonce: true, header: true },
-  getSiteExtraParams: getSiteHashes
+  privateDirectoryUrl: config.privateDirectoryUrl
 }))
 
 app.use(errorHandler)
