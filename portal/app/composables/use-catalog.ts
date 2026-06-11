@@ -62,41 +62,46 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
   const order = ref<'-1' | '1' | undefined>(initialOrder)
 
   const currentPage = ref(1)
-  const displayedItems = ref<T[]>([]) as Ref<T[]>
   const loading = ref(false)
 
   const query = computed(() => config.buildQuery(filters, sortFilter.value, currentPage.value, pageSize))
 
-  const itemsFetch = useFetch<FetchResult<T>>(config.endpoint, { query, watch: false })
+  const itemsFetch = useLocalFetch<FetchResult<T>>(config.endpoint, { query, watch: false })
   const itemsCount = computed(() => itemsFetch.data.value?.count || 0)
   const totalPages = computed(() => Math.ceil((itemsFetch.data.value?.count || 0) / pageSize))
 
-  const refreshItems = async (mode: 'replace' | 'append') => {
+  // Items accumulated across "load more" pages (infinite scroll); undefined when
+  // not accumulating, so the displayed list comes straight from the latest
+  // fetch. Reading itemsFetch.data through a computed (evaluated at render time,
+  // once Nuxt has resolved the SSR data) is what puts the first page into the
+  // server-rendered HTML and avoids the large layout shift on hydration.
+  const appendedItems = ref<T[]>()
+  const displayedItems = computed<T[]>(() => appendedItems.value ?? itemsFetch.data.value?.results ?? []) as Ref<T[]>
+
+  const fetchPage = async () => {
     loading.value = true
     try {
       await itemsFetch.refresh()
-      const results = itemsFetch.data.value?.results
-      if (!results) return
-      if (mode === 'append') displayedItems.value.push(...results)
-      else displayedItems.value = [...results]
     } finally {
       loading.value = false
     }
   }
 
   const goToPage = async (page: number) => {
+    appendedItems.value = undefined
     currentPage.value = page
-    await refreshItems('replace')
+    await fetchPage()
   }
 
   const loadMore = async (paginationPosition: string = 'none') => {
     if (loading.value || paginationPosition !== 'none') return
     if (displayedItems.value.length >= (itemsFetch.data.value?.count || 0)) return
+    // Freeze the items shown so far, then append the next page once it arrives.
+    appendedItems.value = [...displayedItems.value]
     currentPage.value++
-    await refreshItems('append')
+    await fetchPage()
+    appendedItems.value = [...(appendedItems.value ?? []), ...(itemsFetch.data.value?.results ?? [])]
   }
-
-  onMounted(async () => await refreshItems('replace'))
 
   // When user changes sort/order in UI, update the URL-bound sortFilter
   watch([sort, order], () => {
@@ -108,8 +113,9 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
   // Watch all filters + sort to reset pagination and re-fetch
   const filterRefs = [...Object.values(filters), sortFilter]
   watch(filterRefs, async () => {
+    appendedItems.value = undefined
     currentPage.value = 1
-    await refreshItems('replace')
+    await fetchPage()
     if (config.analyticsCategory && filters.search) {
       const searchRef = filters.search as WritableComputedRef<string, string>
       if (searchRef.value) {

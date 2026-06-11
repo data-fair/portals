@@ -1,6 +1,3 @@
-// dynamic CSP modifications based on portal config
-// similar to https://github.com/Baroshem/nuxt-security/blob/main/src/runtime/nitro/plugins/50-updateCsp.ts
-
 import memoize from 'memoizee'
 import axios from '@data-fair/lib-node/axios.js'
 
