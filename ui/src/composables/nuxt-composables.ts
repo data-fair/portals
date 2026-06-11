@@ -15,7 +15,7 @@ export function useRequestURL (): any {
   throw new Error('useRequestURL should only be called from portal, not portals-manager')
 }
 
-export function useCookie (_name: string, _options?: any): any {
+export function useCookie<T = any> (_name: string, _options?: any): Ref<T> {
   throw new Error('useCookie should only be called from portal, not portals-manager')
 }
 

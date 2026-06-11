@@ -123,8 +123,8 @@ export default {
       type: 'object',
       title: 'AlertElement',
       'x-i18n-title': {
-        en: 'Accented text',
-        fr: 'Texte accentué'
+        en: 'Accented text / Alert',
+        fr: 'Texte accentué / Alerte'
       },
       required: ['type', 'alertType'],
       layout: {
@@ -132,10 +132,10 @@ export default {
           {
             if: 'data?.alertType === "none"',
             children: [
-              'type', 'alertType', 'icon', 'color', 'title', 'content', 'mb'
+              'type', 'alertType', 'icon', 'color', 'title', 'content', 'closable', 'mb'
             ]
           },
-          ['type', 'alertType', 'title', 'content', 'mb']
+          ['type', 'alertType', 'title', 'content', 'closable', 'mb']
         ]
       },
       properties: {
@@ -172,6 +172,18 @@ export default {
           title: 'Contenu',
           type: 'string',
           layout: 'markdown'
+        },
+        closable: {
+          type: 'boolean',
+          title: 'Show a dismiss button',
+          'x-i18n-title': {
+            fr: 'Afficher un bouton de fermeture'
+          },
+          description: 'Visitors can dismiss the alert; the dismissal is saved in their browser so it is not shown to them again.',
+          'x-i18n-description': {
+            fr: "Les visiteurs peuvent fermer l'alerte; la fermeture est enregistrée dans leur navigateur pour ne pas la réafficher ensuite."
+          },
+          default: false
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         _html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }

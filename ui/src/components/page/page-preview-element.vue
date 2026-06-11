@@ -28,7 +28,7 @@ defineProps<{ context: { isRoot: boolean, index: number, parentLength: number },
 
 const renderedElement = computed(() => {
   if (!element.value) return
-  if (element.value.type === 'text' && element.value.content) {
+  if ((element.value.type === 'text' || element.value.type === 'alert') && element.value.content) {
     return { ...element.value, _html: renderMarkdown(element.value.content ?? '') }
   }
   return element.value
