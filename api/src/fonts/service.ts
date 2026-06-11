@@ -53,20 +53,40 @@ export const getFontNames = async (owner: AccountKeys) => {
   return fonts.concat(standardFonts)
 }
 
-export const getFontFamilyCss = async (owner: AccountKeys, familyName: string, managerUrl = false) => {
+const getFont = async (owner: AccountKeys, familyName: string, managerUrl = false): Promise<Font> => {
   if (standardFonts.includes(familyName)) {
     const key = familyName.toLowerCase().replace(/\s/g, '')
-    const font: Font = JSON.parse(await readFile(resolvePath(resolve(import.meta.dirname, '../../assets/fonts'), key + '.json'), 'utf-8'))
-    return makeFontCss(font)
+    return JSON.parse(await readFile(resolvePath(resolve(import.meta.dirname, '../../assets/fonts'), key + '.json'), 'utf-8'))
   }
   const assets = (await mongo.fontAssets.find({ 'owner.type': owner.type, 'owner.id': owner.id, name: familyName })
     .project({ _id: 1, subset: 1, weightRange: 1, style: 1, 'file.name': 1 }).toArray()) as any[] as Pick<FontAsset, '_id' | 'subset' | 'weightRange' | 'style' | 'file'>[]
-  const font: Font = {
+  return {
     name: familyName,
     variants: assets.map(asset => {
       const encodedName = encodeURIComponent(asset.file.name)
       return { ...asset, woff2Url: managerUrl ? `/portals-manager/api/font-assets/${asset._id}/data/${encodedName}` : `/portal/api/font-assets/${asset._id}/${encodedName}` }
     })
   }
-  return makeFontCss(font)
+}
+
+export const getFontFamilyCss = async (owner: AccountKeys, familyName: string, managerUrl = false) => {
+  return makeFontCss(await getFont(owner, familyName, managerUrl))
+}
+
+// Pick the URL of the regular (normal-style, latin subset) face of a font family
+// so it can be preloaded. The returned URL matches a `src: url(...)` emitted by
+// makeFontCss, so the browser dedupes the preload with the actual @font-face load.
+const pickPreloadUrl = (font: Font): string | undefined => {
+  const normalLatin = font.variants.filter(v => v.style === 'normal' && v.subset === 'latin')
+  const variant = normalLatin.find(v => v.weightRange === '400' || v.weightRange.includes(' ')) ??
+    normalLatin[0] ??
+    font.variants.find(v => v.style === 'normal')
+  return variant?.woff2Url
+}
+
+// Build both the @font-face CSS and the preload URL of a family from a single
+// DB/file read — getSDSites needs both, so this avoids fetching the font twice.
+export const getFontFamilyAssets = async (owner: AccountKeys, familyName: string, managerUrl = false): Promise<{ css: string, preloadUrl?: string }> => {
+  const font = await getFont(owner, familyName, managerUrl)
+  return { css: makeFontCss(font), preloadUrl: pickPreloadUrl(font) }
 }
