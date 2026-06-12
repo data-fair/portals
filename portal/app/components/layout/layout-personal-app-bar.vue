@@ -17,7 +17,22 @@
     <v-spacer />
     <div id="agent-chat-appbar" class="d-flex align-center" />
     <v-toolbar-items>
-      <notification-queue />
+      <v-btn
+        v-if="preview"
+        :title="t('openNotificationList')"
+        stacked
+      >
+        <v-badge
+          :content="3"
+          color="warning"
+        >
+          <v-icon :icon="mdiBell" />
+        </v-badge>
+      </v-btn>
+      <df-notification-queue
+        v-else
+        events-url="/events"
+      />
 
       <!-- Personal Menu -->
       <layout-personal-menu personal />
@@ -27,7 +42,8 @@
 
 <script setup lang="ts">
 import { VToolbar, VAppBar } from 'vuetify/components'
-import { mdiMenu, mdiMenuOpen } from '@mdi/js'
+import { DfNotificationQueue } from '@data-fair/lib-vuetify-events'
+import { mdiBell, mdiMenu, mdiMenuOpen } from '@mdi/js'
 
 const { preview } = usePortalStore()
 const { personalDrawer, breadcrumbs } = useNavigationStore()
@@ -38,6 +54,8 @@ const { t } = useI18n()
 <i18n lang="yaml">
   en:
     openNavigationMenu: "Open navigation menu"
+    openNotificationList: "Open notification list"
   fr:
     openNavigationMenu: "Ouvrir le menu de navigation"
+    openNotificationList: "Ouvrir la liste des notifications"
 </i18n>

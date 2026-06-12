@@ -35,7 +35,22 @@
         <div id="agent-chat-appbar" class="d-flex align-center" />
 
         <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
-          <notification-queue />
+          <v-btn
+            v-if="preview"
+            :title="t('openNotificationList')"
+            stacked
+          >
+            <v-badge
+              :content="3"
+              color="warning"
+            >
+              <v-icon :icon="mdiBell" />
+            </v-badge>
+          </v-btn>
+          <df-notification-queue
+            v-else
+            events-url="/events"
+          />
           <layout-personal-menu
             :login-color="navBarConfig.loginColor"
             :nav-bar-color="navBarConfig.color"
@@ -48,15 +63,18 @@
 
 <script setup lang="ts">
 import type { NavBar } from '#api/types/portal-config'
+import { DfNotificationQueue } from '@data-fair/lib-vuetify-events'
 import { useDisplay } from 'vuetify'
 import { useElementSize } from '@vueuse/core'
+import { mdiBell } from '@mdi/js'
 
 const { navBarConfig } = defineProps<{
   navBarConfig: NavBar
 }>()
 
-const { portalConfig } = usePortalStore()
+const { portalConfig, preview } = usePortalStore()
 const display = useDisplay()
+const { t } = useI18n()
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
@@ -74,3 +92,10 @@ const logo = computed(() => {
 })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    openNotificationList: "Open notification list"
+  fr:
+    openNotificationList: "Ouvrir la liste des notifications"
+</i18n>
