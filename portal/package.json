@@ -27,6 +27,7 @@
     "@data-fair/lib-vue-agents": "^0.4.0",
     "@data-fair/lib-vuetify": "^2.0.5",
     "@data-fair/lib-vuetify-agents": "^0.6.0",
+    "@data-fair/lib-vuetify-events": "^0.3.0",
     "@data-fair/portals-shared-markdown": "*",
     "@mdi/js": "^7.4.47",
     "@nuxt/eslint": "^1.8.0",
