@@ -12,6 +12,8 @@ export default {
     url: {
       type: 'string',
       title: 'URL',
+      pattern: '^https?://[^/]+$',
+      errorMessage: "L'URL doit être de la forme https://exemple.com (protocole + domaine, sans chemin ni `/` final).",
       layout: {
         placeholder: 'https://test.com'
       }
@@ -20,6 +22,7 @@ export default {
       type: 'string',
       title: 'Certificat custom',
       layout: {
+        if: 'parent.data?.controller !== "manual"',
         placeholder: 'Laissez vide pour utiliser un certificat auto-géré'
       }
     },
@@ -34,6 +37,7 @@ export default {
     redirects: {
       type: 'array',
       title: 'Redirections spécifiques (résolues par le navigateur)',
+      layout: { if: 'parent.data?.controller !== "manual"' },
       items: {
         type: 'array',
         minItems: 2,
@@ -47,6 +51,7 @@ export default {
     rewrites: {
       type: 'array',
       title: 'Re-écriture (résolues directement sur le serveur)',
+      layout: { if: 'parent.data?.controller !== "manual"' },
       items: {
         type: 'array',
         minItems: 2,
@@ -60,6 +65,7 @@ export default {
     blockedIps: {
       type: 'array',
       title: 'IPs bloquées',
+      layout: { if: 'parent.data?.controller !== "manual"' },
       items: {
         type: 'string'
       }
