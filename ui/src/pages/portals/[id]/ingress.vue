@@ -17,6 +17,7 @@
         <v-btn
           color="primary"
           :disabled="!formValid"
+          :loading="saveIngress.loading.value"
           @click="saveIngress.execute()"
         >
           {{ t('save') }}
@@ -43,7 +44,7 @@ watch(portalFetch.data, () => {
 const saveIngress = useAsyncAction(async () => {
   await $fetch(`/portals/${route.params.id}/ingress`, { method: 'POST', body: editIngress.value })
   await portalFetch.refresh()
-})
+}, { success: t('saved') })
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return
@@ -76,10 +77,12 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
     manageDomainExposure: Manage domain exposure
     portals: Portals
     save: Save
+    saved: Exposure saved
 
   fr:
     manageDomainExposure: Gérer l'exposition sur un domaine
     portals: Portails
     save: Enregistrer
+    saved: Exposition enregistrée
 
 </i18n>
