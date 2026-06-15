@@ -60,7 +60,8 @@ watch(portalFetch.data, (portal) => {
 
 const vjsfOptions = computed<VjsfOptions>(() => ({
   context: {
-    ingressControllers: $uiConfig.ingressControllers
+    // "manual" opts the portal out of automatic ingress sync (hand-managed ingress, e.g. main site)
+    ingressControllers: [...$uiConfig.ingressControllers, 'manual']
   },
   density: 'comfortable',
   initialValidation: 'always',

@@ -222,16 +222,20 @@ const getIngressInfos = (portal: Portal) => {
     rewrites: portal.ingress?.rewrites,
   }]
   if (portal.ingress) {
-    ingressInfos.push({
-      url: portal.ingress.url,
-      owner: portal.owner,
-      _id: portal._id,
-      controller: portal.ingress.controller,
-      redirects: portal.ingress.redirects,
-      rewrites: portal.ingress.rewrites,
-      blockedIps: portal.ingress.blockedIps,
-      customCert: portal.ingress.customerCert
-    })
+    // with the "manual" controller the production ingress is managed by hand,
+    // so it is not delegated to portals-ingress-manager (only the draft above is)
+    if (portal.ingress.controller !== 'manual') {
+      ingressInfos.push({
+        url: portal.ingress.url,
+        owner: portal.owner,
+        _id: portal._id,
+        controller: portal.ingress.controller,
+        redirects: portal.ingress.redirects,
+        rewrites: portal.ingress.rewrites,
+        blockedIps: portal.ingress.blockedIps,
+        customCert: portal.ingress.customerCert
+      })
+    }
   } else {
     ingressInfos.push({
       url: config.portalUrlPattern.replace('{subdomain}', portal._id),
