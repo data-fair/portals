@@ -4,25 +4,20 @@
     :color="portalConfig.navBar.color"
     flat
   >
-    <v-container
-      class="mx-2"
-      fluid
-    >
-      <v-row class="align-center">
-        <!-- Logo -->
-        <layout-header-logo
-          v-if="portalConfig.logo"
-          :height="(appBarHeight || 64) - 10"
-          :logo="portalConfig.logo"
-        />
+    <!-- Logo -->
+    <layout-header-logo
+      v-if="portalConfig.logo"
+      :height="(appBarHeight || 64) - 10"
+      :logo="portalConfig.logo"
+    />
 
-        <!-- Breadcrumbs -->
-        <v-spacer />
-        <LayoutBreadcrumbs is-layout-full/>
-        <v-spacer />
-        <div id="agent-chat-appbar" class="d-flex align-center" />
-      </v-row>
-    </v-container>
+    <!-- Breadcrumbs -->
+    <v-spacer />
+    <LayoutBreadcrumbs is-layout-full/>
+    <v-spacer />
+
+    <!-- Agent Chat -->
+    <div id="agent-chat-appbar" class="d-flex align-center" />
   </v-app-bar>
 </template>
 

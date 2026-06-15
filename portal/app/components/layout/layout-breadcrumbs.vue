@@ -8,6 +8,7 @@
   -->
   <component
     :is="isLayoutFull ? 'div' : VContainer"
+    :class="isLayoutFull ? 'd-none d-sm-block' : undefined"
     v-bind="isLayoutFull ? undefined : {
       class: 'pa-0',
       fluid: breadcrumbConfig.fluid,
@@ -17,7 +18,7 @@
       <v-breadcrumbs
         tag="ol"
         density="compact"
-        :class="{ 'px-0 ml-n1': isElement }"
+        :class="{ 'px-0 ml-n1': isElement, 'layout-full-breadcrumbs': isLayoutFull }"
       >
         <template
           v-for="(item, index) in breadcrumbItems"
@@ -109,21 +110,35 @@ const breadcrumbItems = computed(() => {
 <style scoped>
 
 :deep(.v-breadcrumbs-item--link:not([aria-current="page"])) {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-position: 0 90%;
-  background-repeat: no-repeat;
-  background-size: 100% 1px;
-  text-decoration: none;
-  display: inline-block;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 :deep(.v-breadcrumbs-item--link:not([aria-current="page"]):hover),
 :deep(.v-breadcrumbs-item--link:not([aria-current="page"]):active) {
-  background-size: 100% 2px;
+  text-decoration-thickness: 2px;
 }
 
 :deep(.v-breadcrumbs-divider) {
   pointer-events: none;
   user-select: none;
+}
+
+/*
+  In the full layout the breadcrumbs live inside a fixed-height (64px) app bar whose content
+  is clipped (overflow: hidden). Without constraints a long title wraps to many lines and gets
+  cut off vertically. We cap each item to 2 lines with an ellipsis. `min-width: min-content`
+  keeps single-word items (e.g. "Datasets", "Table") at their natural width so only the long
+  items shrink and wrap — no hard-coded width, fully responsive.
+*/
+.layout-full-breadcrumbs :deep(.v-breadcrumbs-item),
+.layout-full-breadcrumbs :deep(.v-breadcrumbs-item--link) {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-width: min-content;
 }
 </style>
