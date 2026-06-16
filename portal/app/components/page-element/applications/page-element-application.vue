@@ -17,6 +17,8 @@
       :src="`${application.href}/capture?updatedAt=${application.updatedAt}`"
       :title="t('previewTooltip')"
       :alt="application.title"
+      :height="displayMode === 'fixed-height' ? fixedHeight : undefined"
+      :cover="displayMode === 'fixed-height'"
     />
 
     <d-frame-wrapper
@@ -24,7 +26,9 @@
       :iframe-title="`${t('application')} - ${element.application.title}`"
       :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
       :sync-params="syncParams"
-      aspect-ratio
+      :aspect-ratio="displayMode !== 'fixed-height' ? '' : undefined"
+      :height="displayMode === 'fixed-height' ? fixedHeight + 'px' : undefined"
+      :resize="displayMode === 'auto-resize' ? undefined : 'no'"
     />
 
     <application-actions
@@ -63,6 +67,9 @@ const syncParams = computed(() => {
 })
 
 const hasActions = computed(() => (element.actionButtons?.items ?? []).length > 0)
+
+const displayMode = computed(() => element.displayMode ?? 'auto-resize')
+const fixedHeight = computed(() => element.height ?? 500)
 
 const applicationFetcher = preview ? useFetch<Application> : useLocalFetch<Application>
 const applicationFetch = applicationFetcher(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application.id : '')

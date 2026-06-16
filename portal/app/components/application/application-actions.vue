@@ -3,6 +3,7 @@
     :justify="alignment"
     no-gutters
     class="ga-1"
+    :style="preview ? 'pointer-events: none' : undefined"
   >
     <action-btn
       v-if="showAction('fullscreen')"
