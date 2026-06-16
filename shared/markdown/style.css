@@ -1,3 +1,14 @@
+.markdown-paragraph:first-child {
+  margin-top: 0 !important;
+}
+.markdown-paragraph:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 
+ * Compat: stored _html rendered before lib-utils 1.10 has no mt-4/mb-4 on <p>;
+ * keep this so old content still gets spacing between paragraphs.
+ */
 .markdown-paragraph:not(:last-child) {
   margin-bottom: 16px;
 }
