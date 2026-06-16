@@ -7,6 +7,7 @@ import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { useReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { unwrapFilterQuery } from '@data-fair/agent-tools-data-fair/_utils'
 import { createAgentTranslator } from './utils'
+import { toAbsoluteUrl, toRoutePath } from './url-utils'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
@@ -48,9 +49,15 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
   const route = useRoute()
   const router = useRouter()
 
+  // Absolute portal URL for a router path (or {slug} template). The router history
+  // base carries the deployment path prefix (e.g. /portal/) — the same base the host
+  // (useAgentChatBase) checks before doing an SPA router.push, so emitting links built
+  // from it lets clicked prose links navigate without a full page reload.
+  const appUrl = (path: string) => toAbsoluteUrl(window.location.origin, router.options.history.base, path)
+
   useAgentTool({
     name: 'get_current_location',
-    description: 'Get the current page location in the portal, including route path, name, parameters, query, and breadcrumbs.',
+    description: 'Get the current page location in the portal, including its full URL, route path, name, parameters, query, and breadcrumbs.',
     annotations: { title: t('getCurrentLocation'), readOnlyHint: true },
     inputSchema: {
       type: 'object' as const,
@@ -61,14 +68,19 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         .map(b => {
           if (typeof b === 'string') return `- ${b}`
           const title = b.title || ''
-          const path = b.to ? (typeof b.to === 'string' ? b.to : router.resolve(b.to).href) : b.href || ''
+          // router.resolve().href already includes the history base, so only prepend the
+          // origin; a bare string `to` is a base-less router path → use appUrl; b.href is
+          // an already-absolute external URL → keep verbatim.
+          const path = b.to
+            ? (typeof b.to === 'string' ? appUrl(b.to) : window.location.origin + router.resolve(b.to).href)
+            : b.href || ''
           return `- ${title}: ${path}`
         })
         .join('\n')
       return {
         content: [{
           type: 'text' as const,
-          text: `**Path**: ${route.path}\n**Name**: ${route.name as string}\n**Params**: ${JSON.stringify({ ...route.params })}\n**Query**: ${JSON.stringify({ ...route.query })}\n**Breadcrumbs**:\n${breadcrumbs}`
+          text: `**URL**: ${appUrl(route.fullPath)}\n**Path**: ${route.path}\n**Name**: ${route.name as string}\n**Params**: ${JSON.stringify({ ...route.params })}\n**Query**: ${JSON.stringify({ ...route.query })}\n**Breadcrumbs**:\n${breadcrumbs}`
         }]
       }
     }
@@ -76,7 +88,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'list_pages',
-    description: 'List all available pages in the portal navigation menu, plus detail page patterns for datasets, applications, events, news, and reuses.',
+    description: 'List all available pages in the portal navigation menu, plus detail page patterns for datasets, applications, events, news, and reuses. Returns full absolute URLs — use them verbatim when writing links; substitute {slug} and append `?<query>` for filtered views, but never alter the origin or path prefix.',
     annotations: { title: t('listPages'), readOnlyHint: true },
     inputSchema: {
       type: 'object' as const,
@@ -100,7 +112,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
             const title = navigationStore.resolveLinkTitle(item, localeVal)
             const path = navigationStore.resolveLink(item)
             if (path && item.type !== 'external') {
-              lines.push(`${indent}- ${title}: ${path}`)
+              lines.push(`${indent}- ${title}: ${appUrl(path)}`)
             } else if (path && item.type === 'external') {
               lines.push(`${indent}- ${title}: ${path} (external)`)
             }
@@ -115,25 +127,25 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       }
 
       sections.push(
-        '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists:\n' +
-        '- Dataset detail: /datasets/{slug}\n' +
-        '- Dataset table: /datasets/{slug}/table — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n' +
-        '- Dataset map: /datasets/{slug}/map — for geolocalized datasets, accepts the same filterQuery as the table page\n' +
-        '- Dataset API doc: /datasets/{slug}/api-doc\n' +
-        '- Application detail: /applications/{slug}\n' +
-        '- Application full view: /applications/{slug}/full\n' +
-        '- Event detail: /event/{slug}\n' +
-        '- News detail: /news/{slug}\n' +
-        '- Reuse detail: /reuses/{slug}'
+        '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists. The URLs are absolute — substitute {slug} and append `?<query>`, but keep the origin and path prefix:\n' +
+        `- Dataset detail: ${appUrl('/datasets/{slug}')}\n` +
+        `- Dataset table: ${appUrl('/datasets/{slug}/table')} — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n` +
+        `- Dataset map: ${appUrl('/datasets/{slug}/map')} — for geolocalized datasets, accepts the same filterQuery as the table page\n` +
+        `- Dataset API doc: ${appUrl('/datasets/{slug}/api-doc')}\n` +
+        `- Application detail: ${appUrl('/applications/{slug}')}\n` +
+        `- Application full view: ${appUrl('/applications/{slug}/full')}\n` +
+        `- Event detail: ${appUrl('/event/{slug}')}\n` +
+        `- News detail: ${appUrl('/news/{slug}')}\n` +
+        `- Reuse detail: ${appUrl('/reuses/{slug}')}`
       )
 
       sections.push(
         '**User pages**:\n' +
-        '- My account: /me\n' +
-        '- My reuses: /me/reuses\n' +
-        '- Update dataset: /me/update-dataset\n' +
-        '- My processings: /me/processings\n' +
-        '- My notifications: /me/notifications'
+        `- My account: ${appUrl('/me')}\n` +
+        `- My reuses: ${appUrl('/me/reuses')}\n` +
+        `- Update dataset: ${appUrl('/me/update-dataset')}\n` +
+        `- My processings: ${appUrl('/me/processings')}\n` +
+        `- My notifications: ${appUrl('/me/notifications')}`
       )
 
       return {
@@ -147,14 +159,14 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'navigate',
-    description: 'Navigate to a page in the portal. Use list_pages to discover available paths, and list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs — prefer the human-readable `slug` over the `id` when building dataset and application paths. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, offer to navigate the user to the filtered table view at /datasets/{slug}/table by passing the same filter parameters as query params — but only when the search returned results (totalResults > 0).',
+    description: 'Navigate to a page in the portal. Accepts either a full absolute URL (as returned by list_pages or get_current_location) or a bare path — both work. Use list_datasets, list_applications, list_events, list_news, or list_reuses to find resource slugs/refs — prefer the human-readable `slug` over the `id` when building dataset and application paths. Optionally pass query parameters. IMPORTANT: when you search or filter data from a dataset, offer to navigate the user to the filtered table view at /datasets/{slug}/table by passing the same filter parameters as query params — but only when the search returned results (totalResults > 0).',
     annotations: { title: t('navigateToPage') },
     inputSchema: {
       type: 'object' as const,
       properties: {
         path: {
           type: 'string' as const,
-          description: 'The path to navigate to (e.g. "/datasets", "/datasets/my-dataset", "/event/my-event")'
+          description: 'The destination, either a full absolute URL (e.g. as returned by list_pages) or a path (e.g. "/datasets", "/datasets/my-dataset", "/event/my-event"). Both are accepted.'
         },
         query: {
           type: 'string' as const,
@@ -165,11 +177,13 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
     },
     execute: async (params) => {
       try {
+        // Accept a full absolute URL, a base-prefixed path, or a bare router path.
+        const { path, query: embeddedQuery } = toRoutePath(window.location.origin, router.options.history.base, params.path)
         // Defensive unwrap: the agent is told to pass the dataset_data subagent's filterQuery
         // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
-        const queryString = unwrapFilterQuery(params.query as string | undefined)
+        const queryString = unwrapFilterQuery(params.query as string | undefined) || embeddedQuery
         const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
-        await router.push(query ? { path: params.path, query } : params.path)
+        await router.push(query ? { path, query } : path)
         await new Promise(resolve => setTimeout(resolve, 500))
         const currentRoute = router.currentRoute.value
         return {
