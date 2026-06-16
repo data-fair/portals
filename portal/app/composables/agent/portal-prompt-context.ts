@@ -25,7 +25,7 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
 
   const origin = import.meta.client ? window.location.origin : ''
   if (origin) {
-    parts.push(`Présente toujours les liens vers les pages du portail comme des liens markdown avec une URL absolue, par exemple \`[Voir la carte](${origin}/datasets/mon-jeu/map)\` — jamais un chemin relatif ni une URL brute non formatée.`)
+    parts.push('Présente toujours les liens vers les pages du portail comme des liens markdown en reprenant telle quelle l\'URL absolue fournie par les outils (list_pages, get_current_location, et le champ `Link` des jeux de données), par exemple `[Voir la carte](<URL absolue du jeu>/map?<filterQuery>)`. N\'écris jamais un chemin relatif, ni une URL brute non formatée, ni une URL assemblée à la main : modifie uniquement le placeholder {slug} et la query, sans toucher à l\'origine ni au préfixe de chemin.')
   }
   return parts
 }
