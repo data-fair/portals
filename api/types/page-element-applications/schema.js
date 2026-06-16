@@ -281,9 +281,45 @@ export default {
             }
           }
         },
+        displayMode: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'auto-resize',
+          description: [
+            'Mode de redimensionnement de la visualisation :',
+            "- **Hauteur optimale** - La visualisation peut se redimensionner pour prendre la hauteur dont elle a besoin. Certaines visualisations comme des cartes se comporteront comme le mode **Hauteur optimale avec scroll**. Ce mode évite d'avoir une barre de scroll pour les visualisations qui prennent beaucoup de hauteur.",
+            "- **Hauteur optimale avec scroll** - Hauteur optimisée pour avoir le meilleur ratio largeur / hauteur sur toutes tailles d'écran.",
+            "- **Hauteur fixe (px)** - Vous définissez vous-même la hauteur de la visualisation, peu recommandé pour un affichage sur toute taille d'écran."
+          ].join('\n'),
+          oneOf: [
+            { const: 'auto-resize', title: 'Hauteur optimale' },
+            { const: 'aspect-ratio', title: 'Hauteur optimale avec scroll' },
+            { const: 'fixed-height', title: 'Hauteur fixe (px)' }
+          ]
+        },
+        height: {
+          type: 'integer',
+          title: 'Hauteur (px)',
+          default: 500,
+          minimum: 150,
+          layout: {
+            if: 'parent.data?.displayMode === "fixed-height"',
+            slots: {
+              after: {
+                markdown: "**⚠️ Attention :** une hauteur fixe est déconseillée. Sur les petites résolutions (mobiles, tablettes), l'affichage peut être difficile. Préférez « Hauteur optimale » ou « Hauteur optimale avec scroll » pour un rendu responsive."
+              }
+            }
+          }
+        },
         syncParams: {
           type: 'string',
           title: "Synchronisation des paramètres d'URL",
+          description: [
+            "Synchronisation des paramètres d'URL entre la visualisation et la page :",
+            "- **Aucune synchronisation** - Les filtres et paramètres de la visualisation ne sont pas reflétés dans l'URL de la page.",
+            "- **Synchronisation cloisonnée** - Les paramètres de la visualisation sont conservés dans l'URL avec un préfixe propre à ce bloc, sans interférer avec les autres visualisations de la page.",
+            '- **Synchronisation avec partage des filtres** - La visualisation partage les filtres (concepts `_c` et jeux de données `_d`) avec les autres blocs de la page.'
+          ].join('\n'),
           default: 'none',
           oneOf: [
             { const: 'none', title: 'Aucune synchronisation' },
@@ -299,7 +335,6 @@ export default {
             items: {
               type: 'array',
               title: 'Boutons à afficher',
-              description: 'Boutons d\'action à afficher au-dessus de la visualisation.',
               items: {
                 type: 'string',
                 oneOf: [
