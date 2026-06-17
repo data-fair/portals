@@ -12,7 +12,7 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
-import { getFontFamilyCss } from '../fonts/service.ts'
+import { getFontFamilyAssets } from '../fonts/service.ts'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')
@@ -176,6 +176,31 @@ const getImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/images/${id}`
 }
 
+const fontMimeByExt: Record<string, string> = { woff2: 'font/woff2', woff: 'font/woff', otf: 'font/otf', ttf: 'font/ttf' }
+
+// fonts are always fetched in CORS mode, so the preload needs crossorigin too
+const fontPreloadLink = (href: string) => {
+  const ext = href.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? ''
+  const type = fontMimeByExt[ext]
+  return { href, as: 'font', ...(type ? { type } : {}), crossorigin: true }
+}
+
+const getThemeFontFields = async (owner: Portal['owner'], config: { bodyFontFamily?: string, headingFontFamily?: string }) => {
+  const body = config.bodyFontFamily ? await getFontFamilyAssets(owner, config.bodyFontFamily) : undefined
+  const heading = config.headingFontFamily ? await getFontFamilyAssets(owner, config.headingFontFamily) : undefined
+  // dedupe by URL: body and heading often share the same family (e.g. both Nunito),
+  // which would otherwise emit the same <link rel="preload"> twice
+  const preloadUrls = [...new Set([body?.preloadUrl, heading?.preloadUrl].filter((url): url is string => !!url))]
+  const preloadLinks = preloadUrls.map(fontPreloadLink)
+  return {
+    bodyFontFamily: config.bodyFontFamily,
+    bodyFontFamilyCss: body?.css,
+    headingFontFamily: config.headingFontFamily,
+    headingFontFamilyCss: heading?.css,
+    preloadLinks: preloadLinks.length ? preloadLinks : undefined
+  }
+}
+
 const getSDSites = async (portal: Portal) => {
   const sites = [{
     _id: 'data-fair-portals:draft-' + portal._id,
@@ -186,10 +211,7 @@ const getSDSites = async (portal: Portal) => {
     theme: {
       ...portal.draftConfig.theme,
       logo: portal.draftConfig.logo && getImageSrc(portal.draftConfig.logo, true),
-      bodyFontFamily: portal.draftConfig.bodyFontFamily,
-      bodyFontFamilyCss: portal.draftConfig.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.draftConfig.bodyFontFamily),
-      headingFontFamily: portal.draftConfig.headingFontFamily,
-      headingFontFamilyCss: portal.draftConfig.headingFontFamily && await getFontFamilyCss(portal.owner, portal.draftConfig.headingFontFamily)
+      ...await getThemeFontFields(portal.owner, portal.draftConfig)
     },
     contact: portal.draftConfig.contactInformations.email
   }]
@@ -202,10 +224,7 @@ const getSDSites = async (portal: Portal) => {
     theme: {
       ...portal.config.theme,
       logo: portal.config.logo && getImageSrc(portal.config.logo, true),
-      bodyFontFamily: portal.config.bodyFontFamily,
-      bodyFontFamilyCss: portal.config.bodyFontFamily && await getFontFamilyCss(portal.owner, portal.config.bodyFontFamily),
-      headingFontFamily: portal.config.headingFontFamily,
-      headingFontFamilyCss: portal.config.headingFontFamily && await getFontFamilyCss(portal.owner, portal.config.headingFontFamily)
+      ...await getThemeFontFields(portal.owner, portal.config)
     },
     contact: portal.config.contactInformations.email
   })
