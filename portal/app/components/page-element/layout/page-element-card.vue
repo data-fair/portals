@@ -22,86 +22,117 @@
     } : undefined"
   >
 
-    <!-- Thumbnail (Top Location) -->
-    <div
-      v-if="element.thumbnail?.location === 'top' && element.thumbnail?.image"
-      aria-hidden="true"
-      class="flex-grow-0"
-    >
-      <v-img
-        :src="getPageImageSrc(element.thumbnail.image, false)"
-        :cover="element.thumbnail.crop"
-        height="170"
-        alt=""
-      />
-    </div>
-
     <!--
-      white-space: unset; => remove default nowrap from v-card-title
+      flex-nowrap => prevent the left thumbnail column from wrapping
+      no-gutters => remove spaces between columns
+      flex-grow-1 => let the row fill the card height so the left image stretches
     -->
-    <v-card-title
-      v-if="element.title"
-      class="font-weight-bold"
-      style="white-space: unset;"
+    <v-row
+      class="flex-nowrap flex-grow-1"
+      no-gutters
     >
-      {{ element.title }}
-    </v-card-title>
+      <!-- Thumbnail (Left Location) -->
+      <!-- On mobile, fall back to the top location (see main column below) -->
+      <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
+        <v-col cols="4">
+          <div
+            aria-hidden="true"
+            :style="leftThumbnailStyle"
+          />
+        </v-col>
+        <v-divider vertical />
+      </template>
 
-    <!-- Thumbnail (Center Location) -->
-    <div
-      v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
-      aria-hidden="true"
-      class="flex-grow-0"
-    >
-      <v-img
-        :src="getPageImageSrc(element.thumbnail.image, false)"
-        :cover="element.thumbnail.crop"
-        height="170"
-        alt=""
-      />
-    </div>
-
-    <!--
-      v-spacer works with "two columns stretch" layout
-      no contentAlign falls back to 'center' for backward compatibility.
-    -->
-    <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'end'" />
-
-    <v-card-text class="flex-grow-0">
-      <slot
-        name="page-elements"
-        :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
-        :elements="element.children"
-        add-item-message="Ajouter un bloc à la boite"
-      />
-    </v-card-text>
-
-    <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'start'" />
-
-    <!--
-      min-height: auto => remove default v-card-actions min-height
-    -->
-    <v-card-actions
-      v-if="element.actions.length"
-      style="min-height: auto"
-    >
-      <!-- Reset default btn styles apply by v-card-actions -->
-      <v-defaults-provider
-        :defaults="{
-          VBtn: {
-            variant: 'flat',
-            slim: false
-          }
-        }"
+      <!--
+        d-flex flex-column => keep the vertical layout and the working v-spacers
+        min-width: 0 => allow the column to shrink below its content width
+      -->
+      <v-col
+        class="d-flex flex-column"
+        style="min-width: 0"
       >
-        <nav-link
-          v-for="(action, i) in element.actions"
-          :key="i"
-          :link="action"
-          :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
-        />
-      </v-defaults-provider>
-    </v-card-actions>
+        <!-- Thumbnail (Top Location), also used as mobile fallback for 'left' -->
+        <div
+          v-if="(element.thumbnail?.location === 'top' || (element.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && element.thumbnail?.image"
+          aria-hidden="true"
+          class="flex-grow-0"
+        >
+          <v-img
+            :src="getPageImageSrc(element.thumbnail.image, false)"
+            :cover="element.thumbnail.crop"
+            height="170"
+            alt=""
+          />
+        </div>
+
+        <!--
+          white-space: unset; => remove default nowrap from v-card-title
+        -->
+        <v-card-title
+          v-if="element.title"
+          class="font-weight-bold"
+          style="white-space: unset;"
+        >
+          {{ element.title }}
+        </v-card-title>
+
+        <!-- Thumbnail (Center Location) -->
+        <div
+          v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
+          aria-hidden="true"
+          class="flex-grow-0"
+        >
+          <v-img
+            :src="getPageImageSrc(element.thumbnail.image, false)"
+            :cover="element.thumbnail.crop"
+            height="170"
+            alt=""
+          />
+        </div>
+
+        <!--
+          v-spacer works with "two columns stretch" layout
+          no contentAlign falls back to 'center' for backward compatibility.
+        -->
+        <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'end'" />
+
+        <v-card-text class="flex-grow-0">
+          <slot
+            name="page-elements"
+            :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
+            :elements="element.children"
+            add-item-message="Ajouter un bloc à la boite"
+          />
+        </v-card-text>
+
+        <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'start'" />
+
+        <!--
+          min-height: auto => remove default v-card-actions min-height
+        -->
+        <v-card-actions
+          v-if="element.actions.length"
+          style="min-height: auto"
+        >
+          <!-- Reset default btn styles apply by v-card-actions -->
+          <v-defaults-provider
+            :defaults="{
+              VBtn: {
+                variant: 'flat',
+                slim: false
+              }
+            }"
+          >
+            <nav-link
+              v-for="(action, i) in element.actions"
+              :key="i"
+              :link="action"
+              :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
+            />
+          </v-defaults-provider>
+        </v-card-actions>
+      </v-col>
+    </v-row>
 
   </v-card>
 </template>
@@ -117,6 +148,19 @@ const { element } = defineProps({
 const { preview, portalConfig } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const getPageImageSrc = usePageImageSrc()
+
+// Background-image style for the left thumbnail column so it fills the card height.
+const leftThumbnailStyle = computed(() => {
+  if (!element.thumbnail?.image) return undefined
+  return {
+    backgroundImage: `url("${getPageImageSrc(element.thumbnail.image, false)}")`,
+    backgroundSize: element.thumbnail.crop ? 'cover' : 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '200px',
+    height: '100%'
+  }
+})
 
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''

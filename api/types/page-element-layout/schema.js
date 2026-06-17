@@ -287,6 +287,7 @@ export default {
               title: "Position de l'image sur la carte",
               default: 'center',
               oneOf: [
+                { const: 'left', title: 'À gauche' },
                 { const: 'top', title: 'En haut' },
                 { const: 'center', title: 'Sous le titre' }
               ]
