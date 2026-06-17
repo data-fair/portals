@@ -23,6 +23,8 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
   if (hostname) descr.push(`accessible sur ${hostname}`)
   if (descr.length) parts.push(`Ce portail est ${descr.join(', ')}.`)
 
+  parts.push('Fonde chiffres, statistiques et graphiques sur les valeurs réellement renvoyées par les outils de données — n\'invente ni n\'estime jamais de données ; en cas d\'incertitude, dis-le et oriente l\'utilisateur vers un aperçu filtré des données qu\'il peut vérifier plutôt que d\'affirmer.')
+
   const origin = import.meta.client ? window.location.origin : ''
   if (origin) {
     parts.push('Présente toujours les liens vers les pages du portail comme des liens markdown en reprenant telle quelle l\'URL absolue fournie par les outils (list_pages, get_current_location, et le champ `Link` des jeux de données), par exemple `[Voir la carte](<URL absolue du jeu>/map?<filterQuery>)`. N\'écris jamais un chemin relatif, ni une URL brute non formatée, ni une URL assemblée à la main : modifie uniquement le placeholder {slug} et la query, sans toucher à l\'origine ni au préfixe de chemin.')
