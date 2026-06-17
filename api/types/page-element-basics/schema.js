@@ -132,10 +132,10 @@ export default {
           {
             if: 'data?.alertType === "none"',
             children: [
-              'type', 'alertType', 'icon', 'color', 'title', 'content', 'closable', 'mb'
+              'type', 'alertType', 'icon', 'color', 'variant', 'title', 'content', 'closable', 'mb'
             ]
           },
-          ['type', 'alertType', 'title', 'content', 'closable', 'mb']
+          ['type', 'alertType', 'variant', 'title', 'content', 'closable', 'mb']
         ]
       },
       properties: {
@@ -163,6 +163,10 @@ export default {
               selection: { name: 'color-select-selection' }
             }
           }
+        },
+        variant: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
+          default: 'default'
         },
         title: {
           title: 'Titre',

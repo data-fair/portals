@@ -4,6 +4,8 @@
     :type="element.alertType !== 'none' ? element.alertType : undefined"
     :title="element.title"
     :color="element.alertType === 'none' ? element.color : undefined"
+    :variant="element.variant && element.variant !== 'default' ? element.variant : undefined"
+    :border="element.variant === 'tonal' ? 'start' : undefined"
     :closable="closable"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     @click:close="onClose"
