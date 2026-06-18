@@ -53,27 +53,26 @@
     </v-row>
 
     <!-- Actions -->
-    <navigation-right>
-      <reuses-actions
-        v-model:search="search"
-        v-model:show-all="showAll"
-      />
-    </navigation-right>
+    <reuses-actions
+      v-model:search="search"
+      v-model:sort="sort"
+      v-model:show-all="showAll"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
 import type { Reuse } from '#api/types/reuse/index'
-import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
+const sort = useStringSearchParam('sort', 'createdAt:-1')
 const { t } = useI18n()
 
 const reusesParams = computed(() => {
   const params: Record<string, any> = {
-    size: 1000,
-    sort: 'updatedAt:-1',
+    size: 10000,
+    sort: sort.value,
     select: '_id,title,owner,requestedPortals'
   }
   if (showAll.value) params.showAll = 'true'

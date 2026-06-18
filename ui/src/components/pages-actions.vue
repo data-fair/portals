@@ -1,329 +1,310 @@
 <template>
-  <!-- Create new page -->
-  <custom-router-link :to="'/pages/new'">
-    <v-list-item link>
-      <template #prepend>
-        <v-icon
-          color="primary"
-          :icon="mdiPlusCircle"
-        />
+  <df-navigation-right>
+    <!-- Create new page -->
+    <custom-router-link :to="'/pages/new'">
+      <v-list-item link>
+        <template #prepend>
+          <v-icon
+            color="primary"
+            :icon="mdiPlusCircle"
+          />
+        </template>
+        {{ t('createNewPage') }}
+      </v-list-item>
+    </custom-router-link>
+
+    <!-- Create new group -->
+    <v-menu
+      v-model="newGroupMenu"
+      location="start"
+      :close-on-content-click="false"
+    >
+      <template #activator="{ props }">
+        <v-list-item v-bind="props">
+          <template #prepend>
+            <v-icon
+              color="primary"
+              :icon="mdiFolderPlusOutline"
+            />
+          </template>
+          {{ t('createNewGroup') }}
+        </v-list-item>
       </template>
-      {{ t('createNewPage') }}
-    </v-list-item>
-  </custom-router-link>
-
-  <!-- Create new group -->
-  <v-menu
-    v-model="newGroupMenu"
-    location="start"
-    :close-on-content-click="false"
-  >
-    <template #activator="{ props }">
-      <v-list-item v-bind="props">
-        <template #prepend>
-          <v-icon
-            color="primary"
-            :icon="mdiFolderPlusOutline"
+      <v-card
+        data-iframe-height
+        min-width="300"
+        rounded="lg"
+        :loading="createGroup.loading.value ? 'primary' : undefined"
+      >
+        <v-card-text>
+          <v-text-field
+            v-model="newGroupTitle"
+            :label="t('newGroupTitle')"
+            density="comfortable"
+            variant="outlined"
+            autofocus
+            auto-grow
+            hide-details
           />
-        </template>
-        {{ t('createNewGroup') }}
-      </v-list-item>
-    </template>
-    <v-card
-      data-iframe-height
-      min-width="300"
-      rounded="lg"
-      :loading="createGroup.loading.value ? 'primary' : undefined"
-    >
-      <v-card-text>
-        <v-text-field
-          v-model="newGroupTitle"
-          :label="t('newGroupTitle')"
-          density="comfortable"
-          variant="outlined"
-          autofocus
-          auto-grow
-          hide-details
-        />
-        <v-textarea
-          v-model="newGroupDescription"
-          :label="t('newGroupDescription')"
-          :rules="[rules.maxLength(100)]"
-          :counter="100"
-          class="mt-4"
-          density="comfortable"
-          hide-details="auto"
-          variant="outlined"
-          no-resize
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          :disabled="createGroup.loading.value"
-          @click="newGroupMenu = false"
-        >
-          {{ t('cancel') }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
-          :disabled="!newGroupTitle || newGroupDescription.length > 100"
-          :loading="createGroup.loading.value ? 'primary' : false"
-          @click="createGroup.execute()"
-        >
-          {{ t('create') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
-
-  <!-- Group management menu -->
-  <v-menu
-    v-model="editGroupMenu"
-    location="start"
-    :close-on-content-click="false"
-  >
-    <template #activator="{ props }">
-      <v-list-item v-bind="props">
-        <template #prepend>
-          <v-icon
-            color="primary"
-            :icon="mdiPencil"
+          <v-textarea
+            v-model="newGroupDescription"
+            :label="t('newGroupDescription')"
+            :rules="[rules.maxLength(100)]"
+            :counter="100"
+            class="mt-4"
+            density="comfortable"
+            hide-details="auto"
+            variant="outlined"
+            no-resize
           />
-        </template>
-        {{ t('editGroup') }}
-      </v-list-item>
-    </template>
-    <v-card
-      data-iframe-height
-      min-width="300"
-      rounded="lg"
-      :loading="editGroup.loading.value ? 'primary' : undefined"
-    >
-      <v-card-text>
-        <v-select
-          v-model="editGroupId"
-          :items="editableGroups"
-          item-title="title"
-          item-value="_id"
-          :label="t('selectGroup')"
-          density="comfortable"
-          variant="outlined"
-          hide-details
-        />
-        <v-text-field
-          v-model="editGroupTitle"
-          :label="t('editGroupTitle')"
-          density="comfortable"
-          variant="outlined"
-          :disabled="!editGroupId"
-          class="mt-4"
-          auto-grow
-          hide-details
-        />
-        <v-textarea
-          v-model="editGroupDescription"
-          :label="t('editGroupDescription')"
-          :rules="[rules.maxLength(100)]"
-          :counter="100"
-          class="mt-4"
-          density="comfortable"
-          hide-details="auto"
-          variant="outlined"
-          no-resize
-          :disabled="!editGroupId"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          :disabled="editGroup.loading.value"
-          @click="editGroupMenu = false"
-        >
-          {{ t('cancel') }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
-          :disabled="!editGroupId || !editGroupTitle || editGroupDescription.length > 100"
-          :loading="editGroup.loading.value ? 'primary' : false"
-          @click="editGroup.execute()"
-        >
-          {{ t('save') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="createGroup.loading.value"
+            @click="newGroupMenu = false"
+          >
+            {{ t('cancel') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            :disabled="!newGroupTitle || newGroupDescription.length > 100"
+            :loading="createGroup.loading.value ? 'primary' : false"
+            @click="createGroup.execute()"
+          >
+            {{ t('create') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
 
-  <!-- Delete group menu -->
-  <v-menu
-    v-model="deleteGroupMenu"
-    :close-on-content-click="false"
-    max-width="500"
-  >
-    <template #activator="{ props }">
-      <v-list-item v-bind="props">
-        <template #prepend>
-          <v-icon
+    <!-- Group management menu -->
+    <v-menu
+      v-model="editGroupMenu"
+      location="start"
+      :close-on-content-click="false"
+    >
+      <template #activator="{ props }">
+        <v-list-item v-bind="props">
+          <template #prepend>
+            <v-icon
+              color="primary"
+              :icon="mdiPencil"
+            />
+          </template>
+          {{ t('editGroup') }}
+        </v-list-item>
+      </template>
+      <v-card
+        data-iframe-height
+        min-width="300"
+        rounded="lg"
+        :loading="editGroup.loading.value ? 'primary' : undefined"
+      >
+        <v-card-text>
+          <v-select
+            v-model="editGroupId"
+            :items="editableGroups"
+            item-title="title"
+            item-value="_id"
+            :label="t('selectGroup')"
+            density="comfortable"
+            variant="outlined"
+            hide-details
+          />
+          <v-text-field
+            v-model="editGroupTitle"
+            :label="t('editGroupTitle')"
+            density="comfortable"
+            variant="outlined"
+            :disabled="!editGroupId"
+            class="mt-4"
+            auto-grow
+            hide-details
+          />
+          <v-textarea
+            v-model="editGroupDescription"
+            :label="t('editGroupDescription')"
+            :rules="[rules.maxLength(100)]"
+            :counter="100"
+            class="mt-4"
+            density="comfortable"
+            hide-details="auto"
+            variant="outlined"
+            no-resize
+            :disabled="!editGroupId"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="editGroup.loading.value"
+            @click="editGroupMenu = false"
+          >
+            {{ t('cancel') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            :disabled="!editGroupId || !editGroupTitle || editGroupDescription.length > 100"
+            :loading="editGroup.loading.value ? 'primary' : false"
+            @click="editGroup.execute()"
+          >
+            {{ t('save') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
+
+    <!-- Delete group menu -->
+    <v-menu
+      v-model="deleteGroupMenu"
+      :close-on-content-click="false"
+      max-width="500"
+    >
+      <template #activator="{ props }">
+        <v-list-item v-bind="props">
+          <template #prepend>
+            <v-icon
+              color="warning"
+              :icon="mdiDelete"
+            />
+          </template>
+          {{ t('deleteGroup') }}
+        </v-list-item>
+      </template>
+      <v-card
+        rounded="lg"
+        variant="elevated"
+        :title="t('deletingGroup')"
+        :loading="deleteGroup.loading.value ? 'warning' : undefined"
+      >
+        <v-card-text class="pb-0">
+          <v-alert
+            class="mt-4"
+            type="warning"
+            variant="outlined"
+            :text="t('deleteGroupWarning')"
+          />
+          <v-select
+            v-if="deletableGroups.length"
+            v-model="deleteGroupId"
+            :items="deletableGroups"
+            item-title="title"
+            item-value="_id"
+            :label="t('selectGroupToDelete')"
+            class="mt-4"
+            density="comfortable"
+            hide-details
+            variant="outlined"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="deleteGroup.loading.value"
+            @click="deleteGroupMenu = false"
+          >
+            {{ t('cancel') }}
+          </v-btn>
+          <v-btn
             color="warning"
-            :icon="mdiDelete"
-          />
-        </template>
-        {{ t('deleteGroup') }}
-      </v-list-item>
-    </template>
-    <v-card
-      rounded="lg"
-      variant="elevated"
-      :title="t('deletingGroup')"
-      :loading="deleteGroup.loading.value ? 'warning' : undefined"
-    >
-      <v-card-text class="pb-0">
-        <v-alert
-          class="mt-4"
-          type="warning"
-          variant="outlined"
-          :text="t('deleteGroupWarning')"
-        />
-        <v-select
-          v-if="deletableGroups.length"
-          v-model="deleteGroupId"
-          :items="deletableGroups"
-          item-title="title"
-          item-value="_id"
-          :label="t('selectGroupToDelete')"
-          class="mt-4"
-          density="comfortable"
-          hide-details
-          variant="outlined"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          :disabled="deleteGroup.loading.value"
-          @click="deleteGroupMenu = false"
-        >
-          {{ t('cancel') }}
-        </v-btn>
-        <v-btn
-          color="warning"
-          variant="flat"
-          :loading="deleteGroup.loading.value"
-          :disabled="!deleteGroupId"
-          @click="deleteGroup.execute()"
-        >
-          {{ t('delete') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
+            variant="flat"
+            :loading="deleteGroup.loading.value"
+            :disabled="!deleteGroupId"
+            @click="deleteGroup.execute()"
+          >
+            {{ t('delete') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
 
-  <!-- Search field -->
-  <v-text-field
-    v-model="search"
-    :append-inner-icon="mdiMagnify"
-    :label="t('search')"
-    class="mt-4 mx-4"
-    color="primary"
-    density="compact"
-    variant="outlined"
-    autofocus
-    hide-details
-    clearable
-  />
+    <!-- Search field -->
+    <df-search-field
+      v-model="search"
+      class="mt-4"
+    />
 
-  <!-- Portals filters -->
-  <v-autocomplete
-    v-model="portalsSelected"
-    :items="portalsItems"
-    item-title="display"
-    item-value="portalId"
-    :label="t('portal')"
-    chips
-    class="mt-4 mx-4"
-    clearable
-    closable-chips
-    density="compact"
-    hide-details
-    multiple
-    rounded="xl"
-    variant="outlined"
-  />
+    <!-- Sort field -->
+    <sort-field
+      v-model="sort"
+      :disabled="!!search"
+    />
 
-  <!-- Page types filters -->
-  <v-autocomplete
-    v-model="typesSelected"
-    :items="typesItems"
-    item-title="display"
-    item-value="type"
-    class="mt-4 mx-4"
-    density="compact"
-    :label="t('pageType.title')"
-    rounded="xl"
-    variant="outlined"
-    hide-details
-    chips
-    clearable
-    closable-chips
-    multiple
-  />
+    <!-- Portals filters -->
+    <v-autocomplete
+      v-model="portalsSelected"
+      :items="portalsItems"
+      item-title="display"
+      item-value="portalId"
+      :label="t('portal')"
+      class="mt-4 mx-4"
+      chips
+      closable-chips
+      multiple
+    />
 
-  <!-- Page groups filters -->
-  <v-autocomplete
-    v-if="groupsItems.length > 0"
-    v-model="groupsSelected"
-    :items="groupsItems"
-    item-title="display"
-    item-value="id"
-    class="mt-4 mx-4"
-    density="compact"
-    :label="t('pageGroup')"
-    rounded="xl"
-    variant="outlined"
-    hide-details
-    chips
-    clearable
-    closable-chips
-    multiple
-  />
+    <!-- Page types filters -->
+    <v-autocomplete
+      v-model="typesSelected"
+      :items="typesItems"
+      item-title="display"
+      item-value="type"
+      :label="t('pageType.title')"
+      class="mt-4 mx-4"
+      chips
+      closable-chips
+      multiple
+    />
 
-  <!-- Show all switch (admin only) -->
-  <v-switch
-    v-if="session.user.value.adminMode"
-    v-model="showAll"
-    color="admin"
-    class="mx-4 text-admin"
-    :label="t('showAllPages')"
-    hide-details
-  />
+    <!-- Page groups filters -->
+    <v-autocomplete
+      v-if="groupsItems.length > 0"
+      v-model="groupsSelected"
+      :items="groupsItems"
+      item-title="display"
+      item-value="id"
+      :label="t('pageGroup')"
+      class="mt-4 mx-4"
+      chips
+      closable-chips
+      multiple
+    />
 
-  <!-- Owner filters (only if showAll and admin) -->
-  <v-autocomplete
-    v-if="showAll"
-    v-model="ownersSelected"
-    :items="ownersItems"
-    item-title="display"
-    item-value="ownerKey"
-    :label="t('owner')"
-    chips
-    class="mt-2 mx-4 text-admin"
-    clearable
-    closable-chips
-    density="compact"
-    hide-details
-    multiple
-    rounded="xl"
-    variant="outlined"
-  />
+    <!-- Show all switch (admin only) -->
+    <v-switch
+      v-if="session.user.value.adminMode"
+      v-model="showAll"
+      color="admin"
+      class="mx-4 text-admin"
+      :label="t('showAllPages')"
+    />
+
+    <!-- Owner filters (only if showAll and admin) -->
+    <v-autocomplete
+      v-if="showAll"
+      v-model="ownersSelected"
+      :items="ownersItems"
+      item-title="display"
+      item-value="ownerKey"
+      :label="t('owner')"
+      class="mt-2 mx-4 text-admin"
+      chips
+      closable-chips
+      multiple
+    />
+  </df-navigation-right>
 </template>
 
 <script setup lang="ts">
 import type { PagesFacets } from '#api/doc/pages/get-res/index.ts'
 import type { Group } from '#api/types/group'
 import { useRules } from 'vuetify/labs/rules'
-import { mdiMagnify, mdiPlusCircle, mdiPencil, mdiDelete, mdiFolderPlusOutline } from '@mdi/js'
+import { mdiPlusCircle, mdiPencil, mdiDelete, mdiFolderPlusOutline } from '@mdi/js'
+import dfNavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import dfSearchField from '@data-fair/lib-vuetify/search-field.vue'
 
 const { t } = useI18n()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
@@ -331,6 +312,7 @@ const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const session = useSessionAuthenticated()
 
 const search = defineModel('search', { type: String, default: '' })
+const sort = defineModel('sort', { type: String, default: 'createdAt:-1' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
 const portalsSelected = defineModel('portalsSelected', { type: Array, required: true })
 const typesSelected = defineModel('typesSelected', { type: Array, required: true })
@@ -522,8 +504,6 @@ const deleteGroup = useAsyncAction(
     create: Create
     createNewPage: Create a new page
     newPageTitle: New Page Title
-    newPageStaging: New Page Staging
-    search: Search
     createNewGroup: Create a new group
     createGroupSuccess: Group created.
     createGroupError: Error while creating the group.
@@ -580,8 +560,6 @@ const deleteGroup = useAsyncAction(
     createGroupSuccess: Groupe créé.
     createGroupError: Erreur lors de la création du groupe.
     newPageTitle: Titre de la nouvelle page
-    newPageStaging: Page de pré-production
-    search: Rechercher
     showAllPages: Voir toutes les pages
     editGroup: Modifier un groupe
     editGroupTitle: Nouveau titre du groupe

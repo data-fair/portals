@@ -55,22 +55,22 @@
     </template>
 
     <!-- Actions -->
-    <navigation-right v-if="portalsFetch.data.value">
-      <portals-actions
-        v-model:search="search"
-        v-model:show-all="showAll"
-      />
-    </navigation-right>
+    <portals-actions
+      v-if="portalsFetch.data.value"
+      v-model:search="search"
+      v-model:sort="sort"
+      v-model:show-all="showAll"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal/index'
-import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
+const sort = useStringSearchParam('sort', 'createdAt:-1')
 const { t } = useI18n()
 
 // Restrict to portals actually owned by the session's account: drops portals
@@ -85,7 +85,7 @@ const ownerFilter = computed(() => {
 const portalsParams = computed(() => {
   const params: Record<string, any> = {
     size: 10000,
-    sort: 'updatedAt:-1',
+    sort: sort.value,
     select: '_id,config.title,config.description,config.authentication,ingress.url,owner',
     owner: ownerFilter.value
   }
