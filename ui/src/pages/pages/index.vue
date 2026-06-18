@@ -23,7 +23,7 @@
 
     <!-- No pages created -->
     <span
-      v-else-if="!pagesFetch.data.value?.results.length"
+      v-else-if="!pagesFetch.data.value?.results.length && !isFiltered"
       class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noPagesCreated') }}
@@ -57,28 +57,37 @@
     </v-row>
 
     <!-- Actions -->
-    <navigation-right>
-      <pages-actions
-        v-model:search="search"
-        v-model:show-all="showAll"
-        v-model:portals-selected="portals"
-        v-model:types-selected="types"
-        v-model:groups-selected="groups"
-        v-model:owners-selected="owners"
-        :facets="facets"
-      />
-    </navigation-right>
+    <pages-actions
+      v-model:search="search"
+      v-model:sort="sort"
+      v-model:show-all="showAll"
+      v-model:portals-selected="portals"
+      v-model:types-selected="types"
+      v-model:groups-selected="groups"
+      v-model:owners-selected="owners"
+      :facets="facets"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
 import type { PagesGetRes, PagesFacets } from '#api/doc/pages/get-res'
-import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 
 const { t } = useI18n()
 const showAll = useBooleanSearchParam('showAll')
-const search = useStringSearchParam('q')
+
+// Search with debounce
+const q = useStringSearchParam('q')
+const search = ref(q.value || '')
+let searchTimeout: ReturnType<typeof setTimeout> | undefined
+watch(search, (val) => {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => { q.value = val || '' }, 300)
+})
+watch(q, (val) => { if (val !== search.value) search.value = val || '' })
+
+const sort = useStringSearchParam('sort', 'createdAt:-1')
 const portals = useStringsArraySearchParam('portal')
 const types = useStringsArraySearchParam('type')
 const groups = useStringsArraySearchParam('group')
@@ -87,9 +96,10 @@ const owners = useStringsArraySearchParam('owner')
 const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
-    sort: 'updatedAt:-1',
     select: '_id,title,type,owner,config.description,config.genericMetadata'
   }
+  if (q.value) params.q = q.value
+  else params.sort = sort.value
   if (types.value.length) params.type = types.value.join(',')
   if (portals.value.length) params.portal = portals.value.join(',')
   if (owners.value.length) params.owners = owners.value.join(',')
@@ -101,12 +111,11 @@ const facets = computed<PagesFacets>(() => pagesFetch.data.value?.facets ?? { ty
 
 const displayPages = computed(() => {
   const pages = (pagesFetch.data.value?.results ?? [])
-  return pages.filter(page => {
-    if (search.value && !page.title.toLowerCase().includes(search.value.toLowerCase())) return false
-    if (!groups.value.length) return true
-    return groups.value.includes(getPageGroupId(page))
-  })
+  if (!groups.value.length) return pages
+  return pages.filter(page => groups.value.includes(getPageGroupId(page)))
 })
+
+const isFiltered = computed(() => !!q.value || types.value.length > 0 || portals.value.length > 0 || owners.value.length > 0 || groups.value.length > 0)
 
 const standardTypes = new Set([
   'home',
