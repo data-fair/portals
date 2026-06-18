@@ -186,10 +186,9 @@ const fontPreloadLink = (href: string) => {
 }
 
 const getThemeFontFields = async (owner: Portal['owner'], config: { bodyFontFamily?: string, headingFontFamily?: string }) => {
-  const body = config.bodyFontFamily ? await getFontFamilyAssets(owner, config.bodyFontFamily) : undefined
-  const heading = config.headingFontFamily ? await getFontFamilyAssets(owner, config.headingFontFamily) : undefined
-  // dedupe by URL: body and heading often share the same family (e.g. both Nunito),
-  // which would otherwise emit the same <link rel="preload"> twice
+  const body = config.bodyFontFamily ? await getFontFamilyAssets(owner, config.bodyFontFamily, '400') : undefined
+  const heading = config.headingFontFamily ? await getFontFamilyAssets(owner, config.headingFontFamily, '700') : undefined
+  // dedupe in case body and heading resolve to the same file (e.g. a shared variable family)
   const preloadUrls = [...new Set([body?.preloadUrl, heading?.preloadUrl].filter((url): url is string => !!url))]
   const preloadLinks = preloadUrls.map(fontPreloadLink)
   return {

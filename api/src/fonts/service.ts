@@ -73,20 +73,24 @@ export const getFontFamilyCss = async (owner: AccountKeys, familyName: string, m
   return makeFontCss(await getFont(owner, familyName, managerUrl))
 }
 
-// Pick the URL of the regular (normal-style, latin subset) face of a font family
-// so it can be preloaded. The returned URL matches a `src: url(...)` emitted by
-// makeFontCss, so the browser dedupes the preload with the actual @font-face load.
-const pickPreloadUrl = (font: Font): string | undefined => {
+// Pick the normal-latin face to preload for the weight this family renders most
+// (400 as body text, 700 as titles). A weightRange is a single weight ("400") or a
+// span — a full variable face ("300 700") or one slice of a multi-file family (EDF
+// ships "400 600" → Regular, "700 900" → Bold). A span covering both 400 and 700
+// makes body and heading resolve to the same file, deduped to one preload.
+const pickPreloadUrl = (font: Font, weight: string): string | undefined => {
+  const target = Number(weight)
   const normalLatin = font.variants.filter(v => v.style === 'normal' && v.subset === 'latin')
-  const variant = normalLatin.find(v => v.weightRange === '400' || v.weightRange.includes(' ')) ??
-    normalLatin[0] ??
-    font.variants.find(v => v.style === 'normal')
-  return variant?.woff2Url
+  const match = normalLatin.find(v => {
+    const [lo, hi] = v.weightRange.split(' ').map(Number)
+    return hi === undefined ? lo === target : target >= lo && target <= hi
+  })
+  return (match ?? normalLatin[0] ?? font.variants.find(v => v.style === 'normal'))?.woff2Url
 }
 
 // Build both the @font-face CSS and the preload URL of a family from a single
 // DB/file read — getSDSites needs both, so this avoids fetching the font twice.
-export const getFontFamilyAssets = async (owner: AccountKeys, familyName: string, managerUrl = false): Promise<{ css: string, preloadUrl?: string }> => {
-  const font = await getFont(owner, familyName, managerUrl)
-  return { css: makeFontCss(font), preloadUrl: pickPreloadUrl(font) }
+export const getFontFamilyAssets = async (owner: AccountKeys, familyName: string, preloadWeight = '400'): Promise<{ css: string, preloadUrl?: string }> => {
+  const font = await getFont(owner, familyName)
+  return { css: makeFontCss(font), preloadUrl: pickPreloadUrl(font, preloadWeight) }
 }
