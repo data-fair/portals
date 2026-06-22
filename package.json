@@ -74,6 +74,7 @@
     "tough-cookie": "^5.1.2"
   },
   "relativeDependencies": {
+    "@data-fair/lib-vue": "../lib/packages/vue",
     "@data-fair/lib-vuetify": "../lib/packages/vuetify"
   }
 }

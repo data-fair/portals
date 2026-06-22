@@ -123,7 +123,8 @@ export default defineNuxtConfig({
       },
       ssrClientHints: {
         // reloadOnFirstRequest: false, // disabled because broken with Brave unfortunately
-        viewportSize: true
+        viewportSize: true, // help SSR choose the right breakpoint on first load to avoid hydration mismatches
+        prefersColorScheme: true // handled manually in 03-vuetify.ts to avoid conflicts with our 'system' cookie value semantics
       }
     },
     vuetifyOptions: {
