@@ -25,12 +25,12 @@ const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${
 provide('page-config', pageConfigFetch.data)
 
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
-  // Breadcrumbs with group if available
-  const items = [{ title: pageConfig?.title || portalConfig.value.title }]
-  if (pageConfig?.genericMetadata?.group?.title) {
-    items.unshift({ title: pageConfig.genericMetadata.group.title })
-  }
-  setBreadcrumbs(items)
+  // Breadcrumbs with group if available, linking to its root page when defined
+  const group = pageConfig?.genericMetadata?.group
+  setBreadcrumbs([
+    ...(group?.title ? [{ title: group.title, to: group.rootPage ? `/pages/${group.rootPage}` : undefined }] : []),
+    { title: pageConfig?.title || portalConfig.value.title }
+  ])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
 }, { immediate: true })
 

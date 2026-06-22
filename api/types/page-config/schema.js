@@ -111,7 +111,7 @@ export default {
           required: ['_id', 'title', 'slug'],
           layout: {
             getItems: {
-              url: '/portals-manager/api/groups?select=_id,title,slug',
+              url: '/portals-manager/api/groups?select=_id,title,slug,rootPage',
               itemsResults: 'data.results',
               itemTitle: 'item.title',
               itemKey: 'item._id'
@@ -120,7 +120,8 @@ export default {
           properties: {
             _id: { type: 'string' },
             title: { type: 'string' },
-            slug: { type: 'string' }
+            slug: { type: 'string' },
+            rootPage: { type: 'string' }
           }
         }
       }

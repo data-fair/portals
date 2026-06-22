@@ -14,148 +14,17 @@
     </custom-router-link>
 
     <!-- Create new group -->
-    <v-menu
-      v-model="newGroupMenu"
-      location="start"
-      :close-on-content-click="false"
-    >
-      <template #activator="{ props }">
-        <v-list-item v-bind="props">
-          <template #prepend>
-            <v-icon
-              color="primary"
-              :icon="mdiFolderPlusOutline"
-            />
-          </template>
-          {{ t('createNewGroup') }}
-        </v-list-item>
-      </template>
-      <v-card
-        data-iframe-height
-        min-width="300"
-        rounded="lg"
-        :loading="createGroup.loading.value ? 'primary' : undefined"
-      >
-        <v-card-text>
-          <v-text-field
-            v-model="newGroupTitle"
-            :label="t('newGroupTitle')"
-            density="comfortable"
-            variant="outlined"
-            autofocus
-            auto-grow
-            hide-details
-          />
-          <v-textarea
-            v-model="newGroupDescription"
-            :label="t('newGroupDescription')"
-            :rules="[rules.maxLength(100)]"
-            :counter="100"
-            class="mt-4"
-            density="comfortable"
-            hide-details="auto"
-            variant="outlined"
-            no-resize
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            :disabled="createGroup.loading.value"
-            @click="newGroupMenu = false"
-          >
-            {{ t('cancel') }}
-          </v-btn>
-          <v-btn
-            color="primary"
-            variant="flat"
-            :disabled="!newGroupTitle || newGroupDescription.length > 100"
-            :loading="createGroup.loading.value ? 'primary' : false"
-            @click="createGroup.execute()"
-          >
-            {{ t('create') }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-menu>
+    <group-form
+      mode="create"
+      @saved="groupsFetch.refresh()"
+    />
 
-    <!-- Group management menu -->
-    <v-menu
-      v-model="editGroupMenu"
-      location="start"
-      :close-on-content-click="false"
-    >
-      <template #activator="{ props }">
-        <v-list-item v-bind="props">
-          <template #prepend>
-            <v-icon
-              color="primary"
-              :icon="mdiPencil"
-            />
-          </template>
-          {{ t('editGroup') }}
-        </v-list-item>
-      </template>
-      <v-card
-        data-iframe-height
-        min-width="300"
-        rounded="lg"
-        :loading="editGroup.loading.value ? 'primary' : undefined"
-      >
-        <v-card-text>
-          <v-select
-            v-model="editGroupId"
-            :items="editableGroups"
-            item-title="title"
-            item-value="_id"
-            :label="t('selectGroup')"
-            density="comfortable"
-            variant="outlined"
-            hide-details
-          />
-          <v-text-field
-            v-model="editGroupTitle"
-            :label="t('editGroupTitle')"
-            density="comfortable"
-            variant="outlined"
-            :disabled="!editGroupId"
-            class="mt-4"
-            auto-grow
-            hide-details
-          />
-          <v-textarea
-            v-model="editGroupDescription"
-            :label="t('editGroupDescription')"
-            :rules="[rules.maxLength(100)]"
-            :counter="100"
-            class="mt-4"
-            density="comfortable"
-            hide-details="auto"
-            variant="outlined"
-            no-resize
-            :disabled="!editGroupId"
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            :disabled="editGroup.loading.value"
-            @click="editGroupMenu = false"
-          >
-            {{ t('cancel') }}
-          </v-btn>
-          <v-btn
-            color="primary"
-            variant="flat"
-            :disabled="!editGroupId || !editGroupTitle || editGroupDescription.length > 100"
-            :loading="editGroup.loading.value ? 'primary' : false"
-            @click="editGroup.execute()"
-          >
-            {{ t('save') }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-menu>
+    <!-- Edit a group -->
+    <group-form
+      mode="edit"
+      :groups="editableGroups"
+      @saved="groupsFetch.refresh()"
+    />
 
     <!-- Delete group menu -->
     <v-menu
@@ -301,13 +170,11 @@
 <script setup lang="ts">
 import type { PagesFacets } from '#api/doc/pages/get-res/index.ts'
 import type { Group } from '#api/types/group'
-import { useRules } from 'vuetify/labs/rules'
-import { mdiPlusCircle, mdiPencil, mdiDelete, mdiFolderPlusOutline } from '@mdi/js'
+import { mdiPlusCircle, mdiDelete } from '@mdi/js'
 import dfNavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import dfSearchField from '@data-fair/lib-vuetify/search-field.vue'
 
 const { t } = useI18n()
-const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 
 const session = useSessionAuthenticated()
 
@@ -319,20 +186,9 @@ const typesSelected = defineModel('typesSelected', { type: Array, required: true
 const groupsSelected = defineModel('groupsSelected', { type: Array, required: true })
 const ownersSelected = defineModel('ownersSelected', { type: Array, required: true })
 
-const { facets, currentGroupId } = defineProps<{
-  facets: PagesFacets,
-  currentGroupId?: string
+const { facets } = defineProps<{
+  facets: PagesFacets
 }>()
-const emit = defineEmits<{ (e: 'refresh-group'): void }>()
-
-const newGroupMenu = ref(false)
-const newGroupTitle = ref('')
-const newGroupDescription = ref('')
-
-const editGroupMenu = ref(false)
-const editGroupId = ref<string | null>(null)
-const editGroupTitle = ref('')
-const editGroupDescription = ref('')
 
 const deleteGroupMenu = ref(false)
 const deleteGroupId = ref<string | null>(null)
@@ -421,67 +277,11 @@ const deletableGroups = computed(() => {
   return groups.filter(group => (groupsCounts[group._id] ?? 0) === 0)
 })
 
-watch(editGroupMenu, () => {
-  if (!editGroupMenu.value) return
-  if (!editGroupId.value && editableGroups.value.length) {
-    editGroupId.value = editableGroups.value[0]._id
-  }
-  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
-  editGroupTitle.value = selected?.title || ''
-  editGroupDescription.value = selected?.description || ''
-})
-
-watch(editGroupId, () => {
-  const selected = editableGroups.value.find(group => group._id === editGroupId.value)
-  editGroupTitle.value = selected?.title || ''
-  editGroupDescription.value = selected?.description || ''
-})
-
 watch(deleteGroupMenu, () => {
   if (!deleteGroupMenu.value) return
   if (deletableGroups.value.length) deleteGroupId.value = deletableGroups.value[0]._id
   else deleteGroupId.value = null
 })
-
-const createGroup = useAsyncAction(
-  async () => {
-    await $fetch<Group>('/groups', {
-      method: 'POST',
-      body: {
-        title: newGroupTitle.value,
-        description: newGroupDescription.value
-      }
-    })
-    await groupsFetch.refresh()
-    newGroupTitle.value = ''
-    newGroupDescription.value = ''
-    newGroupMenu.value = false
-  },
-  {
-    success: t('createGroupSuccess'),
-    error: t('createGroupError')
-  }
-)
-
-const editGroup = useAsyncAction(
-  async () => {
-    if (!editGroupId.value) return
-    await $fetch(`/groups/${editGroupId.value}`, {
-      method: 'PATCH',
-      body: {
-        title: editGroupTitle.value,
-        description: editGroupDescription.value
-      }
-    })
-    await groupsFetch.refresh()
-    if (editGroupId.value === currentGroupId) emit('refresh-group')
-    editGroupMenu.value = false
-  },
-  {
-    success: t('editGroupSuccess'),
-    error: t('editGroupError')
-  }
-)
 
 const deleteGroup = useAsyncAction(
   async () => {
@@ -501,25 +301,13 @@ const deleteGroup = useAsyncAction(
 <i18n lang="yaml">
   en:
     cancel: Cancel
-    create: Create
     createNewPage: Create a new page
     newPageTitle: New Page Title
-    createNewGroup: Create a new group
-    createGroupSuccess: Group created.
-    createGroupError: Error while creating the group.
     showAllPages: Show all pages
-    editGroup: Edit a Group
-    editGroupTitle: New Group Title
-    editGroupDescription: New Group Description
-    editGroupSuccess: Group updated.
-    editGroupError: Error while updating the group.
-    save: Save
     deleteGroup: Delete a group
     deletingGroup: Deleting a group
     deleteGroupSuccess: Group deleted.
     deleteGroupError: Error while deleting the group.
-    newGroupTitle: New Group Title
-    newGroupDescription: Description
     confirmDeleteGroup: Do you really want to delete the group "{title}"? Deletion is permanent and data cannot be recovered.
     groupNotEmptyError: Cannot delete the group while it contains pages
     delete: Delete
@@ -544,7 +332,6 @@ const deleteGroup = useAsyncAction(
       event: Event
       news: News
       generic: Custom content
-    selectGroup: Select a group
     selectGroupToDelete: Group to delete
     groupTitle:
       standard: Standard pages
@@ -554,21 +341,9 @@ const deleteGroup = useAsyncAction(
 
   fr:
     cancel: Annuler
-    create: Créer
     createNewPage: Créer une nouvelle page
-    createNewGroup: Créer un nouveau groupe
-    createGroupSuccess: Groupe créé.
-    createGroupError: Erreur lors de la création du groupe.
     newPageTitle: Titre de la nouvelle page
     showAllPages: Voir toutes les pages
-    editGroup: Modifier un groupe
-    editGroupTitle: Nouveau titre du groupe
-    editGroupDescription: Nouvelle description du groupe
-    editGroupSuccess: Groupe modifié.
-    editGroupError: Erreur lors de la modification du groupe.
-    newGroupTitle: Titre du nouveau groupe
-    newGroupDescription: Description
-    save: Enregistrer
     deleteGroup: Supprimer un groupe
     deletingGroup: "Suppression d'un groupe"
     deleteGroupSuccess: Groupe supprimé.
@@ -578,7 +353,6 @@ const deleteGroup = useAsyncAction(
     owner: Propriétaire
     portal: Portail
     pageGroup: Groupe
-    selectGroup: Choisir un groupe
     selectGroupToDelete: Groupe à supprimer
     groupTitle:
       standard: Pages standard

@@ -3,7 +3,7 @@ import groupSchema from '#types/group/schema.js'
 
 export default {
   ...jsonSchema(groupSchema)
-    .pickProperties(['title', 'description'])
+    .pickProperties(['title', 'description', 'rootPage'])
     .removeFromRequired(['description'])
     .schema,
   $id: 'https://github.com/data-fair/portals/groups/patch-req-body',
