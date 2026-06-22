@@ -201,30 +201,81 @@ export default {
         fr: 'Image'
       },
       required: ['type'],
+      layout: {
+        children: [
+          'type',
+          {
+            comp: 'card',
+            title: 'Image source',
+            'x-i18n-title': { fr: "Source de l'image" },
+            children: [
+              'banner',
+              'url',
+              { if: '!data?.banner && !data?.url', children: ['image'] },
+              { if: 'data?.banner && !data?.url', children: ['wideImage'] }
+            ]
+          },
+          {
+            comp: 'card',
+            title: 'Appearance',
+            'x-i18n-title': { fr: 'Apparence' },
+            children: [
+              { if: '!data?.banner', children: ['cover'] },
+              { if: '!data?.banner && !data?.cover', children: ['alignment'] },
+              'height'
+            ]
+          },
+          {
+            comp: 'card',
+            title: 'Text & accessibility',
+            'x-i18n-title': { fr: 'Texte & accessibilité' },
+            children: [
+              'isPresentation',
+              { if: '!data?.isPresentation', children: ['title', 'legend'] },
+              { if: '!data?.isPresentation && !data?.banner', children: ['zoomable'] },
+              'fetchPriority'
+            ]
+          },
+          {
+            if: '!data?.isPresentation && !data?.zoomable',
+            comp: 'card',
+            title: 'Link on click',
+            'x-i18n-title': { fr: "Lien au clic sur l'image" },
+            children: ['link']
+          },
+          'mb'
+        ]
+      },
       properties: {
         type: { const: 'image' },
         uuid: { type: 'string', layout: 'none' },
         banner: {
           type: 'boolean',
-          title: 'Pleine largeur',
+          title: 'Full width',
+          'x-i18n-title': { fr: 'Pleine largeur' },
+          description: 'Display the image edge-to-edge across the page width, using the dedicated wide image upload.',
+          'x-i18n-description': { fr: "Affiche l'image sur toute la largeur de la page, bord à bord, via l'upload d'image pleine largeur dédié." },
           layout: 'switch'
         },
         isPresentation: {
           type: 'boolean',
-          title: 'Image de présentation (décorative)',
-          description: "Les images de présentations ne sont pas affichés pour les lecteurs d'écrans pour l'accessibilité. Dans ce cas, l'image ne peut pas porter de liens.",
+          title: 'Decorative image',
+          'x-i18n-title': { fr: 'Image de présentation (décorative)' },
+          description: 'Decorative images are hidden from screen readers for accessibility, and cannot carry a link.',
+          'x-i18n-description': { fr: "Les images de présentation ne sont pas affichées pour les lecteurs d'écran (accessibilité). Dans ce cas, l'image ne peut pas porter de lien." },
           layout: 'switch'
         },
         url: {
-          title: "URL vers l'image",
-          description: "Utile pour pointer vers une image sur un autre serveur Web. Si vous disposez de l'image en fichier sur votre poste vous pouvez la charger ci-dessous.",
-          type: 'string'
+          type: 'string',
+          title: 'Image URL',
+          'x-i18n-title': { fr: 'URL vers une image' },
+          description: 'Use this to point to an image hosted on another web server. Leave empty to upload a file below.',
+          'x-i18n-description': { fr: 'Utile pour pointer vers une image hébergée sur un autre serveur web. Laissez vide pour téléverser un fichier ci-dessous.' }
         },
         image: {
           type: 'object',
           required: ['_id', 'name', 'mimeType'],
           layout: {
-            if: '!parent.data?.banner',
             slots: {
               component: {
                 name: 'image-upload',
@@ -251,7 +302,6 @@ export default {
           type: 'object',
           required: ['_id', 'name', 'mimeType'],
           layout: {
-            if: 'parent.data?.banner',
             slots: {
               component: {
                 name: 'image-upload',
@@ -274,43 +324,59 @@ export default {
             }
           }
         },
-        height: {
-          title: 'Hauteur fixe (px)',
-          type: 'integer',
-          minimum: 0
-        },
-        title: {
-          type: 'string',
-          title: "Titre de l'image (Accessibilité)",
-          description: "Nécessaire pour l'accessibilité si l'image n'est pas décorative.",
-          layout: { if: '!parent.data?.isPresentation' }
-        },
-        legend: {
-          type: 'string',
-          title: "Légende de l'image",
-          description: "Légende affichée en italique en dessous de l'image",
-          layout: { if: '!parent.data?.isPresentation' }
-        },
         cover: {
           type: 'boolean',
-          title: "Recadrer l'image pour remplir l'espace",
-          layout: {
-            if: '!parent.data?.banner',
-            comp: 'switch'
-          }
+          title: 'Crop to fill the space',
+          'x-i18n-title': { fr: "Recadrer l'image pour remplir l'espace" },
+          description: 'The image is cropped to cover the available space instead of fitting entirely inside it.',
+          'x-i18n-description': { fr: "L'image est recadrée pour couvrir l'espace disponible au lieu de s'y inscrire entièrement." },
+          layout: 'switch'
+        },
+        alignment: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/horizontal-alignment',
+          description: 'Horizontal alignment when the image is narrower than the container (ignored for full-width or cropped images).',
+          'x-i18n-description': { fr: "Alignement horizontal quand l'image est plus étroite que le conteneur (sans effet en pleine largeur ou recadrée)." }
+        },
+        height: {
+          type: 'integer',
+          title: 'Fixed height (px)',
+          'x-i18n-title': { fr: 'Hauteur fixe (px)' },
+          description: 'Force a fixed height in pixels. Leave empty to keep the natural ratio.',
+          'x-i18n-description': { fr: 'Force une hauteur fixe en pixels. Laissez vide pour conserver le ratio naturel.' },
+          minimum: 0
         },
         zoomable: {
           type: 'boolean',
-          title: 'Zoom au clic',
-          layout: { if: '!parent.data?.banner && !parent.data?.href' }
+          title: 'Zoom on click',
+          'x-i18n-title': { fr: 'Zoom au clic' },
+          description: 'Visitors can click the image to view it enlarged. Not available when the image has a link.',
+          'x-i18n-description': { fr: "Les visiteurs peuvent cliquer sur l'image pour l'agrandir. Indisponible quand l'image porte un lien." },
+          layout: 'switch'
+        },
+        title: {
+          type: 'string',
+          title: 'Alternative text (accessibility)',
+          'x-i18n-title': { fr: 'Texte alternatif (accessibilité)' },
+          description: 'Required for accessibility when the image is not decorative; describes the image for screen readers.',
+          'x-i18n-description': { fr: "Nécessaire pour l'accessibilité si l'image n'est pas décorative ; décrit l'image pour les lecteurs d'écran." }
+        },
+        legend: {
+          type: 'string',
+          title: 'Caption',
+          'x-i18n-title': { fr: "Légende de l'image" },
+          description: 'Caption displayed in italic below the image.',
+          'x-i18n-description': { fr: "Légende affichée en italique sous l'image." }
         },
         link: {
-          $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
-          title: "Lien au clic sur l'image",
-          layout: {
-            if: '!parent.data?.isPresentation',
-            comp: 'card'
-          }
+          $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem'
+        },
+        fetchPriority: {
+          type: 'boolean',
+          title: 'High loading priority',
+          'x-i18n-title': { fr: 'Priorité de chargement élevée' },
+          description: 'Enable for images visible on first render (above the fold), typically the main image at the top of the page, so they load first. Leave off for images further down; enabling it everywhere is counter-productive.',
+          'x-i18n-description': { fr: "À activer pour les images visibles dès le premier affichage de la page (au-dessus de la ligne de flottaison), typiquement l'image principale en haut de page, afin qu'elles se chargent en priorité. À laisser désactivé pour les images plus bas ; l'activer partout est contre-productif." },
+          layout: 'switch'
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

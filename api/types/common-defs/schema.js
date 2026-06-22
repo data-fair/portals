@@ -108,6 +108,19 @@ export default {
       default: 'none'
     },
 
+    // Horizontal alignment (left / center / right)
+    'horizontal-alignment': {
+      type: 'string',
+      title: 'Alignment',
+      'x-i18n-title': { fr: 'Alignement' },
+      default: 'center',
+      oneOf: [
+        { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'Gauche' } },
+        { const: 'center', title: 'Center', 'x-i18n-title': { fr: 'Centré' } },
+        { const: 'right', title: 'Right', 'x-i18n-title': { fr: 'Droite' } }
+      ]
+    },
+
     // Standard color definition (Titles, texts,...)
     color: {
       type: 'string',

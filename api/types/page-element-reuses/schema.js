@@ -106,15 +106,8 @@ export default {
               ]
             },
             alignment: {
-              type: 'string',
-              title: 'Alignement',
-              default: 'center',
-              layout: { if: 'parent.data?.position !== "none"' },
-              oneOf: [
-                { const: 'left', title: 'Gauche' },
-                { const: 'center', title: 'Centré' },
-                { const: 'right', title: 'Droite' }
-              ]
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/horizontal-alignment',
+              layout: { if: 'parent.data?.position !== "none"' }
             }
           }
         },

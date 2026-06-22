@@ -15,7 +15,8 @@
   <div
     v-if="src"
     :class="[
-      'd-flex flex-column align-center overflow-hidden',
+      'd-flex flex-column overflow-hidden',
+      alignClass,
       !preview && element.banner && context.isRoot ? 'banner-fluid' : '',
       !preview && element.banner && context.isRoot && context.index === 0 && !showTopBreadcrumbs && 'mt-n4',
       !preview && element.banner && context.isRoot && context.index === context.parentLength - 1 && 'mb-n4',
@@ -23,7 +24,7 @@
     ]"
   >
     <a
-      v-if="!element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
+      v-if="!element.zoomable && !element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
@@ -35,10 +36,11 @@
         :alt="element.title"
         :style="imgStyle"
         :src="src"
+        :fetchpriority="element.fetchPriority ? 'high' : undefined"
       >
     </a>
     <NuxtLink
-      v-else-if="!element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
+      v-else-if="!element.zoomable && !element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
@@ -50,6 +52,7 @@
         :alt="element.title"
         :style="imgStyle"
         :src="src"
+        :fetchpriority="element.fetchPriority ? 'high' : undefined"
       >
     </NuxtLink>
     <img
@@ -58,6 +61,7 @@
       :alt="!element.isPresentation ? element.title : ''"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
       :src="src"
+      :fetchpriority="element.fetchPriority ? 'high' : undefined"
       @click="element.zoomable ? zoomed = true : undefined"
     >
     <div
@@ -124,6 +128,11 @@ const zoomedSrc = computed(() => {
 })
 
 const zoomed = ref(false)
+
+const alignClass = computed(() => {
+  if (element.banner || element.cover) return 'align-center'
+  return { left: 'align-start', center: 'align-center', right: 'align-end' }[element.alignment ?? 'center']
+})
 
 const imgStyle = computed(() => {
   const fit = `object-fit:${(element.cover || element.banner) ? 'cover' : 'contain'};`
