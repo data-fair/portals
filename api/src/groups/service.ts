@@ -41,6 +41,19 @@ export const patchGroup = async (group: Group, patch: Partial<Group>, session: S
       )
     ])
   }
+  // Update group root page in pages
+  if ('rootPage' in fullPatch && fullPatch.rootPage !== group.rootPage) {
+    await Promise.all([
+      mongo.pages.updateMany(
+        { 'config.genericMetadata.group._id': group._id },
+        { $set: { 'config.genericMetadata.group.rootPage': fullPatch.rootPage ?? '' } }
+      ),
+      mongo.pages.updateMany(
+        { 'draftConfig.genericMetadata.group._id': group._id },
+        { $set: { 'draftConfig.genericMetadata.group.rootPage': fullPatch.rootPage ?? '' } }
+      )
+    ])
+  }
   return updatedGroup
 }
 
