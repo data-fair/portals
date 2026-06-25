@@ -14,7 +14,7 @@ export default {
       'x-i18n-title': { fr: 'Arrondi' },
       oneOf: [
         { const: '0', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
-        { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normal' } },
+        { const: 'default', title: 'Small', 'x-i18n-title': { fr: 'Petit' } },
         { const: 'lg', title: 'Medium', 'x-i18n-title': { fr: 'Moyen' } },
         { const: 'xl', title: 'Large', 'x-i18n-title': { fr: 'Grand' } }
       ]
@@ -37,8 +37,8 @@ export default {
       title: 'Density',
       'x-i18n-title': { fr: 'Densité' },
       oneOf: [
-        { const: 'default', title: 'Normal', 'x-i18n-title': { fr: 'Normale' } },
-        { const: 'comfortable', title: 'Comfortable', 'x-i18n-title': { fr: 'Confortable' } },
+        { const: 'default', title: 'Spacious', 'x-i18n-title': { fr: 'Aérée' } },
+        { const: 'comfortable', title: 'Normal', 'x-i18n-title': { fr: 'Normale' } },
         { const: 'compact', title: 'Compact', 'x-i18n-title': { fr: 'Compacte' } }
       ]
     },
@@ -48,7 +48,7 @@ export default {
       title: 'Variant',
       'x-i18n-title': { fr: 'Variante' },
       oneOf: [
-        { const: 'default', title: 'Default', 'x-i18n-title': { fr: 'Avec fond coloré' } },
+        { const: 'default', title: 'Filled', 'x-i18n-title': { fr: 'Avec fond coloré' } },
         { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
         { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
       ]
