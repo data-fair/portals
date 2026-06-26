@@ -88,18 +88,35 @@
       </v-col>
 
       <v-col
-        v-if="dataset.keywords?.length"
+        v-if="topicsConfig?.show && dataset.topics?.length"
+        v-bind="metadataColProps"
+      >
+        <div class="text-body-small text-medium-emphasis">{{ t('topics') }}</div>
+        <topics-list
+          :topics="dataset.topics"
+          :config="topicsConfig"
+        />
+      </v-col>
+
+      <v-col
+        v-if="keywordsConfig?.show && dataset.keywords?.length"
         v-bind="metadataColProps"
       >
         <div class="text-body-small text-medium-emphasis">{{ metadataLabel('keywords') }}</div>
-        <v-chip
-          v-for="(keyword,i) in dataset.keywords"
-          :key="i"
-          :text="keyword"
-          color="secondary"
-          size="small"
-          class="ma-1"
+        <keywords-list
+          :keywords="dataset.keywords"
+          :config="keywordsConfig"
         />
+      </v-col>
+
+      <!-- Custom metadata -->
+      <v-col
+        v-for="customMeta in metadataSettings.data.value?.custom?.filter(cm => dataset.customMetadata?.[cm.key])"
+        :key="customMeta.key"
+        v-bind="metadataColProps"
+      >
+        <div class="text-body-small text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
+        <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
       </v-col>
 
       <v-col
@@ -165,16 +182,6 @@
         <div class="d-flex align-center ga-2">
           {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('LL') }}
         </div>
-      </v-col>
-
-      <!-- Custom metadata -->
-      <v-col
-        v-for="customMeta in metadataSettings.data.value?.custom?.filter(cm => dataset.customMetadata?.[cm.key])"
-        :key="customMeta.key"
-        v-bind="metadataColProps"
-      >
-        <div class="text-body-small text-medium-emphasis">{{ customMeta.title || customMeta.key }}</div>
-        <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
       </v-col>
 
       <v-col
@@ -292,6 +299,8 @@ const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
+const topicsConfig = computed(() => portalConfig.value.datasets.page.topics)
+const keywordsConfig = computed(() => portalConfig.value.datasets.page.keywords)
 const metadataColProps = computed(() => ({
   class: 'py-0',
   cols: 12,
@@ -371,6 +380,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       api: Open the API documentation in full page
     thisSource: 'this source'
     frequency: 'Update frequency:'
+    topics: 'Topics:'
     updatedAt: Updated at
   fr:
     attachments: 'Pièces jointes :'
@@ -419,5 +429,6 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       api: Ouvrir la documentation d'API en pleine page
     thisSource: 'cette source'
     frequency: 'Fréquence de mise à jour :'
+    topics: 'Thématiques :'
     updatedAt: Mis à jour le
 </i18n>

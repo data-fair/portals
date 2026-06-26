@@ -36,6 +36,18 @@
         </div>
       </v-col>
 
+      <!-- Topics -->
+      <v-col
+        v-if="topicsConfig?.show && application.topics?.length"
+        v-bind="metadataColProps"
+      >
+        <div class="text-body-small text-medium-emphasis">{{ t('topics') }}</div>
+        <topics-list
+          :topics="application.topics"
+          :config="topicsConfig"
+        />
+      </v-col>
+
       <!-- Data update date -->
       <v-col
         v-if="dataUpdatedAt"
@@ -121,6 +133,7 @@ const baseApplicationFetch = useLocalFetch<{
 }>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
 
 const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
+const topicsConfig = computed(() => portalConfig.value.applications.page.topics)
 const metadataColProps = computed(() => ({
   class: 'py-0',
   cols: 12,
@@ -140,6 +153,7 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
     text: Fullscreen
     tooltip: Open the application in full page
     dataUpdatedAt: Data updated at
+    topics: 'Topics:'
     updatedAt: Visualization updated at
   fr:
     application: 'Application :'
@@ -149,5 +163,6 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
     text: Plein écran
     tooltip: Ouvrir la visualisation en pleine page
     dataUpdatedAt: Données mises à jour le
+    topics: 'Thématiques :'
     updatedAt: Visualisation mise à jour le
 </i18n>
