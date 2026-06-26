@@ -20,6 +20,8 @@ export default {
       },
       'titleStyle',
       'metadata',
+      'topics',
+      'keywords',
       'applications',
       'reuses',
       'relatedDatasets'
@@ -141,6 +143,14 @@ export default {
           }
         }
       }
+    },
+
+    topics: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/topicsConfig'
+    },
+
+    keywords: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/keywordsConfig'
     },
 
     applications: {

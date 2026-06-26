@@ -17,6 +17,7 @@ export default {
     },
     'titleStyle',
     'metadata',
+    'topics',
     'datasets'
     ]
   },
@@ -89,6 +90,10 @@ export default {
           default: true
         }
       }
+    },
+
+    topics: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/topicsConfig'
     },
 
     datasets: {
