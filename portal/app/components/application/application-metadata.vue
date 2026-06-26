@@ -36,6 +36,18 @@
         </div>
       </v-col>
 
+      <!-- Data update date -->
+      <v-col
+        v-if="dataUpdatedAt"
+        v-bind="metadataColProps"
+      >
+        {{ t('dataUpdatedAt') }} {{ dayjs(dataUpdatedAt).format('LL') }}
+      </v-col>
+
+      <v-col v-bind="metadataColProps">
+        {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('LL') }}
+      </v-col>
+
       <!-- Share (location not right)-->
       <ClientOnly>
         <v-col
@@ -84,10 +96,6 @@
         <!-- TODO: Show applications attachments ? (not implemented in V1) -->
       </v-col>
 
-      <v-col v-bind="metadataColProps">
-        {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('LL') }}
-      </v-col>
-
       <ClientOnly>
         <v-col v-if="application.public && metadataConfig.location === 'right'">
           {{ t('share') }}
@@ -103,7 +111,7 @@ import type { Application } from '#api/types/index.ts'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiFullscreen } from '@mdi/js'
 
-const { application } = defineProps<{ application: Application }>()
+const { application } = defineProps<{ application: Application, dataUpdatedAt?: string }>()
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
@@ -131,7 +139,8 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
     share: 'Share:'
     text: Fullscreen
     tooltip: Open the application in full page
-    updatedAt: Updated at
+    dataUpdatedAt: Data updated at
+    updatedAt: Visualization updated at
   fr:
     application: 'Application :'
     owner: 'Propriétaire :'
@@ -139,5 +148,6 @@ const customOwnerLabel = portalConfig.value.labelsOverrides?.owner
     share: 'Partager :'
     text: Plein écran
     tooltip: Ouvrir la visualisation en pleine page
-    updatedAt: Mise à jour le
+    dataUpdatedAt: Données mises à jour le
+    updatedAt: Visualisation mise à jour le
 </i18n>

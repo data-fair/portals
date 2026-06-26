@@ -50,7 +50,10 @@
           :order-md="portalConfig.applications.page.metadata?.location === 'top' ? 'first' : 1"
           cols="12"
         >
-          <application-metadata :application="application" />
+          <application-metadata
+            :application="application"
+            :data-updated-at="dataUpdatedAt"
+          />
         </v-col>
       </v-row>
 
@@ -151,7 +154,7 @@ const datasetsUrl = computed(() => {
   const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
@@ -159,6 +162,14 @@ const datasetsUrl = computed(() => {
 })
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)
 const datasets = computed(() => datasetsFetch.data.value?.results || [])
+// Most recent data update among source datasets (matches data-fair's _modified fallback: modified > dataUpdatedAt)
+const dataUpdatedAt = computed(() => {
+  const dates = datasets.value
+    .map(d => d.modified || d.dataUpdatedAt)
+    .filter((d): d is string => !!d)
+  if (!dates.length) return undefined
+  return dates.reduce((a, b) => (a > b ? a : b))
+})
 const datasetsCardConfig = computed(() => {
   const pageConfig = portalConfig.value.applications.page.datasets
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
