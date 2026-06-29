@@ -3,6 +3,7 @@
     id="nav-drawer"
     v-model="drawer"
     :aria-label="t('mobileNavigation')"
+    :style="{ top: `${appBarBottom}px` }"
     temporary
   >
     <v-list
@@ -26,7 +27,7 @@ import type { MenuItem } from '#api/types/portal'
 defineProps<{ navigation: MenuItem[] }>()
 
 const { t } = useI18n()
-const { drawer } = useNavigationStore()
+const { drawer, appBarBottom } = useNavigationStore()
 
 // When the drawer opens, move focus into the drawer so users don't have to tab out
 // of the header first. v-navigation-drawer traps focus but does not auto-focus content.

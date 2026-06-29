@@ -1,17 +1,24 @@
 <template>
+  <!--
+    Single app bar (header) with the navigation bar as its extension. Two
+    separate top app bars would overlap during SSR, as Vuetify only computes
+    their stacked top offset after mount. The `header` tag carries the single
+    `banner` landmark.
+  -->
   <component
     :is="preview ? VToolbar : VAppBar"
     :color="headerConfig.show && headerConfig.color ? headerConfig.color : navBarConfig.color"
     :class="[
-      (navBarConfig.transparent && isScrolled) ? 'opacity-90' : undefined,
+      (navBarConfig.transparent && scrolled) ? 'opacity-90' : undefined,
       navBarConfig.color === 'background' ? 'header-border-inner' : undefined
     ]"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
     scroll-threshold="150"
+    tag="header"
   >
-    <!-- Header (128px)-->
+    <!-- Header (128px) -->
     <layout-header
       v-if="headerConfig.show"
       :header-config="headerConfig"
@@ -22,6 +29,7 @@
       <layout-nav-bar :nav-bar-config="navBarConfig" />
     </template>
   </component>
+
   <nav-drawer :navigation="portalConfig.menu.children" />
 </template>
 
@@ -30,19 +38,7 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
-const isScrolled = ref(false)
-
-onMounted(() => {
-  if (!preview) {
-    const updateScrollState = () => {
-      isScrolled.value = window.scrollY > 150
-    }
-    window.addEventListener('scroll', updateScrollState)
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', updateScrollState)
-    })
-  }
-})
+const { scrolled } = useNavigationStore()
 
 const headerConfig = computed(() => {
   if (!home || !portalConfig.value.headerHomeActive) return portalConfig.value.header
@@ -54,14 +50,12 @@ const navBarConfig = computed(() => {
   return { ...portalConfig.value.navBar, ...portalConfig.value.navBarHome }
 })
 
+// `hide` slides the header out while keeping the extension (nav bar) pinned,
+// `fully-hide` slides both away, `default` keeps everything. The header hides
+// unless kept; the nav bar only hides when shown and neither bar is kept.
 const scrollBehavior = computed(() => {
-  if (headerConfig.value.show && !headerConfig.value.keepOnScroll && !navBarConfig.value.keepOnScroll) {
-    return 'fully-hide'
-  }
-  if (navBarConfig.value.keepOnScroll && headerConfig.value.show) {
-    return 'hide'
-  }
-  return 'default'
+  if (!headerConfig.value.show || headerConfig.value.keepOnScroll) return 'default'
+  return navBarConfig.value.keepOnScroll ? 'hide' : 'fully-hide'
 })
 
 </script>

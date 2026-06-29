@@ -7,6 +7,7 @@
         color="transparent"
         location="left"
         tag="div"
+        :style="{ top: `${appBarBottom}px` }"
         permanent
         floating
       />
@@ -15,6 +16,7 @@
         :aria-label="t('tableOfContents')"
         color="transparent"
         location="right"
+        :style="{ top: `${appBarBottom}px` }"
         permanent
         floating
       >
@@ -37,6 +39,7 @@
       size="small"
       color="primary"
       location="top right"
+      :style="{ top: `${appBarBottom}px` }"
       app
       icon
     >
@@ -69,6 +72,7 @@ const { isFluid } = defineProps<{ isFluid?: boolean }>()
 
 const { t } = useI18n({ useScope: 'local' })
 const { lgAndUp } = useDisplay()
+const { appBarBottom } = useNavigationStore()
 
 const route = useRoute()
 

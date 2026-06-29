@@ -17,6 +17,34 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const isIframe = options.isIframe
   const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
 
+  // Scrolled past the app bar threshold (mirrors layout-app-bar's
+  // scroll-threshold). Drives the app bar transparency and the drawer offset.
+  const scrolled = ref(false)
+  if (import.meta.client) {
+    const onScroll = () => { scrolled.value = window.scrollY > 150 }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScopeDispose(() => window.removeEventListener('scroll', onScroll))
+  }
+
+  // Y offset (px) where the navigation bar ends — where app-positioned children
+  // (TOC drawer/FAB, navigation drawer) should start. Vuetify collapses
+  // --v-layout-top to 0 when the header hides even though the nav bar stays
+  // visible, so we derive the offset ourselves.
+  const route = useRoute()
+  const appBarBottom = computed(() => {
+    if (isIframe.value) return 0
+    const isHome = route.path === '/'
+    const config = $portal.config
+    const header = (isHome && config.headerHomeActive) ? { ...config.header, ...config.headerHome } : config.header
+    const navBar = (isHome && config.navBarHomeActive) ? { ...config.navBar, ...config.navBarHome } : config.navBar
+    const full = (header.show ? 128 : 0) + 64
+    if (!scrolled.value) return full
+    // Scrolled: the header hides unless it is kept.
+    if (!header.show || header.keepOnScroll) return full
+    // The header is hidden; the navigation bar stays unless it also hides.
+    return navBar.keepOnScroll ? 64 : 0
+  })
+
   // Emit BreadcrumbList JSON-LD from resolved breadcrumbs (SSR only)
   if (import.meta.server) {
     const origin = useRequestURL().origin
@@ -207,7 +235,9 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     showTopBreadcrumbs,
     showBottomBreadcrumbs,
     setShowBreadcrumbs,
-    isIframe
+    isIframe,
+    scrolled,
+    appBarBottom
   }
 }
 
