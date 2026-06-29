@@ -159,11 +159,11 @@
         </div>
       </v-col>
 
-      <!-- Modified or dataUpdatedAt -->
+      <!-- Last update date -->
       <v-col v-bind="metadataColProps">
-        <div class="text-body-small text-medium-emphasis">{{ metadataLabel('modified') }}</div>
+        <div class="text-body-small text-medium-emphasis">{{ dataset.modified || dataset.dataUpdatedAt ? metadataLabel('modified') : t('lastUpdate') }}</div>
         <div class="d-flex align-center ga-2">
-          {{ dayjs(dataset.modified || dataset.dataUpdatedAt).format('LL') }}
+          {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('LL') }}
         </div>
       </v-col>
 
@@ -350,6 +350,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       weekly: 'Every week'
     conformsTo: 'Schema:'
     keywords: 'Keywords:'
+    lastUpdate: 'Last update:'
     license: 'License:'
     modified: 'Data last modified:'
     newWindow: 'New window'
@@ -397,6 +398,7 @@ const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data
       weekly: 'Chaque semaine'
     conformsTo: 'Schéma :'
     keywords: 'Mots-clés :'
+    lastUpdate: 'Dernière mise à jour :'
     license: 'Licence :'
     modified: 'Dernière mise à jour des données :'
     newWindow: 'Nouvelle fenêtre'
