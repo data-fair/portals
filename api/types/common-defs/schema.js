@@ -265,5 +265,98 @@ export default {
         }
       }
     },
+
+    // Topics rendering configuration (shared by detail pages)
+    topicsConfig: {
+      type: 'object',
+      title: 'Topics configuration',
+      'x-i18n-title': {
+        en: 'Topics configuration',
+        fr: 'Configuration des thématiques'
+      },
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } },
+              { key: 'showIcon', cols: { md: 4 } },
+              { key: 'iconColor', cols: { md: 4 } }
+            ]
+          }
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher les thématiques',
+          layout: 'switch',
+          default: true
+        },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' },
+        showIcon: {
+          type: 'boolean',
+          title: "Afficher l'icône",
+          layout: { comp: 'switch' },
+          default: true
+        },
+        iconColor: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
+          title: "Couleur de l'icône",
+          layout: {
+            if: 'parent.data?.showIcon === true'
+          }
+        }
+      }
+    },
+
+    // Keywords rendering configuration (shared by detail pages)
+    keywordsConfig: {
+      type: 'object',
+      title: 'Keywords configuration',
+      'x-i18n-title': {
+        en: 'Keywords configuration',
+        fr: 'Configuration des mots-clés'
+      },
+      layout: {
+        comp: 'card',
+        children: [
+          'show',
+          {
+            if: 'data?.show === true',
+            children: [
+              { key: 'color', cols: { md: 4 } },
+              { key: 'elevation', cols: { md: 4 } },
+              { key: 'density', cols: { md: 4 } },
+              { key: 'rounded', cols: { md: 4 } },
+              { key: 'variant', cols: { md: 4 } }
+            ]
+          }
+        ]
+      },
+      properties: {
+        show: {
+          type: 'boolean',
+          title: 'Afficher les mots-clés',
+          layout: 'switch',
+          default: true
+        },
+        color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' }
+      }
+    },
   }
 }
