@@ -28,6 +28,7 @@
           color="primary"
           class="mb-4"
           :loading="createReuse.loading.value"
+          :disabled="!!editingReuseId"
           @click="createReuse.execute()"
         >
           {{ t('createNew') }}
