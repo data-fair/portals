@@ -67,11 +67,6 @@ export default {
           'x-i18n-title': { fr: 'Texte en gras' },
           layout: { cols: { xs: 6 } },
         },
-        link: {
-          $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
-          title: 'Configuration du lien',
-          layout: { comp: 'card' }
-        },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
           type: 'object',
@@ -93,6 +88,53 @@ export default {
                 },
                 props: { background: true }
               }
+            }
+          }
+        },
+        link: {
+          $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
+          title: 'Configuration du lien',
+          layout: { comp: 'card' }
+        },
+        anchor: {
+          type: 'object',
+          title: 'Anchor & table of contents',
+          'x-i18n-title': { fr: 'Ancre & Sommaire' },
+          layout: {
+            comp: 'card',
+            children: [
+              'enabled',
+              { if: 'data?.enabled', children: ['inToc'] },
+              { if: 'data?.enabled && data?.inToc', children: ['label'] }
+            ]
+          },
+          properties: {
+            enabled: {
+              type: 'boolean',
+              title: 'Enable anchor',
+              'x-i18n-title': { fr: "Activer l'ancre" },
+              description: 'Lets visitors copy a direct link to this title.',
+              'x-i18n-description': { fr: 'Permet de copier un lien direct vers le titre.' },
+              layout: 'switch'
+            },
+            inToc: {
+              type: 'boolean',
+              title: 'Show in the table of contents',
+              'x-i18n-title': { fr: 'Afficher dans le sommaire' },
+              default: true,
+              layout: 'switch'
+            },
+            label: {
+              type: 'string',
+              title: 'Table of contents label',
+              'x-i18n-title': { fr: 'Libellé du sommaire' },
+              description: 'Optional shorter label shown in the table of contents instead of the title content.',
+              'x-i18n-description': { fr: 'Libellé plus court, optionnel, affiché dans le sommaire à la place du contenu du titre.' }
+            },
+            _slug: {
+              type: 'string',
+              readOnly: true,
+              layout: 'none'
             }
           }
         }
