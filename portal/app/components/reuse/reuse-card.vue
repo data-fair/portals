@@ -90,17 +90,22 @@
         <v-spacer />
 
         <!-- Publication/update date -->
-        <v-list-item>
-          <p
-            v-if="cardConfig.showAuthor && reuse.config.author"
-            class="text-body-small"
-          >
-            {{ t('publishedBy', { author: reuse.config.author }) }}
-          </p>
-          <p class="text-body-small">
-            {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
-          </p>
-        </v-list-item>
+        <v-row
+          no-gutters
+          class="px-4 py-2"
+        >
+          <v-col cols="12">
+            <p
+              v-if="cardConfig.showAuthor && reuse.config.author"
+              class="text-body-small"
+            >
+              {{ t('publishedBy', { author: reuse.config.author }) }}
+            </p>
+            <p class="text-body-small">
+              {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
+            </p>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-card>
