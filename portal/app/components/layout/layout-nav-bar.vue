@@ -22,7 +22,7 @@
           :height="(appBarHeight || 64) - 10"
           :link="navBarConfig.logoLink"
           :logo="logo"
-          class="pl-4"
+          :class="navBarConfig.fluid !== false ? 'pl-4' : undefined"
         />
 
         <nav-tabs-or-drawer
