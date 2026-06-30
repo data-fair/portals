@@ -38,6 +38,7 @@ test.describe('pages management', () => {
     // Add image element to the source page
     const imageElement: ImageElement = {
       type: 'image',
+      uuid: 'srcuuid1',
       image: {
         _id: sourceImage._id,
         mimeType: sourceImage.mimeType,
@@ -64,6 +65,12 @@ test.describe('pages management', () => {
     // Check that the image was duplicated with a new ID
     const duplicatedImageId = duplicatedPage.config.elements[0].image._id
     assert.notEqual(duplicatedImageId, sourceImage._id, 'Image should have a new ID')
+
+    // Copied elements must get a fresh uuid so identity-keyed features (e.g. the per-uuid
+    // shared-filters agent tool) don't collide with the source page during client-side navigation
+    const duplicatedUuid = duplicatedPage.config.elements[0].uuid
+    assert.ok(duplicatedUuid, 'Duplicated element should have a uuid')
+    assert.notEqual(duplicatedUuid, 'srcuuid1', 'Duplicated element should get a new uuid')
 
     // Verify the duplicated image exists in database
     const duplicatedImageData = await user1.get(`/api/images/${duplicatedImageId}/data`)
