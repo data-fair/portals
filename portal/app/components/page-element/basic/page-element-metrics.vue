@@ -12,9 +12,9 @@
         :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'text-center']"
         :color="element.color"
       >
-        <v-card-text>
-          <div class="text-headline-medium font-weight-bold">{{ metrics[key] }}</div>
-          <div class="text-headline-small font-weight-light">{{ t('title.' + key) }}</div>
+        <v-card-text class="px-12">
+          <div class="text-headline-small font-weight-bold">{{ metrics[key].toLocaleString(locale) }}</div>
+          <div class="text-title-large font-weight-bold text-uppercase">{{ t('title.' + key) }}</div>
         </v-card-text>
       </v-card>
     </v-col>
@@ -29,7 +29,7 @@ const { element } = defineProps({
 })
 
 const { preview, portal } = usePortalStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 let metrics: { datasets: number, records: number, applications: number } | ComputedRef<{ datasets: number, records: number, applications: number }>
 if (!preview) {
