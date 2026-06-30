@@ -5,6 +5,7 @@ import slug from 'slugify'
 import { assertAccountRole, httpError, type SessionStateAuthenticated } from '@data-fair/lib-express'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
+import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
@@ -61,8 +62,9 @@ export const duplicatePageElements = async (
     }
   }
 
-  // Update image references in cloned elements
+  // Update image references in cloned elements, and give each copied element a fresh uuid.
   await traversePageElements(clonedElements, (el) => {
+    if (el.uuid) el.uuid = randomUUID().split('-')[0]
     if (el.type === 'image') {
       updateImageId(el.image)
       updateImageId(el.wideImage)
