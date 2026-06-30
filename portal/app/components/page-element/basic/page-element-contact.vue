@@ -137,13 +137,12 @@
 
               <v-list-item
                 v-if="portalConfig.contactInformations.phone"
-                ref="phoneItem"
                 :prepend-icon="mdiPhone"
-                :title="portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone"
+                :aria-label="t('phoneAriaLabel', { value: portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone })"
                 :href="`tel:${portalConfig.contactInformations.phone}`"
-                target="_blank"
-                rel="noopener"
-              />
+              >
+                {{ portalConfig.contactInformations.phoneLabel || portalConfig.contactInformations.phone }}
+              </v-list-item>
               <v-list-item
                 v-if="portalConfig.contactInformations.website"
                 ref="websiteItem"
@@ -184,13 +183,6 @@ const { portal, portalConfig, preview } = usePortalStore()
 const url = !preview ? useRequestURL() : null
 
 // v-bind:title.attr causes SSR hydration mismatch with Vuetify 4
-const phoneItem = useTemplateRef('phoneItem')
-watchEffect(() => {
-  const el = phoneItem.value?.$el
-  if (!el) return
-  const title = (portalConfig.value.contactInformations.phoneLabel || portalConfig.value.contactInformations.phone) + ' - ' + t('newWindow')
-  el.setAttribute('title', title)
-})
 const websiteItem = useTemplateRef('websiteItem')
 watchEffect(() => {
   const el = websiteItem.value?.$el
@@ -377,6 +369,7 @@ const sendMessage = useAsyncAction(async () => {
     messageSent: 'Message sent!'
     messageBody: 'Message body:'
     newWindow: 'New window'
+    phoneAriaLabel: 'Phone: {value}'
     send: 'Send'
     socialMedia: 'Find us on social media'
     subject: 'Subject'
@@ -390,6 +383,7 @@ const sendMessage = useAsyncAction(async () => {
     messageSent: 'Message envoyé !'
     messageBody: 'Corps du message :'
     newWindow: 'Nouvelle fenêtre'
+    phoneAriaLabel: 'Téléphone : {value}'
     send: 'Envoyer'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
     subject: 'Sujet'
