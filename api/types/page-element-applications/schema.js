@@ -274,36 +274,6 @@ export default {
             }
           }
         },
-        displayMode: {
-          type: 'string',
-          title: "Mode d'affichage",
-          default: 'auto-resize',
-          description: [
-            'Mode de redimensionnement de la visualisation :',
-            "- **Hauteur optimale** - La visualisation peut se redimensionner pour prendre la hauteur dont elle a besoin. Certaines visualisations comme des cartes se comporteront comme le mode **Hauteur optimale avec scroll**. Ce mode évite d'avoir une barre de scroll pour les visualisations qui prennent beaucoup de hauteur.",
-            "- **Hauteur optimale avec scroll** - Hauteur optimisée pour avoir le meilleur ratio largeur / hauteur sur toutes tailles d'écran.",
-            "- **Hauteur fixe (px)** - Vous définissez vous-même la hauteur de la visualisation, peu recommandé pour un affichage sur toute taille d'écran."
-          ].join('\n'),
-          oneOf: [
-            { const: 'auto-resize', title: 'Hauteur optimale' },
-            { const: 'aspect-ratio', title: 'Hauteur optimale avec scroll' },
-            { const: 'fixed-height', title: 'Hauteur fixe (px)' }
-          ]
-        },
-        height: {
-          type: 'integer',
-          title: 'Hauteur (px)',
-          default: 500,
-          minimum: 150,
-          layout: {
-            if: 'parent.data?.displayMode === "fixed-height"',
-            slots: {
-              after: {
-                markdown: "**⚠️ Attention :** une hauteur fixe est déconseillée. Sur les petites résolutions (mobiles, tablettes), l'affichage peut être difficile. Préférez « Hauteur optimale » ou « Hauteur optimale avec scroll » pour un rendu responsive."
-              }
-            }
-          }
-        },
         syncParams: {
           type: 'string',
           title: "Synchronisation des paramètres d'URL",
@@ -319,6 +289,61 @@ export default {
             { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
             { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
           ]
+        },
+        displayMode: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'auto-resize',
+          description: [
+            'Mode de redimensionnement de la visualisation :',
+            "- **Hauteur optimale** - La visualisation peut se redimensionner pour prendre la hauteur dont elle a besoin. Certaines visualisations comme des cartes se comporteront comme le mode **Aspect ratio**. Ce mode évite d'avoir une barre de scroll pour les visualisations qui prennent beaucoup de hauteur.",
+            "- **Aspect ratio** - Ratio largeur / hauteur adapté automatiquement à la largeur de l'écran, ou fixé à une valeur constante.",
+            "- **Hauteur fixe (px)** - Vous définissez vous-même la hauteur de la visualisation, peu recommandé pour un affichage sur toute taille d'écran."
+          ].join('\n'),
+          oneOf: [
+            { const: 'auto-resize', title: 'Hauteur optimale' },
+            { const: 'aspect-ratio', title: 'Aspect ratio' },
+            { const: 'fixed-height', title: 'Hauteur fixe (px)' }
+          ]
+        },
+        ratio: {
+          type: 'string',
+          title: 'Ratio (largeur / hauteur)',
+          default: 'auto',
+          layout: {
+            if: 'parent.data?.displayMode === "aspect-ratio"',
+            comp: 'combobox',
+            items: [
+              { value: 'auto', title: 'Auto (Responsive)' },
+              '16/9',
+              '4/3',
+              '1/1',
+              '3/2',
+              '21/9'
+            ]
+          }
+        },
+        maxHeight: {
+          type: 'integer',
+          title: 'Hauteur maximale (px)',
+          minimum: 100,
+          layout: {
+            if: 'parent.data?.displayMode === "aspect-ratio" && !!parent.data?.ratio && parent.data?.ratio !== "auto"'
+          }
+        },
+        height: {
+          type: 'integer',
+          title: 'Hauteur (px)',
+          default: 500,
+          minimum: 150,
+          layout: {
+            if: 'parent.data?.displayMode === "fixed-height"',
+            slots: {
+              after: {
+                markdown: "**⚠️ Attention :** une hauteur fixe est déconseillée. Sur les petites résolutions (mobiles, tablettes), l'affichage peut être difficile. Préférez « Hauteur optimale » ou « Aspect ratio » pour un rendu responsive."
+              }
+            }
+          }
         },
         actionButtons: {
           type: 'object',

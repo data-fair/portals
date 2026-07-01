@@ -21,15 +21,24 @@
       :cover="displayMode === 'fixed-height'"
     />
 
-    <d-frame-wrapper
+    <!-- d-frame calcule sa hauteur uniquement à partir de sa propre largeur : il ne peut pas
+         se rétrécir tout seul pour respecter une hauteur maximale. Ce conteneur plafonne donc
+         la largeur (maxHeight × ratio) pour que la hauteur déduite reste sous le maximum,
+         sans recadrer le contenu. -->
+    <div
       v-else
-      :iframe-title="`${t('application')} - ${element.application.title}`"
-      :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
-      :sync-params="syncParams"
-      :aspect-ratio="displayMode !== 'fixed-height' ? '' : undefined"
-      :height="displayMode === 'fixed-height' ? fixedHeight + 'px' : undefined"
-      :resize="displayMode === 'auto-resize' ? undefined : 'no'"
-    />
+      class="mx-auto"
+      :style="pillarboxStyle"
+    >
+      <d-frame-wrapper
+        :iframe-title="`${t('application')} - ${element.application.title}`"
+        :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+        :sync-params="syncParams"
+        :aspect-ratio="frameAspectRatio"
+        :height="displayMode === 'fixed-height' ? fixedHeight + 'px' : undefined"
+        :resize="displayMode === 'auto-resize' ? undefined : 'no'"
+      />
+    </div>
 
     <application-actions
       v-if="hasActions && application && element.actionButtons?.position === 'bottom'"
@@ -70,6 +79,34 @@ const hasActions = computed(() => (element.actionButtons?.items ?? []).length > 
 
 const displayMode = computed(() => element.displayMode ?? 'auto-resize')
 const fixedHeight = computed(() => element.height ?? 500)
+
+// A fixed ratio can be given as "16/9" or a plain number ("1.78"). "auto" (the default)
+// keeps the current responsive behavior, so it resolves to no fixed ratio.
+const parsedRatio = computed(() => {
+  if (displayMode.value !== 'aspect-ratio' || !element.ratio || element.ratio === 'auto') return undefined
+  const parts = element.ratio.split(/[/:xX]/)
+  if (parts.length === 2) {
+    const a = Number(parts[0]); const b = Number(parts[1])
+    if (a > 0 && b > 0) return a / b
+  }
+  const n = Number(element.ratio)
+  return n > 0 ? n : undefined
+})
+
+// '' lets d-frame pick its own ratio depending on the viewport width.
+const frameAspectRatio = computed(() => {
+  if (displayMode.value === 'fixed-height') return undefined
+  return parsedRatio.value !== undefined ? String(parsedRatio.value) : ''
+})
+
+// d-frame only ever derives its height from its own width. To respect a max height without
+// cropping, the width itself must be capped here so the derived height stays under the max.
+const pillarboxStyle = computed(() => {
+  if (parsedRatio.value !== undefined && element.maxHeight) {
+    return { width: `min(100%, ${element.maxHeight * parsedRatio.value}px)` }
+  }
+  return undefined
+})
 
 const applicationFetcher = preview ? useFetch<Application> : useLocalFetch<Application>
 const applicationFetch = applicationFetcher(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application.id : '')
