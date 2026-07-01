@@ -1,10 +1,4 @@
 <template>
-  <!--
-    min-width:0 lets this flex item shrink below the tabs' content width.
-    Without it v-tabs stretches the navbar (and gets clipped) instead of
-    overflowing internally, which is what makes Vuetify flag the slide group as
-    overflowing and triggers the swap to the drawer.
-  -->
   <div
     id="header-navigation"
     tabindex="-1"

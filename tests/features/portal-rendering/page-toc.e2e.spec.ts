@@ -123,5 +123,23 @@ test.describe('content page table of contents', () => {
         return Math.round(nav.getBoundingClientRect().top - ext.getBoundingClientRect().bottom)
       })
     }, { timeout: 15_000 }).toBeGreaterThanOrEqual(0)
+
+    // Scrolling back up re-reveals the whole header: Vuetify's `hide` behaviour reacts to the
+    // scroll direction, so a continuous upward gesture keeps the header shown even while still
+    // past the threshold. The table of contents must follow the revealed header down to the full
+    // bar height instead of staying pinned high and slipping underneath it.
+    await page.mouse.move(720, 450)
+    for (let i = 0; i < 20; i++) await page.mouse.wheel(0, 60) // scroll well past the header so it hides
+    await expect.poll(async () => {
+      await page.mouse.wheel(0, -40) // keep scrolling up so the header stays revealed
+      return page.evaluate(() => {
+        const bar = document.querySelector('.v-app-bar')
+        const nav = document.querySelector('nav[aria-label="Sommaire"]')
+        if (!bar || !nav) return null
+        if (window.scrollY <= 170) return null // only assert inside the bug window: still past the threshold
+        if (Math.round(bar.getBoundingClientRect().bottom) < 190) return null // and with the header actually revealed
+        return Math.round(nav.getBoundingClientRect().top)
+      })
+    }, { timeout: 15_000 }).toBeGreaterThanOrEqual(190)
   })
 })

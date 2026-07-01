@@ -1,12 +1,7 @@
 <template>
-  <!--
-    Single app bar (header) with the navigation bar as its extension. Two
-    separate top app bars would overlap during SSR, as Vuetify only computes
-    their stacked top offset after mount. The `header` tag carries the single
-    `banner` landmark.
-  -->
   <component
     :is="preview ? VToolbar : VAppBar"
+    v-model="appBarActive"
     :color="headerConfig.show && headerConfig.color ? headerConfig.color : navBarConfig.color"
     :class="[
       (navBarConfig.transparent && scrolled) ? 'opacity-90' : undefined,
@@ -38,7 +33,7 @@ import { VToolbar, VAppBar } from 'vuetify/components'
 
 const { home } = defineProps<{ home?: boolean }>()
 const { portalConfig, preview } = usePortalStore()
-const { scrolled } = useNavigationStore()
+const { scrolled, appBarActive } = useNavigationStore()
 
 const headerConfig = computed(() => {
   if (!home || !portalConfig.value.headerHomeActive) return portalConfig.value.header

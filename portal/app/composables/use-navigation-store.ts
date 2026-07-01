@@ -26,6 +26,11 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     onScopeDispose(() => window.removeEventListener('scroll', onScroll))
   }
 
+  // Whether the app bar currently shows its full height. Bound to VAppBar's
+  // model value (layout-app-bar), so it mirrors Vuetify's own scroll state: the
+  // header re-appears when scrolling up, not merely below a scroll threshold.
+  const appBarActive = ref(true)
+
   // Y offset (px) where the navigation bar ends — where app-positioned children
   // (TOC drawer/FAB, navigation drawer) should start. Vuetify collapses
   // --v-layout-top to 0 when the header hides even though the nav bar stays
@@ -38,10 +43,9 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     const header = (isHome && config.headerHomeActive) ? { ...config.header, ...config.headerHome } : config.header
     const navBar = (isHome && config.navBarHomeActive) ? { ...config.navBar, ...config.navBarHome } : config.navBar
     const full = (header.show ? 128 : 0) + 64
-    if (!scrolled.value) return full
-    // Scrolled: the header hides unless it is kept.
-    if (!header.show || header.keepOnScroll) return full
-    // The header is hidden; the navigation bar stays unless it also hides.
+    // The app bar shows its full height, so children sit below the whole bar.
+    if (appBarActive.value) return full
+    // Hidden on scroll: the navigation bar stays pinned with `hide`, everything slides away with `fully-hide`.
     return navBar.keepOnScroll ? 64 : 0
   })
 
@@ -237,6 +241,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     setShowBreadcrumbs,
     isIframe,
     scrolled,
+    appBarActive,
     appBarBottom
   }
 }
