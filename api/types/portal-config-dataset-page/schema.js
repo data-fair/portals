@@ -213,8 +213,13 @@ export default {
         comp: 'card',
         children: [
           'display',
-          'columns',
-          'useGlobalCard',
+          {
+            children: [
+              'inviteUserReuses',
+              'columns',
+              'useGlobalCard',
+            ]
+          },
           {
             if: 'data?.display === "card" && data?.useGlobalCard === false',
             children: ['card']
@@ -231,6 +236,16 @@ export default {
             { const: 'none', title: 'Aucun' },
             { const: 'card', title: 'Vignette' }
           ]
+        },
+        inviteUserReuses: {
+          type: 'boolean',
+          title: 'Inviter les utilisateurs à proposer une réutilisation',
+          description: 'Rendre la section réutilisations visible en permanence. Un message invite vos utilisateurs à en proposer depuis leur espace personnel.',
+          layout: {
+            if: 'parent.data?.display === "card" && rootData.reuses?.allowUserReuses',
+            comp: 'switch',
+            cols: { md: 4 }
+          },
         },
         columns: {
           type: 'integer',

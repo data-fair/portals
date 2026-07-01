@@ -29,7 +29,7 @@
           class="mb-4"
           :loading="createReuse.loading.value"
           :disabled="!!editingReuseId"
-          @click="createReuse.execute()"
+          @click="createReuse.execute(presetConfig)"
         >
           {{ t('createNew') }}
         </v-btn>
@@ -320,16 +320,24 @@ const getSubmissionStatus = (reuse: Reuse) => {
   return 'rejected'
 }
 
-const createReuse = useAsyncAction(async () => {
+const createReuse = useAsyncAction(async (preset?: Partial<Reuse['config']>) => {
   // Create a minimal reuse with empty title to get an ID
   const newReuse = await $fetch<Reuse>('/reuses', {
     method: 'POST',
-    body: { config: { title: '' } }
+    body: { config: { title: '', ...preset } }
   })
   await draftReusesFetch.refresh() // Refresh the list to include the new reuse
   creatingReuseId.value = newReuse._id // Track as newly created so cancel can delete it
   editingReuseId.value = newReuse._id // Start editing the newly created reuse
 })
+
+// When arriving from a dataset page invitation (/me/reuses?dataset=...), pre-fill
+// that dataset into the next reuse the user creates.
+const presetDataset = useStringSearchParam('dataset')
+const presetDatasetTitle = useStringSearchParam('datasetTitle')
+const presetConfig = computed<Partial<Reuse['config']> | undefined>(() => presetDataset.value
+  ? { datasets: [{ id: presetDataset.value, title: presetDatasetTitle.value || presetDataset.value }] }
+  : undefined)
 
 const submitReuse = useAsyncAction(async (reuseId: string) => {
   currentReuseId.value = reuseId

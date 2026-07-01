@@ -289,7 +289,7 @@
       </template>
 
       <!-- Reuses section -->
-      <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && reuses.length">
+      <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && (reuses.length || portalConfig.datasets.page.reuses?.inviteUserReuses)">
         <page-element-title
           :element="{
             type: 'title',
@@ -299,6 +299,14 @@
             line: portalConfig.datasets.page.titleStyle
           }"
         />
+
+        <p v-if="portalConfig.datasets.page.reuses?.inviteUserReuses">
+          <i18n-t keypath="reuseInvitation">
+            <nuxt-link :to="{ path: '/me/reuses', query: { dataset: dataset.id, datasetTitle: dataset.title } }">
+              {{ t('personalSpace') }}
+            </nuxt-link>
+          </i18n-t>
+        </p>
 
         <v-row class="d-flex align-stretch">
           <v-col
@@ -581,6 +589,8 @@ useJsonLd(() => {
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
+    reuseInvitation: Would you like to share a reuse of this data? Go to your {0}.
+    personalSpace: personal space
     sections:
       application: Linked application | Linked applications
       reuse: Linked reuse | Linked reuse | Linked reuses
@@ -596,6 +606,8 @@ useJsonLd(() => {
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
+    reuseInvitation: Vous souhaitez faire connaitre une réutilisation de cette donnée ? Rendez vous dans votre {0}.
+    personalSpace: espace personnel
     sections:
       application: Visualisation associée | Visualisation associée | Visualisations associées
       reuse: Réutilisation associée | Réutilisation associée | Réutilisations associées
