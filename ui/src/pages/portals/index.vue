@@ -101,7 +101,11 @@ const portalsFetch = useFetch<{ results: Portal[], count: number }>($apiPath + '
 const displayPortals = computed(() => {
   const portals = (portalsFetch.data.value?.results ?? [])
   if (!search.value) return portals
-  return portals.filter(portal => portal.config.title.toLowerCase().includes(search.value.toLowerCase()))
+  const q = search.value.toLowerCase()
+  return portals.filter(portal =>
+    portal.config.title.toLowerCase().includes(q) ||
+    (portal.ingress?.url ?? '').replace(/^https?:\/\//, '').toLowerCase().includes(q)
+  )
 })
 
 watch(
