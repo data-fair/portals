@@ -324,7 +324,7 @@ export default {
           required: ['id'],
           layout: {
             getItems: {
-              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title&size=20&sort=updatedAt:-1',
+              url: '/data-fair/api/v1/datasets?mine=true&raw=true&select=id,title,isRest&size=20&sort=updatedAt:-1',
               qSearchParam: 'q',
               itemsResults: 'data.results',
               itemTitle: '`${item.title} (${item.id})`',
@@ -334,7 +334,8 @@ export default {
           properties: {
             id: { type: 'string' },
             title: { type: 'string' },
-            href: { type: 'string' }
+            href: { type: 'string' },
+            isRest: { type: 'boolean' }
           }
         },
         syncParams: {
@@ -384,6 +385,12 @@ export default {
           description: 'Autorise le tri, la recherche, les filtres,...',
           type: 'boolean',
           default: true
+        },
+        editable: {
+          title: 'Tableau éditable',
+          description: "Permet aux utilisateurs autorisés d'éditer les données directement dans le tableau. Les autres visiteurs conservent la vue en lecture seule.",
+          type: 'boolean',
+          layout: { if: 'parent.data?.dataset?.isRest && parent.data?.interactions' }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
