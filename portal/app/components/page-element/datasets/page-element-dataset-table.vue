@@ -38,7 +38,7 @@ const syncParams = computed(() => {
 
 const url = computed(() => {
   if (!element.dataset) return
-  const route = element.editable ? 'table-edit' : 'table'
+  const route = element.interactions && element.editable ? 'table-edit' : 'table'
   let ret = `/data-fair/embed/dataset/${element.dataset.id}/${route}?interaction=${element.interactions}`
   if (element.display) ret += `&display=${element.display}`
   if (element.cols && element.cols.length) ret += `&cols=${element.cols.join(',')}`

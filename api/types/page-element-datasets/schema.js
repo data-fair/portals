@@ -383,8 +383,7 @@ export default {
         interactions: {
           title: 'Autoriser les interactions',
           description: 'Autorise le tri, la recherche, les filtres,...',
-          type: 'boolean',
-          default: true
+          type: 'boolean'
         },
         editable: {
           title: 'Tableau éditable',
