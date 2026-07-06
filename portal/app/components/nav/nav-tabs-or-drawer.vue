@@ -3,6 +3,7 @@
     id="header-navigation"
     tabindex="-1"
     class="d-flex flex-grow-1 h-100"
+    style="min-width: 0"
   >
     <!-- Smaller screens: navigation in drawer -->
     <nav-drawer-activator v-if="$vuetify.display.smAndDown || tabsOverflowing" />

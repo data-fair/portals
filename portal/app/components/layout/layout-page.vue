@@ -14,12 +14,16 @@
     </div>
   </v-main>
 
+  <!-- The table of contents only earns its place once hydrated, so it never renders during SSR. -->
+  <client-only>
+    <page-toc />
+  </client-only>
+
   <!-- Do not put bottom breadcrumbs in main, ensuring they stay just above the footer even when main content is short. -->
   <LayoutBreadcrumbs v-if="!isHome && showBottomBreadcrumbs" />
 </template>
 
 <script setup lang="ts">
-
 const { isFluid } = defineProps<{ isFluid?: boolean }>()
 
 const { portalConfig } = usePortalStore()

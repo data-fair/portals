@@ -46,7 +46,6 @@ const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
 const { showTopBreadcrumbs } = useNavigationStore()
-// const pageConfig = inject<Ref<PageConfig>>('page-config')
 
 </script>
 

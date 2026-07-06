@@ -52,7 +52,11 @@ export const useNavigationStore = () => {
     resolveLinkTitle,
     drawer: ref(false),
     personalDrawer: ref(false),
-    isIframe: ref(false)
+    isIframe: ref(false),
+    scrolled: ref(false),
+    // Preview keeps the app bar fully shown, so the offset stays the full header + navigation bar height.
+    appBarActive: ref(true),
+    appBarBottom: ref(192)
   }
 }
 

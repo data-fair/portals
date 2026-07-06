@@ -65,6 +65,14 @@ useHead({
 </script>
 
 <style>
+/* Full-bleed banners break out to width:100vw, which includes the vertical
+   scrollbar width and would otherwise add a few px of horizontal overflow — a
+   thin gutter down the right edge, only visible once scrolled past the banner
+   (e.g. when landing on an anchor). Clip it here while keeping the full-bleed. */
+.v-application {
+  overflow-x: clip;
+}
+
 [tabindex="-1"]:focus {
   outline: none;
 }
