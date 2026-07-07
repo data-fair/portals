@@ -54,6 +54,47 @@ export default {
       ]
     },
 
+    hoverConfig: {
+      type: 'object',
+      title: 'Hover effects',
+      'x-i18n-title': { fr: 'Effets au survol' },
+      properties: {
+        effects: {
+          type: 'array',
+          title: 'Effects',
+          'x-i18n-title': { fr: 'Effets' },
+          description: 'If nothing is selected here nor in the portal defaults, the standard darken effect is applied. An explicitly emptied selection disables any effect.',
+          'x-i18n-description': { fr: "Si rien n'est sélectionné ici ni dans le style par défaut du portail, l'assombrissement standard est appliqué. Une sélection explicitement vidée désactive tout effet." },
+          uniqueItems: true,
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
+              { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
+              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
+              { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Colorer le bord' } },
+              { const: 'titleColor', title: 'Title color', 'x-i18n-title': { fr: 'Colorer le titre' } },
+              { const: 'titleUnderline', title: 'Underline title', 'x-i18n-title': { fr: 'Souligner le titre' } },
+              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom de l'image" } }
+            ]
+          }
+        },
+        color: {
+          $ref: '#/$defs/color',
+          title: 'Hover color',
+          'x-i18n-title': { fr: 'Couleur de survol' },
+          layout: {
+            if: "parent.data?.effects?.some(e => ['background', 'border', 'titleColor'].includes(e))",
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 6 }
+          }
+        }
+      }
+    },
+
     icon: {
       type: 'object',
       title: 'Icon configuration',
@@ -244,6 +285,18 @@ export default {
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
           layout: { cols: { md: 4 } }
+        },
+        hoverColor: {
+          $ref: '#/$defs/color',
+          title: 'Hover color',
+          'x-i18n-title': { fr: 'Couleur au survol' },
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
         },
         showIcon: {
           type: 'boolean',
