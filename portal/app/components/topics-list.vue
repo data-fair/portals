@@ -25,7 +25,8 @@
         :link="isFilters || !!link"
         :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
         :variant="chipVariant(topic.id)"
-        :style="chipStyle(topic.id, topic.color)"
+        :class="chipHoverClasses"
+        :style="[chipStyle(topic.id, topic.color), chipHoverStyle]"
         label
         @click="toggle(topic.id)"
       >
@@ -49,7 +50,7 @@ const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const selected = useStringsArraySearchParam('topics')
 
-const { isFilters, config } = defineProps<{
+const { isFilters, config, link } = defineProps<{
   topics: {
     id: string
     title: string
@@ -63,8 +64,13 @@ const { isFilters, config } = defineProps<{
   link?: LinkItem
   isFilters?: boolean
   centered?: boolean
-  config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor'> & { variant?: 'default' | 'tonal' | 'outlined' }
+  config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor' | 'hover'> & { variant?: 'default' | 'tonal' | 'outlined' }
 }>()
+
+const hoverInteractive = computed(() => isFilters || !!link)
+const resolvedHover = computed(() => resolveHoverConfig(config?.hover, portalConfig.value.defaults?.hover as HoverLike | undefined))
+const chipHoverClasses = computed(() => hoverInteractive.value ? hoverConfigClasses(resolvedHover.value).filter(c => !['pt-hover--title-color', 'pt-hover--title-underline', 'pt-hover--image-zoom'].includes(c)) : [])
+const chipHoverStyle = computed(() => hoverInteractive.value ? hoverConfigStyle(resolvedHover.value) : undefined)
 
 // Toggle selection in the topics query param when filters are enabled.
 const toggle = (id: string) => {

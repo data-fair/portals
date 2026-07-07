@@ -11,15 +11,15 @@
     :rounded="element.rounded ?? portalConfig.defaults?.rounded"
     :elevation="element.elevation ?? portalConfig.defaults?.elevation"
     :variant="element.background?.tonal ? 'tonal' : undefined"
-    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1', ...(element.link && element.link.type !== 'none' ? hoverClasses : [])]"
     :color="element.background?.color"
-    :style="element.background && element.background.image ? {
+    :style="[element.background && element.background.image ? {
       backgroundImage: element.background.tintStrength
         ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
         : `url(${getPageImageSrc(element.background.image, false)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-    } : undefined"
+    } : undefined, hoverStyle]"
   >
 
     <!--
@@ -34,9 +34,10 @@
       <!-- Thumbnail (Left Location) -->
       <!-- On mobile, fall back to the top location (see main column below) -->
       <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
-        <v-col cols="4">
+        <v-col cols="4" class="pt-hover-image">
           <div
             aria-hidden="true"
+            class="pt-hover-image__zoom"
             :style="leftThumbnailStyle"
           />
         </v-col>
@@ -55,13 +56,14 @@
         <div
           v-if="(element.thumbnail?.location === 'top' || (element.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && element.thumbnail?.image"
           aria-hidden="true"
-          class="flex-grow-0"
+          class="flex-grow-0 pt-hover-image"
         >
           <v-img
             :src="getPageImageSrc(element.thumbnail.image, false)"
             :cover="element.thumbnail.crop"
             height="170"
             alt=""
+            class="pt-hover-image__zoom"
           />
         </div>
 
@@ -70,7 +72,7 @@
         -->
         <v-card-title
           v-if="element.title"
-          class="font-weight-bold"
+          :class="['font-weight-bold', 'pt-hover-title']"
           style="white-space: unset;"
         >
           {{ element.title }}
@@ -80,13 +82,14 @@
         <div
           v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
           aria-hidden="true"
-          class="flex-grow-0"
+          class="flex-grow-0 pt-hover-image"
         >
           <v-img
             :src="getPageImageSrc(element.thumbnail.image, false)"
             :cover="element.thumbnail.crop"
             height="170"
             alt=""
+            class="pt-hover-image__zoom"
           />
         </div>
 
@@ -148,6 +151,7 @@ const { element } = defineProps({
 const { preview, portalConfig } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const getPageImageSrc = usePageImageSrc()
+const { hoverClasses, hoverStyle } = useHoverConfig(() => element.hover)
 
 // Background-image style for the left thumbnail column so it fills the card height.
 const leftThumbnailStyle = computed(() => {

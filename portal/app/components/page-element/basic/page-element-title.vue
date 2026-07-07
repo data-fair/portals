@@ -6,7 +6,8 @@
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
-      style="text-decoration: none; color: inherit;"
+      :class="titleLinkClasses"
+      :style="hoverStyle"
     >
       <layout-title :element="element" />
     </a>
@@ -16,7 +17,8 @@
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
       :rel="element.link?.target ? 'noopener' : undefined"
-      style="text-decoration: none; color: inherit;"
+      :class="titleLinkClasses"
+      :style="hoverStyle"
     >
       <layout-title :element="element" />
     </NuxtLink>
@@ -34,6 +36,12 @@ const { element, context } = defineProps<{
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
+const { hoverClasses, hoverStyle } = useHoverConfig(() => element.hover, false)
+
+const titleLinkClasses = computed(() => {
+  const classes = hoverClasses.value.filter(c => c !== 'pt-hover')
+  return ['pt-title-link', 'pt-hover-title-root', ...(element.hover?.effects?.length ? classes : [])]
+})
 
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''
