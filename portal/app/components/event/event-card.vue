@@ -3,16 +3,18 @@
     :to="!preview ? `/event/${pageConfig.eventMetadata?.slug}` : undefined"
     :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
     :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
-    class="h-100 d-flex flex-column"
+    :class="['h-100 d-flex flex-column', ...hoverClasses]"
+    :style="hoverStyle"
     link
   >
     <v-row class="flex-nowrap" no-gutters>
       <!-- Thumbnail (Left Location) -->
       <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-        <v-col cols="4">
+        <v-col cols="4" class="pt-hover-image">
           <div
             v-if="thumbnailUrl"
             aria-hidden="true"
+            class="pt-hover-image__zoom"
             :style="leftThumbnailStyle"
           />
         </v-col>
@@ -25,13 +27,14 @@
         <div
           v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
           aria-hidden="true"
-          class="flex-grow-0"
+          class="flex-grow-0 pt-hover-image"
         >
           <v-img
             :src="thumbnailUrl"
             :cover="cardConfig.thumbnail.crop"
             height="170"
             alt=""
+            class="pt-hover-image__zoom"
           />
         </div>
 
@@ -40,7 +43,7 @@
           white-space: unset; => remove default nowrap from v-card-title
         -->
         <v-card-title
-          :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
+          :class="['font-weight-bold', 'pt-hover-title', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
           :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
           :title="pageConfig.title"
         >
@@ -60,13 +63,14 @@
         <div
           v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
           aria-hidden="true"
-          class="flex-grow-0"
+          class="flex-grow-0 pt-hover-image"
         >
           <v-img
             :src="thumbnailUrl"
             :cover="cardConfig.thumbnail.crop"
             height="170"
             alt=""
+            class="pt-hover-image__zoom"
           />
         </div>
 
@@ -93,6 +97,7 @@ const { dayjs } = useLocaleDayjs()
 const { portalConfig, preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
+const { hoverClasses, hoverStyle } = useHoverConfig(() => cardConfig.hover)
 
 const getEventImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
