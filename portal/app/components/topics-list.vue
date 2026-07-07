@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import type { TopicsElement, LinkItem } from '#api/types/page-elements/index.ts'
+import type { HoverEffect, HoverLike } from '../utils/hover'
 
 const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
