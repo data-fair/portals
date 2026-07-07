@@ -232,8 +232,13 @@
                 :title="link.title + ' - ' + t('newWindow')"
                 target="_blank"
                 rel="noopener"
-                variant="text"
-                class="text-uppercase"
+                :color="importantLinksConfig?.color"
+                :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
+                :elevation="importantLinksConfig?.elevation"
+                :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
+                :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
+                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase ?? true }, buttonHoverClass(importantLinksConfig)]"
+                :style="buttonHoverStyle(importantLinksConfig)"
               >
                 <template #prepend>
                   <v-icon
@@ -247,7 +252,13 @@
               <v-btn
                 v-else
                 :to="resolveLink(link)"
-                variant="text"
+                :color="importantLinksConfig?.color"
+                :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
+                :elevation="importantLinksConfig?.elevation"
+                :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
+                :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
+                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase }, buttonHoverClass(importantLinksConfig)]"
+                :style="buttonHoverStyle(importantLinksConfig)"
               >
                 <template #prepend>
                   <v-icon
@@ -306,6 +317,8 @@ const showSocialLinks = computed(() => {
   return portalConfig.value.footer.socialPosition !== 'none' &&
     Object.keys(portalConfig.value.socialLinks).length > 0
 })
+
+const importantLinksConfig = computed(() => portalConfig.value.footer.importantLinksConfig)
 
 const hasLeftColumn = computed(() => {
   const footer = portalConfig.value.footer
