@@ -84,7 +84,7 @@ export default {
           },
           {
             title: 'Style visuel par défaut',
-            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis.",
+            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis. Les effets au survol des éléments cliquables (vignettes, boites, thématiques) se configurent ici et peuvent aussi être surchargés par bloc.",
             comp: 'card',
             children: ['defaults']
           },
@@ -94,6 +94,15 @@ export default {
             children: [
               'navLinksConfig',
               { name: 'nav-link-preview' }
+            ]
+          },
+          {
+            title: 'Rendu des liens texte',
+            subtitle: 'Liens affichés dans les textes, descriptions et pied de page.',
+            comp: 'card',
+            children: [
+              'linksConfig',
+              { name: 'links-preview' }
             ]
           }
         ]
@@ -281,6 +290,34 @@ export default {
       }
     },
     navLinksConfig: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
+    linksConfig: {
+      type: 'object',
+      properties: {
+        underline: {
+          type: 'string',
+          title: 'Soulignement des liens',
+          description: 'Le soulignement permanent distingue les liens autrement que par la couleur seule, comme recommandé par le RGAA.',
+          default: 'always',
+          layout: { cols: { md: 6 } },
+          oneOf: [
+            { const: 'always', title: 'Toujours' },
+            { const: 'hover', title: 'Au survol' },
+            { const: 'never', title: 'Jamais' }
+          ]
+        },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          title: 'Couleur des liens',
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 6 }
+          }
+        }
+      }
+    },
     logo: {
       type: 'object',
       title: 'Logo',
@@ -442,6 +479,10 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
           layout: { cols: { md: 4 } },
           default: 'default'
+        },
+        hover: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
+          title: 'Effets au survol des éléments cliquables'
         }
       }
     },
