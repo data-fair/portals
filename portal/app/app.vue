@@ -62,6 +62,29 @@ useHead({
   meta,
   link
 })
+
+// Style global des liens texte (a.simple-link, y compris markdown).
+// Le sélecteur double .simple-link.simple-link bat la règle générée par le
+// _theme.css de simple-directory (.v-theme--<name> a.simple-link) quel que
+// soit l'ordre de chargement.
+const linksCss = computed(() => {
+  const cfg = $portal.config.linksConfig
+  const underline = cfg?.underline ?? 'always'
+  const sel = '.v-application a.simple-link.simple-link'
+  const rules: string[] = []
+  if (underline === 'always') {
+    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;}`)
+    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration-thickness:2px;}`)
+  } else if (underline === 'hover') {
+    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration:underline;text-underline-offset:2px;}`)
+  }
+  if (cfg?.color && cfg.color !== 'primary') {
+    const themeColor = cfg.color === 'secondary' ? 'text-secondary' : cfg.color
+    rules.push(`${sel}{color:rgb(var(--v-theme-${themeColor}));}`)
+  }
+  return rules.join('')
+})
+useHead({ style: () => linksCss.value ? [{ key: 'portal-links-css', textContent: linksCss.value }] : [] })
 </script>
 
 <style>
