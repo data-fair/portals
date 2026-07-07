@@ -13,6 +13,7 @@ export default {
         children: [
           { cols: { md: 6 }, key: 'elevation' },
           { cols: { md: 6 }, key: 'rounded' },
+          { cols: { md: 6 }, key: 'hover' },
           { cols: { md: 6 }, key: 'titleLinesCount' },
           { cols: { md: 6 }, key: 'showSummary' },
           { cols: { md: 6 }, key: 'showAuthor' }
@@ -37,6 +38,10 @@ export default {
         fr: 'Arrondi de la carte'
       },
       layout: { cols: { md: 6 } }
+    },
+    hover: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
+      title: 'Effets au survol de la carte'
     },
     titleLinesCount: {
       type: 'number',

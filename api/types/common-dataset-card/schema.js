@@ -15,6 +15,7 @@ export default {
           'actionsStyle',
           'elevation',
           'rounded',
+          'hover',
           'titleLinesCount',
           'showSummary',
           'showDepartment'
@@ -57,6 +58,10 @@ export default {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
       title: 'Arrondi de la carte',
       layout: { cols: { md: 6 } }
+    },
+    hover: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
+      title: 'Effets au survol de la carte'
     },
     titleLinesCount: {
       type: 'number',

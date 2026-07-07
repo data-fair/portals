@@ -201,6 +201,38 @@ export default {
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        hover: {
+          type: 'object',
+          title: 'Effets au survol',
+          properties: {
+            effects: {
+              type: 'array',
+              title: 'Effets',
+              description: 'Appliqués quand les thématiques sont cliquables. Vide : hérite du style par défaut du portail.',
+              uniqueItems: true,
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'darken', title: 'Assombrissement' },
+                  { const: 'elevate', title: 'Élévation' },
+                  { const: 'background', title: 'Couleur de fond' },
+                  { const: 'border', title: 'Colorer le bord' }
+                ]
+              }
+            },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+              title: 'Couleur de survol',
+              layout: {
+                if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                }
+              }
+            }
+          }
+        },
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
           layout: { if: 'parent.data?.redirectPage && (!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1)' }

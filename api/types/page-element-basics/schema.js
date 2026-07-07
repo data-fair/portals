@@ -72,6 +72,36 @@ export default {
           title: 'Configuration du lien',
           layout: { comp: 'card' }
         },
+        hover: {
+          type: 'object',
+          title: 'Effets au survol du lien',
+          layout: { comp: 'card', if: "parent.data?.link && parent.data?.link?.type !== 'none'" },
+          properties: {
+            effects: {
+              type: 'array',
+              title: 'Effets',
+              uniqueItems: true,
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'titleUnderline', title: 'Souligner au survol' },
+                  { const: 'titleColor', title: 'Colorer au survol' }
+                ]
+              }
+            },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+              title: 'Couleur de survol',
+              layout: {
+                if: "parent.data?.effects?.includes('titleColor')",
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                }
+              }
+            }
+          }
+        },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
         line: {
           type: 'object',
