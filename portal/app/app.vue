@@ -79,8 +79,10 @@ const linksCss = computed(() => {
     rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration:underline;text-underline-offset:2px;}`)
   }
   if (cfg?.color && cfg.color !== 'primary') {
-    const themeColor = cfg.color === 'secondary' ? 'text-secondary' : cfg.color
-    rules.push(`${sel}{color:rgb(var(--v-theme-${themeColor}));}`)
+    const colorValue = cfg.color === 'secondary'
+      ? `rgb(var(--v-theme-text-${cfg.color}, var(--v-theme-${cfg.color})))`
+      : `rgb(var(--v-theme-${cfg.color}))`
+    rules.push(`${sel}{color:${colorValue};}`)
   }
   return rules.join('')
 })
