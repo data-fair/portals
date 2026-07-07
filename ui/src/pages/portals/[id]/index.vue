@@ -57,6 +57,12 @@
               :config="node.data.navLinksConfig"
             />
           </template>
+          <template #links-preview="{ node }">
+            <links-preview
+              v-if="formValid"
+              :config="node.data.linksConfig"
+            />
+          </template>
 
           <template #app-bar-preview="context">
             <preview
