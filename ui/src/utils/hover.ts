@@ -1,1 +1,1 @@
-export * from '../../../portal/app/utils/hover'
+export * from '#portal/app/utils/hover'

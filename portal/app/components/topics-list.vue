@@ -67,9 +67,15 @@ const { isFilters, config, link } = defineProps<{
   config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor' | 'hover'> & { variant?: 'default' | 'tonal' | 'outlined' }
 }>()
 
+const chipRelevantEffects: HoverEffect[] = ['darken', 'elevate', 'background', 'border']
+
 const hoverInteractive = computed(() => isFilters || !!link)
-const resolvedHover = computed(() => resolveHoverConfig(config?.hover, portalConfig.value.defaults?.hover as HoverLike | undefined))
-const chipHoverClasses = computed(() => hoverInteractive.value ? hoverConfigClasses(resolvedHover.value).filter(c => !['pt-hover--title-color', 'pt-hover--title-underline', 'pt-hover--image-zoom'].includes(c)) : [])
+const resolvedHover = computed(() => {
+  const resolved = resolveHoverConfig(config?.hover, portalConfig.value.defaults?.hover as HoverLike | undefined)
+  const effects = resolved.effects.filter(e => chipRelevantEffects.includes(e))
+  return { ...resolved, effects: effects.length ? effects : ['darken'] as HoverEffect[] }
+})
+const chipHoverClasses = computed(() => hoverInteractive.value ? hoverConfigClasses(resolvedHover.value) : [])
 const chipHoverStyle = computed(() => hoverInteractive.value ? hoverConfigStyle(resolvedHover.value) : undefined)
 
 // Toggle selection in the topics query param when filters are enabled.
