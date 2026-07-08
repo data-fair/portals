@@ -237,8 +237,8 @@
                 :elevation="importantLinksConfig?.elevation"
                 :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
                 :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
-                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase ?? true }, buttonHoverClass(importantLinksConfig)]"
-                :style="buttonHoverStyle(importantLinksConfig)"
+                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase ?? true }, buttonHoverClass(importantLinksConfig, portalConfig.defaults?.hover?.color)]"
+                :style="buttonHoverStyle(importantLinksConfig, portalConfig.defaults?.hover?.color)"
               >
                 <template #prepend>
                   <v-icon
@@ -257,8 +257,8 @@
                 :elevation="importantLinksConfig?.elevation"
                 :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
                 :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
-                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase }, buttonHoverClass(importantLinksConfig)]"
-                :style="buttonHoverStyle(importantLinksConfig)"
+                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase }, buttonHoverClass(importantLinksConfig, portalConfig.defaults?.hover?.color)]"
+                :style="buttonHoverStyle(importantLinksConfig, portalConfig.defaults?.hover?.color)"
               >
                 <template #prepend>
                   <v-icon

@@ -39,13 +39,15 @@ export const hoverConfigStyle = (resolved: ResolvedHoverConfig): Record<string, 
   }
 }
 
-export const buttonHoverClass = (config?: { hoverColor?: string }): string | undefined =>
-  config?.hoverColor ? 'pt-hover-btn' : undefined
+export const buttonHoverClass = (config?: { hoverColor?: string }, fallbackColor?: string): string | undefined =>
+  (config?.hoverColor ?? fallbackColor) ? 'pt-hover-btn' : undefined
 
-export const buttonHoverStyle = (config?: { hoverColor?: string }): Record<string, string> | undefined =>
-  config?.hoverColor
+export const buttonHoverStyle = (config?: { hoverColor?: string }, fallbackColor?: string): Record<string, string> | undefined => {
+  const color = config?.hoverColor ?? fallbackColor
+  return color
     ? {
-        '--pt-hover-color': `var(--v-theme-${config.hoverColor})`,
-        '--pt-hover-on-color': `var(--v-theme-on-${config.hoverColor})`
+        '--pt-hover-color': `var(--v-theme-${color})`,
+        '--pt-hover-on-color': `var(--v-theme-on-${color})`
       }
     : undefined
+}

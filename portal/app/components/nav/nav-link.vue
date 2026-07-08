@@ -12,8 +12,8 @@
     :elevation="config?.elevation ?? portalConfig.defaults?.elevation"
     :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
     :variant="config?.variant !== 'default' ? config?.variant : undefined"
-    :class="[{ 'text-uppercase': config?.uppercase, 'bg-surface': true }, buttonHoverClass(config)]"
-    :style="buttonHoverStyle(config)"
+    :class="[{ 'text-uppercase': config?.uppercase, 'bg-surface': true }, buttonHoverClass(config, portalConfig.defaults?.hover?.color)]"
+    :style="buttonHoverStyle(config, portalConfig.defaults?.hover?.color)"
     :active="false"
   >
     <!--
