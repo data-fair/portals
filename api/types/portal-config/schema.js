@@ -89,7 +89,7 @@ export default {
             children: ['defaults']
           },
           {
-            title: 'Rendu des liens de navigation',
+            title: 'Rendu des boutons de navigation',
             comp: 'card',
             children: [
               'navLinksConfig',
