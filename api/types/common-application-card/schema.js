@@ -156,7 +156,7 @@ export default {
         useSummary: {
           type: 'boolean',
           title: 'Utiliser le résumé de la visualisation',
-          description: "Affiche le résumé de la visualisation à la place de la capture automatique. Disponible uniquement lorsque l'image est positionnée sous le titre.",
+          description: "Affiche le résumé de la visualisation si disponible, à la place de la capture automatique. Disponible uniquement lorsque l'image est positionnée sous le titre.",
           layout: {
             comp: 'switch',
             cols: { md: 6 },
