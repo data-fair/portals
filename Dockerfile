@@ -61,6 +61,7 @@ ADD /ui ui
 ADD /shared/markdown shared/markdown
 ADD /portal/app/components portal/app/components
 ADD /portal/app/utils portal/app/utils
+ADD /portal/app/assets portal/app/assets
 ADD /portal/app/composables/agent portal/app/composables/agent
 COPY --from=types /app/ui/src/components/vjsf ui/src/components/vjsf
 RUN npm -w ui run build
