@@ -66,6 +66,11 @@ export default {
           description: 'If nothing is selected here nor in the portal defaults, the standard darken effect is applied. An explicitly emptied selection disables any effect.',
           'x-i18n-description': { fr: "Si rien n'est sélectionné ici ni dans le style par défaut du portail, l'assombrissement standard est appliqué. Une sélection explicitement vidée désactive tout effet." },
           uniqueItems: true,
+          layout: {
+            switch: [
+              { if: "parent.data?.effects?.some(e => ['background', 'border', 'titleColor'].includes(e))", cols: { md: 8 } }
+            ]
+          },
           items: {
             type: 'string',
             oneOf: [
@@ -89,7 +94,7 @@ export default {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }
             },
-            cols: { md: 6 }
+            cols: { md: 4 }
           }
         }
       }
