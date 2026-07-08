@@ -17,35 +17,37 @@
         label => use default button rounding, not default chip rounding
         @click => toggle selection in query param
       -->
-      <v-chip
-        :color="resolvedColor(topic.color)"
-        :density="config?.density ?? portalConfig.defaults?.density"
-        :elevation="config?.elevation ?? portalConfig.defaults?.elevation"
-        :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
-        :link="isFilters || !!link"
-        :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
-        :variant="chipVariant(topic.id)"
-        :class="chipHoverClasses"
-        :style="[chipStyle(topic.id, topic.color), chipHoverStyle]"
-        label
-        @click="toggle(topic.id)"
-      >
-        <v-icon
-          v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
-          :color="resolvedIconColor(topic.id, topic.color)"
-          :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
-          start
-        />
-        <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-        <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
-      </v-chip>
+      <v-hover v-slot="{ isHovering, props: hoverProps }">
+        <v-chip
+          v-bind="hoverProps"
+          :color="resolvedColor(topic.color)"
+          :density="config?.density ?? portalConfig.defaults?.density"
+          :elevation="hoverFx.elevation(isHovering && hoverInteractive, config?.elevation ?? portalConfig.defaults?.elevation)"
+          :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
+          :link="isFilters || !!link"
+          :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
+          :variant="chipVariant(topic.id)"
+          :style="[chipStyle(topic.id, topic.color), hoverFx.rootStyle(isHovering && hoverInteractive, { hasBorder: chipVariant(topic.id) === 'outlined' || isSelected(topic.id), inlineBackground: true })]"
+          label
+          @click="toggle(topic.id)"
+        >
+          <v-icon
+            v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
+            :color="resolvedIconColor(topic.id, topic.color)"
+            :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
+            start
+          />
+          <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+          <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
+        </v-chip>
+      </v-hover>
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
 import type { TopicsElement, LinkItem } from '#api/types/page-elements/index.ts'
-import type { HoverEffect, HoverLike } from '../utils/hover'
+import type { HoverEffect } from '../utils/hover'
 
 const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
@@ -68,16 +70,10 @@ const { isFilters, config, link } = defineProps<{
   config?: Pick<TopicsElement, 'color' | 'elevation' | 'density' | 'rounded' | 'centered' | 'showIcon' | 'iconColor' | 'hover'> & { variant?: 'default' | 'tonal' | 'outlined' }
 }>()
 
-const chipRelevantEffects: HoverEffect[] = ['darken', 'elevate', 'background', 'border']
+const chipEffects: HoverEffect[] = ['darken', 'elevate', 'background', 'border', 'grow']
+const hoverFx = useHoverConfig(() => config?.hover, true, chipEffects)
 
 const hoverInteractive = computed(() => isFilters || !!link)
-const resolvedHover = computed(() => {
-  const resolved = resolveHoverConfig(config?.hover, portalConfig.value.defaults?.hover as HoverLike | undefined)
-  const effects = resolved.effects.filter(e => chipRelevantEffects.includes(e))
-  return { ...resolved, effects: effects.length ? effects : ['darken'] as HoverEffect[] }
-})
-const chipHoverClasses = computed(() => hoverInteractive.value ? hoverConfigClasses(resolvedHover.value) : [])
-const chipHoverStyle = computed(() => hoverInteractive.value ? hoverConfigStyle(resolvedHover.value) : undefined)
 
 // Toggle selection in the topics query param when filters are enabled.
 const toggle = (id: string) => {
