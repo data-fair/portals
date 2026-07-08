@@ -84,7 +84,6 @@ export default {
               items: {
                 type: 'string',
                 oneOf: [
-                  { const: 'titleUnderline', title: 'Souligner au survol' },
                   { const: 'titleColor', title: 'Colorer au survol' }
                 ]
               }
@@ -123,6 +122,14 @@ export default {
                 },
                 props: { background: true }
               }
+            },
+            growOnHover: {
+              type: 'boolean',
+              title: 'Grow on hover',
+              'x-i18n-title': { fr: 'Grandit au survol' },
+              description: 'Only applies when the title has a link.',
+              'x-i18n-description': { fr: "S'applique uniquement lorsque le titre porte un lien." },
+              layout: { if: "parent.data?.position === 'bottom-small'" }
             }
           }
         }
