@@ -81,7 +81,7 @@
         </div>
 
         <v-card-text
-          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && dataset.summary?.length"
+          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !thumbnailUrl)) && dataset.summary?.length"
           class="pb-0"
         >
           {{ dataset.summary }}

@@ -176,8 +176,8 @@ export default {
         useSummary: {
           type: 'boolean',
           title: 'Utiliser le résumé du jeu de données',
-          description: "Permet d'utiliser le résumé du jeu de données si aucune image n'est définie pour ce dernier et si l'option 'Afficher le résumé' n'est pas activée.",
-          layout: 'switch'
+          description: "Permet d'utiliser le résumé du jeu de données si aucune image n'est disponible et si l'option 'Afficher le résumé' n'est pas activée. Disponible uniquement lorsque l'image est positionnée sous le titre.",
+          layout: { comp: 'switch', if: "parent.data?.location === 'center'" }
         }
       }
     },
