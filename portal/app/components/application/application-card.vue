@@ -81,7 +81,7 @@
         </div>
 
         <v-card-text
-          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && application.summary?.length"
+          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !thumbnailUrl)) && application.summary?.length"
           class="pb-0"
         >
           {{ application.summary }}
@@ -198,7 +198,7 @@ const thumbnailUrl = computed(() => {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
-  if (cardConfig.thumbnail?.useSummary && application.summary?.length) return undefined
+  if (cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && application.summary?.length) return undefined
   return `${application.href}/capture?updatedAt=${application.updatedAt}`
 })
 
