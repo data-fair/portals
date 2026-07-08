@@ -1,153 +1,205 @@
 <template>
-  <!--
-    :to => disabled in preview
-    link => simulate link style in preview
-  -->
-  <v-card
-    :to="!preview ? `/datasets/${dataset.slug}` : undefined"
-    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
-    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
-    :class="['h-100 d-flex flex-column', ...hoverClasses]"
-    :style="hoverStyle"
-    link
-  >
+  <v-hover v-slot="{ isHovering, props: hoverProps }">
     <!--
-      flex-nowrap => prevent columns from wrapping on multiple rows
-      no-gutters => remove spaces between columns
+      :to => disabled in preview
+      link => simulate link style in preview
     -->
-    <v-row
-      class="flex-nowrap"
-      no-gutters
+    <v-card
+      v-bind="hoverProps"
+      :to="!preview ? `/datasets/${dataset.slug}` : undefined"
+      :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
+      :color="hoverFx.background(isHovering)"
+      :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
+      class="h-100 d-flex flex-column"
+      :style="hoverFx.rootStyle(isHovering)"
+      link
     >
-      <!-- Thumbnail (Left Location) -->
-      <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-        <v-col cols="4" class="pt-hover-image">
-          <div
-            v-if="thumbnailUrl"
-            aria-hidden="true"
-            class="pt-hover-image__zoom"
-            :style="leftThumbnailStyle"
-          />
-        </v-col>
-        <v-divider vertical />
-      </template>
-
-      <!-- Main column -->
       <!--
-        d-flex flex-column => make the column take full height of the card and arrange content vertically
-        min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        flex-nowrap => prevent columns from wrapping on multiple rows
+        no-gutters => remove spaces between columns
       -->
-      <v-col
-        class="d-flex flex-column"
-        style="min-width: 0"
+      <v-row
+        class="flex-nowrap"
+        no-gutters
       >
-        <!-- Thumbnail (Top Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0 pt-hover-image"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-            class="pt-hover-image__zoom"
-          />
-        </div>
-
-        <!--
-          text-two-lines => truncate title to 2 lines
-          white-space: unset; => remove default nowrap from v-card-title
-        -->
-        <v-card-title
-          :class="['font-weight-bold', 'pt-hover-title', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-          :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
-          :title="dataset.title"
-        >
-            {{ dataset.title }}
-        </v-card-title>
-
-        <!-- Thumbnail (Center Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0 pt-hover-image"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-            class="pt-hover-image__zoom"
-          />
-        </div>
-
-        <v-card-text
-          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && dataset.summary?.length"
-          class="pb-0"
-        >
-          {{ dataset.summary }}
-        </v-card-text>
-
-        <v-spacer />
-
-        <!-- Topics List -->
-        <topics-list
-          v-if="cardConfig.topics?.show && dataset.topics?.length"
-          :config="cardConfig.topics"
-          :topics="dataset.topics"
-          class="px-4 mt-2 flex-grow-0"
-        />
-
-        <!-- Keywords list -->
-        <keywords-list
-          v-if="cardConfig.keywords?.show && dataset.keywords?.length"
-          :config="cardConfig.keywords"
-          :keywords="dataset.keywords"
-          class="px-4 mt-2 flex-grow-0"
-        />
-
-        <!-- Department / Updated At -->
-        <v-row
-          v-if="cardConfig.showDepartment"
-          class="px-4 my-2"
-          density="comfortable"
-        >
-          <v-col
-            v-if="cardConfig.showDepartment"
-            cols="auto"
-            class="d-flex align-center"
-          >
-            <owner-avatar
-              :owner="dataset.owner"
-              omit-owner-name
+        <!-- Thumbnail (Left Location) -->
+        <!-- On mobile, always use top location -->
+        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+          <v-col cols="4" style="overflow: hidden">
+            <div
+              v-if="thumbnailUrl"
+              aria-hidden="true"
+              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
             />
           </v-col>
-          <!-- <v-col
-            cols="auto"
-            class="d-flex align-center"
-            :class="{ 'ml-2': cardConfig.showDepartment }"
-          >
-            <span class="text-body-small">
-              {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-            </span>
-          </v-col> -->
-        </v-row>
-        <div v-else class="mt-3" /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
+          <v-divider vertical />
+        </template>
 
-        <!-- Actions (Bottom Location) -->
-        <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">
-          <v-divider />
+        <!-- Main column -->
+        <!--
+          d-flex flex-column => make the column take full height of the card and arrange content vertically
+          min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        -->
+        <v-col
+          class="d-flex flex-column"
+          style="min-width: 0"
+        >
+          <!-- Thumbnail (Top Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0"
+            style="overflow: hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
           <!--
-            ga-0 => remove default v-card-actions gap between action buttons
-            cursor-default and @click.prevent => disable card link on action buttons
-            min-height: auto => remove default v-card-actions min-height
+            text-two-lines => truncate title to 2 lines
+            white-space: unset; => remove default nowrap from v-card-title
           -->
-          <v-card-actions
-            class="py-2 ga-0 cursor-default"
-            style="min-height: auto"
+          <v-card-title
+            :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
+            :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}, hoverFx.titleStyle(isHovering)]"
+            :title="dataset.title"
+          >
+              {{ dataset.title }}
+          </v-card-title>
+          <span
+            v-if="hoverFx.underlineBar.value"
+            class="mx-4"
+            :style="hoverFx.underlineBarStyle(isHovering)"
+            aria-hidden="true"
+            data-pt-hover-underline
+          />
+
+          <!-- Thumbnail (Center Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0"
+            style="overflow: hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <v-card-text
+            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && dataset.summary?.length"
+            class="pb-0"
+          >
+            {{ dataset.summary }}
+          </v-card-text>
+
+          <v-spacer />
+
+          <!-- Topics List -->
+          <topics-list
+            v-if="cardConfig.topics?.show && dataset.topics?.length"
+            :config="cardConfig.topics"
+            :topics="dataset.topics"
+            class="px-4 mt-2 flex-grow-0"
+          />
+
+          <!-- Keywords list -->
+          <keywords-list
+            v-if="cardConfig.keywords?.show && dataset.keywords?.length"
+            :config="cardConfig.keywords"
+            :keywords="dataset.keywords"
+            class="px-4 mt-2 flex-grow-0"
+          />
+
+          <!-- Department / Updated At -->
+          <v-row
+            v-if="cardConfig.showDepartment"
+            class="px-4 my-2"
+            density="comfortable"
+          >
+            <v-col
+              v-if="cardConfig.showDepartment"
+              cols="auto"
+              class="d-flex align-center"
+            >
+              <owner-avatar
+                :owner="dataset.owner"
+                omit-owner-name
+              />
+            </v-col>
+            <!-- <v-col
+              cols="auto"
+              class="d-flex align-center"
+              :class="{ 'ml-2': cardConfig.showDepartment }"
+            >
+              <span class="text-body-small">
+                {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+              </span>
+            </v-col> -->
+          </v-row>
+          <div v-else class="mt-3" /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
+
+          <!-- Actions (Bottom Location) -->
+          <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">
+            <v-divider />
+            <!--
+              ga-0 => remove default v-card-actions gap between action buttons
+              cursor-default and @click.prevent => disable card link on action buttons
+              min-height: auto => remove default v-card-actions min-height
+            -->
+            <v-card-actions
+              class="py-2 ga-0 cursor-default"
+              style="min-height: auto"
+              @click.prevent
+            >
+              <action-btn
+                :to="`/datasets/${dataset.slug}/table`"
+                :action-style="cardConfig.actionsStyle"
+                :icon="mdiTableLarge"
+                :resource-title="dataset.title"
+                :text="t('text.table')"
+                :tooltip="t('tooltip.table')"
+              />
+              <action-btn
+                v-if="dataset.bbox?.length"
+                :to="`/datasets/${dataset.slug}/map`"
+                :action-style="cardConfig.actionsStyle"
+                :icon="mdiMapMarker"
+                :resource-title="dataset.title"
+                :text="t('text.map')"
+                :tooltip="t('tooltip.map')"
+              />
+              <action-btn
+                :to="`/datasets/${dataset.slug}/api-doc`"
+                :action-style="cardConfig.actionsStyle"
+                :icon="mdiCog"
+                :resource-title="dataset.title"
+                :text="t('text.api')"
+                :tooltip="t('tooltip.api')"
+              />
+            </v-card-actions>
+          </template>
+        </v-col>
+
+        <!-- Actions (Right Location) -->
+        <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown && !dataset.isMetaOnly">
+          <v-divider vertical />
+          <!--
+            cols=auto => fit column width to largest button
+            cursor-default and @click.prevent => disable card link on action buttons
+          -->
+          <v-col
+            cols="auto"
+            class="pa-2 cursor-default"
             @click.prevent
           >
             <action-btn
@@ -157,6 +209,7 @@
               :resource-title="dataset.title"
               :text="t('text.table')"
               :tooltip="t('tooltip.table')"
+              block
             />
             <action-btn
               v-if="dataset.bbox?.length"
@@ -166,6 +219,7 @@
               :resource-title="dataset.title"
               :text="t('text.map')"
               :tooltip="t('tooltip.map')"
+              block
             />
             <action-btn
               :to="`/datasets/${dataset.slug}/api-doc`"
@@ -174,55 +228,13 @@
               :resource-title="dataset.title"
               :text="t('text.api')"
               :tooltip="t('tooltip.api')"
+              block
             />
-          </v-card-actions>
+          </v-col>
         </template>
-      </v-col>
-
-      <!-- Actions (Right Location) -->
-      <template v-if="cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown && !dataset.isMetaOnly">
-        <v-divider vertical />
-        <!--
-          cols=auto => fit column width to largest button
-          cursor-default and @click.prevent => disable card link on action buttons
-        -->
-        <v-col
-          cols="auto"
-          class="pa-2 cursor-default"
-          @click.prevent
-        >
-          <action-btn
-            :to="`/datasets/${dataset.slug}/table`"
-            :action-style="cardConfig.actionsStyle"
-            :icon="mdiTableLarge"
-            :resource-title="dataset.title"
-            :text="t('text.table')"
-            :tooltip="t('tooltip.table')"
-            block
-          />
-          <action-btn
-            v-if="dataset.bbox?.length"
-            :to="`/datasets/${dataset.slug}/map`"
-            :action-style="cardConfig.actionsStyle"
-            :icon="mdiMapMarker"
-            :resource-title="dataset.title"
-            :text="t('text.map')"
-            :tooltip="t('tooltip.map')"
-            block
-          />
-          <action-btn
-            :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="cardConfig.actionsStyle"
-            :icon="mdiCog"
-            :resource-title="dataset.title"
-            :text="t('text.api')"
-            :tooltip="t('tooltip.api')"
-            block
-          />
-        </v-col>
-      </template>
-    </v-row>
-  </v-card>
+      </v-row>
+    </v-card>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -242,7 +254,7 @@ const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
-const { hoverClasses, hoverStyle } = useHoverConfig(() => cardConfig.hover)
+const hoverFx = useHoverConfig(() => cardConfig.hover)
 
 const thumbnailUrl = computed(() => {
   if (dataset.image) return dataset.image
