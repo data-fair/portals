@@ -76,11 +76,12 @@ export default {
             oneOf: [
               { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
               { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
-              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
+              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Colorer le fond' } },
               { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Colorer le bord' } },
               { const: 'titleColor', title: 'Title color', 'x-i18n-title': { fr: 'Colorer le titre' } },
               { const: 'titleUnderline', title: 'Underline title', 'x-i18n-title': { fr: 'Souligner le titre' } },
-              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom de l'image" } }
+              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom de l'image" } },
+              { const: 'grow', title: 'Grow slightly', 'x-i18n-title': { fr: 'Grossir légèrement' } }
             ]
           }
         },
@@ -291,11 +292,30 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
           layout: { cols: { md: 4 } }
         },
+        hoverEffects: {
+          type: 'array',
+          title: 'Hover effects',
+          'x-i18n-title': { fr: 'Effets au survol' },
+          description: 'If nothing is selected, the standard darken effect is applied, plus the hover color if defined. An explicit selection replaces this behavior.',
+          'x-i18n-description': { fr: "Sans sélection, l'assombrissement standard s'applique, complété par la couleur de survol si elle est définie. Une sélection explicite remplace ce comportement." },
+          uniqueItems: true,
+          layout: { cols: { md: 8 } },
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
+              { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
+              { const: 'color', title: 'Color', 'x-i18n-title': { fr: 'Coloration (selon la variante)' } },
+              { const: 'grow', title: 'Grow slightly', 'x-i18n-title': { fr: 'Grossir légèrement' } }
+            ]
+          }
+        },
         hoverColor: {
           $ref: '#/$defs/color',
           title: 'Hover color',
           'x-i18n-title': { fr: 'Couleur au survol' },
           layout: {
+            if: "!parent.data?.hoverEffects || parent.data?.hoverEffects?.includes('color')",
             slots: {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }

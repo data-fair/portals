@@ -302,6 +302,7 @@ export default {
           oneOf: [
             { const: 'always', title: 'Toujours' },
             { const: 'hover', title: 'Au survol' },
+            { const: 'hover-grow', title: 'Petit trait grandissant au survol' },
             { const: 'never', title: 'Jamais' }
           ]
         },
@@ -309,6 +310,19 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
           title: 'Couleur des liens',
           layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 6 }
+          }
+        },
+        underlineColor: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          title: 'Couleur du soulignement',
+          description: 'Si vide, reprend la couleur du lien.',
+          layout: {
+            if: "parent.data?.underline !== 'never'",
             slots: {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }
@@ -483,6 +497,11 @@ export default {
         hover: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
           title: 'Effets au survol des éléments cliquables'
+        },
+        titleLineGrowOnHover: {
+          type: 'boolean',
+          title: 'Le petit trait des titres grandit au survol',
+          description: "S'applique aux blocs titre dont le trait est en position « petit trait sous le titre » et qui portent un lien. Surchargeable dans chaque bloc titre."
         }
       }
     },
