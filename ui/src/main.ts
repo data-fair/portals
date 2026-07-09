@@ -7,7 +7,6 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { vuetifySessionOptions } from '@data-fair/lib-vuetify'
 import '@data-fair/lib-vuetify/style/global.scss'
 import 'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
-import '#portal/app/assets/hover.scss' // shared hover effect classes, so config previews render like the portal
 import { createVueRouterDFrameContent } from '@data-fair/frame/lib/vue-router/d-frame-content.js'
 import { createReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { createLocaleDayjs } from '@data-fair/lib-vue/locale-dayjs.js'

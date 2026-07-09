@@ -16,9 +16,6 @@ export const useHoverConfig = (getHover: () => HoverLike | undefined, useDefault
     rootStyle: (isHovering: boolean | null, opts?: { hasBorder?: boolean, inlineBackground?: boolean }) => stripMotion(hoverRootStyle(resolved.value, !!isHovering, opts), reducedMotion.value),
     titleStyle: (isHovering: boolean | null) => stripMotion(hoverTitleStyle(resolved.value, !!isHovering), reducedMotion.value),
     underlineBarStyle: (isHovering: boolean | null) => stripMotion(hoverUnderlineBarStyle(resolved.value, !!isHovering), reducedMotion.value),
-    imageStyle: (isHovering: boolean | null) => stripMotion(hoverImageStyle(resolved.value, !!isHovering), reducedMotion.value),
-    // legacy v1, consommé par les composants pas encore migrés (retiré en fin de refonte)
-    hoverClasses: computed(() => hoverConfigClasses(resolved.value)),
-    hoverStyle: computed(() => hoverConfigStyle(resolved.value))
+    imageStyle: (isHovering: boolean | null) => stripMotion(hoverImageStyle(resolved.value, !!isHovering), reducedMotion.value)
   }
 }
