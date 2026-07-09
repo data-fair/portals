@@ -91,8 +91,7 @@ export default defineNuxtConfig({
   css: [
     '@data-fair/lib-vuetify/style/global.scss',
     '@data-fair/portals-shared-markdown/style.css',
-    'vuetify/lib/components/VTable/VTable.css', // Ensure VTable styles are included, as the component is used in markdown rendering
-    '~/assets/hover.scss'
+    'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
   // pre-bundle dependencies to avoid full page reloads during dev
   // cf https://vite.dev/guide/dep-pre-bundling.html

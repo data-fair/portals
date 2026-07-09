@@ -10,17 +10,6 @@ export type ButtonHoverLike = { hoverEffects?: ButtonHoverEffect[], hoverColor?:
 
 export type ResolvedButtonHover = { effects: ButtonHoverEffect[], color: string }
 
-const effectClasses: Partial<Record<HoverEffect, string>> = {
-  elevate: 'pt-hover--elevate',
-  background: 'pt-hover--background',
-  border: 'pt-hover--border',
-  titleColor: 'pt-hover--title-color',
-  titleUnderline: 'pt-hover--title-underline',
-  imageZoom: 'pt-hover--image-zoom'
-}
-
-const colorEffects: HoverEffect[] = ['background', 'border', 'titleColor']
-
 const HOVER_ELEVATION = 8
 const themeColor = (color: string) => `rgb(var(--v-theme-${color}))`
 const onThemeColor = (color: string) => `rgb(var(--v-theme-on-${color}))`
@@ -117,35 +106,4 @@ export const hoverButtonStyle = (resolved: ResolvedButtonHover, isHovering: bool
 export const stripMotion = <T extends Record<string, string> | undefined>(style: T, reducedMotion: boolean): T => {
   if (style && reducedMotion) delete (style as Record<string, string>).transition
   return style
-}
-
-export const hoverConfigClasses = (resolved: ResolvedHoverConfig): string[] => {
-  const classes = ['pt-hover']
-  if (!resolved.effects.includes('darken')) classes.push('pt-hover--no-darken')
-  for (const effect of resolved.effects) {
-    const cssClass = effectClasses[effect]
-    if (cssClass) classes.push(cssClass)
-  }
-  return classes
-}
-
-export const hoverConfigStyle = (resolved: ResolvedHoverConfig): Record<string, string> | undefined => {
-  if (!resolved.effects.some(e => colorEffects.includes(e))) return undefined
-  return {
-    '--pt-hover-color': `var(--v-theme-${resolved.color})`,
-    '--pt-hover-on-color': `var(--v-theme-on-${resolved.color})`
-  }
-}
-
-export const buttonHoverClass = (config?: { hoverColor?: string }, fallbackColor?: string): string | undefined =>
-  (config?.hoverColor ?? fallbackColor) ? 'pt-hover-btn' : undefined
-
-export const buttonHoverStyle = (config?: { hoverColor?: string }, fallbackColor?: string): Record<string, string> | undefined => {
-  const color = config?.hoverColor ?? fallbackColor
-  return color
-    ? {
-        '--pt-hover-color': `var(--v-theme-${color})`,
-        '--pt-hover-on-color': `var(--v-theme-on-${color})`
-      }
-    : undefined
 }
