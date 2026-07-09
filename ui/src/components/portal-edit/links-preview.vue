@@ -2,12 +2,19 @@
   <preview>
     <p class="mb-0">
       {{ t('sampleText') }}
-      <a
-        href="#"
-        class="simple-link"
-        :style="linkStyle"
-        @click.prevent
-      >{{ t('sampleLink') }}</a>
+      <v-hover v-slot="{ isHovering, props: hoverProps }">
+        <a
+          v-bind="hoverProps"
+          href="#"
+          class="simple-link"
+          :style="linkStyle"
+          @click.prevent
+        >{{ t('sampleLink') }}<span
+          v-if="config?.underline === 'hover-grow'"
+          :style="barStyle(isHovering)"
+          aria-hidden="true"
+        /></a>
+      </v-hover>
       {{ t('sampleTextEnd') }}
     </p>
   </preview>
@@ -15,21 +22,38 @@
 
 <script setup lang="ts">
 import type { PortalConfig } from '#api/types/portal-config/index.ts'
+import type { CSSProperties } from 'vue'
 
 const { t } = useI18n()
 
 const { config } = defineProps<{ config?: PortalConfig['linksConfig'] }>()
+
+const underlineColor = computed(() => `rgb(var(--v-theme-${config?.underlineColor ?? config?.color ?? 'primary'}))`)
 
 const linkStyle = computed(() => {
   const underline = config?.underline ?? 'always'
   const color = config?.color ?? 'primary'
   const themeColor = ['primary', 'secondary'].includes(color) ? `text-${color}` : color
   return {
+    position: 'relative',
     color: `rgb(var(--v-theme-${themeColor}))`,
     textDecoration: underline === 'always' ? 'underline' : 'none',
-    textUnderlineOffset: '2px'
-  }
+    textUnderlineOffset: '2px',
+    textDecorationColor: config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : undefined
+  } satisfies CSSProperties
 })
+
+const barStyle = (isHovering: boolean | null) => ({
+  position: 'absolute',
+  left: '0',
+  bottom: '-3px',
+  width: '45px',
+  height: '3px',
+  backgroundColor: underlineColor.value,
+  transform: isHovering ? 'scaleX(1)' : 'scaleX(0)',
+  transformOrigin: 'left',
+  transition: 'transform .25s ease-out'
+} satisfies CSSProperties)
 </script>
 
 <i18n lang="yaml">
