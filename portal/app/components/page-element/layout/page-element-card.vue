@@ -21,7 +21,7 @@
           : `url(${getPageImageSrc(element.background.image, false)})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-      } : undefined, hoverFx.rootStyle(isHovering && hoverable, { hasBorder: element.border !== false })]"
+      } : undefined, hoverFx.rootStyle(isHovering && hoverable, { hasBorder: !!element.border })]"
     >
 
       <!--
@@ -80,7 +80,7 @@
             {{ element.title }}
           </v-card-title>
           <span
-            v-if="hoverFx.underlineBar.value && hoverable"
+            v-if="hoverFx.underlineBar.value && hoverable && element.title"
             class="mx-4"
             :style="hoverFx.underlineBarStyle(isHovering)"
             aria-hidden="true"

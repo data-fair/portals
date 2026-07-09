@@ -31,12 +31,13 @@ test.describe('hover effects and links style', () => {
       children: [],
       actions: [],
       link: { type: 'external', href: 'https://example.com', title: 'Exemple' },
-      hover: { effects: ['elevate', 'titleUnderline'] }
+      hover: { effects: ['elevate', 'titleUnderline', 'border'] }
     }])
 
     await goToPortal(portal._id)
     const card = page.locator('.v-card', { hasText: 'Ma boite' })
     await expect(card).toBeVisible({ timeout: 10_000 })
+    await expect(card).toHaveCSS('border-width', '1px')
     const bar = card.locator('[data-pt-hover-underline]')
     await expect(bar).toHaveCSS('transform', 'matrix(0, 0, 0, 1, 0, 0)')
     const shadowBefore = await card.evaluate(el => getComputedStyle(el).boxShadow)

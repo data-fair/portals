@@ -1,6 +1,7 @@
 <template>
   <div :class="marginClass">
     <v-hover v-slot="{ isHovering, props: hoverProps }">
+      <!-- element.link!.type !== 'none' est redondant avec isLink mais requis : vue-tsc ne propage pas le narrowing de l'union via la computed -->
       <a
         v-if="isLink && element.link!.type !== 'none' && isExternalLink(element.link!)"
         v-bind="hoverProps"
