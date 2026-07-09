@@ -226,49 +226,59 @@
               v-for="(link, index) in portalConfig.footer.importantLinks"
               :key="index"
             >
-              <v-btn
+              <v-hover
                 v-if="link.type === 'external'"
-                :href="link.href"
-                :title="link.title + ' - ' + t('newWindow')"
-                target="_blank"
-                rel="noopener"
-                :color="importantLinksConfig?.color"
-                :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
-                :elevation="importantLinksConfig?.elevation"
-                :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
-                :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
-                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase ?? true }, buttonHoverClass(importantLinksConfig, portalConfig.defaults?.hover?.color)]"
-                :style="buttonHoverStyle(importantLinksConfig, portalConfig.defaults?.hover?.color)"
+                v-slot="{ isHovering, props: hoverProps }"
               >
-                <template #prepend>
-                  <v-icon
-                    v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-                    :icon="link.icon.mdi?.svgPath || link.icon.custom"
-                    :color="link.icon.color"
-                  />
-                </template>
-                {{ link.title }}
-              </v-btn>
-              <v-btn
+                <v-btn
+                  v-bind="hoverProps"
+                  :href="link.href"
+                  :title="link.title + ' - ' + t('newWindow')"
+                  target="_blank"
+                  rel="noopener"
+                  :color="btnHover.color(isHovering, importantLinksConfig?.color)"
+                  :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
+                  :elevation="btnHover.elevation(isHovering, importantLinksConfig?.elevation)"
+                  :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
+                  :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
+                  :class="[{ 'text-uppercase': importantLinksConfig?.uppercase ?? true }]"
+                  :style="btnHover.style(isHovering)"
+                >
+                  <template #prepend>
+                    <v-icon
+                      v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                      :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                      :color="link.icon.color"
+                    />
+                  </template>
+                  {{ link.title }}
+                </v-btn>
+              </v-hover>
+              <v-hover
                 v-else
-                :to="resolveLink(link)"
-                :color="importantLinksConfig?.color"
-                :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
-                :elevation="importantLinksConfig?.elevation"
-                :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
-                :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
-                :class="[{ 'text-uppercase': importantLinksConfig?.uppercase }, buttonHoverClass(importantLinksConfig, portalConfig.defaults?.hover?.color)]"
-                :style="buttonHoverStyle(importantLinksConfig, portalConfig.defaults?.hover?.color)"
+                v-slot="{ isHovering, props: hoverProps }"
               >
-                <template #prepend>
-                  <v-icon
-                    v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-                    :icon="link.icon.mdi?.svgPath || link.icon.custom"
-                    :color="link.icon.color"
-                  />
-                </template>
-                {{ resolveLinkTitle(link, locale) }}
-              </v-btn>
+                <v-btn
+                  v-bind="hoverProps"
+                  :to="resolveLink(link)"
+                  :color="btnHover.color(isHovering, importantLinksConfig?.color)"
+                  :density="importantLinksConfig?.density ?? portalConfig.defaults?.density"
+                  :elevation="btnHover.elevation(isHovering, importantLinksConfig?.elevation)"
+                  :rounded="importantLinksConfig?.rounded ?? portalConfig.defaults?.rounded"
+                  :variant="importantLinksConfig?.variant && importantLinksConfig.variant !== 'default' ? importantLinksConfig.variant : 'text'"
+                  :class="[{ 'text-uppercase': importantLinksConfig?.uppercase }]"
+                  :style="btnHover.style(isHovering)"
+                >
+                  <template #prepend>
+                    <v-icon
+                      v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                      :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                      :color="link.icon.color"
+                    />
+                  </template>
+                  {{ resolveLinkTitle(link, locale) }}
+                </v-btn>
+              </v-hover>
             </template>
           </v-col>
         </v-row>
@@ -319,6 +329,7 @@ const showSocialLinks = computed(() => {
 })
 
 const importantLinksConfig = computed(() => portalConfig.value.footer.importantLinksConfig)
+const btnHover = useButtonHover(() => importantLinksConfig.value)
 
 const hasLeftColumn = computed(() => {
   const footer = portalConfig.value.footer
