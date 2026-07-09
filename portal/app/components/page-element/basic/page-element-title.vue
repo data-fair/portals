@@ -1,28 +1,30 @@
 <template>
   <div :class="marginClass">
-    <a
-      v-if="element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
-      :href="resolveLink(element.link)"
-      :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
-      :class="titleLinkClasses"
-      :style="hoverStyle"
-    >
-      <layout-title :element="element" />
-    </a>
-    <NuxtLink
-      v-else-if="element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
-      :to="resolveLink(element.link)"
-      :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
-      :class="titleLinkClasses"
-      :style="hoverStyle"
-    >
-      <layout-title :element="element" />
-    </NuxtLink>
-    <layout-title v-else :element="element" />
+    <v-hover v-slot="{ isHovering, props: hoverProps }">
+      <a
+        v-if="isLink && element.link!.type !== 'none' && isExternalLink(element.link!)"
+        v-bind="hoverProps"
+        :href="resolveLink(element.link!)"
+        :title="altLinkTitle"
+        :target="element.link?.target ? '_blank' : undefined"
+        :rel="element.link?.target ? 'noopener' : undefined"
+        :style="linkStyle(isHovering)"
+      >
+        <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
+      </a>
+      <NuxtLink
+        v-else-if="isLink && element.link!.type !== 'none'"
+        v-bind="hoverProps"
+        :to="resolveLink(element.link!)"
+        :title="altLinkTitle"
+        :target="element.link?.target ? '_blank' : undefined"
+        :rel="element.link?.target ? 'noopener' : undefined"
+        :style="linkStyle(isHovering)"
+      >
+        <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
+      </NuxtLink>
+      <layout-title v-else :element="element" />
+    </v-hover>
   </div>
 </template>
 
@@ -36,12 +38,24 @@ const { element, context } = defineProps<{
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
-const { hoverClasses, hoverStyle } = useHoverConfig(() => element.hover, false)
+const { portalConfig } = usePortalStore()
+const reducedMotion = usePrefersReducedMotion()
+const hoverFx = useHoverConfig(() => element.hover, false)
 
-const titleLinkClasses = computed(() => {
-  const classes = hoverClasses.value.filter(c => c !== 'pt-hover')
-  return ['pt-title-link', 'pt-hover-title-root', ...(element.hover?.effects?.length ? classes : [])]
+const isLink = computed(() => !!element.link && element.link.type !== 'none')
+
+const linkStyle = (isHovering: boolean | null) => ({
+  textDecoration: 'none',
+  color: 'inherit',
+  ...hoverFx.titleStyle(isHovering)
 })
+
+const lineGrow = computed(() =>
+  isLink.value &&
+  element.line?.position === 'bottom-small' &&
+  (element.line?.growOnHover ?? portalConfig.value.defaults?.titleLineGrowOnHover) === true &&
+  !reducedMotion.value
+)
 
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''

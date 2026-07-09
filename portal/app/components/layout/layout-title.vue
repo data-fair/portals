@@ -27,11 +27,16 @@
       <span
         v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
-        :style="{
+        :style="[{
           borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
           width: element.line?.position === 'bottom-small' ? '80px' : '100%'
-        }"
+        }, lineGrow && element.line?.position === 'bottom-small' ? {
+          transform: lineHovering ? 'scaleX(1.5)' : 'scaleX(1)',
+          transformOrigin: element.centered ? 'center' : 'left',
+          transition: 'transform .25s ease-out'
+        } : {}]"
         aria-hidden="true"
+        data-pt-title-line
       />
     </span>
   </component>
@@ -48,7 +53,11 @@
 <script setup lang="ts">
 import type { TitleElement } from '#api/types/page-elements/index.ts'
 
-const { element } = defineProps<{ element: TitleElement }>()
+const { element, lineGrow, lineHovering } = defineProps<{
+  element: TitleElement
+  lineGrow?: boolean
+  lineHovering?: boolean
+}>()
 
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 
