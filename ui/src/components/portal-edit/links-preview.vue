@@ -28,6 +28,8 @@ const { t } = useI18n()
 
 const { config } = defineProps<{ config?: PortalConfig['linksConfig'] }>()
 
+const reducedMotion = usePrefersReducedMotion()
+
 const underlineColor = computed(() => config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : 'currentColor')
 
 const linkStyle = computed(() => {
@@ -43,17 +45,20 @@ const linkStyle = computed(() => {
   } satisfies CSSProperties
 })
 
-const barStyle = (isHovering: boolean | null) => ({
-  position: 'absolute',
-  left: '0',
-  bottom: '-3px',
-  width: '45px',
-  height: '3px',
-  backgroundColor: underlineColor.value,
-  transform: isHovering ? 'scaleX(1)' : 'scaleX(0)',
-  transformOrigin: 'left',
-  transition: 'transform .25s ease-out'
-} satisfies CSSProperties)
+const barStyle = (isHovering: boolean | null) => {
+  const style = {
+    position: 'absolute',
+    left: '0',
+    bottom: '-3px',
+    width: '45px',
+    height: '3px',
+    backgroundColor: underlineColor.value,
+    transform: isHovering ? 'scaleX(1)' : 'scaleX(0)',
+    transformOrigin: 'left',
+    transition: 'transform .25s ease-out'
+  } satisfies CSSProperties
+  return stripMotion(style, reducedMotion.value)
+}
 </script>
 
 <i18n lang="yaml">
