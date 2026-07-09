@@ -28,14 +28,14 @@ const { t } = useI18n()
 
 const { config } = defineProps<{ config?: PortalConfig['linksConfig'] }>()
 
-const underlineColor = computed(() => `rgb(var(--v-theme-${config?.underlineColor ?? config?.color ?? 'primary'}))`)
+const underlineColor = computed(() => config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : 'currentColor')
 
 const linkStyle = computed(() => {
   const underline = config?.underline ?? 'always'
   const color = config?.color ?? 'primary'
   const themeColor = ['primary', 'secondary'].includes(color) ? `text-${color}` : color
   return {
-    position: 'relative',
+    position: underline === 'hover-grow' ? 'relative' : undefined,
     color: `rgb(var(--v-theme-${themeColor}))`,
     textDecoration: underline === 'always' ? 'underline' : 'none',
     textUnderlineOffset: '2px',
