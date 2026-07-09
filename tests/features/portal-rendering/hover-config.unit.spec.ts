@@ -34,7 +34,7 @@ test.describe('hover config resolution', () => {
 test.describe('hover props helpers', () => {
   test('elevation raises only when hovering with the elevate effect', () => {
     const resolved = resolveHoverConfig({ effects: ['elevate'] })
-    assert.equal(hoverElevation(resolved, true, 1), 8)
+    assert.equal(hoverElevation(resolved, true, 1), 5)
     assert.equal(hoverElevation(resolved, false, 1), 1)
     assert.equal(hoverElevation(resolveHoverConfig({ effects: ['grow'] }), true, 1), 1)
   })

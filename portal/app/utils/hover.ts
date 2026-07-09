@@ -10,7 +10,8 @@ export type ButtonHoverLike = { hoverEffects?: ButtonHoverEffect[], hoverColor?:
 
 export type ResolvedButtonHover = { effects: ButtonHoverEffect[], color: string }
 
-const HOVER_ELEVATION = 8
+// Vuetify 4 (MD3) ne fournit que les classes elevation-0 à elevation-5
+export const HOVER_ELEVATION = 5
 const themeColor = (color: string) => `rgb(var(--v-theme-${color}))`
 const onThemeColor = (color: string) => `rgb(var(--v-theme-on-${color}))`
 // v-card transitionne nativement box-shadow/background : re-déclarer ces transitions
