@@ -67,6 +67,38 @@ export default {
           'x-i18n-title': { fr: 'Texte en gras' },
           layout: { cols: { xs: 6 } },
         },
+        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
+        line: {
+          type: 'object',
+          title: 'Line configuration',
+          'x-i18n-title': {
+            fr: 'Configuration du trait'
+          },
+          layout: 'card',
+          properties: {
+            position: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/linePosition' },
+            color: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+              title: 'Line color',
+              'x-i18n-title': { fr: 'Couleur du trait' },
+              layout: {
+                slots: {
+                  item: { name: 'color-select-item' },
+                  selection: { name: 'color-select-selection' }
+                },
+                props: { background: true }
+              }
+            },
+            growOnHover: {
+              type: 'boolean',
+              title: 'Grow on hover',
+              'x-i18n-title': { fr: 'Grandit au survol' },
+              description: 'Only applies when the title has a link.',
+              'x-i18n-description': { fr: "S'applique uniquement lorsque le titre porte un lien." },
+              layout: { if: "parent.data?.position === 'bottom-small'" }
+            }
+          }
+        },
         link: {
           $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
           title: 'Configuration du lien',
@@ -101,35 +133,45 @@ export default {
             }
           }
         },
-        icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
-        line: {
+        anchor: {
           type: 'object',
-          title: 'Line configuration',
-          'x-i18n-title': {
-            fr: 'Configuration du trait'
+          title: 'Anchor & table of contents',
+          'x-i18n-title': { fr: 'Ancre & Sommaire' },
+          layout: {
+            comp: 'card',
+            children: [
+              'enabled',
+              { if: 'data?.enabled', children: ['inToc'] },
+              { if: 'data?.enabled && data?.inToc', children: ['label'] }
+            ]
           },
-          layout: 'card',
           properties: {
-            position: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/linePosition' },
-            color: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-              title: 'Line color',
-              'x-i18n-title': { fr: 'Couleur du trait' },
-              layout: {
-                slots: {
-                  item: { name: 'color-select-item' },
-                  selection: { name: 'color-select-selection' }
-                },
-                props: { background: true }
-              }
-            },
-            growOnHover: {
+            enabled: {
               type: 'boolean',
-              title: 'Grow on hover',
-              'x-i18n-title': { fr: 'Grandit au survol' },
-              description: 'Only applies when the title has a link.',
-              'x-i18n-description': { fr: "S'applique uniquement lorsque le titre porte un lien." },
-              layout: { if: "parent.data?.position === 'bottom-small'" }
+              title: 'Enable anchor',
+              'x-i18n-title': { fr: "Activer l'ancre" },
+              description: 'Lets visitors copy a direct link to this title.',
+              'x-i18n-description': { fr: 'Permet de copier un lien direct vers le titre.' },
+              layout: 'switch'
+            },
+            inToc: {
+              type: 'boolean',
+              title: 'Show in the table of contents',
+              'x-i18n-title': { fr: 'Afficher dans le sommaire' },
+              default: true,
+              layout: 'switch'
+            },
+            label: {
+              type: 'string',
+              title: 'Table of contents label',
+              'x-i18n-title': { fr: 'Libellé du sommaire' },
+              description: 'Optional shorter label shown in the table of contents instead of the title content.',
+              'x-i18n-description': { fr: 'Libellé plus court, optionnel, affiché dans le sommaire à la place du contenu du titre.' }
+            },
+            _slug: {
+              type: 'string',
+              readOnly: true,
+              layout: 'none'
             }
           }
         }

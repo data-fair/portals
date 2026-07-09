@@ -1,12 +1,15 @@
 <template>
   <component
     :is="titleTag"
+    :id="anchorId"
     :class="[
       'd-flex align-center',
       element.centered ? 'justify-center' : undefined,
       element.bold ? 'font-weight-bold' : undefined,
-      `text-${element.titleSize || 'h3'}`
+      `text-${element.titleSize || 'h3'}`,
+      anchorId ? 'page-title--anchored' : undefined
     ]"
+    :style="anchorId ? 'scroll-margin-top: var(--toc-scroll-offset, 96px);' : undefined"
   >
     <!-- decorative <span>s instead of <v-divider>/<div> so the heading only contains phrasing content (HTML spec) -->
     <span
@@ -22,9 +25,18 @@
       size="small"
       class="mr-4"
     />
-    <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]">
-      {{ element.content }}
-      <span
+    <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]"><!--
+      -->{{ element.content }}<!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+        v-if="anchorId"
+        :icon="copied ? mdiCheck : mdiLinkVariant"
+        :title="copied ? t('linkCopied') : t('copyLink')"
+        :aria-label="copied ? t('linkCopied') : t('copyLink')"
+        variant="text"
+        density="comfortable"
+        size="small"
+        class="page-anchor-btn ml-1"
+        @click.prevent.stop="copyLink"
+      /><span
         v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
         :style="[{
@@ -51,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiLinkVariant, mdiCheck } from '@mdi/js'
 import type { TitleElement } from '#api/types/page-elements/index.ts'
 
 const { element, lineGrow, lineHovering } = defineProps<{
@@ -59,8 +72,27 @@ const { element, lineGrow, lineHovering } = defineProps<{
   lineHovering?: boolean
 }>()
 
+const { t } = useI18n()
+
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 
+const anchorId = computed(() => element.anchor?._slug || undefined)
+
+const copied = ref(false)
+let copiedTimeout: ReturnType<typeof setTimeout> | undefined
+const copyLink = async () => {
+  if (!anchorId.value) return
+  const url = `${window.location.origin}${window.location.pathname}#${anchorId.value}`
+  try {
+    await navigator.clipboard.writeText(url)
+    history.replaceState(null, '', '#' + anchorId.value)
+    copied.value = true
+    clearTimeout(copiedTimeout)
+    copiedTimeout = setTimeout(() => { copied.value = false }, 1500)
+  } catch { /* clipboard unavailable (insecure context) */ }
+}
+
+onUnmounted(() => clearTimeout(copiedTimeout))
 </script>
 
 <style scoped>
@@ -118,4 +150,23 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 .font-weight-bold {
   font-weight: 700 !important;
 }
+/* Reveal the copy-anchor button only when hovering/focusing the anchored title */
+.page-anchor-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  vertical-align: middle;
+}
+.page-title--anchored:hover .page-anchor-btn,
+.page-anchor-btn:focus-visible {
+  opacity: 1;
+}
 </style>
+
+<i18n lang="yaml">
+  en:
+    copyLink: Copy link to this section
+    linkCopied: Link copied
+  fr:
+    copyLink: Copier le lien vers cette section
+    linkCopied: Lien copié
+</i18n>

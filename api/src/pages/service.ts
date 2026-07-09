@@ -120,6 +120,7 @@ export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 
 export const createPage = async (page: Page, sourcePageId?: string) => {
   debug('createPage', page)
   validateMetadata(page)
+  page.config._toc = await resolvePageAnchors(page.config)
   await mongo.pages.insertOne(page)
 
   const details: string[] = []
@@ -144,6 +145,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   validateMetadata(page, patch)
   if (patch.draftConfig) {
     await renderMarkdownElements(patch.draftConfig)
+    patch.draftConfig._toc = await resolvePageAnchors(patch.draftConfig)
   }
 
   // Check if trying to unpublish a home page
@@ -397,6 +399,32 @@ const validateMetadata = (page: Page, patch?: Partial<Page>) => {
     const validSlug = slug.default(metadata.slug, { lower: true, strict: true })
     if (metadata.slug !== validSlug) throw httpError(400, `Invalid slug "${metadata.slug}". An accepted format is: "${validSlug}"`)
   }
+}
+
+// Resolve each anchored title's slug from its content (deduplicating in document order)
+// and build the table of contents. The resolved slug is stored on the element (anchor._slug)
+// so the rendered title and the table of contents share the same identifier.
+const resolvePageAnchors = async (pageConfig: PageConfig) => {
+  const toc: NonNullable<PageConfig['_toc']> = []
+  const seen = new Set<string>()
+  await traversePageElements(pageConfig.elements, (element) => {
+    if (element.type !== 'title' || !element.anchor) return
+    if (!element.anchor.enabled) {
+      delete element.anchor._slug
+      return
+    }
+    const base = slug.default(element.content || 'section', { lower: true, strict: true }) || 'section'
+    let candidate = base
+    let counter = 2
+    while (seen.has(candidate)) candidate = `${base}-${counter++}`
+    seen.add(candidate)
+    element.anchor._slug = candidate
+    if (element.anchor.inToc) {
+      const label = element.anchor.label?.trim()
+      toc.push({ id: candidate, title: label || element.content || candidate })
+    }
+  })
+  return toc
 }
 
 const switchStandardPages = async (page: Page, addedPortals: string[]): Promise<Record<string, string>> => {

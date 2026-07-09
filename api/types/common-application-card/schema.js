@@ -29,7 +29,7 @@ export default {
     actionsLocation: {
       type: 'string',
       title: "Position des boutons d'actions sur la carte",
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 4 }, if: 'parent.data?.openInFullPage !== true' },
       default: 'bottom',
       oneOf: [
         { const: 'right', title: 'À droite' },
@@ -40,7 +40,7 @@ export default {
     actionsStyle: {
       type: 'string',
       title: "Style des boutons d'actions",
-      layout: { cols: { md: 4 } },
+      layout: { cols: { md: 4 }, if: 'parent.data?.openInFullPage !== true' },
       default: 'full',
       oneOf: [
         { const: 'icon', title: 'Icône seulement' },
@@ -116,6 +116,7 @@ export default {
               'crop',
               'useTopic',
               'useSummary',
+              { markdown: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur la visualisation)\n2. **Image de la thématique** (si activé)\n3. **Résumé de la visualisation** (si activé)\n4. **Capture automatique** de la visualisation' }
             ]
           }
         ]
@@ -160,10 +161,11 @@ export default {
         useSummary: {
           type: 'boolean',
           title: 'Utiliser le résumé de la visualisation',
-          description: "Permet d'utiliser le résumé de la visualisation si aucune image n'est définie pour cette dernière et si l'option 'Afficher le résumé' n'est pas activée.",
+          description: "Affiche le résumé de la visualisation si disponible, à la place de la capture automatique. Disponible uniquement lorsque l'image est positionnée sous le titre.",
           layout: {
             comp: 'switch',
-            cols: { md: 6 }
+            cols: { md: 6 },
+            if: "parent.data?.location === 'center'"
           }
         },
       }

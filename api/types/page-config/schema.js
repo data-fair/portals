@@ -202,6 +202,20 @@ export default {
       items: {
         $ref: 'https://github.com/data-fair/portals/page-elements#/$defs/element'
       }
+    },
+    // Table of contents computed by the API from the anchored title elements (in document order).
+    _toc: {
+      type: 'array',
+      readOnly: true,
+      layout: 'none',
+      items: {
+        type: 'object',
+        required: ['id', 'title'],
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' }
+        }
+      }
     }
   },
   $defs: {
@@ -211,7 +225,9 @@ export default {
       // This pattern is only a client-side validation.
       // The actual check is done on the API, which compares the input
       // with the result of slugify and returns an error if they differ.
-      pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+      pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$',
+      errorMessage: 'Only lowercase letters, digits and dashes are allowed (e.g. my-page).',
+      'x-i18n-errorMessage': { fr: 'Uniquement des minuscules, chiffres et tirets (ex. ma-page).' }
     }
   }
 }

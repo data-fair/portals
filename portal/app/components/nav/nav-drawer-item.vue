@@ -2,7 +2,6 @@
   <!-- Level 1: direct link -->
   <template v-if="level === 1 && item.type !== 'submenu'">
     <v-list-item
-      :title="resolveLinkTitle(item, locale)"
       :to="!isExternalLink(item) ? resolveLink(item) : undefined"
       :href="isExternalLink(item) ? resolveLink(item) : undefined"
       :target="item.type === 'external' && item.target ? '_blank' : undefined"
@@ -16,6 +15,8 @@
           :color="item.icon.color"
         />
       </template>
+      <!-- text-wrap lets long titles wrap instead of being truncated -->
+      <v-list-item-title class="text-wrap">{{ resolveLinkTitle(item, locale) }}</v-list-item-title>
     </v-list-item>
   </template>
 
@@ -45,7 +46,6 @@
   <!-- Level 2+: direct link -->
   <template v-else-if="level >= 2 && item.type !== 'submenu'">
     <v-list-item
-      :title="resolveLinkTitle(item, locale)"
       :to="!isExternalLink(item) ? resolveLink(item) : undefined"
       :href="isExternalLink(item) ? resolveLink(item) : undefined"
       :target="item.type === 'external' && item.target ? '_blank' : undefined"
@@ -59,6 +59,8 @@
           :color="item.icon.color"
         />
       </template>
+      <!-- text-wrap lets long titles wrap instead of being truncated -->
+      <v-list-item-title class="text-wrap">{{ resolveLinkTitle(item, locale) }}</v-list-item-title>
     </v-list-item>
   </template>
 
@@ -71,7 +73,6 @@
       <template #activator="{ props: activatorProps }">
         <v-list-item
           v-bind="activatorProps"
-          :title="item.title"
           :active="isActive"
         >
           <template #prepend>
@@ -81,6 +82,8 @@
               :color="item.icon.color"
             />
           </template>
+          <!-- text-wrap lets long titles wrap instead of being truncated -->
+          <v-list-item-title class="text-wrap">{{ item.title }}</v-list-item-title>
         </v-list-item>
       </template>
       <nav-drawer-item
