@@ -75,7 +75,7 @@
           <v-card-title
             v-if="element.title"
             class="font-weight-bold"
-            :style="[{ 'white-space': 'unset' }, hoverFx.titleStyle(isHovering && hoverable)]"
+            :style="{ 'white-space': 'unset' }"
           >
             {{ element.title }}
           </v-card-title>

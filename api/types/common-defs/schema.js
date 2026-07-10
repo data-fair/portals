@@ -63,12 +63,12 @@ export default {
           type: 'array',
           title: 'Effects',
           'x-i18n-title': { fr: 'Effets' },
-          description: 'If nothing is selected here nor in the portal defaults, the standard darken effect is applied. An explicitly emptied selection disables any effect.',
-          'x-i18n-description': { fr: "Si rien n'est sélectionné ici ni dans le style par défaut du portail, l'assombrissement standard est appliqué. Une sélection explicitement vidée désactive tout effet." },
+          description: 'Title and image effects only apply to boxes and thumbnails. "Title underline" and "Animated title underline" are mutually exclusive (animated takes precedence if both are selected). If nothing is selected, the standard darken effect is applied.',
+          'x-i18n-description': { fr: "Les effets sur le titre et l'image ne s'appliquent qu'aux boîtes et vignettes. « Soulignement du titre » et « Soulignement animé du titre » sont exclusifs (l'animé prime si les deux sont cochés). Par défaut, l'effet d'assombrissement standard est appliqué." },
           uniqueItems: true,
           layout: {
             switch: [
-              { if: "parent.data?.effects?.some(e => ['background', 'border', 'titleColor'].includes(e))", cols: { md: 8 } }
+              { if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))", cols: { md: 8 } }
             ]
           },
           items: {
@@ -76,12 +76,12 @@ export default {
             oneOf: [
               { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
               { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
-              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Colorer le fond' } },
-              { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Colorer le bord' } },
-              { const: 'titleColor', title: 'Title color', 'x-i18n-title': { fr: 'Colorer le titre' } },
-              { const: 'titleUnderline', title: 'Underline title', 'x-i18n-title': { fr: 'Souligner le titre' } },
-              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom de l'image" } },
-              { const: 'grow', title: 'Grow slightly', 'x-i18n-title': { fr: 'Grossir légèrement' } }
+              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
+              { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Couleur de bordure' } },
+              { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } },
+              { const: 'titleUnderline', title: 'Title underline', 'x-i18n-title': { fr: 'Soulignement du titre' } },
+              { const: 'titleUnderlineAnimated', title: 'Animated title underline', 'x-i18n-title': { fr: 'Soulignement animé du titre' } },
+              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom sur l'image" } }
             ]
           }
         },
@@ -90,7 +90,7 @@ export default {
           title: 'Hover color',
           'x-i18n-title': { fr: 'Couleur de survol' },
           layout: {
-            if: "parent.data?.effects?.some(e => ['background', 'border', 'titleColor'].includes(e))",
+            if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
             slots: {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }
@@ -296,8 +296,8 @@ export default {
           type: 'array',
           title: 'Hover effects',
           'x-i18n-title': { fr: 'Effets au survol' },
-          description: 'If nothing is selected, the standard darken effect is applied, plus the hover color if defined. An explicit selection replaces this behavior.',
-          'x-i18n-description': { fr: "Sans sélection, l'assombrissement standard s'applique, complété par la couleur de survol si elle est définie. Une sélection explicite remplace ce comportement." },
+          description: 'If nothing is selected, "Color (based on the variant)" applies by default: border color for the "Outlined" variant, background color for the "Tonal" and "Filled" variants. The hover color customizes this tint when set.',
+          'x-i18n-description': { fr: "Sans sélection, la « Coloration (selon la variante) » s'applique par défaut : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Tonale » et « Avec fond coloré ». La couleur de survol personnalise cette teinte si elle est définie." },
           uniqueItems: true,
           layout: { cols: { md: 8 } },
           items: {
@@ -306,7 +306,7 @@ export default {
               { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
               { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
               { const: 'color', title: 'Color', 'x-i18n-title': { fr: 'Coloration (selon la variante)' } },
-              { const: 'grow', title: 'Grow slightly', 'x-i18n-title': { fr: 'Grossir légèrement' } }
+              { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } }
             ]
           }
         },

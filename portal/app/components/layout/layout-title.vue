@@ -37,16 +37,9 @@
         class="page-anchor-btn ml-1"
         @click.prevent.stop="copyLink"
       /><span
-        v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
+        v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium' || (lineGrow && element.line?.position === 'none')"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
-        :style="[{
-          borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
-          width: element.line?.position === 'bottom-small' ? '80px' : '100%'
-        }, lineGrow && element.line?.position === 'bottom-small' ? {
-          transform: lineHovering ? 'scaleX(1.5)' : 'scaleX(1)',
-          transformOrigin: element.centered ? 'center' : 'left',
-          transition: 'transform .25s ease-out'
-        } : {}]"
+        :style="bottomLineStyle"
         aria-hidden="true"
         data-pt-title-line
       />
@@ -75,6 +68,21 @@ const { element, lineGrow, lineHovering } = defineProps<{
 const { t } = useI18n()
 
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
+
+// bottom-small grows to the title width on hover; "none" reveals the small line from zero
+const bottomLineStyle = computed(() => {
+  const pos = element.line?.position
+  let width: string
+  if (pos === 'bottom-medium') width = '100%'
+  else if (pos === 'bottom-small') width = lineGrow && lineHovering ? '100%' : '80px'
+  else width = lineHovering ? '80px' : '0'
+  const style: Record<string, string> = {
+    borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
+    width
+  }
+  if (lineGrow) style.transition = 'width .25s ease-out'
+  return style
+})
 
 const anchorId = computed(() => element.anchor?._slug || undefined)
 

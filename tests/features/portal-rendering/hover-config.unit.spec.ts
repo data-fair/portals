@@ -2,7 +2,7 @@ import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import {
   resolveHoverConfig, hoverElevation, hoverBackground, hoverRootStyle,
-  hoverTitleStyle, hoverUnderlineBarStyle, hoverImageStyle,
+  hoverUnderlineBarStyle, hoverImageStyle,
   resolveButtonHover, hoverButtonStyle, stripMotion
 } from '../../../portal/app/utils/hover.ts'
 
@@ -22,9 +22,9 @@ test.describe('hover config resolution', () => {
   })
 
   test('relevant effects filter keeps subset, falls back to darken when nothing relevant remains', () => {
-    const subset = resolveHoverConfig({ effects: ['background', 'titleColor'] }, undefined, ['darken', 'background'])
+    const subset = resolveHoverConfig({ effects: ['background', 'elevate'] }, undefined, ['darken', 'background'])
     assert.deepEqual(subset.effects, ['background'])
-    const fallback = resolveHoverConfig({ effects: ['titleColor'] }, undefined, ['darken', 'background'])
+    const fallback = resolveHoverConfig({ effects: ['elevate'] }, undefined, ['darken', 'background'])
     assert.deepEqual(fallback.effects, ['darken'])
     const emptied = resolveHoverConfig({ effects: [] }, undefined, ['darken', 'background'])
     assert.deepEqual(emptied.effects, [])
@@ -32,9 +32,11 @@ test.describe('hover config resolution', () => {
 })
 
 test.describe('hover props helpers', () => {
-  test('elevation raises only when hovering with the elevate effect', () => {
+  test('elevate adds +2 to the current elevation (capped at 5) on hover', () => {
     const resolved = resolveHoverConfig({ effects: ['elevate'] })
-    assert.equal(hoverElevation(resolved, true, 1), 5)
+    assert.equal(hoverElevation(resolved, true, 0), 2)
+    assert.equal(hoverElevation(resolved, true, 1), 3)
+    assert.equal(hoverElevation(resolved, true, 3), 5)
     assert.equal(hoverElevation(resolved, false, 1), 1)
     assert.equal(hoverElevation(resolveHoverConfig({ effects: ['grow'] }), true, 1), 1)
   })
@@ -74,18 +76,18 @@ test.describe('hover props helpers', () => {
     assert.equal(style?.color, 'rgb(var(--v-theme-on-accent))')
   })
 
-  test('title style colors the title on hover only with the titleColor effect', () => {
-    const resolved = resolveHoverConfig({ effects: ['titleColor'], color: 'accent' })
-    assert.equal(hoverTitleStyle(resolved, true)?.color, 'rgb(var(--v-theme-accent))')
-    assert.equal(hoverTitleStyle(resolved, false)?.color, undefined)
-    assert.equal(hoverTitleStyle(resolveHoverConfig(undefined), true), undefined)
+  test('plain underline bar stays visible without a transform', () => {
+    const resolved = resolveHoverConfig({ effects: ['titleUnderline'], color: 'accent' })
+    assert.equal(hoverUnderlineBarStyle(resolved, false).transform, undefined)
+    assert.equal(hoverUnderlineBarStyle(resolved, true).transform, undefined)
+    assert.equal(hoverUnderlineBarStyle(resolved, true).backgroundColor, 'rgb(var(--v-theme-accent))')
   })
 
-  test('underline bar grows from scaleX(0) to scaleX(1)', () => {
-    const resolved = resolveHoverConfig({ effects: ['titleUnderline'], color: 'accent' })
+  test('animated underline bar grows from scaleX(0) to scaleX(1)', () => {
+    const resolved = resolveHoverConfig({ effects: ['titleUnderlineAnimated'], color: 'accent' })
     assert.equal(hoverUnderlineBarStyle(resolved, false).transform, 'scaleX(0)')
     assert.equal(hoverUnderlineBarStyle(resolved, true).transform, 'scaleX(1)')
-    assert.equal(hoverUnderlineBarStyle(resolved, true).backgroundColor, 'rgb(var(--v-theme-accent))')
+    assert.match(hoverUnderlineBarStyle(resolved, true).transition ?? '', /transform/)
   })
 
   test('image style zooms only with the imageZoom effect', () => {
@@ -101,10 +103,10 @@ test.describe('hover props helpers', () => {
 })
 
 test.describe('button hover resolution', () => {
-  test('defaults to color swap when a hover color is resolvable, native darken otherwise', () => {
+  test('defaults to the variant coloring, falling back to primary', () => {
     assert.deepEqual(resolveButtonHover({ hoverColor: 'accent' }), { effects: ['color'], color: 'accent' })
     assert.deepEqual(resolveButtonHover(undefined, 'secondary'), { effects: ['color'], color: 'secondary' })
-    assert.deepEqual(resolveButtonHover(undefined, undefined), { effects: ['darken'], color: 'primary' })
+    assert.deepEqual(resolveButtonHover(undefined, undefined), { effects: ['color'], color: 'primary' })
   })
 
   test('button hoverColor wins over the portal fallback', () => {
@@ -120,6 +122,6 @@ test.describe('button hover resolution', () => {
     assert.equal(style?.['--v-hover-opacity'], '0')
     assert.equal(style?.transform, 'scale(1.05)')
     assert.match(style?.transition ?? '', /background-color/)
-    assert.equal(hoverButtonStyle(resolveButtonHover(undefined, undefined), true), undefined)
+    assert.equal(hoverButtonStyle(resolveButtonHover({ hoverEffects: ['darken'] }), true), undefined)
   })
 })

@@ -66,7 +66,7 @@
           -->
           <v-card-title
             :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-            :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}, hoverFx.titleStyle(isHovering)]"
+            :style="cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : undefined"
             :title="reuse.config.title"
           >
               {{ reuse.config.title }}

@@ -9,7 +9,7 @@ export const useButtonHover = (getConfig: () => ButtonHoverLike | undefined) => 
   ))
   return {
     resolved,
-    elevation: (isHovering: boolean | null, base?: number | string) => resolved.value.effects.includes('elevate') && isHovering ? HOVER_ELEVATION : base,
+    elevation: (isHovering: boolean | null, base?: number | string) => hoverElevation(resolved.value, !!isHovering, base),
     color: (isHovering: boolean | null, base?: string) => resolved.value.effects.includes('color') && isHovering ? resolved.value.color : base,
     style: (isHovering: boolean | null) => stripMotion(hoverButtonStyle(resolved.value, !!isHovering), reducedMotion.value)
   }

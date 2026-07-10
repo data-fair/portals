@@ -95,7 +95,7 @@ export default {
               'x-i18n-title': { fr: 'Grandit au survol' },
               description: 'Only applies when the title has a link.',
               'x-i18n-description': { fr: "S'applique uniquement lorsque le titre porte un lien." },
-              layout: { if: "parent.data?.position === 'bottom-small'" }
+              layout: { if: "parent.parent?.data?.link && parent.parent?.data?.link?.type !== 'none' && ['none', 'bottom-small'].includes(parent.data?.position)" }
             }
           }
         },
@@ -103,35 +103,6 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
           title: 'Configuration du lien',
           layout: { comp: 'card' }
-        },
-        hover: {
-          type: 'object',
-          title: 'Effets au survol du lien',
-          layout: { comp: 'card', if: "parent.data?.link && parent.data?.link?.type !== 'none'" },
-          properties: {
-            effects: {
-              type: 'array',
-              title: 'Effets',
-              uniqueItems: true,
-              items: {
-                type: 'string',
-                oneOf: [
-                  { const: 'titleColor', title: 'Colorer au survol' }
-                ]
-              }
-            },
-            color: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-              title: 'Couleur de survol',
-              layout: {
-                if: "parent.data?.effects?.includes('titleColor')",
-                slots: {
-                  item: { name: 'color-select-item' },
-                  selection: { name: 'color-select-selection' }
-                }
-              }
-            }
-          }
         },
         anchor: {
           type: 'object',

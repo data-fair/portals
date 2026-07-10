@@ -31,7 +31,7 @@ test.describe('hover effects and links style', () => {
       children: [],
       actions: [],
       link: { type: 'external', href: 'https://example.com', title: 'Exemple' },
-      hover: { effects: ['elevate', 'titleUnderline', 'border'] }
+      hover: { effects: ['elevate', 'titleUnderlineAnimated', 'border'] }
     }])
 
     await goToPortal(portal._id)
@@ -148,11 +148,11 @@ test.describe('hover effects and links style', () => {
     await goToPortal(portal._id)
     const bar = page.locator('[data-pt-title-line]')
     await expect(bar).toBeVisible({ timeout: 10_000 })
+    await expect.poll(() => bar.evaluate(el => el.style.width)).toBe('80px')
     await expect.poll(async () => {
       await page.mouse.move(0, 0)
       await page.locator('a', { hasText: 'Mon titre' }).hover()
-      return bar.evaluate(el => el.style.transform)
-    }, { timeout: 15_000 }).toBe('scaleX(1.5)')
-    await expect(bar).toHaveCSS('transform', 'matrix(1.5, 0, 0, 1, 0, 0)')
+      return bar.evaluate(el => el.style.width)
+    }, { timeout: 15_000 }).toBe('100%')
   })
 })

@@ -1,4 +1,4 @@
-export type HoverEffect = 'darken' | 'elevate' | 'background' | 'border' | 'titleColor' | 'titleUnderline' | 'imageZoom' | 'grow'
+export type HoverEffect = 'darken' | 'elevate' | 'background' | 'border' | 'titleUnderline' | 'titleUnderlineAnimated' | 'imageZoom' | 'grow'
 
 export type HoverLike = { effects?: HoverEffect[], color?: string }
 
@@ -28,8 +28,9 @@ export const resolveHoverConfig = (config?: HoverLike, portalDefaults?: HoverLik
   return { effects, color: config?.color ?? portalDefaults?.color ?? 'primary' }
 }
 
-export const hoverElevation = (resolved: ResolvedHoverConfig, isHovering: boolean, base?: number | string): number | string | undefined =>
-  resolved.effects.includes('elevate') && isHovering ? HOVER_ELEVATION : base
+// On hover the elevate effect raises the current elevation by 2, capped at the Vuetify-4 max (5)
+export const hoverElevation = (resolved: { effects: readonly string[] }, isHovering: boolean, base?: number | string): number | string | undefined =>
+  resolved.effects.includes('elevate') && isHovering ? Math.min((Number(base) || 0) + 2, HOVER_ELEVATION) : base
 
 export const hoverBackground = (resolved: ResolvedHoverConfig, isHovering: boolean, base?: string): string | undefined =>
   resolved.effects.includes('background') && isHovering ? resolved.color : base
@@ -58,20 +59,20 @@ export const hoverRootStyle = (resolved: ResolvedHoverConfig, isHovering: boolea
   return Object.keys(style).length ? style : undefined
 }
 
-export const hoverTitleStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> | undefined =>
-  resolved.effects.includes('titleColor')
-    ? { transition: 'color .2s', ...(isHovering ? { color: themeColor(resolved.color) } : {}) }
-    : undefined
-
-export const hoverUnderlineBarStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> => ({
-  display: 'block',
-  height: '3px',
-  width: '45px',
-  backgroundColor: themeColor(resolved.color),
-  transform: isHovering ? 'scaleX(1)' : 'scaleX(0)',
-  transformOrigin: 'left',
-  transition: 'transform .25s ease-out'
-})
+export const hoverUnderlineBarStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> => {
+  const bar: Record<string, string> = {
+    display: 'block',
+    height: '3px',
+    width: '45px',
+    backgroundColor: themeColor(resolved.color)
+  }
+  if (resolved.effects.includes('titleUnderlineAnimated')) {
+    bar.transform = isHovering ? 'scaleX(1)' : 'scaleX(0)'
+    bar.transformOrigin = 'left'
+    bar.transition = 'transform .25s ease-out'
+  }
+  return bar
+}
 
 export const hoverImageStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> | undefined =>
   resolved.effects.includes('imageZoom')
@@ -84,7 +85,7 @@ export const hoverImageStyle = (resolved: ResolvedHoverConfig, isHovering: boole
 export const resolveButtonHover = (config?: ButtonHoverLike, fallbackColor?: string): ResolvedButtonHover => {
   const color = config?.hoverColor ?? fallbackColor
   return {
-    effects: config?.hoverEffects ?? (color ? ['color'] : ['darken']),
+    effects: config?.hoverEffects ?? ['color'],
     color: color ?? 'primary'
   }
 }

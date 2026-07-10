@@ -9,7 +9,7 @@
         :title="altLinkTitle"
         :target="element.link?.target ? '_blank' : undefined"
         :rel="element.link?.target ? 'noopener' : undefined"
-        :style="linkStyle(isHovering)"
+        :style="linkStyle"
       >
         <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
       </a>
@@ -20,7 +20,7 @@
         :title="altLinkTitle"
         :target="element.link?.target ? '_blank' : undefined"
         :rel="element.link?.target ? 'noopener' : undefined"
-        :style="linkStyle(isHovering)"
+        :style="linkStyle"
       >
         <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
       </NuxtLink>
@@ -39,22 +39,19 @@ const { element, context } = defineProps<{
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
-const { portalConfig } = usePortalStore()
 const reducedMotion = usePrefersReducedMotion()
-const hoverFx = useHoverConfig(() => element.hover, false)
 
 const isLink = computed(() => !!element.link && element.link.type !== 'none')
 
-const linkStyle = (isHovering: boolean | null) => ({
+const linkStyle = {
   textDecoration: 'none',
-  color: 'inherit',
-  ...hoverFx.titleStyle(isHovering)
-})
+  color: 'inherit'
+}
 
 const lineGrow = computed(() =>
   isLink.value &&
-  element.line?.position === 'bottom-small' &&
-  (element.line?.growOnHover ?? portalConfig.value.defaults?.titleLineGrowOnHover) === true &&
+  (element.line?.position === 'none' || element.line?.position === 'bottom-small') &&
+  element.line?.growOnHover === true &&
   !reducedMotion.value
 )
 
