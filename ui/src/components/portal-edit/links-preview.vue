@@ -7,7 +7,7 @@
           v-bind="hoverProps"
           href="#"
           class="simple-link"
-          :style="linkStyle"
+          :style="linkStyle(isHovering)"
           @click.prevent
         >{{ t('sampleLink') }}<span
           v-if="config?.underline === 'hover-grow'"
@@ -32,18 +32,20 @@ const reducedMotion = usePrefersReducedMotion()
 
 const underlineColor = computed(() => config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : 'currentColor')
 
-const linkStyle = computed(() => {
+const linkStyle = (isHovering: boolean | null) => {
   const underline = config?.underline ?? 'always'
   const color = config?.color ?? 'primary'
   const themeColor = ['primary', 'secondary'].includes(color) ? `text-${color}` : color
+  const underlined = underline === 'always' || underline === 'always-grow' || (underline === 'hover' && !!isHovering)
   return {
     position: underline === 'hover-grow' ? 'relative' : undefined,
     color: `rgb(var(--v-theme-${themeColor}))`,
-    textDecoration: underline === 'always' ? 'underline' : 'none',
+    textDecoration: underlined ? 'underline' : 'none',
     textUnderlineOffset: '2px',
+    textDecorationThickness: underline === 'always-grow' && isHovering ? '2px' : undefined,
     textDecorationColor: config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : undefined
   } satisfies CSSProperties
-})
+}
 
 const barStyle = (isHovering: boolean | null) => {
   const style = {

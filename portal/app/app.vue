@@ -76,6 +76,8 @@ const linksCss = computed(() => {
   const decorationColor = underlineColor ? `text-decoration-color:${underlineColor};` : ''
   if (underline === 'always') {
     rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
+  } else if (underline === 'always-grow') {
+    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
     rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration-thickness:2px;}`)
   } else if (underline === 'hover') {
     rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
