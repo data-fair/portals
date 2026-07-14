@@ -209,7 +209,6 @@ export default {
               type: 'array',
               title: 'Effets',
               description: 'Appliqués quand les thématiques sont cliquables. Vide : hérite du style par défaut du portail.',
-              uniqueItems: true,
               items: {
                 type: 'string',
                 oneOf: [

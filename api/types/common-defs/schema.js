@@ -65,7 +65,6 @@ export default {
           'x-i18n-title': { fr: 'Effets' },
           description: 'Title and image effects only apply to boxes and thumbnails. "Title underline" and "Animated title underline" are mutually exclusive (animated takes precedence if both are selected). If nothing is selected, the standard darken effect is applied.',
           'x-i18n-description': { fr: "Les effets sur le titre et l'image ne s'appliquent qu'aux boîtes et vignettes. « Soulignement du titre » et « Soulignement animé du titre » sont exclusifs (l'animé prime si les deux sont cochés). Par défaut, l'effet d'assombrissement standard est appliqué." },
-          uniqueItems: true,
           layout: {
             switch: [
               { if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))", cols: { md: 8 } }
@@ -296,10 +295,13 @@ export default {
           type: 'array',
           title: 'Hover effects',
           'x-i18n-title': { fr: 'Effets au survol' },
-          description: 'If nothing is selected, "Color (based on the variant)" applies by default: border color for the "Outlined" variant, background color for the "Tonal" and "Filled" variants. The hover color customizes this tint when set.',
-          'x-i18n-description': { fr: "Sans sélection, la « Coloration (selon la variante) » s'applique par défaut : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Tonale » et « Avec fond coloré ». La couleur de survol personnalise cette teinte si elle est définie." },
-          uniqueItems: true,
-          layout: { cols: { md: 8 } },
+          description: 'The "Color" effect tints the button on hover: border color for the "Outlined" variant, background color for the "Tonal" and "Filled" variants. If nothing is selected, the standard darken effect is applied.',
+          'x-i18n-description': { fr: "L'effet « Coloration » teinte le bouton au survol : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Tonale » et « Avec fond coloré ». Sans sélection, l'effet d'assombrissement standard est appliqué." },
+          layout: {
+            switch: [
+              { if: "parent.data?.hoverEffects?.includes('color')", cols: { md: 8 } }
+            ]
+          },
           items: {
             type: 'string',
             oneOf: [
@@ -315,7 +317,7 @@ export default {
           title: 'Hover color',
           'x-i18n-title': { fr: 'Couleur au survol' },
           layout: {
-            if: "!parent.data?.hoverEffects || parent.data?.hoverEffects?.includes('color')",
+            if: "parent.data?.hoverEffects?.includes('color')",
             slots: {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }

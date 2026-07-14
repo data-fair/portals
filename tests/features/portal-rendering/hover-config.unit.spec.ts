@@ -103,10 +103,10 @@ test.describe('hover props helpers', () => {
 })
 
 test.describe('button hover resolution', () => {
-  test('defaults to the variant coloring, falling back to primary', () => {
-    assert.deepEqual(resolveButtonHover({ hoverColor: 'accent' }), { effects: ['color'], color: 'accent' })
-    assert.deepEqual(resolveButtonHover(undefined, 'secondary'), { effects: ['color'], color: 'secondary' })
-    assert.deepEqual(resolveButtonHover(undefined, undefined), { effects: ['color'], color: 'primary' })
+  test('defaults to darken, the color falling back to primary', () => {
+    assert.deepEqual(resolveButtonHover({ hoverColor: 'accent' }), { effects: ['darken'], color: 'accent' })
+    assert.deepEqual(resolveButtonHover(undefined, 'secondary'), { effects: ['darken'], color: 'secondary' })
+    assert.deepEqual(resolveButtonHover(undefined, undefined), { effects: ['darken'], color: 'primary' })
   })
 
   test('button hoverColor wins over the portal fallback', () => {

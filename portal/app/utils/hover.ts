@@ -85,7 +85,7 @@ export const hoverImageStyle = (resolved: ResolvedHoverConfig, isHovering: boole
 export const resolveButtonHover = (config?: ButtonHoverLike, fallbackColor?: string): ResolvedButtonHover => {
   const color = config?.hoverColor ?? fallbackColor
   return {
-    effects: config?.hoverEffects ?? ['color'],
+    effects: config?.hoverEffects ?? ['darken'],
     color: color ?? 'primary'
   }
 }
