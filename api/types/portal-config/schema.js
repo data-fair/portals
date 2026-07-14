@@ -308,7 +308,7 @@ export default {
           ]
         },
         color: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-main',
           title: 'Couleur des liens',
           layout: {
             slots: {
@@ -319,7 +319,7 @@ export default {
           }
         },
         underlineColor: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-main',
           title: 'Couleur du soulignement',
           description: 'Si vide, reprend la couleur du lien.',
           layout: {
