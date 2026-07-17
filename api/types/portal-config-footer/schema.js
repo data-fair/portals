@@ -21,9 +21,10 @@ export default {
         comp: 'card',
         title: 'Logo',
         children: [
-          [{ key: 'logoPrimaryType', cols: { md: 6 } }, { key: 'logoPrimary', cols: { md: 6 } }],
-          'logoPrimaryDark',
-          'logoPrimaryLink',
+          { key: 'logoPrimaryType', cols: { md: 6 } },
+          { key: 'logoPrimary', cols: { md: 6 } },
+          { key: 'logoPrimaryDark', cols: { md: 6 } },
+          { key: 'logoPrimaryLink', cols: { md: 6 } },
           { key: 'logoPosition', cols: { md: 6 } },
           { key: 'logoAlignment', cols: { md: 6 } }
         ]
