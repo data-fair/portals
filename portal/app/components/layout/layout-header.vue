@@ -42,6 +42,7 @@ const { headerConfig } = defineProps<{ headerConfig: Header }>()
 
 const { portalConfig } = usePortalStore()
 const display = useDisplay()
+const themedLogo = useThemedLogo()
 
 /**
  * Logo selection rules:
@@ -58,7 +59,7 @@ const logo = computed(() => {
   const primaryLogo = headerConfig.logoPrimaryType === 'local'
     ? headerConfig.logoPrimary || null
     : headerConfig.logoPrimaryType === 'default'
-      ? portalConfig.value.logo || null
+      ? themedLogo(portalConfig.value.logo, portalConfig.value.logoDark) || null
       : null
 
   // Centering hides the title, so treat it as "title hidden" for the mobile fallback.

@@ -77,6 +77,7 @@ const { navBarConfig } = defineProps<{
 const { portalConfig, preview } = usePortalStore()
 const display = useDisplay()
 const { t } = useI18n()
+const themedLogo = useThemedLogo()
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
@@ -88,7 +89,7 @@ const logo = computed(() => {
   } else if (navBarConfig.logoType === 'local' && navBarConfig.logo) {
     return navBarConfig.logo
   } else if (navBarConfig.logoType === 'default' && portalConfig.value.logo) {
-    return portalConfig.value.logo
+    return themedLogo(portalConfig.value.logo, portalConfig.value.logoDark)
   }
   return null
 })
