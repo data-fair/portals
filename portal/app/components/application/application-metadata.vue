@@ -76,7 +76,7 @@
       density="compact"
       class="align-center px-3 py-2"
     >
-      <v-col v-bind="metadataColProps">
+      <v-col cols="12">
         <action-btn
           :to="{
             path: `/applications/${application.slug}/full`,
