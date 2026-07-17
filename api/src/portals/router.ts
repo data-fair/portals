@@ -49,10 +49,9 @@ router.post('', async (req, res, next) => {
     menu: {
       children: []
     },
-    allowRobots: !body.config, // By default, allow robots if not a staging portal
     authentication: 'optional' as const,
     theme: fillTheme(defaultTheme, defaultTheme),
-    header: {},
+    header: { show: true, showTitle: true },
     navBar: {},
     breadcrumb: {},
     footer: {
