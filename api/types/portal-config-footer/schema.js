@@ -22,6 +22,7 @@ export default {
         title: 'Logo',
         children: [
           [{ key: 'logoPrimaryType', cols: { md: 6 } }, { key: 'logoPrimary', cols: { md: 6 } }],
+          'logoPrimaryDark',
           'logoPrimaryLink',
           { key: 'logoPosition', cols: { md: 6 } },
           { key: 'logoAlignment', cols: { md: 6 } }
@@ -110,6 +111,34 @@ export default {
           component: {
             name: 'image-upload',
             props: { width: 1280, label: 'Logo principal' }
+          }
+        },
+      },
+      properties: {
+        _id: {
+          type: 'string'
+        },
+        name: {
+          type: 'string'
+        },
+        mimeType: {
+          type: 'string'
+        },
+        mobileAlt: {
+          type: 'boolean'
+        }
+      }
+    },
+    logoPrimaryDark: {
+      type: 'object',
+      title: 'Logo principal - variante pour thème sombre',
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        if: 'parent.data?.logoPrimaryType === "local"',
+        slots: {
+          component: {
+            name: 'image-upload',
+            props: { width: 1280, label: 'Logo principal - variante pour thème sombre' }
           }
         },
       },
