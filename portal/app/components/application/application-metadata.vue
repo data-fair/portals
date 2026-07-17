@@ -15,7 +15,10 @@
       -->
 
       <!-- Base application -->
-      <v-col v-bind="metadataColProps">
+      <v-col
+        v-if="showBaseApplication"
+        v-bind="metadataColProps"
+      >
         <div class="text-body-small text-medium-emphasis"> {{ t('application') }}</div>
         {{ baseApplicationFetch.data.value?.title || application.url.split('/').slice(-3,-2).pop() }}
       </v-col>
@@ -122,11 +125,16 @@ const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 
+const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
+const showBaseApplication = computed(() => metadataConfig.value.showBaseApplication !== false)
+
 const baseApplicationFetch = useLocalFetch<{
   title: string
-}>(`/data-fair/api/v1/applications/${application.id}/base-application`, { params: { html: 'vuetify' } })
+}>(`/data-fair/api/v1/applications/${application.id}/base-application`, {
+  params: { html: 'vuetify' },
+  immediate: showBaseApplication.value
+})
 
-const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const topicsConfig = computed(() => portalConfig.value.applications.page.topics)
 const metadataColProps = computed(() => ({
   class: 'py-0',
