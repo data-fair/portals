@@ -129,7 +129,7 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 
 const { t } = useI18n()
 const route = useRoute<'/applications/[ref]'>()
-const { portalConfig } = usePortalStore()
+const { portal, portalConfig } = usePortalStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
@@ -158,6 +158,7 @@ const datasetsUrl = computed(() => {
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
 const datasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(datasetsUrl)

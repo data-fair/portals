@@ -125,7 +125,7 @@ const { reuseConfig, slug, reusesCatalogExists, editHref } = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { portalConfig, preview } = usePortalStore()
+const { portal, portalConfig, preview } = usePortalStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
@@ -152,6 +152,7 @@ const datasetsUrl = computed(() => {
     size: 100,
     html: 'vuetify',
     ids: reuseConfig?.datasets?.map(d => d.id).join(','),
+    publicationSites: preview ? undefined : 'data-fair-portals:' + portal.value._id
   })
 })
 
