@@ -311,13 +311,13 @@ export default {
     },
     logoDark: {
       type: 'object',
-      title: 'Logo - variante pour fond sombre',
+      title: 'Logo - variante pour thème sombre',
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Logo - variante pour fond sombre' }
+            props: { width: 1280, label: 'Logo - variante pour thème sombre' }
           }
         },
         cols: { md: 6 }

@@ -287,17 +287,18 @@ const { t, locale } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
+const themedLogo = useThemedLogo()
 
 const logo = computed(() => {
-  const { footer, header, logo: defaultLogo } = portalConfig.value
+  const { footer, header, logo: defaultLogo, logoDark } = portalConfig.value
 
   switch (footer.logoPrimaryType) {
-    case 'default': return defaultLogo
+    case 'default': return themedLogo(defaultLogo, logoDark)
     case 'header':
       if (header.logoPrimaryType === 'local' && header.logoPrimary) return header.logoPrimary
-      if (header.logoPrimaryType === 'default') return defaultLogo
+      if (header.logoPrimaryType === 'default') return themedLogo(defaultLogo, logoDark)
       return undefined
-    case 'local': return footer.logoPrimary
+    case 'local': return themedLogo(footer.logoPrimary, footer.logoPrimaryDark)
     default: return undefined
   }
 })

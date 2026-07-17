@@ -707,8 +707,8 @@ const createPortal = useAsyncAction(
       method: 'POST',
       body: {
         owner,
-        sourcePortalId: selectedPortal.value !== 'blank' ? selectedPortal.value : undefined, // Source page ID to duplicate (optional)
-        config: { title: portalTitle, menu: selectedPortal.value !== 'blank' ? undefined : menu } // Init menu only if not duplicating from another portal
+        sourcePortalId: selectedPortal.value,
+        config: { title: portalTitle, menu: selectedPortal.value ? undefined : menu } // Init menu only if not duplicating, a source portal brings its own
       }
     })
 
