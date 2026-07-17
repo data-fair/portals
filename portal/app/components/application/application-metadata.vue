@@ -48,16 +48,10 @@
         />
       </v-col>
 
-      <!-- Data update date -->
-      <v-col
-        v-if="dataUpdatedAt"
-        v-bind="metadataColProps"
-      >
-        {{ t('dataUpdatedAt') }} {{ dayjs(dataUpdatedAt).format('LL') }}
-      </v-col>
-
+      <!-- Update dates -->
       <v-col v-bind="metadataColProps">
-        {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('LL') }}
+        <div v-if="dataUpdatedAt">{{ t('dataUpdatedAt') }} {{ dayjs(dataUpdatedAt).format('LL') }}</div>
+        <div>{{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('LL') }}</div>
       </v-col>
 
       <!-- Share (location not right)-->
