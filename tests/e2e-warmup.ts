@@ -34,7 +34,8 @@ setup('Warmup heavy dev routes', async ({ page, context }) => {
     waitUntil: 'domcontentloaded',
     timeout: 60_000
   })
-  await expect(page.getByText('Warmup')).toBeVisible({ timeout: 60_000 })
+  // exact: the portal title "Warmup Portal" is rendered in the header too
+  await expect(page.getByText('Warmup', { exact: true })).toBeVisible({ timeout: 60_000 })
   stamp('portal home rendered')
 
   // 2) Warm up the manager SPA + auth flow by logging in with redirect to the
