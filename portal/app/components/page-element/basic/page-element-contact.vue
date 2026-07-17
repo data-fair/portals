@@ -282,7 +282,9 @@ if (element.additionalFields?.some(field => field.type === 'application') && !pr
 
 let tokenFetch: ReturnType<typeof useLocalFetch> | undefined
 if (!preview) {
-  tokenFetch = useLocalFetch('/simple-directory/api/auth/anonymous-action', { watch: false })
+  // server: false, the token must be fetched by the browser so that the notBefore anti-spam delay
+  // applies to the actual visitor and so that SSR traffic does not trip the per-IP auth rate limit
+  tokenFetch = useLocalFetch('/simple-directory/api/auth/anonymous-action', { watch: false, server: false })
 }
 
 const sendMessage = useAsyncAction(async () => {
