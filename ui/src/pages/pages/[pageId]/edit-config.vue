@@ -55,6 +55,7 @@
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
 
+import equal from 'fast-deep-equal'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
@@ -68,7 +69,12 @@ const { pageFetch, patchPage } = usePageStore()
 
 const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {
-  if (pageFetch.data.value) editConfig.value = pageFetch.data.value.draftConfig
+  if (!pageFetch.data.value) return
+  // a refresh after validating/canceling the draft can return a draftConfig identical
+  // to the one being edited, do not reassign in that case as it would re-hydrate the
+  // whole form and re-mount every element preview
+  if (equal(toRaw(editConfig.value), pageFetch.data.value.draftConfig)) return
+  editConfig.value = pageFetch.data.value.draftConfig
 }, { immediate: true })
 provide('page-config', editConfig)
 
