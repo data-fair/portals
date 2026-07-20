@@ -210,6 +210,12 @@ watch(portalFetch.data, () => {
 watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
 })
+// The API only renders markdown on write, so the preview would lag behind the input without this
+watch(() => editConfig.value?.footer?.text, (text) => {
+  if (editConfig.value?.footer) {
+    editConfig.value.footer.text_html = text ? renderMarkdown(text) : undefined
+  }
+})
 // When switching from assisted to manual mode, expand assisted colors into the full palette
 // When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
 watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {

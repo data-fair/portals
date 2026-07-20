@@ -522,4 +522,7 @@ const renderPortalConfigMarkdown = (portalConfig: PortalConfig) => {
   if (portalConfig.contactInformations?.infos) {
     portalConfig.contactInformations.infos_html = renderMarkdown(portalConfig.contactInformations.infos)
   }
+  if (portalConfig.footer) {
+    portalConfig.footer.text_html = portalConfig.footer.text ? renderMarkdown(portalConfig.footer.text) : undefined
+  }
 }

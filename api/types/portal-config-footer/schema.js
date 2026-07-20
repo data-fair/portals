@@ -31,6 +31,7 @@ export default {
       },
       { comp: 'card', title: 'Image de fond', children: ['backgroundImage', 'backgroundImageLocation'] },
       { comp: 'card', title: 'Slogan', children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
+      { comp: 'card', title: 'Texte libre', children: ['text', 'textPosition'] },
       { name: 'footer-preview' },
       { comp: 'card', title: 'Liens', children: ['linksMode', 'links'] },
       {
@@ -229,6 +230,21 @@ export default {
       ],
       layout: { cols: { md: 4 } }
     },
+    text: {
+      type: 'string',
+      title: 'Texte libre',
+      layout: 'markdown'
+    },
+    textPosition: {
+      type: 'string',
+      title: 'Position du texte libre',
+      default: 'main',
+      oneOf: [
+        { const: 'main', title: 'Colonne principale' },
+        { const: 'left', title: 'Colonne de gauche' }
+      ]
+    },
+    text_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' },
     backgroundImage: {
       type: 'object',
       title: 'Image de fond du pied de page',
