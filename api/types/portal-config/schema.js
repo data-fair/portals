@@ -95,6 +95,11 @@ export default {
               'navLinksConfig',
               { name: 'nav-link-preview' }
             ]
+          },
+          {
+            title: "Documentation d'API",
+            comp: 'card',
+            children: ['catalogApiDocFullLayout']
           }
         ]
       },
@@ -225,6 +230,12 @@ export default {
       type: 'boolean',
       title: 'Rendre le portail visible sur les moteurs de recherche',
       description: "Permettre à Google et aux autres moteurs de recherche d'indexer ce portail pour qu'il soit visible dans les résultats de recherche.",
+      layout: 'switch'
+    },
+    catalogApiDocFullLayout: {
+      type: 'boolean',
+      title: "Conserver l'entête et le pied de page sur la documentation d'API du catalogue",
+      description: "Affiche la page de documentation de l'API du catalogue avec l'en-tête, la barre de navigation et le pied de page du portail plutôt qu'en mise en page minimale, pour un accès plus accessible (liens d'évitement, navigation, pied de page).",
       layout: 'switch'
     },
     authentication: {
