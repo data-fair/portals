@@ -6,14 +6,12 @@
       :context="context"
     >
       <template #page-elements="{ elements, onUpdate, addItemMessage }">
-        <v-defaults-provider :defaults="vjsfDefaults">
-          <page-edit-elements
-            :model-value="elements"
-            :add-item-message="addItemMessage"
-            :pages="pages"
-            @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
-          />
-        </v-defaults-provider>
+        <page-edit-elements
+          :model-value="elements"
+          :add-item-message="addItemMessage"
+          :pages="pages"
+          @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
+        />
       </template>
     </page-element>
   </v-defaults-provider>
@@ -36,10 +34,7 @@ const renderedElement = computed(() => {
 
 const previewDefaults = {
   // counteract the density defined by vjsf in edit mode
-  global: { density: 'default' }
-}
-
-const vjsfDefaults = {
+  global: { density: 'default' },
   'VjsfList-VCard': {
     border: false
   }

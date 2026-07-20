@@ -37,6 +37,9 @@
 <script setup lang="ts">
 import type { PageElement, ResponsiveGridElement } from '#api/types/page-elements/index.ts'
 
+// inheritAttrs:false silences the extraneous-attrs warning: the preview root is a
+// fragment (slot) and the `context` attr passed by page-element cannot be inherited
+defineOptions({ inheritAttrs: false })
 const { element } = defineProps<{ element: ResponsiveGridElement }>()
 const { preview } = usePortalStore()
 
