@@ -1,4 +1,4 @@
-import pageElementsSchema from '../page-elements/schema.js'
+import pageElementsSchema from '../page-elements/schema.ts'
 import pageConfigSchema from '../page-config/schema.js'
 
 // Re-use the element definition from page-elements but remove the page-preview-element summary slot
