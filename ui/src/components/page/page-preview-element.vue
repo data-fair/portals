@@ -35,8 +35,6 @@ const renderedElement = computed(() => {
 const previewDefaults = {
   // counteract the density defined by vjsf in edit mode
   global: { density: 'default' },
-  // applies to the nested page-edit-elements editors of container elements,
-  // merged here to avoid a second v-defaults-provider per preview
   'VjsfList-VCard': {
     border: false
   }

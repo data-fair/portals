@@ -70,9 +70,6 @@ const { pageFetch, patchPage } = usePageStore()
 const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {
   if (!pageFetch.data.value) return
-  // a refresh after validating/canceling the draft can return a draftConfig identical
-  // to the one being edited, do not reassign in that case as it would re-hydrate the
-  // whole form and re-mount every element preview
   if (equal(toRaw(editConfig.value), pageFetch.data.value.draftConfig)) return
   editConfig.value = pageFetch.data.value.draftConfig
 }, { immediate: true })

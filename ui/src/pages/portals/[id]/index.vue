@@ -213,8 +213,6 @@ watch(editConfig, (newConfig) => {
 // When switching from assisted to manual mode, expand assisted colors into the full palette
 // When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
 watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
-  // reassign editConfig instead of mutating it in place, the vjsf form only
-  // observes changes of identity of its model
   if (oldVal === true && newVal === false && editConfig.value?.theme) {
     const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
     editConfig.value = {
