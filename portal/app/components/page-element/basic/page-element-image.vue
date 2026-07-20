@@ -81,6 +81,7 @@
     <img
       :alt="!element.isPresentation ? element.title : ''"
       :src="zoomedSrc"
+      class="zoom-overlay-img"
     >
   </v-overlay>
 </template>
@@ -162,5 +163,14 @@ const altLinkTitle = computed(() => {
 .banner-fluid {
   width: 100vw;
   margin-left: calc(50% - 50vw);
+}
+
+/* The zoomed image renders at its natural size: without these constraints,
+   an image wider than the window overflows the flex-centered overlay and
+   gets clipped on both sides. */
+.zoom-overlay-img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
 }
 </style>
