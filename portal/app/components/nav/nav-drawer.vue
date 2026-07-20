@@ -7,6 +7,7 @@
     temporary
   >
     <v-list
+      role="presentation"
       color="primary"
       nav
     >
