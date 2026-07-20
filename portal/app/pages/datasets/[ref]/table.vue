@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ `${datasetFetch.data.value?.title || t('dataset')} - ${t('table')}` }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('table')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/table`"
@@ -84,3 +88,4 @@ onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
     dataset: Jeu de données
     table: Tableau
 </i18n>
+

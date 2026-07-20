@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ `${datasetFetch.data.value?.title || t('dataset')} - ${t('map')}` }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('map')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/map`"
@@ -82,3 +86,4 @@ onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
     dataset: Jeu de données
     map: Carte
 </i18n>
+

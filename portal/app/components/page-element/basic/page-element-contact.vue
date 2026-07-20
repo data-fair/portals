@@ -18,6 +18,8 @@
               v-model="message.from"
               :label="t('email')"
               :rules="[rules.required(), rules.email()]"
+              type="email"
+              autocomplete="email"
             />
 
             <!-- Additional fields -->

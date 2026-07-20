@@ -9,6 +9,7 @@
       v-model="search"
       :append-inner-icon="mdiMagnify"
       :label="t('search')"
+      :aria-label="t(`searchByType.${catalogType}`)"
       :density="config.filters?.density ?? portalConfig.defaults?.density"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
@@ -425,6 +426,12 @@ const sortItems = computed(() => {
       noOwners: No owners available
       noChoices: No choices available # When a label is overridden
     search: Search
+    searchByType:
+      datasets: Search for a dataset
+      applications: Search for a visualization
+      reuses: Search for a reuse
+      events: Search for an event
+      news: Search for a news item
     sort:
       createdAt: Creation date
       modified: Update date
@@ -450,6 +457,12 @@ const sortItems = computed(() => {
       noOwners: Aucun propriétaire disponible
       noChoices: Aucun choix disponible # When owner label is overridden
     search: Rechercher
+    searchByType:
+      datasets: Rechercher un jeu de données
+      applications: Rechercher une visualisation
+      reuses: Rechercher une réutilisation
+      events: Rechercher un événement
+      news: Rechercher une actualité
     sort:
       createdAt: Date de création
       modified: Date de mise à jour

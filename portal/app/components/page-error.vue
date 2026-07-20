@@ -28,9 +28,12 @@
         />
         <error-server v-else style="max-height: 300px" />
       </template>
-      <div class="text-headline-small my-4">
+      <component
+        :is="headingTag"
+        class="text-headline-small my-4"
+      >
         {{ title }}
-      </div>
+      </component>
       <nav-link
         :link="{
           ...(link ? link : { type: 'standard', subtype: 'home' }),
@@ -66,6 +69,7 @@ const defaultTitles: Record<number, string> = {
 }
 
 const title = computed(() => props.title || defaultTitles[props.statusCode] || t('error'))
+const headingTag = computed(() => (portalConfig.value.header?.show && portalConfig.value.header?.showTitle) ? 'h2' : 'h1')
 
 const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
   const image = portalConfig.value.errorImages?.[type]
