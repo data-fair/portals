@@ -33,16 +33,16 @@ test.describe('page edit WebMCP agent integration', () => {
     // Verify agent action button exists (hidden until a chat drawer responds via BroadcastChannel)
     await expect(page.locator('[data-action-id="configure-page"]')).toBeAttached()
 
-    // Verify WebMCP tools are registered via navigator.modelContext
-    const hasTools = await page.evaluate(() => {
+    // Verify WebMCP tools are registered via navigator.modelContext.
+    // Registration is async (dynamic compiled-layout import + registerTools),
+    // so poll until the tools appear rather than checking synchronously.
+    await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       if (!mc || typeof mc.listTools !== 'function') return false
-      const tools = mc.listTools()
-      const toolNames = tools.map((t: any) => t.name)
+      const toolNames = mc.listTools().map((t: any) => t.name)
       return toolNames.includes('pageConfig_getData') &&
              toolNames.includes('pageConfig_setFieldValue')
-    })
-    expect(hasTools).toBe(true)
+    }, { timeout: 30_000 })
 
     // Test state sharing: use WebMCP callTool to change the title
     // The title field is at /$comp-1/title due to the layout section wrapper
