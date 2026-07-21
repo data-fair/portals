@@ -59,20 +59,22 @@ export const hoverRootStyle = (resolved: ResolvedHoverConfig, isHovering: boolea
   return Object.keys(style).length ? style : undefined
 }
 
-export const hoverUnderlineBarStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> => {
-  const bar: Record<string, string> = {
-    display: 'block',
-    height: '3px',
-    width: '45px',
-    backgroundColor: themeColor(resolved.color)
-  }
-  if (resolved.effects.includes('titleUnderlineAnimated')) {
-    bar.transform = isHovering ? 'scaleX(1)' : 'scaleX(0)'
-    bar.transformOrigin = 'left'
-    bar.transition = 'transform .25s ease-out'
-  }
-  return bar
-}
+// Plain title underline: a standard text underline that only shows on hover.
+export const hoverTitleStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> | undefined =>
+  isHovering && resolved.effects.includes('titleUnderline') && !resolved.effects.includes('titleUnderlineAnimated')
+    ? { textDecoration: 'underline' }
+    : undefined
+
+// Animated title underline: a small bar growing from the left on hover.
+export const hoverUnderlineBarStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> => ({
+  display: 'block',
+  height: '3px',
+  width: '45px',
+  backgroundColor: themeColor(resolved.color),
+  transform: isHovering ? 'scaleX(1)' : 'scaleX(0)',
+  transformOrigin: 'left',
+  transition: 'transform .25s ease-out'
+})
 
 export const hoverImageStyle = (resolved: ResolvedHoverConfig, isHovering: boolean): Record<string, string> | undefined =>
   resolved.effects.includes('imageZoom')

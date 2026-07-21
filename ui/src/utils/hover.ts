@@ -8,6 +8,7 @@ export const resolveHoverConfig = hover.resolveHoverConfig
 export const hoverElevation = hover.hoverElevation
 export const hoverBackground = hover.hoverBackground
 export const hoverRootStyle = hover.hoverRootStyle
+export const hoverTitleStyle = hover.hoverTitleStyle
 export const hoverUnderlineBarStyle = hover.hoverUnderlineBarStyle
 export const hoverImageStyle = hover.hoverImageStyle
 export const resolveButtonHover = hover.resolveButtonHover

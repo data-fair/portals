@@ -61,23 +61,30 @@
           </div>
 
           <!--
-            text-two-lines => truncate title to 2 lines
-            white-space: unset; => remove default nowrap from v-card-title
+            text-two-lines => clamp the title to 2 lines
+            wrapper reserves 2 title lines (text-title-large sets the line box) so the
+            hover underline hugs the text even when the title fits on a single line
           -->
-          <v-card-title
-            :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-            :style="cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : undefined"
-            :title="application.title"
+          <div
+            class="text-title-large"
+            :class="{ 'my-2': cardConfig.titleLinesCount === 2 }"
+            :style="cardConfig.titleLinesCount === 2 ? { minHeight: '2lh' } : undefined"
           >
-            {{ application.title }}
-          </v-card-title>
-          <span
-            v-if="hoverFx.underlineBar.value"
-            class="mx-4"
-            :style="hoverFx.underlineBarStyle(isHovering)"
-            aria-hidden="true"
-            data-pt-hover-underline
-          />
+            <v-card-title
+              :class="['font-weight-bold', { 'text-two-lines py-0': cardConfig.titleLinesCount === 2 }]"
+              :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : undefined, hoverFx.titleStyle(isHovering)]"
+              :title="application.title"
+            >
+              {{ application.title }}
+            </v-card-title>
+            <span
+              v-if="hoverFx.underlineBar.value"
+              class="mx-4"
+              :style="hoverFx.underlineBarStyle(isHovering)"
+              aria-hidden="true"
+              data-pt-hover-underline
+            />
+          </div>
 
           <!-- Thumbnail (Center Location) -->
           <div

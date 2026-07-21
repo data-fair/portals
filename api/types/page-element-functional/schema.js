@@ -220,7 +220,7 @@ export default {
               }
             },
             color: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
               title: 'Couleur de survol',
               layout: {
                 if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",

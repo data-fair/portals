@@ -2,7 +2,7 @@ import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import {
   resolveHoverConfig, hoverElevation, hoverBackground, hoverRootStyle,
-  hoverUnderlineBarStyle, hoverImageStyle,
+  hoverTitleStyle, hoverUnderlineBarStyle, hoverImageStyle,
   resolveButtonHover, hoverButtonStyle, stripMotion
 } from '../../../portal/app/utils/hover.ts'
 
@@ -76,17 +76,22 @@ test.describe('hover props helpers', () => {
     assert.equal(style?.color, 'rgb(var(--v-theme-on-accent))')
   })
 
-  test('plain underline bar stays visible without a transform', () => {
+  test('plain title underline is a text underline shown only on hover', () => {
     const resolved = resolveHoverConfig({ effects: ['titleUnderline'], color: 'accent' })
-    assert.equal(hoverUnderlineBarStyle(resolved, false).transform, undefined)
-    assert.equal(hoverUnderlineBarStyle(resolved, true).transform, undefined)
-    assert.equal(hoverUnderlineBarStyle(resolved, true).backgroundColor, 'rgb(var(--v-theme-accent))')
+    assert.equal(hoverTitleStyle(resolved, false), undefined)
+    assert.deepEqual(hoverTitleStyle(resolved, true), { textDecoration: 'underline' })
+  })
+
+  test('animated underline takes precedence over the plain title underline', () => {
+    const resolved = resolveHoverConfig({ effects: ['titleUnderline', 'titleUnderlineAnimated'] })
+    assert.equal(hoverTitleStyle(resolved, true), undefined)
   })
 
   test('animated underline bar grows from scaleX(0) to scaleX(1)', () => {
     const resolved = resolveHoverConfig({ effects: ['titleUnderlineAnimated'], color: 'accent' })
     assert.equal(hoverUnderlineBarStyle(resolved, false).transform, 'scaleX(0)')
     assert.equal(hoverUnderlineBarStyle(resolved, true).transform, 'scaleX(1)')
+    assert.equal(hoverUnderlineBarStyle(resolved, true).backgroundColor, 'rgb(var(--v-theme-accent))')
     assert.match(hoverUnderlineBarStyle(resolved, true).transition ?? '', /transform/)
   })
 

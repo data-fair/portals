@@ -248,7 +248,7 @@ export default {
           default: true
         },
         hover: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfigFull',
           title: 'Effets au survol',
           layout: { comp: 'card' }
         },

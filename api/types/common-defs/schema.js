@@ -54,38 +54,65 @@ export default {
       ]
     },
 
+    // Shared effects list for the hover configs (see hoverConfig / hoverConfigFull).
+    hoverEffectsList: {
+      type: 'array',
+      title: 'Effects',
+      'x-i18n-title': { fr: 'Effets' },
+      description: 'Title and image effects only apply to boxes and thumbnails. "Title underline" and "Animated title underline" are mutually exclusive (animated takes precedence if both are selected). If nothing is selected, the standard darken effect is applied.',
+      'x-i18n-description': { fr: "Les effets sur le titre et l'image ne s'appliquent qu'aux boîtes et vignettes. « Soulignement du titre » et « Soulignement animé du titre » sont exclusifs (l'animé prime si les deux sont cochés). Par défaut, l'effet d'assombrissement standard est appliqué." },
+      layout: {
+        switch: [
+          { if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))", cols: { md: 8 } }
+        ]
+      },
+      items: {
+        type: 'string',
+        oneOf: [
+          { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
+          { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
+          { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
+          { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Couleur de bordure' } },
+          { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } },
+          { const: 'titleUnderline', title: 'Title underline', 'x-i18n-title': { fr: 'Soulignement du titre' } },
+          { const: 'titleUnderlineAnimated', title: 'Animated title underline', 'x-i18n-title': { fr: 'Soulignement animé du titre' } },
+          { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom sur l'image" } }
+        ]
+      }
+    },
+
+    // Hover config with the standard color palette (thumbnails, portal default).
     hoverConfig: {
       type: 'object',
       title: 'Hover effects',
       'x-i18n-title': { fr: 'Effets au survol' },
       properties: {
-        effects: {
-          type: 'array',
-          title: 'Effects',
-          'x-i18n-title': { fr: 'Effets' },
-          description: 'Title and image effects only apply to boxes and thumbnails. "Title underline" and "Animated title underline" are mutually exclusive (animated takes precedence if both are selected). If nothing is selected, the standard darken effect is applied.',
-          'x-i18n-description': { fr: "Les effets sur le titre et l'image ne s'appliquent qu'aux boîtes et vignettes. « Soulignement du titre » et « Soulignement animé du titre » sont exclusifs (l'animé prime si les deux sont cochés). Par défaut, l'effet d'assombrissement standard est appliqué." },
-          layout: {
-            switch: [
-              { if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))", cols: { md: 8 } }
-            ]
-          },
-          items: {
-            type: 'string',
-            oneOf: [
-              { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
-              { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
-              { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
-              { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Couleur de bordure' } },
-              { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } },
-              { const: 'titleUnderline', title: 'Title underline', 'x-i18n-title': { fr: 'Soulignement du titre' } },
-              { const: 'titleUnderlineAnimated', title: 'Animated title underline', 'x-i18n-title': { fr: 'Soulignement animé du titre' } },
-              { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom sur l'image" } }
-            ]
-          }
-        },
+        effects: { $ref: '#/$defs/hoverEffectsList' },
         color: {
           $ref: '#/$defs/color',
+          title: 'Hover color',
+          'x-i18n-title': { fr: 'Couleur de survol' },
+          layout: {
+            if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
+        }
+      }
+    },
+
+    // Hover config with the extended color palette, matching the box background colors.
+    hoverConfigFull: {
+      type: 'object',
+      title: 'Hover effects',
+      'x-i18n-title': { fr: 'Effets au survol' },
+      properties: {
+        effects: { $ref: '#/$defs/hoverEffectsList' },
+        color: {
+          $ref: '#/$defs/color-full',
           title: 'Hover color',
           'x-i18n-title': { fr: 'Couleur de survol' },
           layout: {

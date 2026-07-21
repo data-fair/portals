@@ -118,7 +118,6 @@ useHead({ style: () => linksCss.value ? [{ key: 'portal-links-css', textContent:
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  min-height: 2lh;
 }
 
 /* Legacy layout: restore Vuetify 3-like container max-widths */
