@@ -1,5 +1,5 @@
 // Definitions of link item types
-const standardPage = {
+export const standardPage = {
   title: 'Page standard (Accueil, Contact,...)',
   required: ['type', 'subtype'],
   properties: {
@@ -41,7 +41,7 @@ const standardPage = {
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
-const genericPage = {
+export const genericPage = {
   title: 'Page libre',
   required: ['type', 'pageRef'],
   properties: {
@@ -84,7 +84,7 @@ const genericPage = {
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
-const eventPage = {
+export const eventPage = {
   title: "Page d'événements",
   required: ['type', 'pageRef'],
   properties: {
@@ -114,7 +114,7 @@ const eventPage = {
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
-const newsPage = {
+export const newsPage = {
   title: "Page d'actualités",
   required: ['type', 'pageRef'],
   properties: {
@@ -144,7 +144,7 @@ const newsPage = {
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
-const externalLink = {
+export const externalLink = {
   title: 'Lien',
   required: ['type', 'title', 'href'],
   properties: {
@@ -371,14 +371,7 @@ export default {
           properties: { type: { const: 'none' } }
         }
       ]
-    },
-
-    // Still referenced as $refs by the menuItem oneOf of portal-config
-    standardPage,
-    genericPage,
-    eventPage,
-    newsPage,
-    externalLink
+    }
   }
 }
 

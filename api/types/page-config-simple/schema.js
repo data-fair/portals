@@ -17,7 +17,8 @@ export default {
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true,
-    webmcp: true
+    webmcp: true,
+    ajvOptions: { discriminator: true }
   },
   'x-vjsf-locales': ['en', 'fr'],
   title: 'PageConfigSimple',

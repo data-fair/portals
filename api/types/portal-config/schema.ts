@@ -1,4 +1,6 @@
-import { linkItemTitle } from '../common-links/schema.js'
+import { linkItemTitle, standardPage, genericPage, eventPage, newsPage, externalLink } from '../common-links/schema.js'
+
+const menuBranch = (def: any) => ({ ...structuredClone(def), additionalProperties: false })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
@@ -6,7 +8,8 @@ export default {
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true,
-    webmcp: true
+    webmcp: true,
+    ajvOptions: { discriminator: true }
   },
   'x-vjsf-locales': ['en', 'fr'],
   'x-jstt': { additionalProperties: false },
@@ -563,19 +566,19 @@ export default {
   $defs: {
     menuItem: {
       type: 'object',
-      unevaluatedProperties: false,
       oneOfLayout: { emptyData: true },
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
+        menuBranch(standardPage),
+        menuBranch(genericPage),
+        menuBranch(eventPage),
+        menuBranch(newsPage),
         {
           title: 'Sous-menu',
           required: ['type', 'title', 'children'],
+          additionalProperties: false,
           properties: {
             type: { const: 'submenu' },
             title: {
@@ -594,7 +597,7 @@ export default {
             }
           }
         },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
+        menuBranch(externalLink)
       ]
     }
   }

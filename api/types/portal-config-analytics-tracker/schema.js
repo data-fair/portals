@@ -2,7 +2,6 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-analytics-tracker',
   'x-exports': [],
   type: 'object',
-  unevaluatedProperties: false,
   oneOfLayout: { emptyData: true },
   discriminator: { propertyName: 'type' },
   default: {
@@ -11,6 +10,8 @@ export default {
   oneOf: [
     {
       title: 'Aucun suivi',
+      required: ['type'],
+      additionalProperties: false,
       properties: {
         type: {
           const: 'none'
@@ -23,6 +24,7 @@ export default {
     {
       title: 'Google Analytics v4',
       required: ['type', 'params'],
+      additionalProperties: false,
       properties: {
         type: {
           const: 'google-analytics-v4',
@@ -51,6 +53,7 @@ export default {
     {
       title: 'Matomo',
       required: ['type', 'params'],
+      additionalProperties: false,
       properties: {
         type: {
           const: 'matomo',
@@ -81,6 +84,7 @@ export default {
     {
       title: 'Piano',
       required: ['type', 'params'],
+      additionalProperties: false,
       properties: {
         type: {
           const: 'piano',

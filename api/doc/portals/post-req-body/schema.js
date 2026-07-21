@@ -1,6 +1,6 @@
 import jsonSchema from '@data-fair/lib-utils/json-schema.js'
 import portalSchema from '#types/portal/schema.js'
-import portalConfigSchema from '#types/portal-config/schema.js'
+import portalConfigSchema from '#types/portal-config/schema.ts'
 
 const configSchema = jsonSchema(portalConfigSchema)
   .pickProperties(['title', 'menu'])
