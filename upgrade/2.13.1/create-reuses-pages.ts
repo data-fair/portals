@@ -1,5 +1,5 @@
 import type { UpgradeScript } from '@data-fair/lib-node/upgrade-scripts.js'
-import type { Page, PageConfig } from '../../api/types/page/index.ts'
+import type { Page, PageConfig, ReusesCatalogElement } from '../../api/types/page/index.ts'
 import type { Portal } from '../../api/types/portal/index.ts'
 import { randomUUID } from 'node:crypto'
 
@@ -58,7 +58,8 @@ export default {
                 items: ['search', 'sort']
               },
               pagination: { position: 'none' }
-            }
+              // reusesCountPosition is the schema name of the time, later migrated to countPosition by 2.20.0
+            } as ReusesCatalogElement
           ]
         }
       }

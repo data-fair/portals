@@ -75,7 +75,8 @@ export default {
               },
               advancedFilters,
               pagination: { position: 'none' }
-            }
+              // datasetsCountPosition is the schema name of the time, later migrated to countPosition by 2.20.0
+            } as DatasetsCatalogElement
           ]
         }
       }

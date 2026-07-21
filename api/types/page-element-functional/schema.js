@@ -232,6 +232,7 @@ export default {
         type: {
           const: 'metrics'
         },
+        uuid: { type: 'string', layout: 'none' },
         metrics: {
           type: 'array',
           title: 'Chiffres à afficher',

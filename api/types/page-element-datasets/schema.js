@@ -14,6 +14,7 @@ export default {
       required: ['type'],
       properties: {
         type: { const: 'datasets-catalog' },
+        uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
           title: 'Tri par défaut',
