@@ -88,6 +88,15 @@ export default {
             cols: { md: 6 }
           },
           default: true
+        },
+        showBaseApplication: {
+          type: 'boolean',
+          title: "Afficher l'application de base",
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          },
+          default: true
         }
       }
     },

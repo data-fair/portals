@@ -466,6 +466,7 @@ const relatedDatasetsUrl = computed(() => {
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
+    publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
 const relatedDatasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(relatedDatasetsUrl)

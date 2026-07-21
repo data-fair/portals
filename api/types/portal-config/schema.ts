@@ -1,4 +1,6 @@
-import { linkItemTitle } from '../common-links/schema.js'
+import { linkItemTitle, standardPage, genericPage, eventPage, newsPage, externalLink } from '../common-links/schema.js'
+
+const menuBranch = (def: any) => ({ ...structuredClone(def), additionalProperties: false })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config',
@@ -6,7 +8,8 @@ export default {
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true,
-    webmcp: true
+    webmcp: true,
+    ajvOptions: { discriminator: true }
   },
   'x-vjsf-locales': ['en', 'fr'],
   'x-jstt': { additionalProperties: false },
@@ -104,6 +107,11 @@ export default {
               'linksConfig',
               { name: 'links-preview' }
             ]
+          },
+          {
+            title: "Documentation d'API",
+            comp: 'card',
+            children: ['catalogApiDocFullLayout']
           }
         ]
       },
@@ -236,6 +244,12 @@ export default {
       description: "Permettre à Google et aux autres moteurs de recherche d'indexer ce portail pour qu'il soit visible dans les résultats de recherche.",
       layout: 'switch'
     },
+    catalogApiDocFullLayout: {
+      type: 'boolean',
+      title: "Conserver l'entête et le pied de page sur la documentation d'API du catalogue",
+      description: "Affiche la page de documentation de l'API du catalogue avec l'en-tête, la barre de navigation et le pied de page du portail plutôt qu'en mise en page minimale, pour un accès plus accessible (liens d'évitement, navigation, pied de page).",
+      layout: 'switch'
+    },
     authentication: {
       type: 'string',
       oneOf: [
@@ -363,13 +377,13 @@ export default {
     },
     logoDark: {
       type: 'object',
-      title: 'Logo - variante pour fond sombre',
+      title: 'Logo - variante pour thème sombre',
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Logo - variante pour fond sombre' }
+            props: { width: 1280, label: 'Logo - variante pour thème sombre' }
           }
         },
         cols: { md: 6 }
@@ -506,19 +520,19 @@ export default {
   $defs: {
     menuItem: {
       type: 'object',
-      unevaluatedProperties: false,
       oneOfLayout: { emptyData: true },
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
       oneOf: [
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/standardPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/genericPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/eventPage' },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/newsPage' },
+        menuBranch(standardPage),
+        menuBranch(genericPage),
+        menuBranch(eventPage),
+        menuBranch(newsPage),
         {
           title: 'Sous-menu',
           required: ['type', 'title', 'children'],
+          additionalProperties: false,
           properties: {
             type: { const: 'submenu' },
             title: {
@@ -537,7 +551,7 @@ export default {
             }
           }
         },
-        { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/externalLink' }
+        menuBranch(externalLink)
       ]
     }
   }

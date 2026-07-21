@@ -1,4 +1,4 @@
-import pageElementsSchema from '../page-elements/schema.js'
+import pageElementsSchema from '../page-elements/schema.ts'
 import pageConfigSchema from '../page-config/schema.js'
 
 // Re-use the element definition from page-elements but remove the page-preview-element summary slot
@@ -17,7 +17,8 @@ export default {
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true,
-    webmcp: true
+    webmcp: true,
+    ajvOptions: { discriminator: true }
   },
   'x-vjsf-locales': ['en', 'fr'],
   title: 'PageConfigSimple',

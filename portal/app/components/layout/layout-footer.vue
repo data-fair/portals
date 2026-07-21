@@ -48,6 +48,14 @@
             {{ portalConfig.footer.slogan }}
           </div>
 
+          <!-- Free text in left column -->
+          <div
+            v-if="portalConfig.footer.text_html && portalConfig.footer.textPosition === 'left'"
+            class="mb-4"
+            style="overflow-wrap: break-word;"
+            v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.footer.text_html"
+          />
+
           <!-- Social links in left column -->
           <div
             v-if="showSocialLinks && portalConfig.footer.socialPosition === 'left'"
@@ -87,6 +95,14 @@
           >
             {{ portalConfig.footer.slogan }}
           </div>
+
+          <!-- Free text in main column -->
+          <div
+            v-if="portalConfig.footer.text_html && portalConfig.footer.textPosition === 'main'"
+            class="mb-4"
+            style="overflow-wrap: break-word;"
+            v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.footer.text_html"
+          />
 
           <!-- Social links in main column -->
           <div
@@ -308,17 +324,18 @@ const { t, locale } = useI18n()
 const { portal, portalConfig } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
+const themedLogo = useThemedLogo()
 
 const logo = computed(() => {
-  const { footer, header, logo: defaultLogo } = portalConfig.value
+  const { footer, header, logo: defaultLogo, logoDark } = portalConfig.value
 
   switch (footer.logoPrimaryType) {
-    case 'default': return defaultLogo
+    case 'default': return themedLogo(defaultLogo, logoDark)
     case 'header':
       if (header.logoPrimaryType === 'local' && header.logoPrimary) return header.logoPrimary
-      if (header.logoPrimaryType === 'default') return defaultLogo
+      if (header.logoPrimaryType === 'default') return themedLogo(defaultLogo, logoDark)
       return undefined
-    case 'local': return footer.logoPrimary
+    case 'local': return themedLogo(footer.logoPrimary, footer.logoPrimaryDark)
     default: return undefined
   }
 })
@@ -335,6 +352,7 @@ const hasLeftColumn = computed(() => {
   const footer = portalConfig.value.footer
   return (logo.value && footer.logoPosition === 'left') ||
     (footer.slogan && footer.sloganPosition === 'left') ||
+    (footer.text && footer.textPosition === 'left') ||
     (showSocialLinks.value && footer.socialPosition === 'left')
 })
 

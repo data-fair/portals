@@ -456,6 +456,7 @@ export const duplicatePortalConfig = async (
   rewrite(duplicatedConfig.errorImages?.forbidden)
   rewrite(duplicatedConfig.errorImages?.fallback)
   rewrite(duplicatedConfig.footer.logoPrimary)
+  rewrite(duplicatedConfig.footer.logoPrimaryDark)
   rewrite(duplicatedConfig.footer.backgroundImage)
   rewrite(duplicatedConfig.header.logoPrimary)
   rewrite(duplicatedConfig.header.logoPrimaryMobile)
@@ -488,6 +489,7 @@ const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
     portalConfig.errorImages?.forbidden,
     portalConfig.errorImages?.fallback,
     portalConfig.footer.logoPrimary,
+    portalConfig.footer.logoPrimaryDark,
     portalConfig.footer.backgroundImage,
     portalConfig.header.logoPrimary,
     portalConfig.header.logoPrimaryMobile,
@@ -519,5 +521,8 @@ const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
 const renderPortalConfigMarkdown = (portalConfig: PortalConfig) => {
   if (portalConfig.contactInformations?.infos) {
     portalConfig.contactInformations.infos_html = renderMarkdown(portalConfig.contactInformations.infos)
+  }
+  if (portalConfig.footer) {
+    portalConfig.footer.text_html = portalConfig.footer.text ? renderMarkdown(portalConfig.footer.text) : undefined
   }
 }

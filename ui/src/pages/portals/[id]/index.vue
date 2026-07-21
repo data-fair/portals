@@ -216,21 +216,39 @@ watch(portalFetch.data, () => {
 watch(editConfig, (newConfig) => {
   if (newConfig) portalConfig.value = newConfig
 })
+// The API only renders markdown on write, so the preview would lag behind the input without this
+watch(() => editConfig.value?.footer?.text, (text) => {
+  if (editConfig.value?.footer) {
+    editConfig.value.footer.text_html = text ? renderMarkdown(text) : undefined
+  }
+})
 // When switching from assisted to manual mode, expand assisted colors into the full palette
 // When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
 watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
   if (oldVal === true && newVal === false && editConfig.value?.theme) {
     const filled = fillTheme({ ...editConfig.value.theme, assistedMode: true }, defaultTheme)
-    editConfig.value.theme.colors = filled.colors
-    editConfig.value.theme.darkColors = filled.darkColors
-    editConfig.value.theme.hcColors = filled.hcColors
-    editConfig.value.theme.hcDarkColors = filled.hcDarkColors
+    editConfig.value = {
+      ...editConfig.value,
+      theme: {
+        ...editConfig.value.theme,
+        colors: filled.colors,
+        darkColors: filled.darkColors,
+        hcColors: filled.hcColors,
+        hcDarkColors: filled.hcDarkColors
+      }
+    }
   }
   if (oldVal === false && newVal === true && editConfig.value?.theme) {
-    editConfig.value.theme.assistedModeColors = {
-      primary: editConfig.value.theme.colors?.primary ?? defaultTheme.colors.primary,
-      secondary: editConfig.value.theme.colors?.secondary ?? defaultTheme.colors.secondary,
-      accent: editConfig.value.theme.colors?.accent ?? defaultTheme.colors.accent
+    editConfig.value = {
+      ...editConfig.value,
+      theme: {
+        ...editConfig.value.theme,
+        assistedModeColors: {
+          primary: editConfig.value.theme.colors?.primary ?? defaultTheme.colors.primary,
+          secondary: editConfig.value.theme.colors?.secondary ?? defaultTheme.colors.secondary,
+          accent: editConfig.value.theme.colors?.accent ?? defaultTheme.colors.accent
+        }
+      }
     }
   }
 })

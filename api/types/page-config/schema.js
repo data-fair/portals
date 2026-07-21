@@ -4,7 +4,8 @@ export default {
   'x-jstt': { additionalProperties: false },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
-    xI18n: true
+    xI18n: true,
+    ajvOptions: { discriminator: true }
   },
   'x-vjsf-locales': ['en', 'fr'],
   title: 'PageConfig',

@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ `${applicationFetch.data.value?.title || t('application')} - ${t('fullscreen')}` }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="`${t('application')} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
     :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"

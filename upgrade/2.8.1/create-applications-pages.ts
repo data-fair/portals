@@ -74,7 +74,8 @@ export default {
               },
               advancedFilters,
               pagination: { position: 'none' }
-            }
+              // applicationsCountPosition is the schema name of the time, later migrated to countPosition by 2.20.0
+            } as ApplicationsCatalogElement
           ]
         }
       }

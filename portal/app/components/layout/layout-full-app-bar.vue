@@ -6,9 +6,9 @@
   >
     <!-- Logo -->
     <layout-header-logo
-      v-if="portalConfig.logo"
+      v-if="logo"
       :height="(appBarHeight || 64) - 10"
-      :logo="portalConfig.logo"
+      :logo="logo"
     />
 
     <!-- Breadcrumbs -->
@@ -25,8 +25,11 @@
 import { useElementSize } from '@vueuse/core'
 
 const { portalConfig } = usePortalStore()
+const themedLogo = useThemedLogo()
 
 const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
+
+const logo = computed(() => themedLogo(portalConfig.value.logo, portalConfig.value.logoDark))
 
 </script>

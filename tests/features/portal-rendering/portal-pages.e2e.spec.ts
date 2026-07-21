@@ -117,4 +117,32 @@ test.describe('portal rendering', () => {
     await goToPortal(portal._id, '/contact')
     await expect(page.getByText('Formulaire de contact')).toBeVisible({ timeout: 10_000 })
   })
+
+  test('should fetch the anonymous action token from the browser, not during SSR', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: {
+        title: 'Contact Form Portal',
+        menu: { children: [{ type: 'standard', subtype: 'contact' }] }
+      }
+    })).data
+    await user1.post('/api/pages', {
+      type: 'contact',
+      config: {
+        title: 'Nous contacter',
+        elements: [{ type: 'contact' }]
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })
+
+    // fetching the token during SSR would concentrate all portals traffic on a few node IPs
+    // and trigger simple-directory's per-IP auth rate limit
+    const tokenRequest = page.waitForRequest(
+      request => request.url().includes('/simple-directory/api/auth/anonymous-action'),
+      { timeout: 10_000 }
+    )
+    await goToPortal(portal._id, '/contact')
+    await tokenRequest
+    await expect(page.getByLabel('Email')).toBeVisible({ timeout: 10_000 })
+  })
 })
