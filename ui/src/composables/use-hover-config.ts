@@ -1,12 +1,13 @@
+import type { MaybeRefOrGetter } from 'vue'
 import type { HoverEffect, HoverLike } from '../utils/hover'
 
-export const useHoverConfig = (getHover: () => HoverLike | undefined, useDefaults = true, relevantEffects?: HoverEffect[]) => {
+export const useHoverConfig = (getHover: () => HoverLike | undefined, useDefaults = true, relevantEffects?: MaybeRefOrGetter<HoverEffect[]>) => {
   const { portalConfig } = usePortalStore()
   const reducedMotion = usePrefersReducedMotion()
   const resolved = computed(() => resolveHoverConfig(
     getHover(),
     useDefaults ? (portalConfig.value.defaults?.hover as HoverLike | undefined) : undefined,
-    relevantEffects
+    toValue(relevantEffects)
   ))
   return {
     resolved,

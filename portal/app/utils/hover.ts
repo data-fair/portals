@@ -10,15 +10,15 @@ export type ButtonHoverLike = { hoverEffects?: ButtonHoverEffect[], hoverColor?:
 
 export type ResolvedButtonHover = { effects: ButtonHoverEffect[], color: string }
 
-// Vuetify 4 (MD3) ne fournit que les classes elevation-0 à elevation-5
+// Vuetify 4 (MD3) only ships elevation-0 to elevation-5 classes
 export const HOVER_ELEVATION = 5
 const themeColor = (color: string) => `rgb(var(--v-theme-${color}))`
 const onThemeColor = (color: string) => `rgb(var(--v-theme-on-${color}))`
-// v-card transitionne nativement box-shadow/background : re-déclarer ces transitions
-// quand on pose une transition inline (qui remplacerait sinon celle de la feuille de style)
+// v-card transitions box-shadow/background natively: re-declare them when we set an
+// inline transition, which would otherwise override the stylesheet's
 const cardNativeTransitions = ['box-shadow .28s cubic-bezier(0.4, 0, 0.2, 1)', 'background .28s cubic-bezier(0.4, 0, 0.2, 1)']
 
-// effects: [] explicite = aucun effet, absent = héritage (voir spec)
+// explicit effects: [] means no effect, absent means inherit
 export const resolveHoverConfig = (config?: HoverLike, portalDefaults?: HoverLike, relevantEffects?: HoverEffect[]): ResolvedHoverConfig => {
   let effects = config?.effects ?? portalDefaults?.effects ?? ['darken' as HoverEffect]
   if (relevantEffects) {
@@ -92,7 +92,7 @@ export const resolveButtonHover = (config?: ButtonHoverLike, fallbackColor?: str
   }
 }
 
-// v-btn n'a pas de transition native box-shadow/background : tout est déclaré inline
+// v-btn has no native box-shadow/background transition: everything is declared inline
 export const hoverButtonStyle = (resolved: ResolvedButtonHover, isHovering: boolean): Record<string, string> | undefined => {
   const style: Record<string, string> = {}
   const transitions: string[] = []

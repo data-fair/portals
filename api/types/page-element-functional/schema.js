@@ -208,12 +208,13 @@ export default {
             effects: {
               type: 'array',
               title: 'Effets',
-              description: 'Appliqués quand les thématiques sont cliquables. Vide : hérite du style par défaut du portail.',
+              description: 'Appliqués quand les thématiques sont cliquables (lien ou filtre). En mode filtre, la coloration du fond et du bord est ignorée. Vide : hérite du style par défaut du portail.',
               items: {
                 type: 'string',
                 oneOf: [
                   { const: 'darken', title: 'Assombrissement' },
                   { const: 'elevate', title: 'Élévation' },
+                  { const: 'grow', title: 'Agrandissement' },
                   { const: 'background', title: 'Couleur de fond' },
                   { const: 'border', title: 'Colorer le bord' }
                 ]
@@ -223,7 +224,8 @@ export default {
               $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
               title: 'Couleur de survol',
               layout: {
-                if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+                // Only in link mode (same condition as `variant`): filter chips ignore background/border effects.
+                if: "parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1) && parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
                 slots: {
                   item: { name: 'color-select-item' },
                   selection: { name: 'color-select-selection' }

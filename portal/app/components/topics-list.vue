@@ -11,7 +11,7 @@
     >
       <!--
         :to => redirect to the dataset page
-        :link => disable hover effect when not used as link nor filter
+        :link => interactive (overlay/ripple) when link or filter; color-based hover effects (background/border) are excluded in filter mode
         :variant => flat when selected, outlined when not
         :style => surface background + consistent border width
         label => use default button rounding, not default chip rounding
@@ -22,12 +22,12 @@
           v-bind="hoverProps"
           :color="resolvedColor(topic.color)"
           :density="config?.density ?? portalConfig.defaults?.density"
-          :elevation="hoverFx.elevation(isHovering && hoverInteractive, config?.elevation ?? portalConfig.defaults?.elevation)"
+          :elevation="hoverFx.elevation(hoverInteractive && isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
           :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
           :link="isFilters || !!link"
           :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
           :variant="chipVariant(topic.id)"
-          :style="[chipStyle(topic.id, topic.color), hoverFx.rootStyle(isHovering && hoverInteractive, { hasBorder: chipVariant(topic.id) === 'outlined' || isSelected(topic.id), inlineBackground: true })]"
+          :style="[chipStyle(topic.id, topic.color), hoverInteractive ? hoverFx.rootStyle(isHovering, { hasBorder: chipVariant(topic.id) === 'outlined' || isSelected(topic.id), inlineBackground: true }) : undefined]"
           label
           @click="toggle(topic.id)"
         >
@@ -71,7 +71,15 @@ const { isFilters, config, link } = defineProps<{
 }>()
 
 const chipEffects: HoverEffect[] = ['darken', 'elevate', 'background', 'border', 'grow']
-const hoverFx = useHoverConfig(() => config?.hover, true, chipEffects)
+// As filters, chips encode selection through color, so color-based effects would
+// clash: keep only the color-neutral ones.
+const filterEffects: HoverEffect[] = ['darken', 'elevate', 'grow']
+// The reserved border can't match a tonal background, so exclude the border effect there.
+const relevantEffects = computed<HoverEffect[]>(() => {
+  if (isFilters) return filterEffects
+  return config?.variant === 'tonal' ? chipEffects.filter(e => e !== 'border') : chipEffects
+})
+const hoverFx = useHoverConfig(() => config?.hover, true, relevantEffects)
 
 const hoverInteractive = computed(() => isFilters || !!link)
 
