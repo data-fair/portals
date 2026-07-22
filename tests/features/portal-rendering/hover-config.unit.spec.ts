@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {
   resolveHoverConfig, hoverElevation, hoverBackground, hoverRootStyle,
   hoverTitleStyle, hoverUnderlineBarStyle, hoverImageStyle,
-  resolveButtonHover, hoverButtonStyle, stripMotion
+  resolveButtonHover, hoverButtonColor, hoverButtonStyle
 } from '../../../portal/app/utils/hover.ts'
 
 test.describe('hover config resolution', () => {
@@ -38,6 +38,9 @@ test.describe('hover props helpers', () => {
     assert.equal(hoverElevation(resolved, true, 1), 3)
     assert.equal(hoverElevation(resolved, true, 3), 5)
     assert.equal(hoverElevation(resolved, false, 1), 1)
+    // no base configured: resting level is an explicit 0 so the +2 jump stays visible
+    assert.equal(hoverElevation(resolved, false, undefined), 0)
+    assert.equal(hoverElevation(resolved, true, undefined), 2)
     assert.equal(hoverElevation(resolveHoverConfig({ effects: ['grow'] }), true, 1), 1)
   })
 
@@ -56,7 +59,15 @@ test.describe('hover props helpers', () => {
     const resolved = resolveHoverConfig({ effects: ['grow'] })
     assert.equal(hoverRootStyle(resolved, true)?.transform, 'scale(1.02)')
     assert.equal(hoverRootStyle(resolved, false)?.transform, 'scale(1)')
-    assert.match(hoverRootStyle(resolved, true)?.transition ?? '', /transform/)
+    assert.match(hoverRootStyle(resolved, true)?.transition ?? '', /transform \.15s/)
+  })
+
+  test('small elements grow on the chip tempo and keep the chip native transition', () => {
+    const resolved = resolveHoverConfig({ effects: ['grow'] })
+    const transition = hoverRootStyle(resolved, true, { small: true })?.transition ?? ''
+    assert.match(transition, /all \.15s/)
+    assert.match(transition, /transform \.15s/)
+    assert.doesNotMatch(transition, /\.28s/)
   })
 
   test('border effect reserves a transparent border and colors it on hover', () => {
@@ -99,34 +110,55 @@ test.describe('hover props helpers', () => {
     assert.equal(hoverImageStyle(resolveHoverConfig({ effects: ['imageZoom'] }), true)?.transform, 'scale(1.05)')
     assert.equal(hoverImageStyle(resolveHoverConfig({ effects: ['elevate'] }), true), undefined)
   })
-
-  test('stripMotion removes transitions when reduced motion is preferred', () => {
-    assert.equal(stripMotion({ transition: 'transform .2s', transform: 'scale(1)' }, true).transition, undefined)
-    assert.equal(stripMotion({ transition: 'transform .2s' }, false).transition, 'transform .2s')
-    assert.equal(stripMotion(undefined, true), undefined)
-  })
 })
 
 test.describe('button hover resolution', () => {
   test('defaults to darken, the color falling back to primary', () => {
     assert.deepEqual(resolveButtonHover({ hoverColor: 'accent' }), { effects: ['darken'], color: 'accent' })
-    assert.deepEqual(resolveButtonHover(undefined, 'secondary'), { effects: ['darken'], color: 'secondary' })
+    assert.deepEqual(resolveButtonHover(undefined, { color: 'secondary' }), { effects: ['darken'], color: 'secondary' })
     assert.deepEqual(resolveButtonHover(undefined, undefined), { effects: ['darken'], color: 'primary' })
   })
 
   test('button hoverColor wins over the portal fallback', () => {
-    assert.equal(resolveButtonHover({ hoverColor: 'accent' }, 'secondary').color, 'accent')
+    assert.equal(resolveButtonHover({ hoverColor: 'accent' }, { color: 'secondary' }).color, 'accent')
   })
 
   test('explicit effects selection replaces the default behavior', () => {
-    assert.deepEqual(resolveButtonHover({ hoverEffects: ['elevate', 'grow'] }, 'secondary').effects, ['elevate', 'grow'])
+    assert.deepEqual(resolveButtonHover({ hoverEffects: ['elevate', 'grow'] }, { color: 'secondary' }).effects, ['elevate', 'grow'])
+  })
+
+  test('buttons inherit the button-relevant portal default effects', () => {
+    assert.deepEqual(resolveButtonHover(undefined, { effects: ['elevate', 'background', 'grow'] }).effects, ['elevate', 'grow'])
+    assert.deepEqual(resolveButtonHover(undefined, { effects: ['background', 'titleUnderline'] }).effects, ['darken'])
+    assert.deepEqual(resolveButtonHover(undefined, { effects: [] }).effects, [])
+    assert.deepEqual(resolveButtonHover({ hoverEffects: ['color'] }, { effects: ['grow'] }).effects, ['color'])
+  })
+
+  test('button color effect swaps the color only while hovering', () => {
+    const resolved = resolveButtonHover({ hoverEffects: ['color'], hoverColor: 'accent' })
+    assert.equal(hoverButtonColor(resolved, true, 'primary'), 'accent')
+    assert.equal(hoverButtonColor(resolved, false, 'primary'), 'primary')
+    assert.equal(hoverButtonColor(resolveButtonHover({ hoverEffects: ['darken'] }), true, 'primary'), 'primary')
   })
 
   test('button style suppresses overlay without darken, grows and transitions per effect', () => {
     const style = hoverButtonStyle(resolveButtonHover({ hoverEffects: ['color', 'grow'], hoverColor: 'accent' }), true)
     assert.equal(style?.['--v-hover-opacity'], '0')
     assert.equal(style?.transform, 'scale(1.05)')
-    assert.match(style?.transition ?? '', /background-color/)
+    assert.match(style?.transition ?? '', /background-color \.15s/)
     assert.equal(hoverButtonStyle(resolveButtonHover({ hoverEffects: ['darken'] }), true), undefined)
+  })
+
+  test('button grow re-declares the v-btn native transitions on the uniform tempo', () => {
+    const transition = hoverButtonStyle(resolveButtonHover({ hoverEffects: ['grow'] }), true)?.transition ?? ''
+    assert.match(transition, /transform \.15s/)
+    assert.match(transition, /box-shadow \.15s/)
+    assert.doesNotMatch(transition, /\.28s/)
+  })
+
+  test('elevate alone relies on the v-btn native box-shadow transition', () => {
+    const style = hoverButtonStyle(resolveButtonHover({ hoverEffects: ['elevate'] }), true)
+    assert.equal(style?.transition, undefined)
+    assert.equal(style?.['--v-hover-opacity'], '0')
   })
 })
