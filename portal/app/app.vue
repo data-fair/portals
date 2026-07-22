@@ -88,10 +88,7 @@ const linksCss = computed(() => {
     rules.push(`@media (prefers-reduced-motion: reduce){${sel}::after{transition:none;}}`)
   }
   if (cfg?.color && cfg.color !== 'primary') {
-    const colorValue = cfg.color === 'secondary'
-      ? `rgb(var(--v-theme-text-${cfg.color}, var(--v-theme-${cfg.color})))`
-      : `rgb(var(--v-theme-${cfg.color}))`
-    rules.push(`${sel}{color:${colorValue};}`)
+    rules.push(`${sel}{color:${linkColorValue(cfg.color)};}`)
   }
   return rules.join('')
 })
@@ -105,6 +102,15 @@ useHead({ style: () => linksCss.value ? [{ key: 'portal-links-css', textContent:
    (e.g. when landing on an anchor). Clip it here while keeping the full-bleed. */
 .v-application {
   overflow-x: clip;
+}
+
+/* Hover effects under reduced motion: states still apply, but instantly.
+   !important also neutralizes the inline transitions emitted by the hover
+   helpers and the Vuetify native card/btn/chip transitions (not media-gated). */
+@media (prefers-reduced-motion: reduce) {
+  .v-card, .v-card *, .v-btn, .v-chip, [data-pt-title-line], [data-pt-hover-underline] {
+    transition: none !important;
+  }
 }
 
 [tabindex="-1"]:focus {

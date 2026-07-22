@@ -37,7 +37,7 @@
         class="page-anchor-btn ml-1"
         @click.prevent.stop="copyLink"
       /><span
-        v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium' || (lineGrow && element.line?.position === 'none')"
+        v-if="showBottomLine"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
         :style="bottomLineStyle"
         aria-hidden="true"
@@ -68,6 +68,13 @@ const { element, lineGrow, lineHovering } = defineProps<{
 const { t } = useI18n()
 
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
+
+// bottom-small / bottom-medium always render the line; "none" only shows it when it grows in on hover
+const showBottomLine = computed(() =>
+  element.line?.position === 'bottom-small' ||
+  element.line?.position === 'bottom-medium' ||
+  (lineGrow && element.line?.position === 'none')
+)
 
 // bottom-small grows to the title width on hover; "none" reveals the small line from zero
 const bottomLineStyle = computed(() => {

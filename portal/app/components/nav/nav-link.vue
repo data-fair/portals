@@ -14,7 +14,7 @@
       :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
       :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
       :variant="config?.variant !== 'default' ? config?.variant : undefined"
-      :class="[{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering) }]"
+      :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
       :style="btnHover.style(isHovering)"
       :active="false"
     >
