@@ -1,16 +1,4 @@
-import type { ButtonHoverLike, HoverLike } from '../utils/hover'
-
-export const useButtonHover = (getConfig: () => ButtonHoverLike | undefined) => {
-  const { portalConfig } = usePortalStore()
-  const reducedMotion = usePrefersReducedMotion()
-  const resolved = computed(() => resolveButtonHover(
-    getConfig(),
-    (portalConfig.value.defaults?.hover as HoverLike | undefined)?.color
-  ))
-  return {
-    resolved,
-    elevation: (isHovering: boolean | null, base?: number | string) => hoverElevation(resolved.value, !!isHovering, base),
-    color: (isHovering: boolean | null, base?: string) => resolved.value.effects.includes('color') && isHovering ? resolved.value.color : base,
-    style: (isHovering: boolean | null) => stripMotion(hoverButtonStyle(resolved.value, !!isHovering), reducedMotion.value)
-  }
-}
+// Re-export of the portal composable: unimport registers the name from this file
+// and the portal source resolves its own auto-imports (usePortalStore, hover
+// helpers) against the manager registry.
+export { useButtonHover } from '#portal/app/composables/use-button-hover'

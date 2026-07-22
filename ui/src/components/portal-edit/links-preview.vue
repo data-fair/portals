@@ -28,18 +28,15 @@ const { t } = useI18n()
 
 const { config } = defineProps<{ config?: PortalConfig['linksConfig'] }>()
 
-const reducedMotion = usePrefersReducedMotion()
-
 const underlineColor = computed(() => config?.underlineColor ? `rgb(var(--v-theme-${config.underlineColor}))` : 'currentColor')
 
 const linkStyle = (isHovering: boolean | null) => {
   const underline = config?.underline ?? 'always'
   const color = config?.color ?? 'primary'
-  const themeColor = ['primary', 'secondary'].includes(color) ? `text-${color}` : color
   const underlined = underline === 'always' || underline === 'always-grow' || (underline === 'hover' && !!isHovering)
   return {
     position: underline === 'hover-grow' ? 'relative' : undefined,
-    color: `rgb(var(--v-theme-${themeColor}))`,
+    color: linkColorValue(color),
     textDecoration: underlined ? 'underline' : 'none',
     textUnderlineOffset: '2px',
     textDecorationThickness: underline === 'always-grow' && isHovering ? '2px' : undefined,
@@ -48,7 +45,7 @@ const linkStyle = (isHovering: boolean | null) => {
 }
 
 const barStyle = (isHovering: boolean | null) => {
-  const style = {
+  return {
     position: 'absolute',
     left: '0',
     bottom: '-3px',
@@ -59,7 +56,6 @@ const barStyle = (isHovering: boolean | null) => {
     transformOrigin: 'left',
     transition: 'transform .25s ease-out'
   } satisfies CSSProperties
-  return stripMotion(style, reducedMotion.value)
 }
 </script>
 
