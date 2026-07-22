@@ -102,7 +102,7 @@
                   :elevation="btnHover.elevation(isHovering, buttonConfig?.elevation ?? portalConfig.defaults?.elevation)"
                   :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
                   :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
-                  :class="[{ 'text-uppercase': buttonConfig?.uppercase }]"
+                  :class="{ 'text-uppercase': buttonConfig?.uppercase }"
                   :style="btnHover.style(isHovering)"
                   :text="t('send')"
                   :readonly="!valid"

@@ -39,7 +39,6 @@ const { element, context } = defineProps<{
 
 const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
-const reducedMotion = usePrefersReducedMotion()
 
 const isLink = computed(() => !!element.link && element.link.type !== 'none')
 
@@ -51,8 +50,7 @@ const linkStyle = {
 const lineGrow = computed(() =>
   isLink.value &&
   (element.line?.position === 'none' || element.line?.position === 'bottom-small') &&
-  element.line?.growOnHover === true &&
-  !reducedMotion.value
+  element.line?.growOnHover === true
 )
 
 const altLinkTitle = computed(() => {

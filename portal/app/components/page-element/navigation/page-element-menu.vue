@@ -9,12 +9,12 @@
           <v-btn
             v-bind="{ ...menuProps, ...hoverProps }"
             :color="btnHover.color(isHovering, config?.color)"
-            :density="config?.density"
-            :elevation="btnHover.elevation(isHovering, config?.elevation)"
-            :rounded="config?.rounded"
+            :density="config?.density ?? portalConfig.defaults?.density"
+            :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
+            :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
             :variant="config?.variant !== 'default' ? config?.variant : undefined"
             :append-icon="mdiChevronDown"
-            :class="[{ 'text-uppercase': config?.uppercase }]"
+            :class="{ 'text-uppercase': config?.uppercase }"
             :style="btnHover.style(isHovering)"
           >
             <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->

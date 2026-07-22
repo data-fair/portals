@@ -17,17 +17,20 @@
         label => use default button rounding, not default chip rounding
         @click => toggle selection in query param
       -->
-      <v-hover v-slot="{ isHovering, props: hoverProps }">
+      <v-hover
+        v-slot="{ isHovering, props: hoverProps }"
+        :disabled="!hoverInteractive"
+      >
         <v-chip
           v-bind="hoverProps"
           :color="resolvedColor(topic.color)"
           :density="config?.density ?? portalConfig.defaults?.density"
-          :elevation="hoverFx.elevation(hoverInteractive && isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
+          :elevation="hoverFx.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
           :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
           :link="isFilters || !!link"
           :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
           :variant="chipVariant(topic.id)"
-          :style="[chipStyle(topic.id, topic.color), hoverInteractive ? hoverFx.rootStyle(isHovering, { hasBorder: chipVariant(topic.id) === 'outlined' || isSelected(topic.id), inlineBackground: true }) : undefined]"
+          :style="[chipStyle(topic.id, topic.color), chipHoverStyle(topic, isHovering)]"
           label
           @click="toggle(topic.id)"
         >
@@ -79,9 +82,24 @@ const relevantEffects = computed<HoverEffect[]>(() => {
   if (isFilters) return filterEffects
   return config?.variant === 'tonal' ? chipEffects.filter(e => e !== 'border') : chipEffects
 })
-const hoverFx = useHoverConfig(() => config?.hover, true, relevantEffects)
+const hoverFx = useHoverConfig(() => config?.hover, relevantEffects)
 
 const hoverInteractive = computed(() => isFilters || !!link)
+
+// The 'default' hover color means each topic's own color (raw CSS color, not a theme name).
+const chipHoverStyle = (topic: { id: string, color?: string }, isHovering: boolean | null): Record<string, string> | undefined => {
+  if (!hoverInteractive.value) return undefined
+  const style = hoverFx.rootStyle(isHovering, { hasBorder: chipVariant(topic.id) === 'outlined' || isSelected(topic.id), inlineBackground: true, small: true })
+  if (style && hoverFx.resolved.value.color === 'default') {
+    const topicColor = topic.color ?? 'rgb(var(--v-theme-primary))'
+    if (style.borderColor) style.borderColor = topicColor
+    if (style.backgroundColor) {
+      style.backgroundColor = topicColor
+      delete style.color
+    }
+  }
+  return style
+}
 
 // Toggle selection in the topics query param when filters are enabled.
 const toggle = (id: string) => {

@@ -1,6 +1,10 @@
 <template>
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
-  <v-hover v-slot="{ isHovering, props: hoverProps }">
+  <!-- disabled => hover effects only apply when the box is a link -->
+  <v-hover
+    v-slot="{ isHovering, props: hoverProps }"
+    :disabled="!hoverable"
+  >
     <v-card
       ref="card"
       v-bind="hoverProps"
@@ -11,17 +15,17 @@
 
       :border="element.border"
       :rounded="element.rounded ?? portalConfig.defaults?.rounded"
-      :elevation="hoverFx.elevation(isHovering && hoverable, element.elevation ?? portalConfig.defaults?.elevation)"
+      :elevation="hoverFx.elevation(isHovering, element.elevation ?? portalConfig.defaults?.elevation)"
       :variant="element.background?.tonal ? 'tonal' : undefined"
       :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
-      :color="hoverFx.background(isHovering && hoverable, element.background?.color)"
+      :color="hoverFx.background(isHovering, element.background?.color)"
       :style="[element.background && element.background.image ? {
         backgroundImage: element.background.tintStrength
           ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
           : `url(${getPageImageSrc(element.background.image, false)})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-      } : undefined, hoverFx.rootStyle(isHovering && hoverable, { hasBorder: !!element.border })]"
+      } : undefined, hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })]"
     >
 
       <!--
@@ -36,10 +40,10 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, fall back to the top location (see main column below) -->
         <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
-          <v-col cols="4" style="overflow: hidden">
+          <v-col cols="4" class="overflow-hidden">
             <div
               aria-hidden="true"
-              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering && hoverable)]"
+              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
             />
           </v-col>
           <v-divider vertical />
@@ -57,15 +61,14 @@
           <div
             v-if="(element.thumbnail?.location === 'top' || (element.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && element.thumbnail?.image"
             aria-hidden="true"
-            class="flex-grow-0"
-            style="overflow: hidden"
+            class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="getPageImageSrc(element.thumbnail.image, false)"
               :cover="element.thumbnail.crop"
               height="170"
               alt=""
-              :style="hoverFx.imageStyle(isHovering && hoverable)"
+              :style="hoverFx.imageStyle(isHovering)"
             />
           </div>
 
@@ -75,12 +78,12 @@
           <v-card-title
             v-if="element.title"
             class="font-weight-bold"
-            :style="[{ 'white-space': 'unset' }, hoverFx.titleStyle(isHovering && hoverable)]"
+            :style="[{ 'white-space': 'unset' }, hoverFx.titleStyle(isHovering)]"
           >
             {{ element.title }}
           </v-card-title>
           <span
-            v-if="hoverFx.underlineBar.value && hoverable && element.title"
+            v-if="hoverFx.hasUnderlineBar.value && hoverable && element.title"
             class="mx-4"
             :style="hoverFx.underlineBarStyle(isHovering)"
             aria-hidden="true"
@@ -91,15 +94,14 @@
           <div
             v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
             aria-hidden="true"
-            class="flex-grow-0"
-            style="overflow: hidden"
+            class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="getPageImageSrc(element.thumbnail.image, false)"
               :cover="element.thumbnail.crop"
               height="170"
               alt=""
-              :style="hoverFx.imageStyle(isHovering && hoverable)"
+              :style="hoverFx.imageStyle(isHovering)"
             />
           </div>
 

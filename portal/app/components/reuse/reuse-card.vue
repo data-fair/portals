@@ -25,7 +25,7 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
         <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-          <v-col cols="4" style="overflow: hidden">
+          <v-col cols="4" class="overflow-hidden">
             <div
               v-if="thumbnailUrl"
               aria-hidden="true"
@@ -48,8 +48,7 @@
           <div
             v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
             aria-hidden="true"
-            class="flex-grow-0"
-            style="overflow: hidden"
+            class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="thumbnailUrl"
@@ -60,38 +59,18 @@
             />
           </div>
 
-          <!--
-            text-two-lines => clamp the title to 2 lines
-            wrapper reserves 2 title lines (text-title-large sets the line box) so the
-            hover underline hugs the text even when the title fits on a single line
-          -->
-          <div
-            class="text-title-large"
-            :class="{ 'my-2': cardConfig.titleLinesCount === 2 }"
-            :style="cardConfig.titleLinesCount === 2 ? { minHeight: '2lh' } : undefined"
-          >
-            <v-card-title
-              :class="['font-weight-bold', { 'text-two-lines py-0': cardConfig.titleLinesCount === 2 }]"
-              :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : undefined, hoverFx.titleStyle(isHovering)]"
-              :title="reuse.config.title"
-            >
-              {{ reuse.config.title }}
-            </v-card-title>
-            <span
-              v-if="hoverFx.underlineBar.value"
-              class="mx-4"
-              :style="hoverFx.underlineBarStyle(isHovering)"
-              aria-hidden="true"
-              data-pt-hover-underline
-            />
-          </div>
+          <card-hover-title
+            :title="reuse.config.title"
+            :lines-count="cardConfig.titleLinesCount"
+            :hover-fx="hoverFx"
+            :is-hovering="isHovering"
+          />
 
           <!-- Thumbnail (Center Location) -->
           <div
             v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
             aria-hidden="true"
-            class="flex-grow-0"
-            style="overflow: hidden"
+            class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="thumbnailUrl"
