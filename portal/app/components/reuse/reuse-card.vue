@@ -1,11 +1,10 @@
 <template>
   <!--
-    :to => disabled in preview
-    link => simulate link style in preview
+    link => keeps the ripple, hover styles and pointer cursor while rendering a
+    div: the actual link is the overlay below, see card-overlay-link
   -->
   <v-card
     v-bind="hoverProps"
-    :to="!preview ? `/reuses/${reuse.slug}` : undefined "
     :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
     :color="hoverFx.background(isHovering)"
     :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
@@ -13,6 +12,13 @@
     :style="hoverFx.rootStyle(isHovering)"
     link
   >
+    <!-- no link in preview -->
+    <card-overlay-link
+      v-if="!preview"
+      :to="`/reuses/${reuse.slug}`"
+      :label="reuse.config.title"
+    />
+
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
       no-gutters => remove spaces between columns

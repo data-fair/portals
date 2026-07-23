@@ -1,11 +1,10 @@
 <template>
   <!--
-    :to => disabled in preview
-    link => simulate link style in preview
+    link => keeps the ripple, hover styles and pointer cursor while rendering a
+    div: the actual link is the overlay below, see card-overlay-link
   -->
   <v-card
     v-bind="hoverProps"
-    :to="!preview ? `/applications/${application.slug}${cardConfig.openInFullPage ? '/full' : ''}` : undefined"
     :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
     :color="hoverFx.background(isHovering)"
     :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
@@ -13,6 +12,13 @@
     :style="hoverFx.rootStyle(isHovering)"
     link
   >
+    <!-- no link in preview -->
+    <card-overlay-link
+      v-if="!preview"
+      :to="`/applications/${application.slug}${cardConfig.openInFullPage ? '/full' : ''}`"
+      :label="application.title"
+    />
+
     <!--
       flex-nowrap => prevent columns from wrapping on multiple rows
       no-gutters => remove spaces between columns
@@ -126,14 +132,14 @@
         <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown)">
           <v-divider />
           <!--
-            cursor-default and @click.prevent => disable card link on action buttons
+            position-relative + z-index => sit above the card link overlay, so this
+            strip is not part of the card link and only its buttons are clickable
             ga-0 => remove default v-card-actions gap between action buttons
             min-height: auto => remove default v-card-actions min-height
           -->
           <v-card-actions
-            class="py-2 ga-0 cursor-default"
-            style="min-height: auto"
-            @click.prevent
+            class="py-2 ga-0 cursor-default position-relative"
+            style="min-height: auto; z-index: 1"
           >
             <application-preview :application="application" />
             <action-btn
@@ -153,12 +159,13 @@
         <v-divider vertical />
         <!--
           cols=auto => fit column width to largest button
-          cursor-default and @click.prevent => disable card link on action buttons
+          position-relative + z-index => same as the bottom actions strip, this column
+          sits above the card link overlay and is not part of the card link
         -->
         <v-col
           cols="auto"
-          class="pa-2 cursor-default"
-          @click.prevent
+          class="pa-2 cursor-default position-relative"
+          style="z-index: 1"
         >
           <application-preview :application="application" block />
           <action-btn

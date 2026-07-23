@@ -1,7 +1,10 @@
 <template>
+  <!--
+    link => keeps the ripple, hover styles and pointer cursor while rendering a
+    div: the actual link is the overlay below, see card-overlay-link
+  -->
   <v-card
     v-bind="hoverProps"
-    :to="!preview ? `/news/${pageConfig.newsMetadata?.slug}` : undefined"
     :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
     :color="hoverFx.background(isHovering)"
     :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
@@ -9,6 +12,13 @@
     :style="hoverFx.rootStyle(isHovering)"
     link
   >
+    <!-- no link in preview -->
+    <card-overlay-link
+      v-if="!preview"
+      :to="`/news/${pageConfig.newsMetadata?.slug}`"
+      :label="pageConfig.title"
+    />
+
     <v-row class="flex-nowrap" no-gutters>
       <!-- Thumbnail (Left Location) -->
       <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
