@@ -54,6 +54,7 @@ router.post('', async (req, res, next) => {
     header: { show: true, showTitle: true },
     navBar: {},
     breadcrumb: {},
+    linksConfig: { underline: 'always' },
     footer: {
       color: 'primary',
       socialPosition: 'none',
