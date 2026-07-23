@@ -1,31 +1,29 @@
 <template>
   <div :class="marginClass">
-    <v-hover v-slot="{ isHovering, props: hoverProps }">
-      <!-- element.link!.type !== 'none' est redondant avec isLink mais requis : vue-tsc ne propage pas le narrowing de l'union via la computed -->
-      <a
-        v-if="isLink && element.link!.type !== 'none' && isExternalLink(element.link!)"
-        v-bind="hoverProps"
-        :href="resolveLink(element.link!)"
-        :title="altLinkTitle"
-        :target="element.link?.target ? '_blank' : undefined"
-        :rel="element.link?.target ? 'noopener' : undefined"
-        :style="linkStyle"
-      >
-        <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
-      </a>
-      <NuxtLink
-        v-else-if="isLink && element.link!.type !== 'none'"
-        v-bind="hoverProps"
-        :to="resolveLink(element.link!)"
-        :title="altLinkTitle"
-        :target="element.link?.target ? '_blank' : undefined"
-        :rel="element.link?.target ? 'noopener' : undefined"
-        :style="linkStyle"
-      >
-        <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
-      </NuxtLink>
-      <layout-title v-else :element="element" />
-    </v-hover>
+    <!-- element.link!.type !== 'none' est redondant avec isLink mais requis : vue-tsc ne propage pas le narrowing de l'union via la computed -->
+    <a
+      v-if="isLink && element.link!.type !== 'none' && isExternalLink(element.link!)"
+      v-bind="hoverProps"
+      :href="resolveLink(element.link!)"
+      :title="altLinkTitle"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      :style="linkStyle"
+    >
+      <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
+    </a>
+    <NuxtLink
+      v-else-if="isLink && element.link!.type !== 'none'"
+      v-bind="hoverProps"
+      :to="resolveLink(element.link!)"
+      :title="altLinkTitle"
+      :target="element.link?.target ? '_blank' : undefined"
+      :rel="element.link?.target ? 'noopener' : undefined"
+      :style="linkStyle"
+    >
+      <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
+    </NuxtLink>
+    <layout-title v-else :element="element" />
   </div>
 </template>
 
@@ -41,6 +39,7 @@ const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
 
 const isLink = computed(() => !!element.link && element.link.type !== 'none')
+const { isHovering, hoverProps } = useHoverState()
 
 const linkStyle = {
   textDecoration: 'none',

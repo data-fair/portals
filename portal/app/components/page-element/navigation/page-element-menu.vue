@@ -5,22 +5,20 @@
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     >
       <template #activator="{ props: menuProps }">
-        <v-hover v-slot="{ isHovering, props: hoverProps }">
-          <v-btn
-            v-bind="{ ...menuProps, ...hoverProps }"
-            :color="btnHover.color(isHovering, config?.color)"
-            :density="config?.density ?? portalConfig.defaults?.density"
-            :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
-            :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
-            :variant="config?.variant !== 'default' ? config?.variant : undefined"
-            :append-icon="mdiChevronDown"
-            :class="{ 'text-uppercase': config?.uppercase }"
-            :style="btnHover.style(isHovering)"
-          >
-            <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-            <span class="text-truncate">{{ element.label || 'Menu' }}</span>
-          </v-btn>
-        </v-hover>
+        <v-btn
+          v-bind="{ ...menuProps, ...hoverProps }"
+          :color="btnHover.color(isHovering, config?.color)"
+          :density="config?.density ?? portalConfig.defaults?.density"
+          :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
+          :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
+          :variant="config?.variant !== 'default' ? config?.variant : undefined"
+          :append-icon="mdiChevronDown"
+          :class="{ 'text-uppercase': config?.uppercase }"
+          :style="btnHover.style(isHovering)"
+        >
+          <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+          <span class="text-truncate">{{ element.label || 'Menu' }}</span>
+        </v-btn>
       </template>
       <v-list>
         <v-list-item
@@ -62,6 +60,7 @@ const config = computed(() => {
 })
 
 const btnHover = useButtonHover(() => config.value)
+const { isHovering, hoverProps } = useHoverState()
 
 </script>
 

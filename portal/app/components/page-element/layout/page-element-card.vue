@@ -1,156 +1,151 @@
 <template>
   <!-- d-flex align-center flex-grow-1 is used with two columns stretch -->
   <!-- disabled => hover effects only apply when the box is a link -->
-  <v-hover
-    v-slot="{ isHovering, props: hoverProps }"
-    :disabled="!hoverable"
-  >
-    <v-card
-      ref="card"
-      v-bind="hoverProps"
-      :to="!preview && element.link && element.link.type !== 'none' && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
-      :href="!preview && element.link && element.link.type !== 'none' && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
-      :target="element.link && element.link.type !== 'none' && element.link?.target ? '_blank' : undefined"
-      :rel="element.link && element.link.type !== 'none' && element.link?.target ? 'noopener' : undefined"
+  <v-card
+    ref="card"
+    v-bind="hoverProps"
+    :to="!preview && element.link && element.link.type !== 'none' && !isExternalLink(element.link) ? resolveLink(element.link) : undefined"
+    :href="!preview && element.link && element.link.type !== 'none' && isExternalLink(element.link) ? resolveLink(element.link) : undefined"
+    :target="element.link && element.link.type !== 'none' && element.link?.target ? '_blank' : undefined"
+    :rel="element.link && element.link.type !== 'none' && element.link?.target ? 'noopener' : undefined"
 
-      :border="element.border"
-      :rounded="element.rounded ?? portalConfig.defaults?.rounded"
-      :elevation="hoverFx.elevation(isHovering, element.elevation ?? portalConfig.defaults?.elevation)"
-      :variant="element.background?.tonal ? 'tonal' : undefined"
-      :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
-      :color="hoverFx.background(isHovering, element.background?.color)"
-      :style="[element.background && element.background.image ? {
-        backgroundImage: element.background.tintStrength
-          ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
-          : `url(${getPageImageSrc(element.background.image, false)})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } : undefined, hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })]"
+    :border="element.border"
+    :rounded="element.rounded ?? portalConfig.defaults?.rounded"
+    :elevation="hoverFx.elevation(isHovering, element.elevation ?? portalConfig.defaults?.elevation)"
+    :variant="element.background?.tonal ? 'tonal' : undefined"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
+    :color="hoverFx.background(isHovering, element.background?.color)"
+    :style="[element.background && element.background.image ? {
+      backgroundImage: element.background.tintStrength
+        ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
+        : `url(${getPageImageSrc(element.background.image, false)})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    } : undefined, hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })]"
+  >
+
+    <!--
+      flex-nowrap => prevent the left thumbnail column from wrapping
+      no-gutters => remove spaces between columns
+      flex-grow-1 => let the row fill the card height so the left image stretches
+    -->
+    <v-row
+      class="flex-nowrap flex-grow-1"
+      no-gutters
     >
+      <!-- Thumbnail (Left Location) -->
+      <!-- On mobile, fall back to the top location (see main column below) -->
+      <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
+        <v-col cols="4" class="overflow-hidden">
+          <div
+            aria-hidden="true"
+            :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
+          />
+        </v-col>
+        <v-divider vertical />
+      </template>
 
       <!--
-        flex-nowrap => prevent the left thumbnail column from wrapping
-        no-gutters => remove spaces between columns
-        flex-grow-1 => let the row fill the card height so the left image stretches
+        d-flex flex-column => keep the vertical layout and the working v-spacers
+        min-width: 0 => allow the column to shrink below its content width
       -->
-      <v-row
-        class="flex-nowrap flex-grow-1"
-        no-gutters
+      <v-col
+        class="d-flex flex-column"
+        style="min-width: 0"
       >
-        <!-- Thumbnail (Left Location) -->
-        <!-- On mobile, fall back to the top location (see main column below) -->
-        <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
-            <div
-              aria-hidden="true"
-              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
-            />
-          </v-col>
-          <v-divider vertical />
-        </template>
+        <!-- Thumbnail (Top Location), also used as mobile fallback for 'left' -->
+        <div
+          v-if="(element.thumbnail?.location === 'top' || (element.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && element.thumbnail?.image"
+          aria-hidden="true"
+          class="flex-grow-0 overflow-hidden"
+        >
+          <v-img
+            :src="getPageImageSrc(element.thumbnail.image, false)"
+            :cover="element.thumbnail.crop"
+            height="170"
+            alt=""
+            :style="hoverFx.imageStyle(isHovering)"
+          />
+        </div>
 
         <!--
-          d-flex flex-column => keep the vertical layout and the working v-spacers
-          min-width: 0 => allow the column to shrink below its content width
+          white-space: unset; => remove default nowrap from v-card-title
         -->
-        <v-col
-          class="d-flex flex-column"
-          style="min-width: 0"
+        <v-card-title
+          v-if="element.title"
+          class="font-weight-bold"
+          :style="[{ 'white-space': 'unset' }, hoverFx.titleStyle(isHovering)]"
         >
-          <!-- Thumbnail (Top Location), also used as mobile fallback for 'left' -->
-          <div
-            v-if="(element.thumbnail?.location === 'top' || (element.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && element.thumbnail?.image"
-            aria-hidden="true"
-            class="flex-grow-0 overflow-hidden"
-          >
-            <v-img
-              :src="getPageImageSrc(element.thumbnail.image, false)"
-              :cover="element.thumbnail.crop"
-              height="170"
-              alt=""
-              :style="hoverFx.imageStyle(isHovering)"
-            />
-          </div>
+          {{ element.title }}
+        </v-card-title>
+        <span
+          v-if="hoverFx.hasUnderlineBar.value && hoverable && element.title"
+          class="mx-4"
+          :style="hoverFx.underlineBarStyle(isHovering)"
+          aria-hidden="true"
+          data-pt-hover-underline
+        />
 
-          <!--
-            white-space: unset; => remove default nowrap from v-card-title
-          -->
-          <v-card-title
-            v-if="element.title"
-            class="font-weight-bold"
-            :style="[{ 'white-space': 'unset' }, hoverFx.titleStyle(isHovering)]"
-          >
-            {{ element.title }}
-          </v-card-title>
-          <span
-            v-if="hoverFx.hasUnderlineBar.value && hoverable && element.title"
-            class="mx-4"
-            :style="hoverFx.underlineBarStyle(isHovering)"
-            aria-hidden="true"
-            data-pt-hover-underline
+        <!-- Thumbnail (Center Location) -->
+        <div
+          v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
+          aria-hidden="true"
+          class="flex-grow-0 overflow-hidden"
+        >
+          <v-img
+            :src="getPageImageSrc(element.thumbnail.image, false)"
+            :cover="element.thumbnail.crop"
+            height="170"
+            alt=""
+            :style="hoverFx.imageStyle(isHovering)"
           />
+        </div>
 
-          <!-- Thumbnail (Center Location) -->
-          <div
-            v-if="element.thumbnail?.location === 'center' && element.thumbnail?.image"
-            aria-hidden="true"
-            class="flex-grow-0 overflow-hidden"
+        <!--
+          v-spacer works with "two columns stretch" layout
+          no contentAlign falls back to 'center' for backward compatibility.
+        -->
+        <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'end'" />
+
+        <v-card-text class="flex-grow-0">
+          <slot
+            name="page-elements"
+            :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
+            :elements="element.children"
+            add-item-message="Ajouter un bloc à la boite"
+          />
+        </v-card-text>
+
+        <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'start'" />
+
+        <!--
+          min-height: auto => remove default v-card-actions min-height
+        -->
+        <v-card-actions
+          v-if="element.actions.length"
+          style="min-height: auto"
+        >
+          <!-- Reset default btn styles apply by v-card-actions -->
+          <v-defaults-provider
+            :defaults="{
+              VBtn: {
+                variant: 'flat',
+                slim: false
+              }
+            }"
           >
-            <v-img
-              :src="getPageImageSrc(element.thumbnail.image, false)"
-              :cover="element.thumbnail.crop"
-              height="170"
-              alt=""
-              :style="hoverFx.imageStyle(isHovering)"
+            <nav-link
+              v-for="(action, i) in element.actions"
+              :key="i"
+              :link="action"
+              :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
             />
-          </div>
+          </v-defaults-provider>
+        </v-card-actions>
+      </v-col>
+    </v-row>
 
-          <!--
-            v-spacer works with "two columns stretch" layout
-            no contentAlign falls back to 'center' for backward compatibility.
-          -->
-          <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'end'" />
-
-          <v-card-text class="flex-grow-0">
-            <slot
-              name="page-elements"
-              :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
-              :elements="element.children"
-              add-item-message="Ajouter un bloc à la boite"
-            />
-          </v-card-text>
-
-          <v-spacer v-if="!element.contentAlign || element.contentAlign === 'center' || element.contentAlign === 'start'" />
-
-          <!--
-            min-height: auto => remove default v-card-actions min-height
-          -->
-          <v-card-actions
-            v-if="element.actions.length"
-            style="min-height: auto"
-          >
-            <!-- Reset default btn styles apply by v-card-actions -->
-            <v-defaults-provider
-              :defaults="{
-                VBtn: {
-                  variant: 'flat',
-                  slim: false
-                }
-              }"
-            >
-              <nav-link
-                v-for="(action, i) in element.actions"
-                :key="i"
-                :link="action"
-                :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
-              />
-            </v-defaults-provider>
-          </v-card-actions>
-        </v-col>
-      </v-row>
-
-    </v-card>
-  </v-hover>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -165,6 +160,7 @@ const { preview, portalConfig } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const getPageImageSrc = usePageImageSrc()
 const hoverFx = useHoverConfig(() => element.hover)
+const { isHovering, hoverProps } = useHoverState(() => hoverable.value)
 const hoverable = computed(() => !!element.link && element.link.type !== 'none')
 
 // Background-image style for the left thumbnail column so it fills the card height.

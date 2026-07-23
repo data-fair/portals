@@ -2,39 +2,37 @@
   <!--
     active false => remove overlay when the `to` props is the current route
   -->
-  <v-hover v-slot="{ isHovering, props: hoverProps }">
-    <v-btn
-      v-bind="hoverProps"
-      :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
-      :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
-      :target="link.target ? '_blank' : undefined"
-      :rel="link.target ? 'noopener' : undefined"
-      :color="btnHover.color(isHovering, config?.color)"
-      :density="config?.density ?? portalConfig.defaults?.density"
-      :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
-      :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
-      :variant="config?.variant !== 'default' ? config?.variant : undefined"
-      :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
-      :style="btnHover.style(isHovering)"
-      :active="false"
+  <v-btn
+    v-bind="hoverProps"
+    :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
+    :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
+    :target="link.target ? '_blank' : undefined"
+    :rel="link.target ? 'noopener' : undefined"
+    :color="btnHover.color(isHovering, config?.color)"
+    :density="config?.density ?? portalConfig.defaults?.density"
+    :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
+    :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
+    :variant="config?.variant !== 'default' ? config?.variant : undefined"
+    :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
+    :style="btnHover.style(isHovering)"
+    :active="false"
+  >
+    <!--
+      Show icon in prepend, not directly in default slot with start props
+      to align vertically with the text properly.
+    -->
+    <template
+      v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+      #prepend
     >
-      <!--
-        Show icon in prepend, not directly in default slot with start props
-        to align vertically with the text properly.
-      -->
-      <template
-        v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-        #prepend
-      >
-        <v-icon
-          :color="link.icon.color"
-          :icon="link.icon.mdi?.svgPath || link.icon.custom"
-        />
-      </template>
-      <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-      <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
-    </v-btn>
-  </v-hover>
+      <v-icon
+        :color="link.icon.color"
+        :icon="link.icon.mdi?.svgPath || link.icon.custom"
+      />
+    </template>
+    <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+    <span class="text-truncate">{{ resolveLinkTitle(link, locale) }}</span>
+  </v-btn>
 </template>
 
 <script setup lang="ts">
@@ -52,6 +50,7 @@ const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 const btnHover = useButtonHover(() => config)
+const { isHovering, hoverProps } = useHoverState()
 
 </script>
 
