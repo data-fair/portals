@@ -38,7 +38,7 @@ export default {
         comp: 'card',
         title: 'Liens importants',
         subtitle: 'Les liens importants sont affichés sous forme de boutons, ce qui les rend plus visibles que de simples liens.',
-        children: ['importantLinks', 'importantLinksConfig']
+        children: ['importantLinks']
       },
       { comp: 'card', title: 'Liste de logos', children: ['extraLogos'] }
     ]
@@ -368,10 +368,6 @@ export default {
       },
       items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
       default: []
-    },
-    importantLinksConfig: {
-      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig',
-      title: 'Rendu des liens importants'
     }
   }
 }
