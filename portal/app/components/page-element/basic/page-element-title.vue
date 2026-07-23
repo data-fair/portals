@@ -4,17 +4,22 @@
     heading also holds the copy-anchor button, and interactive content is not
     allowed inside a link.
   -->
-  <div
-    :class="marginClass"
-    v-bind="isLink ? hoverProps : {}"
+  <v-hover
+    v-slot="{ isHovering, props: hoverProps }"
+    :disabled="!isLink"
   >
-    <layout-title
-      :element="element"
-      :link="titleLink"
-      :line-grow="lineGrow"
-      :line-hovering="!!isHovering"
-    />
-  </div>
+    <div
+      :class="marginClass"
+      v-bind="hoverProps"
+    >
+      <layout-title
+        :element="element"
+        :link="titleLink"
+        :line-grow="lineGrow"
+        :line-hovering="!!isHovering"
+      />
+    </div>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +34,6 @@ const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
 
 const isLink = computed(() => !!element.link && element.link.type !== 'none')
-const { isHovering, hoverProps } = useHoverState()
 
 const titleLink = computed(() => {
   if (!element.link || element.link.type === 'none') return undefined

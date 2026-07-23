@@ -94,27 +94,29 @@
 
             <!-- Send button -->
             <div class="d-flex justify-center">
-              <v-btn
-                v-bind="hoverProps"
-                :color="btnHover.color(isHovering, buttonConfig?.color)"
-                :density="buttonConfig?.density ?? portalConfig.defaults?.density"
-                :elevation="btnHover.elevation(isHovering, buttonConfig?.elevation ?? portalConfig.defaults?.elevation)"
-                :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
-                :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
-                :class="{ 'text-uppercase': buttonConfig?.uppercase }"
-                :style="btnHover.style(isHovering)"
-                :text="t('send')"
-                :readonly="!valid"
-                :loading="sendMessage.loading.value"
-                @click="sendMessage.execute()"
-              >
-                <template
-                  v-if="buttonConfig?.showIcon"
-                  #prepend
+              <v-hover v-slot="{ isHovering, props: hoverProps }">
+                <v-btn
+                  v-bind="hoverProps"
+                  :color="btnHover.color(isHovering, buttonConfig?.color)"
+                  :density="buttonConfig?.density ?? portalConfig.defaults?.density"
+                  :elevation="btnHover.elevation(isHovering, buttonConfig?.elevation ?? portalConfig.defaults?.elevation)"
+                  :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
+                  :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
+                  :class="{ 'text-uppercase': buttonConfig?.uppercase }"
+                  :style="btnHover.style(isHovering)"
+                  :text="t('send')"
+                  :readonly="!valid"
+                  :loading="sendMessage.loading.value"
+                  @click="sendMessage.execute()"
                 >
-                  <v-icon :icon="mdiSend" />
-                </template>
-              </v-btn>
+                  <template
+                    v-if="buttonConfig?.showIcon"
+                    #prepend
+                  >
+                    <v-icon :icon="mdiSend" />
+                  </template>
+                </v-btn>
+              </v-hover>
             </div>
           </v-form>
         </v-defaults-provider>
@@ -203,7 +205,6 @@ const message = ref({ ...newMessage })
 const buttonConfig = computed(() => (!element.sendButton?.usePortalConfig && element.sendButton?.config) ? element.sendButton?.config : portalConfig.value.navLinksConfig)
 
 const btnHover = useButtonHover(() => buttonConfig.value)
-const { isHovering, hoverProps } = useHoverState()
 
 // Default fields config
 const msgMinLength = computed(() => {
