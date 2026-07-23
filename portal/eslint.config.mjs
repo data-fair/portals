@@ -32,9 +32,8 @@ export default withNuxt([
       // auto-imports are resolved by typescript, eslint cannot see them
       'no-undef': 'off',
       // was enabled by the Nuxt preset before standalone was turned off, and the
-      // codebase already carries disable comments for it. Warning rather than error:
-      // 28 pre-existing any remain, typing them is a separate job.
-      '@typescript-eslint/no-explicit-any': 'warn'
+      // codebase already carries disable comments for it
+      '@typescript-eslint/no-explicit-any': 'error'
     }
   }
 ])

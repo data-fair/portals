@@ -1,8 +1,4 @@
-import type { AnalyticsInstance } from 'analytics'
-
-const _window = window as any
-
-export const useAnalytics = () => _window.__ANALYTICS as AnalyticsInstance | undefined
+export const useAnalytics = () => window.__ANALYTICS
 
 interface IframeTrackMessage { trackEvent: { action: string, label: string } }
 const isIframeTrackMessage = (message: unknown): message is IframeTrackMessage => {

@@ -1,8 +1,6 @@
 import { defineNuxtPlugin } from '#app'
 import type { AnalyticsPlugin } from 'analytics'
 
-const _window = window as any
-
 export default defineNuxtPlugin(async () => {
   const nuxtApp = useNuxtApp()
   if (nuxtApp.$portal.draft) {
@@ -40,7 +38,7 @@ export default defineNuxtPlugin(async () => {
     }
 
     const a = await import('analytics')
-    const analytics = _window.__ANALYTICS = a.Analytics({ plugins })
+    const analytics = window.__ANALYTICS = a.Analytics({ plugins })
 
     useRouter().afterEach((to, from) => {
       // from.name is absent on initial page load

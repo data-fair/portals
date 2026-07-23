@@ -10,26 +10,26 @@ const getUserGeolocationTitle: Record<string, string> = {
 export function useAgentGeoTools (locale: Ref<string>) {
   useAgentTool({
     ...geocodeAddress.schema,
-    annotations: { title: (geocodeAddress.annotations as any)[locale.value]?.title ?? geocodeAddress.annotations.en.title, readOnlyHint: true },
+    annotations: { title: geocodeAddress.annotations[locale.value as keyof typeof geocodeAddress.annotations]?.title ?? geocodeAddress.annotations.en.title, readOnlyHint: true },
     execute: async (params) => {
       let url: string
       try {
         url = geocodeAddress.buildUrl(params)
-      } catch (err: any) {
+      } catch (err) {
         return {
-          content: [{ type: 'text' as const, text: err.message }],
+          content: [{ type: 'text' as const, text: err instanceof Error ? err.message : String(err) }],
           isError: true
         }
       }
 
-      let data: any
+      let data: unknown
       try {
         const res = await fetch(url)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         data = await res.json()
-      } catch (err: any) {
+      } catch (err) {
         return {
-          content: [{ type: 'text' as const, text: `Geocoding API error: ${err.message}` }],
+          content: [{ type: 'text' as const, text: `Geocoding API error: ${err instanceof Error ? err.message : String(err)}` }],
           isError: true
         }
       }
@@ -79,13 +79,16 @@ export function useAgentGeoTools (locale: Ref<string>) {
         return {
           content: [{ type: 'text' as const, text: parts.join('\n') }]
         }
-      } catch (err: any) {
+      } catch (err) {
         const messages: Record<number, string> = {
           1: 'Location permission denied by user.',
           2: 'Position unavailable (location service error).',
           3: 'Geolocation request timed out.'
         }
-        const message = messages[err.code] || err.message || 'Unknown geolocation error.'
+        const code = (err as GeolocationPositionError | undefined)?.code
+        const message = (code !== undefined && messages[code]) ||
+          (err instanceof Error ? err.message : undefined) ||
+          'Unknown geolocation error.'
         return {
           content: [{ type: 'text' as const, text: message }],
           isError: true

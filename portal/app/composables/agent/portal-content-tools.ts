@@ -3,6 +3,13 @@ import type { $Fetch } from 'nitropack/types'
 import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { createAgentTranslator, agentToolError } from './utils'
 
+// Only the fields these tools actually read, the endpoints return much more.
+type ListResponse<T> = { count: number, results?: T[] }
+type ApplicationItem = { id: string, slug?: string, title?: string, summary?: string }
+type EventItem = { title?: string, eventMetadata?: { slug?: string, startDate?: string, endDate?: string } }
+type NewsItem = { title?: string, newsMetadata?: { slug?: string, date?: string } }
+type ReuseItem = { _id: string, slug?: string, config?: { title?: string, summary?: string } }
+
 const messages: Record<string, Record<string, string>> = {
   fr: {
     listApplications: 'Lister les visualisations',
@@ -46,8 +53,8 @@ export function useAgentPortalContentTools (locale: Ref<string>, localFetch: $Fe
         }
         if (params.q) query.q = params.q
 
-        const data = await localFetch<any>('/data-fair/api/v1/applications', { query })
-        const items = (data.results || []).map((app: any) =>
+        const data = await localFetch<ListResponse<ApplicationItem>>('/data-fair/api/v1/applications', { query })
+        const items = (data.results || []).map((app) =>
           `- **${app.title}** (ref: \`${app.slug || app.id}\`)${app.summary ? ` — ${app.summary}` : ''}`
         )
         const text = items.length > 0
@@ -80,8 +87,8 @@ export function useAgentPortalContentTools (locale: Ref<string>, localFetch: $Fe
         }
         if (params.includePast) query.includePast = 'true'
 
-        const data = await localFetch<any>('/portal/api/events', { query })
-        const items = (data.results || []).map((event: any) => {
+        const data = await localFetch<ListResponse<EventItem>>('/portal/api/events', { query })
+        const items = (data.results || []).map((event) => {
           const meta = event.eventMetadata || {}
           const dates = meta.startDate ? ` (${meta.startDate}${meta.endDate ? ' - ' + meta.endDate : ''})` : ''
           return `- **${event.title}** (slug: \`${meta.slug}\`)${dates}`
@@ -116,8 +123,8 @@ export function useAgentPortalContentTools (locale: Ref<string>, localFetch: $Fe
         }
         if (params.q) query.q = params.q
 
-        const data = await localFetch<any>('/portal/api/news', { query })
-        const items = (data.results || []).map((news: any) => {
+        const data = await localFetch<ListResponse<NewsItem>>('/portal/api/news', { query })
+        const items = (data.results || []).map((news) => {
           const meta = news.newsMetadata || {}
           const date = meta.date ? ` (${meta.date})` : ''
           return `- **${news.title}** (slug: \`${meta.slug}\`)${date}`
@@ -152,8 +159,8 @@ export function useAgentPortalContentTools (locale: Ref<string>, localFetch: $Fe
         }
         if (params.q) query.q = params.q
 
-        const data = await localFetch<any>('/portal/api/reuses', { query })
-        const items = (data.results || []).map((reuse: any) => {
+        const data = await localFetch<ListResponse<ReuseItem>>('/portal/api/reuses', { query })
+        const items = (data.results || []).map((reuse) => {
           const config = reuse.config || {}
           const title = config.title || reuse.slug || reuse._id
           const summary = config.summary ? ` — ${config.summary}` : ''
