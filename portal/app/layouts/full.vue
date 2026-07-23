@@ -2,13 +2,13 @@
   <LayoutSkipLinks :targets="skipLinkTargets" />
   <LayoutFullAppBar />
   <v-main>
-    <v-container
+    <div
       id="contenu"
-      fluid
-      class="pa-0 h-100 tabindex"
+      tabindex="-1"
+      class="h-100"
     >
       <slot />
-    </v-container>
+    </div>
   </v-main>
   <LayoutScrollToTop />
 </template>
