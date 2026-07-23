@@ -15,7 +15,7 @@
     :title="title"
     :target="target ? '_blank' : undefined"
     :rel="target ? 'noopener' : undefined"
-    class="position-absolute"
+    class="position-absolute card-overlay-link"
     style="inset: 0"
   />
   <NuxtLink
@@ -25,7 +25,7 @@
     :title="title"
     :target="target ? '_blank' : undefined"
     :rel="target ? 'noopener' : undefined"
-    class="position-absolute"
+    class="position-absolute card-overlay-link"
     style="inset: 0"
   />
 </template>
@@ -46,3 +46,12 @@ defineProps<{
   target?: boolean
 }>()
 </script>
+
+<style scoped>
+/* The overlay is exactly the size of the card, whose overflow is hidden, so the
+   focus ring would be drawn outside and clipped away. Pulling it inside keeps the
+   browser's native ring — and its forced-colors behaviour — while making it visible. */
+.card-overlay-link:focus-visible {
+  outline-offset: -3px;
+}
+</style>

@@ -107,6 +107,27 @@ test.describe('nested links', () => {
     await page.mouse.up()
   })
 
+  test('the card link shows a focus ring despite the card clipping its overflow', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [boxWithLinksInside])
+
+    await goToPortal(portal._id)
+    const overlay = page.getByRole('link', { name: 'Exemple' })
+    await expect(overlay).toBeVisible({ timeout: 10_000 })
+    await overlay.focus()
+
+    // the overlay is exactly the size of the card, whose overflow is hidden, so an
+    // outline drawn outside would be clipped: it has to be pulled inside
+    const ring = await overlay.evaluate((el) => {
+      const cs = getComputedStyle(el)
+      return { style: cs.outlineStyle, offset: cs.outlineOffset }
+    })
+    expect(ring.style).not.toBe('none')
+    expect(parseFloat(ring.offset)).toBeLessThan(0)
+  })
+
   test('the actions strip escapes the box link, the rest of the box does not', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Nested Links Portal', menu: { children: [] } }
