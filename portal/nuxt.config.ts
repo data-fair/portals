@@ -135,11 +135,6 @@ export default defineNuxtConfig({
           // white card with light grey border by default
           variant: 'flat',
           border: 'sm'
-        },
-        // TODO: Workaround for https://github.com/vuetifyjs/vuetify/issues/22876 — without explicit defaults SSR emits style="opacity:NaN"
-        VProgressLinear: {
-          bgOpacity: 0.12,
-          bufferOpacity: 0.12
         }
       }
     }
