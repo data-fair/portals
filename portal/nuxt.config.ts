@@ -1,25 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { defaultNonceCSPDirectives } from '@data-fair/lib-express/serve-spa'
 
 // cf https://nuxt-security.vercel.app/headers/csp
-const contentSecurityPolicy: Record<string, string[]> = {}
-for (const [name, value] of Object.entries(defaultNonceCSPDirectives)) {
-  contentSecurityPolicy[name] = value.replace('{NONCE}', '{{nonce}}').split(' ')
+// aligned with the data-fair defaults (@data-fair/lib-express/serve-spa) but owned here:
+// the portal drops the nonce on style-src, and server/plugins/csp.ts extends connect-src,
+// frame-ancestors and frame-src per request based on the portal config
+const contentSecurityPolicy: Record<string, string[]> = {
+  'default-src': ["'nonce-{{nonce}}'"],
+  'base-uri': ["'self'"],
+  'font-src': ["'self'"], // we always self-host fonts
+  'form-action': ["'self'"],
+  'frame-ancestors': ["'self'"],
+  'frame-src': ["'self'"],
+  'img-src': ["'self'", 'data:', 'blob:', 'https:'], // we often allow free img integration
+  'object-src': ["'none'"],
+  // strict-dynamic necessary for analytics
+  'script-src': ["'nonce-{{nonce}}'", "'strict-dynamic'"],
+  'script-src-attr': ["'none'"],
+  // unsafe-inline is required for vuetify inline style attributes (style="...") on elements
+  // nonces only work on <style> tags, not on element style attributes
+  'style-src': ["'self'", "'unsafe-inline'"],
+  'worker-src': ["'self'", 'blob:'], // necessary for maplibre
+  'child-src': ["'self'", 'blob:'], // same
+  'connect-src': ["'self'", 'https://koumoul.com'] // used by fetch, xhr, etc.
 }
-// unsafe-inline is required for vuetify inline style attributes (style="...") on elements
-// nonces only work on <style> tags, not on element style attributes
-contentSecurityPolicy['style-src'] = ["'self'", "'unsafe-inline'"]
-// strict-dynamic necessary for analytics
-contentSecurityPolicy['script-src']!.push("'strict-dynamic'")
 
 export default defineNuxtConfig({
-  // TODO: remove when nitropack properly calls esbuild.stop() after build
-  // Note: during `nuxt prepare`, close fires before writeTypes runs, so an
-  // immediate exit would skip generation of .nuxt/tsconfig.app.json. We defer
-  // the exit to let writeTypes finish; the small delay is harmless for builds.
-  hooks: {
-    close: (nuxt) => { setTimeout(() => process.exit(0), nuxt.options._prepare ? 1000 : 0) }
-  },
   devServer: {
     port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
