@@ -43,7 +43,7 @@
       app
       icon
     >
-      <v-icon :icon="mdiTableOfContents"/>
+      <v-icon :icon="mdiTableOfContents" />
       <v-menu
         activator="parent"
         :close-on-content-click="false"

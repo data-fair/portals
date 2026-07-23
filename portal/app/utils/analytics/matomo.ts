@@ -8,7 +8,6 @@ const debug = debugModule('matomo')
 
 type MatomoPluginConfig = { trackerBase?: string, siteId?: string, nonce?: string }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _window = window as any
 
 export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlugin {

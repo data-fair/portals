@@ -13,8 +13,12 @@
         :color="element.color"
       >
         <v-card-text class="px-12">
-          <div class="text-headline-small font-weight-bold">{{ metrics[key].toLocaleString(locale) }}</div>
-          <div class="text-title-large font-weight-bold text-uppercase">{{ t('title.' + key) }}</div>
+          <div class="text-headline-small font-weight-bold">
+            {{ metrics[key].toLocaleString(locale) }}
+          </div>
+          <div class="text-title-large font-weight-bold text-uppercase">
+            {{ t('title.' + key) }}
+          </div>
         </v-card-text>
       </v-card>
     </v-col>

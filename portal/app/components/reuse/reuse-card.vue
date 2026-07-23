@@ -31,7 +31,10 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
         <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
+          <v-col
+            cols="4"
+            class="overflow-hidden"
+          >
             <div
               v-if="thumbnailUrl"
               aria-hidden="true"

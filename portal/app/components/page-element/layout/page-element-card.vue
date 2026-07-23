@@ -47,7 +47,10 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, fall back to the top location (see main column below) -->
         <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
+          <v-col
+            cols="4"
+            class="overflow-hidden"
+          >
             <div
               aria-hidden="true"
               :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
@@ -162,7 +165,6 @@
           </v-card-actions>
         </v-col>
       </v-row>
-
     </v-card>
   </v-hover>
 </template>

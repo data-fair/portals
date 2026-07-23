@@ -31,7 +31,10 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
         <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
+          <v-col
+            cols="4"
+            class="overflow-hidden"
+          >
             <div
               v-if="thumbnailUrl"
               aria-hidden="true"
@@ -168,7 +171,10 @@
             class="pa-2 cursor-default position-relative"
             style="z-index: 1"
           >
-            <application-preview :application="application" block />
+            <application-preview
+              :application="application"
+              block
+            />
             <action-btn
               :to="`/applications/${application.slug}/full`"
               :action-style="cardConfig.actionsStyle"

@@ -14,8 +14,14 @@
       icon
       @click="share"
     >
-      <component :is="platform.component" v-if="platform.component" />
-      <v-icon v-else :icon="platform.icon" />
+      <component
+        :is="platform.component"
+        v-if="platform.component"
+      />
+      <v-icon
+        v-else
+        :icon="platform.icon"
+      />
     </v-btn>
   </share-network>
 </template>

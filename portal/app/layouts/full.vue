@@ -5,8 +5,7 @@
     <v-container
       id="contenu"
       fluid
-      class="pa-0 h-100"
-      tabindex="-1"
+      class="pa-0 h-100 tabindex"
     >
       <slot />
     </v-container>

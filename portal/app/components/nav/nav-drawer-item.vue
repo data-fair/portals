@@ -16,7 +16,9 @@
         />
       </template>
       <!-- text-wrap lets long titles wrap instead of being truncated -->
-      <v-list-item-title class="text-wrap">{{ resolveLinkTitle(item, locale) }}</v-list-item-title>
+      <v-list-item-title class="text-wrap">
+        {{ resolveLinkTitle(item, locale) }}
+      </v-list-item-title>
     </v-list-item>
   </template>
 
@@ -60,7 +62,9 @@
         />
       </template>
       <!-- text-wrap lets long titles wrap instead of being truncated -->
-      <v-list-item-title class="text-wrap">{{ resolveLinkTitle(item, locale) }}</v-list-item-title>
+      <v-list-item-title class="text-wrap">
+        {{ resolveLinkTitle(item, locale) }}
+      </v-list-item-title>
     </v-list-item>
   </template>
 
@@ -83,7 +87,9 @@
             />
           </template>
           <!-- text-wrap lets long titles wrap instead of being truncated -->
-          <v-list-item-title class="text-wrap">{{ item.title }}</v-list-item-title>
+          <v-list-item-title class="text-wrap">
+            {{ item.title }}
+          </v-list-item-title>
         </v-list-item>
       </template>
       <nav-drawer-item

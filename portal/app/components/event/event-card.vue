@@ -20,10 +20,16 @@
         :label="pageConfig.title"
       />
 
-      <v-row class="flex-nowrap" no-gutters>
+      <v-row
+        class="flex-nowrap"
+        no-gutters
+      >
         <!-- Thumbnail (Left Location) -->
         <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
+          <v-col
+            cols="4"
+            class="overflow-hidden"
+          >
             <div
               v-if="thumbnailUrl"
               aria-hidden="true"
@@ -34,7 +40,10 @@
         </template>
 
         <!-- Main column -->
-        <v-col class="d-flex flex-column" style="min-width: 0">
+        <v-col
+          class="d-flex flex-column"
+          style="min-width: 0"
+        >
           <!-- Thumbnail (Top Location) -->
           <div
             v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
@@ -58,7 +67,10 @@
           />
 
           <!-- Dates -->
-          <v-card-subtitle v-if="pageConfig.eventMetadata?.startDate" class="pb-2">
+          <v-card-subtitle
+            v-if="pageConfig.eventMetadata?.startDate"
+            class="pb-2"
+          >
             <span>{{ dayjs(pageConfig.eventMetadata.startDate).format('L') }}</span>
             <template v-if="pageConfig.eventMetadata?.endDate">
               &nbsp;-&nbsp;

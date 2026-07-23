@@ -1,7 +1,6 @@
 import { defineNuxtPlugin } from '#app'
 import type { AnalyticsPlugin } from 'analytics'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _window = window as any
 
 export default defineNuxtPlugin(async () => {

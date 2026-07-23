@@ -31,7 +31,10 @@
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
         <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-          <v-col cols="4" class="overflow-hidden">
+          <v-col
+            cols="4"
+            class="overflow-hidden"
+          >
             <div
               v-if="thumbnailUrl"
               aria-hidden="true"
@@ -138,7 +141,10 @@
               </span>
             </v-col> -->
           </v-row>
-          <div v-else class="mt-3" /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
+          <div
+            v-else
+            class="mt-3"
+          /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
 
           <!-- Actions (Bottom Location) -->
           <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">

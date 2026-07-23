@@ -165,7 +165,9 @@
                 v-if="element.showInfo"
                 class="my-2"
               />
-              <p class="text-body-small">{{ t('socialMedia') }}</p>
+              <p class="text-body-small">
+                {{ t('socialMedia') }}
+              </p>
               <social-links :links="portalConfig.socialLinks" />
             </template>
           </v-card-text>

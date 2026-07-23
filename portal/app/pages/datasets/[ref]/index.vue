@@ -86,73 +86,73 @@
 
       <!-- Data section with tabs -->
       <template v-if="portalConfig.datasets.page.showData && !dataset.isMetaOnly">
-          <page-element-title
-            :element="{
-              type: 'title',
-              content: t('sections.data'),
-              titleTag: sectionTitleTag,
-              titleSize: 'h5',
-              line: portalConfig.datasets.page.titleStyle
-            }"
-          />
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.data'),
+            titleTag: sectionTitleTag,
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
 
-          <v-tabs
-            v-model="dataTab"
-            class="mb-4"
+        <v-tabs
+          v-model="dataTab"
+          class="mb-4"
+        >
+          <v-tab value="table">
+            {{ t('sections.table') }}
+          </v-tab>
+          <v-tab
+            v-if="dataset.bbox?.length"
+            value="map"
           >
-            <v-tab value="table">
-              {{ t('sections.table') }}
-            </v-tab>
-            <v-tab
-              v-if="dataset.bbox?.length"
-              value="map"
-            >
-              {{ t('sections.map') }}
-            </v-tab>
-            <v-tab value="schema">
-              {{ t('sections.schema') }}
-            </v-tab>
-          </v-tabs>
+            {{ t('sections.map') }}
+          </v-tab>
+          <v-tab value="schema">
+            {{ t('sections.schema') }}
+          </v-tab>
+        </v-tabs>
 
-          <v-tabs-window
-            v-model="dataTab"
-            class="mb-8"
+        <v-tabs-window
+          v-model="dataTab"
+          class="mb-8"
+        >
+          <v-tabs-window-item value="table">
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.table')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/table`"
+              scrolling="no"
+              resize="no"
+              aspect-ratio
+              sync-params
+              emit-iframe-messages
+              @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
+            />
+          </v-tabs-window-item>
+
+          <v-tabs-window-item
+            v-if="dataset.bbox?.length"
+            value="map"
           >
-            <v-tabs-window-item value="table">
-              <d-frame-wrapper
-                :iframe-title="`${t('sections.table')} - ${dataset.title}`"
-                :src="`/data-fair/embed/dataset/${dataset.id}/table`"
-                scrolling="no"
-                resize="no"
-                aspect-ratio
-                sync-params
-                emit-iframe-messages
-                @iframe-message="(iframeMessage: CustomEvent) => onIframeMessage(iframeMessage.detail)"
-              />
-            </v-tabs-window-item>
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.map')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/map`"
+              scrolling="no"
+              resize="no"
+              aspect-ratio
+            />
+          </v-tabs-window-item>
 
-            <v-tabs-window-item
-              v-if="dataset.bbox?.length"
-              value="map"
-            >
-              <d-frame-wrapper
-                :iframe-title="`${t('sections.map')} - ${dataset.title}`"
-                :src="`/data-fair/embed/dataset/${dataset.id}/map`"
-                scrolling="no"
-                resize="no"
-                aspect-ratio
-              />
-            </v-tabs-window-item>
-
-            <v-tabs-window-item value="schema">
-              <d-frame-wrapper
-                :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
-                :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
-                resize="no"
-                aspect-ratio
-              />
-            </v-tabs-window-item>
-          </v-tabs-window>
+          <v-tabs-window-item value="schema">
+            <d-frame-wrapper
+              :iframe-title="`${t('sections.schema')} - ${dataset.title}`"
+              :src="`/data-fair/embed/dataset/${dataset.id}/fields`"
+              resize="no"
+              aspect-ratio
+            />
+          </v-tabs-window-item>
+        </v-tabs-window>
       </template>
 
       <!-- Applications section -->
@@ -371,7 +371,7 @@
       </v-row>
     </template>
 
-    <div data-iframe-height="40"/>
+    <div data-iframe-height="40" />
   </layout-page>
 </template>
 
