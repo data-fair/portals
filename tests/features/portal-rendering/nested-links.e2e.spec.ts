@@ -80,4 +80,63 @@ test.describe('nested links', () => {
     // the box link itself covers the card and points at its own destination
     await expect(page.getByRole('link', { name: 'Exemple' })).toHaveAttribute('href', 'https://example.com')
   })
+
+  test('the box keeps the native ripple even though it is no longer an anchor', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [boxWithLinksInside])
+
+    await goToPortal(portal._id)
+    const card = page.locator('.v-card', { hasText: 'Boite cliquable' })
+    await expect(card).toBeVisible({ timeout: 10_000 })
+    // the card renders as a div, `link` alone is what keeps it clickable
+    expect(await card.evaluate(el => el.tagName)).toBe('DIV')
+    await expect(card).toHaveClass(/v-card--link/)
+
+    // the ripple directive is only attached once hydrated
+    await expect.poll(
+      () => card.evaluate((el: any) => !!el._ripple?.enabled),
+      { timeout: 15_000 }
+    ).toBe(true)
+
+    const box = (await card.boundingBox())!
+    await page.mouse.move(box.x + box.width / 2, box.y + 30)
+    await page.mouse.down()
+    await expect(card.locator('.v-ripple__animation')).toHaveCount(1)
+    await page.mouse.up()
+  })
+
+  test('the actions strip escapes the box link, the rest of the box does not', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [boxWithLinksInside])
+
+    await goToPortal(portal._id)
+    const card = page.locator('.v-card', { hasText: 'Boite cliquable' })
+    await expect(card).toBeVisible({ timeout: 10_000 })
+
+    // what a click lands on, at the centre of each zone
+    const hit = async (selector: string) => {
+      const box = (await page.locator(selector).boundingBox())!
+      return page.evaluate(([x, y]) => {
+        const el = document.elementFromPoint(x as number, y as number)
+        const link = el?.closest('a')
+        return link ? link.getAttribute('href') : null
+      }, [box.x + box.width / 2, box.y + box.height / 2])
+    }
+
+    // box body => the card link
+    expect(await hit('.v-card-title')).toBe('https://example.com')
+    // action button => its own destination
+    expect(await hit('.v-card-actions a')).toBe('https://example.com/action')
+    // actions strip outside a button => no link at all
+    const strip = (await card.locator('.v-card-actions').boundingBox())!
+    const dead = await page.evaluate(([x, y]) => {
+      const el = document.elementFromPoint(x as number, y as number)
+      return el?.closest('a')?.getAttribute('href') ?? null
+    }, [strip.x + strip.width - 8, strip.y + strip.height / 2])
+    expect(dead).toBeNull()
+  })
 })
