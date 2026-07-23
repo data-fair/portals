@@ -1,77 +1,79 @@
 <template>
-  <v-card
-    :to="!preview ? `/news/${pageConfig.newsMetadata?.slug}` : undefined"
-    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
-    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
-    class="h-100 d-flex flex-column"
-    link
-  >
-    <v-row class="flex-nowrap" no-gutters>
-      <!-- Thumbnail (Left Location) -->
-      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-        <v-col cols="4">
+  <v-hover v-slot="{ isHovering, props: hoverProps }">
+    <v-card
+      v-bind="hoverProps"
+      :to="!preview ? `/news/${pageConfig.newsMetadata?.slug}` : undefined"
+      :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
+      :color="hoverFx.background(isHovering)"
+      :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
+      class="h-100 d-flex flex-column"
+      :style="hoverFx.rootStyle(isHovering)"
+      link
+    >
+      <v-row class="flex-nowrap" no-gutters>
+        <!-- Thumbnail (Left Location) -->
+        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+          <v-col cols="4" class="overflow-hidden">
+            <div
+              v-if="thumbnailUrl"
+              aria-hidden="true"
+              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
+            />
+          </v-col>
+          <v-divider vertical />
+        </template>
+
+        <!-- Main column -->
+        <v-col class="d-flex flex-column" style="min-width: 0">
+          <!-- Thumbnail (Top Location) -->
           <div
-            v-if="thumbnailUrl"
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
             aria-hidden="true"
-            :style="leftThumbnailStyle"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <card-hover-title
+            :title="pageConfig.title"
+            :lines-count="cardConfig.titleLinesCount"
+            :hover-fx="hoverFx"
+            :is-hovering="isHovering"
           />
+
+          <!-- Publication date -->
+          <v-card-subtitle v-if="pageConfig.newsMetadata?.date" class="pb-2">
+            {{ t('publishedOn') }} {{ dayjs(pageConfig.newsMetadata.date).format('LL') }}
+          </v-card-subtitle>
+
+          <!-- Thumbnail (Center Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <v-card-text v-if="(cardConfig.showDescription || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useDescription && !thumbnailUrl)) && pageConfig.description?.length">
+            {{ pageConfig.description }}
+          </v-card-text>
         </v-col>
-        <v-divider vertical />
-      </template>
-
-      <!-- Main column -->
-      <v-col class="d-flex flex-column" style="min-width: 0">
-        <!-- Thumbnail (Top Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <!--
-          text-two-lines => truncate title to 2 lines
-          white-space: unset; => remove default nowrap from v-card-title
-        -->
-        <v-card-title
-          :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-          :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
-          :title="pageConfig.title"
-        >
-          {{ pageConfig.title }}
-        </v-card-title>
-
-        <!-- Publication date -->
-        <v-card-subtitle v-if="pageConfig.newsMetadata?.date" class="pb-2">
-          {{ t('publishedOn') }} {{ dayjs(pageConfig.newsMetadata.date).format('LL') }}
-        </v-card-subtitle>
-
-        <!-- Thumbnail (Center Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <v-card-text v-if="(cardConfig.showDescription || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useDescription && !thumbnailUrl)) && pageConfig.description?.length">
-          {{ pageConfig.description }}
-        </v-card-text>
-      </v-col>
-    </v-row>
-  </v-card>
+      </v-row>
+    </v-card>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -90,6 +92,7 @@ const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
+const hoverFx = useHoverConfig(() => cardConfig.hover)
 
 const getNewsImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id

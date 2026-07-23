@@ -1,114 +1,116 @@
 <template>
-  <!--
-    :to => disabled in preview
-    link => simulate link style in preview
-  -->
-  <v-card
-    :to="!preview ? `/reuses/${reuse.slug}` : undefined "
-    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
-    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
-    class="h-100 d-flex flex-column"
-    link
-  >
+  <v-hover v-slot="{ isHovering, props: hoverProps }">
     <!--
-      flex-nowrap => prevent columns from wrapping on multiple rows
-      no-gutters => remove spaces between columns
+      :to => disabled in preview
+      link => simulate link style in preview
     -->
-    <v-row
-      class="flex-nowrap"
-      no-gutters
+    <v-card
+      v-bind="hoverProps"
+      :to="!preview ? `/reuses/${reuse.slug}` : undefined "
+      :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
+      :color="hoverFx.background(isHovering)"
+      :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
+      class="h-100 d-flex flex-column"
+      :style="hoverFx.rootStyle(isHovering)"
+      link
     >
-      <!-- Thumbnail (Left Location) -->
-      <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-        <v-col cols="4">
-          <div
-            v-if="thumbnailUrl"
-            aria-hidden="true"
-            :style="leftThumbnailStyle"
-          />
-        </v-col>
-        <v-divider vertical />
-      </template>
-
-      <!-- Main column -->
       <!--
-        d-flex flex-column => make the column take full height of the card and arrange content vertically
-        min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        flex-nowrap => prevent columns from wrapping on multiple rows
+        no-gutters => remove spaces between columns
       -->
-      <v-col
-        class="d-flex flex-column"
-        style="min-width: 0"
+      <v-row
+        class="flex-nowrap"
+        no-gutters
       >
-        <!-- Thumbnail (Top Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <!--
-          text-two-lines => truncate title to 2 lines
-          white-space: unset; => remove default nowrap from v-card-title
-        -->
-        <v-card-title
-          :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-          :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
-          :title="reuse.config.title"
-        >
-            {{ reuse.config.title }}
-        </v-card-title>
-
-        <!-- Thumbnail (Center Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <v-card-text
-          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && reuse.config.summary?.length"
-          class="pb-0"
-        >
-          {{ reuse.config.summary }}
-        </v-card-text>
-
-        <v-spacer />
-
-        <!-- Publication/update date -->
-        <v-row
-          no-gutters
-          class="px-4 py-2"
-        >
-          <v-col cols="12">
-            <p
-              v-if="cardConfig.showAuthor && reuse.config.author"
-              class="text-body-small"
-            >
-              {{ t('publishedBy', { author: reuse.config.author }) }}
-            </p>
-            <p class="text-body-small">
-              {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
-            </p>
+        <!-- Thumbnail (Left Location) -->
+        <!-- On mobile, always use top location -->
+        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+          <v-col cols="4" class="overflow-hidden">
+            <div
+              v-if="thumbnailUrl"
+              aria-hidden="true"
+              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
+            />
           </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-card>
+          <v-divider vertical />
+        </template>
+
+        <!-- Main column -->
+        <!--
+          d-flex flex-column => make the column take full height of the card and arrange content vertically
+          min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        -->
+        <v-col
+          class="d-flex flex-column"
+          style="min-width: 0"
+        >
+          <!-- Thumbnail (Top Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <card-hover-title
+            :title="reuse.config.title"
+            :lines-count="cardConfig.titleLinesCount"
+            :hover-fx="hoverFx"
+            :is-hovering="isHovering"
+          />
+
+          <!-- Thumbnail (Center Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <v-card-text
+            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && reuse.config.summary?.length"
+            class="pb-0"
+          >
+            {{ reuse.config.summary }}
+          </v-card-text>
+
+          <v-spacer />
+
+          <!-- Publication/update date -->
+          <v-row
+            no-gutters
+            class="px-4 py-2"
+          >
+            <v-col cols="12">
+              <p
+                v-if="cardConfig.showAuthor && reuse.config.author"
+                class="text-body-small"
+              >
+                {{ t('publishedBy', { author: reuse.config.author }) }}
+              </p>
+              <p class="text-body-small">
+                {{ t('updatedAt') }} {{ dayjs(reuse.updatedAt).format('L') }}
+              </p>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -127,6 +129,7 @@ const { t } = useI18n()
 const { portalConfig, preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
+const hoverFx = useHoverConfig(() => cardConfig.hover)
 
 const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id

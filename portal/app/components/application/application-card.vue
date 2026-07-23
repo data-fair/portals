@@ -1,141 +1,167 @@
 <template>
-  <!--
-    :to => disabled in preview
-    link => simulate link style in preview
-  -->
-  <v-card
-    :to="!preview ? `/applications/${application.slug}${cardConfig.openInFullPage ? '/full' : ''}` : undefined"
-    :elevation="cardConfig.elevation ?? portalConfig.defaults?.elevation"
-    :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
-    class="h-100 d-flex flex-column"
-    link
-  >
+  <v-hover v-slot="{ isHovering, props: hoverProps }">
     <!--
-      flex-nowrap => prevent columns from wrapping on multiple rows
-      no-gutters => remove spaces between columns
+      :to => disabled in preview
+      link => simulate link style in preview
     -->
-    <v-row
-      class="flex-nowrap"
-      no-gutters
+    <v-card
+      v-bind="hoverProps"
+      :to="!preview ? `/applications/${application.slug}${cardConfig.openInFullPage ? '/full' : ''}` : undefined"
+      :elevation="hoverFx.elevation(isHovering, cardConfig.elevation ?? portalConfig.defaults?.elevation)"
+      :color="hoverFx.background(isHovering)"
+      :rounded="cardConfig.rounded ?? portalConfig.defaults?.rounded"
+      class="h-100 d-flex flex-column"
+      :style="hoverFx.rootStyle(isHovering)"
+      link
     >
-      <!-- Thumbnail (Left Location) -->
-      <!-- On mobile, always use top location -->
-      <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
-        <v-col cols="4">
-          <div
-            v-if="thumbnailUrl"
-            aria-hidden="true"
-            :style="leftThumbnailStyle"
-          />
-        </v-col>
-        <v-divider vertical />
-      </template>
-
-      <!-- Main column -->
       <!--
-        d-flex flex-column => make the column take full height of the card and arrange content vertically
-        min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        flex-nowrap => prevent columns from wrapping on multiple rows
+        no-gutters => remove spaces between columns
       -->
-      <v-col
-        class="d-flex flex-column"
-        style="min-width: 0"
+      <v-row
+        class="flex-nowrap"
+        no-gutters
       >
-        <!-- Thumbnail (Top Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <!--
-          text-two-lines => truncate title to 2 lines
-          white-space: unset; => remove default nowrap from v-card-title
-        -->
-        <v-card-title
-          :class="['font-weight-bold', { 'text-two-lines my-2 py-0': cardConfig.titleLinesCount === 2 }]"
-          :style="[cardConfig.titleLinesCount === 0 ? { 'white-space': 'unset' } : {}]"
-          :title="application.title"
-        >
-          {{ application.title }}
-        </v-card-title>
-
-        <!-- Thumbnail (Center Location) -->
-        <div
-          v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
-          aria-hidden="true"
-          class="flex-grow-0"
-        >
-          <v-img
-            :src="thumbnailUrl"
-            :cover="cardConfig.thumbnail.crop"
-            height="170"
-            alt=""
-          />
-        </div>
-
-        <v-card-text
-          v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !thumbnailUrl)) && application.summary?.length"
-          class="pb-0"
-        >
-          {{ application.summary }}
-        </v-card-text>
-
-        <v-spacer />
-
-        <!-- Topics List -->
-        <topics-list
-          v-if="cardConfig.topics?.show && application.topics?.length"
-          :config="cardConfig.topics"
-          :topics="application.topics"
-          class="px-4 mt-2 flex-grow-0"
-        />
-
-        <!-- Department / Updated At -->
-        <v-row
-          no-gutters
-          class="px-4 py-2"
-        >
-          <v-col
-            v-if="cardConfig.showDepartment"
-            cols="auto"
-            class="d-flex align-center mr-2"
-          >
-            <owner-avatar
-              :owner="application.owner"
-              omit-owner-name
+        <!-- Thumbnail (Left Location) -->
+        <!-- On mobile, always use top location -->
+        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+          <v-col cols="4" class="overflow-hidden">
+            <div
+              v-if="thumbnailUrl"
+              aria-hidden="true"
+              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
             />
           </v-col>
+          <v-divider vertical />
+        </template>
+
+        <!-- Main column -->
+        <!--
+          d-flex flex-column => make the column take full height of the card and arrange content vertically
+          min-width: 0 => override default min-width: auto to allow the column to shrink below its content's intrinsic width, enabling text truncation and preventing card overflow
+        -->
+        <v-col
+          class="d-flex flex-column"
+          style="min-width: 0"
+        >
+          <!-- Thumbnail (Top Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <card-hover-title
+            :title="application.title"
+            :lines-count="cardConfig.titleLinesCount"
+            :hover-fx="hoverFx"
+            :is-hovering="isHovering"
+          />
+
+          <!-- Thumbnail (Center Location) -->
+          <div
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            aria-hidden="true"
+            class="flex-grow-0 overflow-hidden"
+          >
+            <v-img
+              :src="thumbnailUrl"
+              :cover="cardConfig.thumbnail.crop"
+              height="170"
+              alt=""
+              :style="hoverFx.imageStyle(isHovering)"
+            />
+          </div>
+
+          <v-card-text
+            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !thumbnailUrl)) && application.summary?.length"
+            class="pb-0"
+          >
+            {{ application.summary }}
+          </v-card-text>
+
+          <v-spacer />
+
+          <!-- Topics List -->
+          <topics-list
+            v-if="cardConfig.topics?.show && application.topics?.length"
+            :config="cardConfig.topics"
+            :topics="application.topics"
+            class="px-4 mt-2 flex-grow-0"
+          />
+
+          <!-- Department / Updated At -->
+          <v-row
+            no-gutters
+            class="px-4 py-2"
+          >
+            <v-col
+              v-if="cardConfig.showDepartment"
+              cols="auto"
+              class="d-flex align-center mr-2"
+            >
+              <owner-avatar
+                :owner="application.owner"
+                omit-owner-name
+              />
+            </v-col>
+            <v-col
+              cols="auto"
+              class="d-flex align-center"
+            >
+              <span class="text-body-small">
+                {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+              </span>
+            </v-col>
+          </v-row>
+
+          <!-- Actions (Bottom Location) -->
+          <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown)">
+            <v-divider />
+            <!--
+              cursor-default and @click.prevent => disable card link on action buttons
+              ga-0 => remove default v-card-actions gap between action buttons
+              min-height: auto => remove default v-card-actions min-height
+            -->
+            <v-card-actions
+              class="py-2 ga-0 cursor-default"
+              style="min-height: auto"
+              @click.prevent
+            >
+              <application-preview :application="application" />
+              <action-btn
+                :to="`/applications/${application.slug}/full`"
+                :action-style="cardConfig.actionsStyle"
+                :icon="mdiFullscreen"
+                :resource-title="application.title"
+                :text="t('text')"
+                :tooltip="t('tooltip')"
+              />
+            </v-card-actions>
+          </template>
+        </v-col>
+
+        <!-- Actions (Right Location) -->
+        <template v-if="!cardConfig.openInFullPage && cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+          <v-divider vertical />
+          <!--
+            cols=auto => fit column width to largest button
+            cursor-default and @click.prevent => disable card link on action buttons
+          -->
           <v-col
             cols="auto"
-            class="d-flex align-center"
-          >
-            <span class="text-body-small">
-              {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-            </span>
-          </v-col>
-        </v-row>
-
-        <!-- Actions (Bottom Location) -->
-        <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown)">
-          <v-divider />
-          <!--
-            cursor-default and @click.prevent => disable card link on action buttons
-            ga-0 => remove default v-card-actions gap between action buttons
-            min-height: auto => remove default v-card-actions min-height
-          -->
-          <v-card-actions
-            class="py-2 ga-0 cursor-default"
-            style="min-height: auto"
+            class="pa-2 cursor-default"
             @click.prevent
           >
-            <application-preview :application="application" />
+            <application-preview :application="application" block />
             <action-btn
               :to="`/applications/${application.slug}/full`"
               :action-style="cardConfig.actionsStyle"
@@ -143,37 +169,13 @@
               :resource-title="application.title"
               :text="t('text')"
               :tooltip="t('tooltip')"
+              block
             />
-          </v-card-actions>
+          </v-col>
         </template>
-      </v-col>
-
-      <!-- Actions (Right Location) -->
-      <template v-if="!cardConfig.openInFullPage && cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
-        <v-divider vertical />
-        <!--
-          cols=auto => fit column width to largest button
-          cursor-default and @click.prevent => disable card link on action buttons
-        -->
-        <v-col
-          cols="auto"
-          class="pa-2 cursor-default"
-          @click.prevent
-        >
-          <application-preview :application="application" block />
-          <action-btn
-            :to="`/applications/${application.slug}/full`"
-            :action-style="cardConfig.actionsStyle"
-            :icon="mdiFullscreen"
-            :resource-title="application.title"
-            :text="t('text')"
-            :tooltip="t('tooltip')"
-            block
-          />
-        </v-col>
-      </template>
-    </v-row>
-  </v-card>
+      </v-row>
+    </v-card>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -191,6 +193,7 @@ const { dayjs } = useLocaleDayjs()
 const { portalConfig, preview } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
+const hoverFx = useHoverConfig(() => cardConfig.hover)
 
 const thumbnailUrl = computed(() => {
   if (application.image) return application.image

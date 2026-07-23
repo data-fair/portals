@@ -37,13 +37,11 @@
         class="page-anchor-btn ml-1"
         @click.prevent.stop="copyLink"
       /><span
-        v-if="element.line?.position === 'bottom-small' || element.line?.position === 'bottom-medium'"
+        v-if="showBottomLine"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
-        :style="{
-          borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
-          width: element.line?.position === 'bottom-small' ? '80px' : '100%'
-        }"
+        :style="bottomLineStyle"
         aria-hidden="true"
+        data-pt-title-line
       />
     </span>
   </component>
@@ -61,11 +59,37 @@
 import { mdiLinkVariant, mdiCheck } from '@mdi/js'
 import type { TitleElement } from '#api/types/page-elements/index.ts'
 
-const { element } = defineProps<{ element: TitleElement }>()
+const { element, lineGrow, lineHovering } = defineProps<{
+  element: TitleElement
+  lineGrow?: boolean
+  lineHovering?: boolean
+}>()
 
 const { t } = useI18n()
 
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
+
+// bottom-small / bottom-medium always render the line; "none" only shows it when it grows in on hover
+const showBottomLine = computed(() =>
+  element.line?.position === 'bottom-small' ||
+  element.line?.position === 'bottom-medium' ||
+  (lineGrow && element.line?.position === 'none')
+)
+
+// bottom-small grows to the title width on hover; "none" reveals the small line from zero
+const bottomLineStyle = computed(() => {
+  const pos = element.line?.position
+  let width: string
+  if (pos === 'bottom-medium') width = '100%'
+  else if (pos === 'bottom-small') width = lineGrow && lineHovering ? '100%' : '80px'
+  else width = lineHovering ? '80px' : '0'
+  const style: Record<string, string> = {
+    borderBottom: `4px solid rgb(var(--v-theme-${element.line?.color}))`,
+    width
+  }
+  if (lineGrow) style.transition = 'width .25s ease-out'
+  return style
+})
 
 const anchorId = computed(() => element.anchor?._slug || undefined)
 

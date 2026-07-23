@@ -247,6 +247,11 @@ export default {
           type: 'boolean',
           default: true
         },
+        hover: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfigFull',
+          title: 'Effets au survol',
+          layout: { comp: 'card' }
+        },
         thumbnail: {
           type: 'object',
           title: "Configuration de l'image",

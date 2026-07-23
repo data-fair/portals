@@ -88,6 +88,14 @@ export default {
                 },
                 props: { background: true }
               }
+            },
+            growOnHover: {
+              type: 'boolean',
+              title: 'Grow on hover',
+              'x-i18n-title': { fr: 'Grandit au survol' },
+              description: 'Only applies when the title has a link.',
+              'x-i18n-description': { fr: "S'applique uniquement lorsque le titre porte un lien." },
+              layout: { if: "parent.parent?.data?.link && parent.parent?.data?.link?.type !== 'none' && ['none', 'bottom-small'].includes(parent.data?.position)" }
             }
           }
         },

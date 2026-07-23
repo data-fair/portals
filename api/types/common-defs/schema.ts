@@ -1,3 +1,26 @@
+// hoverConfig and hoverConfigFull are identical except for their color palette
+const makeHoverConfig = (colorRef: string) => ({
+  type: 'object',
+  title: 'Hover effects',
+  'x-i18n-title': { fr: 'Effets au survol' },
+  properties: {
+    effects: { $ref: '#/$defs/hoverEffectsList' },
+    color: {
+      $ref: colorRef,
+      title: 'Hover color',
+      'x-i18n-title': { fr: 'Couleur de survol' },
+      layout: {
+        if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        cols: { md: 4 }
+      }
+    }
+  }
+})
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
   'x-exports': ['types'],
@@ -52,6 +75,74 @@ export default {
         { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
         { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
       ]
+    },
+
+    // Shared effects list for the hover configs (see hoverConfig / hoverConfigFull).
+    hoverEffectsList: {
+      type: 'array',
+      title: 'Effects',
+      'x-i18n-title': { fr: 'Effets' },
+      description: 'Title and image effects only apply to boxes and thumbnails. "Title underline" and "Animated title underline" are mutually exclusive (animated takes precedence if both are selected). The standard darken effect is applied by default.',
+      'x-i18n-description': { fr: "Les effets sur le titre et l'image ne s'appliquent qu'aux boîtes et vignettes. « Soulignement du titre » et « Soulignement animé du titre » sont exclusifs (l'animé prime si les deux sont cochés). Par défaut, l'effet d'assombrissement standard est appliqué." },
+      layout: {
+        switch: [
+          { if: "parent.data?.effects?.some(e => ['background', 'border'].includes(e))", cols: { md: 8 } }
+        ]
+      },
+      items: {
+        type: 'string',
+        oneOf: [
+          { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
+          { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
+          { const: 'background', title: 'Background color', 'x-i18n-title': { fr: 'Couleur de fond' } },
+          { const: 'border', title: 'Border color', 'x-i18n-title': { fr: 'Couleur de bordure' } },
+          { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } },
+          { const: 'titleUnderline', title: 'Title underline', 'x-i18n-title': { fr: 'Soulignement du titre' } },
+          { const: 'titleUnderlineAnimated', title: 'Animated title underline', 'x-i18n-title': { fr: 'Soulignement animé du titre' } },
+          { const: 'imageZoom', title: 'Image zoom', 'x-i18n-title': { fr: "Zoom sur l'image" } }
+        ]
+      }
+    },
+
+    // Hover config with the standard color palette (thumbnails, portal default).
+    hoverConfig: makeHoverConfig('#/$defs/color'),
+
+    // Hover config with the extended color palette, matching the box background colors.
+    hoverConfigFull: makeHoverConfig('#/$defs/color-full'),
+
+    // Topics hover config: applies to clickable topics only; filter mode ignores background/border.
+    hoverConfigTopics: {
+      type: 'object',
+      title: 'Effets au survol',
+      properties: {
+        effects: {
+          type: 'array',
+          title: 'Effets',
+          description: 'Appliqués quand les thématiques sont cliquables (lien ou filtre). En mode filtre, la coloration du fond et du bord est ignorée. Par défaut, le style du portail est hérité.',
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'darken', title: 'Assombrissement' },
+              { const: 'elevate', title: 'Élévation' },
+              { const: 'grow', title: 'Agrandissement' },
+              { const: 'background', title: 'Couleur de fond' },
+              { const: 'border', title: 'Colorer le bord' }
+            ]
+          }
+        },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
+          title: 'Couleur de survol',
+          layout: {
+            // Only in link mode (same condition as `variant`): filter chips ignore background/border effects.
+            if: "parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1) && parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            }
+          }
+        }
+      }
     },
 
     icon: {
@@ -140,6 +231,24 @@ export default {
         { const: 'success', title: 'Success', 'x-i18n-title': { fr: 'Succès' } },
         { const: 'error', title: 'Error', 'x-i18n-title': { fr: 'Erreur' } },
         { const: 'warning', title: 'Warning', 'x-i18n-title': { fr: 'Avertissement' } }
+      ]
+    },
+
+    // Main colors definition (global settings: links,...)
+    'color-main': {
+      type: 'string',
+      title: 'Color',
+      'x-i18n-title': { fr: 'Couleur' },
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        }
+      },
+      oneOf: [
+        { const: 'primary', title: 'Primary', 'x-i18n-title': { fr: 'Primaire' } },
+        { const: 'secondary', title: 'Secondary', 'x-i18n-title': { fr: 'Secondaire' } },
+        { const: 'accent', title: 'Accent', 'x-i18n-title': { fr: 'Accentuée' } }
       ]
     },
 
@@ -244,6 +353,40 @@ export default {
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
           layout: { cols: { md: 4 } }
+        },
+        hoverEffects: {
+          type: 'array',
+          title: 'Hover effects',
+          'x-i18n-title': { fr: 'Effets au survol' },
+          description: 'The "Color" effect tints the button on hover: border color for the "Outlined" variant, background color for the "Tonal" and "Filled" variants. The standard darken effect is applied by default.',
+          'x-i18n-description': { fr: "L'effet « Coloration » teinte le bouton au survol : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Tonale » et « Avec fond coloré ». Par défaut, l'effet d'assombrissement standard est appliqué." },
+          layout: {
+            switch: [
+              { if: "parent.data?.hoverEffects?.includes('color')", cols: { md: 8 } }
+            ]
+          },
+          items: {
+            type: 'string',
+            oneOf: [
+              { const: 'darken', title: 'Darken', 'x-i18n-title': { fr: 'Assombrissement' } },
+              { const: 'elevate', title: 'Elevate', 'x-i18n-title': { fr: 'Élévation' } },
+              { const: 'color', title: 'Color', 'x-i18n-title': { fr: 'Coloration (selon la variante)' } },
+              { const: 'grow', title: 'Grow', 'x-i18n-title': { fr: 'Agrandissement' } }
+            ]
+          }
+        },
+        hoverColor: {
+          $ref: '#/$defs/color',
+          title: 'Hover color',
+          'x-i18n-title': { fr: 'Couleur au survol' },
+          layout: {
+            if: "parent.data?.hoverEffects?.includes('color')",
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
         },
         showIcon: {
           type: 'boolean',

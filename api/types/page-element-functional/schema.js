@@ -201,6 +201,7 @@ export default {
         elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
         density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
         rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        hover: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfigTopics' },
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
           layout: { if: 'parent.data?.redirectPage && (!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1)' }

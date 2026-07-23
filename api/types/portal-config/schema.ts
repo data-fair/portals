@@ -87,16 +87,25 @@ export default {
           },
           {
             title: 'Style visuel par défaut',
-            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis.",
+            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis. Les effets au survol des éléments cliquables (vignettes, boites, thématiques) se configurent ici et peuvent aussi être surchargés par bloc.",
             comp: 'card',
             children: ['defaults']
           },
           {
-            title: 'Rendu des liens de navigation',
+            title: 'Rendu des boutons de navigation',
             comp: 'card',
             children: [
               'navLinksConfig',
               { name: 'nav-link-preview' }
+            ]
+          },
+          {
+            title: 'Rendu des liens texte',
+            subtitle: 'Liens affichés dans les textes, descriptions et pied de page.',
+            comp: 'card',
+            children: [
+              'linksConfig',
+              { name: 'links-preview' }
             ]
           },
           {
@@ -295,6 +304,49 @@ export default {
       }
     },
     navLinksConfig: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
+    linksConfig: {
+      type: 'object',
+      properties: {
+        underline: {
+          type: 'string',
+          title: 'Soulignement des liens',
+          description: 'Le soulignement permanent distingue les liens autrement que par la couleur seule, comme recommandé par le RGAA.',
+          default: 'always',
+          layout: { cols: { md: 4 } },
+          oneOf: [
+            { const: 'always', title: 'Toujours' },
+            { const: 'always-grow', title: 'Toujours + grossissement au survol' },
+            { const: 'hover-grow', title: 'Petit trait grandissant au survol' },
+            { const: 'hover', title: 'Au survol' },
+            { const: 'never', title: 'Jamais' }
+          ]
+        },
+        color: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-main',
+          title: 'Couleur des liens',
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
+        },
+        underlineColor: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-main',
+          title: 'Couleur du soulignement',
+          description: 'Si vide, reprend la couleur du lien.',
+          layout: {
+            if: "parent.data?.underline !== 'never'",
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            cols: { md: 4 }
+          }
+        }
+      }
+    },
     logo: {
       type: 'object',
       title: 'Logo',
@@ -439,6 +491,7 @@ export default {
     personal: { $ref: 'https://github.com/data-fair/portals/portal-config-personal' },
     topics: { $ref: 'https://github.com/data-fair/portals/portal-config-topics' },
     labelsOverrides: { $ref: 'https://github.com/data-fair/portals/portal-config-labels-overrides' },
+    agentChat: { $ref: 'https://github.com/data-fair/portals/portal-config-agent-chat' },
     defaults: {
       type: 'object',
       properties: {
@@ -456,109 +509,10 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
           layout: { cols: { md: 4 } },
           default: 'default'
-        }
-      }
-    },
-    agentChat: {
-      type: 'object',
-      unevaluatedProperties: false,
-      properties: {
-        active: {
-          type: 'boolean',
-          title: 'Activer l\'assistant IA',
-          default: false,
-          layout: 'switch'
         },
-        visibleTo: {
-          type: 'array',
-          title: 'Visible pour',
-          default: ['admin', 'contrib', 'user', 'external', 'anonymous'],
-          items: {
-            type: 'string',
-            oneOf: [
-              { const: 'admin', title: 'Administrateurs de l\'organisation' },
-              { const: 'contrib', title: 'Contributeurs de l\'organisation' },
-              { const: 'user', title: 'Autres membres de l\'organisation' },
-              { const: 'external', title: 'Utilisateurs externes authentifiés' },
-              { const: 'anonymous', title: 'Visiteurs anonymes' }
-            ]
-          },
-          layout: { if: 'parent.data?.active' }
-        },
-        type: {
-          type: 'string',
-          title: 'Mode d\'affichage',
-          default: 'menu',
-          oneOf: [
-            { const: 'drawer', title: 'Panneau latéral (drawer)' },
-            { const: 'menu', title: 'Menu flottant' }
-          ],
-          layout: { if: 'parent.data?.active', cols: 6 }
-        },
-        togglePosition: {
-          type: 'string',
-          title: 'Position du bouton',
-          default: 'fab',
-          oneOf: [
-            { const: 'fab', title: 'Bouton flottant (coin inférieur droit)' },
-            { const: 'appBar', title: 'Dans la barre de navigation' }
-          ],
-          layout: { if: 'parent.data?.active', cols: 6 }
-        },
-        chatTitle: {
-          type: 'string',
-          title: 'Titre de l\'assistant',
-          default: 'Assistant IA',
-          layout: { if: 'parent.data?.active' }
-        },
-        systemPrompt: {
-          type: 'string',
-          title: 'Prompt système',
-          default: 'Vous êtes un assistant IA intégré à un portail de données. Aidez les utilisateurs à trouver et comprendre les jeux de données disponibles.',
-          layout: {
-            comp: 'textarea',
-            if: 'parent.data?.active'
-          }
-        },
-        drawerProps: {
-          type: 'object',
-          title: 'Options du panneau latéral',
-          unevaluatedProperties: false,
-          layout: { if: "parent.data?.active && parent.data?.type === 'drawer'" },
-          properties: {
-            width: { type: 'number', title: 'Largeur (px)', default: 400 },
-            temporary: { type: 'boolean', title: 'Temporaire (se ferme au clic extérieur)', default: true, layout: 'switch' }
-          }
-        },
-        menuProps: {
-          type: 'object',
-          title: 'Options du menu',
-          unevaluatedProperties: false,
-          layout: { if: "parent.data?.active && parent.data?.type === 'menu'" },
-          properties: {
-            width: { type: 'number', title: 'Largeur (px)', default: 400, layout: { cols: 6 } },
-            height: { type: 'number', title: 'Hauteur (px)', default: 500, layout: { cols: 6 } }
-          }
-        },
-        btnProps: {
-          type: 'object',
-          title: 'Options du bouton',
-          unevaluatedProperties: false,
-          layout: { if: 'parent.data?.active', cols: 6 },
-          properties: {
-            size: {
-              type: 'string',
-              title: 'Taille',
-              default: 'default',
-              oneOf: [
-                { const: 'x-small', title: 'Très petit' },
-                { const: 'small', title: 'Petit' },
-                { const: 'default', title: 'Normal' },
-                { const: 'large', title: 'Grand' },
-                { const: 'x-large', title: 'Très grand' }
-              ]
-            }
-          }
+        hover: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
+          title: 'Effets au survol des éléments cliquables (Boites, vignettes, thématiques, boutons et menu de navigation)',
         }
       }
     }
