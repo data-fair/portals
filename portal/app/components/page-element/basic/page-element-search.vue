@@ -9,7 +9,8 @@
       v-model="searchQuery"
       :label="element.label || t('searchLabel')"
       :density="element.density"
-      :rounded="element.btnPosition === 'attached' ? `e-0 s-${element.rounded}` : element.rounded"
+      :rounded="element.rounded"
+      :class="element.btnPosition === 'attached' ? 'search-field-attached' : undefined"
       :color="element.color"
       :base-color="element.color"
       :variant="element.border ? 'outlined' : 'solo'"
@@ -32,9 +33,9 @@
           :color="element.color"
           :title="t('searchBtn')"
           :density="element.density"
-          :rounded="element.btnPosition === 'attached' ? `s-0 e-${element.rounded}` : element.rounded"
+          :rounded="element.rounded"
           :elevation="element.btnPosition === 'spaced' ? element.elevation : 0"
-          :class="element.btnPosition === 'spaced' ? 'ml-4 h-100' : 'h-100'"
+          :class="element.btnPosition === 'spaced' ? 'ml-4 h-100' : 'h-100 rounded-s-0'"
           stacked
           @click="onSearch"
         >
@@ -108,5 +109,12 @@ const onSearch = () => {
 /* Remove margin between input and appended button for attached button position */
 :deep(.v-input--horizontal .v-input__append) {
   margin-inline-start: 0 !important;
+}
+
+/* vuetify >= 4.1 reads any digit in the rounded prop as a CSS length, so per side values
+   like `e-0 s-lg` are dropped, the side joined to the button is flattened here instead */
+.search-field-attached :deep(.v-field) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
 }
 </style>

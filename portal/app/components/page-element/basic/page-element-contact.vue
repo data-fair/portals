@@ -4,10 +4,10 @@
       <v-col v-if="!tokenFetch?.error.value">
         <v-defaults-provider
           :defaults="{
-            VTextField: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
-            VTextarea: { rounded: element.rounded ? `${element.rounded} b-0` : undefined, autoGrow: true },
-            VSelect: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
-            VAutocomplete: { rounded: element.rounded ? `${element.rounded} b-0` : undefined },
+            VTextField: { rounded: element.rounded },
+            VTextarea: { rounded: element.rounded, autoGrow: true },
+            VSelect: { rounded: element.rounded },
+            VAutocomplete: { rounded: element.rounded },
           }"
         >
           <v-form
@@ -399,3 +399,12 @@ const sendMessage = useAsyncAction(async () => {
     by: 'émis par'
 
 </i18n>
+
+<style scoped>
+/* filled fields have flat bottom corners, but the rounded prop rounds all of them and cannot
+   express `lg b-0` anymore (vuetify >= 4.1 reads any digit in it as a CSS length) */
+:deep(.v-field--variant-filled) {
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+</style>
