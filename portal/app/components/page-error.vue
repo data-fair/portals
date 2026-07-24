@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/portal/index.js'
 import { mdiChevronLeft } from '@mdi/js'
+import { useHead } from '@unhead/vue'
 
 const props = defineProps<{
   statusCode: number
@@ -71,6 +72,15 @@ const defaultTitles: Record<number, string> = {
 const title = computed(() => props.title || defaultTitles[props.statusCode] || t('error'))
 const headingTag = computed(() => (portalConfig.value.header?.show && portalConfig.value.header?.showTitle) ? 'h2' : 'h1')
 
+// Distinct document title per error type (RGAA 8.6). Registered after the page's
+// own usePageSeo so it wins over the generic page title.
+const tabTitles: Record<number, string> = {
+  404: t('tabNotFound'),
+  401: t('tabUnauthorized'),
+  403: t('tabForbidden')
+}
+useHead({ title: () => (tabTitles[props.statusCode] || t('tabError')) + ' - ' + portalConfig.value.title })
+
 const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
   const image = portalConfig.value.errorImages?.[type]
   if (!image) return ''
@@ -85,10 +95,18 @@ const getErrorImageSrc = (type: 'notFound' | 'forbidden' | 'fallback') => {
     forbidden: You do not have permission to access this page.
     error: An unexpected error has occurred.
     goToHome: Go to Home
+    tabNotFound: Page not found
+    tabUnauthorized: Authentication required
+    tabForbidden: Access forbidden
+    tabError: Error
   fr:
     notFound: La page demandée n'existe pas.
     unauthorized: Vous devez être authentifié pour accéder à cette page.
     forbidden: Vous n'avez pas les droits pour accéder à cette page.
     error: Une erreur indéterminée s'est produite.
     goToHome: Aller à l'accueil
+    tabNotFound: Page introuvable
+    tabUnauthorized: Authentification requise
+    tabForbidden: Accès interdit
+    tabError: Erreur
 </i18n>
