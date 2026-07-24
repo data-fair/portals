@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/portal/index.js'
 import { mdiChevronLeft } from '@mdi/js'
+import { useHead } from '@unhead/vue'
 
 const props = defineProps<{
   statusCode: number
