@@ -35,16 +35,18 @@
           aria-hidden="true"
         />
         <template v-if="(showHeader && !$vuetify.display.smAndDown)">
-          <p class="ml-2">{{ session.user.value.name }}</p>
+          <p class="ml-2">
+            {{ session.user.value.name }}
+          </p>
         </template>
       </v-btn>
     </template>
 
-      <!-- Eager to prevent ARIA errors-->
-      <v-menu
-        :close-on-content-click="false"
-        eager
-      >
+    <!-- Eager to prevent ARIA errors-->
+    <v-menu
+      :close-on-content-click="false"
+      eager
+    >
       <template #activator="{ props }">
         <v-btn
           v-bind="props"
@@ -59,7 +61,9 @@
             aria-hidden="true"
           />
           <template v-if="(showHeader && !$vuetify.display.smAndDown) || personal">
-            <p class="ml-2">{{ session.user.value.name }}</p>
+            <p class="ml-2">
+              {{ session.user.value.name }}
+            </p>
           </template>
         </v-btn>
       </template>

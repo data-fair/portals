@@ -26,7 +26,22 @@
       class="mr-4"
     />
     <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]"><!--
-      -->{{ element.content }}<!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+      --><a
+        v-if="link?.href"
+        :href="link.href"
+        :title="link.title"
+        :target="link.target ? '_blank' : undefined"
+        :rel="link.target ? 'noopener' : undefined"
+        style="text-decoration: none; color: inherit"
+      >{{ element.content }}</a><NuxtLink
+        v-else-if="link?.to"
+        :to="link.to"
+        :title="link.title"
+        :target="link.target ? '_blank' : undefined"
+        :rel="link.target ? 'noopener' : undefined"
+        style="text-decoration: none; color: inherit"
+      >{{ element.content }}</NuxtLink><!--
+      --><template v-else>{{ element.content }}</template><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
         v-if="anchorId"
         :icon="copied ? mdiCheck : mdiLinkVariant"
         :title="copied ? t('linkCopied') : t('copyLink')"
@@ -61,6 +76,8 @@ import type { TitleElement } from '#api/types/page-elements/index.ts'
 
 const { element, lineGrow, lineHovering } = defineProps<{
   element: TitleElement
+  /** Wraps the title text only, so the copy-anchor button stays outside the link */
+  link?: { href?: string, to?: string, title?: string, target?: boolean }
   lineGrow?: boolean
   lineHovering?: boolean
 }>()

@@ -32,7 +32,10 @@
 
         <v-spacer />
 
-        <div id="agent-chat-appbar" class="d-flex align-center" />
+        <div
+          id="agent-chat-appbar"
+          class="d-flex align-center"
+        />
 
         <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
           <v-btn

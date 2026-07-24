@@ -6,10 +6,11 @@ import debugModule from 'debug'
 
 const debug = debugModule('matomo')
 
-type MatomoPluginConfig = { trackerBase?: string, siteId?: string, nonce?: string }
+// The queue is created by matomo's own snippet or by initialize below, whichever
+// comes first, so every call site has to tolerate it not being there yet.
+const paq = () => (window._paq ??= [])
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _window = window as any
+type MatomoPluginConfig = { trackerBase?: string, siteId?: string, nonce?: string }
 
 export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlugin {
   const plugin: AnalyticsPlugin = {
@@ -20,10 +21,10 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
 
       // The matomo configuration array, cf https://developer.matomo.org/guides/tracking-javascript-guide
       // items are of the form ['API_method_name', parameters...]
-      _window._paq = _window._paq || []
+      paq()
       const trackerBase = params.trackerBase + (params.trackerBase.endsWith('/') ? '' : '/')
-      _window._paq.push(['setTrackerUrl', trackerBase + 'piwik.php'])
-      _window._paq.push(['setSiteId', params.siteId])
+      paq().push(['setTrackerUrl', trackerBase + 'piwik.php'])
+      paq().push(['setSiteId', params.siteId])
       const d = document
       const g = d.createElement('script')
       const s = d.getElementsByTagName('script')[0]
@@ -36,19 +37,19 @@ export default function matomoPlugin (params: MatomoPluginConfig): AnalyticsPlug
     },
     page: ({ payload }) => {
       debug('page', payload.properties)
-      _window._paq.push(['setDocumentTitle', payload.properties.title])
-      _window._paq.push(['trackPageView'])
+      paq().push(['setDocumentTitle', payload.properties.title])
+      paq().push(['trackPageView'])
     },
     track: ({ payload }) => {
       debug('track', payload)
       if (payload.event === 'search') {
         // https://developer.matomo.org/guides/tracking-javascript-guide#internal-search-tracking
-        _window._paq.push(['trackSiteSearch', payload.properties.label, payload.properties.category, payload.properties.resultsCount])
+        paq().push(['trackSiteSearch', payload.properties.label, payload.properties.category, payload.properties.resultsCount])
       } else if (payload.event.startsWith('download')) {
         const url = payload.properties.url || `${window.location.origin}/download/${payload.properties.label}`
-        _window._paq.push(['trackLink', url, 'download'])
+        paq().push(['trackLink', url, 'download'])
       } else {
-        _window._paq.push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
+        paq().push(['trackEvent', payload.properties.category, payload.event, payload.properties.label])
       }
     }
   }

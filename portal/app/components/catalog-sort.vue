@@ -18,7 +18,10 @@
       @update:model-value="$emit('update:sort', $event)"
       @click:clear="$emit('update:order', undefined)"
     >
-      <template v-if="!drawer" #append>
+      <template
+        v-if="!drawer"
+        #append
+      >
         <v-btn-toggle
           :model-value="order"
           :density="density"

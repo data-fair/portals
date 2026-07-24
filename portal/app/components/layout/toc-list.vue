@@ -15,7 +15,9 @@
       @click="emit('select', section.id)"
     >
       <!-- text-wrap lets long titles wrap instead of being truncated (the portals_v1 regression) -->
-      <v-list-item-title class="text-wrap">{{ section.title }}</v-list-item-title>
+      <v-list-item-title class="text-wrap">
+        {{ section.title }}
+      </v-list-item-title>
     </v-list-item>
   </v-list>
 </template>

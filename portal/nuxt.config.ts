@@ -77,6 +77,14 @@ export default defineNuxtConfig({
     'nuxt-security',
     'vuetify-nuxt-module'
   ],
+  // standalone false => @nuxt/eslint only contributes its Nuxt/Vue rules and leaves
+  // the base TypeScript setup to neostandard. Otherwise both ship their own
+  // @typescript-eslint instance and eslint refuses to merge the configs.
+  eslint: {
+    config: {
+      standalone: false
+    }
+  },
   i18n: {
     locales: ['fr', 'en'],
     defaultLocale: 'fr',

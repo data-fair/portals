@@ -10,8 +10,14 @@
     variant="text"
     icon
   >
-    <component :is="platform.component" v-if="platform.component" />
-    <v-icon v-else :icon="platform.icon" />
+    <component
+      :is="platform.component"
+      v-if="platform.component"
+    />
+    <v-icon
+      v-else
+      :icon="platform.icon"
+    />
   </v-btn>
 </template>
 

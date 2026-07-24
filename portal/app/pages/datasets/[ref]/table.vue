@@ -88,4 +88,3 @@ onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
     dataset: Jeu de données
     table: Tableau
 </i18n>
-

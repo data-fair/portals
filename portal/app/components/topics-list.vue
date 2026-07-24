@@ -17,29 +17,33 @@
         label => use default button rounding, not default chip rounding
         @click => toggle selection in query param
       -->
-      <v-chip
-        :color="resolvedColor(topic.color)"
-        :density="config?.density ?? portalConfig.defaults?.density"
-        :elevation="hoverFx.elevation(isHovering(topic.id), config?.elevation ?? portalConfig.defaults?.elevation)"
-        :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
-        :link="isFilters || !!link"
-        :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
-        :variant="chipVariant(topic.id)"
-        :style="[chipStyle(topic.id, topic.color), chipHoverStyle(topic, isHovering(topic.id))]"
-        label
-        @click="toggle(topic.id)"
-        @mouseenter="hoveredTopic = topic.id"
-        @mouseleave="hoveredTopic = undefined"
+      <v-hover
+        v-slot="{ isHovering, props: hoverProps }"
+        :disabled="!hoverInteractive"
       >
-        <v-icon
-          v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
-          :color="resolvedIconColor(topic.id, topic.color)"
-          :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
-          start
-        />
-        <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
-        <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
-      </v-chip>
+        <v-chip
+          v-bind="hoverProps"
+          :color="resolvedColor(topic.color)"
+          :density="config?.density ?? portalConfig.defaults?.density"
+          :elevation="hoverFx.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
+          :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
+          :link="isFilters || !!link"
+          :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
+          :variant="chipVariant(topic.id)"
+          :style="[chipStyle(topic.id, topic.color), chipHoverStyle(topic, isHovering)]"
+          label
+          @click="toggle(topic.id)"
+        >
+          <v-icon
+            v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
+            :color="resolvedIconColor(topic.id, topic.color)"
+            :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
+            start
+          />
+          <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
+          <span class="text-truncate">{{ topic.title }} {{ topic.count !== undefined ? `(${topic.count})` : '' }}</span>
+        </v-chip>
+      </v-hover>
     </v-col>
   </v-row>
 </template>
@@ -81,10 +85,6 @@ const relevantEffects = computed<HoverEffect[]>(() => {
 const hoverFx = useHoverConfig(() => config?.hover, relevantEffects)
 
 const hoverInteractive = computed(() => isFilters || !!link)
-
-// per-chip hover state, see useHoverState for why VHover is not used
-const hoveredTopic = ref<string>()
-const isHovering = (id: string) => hoverInteractive.value && hoveredTopic.value === id
 
 // The 'default' hover color means each topic's own color (raw CSS color, not a theme name).
 const chipHoverStyle = (topic: { id: string, color?: string }, isHovering: boolean | null): Record<string, string> | undefined => {

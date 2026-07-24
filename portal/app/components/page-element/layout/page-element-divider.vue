@@ -9,7 +9,10 @@
       element.rounded ? 'rounded' : ''
     ]"
   >
-    <template v-if="element.content" #default>
+    <template
+      v-if="element.content"
+      #default
+    >
       {{ element.content }}
     </template>
   </v-divider>

@@ -16,7 +16,9 @@
           </p>
           <p v-if="standardPagesFetch.data.value?.contact">
             <v-icon :icon="mdiEmail" />
-            <NuxtLink to="/contact">{{ t('contactUs') }}</NuxtLink>
+            <NuxtLink to="/contact">
+              {{ t('contactUs') }}
+            </NuxtLink>
           </p>
         </v-col>
         <v-col cols="6">

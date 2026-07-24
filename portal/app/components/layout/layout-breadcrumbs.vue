@@ -24,7 +24,6 @@
           v-for="(item, index) in breadcrumbItems"
           :key="index"
         >
-
           <v-breadcrumbs-item
             v-bind="typeof item === 'object' ? item : { title: item }"
             :class="{ 'text-body-medium': breadcrumbConfig.compact && !isLayoutFull, 'text-medium-emphasis': !isLayoutFull }"
