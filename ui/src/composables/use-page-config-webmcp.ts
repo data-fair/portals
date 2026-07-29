@@ -1,4 +1,4 @@
-import { computed, shallowRef, watch, toRaw, type Ref } from 'vue'
+import { computed, shallowRef, watch, toRaw, onScopeDispose, type Ref } from 'vue'
 import { StatefulLayout } from '@json-layout/core/state'
 import { WebMCP } from '@json-layout/core/webmcp'
 import equal from 'fast-deep-equal'
@@ -51,7 +51,14 @@ export function usePageConfigWebMCP (
         sl as any,
         { prefixName: 'pageConfig_', dataTitle: 'Page configuration', includeSubAgent: true }
       )
-      await wm.registerTools()
+      try {
+        await wm.registerTools()
+      } catch (e) {
+        // a failed registerTools may leave some tools registered; release them so
+        // the global navigator.modelContext registry is not poisoned for retries
+        await wm.unregisterTools().catch(() => {})
+        throw e
+      }
       webMCP.value = wm
     } catch (e) {
       console.error('[usePageConfigWebMCP] setup error', e)
@@ -59,6 +66,16 @@ export function usePageConfigWebMCP (
       setupInProgress = false
     }
   }
+
+  // navigator.modelContext is a page-lifetime global registry that throws on
+  // duplicate names: tools must be released when the owning component unmounts,
+  // otherwise the next mount fails with "Tool already registered"
+  onScopeDispose(() => {
+    if (webMCP.value) {
+      webMCP.value.unregisterTools().catch((e: any) => console.error('[usePageConfigWebMCP] unregister error', e))
+      webMCP.value = null
+    }
+  })
 
   // Load compiled layout when locale changes
   watch(locale, async (loc) => {
