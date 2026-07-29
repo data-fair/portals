@@ -1,5 +1,6 @@
 <template>
   <v-container data-iframe-height>
+    <page-config-errors :config="editConfig" />
     <portal-preview-provider>
       <v-form
         v-if="editConfig"
@@ -56,6 +57,7 @@ import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
 
 import equal from 'fast-deep-equal'
+import { validate as validatePageConfig } from '#api/types/page-config/index.ts'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
@@ -70,8 +72,15 @@ const { pageFetch, patchPage } = usePageStore()
 const editConfig = ref<PageConfig>()
 watch(pageFetch.data, () => {
   if (!pageFetch.data.value) return
-  if (equal(toRaw(editConfig.value), pageFetch.data.value.draftConfig)) return
-  editConfig.value = pageFetch.data.value.draftConfig
+  // old configs can carry properties that the schema rejects (leftovers of an element
+  // type switch, propagated by page duplication), the form would be invalid from the
+  // start and saving the draft would be silently blocked. The validate function is
+  // compiled with removeAdditional and strips them from its input.
+  const draftConfig = structuredClone(toRaw(pageFetch.data.value.draftConfig))
+  validatePageConfig(draftConfig)
+  if (!equal(draftConfig, toRaw(pageFetch.data.value.draftConfig))) console.warn('removed properties rejected by the page config schema')
+  if (equal(toRaw(editConfig.value), draftConfig)) return
+  editConfig.value = draftConfig
 }, { immediate: true })
 provide('page-config', editConfig)
 
