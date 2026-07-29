@@ -1,6 +1,6 @@
 <template>
   <v-container data-iframe-height>
-    <page-config-errors :config="editConfig" />
+    <page-config-errors :errors="storedConfigErrors" />
     <v-form
       v-if="editConfig"
       v-model="formValid"
@@ -44,6 +44,7 @@
 <script lang="ts" setup>
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 import type { Page, Group, PageConfig } from '#api/types/page/index.ts'
+import type { ErrorObject } from 'ajv'
 
 import { validate as validatePageConfig } from '#api/types/page-config/index.ts'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
@@ -57,6 +58,9 @@ const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 const { pageFetch, patchPage } = usePageStore()
 
 const editConfig = ref<PageConfig>()
+// errors of the stored config that healing could not fix, they block the draft saves
+// and the form does not display the ones carried by page elements
+const storedConfigErrors = ref<string[]>([])
 watch(pageFetch.data, () => {
   if (!pageFetch.data.value) return
   // old configs can carry properties that the schema rejects (leftovers of an element
@@ -64,7 +68,12 @@ watch(pageFetch.data, () => {
   // start and saving the draft would be silently blocked. The full page-config validate
   // function is compiled with removeAdditional and strips them from its input.
   const draftConfig = structuredClone(toRaw(pageFetch.data.value.draftConfig))
-  validatePageConfig(draftConfig)
+  if (validatePageConfig(draftConfig)) {
+    storedConfigErrors.value = []
+  } else {
+    const validationErrors = (validatePageConfig as unknown as { errors?: ErrorObject[] | null }).errors ?? []
+    storedConfigErrors.value = [...new Set(validationErrors.map(error => `${error.instancePath} ${error.message}`))]
+  }
   editConfig.value = draftConfig
 }, { immediate: true })
 provide('page-config', editConfig)
@@ -149,6 +158,8 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
   await patchPage.execute({ draftConfig: editConfig.value })
+  // the stored draft was accepted by the API, it no longer carries errors
+  storedConfigErrors.value = []
 })
 
 watch(pageFetch.data, (page) => {
