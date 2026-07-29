@@ -1,7 +1,13 @@
 export default {
   $id: 'https://github.com/data-fair/portals/page-config',
-  'x-exports': ['types', 'vjsf'],
+  'x-exports': ['types', 'vjsf', 'validate'],
   'x-jstt': { additionalProperties: false },
+  // the validate export MUTATES its input: removeAdditional strips the properties that
+  // violate additionalProperties, so that configs carrying leftovers of old element type
+  // switches can be healed instead of blocking the page editor. The discriminator option
+  // is required for this to be safe: without it the properties of the matching branch of
+  // the elements oneOf would be removed as additional properties of the other branches.
+  'x-ajv': { discriminator: true, removeAdditional: true },
   'x-vjsf': {
     pluginsImports: ['@koumoul/vjsf-markdown'],
     xI18n: true,
