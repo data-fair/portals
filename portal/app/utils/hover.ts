@@ -1,11 +1,12 @@
 // Relative (not the portal's #api alias) so this file still resolves under the
 // root tsconfig that type-checks the unit test importing it — that config has no
 // #api alias, and the tests import api types relatively too.
-import type { Effects as SchemaHoverEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
+import type { Effects as SchemaHoverEffects, Effets as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
 
 // Derived from the generated schema types so the effect unions can never drift
-// from the editor's options (hoverEffectsList / buttonConfig in common-defs)
-export type HoverEffect = SchemaHoverEffects[number]
+// from the editor's options (hoverEffectsList / hoverConfigTopics / buttonConfig in common-defs).
+// Topics bring "invert", which only makes sense on a chip that toggles a filter.
+export type HoverEffect = SchemaHoverEffects[number] | SchemaTopicsEffects[number]
 
 export type HoverLike = { effects?: HoverEffect[], color?: string }
 
@@ -43,11 +44,8 @@ const transformTransition = hoverTransition('transform')
 // explicit effects: [] means no effect, absent means inherit
 export const resolveHoverConfig = (config?: HoverLike, portalDefaults?: HoverLike, relevantEffects?: HoverEffect[]): ResolvedHoverConfig => {
   let effects = config?.effects ?? portalDefaults?.effects ?? ['darken' as HoverEffect]
-  if (relevantEffects) {
-    const filtered = effects.filter(e => relevantEffects.includes(e))
-    if (filtered.length || !effects.length) effects = filtered
-    else effects = ['darken'] // the filter removed everything the user picked
-  }
+  // an effect the current context can't render is dropped, never substituted
+  if (relevantEffects) effects = effects.filter(e => relevantEffects.includes(e))
   return { effects, color: config?.color ?? portalDefaults?.color ?? 'primary' }
 }
 
@@ -82,6 +80,11 @@ export const hoverRootStyle = (resolved: ResolvedHoverConfig, isHovering: boolea
       style.color = onThemeColor(resolved.color)
     }
     transitions.push(hoverTransition('background-color'), hoverTransition('color'))
+  }
+  // The component swaps the filled/outlined variant itself, only the tempo is declared here:
+  // .v-chip carries no native transition, so the flip would be abrupt.
+  if (resolved.effects.includes('invert')) {
+    transitions.push(hoverTransition('background-color'), hoverTransition('color'), hoverTransition('border-color'))
   }
   if (transitions.length) style.transition = [...(opts?.small ? [chipNativeTransition] : cardNativeTransitions), ...transitions].join(', ')
   return Object.keys(style).length ? style : undefined

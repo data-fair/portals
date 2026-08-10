@@ -21,11 +21,11 @@ test.describe('hover config resolution', () => {
     assert.deepEqual(resolveHoverConfig({ effects: [] }, { effects: ['elevate'] }).effects, [])
   })
 
-  test('relevant effects filter keeps subset, falls back to darken when nothing relevant remains', () => {
+  test('relevant effects filter drops what the context cannot render, without substituting darken', () => {
     const subset = resolveHoverConfig({ effects: ['background', 'elevate'] }, undefined, ['darken', 'background'])
     assert.deepEqual(subset.effects, ['background'])
-    const fallback = resolveHoverConfig({ effects: ['elevate'] }, undefined, ['darken', 'background'])
-    assert.deepEqual(fallback.effects, ['darken'])
+    const dropped = resolveHoverConfig({ effects: ['elevate'] }, undefined, ['darken', 'background'])
+    assert.deepEqual(dropped.effects, [])
     const emptied = resolveHoverConfig({ effects: [] }, undefined, ['darken', 'background'])
     assert.deepEqual(emptied.effects, [])
   })
@@ -78,6 +78,13 @@ test.describe('hover props helpers', () => {
     const hovering = hoverRootStyle(resolved, true)
     assert.equal(hovering?.borderColor, 'rgb(var(--v-theme-accent))')
     assert.equal(hoverRootStyle(resolved, true, { hasBorder: true })?.border, undefined)
+  })
+
+  test('invert declares the transitions a chip has no native tempo for', () => {
+    const transition = hoverRootStyle(resolveHoverConfig({ effects: ['invert'] }), true, { small: true })?.transition ?? ''
+    assert.match(transition, /background-color \.15s/)
+    assert.match(transition, /border-color \.15s/)
+    assert.match(transition, /color \.15s/)
   })
 
   test('inline background option writes background and on-color inline', () => {
