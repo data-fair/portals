@@ -86,4 +86,3 @@ onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
     dataset: Jeu de données
     map: Carte
 </i18n>
-

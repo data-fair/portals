@@ -286,12 +286,12 @@
       <v-divider />
       <div class="text-center my-2">
         <span>&copy;{{ new Date().getFullYear() }} — </span><strong><a
-            href="https://koumoul.com"
-            :title="t('koumoulWebsite') + ' - ' + t('newWindow')"
-            target="_blank"
-            rel="noopener"
-            class="simple-link"
-          >Koumoul</a></strong>
+          href="https://koumoul.com"
+          :title="t('koumoulWebsite') + ' - ' + t('newWindow')"
+          target="_blank"
+          rel="noopener"
+          class="simple-link"
+        >Koumoul</a></strong>
       </div>
     </template>
   </v-footer>

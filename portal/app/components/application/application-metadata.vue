@@ -19,7 +19,9 @@
         v-if="showBaseApplication"
         v-bind="metadataColProps"
       >
-        <div class="text-body-small text-medium-emphasis"> {{ t('application') }}</div>
+        <div class="text-body-small text-medium-emphasis">
+          {{ t('application') }}
+        </div>
         {{ baseApplicationFetch.data.value?.title || application.url.split('/').slice(-3,-2).pop() }}
       </v-col>
 
@@ -28,7 +30,9 @@
         v-if="metadataConfig.showDepartment"
         v-bind="metadataColProps"
       >
-        <div class="text-body-small text-medium-emphasis">{{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}</div>
+        <div class="text-body-small text-medium-emphasis">
+          {{ customOwnerLabel ? t('ownerOverride', { owner: customOwnerLabel }) : t('owner') }}
+        </div>
         <div class="d-flex align-center ga-2">
           <owner-avatar
             :owner="application.owner"
@@ -44,7 +48,9 @@
         v-if="topicsConfig?.show && application.topics?.length"
         v-bind="metadataColProps"
       >
-        <div class="text-body-small text-medium-emphasis">{{ t('topics') }}</div>
+        <div class="text-body-small text-medium-emphasis">
+          {{ t('topics') }}
+        </div>
         <topics-list
           :topics="application.topics"
           :config="topicsConfig"
@@ -53,7 +59,9 @@
 
       <!-- Update dates -->
       <v-col v-bind="metadataColProps">
-        <div v-if="dataUpdatedAt">{{ t('dataUpdatedAt') }} {{ dayjs(dataUpdatedAt).format('LL') }}</div>
+        <div v-if="dataUpdatedAt">
+          {{ t('dataUpdatedAt') }} {{ dayjs(dataUpdatedAt).format('LL') }}
+        </div>
         <div>{{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('LL') }}</div>
       </v-col>
 
@@ -63,7 +71,9 @@
           v-if="application.public && metadataConfig.location !== 'right'"
           v-bind="metadataColProps"
         >
-          <div class="text-body-small text-medium-emphasis">{{ t('share') }}</div>
+          <div class="text-body-small text-medium-emphasis">
+            {{ t('share') }}
+          </div>
           <social-share :title="application.title" />
         </v-col>
       </ClientOnly>

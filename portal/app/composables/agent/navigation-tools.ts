@@ -192,11 +192,11 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
             text: `**Success**: true\n**New Path**: ${currentRoute.path}\n**Query**: ${JSON.stringify({ ...currentRoute.query })}`
           }]
         }
-      } catch (error: any) {
+      } catch (error) {
         return {
           content: [{
             type: 'text' as const,
-            text: `**Success**: false\n**Error**: ${error.message}`
+            text: `**Success**: false\n**Error**: ${error instanceof Error ? error.message : String(error)}`
           }],
           isError: true
         }

@@ -14,7 +14,7 @@ export function useAgentDatasetTools (locale: Ref<string>, localFetch: $Fetch) {
     annotations: { ...listDatasets.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
       const { path, query } = listDatasets.buildQuery(params, true)
-      const data = await localFetch<any>(`/data-fair/api/v1/${path}`, { query })
+      const data = await localFetch<unknown>(`/data-fair/api/v1/${path}`, { query })
       const page = Math.max(params.page || 1, 1)
       const size = Math.min(Math.max(params.size || 10, 1), 50)
       const result = listDatasets.formatResult(data, page, size)
@@ -27,8 +27,8 @@ export function useAgentDatasetTools (locale: Ref<string>, localFetch: $Fetch) {
     annotations: { ...describeDataset.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
       const [dataset, linesData] = await Promise.all([
-        localFetch<any>(`/data-fair/api/v1/datasets/${encodeURIComponent(params.datasetId)}`),
-        localFetch<any>(`/data-fair/api/v1/datasets/${encodeURIComponent(params.datasetId)}/lines`, { query: { size: '3' } })
+        localFetch<unknown>(`/data-fair/api/v1/datasets/${encodeURIComponent(params.datasetId)}`),
+        localFetch<{ results: unknown[] }>(`/data-fair/api/v1/datasets/${encodeURIComponent(params.datasetId)}/lines`, { query: { size: '3' } })
       ])
       const result = describeDataset.formatResult(dataset, { sampleLines: linesData.results })
       return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }

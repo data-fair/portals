@@ -6,7 +6,7 @@
   >
     <v-list-item-subtitle v-if="attachment.type === 'file'">
       {{ attachment.name }} - {{ formatBytes(attachment.size) }} - {{ t('updatedAt') }} {{
-      dayjs(attachment.updatedAt).format('LL') }}
+        dayjs(attachment.updatedAt).format('LL') }}
     </v-list-item-subtitle>
     <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
       {{ attachment.name }}

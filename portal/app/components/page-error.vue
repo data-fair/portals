@@ -8,7 +8,10 @@
           style="max-height: 300px; margin: auto"
           aria-hidden="true"
         />
-        <error-not-found v-else style="max-height: 300px" />
+        <error-not-found
+          v-else
+          style="max-height: 300px"
+        />
       </template>
       <template v-else-if="statusCode === 401 || statusCode === 403">
         <v-img
@@ -17,7 +20,10 @@
           style="max-height: 300px; margin: auto"
           aria-hidden="true"
         />
-        <error-forbidden v-else style="max-height: 300px" />
+        <error-forbidden
+          v-else
+          style="max-height: 300px"
+        />
       </template>
       <template v-else>
         <v-img
@@ -26,7 +32,10 @@
           style="max-height: 300px; margin: auto"
           aria-hidden="true"
         />
-        <error-server v-else style="max-height: 300px" />
+        <error-server
+          v-else
+          style="max-height: 300px"
+        />
       </template>
       <component
         :is="headingTag"

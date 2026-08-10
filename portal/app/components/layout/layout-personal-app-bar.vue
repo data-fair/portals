@@ -15,7 +15,12 @@
     <v-breadcrumbs :items="breadcrumbs" />
 
     <v-spacer />
-    <div id="agent-chat-appbar" class="d-flex align-center" />
+    <div
+      id="agent-chat-appbar"
+      class="d-flex align-center"
+    />
+    <theme-switcher :theme="portalConfig.theme" />
+
     <v-toolbar-items>
       <v-btn
         v-if="preview"
@@ -33,7 +38,6 @@
         v-else
         events-url="/events"
       />
-      <theme-switcher :theme="portalConfig.theme" />
 
       <!-- Personal Menu -->
       <layout-personal-menu personal />

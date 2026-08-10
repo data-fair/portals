@@ -19,8 +19,8 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     execute: async (params) => {
       const { schemaReq, samplesReq } = getDatasetSchema.buildQuery(params)
       const [dataset, linesData] = await Promise.all([
-        localFetch<any>(apiBase + schemaReq.path, { query: schemaReq.query }),
-        localFetch<any>(apiBase + samplesReq.path, { query: samplesReq.query })
+        localFetch<unknown>(apiBase + schemaReq.path, { query: schemaReq.query }),
+        localFetch<unknown>(apiBase + samplesReq.path, { query: samplesReq.query })
       ])
       return getDatasetSchema.formatResult(dataset, linesData)
     }
@@ -30,13 +30,13 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     ...searchData.schema,
     annotations: { ...searchData.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
-      let data: any
+      let data: unknown
       if (params.next) {
         const url = new URL(params.next)
-        data = await localFetch<any>(url.pathname + url.search)
+        data = await localFetch<unknown>(url.pathname + url.search)
       } else {
         const { path, query } = searchData.buildQuery(params)
-        data = await localFetch<any>(apiBase + path, { query })
+        data = await localFetch<unknown>(apiBase + path, { query })
       }
       const result = searchData.formatResult(data, params)
       return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
@@ -48,7 +48,7 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     annotations: { ...aggregateData.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
       const { path, query } = aggregateData.buildQuery(params)
-      const data = await localFetch<any>(apiBase + path, { query })
+      const data = await localFetch<unknown>(apiBase + path, { query })
       const result = aggregateData.formatResult(data, params)
       return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
@@ -59,7 +59,7 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     annotations: { ...calculateMetric.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
       const { path, query } = calculateMetric.buildQuery(params)
-      const data = await localFetch<any>(apiBase + path, { query })
+      const data = await localFetch<unknown>(apiBase + path, { query })
       const result = calculateMetric.formatResult(data, params)
       return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }
@@ -70,7 +70,7 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     annotations: { ...getFieldValues.annotations[localeVal], readOnlyHint: true },
     execute: async (params) => {
       const { path, query } = getFieldValues.buildQuery(params)
-      const values = await localFetch<any>(apiBase + path, { query })
+      const values = await localFetch<unknown>(apiBase + path, { query })
       const result = getFieldValues.formatResult(values, params)
       return { content: [{ type: 'text' as const, text: result.text }], structuredContent: result.structuredContent }
     }

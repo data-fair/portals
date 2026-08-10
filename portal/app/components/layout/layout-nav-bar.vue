@@ -32,7 +32,14 @@
 
         <v-spacer />
 
-        <div id="agent-chat-appbar" class="d-flex align-center" />
+        <div
+          id="agent-chat-appbar"
+          class="d-flex align-center"
+        />
+
+        <!-- before the authentication block: the theme is a visitor preference,
+             available even on a portal without accounts -->
+        <theme-switcher :theme="portalConfig.theme" />
 
         <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
           <v-btn
@@ -51,7 +58,6 @@
             v-else
             events-url="/events"
           />
-          <theme-switcher :theme="portalConfig.theme" />
           <layout-personal-menu
             :login-color="navBarConfig.loginColor"
             :nav-bar-color="navBarConfig.color"

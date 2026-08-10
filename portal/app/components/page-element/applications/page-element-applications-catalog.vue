@@ -24,7 +24,10 @@
       />
     </template>
     <template #page-elements="slotProps">
-      <slot name="page-elements" v-bind="slotProps" />
+      <slot
+        name="page-elements"
+        v-bind="slotProps"
+      />
     </template>
   </catalog-layout>
 </template>

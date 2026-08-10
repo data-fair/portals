@@ -28,7 +28,9 @@
             v-if="!allInternalPaths.has('/')"
             class="mb-2"
           >
-            <NuxtLink to="/">{{ t('home') }}</NuxtLink>
+            <NuxtLink to="/">
+              {{ t('home') }}
+            </NuxtLink>
           </li>
           <sitemap-menu-item
             v-for="(item, i) in internalNavigationItems"
@@ -61,19 +63,25 @@
             v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')"
             class="mb-2"
           >
-            <NuxtLink to="/datasets">{{ t('datasets') }}</NuxtLink>
+            <NuxtLink to="/datasets">
+              {{ t('datasets') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['applications'] && !allInternalPaths.has('/applications')"
             class="mb-2"
           >
-            <NuxtLink to="/applications">{{ t('applications') }}</NuxtLink>
+            <NuxtLink to="/applications">
+              {{ t('applications') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['reuses'] && !allInternalPaths.has('/reuses')"
             class="mb-2"
           >
-            <NuxtLink to="/reuses">{{ t('reuses') }}</NuxtLink>
+            <NuxtLink to="/reuses">
+              {{ t('reuses') }}
+            </NuxtLink>
           </li>
         </ul>
       </section>
@@ -105,37 +113,49 @@
             v-if="standardPages.contact && !allInternalPaths.has('/contact')"
             class="mb-2"
           >
-            <NuxtLink to="/contact">{{ t('contact') }}</NuxtLink>
+            <NuxtLink to="/contact">
+              {{ t('contact') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages.accessibility && !allInternalPaths.has('/accessibility')"
             class="mb-2"
           >
-            <NuxtLink to="/accessibility">{{ t('accessibility') }}</NuxtLink>
+            <NuxtLink to="/accessibility">
+              {{ t('accessibility') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['terms-of-service'] && !allInternalPaths.has('/terms-of-service')"
             class="mb-2"
           >
-            <NuxtLink to="/terms-of-service">{{ t('termsOfService') }}</NuxtLink>
+            <NuxtLink to="/terms-of-service">
+              {{ t('termsOfService') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['legal-notice'] && !allInternalPaths.has('/legal-notice')"
             class="mb-2"
           >
-            <NuxtLink to="/legal-notice">{{ t('legalNotice') }}</NuxtLink>
+            <NuxtLink to="/legal-notice">
+              {{ t('legalNotice') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['privacy-policy'] && !allInternalPaths.has('/privacy-policy')"
             class="mb-2"
           >
-            <NuxtLink to="/privacy-policy">{{ t('privacyPolicy') }}</NuxtLink>
+            <NuxtLink to="/privacy-policy">
+              {{ t('privacyPolicy') }}
+            </NuxtLink>
           </li>
           <li
             v-if="standardPages['cookie-policy'] && !allInternalPaths.has('/cookie-policy')"
             class="mb-2"
           >
-            <NuxtLink to="/cookie-policy">{{ t('cookiePolicy') }}</NuxtLink>
+            <NuxtLink to="/cookie-policy">
+              {{ t('cookiePolicy') }}
+            </NuxtLink>
           </li>
         </ul>
       </section>

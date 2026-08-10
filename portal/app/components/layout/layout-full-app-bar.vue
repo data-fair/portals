@@ -13,11 +13,14 @@
 
     <!-- Breadcrumbs -->
     <v-spacer />
-    <LayoutBreadcrumbs is-layout-full/>
+    <LayoutBreadcrumbs is-layout-full />
     <v-spacer />
 
     <!-- Agent Chat -->
-    <div id="agent-chat-appbar" class="d-flex align-center" />
+    <div
+      id="agent-chat-appbar"
+      class="d-flex align-center"
+    />
   </v-app-bar>
 </template>
 

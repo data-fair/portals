@@ -18,15 +18,20 @@
       :style="{ borderLeft: `4px solid rgb(var(--v-theme-${element.line?.color}))` }"
       aria-hidden="true"
     />
-    <v-icon
-      v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
-      :icon="element.icon.mdi?.svgPath || element.icon.custom"
-      :color="element.icon.color"
-      size="small"
-      class="mr-4"
-    />
     <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]"><!--
-      -->{{ element.content }}<!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+      the link wraps the icon and the text, so the icon is part of the click target,
+      but never the copy button: a button inside a link is interactive content
+      nested in a link
+      --><component
+        :is="linkTag"
+        v-bind="linkAttrs"
+      ><v-icon
+        v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
+        :icon="element.icon.mdi?.svgPath || element.icon.custom"
+        :color="element.icon.color"
+        size="small"
+        class="mr-4"
+      />{{ element.content }}</component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
         v-if="anchorId"
         :icon="copied ? mdiCheck : mdiLinkVariant"
         :title="copied ? t('linkCopied') : t('copyLink')"
@@ -59,13 +64,30 @@
 import { mdiLinkVariant, mdiCheck } from '@mdi/js'
 import type { TitleElement } from '#api/types/page-elements/index.ts'
 
-const { element, lineGrow, lineHovering } = defineProps<{
+const { element, link, lineGrow, lineHovering } = defineProps<{
   element: TitleElement
+  /** Wraps the icon and the title text, so the copy-anchor button stays outside the link */
+  link?: { href?: string, to?: string, title?: string, target?: boolean }
   lineGrow?: boolean
   lineHovering?: boolean
 }>()
 
 const { t } = useI18n()
+
+const nuxtLink = resolveComponent('NuxtLink')
+const linkTag = computed(() => {
+  if (link?.href) return 'a'
+  if (link?.to) return nuxtLink
+  return 'span'
+})
+const linkAttrs = computed(() => link && {
+  href: link.href,
+  to: link.to,
+  title: link.title,
+  target: link.target ? '_blank' : undefined,
+  rel: link.target ? 'noopener' : undefined,
+  style: 'text-decoration: none; color: inherit'
+})
 
 const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 

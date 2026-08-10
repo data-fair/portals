@@ -1,30 +1,25 @@
 <template>
-  <div :class="marginClass">
-    <!-- element.link!.type !== 'none' est redondant avec isLink mais requis : vue-tsc ne propage pas le narrowing de l'union via la computed -->
-    <a
-      v-if="isLink && element.link!.type !== 'none' && isExternalLink(element.link!)"
+  <!--
+    The link wraps the title text inside layout-title, not the heading itself: the
+    heading also holds the copy-anchor button, and interactive content is not
+    allowed inside a link.
+  -->
+  <v-hover
+    v-slot="{ isHovering, props: hoverProps }"
+    :disabled="!isLink"
+  >
+    <div
+      :class="marginClass"
       v-bind="hoverProps"
-      :href="resolveLink(element.link!)"
-      :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
-      :style="linkStyle"
     >
-      <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
-    </a>
-    <NuxtLink
-      v-else-if="isLink && element.link!.type !== 'none'"
-      v-bind="hoverProps"
-      :to="resolveLink(element.link!)"
-      :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
-      :style="linkStyle"
-    >
-      <layout-title :element="element" :line-grow="lineGrow" :line-hovering="!!isHovering" />
-    </NuxtLink>
-    <layout-title v-else :element="element" />
-  </div>
+      <layout-title
+        :element="element"
+        :link="titleLink"
+        :line-grow="lineGrow"
+        :line-hovering="!!isHovering"
+      />
+    </div>
+  </v-hover>
 </template>
 
 <script setup lang="ts">
@@ -39,12 +34,17 @@ const { t } = useI18n()
 const { isExternalLink, resolveLink } = useNavigationStore()
 
 const isLink = computed(() => !!element.link && element.link.type !== 'none')
-const { isHovering, hoverProps } = useHoverState()
 
-const linkStyle = {
-  textDecoration: 'none',
-  color: 'inherit'
-}
+const titleLink = computed(() => {
+  if (!element.link || element.link.type === 'none') return undefined
+  const resolved = resolveLink(element.link)
+  return {
+    href: isExternalLink(element.link) ? resolved : undefined,
+    to: isExternalLink(element.link) ? undefined : resolved,
+    title: altLinkTitle.value,
+    target: !!element.link.target
+  }
+})
 
 const lineGrow = computed(() =>
   isLink.value &&

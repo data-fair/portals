@@ -55,7 +55,10 @@
       </v-row>
 
       <!-- Advanced Filters slot -->
-      <div v-if="element.showAdvancedFilters" class="mb-4">
+      <div
+        v-if="element.showAdvancedFilters"
+        class="mb-4"
+      >
         <slot
           name="page-elements"
           :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
@@ -118,12 +121,19 @@
           :md="12 / (element.columns || 2)"
           cols="12"
         >
-          <slot name="item-card" :item="item" />
+          <slot
+            name="item-card"
+            :item="item"
+          />
         </v-col>
       </v-row>
 
       <!-- Loading spinner -->
-      <div v-if="loading" class="d-flex justify-center" role="status">
+      <div
+        v-if="loading"
+        class="d-flex justify-center"
+        role="status"
+      >
         <v-progress-circular
           indeterminate
           color="primary"

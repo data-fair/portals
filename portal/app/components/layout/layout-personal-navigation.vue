@@ -124,7 +124,6 @@
         </template>
       </v-list-item>
     </template>
-
   </v-navigation-drawer>
 </template>
 

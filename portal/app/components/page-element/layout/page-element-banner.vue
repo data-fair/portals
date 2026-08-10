@@ -13,8 +13,8 @@
     ]"
     :style="element.background && element.background.image ? {
       backgroundImage: element.background.tintStrength
-    ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
-    : `url(${getPageImageSrc(element.background.image, false)})`,
+        ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
+        : `url(${getPageImageSrc(element.background.image, false)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     } : undefined"
