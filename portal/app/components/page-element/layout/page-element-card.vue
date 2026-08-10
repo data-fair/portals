@@ -226,8 +226,13 @@ const altLinkTitle = computed(() => {
 <style scoped>
 /* The box link covers the card, so its interactive children need to come back on
    top to stay clickable. Children are user content (markdown included), hence the
-   descendant selector rather than a class on each of them. */
-.box-content :deep(a),
+   descendant selector rather than a class on each of them.
+
+   A nested card carries its own overlay link, which must keep the absolute
+   positioning it gets from .position-absolute: this rule is not layered while the
+   Vuetify utility is, so without the exclusion it would win and collapse that
+   overlay to a zero-height box, killing the nested card link. */
+.box-content :deep(a:not(.card-overlay-link)),
 .box-content :deep(button) {
   position: relative;
   z-index: 1;
