@@ -21,6 +21,20 @@ const makeHoverConfig = (colorRef: string) => ({
   }
 })
 
+// Topics are only clickable as a link to the catalog or as a toggle filter, and the second mode
+// paints its own state, hence a distinct effects list per mode (see hoverConfigTopics).
+const topicsEffectTitles: Record<string, string> = {
+  darken: 'Assombrissement',
+  elevate: 'Élévation',
+  grow: 'Agrandissement',
+  background: 'Couleur de fond',
+  border: 'Colorer le bord',
+  invert: 'Inversion du remplissage'
+}
+const topicsEffectItems = (...keys: string[]) => keys.map(key => ({ key, title: topicsEffectTitles[key] }))
+// Same condition as the `variant` property of the topics element: redirection needs a single source.
+const topicsLinkMode = 'parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1)'
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
   'x-exports': ['types'],
@@ -110,7 +124,8 @@ export default {
     // Hover config with the extended color palette, matching the box background colors.
     hoverConfigFull: makeHoverConfig('#/$defs/color-full'),
 
-    // Topics hover config: applies to clickable topics only; filter mode ignores background/border.
+    // Topics hover config: applies to clickable topics only; the offered effects depend on the
+    // mode, filter chips already encoding their selection through their fill.
     hoverConfigTopics: {
       type: 'object',
       title: 'Effets au survol',
@@ -118,24 +133,27 @@ export default {
         effects: {
           type: 'array',
           title: 'Effets',
-          description: 'Appliqués quand les thématiques sont cliquables (lien ou filtre). En mode filtre, la coloration du fond et du bord est ignorée. Par défaut, le style du portail est hérité.',
+          description: 'Appliqués quand les thématiques sont cliquables (redirection ou filtre). Seuls les effets cochés sont appliqués ; sans sélection, ce sont les effets du portail qui sont hérités. En mode filtre, « Inversion du remplissage » remplit au survol une thématique inactive et vide une thématique active.',
+          layout: {
+            // json-layout only derives the options from the oneOf when the layout provides none,
+            // so each case offers the effects that actually do something in that mode.
+            switch: [
+              { if: topicsLinkMode, items: topicsEffectItems('darken', 'elevate', 'grow', 'background', 'border') },
+              { items: topicsEffectItems('darken', 'elevate', 'grow', 'border', 'invert') }
+            ]
+          },
           items: {
             type: 'string',
-            oneOf: [
-              { const: 'darken', title: 'Assombrissement' },
-              { const: 'elevate', title: 'Élévation' },
-              { const: 'grow', title: 'Agrandissement' },
-              { const: 'background', title: 'Couleur de fond' },
-              { const: 'border', title: 'Colorer le bord' }
-            ]
+            // every value stays valid in both modes so switching mode never invalidates a config
+            oneOf: Object.entries(topicsEffectTitles).map(([value, title]) => ({ const: value, title }))
           }
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
           title: 'Couleur de survol',
           layout: {
-            // Only in link mode (same condition as `variant`): filter chips ignore background/border effects.
-            if: "parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1) && parent.data?.effects?.some(e => ['background', 'border'].includes(e))",
+            // "border" colors the outline in both modes, "background" only fills in link mode
+            if: `parent.data?.effects?.includes('border') || ((${topicsLinkMode}) && parent.data?.effects?.includes('background'))`,
             slots: {
               item: { name: 'color-select-item' },
               selection: { name: 'color-select-selection' }
