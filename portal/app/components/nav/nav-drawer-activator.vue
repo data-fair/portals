@@ -6,7 +6,6 @@
       :icon="drawer ? mdiMenuOpen : mdiMenu"
       :aria-expanded="drawer"
       aria-controls="nav-drawer"
-      aria-haspopup="menu"
       stacked
       @click="drawer = !drawer"
     />

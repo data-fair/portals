@@ -7,6 +7,7 @@
     temporary
   >
     <v-list
+      ref="listRef"
       role="presentation"
       color="primary"
       nav
@@ -29,6 +30,35 @@ defineProps<{ navigation: MenuItem[] }>()
 
 const { t } = useI18n()
 const { drawer, appBarBottom } = useNavigationStore()
+
+const listRef = ref()
+
+/**
+ * Force items to be in the natural tab order. Vuetify's VList applies
+ * tabindex="-2" to items (and tabindex="0" on the list itself), reserving
+ * arrow-key roving focus for the menu pattern. The drawer is a navigation, not a
+ * menu: without this only the first link is reachable and Tab jumps straight out
+ * of the drawer to the content behind it. Same treatment as the header submenus
+ * in nav-tabs-menu-item.vue.
+ */
+function sanitizeItemsTabindex () {
+  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
+  if (!el) return
+  if (el.getAttribute('tabindex') !== '-1') el.setAttribute('tabindex', '-1')
+  el.querySelectorAll('.v-list-item').forEach((item) => {
+    if (item.getAttribute('tabindex') !== '0') item.setAttribute('tabindex', '0')
+  })
+}
+
+let observer: MutationObserver | null = null
+onMounted(() => {
+  sanitizeItemsTabindex()
+  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
+  if (!el) return
+  observer = new MutationObserver(() => sanitizeItemsTabindex())
+  observer.observe(el, { attributes: true, subtree: true, attributeFilter: ['tabindex'] })
+})
+onUnmounted(() => observer?.disconnect())
 
 // When the drawer opens, move focus into the drawer so users don't have to tab out
 // of the header first. v-navigation-drawer traps focus but does not auto-focus content.

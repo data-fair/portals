@@ -14,14 +14,19 @@
         v-for="(link, i) of navigation"
         :key="i"
       >
+        <!-- eager: VMenu renders its overlay lazily, so the aria-controls/aria-owns
+             the activator advertises would point at ids that do not exist yet while
+             the menu is closed (RGAA 7.1) -->
         <v-menu
           v-if="link?.type === 'submenu' && link.children.length"
           content-class="rounded-t-0"
+          eager
           @update:model-value="(open) => onMenuToggle(i, open)"
         >
           <template #activator="{ props: menuProps }">
             <v-tab
               v-bind="menuProps"
+              :aria-haspopup="undefined"
               :class="[
                 navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-uppercase' : undefined,
                 navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
@@ -126,16 +131,14 @@ function sanitizeTabsAria () {
  */
 function onMenuToggle (tabIndex: number, open: boolean) {
   if (open) {
-    // The menu content is teleported and rendered after the transition.
-    // Poll briefly for the first item to appear then focus it.
+    // The menu content is teleported and rendered after the transition. Poll until
+    // the focus actually lands: finding the item is not enough, focus() silently
+    // no-ops while the overlay is still hidden.
     let attempts = 0
     const tryFocus = () => {
       const first = document.querySelector<HTMLElement>(`#nav-submenu-${tabIndex} .v-list-item`)
-      if (first) {
-        first.focus()
-        return
-      }
-      if (attempts++ < 10) setTimeout(tryFocus, 20)
+      first?.focus()
+      if (document.activeElement !== first && attempts++ < 10) setTimeout(tryFocus, 20)
     }
     tryFocus()
   } else {
@@ -186,6 +189,18 @@ watch(computedActiveTab, (val) => { if (!preview) modelTab.value = val })
 /* Keep the <nav> semantic wrapper neutral in the layout (no box): only the ARIA role/label is added. */
 .nav-tabs-wrapper {
   display: contents;
+}
+/* Vuetify keys the "menu open" tint on [aria-haspopup=menu][aria-expanded=true].
+   The submenu triggers drop aria-haspopup (their popup is a list of links, not a
+   menu), so re-apply the same overlay opacities on aria-expanded alone. */
+:deep(.v-tab[aria-expanded='true'] > .v-btn__overlay) {
+  opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-tab[aria-expanded='true']:hover > .v-btn__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-tab[aria-expanded='true']:focus-visible > .v-btn__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
 }
 </style>
 

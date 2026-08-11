@@ -1,13 +1,16 @@
 <template>
   <div :class="element.centered && 'd-flex justify-center'">
+    <!-- eager + no aria-haspopup: same rationale as the header submenus (nav-tabs.vue) -->
     <v-menu
       v-if="element.links && element.links.length"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+      eager
     >
       <template #activator="{ props: menuProps }">
         <v-hover v-slot="{ isHovering, props: hoverProps }">
           <v-btn
             v-bind="{ ...menuProps, ...hoverProps }"
+            :aria-haspopup="undefined"
             :color="btnHover.color(isHovering, config?.color)"
             :density="config?.density ?? portalConfig.defaults?.density"
             :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"

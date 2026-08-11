@@ -1,8 +1,16 @@
 <template>
+  <!--
+    role="presentation": Vuetify hardcodes role="list" on v-list while VListItem
+    exposes its links as role="link", so screen readers get a list whose children
+    are not listitems. Same fix as the mobile drawer. The list also carries a
+    tabindex, so the conflict resolution rules drop the presentation role and the
+    element falls back to the div's implicit generic role — which is what we want.
+  -->
   <v-list
     :id="listId"
     ref="listRef"
     :aria-label="listLabel"
+    role="presentation"
   >
     <v-list-item
       v-for="(link, j) of children"
@@ -24,10 +32,13 @@
           :color="link.icon.color"
         />
       </template>
+      <!-- eager + no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
       <v-menu
         v-if="link.type === 'submenu' && link.children?.length"
         :open-on-focus="false"
+        :activator-props="{ 'aria-haspopup': undefined }"
         activator="parent"
+        eager
         open-on-hover
         submenu
       >
