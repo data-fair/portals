@@ -75,9 +75,11 @@
       :value="item.title"
     >
       <template #activator="{ props: activatorProps }">
+        <!-- non-link group toggle: not a listitem -->
         <v-list-item
           v-bind="activatorProps"
           :active="isActive"
+          :role="undefined"
         >
           <template #prepend>
             <v-icon

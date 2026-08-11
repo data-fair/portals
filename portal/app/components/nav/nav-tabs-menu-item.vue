@@ -1,5 +1,5 @@
 <template>
-  <!-- remove the default role="list": its items are links, which breaks list/listitem semantics -->
+  <!-- no list/listitem roles: items are links or non-link submenu triggers, not valid listitems -->
   <v-list
     :id="listId"
     ref="listRef"
@@ -16,6 +16,7 @@
       :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
       :target="link.type === 'external' && link.target ? '_blank' : undefined"
       :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+      :role="undefined"
       color="primary"
       link
     >
