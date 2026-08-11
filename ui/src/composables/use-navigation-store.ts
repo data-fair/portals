@@ -46,6 +46,8 @@ export const useNavigationStore = () => {
     showTopBreadcrumbs: ref(false),
     showBottomBreadcrumbs: ref(false),
     clearBreadcrumbs: () => { },
+    setActivePageGroup: () => { },
+    activePageGroupRootPath: ref<string | undefined>(undefined),
     isMenuItemActive: (_item: any, _currentPath: string): boolean => false,
     isExternalLink,
     resolveLink: (_link: any) => undefined,

@@ -81,6 +81,7 @@
 <script setup lang="ts">
 import type { MenuItem, NavBar } from '#api/types/portal'
 import { mdiChevronDown } from '@mdi/js'
+import { findActiveMenuIndex } from '../../utils/nav-active'
 
 const { navigation } = defineProps<{
   navigation: MenuItem[]
@@ -89,7 +90,7 @@ const { navigation } = defineProps<{
 
 const route = useRoute()
 const { locale, t } = useI18n()
-const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isExternalLink, resolveLink, resolveLinkTitle, activePageGroupRootPath } = useNavigationStore()
 const { preview } = usePortalStore()
 
 const navRootRef = ref<HTMLElement>()
@@ -165,13 +166,8 @@ onUnmounted(() => {
   ariaObserver?.disconnect()
 })
 
-/** Get the active tab index based on the current route */
-const computedActiveTab = computed(() => {
-  for (const [i, item] of navigation.entries()) {
-    if (isMenuItemActive(item, route.path)) return i
-  }
-  return undefined // No match found, no active tab and slider
-})
+/** Get the active tab index based on the current route (and the current page's group) */
+const computedActiveTab = computed(() => findActiveMenuIndex(navigation, route.path, activePageGroupRootPath.value))
 
 /** Writable model for v-model */
 const modelTab = ref<number | undefined>(computedActiveTab.value)
