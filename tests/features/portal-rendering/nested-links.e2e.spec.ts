@@ -160,4 +160,38 @@ test.describe('nested links', () => {
     }, [strip.x + strip.width - 8, strip.y + strip.height / 2])
     expect(dead).toBeNull()
   })
+
+  // The overlay covers the whole card, so every interactive child has to be lifted
+  // back above it. Links and buttons are not the only ones the editor allows inside a
+  // clickable box: a search field and a contact form are both valid children, and
+  // their inputs are what a visitor actually aims at.
+  test('a form field inside a clickable box stays reachable', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [{
+      type: 'card',
+      title: 'Boite avec recherche',
+      link: { type: 'external', href: 'https://example.com', title: 'Exemple' },
+      actions: [],
+      children: [{ type: 'search', label: 'Rechercher un jeu de données' }]
+    }])
+
+    await goToPortal(portal._id)
+    const input = page.locator('.v-card input[type="text"], .v-card input:not([type])').first()
+    await expect(input).toBeVisible({ timeout: 10_000 })
+
+    // what a click at the centre of the field actually lands on
+    const box = (await input.boundingBox())!
+    const onTop = await page.evaluate(([x, y]) => {
+      const el = document.elementFromPoint(x as number, y as number)
+      return { tag: el?.tagName ?? null, isCardLink: !!el?.closest('.card-overlay-link') }
+    }, [box.x + box.width / 2, box.y + box.height / 2])
+    expect(onTop.isCardLink).toBe(false)
+
+    // and it really takes the focus rather than following the box link
+    await input.click()
+    await expect(input).toBeFocused()
+    expect(page.url()).not.toContain('example.com')
+  })
 })

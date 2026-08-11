@@ -21,17 +21,24 @@
     <span :class="['d-block', element.color ? `text-${element.color}` : undefined, element.centered ? 'text-center' : undefined]"><!--
       the link wraps the icon and the text, so the icon is part of the click target,
       but never the copy button: a button inside a link is interactive content
-      nested in a link
+      nested in a link.
+
+      With an icon the link becomes an inline flex row, so the icon keeps a column of
+      its own and stays centred on the whole title. Left inline it would sit on the
+      first line and the following lines would wrap back underneath it. Inline flex
+      rather than flex: the row stays an inline box, so the copy button below still
+      follows the title instead of being pushed onto its own line.
       --><component
         :is="linkTag"
         v-bind="linkAttrs"
+        :class="iconPath ? 'd-inline-flex align-center' : undefined"
       ><v-icon
-        v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
-        :icon="element.icon.mdi?.svgPath || element.icon.custom"
-        :color="element.icon.color"
+        v-if="iconPath"
+        :icon="iconPath"
+        :color="element.icon!.color"
         size="small"
-        class="mr-4"
-      />{{ element.content }}</component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+        class="mr-4 flex-shrink-0"
+      /><span>{{ element.content }}</span></component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
         v-if="anchorId"
         :icon="copied ? mdiCheck : mdiLinkVariant"
         :title="copied ? t('linkCopied') : t('copyLink')"
@@ -73,6 +80,8 @@ const { element, link, lineGrow, lineHovering } = defineProps<{
 }>()
 
 const { t } = useI18n()
+
+const iconPath = computed(() => element.icon?.mdi?.svgPath || element.icon?.custom || undefined)
 
 const nuxtLink = resolveComponent('NuxtLink')
 const linkTag = computed(() => {
