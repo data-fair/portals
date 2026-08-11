@@ -11,6 +11,7 @@
           <v-btn
             v-bind="{ ...menuProps, ...hoverProps }"
             :aria-haspopup="undefined"
+            :aria-owns="undefined"
             :color="btnHover.color(isHovering, config?.color)"
             :density="config?.density ?? portalConfig.defaults?.density"
             :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"

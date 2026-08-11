@@ -33,7 +33,7 @@
         <v-menu
           v-if="link.type === 'submenu' && link.children?.length"
           :open-on-focus="false"
-          :activator-props="{ 'aria-haspopup': undefined }"
+          :activator-props="{ 'aria-haspopup': undefined, 'aria-owns': undefined }"
           activator="parent"
           eager
           open-on-hover

@@ -27,6 +27,7 @@
             <v-tab
               v-bind="menuProps"
               :aria-haspopup="undefined"
+              :aria-owns="undefined"
               :class="[
                 navBarConfig.tabsStyle?.includes('uppercaseTitle') ? 'text-uppercase' : undefined,
                 navBarConfig.tabsStyle?.includes('boldTitle') ? 'font-weight-bold' : undefined
