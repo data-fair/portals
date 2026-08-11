@@ -19,8 +19,7 @@
         :key="`item-${i}`"
         :item="item"
         :level="1"
-        :is-first="i === 0"
-        :is-last="i === navigation.length - 1"
+        :show-divider="showDivider(i)"
       />
     </v-list>
   </v-navigation-drawer>
@@ -29,10 +28,15 @@
 <script setup lang="ts">
 import type { MenuItem } from '#api/types/portal'
 
-defineProps<{ navigation: MenuItem[] }>()
+const { navigation } = defineProps<{ navigation: MenuItem[] }>()
 
 const { t } = useI18n()
 const { drawer, appBarBottom } = useNavigationStore()
+
+// One divider at each group boundary (never doubled): before an item only when it,
+// or the item before it, is a group.
+const isGroup = (item: MenuItem) => item.type === 'submenu' && !!item.children?.length
+const showDivider = (i: number) => i > 0 && (isGroup(navigation[i]) || isGroup(navigation[i - 1]))
 
 const listRef = ref()
 

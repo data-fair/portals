@@ -1,6 +1,9 @@
 <template>
   <!-- Level 1: direct link -->
   <template v-if="level === 1 && item.type !== 'submenu'">
+    <li v-if="showDivider">
+      <v-divider />
+    </li>
     <li>
       <v-list-item
         :to="!isExternalLink(item) ? resolveLink(item) : undefined"
@@ -27,7 +30,7 @@
 
   <!-- Level 1: group with subtitle -->
   <template v-else-if="level === 1 && item.type === 'submenu' && item.children?.length">
-    <li v-if="!isFirst">
+    <li v-if="showDivider">
       <v-divider />
     </li>
     <li>
@@ -49,9 +52,6 @@
       :item="child"
       :level="2"
     />
-    <li v-if="!isLast">
-      <v-divider />
-    </li>
   </template>
 
   <!-- Level 2+: direct link -->
@@ -127,8 +127,7 @@ import type { MenuItem } from '#api/types/portal'
 const props = defineProps<{
   item: MenuItem
   level: number
-  isFirst?: boolean
-  isLast?: boolean
+  showDivider?: boolean
 }>()
 
 const route = useRoute()
