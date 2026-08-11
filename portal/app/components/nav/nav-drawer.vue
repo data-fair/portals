@@ -9,6 +9,8 @@
     <v-list
       ref="listRef"
       :role="undefined"
+      tag="ul"
+      style="list-style: none"
       color="primary"
       nav
     >
@@ -18,6 +20,7 @@
         :item="item"
         :level="1"
         :is-first="i === 0"
+        :is-last="i === navigation.length - 1"
       />
     </v-list>
   </v-navigation-drawer>
