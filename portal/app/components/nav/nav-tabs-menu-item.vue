@@ -1,48 +1,51 @@
 <template>
-  <!-- no list/listitem roles: items are links or non-link submenu triggers, not valid listitems -->
   <v-list
     :id="listId"
     ref="listRef"
     :aria-label="listLabel"
-    :role="undefined"
+    tag="ul"
+    style="list-style: none"
   >
-    <v-list-item
+    <li
       v-for="(link, j) of children"
       :key="j"
-      :title="resolveLinkTitle(link, locale)"
-      :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
-      :active="isItemActive(link)"
-      :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
-      :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
-      :target="link.type === 'external' && link.target ? '_blank' : undefined"
-      :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
-      :role="undefined"
-      color="primary"
-      link
     >
-      <template #prepend>
-        <v-icon
-          v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-          :icon="link.icon.mdi?.svgPath || link.icon.custom"
-          :color="link.icon.color"
-        />
-      </template>
-      <!-- eager + no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
-      <v-menu
-        v-if="link.type === 'submenu' && link.children?.length"
-        :open-on-focus="false"
-        :activator-props="{ 'aria-haspopup': undefined }"
-        activator="parent"
-        eager
-        open-on-hover
-        submenu
+      <v-list-item
+        :title="resolveLinkTitle(link, locale)"
+        :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
+        :active="isItemActive(link)"
+        :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
+        :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
+        :target="link.type === 'external' && link.target ? '_blank' : undefined"
+        :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+        :role="undefined"
+        color="primary"
+        link
       >
-        <nav-tabs-menu-item
-          :children="link.children"
-          :list-label="link.title"
-        />
-      </v-menu>
-    </v-list-item>
+        <template #prepend>
+          <v-icon
+            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+            :icon="link.icon.mdi?.svgPath || link.icon.custom"
+            :color="link.icon.color"
+          />
+        </template>
+        <!-- eager + no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
+        <v-menu
+          v-if="link.type === 'submenu' && link.children?.length"
+          :open-on-focus="false"
+          :activator-props="{ 'aria-haspopup': undefined }"
+          activator="parent"
+          eager
+          open-on-hover
+          submenu
+        >
+          <nav-tabs-menu-item
+            :children="link.children"
+            :list-label="link.title"
+          />
+        </v-menu>
+      </v-list-item>
+    </li>
   </v-list>
 </template>
 

@@ -25,27 +25,33 @@
           </v-btn>
         </v-hover>
       </template>
-      <!-- remove the default role="list": its items are links, which breaks list/listitem semantics -->
-      <v-list :role="undefined">
-        <v-list-item
+      <v-list
+        tag="ul"
+        style="list-style: none"
+      >
+        <li
           v-for="(link, i) of element.links"
           :key="i"
-          :title="resolveLinkTitle(link, locale)"
-          :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
-          :href="(!preview && link.type === 'external') ? link.href : undefined"
-          :target="link.type === 'external' ? '_blank' : undefined"
-          :rel="link.type === 'external' ? 'noopener' : undefined"
-          color="primary"
-          link
         >
-          <template #prepend>
-            <v-icon
-              v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-              :icon="link.icon.mdi?.svgPath || link.icon.custom"
-              :color="link.icon.color"
-            />
-          </template>
-        </v-list-item>
+          <v-list-item
+            :title="resolveLinkTitle(link, locale)"
+            :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
+            :href="(!preview && link.type === 'external') ? link.href : undefined"
+            :target="link.type === 'external' ? '_blank' : undefined"
+            :rel="link.type === 'external' ? 'noopener' : undefined"
+            :role="undefined"
+            color="primary"
+            link
+          >
+            <template #prepend>
+              <v-icon
+                v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                :color="link.icon.color"
+              />
+            </template>
+          </v-list-item>
+        </li>
       </v-list>
     </v-menu>
   </div>
