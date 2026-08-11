@@ -25,7 +25,15 @@
           </v-btn>
         </v-hover>
       </template>
-      <v-list>
+      <!--
+        role="presentation": Vuetify hardcodes role="list" on v-list while VListItem
+        exposes its links as role="link", so screen readers get a list whose children
+        are not listitems. Same fix as the header submenus (nav-tabs-menu-item.vue)
+        and the mobile drawer (nav-drawer.vue). The list also carries a tabindex, so
+        the conflict resolution rules drop the presentation role and the element
+        falls back to the div's implicit generic role — which is what we want.
+      -->
+      <v-list role="presentation">
         <v-list-item
           v-for="(link, i) of element.links"
           :key="i"
