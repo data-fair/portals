@@ -1,16 +1,10 @@
 <template>
-  <!--
-    role="presentation": Vuetify hardcodes role="list" on v-list while VListItem
-    exposes its links as role="link", so screen readers get a list whose children
-    are not listitems. Same fix as the mobile drawer. The list also carries a
-    tabindex, so the conflict resolution rules drop the presentation role and the
-    element falls back to the div's implicit generic role — which is what we want.
-  -->
+  <!-- remove the default role="list": its items are links, which breaks list/listitem semantics -->
   <v-list
     :id="listId"
     ref="listRef"
     :aria-label="listLabel"
-    role="presentation"
+    :role="undefined"
   >
     <v-list-item
       v-for="(link, j) of children"

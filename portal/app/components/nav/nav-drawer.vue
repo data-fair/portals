@@ -8,7 +8,7 @@
   >
     <v-list
       ref="listRef"
-      role="presentation"
+      :role="undefined"
       color="primary"
       nav
     >
