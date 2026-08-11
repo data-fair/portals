@@ -18,7 +18,7 @@ import type { PageConfig } from '#api/types/page'
 
 const route = useRoute<'/pages/pages-[groupSlug]/[pageSlug]'>()
 const { portalConfig } = usePortalStore()
-const { setBreadcrumbs, setShowBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, setShowBreadcrumbs, setActivePageGroup } = useNavigationStore()
 const getPageImageSrc = providePageImageSrc('generic', route.params.pageSlug as string)
 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${route.params.pageSlug}`, { watch: false })
@@ -32,6 +32,8 @@ watch(() => pageConfigFetch.data.value, (pageConfig) => {
     { title: pageConfig?.title || portalConfig.value.title }
   ])
   setShowBreadcrumbs(pageConfig?.showBreadcrumbs)
+  // Let the nav bar highlight the tab pointing at this group's root page
+  setActivePageGroup(group)
 }, { immediate: true })
 
 usePageSeo({

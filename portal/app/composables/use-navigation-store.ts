@@ -1,6 +1,7 @@
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
+import { resolveMenuLink as resolveLink, isMenuItemActive } from '../utils/nav-active'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -16,6 +17,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
   const isIframe = options.isIframe
   const showBreadcrumbsOverride = ref<boolean | undefined>(undefined) // Store if page config overrides portal breadcrumb visibility
+  const _activePageGroupRootPath = ref<string | undefined>(undefined) // Root-page path of the current page's group, used to light up its nav tab
 
   // Scrolled past the app bar threshold (mirrors layout-app-bar's
   // scroll-threshold). Drives the app bar transparency and the drawer offset.
@@ -100,6 +102,9 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     const router = useRouter()
     router.beforeEach(() => {
       document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove())
+      // Reset the active group so a stale root page can't light up a tab on the next
+      // route; group pages re-set it once their config is fetched.
+      _activePageGroupRootPath.value = undefined
     })
   }
 
@@ -130,6 +135,15 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
 
   const clearBreadcrumbs = () => { _breadcrumbs.value = [] }
 
+  /**
+   * Record the group of the page currently displayed so the nav bar can highlight
+   * the tab pointing at the group's root page. Mirrors the breadcrumb, which derives
+   * the parent from the page's real group rather than from URL string matching.
+   */
+  const setActivePageGroup = (group?: { rootPage?: string }) => {
+    _activePageGroupRootPath.value = group?.rootPage ? `/pages/${group.rootPage}` : undefined
+  }
+
   /** Allow to override breadcrumb visibility per page */
   const setShowBreadcrumbs = (value?: boolean) => { showBreadcrumbsOverride.value = value }
 
@@ -147,36 +161,6 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
     if (link.type === 'external') return !link.href?.startsWith('/')
     return false
-  }
-
-  /** Resolve a link or menu item to its corresponding URL path */
-  const resolveLink = (link: SimpleLinkItem | MenuItem): string | undefined => {
-    switch (link.type) {
-      case 'standard': {
-        switch (link.subtype) {
-          case 'home': return '/'
-          case 'contact': return '/contact'
-          case 'accessibility': return '/accessibility'
-          case 'terms-of-service': return '/terms-of-service'
-          case 'legal-notice': return '/legal-notice'
-          case 'privacy-policy': return '/privacy-policy'
-          case 'cookie-policy': return '/cookie-policy'
-          case 'datasets': return '/datasets'
-          case 'applications': return '/applications'
-          case 'reuses': return '/reuses'
-          case 'event-catalog': return '/event'
-          case 'news-catalog': return '/news'
-          case 'sitemap': return '/sitemap'
-          case 'catalog-api-doc': return '/catalog-api-doc'
-          default: return undefined
-        }
-      }
-      case 'event': return link.pageRef ? `/event/${link.pageRef.slug}` : undefined
-      case 'news': return link.pageRef ? `/news/${link.pageRef.slug}` : undefined
-      case 'generic': return link.pageRef ? `/pages${link.pageRef.group ? `-${link.pageRef.group.slug}` : ''}/${link.pageRef.slug}` : undefined
-      case 'external': return link.href
-      default: return undefined
-    }
   }
 
   const resolveLinkTitle = (link: LinkItem | MenuItem, locale: 'fr' | 'en'): string => {
@@ -209,27 +193,12 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     }
   }
 
-  /** Check if a menu item (or any of its children) matches the current route */
-  const isMenuItemActive = (item: MenuItem, currentPath: string): boolean => {
-    if (item.type === 'external') return false
-
-    // Check if any child of the submenu matches the route
-    if (item.type === 'submenu' && item.children) {
-      return item.children.some(child => isMenuItemActive(child, currentPath))
-    }
-
-    // Resolve the link to compare with the current route
-    const resolvedLink = resolveLink(item)
-    if (!resolvedLink) return false
-
-    // Exact match or child route (e.g. /datasets matches /datasets/datasetid)
-    return currentPath === resolvedLink || currentPath.startsWith(resolvedLink + '/')
-  }
-
   return {
     breadcrumbs: _breadcrumbs,
     setBreadcrumbs,
     clearBreadcrumbs,
+    setActivePageGroup,
+    activePageGroupRootPath: _activePageGroupRootPath,
     isMenuItemActive,
     isExternalLink,
     resolveLink,
