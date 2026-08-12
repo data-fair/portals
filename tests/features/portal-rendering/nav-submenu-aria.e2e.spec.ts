@@ -163,7 +163,7 @@ test.describe('mobile drawer accessibility', () => {
     await expect(list).toBeVisible()
     const shape = await list.evaluate((el) => {
       const kids = [...el.children]
-      const isDivider = (li) => !!li.querySelector('.v-divider')
+      const isDivider = (li: Element) => !!li.querySelector('.v-divider')
       let doubled = false
       for (let i = 1; i < kids.length; i++) if (isDivider(kids[i]) && isDivider(kids[i - 1])) doubled = true
       return {
