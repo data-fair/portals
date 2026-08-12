@@ -73,3 +73,18 @@ function isItemActive (item: MenuItem): boolean {
 }
 
 </script>
+
+<style scoped>
+/* Vuetify keys the "menu open" tint on [aria-haspopup=menu][aria-expanded=true].
+   The submenu triggers drop aria-haspopup (their popup is a list of links, not a
+   menu), so re-apply the same overlay opacities on aria-expanded alone. */
+:deep(.v-list-item[aria-expanded='true'] > .v-list-item__overlay) {
+  opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-list-item[aria-expanded='true']:hover > .v-list-item__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-list-item[aria-expanded='true']:focus-visible > .v-list-item__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+}
+</style>
