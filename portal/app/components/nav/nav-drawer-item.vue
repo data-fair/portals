@@ -12,6 +12,7 @@
         :rel="item.type === 'external' && item.target ? 'noopener' : undefined"
         :active="isActive"
         :role="undefined"
+        tabindex="0"
       >
         <template #prepend>
           <v-icon
@@ -64,6 +65,7 @@
         :rel="item.type === 'external' && item.target ? 'noopener' : undefined"
         :active="isActive"
         :role="undefined"
+        tabindex="0"
       >
         <template #prepend>
           <v-icon
@@ -94,6 +96,7 @@
             :active="isActive"
             :aria-expanded="isGroupOpen"
             role="button"
+            tabindex="0"
           >
             <template #prepend>
               <v-icon

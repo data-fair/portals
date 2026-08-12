@@ -1,9 +1,12 @@
 <template>
+  <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
+       reserving arrow keys for the menu pattern. This popup is a disclosure over a
+       list of links: the links carry the tab order and the wrapper is skipped. -->
   <v-list
     :id="listId"
-    ref="listRef"
     :aria-label="listLabel"
     tag="ul"
+    tabindex="-1"
     style="list-style: none"
   >
     <li
@@ -20,6 +23,7 @@
         :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
         :role="undefined"
         color="primary"
+        tabindex="0"
         link
       >
         <template #prepend>
@@ -62,34 +66,6 @@ defineProps<{
 const route = useRoute()
 const { locale } = useI18n()
 const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
-
-const listRef = ref()
-
-/**
- * Force items to be in the natural tab order. Vuetify's VList applies
- * tabindex="-2" to items (and tabindex="0" on the list itself) when rendered
- * inside a VMenu, reserving arrow-key roving focus for the menu pattern.
- * The header nav uses the disclosure pattern instead, so we want Tab to flow
- * through items and skip the list wrapper.
- */
-function sanitizeItemsTabindex () {
-  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
-  if (!el) return
-  if (el.getAttribute('tabindex') !== '-1') el.setAttribute('tabindex', '-1')
-  el.querySelectorAll('.v-list-item').forEach((item) => {
-    if (item.getAttribute('tabindex') !== '0') item.setAttribute('tabindex', '0')
-  })
-}
-
-let observer: MutationObserver | null = null
-onMounted(() => {
-  sanitizeItemsTabindex()
-  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
-  if (!el) return
-  observer = new MutationObserver(() => sanitizeItemsTabindex())
-  observer.observe(el, { attributes: true, subtree: true, attributeFilter: ['tabindex'] })
-})
-onUnmounted(() => observer?.disconnect())
 
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {
