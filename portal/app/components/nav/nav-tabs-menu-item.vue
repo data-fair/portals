@@ -1,42 +1,55 @@
 <template>
+  <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
+       reserving arrow keys for the menu pattern. This popup is a disclosure over a
+       list of links: the links carry the tab order and the wrapper is skipped. -->
   <v-list
     :id="listId"
-    ref="listRef"
     :aria-label="listLabel"
+    tag="ul"
+    tabindex="-1"
+    style="list-style: none"
   >
-    <v-list-item
+    <li
       v-for="(link, j) of children"
       :key="j"
-      :title="resolveLinkTitle(link, locale)"
-      :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
-      :active="isItemActive(link)"
-      :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
-      :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
-      :target="link.type === 'external' && link.target ? '_blank' : undefined"
-      :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
-      color="primary"
-      link
     >
-      <template #prepend>
-        <v-icon
-          v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-          :icon="link.icon.mdi?.svgPath || link.icon.custom"
-          :color="link.icon.color"
-        />
-      </template>
-      <v-menu
-        v-if="link.type === 'submenu' && link.children?.length"
-        :open-on-focus="false"
-        activator="parent"
-        open-on-hover
-        submenu
+      <v-list-item
+        :title="resolveLinkTitle(link, locale)"
+        :append-icon="link.type === 'submenu' && link.children.length ? mdiChevronRight : undefined"
+        :active="isItemActive(link)"
+        :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
+        :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
+        :target="link.type === 'external' && link.target ? '_blank' : undefined"
+        :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+        :role="undefined"
+        color="primary"
+        tabindex="0"
+        link
       >
-        <nav-tabs-menu-item
-          :children="link.children"
-          :list-label="link.title"
-        />
-      </v-menu>
-    </v-list-item>
+        <template #prepend>
+          <v-icon
+            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+            :icon="link.icon.mdi?.svgPath || link.icon.custom"
+            :color="link.icon.color"
+          />
+        </template>
+        <!-- eager + no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
+        <v-menu
+          v-if="link.type === 'submenu' && link.children?.length"
+          :open-on-focus="false"
+          :activator-props="{ 'aria-haspopup': undefined, 'aria-owns': undefined }"
+          activator="parent"
+          eager
+          open-on-hover
+          submenu
+        >
+          <nav-tabs-menu-item
+            :children="link.children"
+            :list-label="link.title"
+          />
+        </v-menu>
+      </v-list-item>
+    </li>
   </v-list>
 </template>
 
@@ -54,37 +67,24 @@ const route = useRoute()
 const { locale } = useI18n()
 const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
-const listRef = ref()
-
-/**
- * Force items to be in the natural tab order. Vuetify's VList applies
- * tabindex="-2" to items (and tabindex="0" on the list itself) when rendered
- * inside a VMenu, reserving arrow-key roving focus for the menu pattern.
- * The header nav uses the disclosure pattern instead, so we want Tab to flow
- * through items and skip the list wrapper.
- */
-function sanitizeItemsTabindex () {
-  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
-  if (!el) return
-  if (el.getAttribute('tabindex') !== '-1') el.setAttribute('tabindex', '-1')
-  el.querySelectorAll('.v-list-item').forEach((item) => {
-    if (item.getAttribute('tabindex') !== '0') item.setAttribute('tabindex', '0')
-  })
-}
-
-let observer: MutationObserver | null = null
-onMounted(() => {
-  sanitizeItemsTabindex()
-  const el = (listRef.value?.$el ?? listRef.value) as HTMLElement | null
-  if (!el) return
-  observer = new MutationObserver(() => sanitizeItemsTabindex())
-  observer.observe(el, { attributes: true, subtree: true, attributeFilter: ['tabindex'] })
-})
-onUnmounted(() => observer?.disconnect())
-
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {
   return isMenuItemActive(item, route.path)
 }
 
 </script>
+
+<style scoped>
+/* Vuetify keys the "menu open" tint on [aria-haspopup=menu][aria-expanded=true].
+   The submenu triggers drop aria-haspopup (their popup is a list of links, not a
+   menu), so re-apply the same overlay opacities on aria-expanded alone. */
+:deep(.v-list-item[aria-expanded='true'] > .v-list-item__overlay) {
+  opacity: calc(var(--v-activated-opacity) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-list-item[aria-expanded='true']:hover > .v-list-item__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-hover-opacity)) * var(--v-theme-overlay-multiplier));
+}
+:deep(.v-list-item[aria-expanded='true']:focus-visible > .v-list-item__overlay) {
+  opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
+}
+</style>

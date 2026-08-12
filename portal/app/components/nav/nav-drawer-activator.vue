@@ -1,12 +1,14 @@
 <template>
   <v-toolbar-items>
+    <!-- active: Vuetify tints activators from [aria-haspopup=menu][aria-expanded=true],
+         which this one drops (it controls a navigation, not a menu) -->
     <v-btn
       variant="text"
       :title="t('openNavigationMenu')"
       :icon="drawer ? mdiMenuOpen : mdiMenu"
+      :active="drawer"
       :aria-expanded="drawer"
       aria-controls="nav-drawer"
-      aria-haspopup="menu"
       stacked
       @click="drawer = !drawer"
     />

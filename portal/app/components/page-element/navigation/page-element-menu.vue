@@ -1,13 +1,19 @@
 <template>
   <div :class="element.centered && 'd-flex justify-center'">
+    <!-- eager + no aria-haspopup: same rationale as the header submenus (nav-tabs.vue) -->
     <v-menu
       v-if="element.links && element.links.length"
+      v-model="open"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+      eager
     >
       <template #activator="{ props: menuProps }">
         <v-hover v-slot="{ isHovering, props: hoverProps }">
           <v-btn
             v-bind="{ ...menuProps, ...hoverProps }"
+            :aria-haspopup="undefined"
+            :aria-owns="undefined"
+            :active="open"
             :color="btnHover.color(isHovering, config?.color)"
             :density="config?.density ?? portalConfig.defaults?.density"
             :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
@@ -22,26 +28,38 @@
           </v-btn>
         </v-hover>
       </template>
-      <v-list>
-        <v-list-item
+      <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
+           reserving arrow keys for the menu pattern. This popup is a list of links:
+           put every link back in the natural tab order and skip the wrapper. -->
+      <v-list
+        tag="ul"
+        tabindex="-1"
+        style="list-style: none"
+      >
+        <li
           v-for="(link, i) of element.links"
           :key="i"
-          :title="resolveLinkTitle(link, locale)"
-          :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
-          :href="(!preview && link.type === 'external') ? link.href : undefined"
-          :target="link.type === 'external' ? '_blank' : undefined"
-          :rel="link.type === 'external' ? 'noopener' : undefined"
-          color="primary"
-          link
         >
-          <template #prepend>
-            <v-icon
-              v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-              :icon="link.icon.mdi?.svgPath || link.icon.custom"
-              :color="link.icon.color"
-            />
-          </template>
-        </v-list-item>
+          <v-list-item
+            :title="resolveLinkTitle(link, locale)"
+            :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
+            :href="(!preview && link.type === 'external') ? link.href : undefined"
+            :target="link.type === 'external' ? '_blank' : undefined"
+            :rel="link.type === 'external' ? 'noopener' : undefined"
+            :role="undefined"
+            color="primary"
+            tabindex="0"
+            link
+          >
+            <template #prepend>
+              <v-icon
+                v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                :icon="link.icon.mdi?.svgPath || link.icon.custom"
+                :color="link.icon.color"
+              />
+            </template>
+          </v-list-item>
+        </li>
       </v-list>
     </v-menu>
   </div>
@@ -56,6 +74,11 @@ const { portalConfig } = usePortalStore()
 const { locale } = useI18n()
 const { preview } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
+
+// Vuetify tints the activator from [aria-haspopup=menu][aria-expanded=true], which
+// this trigger drops (its popup is a list of links, not a menu). `active` restores
+// the exact same class, without styling on an ARIA attribute.
+const open = ref(false)
 
 const config = computed(() => {
   return (!element.usePortalConfig && element.config) ? element.config : portalConfig.value.navLinksConfig
