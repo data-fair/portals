@@ -3,6 +3,7 @@
     <!-- eager + no aria-haspopup: same rationale as the header submenus (nav-tabs.vue) -->
     <v-menu
       v-if="element.links && element.links.length"
+      v-model="open"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
       eager
     >
@@ -12,6 +13,7 @@
             v-bind="{ ...menuProps, ...hoverProps }"
             :aria-haspopup="undefined"
             :aria-owns="undefined"
+            :active="open"
             :color="btnHover.color(isHovering, config?.color)"
             :density="config?.density ?? portalConfig.defaults?.density"
             :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
@@ -72,6 +74,11 @@ const { portalConfig } = usePortalStore()
 const { locale } = useI18n()
 const { preview } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
+
+// Vuetify tints the activator from [aria-haspopup=menu][aria-expanded=true], which
+// this trigger drops (its popup is a list of links, not a menu). `active` restores
+// the exact same class, without styling on an ARIA attribute.
+const open = ref(false)
 
 const config = computed(() => {
   return (!element.usePortalConfig && element.config) ? element.config : portalConfig.value.navLinksConfig
