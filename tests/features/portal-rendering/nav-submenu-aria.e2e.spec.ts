@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
-import type { Locator } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
@@ -27,7 +27,9 @@ const portalWithSubmenu = async () => {
               { type: 'standard', subtype: 'datasets' },
               { type: 'standard', subtype: 'contact' }
             ]
-          }
+          },
+          // a plain link alongside the submenu: this one renders as <a>
+          { type: 'standard', subtype: 'reuses' }
         ]
       }
     }
@@ -49,6 +51,8 @@ const openSubmenu = async (trigger: Locator) => {
   }, { timeout: 15_000 }).toBe('true')
 }
 
+const isFocusInDrawer = (page: Page) => page.evaluate(() => !!document.activeElement?.closest('#nav-drawer'))
+
 test.describe('header submenu accessibility', () => {
   test.beforeEach(clean)
 
@@ -63,6 +67,18 @@ test.describe('header submenu accessibility', () => {
     // disclosure pattern: no menu/owns semantics
     await expect(trigger).not.toHaveAttribute('aria-haspopup', /.*/)
     await expect(trigger).not.toHaveAttribute('aria-owns', /.*/)
+  })
+
+  test('the header tabs are valid HTML (RGAA 8.2)', async ({ page, goToPortal }) => {
+    const portal = await portalWithSubmenu()
+    await goToPortal(portal._id)
+
+    const tabs = page.locator('.nav-tabs .v-tab')
+    await expect(tabs).toHaveCount(2)
+    // VBtn wraps the slot in a <span>, so the patched slider must be phrasing content
+    expect(await page.locator('.nav-tabs .v-tab__slider').first().evaluate((el) => el.tagName)).toBe('SPAN')
+    // `value` mirrors the tabs' v-model but is not a valid attribute on <a>
+    expect(await page.locator('.nav-tabs a.v-tab').first().evaluate((el) => el.hasAttribute('value'))).toBe(false)
   })
 
   test('the closed trigger only references ids that exist', async ({ page, goToPortal }) => {
@@ -120,8 +136,10 @@ test.describe('header submenu accessibility', () => {
 })
 
 /**
- * Mobile drawer accessibility (RGAA 9.3): the drawer links form a real <ul>/<li>
- * list, and group boundaries carry a single divider (never doubled).
+ * Mobile drawer accessibility (RGAA 9.3, 10.7): the drawer links form a real
+ * <ul>/<li> list, group boundaries carry a single divider (never doubled), and
+ * keyboard users can leave — Escape closes and gives the focus back to the burger,
+ * tabbing out closes too rather than parking the focus behind the scrim.
  */
 test.describe('mobile drawer accessibility', () => {
   test.use({ viewport: { width: 390, height: 844 } })
@@ -148,16 +166,20 @@ test.describe('mobile drawer accessibility', () => {
     return portal
   }
 
-  test('the drawer is a real list with a single divider between groups', async ({ page, goToPortal }) => {
-    const portal = await portalWithGroups()
-    await goToPortal(portal._id)
-
-    const burger = page.locator('[aria-controls="nav-drawer"]')
+  const openDrawer = async (burger: Locator) => {
     await expect(burger).toBeVisible({ timeout: 10_000 })
+    // a click landing before hydration does nothing: retry until the drawer opens
     await expect.poll(async () => {
       if (await burger.getAttribute('aria-expanded') !== 'true') await burger.click()
       return burger.getAttribute('aria-expanded')
     }, { timeout: 15_000 }).toBe('true')
+  }
+
+  test('the drawer is a real list with a single divider between groups', async ({ page, goToPortal }) => {
+    const portal = await portalWithGroups()
+    await goToPortal(portal._id)
+
+    await openDrawer(page.locator('[aria-controls="nav-drawer"]'))
 
     const list = page.locator('#nav-drawer .v-list')
     await expect(list).toBeVisible()
@@ -194,18 +216,43 @@ test.describe('mobile drawer accessibility', () => {
     const portal = await portalWithGroups()
     await goToPortal(portal._id)
 
-    const burger = page.locator('[aria-controls="nav-drawer"]')
-    await expect(burger).toBeVisible({ timeout: 10_000 })
-    await expect.poll(async () => {
-      if (await burger.getAttribute('aria-expanded') !== 'true') await burger.click()
-      return burger.getAttribute('aria-expanded')
-    }, { timeout: 15_000 }).toBe('true')
+    await openDrawer(page.locator('[aria-controls="nav-drawer"]'))
 
     const links = page.locator('#nav-drawer .v-list li > a')
     await expect(links).toHaveCount(2)
     await links.first().focus()
     await page.keyboard.press('Tab')
     await expect(links.nth(1)).toBeFocused()
+  })
+
+  test('Escape closes the drawer and returns focus to the burger', async ({ page, goToPortal }) => {
+    const portal = await portalWithGroups()
+    await goToPortal(portal._id)
+
+    const burger = page.locator('[aria-controls="nav-drawer"]')
+    await openDrawer(burger)
+    // Escape is only meaningful once the focus has actually landed inside
+    await expect.poll(() => isFocusInDrawer(page), { timeout: 5_000 }).toBe(true)
+
+    await page.keyboard.press('Escape')
+    await expect(burger).toHaveAttribute('aria-expanded', 'false')
+    await expect(burger).toBeFocused()
+  })
+
+  test('tabbing past the last link closes the drawer instead of hiding the focus', async ({ page, goToPortal }) => {
+    const portal = await portalWithGroups()
+    await goToPortal(portal._id)
+
+    const burger = page.locator('[aria-controls="nav-drawer"]')
+    await openDrawer(burger)
+
+    const links = page.locator('#nav-drawer .v-list li > a')
+    await expect(links).toHaveCount(2)
+    await links.last().focus()
+    await page.keyboard.press('Tab')
+
+    await expect(burger).toHaveAttribute('aria-expanded', 'false')
+    expect(await isFocusInDrawer(page)).toBe(false)
   })
 })
 
