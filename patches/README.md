@@ -43,6 +43,21 @@ no layout meaning. Only the outer tag is reachable from userland, hence the patc
 **Removal criterion**: when Vuetify renders badges with phrasing content, or exposes
 a prop for the wrapper element.
 
+### `lib/components/VChip/VChip.js` — W3C HTML validity for chips
+
+Same defect as `VBadge`, one component further: `VChip` defaults its root `tag` to
+`span` (a chip is an inline box) but hardcodes its content wrapper as
+`div.v-chip__content`. Every chip therefore emits a `div` inside a `span`, which W3C
+rejects — seven occurrences on the portal catalogue page alone (the topic filter
+chips). RGAA 8.2.
+
+This patch renders the wrapper as a `span`. No visual change: `.v-chip__content`
+declares `display: inline-flex` in Vuetify's own CSS, so the tag name carries no
+layout meaning. The wrapper is not reachable from userland, hence the patch.
+
+**Removal criterion**: when Vuetify renders the chip content wrapper as phrasing
+content, or exposes a prop for it.
+
 ### `lib/components/VField/VField.js` — W3C HTML validity for field labels
 
 `VField` builds its main label props as:
@@ -62,6 +77,34 @@ untouched: it carries `aria-hidden="true"` but no `for`, so it is not associated
 stays valid.
 
 **Removal criterion**: when Vuetify stops emitting `aria-hidden="false"` on labels.
+
+### `lib/components/VSelect/VSelect.js` — W3C HTML validity for the hidden native select
+
+`VSelect` mirrors its items into a `<select hidden>` so the value is submitted with a
+native form. It builds each entry with a `value` but no children and no `label`:
+
+```js
+_createElementVNode("option", { key: item.value, value: item.value, selected: … }, null)
+```
+
+The HTML spec requires an empty `option` to carry a `label` attribute, so W3C reports
+one error per item — four on the portal catalogue page ("Trier par"). RGAA 8.2.
+
+This patch passes `label: item.title`, the string `transformItem` already computes for
+display. The element is `hidden`, so there is no visual or behavioural change; the
+`label` is what a native form control would expose anyway.
+
+**Removal criterion**: when Vuetify gives the mirrored options a label or a text node.
+
+> **Not patched — `role="combobox"` without `aria-expanded`.** `VTextField` applies its
+> `role` prop to *both* the `VField` root and the `input` (`VTextField.js` lines 168 and
+> 198), and `VSelect` defaults that prop to `combobox`. Two nested comboboxes result.
+> The inner one (the `input`) is correct and carries `aria-expanded`/`aria-controls` in
+> SSR; the outer one gets them only at runtime, from `VMenu`'s `activator="parent"`
+> binding, so the server-rendered markup has a bare `role="combobox"` and W3C rejects it.
+> The correct fix is upstream — the ARIA 1.2 combobox pattern puts the role on the input
+> only — and removing the role locally would leave `VMenu`'s runtime `aria-expanded` on a
+> roleless `div`, trading one defect for another. Tracked as a Vuetify issue instead.
 
 ### `lib/components/VDivider/VDivider.js` — redundant ARIA role on dividers
 
