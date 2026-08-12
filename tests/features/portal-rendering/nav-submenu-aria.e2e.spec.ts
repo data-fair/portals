@@ -171,6 +171,7 @@ test.describe('mobile drawer accessibility', () => {
         onlyLiChildren: kids.every((c) => c.tagName === 'LI'),
         links: el.querySelectorAll('li > a').length,
         dividers: kids.filter(isDivider).length,
+        dividerRoles: kids.filter(isDivider).map((li) => li.querySelector('.v-divider')!.getAttribute('role')),
         doubled,
         listTabindex: el.getAttribute('tabindex'),
         itemTabindexes: [...el.querySelectorAll('.v-list-item')].map((i) => i.getAttribute('tabindex'))
@@ -182,6 +183,8 @@ test.describe('mobile drawer accessibility', () => {
     // one boundary between the two groups → exactly one divider, never doubled
     expect(shape.dividers).toBe(1)
     expect(shape.doubled).toBe(false)
+    // hr already implies separator: the patched VDivider must not repeat it
+    expect(shape.dividerRoles).toEqual([null])
     // the wrapper is skipped, the links carry the tab order
     expect(shape.listTabindex).toBe('-1')
     expect(shape.itemTabindexes).toEqual(['0', '0'])

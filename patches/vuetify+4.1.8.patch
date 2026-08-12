@@ -1,3 +1,56 @@
+diff --git a/node_modules/vuetify/lib/components/VBadge/VBadge.js b/node_modules/vuetify/lib/components/VBadge/VBadge.js
+index bd68cb2..8745c92 100644
+--- a/node_modules/vuetify/lib/components/VBadge/VBadge.js
++++ b/node_modules/vuetify/lib/components/VBadge/VBadge.js
+@@ -41,7 +41,7 @@ export const makeVBadgeProps = propsFactory({
+     location: 'top end'
+   }),
+   ...makeRoundedProps(),
+-  ...makeTagProps(),
++  ...makeTagProps({ tag: 'span' }),
+   ...makeThemeProps(),
+   ...makeTransitionProps({
+     transition: 'scale-rotate-transition'
+@@ -94,7 +94,7 @@ export const VBadge = genericComponent()({
+       }, attrs, {
+         "style": props.style
+       }), {
+-        default: () => [_createElementVNode("div", {
++        default: () => [_createElementVNode("span", {
+           "class": "v-badge__wrapper"
+         }, [ctx.slots.default?.(), _createVNode(MaybeTransition, {
+           "transition": props.transition
+diff --git a/node_modules/vuetify/lib/components/VDivider/VDivider.js b/node_modules/vuetify/lib/components/VDivider/VDivider.js
+index 0ac9ecf..e7388f2 100644
+--- a/node_modules/vuetify/lib/components/VDivider/VDivider.js
++++ b/node_modules/vuetify/lib/components/VDivider/VDivider.js
+@@ -73,7 +73,10 @@ export const VDivider = genericComponent()({
+           'border-style': props.variant
+         }, props.style]),
+         "aria-orientation": !attrs.role || attrs.role === 'separator' ? props.vertical ? 'vertical' : 'horizontal' : undefined,
+-        "role": `${attrs.role || 'separator'}`
++        // <hr> already carries an implicit separator role: emitting it again is
++        // redundant and reported by the W3C validator. An explicit override
++        // (role="presentation") is still honoured.
++        "role": attrs.role
+       }, null);
+       if (!slots.default) return divider;
+       return _createElementVNode("div", {
+diff --git a/node_modules/vuetify/lib/components/VField/VField.js b/node_modules/vuetify/lib/components/VField/VField.js
+index 5b75eb8..bef9f28 100644
+--- a/node_modules/vuetify/lib/components/VField/VField.js
++++ b/node_modules/vuetify/lib/components/VField/VField.js
+@@ -183,7 +183,9 @@ export const VField = genericComponent()({
+     const mainLabelProps = toRef(() => {
+       const ariaHidden = hasFloatingLabel.value && isActive.value;
+       return {
+-        'aria-hidden': ariaHidden,
++        // only emit the attribute when it is actually true: aria-hidden is forbidden
++        // on a <label> associated with a labelable element, whatever its value
++        'aria-hidden': ariaHidden || undefined,
+         for: ariaHidden ? undefined : id.value
+       };
+     });
 diff --git a/node_modules/vuetify/lib/composables/router.js b/node_modules/vuetify/lib/composables/router.js
 index db5aad7..bb175d7 100644
 --- a/node_modules/vuetify/lib/composables/router.js
@@ -52,38 +105,3 @@ index e61b99d..44dd5a7 100644
            }]
          };
        }
-diff --git a/node_modules/vuetify/lib/components/VBadge/VBadge.js b/node_modules/vuetify/lib/components/VBadge/VBadge.js
---- a/node_modules/vuetify/lib/components/VBadge/VBadge.js
-+++ b/node_modules/vuetify/lib/components/VBadge/VBadge.js
-@@ -41,7 +41,7 @@ export const makeVBadgeProps = propsFactory({
-     location: 'top end'
-   }),
-   ...makeRoundedProps(),
--  ...makeTagProps(),
-+  ...makeTagProps({ tag: 'span' }),
-   ...makeThemeProps(),
-   ...makeTransitionProps({
-     transition: 'scale-rotate-transition'
-@@ -94,7 +94,7 @@ export const VBadge = genericComponent()({
-       }, attrs, {
-         "style": props.style
-       }), {
--        default: () => [_createElementVNode("div", {
-+        default: () => [_createElementVNode("span", {
-           "class": "v-badge__wrapper"
-         }, [ctx.slots.default?.(), _createVNode(MaybeTransition, {
-           "transition": props.transition
-diff --git a/node_modules/vuetify/lib/components/VField/VField.js b/node_modules/vuetify/lib/components/VField/VField.js
---- a/node_modules/vuetify/lib/components/VField/VField.js
-+++ b/node_modules/vuetify/lib/components/VField/VField.js
-@@ -183,7 +183,9 @@ export const VField = genericComponent()({
-     const mainLabelProps = toRef(() => {
-       const ariaHidden = hasFloatingLabel.value && isActive.value;
-       return {
--        'aria-hidden': ariaHidden,
-+        // only emit the attribute when it is actually true: aria-hidden is forbidden
-+        // on a <label> associated with a labelable element, whatever its value
-+        'aria-hidden': ariaHidden || undefined,
-         for: ariaHidden ? undefined : id.value
-       };
-     });

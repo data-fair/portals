@@ -62,3 +62,22 @@ untouched: it carries `aria-hidden="true"` but no `for`, so it is not associated
 stays valid.
 
 **Removal criterion**: when Vuetify stops emitting `aria-hidden="false"` on labels.
+
+### `lib/components/VDivider/VDivider.js` — redundant ARIA role on dividers
+
+`VDivider` always renders an `hr` and hardcodes `role: \`${attrs.role || 'separator'}\``.
+`hr` already has `separator` as its implicit role, so the attribute is redundant and
+the W3C validator reports one "The `separator` role is unnecessary for element `hr`"
+per divider — six of them on the portal home page.
+
+This patch emits `role` only when the caller supplies one (`attrs.role`), so an
+explicit `role="presentation"` on a decorative divider is still honoured while the
+default stays implicit. `aria-orientation` is left untouched: it is not flagged, and
+it carries real meaning on vertical dividers.
+
+Informational only — it fails no criterion and blocks no W3C error — but it is noise
+in every audit report. Upstream issue vuetifyjs/vuetify#18229 raised it in September
+2023; it was closed by the stale bot without ever being triaged, so the case was
+never argued on its merits.
+
+**Removal criterion**: when Vuetify stops hardcoding the implicit `separator` role.
