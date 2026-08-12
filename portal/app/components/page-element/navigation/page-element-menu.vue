@@ -26,8 +26,12 @@
           </v-btn>
         </v-hover>
       </template>
+      <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
+           reserving arrow keys for the menu pattern. This popup is a list of links:
+           put every link back in the natural tab order and skip the wrapper. -->
       <v-list
         tag="ul"
+        tabindex="-1"
         style="list-style: none"
       >
         <li
@@ -42,6 +46,7 @@
             :rel="link.type === 'external' ? 'noopener' : undefined"
             :role="undefined"
             color="primary"
+            tabindex="0"
             link
           >
             <template #prepend>
