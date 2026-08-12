@@ -21,9 +21,27 @@ index bd68cb2..8745c92 100644
          }, [ctx.slots.default?.(), _createVNode(MaybeTransition, {
            "transition": props.transition
 diff --git a/node_modules/vuetify/lib/components/VChip/VChip.js b/node_modules/vuetify/lib/components/VChip/VChip.js
-index 2ec5103..ba875c5 100644
+index 2ec5103..77e42b7 100644
 --- a/node_modules/vuetify/lib/components/VChip/VChip.js
 +++ b/node_modules/vuetify/lib/components/VChip/VChip.js
+@@ -199,7 +199,7 @@ export const VChip = genericComponent()({
+         default: () => [genOverlays(isClickable.value, 'v-chip'), hasFilter && _createVNode(VExpandXTransition, {
+           "key": "filter"
+         }, {
+-          default: () => [_withDirectives(_createElementVNode("div", {
++          default: () => [_withDirectives(_createElementVNode("span", {
+             "class": "v-chip__filter"
+           }, [!slots.filter ? _createVNode(VIcon, {
+             "key": "filter-icon",
+@@ -213,7 +213,7 @@ export const VChip = genericComponent()({
+               }
+             }
+           }, slots.filter)]), [[_vShow, group.isSelected.value]])]
+-        }), hasPrepend && _createElementVNode("div", {
++        }), hasPrepend && _createElementVNode("span", {
+           "key": "prepend",
+           "class": "v-chip__prepend"
+         }, [!slots.prepend ? _createElementVNode(_Fragment, null, [props.prependIcon && _createVNode(VIcon, {
 @@ -237,7 +237,7 @@ export const VChip = genericComponent()({
                start: true
              }
@@ -33,6 +51,15 @@ index 2ec5103..ba875c5 100644
            "class": "v-chip__content",
            "data-no-activator": ""
          }, [slots.default?.({
+@@ -247,7 +247,7 @@ export const VChip = genericComponent()({
+           toggle: group?.toggle,
+           value: group?.value.value,
+           disabled: props.disabled
+-        }) ?? toDisplayString(props.text)]), hasAppend && _createElementVNode("div", {
++        }) ?? toDisplayString(props.text)]), hasAppend && _createElementVNode("span", {
+           "key": "append",
+           "class": "v-chip__append"
+         }, [!slots.append ? _createElementVNode(_Fragment, null, [props.appendIcon && _createVNode(VIcon, {
 diff --git a/node_modules/vuetify/lib/components/VDivider/VDivider.js b/node_modules/vuetify/lib/components/VDivider/VDivider.js
 index 0ac9ecf..e7388f2 100644
 --- a/node_modules/vuetify/lib/components/VDivider/VDivider.js

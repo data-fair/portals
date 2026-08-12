@@ -46,17 +46,25 @@ a prop for the wrapper element.
 ### `lib/components/VChip/VChip.js` — W3C HTML validity for chips
 
 Same defect as `VBadge`, one component further: `VChip` defaults its root `tag` to
-`span` (a chip is an inline box) but hardcodes its content wrapper as
-`div.v-chip__content`. Every chip therefore emits a `div` inside a `span`, which W3C
-rejects — seven occurrences on the portal catalogue page alone (the topic filter
-chips). RGAA 8.2.
+`span` (a chip is an inline box) but hardcodes four inner wrappers as `div` —
+`v-chip__filter`, `v-chip__prepend`, `v-chip__content` and `v-chip__append`. Every
+chip therefore emits a `div` inside a `span`, which W3C rejects — seven occurrences
+on the portal catalogue page alone (the topic filter chips, all on `__content`).
+RGAA 8.2.
 
-This patch renders the wrapper as a `span`. No visual change: `.v-chip__content`
-declares `display: inline-flex` in Vuetify's own CSS, so the tag name carries no
-layout meaning. The wrapper is not reachable from userland, hence the patch.
+This patch renders all four as `span`, which is what the sibling `v-chip__overlay`
+and `v-chip__underlay` wrappers already were. No visual change: Vuetify's own CSS
+declares `display: inline-flex` on `.v-chip__content` and on the
+`.v-chip__filter`/`.v-chip__prepend`/`.v-chip__append` group, so the tag name carries
+no layout meaning. The close button is left alone — it is a `button`, already valid
+phrasing content. None of the wrappers is reachable from userland (`tag` only
+controls the root), hence the patch.
 
-**Removal criterion**: when Vuetify renders the chip content wrapper as phrasing
-content, or exposes a prop for it.
+Only `__content` is exercised by the portal today, but the patch covers the four so
+it stays identical to the upstream fix proposed for this defect.
+
+**Removal criterion**: when Vuetify renders the chip wrappers as phrasing content, or
+exposes props for them.
 
 ### `lib/components/VField/VField.js` — W3C HTML validity for field labels
 
