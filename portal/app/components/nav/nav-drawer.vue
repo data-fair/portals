@@ -74,6 +74,17 @@ function closeOnFocusOut (e: FocusEvent) {
 
 </script>
 
+<style scoped>
+/* VList spaces nav items with `.v-list-item:not(:first-child)`. Each item is now the
+   only child of its <li>, so they all became first children and lost the 4px gap:
+   carry it on the <li> instead. */
+:deep(li:not(:first-child) > .v-list-item),
+:deep(li:not(:first-child) > .v-list-group > .v-list-item),
+:deep(.v-list-group__items li > .v-list-item) {
+  margin-top: 4px;
+}
+</style>
+
 <i18n lang="yaml">
   en:
     mobileNavigation: 'Navigation menu'
