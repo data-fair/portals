@@ -66,6 +66,34 @@ it stays identical to the upstream fix proposed for this defect.
 **Removal criterion**: when Vuetify renders the chip wrappers as phrasing content, or
 exposes props for them.
 
+### `lib/components/VTabs/VTab.js` — W3C HTML validity for the tab slider
+
+Same defect as `VBadge` and `VChip`, one component further: `VTab` renders its
+underline as a hardcoded `div.v-tab__slider` inside `VBtn`'s default slot, which
+`VBtn` wraps in a `span.v-btn__content`. Every tab therefore emits a `div` inside a
+`span` — four occurrences in the portal header navigation. RGAA 8.2.
+
+This patch renders the slider as a `span`. No visual change: `.v-tab__slider` is
+`position: absolute`, which blockifies the box whatever the tag name. The element is
+not reachable from userland (`tag` only controls the root of the underlying `VBtn`),
+hence the patch.
+
+**Removal criterion**: when Vuetify renders the slider as phrasing content.
+
+### `lib/components/VBtn/VBtn.js` — `value` attribute on a link
+
+`VBtn` mirrors its group `value` into a `value` attribute on whatever tag it renders.
+With `to`/`href` that tag is an `a`, where `value` is not a valid attribute — two
+occurrences in the portal header navigation, where the tabs that are plain links take
+`:value="i"` to drive the tabs' `v-model`. RGAA 8.2.
+
+This patch emits the attribute only when the rendered tag is not `a`, mirroring the
+neighbouring `disabled` binding (`isDisabled.value && Tag !== 'a'`) and the `target`
+rule already patched in `composables/router.js`. Selection is unaffected: the group
+reads `props.value`, never the DOM attribute.
+
+**Removal criterion**: when Vuetify stops mirroring `value` onto link tags.
+
 ### `lib/components/VField/VField.js` — W3C HTML validity for field labels
 
 `VField` builds its main label props as:

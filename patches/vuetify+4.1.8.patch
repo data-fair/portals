@@ -20,6 +20,20 @@ index bd68cb2..8745c92 100644
            "class": "v-badge__wrapper"
          }, [ctx.slots.default?.(), _createVNode(MaybeTransition, {
            "transition": props.transition
+diff --git a/node_modules/vuetify/lib/components/VBtn/VBtn.js b/node_modules/vuetify/lib/components/VBtn/VBtn.js
+index fa5d137..5389311 100644
+--- a/node_modules/vuetify/lib/components/VBtn/VBtn.js
++++ b/node_modules/vuetify/lib/components/VBtn/VBtn.js
+@@ -183,7 +183,8 @@ export const VBtn = genericComponent()({
+         "disabled": isDisabled.value && Tag !== 'a' || undefined,
+         "tabindex": props.loading || props.readonly ? -1 : undefined,
+         "onClick": onClick,
+-        "value": valueAttr.value
++        // `value` is invalid on <a>: only emit it when the button is a real button (W3C)
++        "value": Tag === 'a' ? undefined : valueAttr.value
+       }), {
+         default: () => [genOverlays(true, 'v-btn'), !props.icon && hasPrepend && _createElementVNode("span", {
+           "key": "prepend",
 diff --git a/node_modules/vuetify/lib/components/VChip/VChip.js b/node_modules/vuetify/lib/components/VChip/VChip.js
 index 2ec5103..77e42b7 100644
 --- a/node_modules/vuetify/lib/components/VChip/VChip.js
@@ -103,6 +117,19 @@ index dd26eca..6fbbc64 100644
            "selected": selectedValues.value.includes(item.value)
          }, null))]), _createVNode(VMenu, _mergeProps({
            "id": menuId.value,
+diff --git a/node_modules/vuetify/lib/components/VTabs/VTab.js b/node_modules/vuetify/lib/components/VTabs/VTab.js
+index d3fcfdf..8bc36cf 100644
+--- a/node_modules/vuetify/lib/components/VTabs/VTab.js
++++ b/node_modules/vuetify/lib/components/VTabs/VTab.js
+@@ -122,7 +122,7 @@ export const VTab = genericComponent()({
+         "onGroup:selected": updateSlider
+       }), {
+         ...slots,
+-        default: () => _createElementVNode(_Fragment, null, [slots.default?.() ?? props.text, !props.hideSlider && _createElementVNode("div", {
++        default: () => _createElementVNode(_Fragment, null, [slots.default?.() ?? props.text, !props.hideSlider && _createElementVNode("span", {
+           "ref": sliderEl,
+           "class": _normalizeClass(['v-tab__slider', props.inset ? insetColorClasses.value : sliderColorClasses.value]),
+           "style": _normalizeStyle([sliderColorStyles.value, props.inset ? insetColorStyles.value : sliderColorClasses.value])
 diff --git a/node_modules/vuetify/lib/composables/router.js b/node_modules/vuetify/lib/composables/router.js
 index db5aad7..bb175d7 100644
 --- a/node_modules/vuetify/lib/composables/router.js
