@@ -105,6 +105,21 @@ index 5b75eb8..bef9f28 100644
          for: ariaHidden ? undefined : id.value
        };
      });
+diff --git a/node_modules/vuetify/lib/components/VImg/VImg.js b/node_modules/vuetify/lib/components/VImg/VImg.js
+index 7aab774..18ca7f3 100644
+--- a/node_modules/vuetify/lib/components/VImg/VImg.js
++++ b/node_modules/vuetify/lib/components/VImg/VImg.js
+@@ -295,7 +295,9 @@ export const VImg = genericComponent()({
+         }, backgroundColorStyles.value, roundedStyles.value, props.style]
+       }, responsiveProps, rootAttrs, {
+         "aspectRatio": aspectRatio.value,
+-        "aria-label": props.alt,
++        // an empty `alt` (decorative image) must not emit `aria-label`: the root would
++        // then carry it without a role, which W3C rejects (same guard as `role` below)
++        "aria-label": props.alt || undefined,
+         "role": props.alt ? 'img' : undefined
+       }), {
+         additional: () => _createElementVNode(_Fragment, null, [_createVNode(__image, imageAttrs, null), _createVNode(__preloadImage, null, null), _createVNode(__gradient, null, null), _createVNode(__placeholder, null, null), _createVNode(__error, null, null)]),
 diff --git a/node_modules/vuetify/lib/components/VSelect/VSelect.js b/node_modules/vuetify/lib/components/VSelect/VSelect.js
 index 42d2a00..08c6f77 100644
 --- a/node_modules/vuetify/lib/components/VSelect/VSelect.js
