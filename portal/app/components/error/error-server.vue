@@ -4,6 +4,7 @@
     width="1032.24"
     height="832.63"
     viewBox="0 0 1032.24 832.63"
+    aria-hidden="true"
   >
     <ellipse
       cx="530.99"
