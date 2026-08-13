@@ -12,6 +12,7 @@
       <!--
         :to => redirect to the dataset page
         :link => interactive (overlay/ripple) when link or filter; the background hover effect is excluded in filter mode, where 'invert' takes over
+        :role/:aria-pressed => a filter chip has no href, so VChip renders a bare <span tabindex="0">: assistive technologies would announce neither a control nor its selection, which the fill alone carries (RGAA 7.1)
         :variant => flat when selected, outlined when not, flipped on hover with the 'invert' effect
         :style => surface background + consistent border width
         label => use default button rounding, not default chip rounding
@@ -29,6 +30,8 @@
           :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
           :link="isFilters || !!link"
           :to="(!preview && link && !isExternalLink(link)) ? `${resolveLink(link)}?topics=${topic.id}` : undefined"
+          :role="isFilters ? 'button' : undefined"
+          :aria-pressed="isFilters ? String(isSelected(topic.id)) : undefined"
           :variant="chipVariant(topic.id, isHovering)"
           :style="[chipStyle(topic.id, topic.color, isHovering), chipHoverStyle(topic, isHovering)]"
           label
