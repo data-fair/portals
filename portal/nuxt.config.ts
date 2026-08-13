@@ -148,7 +148,15 @@ export default defineNuxtConfig({
           // white card with light grey border by default
           variant: 'flat',
           border: 'sm'
-        }
+        },
+        // Activators advertise aria-controls/aria-owns with the id of an overlay that is
+        // only rendered on open: closed, they point at nothing (RGAA 7.1). Mounting the
+        // overlay up front keeps the ids resolvable; the item lists are virtualised, so
+        // only a window of them is rendered.
+        VMenu: { eager: true },
+        VSelect: { eager: true },
+        VAutocomplete: { eager: true },
+        VCombobox: { eager: true }
       }
     }
   },

@@ -33,13 +33,12 @@
             :color="link.icon.color"
           />
         </template>
-        <!-- eager + no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
+        <!-- no aria-haspopup: same rationale as the top level in nav-tabs.vue -->
         <v-menu
           v-if="link.type === 'submenu' && link.children?.length"
           :open-on-focus="false"
           :activator-props="{ 'aria-haspopup': undefined, 'aria-owns': undefined }"
           activator="parent"
-          eager
           open-on-hover
           submenu
         >

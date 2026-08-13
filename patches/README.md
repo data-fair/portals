@@ -140,7 +140,8 @@ display. The element is `hidden`, so there is no visual or behavioural change; t
 > binding, so the server-rendered markup has a bare `role="combobox"` and W3C rejects it.
 > The correct fix is upstream — the ARIA 1.2 combobox pattern puts the role on the input
 > only — and removing the role locally would leave `VMenu`'s runtime `aria-expanded` on a
-> roleless `div`, trading one defect for another. Tracked as a Vuetify issue instead.
+> roleless `div`, trading one defect for another. Tracked upstream as
+> vuetifyjs/vuetify#23105 instead.
 
 ### `lib/components/VDivider/VDivider.js` — redundant ARIA role on dividers
 
@@ -160,3 +161,12 @@ in every audit report. Upstream issue vuetifyjs/vuetify#18229 raised it in Septe
 never argued on its merits.
 
 **Removal criterion**: when Vuetify stops hardcoding the implicit `separator` role.
+
+> **Not patched — `aria-controls` / `aria-owns` on an unmounted overlay.** `VMenu`
+> advertises both on its activator, and `useMenuActivator` does the same on the field of
+> `VSelect`/`VAutocomplete`/`VCombobox`, with the id of an overlay that is only rendered
+> once the menu opens: while closed, they reference an id absent from the document
+> (RGAA 7.1). Fixed from userland instead, with `eager` defaults on those four
+> components in `portal/nuxt.config.ts` — the overlay stays mounted, so the ids always
+> resolve. The lists are virtualised, so mounting them up front costs a window of items,
+> not the whole set.

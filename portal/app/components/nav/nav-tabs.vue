@@ -14,13 +14,9 @@
         v-for="(link, i) of navigation"
         :key="i"
       >
-        <!-- eager: VMenu renders its overlay lazily, so the aria-controls/aria-owns
-             the activator advertises would point at ids that do not exist yet while
-             the menu is closed (RGAA 7.1) -->
         <v-menu
           v-if="link?.type === 'submenu' && link.children.length"
           content-class="rounded-t-0"
-          eager
           @update:model-value="(open) => onMenuToggle(i, open)"
         >
           <template #activator="{ props: menuProps }">

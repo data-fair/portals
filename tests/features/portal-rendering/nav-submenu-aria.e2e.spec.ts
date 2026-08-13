@@ -10,7 +10,8 @@ const user1 = await axiosAuth('test_admin@test.com')
  * The submenu is a disclosure widget, not an ARIA menu:
  * - the trigger exposes aria-expanded + aria-controls, never aria-haspopup or
  *   aria-owns (the latter would pull the popup into the trigger's name);
- * - `eager` mounts the popup so aria-controls resolves while closed;
+ * - the popup is mounted up front (the `eager` defaults in nuxt.config.ts), so
+ *   aria-controls resolves while closed;
  * - the popup is a real <ul>/<li> list of links, and keyboard flow works
  *   (focus enters on open, Escape closes and returns focus to the trigger).
  */
