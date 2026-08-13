@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ t('contribute') }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="t('contribute')"
     :src="`/data-fair/embed/workflow/update-dataset?publicationSite=data-fair-portals:${portal._id}&owner=${portalOwner}`"

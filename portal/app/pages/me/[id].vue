@@ -1,4 +1,11 @@
 <template>
+  <h1
+    v-if="page"
+    class="d-sr-only"
+  >
+    {{ page.title }}
+  </h1>
+
   <d-frame-wrapper
     v-if="page"
     :iframe-title="page.title"

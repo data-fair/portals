@@ -1,4 +1,9 @@
 <template>
+  <!-- the embedded document starts its titles at h2: the h1 of the page belongs here -->
+  <h1 class="d-sr-only">
+    {{ t('myAccount') }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="t('myAccount')"
     src="/simple-directory/me"

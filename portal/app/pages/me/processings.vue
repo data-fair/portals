@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ t('processings') }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="t('processings')"
     :src="`/processings/processings/?owner=${portalOwner}`"

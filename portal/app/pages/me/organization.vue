@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ t('organization') }}
+  </h1>
+
   <!-- TODO: Add main redirect ? -->
   <d-frame-wrapper
     :iframe-title="t('organization')"
