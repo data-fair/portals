@@ -106,7 +106,7 @@ index 5b75eb8..bef9f28 100644
        };
      });
 diff --git a/node_modules/vuetify/lib/components/VSelect/VSelect.js b/node_modules/vuetify/lib/components/VSelect/VSelect.js
-index dd26eca..6fbbc64 100644
+index 42d2a00..08c6f77 100644
 --- a/node_modules/vuetify/lib/components/VSelect/VSelect.js
 +++ b/node_modules/vuetify/lib/components/VSelect/VSelect.js
 @@ -436,6 +436,7 @@ export const VSelect = genericComponent()({
