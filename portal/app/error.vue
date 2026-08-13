@@ -28,7 +28,6 @@ const documentTitle = computed(() => {
 })
 useHead({ title: () => documentTitle.value, htmlAttrs: { lang: () => locale.value } })
 
-console.log('Error: ', error)
 if (error.status === 401) {
   const session = useSession()
   session.login()
