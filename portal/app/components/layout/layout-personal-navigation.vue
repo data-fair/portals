@@ -5,107 +5,184 @@
     :temporary="$vuetify.display.smAndDown"
     :permanent="!$vuetify.display.smAndDown"
   >
+    <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
+         reserving arrow keys for the menu pattern. A personal navigation is a
+         navigation, not a menu: the links carry the tab order (tabindex="0") and
+         the wrapper (tag="ul") is skipped. Same treatment as nav-drawer.vue. -->
     <v-list
+      id="sidebar-navigation"
       :bg-color="portalConfig.personal.navigationColor"
       class="pa-1"
+      :role="undefined"
+      tag="ul"
+      tabindex="-1"
+      style="list-style: none"
       nav
     >
-      <v-list-item
-        :title="portalConfig.title"
-        :prepend-avatar="ownerAvatar"
-        :subtitle="t('backToPortal')"
-        to="/"
-      />
-      <v-divider :style="navigationTextStyle" />
-      <v-list-subheader
-        :title="t('personalSpace')"
-        :style="navigationTextStyle"
-      />
+      <li>
+        <v-list-item
+          :prepend-avatar="ownerAvatar"
+          :subtitle="t('backToPortal')"
+          to="/"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ portalConfig.title }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
+      <li>
+        <v-divider :style="navigationTextStyle" />
+      </li>
+      <li>
+        <v-list-subheader
+          :title="t('personalSpace')"
+          :style="navigationTextStyle"
+        />
+      </li>
 
-      <v-list-item
-        :prepend-icon="mdiAccount"
-        :title="t('myAccount')"
-        to="/me/account"
-      />
-      <v-list-item
-        v-if="!portalConfig.personal.hidePages.includes('notifications')"
-        :prepend-icon="mdiBell"
-        :title="t('myNotifications')"
-        to="/me/notifications"
-      />
+      <li>
+        <v-list-item
+          :prepend-icon="mdiAccount"
+          to="/me/account"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('myAccount') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
+      <li v-if="!portalConfig.personal.hidePages.includes('notifications')">
+        <v-list-item
+          :prepend-icon="mdiBell"
+          to="/me/notifications"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('myNotifications') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
       <!-- Account switching -->
-      <v-select
-        v-if="accounts.length > 1"
-        :model-value="accountValue"
-        :label="t('activeAccount')"
-        :items="accounts"
-        class="my-2"
-        variant="outlined"
-        density="compact"
-        hide-details
-        @update:model-value="(val) => {
-          const [org, dep] = (val || '').split(':')
-          session.switchOrganization(org || null, dep)
-        }"
-      />
+      <li v-if="accounts.length > 1">
+        <v-select
+          :model-value="accountValue"
+          :label="t('activeAccount')"
+          :items="accounts"
+          class="my-2"
+          variant="outlined"
+          density="compact"
+          hide-details
+          @update:model-value="(val) => {
+            const [org, dep] = (val || '').split(':')
+            session.switchOrganization(org || null, dep)
+          }"
+        />
+      </li>
 
-      <v-list-item
-        v-if="session.account.value.type === 'organization' && !session.account.value.department && session.accountRole.value === 'admin'"
-        :prepend-icon="mdiAccountGroup"
-        :title="t('organizationManagement')"
-        to="/me/organization"
-      />
+      <li v-if="session.account.value.type === 'organization' && !session.account.value.department && session.accountRole.value === 'admin'">
+        <v-list-item
+          :prepend-icon="mdiAccountGroup"
+          to="/me/organization"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('organizationManagement') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
-        v-if="portalConfig.reuses?.allowUserReuses && !isPortalOwner"
-        :prepend-icon="mdiPageNext"
-        :title="t('myReuses')"
-        to="/me/reuses"
-      />
+      <li v-if="portalConfig.reuses?.allowUserReuses && !isPortalOwner">
+        <v-list-item
+          :prepend-icon="mdiPageNext"
+          to="/me/reuses"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('myReuses') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
-        v-if="!session.account.value.department && session.accountRole.value === 'admin' && !portalConfig.personal.hidePages.includes('api-keys')"
-        :prepend-icon="mdiCloudKey"
-        :title="t('apiKeys')"
-        to="/me/api-keys"
-      />
+      <li v-if="!session.account.value.department && session.accountRole.value === 'admin' && !portalConfig.personal.hidePages.includes('api-keys')">
+        <v-list-item
+          :prepend-icon="mdiCloudKey"
+          to="/me/api-keys"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('apiKeys') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
-        v-if="(datasetsCount.rest || datasetsCount.file) && !portalConfig.personal.hidePages.includes('contribute')"
-        :prepend-icon="mdiUpload"
-        :title="t('contribute')"
-        to="/me/update-dataset"
-      />
+      <li v-if="(datasetsCount.rest || datasetsCount.file) && !portalConfig.personal.hidePages.includes('contribute')">
+        <v-list-item
+          :prepend-icon="mdiUpload"
+          to="/me/update-dataset"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('contribute') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
-        v-if="processingsCount && !portalConfig.personal.hidePages.includes('processings')"
-        :prepend-icon="mdiCogTransferOutline"
-        :title="t('processings')"
-        to="/me/processings"
-      />
+      <li v-if="processingsCount && !portalConfig.personal.hidePages.includes('processings')">
+        <v-list-item
+          :prepend-icon="mdiCogTransferOutline"
+          to="/me/processings"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('processings') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
-        v-if="isPortalOwner"
-        :prepend-icon="mdiWrench"
-        :href="backOfficeUrl"
-        :title="t('backOffice')"
-      />
+      <li v-if="isPortalOwner">
+        <v-list-item
+          :prepend-icon="mdiWrench"
+          :href="backOfficeUrl"
+          :role="undefined"
+          tabindex="0"
+        >
+          <v-list-item-title class="text-wrap">
+            {{ t('backOffice') }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
 
-      <v-list-item
+      <li
         v-for="(page, p) in portalConfig.personal.accountPages"
         :key="p"
-        :to="'/me/' + page.id"
-        :title="page.title"
       >
-        <template #prepend>
-          <v-icon
-            v-if="page.icon && (page.icon.mdi?.svgPath || page.icon.custom)"
-            :icon="page.icon.mdi?.svgPath || page.icon.custom"
-            :color="page.icon.color"
-          />
-        </template>
-      </v-list-item>
+        <v-list-item
+          :to="'/me/' + page.id"
+          :role="undefined"
+          tabindex="0"
+        >
+          <template #prepend>
+            <v-icon
+              v-if="page.icon && (page.icon.mdi?.svgPath || page.icon.custom)"
+              :icon="page.icon.mdi?.svgPath || page.icon.custom"
+              :color="page.icon.color"
+            />
+          </template>
+          <v-list-item-title class="text-wrap">
+            {{ page.title }}
+          </v-list-item-title>
+        </v-list-item>
+      </li>
     </v-list>
 
     <!-- Copyright -->
@@ -118,6 +195,8 @@
         href="https://koumoul.com"
         target="_blank"
         rel="noopener"
+        :role="undefined"
+        tabindex="0"
       >
         <template #title>
           <span class="text-body-small">{{ t('publishYourData') }}</span>
