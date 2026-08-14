@@ -114,6 +114,36 @@ stays valid.
 
 **Removal criterion**: when Vuetify stops emitting `aria-hidden="false"` on labels.
 
+### `lib/components/VImg/VImg.js` — W3C HTML validity for decorative images
+
+`VImg` mirrors its `alt` prop onto its root element, next to a `role` that is guarded on
+the same value:
+
+```js
+'aria-label': props.alt,
+role: props.alt ? 'img' : undefined
+```
+
+A decorative image is declared with `alt=""` — the empty string is falsy, so the root
+gets no role, but the attribute is still emitted and the element renders as
+`<div class="v-img" aria-label="">`. W3C rejects that: `aria-label` must not be used on
+a `div` whose role is `generic`. RGAA 8.2. Four occurrences on the portal visualisation
+catalogue (one per card thumbnail), twenty on a full catalogue page.
+
+This patch emits the attribute only when `alt` is non-empty (`props.alt || undefined`),
+the guard the neighbouring `role` binding already applies. Nothing changes for
+informative images: they keep `role="img"` and their label. Decorative ones lose an
+attribute that carried no name anyway — the inner `img` keeps its `alt=""`, which is
+what makes it decorative, so restitution is unchanged.
+
+There is no userland fix: the object holding `aria-label` is the last argument of the
+root's `mergeProps`, so it overrides any `aria-label` passed by the caller, and dropping
+the `alt` prop instead would leave the inner `img` without an `alt` attribute — one W3C
+error traded for another.
+
+**Removal criterion**: when Vuetify guards `aria-label` like it guards `role` — reported
+as vuetifyjs/vuetify#23111, fix proposed upstream in vuetifyjs/vuetify#23112.
+
 ### `lib/components/VSelect/VSelect.js` — W3C HTML validity for the hidden native select
 
 `VSelect` mirrors its items into a `<select hidden>` so the value is submitted with a

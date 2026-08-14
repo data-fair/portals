@@ -13,6 +13,7 @@
           <v-form
             ref="formRef"
             v-model="valid"
+            @submit.prevent="submitContact"
           >
             <v-text-field
               v-model="message.from"
@@ -105,9 +106,8 @@
                   :class="{ 'text-uppercase': buttonConfig?.uppercase }"
                   :style="btnHover.style(isHovering)"
                   :text="t('send')"
-                  :readonly="!valid"
                   :loading="sendMessage.loading.value"
-                  @click="sendMessage.execute()"
+                  type="submit"
                 >
                   <template
                     v-if="buttonConfig?.showIcon"
@@ -369,6 +369,11 @@ const sendMessage = useAsyncAction(async () => {
 }, {
   success: t('messageSent'),
 })
+
+const submitContact = async () => {
+  const { valid: isValid } = await formRef.value.validate()
+  if (isValid) sendMessage.execute()
+}
 
 </script>
 

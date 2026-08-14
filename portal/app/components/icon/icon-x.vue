@@ -4,6 +4,7 @@
     width="24"
     height="24"
     viewBox="0 0 24 24"
+    aria-hidden="true"
   >
     <g fill="currentColor">
       <path d="M1 2h2.5L18.5 22h-2.5z" />

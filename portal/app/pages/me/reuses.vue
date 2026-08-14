@@ -1,4 +1,8 @@
 <template>
+  <h1 class="d-sr-only">
+    {{ t('myReuses') }}
+  </h1>
+
   <d-frame-wrapper
     :iframe-title="t('myReuses')"
     :adapter.prop="stateChangeAdapter"

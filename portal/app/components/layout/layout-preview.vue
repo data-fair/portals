@@ -1,8 +1,10 @@
 <template>
+  <!-- aria-label: the dialog is rendered in a teleport, its visible title is not enough to name it -->
   <v-dialog
     v-model="dialog"
-    max-width="1200"
+    :aria-label="title"
     :fullscreen="$vuetify.display.smAndDown"
+    max-width="1200"
   >
     <template #activator="{ props }">
       <action-btn
@@ -26,6 +28,7 @@
           <template #append>
             <v-btn
               :icon="mdiClose"
+              :title="t('close')"
               @click="isActive.value = false"
             />
           </template>
@@ -59,6 +62,8 @@ const { trackDialog } = defineProps<{
   block?: boolean
 }>()
 
+const { t } = useI18n()
+
 const dialog = ref(false)
 
 if (trackDialog) {
@@ -67,3 +72,10 @@ if (trackDialog) {
   })
 }
 </script>
+
+<i18n lang="yaml">
+  en:
+    close: Close
+  fr:
+    close: Fermer
+</i18n>
