@@ -35,18 +35,18 @@
 
     <!-- download of formats exported by API when <= 10000 lines -->
     <v-list-item
-      v-for="format in simpleExports"
-      :key="format"
-      :title="t('export', { format: format.toUpperCase() })"
-      :subtitle="t('formatSubtitle.' + format)"
+      v-for="simpleExport in simpleExports"
+      :key="simpleExport.key"
+      :title="t('export', { format: simpleExport.key.toUpperCase() })"
+      :subtitle="t('formatSubtitle.' + simpleExport.key)"
     >
       <template #append>
         <v-btn
-          :title="t('downloadExport', { format: format.toUpperCase() })"
+          :title="t('downloadExport', { format: simpleExport.key.toUpperCase() })"
           :icon="mdiDownload"
-          :href="`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${format}`"
+          :href="`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${simpleExport.format}`"
           variant="text"
-          @click="clickDownload(`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${format}`, format)"
+          @click="clickDownload(`/data-fair/api/v1/datasets/${dataset.slug}/lines?size=10000&page=1&format=${simpleExport.format}`, simpleExport.key)"
         />
       </template>
     </v-list-item>
@@ -98,14 +98,14 @@ const hasNormalizedCSV = computed(() => files.value.some(f => (['normalized', 'f
 
 const simpleExports = computed(() => {
   if (count.value > 10000) return []
-  const exportsList = []
-  if (!hasNormalizedCSV.value) exportsList.push('csv')
-  exportsList.push('xlsx')
-  exportsList.push('ods')
+  const exportsList: { key: string, format: string }[] = []
+  if (!hasNormalizedCSV.value) exportsList.push({ key: 'csv', format: 'csv' })
+  exportsList.push({ key: 'xlsx', format: 'xlsx' })
+  exportsList.push({ key: 'ods', format: 'ods' })
   const hasNormalizedGeojson = files.value.some(f => (['normalized', 'full'].includes(f.key) && f.mimetype === 'application/geo+json') || f.key === 'export-geojson')
   if (dataset.bbox?.length) {
-    if (!hasNormalizedGeojson) exportsList.push('geojson')
-    exportsList.push('shapefile')
+    if (!hasNormalizedGeojson) exportsList.push({ key: 'geojson', format: 'geojson' })
+    exportsList.push({ key: 'shapefile', format: 'shp' })
   }
   return exportsList
 })
