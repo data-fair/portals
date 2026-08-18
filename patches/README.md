@@ -2,7 +2,7 @@
 
 Local patches applied via [`patch-package`](https://github.com/ds300/patch-package). Applied in production by the `Dockerfile` (`RUN npx patch-package`); for local dev run `npx patch-package` after `npm install`.
 
-## `vuetify+4.1.8.patch`
+## `vuetify+4.1.10.patch`
 
 ### `lib/composables/router.js` — d-frame iframe support
 
@@ -80,20 +80,6 @@ hence the patch.
 
 **Removal criterion**: when Vuetify renders the slider as phrasing content.
 
-### `lib/components/VBtn/VBtn.js` — `value` attribute on a link
-
-`VBtn` mirrors its group `value` into a `value` attribute on whatever tag it renders.
-With `to`/`href` that tag is an `a`, where `value` is not a valid attribute — two
-occurrences in the portal header navigation, where the tabs that are plain links take
-`:value="i"` to drive the tabs' `v-model`. RGAA 8.2.
-
-This patch emits the attribute only when the rendered tag is not `a`, mirroring the
-neighbouring `disabled` binding (`isDisabled.value && Tag !== 'a'`) and the `target`
-rule already patched in `composables/router.js`. Selection is unaffected: the group
-reads `props.value`, never the DOM attribute.
-
-**Removal criterion**: when Vuetify stops mirroring `value` onto link tags.
-
 ### `lib/components/VField/VField.js` — W3C HTML validity for field labels
 
 `VField` builds its main label props as:
@@ -113,36 +99,6 @@ untouched: it carries `aria-hidden="true"` but no `for`, so it is not associated
 stays valid.
 
 **Removal criterion**: when Vuetify stops emitting `aria-hidden="false"` on labels.
-
-### `lib/components/VImg/VImg.js` — W3C HTML validity for decorative images
-
-`VImg` mirrors its `alt` prop onto its root element, next to a `role` that is guarded on
-the same value:
-
-```js
-'aria-label': props.alt,
-role: props.alt ? 'img' : undefined
-```
-
-A decorative image is declared with `alt=""` — the empty string is falsy, so the root
-gets no role, but the attribute is still emitted and the element renders as
-`<div class="v-img" aria-label="">`. W3C rejects that: `aria-label` must not be used on
-a `div` whose role is `generic`. RGAA 8.2. Four occurrences on the portal visualisation
-catalogue (one per card thumbnail), twenty on a full catalogue page.
-
-This patch emits the attribute only when `alt` is non-empty (`props.alt || undefined`),
-the guard the neighbouring `role` binding already applies. Nothing changes for
-informative images: they keep `role="img"` and their label. Decorative ones lose an
-attribute that carried no name anyway — the inner `img` keeps its `alt=""`, which is
-what makes it decorative, so restitution is unchanged.
-
-There is no userland fix: the object holding `aria-label` is the last argument of the
-root's `mergeProps`, so it overrides any `aria-label` passed by the caller, and dropping
-the `alt` prop instead would leave the inner `img` without an `alt` attribute — one W3C
-error traded for another.
-
-**Removal criterion**: when Vuetify guards `aria-label` like it guards `role` — reported
-as vuetifyjs/vuetify#23111, fix proposed upstream in vuetifyjs/vuetify#23112.
 
 ### `lib/components/VSelect/VSelect.js` — W3C HTML validity for the hidden native select
 
@@ -171,26 +127,7 @@ display. The element is `hidden`, so there is no visual or behavioural change; t
 > The correct fix is upstream — the ARIA 1.2 combobox pattern puts the role on the input
 > only — and removing the role locally would leave `VMenu`'s runtime `aria-expanded` on a
 > roleless `div`, trading one defect for another. Tracked upstream as
-> vuetifyjs/vuetify#23105 instead.
-
-### `lib/components/VDivider/VDivider.js` — redundant ARIA role on dividers
-
-`VDivider` always renders an `hr` and hardcodes `role: \`${attrs.role || 'separator'}\``.
-`hr` already has `separator` as its implicit role, so the attribute is redundant and
-the W3C validator reports one "The `separator` role is unnecessary for element `hr`"
-per divider — six of them on the portal home page.
-
-This patch emits `role` only when the caller supplies one (`attrs.role`), so an
-explicit `role="presentation"` on a decorative divider is still honoured while the
-default stays implicit. `aria-orientation` is left untouched: it is not flagged, and
-it carries real meaning on vertical dividers.
-
-Informational only — it fails no criterion and blocks no W3C error — but it is noise
-in every audit report. Upstream issue vuetifyjs/vuetify#18229 raised it in September
-2023; it was closed by the stale bot without ever being triaged, so the case was
-never argued on its merits.
-
-**Removal criterion**: when Vuetify stops hardcoding the implicit `separator` role.
+> vuetifyjs/vuetify#22098 instead.
 
 > **Not patched — `aria-controls` / `aria-owns` on an unmounted overlay.** `VMenu`
 > advertises both on its activator, and `useMenuActivator` does the same on the field of
@@ -199,4 +136,4 @@ never argued on its merits.
 > (RGAA 7.1). Fixed from userland instead, with `eager` defaults on those four
 > components in `portal/nuxt.config.ts` — the overlay stays mounted, so the ids always
 > resolve. The lists are virtualised, so mounting them up front costs a window of items,
-> not the whole set.
+> not the whole set. Tracked upstream as vuetifyjs/vuetify#23119.
