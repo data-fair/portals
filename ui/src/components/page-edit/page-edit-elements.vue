@@ -73,15 +73,14 @@ const { addItemMessage, pages } = defineProps<{ addItemMessage: string, pages: a
 const session = useSessionAuthenticated()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
-const vjsfOptions: VjsfOptions = {
+// computed, otherwise the context would freeze the pages list as it was on setup,
+// before the pages fetch of the parent resolves, and no link could target a page
+const vjsfOptions = computed<VjsfOptions>(() => ({
   titleDepth: 4,
   density: 'compact',
   updateOn: 'blur',
   initialValidation: 'always',
-  // @ts-ignore
-  messages: {
-    addItem: addItemMessage
-  },
+  messages: { addItem: addItemMessage } as VjsfOptions['messages'],
   pluginsOptions: {
     markdown: {
       cspNonce: $cspNonce,
@@ -92,7 +91,7 @@ const vjsfOptions: VjsfOptions = {
     close: '$tableGroupExpand'
   },
   context: { pages, adminMode: session.user.value.adminMode }
-}
+}))
 </script>
 
 <style lang="css">
