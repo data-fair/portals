@@ -1,5 +1,7 @@
 <template>
+  <content-unavailable v-if="unavailable" />
   <catalog-layout
+    v-else
     catalog-type="applications"
     :element="element"
     :context="context"
@@ -52,7 +54,7 @@ const { t } = useI18n()
 
 const {
   displayedItems, itemsCount, loading, currentPage, totalPages,
-  sort, order, goToPage, loadMore
+  sort, order, goToPage, loadMore, unavailable
 } = useCatalog<Application, ApplicationFilters>(element, {
   endpoint: '/data-fair/api/v1/applications',
   defaultSortFallback: 'createdAt:-1',

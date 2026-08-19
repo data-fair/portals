@@ -1,6 +1,10 @@
 <template>
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
   <div
-    v-if="element.application?.slug"
+    v-else-if="element.application?.slug"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
   >
     <application-actions
@@ -111,6 +115,7 @@ const pillarboxStyle = computed(() => {
 const applicationFetcher = preview ? useFetch<Application> : useLocalFetch<Application>
 const applicationFetch = applicationFetcher(() => element.application?.id ? '/data-fair/api/v1/applications/' + element.application.id : '')
 const application = computed(() => applicationFetch.data.value)
+const unavailable = computed(() => isContentUnavailable(applicationFetch.error?.value))
 </script>
 
 <i18n lang="yaml">

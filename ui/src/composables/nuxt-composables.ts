@@ -46,3 +46,7 @@ export function useBackOfficeUrl (): any {
 export function useEditResourceLink (_kind: any, _resource: any): any {
   throw new Error('useEditResourceLink should only be called from portal, not portals-manager')
 }
+
+export function useResponseHeader (_name: string): Ref<string | undefined> {
+  throw new Error('useResponseHeader should only be called from portal, not portals-manager')
+}

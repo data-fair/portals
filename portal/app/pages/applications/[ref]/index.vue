@@ -3,7 +3,7 @@
     <!-- Error state -->
     <page-error
       v-if="applicationFetch.error.value"
-      :status-code="applicationFetch.error.value.statusCode || 500"
+      :status-code="applicationFetch.error.value.statusCode || 503"
       :title="errorTitle"
       :link="applicationsCatalogExists ? {
         type: 'standard',

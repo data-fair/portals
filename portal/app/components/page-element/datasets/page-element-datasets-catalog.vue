@@ -1,5 +1,7 @@
 <template>
+  <content-unavailable v-if="unavailable" />
   <catalog-layout
+    v-else
     catalog-type="datasets"
     :element="element"
     :context="context"
@@ -69,7 +71,7 @@ const { t } = useI18n()
 
 const {
   displayedItems, itemsCount, loading, currentPage, totalPages,
-  sort, order, goToPage, loadMore
+  sort, order, goToPage, loadMore, unavailable
 } = useCatalog<DatasetResult, DatasetFilters>(element, {
   endpoint: '/data-fair/api/v1/datasets',
   defaultSortFallback: 'createdAt:-1',

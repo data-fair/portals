@@ -4,18 +4,28 @@
 import { getRequestHeader, getRequestURL } from 'h3'
 import type { Dispatcher } from 'undici'
 
+// data-fair is the least stable dependency of a portal, its ssr calls get their own
+// dispatcher: a short inactivity timeout (undici defaults to 300s) so a slow or down
+// data-fair degrades the blocks that need it instead of blocking the whole page render,
+// and a separate connection pool so it cannot starve the calls to our own services
+const dataFairTimeout = 5000
+
 export default defineNuxtPlugin(async () => {
   let _ssrDispatcher: Dispatcher
+  let _ssrDataFairDispatcher: Dispatcher
 
   if (import.meta.server) {
     const { Agent, interceptors } = await import('undici')
-    _ssrDispatcher = new Agent({
+    const createDispatcher = (options?: { headersTimeout: number, bodyTimeout: number }) => new Agent({
       connections: 8,
-      allowH2: true
+      allowH2: true,
+      ...options
     }).compose(interceptors.dns({
       // our load balancers ips should not change
       maxTTL: Infinity
     }))
+    _ssrDispatcher = createDispatcher()
+    _ssrDataFairDispatcher = createDispatcher({ headersTimeout: dataFairTimeout, bodyTimeout: dataFairTimeout })
   }
 
   const localFetch = $fetch.create({
@@ -31,7 +41,7 @@ export default defineNuxtPlugin(async () => {
         if (secretIgnoreRateLimiting) options.headers.set('x-ignore-rate-limiting', secretIgnoreRateLimiting)
         options.baseURL = origin
         options.retry = 0
-        options.dispatcher = _ssrDispatcher
+        options.dispatcher = url.startsWith('/data-fair/') ? _ssrDataFairDispatcher : _ssrDispatcher
       }
     }
   })

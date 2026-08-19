@@ -1,5 +1,12 @@
 <template>
-  <v-row class="justify-center align-center">
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
+  <v-row
+    v-else
+    class="justify-center align-center"
+  >
     <v-col
       v-for="key in element.metrics"
       :key="key"
@@ -36,6 +43,7 @@ const { preview, portal } = usePortalStore()
 const { t, locale } = useI18n()
 
 let metrics: { datasets: number, records: number, applications: number } | ComputedRef<{ datasets: number, records: number, applications: number }>
+let unavailable: ComputedRef<boolean>
 if (!preview) {
   // TODO: stats for private user ? (owner and visibility)
   const datasetsMetricsFetch = useLocalFetch<{ count: number, sums: { count: number } }>('/data-fair/api/v1/catalog/datasets', {
@@ -51,12 +59,14 @@ if (!preview) {
     }
   })
 
+  unavailable = computed(() => isContentUnavailable(datasetsMetricsFetch.error.value) || isContentUnavailable(applicationsMetricsFetch.error.value))
   metrics = computed(() => ({
     datasets: datasetsMetricsFetch.data.value?.count || 0,
     records: datasetsMetricsFetch.data.value?.sums.count || 0,
     applications: applicationsMetricsFetch.data.value?.count || 0,
   }))
 } else {
+  unavailable = computed(() => false)
   metrics = {
     datasets: 100,
     records: 10_000_000,

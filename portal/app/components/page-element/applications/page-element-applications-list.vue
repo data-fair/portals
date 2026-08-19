@@ -1,5 +1,12 @@
 <template>
-  <v-row :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
+  <v-row
+    v-else
+    :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]"
+  >
     <v-col
       v-for="application in displayedApplications"
       :key="application.id"
@@ -24,6 +31,7 @@ const { element } = defineProps<{ element: ApplicationsListElement }>()
 const { portal, preview, portalConfig } = usePortalStore()
 
 let displayedApplications: Application[] | ComputedRef<Application[]>
+let unavailable: ComputedRef<boolean>
 
 if (!preview) {
   const ids = element.applications?.map(app => app.id) || []
@@ -36,6 +44,7 @@ if (!preview) {
   }))
 
   const applicationsFetch = useLocalFetch<ApplicationFetch>('/data-fair/api/v1/applications', { query: applicationsQuery })
+  unavailable = computed(() => isContentUnavailable(applicationsFetch.error.value))
   displayedApplications = computed(() => {
     const results = applicationsFetch.data.value?.results || []
     if (element.mode === 'custom') return [...results].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)) // order by element.applications
@@ -43,6 +52,7 @@ if (!preview) {
   })
 } else {
   const session = useSessionAuthenticated()
+  unavailable = computed(() => false)
 
   // Mock data for preview
   displayedApplications = computed(() => {

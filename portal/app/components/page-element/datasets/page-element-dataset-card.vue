@@ -1,6 +1,10 @@
 <template>
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
   <dataset-card
-    v-if="datasetFetch.data?.value"
+    v-else-if="datasetFetch.data?.value"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     :dataset="datasetFetch.data?.value"
     :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.datasets.card"
@@ -17,6 +21,8 @@ const { portalConfig, preview } = usePortalStore()
 
 const fetch = preview ? useFetch<Dataset> : useLocalFetch<Dataset>
 const datasetFetch = fetch(() => element.dataset?.id ? '/data-fair/api/v1/datasets/' + element.dataset?.id : '', { immediate: false })
+
+const unavailable = computed(() => isContentUnavailable(datasetFetch.error?.value))
 
 watch(() => element.dataset?.id, (id) => {
   if (id) datasetFetch.refresh()
