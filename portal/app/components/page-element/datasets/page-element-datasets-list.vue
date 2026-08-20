@@ -1,5 +1,12 @@
 <template>
-  <v-row :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]">
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
+  <v-row
+    v-else
+    :class="['d-flex align-stretch', element.mb !== 0 && `mb-${element.mb ?? 4}`]"
+  >
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
@@ -25,6 +32,7 @@ const { element } = defineProps<{ element: DatasetsListElement }>()
 const { portal, portalConfig, preview } = usePortalStore()
 
 let displayedDatasets: ComputedRef<DatasetFetch['results']>
+let unavailable: ComputedRef<boolean>
 
 if (!preview) {
   const ids = element.datasets?.map(d => d.id) || []
@@ -38,6 +46,7 @@ if (!preview) {
   }))
 
   const datasetsFetch = useLocalFetch<DatasetFetch>('/data-fair/api/v1/datasets', { query: datasetsQuery })
+  unavailable = computed(() => isContentUnavailable(datasetsFetch.error.value))
   displayedDatasets = computed(() => {
     const results = datasetsFetch.data.value?.results || []
     if (element.mode === 'custom') return [...results].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)) // order by element.datasets
@@ -45,6 +54,7 @@ if (!preview) {
   })
 } else {
   const session = useSessionAuthenticated()
+  unavailable = computed(() => false)
 
   // Mock data for preview
   displayedDatasets = computed(() => {

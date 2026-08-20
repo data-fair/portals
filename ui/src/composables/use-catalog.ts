@@ -15,6 +15,7 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
     sort: computed({ get: () => undefined as string | undefined, set: () => {} }),
     order: computed({ get: () => undefined as '-1' | '1' | undefined, set: () => {} }),
     error: ref(undefined),
+    unavailable: computed(() => false),
     goToPage: async () => { },
     loadMore: async () => { },
     filters: {} as F

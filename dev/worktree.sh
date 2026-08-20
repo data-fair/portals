@@ -101,6 +101,11 @@ echo "Create .env file"
 echo "npm ci"
 npm ci
 
+# no postinstall hook applies them, so an unpatched worktree fails the tests that
+# cover our vuetify patches (cf the Dockerfile, which patches the same way)
+echo "npx patch-package"
+npx patch-package --error-on-fail
+
 echo "npm run build-types"
 npm run build-types
 

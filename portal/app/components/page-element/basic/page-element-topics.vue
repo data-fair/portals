@@ -1,6 +1,10 @@
 <template>
+  <content-unavailable
+    v-if="unavailable"
+    :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
+  />
   <div
-    v-if="topicsItems.length"
+    v-else-if="topicsItems.length"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
   >
     <topics-list
@@ -46,6 +50,7 @@ type TopicItem = {
 }
 
 let topicsItems: TopicItem[] | ComputedRef<TopicItem[]>
+let unavailable: ComputedRef<boolean>
 
 if (!preview) {
   const fetches = modes.value.map(m => useLocalFetch<{
@@ -62,6 +67,7 @@ if (!preview) {
       publicationSites: 'data-fair-portals:' + portal.value._id,
     }
   }))
+  unavailable = computed(() => fetches.some(fetch => isContentUnavailable(fetch.error.value)))
   topicsItems = computed(() => {
     // Merge topics from every source, summing counts for topics that appear in several catalogs.
     const merged = new Map<string, TopicItem>()
@@ -75,6 +81,7 @@ if (!preview) {
     return Array.from(merged.values())
   })
 } else {
+  unavailable = computed(() => false)
   topicsItems = [
     { id: 'topic-1', title: 'Topic 1', count: 10, icon: { svgPath: mdiHome } },
     { id: 'topic-2', title: 'Topic 2', count: 5, color: '#A0F' },

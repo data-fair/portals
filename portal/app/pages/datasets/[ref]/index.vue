@@ -3,7 +3,7 @@
     <!-- Error state -->
     <page-error
       v-if="datasetFetch.error.value"
-      :status-code="datasetFetch.error.value.statusCode || 500"
+      :status-code="datasetFetch.error.value.statusCode || 503"
       :title="errorTitle"
       :link="datasetsCatalogExists ? {
         type: 'standard',
