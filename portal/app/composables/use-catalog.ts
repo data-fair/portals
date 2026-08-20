@@ -2,6 +2,8 @@ import type { WritableComputedRef } from 'vue'
 
 type FetchResult<T> = { count: number; results: T[] }
 
+type CatalogError = { statusCode?: number; message?: string }
+
 export type FilterRef =
   | WritableComputedRef<string, string>
   | WritableComputedRef<string[], string[]>
@@ -15,6 +17,7 @@ export interface CatalogReturn<T, F> {
   totalPages: ComputedRef<number>
   sort: Ref<string | undefined>
   order: Ref<'-1' | '1' | undefined>
+  error: Ref<CatalogError | undefined>
   /** the items could not be fetched and the block should say so, cf utils/content-unavailable */
   unavailable: ComputedRef<boolean>
   goToPage: (page: number) => Promise<void>
@@ -135,6 +138,7 @@ export function useCatalog<T, F extends Record<string, FilterRef>> (
     totalPages,
     sort,
     order,
+    error: itemsFetch.error,
     unavailable: computed(() => isContentUnavailable(itemsFetch.error.value)),
     goToPage,
     loadMore,
