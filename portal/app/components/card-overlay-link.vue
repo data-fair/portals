@@ -11,8 +11,9 @@
   <a
     v-if="href"
     :href="href"
-    :aria-label="label"
-    :title="title"
+    :aria-label="label || undefined"
+    :aria-labelledby="label ? undefined : labelledby"
+    :title="title || undefined"
     :target="target ? '_blank' : undefined"
     :rel="target ? 'noopener' : undefined"
     class="position-absolute card-overlay-link"
@@ -21,8 +22,9 @@
   <NuxtLink
     v-else-if="to"
     :to="to"
-    :aria-label="label"
-    :title="title"
+    :aria-label="label || undefined"
+    :aria-labelledby="label ? undefined : labelledby"
+    :title="title || undefined"
     :target="target ? '_blank' : undefined"
     :rel="target ? 'noopener' : undefined"
     class="position-absolute card-overlay-link"
@@ -39,7 +41,10 @@ defineProps<{
   /** External destination, rendered as a plain anchor */
   href?: string
   /** Accessible name of the card link, usually the resource title */
-  label: string
+  label?: string
+  /** Id of the element naming the link when no label is configured: the overlay is
+      empty, so without it the link has no accessible name at all */
+  labelledby?: string
   /** Native tooltip, when the card is meant to show one */
   title?: string
   /** Open in a new window */

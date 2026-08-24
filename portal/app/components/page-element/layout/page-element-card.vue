@@ -32,6 +32,7 @@
         :href="boxLink.href"
         :target="boxLink.target"
         :label="altLinkTitle"
+        :labelledby="contentId"
         :title="altLinkTitle"
       />
 
@@ -41,6 +42,7 @@
         flex-grow-1 => let the row fill the card height so the left image stretches
       -->
       <v-row
+        :id="contentId"
         class="flex-nowrap flex-grow-1"
         no-gutters
       >
@@ -207,12 +209,16 @@ const leftThumbnailStyle = computed(() => {
   }
 })
 
+// Empty when nothing is configured: the overlay link then takes its name from the box
+// content through contentId, as the wrapping anchor used to before it became an overlay.
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''
-  let linkTitle = element.link?.title || element.title || ''
-  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
-  return linkTitle
+  const linkTitle = element.link?.title || element.title || ''
+  if (!linkTitle) return ''
+  return element.link?.target ? linkTitle + ' - ' + t('newWindow') : linkTitle
 })
+
+const contentId = useId()
 
 </script>
 

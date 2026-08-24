@@ -194,4 +194,30 @@ test.describe('nested links', () => {
     await expect(input).toBeFocused()
     expect(page.url()).not.toContain('example.com')
   })
+
+  // The box link is an empty overlay, so unlike the anchor that used to wrap the whole
+  // card it has no content to be named from. Nothing forces a title in the editor, and
+  // a box whose text lives in its children has none to borrow either: without a
+  // fallback the link ends up with no accessible name at all.
+  test('a box link with no configured title is named by the box content', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [{
+      type: 'card',
+      link: { type: 'external', href: 'https://example.com', target: true },
+      actions: [],
+      children: [{ type: 'text', content: 'Partagez-nous vos reutilisations.' }]
+    }])
+
+    await goToPortal(portal._id)
+    const overlay = page.locator('a.card-overlay-link')
+    await expect(overlay).toBeVisible({ timeout: 10_000 })
+
+    await expect(overlay).toHaveAccessibleName(/Partagez-nous vos reutilisations/)
+    // the "new window" mention used to be appended to the empty title, which left the
+    // link named " - Nouvelle fenêtre": non-empty, so no automated check ever caught it
+    await expect(overlay).not.toHaveAttribute('aria-label')
+    await expect(overlay).not.toHaveAttribute('title')
+  })
 })
