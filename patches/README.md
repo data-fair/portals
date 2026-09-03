@@ -101,8 +101,8 @@ stays valid.
 **Removal criterion**: when Vuetify stops emitting `aria-hidden="false"` on labels.
 
 > **Not patched — `role="combobox"` without `aria-expanded`.** `VTextField` applies its
-> `role` prop to *both* the `VField` root and the `input` (`VTextField.js` lines 168 and
-> 198), and `VSelect` defaults that prop to `combobox`. Two nested comboboxes result.
+> `role` prop to *both* the `VField` root and the `input` (`VTextField.js` lines 179 and
+> 209), and `VSelect` defaults that prop to `combobox`. Two nested comboboxes result.
 > The inner one (the `input`) is correct and carries `aria-expanded`/`aria-controls` in
 > SSR; the outer one gets them only at runtime, from `VMenu`'s `activator="parent"`
 > binding, so the server-rendered markup has a bare `role="combobox"` and W3C rejects it.
