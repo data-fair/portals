@@ -41,8 +41,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '#portal': path.resolve(__dirname, '../portal'),
-      '~': path.resolve(__dirname, 'src/')
+      '#portal': path.resolve(import.meta.dirname, '../portal'),
+      '~': path.resolve(import.meta.dirname, 'src/')
     }
   },
   html: {
