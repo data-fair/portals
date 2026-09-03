@@ -49,7 +49,10 @@ export default defineNuxtConfig({
       contentSecurityPolicy
     },
     // we use rate-limiting on reverse proxy instead
-    rateLimiter: false
+    rateLimiter: false,
+    // it goes through esbuild.drop, ignored by Vite 8 ; done in vite.$client below instead
+    // cf https://github.com/Baroshem/nuxt-security/issues/737
+    removeLoggers: false
   },
   components: [
     { path: '~/components', pathPrefix: false }
@@ -108,8 +111,7 @@ export default defineNuxtConfig({
     'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
   vite: {
-    // nuxt-security removeLoggers still uses esbuild.drop, ignored by Vite 8
-    // cf https://github.com/Baroshem/nuxt-security/issues/737
+    // drops console/debugger from the client bundle, in place of nuxt-security removeLoggers
     $client: {
       build: { rolldownOptions: { output: { minify: { compress: { dropConsole: true, dropDebugger: true } } } } }
     },
