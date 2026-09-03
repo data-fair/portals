@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import type { Group } from '#api/types/group'
-import { useRules } from 'vuetify/labs/rules'
+import { useRules } from 'vuetify'
 import { mdiPencil, mdiFolderPlusOutline } from '@mdi/js'
 
 const { t } = useI18n()

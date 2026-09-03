@@ -61,7 +61,7 @@ index 2ec5103..77e42b7 100644
            "class": "v-chip__append"
          }, [!slots.append ? _createElementVNode(_Fragment, null, [props.appendIcon && _createVNode(VIcon, {
 diff --git a/node_modules/vuetify/lib/components/VField/VField.js b/node_modules/vuetify/lib/components/VField/VField.js
-index 5b75eb8..bef9f28 100644
+index 0c87ea6..f64c0af 100644
 --- a/node_modules/vuetify/lib/components/VField/VField.js
 +++ b/node_modules/vuetify/lib/components/VField/VField.js
 @@ -183,7 +183,9 @@ export const VField = genericComponent()({
@@ -75,18 +75,6 @@ index 5b75eb8..bef9f28 100644
          for: ariaHidden ? undefined : id.value
        };
      });
-diff --git a/node_modules/vuetify/lib/components/VSelect/VSelect.js b/node_modules/vuetify/lib/components/VSelect/VSelect.js
-index 42d2a00..08c6f77 100644
---- a/node_modules/vuetify/lib/components/VSelect/VSelect.js
-+++ b/node_modules/vuetify/lib/components/VSelect/VSelect.js
-@@ -436,6 +436,7 @@ export const VSelect = genericComponent()({
-         }, [items.value.map(item => _createElementVNode("option", {
-           "key": item.value,
-           "value": item.value,
-+          "label": item.title,
-           "selected": selectedValues.value.includes(item.value)
-         }, null))]), _createVNode(VMenu, _mergeProps({
-           "id": menuId.value,
 diff --git a/node_modules/vuetify/lib/components/VTabs/VTab.js b/node_modules/vuetify/lib/components/VTabs/VTab.js
 index d3fcfdf..8bc36cf 100644
 --- a/node_modules/vuetify/lib/components/VTabs/VTab.js
@@ -101,19 +89,19 @@ index d3fcfdf..8bc36cf 100644
            "class": _normalizeClass(['v-tab__slider', props.inset ? insetColorClasses.value : sliderColorClasses.value]),
            "style": _normalizeStyle([sliderColorStyles.value, props.inset ? insetColorStyles.value : sliderColorClasses.value])
 diff --git a/node_modules/vuetify/lib/composables/router.js b/node_modules/vuetify/lib/composables/router.js
-index db5aad7..bb175d7 100644
+index 1590630..4a7d26e 100644
 --- a/node_modules/vuetify/lib/composables/router.js
 +++ b/node_modules/vuetify/lib/composables/router.js
 @@ -1,6 +1,8 @@
  // Utilities
  import { computed, nextTick, onScopeDispose, reactive, resolveDynamicComponent, toRef } from 'vue';
- import { deepEqual, getCurrentInstance, hasEvent, IN_BROWSER, propsFactory } from "../util/index.js"; // Types
+ import { deepEqual, getCurrentInstance, hasEvent, IN_BROWSER, isString, propsFactory } from "../util/index.js"; // Types
 +import useParentUrl from '@data-fair/frame/lib/vue-router/use-parent-url.js'
 +
  export function useRoute() {
    const vm = getCurrentInstance('useRoute');
    return computed(() => vm?.proxy?.$route);
-@@ -43,7 +45,12 @@ export function useLink(props, attrs) {
+@@ -50,7 +52,12 @@ export function useLink(props, attrs) {
      if (!route.value) return link.value.isExactActive?.value ?? false;
      return link.value.isExactActive?.value && deepEqual(link.value.route.value.query, route.value.query);
    });
@@ -127,7 +115,7 @@ index db5aad7..bb175d7 100644
    const isRouterLink = toRef(() => !!props.to);
    return {
      isLink,
-@@ -55,6 +62,7 @@ export function useLink(props, attrs) {
+@@ -62,6 +69,7 @@ export function useLink(props, attrs) {
      href,
      linkProps: reactive({
        href,
@@ -136,7 +124,7 @@ index db5aad7..bb175d7 100644
        'aria-disabled': toRef(() => props.disabled && isLink.value ? 'true' : undefined),
        tabindex: toRef(() => props.disabled && isLink.value ? '-1' : undefined)
 diff --git a/node_modules/vuetify/lib/composables/theme.js b/node_modules/vuetify/lib/composables/theme.js
-index e61b99d..44dd5a7 100644
+index 8300f4d..2cbb3df 100644
 --- a/node_modules/vuetify/lib/composables/theme.js
 +++ b/node_modules/vuetify/lib/composables/theme.js
 @@ -282,10 +282,11 @@ export function createTheme(options) {
