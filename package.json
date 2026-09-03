@@ -63,7 +63,6 @@
     "@types/node": "^24.0.14",
     "@types/resolve-path": "^1.4.3",
     "@types/sanitize-html": "^2.16.0",
-    "commitlint": "^21.2.2",
     "dotenv": "^17.3.1",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.35.0",
