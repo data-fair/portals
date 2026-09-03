@@ -25,7 +25,8 @@
         {{ tab.title }}
       </v-tab>
     </v-tabs>
-    <v-card-text>
+    <!-- text-body-large => v-card-text shrinks its text to 0.875rem, this brings it back to the portal body size -->
+    <v-card-text :class="element.keepTextSize && 'text-body-large'">
       <v-tabs-window v-model="activeTab">
         <v-tabs-window-item
           v-for="(tab, i) of element.tabs.filter(Boolean)"
