@@ -9,7 +9,7 @@ interface VuetifySSRClientHints {
 
 export default defineNuxtPlugin((nuxtApp) => {
   const themeCookie = useCookie<Theme | undefined>('theme')
-  const langCookie = useCookie<'fr' | 'en'>('i18n_lang', { default: () => 'fr' })
+  const langCookie = useCookie<'fr' | 'en'>('i18n_lang', { readonly: true, default: () => 'fr' })
 
   const portalConfig = useNuxtApp().$portal.config
 
@@ -30,8 +30,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       dark = true
     }
 
+    const locale = (nuxtApp.$i18n?.locale?.value as 'fr' | 'en') || langCookie.value
+
     vuetifyOptions.locale = {
-      locale: langCookie.value,
+      locale,
       fallback: 'en',
       messages: { fr, en }
     }
