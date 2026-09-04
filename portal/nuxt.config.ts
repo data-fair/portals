@@ -30,6 +30,11 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  // avoid infinite options traversal in stripDebugProxies during build if DEBUG env var is set
+  debug: false,
+  experimental: {
+    debugModuleMutation: false
+  },
   alias: {
     '#api/types': '../../api/types'
   },
