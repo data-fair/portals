@@ -126,8 +126,10 @@
           <!--
             box-content => lifts the interactive children (markdown links, buttons)
             above the card link overlay so they stay clickable
+            text-body-large => v-card-text shrinks its text to 0.875rem, this brings it
+            back to the portal body size
           -->
-          <v-card-text class="flex-grow-0 box-content">
+          <v-card-text :class="['flex-grow-0 box-content', element.keepTextSize && 'text-body-large']">
             <slot
               name="page-elements"
               :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"

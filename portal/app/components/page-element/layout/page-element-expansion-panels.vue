@@ -27,13 +27,20 @@
             {{ panel.title }}
           </span>
         </template>
+        <!--
+          Vuetify leaves the panel text at the page size, unlike v-card-text: the same
+          reduced size is applied here so the three containers behave alike, and the
+          same option brings it back to the portal body size
+        -->
         <template #text>
-          <slot
-            name="page-elements"
-            :on-update="(newElements: PageElement[]) => onPanelsChildrenUpdate(newElements, i)"
-            :elements="panel.children"
-            add-item-message="Ajouter un bloc au panneau"
-          />
+          <div :class="element.keepTextSize ? 'text-body-large' : 'text-body-medium'">
+            <slot
+              name="page-elements"
+              :on-update="(newElements: PageElement[]) => onPanelsChildrenUpdate(newElements, i)"
+              :elements="panel.children"
+              add-item-message="Ajouter un bloc au panneau"
+            />
+          </div>
         </template>
       </v-expansion-panel>
     </template>

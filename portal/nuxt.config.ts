@@ -30,6 +30,11 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  // avoid infinite options traversal in stripDebugProxies during build if DEBUG env var is set
+  debug: false,
+  experimental: {
+    debugModuleMutation: false
+  },
   alias: {
     '#api/types': '../../api/types'
   },
@@ -49,7 +54,10 @@ export default defineNuxtConfig({
       contentSecurityPolicy
     },
     // we use rate-limiting on reverse proxy instead
-    rateLimiter: false
+    rateLimiter: false,
+    // it goes through esbuild.drop, ignored by Vite 8 ; done in vite.$client below instead
+    // cf https://github.com/Baroshem/nuxt-security/issues/737
+    removeLoggers: false
   },
   components: [
     { path: '~/components', pathPrefix: false }
@@ -107,9 +115,16 @@ export default defineNuxtConfig({
     '@data-fair/portals-shared-markdown/style.css',
     'vuetify/lib/components/VTable/VTable.css' // Ensure VTable styles are included, as the component is used in markdown rendering
   ],
-  // pre-bundle dependencies to avoid full page reloads during dev
-  // cf https://vite.dev/guide/dep-pre-bundling.html
   vite: {
+    // drops console/debugger from the client bundle, in place of nuxt-security removeLoggers
+    $client: {
+      build: { rolldownOptions: { output: { minify: { compress: { dropConsole: true, dropDebugger: true } } } } }
+    },
+    // with fromLabs: false the module imports createRulesPlugin from 'vuetify/rules', which
+    // does not exist: rules live in the main entry (cf vuetifyjs/nuxt-module#390)
+    resolve: { alias: [{ find: /^vuetify\/rules$/, replacement: 'vuetify' }] },
+    // pre-bundle dependencies to avoid full page reloads during dev
+    // cf https://vite.dev/guide/dep-pre-bundling.html
     optimizeDeps: {
       include: [
         '@analytics/google-analytics',
@@ -131,6 +146,12 @@ export default defineNuxtConfig({
   vue: { compilerOptions: { isCustomElement: (tag: string) => tag === 'd-frame' } },
   vuetify: {
     moduleOptions: {
+      // rules are core since vuetify 4.2, the module still defaults to the removed labs entry
+      // cf https://github.com/vuetifyjs/nuxt-module/pull/390
+      rulesConfiguration: { fromLabs: false },
+      // nuxt 4.5 ships its own useLayout, the module still auto-imports vuetify's under the same name
+      // cf https://github.com/vuetifyjs/nuxt-module/issues/384
+      prefixComposables: ['useLayout'],
       styles: {
         colors: false,
         configFile: '@data-fair/lib-vuetify/style/settings.scss'

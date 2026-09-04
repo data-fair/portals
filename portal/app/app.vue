@@ -60,7 +60,7 @@ const meta = [
   { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
 ]
 if ($portal.draft || !$portal.config.allowRobots) meta.push({ name: 'robots', content: 'noindex' })
-const link = $portal.config.favicon ? [{ rel: 'icon', type: 'image/png', href: getPortalImageSrc($portal.config.favicon, false) }] : []
+const link = $portal.config.favicon ? [{ rel: 'icon' as const, type: 'image/png', href: getPortalImageSrc($portal.config.favicon, false) }] : []
 
 useHead({
   title: $portal.config.title,

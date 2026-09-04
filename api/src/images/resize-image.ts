@@ -1,4 +1,4 @@
-import sharp from 'sharp'
+import sharp, { type Sharp } from 'sharp'
 import fs from 'node:fs/promises'
 import decodeIco from 'decode-ico'
 
@@ -14,7 +14,7 @@ export default async (input: ResizeInput): Promise<ResizeOutput> => {
       return { data, width: 0, height: 0, mimeType: 'image/svg+xml' }
     }
 
-    let sharpImage: sharp.Sharp
+    let sharpImage: Sharp
 
     // ICO: extract largest image, handle both PNG-encoded and BMP-encoded frames
     if (input.mimetype === 'image/x-icon' || input.mimetype === 'image/vnd.microsoft.icon') {

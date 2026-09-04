@@ -243,9 +243,14 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
         },
         border: {
-          title: 'Bordure',
+          title: 'Afficher une bordure',
           type: 'boolean',
           default: true
+        },
+        keepTextSize: {
+          title: 'Conserver la taille de texte du portail',
+          description: 'Par défaut, le texte des boites est affiché plus petit que celui du portail (14px au lieu de 16px, règle Material Design). Activez cette option pour garder la taille normale du portail.',
+          type: 'boolean'
         },
         hover: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfigFull',
@@ -576,9 +581,14 @@ export default {
           ]
         },
         border: {
-          title: 'Bordure',
+          title: 'Afficher une bordure',
           type: 'boolean',
           default: true
+        },
+        keepTextSize: {
+          title: 'Conserver la taille de texte du portail',
+          description: 'Par défaut, le texte des onglets est affiché plus petit que celui du portail (14px au lieu de 16px, règle Material Design). Activez cette option pour garder la taille normale du portail.',
+          type: 'boolean'
         },
         tabs: {
           type: 'array',
@@ -644,6 +654,11 @@ export default {
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        keepTextSize: {
+          title: 'Conserver la taille de texte du portail',
+          description: 'Par défaut, le texte des panneaux est affiché plus petit que celui du portail (14px au lieu de 16px, règle Material Design). Activez cette option pour garder la taille normale du portail.',
+          type: 'boolean'
         },
         multiple: {
           type: 'boolean',
