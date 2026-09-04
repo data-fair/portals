@@ -220,4 +220,35 @@ test.describe('nested links', () => {
     await expect(overlay).not.toHaveAttribute('aria-label')
     await expect(overlay).not.toHaveAttribute('title')
   })
+
+  // The overlay must cover in-flow content like thumbnail images and decorative badges
+  // so clicking the visual body of the card follows the card link.
+  test('a thumbnail image inside a clickable box is covered by the card link', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Nested Links Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [{
+      type: 'card',
+      title: 'Boite avec image',
+      link: { type: 'external', href: 'https://example.com', title: 'Exemple' },
+      actions: [],
+      thumbnail: {
+        image: { _id: 'thumb-1', name: 'thumb.jpg', mimeType: 'image/jpeg' },
+        location: 'top'
+      },
+      children: []
+    }])
+
+    await goToPortal(portal._id)
+    const card = page.locator('.v-card', { hasText: 'Boite avec image' })
+    await expect(card).toBeVisible({ timeout: 10_000 })
+    await expect(card.locator('.v-img')).toBeVisible({ timeout: 10_000 })
+
+    const box = (await card.locator('.v-img').boundingBox())!
+    const destination = await page.evaluate(([x, y]) => {
+      const el = document.elementFromPoint(x as number, y as number)
+      return el?.closest('a')?.getAttribute('href') ?? null
+    }, [box.x + box.width / 2, box.y + box.height / 2])
+    expect(destination).toBe('https://example.com')
+  })
 })

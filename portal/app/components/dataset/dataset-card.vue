@@ -157,7 +157,7 @@
             -->
             <v-card-actions
               class="py-2 ga-0 cursor-default position-relative"
-              style="min-height: auto; z-index: 1"
+              style="min-height: auto; z-index: 2"
             >
               <action-btn
                 :to="`/datasets/${dataset.slug}/table`"
@@ -199,7 +199,7 @@
           <v-col
             cols="auto"
             class="pa-2 cursor-default position-relative"
-            style="z-index: 1"
+            style="z-index: 2"
           >
             <action-btn
               :to="`/datasets/${dataset.slug}/table`"
