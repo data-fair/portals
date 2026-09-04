@@ -53,6 +53,12 @@ defineProps<{
 </script>
 
 <style scoped>
+/* Sit above in-flow card content (thumbnails, text, non-interactive badges).
+   Zones meant to escape the card link (action bars, nested inputs) sit at z-index 2+. */
+.card-overlay-link {
+  z-index: 1;
+}
+
 /* The overlay is exactly the size of the card, whose overflow is hidden, so the
    focus ring would be drawn outside and clipped away. Pulling it inside keeps the
    browser's native ring — and its forced-colors behaviour — while making it visible. */

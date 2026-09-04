@@ -148,7 +148,7 @@
           <v-card-actions
             v-if="element.actions.length"
             class="position-relative"
-            style="min-height: auto; z-index: 1"
+            style="min-height: auto; z-index: 2"
           >
             <!-- Reset default btn styles apply by v-card-actions -->
             <v-defaults-provider
@@ -240,10 +240,15 @@ const contentId = useId()
    positioning it gets from .position-absolute: this rule is not layered while the
    Vuetify utility is, so without the exclusion it would win and collapse that
    overlay to a zero-height box, killing the nested card link. */
+.box-content :deep(.v-card),
 .box-content :deep(a:not(.card-overlay-link)),
-.box-content :deep(button) {
+.box-content :deep(button),
+.box-content :deep(input),
+.box-content :deep(textarea),
+.box-content :deep(select),
+.box-content :deep(.v-field) {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 </style>
 

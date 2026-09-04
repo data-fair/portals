@@ -143,7 +143,7 @@
             -->
             <v-card-actions
               class="py-2 ga-0 cursor-default position-relative"
-              style="min-height: auto; z-index: 1"
+              style="min-height: auto; z-index: 2"
             >
               <application-preview :application="application" />
               <action-btn
@@ -169,7 +169,7 @@
           <v-col
             cols="auto"
             class="pa-2 cursor-default position-relative"
-            style="z-index: 1"
+            style="z-index: 2"
           >
             <application-preview
               :application="application"
