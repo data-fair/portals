@@ -4,7 +4,7 @@
   -->
   <v-hover v-slot="{ isHovering, props: hoverProps }">
     <v-btn
-      v-bind="hoverProps"
+      v-bind="{ ...$attrs, ...hoverProps }"
       :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
       :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
       :target="link.target ? '_blank' : undefined"
@@ -40,6 +40,10 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/page-elements/index.ts'
 import type { ButtonConfig } from '#api/types/common-defs/index.ts'
+
+defineOptions({
+  inheritAttrs: false
+})
 
 const { config } = defineProps<{
   link: LinkItem
