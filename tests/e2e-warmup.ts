@@ -53,5 +53,13 @@ setup('Warmup heavy dev routes', async ({ page, context }) => {
   await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 60_000 })
   stamp('edit-config form rendered')
 
+  // 3) Warm up portal settings so vjsf-portal-config finishes compiling.
+  await page.goto(`${baseUrl}/portals-manager/portals/${portal._id}`, {
+    waitUntil: 'domcontentloaded',
+    timeout: 60_000
+  })
+  await expect(page.getByRole('tab', { name: 'Apparence' })).toBeVisible({ timeout: 60_000 })
+  stamp('portal settings form rendered')
+
   // Leave the seeded data — individual tests run clean() in beforeEach.
 })
