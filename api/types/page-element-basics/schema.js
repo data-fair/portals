@@ -497,6 +497,55 @@ export default {
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
+    },
+    'element-mermaid': {
+      type: 'object',
+      title: 'MermaidElement',
+      'x-i18n-title': {
+        en: 'Mermaid diagram',
+        fr: 'Diagramme Mermaid'
+      },
+      required: ['type'],
+      properties: {
+        type: { const: 'mermaid' },
+        uuid: { type: 'string', layout: 'none' },
+        code: {
+          title: 'Mermaid code',
+          'x-i18n-title': { fr: 'Code Mermaid' },
+          description: 'The diagram source, in the Mermaid syntax (https://mermaid.js.org).',
+          'x-i18n-description': { fr: 'La source du diagramme, en syntaxe Mermaid (https://mermaid.js.org).' },
+          type: 'string',
+          layout: {
+            comp: 'textarea',
+            props: {
+              autoGrow: true,
+              rows: 10,
+              class: 'text-mono'
+            }
+          }
+        },
+        description: {
+          title: 'Text alternative',
+          'x-i18n-title': { fr: 'Alternative textuelle' },
+          description: 'Describes the diagram for screen reader users. Required for accessibility.',
+          'x-i18n-description': { fr: "Décrit le diagramme pour les personnes utilisant un lecteur d'écran. Nécessaire pour l'accessibilité." },
+          type: 'string',
+          layout: {
+            comp: 'textarea',
+            props: {
+              autoGrow: true,
+              rows: 2
+            }
+          }
+        },
+        centered: {
+          type: 'boolean',
+          title: 'Center the diagram',
+          'x-i18n-title': { fr: 'Centrer le diagramme' },
+          default: true
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
     }
   }
 }
