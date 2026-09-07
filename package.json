@@ -42,7 +42,7 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "engines": {
-    "node": ">=24.11.0"
+    "node": ">=24.20.0"
   },
   "dependencies": {
     "@data-fair/lib-types-builder": "^1.14.3",
