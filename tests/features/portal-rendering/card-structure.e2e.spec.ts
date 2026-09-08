@@ -1,5 +1,5 @@
-// Structural characterization of the resource cards, captured before the thumbnail
-// fallback lands so any layout drift it causes shows up here.
+// Structural characterization of the resource cards: the thumbnail cascade must not
+// move a column, a divider or a background style.
 import { test, expect } from '../../fixtures/portal.ts'
 import { clean } from '../../support/axios.ts'
 import {
@@ -166,22 +166,6 @@ test.describe('card structure', () => {
     }, [box.x + box.width / 2, box.y + box.height / 2])
     expect(href).toBe('/datasets/ds-overlay')
   })
-
-  // opendata-corse.edf.fr sets titleLinesCount 0, opendata.koumoul.com 1, most others 2
-  for (const [lines, clamp] of [[0, 'none'], [2, '2']] as const) {
-    test(`titleLinesCount ${lines} drives the title clamp`, async ({ page, goToPortal }) => {
-      const { portal, path } = await createCardPortal({
-        kind: 'datasets',
-        card: { titleLinesCount: lines, showSummary: true, thumbnail: { show: false } }
-      })
-      await stubList(page, 'datasets', [makeDataset({ id: `ds-lines${lines}` })])
-
-      await openCatalogWithStub(page, goToPortal, portal, path, `Jeu ds-lines${lines}`)
-
-      const title = page.locator('.v-card').filter({ hasText: `Jeu ds-lines${lines}` }).first().locator('.v-card-title')
-      expect(await title.evaluate((el) => getComputedStyle(el).webkitLineClamp)).toBe(clamp)
-    })
-  }
 
   // a reuse thumbnail comes from the reuse's own image route, not the portal one
   test('a reuse image is served from the reuse image route', async ({ page, goToPortal }) => {

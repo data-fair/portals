@@ -1,4 +1,4 @@
-// THROWAWAY support module for the card test campaign, delete with the specs.
+// Seeds real data-fair resources for the specs that need the server-rendered path.
 //
 // DELETE /api/test-env only wipes the portals-manager collections, it never touches
 // data-fair, so anything seeded here has to be deleted here too.

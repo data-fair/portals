@@ -1,4 +1,4 @@
-// THROWAWAY support module for the card test campaign, delete with the specs.
+// Helpers shared by the resource card specs.
 //
 // Card lists are fetched with useFetch: server-side on the initial SSR load, but
 // client-side on every refresh. Submitting a search triggers such a refresh, so a
@@ -31,7 +31,7 @@ export const PORTAL_IMAGE_URL = '**/portal/api/images/**'
 export const REUSE_IMAGE_URL = '**/portal/api/reuses/*/images/**'
 
 /** 1x1 transparent PNG, small enough to inline and a valid image for the browser */
-export const PNG_1X1 = Buffer.from(
+const PNG_1X1 = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
   'base64'
 )
@@ -171,9 +171,6 @@ export const thumbnailSrc = async (card: Locator) => {
   })
 }
 
-/** The hidden probe the left location needs to observe image errors */
-export const leftProbe = (card: Locator) => card.locator('.v-col--cols-4 img')
-
 let seq = 0
 const nextId = (prefix: string) => `${prefix}-${++seq}`
 
@@ -234,10 +231,6 @@ export const linkedApplication = (id: string) => ({
   slug: id,
   updatedAt: '2026-01-01T00:00:00.000Z'
 })
-
-/** The capture url the cards build for a linked application */
-export const captureUrlFor = (id: string) =>
-  `/data-fair/api/v1/applications/${id}/capture?updatedAt=2026-01-01T00:00:00.000Z`
 
 export const imageRef = (id: string, name = 'image.png') => ({
   _id: id,
