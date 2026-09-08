@@ -12,7 +12,7 @@ export const mermaidThemeVariables = (colors: Record<string, unknown>, dark: boo
     background: color('background'),
     primaryColor: color('primary'),
     primaryTextColor: color('on-primary'),
-    lineColor: color('on-surface'),
+    lineColor: color('on-background'),
     textColor: color('on-background'),
     // resolved against the block in the DOM, so the diagram uses the portal body font
     fontFamily: 'inherit'

@@ -6,7 +6,7 @@ const colors = {
   background: '#FAFAFA',
   'on-background': '#424242',
   surface: '#FFFFFF',
-  'on-surface': '#424242',
+  'on-surface': '#212121',
   primary: '#1E88E5',
   'on-primary': '#FFFFFF'
 }
