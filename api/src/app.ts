@@ -65,8 +65,8 @@ app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
   csp: {
     nonce: true,
-    // nonces only work on <style> tags, not on element style attributes, which vuetify
-    // and the svg produced by mermaid both rely on
+    // nonces only work on <style> tags, not on element style attributes, and the svg
+    // produced by mermaid carries both
     header: { ...defaultNonceCSPDirectives, 'style-src': "'self' 'unsafe-inline'" }
   },
   privateDirectoryUrl: config.privateDirectoryUrl
