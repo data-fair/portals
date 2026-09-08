@@ -41,7 +41,7 @@ const groups = [
       { from: basics, def: 'element-image', title: 'Image', 'x-i18n-title': { fr: 'Image' } },
       { from: basics, def: 'element-iframe', title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
       { from: basics, def: 'element-icon', title: 'Icon', 'x-i18n-title': { fr: 'Icône' } },
-      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram', 'x-i18n-title': { fr: 'Diagramme Mermaid' } }
+      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (Beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } }
     ]
   },
   {

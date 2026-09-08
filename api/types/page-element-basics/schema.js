@@ -502,8 +502,8 @@ export default {
       type: 'object',
       title: 'MermaidElement',
       'x-i18n-title': {
-        en: 'Mermaid diagram',
-        fr: 'Diagramme Mermaid'
+        en: 'Mermaid diagram (Beta)',
+        fr: 'Diagramme Mermaid (Bêta)'
       },
       required: ['type'],
       properties: {
