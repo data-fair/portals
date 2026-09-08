@@ -25,7 +25,7 @@ const createPortalWithDiagram = async (title: string, element: Record<string, un
 test.describe('mermaid block', () => {
   test.beforeEach(clean)
 
-  test('renders the diagram as an inline svg, with the source as SSR fallback', async ({ page, request, goToPortal }) => {
+  test('renders the diagram as an inline svg, with a loader as SSR fallback', async ({ page, request, goToPortal }) => {
     const portal = await createPortalWithDiagram('Diagram Portal', {
       uuid: 'mm1',
       type: 'mermaid',
@@ -33,9 +33,10 @@ test.describe('mermaid block', () => {
       description: 'Chaîne de traitement de la donnée'
     })
 
-    // mermaid only runs in the browser, so the server response carries the source
+    // mermaid only runs in the browser, so the server response carries a loader, not the source
     const html = await (await request.get(portalUrl(portal._id), { timeout: 20_000 })).text()
-    expect(html).toContain('Collecte--&gt;Publication')
+    expect(html).toContain('v-progress-circular')
+    expect(html).not.toContain('Collecte--&gt;Publication')
     // the page has mdi icons, so only the mermaid-generated svg must be absent
     expect(html).not.toContain('id="mermaid-mm1')
 

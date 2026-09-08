@@ -25,11 +25,25 @@
         :text="error"
       />
       <pre
-        v-else
+        v-else-if="error"
         style="overflow-x: auto;"
       >{{ element.code }}</pre>
+      <div
+        v-else
+        class="d-flex justify-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        />
+      </div>
       <template #fallback>
-        <pre style="overflow-x: auto;">{{ element.code }}</pre>
+        <div class="d-flex justify-center">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          />
+        </div>
       </template>
     </ClientOnly>
   </div>
