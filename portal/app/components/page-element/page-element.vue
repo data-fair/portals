@@ -26,6 +26,10 @@
     v-else-if="element.type === 'icon'"
     :element="element"
   />
+  <page-element-mermaid
+    v-else-if="element.type === 'mermaid'"
+    :element="element"
+  />
 
   <!-- Navigation elements -->
   <page-element-button

@@ -20,6 +20,8 @@ import type { Ref } from 'vue'
 import { useTheme } from 'vuetify'
 import type { Colors } from '@data-fair/lib-common-types/theme/index.js'
 import { defaultTheme, fillTheme, getTextColorsCss } from '@data-fair/lib-common-types/theme/index.js'
+import type { Theme } from '@data-fair/lib-vue/session.js'
+import { resolveTheme } from '@data-fair/lib-vue/session.js'
 
 const { t } = useI18n()
 const vuetifyTheme = useTheme()
@@ -100,21 +102,40 @@ const fullTheme = computed(() => {
   return fillTheme(config.theme, defaultTheme)
 })
 
-const themeColors = computed(() => fullTheme.value?.colors)
+// the preview follows the theme of the back-office, but only among the variants the
+// previewed portal offers: a portal without a dark theme is previewed in its light one
+const appliedTheme = computed(() => {
+  if (!fullTheme.value) return 'default'
+  return resolveTheme(vuetifyTheme.name.value as Theme, { theme: fullTheme.value })
+})
 
-watch(fullTheme, () => {
-  if (!fullTheme.value) return
-  const colors = fullTheme.value.colors
+const previewDark = computed(() => appliedTheme.value === 'dark' || appliedTheme.value === 'hc-dark')
+
+const themeColors = computed(() => {
+  const full = fullTheme.value
+  if (!full) return undefined
+  if (appliedTheme.value === 'dark') return full.darkColors
+  if (appliedTheme.value === 'hc') return full.hcColors
+  if (appliedTheme.value === 'hc-dark') return full.hcDarkColors
+  return full.colors
+})
+
+watch([themeColors, previewDark], () => {
+  const colors = themeColors.value
+  if (!colors) return
+  const variables = vuetifyTheme.themes.value[previewDark.value ? 'dark' : 'light'].variables
   if (vuetifyTheme.themes.value[themeKey]) {
     for (const color of Object.keys(vuetifyTheme.themes.value[themeKey].colors)) {
       if (colors[color as keyof Colors] === undefined) delete vuetifyTheme.themes.value[themeKey].colors[color]
     }
     Object.assign(vuetifyTheme.themes.value[themeKey].colors, colors)
+    vuetifyTheme.themes.value[themeKey].dark = previewDark.value
+    vuetifyTheme.themes.value[themeKey].variables = variables
   } else {
     vuetifyTheme.themes.value[themeKey] = {
-      dark: false,
+      dark: previewDark.value,
       colors,
-      variables: vuetifyTheme.themes.value.light.variables
+      variables
     }
   }
 }, { immediate: true })
