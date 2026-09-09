@@ -74,6 +74,10 @@
     "tough-cookie": "^5.1.2",
     "undici": "^7.14.0"
   },
+  "overrides": {
+    "@json-layout/core": "~2.9.0",
+    "@json-layout/vocabulary": "~2.13.2"
+  },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
     "@data-fair/lib-vuetify": "../lib/packages/vuetify"

@@ -3,6 +3,9 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
+// the webmcp tools answer with text only, their payloads are JSON in the first content part
+const toolJson = (result: any) => JSON.parse(result?.content?.[0]?.text)
+
 test.describe('page edit WebMCP agent integration', () => {
   test.beforeEach(clean)
 
@@ -71,7 +74,7 @@ test.describe('page edit WebMCP agent integration', () => {
     })
 
     // The StatefulLayout should reflect the form edit
-    expect((slData as any)?.structuredContent?.data?.title).toBe('Edited in form')
+    expect(toolJson(slData).data?.title).toBe('Edited in form')
   })
 
   test('should give the agent access to page elements via WebMCP', async ({ page, goToWithAuth }) => {
@@ -107,7 +110,7 @@ test.describe('page edit WebMCP agent integration', () => {
       const mc = (navigator as any).modelContext
       return await mc.callTool({ name: 'pageConfig_getData', arguments: {} })
     })
-    const data = (getData as any)?.structuredContent?.data
+    const data = toolJson(getData).data
     expect(data.elements).toBeDefined()
     expect(data.elements).toHaveLength(1)
     expect(data.elements[0].type).toBe('title')
