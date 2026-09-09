@@ -36,6 +36,7 @@ export default defineConfig({
       'fast-deep-equal',
       'sanitize-html',
       'marked',
+      'mermaid',
       'ofetch'
     ]
   },

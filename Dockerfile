@@ -1,7 +1,10 @@
 # =============================
 # Base Node image
 # =============================
-FROM node:24.11.1-alpine3.22 AS base
+FROM node:24.20.0-alpine3.24 AS base
+
+# pick up alpine security fixes released after the base image was published
+RUN apk upgrade --no-cache
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -76,7 +79,7 @@ RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
     npx clean-modules && \
     cp -rf /tmp/sharp-linuxmusl-x64 node_modules/@img/sharp-linuxmusl-x64 && \
     cp -rf /tmp/sharp-libvips-linuxmusl-x64 node_modules/@img/sharp-libvips-linuxmusl-x64
-RUN mkdir -p /app/shared/node_modules
+RUN mkdir -p /app/shared/markdown/node_modules
 RUN mkdir -p /app/api/node_modules
 
 ##########################
@@ -109,6 +112,9 @@ ADD package.json README.md LICENSE BUILD.json* ./
 ENV PORT=8080
 ENV HOST=0.0.0.0
 
+# npm and corepack are never used at runtime and carry their own CVEs
+RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
+
 EXPOSE 8080
 USER node
 WORKDIR /app/portal
@@ -127,12 +133,16 @@ ADD /api api
 COPY --from=types /app/api/types api/types
 COPY --from=types /app/api/doc api/doc
 COPY --from=types /app/api/config api/config
-COPY --from=api-installer /app/shared/node_modules shared/node_modules
+COPY --from=api-installer /app/shared/markdown/node_modules shared/markdown/node_modules
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist
 ADD package.json README.md LICENSE BUILD.json* ./
 # artificially create a dependency to "portal" target for better caching in github ci
 COPY --from=portal /app/package.json package.json
+
+# npm and corepack are never used at runtime and carry their own CVEs
+RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
+
 EXPOSE 8080
 EXPOSE 9090
 USER node

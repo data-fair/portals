@@ -12,31 +12,49 @@
         ]"
       />
 
-      <v-card-text>
-        <v-tabs-window v-model="tab">
-          <portal-preview-provider>
-            <v-tabs-window-item value="preview">
+      <!-- no v-card-text around the windows: the preview panes carry the page background of
+           the portal edge to edge, like v-main does there, and pad their content themselves -->
+      <v-tabs-window v-model="tab">
+        <portal-preview-provider>
+          <v-tabs-window-item value="preview">
+            <!-- a v-sheet, not a bg-background class: v-theme-provider renders no element of
+                 its own, so only a vuetify component carries the preview theme vars -->
+            <v-sheet
+              color="background"
+              class="pa-4"
+            >
               <page-elements :model-value="pageFetch.data.value?.config.elements" />
-            </v-tabs-window-item>
+            </v-sheet>
+          </v-tabs-window-item>
 
-            <v-tabs-window-item value="preview-draft">
+          <v-tabs-window-item value="preview-draft">
+            <v-sheet
+              color="background"
+              class="pa-4"
+            >
               <page-elements :model-value="pageFetch.data.value?.draftConfig.elements" />
-            </v-tabs-window-item>
-          </portal-preview-provider>
-
-          <!-- <v-tabs-window-item value="permissions">
-              TODO: add permissions management
-            </v-tabs-window-item> -->
-
-          <v-tabs-window-item value="publications">
-            <page-edit-publication />
+            </v-sheet>
           </v-tabs-window-item>
+        </portal-preview-provider>
 
-          <v-tabs-window-item value="informations">
-            <page-activity />
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-card-text>
+        <!-- <v-tabs-window-item value="permissions">
+            TODO: add permissions management
+          </v-tabs-window-item> -->
+
+        <v-tabs-window-item
+          value="publications"
+          class="pa-4"
+        >
+          <page-edit-publication />
+        </v-tabs-window-item>
+
+        <v-tabs-window-item
+          value="informations"
+          class="pa-4"
+        >
+          <page-activity />
+        </v-tabs-window-item>
+      </v-tabs-window>
     </v-card>
     <navigation-right>
       <page-actions />

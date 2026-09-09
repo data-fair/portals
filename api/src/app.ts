@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { session, errorHandler, createSiteMiddleware, createSpaMiddleware } from '@data-fair/lib-express/index.js'
+import { session, errorHandler, createSiteMiddleware, createSpaMiddleware, defaultNonceCSPDirectives } from '@data-fair/lib-express/index.js'
 import express from 'express'
 import helmet from 'helmet'
 import { uiConfig } from './ui-config.ts'
@@ -63,7 +63,12 @@ app.get('/api/ping', async (req, res) => {
 app.use('/api', (req, res) => res.status(404).send('unknown api endpoint'))
 
 app.use(await createSpaMiddleware(resolve(import.meta.dirname, '../../ui/dist'), uiConfig, {
-  csp: { nonce: true, header: true },
+  csp: {
+    nonce: true,
+    // nonces only work on <style> tags, not on element style attributes, and the svg
+    // produced by mermaid carries both
+    header: { ...defaultNonceCSPDirectives, 'style-src': "'self' 'unsafe-inline'" }
+  },
   privateDirectoryUrl: config.privateDirectoryUrl
 }))
 

@@ -1,19 +1,27 @@
 <template>
   <v-defaults-provider :defaults="previewDefaults">
-    <page-element
+    <!-- the block sits on the page background in the portal, and needs it here too: the
+         surrounding form is painted by the theme of the back-office, not the portal's. A
+         v-sheet, not a bg-background class: v-theme-provider renders no element of its own,
+         so only a vuetify component carries the preview theme vars -->
+    <v-sheet
       v-if="renderedElement"
-      :element="renderedElement"
-      :context="context"
+      color="background"
     >
-      <template #page-elements="{ elements, onUpdate, addItemMessage }">
-        <page-edit-elements
-          :model-value="elements"
-          :add-item-message="addItemMessage"
-          :pages="pages"
-          @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
-        />
-      </template>
-    </page-element>
+      <page-element
+        :element="renderedElement"
+        :context="context"
+      >
+        <template #page-elements="{ elements, onUpdate, addItemMessage }">
+          <page-edit-elements
+            :model-value="elements"
+            :add-item-message="addItemMessage"
+            :pages="pages"
+            @update:model-value="(newElements: PageElement[] | undefined) => element = onUpdate(newElements ?? [])"
+          />
+        </template>
+      </page-element>
+    </v-sheet>
   </v-defaults-provider>
 </template>
 
