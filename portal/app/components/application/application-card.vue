@@ -35,11 +35,21 @@
             cols="4"
             class="overflow-hidden"
           >
-            <div
-              v-if="thumbnailUrl"
-              aria-hidden="true"
-              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
-            />
+            <template v-if="currentThumbnailUrl">
+              <div
+                aria-hidden="true"
+                :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
+              />
+              <!-- background-image emits no error event, this hidden probe drives the fallback -->
+              <img
+                :key="currentThumbnailUrl"
+                :src="currentThumbnailUrl"
+                class="d-none"
+                alt=""
+                aria-hidden="true"
+                @error="onThumbnailError"
+              >
+            </template>
           </v-col>
           <v-divider vertical />
         </template>
@@ -55,16 +65,17 @@
         >
           <!-- Thumbnail (Top Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
-              :src="thumbnailUrl"
+              :src="currentThumbnailUrl"
               :cover="cardConfig.thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
+              @error="onThumbnailError"
             />
           </div>
 
@@ -77,21 +88,22 @@
 
           <!-- Thumbnail (Center Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
-              :src="thumbnailUrl"
+              :src="currentThumbnailUrl"
               :cover="cardConfig.thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
+              @error="onThumbnailError"
             />
           </div>
 
           <v-card-text
-            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !thumbnailUrl)) && application.summary?.length"
+            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !currentThumbnailUrl)) && application.summary?.length"
             class="pb-0"
           >
             {{ application.summary }}
@@ -208,21 +220,20 @@ const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
 const hoverFx = useHoverConfig(() => cardConfig.hover)
 
-const thumbnailUrl = computed(() => {
-  if (application.image) return application.image
-  if (cardConfig.thumbnail?.useTopic && application.topics?.[0]?.id) {
-    const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.topics![0]!.id)
-    if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
-  }
-  if (cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && application.summary?.length) return undefined
-  return `${application.href}/capture?updatedAt=${application.updatedAt}`
-})
+const candidates = computed(() => applicationThumbnailCandidates(
+  application,
+  cardConfig,
+  portalConfig.value.topics,
+  getPortalImageSrc
+))
+
+const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates)
 
 // Set thumbnail in background for left location to cover full height of the card
 const leftThumbnailStyle = computed(() => {
-  if (!thumbnailUrl.value) return undefined
+  if (!currentThumbnailUrl.value) return undefined
   return {
-    backgroundImage: `url("${thumbnailUrl.value}")`,
+    backgroundImage: `url("${currentThumbnailUrl.value}")`,
     backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
