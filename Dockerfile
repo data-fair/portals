@@ -79,7 +79,7 @@ RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
     npx clean-modules && \
     cp -rf /tmp/sharp-linuxmusl-x64 node_modules/@img/sharp-linuxmusl-x64 && \
     cp -rf /tmp/sharp-libvips-linuxmusl-x64 node_modules/@img/sharp-libvips-linuxmusl-x64
-RUN mkdir -p /app/shared/node_modules
+RUN mkdir -p /app/shared/markdown/node_modules
 RUN mkdir -p /app/api/node_modules
 
 ##########################
@@ -133,7 +133,7 @@ ADD /api api
 COPY --from=types /app/api/types api/types
 COPY --from=types /app/api/doc api/doc
 COPY --from=types /app/api/config api/config
-COPY --from=api-installer /app/shared/node_modules shared/node_modules
+COPY --from=api-installer /app/shared/markdown/node_modules shared/markdown/node_modules
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist
 ADD package.json README.md LICENSE BUILD.json* ./
