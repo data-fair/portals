@@ -174,6 +174,10 @@ test.describe('mobile drawer accessibility', () => {
       if (await burger.getAttribute('aria-expanded') !== 'true') await burger.click()
       return burger.getAttribute('aria-expanded')
     }, { timeout: 15_000 }).toBe('true')
+    // aria-expanded flips as soon as the model does, but nav-drawer.vue moves focus to
+    // the first link a nextTick and a frame later. A test that takes focus in that window
+    // has it yanked back to the first link, so wait for the drawer to own the focus first.
+    await expect.poll(() => isFocusInDrawer(burger.page()), { timeout: 5_000 }).toBe(true)
   }
 
   test('the drawer is a real list with a single divider between groups', async ({ page, goToPortal }) => {
@@ -232,8 +236,6 @@ test.describe('mobile drawer accessibility', () => {
 
     const burger = page.locator('[aria-controls="nav-drawer"]')
     await openDrawer(burger)
-    // Escape is only meaningful once the focus has actually landed inside
-    await expect.poll(() => isFocusInDrawer(page), { timeout: 5_000 }).toBe(true)
 
     await page.keyboard.press('Escape')
     await expect(burger).toHaveAttribute('aria-expanded', 'false')

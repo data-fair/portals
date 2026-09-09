@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@analytics/google-analytics": "^1.1.0",
-    "@analytics/google-tag-manager": "^0.6.0",
     "@data-fair/agent-tools-data-fair": "^0.6.1",
     "@data-fair/frame": "^0.18.1",
     "@data-fair/lib-common-types": "^1.21.0",
@@ -35,6 +34,7 @@
     "analytics": "^0.8.19",
     "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
+    "memoizee": "^0.4.17",
     "mermaid": "^11.17.2",
     "nuxt": "^4.5.2",
     "nuxt-security": "^2.3.0",
