@@ -1,11 +1,12 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import 'dotenv/config'
-import { clean, axiosAuth } from '../../support/axios.ts'
+import { clean, axiosAuth, directoryUrl } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
 const deptAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1' })
+const superadmin = await axiosAuth({ email: 'test_superadmin@test.com', adminMode: true })
 
 test.describe('portals management', () => {
   test.beforeEach(clean)
@@ -136,5 +137,20 @@ test.describe('portals management', () => {
     assert.ok(ids.includes(sharedPortal._id))
     assert.ok(ids.includes(plainPortal._id))
     assert.ok(ids.includes(deptPortal._id), 'org-root admin sees dept-scoped portals too')
+  })
+
+  test('deleting a portal removes its draft site from simple-directory and keeps the production one', async () => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
+    const sdSiteUrl = (id: string) => `${directoryUrl}/api/sites/${encodeURIComponent(id)}`
+    const draftSiteUrl = sdSiteUrl('data-fair-portals:draft-' + portal._id)
+    const siteUrl = sdSiteUrl('data-fair-portals:' + portal._id)
+
+    assert.equal((await superadmin.get(draftSiteUrl)).status, 200)
+    assert.equal((await superadmin.get(siteUrl)).status, 200)
+
+    await user1.delete(`/api/portals/${portal._id}`)
+
+    await assert.rejects(superadmin.get(draftSiteUrl), (err: any) => err.status === 404)
+    assert.equal((await superadmin.get(siteUrl)).status, 200, 'the production site must survive, it can hold accounts and SSO config')
   })
 })

@@ -338,12 +338,22 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
     { headers: { cookie } }
   )
 
+  // the draft site is disposable, but the production site is deliberately kept:
+  // it can hold local accounts, SSO providers, etc.
   await axios.delete(
-    `${config.privateIngressManagerUrl}/api/ingress/${portal._id}`,
-    { headers: { 'x-secret-key': config.secretKeys.ingress } }
+    `${config.privateDirectoryUrl}/api/sites/${encodeURIComponent('data-fair-portals:draft-' + portal._id)}`,
+    { params: { key: config.secretKeys.sites } }
   )
 
-  // TODO: should we propagate deletion to SD or is it too risky ?
+  if (config.privateIngressManagerUrl) {
+    // ingresses are registered per id by getIngressInfos, the draft one has its own
+    for (const ingressId of [portal._id, portal._id + '--draft']) {
+      await axios.delete(
+        `${config.privateIngressManagerUrl}/api/ingress/${ingressId}`,
+        { headers: { 'x-secret-key': config.secretKeys.ingress } }
+      )
+    }
+  }
 }
 
 const cleanUnusedImages = async (portal: Portal) => {
