@@ -3,6 +3,15 @@ import pageConfigSchema from '../page-config/schema.js'
 
 const ELEMENT_REF = 'https://github.com/data-fair/portals/page-elements#/$defs/element'
 
+// Nested element arrays are indistinguishable in the schema (same type, same layout:
+// 'none', same items ref), so they are told apart by their key. advancedFilters is the
+// odd one out: it is not content but a strip of filter blocks, hence its own title.
+const nestedArrayTitles = {
+  children: { title: 'Content', fr: 'Contenu' },
+  children2: { title: 'Second content', fr: 'Deuxième contenu' },
+  advancedFilters: { title: 'Advanced filters', fr: 'Filtres avancés' }
+}
+
 /**
  * Layout elements (banner, card, two columns, tabs...) nest other elements through
  * arrays that the page editor hides with layout: 'none', because it manipulates them on
@@ -10,13 +19,20 @@ const ELEMENT_REF = 'https://github.com/data-fair/portals/page-elements#/$defs/e
  * form-based simple editor, where nesting has to be reachable through the form itself.
  * @param {string} key
  */
-const navigableChildrenLayout = (key) => ({
-  title: key === 'children2' ? 'Second content' : 'Content',
-  'x-i18n-title': { fr: key === 'children2' ? 'Deuxième contenu' : 'Contenu' },
-  clipboardKey: 'elements',
-  listEditMode: 'dialog',
-  itemCopy: "{...item, uuid: crypto.randomUUID().split('-')[0]}"
-})
+const navigableChildrenLayout = (key) => {
+  const titles = nestedArrayTitles[/** @type {keyof typeof nestedArrayTitles} */ (key)] ?? nestedArrayTitles.children
+  return {
+    title: titles.title,
+    'x-i18n-title': { fr: titles.fr },
+    // catalog-layout only renders the advanced filters when the sibling switch is on;
+    // without mirroring that condition the form lets an agent fill an array that is
+    // never drawn, a silent no-op
+    ...(key === 'advancedFilters' ? { if: 'parent.data?.showAdvancedFilters' } : {}),
+    clipboardKey: 'elements',
+    listEditMode: 'dialog',
+    itemCopy: "{...item, uuid: crypto.randomUUID().split('-')[0]}"
+  }
+}
 
 /**
  * Unhide the nested element arrays, and re-point their items at the local element:
