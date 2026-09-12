@@ -18,21 +18,28 @@ export const usePageSeo = (meta: {
 }) => {
   const { portalConfig } = usePortalStore()
 
+  const requestUrl = useRequestURL()
+
   const seoMeta: UseSeoMetaInput = {
     title: () => toValue(meta.title),
     description: () => toValue(meta.description),
     ogTitle: () => toValue(meta.title),
     ogDescription: () => toValue(meta.description) || portalConfig.value.description,
     ogType: meta.ogType || 'website',
-    ogUrl: useRequestURL().href
+    ogUrl: requestUrl.href
   }
-  if (meta.ogImage) { seoMeta.ogImage = () => toValue(meta.ogImage) }
+  if (meta.ogImage) {
+    // Social network crawlers require an absolute og:image URL
+    seoMeta.ogImage = () => {
+      const image = toValue(meta.ogImage)
+      return image ? new URL(image, requestUrl.origin).href : undefined
+    }
+  }
   if (meta.noindex) { seoMeta.robots = 'noindex' }
 
   useSeoMeta(seoMeta)
 
   // Add canonical link (always current URL without query params)
-  const requestUrl = useRequestURL()
   const canonicalUrl = `${requestUrl.origin}${requestUrl.pathname}`
   useHead({ link: [{ rel: 'canonical', href: canonicalUrl }] })
 }
