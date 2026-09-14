@@ -35,11 +35,21 @@
             cols="4"
             class="overflow-hidden"
           >
-            <div
-              v-if="thumbnailUrl"
-              aria-hidden="true"
-              :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
-            />
+            <template v-if="currentThumbnailUrl">
+              <div
+                aria-hidden="true"
+                :style="[leftThumbnailStyle, hoverFx.imageStyle(isHovering)]"
+              />
+              <!-- background-image emits no error event, this hidden probe drives the fallback -->
+              <img
+                ref="thumbnailProbe"
+                :src="currentThumbnailUrl"
+                class="d-none"
+                alt=""
+                aria-hidden="true"
+                @error="onThumbnailError"
+              >
+            </template>
           </v-col>
           <v-divider vertical />
         </template>
@@ -55,16 +65,17 @@
         >
           <!-- Thumbnail (Top Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && thumbnailUrl"
+            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
-              :src="thumbnailUrl"
+              :src="currentThumbnailUrl"
               :cover="cardConfig.thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
+              @error="onThumbnailError"
             />
           </div>
 
@@ -77,21 +88,22 @@
 
           <!-- Thumbnail (Center Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && thumbnailUrl"
+            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
-              :src="thumbnailUrl"
+              :src="currentThumbnailUrl"
               :cover="cardConfig.thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
+              @error="onThumbnailError"
             />
           </div>
 
           <v-card-text
-            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !thumbnailUrl)) && reuse.config.summary?.length"
+            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !currentThumbnailUrl)) && reuse.config.summary?.length"
             class="pb-0"
           >
             {{ reuse.config.summary }}
@@ -146,17 +158,21 @@ const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   return `/portal/api/reuses/${reuse.slug}/images/${id}`
 }
 
-const thumbnailUrl = computed(() => {
-  if (reuse.config.image) return getReuseImageSrc(reuse.config.image, false)
-  if (cardConfig.thumbnail?.default) return (isPortalConfig ? getPortalImageSrc : getPageImageSrc)(cardConfig.thumbnail.default, false)
-  return undefined
-})
+const candidates = computed(() => reuseThumbnailCandidates(
+  reuse.config.image,
+  cardConfig,
+  getReuseImageSrc,
+  isPortalConfig ? getPortalImageSrc : getPageImageSrc
+))
+
+const thumbnailProbe = useTemplateRef('thumbnailProbe')
+const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)
 
 // Set thumbnail in background for left location to cover full height of the card
 const leftThumbnailStyle = computed(() => {
-  if (!thumbnailUrl.value) return undefined
+  if (!currentThumbnailUrl.value) return undefined
   return {
-    backgroundImage: `url("${thumbnailUrl.value}")`,
+    backgroundImage: `url("${currentThumbnailUrl.value}")`,
     backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
