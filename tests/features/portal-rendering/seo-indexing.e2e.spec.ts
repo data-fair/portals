@@ -225,7 +225,11 @@ test.describe('SEO / indexation', () => {
     })).data
     await user1.post('/api/pages', {
       type: 'home',
-      config: { title: 'Home', elements: [] },
+      config: {
+        title: 'Home',
+        elements: [],
+        thumbnail: { _id: 'og-image', name: 'og.jpg', mimeType: 'image/jpeg' }
+      },
       portals: [portal._id],
       owner: portal.owner
     })
@@ -238,6 +242,8 @@ test.describe('SEO / indexation', () => {
     expect(extractMetaContent(html, 'og:description', 'property')).toBe('Description du portail pour SEO')
     expect(extractMetaContent(html, 'og:type', 'property')).toBe('website')
     expect(extractMetaContent(html, 'og:url', 'property')).toBeTruthy()
+    // og:image must be absolute for social network crawlers
+    expect(extractMetaContent(html, 'og:image', 'property')).toBe(`${portalUrl(portal._id)}/portal/api/pages/home/home/images/og-image`)
 
     // Canonical
     const canonical = extractCanonical(html)
