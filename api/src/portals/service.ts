@@ -337,7 +337,12 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: str
     `${reqOrigin}/data-fair/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites/data-fair-portals/${portal._id}`,
     { headers: { cookie } }
   )
+  await deletePortalSites(portal)
+}
 
+// the part of a portal that lives in other services and needs no user session: the draft site
+// in simple-directory and the ingresses (also used by the identity webhook)
+export const deletePortalSites = async (portal: Portal) => {
   // the draft site is disposable, but the production site is deliberately kept:
   // it can hold local accounts, SSO providers, etc.
   await axios.delete(
