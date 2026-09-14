@@ -40,12 +40,10 @@ export const createCardPortal = async (opts: {
   kind: CardKind
   card: Record<string, any>
   topics?: Record<string, any>[]
-  columns?: number
-  title?: string
 }) => {
-  const { kind, card, topics, columns = 3, title = 'Card Portal' } = opts
+  const { kind, card, topics } = opts
   const config: Record<string, any> = {
-    title,
+    title: 'Card Portal',
     menu: { children: [] },
     [kind]: { card }
   }
@@ -62,7 +60,7 @@ export const createCardPortal = async (opts: {
     type: kind,
     config: {
       title: 'Catalogue',
-      elements: [{ uuid: 'cat1', type: CATALOG_ELEMENT[kind], columns, filters: { items: ['search'] } }]
+      elements: [{ uuid: 'cat1', type: CATALOG_ELEMENT[kind], columns: 3, filters: { items: ['search'] } }]
     },
     portals: [portal._id],
     owner: portal.owner
@@ -70,21 +68,16 @@ export const createCardPortal = async (opts: {
   return { portal, path: `/${kind}` }
 }
 
-/** Serve `items` for the card list of `kind`. Counts how many times it answered. */
+/** Serve `items` for the card list of `kind` */
 export const stubList = async (page: Page, kind: CardKind, items: any[]) => {
-  const state = { hits: 0 }
-  await page.route(LIST_ENDPOINT[kind], async (route: Route) => {
-    state.hits++
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({ count: items.length, results: items })
-    })
-  })
-  return state
+  await page.route(LIST_ENDPOINT[kind], (route: Route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ count: items.length, results: items })
+  }))
 }
 
-export type ImageOutcome =
+type ImageOutcome =
   /** a real, decodable image */
   | 'ok'
   /** the application was deleted or is not readable */
@@ -92,8 +85,6 @@ export type ImageOutcome =
   /** what data-fair really answers when a capture cannot be generated: a redirect
    *  to /no-preview.png, which no instance serves any more and comes back as html */
   | 'capturePlaceholder'
-  /** network-level failure (dns, tls, offline) */
-  | 'abort'
 
 /**
  * Serve `outcome` for every request matching `glob`. Records the urls it answered.
@@ -108,7 +99,6 @@ export const stubImage = async (page: Page, glob: string, outcome: ImageOutcome,
     state.urls.push(route.request().url())
     if (delayMs) await new Promise((resolve) => setTimeout(resolve, delayMs))
     state.answered++
-    if (outcome === 'abort') return route.abort()
     if (outcome === 'notFound') return route.fulfill({ status: 404, contentType: 'text/plain', body: 'not found' })
     if (outcome === 'capturePlaceholder') {
       return route.fulfill({

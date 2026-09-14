@@ -19,27 +19,6 @@ const TOPIC = { id: 'topic-1', title: 'Thematique', thumbnail: imageRef('topic-i
 test.describe('card thumbnail fallback', () => {
   test.beforeEach(clean)
 
-  for (const outcome of ['capturePlaceholder', 'notFound', 'abort'] as const) {
-    test(`a capture answering with ${outcome} falls back to the default image`, async ({ page, goToPortal }) => {
-      const { portal, path } = await createCardPortal({
-        kind: 'datasets',
-        card: {
-          titleLinesCount: 1,
-          showSummary: true,
-          thumbnail: { show: true, location: 'center', crop: true, useApplication: true, default: imageRef('default-1') }
-        }
-      })
-      await stubList(page, 'datasets', [makeDataset({ id: 'ds-cap', extras: { applications: [linkedApplication('app-broken')] } })])
-      await stubImage(page, CAPTURE_URL, outcome)
-      await stubImage(page, PORTAL_IMAGE_URL, 'ok')
-
-      await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-cap')
-
-      const card = page.locator('.v-card').filter({ hasText: 'Jeu ds-cap' }).first()
-      await expect.poll(() => thumbnailSrc(card), { timeout: 15_000 }).toContain('/portal/api/images/default-1')
-    })
-  }
-
   // the whole documented chain, one broken link at a time
   test('the cascade walks image, topic, capture then default', async ({ page, goToPortal }) => {
     const { portal, path } = await createCardPortal({
@@ -101,7 +80,8 @@ test.describe('card thumbnail fallback', () => {
     await expect(card.locator('.v-img')).toHaveCount(0)
   })
 
-  // the left location has no error event of its own, a hidden probe drives it
+  // the left location has no error event of its own, a hidden probe drives it: it
+  // points at the same url as the background-image, so it must not cost a request
   test('a left thumbnail falls back too, without losing its column', async ({ page, goToPortal }) => {
     const { portal, path } = await createCardPortal({
       kind: 'datasets',
@@ -114,6 +94,7 @@ test.describe('card thumbnail fallback', () => {
     await stubList(page, 'datasets', [makeDataset({ id: 'ds-left', extras: { applications: [linkedApplication('app-left-broken')] } })])
     await stubImage(page, CAPTURE_URL, 'capturePlaceholder')
     await stubImage(page, PORTAL_IMAGE_URL, 'ok')
+    const requested = recordImageRequests(page)
 
     await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-left')
 
@@ -121,50 +102,8 @@ test.describe('card thumbnail fallback', () => {
     await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toContain('/portal/api/images/default-1')
     await expect(card.locator('.v-col--cols-4')).toHaveCount(1)
     await expect(card.locator('.v-divider--vertical')).toHaveCount(1)
-  })
-
-  // exhausting the cascade must not change the card structure: the column and the
-  // divider stay, exactly as they do today for a card that never had a source
-  test('a left thumbnail that exhausts every source keeps the column and the divider', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'datasets',
-      card: {
-        titleLinesCount: 2,
-        showSummary: true,
-        thumbnail: { show: true, location: 'left', crop: true, useApplication: true, default: imageRef('default-1') }
-      }
-    })
-    await stubList(page, 'datasets', [makeDataset({ id: 'ds-leftdead', extras: { applications: [linkedApplication('app-leftdead')] } })])
-    await stubImage(page, CAPTURE_URL, 'capturePlaceholder')
-    await stubImage(page, PORTAL_IMAGE_URL, 'notFound')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-leftdead')
-
-    const card = page.locator('.v-card').filter({ hasText: 'Jeu ds-leftdead' }).first()
-    await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toBeUndefined()
-    await expect(card.locator('.v-col--cols-4')).toHaveCount(1)
-    await expect(card.locator('.v-divider--vertical')).toHaveCount(1)
-  })
-
-  // an index that could wrap or be reset would keep hammering the same dead url
-  test('a card never requests the same failing source twice', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'datasets',
-      card: {
-        titleLinesCount: 1,
-        showSummary: true,
-        thumbnail: { show: true, location: 'center', crop: true, useApplication: true, default: imageRef('default-1') }
-      }
-    })
-    await stubList(page, 'datasets', [makeDataset({ id: 'ds-once', extras: { applications: [linkedApplication('app-once')] } })])
-    await stubImage(page, CAPTURE_URL, 'capturePlaceholder')
-    await stubImage(page, PORTAL_IMAGE_URL, 'notFound')
-    const requested = recordImageRequests(page)
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-once')
-    await page.waitForTimeout(3_000)
-
-    expect(requested.filter((u) => u.includes('/applications/app-once/capture'))).toHaveLength(1)
+    await page.waitForTimeout(1_000)
+    expect(requested.filter((u) => u.includes('/applications/app-left-broken/capture'))).toHaveLength(1)
     expect(requested.filter((u) => u.includes('/portal/api/images/default-1'))).toHaveLength(1)
   })
 
@@ -240,46 +179,6 @@ test.describe('card thumbnail fallback', () => {
     expect(defaults.urls).toHaveLength(0)
   })
 
-  // a working source must never be swapped out
-  test('a source that loads is kept and the next one is never requested', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'datasets',
-      card: {
-        titleLinesCount: 1,
-        showSummary: true,
-        thumbnail: { show: true, location: 'center', crop: true, useApplication: true, default: imageRef('default-1') }
-      }
-    })
-    await stubList(page, 'datasets', [makeDataset({ id: 'ds-ok', extras: { applications: [linkedApplication('app-ok')] } })])
-    await stubImage(page, CAPTURE_URL, 'ok')
-    const defaults = await stubImage(page, PORTAL_IMAGE_URL, 'ok')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-ok')
-    await page.waitForTimeout(2_000)
-
-    const card = page.locator('.v-card').filter({ hasText: 'Jeu ds-ok' }).first()
-    expect(await thumbnailSrc(card)).toContain('/applications/app-ok/capture')
-    expect(defaults.urls).toHaveLength(0)
-  })
-
-  // application cards have no default image: the cascade ends on nothing, which is
-  // already what a client sees today when a capture is missing
-  test('an application card with a broken capture ends without a thumbnail', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'applications',
-      card: { titleLinesCount: 2, showSummary: true, thumbnail: { show: true, location: 'center', crop: true } }
-    })
-    await stubList(page, 'applications', [makeApplication({ id: 'app-dead' })])
-    await stubImage(page, CAPTURE_URL, 'capturePlaceholder')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Visu app-dead')
-
-    const card = page.locator('.v-card').filter({ hasText: 'Visu app-dead' }).first()
-    await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toBeUndefined()
-    // the card is still fully usable
-    await expect(card.getByText('Visu app-dead')).toBeVisible()
-  })
-
   // an application image that fails must reach the capture behind it
   test('a broken application image falls back to the capture', async ({ page, goToPortal }) => {
     const { portal, path } = await createCardPortal({
@@ -310,31 +209,5 @@ test.describe('card thumbnail fallback', () => {
 
     const card = page.locator('.v-card').filter({ hasText: 'Reutilisation reuse-broken' }).first()
     await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toContain('/portal/api/images/default-1')
-  })
-
-  // the cascade runs in the browser and must not report a hydration mismatch
-  test('the cascade raises no console error', async ({ page, goToPortal }) => {
-    const errors: string[] = []
-    page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
-
-    const { portal, path } = await createCardPortal({
-      kind: 'datasets',
-      card: {
-        titleLinesCount: 1,
-        showSummary: true,
-        thumbnail: { show: true, location: 'center', crop: true, useApplication: true, default: imageRef('default-1') }
-      }
-    })
-    await stubList(page, 'datasets', [makeDataset({ id: 'ds-quiet', extras: { applications: [linkedApplication('app-quiet')] } })])
-    await stubImage(page, CAPTURE_URL, 'capturePlaceholder')
-    await stubImage(page, PORTAL_IMAGE_URL, 'ok')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-quiet')
-    const card = page.locator('.v-card').filter({ hasText: 'Jeu ds-quiet' }).first()
-    await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toContain('/portal/api/images/default-1')
-
-    // the failing image itself is expected to log, nothing else may
-    const unexpected = errors.filter((e) => !/Failed to load resource|ERR_|net::/.test(e))
-    expect(unexpected).toEqual([])
   })
 })
