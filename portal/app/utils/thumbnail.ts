@@ -3,9 +3,6 @@
 import type { ImageRef } from '../../../api/types/image-ref/index.ts'
 import type { ApplicationCard, DatasetCard, PortalConfigTopics, ReuseCard } from '../../../api/types/portal-config/index.ts'
 
-// mobile is required, not optional: the manager declares its own image getter with a
-// required parameter (ui/src/composables/use-image-src.ts) and it would not be
-// assignable to a type whose parameter is optional. Callers always pass it.
 type ImageSrc = (imageRef: ImageRef, mobile: boolean) => string
 
 // structural shapes rather than the full Dataset/Application types: these helpers only
