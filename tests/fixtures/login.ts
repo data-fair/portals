@@ -7,7 +7,7 @@ async function performLogin (page: any, context: any, baseUrl: string, url: stri
   const loginUrl = `${baseUrl}/simple-directory/login?redirect=${encodeURIComponent(fullUrl)}`
   await page.goto(loginUrl)
   await page.getByLabel('Adresse mail').fill(`${user}@test.com`)
-  await page.getByLabel('Mot de passe').fill('passwd')
+  await page.getByRole('textbox', { name: 'Mot de passe' }).fill('passwd')
   await page.getByRole('button', { name: 'Se connecter' }).click()
   await page.waitForURL(fullUrl, { timeout: 10_000 })
   const cookies = await context.cookies()

@@ -46,7 +46,7 @@ setup('Warmup heavy dev routes', async ({ page, context }) => {
     timeout: 60_000
   })
   await page.getByLabel('Adresse mail').fill('test_admin@test.com')
-  await page.getByLabel('Mot de passe').fill('passwd')
+  await page.getByRole('textbox', { name: 'Mot de passe' }).fill('passwd')
   await page.getByRole('button', { name: 'Se connecter' }).click()
   await page.waitForURL(redirect, { timeout: 60_000 })
   // Form rendering proves VJSF + page-config schemas finished compiling.
