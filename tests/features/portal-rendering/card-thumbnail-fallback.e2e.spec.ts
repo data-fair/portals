@@ -206,6 +206,40 @@ test.describe('card thumbnail fallback', () => {
     expect(requested.slice(before).filter((u) => u.includes('/applications/app-shared/capture'))).toHaveLength(0)
   })
 
+  // the catalog keys its cards by index, so a search hands the same card another dataset
+  // while the capture of the previous one may still be pending: that late failure must
+  // not be attributed to the new dataset's source
+  test('a source still pending when the card is reused does not blacklist the next one', async ({ page, goToPortal }) => {
+    const { portal, path } = await createCardPortal({
+      kind: 'datasets',
+      card: {
+        titleLinesCount: 2,
+        showSummary: true,
+        thumbnail: { show: true, location: 'left', crop: true, useApplication: true, default: imageRef('default-1') }
+      }
+    })
+    await stubList(page, 'datasets', [makeDataset({ id: 'ds-stale', extras: { applications: [linkedApplication('app-stale')] } })])
+    const stale = await stubImage(page, '**/applications/app-stale/capture**', 'capturePlaceholder', 5_000)
+    await stubImage(page, '**/applications/app-fresh/capture**', 'ok')
+    const defaults = await stubImage(page, PORTAL_IMAGE_URL, 'ok')
+
+    await openCatalogWithStub(page, goToPortal, portal, path, 'Jeu ds-stale')
+    await expect.poll(() => stale.urls.length, { timeout: 15_000 }).toBeGreaterThan(0)
+
+    // the same card slot now shows another dataset whose capture works
+    await stubList(page, 'datasets', [makeDataset({ id: 'ds-fresh', extras: { applications: [linkedApplication('app-fresh')] } })])
+    const search = page.getByRole('textbox', { name: 'Rechercher', exact: true })
+    await search.fill('relance-stale')
+    await search.press('Enter')
+    const card = page.locator('.v-card').filter({ hasText: 'Jeu ds-fresh' }).first()
+    await expect.poll(() => thumbnailSrc(card), { timeout: 15_000 }).toContain('/applications/app-fresh/capture')
+
+    // long enough for the stale capture to have answered
+    await page.waitForTimeout(6_000)
+    expect(await thumbnailSrc(card)).toContain('/applications/app-fresh/capture')
+    expect(defaults.urls).toHaveLength(0)
+  })
+
   // a working source must never be swapped out
   test('a source that loads is kept and the next one is never requested', async ({ page, goToPortal }) => {
     const { portal, path } = await createCardPortal({

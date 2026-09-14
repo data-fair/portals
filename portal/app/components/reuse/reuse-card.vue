@@ -42,7 +42,7 @@
               />
               <!-- background-image emits no error event, this hidden probe drives the fallback -->
               <img
-                :key="currentThumbnailUrl"
+                ref="thumbnailProbe"
                 :src="currentThumbnailUrl"
                 class="d-none"
                 alt=""
@@ -165,7 +165,8 @@ const candidates = computed(() => reuseThumbnailCandidates(
   isPortalConfig ? getPortalImageSrc : getPageImageSrc
 ))
 
-const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates)
+const thumbnailProbe = useTemplateRef('thumbnailProbe')
+const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)
 
 // Set thumbnail in background for left location to cover full height of the card
 const leftThumbnailStyle = computed(() => {

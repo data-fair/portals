@@ -9,9 +9,11 @@ const failedUrls = new Set<string>()
 /**
  * Walks `candidates` in order, moving on as soon as the browser reports the current
  * one failed. `background-image` emits no error event, so the left location has to
- * feed this from a hidden `<img>` probe.
+ * feed this from a hidden `<img>` probe, passed as `probe` so its state can be checked
+ * on mount: it is in the server html with its src, and a fast failure fires its error
+ * event before hydration attaches the listener.
  */
-export function useThumbnailFallback (candidates: Ref<string[]>) {
+export function useThumbnailFallback (candidates: Ref<string[]>, probe?: Ref<HTMLImageElement | null>) {
   const index = ref(0)
 
   const nextUsable = (from: number) => {
@@ -26,7 +28,12 @@ export function useThumbnailFallback (candidates: Ref<string[]>) {
   watch(() => candidates.value.join('\n'), () => { index.value = nextUsable(0) })
 
   // applied after hydration only, so the first client render matches the server html
-  onMounted(() => { index.value = nextUsable(0) })
+  onMounted(() => {
+    // same check as v-img at init: a probe that already settled without a size failed
+    const el = probe?.value
+    if (el?.complete && !el.naturalWidth) failedUrls.add(candidates.value[0]!)
+    index.value = nextUsable(0)
+  })
 
   const currentThumbnailUrl = computed(() => candidates.value[index.value])
 
