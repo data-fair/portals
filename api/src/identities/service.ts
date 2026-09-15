@@ -18,6 +18,14 @@ export const updateIdentity = async (identity: IdentityUpdate) => {
         { $set: { 'owner.departmentName': department.name } }
       )
     }
+    // the directory sends the complete list of departments: a department missing from it was
+    // deleted, its resources keep the id (still reachable by the organization admins) but not the name
+    if (departments) {
+      await collection.updateMany(
+        { 'owner.type': type, 'owner.id': id, 'owner.department': { $exists: true, $nin: departments.map(d => d.id) } },
+        { $unset: { 'owner.departmentName': 1 } }
+      )
+    }
   }
 }
 

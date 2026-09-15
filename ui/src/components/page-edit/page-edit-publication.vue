@@ -46,7 +46,7 @@
           class="mb-2"
         >
           <span>{{ page.owner.name }}</span>
-          <span v-if="portal.owner.department"> - {{ portal.owner.departmentName || portal.owner.department }}</span>
+          <span v-if="portal.owner.department"> - {{ departmentLabel(portal.owner.department, portal.owner.departmentName) }}</span>
         </v-list-item-subtitle>
         <v-list-item-subtitle
           v-if="page.portals.includes(portal._id) && pageUrl"
@@ -111,6 +111,7 @@ import type { Page } from '#api/types/page'
 import { getAccountRole } from '@data-fair/lib-vue/session'
 
 const { t } = useI18n()
+const { departmentLabel } = useDisplayOwner()
 const session = useSessionAuthenticated()
 const { patchPage, page, pageUrl } = usePageStore()
 

@@ -27,11 +27,21 @@ test.describe('identities webhooks', () => {
   })
 
   test('should update the department name on every resource', async () => {
-    const { portal, page, group } = await seedResources(orgAdmin)
+    const depAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1', dep: 'dep1' })
+    const { portal, page, group } = await seedResources(depAdmin)
     await axIdentities.post('/api/identities/organization/test_org1', { name: 'Renamed Org', departments: [{ id: 'dep1', name: 'Renamed Department' }] })
     for (const [path, id] of [['portals', portal._id], ['pages', page._id], ['groups', group._id]]) {
       const owner = (await orgAdmin.get(`/api/${path}/${id}`)).data.owner
       assert.equal(owner.name, 'Renamed Org')
+      assert.equal(owner.departmentName, 'Renamed Department')
+    }
+
+    // dep1 is missing from the complete list of departments: it was deleted, only its id remains
+    await axIdentities.post('/api/identities/organization/test_org1', { name: 'Renamed Org', departments: [{ id: 'dep2', name: 'Department 2' }] })
+    for (const [path, id] of [['portals', portal._id], ['pages', page._id], ['groups', group._id]]) {
+      const owner = (await orgAdmin.get(`/api/${path}/${id}`)).data.owner
+      assert.equal(owner.department, 'dep1')
+      assert.equal(owner.departmentName, undefined)
     }
   })
 
