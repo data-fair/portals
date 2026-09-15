@@ -89,9 +89,11 @@ test.describe('SEO / indexation', () => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Draftable Portal', allowRobots: true, menu: { children: [] } }
     })).data
+    // a marker rendered in the portal page body: what must never reach an anonymous crawler
+    const draftContent = 'Contenu confidentiel du brouillon'
     await user1.post('/api/pages', {
       type: 'home',
-      config: { title: 'Home', elements: [] },
+      config: { title: 'Home', elements: [{ type: 'title', content: draftContent, titleSize: 'h2' }] },
       portals: [portal._id],
       owner: portal.owner
     })
@@ -99,13 +101,17 @@ test.describe('SEO / indexation', () => {
     const res = await request.get(portalUrl(portal._id, true) + '/', { timeout: 20_000 })
     const html = await res.text()
     // Anonymous request should not be served the portal HTML — instead the
-    // simple-directory login UI is rendered.
+    // simple-directory login UI is rendered. That login page legitimately carries the
+    // site title registered in simple-directory (`<title>… (brouillon)</title>`, cf
+    // getSDSites in api/src/portals/service.ts), so only the page content is asserted here.
     expect(html).toContain('/simple-directory/')
-    expect(html).not.toContain('Draftable Portal')
+    expect(html).not.toContain(draftContent)
 
     // Production URL is reachable normally and has no noindex
     const prodHtml = await fetchHtml(request, portalUrl(portal._id) + '/')
     expect(hasRobotsNoindex(prodHtml)).toBe(false)
+    // the marker does reach the production HTML, so its absence above is meaningful
+    expect(prodHtml).toContain(draftContent)
   })
 
   test('robots.txt reflects portal indexability', async ({ request }) => {
