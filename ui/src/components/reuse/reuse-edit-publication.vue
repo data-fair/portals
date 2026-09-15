@@ -42,7 +42,7 @@
             >{{ portal.title }}</a>
           </td>
           <td v-if="hasDepartmentPortals">
-            {{ portal.owner.departmentName || portal.owner.department || '-' }}
+            {{ departmentLabel(portal.owner.department, portal.owner.departmentName) || '-' }}
           </td>
           <td class="w-25">
             <v-chip
@@ -109,6 +109,7 @@ import type { Portal } from '#api/types/portal'
 import { mdiOpenInNew } from '@mdi/js'
 
 const { t } = useI18n()
+const { departmentLabel } = useDisplayOwner()
 const session = useSessionAuthenticated()
 const { patchReuse, reuse } = useReuseStore()
 

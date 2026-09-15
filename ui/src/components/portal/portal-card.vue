@@ -18,7 +18,7 @@
         <template #append>
           <owner-avatar
             v-if="showOwner"
-            :owner="portal.owner"
+            :owner="displayOwner(portal.owner)"
           />
         </template>
       </v-card-item>
@@ -76,6 +76,7 @@ defineProps({
 })
 
 const { t } = useI18n()
+const { displayOwner } = useDisplayOwner()
 
 </script>
 
