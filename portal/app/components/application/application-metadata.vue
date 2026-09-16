@@ -39,7 +39,7 @@
             :show-tooltip="false"
             aria-hidden="true"
           />
-          {{ departmentLabel(application.owner.department, application.owner.departmentName) || application.owner.name }}
+          {{ departmentLabel(application.owner.department, application.owner.departmentName) ?? application.owner.name }}
         </div>
       </v-col>
 

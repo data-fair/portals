@@ -62,7 +62,7 @@
             :show-tooltip="false"
             aria-hidden="true"
           />
-          {{ departmentLabel(dataset.owner.department, dataset.owner.departmentName) || dataset.owner.name }}
+          {{ departmentLabel(dataset.owner.department, dataset.owner.departmentName) ?? dataset.owner.name }}
         </div>
       </v-col>
 
