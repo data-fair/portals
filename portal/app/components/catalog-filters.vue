@@ -222,6 +222,7 @@ type CatalogType = 'datasets' | 'applications' | 'reuses' | 'events' | 'news'
 type FilterType = 'search' | 'include-past' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
 
 const { t } = useI18n()
+const { departmentLabel } = useDisplayOwner()
 const { portal, preview, portalConfig } = usePortalStore()
 
 const { config, catalogType, drawer } = defineProps<{
@@ -353,7 +354,7 @@ const baseApplicationItems = computed(() => {
 const ownersItems = computed(() => {
   return facets.value.owner.map(facet => {
     const owner = facet.value
-    let title = owner.department ? (owner.departmentName || owner.department) : owner.name
+    let title = departmentLabel(owner.department, owner.departmentName) ?? owner.name
     title += ` (${facet.count})`
     const value = `${owner.type}:${owner.id}:` + (owner.department ? `${owner.department}` : '-')
     const avatar = owner.department

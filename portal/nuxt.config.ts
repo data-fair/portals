@@ -76,6 +76,10 @@ export default defineNuxtConfig({
         imports: ['useLocaleDayjs']
       },
       {
+        from: '@data-fair/lib-vue/owner.js',
+        imports: ['useDisplayOwner']
+      },
+      {
         from: '@data-fair/lib-vue/reactive-search-params.js',
         imports: ['useStringSearchParam', 'useNumberSearchParam', 'useBooleanSearchParam', 'useStringsArraySearchParam']
       }

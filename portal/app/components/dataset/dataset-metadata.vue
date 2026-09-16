@@ -62,7 +62,7 @@
             :show-tooltip="false"
             aria-hidden="true"
           />
-          {{ dataset.owner.departmentName || dataset.owner.department || dataset.owner.name }}
+          {{ departmentLabel(dataset.owner.department, dataset.owner.departmentName) || dataset.owner.name }}
         </div>
       </v-col>
 
@@ -327,6 +327,7 @@ const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
 const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
+const { departmentLabel } = useDisplayOwner()
 
 const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
 const topicsConfig = computed(() => portalConfig.value.datasets.page.topics)

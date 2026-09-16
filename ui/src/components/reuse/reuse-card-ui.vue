@@ -18,7 +18,7 @@
         <template #append>
           <owner-avatar
             v-if="showAll || !!(reuse.owner.department && !session.state.account.department)"
-            :owner="displayOwner(reuse.owner)"
+            :owner="reuse.owner"
           />
         </template>
       </v-card-item>
@@ -52,7 +52,6 @@ import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiAlertCircle } from '@mdi/js'
 
 const { t } = useI18n()
-const { displayOwner } = useDisplayOwner()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 

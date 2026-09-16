@@ -18,7 +18,7 @@
         <template #append>
           <owner-avatar
             v-if="showAll || !!(page.owner.department && !session.state.account.department)"
-            :owner="displayOwner(page.owner)"
+            :owner="page.owner"
           />
         </template>
       </v-card-item>
@@ -72,7 +72,6 @@ import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiFolderInformationOutline, mdiInformationOutline } from '@mdi/js'
 
 const { t } = useI18n()
-const { displayOwner } = useDisplayOwner()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
