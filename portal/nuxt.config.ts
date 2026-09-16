@@ -76,6 +76,10 @@ export default defineNuxtConfig({
         imports: ['useLocaleDayjs']
       },
       {
+        from: '@data-fair/lib-vue/owner.js',
+        imports: ['useDisplayOwner']
+      },
+      {
         from: '@data-fair/lib-vue/reactive-search-params.js',
         imports: ['useStringSearchParam', 'useNumberSearchParam', 'useBooleanSearchParam', 'useStringsArraySearchParam']
       }
@@ -133,6 +137,7 @@ export default defineNuxtConfig({
         '@data-fair/lib-vue/session.js',
         '@data-fair/lib-vue/ui-notif.js',
         '@data-fair/lib-vue/locale-dayjs.js',
+        '@data-fair/lib-vue/owner.js',
         '@data-fair/lib-vue/async-action.js',
         '@data-fair/lib-utils/micro-template.js',
         '@data-fair/lib-vue/reactive-search-params.js',

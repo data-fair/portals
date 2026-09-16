@@ -39,7 +39,7 @@
             :show-tooltip="false"
             aria-hidden="true"
           />
-          {{ application.owner.departmentName || application.owner.department || application.owner.name }}
+          {{ departmentLabel(application.owner.department, application.owner.departmentName) ?? application.owner.name }}
         </div>
       </v-col>
 
@@ -134,6 +134,7 @@ const { application } = defineProps<{ application: Application, dataUpdatedAt?: 
 const { portalConfig } = usePortalStore()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
+const { departmentLabel } = useDisplayOwner()
 
 const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
 const showBaseApplication = computed(() => metadataConfig.value.showBaseApplication !== false)
