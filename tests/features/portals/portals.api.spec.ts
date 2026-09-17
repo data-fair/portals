@@ -202,6 +202,25 @@ test.describe('portals management', () => {
     footer.rows[0].columns[0].blocks.push({ type: 'text', align: 'left', markdown: true, content: '**bold**' })
     const patched = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
     assert.match(patched.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, /<strong>bold<\/strong>/)
+
+    footer.rows[0].columns[0].blocks[1] = { type: 'text', align: 'left', markdown: false, content: '**bold**' }
+    const rawText = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
+    assert.equal(rawText.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, undefined)
+
+    footer.rows[0].columns[0].blocks[1] = { type: 'text', align: 'left', markdown: true, content: '' }
+    const emptyText = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
+    assert.equal(emptyText.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, undefined)
+  })
+
+  test('duplicating a white label portal restores the Koumoul mention', async () => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'White label source', menu: { children: [] } } })).data
+    await superadmin.patch(`/api/portals/${portal._id}`, { whiteLabel: true })
+    await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer: footerWith({ copyright: false }) } })
+    await user1.post(`/api/portals/${portal._id}/draft`)
+
+    const copy = (await user1.post('/api/portals', { config: { title: 'Copy', menu: { children: [] } }, sourcePortalId: portal._id })).data
+    assert.equal(copy.config.footer.copyright, true)
+    assert.equal(copy.draftConfig.footer.copyright, true)
   })
 
   test('duplicating a portal rewrites the footer image references', async () => {

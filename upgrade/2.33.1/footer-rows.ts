@@ -1,10 +1,9 @@
 import type { UpgradeScript } from '@data-fair/lib-node/upgrade-scripts.js'
 import type { Portal } from '../../api/types/portal/index.ts'
 import type { Footer, FooterRow } from '../../api/types/portal-config-footer/index.ts'
-import type { FooterElement, FooterImagesItem, Color } from '../../api/types/footer-elements/index.ts'
+import type { FooterElement, FooterImagesItem, LinkItem, Color } from '../../api/types/footer-elements/index.ts'
 import type { ImageRef } from '../../api/types/image-ref/index.ts'
 
-type LinkItem = Record<string, any>
 type Position = 'main' | 'left'
 type Alignment = 'left' | 'center' | 'right'
 
@@ -68,7 +67,7 @@ const columnBlocks = (legacy: LegacyFooter, position: Position, whiteLabel: bool
     if (legacy.copyright === 'logo' && !whiteLabel) items.push({ source: 'koumoul' })
     if (items.length) blocks.push({ type: 'images', align: 'center', height: 40, items, mb: 0 })
     if (legacy.links?.length) {
-      blocks.push({ type: 'links', align: 'center', display: legacy.linksMode === 'columns' ? 'columns' : 'inline', items: legacy.links as any, mb: 0 })
+      blocks.push({ type: 'links', align: 'center', display: legacy.linksMode === 'columns' ? 'columns' : 'inline', items: legacy.links as LinkItem[], mb: 0 })
     }
   }
   return blocks
@@ -90,7 +89,7 @@ export const migrateLegacyFooter = (legacy: LegacyFooter, whiteLabel: boolean): 
         width: 'auto',
         blocks: [
           divider,
-          { type: 'buttons', align: 'center', variant: 'text', items: legacy.importantLinks as any, mb: 2 },
+          { type: 'buttons', align: 'center', variant: 'text', items: legacy.importantLinks as LinkItem[], mb: 2 },
           { ...divider }
         ]
       }]
@@ -109,6 +108,7 @@ export const migrateLegacyFooter = (legacy: LegacyFooter, whiteLabel: boolean): 
     rows
   }
 
+  // strips the undefined values so the migrated footer is written to mongo without empty keys
   return JSON.parse(JSON.stringify(result))
 }
 
@@ -136,6 +136,7 @@ export default {
         if (!portal.legacyDraftFooter) $set.legacyDraftFooter = draftConfig.footer
         $set['draftConfig.footer'] = migrateLegacyFooter(draftConfig.footer as LegacyFooter, whiteLabel)
       }
+      if (!Object.keys($set).length) continue
       await portals.updateOne({ _id: portal._id }, { $set })
       count++
       debug(`migrated footer of portal ${portal._id} (${portal.title})`)
