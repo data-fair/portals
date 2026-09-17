@@ -97,6 +97,59 @@ test.describe('portal rendering', () => {
     await expect(page.locator('#footer')).toBeVisible({ timeout: 10_000 })
   })
 
+  test('should render a footer with rows, columns and every block type', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Footer Test Portal', menu: { children: [] } }
+    })).data
+    const footer = {
+      copyright: true,
+      background: { color: 'primary' },
+      rows: [
+        {
+          columns: [
+            {
+              width: '1/3',
+              blocks: [
+                { type: 'text', align: 'left', markdown: true, content: '**Footer text**' },
+                { type: 'social', align: 'center' }
+              ]
+            },
+            {
+              width: '2/3',
+              blocks: [
+                { type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] },
+                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Site map' }] }
+              ]
+            }
+          ]
+        },
+        {
+          background: { color: 'secondary' },
+          columns: [{
+            width: 'auto',
+            blocks: [
+              { type: 'divider', align: 'left', opacity: 0.5, thickness: 2 },
+              { type: 'buttons', align: 'center', variant: 'outlined', items: [{ type: 'standard', subtype: 'contact', title: 'Contact us' }] }
+            ]
+          }]
+        }
+      ]
+    }
+    await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer, socialLinks: { linkedin: 'https://www.linkedin.com/company/koumoul' } } })
+    await user1.post(`/api/portals/${portal._id}/draft`)
+
+    await goToPortal(portal._id)
+    const footerLocator = page.locator('#footer')
+    await expect(footerLocator).toBeVisible({ timeout: 10_000 })
+    await expect(footerLocator.locator('strong', { hasText: 'Footer text' })).toBeVisible()
+    await expect(footerLocator.getByRole('link', { name: /Site map/ })).toBeVisible()
+    await expect(footerLocator.getByRole('link', { name: /Contact us/ })).toBeVisible()
+    await expect(footerLocator.locator('img[src*="koumoul.com"]')).toBeVisible()
+    await expect(footerLocator.locator('.v-divider')).toHaveCount(2)
+    await expect(footerLocator.locator('.bg-secondary')).toBeVisible()
+    await expect(footerLocator.getByText(/Koumoul/).last()).toBeVisible()
+  })
+
   test('should render contact page', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
