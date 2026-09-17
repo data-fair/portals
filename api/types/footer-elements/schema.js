@@ -104,15 +104,13 @@ const elementImages = {
             type: 'string',
             title: 'Source',
             default: 'upload',
-            layout: {
-              cols: { md: 6 },
-              getItems: {
-                expr: "[{ key: 'upload', title: 'Image chargée' }, { key: 'global', title: 'Logo du portail' }, { key: 'header', title: \"Logo principal de l'entête\" }, { key: 'koumoul', title: 'Logo Koumoul' }].filter(i => !context.whiteLabel || i.key !== 'koumoul')",
-                itemKey: 'item.key',
-                itemTitle: 'item.title'
-              }
-            },
-            enum: ['upload', 'global', 'header', 'koumoul']
+            layout: { cols: { md: 6 } },
+            oneOf: [
+              { const: 'upload', title: 'Image chargée' },
+              { const: 'global', title: 'Logo du portail' },
+              { const: 'header', title: "Logo principal de l'entête" },
+              { const: 'koumoul', title: 'Logo Koumoul' }
+            ]
           },
           label: {
             type: 'string',
@@ -259,7 +257,7 @@ export default {
   default: [],
   layout: {
     title: '',
-    listEditMode: 'dialog',
+    listEditMode: 'inline-single',
     listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
     itemTitle: elementTitle,
     itemSubtitle: elementSubtitle,

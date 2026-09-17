@@ -105,7 +105,7 @@ export default {
       default: [],
       layout: {
         title: '',
-        listEditMode: 'dialog',
+        listEditMode: 'inline-single',
         listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
         itemTitle: jsFn(rowTitleFn),
         itemSubtitle: jsFn(rowSubtitleFn),
