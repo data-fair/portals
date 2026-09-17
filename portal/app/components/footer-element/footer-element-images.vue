@@ -30,7 +30,7 @@
             rel="noopener"
           >
             <img
-              :alt="item.label + ' - ' + t('newWindow')"
+              :alt="item.label"
               :src="item.src"
               :height="element.height"
             >

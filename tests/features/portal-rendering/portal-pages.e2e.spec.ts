@@ -132,6 +132,12 @@ test.describe('portal rendering', () => {
               { type: 'buttons', align: 'center', variant: 'outlined', items: [{ type: 'standard', subtype: 'contact', title: 'Contact us' }] }
             ]
           }]
+        },
+        {
+          columns: [
+            { width: 'auto', blocks: [{ type: 'text', align: 'left', markdown: false, content: 'Auto column A' }] },
+            { width: 'auto', blocks: [{ type: 'text', align: 'left', markdown: false, content: 'Auto column B' }] }
+          ]
         }
       ]
     }
@@ -148,6 +154,18 @@ test.describe('portal rendering', () => {
     await expect(footerLocator.locator('.v-divider')).toHaveCount(2)
     await expect(footerLocator.locator('.bg-secondary')).toBeVisible()
     await expect(footerLocator.getByText(/Koumoul/).last()).toBeVisible()
+
+    // two auto columns share their row on a desktop viewport instead of stacking full width
+    await page.setViewportSize({ width: 1280, height: 720 })
+    const autoRow = footerLocator.locator('.v-row').filter({ hasText: 'Auto column A' })
+    const autoColumns = autoRow.locator('> .v-col')
+    await expect(autoColumns).toHaveCount(2)
+    const rowBox = (await autoRow.boundingBox())!
+    const firstBox = (await autoColumns.first().boundingBox())!
+    const secondBox = (await autoColumns.last().boundingBox())!
+    expect(firstBox.y).toBe(secondBox.y)
+    expect(firstBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)
+    expect(secondBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)
   })
 
   test('should render contact page', async ({ page, goToPortal }) => {

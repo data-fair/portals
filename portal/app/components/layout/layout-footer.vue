@@ -16,9 +16,9 @@
         v-for="(row, rowIndex) in footer.rows"
         :key="rowIndex"
         :class="['w-100', row.background?.color && `bg-${row.background.color}`]"
-        :style="row.background?.color ? backgroundStyle(row.background) : undefined"
+        :style="row.background ? backgroundStyle(row.background) : undefined"
       >
-        <v-container :class="row.background?.color ? 'py-3' : 'py-1'">
+        <v-container :class="row.background?.color || row.background?.image ? 'py-3' : 'py-1'">
           <v-row>
             <v-col
               v-for="(column, columnIndex) in row.columns"
@@ -63,7 +63,8 @@ const getPortalImageSrc = usePortalImageSrc()
 const footer = computed(() => portalConfig.value.footer)
 
 const widths: Record<FooterColumn['width'], number | undefined> = { auto: undefined, '1/4': 3, '1/3': 4, '1/2': 6, '2/3': 8, '3/4': 9 }
-const columnMd = (width: FooterColumn['width']) => widths[width]
+// an empty string tells v-col the breakpoint prop is set without a size, which is how a column grows to share its row
+const columnMd = (width: FooterColumn['width']) => widths[width] ?? ''
 
 const backgroundStyle = (background: Footer['background'] | NonNullable<Footer['rows'][number]['background']>) => {
   if (!background.image) return undefined
