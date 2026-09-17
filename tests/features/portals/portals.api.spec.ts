@@ -1,3 +1,4 @@
+import type { Footer } from '../../../api/types/portal-config-footer/index.ts'
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
@@ -156,7 +157,7 @@ test.describe('portals management', () => {
     assert.equal((await superadmin.get(siteUrl)).status, 200, 'the production site must survive, it can hold accounts and SSO config')
   })
 
-  const footerWith = (overrides: Record<string, any>): any => ({
+  const footerWith = (overrides: Record<string, any>): Footer => ({
     copyright: true,
     background: { color: 'primary' },
     rows: [{ columns: [{ width: 'auto', blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] }] }] }],
