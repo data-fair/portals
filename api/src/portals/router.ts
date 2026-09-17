@@ -56,14 +56,14 @@ router.post('', async (req, res, next) => {
     breadcrumb: {},
     linksConfig: { underline: 'always' },
     footer: {
-      color: 'primary',
-      socialPosition: 'none',
-      copyright: 'text',
-      logoPrimaryType: 'default',
-      extraLogos: [],
-      linksMode: 'lines',
-      links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
-      importantLinks: []
+      copyright: true,
+      background: { color: 'primary' },
+      rows: [{
+        columns: [{
+          width: 'auto',
+          blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
+        }]
+      }]
     },
     datasets: {
       card: {},
