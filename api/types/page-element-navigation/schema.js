@@ -24,6 +24,7 @@ export default {
                 if: '!parent.data?.usePortalConfig',
                 children: ['config']
               },
+              'fullWidth',
               'centered'
             ]
           },
@@ -42,10 +43,15 @@ export default {
           default: true
         },
         config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
+        fullWidth: {
+          type: 'boolean',
+          title: 'Afficher le bouton en pleine largeur'
+        },
         centered: {
           type: 'boolean',
           title: 'Centré',
-          default: true
+          default: true,
+          layout: { if: '!parent.data?.fullWidth' }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
