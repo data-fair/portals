@@ -41,6 +41,18 @@ export default {
       type: 'boolean',
       default: false
     },
+    legacyFooter: {
+      type: 'object',
+      description: 'Footer configuration before the rows migration, kept to replay the conversion',
+      additionalProperties: true,
+      readOnly: true
+    },
+    legacyDraftFooter: {
+      type: 'object',
+      description: 'Draft footer configuration before the rows migration, kept to replay the conversion',
+      additionalProperties: true,
+      readOnly: true
+    },
     contributorDepartments: {
       type: 'array',
       title: 'Départements contributeurs',
