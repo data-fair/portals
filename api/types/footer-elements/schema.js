@@ -65,6 +65,7 @@ export const elementSubtitle = jsFn(elementSubtitleFn)
 const elementImages = {
   type: 'object',
   title: 'FooterImagesElement',
+  'x-i18n-title': { en: 'Images', fr: 'Images' },
   additionalProperties: false,
   required: ['type', 'align', 'height', 'items'],
   layout: ['type', { cols: { md: 6 }, key: 'height' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
@@ -104,13 +105,14 @@ const elementImages = {
             type: 'string',
             title: 'Source',
             default: 'upload',
-            layout: { cols: { md: 6 } },
-            oneOf: [
-              { const: 'upload', title: 'Image chargée' },
-              { const: 'global', title: 'Logo du portail' },
-              { const: 'header', title: "Logo principal de l'entête" },
-              { const: 'koumoul', title: 'Logo Koumoul' }
-            ]
+            layout: {
+              cols: { md: 6 },
+              getItems: {
+                expr: "[{ key: 'upload', title: 'Image chargée' }, { key: 'global', title: 'Logo du portail' }, { key: 'header', title: \"Logo principal de l'entête\" }, { key: 'koumoul', title: 'Logo Koumoul' }].filter(i => !context.whiteLabel || i.key !== 'koumoul')",
+                itemKey: 'item.key',
+                itemTitle: 'item.title'
+              }
+            }
           },
           label: {
             type: 'string',
@@ -135,6 +137,7 @@ const elementImages = {
 const elementText = {
   type: 'object',
   title: 'FooterTextElement',
+  'x-i18n-title': { en: 'Text', fr: 'Texte' },
   additionalProperties: false,
   required: ['type', 'align', 'markdown'],
   layout: ['type', 'content', { cols: { md: 4 }, key: 'markdown' }, { cols: { md: 4 }, key: 'color' }, { cols: { md: 4 }, key: 'align' }, 'mb'],
@@ -156,6 +159,7 @@ const elementText = {
 const elementLinks = {
   type: 'object',
   title: 'FooterLinksElement',
+  'x-i18n-title': { en: 'Links', fr: 'Liens' },
   additionalProperties: false,
   required: ['type', 'align', 'display', 'items'],
   layout: ['type', { cols: { md: 6 }, key: 'display' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
@@ -179,6 +183,7 @@ const elementLinks = {
 const elementButtons = {
   type: 'object',
   title: 'FooterButtonsElement',
+  'x-i18n-title': { en: 'Buttons', fr: 'Boutons' },
   additionalProperties: false,
   required: ['type', 'align', 'variant', 'items'],
   layout: ['type', { cols: { md: 6 }, key: 'variant' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
@@ -204,6 +209,7 @@ const elementButtons = {
 const elementSocial = {
   type: 'object',
   title: 'FooterSocialElement',
+  'x-i18n-title': { en: 'Social links', fr: 'Réseaux sociaux' },
   additionalProperties: false,
   required: ['type', 'align'],
   layout: ['type', { cols: { md: 8 }, key: 'title' }, { cols: { md: 4 }, key: 'align' }, 'mb'],
@@ -221,6 +227,7 @@ const elementSocial = {
 const elementDivider = {
   type: 'object',
   title: 'FooterDividerElement',
+  'x-i18n-title': { en: 'Divider', fr: 'Séparateur' },
   additionalProperties: false,
   required: ['type', 'align', 'opacity', 'thickness'],
   layout: ['type', 'color', { cols: { md: 6 }, key: 'opacity' }, { cols: { md: 6 }, key: 'thickness' }, 'mb'],
@@ -278,7 +285,13 @@ export default {
     element: {
       title: 'Footer element',
       type: 'object',
-      layout: { getDefaultData: "{ type: 'text', align: 'left' }" },
+      layout: {
+        getDefaultData: "{ type: 'text', align: 'left' }",
+        switch: [
+          { if: 'summary', children: [] },
+          {}
+        ]
+      },
       oneOfLayout: { label: 'Type de bloc' },
       discriminator: { propertyName: 'type' },
       oneOf: [

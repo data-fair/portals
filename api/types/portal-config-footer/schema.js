@@ -119,16 +119,21 @@ export default {
       type: 'object',
       title: 'FooterRow',
       required: ['columns'],
-      layout: [
-        {
-          comp: 'expansion-panels',
-          children: [{
-            title: 'Fond de la ligne',
-            children: ['background']
-          }]
-        },
-        'columns'
-      ],
+      layout: {
+        switch: [
+          { if: 'summary', children: [] },
+          [
+            {
+              comp: 'expansion-panels',
+              children: [{
+                title: 'Fond de la ligne',
+                children: ['background']
+              }]
+            },
+            'columns'
+          ]
+        ]
+      },
       properties: {
         background: { ...structuredClone(background), title: 'Fond de la ligne', description: 'Laissez la couleur vide pour utiliser le fond du pied de page.', required: [] },
         columns: {
