@@ -145,7 +145,7 @@
           </v-row>
 
           <!-- Actions (Bottom Location) -->
-          <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown)">
+          <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown))">
             <v-divider />
             <!--
               position-relative + z-index => sit above the card link overlay, so this
