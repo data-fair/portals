@@ -1,3 +1,5 @@
+import { jsFn } from '../common-links/schema.js'
+
 const background = {
   type: 'object',
   title: 'FooterBackground',
@@ -48,26 +50,24 @@ const background = {
 }
 
 // list row labels: same js-fn mechanism as linkItemTitle in common-links (receives `item` only)
-// @ts-expect-error
+/** @param {any} item */
 const rowTitleFn = (item) => {
-  // @ts-expect-error
-  const widths = (item.columns ?? []).map(column => column.width ?? 'auto').join(' + ')
-  return `Ligne · ${widths || 'vide'}`
+  const widths = []
+  for (const column of item.columns ?? []) widths.push(column.width ?? 'auto')
+  return `Ligne · ${widths.join(' + ') || 'vide'}`
 }
-// @ts-expect-error
+/** @param {any} item */
 const rowSubtitleFn = (item) => {
-  // @ts-expect-error
-  const blocks = (item.columns ?? []).reduce((total, column) => total + (column.blocks?.length ?? 0), 0)
+  let blocks = 0
+  for (const column of item.columns ?? []) blocks += column.blocks?.length ?? 0
   const background = item.background?.color ? ` · fond ${item.background.color}` : ''
   return `${blocks} bloc(s)${background}`
 }
-// @ts-expect-error
+/** @param {any} item */
 const columnTitleFn = (item) => {
   const width = (item.width ?? 'auto') === 'auto' ? 'largeur auto' : item.width
   return `Colonne · ${width} · ${item.blocks?.length ?? 0} bloc(s)`
 }
-// @ts-expect-error
-const jsFn = (fn) => ({ expr: fn.toString().replace(/^[^{]+{|}$/g, '').trim(), type: 'js-fn' })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',

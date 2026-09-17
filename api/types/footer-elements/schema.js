@@ -1,4 +1,4 @@
-import { linkItemTitle } from '../common-links/schema.js'
+import { jsFn, linkItemTitle } from '../common-links/schema.js'
 
 // @ts-expect-error
 const imageRef = (label, width) => ({
@@ -34,10 +34,9 @@ const linksList = (addItem) => ({
 })
 
 // summary shown on a collapsed block in the rows dialog
-// @ts-expect-error
+/** @param {any} item */
 const elementSubtitleFn = (item) => {
-  // @ts-expect-error
-  const align = { left: 'à gauche', center: 'centré', right: 'à droite' }[item.align ?? 'left']
+  const align = new Map([['left', 'à gauche'], ['center', 'centré'], ['right', 'à droite']]).get(item.align ?? 'left')
   if (item.type === 'images') return `${item.items?.length ?? 0} image(s) · ${item.height ?? 40}px · ${align}`
   if (item.type === 'text') return `${(item.content ?? '').split('\n')[0].slice(0, 60)} · ${align}`
   if (item.type === 'links') return `${item.items?.length ?? 0} lien(s) · ${align}`
@@ -46,14 +45,16 @@ const elementSubtitleFn = (item) => {
   return ''
 }
 
-// @ts-expect-error
+/** @param {any} item */
 const elementTitleFn = (item) => {
-  const titles = { images: 'Images', text: 'Texte', links: 'Liens', buttons: 'Boutons', social: 'Réseaux sociaux', divider: 'Séparateur' }
-  // @ts-expect-error
-  return titles[item.type] ?? item.type
+  const titles = new Map([['images', 'Images'], ['text', 'Texte'], ['links', 'Liens'], ['buttons', 'Boutons'], ['social', 'Réseaux sociaux'], ['divider', 'Séparateur']])
+  return titles.get(item.type) ?? item.type
 }
-// @ts-expect-error
-const jsFn = (fn) => ({ expr: fn.toString().replace(/^[^{]+{|}$/g, '').trim(), type: 'js-fn' })
+/** @param {any} item */
+const imagesItemTitleFn = (item) => {
+  const sources = new Map([['upload', 'Image chargée'], ['global', 'Logo du portail'], ['header', "Logo de l'entête"], ['koumoul', 'Logo Koumoul']])
+  return (sources.get(item.source) ?? item.source) + (item.label ? ' · ' + item.label : '')
+}
 export const elementTitle = jsFn(elementTitleFn)
 export const elementSubtitle = jsFn(elementSubtitleFn)
 
@@ -86,14 +87,7 @@ const elementImages = {
       layout: {
         title: '',
         listEditMode: 'inline',
-        itemTitle: jsFn(
-          // @ts-expect-error
-          (item) => {
-            const sources = { upload: 'Image chargée', global: 'Logo du portail', header: "Logo de l'entête", koumoul: 'Logo Koumoul' }
-            // @ts-expect-error
-            return sources[item.source] + (item.label ? ' · ' + item.label : '')
-          }
-        ),
+        itemTitle: jsFn(imagesItemTitleFn),
         messages: { addItem: 'Ajouter une image' }
       },
       items: {
@@ -105,6 +99,7 @@ const elementImages = {
             type: 'string',
             title: 'Source',
             default: 'upload',
+            pattern: '^(upload|global|header|koumoul)$',
             layout: {
               cols: { md: 6 },
               getItems: {
