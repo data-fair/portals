@@ -1,0 +1,67 @@
+{
+  "name": "data-laposte-fr",
+  "whiteLabel": true,
+  "footer": {
+    "color": "primary",
+    "socialPosition": "main",
+    "copyright": "text",
+    "logoPrimaryType": "hidden",
+    "extraLogos": [],
+    "linksMode": "lines",
+    "links": [
+      {
+        "type": "standard",
+        "subtype": "legal-notice"
+      },
+      {
+        "type": "standard",
+        "subtype": "terms-of-service"
+      },
+      {
+        "type": "generic",
+        "pageRef": {
+          "slug": "aide",
+          "title": "Aide"
+        },
+        "title": "Aide"
+      },
+      {
+        "type": "standard",
+        "subtype": "contact"
+      },
+      {
+        "type": "standard",
+        "subtype": "privacy-policy"
+      },
+      {
+        "type": "standard",
+        "subtype": "cookie-policy"
+      },
+      {
+        "type": "standard",
+        "subtype": "accessibility",
+        "title": "Accessibilité : non conforme"
+      },
+      {
+        "type": "standard",
+        "subtype": "sitemap",
+        "title": "Plan du site"
+      }
+    ],
+    "importantLinks": [],
+    "logoPosition": "main",
+    "logoAlignment": "left",
+    "backgroundImageLocation": "right",
+    "sloganPosition": "main",
+    "sloganAlignment": "left",
+    "textPosition": "main"
+  },
+  "socialLinks": {
+    "x": "GroupeLaPoste",
+    "facebook": "laposte",
+    "linkedin": "la-poste",
+    "youtube": "laposte"
+  },
+  "hasLogo": true,
+  "headerLogoPrimaryType": "default"
+}

@@ -1,0 +1,49 @@
+{
+  "name": "opendata-enedis-fr",
+  "whiteLabel": false,
+  "footer": {
+    "color": "primary",
+    "showSocial": false,
+    "copyright": "text",
+    "logoPrimaryType": "hidden",
+    "extraLogos": [],
+    "linksMode": "lines",
+    "links": [
+      {
+        "type": "standard",
+        "subtype": "terms-of-service",
+        "title": "CGU"
+      },
+      {
+        "type": "standard",
+        "subtype": "cookie-policy",
+        "title": "Données personnelles et cookies"
+      },
+      {
+        "type": "standard",
+        "subtype": "accessibility",
+        "title": "Accessibilité : non conforme"
+      },
+      {
+        "type": "standard",
+        "subtype": "contact"
+      }
+    ],
+    "importantLinks": [],
+    "backgroundImageLocation": "right",
+    "socialPosition": "main",
+    "logoPosition": "main",
+    "logoAlignment": "left",
+    "sloganPosition": "main",
+    "sloganAlignment": "left"
+  },
+  "socialLinks": {
+    "youtube": "@EnedisOfficiel",
+    "instagram": "enedis.officiel",
+    "facebook": "Enedis.officiel",
+    "x": "enedis",
+    "linkedin": "enedis"
+  },
+  "hasLogo": true,
+  "headerLogoPrimaryType": "default"
+}

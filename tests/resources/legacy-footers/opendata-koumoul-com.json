@@ -1,0 +1,68 @@
+{
+  "name": "opendata-koumoul-com",
+  "whiteLabel": false,
+  "footer": {
+    "color": "surface-inverse",
+    "showSocial": true,
+    "copyright": "text",
+    "logoPrimaryType": "hidden",
+    "extraLogos": [],
+    "linksMode": "columns",
+    "links": [
+      {
+        "type": "standard",
+        "subtype": "privacy-policy"
+      },
+      {
+        "type": "standard",
+        "subtype": "legal-notice"
+      },
+      {
+        "type": "standard",
+        "subtype": "sitemap"
+      },
+      {
+        "type": "standard",
+        "subtype": "terms-of-service",
+        "title": "Conditions d'utilisation"
+      },
+      {
+        "type": "standard",
+        "subtype": "contact",
+        "title": "Nous contacter"
+      },
+      {
+        "type": "external",
+        "title": "Partage et valorisation de données",
+        "href": "https://koumoul.com"
+      }
+    ],
+    "importantLinks": [
+      {
+        "type": "external",
+        "title": "Site de documentation",
+        "href": "https://docs.koumoul.com/",
+        "target": true
+      },
+      {
+        "type": "external",
+        "title": "Portail de démonstration",
+        "href": "https://demo.koumoul.com/",
+        "target": true
+      }
+    ],
+    "socialPosition": "main",
+    "logoAlignment": "left",
+    "sloganPosition": "main",
+    "sloganAlignment": "left",
+    "backgroundImageLocation": "right",
+    "textPosition": "main"
+  },
+  "socialLinks": {
+    "bluesky": "koumoul.com",
+    "facebook": "koumoul56",
+    "linkedin": "11097234"
+  },
+  "hasLogo": true,
+  "headerLogoPrimaryType": "default"
+}

@@ -1,0 +1,62 @@
+{
+  "name": "data-grandpoitiers-fr",
+  "whiteLabel": false,
+  "footer": {
+    "color": "primary",
+    "socialPosition": "main",
+    "copyright": "text",
+    "logoPrimaryType": "local",
+    "extraLogos": [],
+    "linksMode": "lines",
+    "links": [
+      {
+        "type": "standard",
+        "subtype": "sitemap",
+        "title": "Plan du site"
+      }
+    ],
+    "importantLinks": [
+      {
+        "type": "standard",
+        "subtype": "terms-of-service",
+        "icon": {
+          "color": "secondary"
+        }
+      },
+      {
+        "type": "standard",
+        "subtype": "legal-notice"
+      },
+      {
+        "type": "standard",
+        "subtype": "privacy-policy"
+      },
+      {
+        "type": "standard",
+        "subtype": "accessibility",
+        "title": "Accessibilité : \"partiellement conforme\""
+      }
+    ],
+    "logoPosition": "main",
+    "logoAlignment": "center",
+    "backgroundImageLocation": "right",
+    "sloganPosition": "main",
+    "sloganAlignment": "left",
+    "logoPrimary": {
+      "_id": "e3af0933-558e-4789-af05-402c10ff1e6a",
+      "name": "logo_GPCU.jpg",
+      "mimeType": "image/webp",
+      "mobileAlt": true
+    },
+    "textPosition": "main"
+  },
+  "socialLinks": {
+    "bluesky": "grandpoitiers.bsky.social",
+    "facebook": "GrandPoitiers",
+    "youtube": "channel/UC_uafA96mjQjDGUFIanR_JA",
+    "linkedin": "grand-poitiers-communauté-urbaine",
+    "instagram": "grandpoitiers"
+  },
+  "hasLogo": true,
+  "headerLogoPrimaryType": "default"
+}

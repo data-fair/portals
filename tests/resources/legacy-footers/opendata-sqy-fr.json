@@ -1,0 +1,46 @@
+{
+  "name": "opendata-sqy-fr",
+  "whiteLabel": false,
+  "footer": {
+    "color": "primary",
+    "socialPosition": "none",
+    "copyright": "text",
+    "logoPrimaryType": "local",
+    "extraLogos": [],
+    "linksMode": "lines",
+    "links": [
+      {
+        "type": "standard",
+        "subtype": "terms-of-service",
+        "title": "Conditions d'utilisation"
+      },
+      {
+        "type": "standard",
+        "subtype": "privacy-policy",
+        "title": "Politique de confidentialité"
+      },
+      {
+        "type": "standard",
+        "subtype": "contact",
+        "title": " Contactez-nous ! "
+      }
+    ],
+    "importantLinks": [],
+    "logoPosition": "main",
+    "logoAlignment": "center",
+    "sloganPosition": "main",
+    "sloganAlignment": "left",
+    "backgroundImageLocation": "left",
+    "logoPrimary": {
+      "_id": "c59b8e32-b081-4183-8282-c40b0c080a4e",
+      "name": "logo sqy carreÌ bleu.png",
+      "mimeType": "image/png"
+    },
+    "logoPrimaryLink": "https://www.saint-quentin-en-yvelines.fr/"
+  },
+  "socialLinks": {
+    "facebook": "https://www.facebook.com/sqy78"
+  },
+  "hasLogo": true,
+  "headerLogoPrimaryType": "default"
+}
