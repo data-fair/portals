@@ -65,24 +65,36 @@ const headerLogo = () => {
   return undefined
 }
 
-const resolve = (item: FooterImagesItem) => {
+const resolveSrc = (item: FooterImagesItem) => {
   switch (item.source) {
     case 'global': {
       const image = themedLogo(portalConfig.value.logo, portalConfig.value.logoDark)
-      return { src: image && getPortalImageSrc(image, false), label: item.label || t('mainLogo'), link: item.link }
+      return image && getPortalImageSrc(image, false)
     }
     case 'header': {
       const image = headerLogo()
-      return { src: image && getPortalImageSrc(image, false), label: item.label || t('mainLogo'), link: item.link }
+      return image && getPortalImageSrc(image, false)
     }
     case 'upload': {
       const image = themedLogo(item.image, item.imageDark)
-      return { src: image && getPortalImageSrc(image, false), label: item.label ?? '', link: item.link }
+      return image && getPortalImageSrc(image, false)
     }
     case 'koumoul':
-      if (portal.value.whiteLabel) return { src: undefined, label: '', link: undefined }
-      return { src: 'https://koumoul.com/static/logo-title-right.png', label: item.label || t('koumoulWebsite'), link: item.link || 'https://koumoul.com' }
+      return portal.value.whiteLabel ? undefined : 'https://koumoul.com/static/logo-title-right.png'
   }
+}
+
+// an unlinked image is decorative, but a linked one must carry an accessible name
+const defaultLabel = (item: FooterImagesItem, link?: string) => {
+  if (!link) return ''
+  if (link.startsWith('/')) return t('home') + ' - ' + portalConfig.value.title
+  if (item.source === 'koumoul') return t('koumoulWebsite')
+  return t('mainLogo')
+}
+
+const resolve = (item: FooterImagesItem) => {
+  const link = item.source === 'koumoul' ? (item.link || 'https://koumoul.com') : item.link
+  return { src: resolveSrc(item), link, label: item.label || defaultLabel(item, link) }
 }
 
 const items = computed(() => element.items.map(resolve))
@@ -90,10 +102,12 @@ const items = computed(() => element.items.map(resolve))
 
 <i18n lang="yaml">
   en:
+    home: 'Home'
     mainLogo: 'Main logo of the site'
     koumoulWebsite: 'Koumoul website'
     newWindow: 'New window'
   fr:
+    home: 'Accueil'
     mainLogo: 'Logo principal du site'
     koumoulWebsite: 'Site web Koumoul'
     newWindow: 'Nouvelle fenêtre'

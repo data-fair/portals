@@ -16,7 +16,7 @@
         :class="['w-100', row.background?.color && `bg-${row.background.color}`]"
         :style="row.background?.color ? backgroundStyle(row.background) : undefined"
       >
-        <v-container class="py-0">
+        <v-container :class="row.background?.color ? 'py-3' : 'py-0'">
           <v-row>
             <v-col
               v-for="(column, columnIndex) in row.columns"
