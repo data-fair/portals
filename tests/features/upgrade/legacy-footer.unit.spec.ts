@@ -2,7 +2,7 @@ import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { migrateLegacyFooter, type LegacyFooter } from '../../../upgrade/2.33.1/legacy-footer.ts'
+import { migrateLegacyFooter, type LegacyFooter } from '../../../upgrade/2.33.1/footer-rows.ts'
 import type { Footer } from '../../../api/types/portal-config-footer/index.ts'
 import type { FooterElement } from '../../../api/types/footer-elements/index.ts'
 
