@@ -53,6 +53,9 @@ export default defineNuxtConfig({
     headers: {
       // this blocks iframes starting with a / is better covered by CSP anyway
       crossOriginEmbedderPolicy: false,
+      // nuxt-security defaults to no-referrer, but YouTube (error 153) and other embeds
+      // reject players when the page origin is missing from the Referer header
+      referrerPolicy: 'strict-origin-when-cross-origin',
       contentSecurityPolicy
     },
     // we use rate-limiting on reverse proxy instead
