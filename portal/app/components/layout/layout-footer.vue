@@ -9,14 +9,16 @@
     ]"
     tabindex="-1"
   >
-    <div class="w-100 py-4">
+    <!-- py-3 here plus py-1 on a plain row keeps 16px above and below the footer content,
+         and separates two consecutive rows by 8px -->
+    <div class="w-100 py-3">
       <div
         v-for="(row, rowIndex) in footer.rows"
         :key="rowIndex"
         :class="['w-100', row.background?.color && `bg-${row.background.color}`]"
         :style="row.background?.color ? backgroundStyle(row.background) : undefined"
       >
-        <v-container :class="row.background?.color ? 'py-3' : 'py-0'">
+        <v-container :class="row.background?.color ? 'py-3' : 'py-1'">
           <v-row>
             <v-col
               v-for="(column, columnIndex) in row.columns"
