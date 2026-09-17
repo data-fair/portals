@@ -40,7 +40,6 @@
             :alt="item.label"
             :src="item.src"
             :height="element.height"
-            class="d-block"
           >
         </v-col>
       </template>
