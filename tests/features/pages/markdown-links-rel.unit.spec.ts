@@ -25,5 +25,15 @@ test.describe('renderMarkdown link rel', () => {
   test('a raw link opened in a new tab gets noopener', () => {
     const [a] = anchors(renderMarkdown('<a href="https://example.com" target="_blank">ext</a>'))
     assert.match(a, /rel="noopener"/)
+    assert.match(a, /target="_blank"/)
+  })
+
+  test('a link to the personal space opened in a new tab', () => {
+    const [a] = anchors(renderMarkdown('<a href="/me/reuses" target="_blank">x</a>'))
+    assert.match(a, /rel="noopener nofollow"/)
+  })
+
+  test('does not throw on an unparseable href', () => {
+    assert.doesNotThrow(() => renderMarkdown('[x](http://)'))
   })
 })

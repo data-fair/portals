@@ -3,7 +3,12 @@
 
 /** Private routes a crawler must not follow: the personal space and the auth service */
 export const isPrivatePath = (href: string): boolean => {
-  const { pathname } = new URL(href, 'http://localhost')
+  let pathname: string
+  try {
+    pathname = new URL(href, 'http://localhost').pathname
+  } catch {
+    return false
+  }
   return /^\/me(\/|$)/.test(pathname) || pathname.startsWith('/simple-directory/')
 }
 

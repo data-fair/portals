@@ -24,6 +24,10 @@ test.describe('isPrivatePath', () => {
     assert.equal(isPrivatePath('https://example.com/datasets'), false)
     assert.equal(isPrivatePath('mailto:contact@example.com'), false)
   })
+
+  test('does not throw on an unparseable href', () => {
+    assert.equal(isPrivatePath('http://'), false)
+  })
 })
 
 test.describe('linkRel', () => {
@@ -39,5 +43,9 @@ test.describe('linkRel', () => {
   test('adds nofollow for a private link', () => {
     assert.equal(linkRel('/me/reuses'), 'nofollow')
     assert.equal(linkRel('/me/reuses', true), 'noopener nofollow')
+  })
+
+  test('does not throw on an unparseable href', () => {
+    assert.equal(linkRel('https://[', true), 'noopener')
   })
 })

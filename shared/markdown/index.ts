@@ -7,7 +7,7 @@ import { linkRel } from './link-rel.ts'
 const baseOpts = getSanitizeOpts(sanitizeHtml.defaults)
 const sanitizeOpts: sanitizeHtml.IOptions = {
   ...baseOpts,
-  allowedAttributes: { ...baseOpts.allowedAttributes, a: [...sanitizeHtml.defaults.allowedAttributes.a, 'rel'] },
+  allowedAttributes: { ...baseOpts.allowedAttributes, a: [...((baseOpts.allowedAttributes && baseOpts.allowedAttributes.a) || []), 'rel'] },
   transformTags: {
     // rel is always ours: nofollow toward private pages, noopener on new tabs
     a: (tagName, attribs) => {
