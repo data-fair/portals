@@ -166,6 +166,7 @@
 <script setup lang="ts">
 import type { MenuItem, LinkItem } from '#api/types/portal'
 import type { HeadingTag } from '#api/types/page-elements/index.ts'
+import { footerLinkItems } from '#api/types/portal-config-footer/walk.ts'
 
 const { t, locale } = useI18n()
 const session = useSession()
@@ -228,20 +229,18 @@ const filterInternalItems = (items: (MenuItem | LinkItem)[]): (MenuItem | LinkIt
   })
 }
 
+const footerLinks = computed(() => footerLinkItems(portalConfig.value.footer))
+
 const internalNavigationItems = computed(() => filterInternalItems(portalConfig.value.menu.children))
-const internalFooterLinks = computed(() => filterInternalItems(portalConfig.value.footer.links || []))
-const internalFooterImportantLinks = computed(() => filterInternalItems(portalConfig.value.footer.importantLinks || []))
+const internalFooterLinks = computed(() => filterInternalItems(footerLinks.value.links))
+const internalFooterImportantLinks = computed(() => filterInternalItems(footerLinks.value.buttons))
 
 // All internal paths (to avoid duplicates)
 const allInternalPaths = computed(() => {
   const paths = new Set<string>()
   collectInternalPaths(portalConfig.value.menu.children).forEach(p => paths.add(p))
-  if (portalConfig.value.footer.links) {
-    collectInternalPaths(portalConfig.value.footer.links).forEach(p => paths.add(p))
-  }
-  if (portalConfig.value.footer.importantLinks) {
-    collectInternalPaths(portalConfig.value.footer.importantLinks).forEach(p => paths.add(p))
-  }
+  collectInternalPaths(footerLinks.value.links).forEach(p => paths.add(p))
+  collectInternalPaths(footerLinks.value.buttons).forEach(p => paths.add(p))
   return paths
 })
 
