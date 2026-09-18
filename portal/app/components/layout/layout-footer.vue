@@ -246,8 +246,8 @@
                 v-if="link.type === 'external'"
                 :href="link.href"
                 :title="link.title + ' - ' + t('newWindow')"
+                :rel="linkRel(link.href, true)"
                 target="_blank"
-                rel="noopener"
                 variant="text"
                 class="text-uppercase"
               >

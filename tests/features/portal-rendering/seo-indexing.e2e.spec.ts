@@ -323,7 +323,19 @@ test.describe('SEO / indexation', () => {
       config: {
         title: 'Nofollow Portal',
         allowRobots: true,
-        menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] }
+        menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] },
+        // config is shallow-merged onto portal defaults (see router.ts), so the
+        // whole default footer must be repeated here to keep it non-empty
+        footer: {
+          color: 'primary',
+          socialPosition: 'none',
+          copyright: 'text',
+          logoPrimaryType: 'default',
+          extraLogos: [],
+          linksMode: 'lines',
+          links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
+          importantLinks: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }]
+        }
       }
     })).data
     const config = {
@@ -344,8 +356,17 @@ test.describe('SEO / indexation', () => {
     const privateAnchors = [...anchorsTo(home, '/me/account'), ...anchorsTo(home, '/me/reuses')]
     expect(privateAnchors.length).toBeGreaterThanOrEqual(3)
     for (const tag of privateAnchors) expect(tag).toMatch(/rel="[^"]*nofollow/)
+    // footer important link
+    const footerAnchors = anchorsTo(home, '/me/api-keys')
+    expect(footerAnchors.length).toBeGreaterThanOrEqual(1)
+    for (const tag of footerAnchors) {
+      expect(tag).toMatch(/rel="[^"]*nofollow/)
+      expect(tag).toContain('noopener')
+    }
     // control: public links keep their current rel
-    for (const tag of anchorsTo(home, '/datasets')) expect(tag).not.toContain('nofollow')
+    const publicAnchors = anchorsTo(home, '/datasets')
+    expect(publicAnchors.length).toBeGreaterThan(0)
+    for (const tag of publicAnchors) expect(tag).not.toContain('nofollow')
     const external = anchorsTo(home, 'https://example.com')
     expect(external.length).toBeGreaterThanOrEqual(1)
     for (const tag of external) expect(tag).toMatch(/rel="noopener"/)
