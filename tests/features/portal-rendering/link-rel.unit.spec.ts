@@ -1,6 +1,6 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
-import { isPrivatePath, linkRel } from '../../../portal/app/utils/link-rel.ts'
+import { isPrivatePath, linkRel } from '../../../shared/markdown/link-rel.ts'
 
 test.describe('isPrivatePath', () => {
   test('matches the personal space root and its sub-pages', () => {

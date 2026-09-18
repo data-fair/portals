@@ -2,7 +2,7 @@ import sanitizeHtml from 'sanitize-html'
 import { marked } from 'marked'
 import { getSanitizeOpts } from '@data-fair/lib-utils/sanitize-html.js'
 import { markedVuetify } from '@data-fair/lib-utils/marked-vuetify.js'
-import { linkRel } from '../../portal/app/utils/link-rel.ts'
+import { linkRel } from './link-rel.ts'
 
 const baseOpts = getSanitizeOpts(sanitizeHtml.defaults)
 const sanitizeOpts: sanitizeHtml.IOptions = {
