@@ -4,7 +4,10 @@
     v-if="item.type !== 'submenu'"
     class="mb-2 d-flex align-center"
   >
-    <NuxtLink :to="resolveLink(item)">
+    <NuxtLink
+      :to="resolveLink(item)"
+      :rel="linkRel(resolveLink(item))"
+    >
       {{ resolveLinkTitle(item, locale) }}
     </NuxtLink>
   </li>

@@ -302,7 +302,10 @@
 
         <p v-if="portalConfig.datasets.page.reuses?.inviteUserReuses">
           <i18n-t keypath="reuseInvitation">
-            <nuxt-link :to="{ path: '/me/reuses', query: { dataset: dataset.id, datasetTitle: dataset.title } }">
+            <nuxt-link
+              :to="{ path: '/me/reuses', query: { dataset: dataset.id, datasetTitle: dataset.title } }"
+              rel="nofollow"
+            >
               {{ t('personalSpace') }}
             </nuxt-link>
           </i18n-t>

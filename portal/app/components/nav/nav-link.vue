@@ -8,7 +8,7 @@
       :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
       :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
       :target="link.target ? '_blank' : undefined"
-      :rel="link.target ? 'noopener' : undefined"
+      :rel="linkRel(resolveLink(link), link.target)"
       :color="btnHover.color(isHovering, config?.color)"
       :density="config?.density ?? portalConfig.defaults?.density"
       :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
