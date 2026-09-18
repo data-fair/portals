@@ -4,13 +4,14 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { migrateLegacyFooter, type LegacyFooter } from '../../../upgrade/2.33.1/footer-rows.ts'
 import type { Footer } from '../../../api/types/portal-config-footer/index.ts'
+import { footerRowColumns } from '../../../api/types/portal-config-footer/walk.ts'
 import type { FooterElement } from '../../../api/types/footer-elements/index.ts'
 
 const fixturesDir = join(import.meta.dirname, '../../resources/legacy-footers')
 const fixtures = readdirSync(fixturesDir).map(file => JSON.parse(readFileSync(join(fixturesDir, file), 'utf8')) as { name: string, whiteLabel: boolean, footer: LegacyFooter })
 const byName = (name: string) => fixtures.find(f => f.name === name)!
 
-const blocks = (footer: Footer, row = 0, column = 0) => footer.rows[row]?.columns[column]?.blocks ?? []
+const blocks = (footer: Footer, row = 0, column = 0) => footerRowColumns(footer.rows[row]!)[column] ?? []
 const types = (elements: FooterElement[]) => elements.map(e => e.type)
 
 const image = { _id: 'img1', name: 'img.png', mimeType: 'image/png' }
@@ -24,8 +25,9 @@ test.describe('legacy footer converter', () => {
       assert.equal(footer.background.color, fixture.footer.color, fixture.name)
       assert.ok(footer.rows.length >= 1, fixture.name)
       for (const row of footer.rows) {
-        assert.ok(row.columns.length >= 1 && row.columns.length <= 2, fixture.name)
-        for (const column of row.columns) assert.ok(column.blocks.length >= 1 || footer.rows.length === 1, fixture.name)
+        assert.ok(row.columns === 1 || row.columns === 2, fixture.name)
+        assert.equal(row.blocks3, undefined, fixture.name)
+        for (const column of footerRowColumns(row)) assert.ok(column.length >= 1 || footer.rows.length === 1, fixture.name)
       }
     }
   })
@@ -33,7 +35,8 @@ test.describe('legacy footer converter', () => {
   test('edf: local logo and slogan in the left column, links in columns in the main one', () => {
     const footer = migrateLegacyFooter(byName('opendata-edf-fr').footer, false)
     assert.equal(footer.rows.length, 1)
-    assert.deepEqual(footer.rows[0].columns.map(c => c.width), ['1/3', '2/3'])
+    assert.equal(footer.rows[0].columns, 2)
+    assert.equal(footer.rows[0].disposition, 'right')
     assert.deepEqual(types(blocks(footer, 0, 0)), ['images', 'text'])
     const logo = blocks(footer, 0, 0)[0] as Extract<FooterElement, { type: 'images' }>
     assert.equal(logo.height, 80)
@@ -49,7 +52,7 @@ test.describe('legacy footer converter', () => {
   test('poitiers: centered logo, social links and important links as a second row', () => {
     const footer = migrateLegacyFooter(byName('data-grandpoitiers-fr').footer, false)
     assert.equal(footer.rows.length, 2)
-    assert.equal(footer.rows[0].columns.length, 1)
+    assert.equal(footer.rows[0].columns, 1)
     assert.deepEqual(types(blocks(footer)), ['images', 'social', 'links'])
     assert.equal(blocks(footer)[0].align, 'center')
     assert.deepEqual(types(blocks(footer, 1)), ['divider', 'buttons', 'divider'])
@@ -59,7 +62,8 @@ test.describe('legacy footer converter', () => {
 
   test('cines: hidden logo, social in the left column, extra logos without links', () => {
     const footer = migrateLegacyFooter(byName('datacinesindes-fr').footer, false)
-    assert.deepEqual(footer.rows[0].columns.map(c => c.width), ['1/3', '2/3'])
+    assert.equal(footer.rows[0].columns, 2)
+    assert.equal(footer.rows[0].disposition, 'right')
     assert.deepEqual(types(blocks(footer, 0, 0)), ['social'])
     assert.deepEqual(types(blocks(footer, 0, 1)), ['images', 'links'])
     const logos = blocks(footer, 0, 1)[0] as Extract<FooterElement, { type: 'images' }>
@@ -85,8 +89,8 @@ test.describe('legacy footer converter', () => {
     const footer = migrateLegacyFooter({ ...byName('data-laposte-fr').footer, copyright: 'logo' }, true)
     assert.equal(footer.copyright, true)
     for (const row of footer.rows) {
-      for (const column of row.columns) {
-        for (const block of column.blocks) {
+      for (const column of footerRowColumns(row)) {
+        for (const block of column) {
           if (block.type === 'images') assert.ok(!block.items.some(i => i.source === 'koumoul'))
         }
       }
@@ -121,7 +125,8 @@ test.describe('legacy footer converter', () => {
 
   test('text in the left column creates the two-column layout', () => {
     const footer = migrateLegacyFooter({ ...base, text: 'hello', textPosition: 'left' }, false)
-    assert.deepEqual(footer.rows[0].columns.map(c => c.width), ['1/3', '2/3'])
+    assert.equal(footer.rows[0].columns, 2)
+    assert.equal(footer.rows[0].disposition, 'right')
     assert.deepEqual(types(blocks(footer, 0, 0)), ['text'])
   })
 
@@ -133,7 +138,7 @@ test.describe('legacy footer converter', () => {
   test('an empty legacy footer gives one row with one empty column', () => {
     const footer = migrateLegacyFooter(base, false)
     assert.equal(footer.rows.length, 1)
-    assert.deepEqual(footer.rows[0].columns, [{ width: 'auto', blocks: [] }])
+    assert.deepEqual(footer.rows[0], { columns: 1, blocks: [] })
   })
 
   test('spacing reproduces the legacy template', () => {

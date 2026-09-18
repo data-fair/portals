@@ -77,22 +77,20 @@ export const migrateLegacyFooter = (legacy: LegacyFooter, whiteLabel: boolean): 
   const left = columnBlocks(legacy, 'left', whiteLabel)
   const main = columnBlocks(legacy, 'main', whiteLabel)
 
-  const columns: FooterRow['columns'] = left.length
-    ? [{ width: '1/3', blocks: left }, { width: '2/3', blocks: main }]
-    : [{ width: 'auto', blocks: main }]
-  const rows: FooterRow[] = [{ columns }]
+  // the legacy left column was a third of the row
+  const rows: FooterRow[] = [left.length
+    ? { columns: 2, disposition: 'right', blocks: left, blocks2: main }
+    : { columns: 1, blocks: main }]
 
   if (legacy.importantLinks?.length) {
     const divider: FooterElement = { type: 'divider', align: 'left', opacity: 0.10, thickness: 1, mb: 2 }
     rows.push({
-      columns: [{
-        width: 'auto',
-        blocks: [
-          divider,
-          { type: 'buttons', align: 'center', variant: 'text', items: legacy.importantLinks as LinkItem[], mb: 2 },
-          { ...divider }
-        ]
-      }]
+      columns: 1,
+      blocks: [
+        divider,
+        { type: 'buttons', align: 'center', variant: 'text', items: legacy.importantLinks as LinkItem[], mb: 2 },
+        { ...divider }
+      ]
     })
   }
 

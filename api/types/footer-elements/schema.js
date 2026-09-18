@@ -39,7 +39,7 @@ const elementSubtitleFn = (item) => {
   const align = new Map([['left', 'à gauche'], ['center', 'centré'], ['right', 'à droite']]).get(item.align ?? 'left')
   if (item.type === 'images') return `${item.items?.length ?? 0} image(s) · ${item.height ?? 40}px · ${align}`
   if (item.type === 'text') return `${(item.content ?? '').split('\n')[0].slice(0, 60)} · ${align}`
-  if (item.type === 'links') return `${item.items?.length ?? 0} lien(s) · ${align}`
+  if (item.type === 'links') return `${item.items?.length ?? 0} lien(s)` + (item.display === 'columns' ? '' : ` · ${align}`)
   if (item.type === 'buttons') return `${item.items?.length ?? 0} bouton(s) · ${align}`
   if (item.type === 'social') return align
   return ''
@@ -157,7 +157,8 @@ const elementLinks = {
   'x-i18n-title': { en: 'Links', fr: 'Liens' },
   additionalProperties: false,
   required: ['type', 'align', 'display', 'items'],
-  layout: ['type', { cols: { md: 6 }, key: 'display' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
+  // the columns display has its own markup, align has no effect on it
+  layout: ['type', { cols: { md: 6 }, key: 'display' }, { if: "data.display !== 'columns'", cols: { md: 6 }, children: ['align'] }, 'items', 'mb'],
   properties: {
     type: { const: 'links', title: 'Liens' },
     align,

@@ -5,9 +5,9 @@ const background = {
   title: 'FooterBackground',
   required: ['color'],
   layout: [
-    { cols: { md: 6 }, key: 'color' },
-    { cols: { md: 6 }, key: 'imageLocation' },
-    'image'
+    { cols: { md: 4 }, key: 'color' },
+    { cols: { md: 4 }, key: 'imageLocation' },
+    { cols: { md: 4 }, key: 'image' }
   ],
   properties: {
     color: {
@@ -52,22 +52,29 @@ const background = {
 // list row labels: same js-fn mechanism as linkItemTitle in common-links (receives `item` only)
 /** @param {any} item */
 const rowTitleFn = (item) => {
-  const widths = []
-  for (const column of item.columns ?? []) widths.push(column.width ?? 'auto')
-  return `Ligne · ${widths.join(' + ') || 'vide'}`
+  if (item.columns === 3) return '3 colonnes'
+  if (item.columns === 2) {
+    if (item.disposition === 'left') return 'Colonne de gauche large'
+    if (item.disposition === 'right') return 'Colonne de droite large'
+    return '2 colonnes'
+  }
+  return '1 colonne'
 }
 /** @param {any} item */
 const rowSubtitleFn = (item) => {
-  let blocks = 0
-  for (const column of item.columns ?? []) blocks += column.blocks?.length ?? 0
+  let blocks = item.blocks?.length ?? 0
+  if (item.columns >= 2) blocks += item.blocks2?.length ?? 0
+  if (item.columns >= 3) blocks += item.blocks3?.length ?? 0
   const background = item.background?.color ? ` · fond ${item.background.color}` : ''
   return `${blocks} bloc(s)${background}`
 }
-/** @param {any} item */
-const columnTitleFn = (item) => {
-  const width = (item.width ?? 'auto') === 'auto' ? 'largeur auto' : item.width
-  return `Colonne · ${width} · ${item.blocks?.length ?? 0} bloc(s)`
-}
+
+const blocks = { $ref: 'https://github.com/data-fair/portals/footer-elements' }
+/**
+ * @param {string} title
+ * @param {string} key
+ */
+const columnSection = (title, key) => ({ comp: 'section', title, children: [key] })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',
@@ -95,7 +102,7 @@ export default {
     copyright: {
       type: 'boolean',
       title: 'Afficher la mention « ©année — Koumoul » en bas du pied de page',
-      description: 'Si vous la masquez, un bloc Images doit contenir le logo Koumoul.',
+      description: 'Cette option est obligatoire : si vous la désactivez, vous devez afficher le logo de Koumoul dans le pied de page.',
       default: true
     },
     background: { ...background, title: 'Fond du pied de page' },
@@ -118,61 +125,88 @@ export default {
     row: {
       type: 'object',
       title: 'FooterRow',
-      required: ['columns'],
+      required: ['columns', 'blocks'],
       layout: {
         switch: [
           { if: 'summary', children: [] },
-          [
-            {
-              comp: 'expansion-panels',
-              children: [{
-                title: 'Fond de la ligne',
-                children: ['background']
-              }]
-            },
-            'columns'
-          ]
+          {
+            if: 'data.columns === 2',
+            children: [
+              { cols: { md: 3 }, key: 'columns' },
+              { cols: { md: 3 }, key: 'disposition' },
+              { cols: { md: 3 }, key: 'gutter' },
+              { cols: { md: 3 }, key: 'align' },
+              'background',
+              columnSection('Colonne de gauche', 'blocks'),
+              columnSection('Colonne de droite', 'blocks2')
+            ]
+          },
+          {
+            if: 'data.columns === 3',
+            children: [
+              { cols: { md: 4 }, key: 'columns' },
+              { cols: { md: 4 }, key: 'gutter' },
+              { cols: { md: 4 }, key: 'align' },
+              'background',
+              columnSection('Colonne de gauche', 'blocks'),
+              columnSection('Colonne centrale', 'blocks2'),
+              columnSection('Colonne de droite', 'blocks3')
+            ]
+          },
+          {
+            children: [
+              { cols: { md: 3 }, key: 'columns' },
+              'background',
+              'blocks'
+            ]
+          }
         ]
       },
       properties: {
-        background: { ...structuredClone(background), title: 'Fond de la ligne', description: 'Laissez la couleur vide pour utiliser le fond du pied de page.', required: [] },
         columns: {
-          type: 'array',
+          type: 'integer',
           title: 'Colonnes',
-          minItems: 1,
-          maxItems: 4,
-          default: [{ width: 'auto', blocks: [] }],
-          layout: {
-            title: '',
-            listEditMode: 'inline',
-            listActions: ['add', 'delete', 'sort'],
-            itemTitle: jsFn(columnTitleFn),
-            messages: { addItem: 'Ajouter une colonne' }
-          },
-          items: { $ref: '#/$defs/column' }
-        }
-      }
-    },
-    column: {
-      type: 'object',
-      title: 'FooterColumn',
-      required: ['width', 'blocks'],
-      properties: {
-        width: {
-          type: 'string',
-          title: 'Largeur',
-          description: "« Automatique » partage l'espace restant à parts égales. Sur mobile les colonnes s'empilent.",
-          default: 'auto',
+          default: 1,
           oneOf: [
-            { const: 'auto', title: 'Automatique' },
-            { const: '1/4', title: 'Un quart' },
-            { const: '1/3', title: 'Un tiers' },
-            { const: '1/2', title: 'Moitié' },
-            { const: '2/3', title: 'Deux tiers' },
-            { const: '3/4', title: 'Trois quarts' }
+            { const: 1, title: '1 colonne' },
+            { const: 2, title: '2 colonnes' },
+            { const: 3, title: '3 colonnes' }
           ]
         },
-        blocks: { $ref: 'https://github.com/data-fair/portals/footer-elements' }
+        disposition: {
+          type: 'string',
+          title: 'Disposition',
+          default: 'equal',
+          oneOf: [
+            { const: 'equal', title: 'Largeurs égales' },
+            { const: 'left', title: 'Gauche plus large' },
+            { const: 'right', title: 'Droite plus large' }
+          ]
+        },
+        gutter: {
+          type: 'string',
+          title: 'Espacement',
+          default: 'default',
+          oneOf: [
+            { const: 'none', title: 'Aucun espacement' },
+            { const: 'dense', title: 'Petit espacement' },
+            { const: 'default', title: 'Espacement normal' }
+          ]
+        },
+        align: {
+          type: 'string',
+          title: 'Alignement vertical',
+          default: 'start',
+          oneOf: [
+            { const: 'start', title: 'Aligné en haut' },
+            { const: 'center', title: 'Aligné au centre' },
+            { const: 'end', title: 'Aligné en bas' }
+          ]
+        },
+        background: { ...structuredClone(background), title: 'Fond de la ligne', description: 'Laissez la couleur vide pour utiliser le fond du pied de page.', required: [] },
+        blocks,
+        blocks2: { ...blocks },
+        blocks3: { ...blocks }
       }
     }
   }

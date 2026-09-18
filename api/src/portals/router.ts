@@ -60,10 +60,8 @@ router.post('', async (req, res, next) => {
       copyright: true,
       background: { color: 'primary' },
       rows: [{
-        columns: [{
-          width: 'auto',
-          blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
-        }]
+        columns: 1,
+        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
       }]
     },
     datasets: {

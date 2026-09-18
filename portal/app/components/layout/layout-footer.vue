@@ -19,15 +19,19 @@
         :style="row.background ? backgroundStyle(row.background) : undefined"
       >
         <v-container :class="row.background?.color || row.background?.image ? 'py-3' : 'py-1'">
-          <v-row>
+          <v-row
+            :density="row.gutter === 'dense' ? 'comfortable' : undefined"
+            :no-gutters="row.gutter === 'none'"
+            :align="row.align"
+          >
             <v-col
-              v-for="(column, columnIndex) in row.columns"
+              v-for="(blocks, columnIndex) in footerRowColumns(row)"
               :key="columnIndex"
-              :md="columnMd(column.width)"
+              :md="columnMd(row, columnIndex)"
               cols="12"
             >
               <footer-element
-                v-for="(element, elementIndex) in column.blocks"
+                v-for="(element, elementIndex) in blocks"
                 :key="elementIndex"
                 :element="element"
               />
@@ -54,7 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Footer, FooterColumn } from '#api/types/portal-config-footer/index.ts'
+import type { Footer, FooterRow } from '#api/types/portal-config-footer/index.ts'
+import { footerRowColumns } from '#api/types/portal-config-footer/walk.ts'
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
@@ -62,9 +67,15 @@ const getPortalImageSrc = usePortalImageSrc()
 
 const footer = computed(() => portalConfig.value.footer)
 
-const widths: Record<FooterColumn['width'], number | undefined> = { auto: undefined, '1/4': 3, '1/3': 4, '1/2': 6, '2/3': 8, '3/4': 9 }
-// an empty string tells v-col the breakpoint prop is set without a size, which is how a column grows to share its row
-const columnMd = (width: FooterColumn['width']) => widths[width] ?? ''
+const columnMd = (row: FooterRow, index: number) => {
+  if (row.columns === 3) return 4
+  if (row.columns === 2) {
+    if (row.disposition === 'left') return index === 0 ? 8 : 4
+    if (row.disposition === 'right') return index === 0 ? 4 : 8
+    return 6
+  }
+  return 12
+}
 
 const backgroundStyle = (background: Footer['background'] | NonNullable<Footer['rows'][number]['background']>) => {
   if (!background.image) return undefined

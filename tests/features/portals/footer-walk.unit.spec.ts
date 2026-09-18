@@ -14,15 +14,11 @@ const footer: Footer = {
   rows: [
     {
       background: { color: 'secondary', image: rowImage },
-      columns: [
-        {
-          width: 'auto',
-          blocks: [
-            { type: 'images', align: 'center', height: 40, items: [{ source: 'upload', image: itemImage, imageDark: itemImageDark }] },
-            { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] },
-            { type: 'buttons', align: 'center', variant: 'flat', items: [{ type: 'external', href: '/foo', title: 'Foo' }] }
-          ]
-        }
+      columns: 1,
+      blocks: [
+        { type: 'images', align: 'center', height: 40, items: [{ source: 'upload', image: itemImage, imageDark: itemImageDark }] },
+        { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] },
+        { type: 'buttons', align: 'center', variant: 'flat', items: [{ type: 'external', href: '/foo', title: 'Foo' }] }
       ]
     }
   ]
@@ -40,6 +36,25 @@ test.describe('forEachFooterBlock', () => {
     forEachFooterBlock(undefined, (block) => types.push(block.type))
     assert.deepEqual(types, [])
   })
+
+  test('skips the columns a row no longer displays', () => {
+    const hiddenImage = { _id: 'hidden', name: 'hidden.png', mimeType: 'image/png' }
+    const twoColumns: Footer = {
+      ...footer,
+      rows: [{
+        columns: 2,
+        blocks: [{ type: 'text', align: 'left', markdown: false, content: 'a' }],
+        blocks2: [{ type: 'social', align: 'left' }],
+        blocks3: [{ type: 'images', align: 'left', height: 40, items: [{ source: 'koumoul' }, { source: 'upload', image: hiddenImage }] }]
+      }]
+    }
+    const types: string[] = []
+    forEachFooterBlock(twoColumns, (block) => types.push(block.type))
+    assert.deepEqual(types, ['text', 'social'])
+    assert.equal(hasKoumoulMention(twoColumns), false)
+    // the images of a hidden column are still kept
+    assert.deepEqual(footerImageRefs(twoColumns), [backgroundImage, hiddenImage])
+  })
 })
 
 test.describe('hasKoumoulMention', () => {
@@ -55,10 +70,8 @@ test.describe('hasKoumoulMention', () => {
     const withKoumoulLogo: Footer = {
       ...footer,
       rows: [{
-        columns: [{
-          width: 'auto',
-          blocks: [{ type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] }]
-        }]
+        columns: 1,
+        blocks: [{ type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] }]
       }]
     }
     assert.equal(hasKoumoulMention(withKoumoulLogo), true)

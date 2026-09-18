@@ -106,38 +106,33 @@ test.describe('portal rendering', () => {
       background: { color: 'primary' },
       rows: [
         {
-          columns: [
-            {
-              width: '1/3',
-              blocks: [
-                { type: 'text', align: 'left', markdown: true, content: '**Footer text**' },
-                { type: 'social', align: 'center' }
-              ]
-            },
-            {
-              width: '2/3',
-              blocks: [
-                { type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] },
-                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Site map' }] }
-              ]
-            }
+          columns: 2,
+          disposition: 'right',
+          blocks: [
+            { type: 'text', align: 'left', markdown: true, content: '**Footer text**' },
+            { type: 'social', align: 'center' }
+          ],
+          blocks2: [
+            { type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] },
+            { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Site map' }] }
           ]
         },
         {
+          columns: 1,
           background: { color: 'secondary' },
-          columns: [{
-            width: 'auto',
-            blocks: [
-              { type: 'divider', align: 'left', opacity: 0.5, thickness: 2 },
-              { type: 'buttons', align: 'center', variant: 'outlined', items: [{ type: 'standard', subtype: 'contact', title: 'Contact us' }] }
-            ]
-          }]
+          blocks: [
+            { type: 'divider', align: 'left', opacity: 0.5, thickness: 2 },
+            { type: 'buttons', align: 'center', variant: 'outlined', items: [{ type: 'standard', subtype: 'contact', title: 'Contact us' }] }
+          ]
         },
         {
-          columns: [
-            { width: 'auto', blocks: [{ type: 'text', align: 'left', markdown: false, content: 'Auto column A' }] },
-            { width: 'auto', blocks: [{ type: 'text', align: 'left', markdown: false, content: 'Auto column B' }] }
-          ]
+          columns: 2,
+          gutter: 'none',
+          align: 'center',
+          blocks: [{ type: 'text', align: 'left', markdown: false, content: 'Equal column A' }],
+          blocks2: [{ type: 'text', align: 'left', markdown: false, content: 'Equal column B' }],
+          // a third list left behind by a wider layout is not rendered
+          blocks3: [{ type: 'text', align: 'left', markdown: false, content: 'Hidden column C' }]
         }
       ]
     }
@@ -155,14 +150,15 @@ test.describe('portal rendering', () => {
     await expect(footerLocator.locator('.bg-secondary')).toBeVisible()
     await expect(footerLocator.getByText(/Koumoul/).last()).toBeVisible()
 
-    // two auto columns share their row on a desktop viewport instead of stacking full width
+    // two equal columns share their row on a desktop viewport instead of stacking full width
     await page.setViewportSize({ width: 1280, height: 720 })
-    const autoRow = footerLocator.locator('.v-row').filter({ hasText: 'Auto column A' })
-    const autoColumns = autoRow.locator('> .v-col')
-    await expect(autoColumns).toHaveCount(2)
-    const rowBox = (await autoRow.boundingBox())!
-    const firstBox = (await autoColumns.first().boundingBox())!
-    const secondBox = (await autoColumns.last().boundingBox())!
+    const equalRow = footerLocator.locator('.v-row').filter({ hasText: 'Equal column A' })
+    const equalColumns = equalRow.locator('> .v-col')
+    await expect(equalColumns).toHaveCount(2)
+    await expect(footerLocator.getByText('Hidden column C')).toHaveCount(0)
+    const rowBox = (await equalRow.boundingBox())!
+    const firstBox = (await equalColumns.first().boundingBox())!
+    const secondBox = (await equalColumns.last().boundingBox())!
     expect(firstBox.y).toBe(secondBox.y)
     expect(firstBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)
     expect(secondBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)

@@ -160,7 +160,7 @@ test.describe('portals management', () => {
   const footerWith = (overrides: Record<string, any>): Footer => ({
     copyright: true,
     background: { color: 'primary' },
-    rows: [{ columns: [{ width: 'auto', blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] }] }] }],
+    rows: [{ columns: 1, blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] }] }],
     ...overrides
   })
 
@@ -169,7 +169,7 @@ test.describe('portals management', () => {
     assert.equal(portal.config.footer.copyright, true)
     assert.equal(portal.config.footer.background.color, 'primary')
     assert.equal(portal.config.footer.rows.length, 1)
-    assert.equal(portal.config.footer.rows[0].columns[0].blocks[0].type, 'links')
+    assert.equal(portal.config.footer.rows[0].blocks[0].type, 'links')
   })
 
   test('footer without any Koumoul mention is refused on a non white label portal', async () => {
@@ -184,7 +184,7 @@ test.describe('portals management', () => {
   test('footer with the Koumoul logo in an images block is accepted without the copyright line', async () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     const footer = footerWith({ copyright: false })
-    footer.rows[0].columns[0].blocks.push({ type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] })
+    footer.rows[0].blocks.push({ type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] })
     const patched = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
     assert.equal(patched.draftConfig.footer.copyright, false)
   })
@@ -199,17 +199,17 @@ test.describe('portals management', () => {
   test('markdown of footer text blocks is rendered on save', async () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     const footer = footerWith({})
-    footer.rows[0].columns[0].blocks.push({ type: 'text', align: 'left', markdown: true, content: '**bold**' })
+    footer.rows[0].blocks.push({ type: 'text', align: 'left', markdown: true, content: '**bold**' })
     const patched = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
-    assert.match(patched.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, /<strong>bold<\/strong>/)
+    assert.match(patched.draftConfig.footer.rows[0].blocks[1].content_html, /<strong>bold<\/strong>/)
 
-    footer.rows[0].columns[0].blocks[1] = { type: 'text', align: 'left', markdown: false, content: '**bold**' }
+    footer.rows[0].blocks[1] = { type: 'text', align: 'left', markdown: false, content: '**bold**' }
     const rawText = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
-    assert.equal(rawText.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, undefined)
+    assert.equal(rawText.draftConfig.footer.rows[0].blocks[1].content_html, undefined)
 
-    footer.rows[0].columns[0].blocks[1] = { type: 'text', align: 'left', markdown: true, content: '' }
+    footer.rows[0].blocks[1] = { type: 'text', align: 'left', markdown: true, content: '' }
     const emptyText = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
-    assert.equal(emptyText.draftConfig.footer.rows[0].columns[0].blocks[1].content_html, undefined)
+    assert.equal(emptyText.draftConfig.footer.rows[0].blocks[1].content_html, undefined)
   })
 
   test('duplicating a white label portal restores the Koumoul mention', async () => {
@@ -234,14 +234,14 @@ test.describe('portals management', () => {
 
     const footer = footerWith({})
     footer.background.image = imageRef
-    footer.rows[0].columns[0].blocks.push({ type: 'images', align: 'left', height: 40, items: [{ source: 'upload', image: imageRef }] })
+    footer.rows[0].blocks.push({ type: 'images', align: 'left', height: 40, items: [{ source: 'upload', image: imageRef }] })
     await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })
     await user1.post(`/api/portals/${portal._id}/draft`)
 
     const copy = (await user1.post('/api/portals', { config: { title: 'Copy' }, sourcePortalId: portal._id })).data
 
     const copiedBackgroundImageId = copy.config.footer.background.image._id
-    const copiedItemImageId = copy.config.footer.rows[0].columns[0].blocks[1].items[0].image._id
+    const copiedItemImageId = copy.config.footer.rows[0].blocks[1].items[0].image._id
     assert.notEqual(copiedBackgroundImageId, sourceImage._id, 'background image should have a new id')
     assert.notEqual(copiedItemImageId, sourceImage._id, 'images block item image should have a new id')
 
