@@ -7,6 +7,7 @@ const imageRef = (label, width) => ({
   required: ['_id', 'name', 'mimeType'],
   layout: {
     if: 'parent.data?.source === "upload"',
+    cols: { md: 6 },
     slots: { component: { name: 'image-upload', props: { width, label } } }
   },
   properties: {
@@ -260,8 +261,10 @@ export default {
   default: [],
   layout: {
     title: '',
+    // shared clipboard so a block can be copied from one column and pasted in another
+    clipboardKey: 'footer-blocks',
     listEditMode: 'inline-single',
-    listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
+    listActions: ['add', 'edit', 'delete', 'sort', 'duplicate', 'copy', 'paste'],
     itemTitle: elementTitle,
     itemSubtitle: elementSubtitle,
     messages: { addItem: 'Ajouter un bloc' }
