@@ -17,14 +17,16 @@
           :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
           class="simple-link"
         >
-          <v-icon
-            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-            :icon="link.icon.mdi?.svgPath || link.icon.custom"
-            :color="link.icon.color"
-            size="small"
-            class="mr-1"
-          />
-          {{ resolveLinkTitle(link, locale) }}
+          <span class="d-flex align-center">
+            <v-icon
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              :icon="link.icon.mdi?.svgPath || link.icon.custom"
+              :color="link.icon.color"
+              size="small"
+              class="mr-1"
+            />
+            {{ resolveLinkTitle(link, locale) }}
+          </span>
         </NuxtLink>
       </v-col>
     </v-row>
