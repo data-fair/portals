@@ -1,13 +1,13 @@
 // Nothing is rendered server-side inside the <ClientOnly> of an application block, so the
 // content below it used to jump down on hydration, once <d-frame> gave itself a height.
-// The block now reserves that height in the server html and keeps it until d-frame is ready.
+// The wrapper now reserves that height in the server html, as the fallback of <ClientOnly>.
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
-// No application is seeded in data-fair: the iframe lands on a 404 and d-frame still fires
-// `ready` on its load, which is all the placeholder hand-over needs.
+// No application is seeded in data-fair: the iframe lands on a 404, which does not matter
+// since the placeholder only lives until <d-frame> mounts.
 const application = { id: 'no-such-app', slug: 'no-such-app', title: 'Missing app' }
 
 const seedPortal = async () => {
@@ -67,9 +67,8 @@ test.describe('application block placeholder', () => {
     await goToPortal(portal._id)
     const frames = page.locator('d-frame')
     await expect(frames).toHaveCount(3, { timeout: 15_000 })
-    // the placeholders are released once every d-frame is ready
+    // the placeholders leave with the fallback
     await expect(page.locator('.frame-placeholder')).toHaveCount(0, { timeout: 15_000 })
-    await expect(page.locator('[style*="min-height"]').filter({ has: frames })).toHaveCount(0)
 
     const markerMoves = await page.evaluate(() =>
       (window as any).__shifts.filter((s: { text: string }) => s.text.startsWith('Below the applications')).map((s: { dy: number }) => Math.abs(s.dy))

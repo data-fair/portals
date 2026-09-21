@@ -1,41 +1,35 @@
 <template>
-  <!-- Nothing is rendered server-side inside <ClientOnly>, and once mounted d-frame goes
-       through provisional heights before settling. The inner box reserves the height d-frame
-       will give itself until it is ready, so the content below does not shift on hydration.
-       The root is a size container so the auto ratio can follow the frame width. -->
-  <div
-    :class="attrs.class"
-    style="container-type: inline-size"
-  >
-    <div
-      :class="{ 'frame-placeholder': placeholderAuto }"
-      :style="placeholderStyle"
-      style="height: 100%"
-    >
-      <ClientOnly>
-        <d-frame
-          v-bind="frameAttrs"
-          .adapter="dFrameAdapter"
-          style="height: 100%"
-          @ready="ready = true"
-          @notif="onNotif"
+  <ClientOnly>
+    <d-frame
+      v-bind="$attrs"
+      .adapter="dFrameAdapter"
+      @notif="onNotif"
+    />
+    <!-- Nothing is rendered server-side otherwise, and the content below would jump down on
+         hydration once <d-frame> gives itself a height. The fallback reserves that height: a
+         size container so the auto ratio can follow the frame width, and the same class for
+         the margins. -->
+    <template #fallback>
+      <div
+        :class="$attrs.class"
+        style="container-type: inline-size"
+      >
+        <div
+          :class="{ 'frame-placeholder': placeholderAuto }"
+          :style="placeholderStyle"
         />
-      </ClientOnly>
-    </div>
-  </div>
+      </div>
+    </template>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
 import createDFrameAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter.js'
 import { useUiNotif, type UiNotif } from '@data-fair/lib-vue/ui-notif.js'
 
-// the class (margins, fill-height) sizes the placeholder box, every other attr is for <d-frame>
+// inheritAttrs:false keeps unknown attrs (iframe-title, src, aspect-ratio) off the SSR <ClientOnly> placeholder
 defineOptions({ inheritAttrs: false })
 const attrs = useAttrs()
-const frameAttrs = computed(() => {
-  const { class: _class, ...rest } = attrs
-  return rest
-})
 
 // <d-frame> is registered globally by plugins/dframe.client.ts — must run before any <d-frame> is created,
 // otherwise Vue's `.adapter` IDL binding is set on a not-yet-upgraded element and the constructor overwrites it.
@@ -45,16 +39,14 @@ const dFrameAdapter = createDFrameAdapter(useRouter())
 // (cf. https://github.com/data-fair/frame/blob/master/lib/DFrameElement.ts, updateStyle):
 // the direct height, the fixed ratio, the width-based auto ratio (container queries of .frame-placeholder),
 // or without any of them the 150px of its loading slot.
-const ready = ref(false)
 const placeholderStyle = computed(() => {
-  if (ready.value) return undefined
   if (attrs.height) return { minHeight: String(attrs.height) }
   const ratio = attrs['aspect-ratio']
   if (ratio === undefined || ratio === null) return { minHeight: '150px' }
   if (ratio !== '' && ratio !== 'auto') return { aspectRatio: String(ratio) }
   return undefined
 })
-const placeholderAuto = computed(() => !ready.value && placeholderStyle.value === undefined)
+const placeholderAuto = computed(() => placeholderStyle.value === undefined)
 
 // An embedded sub-app (data-fair, events, ...) delegates its ui-notif to the host when inside an iframe:
 // its own lib snackbar stays silent and posts the notif up, which <d-frame> re-dispatches as a `notif` event.
