@@ -94,7 +94,7 @@ const linkAttrs = computed(() => link && {
   to: link.to,
   title: link.title,
   target: link.target ? '_blank' : undefined,
-  rel: link.target ? 'noopener' : undefined,
+  rel: linkRel(link.href ?? link.to, link.target),
   style: 'text-decoration: none; color: inherit'
 })
 

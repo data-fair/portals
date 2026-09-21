@@ -9,8 +9,8 @@
         :href="link.href"
         :title="link.title + ' - ' + t('newWindow')"
         :variant="element.variant"
+        :rel="linkRel(link.href, true)"
         target="_blank"
-        rel="noopener"
         class="text-uppercase"
       >
         <template #prepend>
@@ -25,6 +25,7 @@
       <v-btn
         v-else
         :to="resolveLink(link)"
+        :rel="linkRel(resolveLink(link))"
         :variant="element.variant"
       >
         <template #prepend>

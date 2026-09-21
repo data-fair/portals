@@ -15,7 +15,7 @@
     :aria-labelledby="label ? undefined : labelledby"
     :title="title || undefined"
     :target="target ? '_blank' : undefined"
-    :rel="target ? 'noopener' : undefined"
+    :rel="rel"
     class="position-absolute card-overlay-link"
     style="inset: 0"
   />
@@ -26,7 +26,7 @@
     :aria-labelledby="label ? undefined : labelledby"
     :title="title || undefined"
     :target="target ? '_blank' : undefined"
-    :rel="target ? 'noopener' : undefined"
+    :rel="rel"
     class="position-absolute card-overlay-link"
     style="inset: 0"
   />
@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
 
-defineProps<{
+const props = defineProps<{
   /** Internal destination, rendered as a NuxtLink */
   to?: RouteLocationRaw
   /** External destination, rendered as a plain anchor */
@@ -50,6 +50,12 @@ defineProps<{
   /** Open in a new window */
   target?: boolean
 }>()
+
+const toPath = computed(() => {
+  if (typeof props.to === 'string') return props.to
+  return props.to && 'path' in props.to ? props.to.path : undefined
+})
+const rel = computed(() => linkRel(props.href ?? toPath.value, props.target))
 </script>
 
 <style scoped>

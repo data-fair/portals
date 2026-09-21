@@ -57,7 +57,10 @@
             v-if="!session.user.value"
             class="mb-2"
           >
-            <a :href="session.loginUrl()">{{ t('login') }}</a>
+            <a
+              :href="session.loginUrl()"
+              rel="nofollow"
+            >{{ t('login') }}</a>
           </li>
           <li
             v-if="standardPages['datasets'] && !allInternalPaths.has('/datasets')"

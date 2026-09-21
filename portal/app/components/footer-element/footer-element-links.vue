@@ -14,7 +14,7 @@
         <NuxtLink
           :to="resolveLink(link)"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
           class="simple-link"
         >
           <span class="d-flex align-center">
@@ -41,7 +41,7 @@
         :key="index"
         :to="resolveLink(link)"
         :target="link.type === 'external' && link.target ? '_blank' : undefined"
-        :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+        :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
         class="simple-link my-1"
       >
         <span class="d-flex align-center">
@@ -75,7 +75,7 @@
         <NuxtLink
           :to="resolveLink(link)"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
           class="simple-link"
         >
           <span class="d-flex align-center">

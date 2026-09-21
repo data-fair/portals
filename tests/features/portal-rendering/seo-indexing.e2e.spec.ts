@@ -34,6 +34,10 @@ const extractJsonLd = (html: string) => {
   return JSON.parse(m[1])
 }
 
+// Every <a> start tag whose href attribute is exactly `href` (attribute order agnostic)
+const anchorsTo = (html: string, href: string) =>
+  [...html.matchAll(/<a\b[^>]*>/gi)].map(m => m[0]).filter(tag => tag.includes(`href="${href}"`))
+
 test.describe('SEO / indexation', () => {
   test.beforeEach(clean)
 
@@ -312,5 +316,65 @@ test.describe('SEO / indexation', () => {
 
     const html = await fetchHtml(request, portalUrl(portal._id) + '/catalog-api-doc')
     expect(hasRobotsNoindex(html)).toBe(false)
+  })
+
+  test('links to the personal space and to the login page are nofollow', async ({ request }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: {
+        title: 'Nofollow Portal',
+        allowRobots: true,
+        menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] },
+        footer: {
+          copyright: true,
+          background: { color: 'primary' },
+          rows: [
+            {
+              columns: 1,
+              blocks: [
+                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] },
+                { type: 'buttons', align: 'center', items: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }] }
+              ]
+            }
+          ]
+        }
+      }
+    })).data
+    const config = {
+      title: 'Home',
+      elements: [
+        { type: 'card', title: 'Proposer une réutilisation', children: [], actions: [], link: { type: 'external', title: 'Proposer', href: '/me/reuses' } },
+        { type: 'card', title: 'Site externe', children: [], actions: [], link: { type: 'external', title: 'Exemple', href: 'https://example.com', target: true } },
+        { type: 'text', content: 'Depuis votre [espace personnel](/me/reuses) ou le [catalogue](/datasets).' }
+      ]
+    }
+    // publish through the draft flow so the API renders the markdown `_html`
+    const page = (await user1.post('/api/pages', { type: 'home', config, portals: [portal._id], owner: portal.owner })).data
+    await user1.patch(`/api/pages/${page._id}`, { draftConfig: config })
+    await user1.post(`/api/pages/${page._id}/draft`)
+
+    const home = await fetchHtml(request, portalUrl(portal._id) + '/')
+    // nav bar item + card overlay + markdown link
+    const privateAnchors = [...anchorsTo(home, '/me/account'), ...anchorsTo(home, '/me/reuses')]
+    expect(privateAnchors.length).toBeGreaterThanOrEqual(3)
+    for (const tag of privateAnchors) expect(tag).toMatch(/rel="[^"]*nofollow/)
+    // footer important link
+    const footerAnchors = anchorsTo(home, '/me/api-keys')
+    expect(footerAnchors.length).toBeGreaterThanOrEqual(1)
+    for (const tag of footerAnchors) {
+      expect(tag).toMatch(/rel="[^"]*nofollow/)
+      expect(tag).toContain('noopener')
+    }
+    // control: public links keep their current rel
+    const publicAnchors = anchorsTo(home, '/datasets')
+    expect(publicAnchors.length).toBeGreaterThan(0)
+    for (const tag of publicAnchors) expect(tag).not.toContain('nofollow')
+    const external = anchorsTo(home, 'https://example.com')
+    expect(external.length).toBeGreaterThanOrEqual(1)
+    for (const tag of external) expect(tag).toMatch(/rel="noopener"/)
+
+    const sitemap = await fetchHtml(request, portalUrl(portal._id) + '/sitemap')
+    const loginAnchors = [...sitemap.matchAll(/<a\b[^>]*>/gi)].map(m => m[0]).filter(tag => tag.includes('/simple-directory/login'))
+    expect(loginAnchors.length).toBe(1)
+    expect(loginAnchors[0]).toMatch(/rel="[^"]*nofollow/)
   })
 })

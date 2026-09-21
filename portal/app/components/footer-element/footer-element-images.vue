@@ -13,6 +13,7 @@
             v-if="item.link?.startsWith('/')"
             :to="item.link"
             :title="item.label"
+            :rel="linkRel(item.link)"
             class="d-flex align-center"
           >
             <img
@@ -25,9 +26,9 @@
             v-else-if="item.link"
             :href="item.link"
             :title="item.label + ' - ' + t('newWindow')"
+            :rel="linkRel(item.link, true)"
             class="d-flex align-center"
             target="_blank"
-            rel="noopener"
           >
             <img
               :alt="item.label"
