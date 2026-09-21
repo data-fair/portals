@@ -178,7 +178,7 @@
               <NuxtLink
                 :to="resolveLink(link)"
                 :target="link.type === 'external' && link.target ? '_blank' : undefined"
-                :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+                :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
                 class="simple-link"
               >
                 <v-icon
@@ -211,7 +211,7 @@
               <NuxtLink
                 :to="resolveLink(link)"
                 :target="link.type === 'external' && link.target ? '_blank' : undefined"
-                :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+                :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
                 class="simple-link"
               >
                 <span class="d-flex align-center">
@@ -246,8 +246,8 @@
                 v-if="link.type === 'external'"
                 :href="link.href"
                 :title="link.title + ' - ' + t('newWindow')"
+                :rel="linkRel(link.href, true)"
                 target="_blank"
-                rel="noopener"
                 variant="text"
                 class="text-uppercase"
               >
@@ -263,6 +263,7 @@
               <v-btn
                 v-else
                 :to="resolveLink(link)"
+                :rel="linkRel(resolveLink(link))"
                 variant="text"
               >
                 <template #prepend>
