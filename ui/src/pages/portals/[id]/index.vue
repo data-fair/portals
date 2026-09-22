@@ -76,12 +76,9 @@
             </preview>
           </template>
           <template #footer-preview>
-            <preview
-              :append-title="t('footer')"
-              no-padding
-            >
+            <footer-preview>
               <layout-footer v-if="formValid" />
-            </preview>
+            </footer-preview>
           </template>
           <template #breadcrumb-preview>
             <preview
@@ -355,7 +352,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   en:
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
-    footer: Footer
     home: Home
     portals: Portals
     portalConfig: Portal configuration
@@ -364,7 +360,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
   fr:
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
-    footer: Pied de page
     home: Accueil
     portals: Portails
     portalConfig: Configuration du portail
