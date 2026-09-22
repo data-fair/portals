@@ -13,39 +13,26 @@ export default defineEventHandler((event) => {
       'Disallow: /'
     ].join('\n')
   }
+  // robots.txt only controls the crawl: what gets indexed is decided by each
+  // service on the domain through X-Robots-Tag / meta noindex, and a noindex is
+  // only seen on pages that crawlers are allowed to fetch
   return [
     'User-agent: *',
     'Content-Signal: search=yes, ai-train=no, ai-input=yes',
     '',
-    '# public portal pages',
-    'Allow: /$',
-    'Allow: /datasets',
-    'Allow: /applications',
-    'Allow: /reuses',
-    'Allow: /news',
-    'Allow: /event',
-    'Allow: /pages/',
-    'Allow: /pages-',
-    'Allow: /catalog-api-doc',
-    'Allow: /sitemap',
-    'Allow: /contact',
-    'Allow: /legal-notice',
-    'Allow: /privacy-policy',
-    'Allow: /terms-of-service',
-    'Allow: /accessibility',
-    'Allow: /cookie-policy',
+    '# JSON APIs and exports of every service on the domain: nothing indexable',
+    '# there (each service answers X-Robots-Tag: noindex) and expensive to crawl',
+    'Disallow: /*/api/',
     '',
-    '# legacy redirects (let Google crawl them to discover the 302 and update its index)',
-    'Allow: /explore',
-    '',
-    '# assets needed for rendering (CSS/JS bundles, images, fonts)',
-    'Allow: /_nuxt/',
+    '# assets needed for rendering (images, fonts)',
     'Allow: /portal/api/images/',
     'Allow: /portal/api/font-assets/',
     'Allow: /portal/api/pages/*/images/',
     '',
-    '# block everything else (user pages, JSON APIs, other services on the same domain)',
-    'Disallow: /',
+    '# dataset API roots crawled before the 2026-05 allow-list are still indexed:',
+    '# let Google re-crawl them so it sees the noindex and drops them',
+    '# (remove this rule once Search Console no longer lists them)',
+    'Allow: /data-fair/api/v1/datasets/*/$',
     '',
     `Sitemap: ${requestURL.origin}/sitemap.xml`
   ].join('\n')

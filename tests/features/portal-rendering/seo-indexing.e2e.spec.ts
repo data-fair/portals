@@ -130,10 +130,15 @@ test.describe('SEO / indexation', () => {
     await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [hidden._id], owner: hidden.owner })
 
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
-    // Indexable portals use an Allow-list of public sections, then a final
-    // Disallow: / as fallback to keep everything else out.
-    expect(okRobots).toContain('Allow: /$')
-    expect(okRobots).toContain('Allow: /datasets')
+    // Indexable portals only block the JSON APIs (crawl cost): what gets indexed
+    // is decided by each service through noindex, never by robots.txt
+    expect(okRobots).toContain('Disallow: /*/api/')
+    expect(okRobots).not.toMatch(/^Disallow: \/$/m)
+    expect(okRobots).toContain('Allow: /portal/api/images/')
+    expect(okRobots).toContain('Allow: /portal/api/font-assets/')
+    expect(okRobots).toContain('Allow: /portal/api/pages/*/images/')
+    expect(okRobots).toContain('Allow: /data-fair/api/v1/datasets/*/$')
+    expect(okRobots).toContain('Content-Signal: search=yes, ai-train=no, ai-input=yes')
     expect(okRobots).toContain('Sitemap:')
 
     const koRobots = await (await request.get(portalUrl(hidden._id) + '/robots.txt')).text()
