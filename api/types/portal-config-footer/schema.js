@@ -6,8 +6,8 @@ const background = {
   required: ['color'],
   layout: [
     { cols: { md: 4 }, key: 'color' },
-    { cols: { md: 4 }, key: 'imageLocation' },
-    { cols: { md: 4 }, key: 'image' }
+    { cols: { md: 4 }, key: 'image' },
+    'imageLocation'
   ],
   properties: {
     color: {
@@ -39,6 +39,7 @@ const background = {
       type: 'string',
       title: "Position de l'image de fond",
       default: 'right',
+      layout: { if: 'parent.data?.image?._id', cols: { md: 4 } },
       oneOf: [
         { const: 'left', title: 'Gauche' },
         { const: 'center', title: 'Centre' },
@@ -59,14 +60,6 @@ const rowTitleFn = (item) => {
     return '2 colonnes'
   }
   return '1 colonne'
-}
-/** @param {any} item */
-const rowSubtitleFn = (item) => {
-  let blocks = item.blocks?.length ?? 0
-  if (item.columns >= 2) blocks += item.blocks2?.length ?? 0
-  if (item.columns >= 3) blocks += item.blocks3?.length ?? 0
-  const background = item.background?.color ? ` · fond ${item.background.color}` : ''
-  return `${blocks} bloc(s)${background}`
 }
 
 const blocks = { $ref: 'https://github.com/data-fair/portals/footer-elements' }
@@ -115,7 +108,6 @@ export default {
         listEditMode: 'inline-single',
         listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
         itemTitle: jsFn(rowTitleFn),
-        itemSubtitle: jsFn(rowSubtitleFn),
         messages: { addItem: 'Ajouter une ligne' }
       },
       items: { $ref: '#/$defs/row' }
