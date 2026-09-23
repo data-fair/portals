@@ -130,14 +130,13 @@ test.describe('SEO / indexation', () => {
     await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [hidden._id], owner: hidden.owner })
 
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
-    // Indexable portals only block the JSON APIs (crawl cost): robots.txt never
-    // decides what is indexable, each service says so with its own headers
-    expect(okRobots).toContain('Disallow: /*/api/')
+    // Indexable portals only block the dataset downloads (crawl cost): the APIs
+    // stay open for rendering, and each service says what is indexable itself
+    expect(okRobots).toContain('Disallow: /*/api/v1/datasets/*/full')
+    expect(okRobots).toContain('Disallow: /*/api/v1/datasets/*/lines?*format=')
+    expect(okRobots).not.toContain('Disallow: /*/api/\n')
     expect(okRobots).not.toMatch(/^Disallow: \/$/m)
-    expect(okRobots).toContain('Allow: /portal/api/images/')
-    expect(okRobots).toContain('Allow: /portal/api/font-assets/')
-    expect(okRobots).toContain('Allow: /portal/api/pages/*/images/')
-    expect(okRobots).toContain('Allow: /data-fair/api/v1/datasets/*/$')
+    expect(okRobots).not.toContain('Allow:')
     expect(okRobots).toContain('Content-Signal: search=yes, ai-train=no, ai-input=yes')
     expect(okRobots).toContain('Sitemap:')
 
