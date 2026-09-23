@@ -130,8 +130,8 @@ test.describe('SEO / indexation', () => {
     await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [hidden._id], owner: hidden.owner })
 
     const okRobots = await (await request.get(portalUrl(indexable._id) + '/robots.txt')).text()
-    // Indexable portals only block the JSON APIs (crawl cost): what gets indexed
-    // is decided by each service through noindex, never by robots.txt
+    // Indexable portals only block the JSON APIs (crawl cost): robots.txt never
+    // decides what is indexable, each service says so with its own headers
     expect(okRobots).toContain('Disallow: /*/api/')
     expect(okRobots).not.toMatch(/^Disallow: \/$/m)
     expect(okRobots).toContain('Allow: /portal/api/images/')
