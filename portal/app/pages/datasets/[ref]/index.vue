@@ -405,6 +405,8 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
   params: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
+// a meta-only dataset carries no data: its export URLs would lead nowhere
+const datasetFiles = dataset.value && !dataset.value.isMetaOnly ? await useDatasetFiles(dataset.value) : null
 
 // Check if datasets catalog page exists
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
@@ -528,6 +530,14 @@ usePageSeo({
   ogType: 'article'
 })
 
+const exportMimetypes: Record<string, string> = {
+  csv: 'text/csv',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ods: 'application/vnd.oasis.opendocument.spreadsheet',
+  geojson: 'application/geo+json',
+  shp: 'application/zip'
+}
+
 const requestURL = useRequestURL()
 useJsonLd(() => {
   const d = dataset.value
@@ -554,6 +564,20 @@ useJsonLd(() => {
         : `${d.temporal.start}/..`
       : undefined,
     spatialCoverage: d.spatial || undefined,
+    distribution: datasetFiles
+      ? [
+          ...datasetFiles.files.map(f => ({
+            name: f.title,
+            encodingFormat: f.mimetype,
+            contentUrl: f.url.startsWith('/') ? requestURL.origin + f.url : f.url
+          })),
+          ...datasetFiles.simpleExports.value.map(e => ({
+            name: `Export ${e.key.toUpperCase()}`,
+            encodingFormat: exportMimetypes[e.format],
+            contentUrl: requestURL.origin + `/data-fair/api/v1/datasets/${d.slug}/lines?size=10000&page=1&format=${e.format}`
+          }))
+        ]
+      : undefined,
     isRelatedTo: relatedDatasets.value.map(rd => ({
       id: requestURL.origin + `/datasets/${rd.slug}`,
       name: rd.title

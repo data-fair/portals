@@ -76,66 +76,12 @@ import type { Dataset } from '#api/types/index.ts'
 import { mdiDownload, mdiTableLarge } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
-type File = {
-  name: string
-  key: 'original' | string
-  title: string
-  mimetype: string
-  size: number
-  url: string
-  format: string
-}
-
 const { dataset } = defineProps<{ dataset: Dataset }>()
+
 const { t, locale } = useI18n()
 const { portalConfig, preview } = usePortalStore()
 
-const files = ref<File[]>([])
-const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { params: { size: 0 } })
-const count = computed(() => countFetch.data.value?.total || 0)
-
-const hasNormalizedCSV = computed(() => files.value.some(f => (['normalized', 'full'].includes(f.key) && f.mimetype === 'text/csv') || f.key === 'export-csv'))
-
-const simpleExports = computed(() => {
-  if (count.value > 10000) return []
-  const exportsList: { key: string, format: string }[] = []
-  if (!hasNormalizedCSV.value) exportsList.push({ key: 'csv', format: 'csv' })
-  exportsList.push({ key: 'xlsx', format: 'xlsx' })
-  exportsList.push({ key: 'ods', format: 'ods' })
-  const hasNormalizedGeojson = files.value.some(f => (['normalized', 'full'].includes(f.key) && f.mimetype === 'application/geo+json') || f.key === 'export-geojson')
-  if (dataset.bbox?.length) {
-    if (!hasNormalizedGeojson) exportsList.push({ key: 'geojson', format: 'geojson' })
-    exportsList.push({ key: 'shapefile', format: 'shp' })
-  }
-  return exportsList
-})
-
-let filesRes: File[] = []
-if (!dataset.isVirtual && !dataset.isRest && !dataset.isMetaOnly) {
-  filesRes = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${dataset.id}/data-files`)).data.value || []
-}
-
-if (dataset.virtual?.children) {
-  const childrenFetch = await useLocalFetch<{ results: Dataset[] }>('/data-fair/api/v1/catalog/datasets', {
-    params: {
-      id: dataset.virtual.children.join(','),
-      select: 'id,isVirtual,isRest,isMetaOnly'
-    }
-  })
-  for (const child of childrenFetch.data.value?.results || []) {
-    if (!child.userPermissions.includes('listDataFiles')) continue
-    if (child.isVirtual || child.isRest || child.isMetaOnly) continue
-    const childrenFiles: File[] = (await useLocalFetch<File[]>(`/data-fair/api/v1/datasets/${child.id}/data-files`)).data.value || []
-    const file = childrenFiles?.find(f => f.key === 'original')
-    if (file) filesRes.push(file)
-  }
-}
-
-// Add format
-files.value = filesRes.map(f => ({
-  ...f,
-  format: f.mimetype ? f.mimetype.split('/').pop()?.replace('+', '') || '' : f.name.split('.').pop() || ''
-}))
+const { files, simpleExports, count } = await useDatasetFiles(dataset)
 
 const origin = !preview ? useRequestURL().origin : null
 const clickDownload = (url: string, format: string) => {
