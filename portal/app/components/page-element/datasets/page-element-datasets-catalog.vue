@@ -92,11 +92,16 @@ const {
       size: pageSize,
       page
     }
+    const staticFilters = element.staticFilters
+    const concepts = staticFilterParam(filters.concepts.value, staticFilters?.includedConcepts)
+    const topics = staticFilterParam(filters.topics.value, staticFilters?.includedTopics)
+    const keywords = staticFilterParam(filters.keywords.value, staticFilters?.includedKeywords)
+    const owner = staticFilterParam(filters.owners.value, staticFilters?.includedOwners, staticFilters?.excludedOwners)
     if (filters.search.value) query.q = filters.search.value
-    if (filters.concepts.value?.length) query.concepts = filters.concepts.value.join(',')
-    if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
-    if (filters.keywords.value?.length) query.keywords = filters.keywords.value.join(',')
-    if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
+    if (concepts) query.concepts = concepts
+    if (topics) query.topics = topics
+    if (keywords) query.keywords = keywords
+    if (owner) query.owner = owner
     if (filters.ids.value?.length) query.ids = filters.ids.value.join(',')
     // No sort during a text search: let data-fair rank results by relevance
     if (sortValue && !filters.search.value) query.sort = sortValue
