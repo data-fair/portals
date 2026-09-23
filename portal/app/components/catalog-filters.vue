@@ -214,7 +214,7 @@ type Concept = {
 }
 
 type BaseApplication = {
-  id: string
+  url: string
   title: string
 }
 
@@ -295,8 +295,8 @@ const previewFacets: Facets = {
     { value: 'concept-b', count: 2 }
   ],
   'base-application': [
-    { value: { id: 'app-1', title: 'Application 1' }, count: 3 },
-    { value: { id: 'app-2', title: 'Application 2' }, count: 5 }
+    { value: { url: 'https://example.com/app-1/', title: 'Application 1' }, count: 3 },
+    { value: { url: 'https://example.com/app-2/', title: 'Application 2' }, count: 5 }
   ],
   topics: [
     { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d', icon: { svgPath: mdiHome } }, count: 5 },
@@ -346,7 +346,7 @@ const baseApplicationItems = computed(() => {
     const app = facet.value
     return {
       title: `${app.title} (${facet.count})`,
-      value: app.id
+      value: app.url
     }
   })
 })
