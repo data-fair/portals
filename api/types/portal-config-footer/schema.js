@@ -62,8 +62,8 @@ const rowSubtitleFn = (item) => {
   const column = (label, blocks) => `${label} : ${blocks?.length ?? 0} bloc${(blocks?.length ?? 0) > 1 ? 's' : ''}`
   if (item.columns === 3) return [column('Gauche', item.blocks), column('Centre', item.blocks2), column('Droite', item.blocks3)].join(' · ')
   if (item.columns === 2) {
-    const left = { left: 'Gauche (large)', right: 'Gauche (étroite)' }[item.disposition] ?? 'Gauche'
-    const right = { left: 'Droite (étroite)', right: 'Droite (large)' }[item.disposition] ?? 'Droite'
+    const left = new Map([['left', 'Gauche (large)'], ['right', 'Gauche (étroite)']]).get(item.disposition) ?? 'Gauche'
+    const right = new Map([['left', 'Droite (étroite)'], ['right', 'Droite (large)']]).get(item.disposition) ?? 'Droite'
     return [column(left, item.blocks), column(right, item.blocks2)].join(' · ')
   }
   return column('Colonne unique', item.blocks)
