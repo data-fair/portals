@@ -38,17 +38,19 @@ const linksList = (addItem) => ({
 /** @param {any} item */
 const elementSubtitleFn = (item) => {
   const align = new Map([['left', 'à gauche'], ['center', 'centré'], ['right', 'à droite']]).get(item.align ?? 'left')
-  if (item.type === 'images') return `${item.items?.length ?? 0} image(s) · ${item.height ?? 40}px · ${align}`
+  /** @param {string} word */
+  const count = (word) => `${item.items?.length ?? 0} ${word}${(item.items?.length ?? 0) > 1 ? 's' : ''}`
+  if (item.type === 'images') return `${count('image')} · ${item.height ?? 40}px · ${align}`
   if (item.type === 'text') return `${(item.content ?? '').split('\n')[0].slice(0, 60)} · ${align}`
-  if (item.type === 'links') return `${item.items?.length ?? 0} lien(s)` + (item.display === 'columns' ? '' : ` · ${align}`)
-  if (item.type === 'buttons') return `${item.items?.length ?? 0} bouton(s) · ${align}`
+  if (item.type === 'links') return count('lien') + (item.display === 'columns' ? '' : ` · ${align}`)
+  if (item.type === 'buttons') return `${count('bouton')} · ${align}`
   if (item.type === 'social') return align
   return ''
 }
 
 /** @param {any} item */
 const elementTitleFn = (item) => {
-  const titles = new Map([['images', 'Images'], ['text', 'Texte'], ['links', 'Liens'], ['buttons', 'Boutons'], ['social', 'Réseaux sociaux'], ['divider', 'Séparateur']])
+  const titles = new Map([['images', "Image ou liste d'images"], ['text', 'Texte'], ['links', 'Lien ou liste de liens'], ['buttons', 'Bouton ou liste de boutons'], ['social', 'Réseaux sociaux'], ['divider', 'Séparateur']])
   return titles.get(item.type) ?? item.type
 }
 /** @param {any} item */
@@ -67,12 +69,12 @@ export const elementSubtitle = jsFn(elementSubtitleFn)
 const elementImages = {
   type: 'object',
   title: 'FooterImagesElement',
-  'x-i18n-title': { en: 'Images', fr: 'Images' },
+  'x-i18n-title': { en: 'Image or image list', fr: "Image ou liste d'images" },
   additionalProperties: false,
   required: ['type', 'align', 'height', 'items'],
   layout: ['type', { cols: { md: 6 }, key: 'height' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
   properties: {
-    type: { const: 'images', title: 'Images' },
+    type: { const: 'images', title: "Image ou liste d'images" },
     align,
     height: {
       type: 'integer',
@@ -155,13 +157,13 @@ const elementText = {
 const elementLinks = {
   type: 'object',
   title: 'FooterLinksElement',
-  'x-i18n-title': { en: 'Links', fr: 'Liens' },
+  'x-i18n-title': { en: 'Link or link list', fr: 'Lien ou liste de liens' },
   additionalProperties: false,
   required: ['type', 'align', 'display', 'items'],
   // the columns display has its own markup, align has no effect on it
   layout: ['type', { cols: { md: 6 }, key: 'display' }, { if: "data.display !== 'columns'", cols: { md: 6 }, children: ['align'] }, 'items', 'mb'],
   properties: {
-    type: { const: 'links', title: 'Liens' },
+    type: { const: 'links', title: 'Lien ou liste de liens' },
     align,
     display: {
       type: 'string',
@@ -180,12 +182,12 @@ const elementLinks = {
 const elementButtons = {
   type: 'object',
   title: 'FooterButtonsElement',
-  'x-i18n-title': { en: 'Buttons', fr: 'Boutons' },
+  'x-i18n-title': { en: 'Button or button list', fr: 'Bouton ou liste de boutons' },
   additionalProperties: false,
   required: ['type', 'align', 'variant', 'items'],
   layout: ['type', { cols: { md: 6 }, key: 'variant' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
   properties: {
-    type: { const: 'buttons', title: 'Boutons' },
+    type: { const: 'buttons', title: 'Bouton ou liste de boutons' },
     align,
     variant: {
       type: 'string',

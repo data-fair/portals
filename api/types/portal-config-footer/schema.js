@@ -50,16 +50,23 @@ const background = {
   }
 }
 
-// list row labels: same js-fn mechanism as linkItemTitle in common-links (receives `item` only)
+// list row labels: js-fn bodies are extracted, so all the logic stays inside each function
+/** @param {any} item @param {any} parent */
+const rowTitleFn = (item, parent) => {
+  const index = parent.data.rows.indexOf(item)
+  return index === -1 ? 'Ligne' : `Ligne ${index + 1}`
+}
 /** @param {any} item */
-const rowTitleFn = (item) => {
-  if (item.columns === 3) return '3 colonnes'
+const rowSubtitleFn = (item) => {
+  /** @param {string} label @param {any[] | undefined} blocks */
+  const column = (label, blocks) => `${label} : ${blocks?.length ?? 0} bloc${(blocks?.length ?? 0) > 1 ? 's' : ''}`
+  if (item.columns === 3) return [column('Gauche', item.blocks), column('Centre', item.blocks2), column('Droite', item.blocks3)].join(' · ')
   if (item.columns === 2) {
-    if (item.disposition === 'left') return 'Colonne de gauche large'
-    if (item.disposition === 'right') return 'Colonne de droite large'
-    return '2 colonnes'
+    const left = { left: 'Gauche (large)', right: 'Gauche (étroite)' }[item.disposition] ?? 'Gauche'
+    const right = { left: 'Droite (étroite)', right: 'Droite (large)' }[item.disposition] ?? 'Droite'
+    return [column(left, item.blocks), column(right, item.blocks2)].join(' · ')
   }
-  return '1 colonne'
+  return column('Colonne unique', item.blocks)
 }
 
 const blocks = { $ref: 'https://github.com/data-fair/portals/footer-elements' }
@@ -107,7 +114,8 @@ export default {
         title: '',
         listEditMode: 'inline-single',
         listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
-        itemTitle: jsFn(rowTitleFn),
+        itemTitle: { ...jsFn(rowTitleFn), pure: false },
+        itemSubtitle: jsFn(rowSubtitleFn),
         messages: { addItem: 'Ajouter une ligne' }
       },
       items: { $ref: '#/$defs/row' }
