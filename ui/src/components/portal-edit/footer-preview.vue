@@ -75,34 +75,34 @@ const labels = computed(() => Object.fromEntries(
 }
 /* the md width of a column tells its place: 12 is alone, 6 and 6 are halves,
    8 and 4 are the wide and narrow ones, and three cols of 4 are a triptych */
-.footer-grid :deep(.v-col--cols-md-12)::before {
+.footer-grid :deep(.v-container > .v-row > .v-col--cols-md-12)::before {
   content: var(--fgd-columnSingle);
 }
-.footer-grid :deep(.v-col--cols-md-6:first-child)::before {
+.footer-grid :deep(.v-container > .v-row > .v-col--cols-md-6:first-child)::before {
   content: var(--fgd-columnLeft);
 }
-.footer-grid :deep(.v-col--cols-md-6:last-child)::before {
+.footer-grid :deep(.v-container > .v-row > .v-col--cols-md-6:last-child)::before {
   content: var(--fgd-columnRight);
 }
-.footer-grid :deep(.v-col--cols-md-8:first-child)::before {
+.footer-grid :deep(.v-container > .v-row > .v-col--cols-md-8:first-child)::before {
   content: var(--fgd-columnLeft) ' ' var(--fgd-wide);
 }
-.footer-grid :deep(.v-col--cols-md-8:last-child)::before {
+.footer-grid :deep(.v-container > .v-row > .v-col--cols-md-8:last-child)::before {
   content: var(--fgd-columnRight) ' ' var(--fgd-wide);
 }
-.footer-grid :deep(.v-row:not(:has(> :nth-child(3))) > .v-col--cols-md-4:first-child)::before {
+.footer-grid :deep(.v-container > .v-row:not(:has(> :nth-child(3))) > .v-col--cols-md-4:first-child)::before {
   content: var(--fgd-columnLeft) ' ' var(--fgd-narrow);
 }
-.footer-grid :deep(.v-row:not(:has(> :nth-child(3))) > .v-col--cols-md-4:last-child)::before {
+.footer-grid :deep(.v-container > .v-row:not(:has(> :nth-child(3))) > .v-col--cols-md-4:last-child)::before {
   content: var(--fgd-columnRight) ' ' var(--fgd-narrow);
 }
-.footer-grid :deep(.v-row:has(> :nth-child(3)) > .v-col:nth-child(1))::before {
+.footer-grid :deep(.v-container > .v-row:has(> :nth-child(3)) > .v-col:nth-child(1))::before {
   content: var(--fgd-columnLeft);
 }
-.footer-grid :deep(.v-row:has(> :nth-child(3)) > .v-col:nth-child(2))::before {
+.footer-grid :deep(.v-container > .v-row:has(> :nth-child(3)) > .v-col:nth-child(2))::before {
   content: var(--fgd-columnCenter);
 }
-.footer-grid :deep(.v-row:has(> :nth-child(3)) > .v-col:nth-child(3))::before {
+.footer-grid :deep(.v-container > .v-row:has(> :nth-child(3)) > .v-col:nth-child(3))::before {
   content: var(--fgd-columnRight);
 }
 </style>
