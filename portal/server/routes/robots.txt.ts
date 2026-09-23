@@ -20,13 +20,7 @@ export default defineEventHandler((event) => {
     'User-agent: *',
     'Content-Signal: search=yes, ai-train=no, ai-input=yes',
     '',
-    '# dataset downloads and exports: expensive to crawl and of no use as a search result.',
-    '# The other APIs stay open: crawlers call them to render pages and embedded applications.',
-    'Disallow: /*/api/v1/datasets/*/full',
-    'Disallow: /*/api/v1/datasets/*/raw',
-    'Disallow: /*/api/v1/datasets/*/convert',
-    'Disallow: /*/api/v1/datasets/*/data-files/',
-    'Disallow: /*/api/v1/datasets/*/lines?*format=',
+    'Allow: /',
     '',
     `Sitemap: ${requestURL.origin}/sitemap.xml`
   ].join('\n')
