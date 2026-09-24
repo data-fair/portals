@@ -1,8 +1,85 @@
-import { linkItemTitle } from '../common-links/schema.js'
+import { jsFn } from '../common-links/schema.js'
+
+const background = {
+  type: 'object',
+  title: 'FooterBackground',
+  required: ['color'],
+  layout: [
+    { cols: { md: 4 }, key: 'color' },
+    { cols: { md: 4 }, key: 'image' },
+    'imageLocation'
+  ],
+  properties: {
+    color: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
+      title: 'Couleur de fond',
+      layout: {
+        slots: {
+          item: { name: 'color-select-item' },
+          selection: { name: 'color-select-selection' }
+        },
+        props: { background: true }
+      }
+    },
+    image: {
+      type: 'object',
+      title: 'Image de fond',
+      required: ['_id', 'name', 'mimeType'],
+      layout: {
+        slots: { component: { name: 'image-upload', props: { width: 2560, label: 'Chargez une image de fond' } } }
+      },
+      properties: {
+        _id: { type: 'string' },
+        name: { type: 'string' },
+        mimeType: { type: 'string' },
+        mobileAlt: { type: 'boolean' }
+      }
+    },
+    imageLocation: {
+      type: 'string',
+      title: "Position de l'image de fond",
+      default: 'right',
+      layout: { if: 'parent.data?.image?._id', cols: { md: 4 } },
+      oneOf: [
+        { const: 'left', title: 'Gauche' },
+        { const: 'center', title: 'Centre' },
+        { const: 'right', title: 'Droite' },
+        { const: 'repeat', title: 'Répétée' }
+      ]
+    }
+  }
+}
+
+// list row labels: js-fn bodies are extracted, so all the logic stays inside each function
+/** @param {any} item @param {any} parent */
+const rowTitleFn = (item, parent) => {
+  const index = parent.data.rows.indexOf(item)
+  return index === -1 ? 'Ligne' : `Ligne ${index + 1}`
+}
+/** @param {any} item */
+const rowSubtitleFn = (item) => {
+  /** @param {string} label @param {any[] | undefined} blocks */
+  const column = (label, blocks) => `${label} : ${blocks?.length ?? 0} bloc${(blocks?.length ?? 0) > 1 ? 's' : ''}`
+  if (item.columns === 3) return [column('Gauche', item.blocks), column('Centre', item.blocks2), column('Droite', item.blocks3)].join(' · ')
+  if (item.columns === 2) {
+    const left = new Map([['left', 'Gauche (large)'], ['right', 'Gauche (étroite)']]).get(item.disposition) ?? 'Gauche'
+    const right = new Map([['left', 'Droite (étroite)'], ['right', 'Droite (large)']]).get(item.disposition) ?? 'Droite'
+    return [column(left, item.blocks), column(right, item.blocks2)].join(' · ')
+  }
+  return column('Colonne unique', item.blocks)
+}
+
+const blocks = { $ref: 'https://github.com/data-fair/portals/footer-elements' }
+/**
+ * @param {string} title
+ * @param {string} key
+ */
+const columnSection = (title, key) => ({ comp: 'section', title, children: [key] })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',
-  'x-exports': [],
+  'x-exports': ['types'],
+  'x-jstt': { additionalProperties: false },
   title: 'Footer',
   type: 'object',
   layout: {
@@ -12,362 +89,125 @@ export default {
         comp: 'card',
         title: 'Options',
         children: [
-          { cols: { md: 6, }, key: 'color' },
-          { cols: { md: 6, }, key: 'socialPosition' },
-          'copyright',
+          { if: '!context.whiteLabel', children: ['copyright'] },
+          'background'
         ]
       },
-      {
-        comp: 'card',
-        title: 'Logo',
-        children: [
-          { key: 'logoPrimaryType', cols: { md: 6 } },
-          { key: 'logoPrimary', cols: { md: 6 } },
-          { key: 'logoPrimaryDark', cols: { md: 6 } },
-          { key: 'logoPrimaryLink', cols: { md: 6 } },
-          { key: 'logoPosition', cols: { md: 6 } },
-          { key: 'logoAlignment', cols: { md: 6 } }
-        ]
-      },
-      { comp: 'card', title: 'Image de fond', children: ['backgroundImage', 'backgroundImageLocation'] },
-      { comp: 'card', title: 'Slogan', children: ['slogan', 'sloganColor', 'sloganPosition', 'sloganAlignment'] },
-      { comp: 'card', title: 'Texte libre', children: ['text', 'textPosition'] },
-      { name: 'footer-preview' },
-      { comp: 'card', title: 'Liens', children: ['linksMode', 'links'] },
-      {
-        comp: 'card',
-        title: 'Liens importants',
-        subtitle: 'Les liens importants sont affichés sous forme de boutons, ce qui les rend plus visibles que de simples liens.',
-        children: ['importantLinks']
-      },
-      { comp: 'card', title: 'Liste de logos', children: ['extraLogos'] }
+      { comp: 'card', title: 'Lignes', children: ['rows'] },
+      { name: 'footer-preview' }
     ]
   },
-  required: ['color', 'copyright', 'logoPrimaryType', 'extraLogos', 'linksMode', 'links', 'importantLinks'],
+  required: ['copyright', 'background', 'rows'],
   properties: {
-    color: {
-      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
-      title: 'Couleur du pied de page',
-      layout: {
-        slots: {
-          item: { name: 'color-select-item' },
-          selection: { name: 'color-select-selection' }
-        },
-        props: { background: true }
-      }
-    },
     copyright: {
-      type: 'string',
-      title: 'Affichage du copyright',
-      description: 'Vous pouvez afficher le copyright de 2 manières : \n- Afficher un texte du type **©2025 — Koumoul** en bas du pied de page.\n- Afficher le logo de **Koumoul** parmi la liste des logos du pied de page.',
-      default: 'text',
-      oneOf: [
-        {
-          const: 'text',
-          title: 'Afficher "©2025 — Koumoul" en bas du pied de page',
-        },
-        {
-          const: 'logo',
-          title: 'Afficher le logo Koumoul',
-        }
-      ]
+      type: 'boolean',
+      title: 'Afficher la mention « ©année — Koumoul » en bas du pied de page',
+      description: 'Cette option est obligatoire : si vous la désactivez, vous devez afficher le logo de Koumoul dans le pied de page.',
+      default: true
     },
-    socialPosition: {
-      type: 'string',
-      title: 'Position des réseaux sociaux',
-      description: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Paramètres généraux › Réseaux sociaux ».",
-      default: 'none',
-      oneOf: [
-        { const: 'none', title: 'Aucun' },
-        { const: 'main', title: 'Colonne principale' },
-        { const: 'left', title: 'Colonne de gauche' }
-      ],
-    },
-    // DEPRECATED for now
-    // showContactInformations: {
-    //   type: 'boolean',
-    //   title: 'Afficher les informations de contact',
-    //   layout: {
-    //     comp: 'switch',
-    //     cols: { md: 6 }
-    //   }
-    // },
-    logoPrimaryType: {
-      type: 'string',
-      title: 'Logo principal du pied de page',
-      default: 'default',
-      oneOf: [
-        { const: 'default', title: 'Utiliser le logo global' },
-        { const: 'header', title: "Utiliser le logo principal de l'entête" },
-        { const: 'local', title: 'Charger une image' },
-        { const: 'hidden', title: 'Ne pas afficher de logo' }
-      ]
-    },
-    logoPrimary: {
-      type: 'object',
-      title: 'Logo principal',
-      required: ['_id', 'name', 'mimeType'],
-      layout: {
-        if: 'parent.data?.logoPrimaryType === "local"',
-        slots: {
-          component: {
-            name: 'image-upload',
-            props: { width: 1280, label: 'Logo principal' }
-          }
-        },
-      },
-      properties: {
-        _id: {
-          type: 'string'
-        },
-        name: {
-          type: 'string'
-        },
-        mimeType: {
-          type: 'string'
-        },
-        mobileAlt: {
-          type: 'boolean'
-        }
-      }
-    },
-    logoPrimaryDark: {
-      type: 'object',
-      title: 'Logo principal - variante pour thème sombre',
-      required: ['_id', 'name', 'mimeType'],
-      layout: {
-        if: 'parent.data?.logoPrimaryType === "local"',
-        slots: {
-          component: {
-            name: 'image-upload',
-            props: { width: 1280, label: 'Logo principal - variante pour thème sombre' }
-          }
-        },
-      },
-      properties: {
-        _id: {
-          type: 'string'
-        },
-        name: {
-          type: 'string'
-        },
-        mimeType: {
-          type: 'string'
-        },
-        mobileAlt: {
-          type: 'boolean'
-        }
-      }
-    },
-    logoPrimaryLink: {
-      type: 'string',
-      title: 'Lien au clic sur le logo principal',
-      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo.",
-      layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"',
-        props: { clearable: true }
-      }
-    },
-    logoPosition: {
-      type: 'string',
-      title: 'Position du logo principal',
-      default: 'main',
-      oneOf: [
-        { const: 'main', title: 'Colonne principale' },
-        { const: 'left', title: 'Colonne de gauche' }
-      ],
-      layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"'
-      }
-    },
-    logoAlignment: {
-      type: 'string',
-      title: 'Alignement du logo principal',
-      default: 'left',
-      oneOf: [
-        { const: 'left', title: 'Gauche' },
-        { const: 'center', title: 'Centre' },
-        { const: 'right', title: 'Droite' }
-      ],
-      layout: {
-        if: 'parent.data?.logoPrimaryType !== "hidden"',
-        cols: { md: 4 }
-      }
-    },
-    slogan: {
-      type: 'string',
-      title: 'Slogan'
-    },
-    sloganColor: {
-      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color',
-      title: 'Couleur du slogan',
-      layout: {
-        slots: {
-          item: { name: 'color-select-item' },
-          selection: { name: 'color-select-selection' }
-        },
-        cols: { md: 4 }
-      }
-    },
-    sloganPosition: {
-      type: 'string',
-      title: 'Position du slogan',
-      default: 'main',
-      oneOf: [
-        { const: 'main', title: 'Colonne principale' },
-        { const: 'left', title: 'Colonne de gauche' }
-      ],
-      layout: { cols: { md: 4 } }
-    },
-    sloganAlignment: {
-      type: 'string',
-      title: 'Alignement du slogan',
-      default: 'left',
-      oneOf: [
-        { const: 'left', title: 'Gauche' },
-        { const: 'center', title: 'Centre' },
-        { const: 'right', title: 'Droite' }
-      ],
-      layout: { cols: { md: 4 } }
-    },
-    text: {
-      type: 'string',
-      title: 'Texte libre',
-      layout: 'markdown'
-    },
-    textPosition: {
-      type: 'string',
-      title: 'Position du texte libre',
-      default: 'main',
-      oneOf: [
-        { const: 'main', title: 'Colonne principale' },
-        { const: 'left', title: 'Colonne de gauche' }
-      ]
-    },
-    text_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' },
-    backgroundImage: {
-      type: 'object',
-      title: 'Image de fond du pied de page',
-      required: ['_id', 'name', 'mimeType'],
-      layout: {
-        slots: {
-          component: {
-            name: 'image-upload',
-            props: { width: 2560, label: 'Chargez une image de fond' }
-          }
-        },
-        cols: { md: 6 }
-      },
-      properties: {
-        _id: {
-          type: 'string'
-        },
-        name: {
-          type: 'string'
-        },
-        mimeType: {
-          type: 'string'
-        },
-        mobileAlt: {
-          type: 'boolean'
-        }
-      }
-    },
-    backgroundImageLocation: {
-      type: 'string',
-      title: "Position de l'image de fond",
-      default: 'right',
-      layout: { cols: { md: 6 } },
-      oneOf: [
-        { const: 'left', title: 'Gauche' },
-        { const: 'center', title: 'Centre' },
-        { const: 'right', title: 'Droite' },
-        { const: 'repeat', title: 'Répétée' }
-      ]
-    },
-    extraLogos: {
+    background: { ...background, title: 'Fond du pied de page' },
+    rows: {
       type: 'array',
-      title: 'Extra logos',
-      layout: {
-        title: '',
-        messages: { addItem: 'Ajouter un logo' }
-      },
-      items: {
-        type: 'object',
-        required: ['logo', 'label'],
-        properties: {
-          logo: {
-            type: 'object',
-            title: 'Logo',
-            required: ['_id', 'name', 'mimeType'],
-            layout: {
-              slots: {
-                component: {
-                  name: 'image-upload',
-                  props: { width: 1280, label: 'Logo' }
-                }
-              }
-            },
-            properties: {
-              _id: {
-                type: 'string'
-              },
-              name: {
-                type: 'string'
-              },
-              mimeType: {
-                type: 'string'
-              },
-              mobileAlt: {
-                type: 'boolean'
-              }
-            }
-          },
-          label: {
-            type: 'string',
-            title: 'Libellé',
-            description: "Texte affiché au survol du logo, pour l'accessibilité.",
-            layout: { cols: { md: 6 } }
-          },
-          link: {
-            type: 'string',
-            title: 'Lien au clic sur le logo',
-            description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo.",
-            layout: { cols: { md: 6 } }
-          }
-        }
-      }
-    },
-    linksMode: {
-      type: 'string',
-      title: "Mode d'affichage des liens",
-      default: 'lines',
-      oneOf: [
-        { title: 'En lignes', const: 'lines' },
-        { title: 'Sur 2 colonnes', const: 'columns' }
-      ]
-    },
-    links: {
-      type: 'array',
-      title: 'Links',
-      layout: {
-        title: '',
-        itemTitle: linkItemTitle,
-        messages: { addItem: 'Ajouter un lien' }
-      },
-      items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
+      title: 'Lignes',
       default: [],
-    },
-    importantLinks: {
-      type: 'array',
-      title: 'Important Links',
       layout: {
         title: '',
-        itemTitle: linkItemTitle,
-        messages: { addItem: 'Ajouter un lien' }
+        listEditMode: 'inline-single',
+        listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
+        itemTitle: { ...jsFn(rowTitleFn), pure: false },
+        itemSubtitle: jsFn(rowSubtitleFn),
+        messages: { addItem: 'Ajouter une ligne' }
       },
-      items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
-      default: []
+      items: { $ref: '#/$defs/row' }
+    }
+  },
+  $defs: {
+    row: {
+      type: 'object',
+      title: 'FooterRow',
+      required: ['columns', 'blocks'],
+      layout: {
+        switch: [
+          { if: 'summary', children: [] },
+          {
+            if: 'data.columns === 2',
+            children: [
+              { cols: { md: 3 }, key: 'columns' },
+              { cols: { md: 3 }, key: 'disposition' },
+              { cols: { md: 3 }, key: 'gutter' },
+              { cols: { md: 3 }, key: 'align' },
+              'background',
+              columnSection('Colonne de gauche', 'blocks'),
+              columnSection('Colonne de droite', 'blocks2')
+            ]
+          },
+          {
+            if: 'data.columns === 3',
+            children: [
+              { cols: { md: 4 }, key: 'columns' },
+              { cols: { md: 4 }, key: 'gutter' },
+              { cols: { md: 4 }, key: 'align' },
+              'background',
+              columnSection('Colonne de gauche', 'blocks'),
+              columnSection('Colonne centrale', 'blocks2'),
+              columnSection('Colonne de droite', 'blocks3')
+            ]
+          },
+          {
+            children: [
+              { cols: { md: 3 }, key: 'columns' },
+              'background',
+              'blocks'
+            ]
+          }
+        ]
+      },
+      properties: {
+        columns: {
+          type: 'integer',
+          title: 'Colonnes',
+          default: 1,
+          oneOf: [
+            { const: 1, title: '1 colonne' },
+            { const: 2, title: '2 colonnes' },
+            { const: 3, title: '3 colonnes' }
+          ]
+        },
+        disposition: {
+          type: 'string',
+          title: 'Disposition',
+          default: 'equal',
+          oneOf: [
+            { const: 'equal', title: 'Largeurs égales' },
+            { const: 'left', title: 'Gauche plus large' },
+            { const: 'right', title: 'Droite plus large' }
+          ]
+        },
+        gutter: {
+          type: 'string',
+          title: 'Espacement',
+          default: 'default',
+          oneOf: [
+            { const: 'none', title: 'Aucun espacement' },
+            { const: 'dense', title: 'Petit espacement' },
+            { const: 'default', title: 'Espacement normal' }
+          ]
+        },
+        align: {
+          type: 'string',
+          title: 'Alignement vertical',
+          default: 'start',
+          oneOf: [
+            { const: 'start', title: 'Aligné en haut' },
+            { const: 'center', title: 'Aligné au centre' },
+            { const: 'end', title: 'Aligné en bas' }
+          ]
+        },
+        background: { ...structuredClone(background), title: 'Fond de la ligne', description: 'Laissez la couleur vide pour utiliser le fond du pied de page.', required: [] },
+        blocks,
+        blocks2: { ...blocks },
+        blocks3: { ...blocks }
+      }
     }
   }
 }

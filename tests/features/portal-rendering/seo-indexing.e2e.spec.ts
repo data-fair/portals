@@ -371,17 +371,18 @@ test.describe('SEO / indexation', () => {
         title: 'Nofollow Portal',
         allowRobots: true,
         menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] },
-        // config is shallow-merged onto portal defaults (see router.ts), so the
-        // whole default footer must be repeated here to keep it non-empty
         footer: {
-          color: 'primary',
-          socialPosition: 'none',
-          copyright: 'text',
-          logoPrimaryType: 'default',
-          extraLogos: [],
-          linksMode: 'lines',
-          links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
-          importantLinks: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }]
+          copyright: true,
+          background: { color: 'primary' },
+          rows: [
+            {
+              columns: 1,
+              blocks: [
+                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] },
+                { type: 'buttons', align: 'center', items: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }] }
+              ]
+            }
+          ]
         }
       }
     })).data

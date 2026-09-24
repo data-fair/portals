@@ -2,6 +2,7 @@ import type { MenuItem, LinkItem } from '#api/types/portal'
 import type { Page } from '#api/types/page'
 import type { RequestPortal } from '~~/server/middleware/1.get-portal'
 
+import { footerLinkItems } from '../../../api/types/portal-config-footer/walk.ts'
 import { portalMongo } from '~~/server/plugins/mongo'
 
 interface SitemapUrl {
@@ -100,17 +101,10 @@ export default defineEventHandler(async (event) => {
   const navigationUrls = collectMenuPaths(portal.config.menu.children, 0.8)
   sitemapUrls.push(...navigationUrls)
 
-  // Add footer links
-  if (portal.config.footer.links) {
-    const footerUrls = collectMenuPaths(portal.config.footer.links, 0.6)
-    sitemapUrls.push(...footerUrls)
-  }
-
-  // Add footer important links
-  if (portal.config.footer.importantLinks) {
-    const footerImportantUrls = collectMenuPaths(portal.config.footer.importantLinks, 0.7)
-    sitemapUrls.push(...footerImportantUrls)
-  }
+  // Add footer links and buttons
+  const footerLinks = footerLinkItems(portal.config.footer)
+  sitemapUrls.push(...collectMenuPaths(footerLinks.links, 0.6))
+  sitemapUrls.push(...collectMenuPaths(footerLinks.buttons, 0.7))
 
   // Fetch and add event pages with their update dates
   const eventsResponse = await portalMongo.pages.find<Pick<Page, 'config' | 'configUpdatedAt'>>(
