@@ -207,7 +207,7 @@
             <v-col cols="12">
               <d-frame-wrapper
                 :iframe-title="`${t('application')} - ${app.title}`"
-                :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
+                :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary as string)}`"
                 resize="no"
                 aspect-ratio
               />
@@ -243,7 +243,7 @@
               <v-col cols="12">
                 <d-frame-wrapper
                   :iframe-title="`${t('application')} - ${app.title}`"
-                  :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
+                  :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary as string)}`"
                   resize="no"
                   aspect-ratio
                 />
@@ -259,7 +259,7 @@
               >
                 <d-frame-wrapper
                   :iframe-title="`${t('application')} - ${app.title}`"
-                  :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
+                  :src="app.exposedUrl + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary as string)}`"
                   resize="no"
                   aspect-ratio
                 />

@@ -11,7 +11,7 @@
   >
     <d-frame-wrapper
       :iframe-title="t('title') + ' - ' + application.title"
-      :src="`${application.exposedUrl}?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
+      :src="`${application.exposedUrl}?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary as string)}`"
       aspect-ratio
     />
   </layout-preview>
