@@ -60,7 +60,7 @@
       <!-- Application iframe -->
       <d-frame-wrapper
         :iframe-title="`${t('application')} - ${application.title}`"
-        :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+        :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
         class="mt-2"
         aspect-ratio
         sync-params

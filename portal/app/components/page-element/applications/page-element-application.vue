@@ -36,7 +36,7 @@
     >
       <d-frame-wrapper
         :iframe-title="`${t('application')} - ${element.application.title}`"
-        :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+        :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
         :sync-params="syncParams"
         :aspect-ratio="frameAspectRatio"
         :height="displayMode === 'fixed-height' ? fixedHeight + 'px' : undefined"

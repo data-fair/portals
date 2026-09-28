@@ -5,7 +5,7 @@
 
   <d-frame-wrapper
     :iframe-title="`${t('application')} - ${applicationFetch.data.value?.title} - ${t('fullscreen')}`"
-    :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+    :src="`/data-fair/app/${$route.params.ref}?d-frame=true&primary=${encodeURIComponent($vuetify.theme.current.colors.primary)}`"
     class="fill-height"
     resize="no"
     sync-params
