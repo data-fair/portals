@@ -100,6 +100,8 @@ FROM installer AS portal-builder
 
 ENV DEBUG=""
 ADD /shared/markdown shared/markdown
+# the sitemap page and route import footerLinkItems from api/types at runtime
+COPY --from=types /app/api/types api/types
 ADD /portal portal
 RUN npm -w portal run build
 

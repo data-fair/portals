@@ -9,6 +9,7 @@ import axios from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
+import { forEachFooterBlock, footerImageRefs, hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
@@ -59,6 +60,11 @@ export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: s
 export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
   // Change WhiteLabel, isReference or md2Compat by super admin only
   if (patch.whiteLabel || patch.isReference || patch.md2Compat) assertAdminMode(session)
+
+  const whiteLabel = patch.whiteLabel ?? portal.whiteLabel
+  if (patch.draftConfig && !whiteLabel && !hasKoumoulMention(patch.draftConfig.footer)) {
+    throw httpError(400, 'Le pied de page doit afficher la mention Koumoul : activez la ligne de copyright ou ajoutez le logo Koumoul dans un bloc images.')
+  }
 
   if (patch.contributorDepartments && patch.contributorDepartments.length && portal.owner.department) {
     throw httpError(400, 'contributorDepartments is only allowed when the portal owner is the organisation root')
@@ -470,18 +476,13 @@ export const duplicatePortalConfig = async (
   rewrite(duplicatedConfig.errorImages?.notFound)
   rewrite(duplicatedConfig.errorImages?.forbidden)
   rewrite(duplicatedConfig.errorImages?.fallback)
-  rewrite(duplicatedConfig.footer.logoPrimary)
-  rewrite(duplicatedConfig.footer.logoPrimaryDark)
-  rewrite(duplicatedConfig.footer.backgroundImage)
+  for (const imageRef of footerImageRefs(duplicatedConfig.footer)) rewrite(imageRef)
   rewrite(duplicatedConfig.header.logoPrimary)
   rewrite(duplicatedConfig.header.logoPrimaryMobile)
   rewrite(duplicatedConfig.header.logoSecondary)
   rewrite(duplicatedConfig.navBar.logo)
   rewrite(duplicatedConfig.navBar.logoMobile)
   rewrite(duplicatedConfig.datasets.card.thumbnail?.default)
-  if (duplicatedConfig.footer.extraLogos) {
-    for (const extraLogo of duplicatedConfig.footer.extraLogos) rewrite(extraLogo.logo)
-  }
   if (duplicatedConfig.topics) {
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
@@ -503,9 +504,6 @@ const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
     portalConfig.errorImages?.notFound,
     portalConfig.errorImages?.forbidden,
     portalConfig.errorImages?.fallback,
-    portalConfig.footer.logoPrimary,
-    portalConfig.footer.logoPrimaryDark,
-    portalConfig.footer.backgroundImage,
     portalConfig.header.logoPrimary,
     portalConfig.header.logoPrimaryMobile,
     portalConfig.header.logoSecondary,
@@ -513,12 +511,7 @@ const getPortalConfigImageRefs = (portalConfig: PortalConfig) => {
     portalConfig.navBar.logoMobile,
     portalConfig.datasets.card.thumbnail?.default,
   ]
-  // List of footer extra logos
-  if (portalConfig.footer.extraLogos) {
-    for (const extraLogo of portalConfig.footer.extraLogos) {
-      imageRefs.push(extraLogo.logo)
-    }
-  }
+  imageRefs.push(...footerImageRefs(portalConfig.footer))
 
   // List of topics images
   if (portalConfig.topics) {
@@ -537,7 +530,8 @@ const renderPortalConfigMarkdown = (portalConfig: PortalConfig) => {
   if (portalConfig.contactInformations?.infos) {
     portalConfig.contactInformations.infos_html = renderMarkdown(portalConfig.contactInformations.infos)
   }
-  if (portalConfig.footer) {
-    portalConfig.footer.text_html = portalConfig.footer.text ? renderMarkdown(portalConfig.footer.text) : undefined
-  }
+  forEachFooterBlock(portalConfig.footer, (block) => {
+    if (block.type !== 'text') return
+    block.content_html = block.markdown && block.content ? renderMarkdown(block.content) : undefined
+  })
 }

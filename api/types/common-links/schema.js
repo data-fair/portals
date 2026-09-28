@@ -423,7 +423,7 @@ const linkItemTitleFn = (item) => {
   return 'Lien non configuré'
 }
 
-export const linkItemTitle = {
-  expr: linkItemTitleFn.toString().replace(/^[^{]+{|}$/g, '').trim(),
-  type: 'js-fn'
-}
+/** @param {Function} fn */
+export const jsFn = (fn) => ({ expr: fn.toString().replace(/^[^{]+{|}$/g, '').trim(), type: 'js-fn' })
+
+export const linkItemTitle = jsFn(linkItemTitleFn)

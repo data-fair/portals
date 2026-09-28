@@ -87,7 +87,7 @@ export default {
           },
           {
             title: 'Style visuel par défaut',
-            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis. Les effets au survol des éléments cliquables (vignettes, boites, thématiques) se configurent ici et peuvent aussi être surchargés par bloc.",
+            subtitle: "Paramètres visuels globaux appliqués par défaut à l'ensemble du portail. Ces valeurs peuvent être surchargées dans chaque bloc ou composant spécifique pour adapter le style selon les besoins. Ces paramètres impactent toutes les vignettes, les boutons et menu de navigations, les thématiques et mots-clés, les blocs, boite, onglets, accordéons, barre de recherche, formulaire de contact,... quand leurs paramètres d'élévation, de densité et d'arrondi ne sont pas définis. Les effets au survol des éléments cliquables (vignettes, boites, thématiques) se configurent ici et peuvent aussi être surchargés par bloc.",
             comp: 'card',
             children: ['defaults']
           },

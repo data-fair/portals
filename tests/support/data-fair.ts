@@ -2,6 +2,7 @@
 //
 // DELETE /api/test-env only wipes the portals-manager collections, it never touches
 // data-fair, so anything seeded here has to be deleted here too.
+import FormData from 'form-data'
 import { axiosAuth } from './axios.ts'
 
 export const dataFairUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/data-fair`
@@ -27,6 +28,24 @@ export const seedDataset = async (portalId: string, opts: {
     image: opts.image,
     publicationSites: [publicationSite(portalId)]
   })
+  await admin.put(`${dataFairUrl}/api/v1/datasets/${opts.id}/permissions`, [{ classes: ['read', 'list'] }])
+  return opts.id
+}
+
+/** A dataset with a real file: data-fair workers must finalize it before its downloads exist */
+export const seedFileDataset = async (portalId: string, opts: { id: string, title: string, csv: string }) => {
+  const form = new FormData()
+  form.append('title', opts.title)
+  form.append('file', Buffer.from(opts.csv), 'data.csv')
+  await admin.post(`${dataFairUrl}/api/v1/datasets/${opts.id}`, form, { headers: form.getHeaders() })
+  for (let i = 0; ; i++) {
+    const { data } = await admin.get(`${dataFairUrl}/api/v1/datasets/${opts.id}`)
+    if (data.status === 'finalized') break
+    if (data.status === 'error') throw new Error(`dataset ${opts.id} in error: ${data.errorStatus}`)
+    if (i >= 60) throw new Error(`dataset ${opts.id} not finalized after 60s (status ${data.status})`)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+  await admin.patch(`${dataFairUrl}/api/v1/datasets/${opts.id}`, { publicationSites: [publicationSite(portalId)] })
   await admin.put(`${dataFairUrl}/api/v1/datasets/${opts.id}/permissions`, [{ classes: ['read', 'list'] }])
   return opts.id
 }

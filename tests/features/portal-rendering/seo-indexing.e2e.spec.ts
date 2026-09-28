@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
+import { deleteDatasets, seedDataset, seedFileDataset } from '../../support/data-fair.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
@@ -32,6 +33,15 @@ const extractJsonLd = (html: string) => {
   const m = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i)
   if (!m) return null
   return JSON.parse(m[1])
+}
+
+// on a dataset page several ld+json scripts coexist (the breadcrumb comes first)
+const extractJsonLdOfType = (html: string, type: string) => {
+  for (const m of html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    const parsed = JSON.parse(m[1])
+    if (parsed['@type'] === type) return parsed
+  }
+  return null
 }
 
 // Every <a> start tag whose href attribute is exactly `href` (attribute order agnostic)
@@ -269,6 +279,43 @@ test.describe('SEO / indexation', () => {
     expect(jsonLd.description).toBe('Description du portail pour SEO')
   })
 
+  test('dataset JSON-LD lists the downloads as DataDownload', async ({ request }) => {
+    // seeding waits for the data-fair workers to finalize the uploaded file
+    test.setTimeout(120_000)
+
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'DataDownload Portal', allowRobots: true, menu: { children: [] } }
+    })).data
+    await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [portal._id], owner: portal.owner })
+
+    const fileId = `test-jsonld-file-${Date.now()}`
+    const metaId = `test-jsonld-meta-${Date.now()}`
+    const seeded = [
+      await seedFileDataset(portal._id, { id: fileId, title: 'Jeu avec fichier', csv: 'nom,valeur\nun,1\ndeux,2\n' }),
+      await seedDataset(portal._id, { id: metaId, title: 'Jeu sans données' })
+    ]
+    try {
+      const withFile = extractJsonLdOfType(await fetchHtml(request, portalUrl(portal._id) + `/datasets/${fileId}`), 'Dataset')
+      expect(withFile).not.toBeNull()
+      // the original file and the API exports, all absolute, all typed
+      const downloads = withFile.distribution as Array<{ '@type': string, name: string, encodingFormat: string, contentUrl: string }>
+      expect(downloads.length).toBeGreaterThanOrEqual(2)
+      for (const d of downloads) {
+        expect(d['@type']).toBe('DataDownload')
+        expect(d.contentUrl).toMatch(/^https?:\/\//)
+        expect(d.encodingFormat).toBeTruthy()
+      }
+      expect(downloads.some(d => d.contentUrl.includes(`/data-fair/api/v1/datasets/${fileId}/data-files/`))).toBe(true)
+      expect(downloads.some(d => d.encodingFormat === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).toBe(true)
+
+      const metaOnly = extractJsonLdOfType(await fetchHtml(request, portalUrl(portal._id) + `/datasets/${metaId}`), 'Dataset')
+      expect(metaOnly).not.toBeNull()
+      expect(metaOnly.distribution).toBeUndefined()
+    } finally {
+      await deleteDatasets(seeded)
+    }
+  })
+
   test('dataset sub-pages are noindex (table, map, api-doc)', async ({ request }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Sub Portal', allowRobots: true, menu: { children: [] } }
@@ -324,17 +371,18 @@ test.describe('SEO / indexation', () => {
         title: 'Nofollow Portal',
         allowRobots: true,
         menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] },
-        // config is shallow-merged onto portal defaults (see router.ts), so the
-        // whole default footer must be repeated here to keep it non-empty
         footer: {
-          color: 'primary',
-          socialPosition: 'none',
-          copyright: 'text',
-          logoPrimaryType: 'default',
-          extraLogos: [],
-          linksMode: 'lines',
-          links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
-          importantLinks: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }]
+          copyright: true,
+          background: { color: 'primary' },
+          rows: [
+            {
+              columns: 1,
+              blocks: [
+                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] },
+                { type: 'buttons', align: 'center', items: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }] }
+              ]
+            }
+          ]
         }
       }
     })).data
