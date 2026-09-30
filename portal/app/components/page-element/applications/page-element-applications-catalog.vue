@@ -73,10 +73,14 @@ const {
       size: pageSize,
       page
     }
+    const staticFilters = element.staticFilters
+    const baseApplication = staticFilterParam(filters.baseApplication.value, staticFilters?.includedBaseApplications)
+    const topics = staticFilterParam(filters.topics.value, staticFilters?.includedTopics)
+    const owner = staticFilterParam(filters.owners.value, staticFilters?.includedOwners, staticFilters?.excludedOwners)
     if (filters.search.value) query.q = filters.search.value
-    if (filters.baseApplication.value?.length) query['base-application'] = filters.baseApplication.value.join(',')
-    if (filters.topics.value?.length) query.topics = filters.topics.value.join(',')
-    if (filters.owners.value?.length) query.owner = filters.owners.value.join(',')
+    if (baseApplication) query['base-application'] = baseApplication
+    if (topics) query.topics = topics
+    if (owner) query.owner = owner
     // No sort during a text search: let data-fair rank results by relevance
     if (sortValue && !filters.search.value) query.sort = sortValue
     return query

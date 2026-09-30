@@ -519,5 +519,17 @@ export default {
         variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' }
       }
     },
+    staticFilterValues: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id'],
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' }
+        }
+      }
+    }
   }
 }

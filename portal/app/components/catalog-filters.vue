@@ -76,7 +76,7 @@
       v-model="filters.topics.value"
       :label="t('filters.topics')"
       :no-data-text="t('filters.noTopics')"
-      :items="facets.topics"
+      :items="topicsItems"
       :item-title="(item) => `${item.value.title} (${item.count})`"
       :item-value="(item) => item.value.id"
       :density="config.filters?.density ?? portalConfig.defaults?.density"
@@ -114,7 +114,7 @@
       v-model="filters.keywords.value"
       :label="t('filters.keywords')"
       :no-data-text="t('filters.noKeywords')"
-      :items="facets.keywords"
+      :items="keywordsItems"
       :item-title="(item) => `${item.value} (${item.count})`"
       item-value="value"
       :density="config.filters?.density ?? portalConfig.defaults?.density"
@@ -214,7 +214,7 @@ type Concept = {
 }
 
 type BaseApplication = {
-  id: string
+  url: string
   title: string
 }
 
@@ -241,6 +241,9 @@ const filters = {
   owners: useStringsArraySearchParam('owner'),
   sort: useStringSearchParam('sort', { default: config.defaultSort })
 }
+
+const staticFilters = ('staticFilters' in config ? config.staticFilters : undefined) as
+  NonNullable<DatasetsCatalogElement['staticFilters']> & NonNullable<ApplicationsCatalogElement['staticFilters']> | undefined
 
 const search = ref<string>(filters.search.value || '')
 const sort = ref<string>()
@@ -278,11 +281,19 @@ if (!preview && (catalogType === 'datasets' || catalogType === 'applications')) 
   if (showFilter('keywords')) facetsToFetch.push('keywords')
 
   const endpoint = catalogType === 'datasets' ? '/data-fair/api/v1/catalog/datasets' : '/data-fair/api/v1/applications'
+  const staticQuery = {
+    concepts: staticFilterParam([], staticFilters?.includedConcepts),
+    topics: staticFilterParam([], staticFilters?.includedTopics),
+    keywords: staticFilterParam([], staticFilters?.includedKeywords),
+    owner: staticFilterParam([], staticFilters?.includedOwners, staticFilters?.excludedOwners),
+    'base-application': staticFilterParam([], staticFilters?.includedBaseApplications)
+  }
   catalogFetch = useLocalFetch<{ facets: Facets }>(endpoint, {
     query: {
       publicationSites: 'data-fair-portals:' + portal.value._id, // Only used by /applications
       facets: facetsToFetch.join(','),
       size: 0,
+      ...Object.fromEntries(Object.entries(staticQuery).filter(([, value]) => value !== undefined))
     }
   })
 
@@ -295,8 +306,8 @@ const previewFacets: Facets = {
     { value: 'concept-b', count: 2 }
   ],
   'base-application': [
-    { value: { id: 'app-1', title: 'Application 1' }, count: 3 },
-    { value: { id: 'app-2', title: 'Application 2' }, count: 5 }
+    { value: { url: 'https://example.com/app-1/', title: 'Application 1' }, count: 3 },
+    { value: { url: 'https://example.com/app-2/', title: 'Application 2' }, count: 5 }
   ],
   topics: [
     { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d', icon: { svgPath: mdiHome } }, count: 5 },
@@ -314,6 +325,10 @@ const previewFacets: Facets = {
 }
 const facets = computed(() => preview ? previewFacets : (catalogFetch?.data.value?.facets ?? { concepts: [], 'base-application': [], topics: [], keywords: [], owner: [] }))
 
+// the facets of a field ignore the filter on this same field, only offer the choices allowed by the static filters
+const topicsItems = computed(() => facets.value.topics.filter(facet => isStaticFilterAllowed(facet.value.id, staticFilters?.includedTopics)))
+const keywordsItems = computed(() => facets.value.keywords.filter(facet => isStaticFilterAllowed(facet.value, staticFilters?.includedKeywords)))
+
 const conceptsItems = computed(() => {
   const conceptsList = preview
     ? [
@@ -325,7 +340,7 @@ const conceptsItems = computed(() => {
   const titleMap = new Map(conceptsList.map(c => [c.identifiers[0], c.title]))
 
   // Build items from facets
-  const items = facets.value.concepts.map(facet => {
+  const items = facets.value.concepts.filter(facet => isStaticFilterAllowed(facet.value, staticFilters?.includedConcepts)).map(facet => {
     const title = titleMap.get(facet.value) ?? facet.value
     return { title: `${title} (${facet.count})`, value: facet.value }
   })
@@ -342,13 +357,12 @@ const conceptsItems = computed(() => {
 })
 
 const baseApplicationItems = computed(() => {
-  return facets.value['base-application'].map(facet => {
-    const app = facet.value
-    return {
-      title: `${app.title} (${facet.count})`,
-      value: app.id
-    }
-  })
+  return facets.value['base-application']
+    .filter(facet => isStaticFilterAllowed(facet.value.url, staticFilters?.includedBaseApplications))
+    .map(facet => ({
+      title: `${facet.value.title} (${facet.count})`,
+      value: facet.value.url
+    }))
 })
 
 const ownersItems = computed(() => {
@@ -362,7 +376,7 @@ const ownersItems = computed(() => {
       : `/simple-directory/api/avatars/${owner.type}/${owner.id}/avatar.png`
 
     return { title, value, avatar }
-  })
+  }).filter(item => isStaticFilterAllowed(item.value, staticFilters?.includedOwners, staticFilters?.excludedOwners))
 })
 
 // Update filters.sort param when sort or order change
