@@ -170,7 +170,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         },
         query: {
           type: 'string' as const,
-          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself. You may additionally append `select=<column keys>` to choose which columns are displayed, but do not otherwise alter the filter syntax.'
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself. On the table page you may additionally append `cols=<column keys>` to choose which columns are displayed, but do not otherwise alter the filter syntax.'
         }
       },
       required: ['path'] as const
