@@ -350,7 +350,6 @@ const sendMessage = useAsyncAction(async () => {
         }
       })
     }
-    formattedBody += ' ' + t('by') + ' ' + (message.value.from) + '<br>'
     formattedBody += additionalFieldsItems.length ? `<ul>${additionalFieldsItems.join('')}</ul>` : ''
     formattedBody += messageTextHtml.trim() ? `<p><strong>${t('messageBody')}</strong><br>${messageTextHtml}</p>` : ''
   }
@@ -390,7 +389,6 @@ const submitContact = async () => {
     send: 'Send'
     socialMedia: 'Find us on social media'
     subject: 'Subject'
-    by: 'submit by'
 
   fr:
     applications: 'Visualisation'
@@ -404,6 +402,5 @@ const submitContact = async () => {
     send: 'Envoyer'
     socialMedia: 'Retrouvez-nous sur les réseaux sociaux'
     subject: 'Sujet'
-    by: 'émis par'
 
 </i18n>
