@@ -1,3 +1,4 @@
+import { agentGuide } from './agent-guide.js'
 import { linkItemTitle, standardPage, genericPage, eventPage, newsPage, externalLink } from '../common-links/schema.js'
 
 const menuBranch = (def: any) => ({ ...structuredClone(def), additionalProperties: false })
@@ -14,6 +15,8 @@ export default {
   'x-vjsf-locales': ['en', 'fr'],
   'x-jstt': { additionalProperties: false },
   title: 'Portal Config',
+  'x-agent-guide': agentGuide.en,
+  'x-i18n-x-agent-guide': { fr: agentGuide.fr },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
