@@ -45,10 +45,16 @@ export function errorsInSseBody (body: string): string[] {
  * Errors in one gateway response. A quota refusal (the account credit cap,
  * checked before any stream opens) is an HTTP 429 with a JSON body, not an SSE
  * error chunk — the chat retries it and renders the same alert, so it must
- * invalidate the run just the same.
+ * invalidate the run just the same. Authentication refusals are the exception
+ * (see below).
  */
 export function errorsInResponse (status: number, body: string): string[] {
   if (status < 400) return errorsInSseBody(body)
+  // 401/403 are the agents service refusing this visitor, not the model failing:
+  // a portal case's anonymous visitor once had its first message refused because
+  // its action token was "not yet valid". The person sees that refusal in the chat,
+  // so it is product behaviour for the judge, not a reason to throw the run away.
+  if (status === 401 || status === 403) return []
   let reason: unknown
   try { reason = JSON.parse(body)?.reason ?? JSON.parse(body)?.error?.message } catch {}
   return [`HTTP ${status}${typeof reason === 'string' && reason ? `: ${reason}` : ''}`]

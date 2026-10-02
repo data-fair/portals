@@ -19,6 +19,13 @@ test.describe('simulation runner helpers', () => {
     expect(errorsInResponse(200, 'data: {"choices":[]}')).toEqual([])
   })
 
+  test('errorsInResponse leaves auth refusals to the judge', () => {
+    // The agents service refusing a visitor (e.g. an anonymous action token not yet
+    // valid) is product behaviour the person sees, not a provider failure.
+    expect(errorsInResponse(401, '{"reason":"anonymous action token not yet valid"}')).toEqual([])
+    expect(errorsInResponse(403, 'forbidden')).toEqual([])
+  })
+
   test('bridgeSettings maps background roles to the tools model', () => {
     const { superadmin, org } = bridgeSettings('sonnet', 'haiku')
     expect(Object.keys(org.modelMapping).sort()).toEqual([...MODEL_ROLES].sort())
