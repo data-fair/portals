@@ -14,14 +14,26 @@
       :variant="element.background?.tonal ? 'tonal' : undefined"
       :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
       :color="hoverFx.background(isHovering, element.background?.color)"
-      :style="[element.background && element.background.image ? {
-        backgroundImage: element.background.tintStrength
-          ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
-          : `url(${getPageImageSrc(element.background.image, false)})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } : undefined, hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })]"
+      :style="hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })"
     >
+      <!--
+        Background image on its own layer so the image zoom effect scales it without the box.
+        z-index: -1 => painted under the content, inside the stacking context of .v-card (z-index: 0)
+      -->
+      <div
+        v-if="element.background?.image"
+        :style="[{
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: element.background.tintStrength
+            ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
+            : `url(${getPageImageSrc(element.background.image, false)})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }, hoverFx.imageStyle(isHovering)]"
+        aria-hidden="true"
+        class="position-absolute"
+      />
       <!--
         The box holds arbitrary user content, so its own link must never wrap it:
         an action button or a markdown link inside would be an anchor in an anchor.
