@@ -27,6 +27,8 @@ const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 /** The agents chat frame, whose src is /agents/<type>/<id>/chat?… — not a bare 'iframe': both surfaces embed other frames. */
 const CHAT_FRAME = 'iframe[src*="/agents/"][src*="/chat"]'
 
+/** The portal page's embedded data-fair view (dataset table, map, …). */
+const EMBED_FRAME = 'iframe[src*="/data-fair/embed/"]'
 /** The d-frame in which the data-fair shell embeds the portals manager UI. */
 const MANAGER_FRAME = 'iframe[src*="/portals-manager/"]'
 
@@ -83,6 +85,15 @@ export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surf
     goto: async () => { await page.goto(portalUrl(ids.portalId) + route, { waitUntil: 'domcontentloaded' }) },
     chatFrame,
     ensureChatOpen,
-    perceptionRoots: [{ label: 'page', root: page, cap: 6000 }, { label: 'chat panel', root: chatFrame }]
+    // The portal embeds data-fair's own views (table, map, …) in an iframe, and an
+    // aria snapshot stops at the iframe boundary: without this root a person on a
+    // table page that showed exactly the 8 rows asked for reported "un cadre vide",
+    // and the judge would have read that as a product failure. On pages without an
+    // embedded view the root costs one read timeout and says so.
+    perceptionRoots: [
+      { label: 'page', root: page, cap: 6000 },
+      { label: 'embedded data view', root: page.locator(EMBED_FRAME).first().contentFrame(), cap: 6000 },
+      { label: 'chat panel', root: chatFrame }
+    ]
   }
 }

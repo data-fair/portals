@@ -89,8 +89,12 @@ Constraints the judge should know:
 
 - Portal dataset routes are plural: `/datasets/<ref>`, `/datasets/<ref>/table`,
   `/datasets/<ref>/map` (data-fair's back-office uses singular `/dataset/<id>`).
-- Only `_c_`-prefixed filter query params (and `_d_<id>_`) survive the table/map embed
-  URL sync; unprefixed filters in a link are silently dropped by the embedded view.
+- In a table/map link, column filters are bare (`type_eq=Piscine`) and work as is;
+  the search and geographic filters (`q`, `bbox`, `geo_distance`, `date_match`) must be
+  `_c_`-prefixed, unprefixed ones are silently dropped by the embedded view. The data
+  sub-agent returns a ready-made `filterQuery` that follows these rules.
+- The table/map itself is data-fair's embedded view in an iframe
+  (`/data-fair/embed/dataset/<ref>/table`).
 - Table links choose their columns with `cols=` (the parameter the embedded table
   reads), not `select=`.
 - These tools are a hand-maintained fork of the data-fair back-office agent tools
