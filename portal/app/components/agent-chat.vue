@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, computed } from 'vue'
-import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
 import { portalPromptContext } from '../composables/agent/portal-prompt-context'
@@ -69,7 +68,6 @@ const props = defineProps<{
   portalId: string
   owner: Account
   locale: string
-  localFetch: $Fetch
 }>()
 
 const agentChat = computed(() => props.portalConfig.agentChat)
