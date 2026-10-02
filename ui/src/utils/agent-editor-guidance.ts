@@ -29,7 +29,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   },
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
-      'To put an existing page in the menu, add a menu item of the « Page libre » kind and pick the page among the suggestions; the page must be published first. ' +
+      'To put an existing page in the menu, add a menu item: a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …) or a standard page (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page ». ' +
       '« Voir le brouillon » in the actions panel opens the draft portal in a new tab: that is where the person sees unpublished changes.',
     'editor-drafts': DRAFT
   }
@@ -51,7 +51,7 @@ export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a p
   '« Groupe » for a free page (groups only sort pages in this back-office list, not the portal menu; « Aucun groupe » is fine), ' +
   'clicking a card moves to the next step by itself (« Suivant » stays disabled), ' +
   '« Choisir une source » (« Page blanche », a reference template, or « Dupliquer une page existante »), then « Informations » (title, owner) and the « Créer » button. ' +
-  'The new page is created already published, with no draft to validate: to show it in the portal menu, go straight to the portal editor.'
+  'The new page is created already published, with no draft to validate: to show it in the portal menu, go straight to the portal editor, where a free page is a « Page libre » item and a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
 
 const STEP_NAMES: Record<string, string> = {
   type: '« Type de page »',

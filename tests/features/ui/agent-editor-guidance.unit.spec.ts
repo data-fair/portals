@@ -28,6 +28,10 @@ test.describe('agent editor guidance', () => {
     const text = Object.values(editorGuidance('portal')).join('\n')
     expect(text).toContain('portalConfig_form')
     expect(text).toContain('« Page libre »')
+    // a catalog page (events, datasets, …) is a « Page standard » item with its « Type de page »:
+    // an after-fix run looked for an events catalog under « Page libre » and never found it
+    expect(text).toContain('« Page standard (Accueil, Contact,...) »')
+    expect(text).toContain('« Catalogue d\'événements »')
     expect(text).toContain('« Voir le brouillon »')
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
@@ -43,6 +47,7 @@ test.describe('agent editor guidance', () => {
     expect(PAGE_CREATION_GUIDANCE).toContain('already published')
     // clicking a card moves on, « Suivant » stays disabled
     expect(PAGE_CREATION_GUIDANCE).toContain('moves to the next step')
+    expect(PAGE_CREATION_GUIDANCE).toContain('« Page standard (Accueil, Contact,...) »')
     expect(PAGE_CREATION_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     expect(pageCreationStep('group')).toContain('« Groupe »')
     expect(pageCreationStep('information')).toContain('« Créer »')
