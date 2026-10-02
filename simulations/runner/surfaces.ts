@@ -58,9 +58,16 @@ export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surf
    * close a drawer that is already open.
    */
   const ensureChatOpen = async (composer: Locator) => {
-    const open = await composer.waitFor({ state: 'visible', timeout: 2000 }).then(() => true, () => false)
-    if (open) return
-    await page.locator('.df-agent-chat-toggle').first().click()
+    const visible = (timeout: number) => composer.waitFor({ state: 'visible', timeout }).then(() => true, () => false)
+    // 10s, not 2: right after a navigation the open drawer's iframe is still reloading,
+    // and a short probe read it as closed — the click then CLOSED the drawer and the run
+    // died waiting for a composer the harness itself had hidden.
+    if (await visible(10_000)) return
+    const toggle = page.locator('.df-agent-chat-toggle').first()
+    await toggle.click()
+    if (await visible(15_000)) return
+    // Still nothing: the probe raced a drawer that was open after all. One more toggle.
+    await toggle.click()
     await composer.waitFor({ state: 'visible', timeout: 30_000 })
   }
   const route = resolveRoute(simCase.route, ids)
