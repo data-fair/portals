@@ -134,13 +134,30 @@ test.describe('header submenu accessibility', () => {
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')
     await expect(trigger).toBeFocused()
   })
+
+  test('keyboard: tabbing past the last item moves on instead of returning to the trigger', async ({ page, goToPortal }) => {
+    const portal = await portalWithSubmenu()
+    await goToPortal(portal._id)
+
+    const trigger = page.locator('.nav-tabs .v-tab', { hasText: 'Territoire' })
+    await expect(trigger).toBeVisible({ timeout: 10_000 })
+    await openSubmenu(trigger)
+
+    const items = page.locator(`#${await trigger.getAttribute('aria-controls')} .v-list-item`)
+    await expect(items.first()).toBeFocused({ timeout: 5_000 })
+    await items.last().focus()
+    await page.keyboard.press('Tab')
+
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await expect(trigger).not.toBeFocused()
+  })
 })
 
 /**
  * Mobile drawer accessibility (RGAA 9.3, 10.7): the drawer links form a real
  * <ul>/<li> list, group boundaries carry a single divider (never doubled), and
- * keyboard users can leave — Escape closes and gives the focus back to the burger,
- * tabbing out closes too rather than parking the focus behind the scrim.
+ * the drawer holds the focus while open (never parked behind the scrim) and Escape
+ * closes it and gives the focus back to the burger.
  */
 test.describe('mobile drawer accessibility', () => {
   test.use({ viewport: { width: 390, height: 844 } })
@@ -242,7 +259,7 @@ test.describe('mobile drawer accessibility', () => {
     await expect(burger).toBeFocused()
   })
 
-  test('tabbing past the last link closes the drawer instead of hiding the focus', async ({ page, goToPortal }) => {
+  test('tabbing past the last link keeps the focus in the open drawer', async ({ page, goToPortal }) => {
     const portal = await portalWithGroups()
     await goToPortal(portal._id)
 
@@ -254,8 +271,8 @@ test.describe('mobile drawer accessibility', () => {
     await links.last().focus()
     await page.keyboard.press('Tab')
 
-    await expect(burger).toHaveAttribute('aria-expanded', 'false')
-    expect(await isFocusInDrawer(page)).toBe(false)
+    await expect(burger).toHaveAttribute('aria-expanded', 'true')
+    await expect.poll(() => isFocusInDrawer(page)).toBe(true)
   })
 })
 

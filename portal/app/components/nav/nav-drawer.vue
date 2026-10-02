@@ -5,8 +5,8 @@
     :aria-label="t('mobileNavigation')"
     :style="{ top: `${appBarBottom}px` }"
     temporary
+    retain-focus
     @keydown.esc="close"
-    @focusout="closeOnFocusOut"
   >
     <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
          reserving arrow keys for the menu pattern. A drawer is a navigation, not a
@@ -45,7 +45,8 @@ const isGroup = (item?: MenuItem) => item?.type === 'submenu' && !!item.children
 const showDivider = (i: number) => i > 0 && (isGroup(navigation[i]) || isGroup(navigation[i - 1]))
 
 // When the drawer opens, move focus into the drawer so users don't have to tab out
-// of the header first. v-navigation-drawer neither traps focus nor auto-focuses content.
+// of the header first. retain-focus keeps it there (RGAA 10.7) but, unlike VDialog,
+// the drawer does not move it in on open (capture-focus only acts on the next key).
 watch(drawer, async (isOpen) => {
   if (!isOpen) return
   await nextTick()
@@ -62,14 +63,6 @@ const activator = () => document.querySelector<HTMLElement>('[aria-controls="nav
 function close () {
   drawer.value = false
   activator()?.focus()
-}
-
-// Focus is moved into the drawer on open but nothing holds it there: tabbing past
-// the last link would leave it on the page behind the drawer and its scrim, out of
-// sight (RGAA 10.7). Close on the way out, like the header submenus do.
-function closeOnFocusOut (e: FocusEvent) {
-  const next = e.relatedTarget as Node | null
-  if (next && !(e.currentTarget as HTMLElement).contains(next)) drawer.value = false
 }
 
 </script>
