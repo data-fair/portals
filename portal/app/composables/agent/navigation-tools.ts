@@ -220,9 +220,15 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         const v = searchParams[k]
         if (isFilterKey(k) && v != null) current[k] = v
       }
-      const text = Object.keys(current).length
+      // Column filters of a table/map link (`capacite_gt=500`) live in the URL query, not
+      // in the page filters: answering "none" on such a page contradicted the screen.
+      const other = Object.keys(searchParams).filter(k => !isFilterKey(k) && searchParams[k] != null)
+      const otherText = other.length
+        ? `\nThe page URL also carries these query parameters (column filters, sort or columns of an embedded table or map): ${other.map(k => `\`${k}\` = ${searchParams[k]}`).join(', ')}.`
+        : ''
+      const text = (Object.keys(current).length
         ? Object.entries(current).map(([k, v]) => `- \`${k}\` = ${v}`).join('\n')
-        : 'No page filters are currently set.'
+        : 'No page filters (_c_ / _d_ keys) are currently set.') + otherText
       return { content: [{ type: 'text' as const, text }], structuredContent: current }
     }
   })

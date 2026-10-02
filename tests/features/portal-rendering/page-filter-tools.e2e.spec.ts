@@ -52,6 +52,35 @@ test.describe('page filter tools', () => {
     await expect.poll(() => new URL(page.url()).searchParams.get('_c_theme_eq')).toBe(null)
   })
 
+  // Judged simulations: on a table opened with ?capacite_gt=500 the tool answered that no
+  // filter was set, contradicting the screen. Column filters live in the URL query of a
+  // table/map link, not in the page filters, and the answer must say so.
+  test('pageFilters_get mentions the column filters carried by the URL', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Filter Tools 2', menu: { children: [] }, agentChat: { active: false } }
+    })).data
+    await user1.post('/api/pages', {
+      type: 'home',
+      config: { title: 'Home', elements: [{ uuid: 'h1', type: 'title', content: 'Hello', titleSize: 'h2' }] },
+      portals: [portal._id],
+      owner: portal.owner
+    })
+
+    await goToPortal(portal._id, '/?capacite_gt=500')
+    await expect(page.getByText('Hello')).toBeVisible({ timeout: 15_000 })
+    await page.waitForFunction(() => {
+      const mc = (navigator as any).modelContext
+      return mc?.listTools?.().some((t: any) => t.name === 'pageFilters_get')
+    }, undefined, { timeout: 15_000 })
+
+    const text = await page.evaluate(async () => {
+      const r = await (navigator as any).modelContext.callTool({ name: 'pageFilters_get', arguments: {} })
+      return r?.content?.[0]?.text ?? ''
+    })
+    expect(text).toContain('capacite_gt')
+    expect(text).not.toBe('No page filters are currently set.')
+  })
+
   test('a shared-filters dataset-table registers a describe tool, sandboxed does not', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Describe Tools', menu: { children: [] }, agentChat: { active: false } }
