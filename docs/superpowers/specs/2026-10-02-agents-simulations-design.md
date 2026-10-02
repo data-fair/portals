@@ -23,8 +23,9 @@ suggested fix. Too-large portals changes are reported, flagged as such.
   evidence for each (a valid run, not necessarily a satisfied one).
 - The `/agents-sim` skill + `simulation-judge` agent can judge them, and
   `npm run simulate:report` summarises the verdicts.
-- A baseline has been run and judged; each friction point has been root-caused and
+- A baseline (two Sonnet passes, one Haiku pass) has been run and judged; each friction point has been root-caused and
   either fixed here (one commit per fix, case re-run) or written up in the final report.
+- `docs/qa/simulations-assistant-ia.md` summarises the statuses (see QA document).
 - Simulations never run from `npm test`, CI, or husky hooks.
 
 ### Non-goals
@@ -151,7 +152,31 @@ the `_c_` filter constraint. The judge's definition is pointed at it.
 2. Run the baseline, judge each valid case, `simulate:report`.
 3. Root-cause each friction point in the code: portals defect → fix + re-run the case;
    other repo → report; harness artefact → fix the harness.
-4. Final report: verdicts before/after, fixes made, cross-repo findings.
+4. Final report: verdicts before/after, fixes made, cross-repo findings — written as the
+   QA document below.
+
+## QA document
+
+`docs/qa/simulations-assistant-ia.md`, in French, same structure and tone as
+data-fair's `docs/qa/simulations-assistant-ia.md`:
+
+- **Titre + état au <date>**, the branch measured and the exact dependency versions
+  (`agents:main` image commit, `data-fair:master` image, `@data-fair/lib-agents-sim`,
+  `lib-vue-agents` / `lib-vuetify-agents`, vjsf).
+- **En bref** — satisfied/total per assistant model, what holds, what is fragile,
+  cases failing by construction.
+- **Résultats de la référence** — one row per case (case, what the person wants),
+  one column per pass (two Sonnet passes, one Haiku pass), ✓/✗ with the judge's
+  friction count; then why each failure happened.
+- **Ce que la référence a fait corriger** — finding / fix / where (portals, or the
+  other repo for reported-only findings, marked as not fixed here).
+- **Limites et prochaines étapes** — open issues, coverage gaps, cadence.
+- **Fonctionnement** — short description of persona/assistant/judge, invalid runs,
+  and how to launch (`/agents-sim`), out of `npm test` and CI.
+
+It records statuses only from runs actually judged; no row is filled from an invalid or
+unjudged run. The `/agents-sim` skill's last step is extended to update it after a
+baseline.
 
 Commits follow `dev/COMMITS.md`. A `simulations` scope is added to the commitlint
 `scope-enum` and the COMMITS.md table (as data-fair has); the scaffold is
