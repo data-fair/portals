@@ -194,6 +194,7 @@ import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
+import { useEditorAgentState } from '~/composables/use-editor-agent-state'
 
 const { t, locale } = useI18n()
 const session = useSessionAuthenticated()
@@ -261,6 +262,7 @@ const saveDraft = useAsyncAction(async () => {
 const hasDraftDiff = computed(() => {
   return !equal(editConfig.value, portalFetch.data.value?.config)
 })
+useEditorAgentState('portal', hasDraftDiff)
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return

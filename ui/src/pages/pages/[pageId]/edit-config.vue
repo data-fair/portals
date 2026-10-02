@@ -63,12 +63,14 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
+import { useEditorAgentState } from '~/composables/use-editor-agent-state'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
-const { pageFetch, patchPage } = usePageStore()
+const { pageFetch, patchPage, hasDraftDiff } = usePageStore()
+useEditorAgentState('page', hasDraftDiff)
 
 const editConfig = ref<PageConfig>()
 // errors of the stored config that healing could not fix, they block the draft saves
