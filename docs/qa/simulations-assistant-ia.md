@@ -52,7 +52,12 @@ Pourquoi les échecs après corrections :
 
 ## Limites et prochaines étapes
 
-1. **Publier json-layout** (chemins de données, fusion profonde), mettre à jour portals, puis remesurer `portail-configuration`. Le pont de simulation doit d'abord transmettre les gros résultats d'outil, sinon ce cas ne mesure pas le produit.
+1. **Publier json-layout**, puis mettre à jour portals. La branche json-layout a été validée en local, en remplaçant le code dans `node_modules`. `portail-configuration` y réussit avec Sonnet, pour la première fois. Avec Haiku, la tâche est faite au premier tour, mais le run échoue ensuite pour trois raisons :
+   - `navigate` du shell data-fair accepte une route inexistante ;
+   - la persona ne perçoit pas les couleurs ;
+   - Haiku renie son propre résultat sous la pression.
+
+   Avec la description du formulaire réduite de 83 à 55 Ko, le pont de simulation n'a plus renvoyé de fichier illisible.
 2. **Remesurer `page-puis-menu`** avec la consigne sur les pages de catalogue. Le run doit aussi pouvoir se reconnecter si la session expire.
 3. **Premier message des visiteurs anonymes** : la correction relève du service agents. Tant qu'elle n'est pas faite, chaque visiteur pressé perd sa première question.
 4. **Haiku comme modèle principal** : il écrit lui-même de faux échanges sur les parcours longs. Il réussit les parcours courts mais n'est pas fiable sur les longs.
