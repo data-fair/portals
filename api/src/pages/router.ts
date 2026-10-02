@@ -8,6 +8,7 @@ import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, initCatalogPageElements, sendPageEvent } from './service.ts'
 import { pageFacets } from './aggregations.ts'
+import { assertNbPagesLimit } from '../limits/service.ts'
 
 const router = Router()
 export default router
@@ -98,6 +99,7 @@ router.post('', async (req, res, next) => {
     requestedPortals: []
   }
   assertAccountRole(session, page.owner, 'admin')
+  await assertNbPagesLimit(page.owner)
 
   const creationDetails = await createPage(page, body.sourcePageId)
   sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
