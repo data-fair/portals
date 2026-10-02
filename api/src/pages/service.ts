@@ -9,6 +9,7 @@ import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
+import { assertNbPagesLimit } from '../limits/service.ts'
 
 const debug = debugModule('pages')
 
@@ -179,6 +180,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   if (patch.owner) {
     assertAccountRole(session, page.owner, 'admin')
     assertAccountRole(session, patch.owner, 'admin')
+    if (patch.owner.type !== page.owner.type || patch.owner.id !== page.owner.id) await assertNbPagesLimit(patch.owner)
     await mongo.images.updateMany(
       {
         'owner.type': page.owner.type,
