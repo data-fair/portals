@@ -10,3 +10,4 @@ data/
 dev/logs/
 test-results/
 .playwright-mcp
+/simulations/tmp/

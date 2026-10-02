@@ -67,6 +67,12 @@ check_http "dev-api" "${NGINX}/portals-manager/api/ping"
 check_http "dev-ui" "http://localhost:${DEV_UI_PORT}"
 check_http "portal" "http://localhost:${DEV_PORTAL_PORT}/ping"
 check_http "ingress-manager" "http://localhost:${DEV_INGRESS_PORT}/ping"
+# Optional: only needed for simulations (npm run simulate).
+if [ -n "${BRIDGE_PORT:-}" ]; then
+  check_http "dev-bridge (opt)" "http://localhost:${BRIDGE_PORT}/_bridge/status"
+else
+  printf "%-20s n/a      (BRIDGE_PORT missing from .env — see dev/init-env.sh)\n" "dev-bridge (opt)"
+fi
 echo ""
 
 # --- Docker compose services ---
