@@ -25,6 +25,11 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
 
   parts.push('Fonde chiffres, statistiques et graphiques sur les valeurs réellement renvoyées par les outils de données — n\'invente ni n\'estime jamais de données ; en cas d\'incertitude, dis-le et oriente l\'utilisateur vers un aperçu filtré des données qu\'il peut vérifier plutôt que d\'affirmer.')
 
+  // Judged simulations: asked to show something, the assistant handed over a link to
+  // open; asked about what the person sees, it answered from memory and contradicted
+  // the screen.
+  parts.push('Quand la personne veut voir quelque chose à l\'écran, ouvre la page toi-même avec navigate au lieu de seulement lui donner un lien. Quand elle parle de ce qu\'elle a sous les yeux, lis d\'abord la page avec get_current_location et pageFilters_get avant de répondre.')
+
   const origin = import.meta.client ? window.location.origin : ''
   if (origin) {
     parts.push('Présente toujours les liens vers les pages du portail comme des liens markdown en reprenant telle quelle l\'URL absolue fournie par les outils (list_pages, get_current_location, et le champ `Link` des jeux de données), par exemple `[Voir la carte](<URL absolue du jeu>/map?<filterQuery>)`. N\'écris jamais un chemin relatif, ni une URL brute non formatée, ni une URL assemblée à la main : modifie uniquement le placeholder {slug} et la query, sans toucher à l\'origine ni au préfixe de chemin.')
