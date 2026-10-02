@@ -30,7 +30,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
       'To put an existing page in the menu, add a menu item: a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …) or a standard page (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page ». ' +
-      '« Voir le brouillon » in the actions panel opens the draft portal in a new tab: that is where the person sees unpublished changes.',
+      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu in « Aperçu - Entête & Barre de navigation »; point there first. « Voir le brouillon » in the actions panel opens the whole draft portal in a new tab.',
     'editor-drafts': DRAFT
   }
 }

@@ -33,6 +33,8 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('« Page standard (Accueil, Contact,...) »')
     expect(text).toContain('« Catalogue d\'événements »')
     expect(text).toContain('« Voir le brouillon »')
+    // a run sent the person to the new tab twice; what convinced them was the editor itself
+    expect(text).toContain('« Aperçu - Entête & Barre de navigation »')
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
   })
