@@ -21,11 +21,11 @@ const DRAFT = 'Every change made by the form sub-agent or by the person is saved
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
     editor: 'Portal page editor. Edit the page (title, description, blocks) with the pageConfig_form sub-agent. ' +
-      'In the editor, lists of datasets, events or news are drawn as placeholders (« Dataset 1 », …): the real content only shows on the portal. ' +
+      'In the editor, lists of datasets, events or news are drawn as placeholders (« Dataset 1 », …): the real content only shows on the portal. The « Liste de jeux de données » block shows the 3 latest by default; for all published datasets use « Catalogue de données ». ' +
       'The « Voir sur … » link in the actions panel opens the published page in a new tab, so it does not show unpublished changes. ' +
       'Pages have no topic (thématique).',
     'editor-drafts': DRAFT,
-    'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Navigate there once this page is published.'
+    'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published.'
   },
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
@@ -49,8 +49,9 @@ export function draftState (hasDraftDiff: boolean): string {
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose. ' +
   'Steps: « Type de page » (« Page libre » for free content, institutional pages, or catalog pages that list datasets, events or news automatically), ' +
   '« Groupe » for a free page (groups only sort pages in this back-office list, not the portal menu; « Aucun groupe » is fine), ' +
+  'clicking a card moves to the next step by itself (« Suivant » stays disabled), ' +
   '« Choisir une source » (« Page blanche », a reference template, or « Dupliquer une page existante »), then « Informations » (title, owner) and the « Créer » button. ' +
-  'The new page opens in the page editor as a draft. To show it in the portal menu, it must be published (« Valider le brouillon »), then added in the portal editor.'
+  'The new page is created already published, with no draft to validate: to show it in the portal menu, go straight to the portal editor.'
 
 const STEP_NAMES: Record<string, string> = {
   type: '« Type de page »',

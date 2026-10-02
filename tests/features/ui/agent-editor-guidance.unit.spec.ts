@@ -18,6 +18,10 @@ test.describe('agent editor guidance', () => {
     // the menu lives in the portal editor, not in the page form
     expect(text).toContain('« Barre de navigation »')
     expect(text).toContain('portalConfig_form')
+    // the menu hint was read as an order: unprompted offers to edit the menu
+    expect(text).toContain('only if the person wants this page in the menu')
+    // the datasets list block defaults to the 3 latest datasets
+    expect(text).toContain('« Catalogue de données »')
   })
 
   test('portal editor guidance names its sub-agent, the menu and the draft preview', () => {
@@ -34,6 +38,11 @@ test.describe('agent editor guidance', () => {
     expect(PAGE_CREATION_GUIDANCE).toContain('« Créer »')
     // haiku took the page group for the portal menu for four turns
     expect(PAGE_CREATION_GUIDANCE).toContain('not the portal menu')
+    // a created page starts published (its draft equals its config): a run told to
+    // validate it first found the button disabled and went adding content instead
+    expect(PAGE_CREATION_GUIDANCE).toContain('already published')
+    // clicking a card moves on, « Suivant » stays disabled
+    expect(PAGE_CREATION_GUIDANCE).toContain('moves to the next step')
     expect(PAGE_CREATION_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     expect(pageCreationStep('group')).toContain('« Groupe »')
     expect(pageCreationStep('information')).toContain('« Créer »')
