@@ -1,4 +1,5 @@
-import type { PortalConfig } from '#api/types/portal-config'
+// relative, not #api: this module is also unit-tested from the root project (tests/features/agent-tools)
+import type { PortalConfig } from '../../../../api/types/portal-config/index.ts'
 
 /**
  * Portal context appended to every agent's system prompt.
@@ -16,7 +17,7 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
 
   // Single fact line (title / owner / domain) instead of three sentences: shorter
   // and keeps the prompt prefix homogeneous across users for better prompt caching.
-  const hostname = import.meta.client ? window.location.hostname : ''
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : ''
   const descr: string[] = []
   if (portalConfig.title) descr.push(`intitulé « ${portalConfig.title} »`)
   if (ownerName) descr.push(`géré par « ${ownerName} »`)
@@ -30,7 +31,7 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
   // the screen.
   parts.push('Quand la personne veut voir quelque chose à l\'écran, ouvre la page toi-même avec navigate au lieu de seulement lui donner un lien. Quand elle parle de ce qu\'elle a sous les yeux, lis d\'abord la page avec get_current_location et pageFilters_get avant de répondre.')
 
-  const origin = import.meta.client ? window.location.origin : ''
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
   if (origin) {
     parts.push('Présente toujours les liens vers les pages du portail comme des liens markdown en reprenant telle quelle l\'URL absolue fournie par les outils (list_pages, get_current_location, et le champ `Link` des jeux de données), par exemple `[Voir la carte](<URL absolue du jeu>/map?<filterQuery>)`. N\'écris jamais un chemin relatif, ni une URL brute non formatée, ni une URL assemblée à la main : modifie uniquement le placeholder {slug} et la query, sans toucher à l\'origine ni au préfixe de chemin.')
   }
