@@ -27,13 +27,11 @@ export default defineConfig({
     // No path suffix: back-office routes carry /data-fair/, portal routes are
     // absolute URLs on the portal's own domain (see simulations/runner/surfaces.ts).
     baseURL: `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
-    // Headed by default, unlike every other project here: simulations never run
-    // in CI and are always started by a maintainer, and watching a simulated
-    // person use the product is most of the value. Since 0.4.0 the persona has
-    // its own look/click/type tools, so what you see is it moving around the
-    // page on its own — a run you cannot see is far harder to diagnose than one
-    // you can. SIM_HEADLESS=1 opts out.
-    headless: !!process.env.SIM_HEADLESS,
+    // Headless by default. Watching the persona move around the page was the first
+    // choice, but a suite that opens a browser window per case in front of whoever is
+    // working proved too intrusive; the trace (below) records every step anyway.
+    // SIM_HEADED=1 opens the window to watch a run.
+    headless: !process.env.SIM_HEADED,
     // 'on', not 'retain-on-failure': most of a simulation is a model thinking,
     // so the trace's per-action DOM snapshots are a better record than watching
     // live, and a satisfied-but-odd run is exactly the one worth replaying. A

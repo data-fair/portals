@@ -50,6 +50,7 @@ while someone is relying on that data.
    ```bash
    npm run simulate                              # every case
    SIM_CASES=page-parametres npm run simulate   # one case
+   SIM_HEADED=1 npm run simulate                 # open the browser window to watch a run (headless by default)
    ```
 
    Models are pinned by `SIM_ASSISTANT_MODEL` (default `sonnet`),
