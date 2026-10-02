@@ -212,6 +212,7 @@ export default {
         { const: 'left', title: 'Trait à gauche du titre' },
         { const: 'bottom-small', title: 'Petit trait sous le titre' },
         { const: 'bottom-medium', title: 'Trait sous le titre (largeur du texte)' },
+        { const: 'underline', title: 'Texte souligné (sous chaque ligne)' },
         { const: 'bottom-large', title: 'Trait pleine largeur sous le titre' }
       ],
       default: 'none'

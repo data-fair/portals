@@ -38,7 +38,7 @@
         :color="element.icon!.color"
         size="small"
         class="mr-4 flex-shrink-0"
-      /><span>{{ element.content }}</span></component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+      /><span :style="textUnderlineStyle">{{ element.content }}</span></component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
         v-if="anchorId"
         :icon="copied ? mdiCheck : mdiLinkVariant"
         :title="copied ? t('linkCopied') : t('copyLink')"
@@ -106,6 +106,11 @@ const showBottomLine = computed(() =>
   element.line?.position === 'bottom-medium' ||
   (lineGrow && element.line?.position === 'none')
 )
+
+// underline decorates the text itself, so a wrapping title gets a line under each of its lines
+const textUnderlineStyle = computed(() => element.line?.position === 'underline'
+  ? `text-decoration: underline 4px rgb(var(--v-theme-${element.line?.color})); text-underline-offset: .2em; text-decoration-skip-ink: none`
+  : undefined)
 
 // bottom-small grows to the title width on hover; "none" reveals the small line from zero
 const bottomLineStyle = computed(() => {

@@ -156,6 +156,35 @@ test.describe('hover effects and links style', () => {
     }, { timeout: 15_000 }).toBe('100%')
   })
 
+  test('underline title line decorates every wrapped line, bottom-medium keeps its separate line', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Title Underline Portal', menu: { children: [] } }
+    })).data
+    const content = 'Un titre assez long pour passer sur plusieurs lignes quelle que soit la largeur de la fenêtre du navigateur'
+    await createHomePage(portal, [
+      { type: 'title', content, titleSize: 'h3', titleTag: 'h2', line: { position: 'underline', color: 'primary' } },
+      { type: 'title', content: 'Titre au trait moyen', titleSize: 'h3', titleTag: 'h2', line: { position: 'bottom-medium', color: 'primary' } }
+    ])
+
+    await goToPortal(portal._id)
+    const underlined = page.getByRole('heading', { name: content })
+    await expect(underlined).toBeVisible({ timeout: 10_000 })
+    const text = underlined.locator('span', { hasText: content }).last()
+    await expect(text).toHaveCSS('text-decoration-line', 'underline')
+    await expect(underlined.locator('[data-pt-title-line]')).toHaveCount(0)
+    // the decoration is per line, which only matters if the title really wraps
+    const lines = await text.evaluate(el => {
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      return range.getClientRects().length
+    })
+    expect(lines).toBeGreaterThan(1)
+
+    const medium = page.getByRole('heading', { name: 'Titre au trait moyen' })
+    await expect(medium.locator('[data-pt-title-line]')).toHaveCount(1)
+    await expect(medium.locator('span', { hasText: 'Titre au trait moyen' }).last()).toHaveCSS('text-decoration-line', 'none')
+  })
+
   test('box background image zooms on hover inside the box', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Background Zoom Portal', menu: { children: [] } }
