@@ -43,6 +43,8 @@ test.describe('agent host state of the editors', () => {
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     await expect.poll(async () => (await readAgentState(page)).editor ?? '').toContain('pageConfig_form')
+    // the assistant action was labelled in English in the French editor
+    await expect(page.locator('[data-action-id="configure-page"]')).toHaveAttribute('title', "Demander à l'assistant")
     // the store settles once the editor has loaded the page
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('no unpublished changes')
 

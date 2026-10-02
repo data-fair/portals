@@ -19,6 +19,7 @@
         <div class="d-flex justify-end mb-1">
           <df-agent-chat-action
             action-id="configure-portal"
+            :title="t('askAssistant')"
             :visible-prompt="t('configurePrompt')"
             :hidden-context="configureContext"
           />
@@ -351,6 +352,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
 
 <i18n lang="yaml">
   en:
+    askAssistant: Ask the assistant
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
     footer: Footer
@@ -360,6 +362,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     configurePrompt: Help me configure this portal
     themeBetaWarning: Offering several themes to users is still a beta feature. If you notice display issues on a theme other than the default one, please report it to us through support.
   fr:
+    askAssistant: Demander à l'assistant
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     footer: Pied de page

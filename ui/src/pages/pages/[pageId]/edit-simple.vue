@@ -8,6 +8,7 @@
       <div class="d-flex justify-end mb-1">
         <df-agent-chat-action
           action-id="configure-page"
+          :title="t('askAssistant')"
           :visible-prompt="t('configurePrompt')"
           :hidden-context="configureContext"
         />
@@ -175,6 +176,7 @@ watch(pageFetch.data, (page) => {
 
 <i18n lang="yaml">
   en:
+    askAssistant: Ask the assistant
     addItemMessage: Add a block to the page
     edit: Editing draft (simple)
     pages: Pages
@@ -182,6 +184,7 @@ watch(pageFetch.data, (page) => {
     configurePrompt: Help me configure this page
 
   fr:
+    askAssistant: Demander à l'assistant
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon (simple)
     pages: Pages
