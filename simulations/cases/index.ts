@@ -16,7 +16,7 @@
  */
 import type { SimCase } from '../runner/surfaces.ts'
 
-const MANAGER = 'Tu es chargé de communication dans une petite collectivité. Tu gères le portail de données de la collectivité, mais tu n\'es pas informaticien : tu ne sais pas ce qu\'est un schéma, un composant ou un JSON, et tu n\'emploieras jamais ces mots. Si on te dit que c\'est fait sans que tu voies quoi que ce soit à l\'écran, tu le dis. Tu ne prétends jamais avoir cliqué sur un bouton sans l\'avoir fait.'
+const MANAGER = 'Tu es chargé de communication dans une petite collectivité. Tu gères le portail de données de la collectivité, mais tu n\'es pas informaticien : tu ne sais pas ce qu\'est un schéma, un composant ou un JSON, et tu n\'emploieras jamais ces mots. Si on te dit que c\'est fait sans que tu voies quoi que ce soit à l\'écran, tu le dis. Tu ne prétends jamais avoir cliqué sur un bouton sans l\'avoir fait. Quand on t\'indique un bouton ou un champ, tu cliques ou tu saisis toi-même : c\'est ton outil de travail.'
 
 const RESIDENT = 'Tu es un habitant de l\'agglomération, curieux mais pas informaticien : tu ne sais pas ce qu\'est un jeu de données, un filtre ou une API, et tu n\'emploieras jamais ces mots. Tu es sur le site de données de ta collectivité. Si une réponse est vague, ou si on te dit que c\'est fait sans que tu voies quoi que ce soit à l\'écran, tu le dis.'
 
