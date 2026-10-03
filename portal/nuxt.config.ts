@@ -21,7 +21,9 @@ const contentSecurityPolicy: Record<string, string[]> = {
   'style-src': ["'self'", "'unsafe-inline'"],
   'worker-src': ["'self'", 'blob:'], // necessary for maplibre
   'child-src': ["'self'", 'blob:'], // same
-  'connect-src': ["'self'", 'https://koumoul.com'] // used by fetch, xhr, etc.
+  // used by fetch, xhr, etc. data.geopf.fr: the assistant's geocode_address tool
+  // (@data-fair/agent-tools-data-fair) calls it from the browser
+  'connect-src': ["'self'", 'https://koumoul.com', 'https://data.geopf.fr']
 }
 
 export default defineNuxtConfig({

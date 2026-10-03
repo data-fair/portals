@@ -102,7 +102,7 @@ Registered by `usePortalAgentHost`:
 | `dataset_data` | `dataset-data-tools.ts` | Data sub-agent: queries, aggregations, filters on a dataset. |
 | `get_current_location`, `list_pages`, `navigate`, `pageFilters_get`, `pageFilters_set` | `navigation-tools.ts`, `page-filter-describe-tool.ts` | Where the person is, what pages exist, moving them, and reading/setting the filters of the current page. |
 | `list_applications`, `list_reuses`, `list_events`, `list_news` | `portal-content-tools.ts` | Portal content listings. |
-| `get_user_geolocation` | `geo-tools.ts` | Asks the browser for the visitor's position. |
+| `get_user_geolocation`, `geocode_address` | `geo-tools.ts` | Asks the browser for the visitor's position; turns an address into coordinates through the IGN geocoding service (data.geopf.fr, allowed in the portal's CSP). |
 
 Constraints the judge should know:
 
