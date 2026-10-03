@@ -523,7 +523,8 @@ export default {
   $defs: {
     menuItem: {
       type: 'object',
-      oneOfLayout: { emptyData: true },
+      // named, or the drop-down of a new « Lien non configuré » row had no label to point to
+      oneOfLayout: { label: 'Type de lien', emptyData: true },
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
