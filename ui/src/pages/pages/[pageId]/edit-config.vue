@@ -18,7 +18,8 @@
           v-model="editConfig"
           :locale="locale"
           :options="vjsfOptions"
-          @update:model-value="saveDraft.execute()"
+          @update:state="onFormState"
+          @update:model-value="onFormData"
         >
           <template #page-elements="{node, statefulLayout}">
             <v-defaults-provider :defaults="vjsfDefaults">
@@ -76,6 +77,8 @@ useEditorAgentState('page', hasDraftDiff)
 usePagePublicationAgentState()
 
 const editConfig = ref<PageConfig>()
+// the draft as loaded from the API, before the form fills in its defaults
+let loadedDraftConfig: PageConfig | undefined
 // errors of the stored config that healing could not fix, they block the draft saves
 // and the form does not display the ones carried by page elements
 const storedConfigErrors = ref<string[]>([])
@@ -95,10 +98,41 @@ watch(pageFetch.data, () => {
   if (!equal(draftConfig, toRaw(pageFetch.data.value.draftConfig))) console.warn('removed properties rejected by the page config schema')
   if (equal(toRaw(editConfig.value), draftConfig)) return
   editConfig.value = draftConfig
+  loadedDraftConfig = draftConfig
 }, { immediate: true })
 provide('page-config', editConfig)
 
-const changesStack = useChangesStack(editConfig)
+// Undo and redo restore a value without a form input: saved here. Back at the opening state,
+// the draft as it was loaded is saved, not the form's filled-in copy of it: that copy carries
+// defaults the published configuration does not, and would show as a change to validate.
+const changesStack = useChangesStack(editConfig, {
+  onRestore: () => nextTick(() => {
+    if (changesStack.index.value === 0 && loadedDraftConfig) patchPage.execute({ draftConfig: loadedDraftConfig })
+    else saveDraft.execute()
+  })
+})
+
+// Only edits are saved, as in the portal editor: a person's input moves the form state's
+// editCount (json-layout), the form filling itself in (defaults) as it opens does not. Until
+// the first edit that filling is also the undo baseline, or « Annuler le dernier changement »
+// was enabled before anything was edited. The assistant's tools write through
+// usePageConfigWebMCP, which saves on its own.
+type FormLayout = { editCount: number } // json-layout's StatefulLayout
+let formState: { layout: FormLayout, initialEditCount: number, savedEditCount: number } | undefined
+const onFormState = (layout: FormLayout) => {
+  if (formState?.layout !== layout) formState = { layout, initialEditCount: layout.editCount, savedEditCount: layout.editCount }
+}
+const onFormData = () => {
+  if (!formState) return
+  if (formState.layout.editCount === formState.initialEditCount) {
+    // after the changes stack has recorded the value
+    nextTick(() => changesStack.reset())
+    return
+  }
+  if (formState.layout.editCount === formState.savedEditCount) return
+  formState.savedEditCount = formState.layout.editCount
+  saveDraft.execute()
+}
 const formValid = ref(false)
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {

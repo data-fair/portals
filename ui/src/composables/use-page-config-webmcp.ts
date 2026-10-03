@@ -18,11 +18,15 @@ export function usePageConfigWebMCP (
   const statefulLayout = shallowRef<StatefulLayout | null>(null)
   const webMCP = shallowRef<WebMCP | null>(null)
   let setupInProgress = false
-  // Prevents feedback loop: when we sync editConfig → statefulLayout externally,
-  // the StatefulLayout synchronously calls onData; we must ignore that echo.
-  let ignoringOnData = false
+  // Only the tools' edits are forwarded, which move editCount: not the echo of editConfig
+  // synced into this layout, nor the layout filling itself in (defaults) as it is created,
+  // which was written into editConfig and enabled « Annuler le dernier changement » before
+  // anything was edited.
+  let forwardedEditCount = 0
   const wrappedOnData = (data: any) => {
-    if (ignoringOnData) return
+    const sl = statefulLayout.value
+    if (!sl || sl.editCount === forwardedEditCount) return
+    forwardedEditCount = sl.editCount
     onData(data)
   }
 
@@ -35,6 +39,7 @@ export function usePageConfigWebMCP (
         webMCP.value = null
       }
 
+      forwardedEditCount = 0
       const sl = new StatefulLayout(
         toRaw(cl),
         toRaw(cl.skeletonTrees[cl.mainTree]),
@@ -103,12 +108,10 @@ export function usePageConfigWebMCP (
     if (config && compiledLayout.value && !webMCP.value) {
       await setup(compiledLayout.value, config)
     }
-    // Sync external changes (user edits via main form) -> agent StatefulLayout.
-    // StatefulLayout.set data calls onData synchronously; use the flag to ignore that echo.
+    // Sync external changes (user edits via main form) -> agent StatefulLayout. Its echo
+    // through onData is not forwarded: setting data is not an edit.
     if (statefulLayout.value && config && !equal(statefulLayout.value.data, toRaw(config))) {
-      ignoringOnData = true
       statefulLayout.value.data = toRaw(config)
-      ignoringOnData = false
     }
   })
 

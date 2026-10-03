@@ -26,6 +26,11 @@ test.describe('draft actions of the page editor', () => {
     const validate = page.getByRole('button', { name: 'Valider le brouillon' })
     // nothing to publish yet
     await expect(validate).toHaveAttribute('aria-disabled', 'true')
+    // nothing to undo either: the form filling itself in as it opens is not a change (a judged
+    // run found « Annuler le dernier changement » enabled before anything was edited)
+    const undo = page.locator('button[title="Annuler le dernier changement"]')
+    await page.waitForTimeout(2000)
+    await expect(undo).toBeDisabled()
 
     const patchResponse = page.waitForResponse(response =>
       response.url().includes(`/api/pages/${createdPage._id}`) && response.request().method() === 'PATCH' && response.ok()
@@ -34,6 +39,22 @@ test.describe('draft actions of the page editor', () => {
     await page.getByLabel('Titre').blur()
     await patchResponse
 
+    await expect(validate).toHaveAttribute('aria-disabled', 'false')
+    await expect(undo).toBeEnabled()
+    // undoing restores the previous value without an input: it must still be saved
+    const undoPatch = page.waitForResponse(response =>
+      response.url().includes(`/api/pages/${createdPage._id}`) && response.request().method() === 'PATCH' && response.ok()
+    )
+    await undo.click()
+    await undoPatch
+    await expect(validate).toHaveAttribute('aria-disabled', 'true')
+    expect((await user1.get(`/api/pages/${createdPage._id}`)).data.draftConfig.title).toBe('Draft Actions Page')
+    // and redone
+    const redoPatch = page.waitForResponse(response =>
+      response.url().includes(`/api/pages/${createdPage._id}`) && response.request().method() === 'PATCH' && response.ok()
+    )
+    await page.locator('button[title="Rétablir le dernier changement"]').click()
+    await redoPatch
     await expect(validate).toHaveAttribute('aria-disabled', 'false')
     await validate.click()
     await expect(page.getByText('Le brouillon a été validé')).toBeVisible()

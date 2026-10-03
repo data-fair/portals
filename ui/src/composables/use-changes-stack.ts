@@ -3,7 +3,11 @@ import { watchIgnorable } from '@vueuse/core'
 import { useHotkey } from 'vuetify'
 import equal from 'fast-deep-equal'
 
-function useChangesStack<Type> (modelValue: Ref<Type>) {
+/**
+ * @param options.onRestore called after undo or redo has restored a value: a restore is not
+ * a form input, so an editor that saves only inputs saves it here
+ */
+function useChangesStack<Type> (modelValue: Ref<Type>, options: { onRestore?: () => void } = {}) {
   let stack: Type[] = []
   const index = ref(-1)
   const size = ref(0)
@@ -20,6 +24,7 @@ function useChangesStack<Type> (modelValue: Ref<Type>) {
     ignoreUpdates(() => {
       modelValue.value = stack[index.value]
     })
+    options.onRestore?.()
   }
 
   const canUndo = computed(() => index.value > 0)
