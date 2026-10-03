@@ -75,9 +75,14 @@ belong to datasets (data-fair settings of the owner).
 
 Only edits are saved: opening an editor saves nothing, even though the form fills in
 defaults and the account's topics as it opens, so « Valider le brouillon » stays
-disabled until something is changed. A newly created page or portal starts published,
-its draft equal to its configuration; the page editor is still titled « Édition du
-brouillon », since edits always go to the draft first.
+disabled until something is changed. A newly created page or portal has nothing to
+validate, its draft equal to its configuration; the page editor is still titled
+« Édition du brouillon », since edits always go to the draft first.
+
+A new page is published on no portal. Once it has content (an empty page cannot be
+published), the person publishes it with the « Publié » switch of a portal in the page's
+« Publications » tab. The portal menu's « Page libre » item only offers pages published on
+that portal.
 
 ### What the back-office tells the assistant
 
