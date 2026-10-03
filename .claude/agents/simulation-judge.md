@@ -31,7 +31,10 @@ A case name, the person's goal, and paths to the evidence. Read the files with
   - `consoleErrors` — browser errors during the run
   - `observations` — what the person actually looked at and did, per turn:
     `{ turn, tool, args, result }`. `look` returns the accessibility outline of
-    the screen at that moment.
+    the screen at that moment. `turn` N is what the person did while writing
+    their Nth reply: the last reply, « DONE », is not sent, so observations
+    normally run one turn past the conversation's user messages. That is not a
+    record defect.
 - `simulations/tmp/sim-<case>.run.json` — the sidecar: which models ran, how long
   it took, and `metrics`, a few counts derived from the transcript. Read them as
   facts, not as a score: nothing in `metrics` is a pass mark, and a number only
