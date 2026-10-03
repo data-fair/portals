@@ -43,6 +43,18 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('« Visiter le portail »')
     // a new menu item is a « Lien non configuré » row whose type is chosen in its drop-down
     expect(text).toContain('« Lien non configuré »')
+    // a catalog item without a label showed « Événement » in the menu, not the page's title
+    expect(text).toContain('« Libellé »')
+  })
+
+  test('the page editor says what its previews show, and that validating does not publish on a portal', () => {
+    const text = Object.values(editorGuidance('page')).join('\n')
+    // a person asked for a preview with real datasets: the assistant knew nothing of the
+    // « Portail de prévisualisation » selector, and the form sub-agent said it did not exist
+    expect(text).toContain('« Portail de prévisualisation »')
+    expect(text).toContain('no preview of the draft with real data')
+    // a haiku run took « Valider le brouillon » for publishing the page on the portal
+    expect(text).toContain('does not publish the page on a portal')
   })
 
   test('the menu guidance says a free page must be published on the portal first', () => {
@@ -64,6 +76,8 @@ test.describe('agent editor guidance', () => {
       const text = Object.values(editorGuidance(kind)).join('\n')
       expect(text, kind).toContain('never guess')
       expect(text, kind).toContain('describe the current state')
+      // a run asked the form sub-agent where « Valider le brouillon » is: it cannot see the panel
+      expect(text, kind).toContain('The actions panel is outside the form')
     }
   })
 

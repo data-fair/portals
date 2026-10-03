@@ -18,7 +18,7 @@ export type EditorKind = 'page' | 'portal'
 
 const DRAFT = 'Every change made by the form sub-agent or by the person is saved automatically to a DRAFT; the public portal only shows it once the person presses « Valider le brouillon » in the actions panel on the right of the editor (« Annuler le brouillon » discards the draft). You cannot press it: when the draft is ready, declare wait_for_user_action, its message telling the person to press « Valider le brouillon » on the right; the draft state tells you once it is published.'
 
-const GUIDING = (subAgent: string) => `To guide the person click by click, first have the ${subAgent} sub-agent describe the current state of the form (open tab, field labels, list items) and name only what it reports: never guess a label, a button or what a click will show. If the person cannot find something after one try, offer to make the change with the sub-agent instead.`
+const GUIDING = (subAgent: string) => `To guide the person click by click, first have the ${subAgent} sub-agent describe the current state of the form (open tab, field labels, list items) and name only what it reports: never guess a label, a button or what a click will show. If the person cannot find something after one try, offer to make the change with the sub-agent instead. The actions panel is outside the form: it is described here, not by the sub-agent.`
 
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
@@ -28,6 +28,8 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
       'Pages have no topic (thématique).',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
+    'editor-previews': 'The editor and the « Aperçu (brouillon) » tab of the page view draw lists of datasets, events or news as placeholders; the « Portail de prévisualisation » selector of the actions panel only picks which portal\'s look these previews take. There is no preview of the draft with real data: real content only shows on the portal once the draft is validated and the page is published there. ' +
+      'Validating the draft does not publish the page on a portal: that is the « Publié » switch of the page\'s « Publications » tab (see the publication state).',
     'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once the page is published on that portal (see the publication state): the « Page libre » menu item only offers pages published on that portal.'
   },
   portal: {
@@ -37,7 +39,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_form'),
     'editor-links': 'Actions panel links of this editor: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal (« Voir sur … » belongs to the page editor). ' +
-      'In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down. The page list of a « Page libre » item only offers pages published on this portal: a page missing there must first be published, in the « Publications » tab of the page.'
+      'In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down; give a catalog page item a « Libellé » (the page title), or the menu shows a generic one (« Événement »). The page list of a « Page libre » item only offers pages published on this portal: a page missing there must first be published, in the « Publications » tab of the page.'
   }
 }
 
