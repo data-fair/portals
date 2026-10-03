@@ -249,6 +249,7 @@ import type { Portal } from '#api/types/portal/index.ts'
 import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { emitAgentEvent } from '@data-fair/lib-vue-agents'
+import { pageDraftValidatedDetail } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -275,7 +276,7 @@ const validateDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
   await pageFetch.refresh()
   // lets an assistant waiting on the person's click (wait_for_user_action) resume
-  emitAgentEvent('draft-validated', { page: page.value?.title })
+  emitAgentEvent('draft-validated', pageDraftValidatedDetail(page.value?.title, (page.value?.portals ?? []).map(id => portalsById.value[id]?.title ?? id)))
 }, { success: t('draftValidated') })
 
 const cancelDraft = useAsyncAction(async () => {

@@ -121,6 +121,7 @@
 import type { Portal } from '#api/types/portal/index.ts'
 import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo, mdiOpenInNew } from '@mdi/js'
 import { emitAgentEvent } from '@data-fair/lib-vue-agents'
+import { pageDraftValidatedDetail } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
 const { pageId, page, pageFetch, hasDraftDiff, pageUrl } = usePageStore()
@@ -135,7 +136,7 @@ const validateDraft = useAsyncAction(async () => {
   await pageFetch.refresh()
   changesStack.reset()
   // lets an assistant waiting on the person's click (wait_for_user_action) resume
-  emitAgentEvent('draft-validated', { page: page.value?.title })
+  emitAgentEvent('draft-validated', pageDraftValidatedDetail(page.value?.title, (page.value?.portals ?? []).map(id => portalsById.value[id]?.title ?? id)))
 }, { success: t('draftValidated') })
 
 const cancelDraft = useAsyncAction(async () => {

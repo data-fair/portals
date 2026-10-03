@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, pagePublicationState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -55,6 +55,14 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('no preview of the draft with real data')
     // a haiku run took « Valider le brouillon » for publishing the page on the portal
     expect(text).toContain('does not publish the page on a portal')
+  })
+
+  test('the draft-validated event of a page says whether it is on a portal', () => {
+    // a haiku run took « Valider le brouillon » for publishing on the portal
+    expect(pageDraftValidatedDetail('Agenda', []).note).toContain('published on no portal')
+    expect(pageDraftValidatedDetail('Agenda', []).note).toContain('« Publications »')
+    expect(pageDraftValidatedDetail('Agenda', ['Portail A'])).toEqual({ page: 'Agenda', publishedOn: 'Portail A' })
+    expect(JSON.stringify(pageDraftValidatedDetail('Agenda', [])).length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
   test('the menu guidance says a free page must be published on the portal first', () => {

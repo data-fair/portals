@@ -60,6 +60,17 @@ export function pagePublicationState (portalTitles: string[]): string {
     : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); an empty page cannot be published'
 }
 
+/**
+ * Detail of the draft-validated event of a page. Validating a draft does not publish the page
+ * on a portal: a haiku run announced « publiée et active sur le portail » from this event, the
+ * guidance saying otherwise being many turns back. The event says it where it matters.
+ */
+export function pageDraftValidatedDetail (title: string | undefined, portalTitles: string[]): Record<string, string> {
+  return portalTitles.length
+    ? { page: title ?? '', publishedOn: portalTitles.join(', ') }
+    : { page: title ?? '', note: 'validated, but published on no portal: not visible on any portal until the person turns on « Publié » in the « Publications » tab of the page' }
+}
+
 /** The pages list (/pages): without it the first reply invented a creation flow. */
 export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page from here: the « Créer une nouvelle page » action in the actions panel on the right opens a creation wizard (its steps are described once it is open); clicking a page opens its editor.'
 
