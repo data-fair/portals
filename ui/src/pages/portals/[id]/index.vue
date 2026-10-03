@@ -32,7 +32,8 @@
           :data-title="t('portalConfig')"
           prefix-name="portalConfig_"
           :sub-agent="true"
-          @update:model-value="saveDraft.execute()"
+          @update:state="onFormState"
+          @update:model-value="onFormData"
         >
           <template #theme-beta-warning>
             <v-alert
@@ -203,12 +204,17 @@ const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
+// The draft as stored. The form fills schema defaults and the account's topics into
+// editConfig as it opens: that is not a change, and comparing editConfig with the
+// published config marked every new portal as having unpublished changes.
+const storedDraftConfig = ref<PortalConfig>()
 const formValid = ref(false)
 const { portalConfig } = providePortalStore()
 
 // Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {
   if (!portalFetch.data.value) return
+  storedDraftConfig.value = portalFetch.data.value.draftConfig
   if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
     editConfig.value = portalFetch.data.value.draftConfig
   }
@@ -257,11 +263,27 @@ watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
 
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
-  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+  const updated = await $fetch<Portal>(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+  storedDraftConfig.value = updated.draftConfig
 })
 
+// Only edits are saved: a person's input or the assistant's form tools, which move the form
+// state's editCount, not what the form fills in by itself. The state comes before the data
+// event, and a new form state starts from its own count.
+type FormLayout = { editCount: number } // json-layout's StatefulLayout
+let formState: { layout: FormLayout, savedEditCount: number } | undefined
+const onFormState = (layout: FormLayout) => {
+  if (formState?.layout !== layout) formState = { layout, savedEditCount: layout.editCount }
+}
+const onFormData = () => {
+  if (!formState || formState.layout.editCount === formState.savedEditCount) return
+  formState.savedEditCount = formState.layout.editCount
+  // after nextTick, so the watchers above (assisted colours) complete the edit before it is sent
+  nextTick(() => saveDraft.execute())
+}
+
 const hasDraftDiff = computed(() => {
-  return !equal(editConfig.value, portalFetch.data.value?.config)
+  return !!storedDraftConfig.value && !equal(storedDraftConfig.value, portalFetch.data.value?.config)
 })
 useEditorAgentState('portal', hasDraftDiff)
 

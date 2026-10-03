@@ -63,8 +63,8 @@ test.describe('agent host state of the editors', () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_form')
-    // not asserting its value: opening the editor of a new portal fills schema defaults
-    // into the draft, which then really differs from the published config
-    await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('published')
+    // opening the editor of a new portal fills schema defaults into the form: not a draft
+    await page.waitForTimeout(3000)
+    await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('no unpublished changes')
   })
 })
