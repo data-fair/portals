@@ -106,6 +106,8 @@ Registered by `usePortalAgentHost`:
 
 Constraints the judge should know:
 
+- `navigate` refuses `/datasets/<ref>/map` for a dataset without geographic data (no
+  `bbox`) and points to its table; the map page itself says it cannot show one.
 - Portal dataset routes are plural: `/datasets/<ref>`, `/datasets/<ref>/table`,
   `/datasets/<ref>/map` (data-fair's back-office uses singular `/dataset/<id>`).
 - In a table/map link, column filters are bare (`type_eq=Piscine`) and work as is;

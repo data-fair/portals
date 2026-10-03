@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import type { $Fetch } from 'nitropack/types'
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { LinkItem } from '#api/types/common-links/index.ts'
@@ -7,7 +8,7 @@ import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { useReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { unwrapFilterQuery } from '@data-fair/agent-tools-data-fair/_utils'
 import { createAgentTranslator } from './utils'
-import { toAbsoluteUrl, toRoutePath } from './url-utils'
+import { toAbsoluteUrl, toRoutePath, datasetMapRef } from './url-utils'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
@@ -42,9 +43,10 @@ interface AgentNavigationToolsDeps {
   locale: Ref<string>
   portalConfig: PortalConfig
   navigationStore: AgentNavigationStore
+  localFetch: $Fetch
 }
 
-export function useAgentNavigationTools ({ locale, portalConfig, navigationStore }: AgentNavigationToolsDeps) {
+export function useAgentNavigationTools ({ locale, portalConfig, navigationStore, localFetch }: AgentNavigationToolsDeps) {
   const t = createAgentTranslator(messages, locale)
   const route = useRoute()
   const router = useRouter()
@@ -183,6 +185,21 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
         const queryString = unwrapFilterQuery(params.query as string | undefined) || embeddedQuery
         const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
+        // A dataset without geographic data has no map: the page would show an empty map and a
+        // raw error, and a judged run told the person the map was displayed.
+        const mapRef = datasetMapRef(path)
+        if (mapRef) {
+          const dataset = await localFetch<{ bbox?: number[] }>(`/data-fair/api/v1/datasets/${encodeURIComponent(mapRef)}`, { query: { select: 'bbox' } })
+          if (!dataset.bbox?.length) {
+            return {
+              content: [{
+                type: 'text' as const,
+                text: `**Success**: false\n**Error**: this dataset has no geographic data, it cannot be shown on a map. Show it in its table instead: /datasets/${mapRef}/table`
+              }],
+              isError: true
+            }
+          }
+        }
         await router.push(query ? { path, query } : path)
         await new Promise(resolve => setTimeout(resolve, 500))
         const currentRoute = router.currentRoute.value

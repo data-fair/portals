@@ -35,3 +35,8 @@ export function toRoutePath (origin: string, base: string, input: string): { pat
   }
   return { path: pathname, query: parsed.search ? parsed.search.slice(1) : undefined }
 }
+
+/** The dataset whose map a router path shows (/datasets/<ref>/map), if it is one. */
+export function datasetMapRef (path: string): string | undefined {
+  return path.match(/^\/datasets\/([^/]+)\/map\/?$/)?.[1]
+}
