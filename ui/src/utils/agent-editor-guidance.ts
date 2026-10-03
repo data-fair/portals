@@ -51,6 +51,9 @@ export function draftState (hasDraftDiff: boolean): string {
     : 'no unpublished changes: what the editor shows is published'
 }
 
+/** The pages list (/pages): without it the first reply invented a creation flow. */
+export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page from here: the « Créer une nouvelle page » action in the actions panel on the right opens a creation wizard (its steps are described once it is open); clicking a page opens its editor.'
+
 /** The page creation wizard (/pages/new): the person clicks through it, nothing creates a page for them. */
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +
   'Steps: « Type de page »: « Page libre » for free content built from blocks, « Pages institutionnelles » (contact, legal notice, …) or « Pages de catalogues » (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …, listing their contents automatically); ' +

@@ -53,6 +53,11 @@ test.describe('agent host state of the editors', () => {
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('the person must press « Valider le brouillon »')
   })
 
+  test('the pages list points to the creation wizard', async ({ page, goToWithAuth }) => {
+    await goToWithAuth('/portals-manager/pages', 'test_admin')
+    await expect.poll(async () => (await readAgentState(page)).pages ?? '', { timeout: 30_000 }).toContain('« Créer une nouvelle page »')
+  })
+
   test('the page creation wizard publishes its guidance and current step', async ({ page, goToWithAuth }) => {
     await goToWithAuth('/portals-manager/pages/new', 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).wizard ?? '', { timeout: 30_000 }).toContain('not the portal menu')

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -76,6 +76,14 @@ test.describe('agent editor guidance', () => {
     expect(PAGE_CREATION_AFTER.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     expect(pageCreationStep('group')).toContain('« Groupe »')
     expect(pageCreationStep('information')).toContain('« Créer »')
+  })
+
+  test('pages list guidance points to the creation wizard', () => {
+    // on the pages list the assistant knew nothing of the wizard and invented a « + » button,
+    // a portal choice and a publish step in its first reply
+    expect(PAGES_LIST_GUIDANCE).toContain('« Créer une nouvelle page »')
+    expect(PAGES_LIST_GUIDANCE).toContain('wizard')
+    expect(PAGES_LIST_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
   test('every published text fits a host event without truncation', () => {

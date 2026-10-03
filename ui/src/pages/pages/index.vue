@@ -71,10 +71,13 @@
 </template>
 
 <script setup lang="ts">
+import { useAgentState } from '@data-fair/lib-vue-agents'
+import { PAGES_LIST_GUIDANCE } from '~/utils/agent-editor-guidance'
 import type { Page } from '#api/types/page'
 import type { PagesGetRes, PagesFacets } from '#api/doc/pages/get-res'
 
 const { t } = useI18n()
+useAgentState('pages', PAGES_LIST_GUIDANCE)
 const showAll = useBooleanSearchParam('showAll')
 
 // Search with debounce
