@@ -71,10 +71,8 @@
               :append-title="context.title ?? (context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview'))"
               no-padding
             >
-              <layout-app-bar
-                v-if="formValid"
-                :home="context.home"
-              />
+              <layout-app-bar :home="context.home" />
+              <preview-paused v-if="!formValid" />
             </preview>
           </template>
           <template #footer-preview>
@@ -82,7 +80,8 @@
               :append-title="t('footer')"
               no-padding
             >
-              <layout-footer v-if="formValid" />
+              <layout-footer />
+              <preview-paused v-if="!formValid" />
             </preview>
           </template>
           <template #breadcrumb-preview>
@@ -90,7 +89,8 @@
               :append-title="t('breadcrumbs')"
               no-padding
             >
-              <layout-breadcrumbs v-if="formValid" />
+              <layout-breadcrumbs />
+              <preview-paused v-if="!formValid" />
             </preview>
           </template>
 
@@ -220,9 +220,11 @@ watch(portalFetch.data, () => {
   }
   if (editConfig.value) portalConfig.value = editConfig.value
 })
-// Synchronize editConfig changes back to portalConfig
-watch(editConfig, (newConfig) => {
-  if (newConfig) portalConfig.value = newConfig
+// Synchronize editConfig changes back to portalConfig, only while the form is valid: the
+// header, footer and breadcrumb previews then keep the last valid state instead of going
+// blank as soon as an item is incomplete (a new « Lien non configuré » menu row).
+watch([editConfig, formValid], ([newConfig, valid]) => {
+  if (newConfig && valid) portalConfig.value = newConfig
 })
 // The API only renders markdown on write, so the preview would lag behind the input without this
 watch(() => editConfig.value?.footer?.text, (text) => {
