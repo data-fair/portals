@@ -71,6 +71,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === 'generic' ? 'primary' : ''"
                 @click="selectPageType('generic')"
@@ -92,6 +93,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -120,6 +122,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -148,6 +151,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -176,6 +180,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedGroupId === 'default' ? 'primary' : ''"
                 @click="selectGroup('default')"
@@ -197,6 +202,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedGroupId === customGroup._id ? 'primary' : ''"
                 @click="selectGroup(customGroup._id)"
@@ -224,6 +230,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'blank' ? 'primary' : ''"
                 @click="selectAction('blank')"
@@ -245,6 +252,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'reference' ? 'primary' : ''"
                 @click="selectAction('reference')"
@@ -266,6 +274,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'duplicate' ? 'primary' : ''"
                 @click="selectAction('duplicate')"
@@ -292,6 +301,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedPageId === page._id ? 'primary' : ''"
                 @click="selectPage(page._id)"
