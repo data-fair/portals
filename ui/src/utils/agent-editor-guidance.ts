@@ -28,7 +28,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
       'Pages have no topic (thématique).',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
-    'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published.'
+    'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once the page is published on that portal (see the publication state): the « Page libre » menu item only offers pages published on that portal.'
   },
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
@@ -37,7 +37,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_form'),
     'editor-links': 'Actions panel links of this editor: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal (« Voir sur … » belongs to the page editor). ' +
-      'In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type (« Page libre », « Page standard (Accueil, Contact,...) », …) is chosen in the drop-down of that row; the navigation preview stays empty until the row is configured.'
+      'In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down. The page list of a « Page libre » item only offers pages published on this portal: a page missing there must first be published, in the « Publications » tab of the page.'
   }
 }
 
@@ -51,6 +51,13 @@ export function draftState (hasDraftDiff: boolean): string {
     : 'no unpublished changes: what the editor shows is published'
 }
 
+/** On which portals the open page is published: a new page is on none, and cannot be put in a portal menu yet. */
+export function pagePublicationState (portalTitles: string[]): string {
+  return portalTitles.length
+    ? `published on: ${portalTitles.join(', ')}`
+    : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal), once it has content'
+}
+
 /** The pages list (/pages): without it the first reply invented a creation flow. */
 export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page from here: the « Créer une nouvelle page » action in the actions panel on the right opens a creation wizard (its steps are described once it is open); clicking a page opens its editor.'
 
@@ -61,8 +68,9 @@ export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a p
   '« Choisir une source » (« Page blanche », a reference template or « Dupliquer une page existante »); then « Informations » (title, owner) and « Créer ».'
 
 /** What follows « Créer », a key of its own: a host event detail is capped at 1000 characters. */
-export const PAGE_CREATION_AFTER = 'The page is created already published. Its editor is titled « Édition du brouillon » because edits always go to a draft first, with nothing to validate until something changes. ' +
-  'To show it in the portal menu, go to the portal editor: a free page is a « Page libre » item, a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
+export const PAGE_CREATION_AFTER = 'After « Créer » the page editor opens, titled « Édition du brouillon » because edits always go to a draft first; a new page has nothing to validate until something changes. ' +
+  'A new page is published on no portal: once it has content (an empty page cannot be published), the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal). ' +
+  'Only then can it go in the portal menu, in the portal editor: a free page is a « Page libre » item, a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
 
 const STEP_NAMES: Record<string, string> = {
   type: '« Type de page »',

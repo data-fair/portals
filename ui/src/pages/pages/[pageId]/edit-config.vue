@@ -65,13 +65,23 @@ import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
 import { useEditorAgentState } from '~/composables/use-editor-agent-state'
+import { useAgentState } from '@data-fair/lib-vue-agents'
+import { pagePublicationState } from '~/utils/agent-editor-guidance'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
-const { pageFetch, patchPage, hasDraftDiff } = usePageStore()
+const { pageFetch, patchPage, hasDraftDiff, page } = usePageStore()
 useEditorAgentState('page', hasDraftDiff)
+// A new page is published on no portal, and the menu's « Page libre » item only offers pages
+// published on that portal: a judged run looked for a page it had just created and never found it.
+const publicationPortalsFetch = useFetch<{ results: { _id: string, title: string }[] }>($apiPath + '/portals', { query: { select: '_id,title', size: 10000 } })
+useAgentState('publication', () => {
+  if (!page.value || !publicationPortalsFetch.data.value) return undefined
+  const titles = Object.fromEntries(publicationPortalsFetch.data.value.results.map(p => [p._id, p.title]))
+  return pagePublicationState((page.value.portals ?? []).map(id => titles[id] ?? id))
+})
 
 const editConfig = ref<PageConfig>()
 // errors of the stored config that healing could not fix, they block the draft saves

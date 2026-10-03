@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, pagePublicationState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -43,6 +43,18 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('« Lien non configuré »')
   })
 
+  test('the menu guidance says a free page must be published on the portal first', () => {
+    for (const kind of ['page', 'portal'] as const) {
+      expect(Object.values(editorGuidance(kind)).join('\n'), kind).toContain('only offers pages published on')
+    }
+  })
+
+  test('the page editor says on which portals the page is published', () => {
+    expect(pagePublicationState([])).toContain('published on no portal')
+    expect(pagePublicationState([])).toContain('« Publications »')
+    expect(pagePublicationState(['Portail de l\'agglomération'])).toBe('published on: Portail de l\'agglomération')
+  })
+
   test('both editors ground click-by-click guidance in the form itself', () => {
     // a run guided by guessing the screen for three turns (a card heading to click, a
     // chooser that never appeared) although its sub-agent could describe the form
@@ -59,9 +71,13 @@ test.describe('agent editor guidance', () => {
     expect(PAGE_CREATION_GUIDANCE).toContain('« Créer »')
     // haiku took the page group for the portal menu for four turns
     expect(PAGE_CREATION_GUIDANCE).toContain('not the portal menu')
-    // a created page starts published (its draft equals its config): a run told to
+    // a created page has no draft to validate (its draft equals its config): a run told to
     // validate it first found the button disabled and went adding content instead
-    expect(PAGE_CREATION_GUIDANCE).toContain('already published')
+    expect(PAGE_CREATION_GUIDANCE).toContain('nothing to validate')
+    // but it is published on no portal: the « Page libre » menu picker only offers pages
+    // published on that portal, and a run could not find the page it had just created
+    expect(PAGE_CREATION_GUIDANCE).toContain('published on no portal')
+    expect(PAGE_CREATION_GUIDANCE).toContain('« Publications »')
     // clicking a card moves on, « Suivant » stays disabled
     expect(PAGE_CREATION_GUIDANCE).toContain('moves to the next step')
     expect(PAGE_CREATION_GUIDANCE).toContain('« Page standard (Accueil, Contact,...) »')

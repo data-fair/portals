@@ -48,6 +48,9 @@ test.describe('agent host state of the editors', () => {
     // the store settles once the editor has loaded the page
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('no unpublished changes')
 
+    // the page is attached to the portal: it says so, by the portal's title
+    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toBe('published on: State Portal')
+
     await page.getByLabel('Titre').fill('State Page renamed')
     await page.getByLabel('Titre').blur()
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('the person must press « Valider le brouillon »')
