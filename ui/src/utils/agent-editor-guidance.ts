@@ -33,7 +33,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
       'To put an existing page in the menu, add a menu item: a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …) or a standard page (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page ». ' +
-      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu in « Aperçu - Entête & Barre de navigation »; point there first.',
+      'The editor shows changes at once, but stays on the tab that is open: colours in the « Apparence » tab > « Couleurs », the menu in « Aperçu - Entête & Barre de navigation » under the « Barre de navigation » tab; name the tab to open.',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_form'),
     'editor-links': 'Actions panel links of this editor: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal (« Voir sur … » belongs to the page editor). ' +
@@ -48,14 +48,14 @@ export function editorGuidance (kind: EditorKind): Record<string, string> {
 export function draftState (hasDraftDiff: boolean): string {
   return hasDraftDiff
     ? 'unpublished changes: the person must press « Valider le brouillon » to publish them'
-    : 'no unpublished changes: what the editor shows is published'
+    : 'no unpublished changes: the draft equals the saved configuration'
 }
 
 /** On which portals the open page is published: a new page is on none, and cannot be put in a portal menu yet. */
 export function pagePublicationState (portalTitles: string[]): string {
   return portalTitles.length
     ? `published on: ${portalTitles.join(', ')}`
-    : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal), once it has content'
+    : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); an empty page cannot be published'
 }
 
 /** The pages list (/pages): without it the first reply invented a creation flow. */
@@ -69,7 +69,7 @@ export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a p
 
 /** What follows « Créer », a key of its own: a host event detail is capped at 1000 characters. */
 export const PAGE_CREATION_AFTER = 'After « Créer » the page editor opens, titled « Édition du brouillon » because edits always go to a draft first; a new page has nothing to validate until something changes. ' +
-  'A new page is published on no portal: once it has content (an empty page cannot be published), the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal). ' +
+  'A new page is published on no portal. The person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); a blank free page needs content first (an empty page cannot be published), catalog pages are created with their content. ' +
   'Only then can it go in the portal menu, in the portal editor: a free page is a « Page libre » item, a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
 
 const STEP_NAMES: Record<string, string> = {

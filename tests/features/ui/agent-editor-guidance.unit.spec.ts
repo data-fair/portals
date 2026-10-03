@@ -35,6 +35,8 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('« Voir le brouillon »')
     // a run sent the person to the new tab twice; what convinced them was the editor itself
     expect(text).toContain('« Aperçu - Entête & Barre de navigation »')
+    // a run placed that preview « en haut à droite »: it is under a tab the person must open
+    expect(text).toContain('« Aperçu - Entête & Barre de navigation » under the « Barre de navigation » tab')
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
     // the portal editor's own links: a run sent the person to the page editor's « Voir sur … »
@@ -78,6 +80,9 @@ test.describe('agent editor guidance', () => {
     // published on that portal, and a run could not find the page it had just created
     expect(PAGE_CREATION_GUIDANCE).toContain('published on no portal')
     expect(PAGE_CREATION_GUIDANCE).toContain('« Publications »')
+    // a catalog page is created with content: a run told the person their new events
+    // catalog was empty and could not be published
+    expect(PAGE_CREATION_GUIDANCE).toContain('catalog pages are created with their content')
     // clicking a card moves on, « Suivant » stays disabled
     expect(PAGE_CREATION_GUIDANCE).toContain('moves to the next step')
     expect(PAGE_CREATION_GUIDANCE).toContain('« Page standard (Accueil, Contact,...) »')
@@ -112,6 +117,8 @@ test.describe('agent editor guidance', () => {
 
   test('draft state says whether unpublished changes are waiting', () => {
     expect(draftState(true)).toBe('unpublished changes: the person must press « Valider le brouillon » to publish them')
-    expect(draftState(false)).toBe('no unpublished changes: what the editor shows is published')
+    // « what the editor shows is published » read as « the page is online », next to a
+    // page published on no portal
+    expect(draftState(false)).toBe('no unpublished changes: the draft equals the saved configuration')
   })
 })

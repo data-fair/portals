@@ -64,9 +64,11 @@
 
 <script lang="ts" setup>
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { usePagePublicationAgentState } from '~/composables/use-page-publication-agent-state'
 
 const { t } = useI18n()
 const { pageFetch } = usePageStore()
+usePagePublicationAgentState()
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 watch(pageFetch.data, (page) => {

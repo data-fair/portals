@@ -56,6 +56,21 @@ test.describe('agent host state of the editors', () => {
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('the person must press « Valider le brouillon »')
   })
 
+  test('the page view reports publishing the page on a portal', async ({ page, goToWithAuth }) => {
+    // a judged run had the person tick « Publié » with nothing telling the assistant
+    const portal = (await user1.post('/api/portals', { config: { title: 'Publication Portal', menu: { children: [] } } })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Publication Page', elements: [{ type: 'text', content: 'Hello' }], genericMetadata: { slug: 'publication-page' } },
+      portals: [],
+      owner: portal.owner
+    })).data
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}?tab=publications`, 'test_admin')
+    await expect.poll(async () => (await readAgentState(page)).publication ?? '', { timeout: 30_000 }).toContain('published on no portal')
+    await page.getByRole('checkbox', { name: 'Publié' }).first().check()
+    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toBe('published on: Publication Portal')
+  })
+
   test('the pages list points to the creation wizard', async ({ page, goToWithAuth }) => {
     await goToWithAuth('/portals-manager/pages', 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).pages ?? '', { timeout: 30_000 }).toContain('« Créer une nouvelle page »')
