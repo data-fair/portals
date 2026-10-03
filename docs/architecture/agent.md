@@ -73,6 +73,20 @@ brouillon »** discards it). A tool that writes the form has therefore changed t
 draft, not the published portal. Pages have no topic (thématique) field: topics
 belong to datasets (data-fair settings of the owner).
 
+Only edits are saved: opening an editor saves nothing, even though the form fills in
+defaults and the account's topics as it opens, so « Valider le brouillon » stays
+disabled until something is changed. A newly created page or portal starts published,
+its draft equal to its configuration; the page editor is still titled « Édition du
+brouillon », since edits always go to the draft first.
+
+### What the back-office tells the assistant
+
+The page and portal editors, the pages list and the page creation wizard publish their
+guidance to the chat as host state (`ui/src/utils/agent-editor-guidance.ts`): how to
+reach and edit what is on screen, the draft and its current state, where the menu is
+edited, and the wizard's steps. The assistant is told to have the form sub-agent
+describe the form before guiding the person click by click, never to guess a label.
+
 ## Portal tools (visitors)
 
 Registered by `usePortalAgentHost`:
