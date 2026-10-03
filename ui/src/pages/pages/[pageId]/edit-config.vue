@@ -221,7 +221,7 @@ const saveDraft = useAsyncAction(async () => {
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
   editConfig.value = { ...editConfig.value, ...data } as PageConfig
   saveDraft.execute()
-})
+}, computed(() => (vjsfOptions.value.context ?? {}) as Record<string, unknown>))
 
 watch(pageFetch.data, (page) => {
   if (!page) return

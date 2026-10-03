@@ -1,4 +1,4 @@
-import { computed, shallowRef, watch, toRaw, onScopeDispose, type Ref } from 'vue'
+import { computed, ref, shallowRef, watch, toRaw, onScopeDispose, type Ref } from 'vue'
 import { StatefulLayout } from '@json-layout/core/state'
 import { WebMCP } from '@json-layout/core/webmcp'
 import equal from 'fast-deep-equal'
@@ -12,7 +12,10 @@ const compiledLayoutImports: Record<string, () => Promise<any>> = {
 export function usePageConfigWebMCP (
   editConfig: Ref<PageConfig | undefined>,
   locale: Ref<string>,
-  onData: (data: any) => void
+  onData: (data: any) => void,
+  // the visible form's context (page type…): without it the tools' form hid what depends on
+  // it, a free page's slug and group or an event's dates
+  context: Readonly<Ref<Record<string, unknown>>> = ref({})
 ) {
   const compiledLayout = shallowRef<any>(null)
   const statefulLayout = shallowRef<StatefulLayout | null>(null)
@@ -46,6 +49,7 @@ export function usePageConfigWebMCP (
         {
           width: 600,
           updateOn: 'input',
+          context: toRaw(context.value),
           onData: wrappedOnData
         },
         toRaw(config)
@@ -114,6 +118,12 @@ export function usePageConfigWebMCP (
       statefulLayout.value.data = toRaw(config)
     }
   })
+
+  // the context can complete later (the pages list): the tools' form follows it
+  watch(context, (ctx) => {
+    const sl = statefulLayout.value
+    if (sl) sl.options = { ...sl.options, context: toRaw(ctx) }
+  }, { deep: true })
 
   const configureContext = computed(() => {
     const lines = [
