@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, draftSaveState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -63,6 +63,15 @@ test.describe('agent editor guidance', () => {
     expect(pageDraftValidatedDetail('Agenda', []).note).toContain('« Publications »')
     expect(pageDraftValidatedDetail('Agenda', ['Portail A'])).toEqual({ page: 'Agenda', publishedOn: 'Portail A' })
     expect(JSON.stringify(pageDraftValidatedDetail('Agenda', [])).length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+  })
+
+  test('a failed draft save is reported until a later save succeeds', () => {
+    // a judged run's draft was refused by the API (400): the editor showed a red toast, the
+    // assistant said « enregistré » three times and asked the person to copy the error
+    expect(draftSaveState(undefined, false)).toBeUndefined()
+    expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('NOT saved')
+    expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('400 - body/draftConfig/elements/1')
+    expect(draftSaveState(undefined, true)).toContain('saved again')
   })
 
   test('the menu guidance says a free page must be published on the portal first', () => {

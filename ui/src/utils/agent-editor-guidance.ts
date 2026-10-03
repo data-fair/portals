@@ -53,6 +53,17 @@ export function draftState (hasDraftDiff: boolean): string {
     : 'no unpublished changes: the draft equals the saved configuration'
 }
 
+/**
+ * Whether the draft could be saved. Absent until a save fails: a judged run's draft was
+ * refused by the API, the editor showed a red toast, and the assistant said « enregistré »
+ * three times and asked the person to copy the error.
+ */
+export function draftSaveState (error: string | undefined, hadFailure: boolean): string | undefined {
+  if (error) return `the last change is NOT saved: the draft was refused (${error.slice(0, 300)}). Tell the person, and fix or undo the change with the form sub-agent`
+  if (hadFailure) return 'the draft is saved again'
+  return undefined
+}
+
 /** On which portals the open page is published: a new page is on none, and cannot be put in a portal menu yet. */
 export function pagePublicationState (portalTitles: string[]): string {
   return portalTitles.length

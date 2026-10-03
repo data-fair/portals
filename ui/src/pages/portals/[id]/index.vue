@@ -287,7 +287,7 @@ const onFormData = () => {
 const hasDraftDiff = computed(() => {
   return !!storedDraftConfig.value && !equal(storedDraftConfig.value, portalFetch.data.value?.config)
 })
-useEditorAgentState('portal', hasDraftDiff)
+useEditorAgentState('portal', hasDraftDiff, () => saveDraft.error.value)
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return

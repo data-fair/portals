@@ -73,7 +73,6 @@ const route = useRoute<'/pages/[pageId]/edit-config'>()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
 const { pageFetch, patchPage, hasDraftDiff } = usePageStore()
-useEditorAgentState('page', hasDraftDiff)
 usePagePublicationAgentState()
 
 const editConfig = ref<PageConfig>()
@@ -217,6 +216,7 @@ const saveDraft = useAsyncAction(async () => {
   // the stored draft was accepted by the API, it no longer carries errors
   storedConfigErrors.value = []
 })
+useEditorAgentState('page', hasDraftDiff, () => patchPage.error.value)
 
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
   editConfig.value = { ...editConfig.value, ...data } as PageConfig

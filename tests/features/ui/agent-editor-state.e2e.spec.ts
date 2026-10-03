@@ -76,6 +76,24 @@ test.describe('agent host state of the editors', () => {
     await expect.poll(async () => (await readAgentState(page)).pages ?? '', { timeout: 30_000 }).toContain('« Créer une nouvelle page »')
   })
 
+  test('the page editor reports a draft save the API refused', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'Save Portal', menu: { children: [] } } })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Save Page', elements: [], genericMetadata: { slug: 'save-page' } },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+    await page.route(`**/api/pages/${createdPage._id}`, route => route.request().method() === 'PATCH'
+      ? route.fulfill({ status: 400, contentType: 'text/plain', body: 'body/draftConfig/elements/1 requiert la propriété type' })
+      : route.continue())
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
+    await page.getByLabel('Titre').fill('Save Page renamed')
+    await page.getByLabel('Titre').blur()
+    await expect.poll(async () => (await readAgentState(page))['draft-save'] ?? '').toContain('NOT saved')
+  })
+
   test('the page creation wizard publishes its guidance and current step', async ({ page, goToWithAuth }) => {
     await goToWithAuth('/portals-manager/pages/new', 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).wizard ?? '', { timeout: 30_000 }).toContain('not the portal menu')
