@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, PAGE_CREATION_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -37,9 +37,24 @@ test.describe('agent editor guidance', () => {
     expect(text).toContain('« Aperçu - Entête & Barre de navigation »')
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
+    // the portal editor's own links: a run sent the person to the page editor's « Voir sur … »
+    expect(text).toContain('« Visiter le portail »')
+    // a new menu item is a « Lien non configuré » row whose type is chosen in its drop-down
+    expect(text).toContain('« Lien non configuré »')
+  })
+
+  test('both editors ground click-by-click guidance in the form itself', () => {
+    // a run guided by guessing the screen for three turns (a card heading to click, a
+    // chooser that never appeared) although its sub-agent could describe the form
+    for (const kind of ['page', 'portal'] as const) {
+      const text = Object.values(editorGuidance(kind)).join('\n')
+      expect(text, kind).toContain('never guess')
+      expect(text, kind).toContain('describe the current state')
+    }
   })
 
   test('page creation guidance walks the wizard and keeps the menu out of it', () => {
+    const PAGE_CREATION_GUIDANCE = STEPS + '\n' + PAGE_CREATION_AFTER
     expect(PAGE_CREATION_GUIDANCE).toContain('« Page libre »')
     expect(PAGE_CREATION_GUIDANCE).toContain('« Créer »')
     // haiku took the page group for the portal menu for four turns
@@ -50,7 +65,15 @@ test.describe('agent editor guidance', () => {
     // clicking a card moves on, « Suivant » stays disabled
     expect(PAGE_CREATION_GUIDANCE).toContain('moves to the next step')
     expect(PAGE_CREATION_GUIDANCE).toContain('« Page standard (Accueil, Contact,...) »')
-    expect(PAGE_CREATION_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+    // catalog pages have their own cards: the guidance used to file them under « Page libre »
+    expect(PAGE_CREATION_GUIDANCE).toContain('« Pages de catalogues »')
+    expect(PAGE_CREATION_GUIDANCE).toContain('« Catalogue d\'événements »')
+    expect(PAGE_CREATION_GUIDANCE).not.toContain('or catalog pages that list')
+    // the editor that opens is titled « Édition du brouillon »: a run that announced « no
+    // draft » was contradicted by the screen
+    expect(PAGE_CREATION_GUIDANCE).toContain('« Édition du brouillon »')
+    expect(STEPS.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+    expect(PAGE_CREATION_AFTER.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     expect(pageCreationStep('group')).toContain('« Groupe »')
     expect(pageCreationStep('information')).toContain('« Créer »')
   })

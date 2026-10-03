@@ -18,6 +18,8 @@ export type EditorKind = 'page' | 'portal'
 
 const DRAFT = 'Every change made by the form sub-agent or by the person is saved automatically to a DRAFT; the public portal only shows it once the person presses « Valider le brouillon » in the actions panel on the right of the editor (« Annuler le brouillon » discards the draft). You cannot press it: when the draft is ready, declare wait_for_user_action, its message telling the person to press « Valider le brouillon » on the right; the draft state tells you once it is published.'
 
+const GUIDING = (subAgent: string) => `To guide the person click by click, first have the ${subAgent} sub-agent describe the current state of the form (open tab, field labels, list items) and name only what it reports: never guess a label, a button or what a click will show. If the person cannot find something after one try, offer to make the change with the sub-agent instead.`
+
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
     editor: 'Portal page editor. Edit the page (title, description, blocks) with the pageConfig_form sub-agent. ' +
@@ -25,13 +27,17 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
       'The « Voir sur … » link in the actions panel opens the published page in a new tab, so it does not show unpublished changes. ' +
       'Pages have no topic (thématique).',
     'editor-drafts': DRAFT,
+    'editor-guiding': GUIDING('pageConfig_form'),
     'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published.'
   },
   portal: {
     editor: 'Portal editor. Edit the portal configuration (theme and colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent, not with application tools. ' +
       'To put an existing page in the menu, add a menu item: a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …) or a standard page (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page ». ' +
-      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu in « Aperçu - Entête & Barre de navigation »; point there first. « Voir le brouillon » in the actions panel opens the whole draft portal in a new tab.',
-    'editor-drafts': DRAFT
+      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu in « Aperçu - Entête & Barre de navigation »; point there first.',
+    'editor-drafts': DRAFT,
+    'editor-guiding': GUIDING('portalConfig_form'),
+    'editor-links': 'Actions panel links of this editor: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal (« Voir sur … » belongs to the page editor). ' +
+      'In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type (« Page libre », « Page standard (Accueil, Contact,...) », …) is chosen in the drop-down of that row; the navigation preview stays empty until the row is configured.'
   }
 }
 
@@ -46,12 +52,14 @@ export function draftState (hasDraftDiff: boolean): string {
 }
 
 /** The page creation wizard (/pages/new): the person clicks through it, nothing creates a page for them. */
-export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose. ' +
-  'Steps: « Type de page » (« Page libre » for free content, institutional pages, or catalog pages that list datasets, events or news automatically), ' +
-  '« Groupe » for a free page (groups only sort pages in this back-office list, not the portal menu; « Aucun groupe » is fine), ' +
-  'clicking a card moves to the next step by itself (« Suivant » stays disabled), ' +
-  '« Choisir une source » (« Page blanche », a reference template, or « Dupliquer une page existante »), then « Informations » (title, owner) and the « Créer » button. ' +
-  'The new page is created already published, with no draft to validate: to show it in the portal menu, go straight to the portal editor, where a free page is a « Page libre » item and a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
+export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +
+  'Steps: « Type de page »: « Page libre » for free content built from blocks, « Pages institutionnelles » (contact, legal notice, …) or « Pages de catalogues » (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …, listing their contents automatically); ' +
+  '« Groupe », for a free page only (it sorts pages in this back-office list, not the portal menu; « Aucun groupe » is fine); ' +
+  '« Choisir une source » (« Page blanche », a reference template or « Dupliquer une page existante »); then « Informations » (title, owner) and « Créer ».'
+
+/** What follows « Créer », a key of its own: a host event detail is capped at 1000 characters. */
+export const PAGE_CREATION_AFTER = 'The page is created already published. Its editor is titled « Édition du brouillon » because edits always go to a draft first, with nothing to validate until something changes. ' +
+  'To show it in the portal menu, go to the portal editor: a free page is a « Page libre » item, a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
 
 const STEP_NAMES: Record<string, string> = {
   type: '« Type de page »',

@@ -366,7 +366,7 @@ import type { Account } from '@data-fair/lib-common-types/session'
 import { mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
 import { useAgentState } from '@data-fair/lib-vue-agents'
-import { PAGE_CREATION_GUIDANCE, pageCreationStep } from '~/utils/agent-editor-guidance'
+import { PAGE_CREATION_GUIDANCE, PAGE_CREATION_AFTER, pageCreationStep } from '~/utils/agent-editor-guidance'
 
 const hasDepartments = useHasDepartments()
 const session = useSessionAuthenticated()
@@ -389,6 +389,7 @@ const catalogPageTypes = ['datasets', 'applications', 'reuses', 'event-catalog',
 const step = ref<'type' | 'group' | 'action' | 'source' | 'information'>('type')
 // the chat only saw the URL during creation and invented steps (see agent-editor-guidance)
 useAgentState('wizard', PAGE_CREATION_GUIDANCE)
+useAgentState('wizard-after', PAGE_CREATION_AFTER)
 useAgentState('wizard-step', () => pageCreationStep(step.value))
 const pageType = ref<string | undefined>(undefined)
 const selectedGroupId = ref<string | undefined>(undefined)
