@@ -219,6 +219,22 @@ const saveDraft = useAsyncAction(async () => {
 })
 useEditorAgentState('page', hasDraftDiff, () => patchPage.error.value, formValid)
 
+// The page view and an editor opened again from it read the page store of the parent route,
+// loaded once: judged runs saw a block added here missing from the draft preview and from the
+// reopened editor. Refreshed on leaving, once the last save is done; not after each save, which
+// would reload the form under the person's typing.
+let savedDraft = false
+watch(patchPage.loading, (loading) => { if (loading) savedDraft = true })
+onBeforeUnmount(() => {
+  if (!savedDraft) return
+  if (!patchPage.loading.value) return pageFetch.refresh()
+  const stop = watch(patchPage.loading, (loading) => {
+    if (loading) return
+    stop()
+    pageFetch.refresh()
+  })
+})
+
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
   editConfig.value = { ...editConfig.value, ...data } as PageConfig
   saveDraft.execute()
