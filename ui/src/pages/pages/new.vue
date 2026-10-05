@@ -458,19 +458,30 @@ const selectPageType = (type: string) => {
     step.value = 'group'
   } else {
     // For standard pages, go directly to action
-    step.value = 'action'
-    // Fetch pages for reference/duplicate options
-    referencesFetch.refresh()
-    userPagesFetch.refresh()
+    goToActionStep()
   }
 }
 
 const selectGroup = (groupId: string) => {
   selectedGroupId.value = groupId
+  goToActionStep()
+}
+
+// A blank page is the only source when there is no reference page and no page of this type to
+// duplicate: the step is skipped. Judged runs made an events catalogue through a step whose
+// only card read « Page blanche – Commencer avec une page vide », and both the person and the
+// assistant took it for an empty free page.
+const onlyBlankSource = ref(false)
+const goToActionStep = async () => {
   step.value = 'action'
+  onlyBlankSource.value = false
   // Fetch pages for reference/duplicate options
-  referencesFetch.refresh()
-  userPagesFetch.refresh()
+  await Promise.all([referencesFetch.refresh(), userPagesFetch.refresh()])
+  if (step.value !== 'action' || actionType.value) return
+  if (!referencesFetch.data.value?.results?.length && !userPagesFetch.data.value?.results?.length) {
+    onlyBlankSource.value = true
+    selectAction('blank')
+  }
 }
 
 const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
@@ -498,7 +509,11 @@ const goToPreviousStep = () => {
   } else if (step.value === 'source') {
     step.value = 'action'
   } else if (step.value === 'information') {
-    if (actionType.value === 'blank') step.value = 'action'
+    if (actionType.value === 'blank' && onlyBlankSource.value) {
+      // the source step was skipped: back to what came before it
+      actionType.value = undefined
+      step.value = isGenericPage.value ? 'group' : 'type'
+    } else if (actionType.value === 'blank') step.value = 'action'
     else step.value = 'source'
   }
 }

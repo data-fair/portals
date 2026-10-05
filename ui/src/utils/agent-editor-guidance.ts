@@ -102,7 +102,7 @@ export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No to
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +
   'Steps: « Type de page »: « Page libre » for free content built from blocks, « Pages institutionnelles » (contact, legal notice, …) or « Pages de catalogues » (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …, listing their contents automatically); ' +
   '« Groupe », for a free page only (it sorts pages in this back-office list, not the portal menu; « Aucun groupe » is fine); ' +
-  '« Choisir une source » (« Page blanche », a reference template or « Dupliquer une page existante »); then « Informations » (title, owner) and « Créer ».'
+  '« Choisir une source » (« Page blanche », a reference template or « Dupliquer une page existante »; skipped when a blank page is the only source); then « Informations » (title, owner) and « Créer ».'
 
 /** What follows « Créer », a key of its own: a host event detail is capped at 1000 characters. */
 export const PAGE_CREATION_AFTER = 'After « Créer » the page editor opens, titled « Édition du brouillon » because edits always go to a draft first; a new page has nothing to validate until something changes. ' +

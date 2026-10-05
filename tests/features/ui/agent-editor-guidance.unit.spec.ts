@@ -97,6 +97,10 @@ test.describe('agent editor guidance', () => {
     expect(previews.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
+  test('the wizard guidance says when the choice of a source is skipped', () => {
+    expect(STEPS).toContain('skipped when a blank page is the only source')
+  })
+
   test('the page editor says where a page\'s title and description show', () => {
     // a haiku run promised the new title in the draft preview and the breadcrumb, where it
     // never shows, and the person concluded nothing had changed
