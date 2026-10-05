@@ -62,9 +62,10 @@ export const cases: SimCase[] = [
     route: '/data-fair/pages',
     persona: MANAGER + ' Tu fais toi-même les clics qu\'on te demande, un à la fois, mais tu ne cherches pas tout seul dans l\'interface.',
     goal: 'Tu veux créer une nouvelle page « Agenda des événements » sur le portail, puis qu\'elle apparaisse dans le menu du portail. Tu veux qu\'on te guide pas à pas et voir le résultat à l\'écran.',
-    // 12, not 10: the 2026-10-02 baseline ran out of turns in the wizard and on the
-    // validation step, every time before the menu half of the goal was reached.
-    maxTurns: 12
+    // 16: the goal takes about 17 clicks (4 in the wizard, 3 to publish, about 10 in the
+    // portal editor), and the person reports after each one. At 12 (10 before), all four
+    // runs of the seventh series stopped in the portal editor, the menu item half set up.
+    maxTurns: 16
   },
   // The navigation the PERSON performs, by opening a link the assistant produced. A
   // filtered view is not reachable by pointing at things, so asking is the only way
