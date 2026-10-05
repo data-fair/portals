@@ -18,7 +18,7 @@ export type EditorKind = 'page' | 'portal'
 
 const DRAFT = 'Every change made by the form sub-agent or by the person is saved automatically to a DRAFT; the public portal only shows it once the person presses « Valider le brouillon » in the actions panel on the right of the editor (« Annuler le brouillon » discards the draft). You cannot press it: when the draft is ready, declare wait_for_user_action, its message telling the person to press « Valider le brouillon » on the right; the draft state tells you once it is published.'
 
-const GUIDING = (subAgent: string) => `To guide the person click by click, first have the ${subAgent} sub-agent describe the current state of the form (open tab, field labels, list items) and name only what it reports: never guess a label, a button or what a click will show. If the person cannot find something after one try, offer to make the change with the sub-agent instead. The actions panel is outside the form: it is described here, not by the sub-agent.`
+const GUIDING = (subAgent: string) => `To guide the person click by click, first have the ${subAgent} sub-agent describe the current state of the form (open tab, field labels, list items) and name only what it reports: never guess a label, a button or what a click will show. Before naming a choice, have it list the options of a drop-down (with the fields each option brings). For a section with several fields (a menu item: its type, then its page or page type, its label), give all the remaining steps in one reply, down to « Valider le brouillon », rather than one click per reply. If the person cannot find something after one try, offer to make the change with the sub-agent instead. The actions panel is outside the form: it is described here, not by the sub-agent.`
 
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
@@ -28,7 +28,8 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
       'Pages have no topic (thématique).',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
-    'editor-previews': 'The editor and the « Aperçu (brouillon) » tab of the page view draw lists of datasets, events or news as placeholders; the « Portail de prévisualisation » selector of the actions panel only picks which portal\'s look these previews take. There is no preview of the draft with real data: real content only shows on the portal once the draft is validated and the page is published there. ' +
+    'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor. That tab is in the page view (the page title in the breadcrumb). Both draw lists of datasets, events or news as placeholders; the « Portail de prévisualisation » selector of the actions panel only picks which portal\'s look these previews take. There is no preview of the draft with real data: real content only shows on the portal once the draft is validated and the page is published there. ' +
+      'If the person wants to see the result first, tell them where it shows and wait for their go-ahead before asking them to validate. ' +
       'Validating the draft does not publish the page on a portal: that is the « Publié » switch of the page\'s « Publications » tab (see the publication state).',
     'editor-menu': 'The portal menu is not edited here: it is in the portal editor (back-office « Portails », then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its own portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once the page is published on that portal (see the publication state): the « Page libre » menu item only offers pages published on that portal.'
   },
@@ -61,6 +62,18 @@ export function draftState (hasDraftDiff: boolean): string {
 export function draftSaveState (error: string | undefined, hadFailure: boolean): string | undefined {
   if (error) return `the last change is NOT saved: the draft was refused (${error.slice(0, 300)}). Tell the person, and fix or undo the change with the form sub-agent`
   if (hadFailure) return 'the draft is saved again'
+  return undefined
+}
+
+/**
+ * Whether the form is complete. An incomplete one (a required field empty, as in a menu row
+ * just added) is not saved: the draft keeps the last complete state. A judged run lost a
+ * half-configured menu item when the person left the editor, and nothing had said so.
+ */
+export function formCompletenessState (valid: boolean | null, hadIncomplete: boolean): string | undefined {
+  // null: v-form has not checked every field yet, as while the form opens
+  if (valid === false) return 'the form is incomplete (a required field is empty): its last change is NOT saved, the draft keeps the last complete state, and the change is lost if the person leaves the editor. Have the form sub-agent find and fill the missing field'
+  if (hadIncomplete) return 'the form is complete again: its changes are saved to the draft'
   return undefined
 }
 

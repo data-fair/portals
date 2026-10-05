@@ -100,6 +100,23 @@ test.describe('agent host state of the editors', () => {
     expect((await readAgentState(page))['wizard-step']).toContain('« Type de page »')
   })
 
+  test('the portal editor reports an incomplete form, whose change is not saved', async ({ page, goToWithAuth }) => {
+    // a run lost a half-configured menu item when the person left the editor: nothing had
+    // told the assistant that the incomplete row was not saved
+    const portal = (await user1.post('/api/portals', { config: { title: 'Form Portal', menu: { children: [{ type: 'standard', subtype: 'home' }] } } })).data
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_form')
+    await expect.poll(async () => (await readAgentState(page)).form, { timeout: 15_000 }).toBeUndefined()
+    await page.getByRole('tab', { name: 'Barre de navigation' }).click()
+    await page.getByRole('button', { name: 'Ajouter un lien' }).click()
+    await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('NOT saved')
+    // a standard page item is complete as soon as its type is chosen (its page type defaults to home)
+    // the field wraps its input and takes the click
+    await page.locator('.v-field', { has: page.getByRole('combobox', { name: 'Type de lien' }) }).click()
+    await page.getByRole('option', { name: 'Page standard (Accueil, Contact,...)' }).click()
+    await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('complete again')
+  })
+
   test('the portal editor publishes its guidance', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')

@@ -132,7 +132,8 @@ const onFormData = () => {
   formState.savedEditCount = formState.layout.editCount
   saveDraft.execute()
 }
-const formValid = ref(false)
+// null until v-form has checked every field: unknown, not incomplete
+const formValid = ref<boolean | null>(null)
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
   query: {
@@ -216,7 +217,7 @@ const saveDraft = useAsyncAction(async () => {
   // the stored draft was accepted by the API, it no longer carries errors
   storedConfigErrors.value = []
 })
-useEditorAgentState('page', hasDraftDiff, () => patchPage.error.value)
+useEditorAgentState('page', hasDraftDiff, () => patchPage.error.value, formValid)
 
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
   editConfig.value = { ...editConfig.value, ...data } as PageConfig

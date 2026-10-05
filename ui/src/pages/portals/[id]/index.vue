@@ -208,7 +208,8 @@ const editConfig = ref<PortalConfig>()
 // editConfig as it opens: that is not a change, and comparing editConfig with the
 // published config marked every new portal as having unpublished changes.
 const storedDraftConfig = ref<PortalConfig>()
-const formValid = ref(false)
+// null until v-form has checked every field: unknown, not incomplete
+const formValid = ref<boolean | null>(null)
 const { portalConfig } = providePortalStore()
 
 // Initialize editConfig and portalStore when init portal config is fetched
@@ -287,7 +288,7 @@ const onFormData = () => {
 const hasDraftDiff = computed(() => {
   return !!storedDraftConfig.value && !equal(storedDraftConfig.value, portalFetch.data.value?.config)
 })
-useEditorAgentState('portal', hasDraftDiff, () => saveDraft.error.value)
+useEditorAgentState('portal', hasDraftDiff, () => saveDraft.error.value, formValid)
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return

@@ -79,6 +79,11 @@ disabled until something is changed. A newly created page or portal has nothing 
 validate, its draft equal to its configuration; the page editor is still titled
 « Édition du brouillon », since edits always go to the draft first.
 
+An incomplete form (a required field empty, as in a menu row just added) is not saved:
+the draft keeps its last complete state, and the change is lost if the person leaves the
+editor. The editors tell the assistant when the form is incomplete, and when it is
+complete again.
+
 A new page is published on no portal. Once it has content (an empty page cannot be
 published), the person publishes it with the « Publié » switch of a portal in the page's
 « Publications » tab. The portal menu's « Page libre » item only offers pages published on
@@ -90,7 +95,11 @@ The page and portal editors, the pages list and the page creation wizard publish
 guidance to the chat as host state (`ui/src/utils/agent-editor-guidance.ts`): how to
 reach and edit what is on screen, the draft and its current state, where the menu is
 edited, and the wizard's steps. The assistant is told to have the form sub-agent
-describe the form before guiding the person click by click, never to guess a label.
+describe the form before guiding the person click by click, never to guess a label,
+to have it list a drop-down's options before naming one, and to give all the remaining
+steps of a section with several fields in one reply. The page editor has no « Aperçu
+(brouillon) » tab: that tab is in the page view. When the person wants to see the result
+first, the assistant waits for their go-ahead before asking them to validate.
 
 ## Portal tools (visitors)
 

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
 import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, draftSaveState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, draftSaveState, formCompletenessState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
@@ -72,6 +72,37 @@ test.describe('agent editor guidance', () => {
     expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('NOT saved')
     expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('400 - body/draftConfig/elements/1')
     expect(draftSaveState(undefined, true)).toContain('saved again')
+  })
+
+  test('guiding a form section names the real options and gives every remaining step at once', () => {
+    // judged runs guessed drop-down options three times in a row, and confirmed one click per
+    // reply until the person ran out of patience with the menu item half configured
+    for (const kind of ['page', 'portal'] as const) {
+      const guiding = editorGuidance(kind)['editor-guiding']
+      expect(guiding, kind).toContain('list the options of a drop-down')
+      expect(guiding, kind).toContain('all the remaining steps in one reply')
+      expect(guiding.length, kind).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+    }
+  })
+
+  test('the page editor guidance says where the draft preview is, and lets the person look first', () => {
+    // a haiku run sent the person to an « Aperçu (brouillon) » tab « en haut de l'éditeur »
+    const previews = editorGuidance('page')['editor-previews']
+    expect(previews).toContain('The editor itself has no « Aperçu (brouillon) » tab')
+    expect(previews).toContain('before asking them to validate')
+    expect(previews.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+  })
+
+  test('an incomplete form is reported: its change is not saved', () => {
+    // adding a menu row leaves the portal form invalid; nothing said the change was not saved,
+    // and a run lost it when the person left the editor
+    expect(formCompletenessState(true, false)).toBeUndefined()
+    // unknown while the form opens: not an incomplete form
+    expect(formCompletenessState(null, false)).toBeUndefined()
+    expect(formCompletenessState(false, true)).toContain('NOT saved')
+    expect(formCompletenessState(false, true)).toContain('lost if the person leaves the editor')
+    // a state cannot be withdrawn once published: it must say the form is complete again
+    expect(formCompletenessState(true, true)).toContain('complete again')
   })
 
   test('the menu guidance says a free page must be published on the portal first', () => {
