@@ -23,6 +23,18 @@ test.describe('pages management', () => {
     assert.deepEqual(page.draftConfig, { ...pageConfig, _toc: [] })
   })
 
+  // the page previews draw a text block from its rendered _html: a judged simulation found the
+  // back-office previews of a page created with content empty until its draft was edited
+  test('should render the markdown of a page created with text blocks', async () => {
+    const page = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Text page', elements: [{ type: 'text', content: 'Un **texte**.' }], genericMetadata: { slug: 'text-page' } }
+    })).data
+    const stored = (await user1.get(`/api/pages/${page._id}`)).data
+    assert.match(stored.config.elements[0]._html, /<strong>texte<\/strong>/)
+    assert.match(stored.draftConfig.elements[0]._html, /<strong>texte<\/strong>/)
+  })
+
   test('should duplicate a page with an image', async () => {
     const sourcePageConfig: PageConfig = {
       title: 'Source page',

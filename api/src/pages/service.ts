@@ -120,6 +120,10 @@ export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 
 export const createPage = async (page: Page, sourcePageId?: string) => {
   debug('createPage', page)
   validateMetadata(page)
+  // text blocks display their rendered _html: a page created with content showed empty blocks
+  // until its draft was first edited
+  await renderMarkdownElements(page.config)
+  if (page.draftConfig !== page.config) await renderMarkdownElements(page.draftConfig)
   page.config._toc = await resolvePageAnchors(page.config)
   await mongo.pages.insertOne(page)
 
