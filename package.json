@@ -17,6 +17,7 @@
     "dev-zellij": "dotenv -v DEV_SHELL=$(basename \"$SHELL\") -- zellij --layout .zellij.kdl",
     "lint": "eslint . && npm -w portal run lint && npm -w ui run lint",
     "lint-fix": "eslint --fix . && npm -w portal run lint-fix && npm -w ui run lint-fix",
+    "postinstall": "patch-package --error-on-fail",
     "prepare": "husky || true",
     "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.ts",
     "quality": "npm run lint && npm run build-types && npm -w ui run build && npm run check-types && npm run test && npm audit --omit=dev --audit-level=critical",

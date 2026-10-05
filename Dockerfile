@@ -38,7 +38,6 @@ ADD patches patches
 # also used to fill the npm cache for faster install of api deps
 # Note: --omit=peer can break nuxt's dependency resolution during postinstall
 RUN npm ci --omit=dev --no-audit --no-fund
-RUN npx patch-package --error-on-fail
 
 # =============================
 # Build Types
@@ -73,6 +72,8 @@ RUN npm -w ui run build
 # =============================
 FROM installer AS api-installer
 
+# vuetify and patch-package are not part of the api install, so skip the patches
+RUN npm pkg delete scripts.postinstall
 RUN cp -rf node_modules/@img/sharp-linuxmusl-x64 /tmp/sharp-linuxmusl-x64 && \
     cp -rf node_modules/@img/sharp-libvips-linuxmusl-x64 /tmp/sharp-libvips-linuxmusl-x64 && \
     npm ci -w api --prefer-offline --omit=dev --omit=optional --no-audit --no-fund && \
