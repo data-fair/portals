@@ -36,7 +36,7 @@ test.describe('agent editor guidance', () => {
     // a run sent the person to the new tab twice; what convinced them was the editor itself
     expect(text).toContain('« Aperçu - Entête & Barre de navigation »')
     // a run placed that preview « en haut à droite »: it is under a tab the person must open
-    expect(text).toContain('« Aperçu - Entête & Barre de navigation » under the « Barre de navigation » tab')
+    expect(text).toContain('« Aperçu - Entête & Barre de navigation » in « Barre de navigation »')
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
     // the portal editor's own links: a run sent the person to the page editor's « Voir sur … »
@@ -80,8 +80,10 @@ test.describe('agent editor guidance', () => {
     for (const kind of ['page', 'portal'] as const) {
       const guiding = editorGuidance(kind)['editor-guiding']
       expect(guiding, kind).toContain('list the options of a drop-down')
-      // three runs told the person a tab was open on the sub-agent's word: it cannot see the screen
-      expect(guiding, kind).toContain('cannot see or change which tab is open')
+      // three runs told the person a tab was open on the sub-agent's guess; its writes now open
+      // the tab that shows them, and say so
+      expect(guiding, kind).toContain('open the tab that holds what they change')
+      expect(guiding, kind).toContain('ask it to open the tab')
       expect(guiding, kind).toContain('all the remaining steps in one reply')
       expect(guiding.length, kind).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     }
