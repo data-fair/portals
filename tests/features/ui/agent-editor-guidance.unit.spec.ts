@@ -115,7 +115,7 @@ test.describe('agent editor guidance', () => {
   })
 
   test('guiding a choice uses what the sub-agent can tell of every option', () => {
-    // describeSchema describes an option not chosen; the sub-agent got « node not found » before
+    // describeState describes an option not chosen; the sub-agent got « node not found » before
     for (const kind of ['page', 'portal'] as const) {
       expect(editorGuidance(kind)['editor-guiding'], kind).toContain('even those not chosen')
     }
