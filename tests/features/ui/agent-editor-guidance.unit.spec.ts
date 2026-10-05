@@ -79,7 +79,7 @@ test.describe('agent editor guidance', () => {
     // reply until the person ran out of patience with the menu item half configured
     for (const kind of ['page', 'portal'] as const) {
       const guiding = editorGuidance(kind)['editor-guiding']
-      expect(guiding, kind).toContain('list the options of a drop-down')
+      expect(guiding, kind).toContain('describe the options of a drop-down')
       // three runs told the person a tab was open on the sub-agent's guess; its writes now open
       // the tab that shows them, and say so
       expect(guiding, kind).toContain('open the tab that holds what they change')
@@ -95,6 +95,26 @@ test.describe('agent editor guidance', () => {
     expect(previews).toContain('The editor itself has no « Aperçu (brouillon) » tab')
     expect(previews).toContain('before asking them to validate')
     expect(previews.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+  })
+
+  test('the page editor says where a page\'s title and description show', () => {
+    // a haiku run promised the new title in the draft preview and the breadcrumb, where it
+    // never shows, and the person concluded nothing had changed
+    const text = Object.values(editorGuidance('page')).join('\n')
+    expect(text).toContain('The page title and description show only in the editor')
+  })
+
+  test('the pages list says where the portal menu is edited', () => {
+    // its first reply could not say whether the menu was set in the wizard, the page or the portal
+    expect(PAGES_LIST_GUIDANCE).toContain('portal menu')
+    expect(PAGES_LIST_GUIDANCE).toContain('« Barre de navigation »')
+  })
+
+  test('guiding a choice uses what the sub-agent can tell of every option', () => {
+    // describeSchema describes an option not chosen; the sub-agent got « node not found » before
+    for (const kind of ['page', 'portal'] as const) {
+      expect(editorGuidance(kind)['editor-guiding'], kind).toContain('even those not chosen')
+    }
   })
 
   test('an incomplete form is reported: its change is not saved', () => {
@@ -127,7 +147,7 @@ test.describe('agent editor guidance', () => {
     for (const kind of ['page', 'portal'] as const) {
       const text = Object.values(editorGuidance(kind)).join('\n')
       expect(text, kind).toContain('never guess')
-      expect(text, kind).toContain('describe the current state')
+      expect(text, kind).toContain('sub-agent describe the form')
       // a run asked the form sub-agent where « Valider le brouillon » is: it cannot see the panel
       expect(text, kind).toContain('The actions panel is outside the form')
     }

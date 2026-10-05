@@ -96,8 +96,10 @@ guidance to the chat as host state (`ui/src/utils/agent-editor-guidance.ts`): ho
 reach and edit what is on screen, the draft and its current state, where the menu is
 edited, and the wizard's steps. The assistant is told to have the form sub-agent
 describe the form before guiding the person click by click, never to guess a label,
-to have it list a drop-down's options before naming one, and to give all the remaining
-steps of a section with several fields in one reply. The page editor has no « Aperçu
+to have it describe a drop-down's options before naming one — the form tools describe
+every option, even one not chosen — and to give all the remaining steps of a section with
+several fields in one reply. A page's title and description show only in the editor's
+fields, not in the draft preview nor in the breadcrumb before the draft is validated. The page editor has no « Aperçu
 (brouillon) » tab: that tab is in the page view. When the person wants to see the result
 first, the assistant waits for their go-ahead before asking them to validate.
 

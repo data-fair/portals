@@ -132,7 +132,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists. The URLs are absolute — substitute {slug} and append `?<query>`, but keep the origin and path prefix:\n' +
         `- Dataset detail: ${appUrl('/datasets/{slug}')}\n` +
         `- Dataset table: ${appUrl('/datasets/{slug}/table')} — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n` +
-        `- Dataset map: ${appUrl('/datasets/{slug}/map')} — for geolocalized datasets, accepts the same filterQuery as the table page\n` +
+        `- Dataset map: ${appUrl('/datasets/{slug}/map')} — only for a dataset describe_dataset reports as geolocalized (the others have no map), accepts the same filterQuery as the table page\n` +
         `- Dataset API doc: ${appUrl('/datasets/{slug}/api-doc')}\n` +
         `- Application detail: ${appUrl('/applications/{slug}')}\n` +
         `- Application full view: ${appUrl('/applications/{slug}/full')}\n` +
