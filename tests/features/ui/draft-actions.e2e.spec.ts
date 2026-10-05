@@ -65,6 +65,42 @@ test.describe('draft actions of the page editor', () => {
   })
 })
 
+test.describe('validating while the page draft is being saved', () => {
+  test.beforeEach(clean)
+
+  test('validating right after an edit publishes that edit, once it is saved', async ({ page, goToWithAuth }) => {
+    // the validation used to be sent at once and could reach the API before the save of the
+    // last edit, publishing the draft without it
+    const portal = (await user1.post('/api/portals', { config: { title: 'Quick Page Portal', menu: { children: [] } } })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Quick Page', elements: [], genericMetadata: { slug: 'quick-page' } },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
+    // a first edit, saved: the draft differs and « Valider le brouillon » is enabled
+    const firstPatch = page.waitForResponse(response =>
+      response.url().includes(`/api/pages/${createdPage._id}`) && response.request().method() === 'PATCH' && response.ok()
+    )
+    await page.getByLabel('Titre').fill('Quick Page 1')
+    await page.getByLabel('Titre').blur()
+    await firstPatch
+    // then a slow save, so that the click lands while it runs
+    await page.route(`**/api/pages/${createdPage._id}`, async route => {
+      if (route.request().method() === 'PATCH') await new Promise(resolve => setTimeout(resolve, 1500))
+      await route.continue()
+    })
+    await page.getByLabel('Titre').fill('Quick Page 2')
+    await page.getByLabel('Titre').blur()
+    await page.waitForTimeout(300)
+    await page.getByRole('button', { name: 'Valider le brouillon' }).click({ force: true })
+    await expect(page.getByText('Le brouillon a été validé')).toBeVisible({ timeout: 10_000 })
+    expect((await user1.get(`/api/pages/${createdPage._id}`)).data.config.title).toBe('Quick Page 2')
+  })
+})
+
 // Opening the editor of a new portal filled the schema defaults into the form, saved them
 // as a draft and enabled « Valider le brouillon »: a change nobody made, which the
 // assistant then warned about (« modifications non publiées ») in judged simulations.
@@ -102,5 +138,30 @@ test.describe('draft actions of the portal editor', () => {
     await expect(page.getByText('Le brouillon a été validé')).toBeVisible()
     await expect(validate).toHaveAttribute('aria-disabled', 'true')
     expect((await user1.get(`/api/portals/${portal._id}`)).data.config.title).toBe('Draft Actions Portal renamed')
+  })
+
+  test('validating right after an edit publishes that edit, once it is saved', async ({ page, goToWithAuth }) => {
+    // a judged run: the person typed a menu label and clicked « Valider le brouillon » while the
+    // draft was being saved; the button was disabled for that instant, the click did nothing
+    // and the published portal kept its old menu
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Quick Portal', menu: { children: [] } }
+    })).data
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    const title = page.getByLabel('Titre', { exact: true })
+    await expect(title).toBeVisible({ timeout: 30_000 })
+    await page.waitForTimeout(3000)
+    // a slow save, so that the click lands while it runs
+    await page.route(`**/api/portals/${portal._id}`, async route => {
+      if (route.request().method() === 'PATCH') await new Promise(resolve => setTimeout(resolve, 1500))
+      await route.continue()
+    })
+    await title.fill('Quick Portal renamed')
+    await title.blur()
+    await page.waitForTimeout(300)
+    // force: a person's click lands whatever the button's state, as the simulation's did
+    await page.getByRole('button', { name: 'Valider le brouillon' }).click({ force: true })
+    await expect(page.getByText('Le brouillon a été validé')).toBeVisible({ timeout: 10_000 })
+    expect((await user1.get(`/api/portals/${portal._id}`)).data.config.title).toBe('Quick Portal renamed')
   })
 })

@@ -124,14 +124,21 @@ import { emitAgentEvent } from '@data-fair/lib-vue-agents'
 import { pageDraftValidatedDetail } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
-const { pageId, page, pageFetch, hasDraftDiff, pageUrl } = usePageStore()
+const { pageId, page, pageFetch, hasDraftDiff, pageUrl, patchPage } = usePageStore()
 const { changesStack } = defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
 const showCancelDraftMenu = ref(false)
 
 // role and aria-disabled: a clickable v-list-item inside a v-list is rendered as a
 // plain listitem, so the action was not announced as a button and its disabled state
 // was invisible — people pressed it, saw nothing and believed the draft unsaved.
+// A click right after an edit lands while that edit is being saved: sent at once, the
+// validation could reach the API first and publish the draft without the edit.
 const validateDraft = useAsyncAction(async () => {
+  if (patchPage.loading.value) {
+    await new Promise<void>(resolve => {
+      const stop = watch(patchPage.loading, (saving) => { if (!saving) { stop(); resolve() } })
+    })
+  }
   await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
   await pageFetch.refresh()
   changesStack.reset()

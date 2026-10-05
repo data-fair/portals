@@ -1,10 +1,10 @@
 <template>
   <!-- Validate draft -->
   <v-list-item
-    :disabled="isSavingDraft || !hasDraftDiff"
+    :disabled="!isSavingDraft && !hasDraftDiff"
     :loading="validateDraft.loading.value"
     role="button"
-    :aria-disabled="String(isSavingDraft || !hasDraftDiff)"
+    :aria-disabled="String(!isSavingDraft && !hasDraftDiff)"
     @click="validateDraft.execute()"
   >
     <template #prepend>
@@ -360,7 +360,7 @@ const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
-const { portal } = defineProps<{
+const { portal, isSavingDraft, hasDraftDiff } = defineProps<{
   hasDraftDiff: boolean
   isSavingDraft: boolean
   portal: Portal
@@ -370,7 +370,17 @@ const showCancelDraftMenu = ref(false)
 // role and aria-disabled: a clickable v-list-item inside a v-list is rendered as a
 // plain listitem, so the action was not announced as a button and its disabled state
 // was invisible — people pressed it, saw nothing and believed the draft unsaved.
+// A click right after an edit lands while that edit is being saved: a judged run's click did
+// nothing then (the button was disabled for that instant) and the portal kept its old menu.
+// The validation waits for the save, then publishes what it saved.
 const validateDraft = useAsyncAction(async () => {
+  if (isSavingDraft) {
+    await new Promise<void>(resolve => {
+      const stop = watch(() => isSavingDraft, (saving) => { if (!saving) { stop(); resolve() } })
+    })
+    await nextTick()
+  }
+  if (!hasDraftDiff) return
   await $fetch(`portals/${portal._id}/draft`, { method: 'POST' })
   emit('refresh-portal')
   // lets an assistant waiting on the person's click (wait_for_user_action) resume
