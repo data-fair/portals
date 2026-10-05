@@ -80,6 +80,8 @@ test.describe('agent editor guidance', () => {
     for (const kind of ['page', 'portal'] as const) {
       const guiding = editorGuidance(kind)['editor-guiding']
       expect(guiding, kind).toContain('list the options of a drop-down')
+      // three runs told the person a tab was open on the sub-agent's word: it cannot see the screen
+      expect(guiding, kind).toContain('cannot see or change which tab is open')
       expect(guiding, kind).toContain('all the remaining steps in one reply')
       expect(guiding.length, kind).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     }
