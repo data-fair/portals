@@ -29,7 +29,7 @@ import type { PageConfig } from '#api/types/page'
 const { isFluid } = defineProps<{ isFluid?: boolean }>()
 
 // On full-width pages the table of contents is a floating button: on large screens keep a gutter on both sides
-// (symmetric so root banners stay centered) so it never covers the content.
+// (symmetric so root banners stay centered) so it does not cover the content. Below lg it may overlap, as on mobile.
 const pageConfig = inject<Ref<PageConfig | null> | undefined>('page-config', undefined)
 const tocGutter = computed(() => isFluid && !!pageConfig?.value?._toc?.length)
 
