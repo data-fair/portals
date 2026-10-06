@@ -206,10 +206,12 @@ test.describe('agent editor guidance', () => {
   })
 
   test('the way to the portal editor names the group that holds « Portails »', () => {
-    // two judged runs lost a turn: « Portails » sits in the collapsed group « Gestion de
-    // l'organisation » of the left column, and the person could not find it
+    // two judged runs lost a turn: « Portails » sits in the collapsed group « Gestion » of the
+    // left column, and the person could not find it; a later run was sent to « Gestion de
+    // l'organisation », a link inside that group, not the group
     for (const text of [PAGES_LIST_GUIDANCE, editorGuidance('page')['editor-menu']]) {
-      expect(text).toContain("« Gestion de l'organisation »")
+      expect(text).toContain('the group « Gestion » of the left column')
+      expect(text).not.toContain("Gestion de l'organisation")
       expect(text).toContain('navigate')
     }
   })
