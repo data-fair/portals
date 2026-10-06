@@ -75,11 +75,6 @@
     "tough-cookie": "^5.1.2",
     "undici": "^7.14.0"
   },
-  "overrides": {
-    "mermaid": {
-      "katex": "0.18.10"
-    }
-  },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
     "@data-fair/lib-vuetify": "../lib/packages/vuetify"
