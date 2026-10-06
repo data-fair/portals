@@ -79,12 +79,12 @@ test.describe('agent editor guidance', () => {
     // reply until the person ran out of patience with the menu item half configured
     for (const kind of ['page', 'portal'] as const) {
       const guiding = editorGuidance(kind)['editor-guiding']
-      expect(guiding, kind).toContain('describe the options of a drop-down')
+      expect(guiding, kind).toContain('the options of a drop-down, even those not chosen')
       // three runs told the person a tab was open on the sub-agent's guess; its writes now open
       // the tab that shows them, and say so
       expect(guiding, kind).toContain('open the tab that holds what they change')
       expect(guiding, kind).toContain('ask it to open the tab')
-      expect(guiding, kind).toContain('all the remaining steps in one reply')
+      expect(guiding, kind).toContain('all the remaining steps of a section in one reply')
       expect(guiding.length, kind).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     }
   })
