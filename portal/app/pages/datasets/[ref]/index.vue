@@ -402,7 +402,7 @@ providePageImageSrc('datasets', route.params.ref as string)
 const dataTab = ref<string | undefined>()
 
 const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + route.params.ref, {
-  params: { html: 'vuetify' }
+  query: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
 // a meta-only dataset carries no data: its export URLs would lead nowhere

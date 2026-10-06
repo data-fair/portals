@@ -43,7 +43,7 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "engines": {
-    "node": ">=24.20.0"
+    "node": ">=24.21.0"
   },
   "dependencies": {
     "@data-fair/lib-types-builder": "^1.14.3",
@@ -74,6 +74,11 @@
     "neostandard": "^0.12.2",
     "tough-cookie": "^5.1.2",
     "undici": "^7.14.0"
+  },
+  "overrides": {
+    "mermaid": {
+      "katex": "0.18.10"
+    }
   },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
