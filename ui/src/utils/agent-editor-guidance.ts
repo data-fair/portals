@@ -16,7 +16,7 @@
 
 export type EditorKind = 'page' | 'portal'
 
-const DRAFT = 'Every change, the sub-agent\'s or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it: when the draft is ready, declare wait_for_user_action asking them to; the draft state tells you once it is published.'
+const DRAFT = 'Every change, the sub-agent\'s or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it. When the draft is ready and the person wants to see the result first, tell them where it shows and end your turn asking whether it suits them; once they agree (at once if they did not ask to see it), only then declare wait_for_user_action asking them to press it. The draft state tells you once it is published.'
 
 const GUIDING = (subAgent: string) => `To guide the person click by click, have the ${subAgent} sub-agent describe the form with readOnly: true (the open tab, labels, items, and the options of a drop-down, even those not chosen) and name only what it reports: never guess a label or what a click will show. Its writes open the tab that holds what they change and say what is now on screen; to show the person a part of the form, ask it to open the tab. Give all the remaining steps of a section in one reply, down to « Valider le brouillon »; if the person cannot find something after one try, offer to make the change. The actions panel is outside the form: it is described here, not by the sub-agent.`
 
@@ -27,7 +27,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
     'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor, and in that tab of the page view (the page title in the breadcrumb). There is no preview of the draft with real data: both draw lists as placeholders, « Portail de prévisualisation » only picks which portal\'s look they take, and « Voir sur … » opens the published page, without the draft. ' +
-      'If the person wants to see the result first, tell them where it shows and wait for their go-ahead before asking them to validate. Validating does not publish the page on a portal: that is the « Publié » switch of its « Publications » tab.',
+      'Validating does not publish the page on a portal: that is the « Publié » switch of its « Publications » tab.',
     'editor-menu': 'The portal menu is edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published on that portal: a « Page libre » item only offers pages published on that portal.'
   },
   portal: {

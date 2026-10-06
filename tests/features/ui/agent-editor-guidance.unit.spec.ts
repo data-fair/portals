@@ -93,7 +93,6 @@ test.describe('agent editor guidance', () => {
     // a haiku run sent the person to an « Aperçu (brouillon) » tab « en haut de l'éditeur »
     const previews = editorGuidance('page')['editor-previews']
     expect(previews).toContain('The editor itself has no « Aperçu (brouillon) » tab')
-    expect(previews).toContain('before asking them to validate')
     expect(previews.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
@@ -220,6 +219,17 @@ test.describe('agent editor guidance', () => {
     // a judged run told the person the card « Éléments du menu de navigation » was above the
     // preview, from guidance that only said the preview was « below the menu settings »
     expect(editorGuidance('portal').editor).toContain('« Options », the preview, then « Éléments du menu de navigation »')
+  })
+
+  test('both editors say how seeing the result first and validating fit together', () => {
+    // judged runs, in most passes: told both to declare the wait once the draft is ready and
+    // to wait for a go-ahead before asking to validate, the assistant asked for validation in
+    // the message that showed the result, before the person had said it suited them
+    for (const kind of ['page', 'portal'] as const) {
+      const drafts = editorGuidance(kind)['editor-drafts']
+      expect(drafts, kind).toContain('end your turn asking whether it suits them')
+      expect(drafts, kind).toContain('only then declare wait_for_user_action')
+    }
   })
 
   test('every published text fits a host event without truncation', () => {
