@@ -117,6 +117,42 @@ test.describe('agent host state of the editors', () => {
     await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('complete again')
   })
 
+  test('the portal editor says the draft is published as soon as it is validated', async ({ page, goToWithAuth }) => {
+    // a judged run's wait for the validation returned « draft-validated » with the older
+    // « unpublished changes » state still current: the draft state only changed once the
+    // portal was reloaded, after the wait had answered
+    const portal = (await user1.post('/api/portals', { config: { title: 'Validate Portal', menu: { children: [] } } })).data
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    const title = page.getByLabel('Titre', { exact: true })
+    await expect(title).toBeVisible({ timeout: 30_000 })
+    const saved = page.waitForResponse(response => response.url().includes(`/api/portals/${portal._id}`) && response.request().method() === 'PATCH' && response.ok())
+    await title.fill('Validate Portal renamed')
+    await title.blur()
+    await saved
+    await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('unpublished changes: the person must press')
+    // the reload that follows the validation is slow: the state must not wait for it
+    await page.route(`**/api/portals/${portal._id}`, async route => {
+      if (route.request().method() === 'GET') await new Promise(resolve => setTimeout(resolve, 3000))
+      await route.continue()
+    })
+    await page.evaluate(() => {
+      const channelId = sessionStorage.getItem('mcpTabChannelId')
+      const ch = new BroadcastChannel(channelId!)
+      const seen: Array<{ name: string, detail?: string, t: number }> = (window as any).__agentEvents = []
+      ch.onmessage = (e) => { if (e.data?.type === 'agent-event') seen.push({ name: e.data.event.name, detail: e.data.event.detail, t: Date.now() }) }
+    })
+    await page.getByRole('button', { name: 'Valider le brouillon' }).click()
+    await expect.poll(() => page.evaluate(() => (window as any).__agentEvents.some((e: any) => e.name === 'draft-validated'))).toBe(true)
+    const events = await page.evaluate(async () => {
+      await new Promise(resolve => setTimeout(resolve, 300))
+      return (window as any).__agentEvents
+    })
+    const validated = events.find((e: any) => e.name === 'draft-validated')
+    const published = events.find((e: any) => e.name === 'draft' && e.detail?.includes('no unpublished changes'))
+    expect(published, JSON.stringify(events)).toBeTruthy()
+    expect(published.t - validated.t).toBeLessThan(300)
+  })
+
   test('the portal editor publishes its guidance', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')

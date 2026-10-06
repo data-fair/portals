@@ -180,7 +180,7 @@
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
         :portal="portalFetch.data.value"
-        @refresh-portal="portalFetch.refresh()"
+        @refresh-portal="onDraftValidated"
       />
     </navigation-right>
   </v-container>
@@ -301,8 +301,18 @@ const onFormData = () => {
   nextTick(() => saveDraft.execute())
 }
 
+// The validated draft is the published config at once: the draft state told the assistant
+// « unpublished changes » until the reload, and a judged run's wait for the validation answered
+// with that stale state still current
+const publishedConfig = ref<PortalConfig>()
+watch(portalFetch.data, (portal) => { if (portal) publishedConfig.value = portal.config }, { immediate: true })
+const onDraftValidated = () => {
+  if (storedDraftConfig.value) publishedConfig.value = storedDraftConfig.value
+  portalFetch.refresh()
+}
+
 const hasDraftDiff = computed(() => {
-  return !!storedDraftConfig.value && !equal(storedDraftConfig.value, portalFetch.data.value?.config)
+  return !!storedDraftConfig.value && !equal(storedDraftConfig.value, publishedConfig.value)
 })
 useEditorAgentState('portal', hasDraftDiff, () => saveDraft.error.value, formValid)
 
