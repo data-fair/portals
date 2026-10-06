@@ -129,8 +129,22 @@ test.describe('hover effects and links style', () => {
     await expect(link).toHaveCSS('text-decoration-line', 'none')
     await expect.poll(async () => {
       await link.hover()
-      return link.evaluate(el => getComputedStyle(el, '::after').transform)
+      return link.evaluate(el => getComputedStyle(el, '::before').transform)
     }).toBe('matrix(1, 0, 0, 1, 0, 0)')
+  })
+
+  test('new window icon is shown only on links opening a new tab', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'New Window Icon Portal', menu: { children: [] }, linksConfig: { newWindowIcon: true } }
+    })).data
+    await createHomePage(portal, [{ type: 'text', content: 'Voir [mon lien](https://example.com/page) pour en savoir plus.' }])
+
+    await goToPortal(portal._id)
+    const sameTab = page.locator('a.simple-link', { hasText: 'mon lien' })
+    const newTab = page.locator('footer a.simple-link[target="_blank"]', { hasText: 'Koumoul' })
+    await expect(sameTab).toBeVisible({ timeout: 10_000 })
+    expect(await sameTab.evaluate(el => getComputedStyle(el, '::after').maskImage)).toBe('none')
+    expect(await newTab.evaluate(el => getComputedStyle(el, '::after').maskImage)).toContain('data:image/svg+xml')
   })
 
   test('title small line grows on link hover', async ({ page, goToPortal }) => {

@@ -65,6 +65,7 @@
             <NuxtLink
               class="simple-link"
               :to="attachment.url"
+              :title="(attachment.title || attachment.name) + ' - ' + t('newWindow')"
               target="_blank"
               rel="noopener"
             >
@@ -612,6 +613,7 @@ useJsonLd(() => {
 
 <i18n lang="yaml">
   en:
+    newWindow: New window
     application: Application
     backToDatasets: Go to datasets catalog
     dataset: Dataset
@@ -629,6 +631,7 @@ useJsonLd(() => {
       table: Table
 
   fr:
+    newWindow: Nouvelle fenêtre
     application: Visualisation
     backToDatasets: Aller au catalogue de données
     dataset: Jeu de données

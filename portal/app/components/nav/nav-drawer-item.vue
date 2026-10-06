@@ -23,7 +23,10 @@
         </template>
         <!-- text-wrap lets long titles wrap instead of being truncated -->
         <v-list-item-title class="text-wrap">
-          {{ resolveLinkTitle(item, locale) }}
+          {{ resolveLinkTitle(item, locale) }}<span
+            v-if="item.type === 'external' && item.target"
+            class="d-sr-only"
+          > - {{ t('newWindow') }}</span>
         </v-list-item-title>
       </v-list-item>
     </li>
@@ -76,7 +79,10 @@
         </template>
         <!-- text-wrap lets long titles wrap instead of being truncated -->
         <v-list-item-title class="text-wrap">
-          {{ resolveLinkTitle(item, locale) }}
+          {{ resolveLinkTitle(item, locale) }}<span
+            v-if="item.type === 'external' && item.target"
+            class="d-sr-only"
+          > - {{ t('newWindow') }}</span>
         </v-list-item-title>
       </v-list-item>
     </li>
@@ -134,7 +140,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 const isActive = computed(() => isMenuItemActive(props.item, route.path))
@@ -150,3 +156,10 @@ watch(isActive, (active) => {
 }, { immediate: true })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>
