@@ -208,6 +208,11 @@ const editConfig = ref<PortalConfig>()
 // editConfig as it opens: that is not a change, and comparing editConfig with the
 // published config marked every new portal as having unpublished changes.
 const storedDraftConfig = ref<PortalConfig>()
+// The draft as loaded, and the form's copy of it once filled in, before any edit: an edit that
+// brings the form back to that copy (a menu row added then removed) saves the loaded draft, or
+// the defaults the form filled in would show as unpublished changes
+let loadedDraftConfig: PortalConfig | undefined
+let openedFormConfig: PortalConfig | undefined
 // null until v-form has checked every field: unknown, not incomplete
 const formValid = ref<boolean | null>(null)
 const { portalConfig } = providePortalStore()
@@ -218,6 +223,8 @@ watch(portalFetch.data, () => {
   storedDraftConfig.value = portalFetch.data.value.draftConfig
   if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
     editConfig.value = portalFetch.data.value.draftConfig
+    loadedDraftConfig = portalFetch.data.value.draftConfig
+    openedFormConfig = undefined
   }
   if (editConfig.value) portalConfig.value = editConfig.value
 })
@@ -266,7 +273,9 @@ watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
 
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
-  const updated = await $fetch<Portal>(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+  const backToOpening = loadedDraftConfig && openedFormConfig && equal(toRaw(editConfig.value), openedFormConfig)
+  const draftConfig = backToOpening ? loadedDraftConfig : editConfig.value
+  const updated = await $fetch<Portal>(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig } })
   storedDraftConfig.value = updated.draftConfig
 })
 
@@ -278,8 +287,15 @@ let formState: { layout: FormLayout, savedEditCount: number } | undefined
 const onFormState = (layout: FormLayout) => {
   if (formState?.layout !== layout) formState = { layout, savedEditCount: layout.editCount }
 }
+let edited = false
 const onFormData = () => {
-  if (!formState || formState.layout.editCount === formState.savedEditCount) return
+  if (!formState) return
+  if (formState.layout.editCount === formState.savedEditCount) {
+    // the form filling itself in as it opens
+    if (!edited && editConfig.value) openedFormConfig = structuredClone(toRaw(editConfig.value))
+    return
+  }
+  edited = true
   formState.savedEditCount = formState.layout.editCount
   // after nextTick, so the watchers above (assisted colours) complete the edit before it is sent
   nextTick(() => saveDraft.execute())

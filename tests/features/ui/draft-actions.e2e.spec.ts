@@ -165,3 +165,34 @@ test.describe('draft actions of the portal editor', () => {
     expect((await user1.get(`/api/portals/${portal._id}`)).data.config.title).toBe('Quick Portal renamed')
   })
 })
+
+// Judged simulation: the form sub-agent added a menu row and removed it, and « Valider le
+// brouillon » stayed lit with nothing to validate. Each edit saved the form's copy of the
+// config, which carries the defaults the form fills in as it opens.
+test.describe('draft actions of the portal editor', () => {
+  test.beforeEach(clean)
+
+  test('an edit undone by hand leaves nothing to validate', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'Back And Forth Portal', menu: { children: [] } } })).data
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    const title = page.getByLabel('Titre', { exact: true })
+    await expect(title).toBeVisible({ timeout: 30_000 })
+    const validate = page.getByRole('button', { name: 'Valider le brouillon' })
+    await expect(validate).toHaveAttribute('aria-disabled', 'true')
+
+    const saved = () => page.waitForResponse(response =>
+      response.url().includes(`/api/portals/${portal._id}`) && response.request().method() === 'PATCH' && response.ok()
+    )
+    let patch = saved()
+    await title.fill('Back And Forth Portal renamed')
+    await title.blur()
+    await patch
+    await expect(validate).toHaveAttribute('aria-disabled', 'false')
+
+    patch = saved()
+    await title.fill('Back And Forth Portal')
+    await title.blur()
+    await patch
+    await expect(validate).toHaveAttribute('aria-disabled', 'true')
+  })
+})
