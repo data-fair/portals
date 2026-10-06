@@ -52,6 +52,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
+    "@data-fair/lib-node": "~2.13.3",
     "@data-fair/lib-common-types": "^1.21.0",
     "@koumoul/vjsf-compiler": "^1.5.2",
     "@koumoul/vjsf-markdown": "^0.5.0",
