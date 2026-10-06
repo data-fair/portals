@@ -197,6 +197,23 @@ test.describe('agent editor guidance', () => {
     expect(PAGES_LIST_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
+  test('describing the form is asked of the sub-agent read-only', () => {
+    // judged runs: four requests to describe the menu, none read-only, and twice the sub-agent
+    // changed the form anyway, leaving a draft to validate
+    for (const kind of ['page', 'portal'] as const) {
+      expect(editorGuidance(kind)['editor-guiding'], kind).toContain('readOnly: true')
+    }
+  })
+
+  test('the way to the portal editor names the group that holds « Portails »', () => {
+    // two judged runs lost a turn: « Portails » sits in the collapsed group « Gestion de
+    // l'organisation » of the left column, and the person could not find it
+    for (const text of [PAGES_LIST_GUIDANCE, editorGuidance('page')['editor-menu']]) {
+      expect(text).toContain("« Gestion de l'organisation »")
+      expect(text).toContain('navigate')
+    }
+  })
+
   test('every published text fits a host event without truncation', () => {
     for (const kind of ['page', 'portal'] as const) {
       for (const [key, text] of Object.entries(editorGuidance(kind))) {
