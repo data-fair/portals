@@ -108,7 +108,7 @@ const { portal, preview } = usePortalStore()
 const session = useSession()
 
 let isPortalOwner: ComputedRef<boolean>
-let backOfficeUrl: ComputedRef<string>
+let backOfficeUrl: ComputedRef<string> | undefined
 if (!preview) {
   isPortalOwner = computed(() => {
     const account = session.account.value

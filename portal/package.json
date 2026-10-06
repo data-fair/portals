@@ -23,7 +23,7 @@
     "@data-fair/lib-node": "^2.12.1",
     "@data-fair/lib-utils": "^1.12.2",
     "@data-fair/lib-vue": "^1.31.1",
-    "@data-fair/lib-vue-agents": "^0.4.0",
+    "@data-fair/lib-vue-agents": "^0.6.0",
     "@data-fair/lib-vuetify": "^2.5.1",
     "@data-fair/lib-vuetify-agents": "^0.6.0",
     "@data-fair/lib-vuetify-events": "^0.3.0",
@@ -43,8 +43,7 @@
     "vue": "^3.5.30",
     "vue-router": "^5.0.3",
     "vue3-social-sharing": "^1.4.1",
-    "vuetify": "4.2.0",
-    "vuetify-nuxt-module": "^1.0.0-rc.5",
-    "zod-to-json-schema": "^3.25.2"
+    "vuetify": "4.2.4",
+    "vuetify-nuxt-module": "^1.0.0-rc.5"
   }
 }

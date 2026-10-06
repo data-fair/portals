@@ -138,7 +138,7 @@ const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('applications', route.params.ref as string)
 
 const applicationFetch = await useLocalFetch<Application>('/data-fair/api/v1/applications/' + route.params.ref, {
-  params: { html: 'vuetify' }
+  query: { html: 'vuetify' }
 })
 
 // Check if applications catalog page exists
