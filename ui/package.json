@@ -17,7 +17,7 @@
     "@data-fair/frame": "^0.18.7",
     "@data-fair/lib-common-types": "^1.21.0",
     "@data-fair/lib-vue": "^1.31.1",
-    "@data-fair/lib-vue-agents": "^0.4.0",
+    "@data-fair/lib-vue-agents": "^0.6.0",
     "@data-fair/lib-vuetify": "^2.5.1",
     "@data-fair/lib-vuetify-agents": "^0.6.0",
     "@data-fair/portals-shared-markdown": "*",
@@ -40,7 +40,6 @@
     "vue-i18n": "^11.1.9",
     "vue-router": "^5.0.3",
     "vue-tsc": "^3.0.1",
-    "vuetify": "4.2.0",
-    "zod-to-json-schema": "^3.25.2"
+    "vuetify": "4.2.4"
   }
 }
