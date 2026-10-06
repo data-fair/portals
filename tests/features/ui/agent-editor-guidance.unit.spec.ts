@@ -216,6 +216,12 @@ test.describe('agent editor guidance', () => {
     }
   })
 
+  test('the portal editor says the menu preview comes before the menu card', () => {
+    // a judged run told the person the card « Éléments du menu de navigation » was above the
+    // preview, from guidance that only said the preview was « below the menu settings »
+    expect(editorGuidance('portal').editor).toContain('« Options », the preview, then « Éléments du menu de navigation »')
+  })
+
   test('every published text fits a host event without truncation', () => {
     for (const kind of ['page', 'portal'] as const) {
       for (const [key, text] of Object.entries(editorGuidance(kind))) {

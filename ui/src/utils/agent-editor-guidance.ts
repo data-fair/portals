@@ -33,7 +33,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   portal: {
     editor: 'Portal editor: edit the configuration (colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent. ' +
       'In the menu, a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », …) or a standard one (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page »; give a catalog item a « Libellé » (the page title), or the menu shows a generic one. ' +
-      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », below the menu settings.',
+      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Options », the preview, then « Éléments du menu de navigation ».',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_form'),
     'editor-links': 'Actions panel links: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal. In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down. A « Page libre » item only offers pages published on this portal: publish a missing one first, in the « Publications » tab of the page.'
