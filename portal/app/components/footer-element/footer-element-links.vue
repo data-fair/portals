@@ -16,7 +16,7 @@
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
           :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
           :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
-          class="simple-link d-inline-flex align-center"
+          class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
             <v-icon
@@ -44,7 +44,7 @@
         :target="link.type === 'external' && link.target ? '_blank' : undefined"
         :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
         :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
-        class="simple-link d-inline-flex align-center my-1"
+        class="simple-link d-flex align-center my-1"
       >
         <span class="d-flex align-center">
           <v-icon
@@ -79,7 +79,7 @@
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
           :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
           :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
-          class="simple-link d-inline-flex align-center"
+          class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
             <v-icon
