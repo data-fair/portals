@@ -15,8 +15,9 @@ const createPreviewPortalStore = (pageStore: PageStore) => {
     { query: { select: '_id,title', size: 10000 } }
   )
 
-  // set default portal when no URL param is set
-  watch([() => pageStore.pageFetch.data.value, () => portalsFetch.data.value], () => {
+  // set default portal when no URL param is set, also when a navigation drops it (the assistant's
+  // navigate back to the editor left « Portail de prévisualisation » empty)
+  watch([() => pageStore.pageFetch.data.value, () => portalsFetch.data.value, previewPortalId], () => {
     if (previewPortalId.value) return
     const page = pageStore.pageFetch.data.value
     const portals = portalsFetch.data.value?.results
