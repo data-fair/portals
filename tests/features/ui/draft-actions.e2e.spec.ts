@@ -196,3 +196,38 @@ test.describe('draft actions of the portal editor', () => {
     await expect(validate).toHaveAttribute('aria-disabled', 'true')
   })
 })
+
+// Judged simulation: after the assistant's form tools changed the page, « Annuler le dernier
+// changement » stayed disabled. Their edits reach the visible form as outside data, which the
+// editor took for the form filling itself in as it opens: it reset the undo history.
+test.describe('undoing an edit of the assistant', () => {
+  test.beforeEach(clean)
+
+  test('an edit made by the form tools before any by the person can be undone', async ({ page, goToWithAuth }) => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'Undo Portal', menu: { children: [] } } })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Undo Page', elements: [], genericMetadata: { slug: 'undo-page' } },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
+    await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_setFieldValue'), undefined, { timeout: 30_000 })
+    const undo = page.locator('button[title="Annuler le dernier changement"]')
+    await expect(undo).toBeDisabled()
+
+    const saved = page.waitForResponse(response =>
+      response.url().includes(`/api/pages/${createdPage._id}`) && response.request().method() === 'PATCH' && response.ok()
+    )
+    await page.evaluate(() => (navigator as any).modelContext.callTool({
+      name: 'pageConfig_setFieldValue',
+      arguments: { path: '/$comp-1/title', value: 'Undo Page by the assistant' }
+    }))
+    await saved
+    await expect(page.getByLabel('Titre')).toHaveValue('Undo Page by the assistant')
+    await expect(undo).toBeEnabled()
+    await undo.click()
+    await expect(page.getByLabel('Titre')).toHaveValue('Undo Page')
+  })
+})

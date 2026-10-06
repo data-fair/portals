@@ -121,11 +121,15 @@ let formState: { layout: FormLayout, initialEditCount: number, savedEditCount: n
 const onFormState = (layout: FormLayout) => {
   if (formState?.layout !== layout) formState = { layout, initialEditCount: layout.editCount, savedEditCount: layout.editCount }
 }
+// The assistant's form tools edit their own state of the form: their edits reach this one as
+// outside data, which left its editCount unmoved. Taken for the form filling itself in, they
+// reset the undo history, and a judged run could not undo them.
+let toolsEdited = false
 const onFormData = () => {
   if (!formState) return
   if (formState.layout.editCount === formState.initialEditCount) {
     // after the changes stack has recorded the value
-    nextTick(() => changesStack.reset())
+    if (!toolsEdited) nextTick(() => changesStack.reset())
     return
   }
   if (formState.layout.editCount === formState.savedEditCount) return
@@ -236,6 +240,7 @@ onBeforeUnmount(() => {
 })
 
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
+  toolsEdited = true
   editConfig.value = { ...editConfig.value, ...data } as PageConfig
   saveDraft.execute()
 }, computed(() => (vjsfOptions.value.context ?? {}) as Record<string, unknown>))
