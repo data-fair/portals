@@ -16,6 +16,19 @@
         /></a>
       </v-hover>
       {{ t('sampleTextEnd') }}
+      <template v-if="config?.newWindowIcon">
+        <br>
+        <a
+          href="#"
+          class="simple-link"
+          :style="linkStyle(false)"
+          @click.prevent
+        >{{ t('sampleNewWindowLink') }}<v-icon
+          :icon="mdiOpenInNew"
+          class="ml-1"
+          size="1em"
+        /></a>
+      </template>
     </p>
   </preview>
 </template>
@@ -23,6 +36,7 @@
 <script setup lang="ts">
 import type { PortalConfig } from '#api/types/portal-config/index.ts'
 import type { CSSProperties } from 'vue'
+import { mdiOpenInNew } from '@mdi/js'
 
 const { t } = useI18n()
 
@@ -64,8 +78,10 @@ const barStyle = (isHovering: boolean | null) => {
     sampleText: 'A text containing'
     sampleLink: 'a link'
     sampleTextEnd: 'to another page.'
+    sampleNewWindowLink: 'A link that opens in a new tab'
   fr:
     sampleText: 'Un texte contenant'
     sampleLink: 'un lien'
     sampleTextEnd: 'vers une autre page.'
+    sampleNewWindowLink: "Un lien qui s'ouvre dans un nouvel onglet"
 </i18n>

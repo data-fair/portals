@@ -63,6 +63,7 @@
           :href="isExternalLink(link) ? resolveLink(link) : undefined"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
           :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
+          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
           :value="i"
         >
           <template
@@ -196,6 +197,8 @@ watch(computedActiveTab, (val) => { if (!preview) modelTab.value = val })
 <i18n lang="yaml">
   en:
     mainNavigation: 'Main navigation'
+    newWindow: 'New window'
   fr:
     mainNavigation: 'Navigation principale'
+    newWindow: 'Nouvelle fenêtre'
 </i18n>

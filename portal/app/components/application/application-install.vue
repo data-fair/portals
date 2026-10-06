@@ -22,6 +22,7 @@
       <v-code class="d-block mb-6 pa-4">
         <a
           :href="application.exposedUrl"
+          :title="application.exposedUrl + ' - ' + t('newWindow')"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -157,6 +158,7 @@ onMounted(() => {
 
 <i18n lang="yaml">
   en:
+    newWindow: New window
     title: Install application
     text: Install
     tooltip: Open the install instructions in a dialog
@@ -184,6 +186,7 @@ onMounted(() => {
       step3: 'Tap "Add".'
     other: 'Look for an "Install" or "Add to Home Screen" option in your browser menu.'
   fr:
+    newWindow: Nouvelle fenêtre
     title: Installer l'application
     text: Installer
     tooltip: Ouvrir les instructions d'installation dans une boîte de dialogue
