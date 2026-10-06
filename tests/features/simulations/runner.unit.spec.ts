@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { errorsInSseBody, errorsInResponse } from '../../../simulations/runner/gateway-errors.ts'
 import { bridgeSettings, MODEL_ROLES } from '../../../simulations/runner/settings.ts'
+import { passActions, withSilentPasses } from '../../../simulations/runner/silent-passes.ts'
 
 test.describe('simulation runner helpers', () => {
   test('errorsInSseBody keeps only error chunks', () => {
@@ -44,5 +45,37 @@ test.describe('simulation runner helpers', () => {
     const { superadmin } = bridgeSettings('sonnet', 'sonnet')
     expect(superadmin.models).toHaveLength(1)
     expect(superadmin.models[0].usage.sort()).toEqual([...MODEL_ROLES].sort())
+  })
+
+  // A judged run: the person clicked « Valider le brouillon » in the pass that resolved the
+  // assistant's wait, the message they wrote then was dropped, and the next pass read a
+  // conversation where the assistant validated with nothing from them in between. They told
+  // it « Vous avez validé à ma place ».
+  test('passActions names what the person did in one pass, not what they looked at', () => {
+    const observations = [
+      { turn: 1, tool: 'click', args: { name: 'Apparence' }, result: 'clicked "Apparence"' },
+      { turn: 2, tool: 'look', args: {}, result: '…' },
+      { turn: 2, tool: 'click', args: { name: 'Valider le brouillon' }, result: 'clicked "Valider le brouillon"' },
+      { turn: 2, tool: 'type', args: { name: 'Titre', text: 'Agenda' }, result: 'typed' },
+      { turn: 2, tool: 'screenshot', args: {}, result: 'screenshot of tab 1' }
+    ]
+    expect(passActions(observations, 2)).toEqual(['clicked "Valider le brouillon"', 'typed "Agenda" into "Titre"'])
+  })
+
+  test('withSilentPasses puts what the person did where they did it', () => {
+    const conversation = [
+      { role: 'user', text: 'Mets le portail en vert' },
+      { role: 'assistant', text: 'Vérifiez, puis cliquez sur « Valider le brouillon »' },
+      { role: 'assistant', text: 'Le brouillon a été validé' },
+      { role: 'user', text: 'Merci' }
+    ]
+    const merged = withSilentPasses(conversation, [{ at: 2, actions: ['clicked "Valider le brouillon"'] }])
+    expect(merged.map(m => m.role)).toEqual(['user', 'assistant', 'user', 'assistant', 'user'])
+    expect(merged[2].text).toContain('clicked "Valider le brouillon"')
+    expect(merged[2].text).toMatch(/without writing a message/)
+    // the conversation read from the chat is left as it is
+    expect(conversation).toHaveLength(4)
+    // a pass with no action leaves nothing
+    expect(withSilentPasses(conversation, [{ at: 2, actions: [] }])).toEqual(conversation)
   })
 })

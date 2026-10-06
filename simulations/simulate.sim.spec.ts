@@ -13,6 +13,7 @@ import { seedAll } from './runner/fixtures.ts'
 import { assertBridgeUp, seedSettings } from './runner/settings.ts'
 import { captureGatewayErrors } from './runner/gateway-errors.ts'
 import { createSurface } from './runner/surfaces.ts'
+import { passActions, withSilentPasses, type SilentPass } from './runner/silent-passes.ts'
 import {
   createChatDriver,
   chatDriverStrings,
@@ -59,6 +60,8 @@ for (const simCase of selected) {
     const gatewayErrors = captureGatewayErrors(page)
 
     const conversation: Array<{ role: string, text: string }> = []
+    // What the person did in a pass whose message was dropped (see runner/silent-passes.ts)
+    const silentPasses: SilentPass[] = []
     let perception: ReturnType<typeof createPagePerception> | undefined
 
     // Written up front and overwritten on the way out. A Playwright test timeout
@@ -138,7 +141,7 @@ for (const simCase of selected) {
 
       for (let i = 0; i < simCase.maxTurns; i++) {
         perception.setTurn(i + 1)
-        const message = await nextUserMessage(simCase, conversation, simCase.maxTurns - i, { perception })
+        const message = await nextUserMessage(simCase, withSilentPasses(conversation, silentPasses), simCase.maxTurns - i, { perception })
         if (handedOver) {
           // The pass above was the person's chance to act on the wait. If they took it,
           // the wait resolved and the assistant is finishing the turn it paused — let it,
@@ -147,11 +150,16 @@ for (const simCase of selected) {
           handedOver = (await chat.waitForTurn(TURN_CEILING_MS)) === 'waiting'
           const resumed = await chat.readConversation()
           const changed = resumed.length !== conversation.length
+          const before = conversation.length
           conversation.length = 0
           conversation.push(...resumed)
           // Whatever the person wrote in that pass, they wrote it before the reply
-          // their action caused. Drop it and let them read the reply first.
-          if (changed) continue
+          // their action caused. Drop it and let them read the reply first, but keep
+          // what they did, where they did it.
+          if (changed) {
+            silentPasses.push({ at: before, actions: passActions(perception.observations, i + 1) })
+            continue
+          }
         }
         if (isDone(message)) break
         if (message === '') {
@@ -203,7 +211,7 @@ for (const simCase of selected) {
       goal: simCase.goal,
       persona: simCase.persona,
       route: simCase.route,
-      conversation,
+      conversation: withSilentPasses(conversation, silentPasses),
       gateway,
       consoleErrors,
       observations: perception?.observations ?? []
