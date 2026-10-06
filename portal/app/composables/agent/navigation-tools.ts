@@ -34,9 +34,10 @@ const messages: Record<string, Record<string, string>> = {
   }
 }
 
-// keys synced with embedded apps/previews: concept filters (_c…) and per-dataset
-// filters (_d_…). We only expose these to the agent, not unrelated router params.
-const isFilterKey = (k: string) => k.startsWith('_c') || k.startsWith('_d')
+// keys synced with embedded apps/previews: concept filters (_c…), per-dataset
+// filters (_d_…) and selection markers (_s_…). We only expose these to the agent,
+// not unrelated router params.
+const isFilterKey = (k: string) => k.startsWith('_c') || k.startsWith('_d') || k.startsWith('_s')
 
 interface AgentNavigationToolsDeps {
   locale: Ref<string>
@@ -211,7 +212,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'pageFilters_get',
-    description: 'Read the current page filters synced with embedded visualizations and dataset previews. Returns concept filters (keys starting with "_c") and per-dataset filters (keys starting with "_d_<datasetId>_"). Call a block\'s describe_filters_* tool first to learn which keys it accepts.',
+    description: 'Read the current page filters synced with embedded visualizations and dataset previews. Returns concept filters (keys starting with "_c") and per-dataset filters (keys starting with "_d_<datasetId>_"), plus selection markers (keys starting with "_s_") that tell which visualization emitted a filter. Call a block\'s describe_filters_* tool first to learn which keys it accepts.',
     annotations: { title: t('getPageFilters'), readOnlyHint: true },
     inputSchema: { type: 'object' as const, properties: {} },
     execute: async () => {
@@ -229,7 +230,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
 
   useAgentTool({
     name: 'pageFilters_set',
-    description: 'Set or clear page filters synced with embedded visualizations and dataset previews. Pass a "params" object mapping filter keys to values; an empty string, null, or undefined value clears that key. Use keys advertised by a block\'s describe_filters_* tool (concept keys start with "_c", per-dataset keys with "_d_<datasetId>_").',
+    description: 'Set or clear page filters synced with embedded visualizations and dataset previews. Pass a "params" object mapping filter keys to values; an empty string, null, or undefined value clears that key. Use keys advertised by a block\'s describe_filters_* tool (concept keys start with "_c", per-dataset keys with "_d_<datasetId>_"). When clearing a filter, also clear its selection marker ("_s_" + the filter key without its "_c_"/"_d_" prefix and operator suffix).',
     annotations: { title: t('setPageFilters') },
     inputSchema: {
       type: 'object' as const,

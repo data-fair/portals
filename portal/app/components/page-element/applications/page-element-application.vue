@@ -76,7 +76,7 @@ if (element.syncParams === 'shared-filters' && element.uuid) {
 const syncParams = computed(() => {
   const uuid = element.uuid || crypto.randomUUID().split('-')[0] // Prevent undefined uuid
   if (element.syncParams === 'sandboxed') return `*:${uuid}_`
-  if (element.syncParams === 'shared-filters') return `_c*,_d*,*:${uuid}_`
+  if (element.syncParams === 'shared-filters') return `_c*,_s*,_d*,*:${uuid}_`
   return undefined
 })
 
