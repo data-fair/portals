@@ -129,6 +129,8 @@ export default {
               type: 'boolean',
               title: 'Show in the table of contents',
               'x-i18n-title': { fr: 'Afficher dans le sommaire' },
+              description: 'Enabled by default with the anchor. As soon as one title of the page is in the table of contents, it is displayed: a side panel on large screens, or a floating button on mobile and on full-width pages. To have no table of contents, disable this option on every anchored title of the page.',
+              'x-i18n-description': { fr: 'Activé par défaut avec l\'ancre. Dès qu\'un seul titre de la page est dans le sommaire, celui-ci s\'affiche : volet latéral sur grand écran, bouton flottant sur mobile et sur les pages pleine largeur. Pour ne pas avoir de sommaire, désactivez cette option sur tous les titres ancrés de la page.' },
               default: true,
               layout: 'switch'
             },
