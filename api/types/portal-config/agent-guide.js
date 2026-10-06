@@ -6,6 +6,7 @@ export const agentGuide = {
   en: `Editing a data portal's configuration.
 
 - Colours: in assisted mode (theme.assistedMode) only the main, secondary and accent colours are set (theme.assistedModeColors); every palette (light, dark, high contrast) and the text colours are recomputed from them when the draft is saved, overwriting colours set by hand. For an exact colour elsewhere (background, a text colour), turn assisted mode off first.
+- The header takes its own colour (header.color), else the navigation bar's (navBar.color): the main colour only shows there when one of them is « primary ».
 - Menu (menu.children): an existing free page is a « Page libre » item, its page picked among the suggestions; a catalog or standard page (home, contact, datasets, events, news, legal notice…) is a « Page standard » item with its type; an external link needs its URL; a submenu groups items. A standard item for a page type the portal has no published page of leads to a 404.
 - Social links take an identifier, not a URL (linkedin: koumoul).
 - The breadcrumb stays hidden until a position is chosen.
@@ -16,6 +17,7 @@ export const agentGuide = {
   fr: `Édition de la configuration d'un portail de données.
 
 - Couleurs : en mode assisté (theme.assistedMode), seules les couleurs principale, secondaire et d'accentuation se règlent (theme.assistedModeColors) ; toutes les palettes (claire, sombre, contraste élevé) et les couleurs de texte en sont recalculées à l'enregistrement du brouillon, ce qui écrase les couleurs posées à la main. Pour une couleur exacte ailleurs (fond, couleur de texte), désactiver d'abord le mode assisté.
+- L'entête prend sa propre couleur (header.color), sinon celle de la barre de navigation (navBar.color) : la couleur principale n'y apparaît que si l'une d'elles est « Primaire ».
 - Menu (menu.children) : une page libre existante est un élément « Page libre », sa page choisie parmi les suggestions ; une page de catalogue ou standard (accueil, contact, données, événements, actualités, mentions légales…) est un élément « Page standard » avec son type ; un lien externe demande son URL ; un sous-menu regroupe des éléments. Un élément standard vers un type de page que le portail ne publie pas mène à une erreur 404.
 - Les réseaux sociaux prennent un identifiant, pas une URL (linkedin : koumoul).
 - Le fil d'Ariane reste masqué tant qu'aucune position n'est choisie.
