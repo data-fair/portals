@@ -100,7 +100,7 @@ export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No to
 
 /** The page creation wizard (/pages/new): the person clicks through it, nothing creates a page for them. */
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +
-  'Steps: « Type de page »: « Page libre » for free content built from blocks, « Pages institutionnelles » (contact, legal notice, …) or « Pages de catalogues » (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …, listing their contents automatically); ' +
+  'Steps: « Type de page »: « Page libre » for free content built from blocks, « Page d\'événement » or « Page d\'actualité » for one event or one news item, « Pages institutionnelles » (contact, legal notice, …) or « Pages de catalogues » (« Catalogue de données », « Catalogue d\'événements », « Catalogue d\'actualités », …, listing their contents automatically); ' +
   '« Groupe », for a free page only (it sorts pages in this back-office list, not the portal menu; « Aucun groupe » is fine); ' +
   '« Choisir une source » (« Page blanche », a reference template or « Dupliquer une page existante »; skipped when a blank page is the only source); then « Informations » (title, owner) and « Créer ».'
 

@@ -253,6 +253,14 @@ test.describe('agent editor guidance', () => {
     for (const text of texts) expect(text).not.toMatch(/« Publié » switch/)
   })
 
+  test('the wizard guidance names the cards of one event and one news item', () => {
+    // a judged run hedged about « Page d'événement », a card the person saw and the guidance
+    // did not name
+    expect(STEPS).toContain("« Page d'événement »")
+    expect(STEPS).toContain("« Page d'actualité »")
+    expect(STEPS.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+  })
+
   test('every published text fits a host event without truncation', () => {
     for (const kind of ['page', 'portal'] as const) {
       for (const [key, text] of Object.entries(editorGuidance(kind))) {
