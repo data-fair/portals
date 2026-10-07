@@ -28,7 +28,7 @@
       :href="resolveLink(element.link)"
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
+      :rel="linkRel(resolveLink(element.link), element.link?.target)"
       :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img
@@ -44,7 +44,7 @@
       :to="resolveLink(element.link)"
       :title="altLinkTitle"
       :target="element.link?.target ? '_blank' : undefined"
-      :rel="element.link?.target ? 'noopener' : undefined"
+      :rel="linkRel(resolveLink(element.link), element.link?.target)"
       :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img

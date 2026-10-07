@@ -1,9 +1,12 @@
 <template>
   <v-navigation-drawer
+    id="personal-drawer"
     v-model="personalDrawer"
     :color="portalConfig.personal.navigationColor"
     :temporary="$vuetify.display.smAndDown"
     :permanent="!$vuetify.display.smAndDown"
+    :retain-focus="$vuetify.display.smAndDown"
+    @keydown.esc="close"
   >
     <!-- VList makes the list itself the only tab stop and gives items tabindex="-2",
          reserving arrow keys for the menu pattern. A personal navigation is a
@@ -208,11 +211,30 @@
 
 <script setup lang="ts">
 import { mdiAccount, mdiBell, mdiAccountGroup, mdiCloudKey, mdiUpload, mdiCogTransferOutline, mdiPageNext, mdiWrench } from '@mdi/js'
+import { useDisplay } from 'vuetify'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const { portal, portalConfig, siteInfo } = usePortalStore()
 const { personalDrawer } = useNavigationStore()
+const display = useDisplay()
+
+// On mobile the drawer is modal: move focus into it on open and let Escape close it,
+// as retain-focus would otherwise trap keyboard users with no way out. Same as nav-drawer.vue.
+watch(personalDrawer, async (isOpen) => {
+  if (!isOpen || !display.smAndDown.value) return
+  await nextTick()
+  requestAnimationFrame(() => {
+    document.querySelector<HTMLElement>('#personal-drawer a[href], #personal-drawer button:not([disabled])')?.focus()
+  })
+})
+
+const activator = () => document.querySelector<HTMLElement>('[aria-controls="personal-drawer"]')
+function close () {
+  if (!display.smAndDown.value) return
+  personalDrawer.value = false
+  activator()?.focus()
+}
 
 const datasetsCount = ref({ file: null as number | null, rest: null as number | null })
 const processingsCount = ref<number | null>(null)

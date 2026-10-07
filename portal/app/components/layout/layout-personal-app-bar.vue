@@ -10,6 +10,8 @@
       variant="text"
       :icon="personalDrawer ? mdiMenuOpen : mdiMenu"
       :title="t('openNavigationMenu')"
+      :aria-expanded="personalDrawer"
+      aria-controls="personal-drawer"
       @click="personalDrawer = !personalDrawer"
     />
     <v-breadcrumbs :items="breadcrumbs" />

@@ -1,4 +1,11 @@
 /* eslint-disable no-template-curly-in-string */
+const ownersGetItems = {
+  url: '/data-fair/api/v1/applications?mine=true&size=0&facets=owner',
+  itemsResults: "data.facets.owner.map(f => ({ id: `${f.value.type}:${f.value.id}:${f.value.department ?? '-'}`, title: f.value.departmentName ?? f.value.name }))",
+  itemTitle: 'item.title',
+  itemKey: 'item.id'
+}
+
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-applications',
   'x-exports': [],
@@ -12,6 +19,27 @@ export default {
       type: 'object',
       unevaluatedProperties: false,
       required: ['type'],
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'countPosition',
+          'showSortBesideCount',
+          {
+            title: 'Filtres statiques',
+            comp: 'card',
+            children: ['defaultSort', 'staticFilters']
+          },
+          {
+            title: 'Filtres dynamiques',
+            comp: 'card',
+            children: ['filters', 'showAdvancedFilters']
+          },
+          'pagination',
+          'advancedFilters',
+          'mb'
+        ]
+      },
       properties: {
         type: { const: 'applications-catalog' },
         uuid: { type: 'string', layout: 'none' },
@@ -58,10 +86,62 @@ export default {
           description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
           layout: 'switch'
         },
+        staticFilters: {
+          type: 'object',
+          description: 'Restreignent les visualisations affichées par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.',
+          properties: {
+            includedOwners: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Propriétaires à inclure',
+              layout: {
+                comp: 'autocomplete',
+                cols: { md: 6 },
+                getItems: ownersGetItems,
+                props: { chips: true, closableChips: true }
+              }
+            },
+            excludedOwners: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Propriétaires à exclure',
+              layout: {
+                comp: 'autocomplete',
+                cols: { md: 6 },
+                getItems: ownersGetItems,
+                props: { chips: true, closableChips: true }
+              }
+            },
+            includedTopics: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Thématiques à inclure',
+              layout: {
+                comp: 'autocomplete',
+                getItems: {
+                  url: '/data-fair/api/v1/applications?mine=true&size=0&facets=topics',
+                  itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
+                  itemTitle: 'item.title',
+                  itemKey: 'item.id'
+                },
+                props: { chips: true, closableChips: true }
+              }
+            },
+            includedBaseApplications: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Applications de base à inclure',
+              layout: {
+                comp: 'autocomplete',
+                getItems: {
+                  url: '/data-fair/api/v1/applications?mine=true&size=0&facets=base-application',
+                  itemsResults: "data.facets['base-application'].map(f => ({ id: f.value.url, title: f.value.title }))",
+                  itemTitle: 'item.title',
+                  itemKey: 'item.id'
+                },
+                props: { chips: true, closableChips: true }
+              }
+            }
+          }
+        },
         filters: {
           type: 'object',
-          title: 'Configuration des filtres',
-          layout: 'card',
           properties: {
             position: {
               type: 'string',
@@ -80,7 +160,7 @@ export default {
                 type: 'string',
                 oneOf: [
                   { const: 'search', title: 'Barre de recherche' },
-                  { const: 'base-application', title: 'Filtres par applications' },
+                  { const: 'base-application', title: 'Filtres par applications de base' },
                   { const: 'topics', title: 'Filtres par thématiques' },
                   { const: 'owners', title: 'Filtres par propriétaires' },
                   { const: 'sort', title: 'Tri' }
@@ -118,7 +198,6 @@ export default {
             }
           }
         },
-        // TODO: add static filters ?
         advancedFilters: {
           type: 'array',
           layout: 'none',
@@ -274,22 +353,6 @@ export default {
             }
           }
         },
-        syncParams: {
-          type: 'string',
-          title: "Synchronisation des paramètres d'URL",
-          description: [
-            "Synchronisation des paramètres d'URL entre la visualisation et la page :",
-            "- **Aucune synchronisation** - Les filtres et paramètres de la visualisation ne sont pas reflétés dans l'URL de la page.",
-            "- **Synchronisation cloisonnée** - Les paramètres de la visualisation sont conservés dans l'URL avec un préfixe propre à ce bloc, sans interférer avec les autres visualisations de la page.",
-            '- **Synchronisation avec partage des filtres** - La visualisation partage les filtres (concepts `_c` et jeux de données `_d`) avec les autres blocs de la page.'
-          ].join('\n'),
-          default: 'none',
-          oneOf: [
-            { const: 'none', title: 'Aucune synchronisation' },
-            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
-            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
-          ]
-        },
         displayMode: {
           type: 'string',
           title: "Mode d'affichage",
@@ -341,6 +404,53 @@ export default {
             slots: {
               after: {
                 markdown: "**⚠️ Attention :** une hauteur fixe est déconseillée. Sur les petites résolutions (mobiles, tablettes), l'affichage peut être difficile. Préférez « Hauteur optimale » ou « Aspect ratio » pour un rendu responsive."
+              }
+            }
+          }
+        },
+        syncParams: {
+          type: 'string',
+          title: "Synchronisation des paramètres d'URL",
+          description: [
+            "Synchronisation des paramètres d'URL entre la visualisation et la page :",
+            "- **Aucune synchronisation** - Les filtres et paramètres de la visualisation ne sont pas reflétés dans l'URL de la page.",
+            "- **Synchronisation cloisonnée** - Les paramètres de la visualisation sont conservés dans l'URL avec un préfixe propre à ce bloc, sans interférer avec les autres visualisations de la page.",
+            '- **Synchronisation avec partage des filtres** - La visualisation partage les filtres (concepts `_c` et jeux de données `_d`) avec les autres blocs de la page.'
+          ].join('\n'),
+          default: 'none',
+          oneOf: [
+            { const: 'none', title: 'Aucune synchronisation' },
+            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
+            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
+          ]
+        },
+        staticFilters: {
+          type: 'array',
+          title: 'Filtres par défaut',
+          description: [
+            "Filtres transmis à la visualisation au chargement, sans apparaître dans l'URL de la page. Le visiteur peut les modifier si la visualisation le permet.",
+            '- **Concept** - `_c_<concept>_<opérateur>`, par exemple `_c_commune_eq`',
+            '- **Colonne** - `_d_<id du jeu de données>_<colonne>_<opérateur>`, par exemple `_d_mon-jdd_annee_gte`',
+            '',
+            'Opérateurs : `eq`, `neq`, `in`, `nin` (valeurs séparées par des virgules), `lt`, `lte`, `gt`, `gte`, `starts`, `exists`, `nexists`, `contains`, `search`.'
+          ].join('\n'),
+          layout: {
+            messages: { addItem: 'Ajouter un filtre' },
+            listEditMode: 'inline'
+          },
+          items: {
+            type: 'object',
+            required: ['key', 'value'],
+            properties: {
+              key: {
+                type: 'string',
+                title: 'Paramètre',
+                pattern: '^_(c|d|id)_',
+                errorMessage: 'Le paramètre doit commencer par _c_, _d_ ou _id_'
+              },
+              value: {
+                type: 'string',
+                title: 'Valeur'
               }
             }
           }

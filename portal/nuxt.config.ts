@@ -21,8 +21,8 @@ const contentSecurityPolicy: Record<string, string[]> = {
   'style-src': ["'self'", "'unsafe-inline'"],
   'worker-src': ["'self'", 'blob:'], // necessary for maplibre
   'child-src': ["'self'", 'blob:'], // same
-  // used by fetch, xhr, etc. data.geopf.fr: the assistant's geocode_address tool
-  // (@data-fair/agent-tools-data-fair) calls it from the browser
+  // used by fetch, xhr, etc. ; data.geopf.fr is the IGN Geoplateforme geocoding service
+  // called from the browser by the geocode_address agent tool (always registered, cf app/composables/agent/geo-tools.ts)
   'connect-src': ["'self'", 'https://koumoul.com', 'https://data.geopf.fr']
 }
 
@@ -53,6 +53,9 @@ export default defineNuxtConfig({
     headers: {
       // this blocks iframes starting with a / is better covered by CSP anyway
       crossOriginEmbedderPolicy: false,
+      // nuxt-security defaults to no-referrer, but YouTube (error 153) and other embeds
+      // reject players when the page origin is missing from the Referer header
+      referrerPolicy: 'strict-origin-when-cross-origin',
       contentSecurityPolicy
     },
     // we use rate-limiting on reverse proxy instead
@@ -74,6 +77,10 @@ export default defineNuxtConfig({
       {
         from: '@data-fair/lib-vue/locale-dayjs.js',
         imports: ['useLocaleDayjs']
+      },
+      {
+        from: '@data-fair/lib-vue/owner.js',
+        imports: ['useDisplayOwner']
       },
       {
         from: '@data-fair/lib-vue/reactive-search-params.js',
@@ -133,6 +140,7 @@ export default defineNuxtConfig({
         '@data-fair/lib-vue/session.js',
         '@data-fair/lib-vue/ui-notif.js',
         '@data-fair/lib-vue/locale-dayjs.js',
+        '@data-fair/lib-vue/owner.js',
         '@data-fair/lib-vue/async-action.js',
         '@data-fair/lib-utils/micro-template.js',
         '@data-fair/lib-vue/reactive-search-params.js',

@@ -36,7 +36,7 @@
     >
       <d-frame-wrapper
         :iframe-title="`${t('application')} - ${element.application.title}`"
-        :src="'/data-fair/app/' + element.application.slug + `?d-frame=true&primary=${$vuetify.theme.current.colors.primary}`"
+        :src="frameSrc"
         :sync-params="syncParams"
         :aspect-ratio="frameAspectRatio"
         :height="displayMode === 'fixed-height' ? fixedHeight + 'px' : undefined"
@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationElement } from '#api/types/page-elements/index.ts'
+import { useTheme } from 'vuetify'
 import { usePageFilterDescribeTool } from '../../../composables/agent/page-filter-describe-tool'
 
 const { element } = defineProps<{ element: ApplicationElement }>()
@@ -77,6 +78,17 @@ const syncParams = computed(() => {
   if (element.syncParams === 'sandboxed') return `*:${uuid}_`
   if (element.syncParams === 'shared-filters') return `_c*,_d*,*:${uuid}_`
   return undefined
+})
+
+// Static filters live in the src only: d-frame never copies a param still equal to its src value
+// up to the page URL, so they act as invisible defaults.
+const theme = useTheme()
+const frameSrc = computed(() => {
+  const params = new URLSearchParams({ 'd-frame': 'true', primary: theme.current.value.colors.primary as string })
+  for (const filter of element.staticFilters ?? []) {
+    if (filter.key && filter.value) params.set(filter.key, filter.value)
+  }
+  return `/data-fair/app/${element.application?.slug}?${params}`
 })
 
 const hasActions = computed(() => (element.actionButtons?.items ?? []).length > 0)

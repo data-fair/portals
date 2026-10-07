@@ -10,6 +10,7 @@ import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
 import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
+import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 
 const router = Router()
@@ -56,14 +57,12 @@ router.post('', async (req, res, next) => {
     breadcrumb: {},
     linksConfig: { underline: 'always' },
     footer: {
-      color: 'primary',
-      socialPosition: 'none',
-      copyright: 'text',
-      logoPrimaryType: 'default',
-      extraLogos: [],
-      linksMode: 'lines',
-      links: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }],
-      importantLinks: []
+      copyright: true,
+      background: { color: 'primary' },
+      rows: [{
+        columns: 1,
+        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
+      }]
     },
     datasets: {
       card: {},
@@ -104,6 +103,8 @@ router.post('', async (req, res, next) => {
     const { config: duplicatedConfig, eventDetails } = await duplicatePortalConfig(session, body.sourcePortalId, portalId, owner)
     config = { ...config, ...duplicatedConfig }
     duplicationEventDetails = eventDetails
+    // a new portal is never whiteLabel, a duplicated footer without the Koumoul mention would reject every later save
+    if (!hasKoumoulMention(config.footer)) config.footer.copyright = true
   }
 
   // Finally apply explicit body config overrides

@@ -1,4 +1,11 @@
 /* eslint-disable no-template-curly-in-string */
+const ownersGetItems = {
+  url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=owner',
+  itemsResults: "data.facets.owner.map(f => ({ id: `${f.value.type}:${f.value.id}:${f.value.department ?? '-'}`, title: f.value.departmentName ?? f.value.name }))",
+  itemTitle: 'item.title',
+  itemKey: 'item.id'
+}
+
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-datasets',
   'x-exports': [],
@@ -12,6 +19,28 @@ export default {
       type: 'object',
       unevaluatedProperties: false,
       required: ['type'],
+      layout: {
+        children: [
+          'type',
+          'columns',
+          'countPosition',
+          'showApiButton',
+          'showSortBesideCount',
+          {
+            title: 'Filtres statiques',
+            comp: 'card',
+            children: ['defaultSort', 'staticFilters']
+          },
+          {
+            title: 'Filtres dynamiques',
+            comp: 'card',
+            children: ['filters', 'showAdvancedFilters']
+          },
+          'pagination',
+          'advancedFilters',
+          'mb'
+        ]
+      },
       properties: {
         type: { const: 'datasets-catalog' },
         uuid: { type: 'string', layout: 'none' },
@@ -67,10 +96,76 @@ export default {
           description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
           layout: 'switch'
         },
+        staticFilters: {
+          type: 'object',
+          description: 'Restreignent les jeux de données affichés par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.',
+          properties: {
+            includedOwners: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Propriétaires à inclure',
+              layout: {
+                comp: 'autocomplete',
+                cols: { md: 6 },
+                getItems: ownersGetItems,
+                props: { chips: true, closableChips: true }
+              }
+            },
+            excludedOwners: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Propriétaires à exclure',
+              layout: {
+                comp: 'autocomplete',
+                cols: { md: 6 },
+                getItems: ownersGetItems,
+                props: { chips: true, closableChips: true }
+              }
+            },
+            includedTopics: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Thématiques à inclure',
+              layout: {
+                comp: 'autocomplete',
+                getItems: {
+                  url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=topics',
+                  itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
+                  itemTitle: 'item.title',
+                  itemKey: 'item.id'
+                },
+                props: { chips: true, closableChips: true }
+              }
+            },
+            includedConcepts: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Concepts à inclure',
+              layout: {
+                comp: 'autocomplete',
+                getItems: {
+                  url: '/data-fair/api/v1/vocabulary',
+                  itemsResults: 'data.map(c => ({ id: c.identifiers[0], title: c.title }))',
+                  itemTitle: 'item.title',
+                  itemKey: 'item.id'
+                },
+                props: { chips: true, closableChips: true }
+              }
+            },
+            includedKeywords: {
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+              title: 'Mots-clés à inclure',
+              layout: {
+                comp: 'autocomplete',
+                getItems: {
+                  url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=keywords',
+                  itemsResults: 'data.facets.keywords.map(f => ({ id: f.value, title: f.value }))',
+                  itemTitle: 'item.title',
+                  itemKey: 'item.id'
+                },
+                props: { chips: true, closableChips: true }
+              }
+            }
+          }
+        },
         filters: {
           type: 'object',
-          title: 'Configuration des filtres',
-          layout: 'card',
           properties: {
             position: {
               type: 'string',
@@ -128,7 +223,6 @@ export default {
             }
           }
         },
-        // TODO: add static filters ?
         advancedFilters: {
           type: 'array',
           layout: 'none',

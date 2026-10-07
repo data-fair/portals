@@ -159,7 +159,7 @@
           /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
 
           <!-- Actions (Bottom Location) -->
-          <template v-if="(cardConfig.actionsLocation === 'bottom' || $vuetify.display.smAndDown) && !dataset.isMetaOnly">
+          <template v-if="(cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown)) && !dataset.isMetaOnly">
             <v-divider />
             <!--
               ga-0 => remove default v-card-actions gap between action buttons

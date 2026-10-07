@@ -76,13 +76,10 @@
             </preview>
           </template>
           <template #footer-preview>
-            <preview
-              :append-title="t('footer')"
-              no-padding
-            >
+            <footer-preview>
               <layout-footer />
               <preview-paused v-if="!formValid" />
-            </preview>
+            </footer-preview>
           </template>
           <template #breadcrumb-preview>
             <preview
@@ -191,6 +188,7 @@ import type { Portal, PortalConfig } from '#api/types/portal'
 import type { Page, Group } from '#api/types/page'
 import type { Options as VjsfOptions } from '@koumoul/vjsf'
 
+import { forEachFooterBlock } from '#api/types/portal-config-footer/walk.ts'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
@@ -235,11 +233,13 @@ watch([editConfig, formValid], ([newConfig, valid]) => {
   if (newConfig && valid) portalConfig.value = newConfig
 })
 // The API only renders markdown on write, so the preview would lag behind the input without this
-watch(() => editConfig.value?.footer?.text, (text) => {
-  if (editConfig.value?.footer) {
-    editConfig.value.footer.text_html = text ? renderMarkdown(text) : undefined
-  }
-})
+watch(() => editConfig.value?.footer?.rows, () => {
+  forEachFooterBlock(editConfig.value?.footer, (block) => {
+    if (block.type !== 'text') return
+    const html = block.markdown && block.content ? renderMarkdown(block.content) : undefined
+    if (block.content_html !== html) block.content_html = html
+  })
+}, { deep: true })
 // When switching from assisted to manual mode, expand assisted colors into the full palette
 // When switching from manual to assisted mode, carry over primary/secondary/accent into assistedModeColors
 watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
@@ -384,6 +384,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     pages: pages.value,
     owner: session.account.value,
     adminMode: session.user.value.adminMode,
+    whiteLabel: !!portalFetch.data.value?.whiteLabel,
     // used by schema https://github.com/data-fair/lib/theme to hide some parts
     simplifiedTheme: true
   },
@@ -406,7 +407,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     askAssistant: Ask the assistant
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
-    footer: Footer
     home: Home
     portals: Portals
     portalConfig: Portal configuration
@@ -416,7 +416,6 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     askAssistant: Demander à l'assistant
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
-    footer: Pied de page
     home: Accueil
     portals: Portails
     portalConfig: Configuration du portail

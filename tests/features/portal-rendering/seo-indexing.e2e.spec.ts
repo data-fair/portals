@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
+import { deleteDatasets, seedDataset, seedFileDataset } from '../../support/data-fair.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
@@ -33,6 +34,19 @@ const extractJsonLd = (html: string) => {
   if (!m) return null
   return JSON.parse(m[1])
 }
+
+// on a dataset page several ld+json scripts coexist (the breadcrumb comes first)
+const extractJsonLdOfType = (html: string, type: string) => {
+  for (const m of html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    const parsed = JSON.parse(m[1])
+    if (parsed['@type'] === type) return parsed
+  }
+  return null
+}
+
+// Every <a> start tag whose href attribute is exactly `href` (attribute order agnostic)
+const anchorsTo = (html: string, href: string) =>
+  [...html.matchAll(/<a\b[^>]*>/gi)].map(m => m[0]).filter(tag => tag.includes(`href="${href}"`))
 
 test.describe('SEO / indexation', () => {
   test.beforeEach(clean)
@@ -89,9 +103,11 @@ test.describe('SEO / indexation', () => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Draftable Portal', allowRobots: true, menu: { children: [] } }
     })).data
+    // a marker rendered in the portal page body: what must never reach an anonymous crawler
+    const draftContent = 'Contenu confidentiel du brouillon'
     await user1.post('/api/pages', {
       type: 'home',
-      config: { title: 'Home', elements: [] },
+      config: { title: 'Home', elements: [{ type: 'title', content: draftContent, titleSize: 'h2' }] },
       portals: [portal._id],
       owner: portal.owner
     })
@@ -99,13 +115,17 @@ test.describe('SEO / indexation', () => {
     const res = await request.get(portalUrl(portal._id, true) + '/', { timeout: 20_000 })
     const html = await res.text()
     // Anonymous request should not be served the portal HTML — instead the
-    // simple-directory login UI is rendered.
+    // simple-directory login UI is rendered. That login page legitimately carries the
+    // site title registered in simple-directory (`<title>… (brouillon)</title>`, cf
+    // getSDSites in api/src/portals/service.ts), so only the page content is asserted here.
     expect(html).toContain('/simple-directory/')
-    expect(html).not.toContain('Draftable Portal')
+    expect(html).not.toContain(draftContent)
 
     // Production URL is reachable normally and has no noindex
     const prodHtml = await fetchHtml(request, portalUrl(portal._id) + '/')
     expect(hasRobotsNoindex(prodHtml)).toBe(false)
+    // the marker does reach the production HTML, so its absence above is meaningful
+    expect(prodHtml).toContain(draftContent)
   })
 
   test('robots.txt reflects portal indexability', async ({ request }) => {
@@ -259,6 +279,43 @@ test.describe('SEO / indexation', () => {
     expect(jsonLd.description).toBe('Description du portail pour SEO')
   })
 
+  test('dataset JSON-LD lists the downloads as DataDownload', async ({ request }) => {
+    // seeding waits for the data-fair workers to finalize the uploaded file
+    test.setTimeout(120_000)
+
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'DataDownload Portal', allowRobots: true, menu: { children: [] } }
+    })).data
+    await user1.post('/api/pages', { type: 'home', config: { title: 'Home', elements: [] }, portals: [portal._id], owner: portal.owner })
+
+    const fileId = `test-jsonld-file-${Date.now()}`
+    const metaId = `test-jsonld-meta-${Date.now()}`
+    const seeded = [
+      await seedFileDataset(portal._id, { id: fileId, title: 'Jeu avec fichier', csv: 'nom,valeur\nun,1\ndeux,2\n' }),
+      await seedDataset(portal._id, { id: metaId, title: 'Jeu sans données' })
+    ]
+    try {
+      const withFile = extractJsonLdOfType(await fetchHtml(request, portalUrl(portal._id) + `/datasets/${fileId}`), 'Dataset')
+      expect(withFile).not.toBeNull()
+      // the original file and the API exports, all absolute, all typed
+      const downloads = withFile.distribution as Array<{ '@type': string, name: string, encodingFormat: string, contentUrl: string }>
+      expect(downloads.length).toBeGreaterThanOrEqual(2)
+      for (const d of downloads) {
+        expect(d['@type']).toBe('DataDownload')
+        expect(d.contentUrl).toMatch(/^https?:\/\//)
+        expect(d.encodingFormat).toBeTruthy()
+      }
+      expect(downloads.some(d => d.contentUrl.includes(`/data-fair/api/v1/datasets/${fileId}/data-files/`))).toBe(true)
+      expect(downloads.some(d => d.encodingFormat === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).toBe(true)
+
+      const metaOnly = extractJsonLdOfType(await fetchHtml(request, portalUrl(portal._id) + `/datasets/${metaId}`), 'Dataset')
+      expect(metaOnly).not.toBeNull()
+      expect(metaOnly.distribution).toBeUndefined()
+    } finally {
+      await deleteDatasets(seeded)
+    }
+  })
+
   test('dataset sub-pages are noindex (table, map, api-doc)', async ({ request }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Sub Portal', allowRobots: true, menu: { children: [] } }
@@ -306,5 +363,65 @@ test.describe('SEO / indexation', () => {
 
     const html = await fetchHtml(request, portalUrl(portal._id) + '/catalog-api-doc')
     expect(hasRobotsNoindex(html)).toBe(false)
+  })
+
+  test('links to the personal space and to the login page are nofollow', async ({ request }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: {
+        title: 'Nofollow Portal',
+        allowRobots: true,
+        menu: { children: [{ type: 'external', title: 'Mon compte', href: '/me/account' }] },
+        footer: {
+          copyright: true,
+          background: { color: 'primary' },
+          rows: [
+            {
+              columns: 1,
+              blocks: [
+                { type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] },
+                { type: 'buttons', align: 'center', items: [{ type: 'external', title: 'Mes clés', href: '/me/api-keys' }] }
+              ]
+            }
+          ]
+        }
+      }
+    })).data
+    const config = {
+      title: 'Home',
+      elements: [
+        { type: 'card', title: 'Proposer une réutilisation', children: [], actions: [], link: { type: 'external', title: 'Proposer', href: '/me/reuses' } },
+        { type: 'card', title: 'Site externe', children: [], actions: [], link: { type: 'external', title: 'Exemple', href: 'https://example.com', target: true } },
+        { type: 'text', content: 'Depuis votre [espace personnel](/me/reuses) ou le [catalogue](/datasets).' }
+      ]
+    }
+    // publish through the draft flow so the API renders the markdown `_html`
+    const page = (await user1.post('/api/pages', { type: 'home', config, portals: [portal._id], owner: portal.owner })).data
+    await user1.patch(`/api/pages/${page._id}`, { draftConfig: config })
+    await user1.post(`/api/pages/${page._id}/draft`)
+
+    const home = await fetchHtml(request, portalUrl(portal._id) + '/')
+    // nav bar item + card overlay + markdown link
+    const privateAnchors = [...anchorsTo(home, '/me/account'), ...anchorsTo(home, '/me/reuses')]
+    expect(privateAnchors.length).toBeGreaterThanOrEqual(3)
+    for (const tag of privateAnchors) expect(tag).toMatch(/rel="[^"]*nofollow/)
+    // footer important link
+    const footerAnchors = anchorsTo(home, '/me/api-keys')
+    expect(footerAnchors.length).toBeGreaterThanOrEqual(1)
+    for (const tag of footerAnchors) {
+      expect(tag).toMatch(/rel="[^"]*nofollow/)
+      expect(tag).toContain('noopener')
+    }
+    // control: public links keep their current rel
+    const publicAnchors = anchorsTo(home, '/datasets')
+    expect(publicAnchors.length).toBeGreaterThan(0)
+    for (const tag of publicAnchors) expect(tag).not.toContain('nofollow')
+    const external = anchorsTo(home, 'https://example.com')
+    expect(external.length).toBeGreaterThanOrEqual(1)
+    for (const tag of external) expect(tag).toMatch(/rel="noopener"/)
+
+    const sitemap = await fetchHtml(request, portalUrl(portal._id) + '/sitemap')
+    const loginAnchors = [...sitemap.matchAll(/<a\b[^>]*>/gi)].map(m => m[0]).filter(tag => tag.includes('/simple-directory/login'))
+    expect(loginAnchors.length).toBe(1)
+    expect(loginAnchors[0]).toMatch(/rel="[^"]*nofollow/)
   })
 })

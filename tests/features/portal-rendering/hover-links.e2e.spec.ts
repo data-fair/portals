@@ -155,4 +155,73 @@ test.describe('hover effects and links style', () => {
       return bar.evaluate(el => el.style.width)
     }, { timeout: 15_000 }).toBe('100%')
   })
+
+  test('underline title line decorates every wrapped line, bottom-medium keeps its separate line', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Title Underline Portal', menu: { children: [] } }
+    })).data
+    const content = 'Un titre assez long pour passer sur plusieurs lignes quelle que soit la largeur de la fenêtre du navigateur'
+    await createHomePage(portal, [
+      { type: 'title', content, titleSize: 'h3', titleTag: 'h2', line: { position: 'underline', color: 'primary' } },
+      { type: 'title', content: 'Titre au trait moyen', titleSize: 'h3', titleTag: 'h2', line: { position: 'bottom-medium', color: 'primary' } }
+    ])
+
+    await goToPortal(portal._id)
+    const underlined = page.getByRole('heading', { name: content })
+    await expect(underlined).toBeVisible({ timeout: 10_000 })
+    const text = underlined.locator('span', { hasText: content }).last()
+    await expect(text).toHaveCSS('text-decoration-line', 'underline')
+    await expect(underlined.locator('[data-pt-title-line]')).toHaveCount(0)
+    // the decoration is per line, which only matters if the title really wraps
+    const lines = await text.evaluate(el => {
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      return range.getClientRects().length
+    })
+    expect(lines).toBeGreaterThan(1)
+
+    const medium = page.getByRole('heading', { name: 'Titre au trait moyen' })
+    await expect(medium.locator('[data-pt-title-line]')).toHaveCount(1)
+    await expect(medium.locator('span', { hasText: 'Titre au trait moyen' }).last()).toHaveCSS('text-decoration-line', 'none')
+  })
+
+  test('box background image zooms on hover inside the box', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Background Zoom Portal', menu: { children: [] } }
+    })).data
+    await createHomePage(portal, [{
+      type: 'card',
+      title: 'Ma boite',
+      children: [{ type: 'text', content: 'Voir [mon lien](https://example.com/page) dans la boite.' }],
+      actions: [],
+      link: { type: 'external', href: 'https://example.com', title: 'Exemple' },
+      hover: { effects: ['imageZoom'] },
+      background: { image: { _id: 'bg-1', name: 'bg.png', mimeType: 'image/png' }, color: 'primary', tintStrength: 0.3 }
+    }])
+
+    await goToPortal(portal._id)
+    const card = page.locator('.v-card', { hasText: 'Ma boite' })
+    await expect(card).toBeVisible({ timeout: 10_000 })
+    // the image moved from the box to a decorative layer, hidden from assistive technologies
+    const layer = card.locator(':scope > [aria-hidden="true"]').first()
+    await expect(layer).toHaveCSS('background-image', /linear-gradient.*bg-1/)
+    await expect(card).toHaveCSS('background-image', 'none')
+
+    // the layer stays under the box link and the inner links
+    const hits = await card.evaluate(el => {
+      const r = el.getBoundingClientRect()
+      const center = document.elementFromPoint(r.left + r.width / 2, r.top + 20)
+      const innerLink = el.querySelector('a.simple-link')!.getBoundingClientRect()
+      const inner = document.elementFromPoint(innerLink.left + innerLink.width / 2, innerLink.top + innerLink.height / 2)
+      return { box: center?.classList.contains('card-overlay-link'), inner: inner?.closest('a')?.textContent }
+    })
+    expect(hits).toEqual({ box: true, inner: 'mon lien' })
+
+    await expect.poll(async () => {
+      await page.mouse.move(0, 0)
+      await card.hover()
+      return layer.evaluate(el => el.style.transform)
+    }, { timeout: 15_000 }).toBe('scale(1.05)')
+    await expect(card).toHaveCSS('transform', 'none')
+  })
 })

@@ -44,7 +44,7 @@
             :to="(!preview && link.type !== 'external') ? resolveLink(link) : undefined"
             :href="(!preview && link.type === 'external') ? link.href : undefined"
             :target="link.type === 'external' ? '_blank' : undefined"
-            :rel="link.type === 'external' ? 'noopener' : undefined"
+            :rel="linkRel(resolveLink(link), link.type === 'external')"
             :role="undefined"
             color="primary"
             tabindex="0"

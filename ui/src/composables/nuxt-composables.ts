@@ -7,6 +7,11 @@ export function useLocalFetch<T = unknown> (
   throw new Error('useLocalFetch should only be called from portal, not portals-manager')
 }
 
+// only the part the shared portal components use
+export function useNuxtApp (): { runWithContext: <T>(fn: () => T) => T } {
+  throw new Error('useNuxtApp should only be called from portal, not portals-manager')
+}
+
 export function useRuntimeConfig (): any {
   throw new Error('useRuntimeConfig should only be called from portal, not portals-manager')
 }

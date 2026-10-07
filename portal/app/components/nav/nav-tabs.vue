@@ -62,7 +62,7 @@
           :to="!isExternalLink(link) ? resolveLink(link) : undefined"
           :href="isExternalLink(link) ? resolveLink(link) : undefined"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="link.type === 'external' && link.target ? 'noopener' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
           :value="i"
         >
           <template
@@ -124,25 +124,21 @@ function sanitizeTabsAria () {
 
 /**
  * On submenu open: focus the first item so Tab can flow through the menu
- * like a disclosure (per user request). On close: restore focus to the
- * activator tab so keyboard users don't lose their place.
+ * like a disclosure (per user request). On close, VMenu already restores focus:
+ * to the activator on Escape, to the next element when tabbing out.
  */
 function onMenuToggle (tabIndex: number, open: boolean) {
-  if (open) {
-    // The menu content is teleported and rendered after the transition. Poll until
-    // the focus actually lands: finding the item is not enough, focus() silently
-    // no-ops while the overlay is still hidden.
-    let attempts = 0
-    const tryFocus = () => {
-      const first = document.querySelector<HTMLElement>(`#nav-submenu-${tabIndex} .v-list-item`)
-      first?.focus()
-      if (document.activeElement !== first && attempts++ < 10) setTimeout(tryFocus, 20)
-    }
-    tryFocus()
-  } else {
-    const activator = navRootRef.value?.querySelector<HTMLElement>(`.v-tab[aria-controls="nav-submenu-${tabIndex}"]`)
-    activator?.focus()
+  if (!open) return
+  // The menu content is teleported and rendered after the transition. Poll until
+  // the focus actually lands: finding the item is not enough, focus() silently
+  // no-ops while the overlay is still hidden.
+  let attempts = 0
+  const tryFocus = () => {
+    const first = document.querySelector<HTMLElement>(`#nav-submenu-${tabIndex} .v-list-item`)
+    first?.focus()
+    if (document.activeElement !== first && attempts++ < 10) setTimeout(tryFocus, 20)
   }
+  tryFocus()
 }
 
 onMounted(() => {
