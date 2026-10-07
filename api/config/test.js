@@ -16,7 +16,8 @@ export default {
   secretKeys: {
     identities: 'secret-identities',
     events: 'secret-events',
-    sites: 'secret-sites'
+    sites: 'secret-sites',
+    limits: 'secret-limits'
   },
   portalUrlPattern: `http://{subdomain}.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   upgradeRoot: './'
