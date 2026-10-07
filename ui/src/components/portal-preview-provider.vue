@@ -7,7 +7,7 @@
       :is="'style'"
       :nonce="$cspNonce"
     >
-      {{ getTextColorsCss(themeColors, themeKey) }}
+      {{ getTextColorsCss(themeColors, themeKey) + portalLinksCss(activeConfig.linksConfig, `.v-theme--${themeKey}`) }}
     </component>
     <slot />
   </v-theme-provider>

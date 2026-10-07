@@ -353,22 +353,6 @@ export default {
             }
           }
         },
-        syncParams: {
-          type: 'string',
-          title: "Synchronisation des paramètres d'URL",
-          description: [
-            "Synchronisation des paramètres d'URL entre la visualisation et la page :",
-            "- **Aucune synchronisation** - Les filtres et paramètres de la visualisation ne sont pas reflétés dans l'URL de la page.",
-            "- **Synchronisation cloisonnée** - Les paramètres de la visualisation sont conservés dans l'URL avec un préfixe propre à ce bloc, sans interférer avec les autres visualisations de la page.",
-            '- **Synchronisation avec partage des filtres** - La visualisation partage les filtres (concepts `_c` et jeux de données `_d`) avec les autres blocs de la page.'
-          ].join('\n'),
-          default: 'none',
-          oneOf: [
-            { const: 'none', title: 'Aucune synchronisation' },
-            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
-            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
-          ]
-        },
         displayMode: {
           type: 'string',
           title: "Mode d'affichage",
@@ -420,6 +404,54 @@ export default {
             slots: {
               after: {
                 markdown: "**⚠️ Attention :** une hauteur fixe est déconseillée. Sur les petites résolutions (mobiles, tablettes), l'affichage peut être difficile. Préférez « Hauteur optimale » ou « Aspect ratio » pour un rendu responsive."
+              }
+            }
+          }
+        },
+        syncParams: {
+          type: 'string',
+          title: "Synchronisation des paramètres d'URL",
+          description: [
+            "Synchronisation des paramètres d'URL entre la visualisation et la page :",
+            "- **Aucune synchronisation** - Les filtres et paramètres de la visualisation ne sont pas reflétés dans l'URL de la page.",
+            "- **Synchronisation cloisonnée** - Les paramètres de la visualisation sont conservés dans l'URL avec un préfixe propre à ce bloc, sans interférer avec les autres visualisations de la page.",
+            '- **Synchronisation avec partage des filtres** - La visualisation partage les filtres (concepts `_c` et jeux de données `_d`) avec les autres blocs de la page.'
+          ].join('\n'),
+          default: 'none',
+          oneOf: [
+            { const: 'none', title: 'Aucune synchronisation' },
+            { const: 'sandboxed', title: 'Synchronisation cloisonnée' },
+            { const: 'shared-filters', title: 'Synchronisation avec partage des filtres' }
+          ]
+        },
+        staticFilters: {
+          type: 'array',
+          title: 'Filtres par défaut',
+          description: [
+            "Filtres transmis à la visualisation au chargement, sans apparaître dans l'URL de la page. Le visiteur peut les modifier si la visualisation le permet.",
+            '- **Concept** - `_c_<concept>_<opérateur>`, par exemple `_c_commune_eq`',
+            '- **Colonne** - `_d_<id du jeu de données>_<colonne>_<opérateur>`, par exemple `_d_mon-jdd_annee_gte`',
+            '- **Marqueur de sélection** - `_s_<concept>` ou `_s_<id du jeu de données>_<colonne>`, associé à un filtre `_c_`/`_d_` pour marquer une sélection reçue (convention inter-apps `_s_`) et non une restriction.',
+            '',
+            'Opérateurs : `eq`, `neq`, `in`, `nin` (valeurs séparées par des virgules), `lt`, `lte`, `gt`, `gte`, `starts`, `exists`, `nexists`, `contains`, `search`.'
+          ].join('\n'),
+          layout: {
+            messages: { addItem: 'Ajouter un filtre' },
+            listEditMode: 'inline'
+          },
+          items: {
+            type: 'object',
+            required: ['key', 'value'],
+            properties: {
+              key: {
+                type: 'string',
+                title: 'Paramètre',
+                pattern: '^_(c|d|id|s)_',
+                errorMessage: 'Le paramètre doit commencer par _c_, _d_, _id_ ou _s_'
+              },
+              value: {
+                type: 'string',
+                title: 'Valeur'
               }
             }
           }

@@ -21,7 +21,7 @@ export const useDatasetFiles = async (dataset: Dataset) => {
   const fetchInContext = <T>(url: string, options?: UseFetchOptions<T>) =>
     nuxtApp.runWithContext(() => useLocalFetch<T>(url, options))
 
-  const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { params: { size: 0 } })
+  const countFetch = useLocalFetch<{ total: number }>(`/data-fair/api/v1/datasets/${dataset.id}/lines`, { query: { size: 0 } })
   const count = computed(() => countFetch.data.value?.total || 0)
 
   let filesRes: Omit<DatasetFile, 'format'>[] = []
@@ -31,7 +31,7 @@ export const useDatasetFiles = async (dataset: Dataset) => {
 
   if (dataset.virtual?.children) {
     const childrenFetch = await fetchInContext<{ results: Dataset[] }>('/data-fair/api/v1/catalog/datasets', {
-      params: {
+      query: {
         id: dataset.virtual.children.join(','),
         select: 'id,isVirtual,isRest,isMetaOnly'
       }

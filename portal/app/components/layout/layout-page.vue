@@ -6,7 +6,7 @@
     >
       <LayoutBreadcrumbs v-if="!isHome && showTopBreadcrumbs" />
       <v-container
-        :class="{ 'pt-0': showTopBreadcrumbs }"
+        :class="{ 'pt-0': showTopBreadcrumbs, 'px-lg-16': tocGutter }"
         :fluid="isFluid"
       >
         <slot />
@@ -16,7 +16,7 @@
 
   <!-- The table of contents only earns its place once hydrated, so it never renders during SSR. -->
   <client-only>
-    <page-toc />
+    <page-toc :is-fluid="isFluid" />
   </client-only>
 
   <!-- Do not put bottom breadcrumbs in main, ensuring they stay just above the footer even when main content is short. -->
@@ -24,7 +24,14 @@
 </template>
 
 <script setup lang="ts">
+import type { PageConfig } from '#api/types/page'
+
 const { isFluid } = defineProps<{ isFluid?: boolean }>()
+
+// On full-width pages the table of contents is a floating button: on large screens keep a gutter on both sides
+// (symmetric so root banners stay centered) so it does not cover the content. Below lg it may overlap, as on mobile.
+const pageConfig = inject<Ref<PageConfig | null> | undefined>('page-config', undefined)
+const tocGutter = computed(() => isFluid && !!pageConfig?.value?._toc?.length)
 
 const { portalConfig } = usePortalStore()
 const { isIframe, showTopBreadcrumbs, showBottomBreadcrumbs } = useNavigationStore()

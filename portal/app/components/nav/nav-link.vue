@@ -9,6 +9,7 @@
       :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
       :target="link.target ? '_blank' : undefined"
       :rel="linkRel(resolveLink(link), link.target)"
+      :title="link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
       :color="btnHover.color(isHovering, config?.color)"
       :density="config?.density ?? portalConfig.defaults?.density"
       :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
@@ -50,7 +51,7 @@ const { config } = defineProps<{
   config?: ButtonConfig
 }>()
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
@@ -66,3 +67,10 @@ const btnHover = useButtonHover(() => config)
   min-width: 0; /* needed for btn but not for chip ?!! */
 }
 </style>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>

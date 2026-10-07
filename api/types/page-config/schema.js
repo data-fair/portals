@@ -187,13 +187,13 @@ export default {
     },
     fluid: {
       type: 'boolean',
-      title: '',
+      title: 'Full-width page',
       'x-i18n-title': {
         fr: 'Page pleine largeur'
       },
-      description: '',
+      description: 'When enabled, the page content uses the full available screen width; otherwise it stays within a fixed width for better readability. If the page has a table of contents (at least one title with "Show in the table of contents" enabled), it then becomes a floating button at the top right instead of a side panel.',
       'x-i18n-description': {
-        fr: 'Si activé, le contenu de la page utilisera toute la largeur disponible de l\'écran, sinon il sera contenu dans une largeur fixe pour une meilleure lisibilité.'
+        fr: 'Si activé, le contenu de la page utilise toute la largeur disponible de l\'écran, sinon il reste dans une largeur fixe pour une meilleure lisibilité. Si la page a un sommaire (au moins un titre avec « Afficher dans le sommaire » activé), il devient alors un bouton flottant en haut à droite au lieu d\'un volet latéral.'
       },
       layout: {
         comp: 'switch',

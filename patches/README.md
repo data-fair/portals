@@ -1,8 +1,8 @@
 # Patches
 
-Local patches applied via [`patch-package`](https://github.com/ds300/patch-package). Applied in production by the `Dockerfile` (`RUN npx patch-package`); for local dev run `npx patch-package` after `npm install`.
+Local patches applied via [`patch-package`](https://github.com/ds300/patch-package). Applied by the `postinstall` script on `npm install` / `npm ci`.
 
-## `vuetify+4.2.0.patch`
+## `vuetify+4.2.4.patch`
 
 ### `lib/composables/router.js` — d-frame iframe support
 
