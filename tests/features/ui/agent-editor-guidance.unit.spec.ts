@@ -153,7 +153,7 @@ test.describe('agent editor guidance', () => {
   test('the pages list says a new page has to be published before it goes in a menu', () => {
     // both judged runs: before the wizard had said anything, the first reply invented a plan
     // (« ajoutez le contenu », « enregistrez », « vérifiez dans l'éditeur qu'elle est publiée »)
-    expect(PAGES_LIST_GUIDANCE).toContain('« Publié » switch')
+    expect(PAGES_LIST_GUIDANCE).toContain('« Publié » checkbox')
     expect(PAGES_LIST_GUIDANCE).toContain('guide the step the person is on')
     expect(PAGES_LIST_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
@@ -244,6 +244,13 @@ test.describe('agent editor guidance', () => {
       expect(drafts, kind).toContain('end your turn asking whether it suits them')
       expect(drafts, kind).toContain('only then declare wait_for_user_action')
     }
+  })
+
+  test('« Publié » is called a checkbox, as it is on screen', () => {
+    // a judged run called it « interrupteur » until the person corrected it: two checkboxes
+    // (« Publié », « Publication demandée par un contributeur ») per portal
+    const texts = [PAGES_LIST_GUIDANCE, STEPS, PAGE_CREATION_AFTER, pagePublicationState([]), ...Object.values(editorGuidance('page'))]
+    for (const text of texts) expect(text).not.toMatch(/« Publié » switch/)
   })
 
   test('every published text fits a host event without truncation', () => {

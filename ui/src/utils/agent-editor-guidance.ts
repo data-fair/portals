@@ -27,7 +27,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
     'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor, and in that tab of the page view (the page title in the breadcrumb). There is no preview of the draft with real data: both draw lists as placeholders, « Portail de prévisualisation » only picks which portal\'s look they take, and « Voir sur … » opens the published page, without the draft. ' +
-      'Validating does not publish the page on a portal: that is the « Publié » switch of its « Publications » tab.',
+      'Validating does not publish the page on a portal: that is the « Publié » checkbox of its « Publications » tab.',
     'editor-menu': 'The portal menu is edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published on that portal: a « Page libre » item only offers pages published on that portal.'
   },
   portal: {
@@ -81,7 +81,7 @@ export function formCompletenessState (valid: boolean | null, hadIncomplete: boo
 export function pagePublicationState (portals: Array<{ id: string, title: string }>): string {
   return portals.length
     ? `published on: ${portals.map(p => `${p.title} (its editor, where its menu is edited: navigate to /portals/${p.id})`).join(', ')}`
-    : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); an empty page cannot be published'
+    : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » checkbox of the portal); an empty page cannot be published'
 }
 
 /**
@@ -96,7 +96,7 @@ export function pageDraftValidatedDetail (title: string | undefined, portalTitle
 }
 
 /** The pages list (/pages): without it the first reply invented a creation flow. */
-export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page here: « Créer une nouvelle page » in the actions panel on the right opens a creation wizard, described step by step once open, and clicking a page opens its editor: guide the step the person is on, not a plan of steps you cannot see yet. A new page is published on no portal until the « Publié » switch of its « Publications » tab (its page view). Only then can it go in the portal menu, edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation »).'
+export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page here: « Créer une nouvelle page » in the actions panel on the right opens a creation wizard, described step by step once open, and clicking a page opens its editor: guide the step the person is on, not a plan of steps you cannot see yet. A new page is published on no portal until the « Publié » checkbox of its « Publications » tab (its page view). Only then can it go in the portal menu, edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation »).'
 
 /** The page creation wizard (/pages/new): the person clicks through it, nothing creates a page for them. */
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +
@@ -106,7 +106,7 @@ export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a p
 
 /** What follows « Créer », a key of its own: a host event detail is capped at 1000 characters. */
 export const PAGE_CREATION_AFTER = 'After « Créer » the page editor opens, titled « Édition du brouillon » because edits always go to a draft first; a new page has nothing to validate until something changes. ' +
-  'A new page is published on no portal. The person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); a blank free page needs content first (an empty page cannot be published), catalog pages are created with their content. ' +
+  'A new page is published on no portal. The person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » checkbox of the portal); a blank free page needs content first (an empty page cannot be published), catalog pages are created with their content. ' +
   'Only then can it go in the portal menu, in the portal editor: a free page is a « Page libre » item, a catalog page a « Page standard (Accueil, Contact,...) » item of its type.'
 
 const STEP_NAMES: Record<string, string> = {
