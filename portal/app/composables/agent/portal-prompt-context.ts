@@ -30,6 +30,9 @@ export function portalPromptContext (portalConfig: PortalConfig, ownerName?: str
   // open; asked about what the person sees, it answered from memory and contradicted
   // the screen.
   parts.push('Quand la personne veut voir quelque chose à l\'écran, ouvre la page toi-même avec navigate au lieu de seulement lui donner un lien. Quand elle parle de ce qu\'elle a sous les yeux, lis d\'abord la page avec get_current_location et pageFilters_get avant de répondre.')
+  // A judged run opened a filtered table, then said it could not see its rows and left the
+  // check to the person: the table shows the rows of the page's filters, which can be queried.
+  parts.push('Pour vérifier ce que montre un tableau de données à l\'écran, lis ses filtres avec pageFilters_get et lance la même requête avec subagent_dataset_data : le tableau affiche exactement ces lignes.')
 
   const origin = typeof window !== 'undefined' ? window.location.origin : ''
   if (origin) {
