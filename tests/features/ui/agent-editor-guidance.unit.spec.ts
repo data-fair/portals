@@ -261,6 +261,19 @@ test.describe('agent editor guidance', () => {
     expect(STEPS.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
+  test('the portal editor publishes the options of a menu row', () => {
+    // both judged runs of a page then its menu entry: the assistant never had the form
+    // described, and made the person read the drop-downs out to it
+    const options = editorGuidance('portal')['editor-menu-options']
+    expect(options).toContain('« Type de lien »')
+    expect(options).toContain('« Page standard (Accueil, Contact,...) »')
+    expect(options).toContain("« Catalogue d'événements »")
+    expect(options).toContain("« Page d'événement »")
+    expect(options).toContain('« Sous-menu »')
+    expect(options).toContain('« Libellé »')
+    expect(options.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
+  })
+
   test('every published text fits a host event without truncation', () => {
     for (const kind of ['page', 'portal'] as const) {
       for (const [key, text] of Object.entries(editorGuidance(kind))) {

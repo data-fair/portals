@@ -14,7 +14,16 @@
  * Pure on purpose: unit-tested without a browser (tests/features/ui).
  */
 
+import { standardPage, genericPage, eventPage, newsPage, externalLink } from '#api/types/common-links/schema.js'
+
 export type EditorKind = 'page' | 'portal'
+
+// The options of a menu row, from the schema the form is built from: both judged runs of a
+// page then its menu entry guided the menu without having the form described, and made the
+// person read the drop-downs out to it.
+const pageTypes = (standardPage.properties.subtype.oneOf as Array<{ const?: string, title?: string }>)
+  .filter(o => o.const).map(o => `« ${o.title} »`).join(', ')
+const MENU_OPTIONS = `Options of a menu row, added by « Ajouter un lien » as « Lien non configuré »: its « Type de lien » is « ${standardPage.title} » (then its « Type de page »: ${pageTypes}), « ${genericPage.title} » (then its « Page », among the pages published on this portal), « ${eventPage.title} » or « ${newsPage.title} » (one event or news page), « Sous-menu » (a « Libellé » and its own rows) or « ${externalLink.title} » (a URL). Each has a « Libellé ».`
 
 const DRAFT = 'Every change, the sub-agent\'s or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it. When the draft is ready and the person wants to see the result first, tell them where it shows and end your turn asking whether it suits them; once they agree (at once if they did not ask to see it), only then declare wait_for_user_action asking them to press it. The draft state tells you once it is published.'
 
@@ -36,6 +45,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
       'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Options », the preview, then « Éléments du menu de navigation ».',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_form'),
+    'editor-menu-options': MENU_OPTIONS,
     'editor-links': 'Actions panel links: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal. In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down. A « Page libre » item only offers pages published on this portal: publish a missing one first, in the « Publications » tab of the page.'
   }
 }

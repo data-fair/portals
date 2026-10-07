@@ -162,6 +162,8 @@ test.describe('agent host state of the editors', () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_form')
+    // the options of a menu row, so that the assistant does not ask the person to read them out
+    expect((await readAgentState(page))['editor-menu-options']).toContain("« Catalogue d'événements »")
     // opening the editor of a new portal fills schema defaults into the form: not a draft
     await page.waitForTimeout(3000)
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('no unpublished changes')
