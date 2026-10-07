@@ -141,7 +141,21 @@ test.describe('agent editor guidance', () => {
   test('the page editor says on which portals the page is published', () => {
     expect(pagePublicationState([])).toContain('published on no portal')
     expect(pagePublicationState([])).toContain('« Publications »')
-    expect(pagePublicationState(['Portail de l\'agglomération'])).toBe('published on: Portail de l\'agglomération')
+    expect(pagePublicationState([{ id: 'p1', title: 'Portail de l\'agglomération' }])).toContain('published on: Portail de l\'agglomération')
+  })
+
+  test('the page editor gives the way to the editor of each portal the page is published on', () => {
+    // both judged runs of a page then its menu entry opened the portals list, not the portal,
+    // though the portal was known: one more step for the person each time
+    expect(pagePublicationState([{ id: 'p1', title: 'Portail de l\'agglomération' }])).toContain('/portals/p1')
+  })
+
+  test('the pages list says a new page has to be published before it goes in a menu', () => {
+    // both judged runs: before the wizard had said anything, the first reply invented a plan
+    // (« ajoutez le contenu », « enregistrez », « vérifiez dans l'éditeur qu'elle est publiée »)
+    expect(PAGES_LIST_GUIDANCE).toContain('« Publié » switch')
+    expect(PAGES_LIST_GUIDANCE).toContain('guide the step the person is on')
+    expect(PAGES_LIST_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
   test('both editors ground click-by-click guidance in the form itself', () => {

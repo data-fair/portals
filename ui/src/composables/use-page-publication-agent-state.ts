@@ -13,6 +13,6 @@ export function usePagePublicationAgentState () {
   useAgentState('publication', () => {
     if (!page.value || !portalsFetch.data.value) return undefined
     const titles = Object.fromEntries(portalsFetch.data.value.results.map(p => [p._id, p.title]))
-    return pagePublicationState((page.value.portals ?? []).map(id => titles[id] ?? id))
+    return pagePublicationState((page.value.portals ?? []).map(id => ({ id, title: titles[id] ?? id })))
   })
 }

@@ -73,10 +73,14 @@ export function formCompletenessState (valid: boolean | null, hadIncomplete: boo
   return undefined
 }
 
-/** On which portals the open page is published: a new page is on none, and cannot be put in a portal menu yet. */
-export function pagePublicationState (portalTitles: string[]): string {
-  return portalTitles.length
-    ? `published on: ${portalTitles.join(', ')}`
+/**
+ * On which portals the open page is published: a new page is on none, and cannot be put in a
+ * portal menu yet. With the way to each portal's editor: judged runs opened the portals list,
+ * not the portal, though it was known.
+ */
+export function pagePublicationState (portals: Array<{ id: string, title: string }>): string {
+  return portals.length
+    ? `published on: ${portals.map(p => `${p.title} (its editor, where its menu is edited: navigate to /portals/${p.id})`).join(', ')}`
     : 'published on no portal: the person publishes it in the « Publications » tab of the page (its title in the breadcrumb, then the « Publié » switch of the portal); an empty page cannot be published'
 }
 
@@ -92,7 +96,7 @@ export function pageDraftValidatedDetail (title: string | undefined, portalTitle
 }
 
 /** The pages list (/pages): without it the first reply invented a creation flow. */
-export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page here: « Créer une nouvelle page » in the actions panel on the right opens a creation wizard, and clicking a page opens its editor. A page published on a portal goes in the portal menu from the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation »).'
+export const PAGES_LIST_GUIDANCE = 'Pages list of the portals back-office. No tool creates or edits a page here: « Créer une nouvelle page » in the actions panel on the right opens a creation wizard, described step by step once open, and clicking a page opens its editor: guide the step the person is on, not a plan of steps you cannot see yet. A new page is published on no portal until the « Publié » switch of its « Publications » tab (its page view). Only then can it go in the portal menu, edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation »).'
 
 /** The page creation wizard (/pages/new): the person clicks through it, nothing creates a page for them. */
 export const PAGE_CREATION_GUIDANCE = 'Page creation wizard. No tool creates a page: the person clicks through the steps and you tell them what to choose; clicking a card moves to the next step by itself (« Suivant » stays disabled). ' +

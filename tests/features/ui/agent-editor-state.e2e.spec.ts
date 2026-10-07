@@ -49,7 +49,7 @@ test.describe('agent host state of the editors', () => {
     await expect.poll(async () => (await readAgentState(page)).draft ?? '').toContain('no unpublished changes')
 
     // the page is attached to the portal: it says so, by the portal's title
-    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toBe('published on: State Portal')
+    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toContain('published on: State Portal (its editor')
 
     await page.getByLabel('Titre').fill('State Page renamed')
     await page.getByLabel('Titre').blur()
@@ -68,7 +68,7 @@ test.describe('agent host state of the editors', () => {
     await goToWithAuth(`/portals-manager/pages/${createdPage._id}?tab=publications`, 'test_admin')
     await expect.poll(async () => (await readAgentState(page)).publication ?? '', { timeout: 30_000 }).toContain('published on no portal')
     await page.getByRole('checkbox', { name: 'Publié' }).first().check()
-    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toBe('published on: Publication Portal')
+    await expect.poll(async () => (await readAgentState(page)).publication ?? '').toContain('published on: Publication Portal (its editor')
   })
 
   test('the pages list points to the creation wizard', async ({ page, goToWithAuth }) => {
