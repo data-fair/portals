@@ -14,7 +14,7 @@
  * Pure on purpose: unit-tested without a browser (tests/features/ui).
  */
 
-import { standardPage, genericPage, eventPage, newsPage, externalLink } from '#api/types/common-links/schema.js'
+import { standardPage, genericPage, eventPage, newsPage, externalLink } from '../../../api/types/common-links/schema.js'
 
 export type EditorKind = 'page' | 'portal'
 
