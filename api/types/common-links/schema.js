@@ -7,7 +7,6 @@ export const standardPage = {
     subtype: {
       type: 'string',
       title: 'Type de page',
-      default: 'home',
       oneOf: [
         // Editable pages
         { const: 'home', title: 'Accueil' },
@@ -177,7 +176,6 @@ const baseStandardPage = {
     subtype: {
       type: 'string',
       title: 'Type de page',
-      default: 'home',
       oneOf: [
         // Editable pages
         { const: 'home', title: 'Accueil' },

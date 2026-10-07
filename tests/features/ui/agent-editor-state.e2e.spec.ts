@@ -110,10 +110,15 @@ test.describe('agent host state of the editors', () => {
     await page.getByRole('tab', { name: 'Barre de navigation' }).click()
     await page.getByRole('button', { name: 'Ajouter un lien' }).click()
     await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('NOT saved')
-    // a standard page item is complete as soon as its type is chosen (its page type defaults to home)
     // the field wraps its input and takes the click
     await page.locator('.v-field', { has: page.getByRole('combobox', { name: 'Type de lien' }) }).click()
     await page.getByRole('option', { name: 'Page standard (Accueil, Contact,...)' }).click()
+    // a standard page item has no page type until one is chosen: a default « Accueil » made the
+    // row complete at once, and a judged run nearly published a duplicate home link
+    await page.waitForTimeout(1000)
+    expect((await readAgentState(page)).form ?? '').toContain('NOT saved')
+    await page.locator('.v-field', { has: page.getByRole('combobox', { name: 'Type de page' }) }).click()
+    await page.getByRole('option', { name: 'Catalogue de données' }).click()
     await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('complete again')
   })
 
