@@ -74,6 +74,9 @@ router.post('', async (req, res, next) => {
   const config = { ...body.config }
   const pageId = randomUUID()
   const owner = body.owner ?? session.account
+  // before the duplication, a refused creation must not leave copied images behind
+  assertAccountRole(session, owner, 'admin')
+  await assertNbPagesLimit(owner)
 
   // Handle page duplication if sourcePageId is provided
   if (body.sourcePageId) {
@@ -98,8 +101,6 @@ router.post('', async (req, res, next) => {
     portals: body.portals || [],
     requestedPortals: []
   }
-  assertAccountRole(session, page.owner, 'admin')
-  await assertNbPagesLimit(page.owner)
 
   const creationDetails = await createPage(page, body.sourcePageId)
   sendPageEvent(page, 'a été créée', 'create', session, creationDetails)

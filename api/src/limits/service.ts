@@ -17,7 +17,7 @@ export const getLimits = async (account: AccountKeys & { name?: string }): Promi
     id: account.id,
     name: account.name ?? account.id,
     lastUpdate: new Date().toISOString(),
-    defaults: true,
+    ...(!stored && { defaults: true }),
     ...stored,
     portals_nb_pages: { limit: stored?.portals_nb_pages?.limit ?? config.defaultLimits.nbPages, consumption: nbPages },
     portals_nb_domains: { limit: stored?.portals_nb_domains?.limit ?? config.defaultLimits.nbDomains, consumption: nbDomains }
@@ -27,6 +27,6 @@ export const getLimits = async (account: AccountKeys & { name?: string }): Promi
 export const assertNbPagesLimit = async (owner: AccountKeys) => {
   const { limit, consumption } = (await getLimits(owner)).portals_nb_pages!
   if (limit !== -1 && consumption! >= limit!) {
-    throw httpError(429, `Le nombre maximal de pages (${limit}) est atteint pour ce compte.`)
+    throw httpError(429, `The maximum number of pages (${limit}) is reached for this account.`)
   }
 }

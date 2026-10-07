@@ -15,9 +15,16 @@ test.describe('limits', () => {
     let limits = (await orgAdmin.get('/api/limits/organization/test_org1')).data
     assert.deepEqual(limits.portals_nb_pages, { limit: -1, consumption: 0 })
     assert.deepEqual(limits.portals_nb_domains, { limit: -1, consumption: 0 })
+    assert.equal(limits.defaults, true)
 
     // consumption sent by customers is ignored, it is always counted
+    // customers spreads its subscription account, the extra keys are dropped instead of rejected
     await anonymous.post('/api/limits/organization/test_org1', {
+      type: 'organization',
+      id: 'test_org1',
+      name: 'Test org 1',
+      department: 'dep1',
+      departmentName: 'Department 1',
       lastUpdate: new Date().toISOString(),
       portals_nb_pages: { limit: 1, consumption: 12 },
       portals_nb_domains: { limit: 2, consumption: 12 }
@@ -27,6 +34,7 @@ test.describe('limits', () => {
     limits = (await orgAdmin.get('/api/limits/organization/test_org1')).data
     assert.deepEqual(limits.portals_nb_pages, { limit: 1, consumption: 1 })
     assert.deepEqual(limits.portals_nb_domains, { limit: 2, consumption: 0 })
+    assert.equal(limits.defaults, undefined)
 
     await assert.rejects(
       orgAdmin.post('/api/pages', { type: 'home', config: { title: 'Page 2', elements: [] } }),
@@ -39,7 +47,8 @@ test.describe('limits', () => {
     await assert.rejects(anonymous.post('/api/limits/organization/test_org1', { lastUpdate: new Date().toISOString() }, { params: { key: 'wrong' } }), { status: 401 })
     await assert.rejects(otherUser.get('/api/limits/organization/test_org1'), { status: 403 })
     await assert.rejects(orgAdmin.get('/api/limits'), { status: 403 })
-    const list = (await anonymous.get('/api/limits', { params: { key } })).data
+    // filtered on a test account, the dev database can hold limits pushed by a local customers
+    const list = (await anonymous.get('/api/limits', { params: { key, id: 'test_org1' } })).data
     assert.equal(list.count, 0)
   })
 })

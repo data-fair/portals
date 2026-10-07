@@ -1,8 +1,7 @@
 import type { Request } from 'express'
 import type { Limit } from '#types/limit/index.ts'
-import { timingSafeEqual } from 'node:crypto'
 import { Router } from 'express'
-import { httpError, reqSessionAuthenticated, assertAdminMode } from '@data-fair/lib-express'
+import { httpError, reqSessionAuthenticated, assertAdminMode, secretKeyMatches } from '@data-fair/lib-express'
 import * as limitSchema from '#types/limit/index.ts'
 import mongo from '#mongo'
 import config from '#config'
@@ -11,12 +10,7 @@ import { getLimits } from './service.ts'
 const router = Router()
 export default router
 
-const hasSecretKey = (req: Request) => {
-  const key = req.query.key
-  const secret = config.secretKeys.limits
-  if (!secret || typeof key !== 'string' || key.length !== secret.length) return false
-  return timingSafeEqual(Buffer.from(key), Buffer.from(secret))
-}
+const hasSecretKey = (req: Request) => secretKeyMatches(req.query.key, config.secretKeys.limits)
 
 const assertSuperAdmin = (req: Request) => {
   if (!hasSecretKey(req)) assertAdminMode(reqSessionAuthenticated(req))
@@ -33,9 +27,11 @@ router.post('/:type/:id', async (req, res) => {
   assertSuperAdmin(req)
   const { type, id } = accountParams(req)
   // consumptions are computed, ignore the ones sent by customers
-  const { portals_nb_pages: pages, portals_nb_domains: domains, ...body } = req.body ?? {}
+  // and keep only the known keys: customers spreads its subscription account (department, etc)
+  const { name, lastUpdate, portals_nb_pages: pages, portals_nb_domains: domains } = req.body ?? {}
   const limit: Limit = limitSchema.returnValid({
-    ...body,
+    name,
+    lastUpdate,
     type,
     id,
     ...(pages && { portals_nb_pages: { limit: pages.limit } }),
