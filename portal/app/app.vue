@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import UiNotif from '@data-fair/lib-vuetify/ui-notif.vue'
-import { mdiOpenInNew } from '@mdi/js'
 import { toRef } from 'vue'
 import { useTheme } from 'vuetify'
 import { usePortalAgentHost } from './composables/agent/use-portal-agent-host'
@@ -70,39 +69,7 @@ useHead({
   link
 })
 
-// Style global des liens texte (a.simple-link, y compris markdown).
-// Le sélecteur double .simple-link.simple-link bat la règle générée par le
-// _theme.css de simple-directory (.v-theme--<name> a.simple-link) quel que
-// soit l'ordre de chargement.
-const linksCss = computed(() => {
-  const cfg = $portal.config.linksConfig
-  const underline = cfg?.underline ?? 'always'
-  const sel = '.v-application a.simple-link.simple-link'
-  const rules: string[] = []
-  const underlineColor = cfg?.underlineColor ? `rgb(var(--v-theme-${cfg.underlineColor}))` : undefined
-  const decorationColor = underlineColor ? `text-decoration-color:${underlineColor};` : ''
-  if (underline === 'always') {
-    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
-  } else if (underline === 'always-grow') {
-    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
-    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration-thickness:2px;}`)
-  } else if (underline === 'hover') {
-    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
-  } else if (underline === 'hover-grow') {
-    rules.push(`${sel}{text-decoration:none;position:relative;}`)
-    rules.push(`${sel}::before{content:"";position:absolute;left:0;bottom:-3px;width:45px;height:3px;background-color:${underlineColor ?? 'currentColor'};transform:scaleX(0);transform-origin:left;transition:transform .25s ease-out;}`)
-    rules.push(`${sel}:hover::before,${sel}:focus-visible::before{transform:scaleX(1);}`)
-    rules.push(`@media (prefers-reduced-motion: reduce){${sel}::before{transition:none;}}`)
-  }
-  if (cfg?.color && cfg.color !== 'primary') {
-    rules.push(`${sel}{color:${linkColorValue(cfg.color)};}`)
-  }
-  if (cfg?.newWindowIcon) {
-    const icon = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="${mdiOpenInNew}"/></svg>`)
-    rules.push(`${sel}[target="_blank"]:not(:has(> .v-icon))::after{content:"";display:inline-block;width:1em;height:1em;margin-left:.2em;vertical-align:-.15em;background-color:currentColor;mask:url("data:image/svg+xml,${icon}") center/contain no-repeat;}`)
-  }
-  return rules.join('')
-})
+const linksCss = computed(() => portalLinksCss($portal.config.linksConfig, '.v-application'))
 useHead({ style: () => linksCss.value ? [{ key: 'portal-links-css', textContent: linksCss.value }] : [] })
 </script>
 

@@ -2,6 +2,8 @@
 // root tsconfig that type-checks the unit test importing it — that config has no
 // #api alias, and the tests import api types relatively too.
 import type { Effects as SchemaHoverEffects, Effets as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
+import type { PortalConfig } from '../../../api/types/portal-config/index.ts'
+import { mdiOpenInNew } from '@mdi/js'
 
 // Derived from the generated schema types so the effect unions can never drift
 // from the editor's options (hoverEffectsList / hoverConfigTopics / buttonConfig in common-defs).
@@ -28,6 +30,40 @@ const onThemeColor = (color: string) => `rgb(var(--v-theme-on-${color}))`
 // theme variant the portal may emit, falling back to the base color otherwise.
 export const linkColorValue = (color: string): string =>
   `rgb(var(--v-theme-text-${color}, var(--v-theme-${color})))`
+
+// Global style of text links (a.simple-link, markdown included), shared by the portal
+// (scope .v-application) and the manager page preview (scope of its theme provider).
+// The doubled .simple-link.simple-link beats the rule from the simple-directory
+// _theme.css (.v-theme--<name> a.simple-link) whatever the loading order.
+export const portalLinksCss = (cfg: PortalConfig['linksConfig'], scope: string): string => {
+  const underline = cfg?.underline ?? 'always'
+  const sel = `${scope} a.simple-link.simple-link`
+  const rules: string[] = []
+  const underlineColor = cfg?.underlineColor ? `rgb(var(--v-theme-${cfg.underlineColor}))` : undefined
+  const decorationColor = underlineColor ? `text-decoration-color:${underlineColor};` : ''
+  if (underline === 'always') {
+    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
+  } else if (underline === 'always-grow') {
+    rules.push(`${sel}{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
+    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration-thickness:2px;}`)
+  } else if (underline === 'hover') {
+    rules.push(`${sel}:hover,${sel}:focus-visible{text-decoration:underline;text-underline-offset:2px;${decorationColor}}`)
+  } else if (underline === 'hover-grow') {
+    rules.push(`${sel}{text-decoration:none;position:relative;}`)
+    rules.push(`${sel}::before{content:"";position:absolute;left:0;bottom:-3px;width:45px;height:3px;background-color:${underlineColor ?? 'currentColor'};transform:scaleX(0);transform-origin:left;transition:transform .25s ease-out;}`)
+    rules.push(`${sel}:hover::before,${sel}:focus-visible::before{transform:scaleX(1);}`)
+    rules.push(`@media (prefers-reduced-motion: reduce){${sel}::before{transition:none;}}`)
+  }
+  if (cfg?.color && cfg.color !== 'primary') {
+    rules.push(`${sel}{color:${linkColorValue(cfg.color)};}`)
+  }
+  if (cfg?.newWindowIcon) {
+    const icon = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="${mdiOpenInNew}"/></svg>`)
+    rules.push(`${sel}[target="_blank"]:not(:has(> .v-icon))::after{content:"";display:inline-block;width:1em;height:1em;margin-left:.2em;vertical-align:-.15em;background-color:currentColor;mask:url("data:image/svg+xml,${icon}") center/contain no-repeat;}`)
+  }
+  return rules.join('')
+}
+
 // Uniform MD3 "short" hover tempo: cards, buttons and chips all settle their
 // hover state in the same .15s whatever their size. Setting an inline transition
 // overrides the stylesheet, so the Vuetify native transitions are re-declared at
