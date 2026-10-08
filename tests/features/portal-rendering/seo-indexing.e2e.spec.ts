@@ -335,6 +335,31 @@ test.describe('SEO / indexation', () => {
     expect(head.headers()['content-type']).toBe(image.mimeType)
   })
 
+  test('sitemap.xml lists every generic page at the URL of its group', async ({ request }) => {
+    const group = (await user1.post('/api/groups', { title: 'Guides', description: '' })).data
+    // the menu link keeps a stale snapshot, taken before the page moved into the group
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Sitemap portal', allowRobots: true, menu: { children: [{ type: 'generic', title: 'Grouped', pageRef: { slug: 'grouped', title: 'Grouped' } }] } }
+    })).data
+    for (const [slug, metadata] of [['grouped', { group: { _id: group._id, title: group.title, slug: group.slug } }], ['content-only', {}]] as const) {
+      const page = (await user1.post('/api/pages', {
+        type: 'generic',
+        config: { title: slug, elements: [], genericMetadata: { slug, ...metadata } },
+        portals: [portal._id],
+        owner: portal.owner
+      })).data
+      // validating the draft sets configUpdatedAt, the sitemap lastmod
+      await user1.post(`/api/pages/${page._id}/draft`)
+    }
+
+    const base = portalUrl(portal._id)
+    const xml = await fetchHtml(request, base + '/sitemap.xml')
+    const entries = Object.fromEntries([...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(m => [m[1].match(/<loc>(.*)<\/loc>/)![1], m[1]]))
+    expect(entries[base + '/pages-guides/grouped']).toMatch(/<lastmod>.*<\/lastmod>[\s\S]*<priority>0\.8<\/priority>/)
+    expect(entries[base + '/pages/content-only']).toBeTruthy()
+    expect(entries[base + '/pages/grouped']).toBeUndefined()
+  })
+
   test('dataset JSON-LD lists the downloads as DataDownload', async ({ request }) => {
     // seeding waits for the data-fair workers to finalize the uploaded file
     test.setTimeout(120_000)
