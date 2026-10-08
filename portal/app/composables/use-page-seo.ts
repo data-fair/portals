@@ -8,6 +8,7 @@ import type { MaybeRefOrGetter } from 'vue'
  * @param meta.description - Page description
  * @param meta.ogType - Open Graph type (default: 'website')
  * @param meta.ogImage - Open Graph image URL
+ * @param meta.canonicalPath - Path of the page when it also answers at other URLs (default: current path)
  */
 export const usePageSeo = (meta: {
   title?: MaybeRefOrGetter<string | undefined>
@@ -15,10 +16,13 @@ export const usePageSeo = (meta: {
   ogType?: 'website' | 'article'
   ogImage?: MaybeRefOrGetter<string | undefined>
   noindex?: boolean
+  canonicalPath?: string
 }) => {
   const { portalConfig } = usePortalStore()
 
   const requestUrl = useRequestURL()
+  // Canonical URL, without query params nor trailing slash
+  const canonicalUrl = requestUrl.origin + (meta.canonicalPath ?? requestUrl.pathname.replace(/(.)\/+$/, '$1'))
 
   const seoMeta: UseSeoMetaInput = {
     title: () => toValue(meta.title),
@@ -26,7 +30,7 @@ export const usePageSeo = (meta: {
     ogTitle: () => toValue(meta.title),
     ogDescription: () => toValue(meta.description) || portalConfig.value.description,
     ogType: meta.ogType || 'website',
-    ogUrl: requestUrl.href
+    ogUrl: meta.canonicalPath ? canonicalUrl : requestUrl.href
   }
   if (meta.ogImage) {
     // Social network crawlers require an absolute og:image URL
@@ -39,7 +43,5 @@ export const usePageSeo = (meta: {
 
   useSeoMeta(seoMeta)
 
-  // Add canonical link (always current URL without query params)
-  const canonicalUrl = `${requestUrl.origin}${requestUrl.pathname}`
   useHead({ link: [{ rel: 'canonical', href: canonicalUrl }] })
 }
