@@ -20,17 +20,12 @@ export type Surface = {
   goto: () => Promise<void>
   chatFrame: FrameLocator
   ensureChatOpen: (composer: Locator) => Promise<void>
-  perceptionRoots: Array<{ label: string, root: Page | FrameLocator, cap?: number }>
+  perceptionRoots: Array<{ label: string, root: Page | FrameLocator, cap?: number, frames?: boolean }>
 }
 
 const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 /** The agents chat frame, whose src is /agents/<type>/<id>/chat?… — not a bare 'iframe': both surfaces embed other frames. */
 const CHAT_FRAME = 'iframe[src*="/agents/"][src*="/chat"]'
-
-/** The portal page's embedded data-fair view (dataset table, map, …). */
-const EMBED_FRAME = 'iframe[src*="/data-fair/embed/"]'
-/** The d-frame in which the data-fair shell embeds the portals manager UI. */
-const MANAGER_FRAME = 'iframe[src*="/portals-manager/"]'
 
 export function resolveRoute (route: string, ids: SeedIds) {
   return route.replaceAll('{portalId}', ids.portalId).replaceAll('{pageId}', ids.pageId)
@@ -77,14 +72,12 @@ export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surf
       goto: () => login(page, `${ROOT}${route}`),
       chatFrame,
       ensureChatOpen,
-      // Three roots, not two: an aria snapshot and a role locator stop at an iframe
-      // boundary, so the shell page alone would show the person the navigation and
-      // the chat toggle but not the manager form they are working on. The manager
-      // forms are long, hence the larger cap.
+      // One root that sees through its iframes: the shell, the manager form inside its
+      // d-frame, the page editor's preview nested in the manager, and the chat. Separate
+      // roots per frame missed the nested preview. The manager forms are long, hence
+      // the cap.
       perceptionRoots: [
-        { label: 'page', root: page },
-        { label: 'manager', root: page.frameLocator(MANAGER_FRAME), cap: 8000 },
-        { label: 'chat panel', root: chatFrame }
+        { label: 'page', root: page, frames: true, cap: 16000 }
       ]
     }
   }
@@ -92,15 +85,11 @@ export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surf
     goto: async () => { await page.goto(portalUrl(ids.portalId) + route, { waitUntil: 'domcontentloaded' }) },
     chatFrame,
     ensureChatOpen,
-    // The portal embeds data-fair's own views (table, map, …) in an iframe, and an
-    // aria snapshot stops at the iframe boundary: without this root a person on a
-    // table page that showed exactly the 8 rows asked for reported "un cadre vide",
-    // and the judge would have read that as a product failure. On pages without an
-    // embedded view the root costs one read timeout and says so.
+    // The portal embeds data-fair's own views (table, map, …) in an iframe: a root
+    // that stopped at it had a person on a table page showing exactly the 8 rows asked
+    // for report "un cadre vide". This one sees through it, and through the chat frame.
     perceptionRoots: [
-      { label: 'page', root: page, cap: 6000 },
-      { label: 'embedded data view', root: page.locator(EMBED_FRAME).first().contentFrame(), cap: 6000 },
-      { label: 'chat panel', root: chatFrame }
+      { label: 'page', root: page, frames: true, cap: 12000 }
     ]
   }
 }
