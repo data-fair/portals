@@ -192,6 +192,14 @@ test.describe('SEO / indexation', () => {
     }
   })
 
+  test('font assets are served anonymously on a private portal', async ({ request }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Private Portal', authentication: 'required', allowRobots: false, menu: { children: [] } }
+    })).data
+    const res = await request.get(portalUrl(portal._id) + '/portal/api/font-assets/unknown/font.woff2', { maxRedirects: 0 })
+    expect(res.status()).toBe(404)
+  })
+
   test('.well-known/change-password redirects when auth is enabled, 404 otherwise', async ({ request }) => {
     const withAuth = (await user1.post('/api/portals', {
       config: { title: 'Auth Optional', authentication: 'optional', allowRobots: true, menu: { children: [] } }

@@ -3,6 +3,8 @@ import { session } from '~~/server/plugins/session'
 export default defineEventHandler(async (event) => {
   const portal = event.context.portal
   if (!portal) return // portal middleware should run first
+  // fonts are referenced by the site theme, also loaded on the anonymous login page
+  if (getRequestURL(event).pathname.startsWith('/portal/api/font-assets/')) return
 
   if (portal.config.authentication === 'required' || portal.draft) {
     const cookieHeader = getRequestHeader(event, 'cookie')
