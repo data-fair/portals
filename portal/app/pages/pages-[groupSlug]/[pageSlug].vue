@@ -24,6 +24,10 @@ const getPageImageSrc = providePageImageSrc('generic', route.params.pageSlug as 
 const pageConfigFetch = await useFetch<PageConfig>(`/portal/api/pages/generic/${route.params.pageSlug}`, { watch: false })
 provide('page-config', pageConfigFetch.data)
 
+// The page also answers without its group or under another one: all these URLs point to its group URL
+const groupSlug = pageConfigFetch.data.value?.genericMetadata?.group?.slug
+const pagePath = `/pages${groupSlug ? `-${groupSlug}` : ''}/${route.params.pageSlug}`
+
 watch(() => pageConfigFetch.data.value, (pageConfig) => {
   // Breadcrumbs with group if available, linking to its root page when defined
   const group = pageConfig?.genericMetadata?.group
@@ -41,19 +45,20 @@ usePageSeo({
     ? `${pageConfigFetch.data.value.title} - ${portalConfig.value.title}`
     : portalConfig.value.title,
   description: () => pageConfigFetch.data.value?.description,
-  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined
+  ogImage: () => pageConfigFetch.data.value?.thumbnail ? getPageImageSrc(pageConfigFetch.data.value.thumbnail) : undefined,
+  canonicalPath: pagePath
 })
 
 useJsonLd(() => {
   const pageConfig = pageConfigFetch.data.value
   if (!pageConfig) return []
-  const base = useRequestURL()
+  const url = useRequestURL().origin + pagePath
 
   return createWebPageSchema({
-    id: base.href,
+    id: url,
     title: pageConfig.title,
     description: pageConfig.description,
-    url: base.href
+    url
   })
 })
 </script>

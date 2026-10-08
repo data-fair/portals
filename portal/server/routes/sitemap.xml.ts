@@ -27,6 +27,23 @@ export default defineEventHandler(async (event) => {
   // Helper function to create full URL
   const fullUrl = (path: string): string => { return baseUrl + path }
 
+  // Generic pages published on this portal, at the URL of their actual group
+  // (links only keep a snapshot of the group, stale once the page moves)
+  const genericPages = await portalMongo.pages.find<Pick<Page, 'config' | 'configUpdatedAt'>>(
+    {
+      type: 'generic',
+      'owner.type': portal.owner.type,
+      'owner.id': portal.owner.id,
+      [portal.staging ? 'requestedPortals' : 'portals']: portal._id
+    },
+    { projection: { 'config.genericMetadata': 1, configUpdatedAt: 1 }, limit: 1000 }
+  ).toArray()
+  const genericPaths = new Map<string, string>()
+  for (const page of genericPages) {
+    const metadata = page.config.genericMetadata
+    if (metadata?.slug) genericPaths.set(metadata.slug, `/pages${metadata.group ? `-${metadata.group.slug}` : ''}/${metadata.slug}`)
+  }
+
   // Helper function to resolve link from menu item
   const resolveLink = (link: LinkItem | MenuItem): string | undefined => {
     switch (link.type) {
@@ -51,7 +68,7 @@ export default defineEventHandler(async (event) => {
       }
       case 'event': return link.pageRef ? `/event/${link.pageRef.slug}` : undefined
       case 'news': return link.pageRef ? `/news/${link.pageRef.slug}` : undefined
-      case 'generic': return link.pageRef ? `/pages${link.pageRef.group ? `-${link.pageRef.group.slug}` : ''}/${link.pageRef.slug}` : undefined
+      case 'generic': return link.pageRef ? genericPaths.get(link.pageRef.slug) : undefined
       case 'external': return link.href
       default: return undefined
     }
@@ -148,6 +165,18 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Add generic pages, including the ones only reachable from page content
+  for (const page of genericPages) {
+    const path = genericPaths.get(page.config.genericMetadata?.slug ?? '')
+    if (path) {
+      sitemapUrls.push({
+        loc: fullUrl(path),
+        lastmod: page.configUpdatedAt ? formatDate(page.configUpdatedAt) : undefined,
+        priority: '0.5'
+      })
+    }
+  }
+
   // Fetch and add datasets published on this portal
   const datasetsResponse = await $fetch<{ count: number, results: Array<{ slug: string; updatedAt: string }> }>(
     baseUrl + '/data-fair/api/v1/datasets',
@@ -221,11 +250,14 @@ export default defineEventHandler(async (event) => {
     priority: '0.4'
   })
 
-  // Remove duplicates (keep first occurrence with highest priority)
+  // Remove duplicates (keep first occurrence with highest priority, and any known lastmod)
   const uniqueUrls = new Map<string, SitemapUrl>()
   for (const url of sitemapUrls) {
-    if (!uniqueUrls.has(url.loc) || parseFloat(url.priority) > parseFloat(uniqueUrls.get(url.loc)!.priority)) {
-      uniqueUrls.set(url.loc, url)
+    const existing = uniqueUrls.get(url.loc)
+    if (!existing) uniqueUrls.set(url.loc, url)
+    else {
+      const kept = parseFloat(url.priority) > parseFloat(existing.priority) ? url : existing
+      uniqueUrls.set(url.loc, { ...kept, lastmod: existing.lastmod ?? url.lastmod })
     }
   }
   const finalUrls = Array.from(uniqueUrls.values())

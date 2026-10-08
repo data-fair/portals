@@ -1,3 +1,5 @@
+import { createReadStream } from 'node:fs'
+import FormData from 'form-data'
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { deleteDatasets, seedDataset, seedFileDataset } from '../../support/data-fair.ts'
@@ -285,6 +287,77 @@ test.describe('SEO / indexation', () => {
     expect(jsonLd['@type']).toBe('WebSite')
     expect(jsonLd.name).toBe('OG Portal')
     expect(jsonLd.description).toBe('Description du portail pour SEO')
+  })
+
+  test('every URL of a generic page points to the URL of its group', async ({ request }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Grouped pages', allowRobots: true, menu: { children: [] } }
+    })).data
+    const group = (await user1.post('/api/groups', { title: 'Guides', description: '' })).data
+    const grouped = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Grouped', elements: [], genericMetadata: { slug: 'grouped', group: { _id: group._id, title: group.title, slug: group.slug } } },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+    await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Free', elements: [], genericMetadata: { slug: 'free' } },
+      portals: [portal._id],
+      owner: portal.owner
+    })
+
+    const base = portalUrl(portal._id)
+    // every URL a page answers at points to the URL of its actual group, trailing slash dropped
+    const variants: Record<string, string> = {
+      '/pages-guides/grouped': '/pages-guides/grouped',
+      '/pages/grouped': '/pages-guides/grouped',
+      '/pages-other/grouped/': '/pages-guides/grouped',
+      '/pages/free': '/pages/free',
+      '/pages-guides/free': '/pages/free'
+    }
+    for (const [path, pagePath] of Object.entries(variants)) {
+      const html = await fetchHtml(request, base + path)
+      expect(extractCanonical(html), path).toBe(base + pagePath)
+      expect(extractMetaContent(html, 'og:url', 'property'), path).toBe(base + pagePath)
+      expect(extractJsonLdOfType(html, 'WebPage')?.url, path).toBe(base + pagePath)
+    }
+    // other pages drop the trailing slash from their canonical too
+    expect(extractCanonical(await fetchHtml(request, base + '/sitemap/'))).toBe(base + '/sitemap')
+
+    // link preview bots probe og:image with HEAD
+    const form = new FormData()
+    form.append('body', JSON.stringify({ resource: { type: 'page', _id: grouped._id } }))
+    form.append('image', createReadStream('tests/resources/logo.png'))
+    const image = (await user1.post('/api/images', form)).data
+    const head = await request.head(`${base}/portal/api/pages/generic/grouped/images/${image._id}`)
+    expect(head.status()).toBe(200)
+    expect(head.headers()['content-type']).toBe(image.mimeType)
+  })
+
+  test('sitemap.xml lists every generic page at the URL of its group', async ({ request }) => {
+    const group = (await user1.post('/api/groups', { title: 'Guides', description: '' })).data
+    // the menu link keeps a stale snapshot, taken before the page moved into the group
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Sitemap portal', allowRobots: true, menu: { children: [{ type: 'generic', title: 'Grouped', pageRef: { slug: 'grouped', title: 'Grouped' } }] } }
+    })).data
+    for (const [slug, metadata] of [['grouped', { group: { _id: group._id, title: group.title, slug: group.slug } }], ['content-only', {}]] as const) {
+      const page = (await user1.post('/api/pages', {
+        type: 'generic',
+        config: { title: slug, elements: [], genericMetadata: { slug, ...metadata } },
+        portals: [portal._id],
+        owner: portal.owner
+      })).data
+      // validating the draft sets configUpdatedAt, the sitemap lastmod
+      await user1.post(`/api/pages/${page._id}/draft`)
+    }
+
+    const base = portalUrl(portal._id)
+    const xml = await fetchHtml(request, base + '/sitemap.xml')
+    const entries = Object.fromEntries([...xml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(m => [m[1].match(/<loc>(.*)<\/loc>/)![1], m[1]]))
+    expect(entries[base + '/pages-guides/grouped']).toMatch(/<lastmod>.*<\/lastmod>[\s\S]*<priority>0\.8<\/priority>/)
+    expect(entries[base + '/pages/content-only']).toBeTruthy()
+    expect(entries[base + '/pages/grouped']).toBeUndefined()
   })
 
   test('dataset JSON-LD lists the downloads as DataDownload', async ({ request }) => {
