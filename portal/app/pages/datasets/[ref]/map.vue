@@ -3,7 +3,25 @@
     {{ `${datasetFetch.data.value?.title || t('dataset')} - ${t('map')}` }}
   </h1>
 
+  <!-- a dataset without geographic data has no map: the embed would show an empty map and
+       a raw error (no portal link leads here, but a typed URL or the assistant can) -->
+  <v-container v-if="datasetFetch.data.value && !datasetFetch.data.value.bbox?.length">
+    <v-alert
+      type="info"
+      variant="tonal"
+      :text="t('noGeoData')"
+    />
+    <v-btn
+      class="mt-4"
+      color="primary"
+      variant="flat"
+      :to="`/datasets/${$route.params.ref}/table`"
+    >
+      {{ t('seeTable') }}
+    </v-btn>
+  </v-container>
   <d-frame-wrapper
+    v-else
     :iframe-title="`${t('dataset')} - ${datasetFetch.data.value?.title} - ${t('map')}`"
     :src="`/data-fair/embed/dataset/${$route.params.ref}/map`"
     class="fill-height"
@@ -38,6 +56,7 @@ const datasetFetch = await useLocalFetch<{
   image?: string
   thumbnail?: string
   updatedAt?: string
+  bbox?: number[]
   topics: { id: string; title: string; color: string }[]
   extras?: {
     applications?: { id: string; slug: string; updatedAt: string }[]
@@ -82,7 +101,11 @@ onMounted(() => window.parent.postMessage(['df-child', 'reinit-height'], '*'))
   en:
     dataset: Dataset
     map: Map
+    noGeoData: This dataset has no geographic data, it cannot be shown on a map.
+    seeTable: See the table
   fr:
     dataset: Jeu de données
     map: Carte
+    noGeoData: Ce jeu de données ne contient pas de données géographiques, il ne peut pas être affiché sur une carte.
+    seeTable: Voir le tableau
 </i18n>

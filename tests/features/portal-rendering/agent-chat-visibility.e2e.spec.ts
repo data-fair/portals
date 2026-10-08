@@ -6,9 +6,7 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('agent chat visibility', () => {
   test.beforeEach(clean)
 
-  // TODO: the agent chat toggle never renders for anonymous visitors even when
-  // `visibleTo: ['anonymous']` — separate functional bug, not a timing issue.
-  test.skip('anonymous visitor sees the toggle when visibleTo includes anonymous', async ({ page, goToPortal }) => {
+  test('anonymous visitor sees the toggle when visibleTo includes anonymous', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
         title: 'Agent Chat Anon Visible',

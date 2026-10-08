@@ -1,3 +1,4 @@
+import { agentGuide } from './agent-guide.js'
 import pageElementsSchema from '../page-elements/schema.ts'
 import pageConfigSchema from '../page-config/schema.js'
 
@@ -81,6 +82,8 @@ export default {
   },
   'x-vjsf-locales': ['en', 'fr'],
   title: 'PageConfigSimple',
+  'x-agent-guide': agentGuide.en,
+  'x-i18n-x-agent-guide': { fr: agentGuide.fr },
   type: 'object',
   unevaluatedProperties: false,
   layout: pageConfigSchema.layout,

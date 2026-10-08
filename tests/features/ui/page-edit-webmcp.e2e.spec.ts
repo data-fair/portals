@@ -115,4 +115,24 @@ test.describe('page edit WebMCP agent integration', () => {
     expect(data.elements).toHaveLength(1)
     expect(data.elements[0].type).toBe('title')
   })
+
+  test('the form tools see the fields that depend on the page type', async ({ page, goToWithAuth }) => {
+    // the tools' form had no context: what the page type shows (a free page's slug and
+    // group, an event's dates…) was hidden from them, and a judged run's assistant could
+    // not name the « Slug » and « Groupe » fields the person had on screen
+    const portal = (await user1.post('/api/portals', { config: { title: 'Context Portal', menu: { children: [] } } })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Context Page', elements: [], genericMetadata: { slug: 'context-page' } },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_describeState'), { timeout: 30_000 })
+    const described = await page.evaluate(async () => {
+      const result = await (navigator as any).modelContext.callTool({ name: 'pageConfig_describeState', arguments: {} })
+      return result.content.map((c: any) => c.text).join('')
+    })
+    expect(described).toContain('genericMetadata/slug')
+  })
 })

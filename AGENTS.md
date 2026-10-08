@@ -75,6 +75,23 @@ npm run test -- path/to/file      # specific file
 
 The test suite is very long — when iterating on changes always run only the related test cases. The full test suite will be run when pushing by a git hook managed by husky.
 
+### Simulations
+
+Judged browser simulations of the AI assistant (`@data-fair/lib-agents-sim`): a simulated
+person pursues a goal with the real assistant on a real model, then a judge reads the
+transcript. Cases live in `simulations/cases/index.ts` and run on two surfaces — the
+data-fair back-office shell embedding the manager UI, and the public portal's own chat.
+Run and judge them with the `/agents-sim` skill.
+
+- Never part of `npm test`, CI or hooks (separate `playwright.sim.config.ts`): they spend
+  Claude plan quota.
+- They need the Claude Code bridge (`bridge` zellij pane / `npm run dev-bridge`, port
+  `BRIDGE_PORT` in `.env`). Only the user starts it.
+- A run wipes `test_`-owned portals data (`DELETE /api/test-env`), recreates the `sim-*`
+  datasets in data-fair, and rewrites `test_org1`'s agents settings and data-fair topics.
+- Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
+  product's promises: `docs/architecture/agent.md`.
+
 ### Linting & Type Checking
 
 ```bash

@@ -9,6 +9,7 @@
         <div class="d-flex justify-end mb-1">
           <df-agent-chat-action
             action-id="configure-page"
+            :title="t('askAssistant')"
             :visible-prompt="t('configurePrompt')"
             :hidden-context="configureContext"
           />
@@ -17,7 +18,8 @@
           v-model="editConfig"
           :locale="locale"
           :options="vjsfOptions"
-          @update:model-value="saveDraft.execute()"
+          @update:state="onFormState"
+          @update:model-value="onFormData"
         >
           <template #page-elements="{node, statefulLayout}">
             <v-defaults-provider :defaults="vjsfDefaults">
@@ -63,14 +65,19 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
 import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
+import { useEditorAgentState } from '~/composables/use-editor-agent-state'
+import { usePagePublicationAgentState } from '~/composables/use-page-publication-agent-state'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
 
-const { pageFetch, patchPage } = usePageStore()
+const { pageFetch, patchPage, hasDraftDiff } = usePageStore()
+usePagePublicationAgentState()
 
 const editConfig = ref<PageConfig>()
+// the draft as loaded from the API, before the form fills in its defaults
+let loadedDraftConfig: PageConfig | undefined
 // errors of the stored config that healing could not fix, they block the draft saves
 // and the form does not display the ones carried by page elements
 const storedConfigErrors = ref<string[]>([])
@@ -90,11 +97,47 @@ watch(pageFetch.data, () => {
   if (!equal(draftConfig, toRaw(pageFetch.data.value.draftConfig))) console.warn('removed properties rejected by the page config schema')
   if (equal(toRaw(editConfig.value), draftConfig)) return
   editConfig.value = draftConfig
+  loadedDraftConfig = draftConfig
 }, { immediate: true })
 provide('page-config', editConfig)
 
-const changesStack = useChangesStack(editConfig)
-const formValid = ref(false)
+// Undo and redo restore a value without a form input: saved here. Back at the opening state,
+// the draft as it was loaded is saved, not the form's filled-in copy of it: that copy carries
+// defaults the published configuration does not, and would show as a change to validate.
+const changesStack = useChangesStack(editConfig, {
+  onRestore: () => nextTick(() => {
+    if (changesStack.index.value === 0 && loadedDraftConfig) patchPage.execute({ draftConfig: loadedDraftConfig })
+    else saveDraft.execute()
+  })
+})
+
+// Only edits are saved, as in the portal editor: a person's input moves the form state's
+// editCount (json-layout), the form filling itself in (defaults) as it opens does not. Until
+// the first edit that filling is also the undo baseline, or « Annuler le dernier changement »
+// was enabled before anything was edited. The assistant's tools write through
+// usePageConfigWebMCP, which saves on its own.
+type FormLayout = { editCount: number } // json-layout's StatefulLayout
+let formState: { layout: FormLayout, initialEditCount: number, savedEditCount: number } | undefined
+const onFormState = (layout: FormLayout) => {
+  if (formState?.layout !== layout) formState = { layout, initialEditCount: layout.editCount, savedEditCount: layout.editCount }
+}
+// The assistant's form tools edit their own state of the form: their edits reach this one as
+// outside data, which left its editCount unmoved. Taken for the form filling itself in, they
+// reset the undo history, and a judged run could not undo them.
+let toolsEdited = false
+const onFormData = () => {
+  if (!formState) return
+  if (formState.layout.editCount === formState.initialEditCount) {
+    // after the changes stack has recorded the value
+    if (!toolsEdited) nextTick(() => changesStack.reset())
+    return
+  }
+  if (formState.layout.editCount === formState.savedEditCount) return
+  formState.savedEditCount = formState.layout.editCount
+  saveDraft.execute()
+}
+// null until v-form has checked every field: unknown, not incomplete
+const formValid = ref<boolean | null>(null)
 
 const pagesFetch = useFetch<{ results: Page[] }>($apiPath + '/pages', {
   query: {
@@ -178,11 +221,29 @@ const saveDraft = useAsyncAction(async () => {
   // the stored draft was accepted by the API, it no longer carries errors
   storedConfigErrors.value = []
 })
+useEditorAgentState('page', hasDraftDiff, () => patchPage.error.value, formValid)
+
+// The page view and an editor opened again from it read the page store of the parent route,
+// loaded once: judged runs saw a block added here missing from the draft preview and from the
+// reopened editor. Refreshed on leaving, once the last save is done; not after each save, which
+// would reload the form under the person's typing.
+let savedDraft = false
+watch(patchPage.loading, (loading) => { if (loading) savedDraft = true })
+onBeforeUnmount(() => {
+  if (!savedDraft) return
+  if (!patchPage.loading.value) return pageFetch.refresh()
+  const stop = watch(patchPage.loading, (loading) => {
+    if (loading) return
+    stop()
+    pageFetch.refresh()
+  })
+})
 
 const { configureContext } = usePageConfigWebMCP(editConfig, locale, (data: any) => {
+  toolsEdited = true
   editConfig.value = { ...editConfig.value, ...data } as PageConfig
   saveDraft.execute()
-})
+}, computed(() => (vjsfOptions.value.context ?? {}) as Record<string, unknown>))
 
 watch(pageFetch.data, (page) => {
   if (!page) return
@@ -197,6 +258,7 @@ watch(pageFetch.data, (page) => {
 
 <i18n lang="yaml">
   en:
+    askAssistant: Ask the assistant
     addItemMessage: Add a block to the page
     edit: Editing draft
     pages: Pages
@@ -204,6 +266,7 @@ watch(pageFetch.data, (page) => {
     configurePrompt: Help me configure this page
 
   fr:
+    askAssistant: Demander à l'assistant
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon
     pages: Pages

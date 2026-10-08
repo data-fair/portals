@@ -1,6 +1,6 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
-import { toAbsoluteUrl, toRoutePath } from '../../../portal/app/composables/agent/url-utils.ts'
+import { toAbsoluteUrl, toRoutePath, datasetMapRef } from '../../../portal/app/composables/agent/url-utils.ts'
 
 const ORIGIN = 'https://portal.example.com'
 
@@ -48,5 +48,20 @@ test.describe('toRoutePath', () => {
 
   test('maps the base root to "/"', () => {
     assert.deepEqual(toRoutePath(ORIGIN, '/portal/', 'https://portal.example.com/portal'), { path: '/', query: undefined })
+  })
+})
+
+// A judged run navigated to the map of a dataset without geographic data: the portal showed
+// an empty map with a raw _geopoint error, and navigate answered « Success ».
+test.describe('datasetMapRef', () => {
+  test('gives the dataset of a map route', () => {
+    assert.equal(datasetMapRef('/datasets/equipements-sportifs/map'), 'equipements-sportifs')
+    assert.equal(datasetMapRef('/datasets/equipements-sportifs/map/'), 'equipements-sportifs')
+  })
+
+  test('ignores any other route', () => {
+    assert.equal(datasetMapRef('/datasets/equipements-sportifs/table'), undefined)
+    assert.equal(datasetMapRef('/datasets/equipements-sportifs'), undefined)
+    assert.equal(datasetMapRef('/event/map'), undefined)
   })
 })

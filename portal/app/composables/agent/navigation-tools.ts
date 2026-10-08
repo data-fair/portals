@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import type { $Fetch } from 'nitropack/types'
 import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { LinkItem } from '#api/types/common-links/index.ts'
@@ -7,7 +8,7 @@ import { useAgentTool } from '@data-fair/lib-vue-agents'
 import { useReactiveSearchParams } from '@data-fair/lib-vue/reactive-search-params.js'
 import { unwrapFilterQuery } from '@data-fair/agent-tools-data-fair/_utils'
 import { createAgentTranslator } from './utils'
-import { toAbsoluteUrl, toRoutePath } from './url-utils'
+import { toAbsoluteUrl, toRoutePath, datasetMapRef } from './url-utils'
 
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 
@@ -43,9 +44,10 @@ interface AgentNavigationToolsDeps {
   locale: Ref<string>
   portalConfig: PortalConfig
   navigationStore: AgentNavigationStore
+  localFetch: $Fetch
 }
 
-export function useAgentNavigationTools ({ locale, portalConfig, navigationStore }: AgentNavigationToolsDeps) {
+export function useAgentNavigationTools ({ locale, portalConfig, navigationStore, localFetch }: AgentNavigationToolsDeps) {
   const t = createAgentTranslator(messages, locale)
   const route = useRoute()
   const router = useRouter()
@@ -131,7 +133,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists. The URLs are absolute — substitute {slug} and append `?<query>`, but keep the origin and path prefix:\n' +
         `- Dataset detail: ${appUrl('/datasets/{slug}')}\n` +
         `- Dataset table: ${appUrl('/datasets/{slug}/table')} — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n` +
-        `- Dataset map: ${appUrl('/datasets/{slug}/map')} — for geolocalized datasets, accepts the same filterQuery as the table page\n` +
+        `- Dataset map: ${appUrl('/datasets/{slug}/map')} — only for a dataset describe_dataset reports as geolocalized (the others have no map), accepts the same filterQuery as the table page\n` +
         `- Dataset API doc: ${appUrl('/datasets/{slug}/api-doc')}\n` +
         `- Application detail: ${appUrl('/applications/{slug}')}\n` +
         `- Application full view: ${appUrl('/applications/{slug}/full')}\n` +
@@ -184,6 +186,21 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
         const queryString = unwrapFilterQuery(params.query as string | undefined) || embeddedQuery
         const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
+        // A dataset without geographic data has no map: the page would show an empty map and a
+        // raw error, and a judged run told the person the map was displayed.
+        const mapRef = datasetMapRef(path)
+        if (mapRef) {
+          const dataset = await localFetch<{ bbox?: number[] }>(`/data-fair/api/v1/datasets/${encodeURIComponent(mapRef)}`, { query: { select: 'bbox' } })
+          if (!dataset.bbox?.length) {
+            return {
+              content: [{
+                type: 'text' as const,
+                text: `**Success**: false\n**Error**: this dataset has no geographic data, it cannot be shown on a map. Show it in its table instead: /datasets/${mapRef}/table`
+              }],
+              isError: true
+            }
+          }
+        }
         await router.push(query ? { path, query } : path)
         await new Promise(resolve => setTimeout(resolve, 500))
         const currentRoute = router.currentRoute.value
@@ -221,9 +238,15 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         const v = searchParams[k]
         if (isFilterKey(k) && v != null) current[k] = v
       }
-      const text = Object.keys(current).length
+      // Column filters of a table/map link (`capacite_gt=500`) live in the URL query, not
+      // in the page filters: answering "none" on such a page contradicted the screen.
+      const other = Object.keys(searchParams).filter(k => !isFilterKey(k) && searchParams[k] != null)
+      const otherText = other.length
+        ? `\nThe page URL also carries these query parameters (column filters, sort or columns of an embedded table or map): ${other.map(k => `\`${k}\` = ${searchParams[k]}`).join(', ')}.`
+        : ''
+      const text = (Object.keys(current).length
         ? Object.entries(current).map(([k, v]) => `- \`${k}\` = ${v}`).join('\n')
-        : 'No page filters are currently set.'
+        : 'No page filters (_c_ / _d_ keys) are currently set.') + otherText
       return { content: [{ type: 'text' as const, text }], structuredContent: current }
     }
   })

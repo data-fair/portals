@@ -1,4 +1,4 @@
-import { computed, shallowRef, watch, toRaw, onScopeDispose, type Ref } from 'vue'
+import { computed, ref, shallowRef, watch, toRaw, onScopeDispose, type Ref } from 'vue'
 import { StatefulLayout } from '@json-layout/core/state'
 import { WebMCP } from '@json-layout/core/webmcp'
 import equal from 'fast-deep-equal'
@@ -12,17 +12,24 @@ const compiledLayoutImports: Record<string, () => Promise<any>> = {
 export function usePageConfigWebMCP (
   editConfig: Ref<PageConfig | undefined>,
   locale: Ref<string>,
-  onData: (data: any) => void
+  onData: (data: any) => void,
+  // the visible form's context (page type…): without it the tools' form hid what depends on
+  // it, a free page's slug and group or an event's dates
+  context: Readonly<Ref<Record<string, unknown>>> = ref({})
 ) {
   const compiledLayout = shallowRef<any>(null)
   const statefulLayout = shallowRef<StatefulLayout | null>(null)
   const webMCP = shallowRef<WebMCP | null>(null)
   let setupInProgress = false
-  // Prevents feedback loop: when we sync editConfig → statefulLayout externally,
-  // the StatefulLayout synchronously calls onData; we must ignore that echo.
-  let ignoringOnData = false
+  // Only the tools' edits are forwarded, which move editCount: not the echo of editConfig
+  // synced into this layout, nor the layout filling itself in (defaults) as it is created,
+  // which was written into editConfig and enabled « Annuler le dernier changement » before
+  // anything was edited.
+  let forwardedEditCount = 0
   const wrappedOnData = (data: any) => {
-    if (ignoringOnData) return
+    const sl = statefulLayout.value
+    if (!sl || sl.editCount === forwardedEditCount) return
+    forwardedEditCount = sl.editCount
     onData(data)
   }
 
@@ -35,12 +42,14 @@ export function usePageConfigWebMCP (
         webMCP.value = null
       }
 
+      forwardedEditCount = 0
       const sl = new StatefulLayout(
         toRaw(cl),
         toRaw(cl.skeletonTrees[cl.mainTree]),
         {
           width: 600,
           updateOn: 'input',
+          context: toRaw(context.value),
           onData: wrappedOnData
         },
         toRaw(config)
@@ -103,14 +112,18 @@ export function usePageConfigWebMCP (
     if (config && compiledLayout.value && !webMCP.value) {
       await setup(compiledLayout.value, config)
     }
-    // Sync external changes (user edits via main form) -> agent StatefulLayout.
-    // StatefulLayout.set data calls onData synchronously; use the flag to ignore that echo.
+    // Sync external changes (user edits via main form) -> agent StatefulLayout. Its echo
+    // through onData is not forwarded: setting data is not an edit.
     if (statefulLayout.value && config && !equal(statefulLayout.value.data, toRaw(config))) {
-      ignoringOnData = true
       statefulLayout.value.data = toRaw(config)
-      ignoringOnData = false
     }
   })
+
+  // the context can complete later (the pages list): the tools' form follows it
+  watch(context, (ctx) => {
+    const sl = statefulLayout.value
+    if (sl) sl.options = { ...sl.options, context: toRaw(ctx) }
+  }, { deep: true })
 
   const configureContext = computed(() => {
     const lines = [

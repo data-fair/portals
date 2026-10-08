@@ -17,6 +17,8 @@
     :loading="validateDraft.loading.value"
     :disabled="cancelDraft.loading.value || !hasDraftDiff"
     :title="t('validateDraft')"
+    role="button"
+    :aria-disabled="String(cancelDraft.loading.value || !hasDraftDiff)"
     @click="validateDraft.execute()"
   >
     <template #prepend>
@@ -39,6 +41,8 @@
         :loading="cancelDraft.loading.value"
         :disabled="validateDraft.loading.value || !hasDraftDiff"
         :title="t('cancelDraft')"
+        role="button"
+        :aria-disabled="String(validateDraft.loading.value || !hasDraftDiff)"
       >
         <template #prepend>
           <v-icon
@@ -244,6 +248,8 @@
 import type { Portal } from '#api/types/portal/index.ts'
 import { mdiAccount, mdiFileEdit, mdiFileReplace, mdiFileCancel, mdiDelete, mdiClipboardTextClock, mdiOpenInNew } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
+import { emitAgentEvent } from '@data-fair/lib-vue-agents'
+import { pageDraftValidatedDetail } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
@@ -263,16 +269,21 @@ const editDraftLink = computed(() => {
   return base
 })
 
+// role and aria-disabled: a clickable v-list-item inside a v-list is rendered as a
+// plain listitem, so the action was not announced as a button and its disabled state
+// was invisible — people pressed it, saw nothing and believed the draft unsaved.
 const validateDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
   await pageFetch.refresh()
-})
+  // lets an assistant waiting on the person's click (wait_for_user_action) resume
+  emitAgentEvent('draft-validated', pageDraftValidatedDetail(page.value?.title, (page.value?.portals ?? []).map(id => portalsById.value[id]?.title ?? id)))
+}, { success: t('draftValidated') })
 
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'DELETE' })
   await pageFetch.refresh()
   showCancelDraftMenu.value = false
-})
+}, { success: t('draftCanceled') })
 
 const changeOwner = useAsyncAction(
   async () => {
@@ -327,6 +338,8 @@ const portalsById = computed(() => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
+    draftValidated: The draft was validated, the changes are published.
+    draftCanceled: The draft was canceled.
     viewOn: View on {portalTitle}
     notPublishedOnAnyPortal: This page is not published on any portal
     yes: Yes
@@ -348,6 +361,8 @@ const portalsById = computed(() => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
+    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftCanceled: Le brouillon a été annulé.
     viewOn: Voir sur {portalTitle}
     notPublishedOnAnyPortal: Cette page n'est publiée sur aucun portail
     yes: Oui

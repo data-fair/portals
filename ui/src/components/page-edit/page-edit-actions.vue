@@ -4,6 +4,8 @@
     :loading="validateDraft.loading.value"
     :disabled="cancelDraft.loading.value || !hasDraftDiff"
     :title="t('validateDraft')"
+    role="button"
+    :aria-disabled="String(cancelDraft.loading.value || !hasDraftDiff)"
     @click="validateDraft.execute()"
   >
     <template #prepend>
@@ -26,6 +28,8 @@
         :loading="cancelDraft.loading.value"
         :disabled="validateDraft.loading.value || !hasDraftDiff"
         :title="t('cancelDraft')"
+        role="button"
+        :aria-disabled="String(validateDraft.loading.value || !hasDraftDiff)"
       >
         <template #prepend>
           <v-icon
@@ -116,24 +120,38 @@
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal/index.ts'
 import { mdiFileReplace, mdiFileCancel, mdiUndo, mdiRedo, mdiOpenInNew } from '@mdi/js'
+import { emitAgentEvent } from '@data-fair/lib-vue-agents'
+import { pageDraftValidatedDetail } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
-const { pageId, page, pageFetch, hasDraftDiff, pageUrl } = usePageStore()
+const { pageId, page, pageFetch, hasDraftDiff, pageUrl, patchPage } = usePageStore()
 const { changesStack } = defineProps<{ changesStack: ReturnType<typeof useChangesStack> }>()
 const showCancelDraftMenu = ref(false)
 
+// role and aria-disabled: a clickable v-list-item inside a v-list is rendered as a
+// plain listitem, so the action was not announced as a button and its disabled state
+// was invisible — people pressed it, saw nothing and believed the draft unsaved.
+// A click right after an edit lands while that edit is being saved: sent at once, the
+// validation could reach the API first and publish the draft without the edit.
 const validateDraft = useAsyncAction(async () => {
+  if (patchPage.loading.value) {
+    await new Promise<void>(resolve => {
+      const stop = watch(patchPage.loading, (saving) => { if (!saving) { stop(); resolve() } })
+    })
+  }
   await $fetch(`pages/${pageId}/draft`, { method: 'POST' })
   await pageFetch.refresh()
   changesStack.reset()
-})
+  // lets an assistant waiting on the person's click (wait_for_user_action) resume
+  emitAgentEvent('draft-validated', pageDraftValidatedDetail(page.value?.title, (page.value?.portals ?? []).map(id => portalsById.value[id]?.title ?? id)))
+}, { success: t('draftValidated') })
 
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`pages/${pageId}/draft`, { method: 'DELETE' })
   await pageFetch.refresh()
   changesStack.reset()
   showCancelDraftMenu.value = false
-})
+}, { success: t('draftCanceled') })
 
 // For "View On" links
 type PartialPortal = Pick<Portal, '_id' | 'title' | 'ingress'>
@@ -157,6 +175,8 @@ const portalsById = computed(() => {
     cancelingDraft: Canceling draft
     confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
     validateDraft: Validate draft
+    draftValidated: The draft was validated, the changes are published.
+    draftCanceled: The draft was canceled.
     viewOn: View on {portalTitle}
     no: No
     yes: Yes
@@ -167,6 +187,8 @@ const portalsById = computed(() => {
     cancelingDraft: Annulation du brouillon
     confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
     validateDraft: Valider le brouillon
+    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftCanceled: Le brouillon a été annulé.
     viewOn: Voir sur {portalTitle}
     no: Non
     yes: Oui

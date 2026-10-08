@@ -19,6 +19,7 @@
         <div class="d-flex justify-end mb-1">
           <df-agent-chat-action
             action-id="configure-portal"
+            :title="t('askAssistant')"
             :visible-prompt="t('configurePrompt')"
             :hidden-context="configureContext"
           />
@@ -31,7 +32,8 @@
           :data-title="t('portalConfig')"
           prefix-name="portalConfig_"
           :sub-agent="true"
-          @update:model-value="saveDraft.execute()"
+          @update:state="onFormState"
+          @update:model-value="onFormData"
         >
           <template #theme-beta-warning>
             <v-alert
@@ -69,15 +71,14 @@
               :append-title="context.title ?? (context.home ? t('appBarPreview') + ' - ' + t('home'): t('appBarPreview'))"
               no-padding
             >
-              <layout-app-bar
-                v-if="formValid"
-                :home="context.home"
-              />
+              <layout-app-bar :home="context.home" />
+              <preview-paused v-if="!formValid" />
             </preview>
           </template>
           <template #footer-preview>
             <footer-preview>
-              <layout-footer v-if="formValid" />
+              <layout-footer />
+              <preview-paused v-if="!formValid" />
             </footer-preview>
           </template>
           <template #breadcrumb-preview>
@@ -85,7 +86,8 @@
               :append-title="t('breadcrumbs')"
               no-padding
             >
-              <layout-breadcrumbs v-if="formValid" />
+              <layout-breadcrumbs />
+              <preview-paused v-if="!formValid" />
             </preview>
           </template>
 
@@ -175,7 +177,7 @@
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
         :portal="portalFetch.data.value"
-        @refresh-portal="portalFetch.refresh()"
+        @refresh-portal="onDraftValidated"
       />
     </navigation-right>
   </v-container>
@@ -192,6 +194,7 @@ import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
+import { useEditorAgentState } from '~/composables/use-editor-agent-state'
 
 const { t, locale } = useI18n()
 const session = useSessionAuthenticated()
@@ -199,20 +202,35 @@ const route = useRoute<'/portals/[id]/'>()
 
 const portalFetch = useFetch<Portal>($apiPath + '/portals/' + route.params.id)
 const editConfig = ref<PortalConfig>()
-const formValid = ref(false)
+// The draft as stored. The form fills schema defaults and the account's topics into
+// editConfig as it opens: that is not a change, and comparing editConfig with the
+// published config marked every new portal as having unpublished changes.
+const storedDraftConfig = ref<PortalConfig>()
+// The draft as loaded, and the form's copy of it once filled in, before any edit: an edit that
+// brings the form back to that copy (a menu row added then removed) saves the loaded draft, or
+// the defaults the form filled in would show as unpublished changes
+let loadedDraftConfig: PortalConfig | undefined
+let openedFormConfig: PortalConfig | undefined
+// null until v-form has checked every field: unknown, not incomplete
+const formValid = ref<boolean | null>(null)
 const { portalConfig } = providePortalStore()
 
 // Initialize editConfig and portalStore when init portal config is fetched
 watch(portalFetch.data, () => {
   if (!portalFetch.data.value) return
+  storedDraftConfig.value = portalFetch.data.value.draftConfig
   if (!equal(editConfig.value, portalFetch.data.value.draftConfig)) {
     editConfig.value = portalFetch.data.value.draftConfig
+    loadedDraftConfig = portalFetch.data.value.draftConfig
+    openedFormConfig = undefined
   }
   if (editConfig.value) portalConfig.value = editConfig.value
 })
-// Synchronize editConfig changes back to portalConfig
-watch(editConfig, (newConfig) => {
-  if (newConfig) portalConfig.value = newConfig
+// Synchronize editConfig changes back to portalConfig, only while the form is valid: the
+// header, footer and breadcrumb previews then keep the last valid state instead of going
+// blank as soon as an item is incomplete (a new « Lien non configuré » menu row).
+watch([editConfig, formValid], ([newConfig, valid]) => {
+  if (newConfig && valid) portalConfig.value = newConfig
 })
 // The API only renders markdown on write, so the preview would lag behind the input without this
 watch(() => editConfig.value?.footer?.rows, () => {
@@ -255,12 +273,48 @@ watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
 
 const saveDraft = useAsyncAction(async () => {
   if (!formValid.value) return
-  await $fetch(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig: editConfig.value } })
+  const backToOpening = loadedDraftConfig && openedFormConfig && equal(toRaw(editConfig.value), openedFormConfig)
+  const draftConfig = backToOpening ? loadedDraftConfig : editConfig.value
+  const updated = await $fetch<Portal>(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig } })
+  storedDraftConfig.value = updated.draftConfig
 })
 
+// Only edits are saved: a person's input or the assistant's form tools, which move the form
+// state's editCount, not what the form fills in by itself. The state comes before the data
+// event, and a new form state starts from its own count.
+type FormLayout = { editCount: number } // json-layout's StatefulLayout
+let formState: { layout: FormLayout, savedEditCount: number } | undefined
+const onFormState = (layout: FormLayout) => {
+  if (formState?.layout !== layout) formState = { layout, savedEditCount: layout.editCount }
+}
+let edited = false
+const onFormData = () => {
+  if (!formState) return
+  if (formState.layout.editCount === formState.savedEditCount) {
+    // the form filling itself in as it opens
+    if (!edited && editConfig.value) openedFormConfig = structuredClone(toRaw(editConfig.value))
+    return
+  }
+  edited = true
+  formState.savedEditCount = formState.layout.editCount
+  // after nextTick, so the watchers above (assisted colours) complete the edit before it is sent
+  nextTick(() => saveDraft.execute())
+}
+
+// The validated draft is the published config at once: the draft state told the assistant
+// « unpublished changes » until the reload, and a judged run's wait for the validation answered
+// with that stale state still current
+const publishedConfig = ref<PortalConfig>()
+watch(portalFetch.data, (portal) => { if (portal) publishedConfig.value = portal.config }, { immediate: true })
+const onDraftValidated = () => {
+  if (storedDraftConfig.value) publishedConfig.value = storedDraftConfig.value
+  portalFetch.refresh()
+}
+
 const hasDraftDiff = computed(() => {
-  return !equal(editConfig.value, portalFetch.data.value?.config)
+  return !!storedDraftConfig.value && !equal(storedDraftConfig.value, publishedConfig.value)
 })
+useEditorAgentState('portal', hasDraftDiff, () => saveDraft.error.value, formValid)
 
 watch(portalFetch.data, (portal) => {
   if (!portal) return
@@ -350,6 +404,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
 
 <i18n lang="yaml">
   en:
+    askAssistant: Ask the assistant
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
     home: Home
@@ -358,6 +413,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     configurePrompt: Help me configure this portal
     themeBetaWarning: Offering several themes to users is still a beta feature. If you notice display issues on a theme other than the default one, please report it to us through support.
   fr:
+    askAssistant: Demander à l'assistant
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     home: Accueil

@@ -12,6 +12,7 @@ export default {
       'analytics',
       'reuses',
       'seo',
+      'simulations',
     ]],
     'scope-empty': [1, 'never'],
   },

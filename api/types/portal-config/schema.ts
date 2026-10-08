@@ -1,3 +1,4 @@
+import { agentGuide } from './agent-guide.js'
 import { linkItemTitle, standardPage, genericPage, eventPage, newsPage, externalLink } from '../common-links/schema.js'
 
 const menuBranch = (def: any) => ({ ...structuredClone(def), additionalProperties: false })
@@ -14,6 +15,8 @@ export default {
   'x-vjsf-locales': ['en', 'fr'],
   'x-jstt': { additionalProperties: false },
   title: 'Portal Config',
+  'x-agent-guide': agentGuide.en,
+  'x-i18n-x-agent-guide': { fr: agentGuide.fr },
   type: 'object',
   unevaluatedProperties: false,
   layout: {
@@ -526,7 +529,8 @@ export default {
   $defs: {
     menuItem: {
       type: 'object',
-      oneOfLayout: { emptyData: true },
+      // named, or the drop-down of a new « Lien non configuré » row had no label to point to
+      oneOfLayout: { label: 'Type de lien', emptyData: true },
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },

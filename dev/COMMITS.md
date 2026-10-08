@@ -39,6 +39,7 @@ The allowed scopes are enforced by `commitlint.config.ts` (`scope-enum`, level `
 | `analytics` | Analytics/tracking (Matomo, Piano, page-tracking config) |
 | `reuses` | Content reuse system |
 | `seo` | SEO improvements (`robots.txt`, `sitemap.xml`, `.well-known/*`, structured data, crawl rules) |
+| `simulations` | Judged agent simulations (`simulations/`, sim config, agents-sim skill, QA doc) |
 
 ### Scope is editorial, not mechanical
 

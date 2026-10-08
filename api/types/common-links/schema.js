@@ -7,7 +7,6 @@ export const standardPage = {
     subtype: {
       type: 'string',
       title: 'Type de page',
-      default: 'home',
       oneOf: [
         // Editable pages
         { const: 'home', title: 'Accueil' },
@@ -85,7 +84,7 @@ export const genericPage = {
   }
 }
 export const eventPage = {
-  title: "Page d'événements",
+  title: "Page d'événement",
   required: ['type', 'pageRef'],
   properties: {
     type: { const: 'event' },
@@ -115,7 +114,7 @@ export const eventPage = {
   }
 }
 export const newsPage = {
-  title: "Page d'actualités",
+  title: "Page d'actualité",
   required: ['type', 'pageRef'],
   properties: {
     type: { const: 'news' },
@@ -177,7 +176,6 @@ const baseStandardPage = {
     subtype: {
       type: 'string',
       title: 'Type de page',
-      default: 'home',
       oneOf: [
         // Editable pages
         { const: 'home', title: 'Accueil' },
@@ -253,7 +251,7 @@ const baseGenericPage = {
   }
 }
 const baseEventPage = {
-  title: "Page d'événements",
+  title: "Page d'événement",
   required: ['type'],
   properties: {
     type: { const: 'event' },
@@ -282,7 +280,7 @@ const baseEventPage = {
   }
 }
 const baseNewsPage = {
-  title: "Page d'actualités",
+  title: "Page d'actualité",
   required: ['type'],
   properties: {
     type: { const: 'news' },

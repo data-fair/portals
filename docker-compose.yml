@@ -98,6 +98,8 @@ services:
       - PORT=${DF_PORT}
       - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair
       - ES_HOST=localhost:${ES_PORT}
+      # single dev node: a replica would stay unassigned, the cluster yellow and /ping 500
+      - ES_NB_REPLICAS=0
       - DIRECTORY_URL=http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
       - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
@@ -105,6 +107,8 @@ services:
       - WS_PUBLIC_URL=ws://${DEV_HOST}:${NGINX_PORT}/data-fair
       - OBSERVER_ACTIVE=false
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
+      # turns on the back-office agent chat (agentsIntegration), needed by the simulations
+      - PRIVATE_AGENTS_URL=http://localhost:${AGENTS_PORT}
       - SECRET_EVENTS=secret-events
 
   #####

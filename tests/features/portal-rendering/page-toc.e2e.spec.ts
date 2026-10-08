@@ -3,10 +3,12 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
-const html = (n: number) => Array.from({ length: n }, (_, i) =>
-  `<p>Paragraphe ${i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>`
-).join('')
-const text = (uuid: string, n: number) => ({ uuid, type: 'text', content: 'lorem', _html: html(n) })
+// n paragraphs of markdown: the API renders a text block's _html from its content when the
+// page is created, so a long page needs long content, not ready-made html
+const markdown = (n: number) => Array.from({ length: n }, (_, i) =>
+  `Paragraphe ${i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
+).join('\n\n')
+const text = (uuid: string, n: number) => ({ uuid, type: 'text', content: markdown(n) })
 
 test.describe('content page table of contents', () => {
   test.beforeEach(clean)

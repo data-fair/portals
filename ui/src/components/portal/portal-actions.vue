@@ -1,8 +1,10 @@
 <template>
   <!-- Validate draft -->
   <v-list-item
-    :disabled="isSavingDraft || !hasDraftDiff"
+    :disabled="!isSavingDraft && !hasDraftDiff"
     :loading="validateDraft.loading.value"
+    role="button"
+    :aria-disabled="String(!isSavingDraft && !hasDraftDiff)"
     @click="validateDraft.execute()"
   >
     <template #prepend>
@@ -25,6 +27,8 @@
         v-bind="props"
         :disabled="isSavingDraft || !hasDraftDiff"
         :loading="cancelDraft.loading.value"
+        role="button"
+        :aria-disabled="String(isSavingDraft || !hasDraftDiff)"
       >
         <template #prepend>
           <v-icon
@@ -338,6 +342,7 @@
 <script setup lang="ts">
 import { mdiDelete, mdiFileReplace, mdiFileExport, mdiFileCancel, mdiOpenInNew, mdiShieldLinkVariant, mdiAccount, mdiAccountGroup, mdiClipboardTextClock, mdiShieldStar, mdiViewDashboardEdit } from '@mdi/js'
 import ownerPick from '@data-fair/lib-vuetify/owner-pick.vue'
+import { emitAgentEvent } from '@data-fair/lib-vue-agents'
 import { Portal } from '#api/types/portal/index.ts'
 
 const { t } = useI18n()
@@ -355,23 +360,38 @@ const ownersReady = ref(false)
 const newOwner = ref<Record<string, string> | null>(null)
 
 const emit = defineEmits<{ (e: 'refresh-portal'): void }>()
-const { portal } = defineProps<{
+const { portal, isSavingDraft, hasDraftDiff } = defineProps<{
   hasDraftDiff: boolean
   isSavingDraft: boolean
   portal: Portal
 }>()
 const showCancelDraftMenu = ref(false)
 
+// role and aria-disabled: a clickable v-list-item inside a v-list is rendered as a
+// plain listitem, so the action was not announced as a button and its disabled state
+// was invisible — people pressed it, saw nothing and believed the draft unsaved.
+// A click right after an edit lands while that edit is being saved: a judged run's click did
+// nothing then (the button was disabled for that instant) and the portal kept its old menu.
+// The validation waits for the save, then publishes what it saved.
 const validateDraft = useAsyncAction(async () => {
+  if (isSavingDraft) {
+    await new Promise<void>(resolve => {
+      const stop = watch(() => isSavingDraft, (saving) => { if (!saving) { stop(); resolve() } })
+    })
+    await nextTick()
+  }
+  if (!hasDraftDiff) return
   await $fetch(`portals/${portal._id}/draft`, { method: 'POST' })
   emit('refresh-portal')
-})
+  // lets an assistant waiting on the person's click (wait_for_user_action) resume
+  emitAgentEvent('draft-validated', { portal: portal.config?.title })
+}, { success: t('draftValidated') })
 
 const cancelDraft = useAsyncAction(async () => {
   await $fetch(`portals/${portal._id}/draft`, { method: 'DELETE' })
   emit('refresh-portal')
   showCancelDraftMenu.value = false
-})
+}, { success: t('draftCanceled') })
 
 const changeOwner = useAsyncAction(
   async () => {
@@ -436,6 +456,8 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     portalDeleted: Portal deleted!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
+    draftValidated: The draft was validated, the changes are published.
+    draftCanceled: The draft was canceled.
     viewDraft: View draft
     viewPortal: View portal
     viewPortalPages: View published pages on this portal
@@ -469,6 +491,8 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     portalDeleted: Portail supprimé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
+    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftCanceled: Le brouillon a été annulé.
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail
     viewPortalPages: Voir les pages publiées sur ce portail

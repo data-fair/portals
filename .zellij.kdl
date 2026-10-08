@@ -13,6 +13,10 @@ layout {
         command "bash"
         args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-ingress-manager"
       }
+      pane name="bridge" {
+        command "bash"
+        args "-ic" "nvm use > /dev/null 2>&1 && npm run dev-bridge"
+      }
     }
     pane {
       split_direction "vertical"

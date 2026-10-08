@@ -33,7 +33,13 @@ export const test = base.extend<{
 
       goToWithAuth: async ({ page, context }, use) => {
         const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
+        // simple-directory's exchange token is single use: each keepalive of a page rotates it,
+        // and presenting an older one after a short grace destroys the session. The cache must
+        // follow the rotations, or the next test reusing it is logged out (401s, no redirect).
+        let currentUser: string | undefined
         const goToWithAuth = async (url: string, user: string) => {
+          if (currentUser && currentUser !== user) cookieCache.set(currentUser, await context.cookies())
+          currentUser = user
           const cached = cookieCache.get(user)
           if (cached) {
             await context.addCookies(cached)
@@ -48,6 +54,7 @@ export const test = base.extend<{
           }
         }
         await use(goToWithAuth)
+        if (currentUser) cookieCache.set(currentUser, await context.cookies())
       }
     })
 

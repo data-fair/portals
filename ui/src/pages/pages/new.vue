@@ -71,6 +71,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === 'generic' ? 'primary' : ''"
                 @click="selectPageType('generic')"
@@ -92,6 +93,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -120,6 +122,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -148,6 +151,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="pageType === pType ? 'primary' : ''"
                 @click="selectPageType(pType)"
@@ -176,6 +180,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedGroupId === 'default' ? 'primary' : ''"
                 @click="selectGroup('default')"
@@ -197,6 +202,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedGroupId === customGroup._id ? 'primary' : ''"
                 @click="selectGroup(customGroup._id)"
@@ -224,6 +230,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'blank' ? 'primary' : ''"
                 @click="selectAction('blank')"
@@ -245,6 +252,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'reference' ? 'primary' : ''"
                 @click="selectAction('reference')"
@@ -266,6 +274,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="actionType === 'duplicate' ? 'primary' : ''"
                 @click="selectAction('duplicate')"
@@ -292,6 +301,7 @@
               cols="12"
             >
               <v-card
+                role="button"
                 class="h-100"
                 :color="selectedPageId === page._id ? 'primary' : ''"
                 @click="selectPage(page._id)"
@@ -365,6 +375,8 @@
 import type { Account } from '@data-fair/lib-common-types/session'
 import { mdiFile, mdiPlaylistEdit, mdiTextBox, mdiShape } from '@mdi/js'
 import OwnerPick from '@data-fair/lib-vuetify/owner-pick.vue'
+import { useAgentState } from '@data-fair/lib-vue-agents'
+import { PAGE_CREATION_GUIDANCE, PAGE_CREATION_AFTER, pageCreationStep } from '~/utils/agent-editor-guidance'
 
 const hasDepartments = useHasDepartments()
 const session = useSessionAuthenticated()
@@ -385,6 +397,10 @@ const standardPageTypes = ['home', 'contact', 'accessibility', 'terms-of-service
 const catalogPageTypes = ['datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog']
 
 const step = ref<'type' | 'group' | 'action' | 'source' | 'information'>('type')
+// the chat only saw the URL during creation and invented steps (see agent-editor-guidance)
+useAgentState('wizard', PAGE_CREATION_GUIDANCE)
+useAgentState('wizard-after', PAGE_CREATION_AFTER)
+useAgentState('wizard-step', () => pageCreationStep(step.value))
 const pageType = ref<string | undefined>(undefined)
 const selectedGroupId = ref<string | undefined>(undefined)
 const actionType = ref<'blank' | 'reference' | 'duplicate' | undefined>(undefined)
@@ -442,19 +458,30 @@ const selectPageType = (type: string) => {
     step.value = 'group'
   } else {
     // For standard pages, go directly to action
-    step.value = 'action'
-    // Fetch pages for reference/duplicate options
-    referencesFetch.refresh()
-    userPagesFetch.refresh()
+    goToActionStep()
   }
 }
 
 const selectGroup = (groupId: string) => {
   selectedGroupId.value = groupId
+  goToActionStep()
+}
+
+// A blank page is the only source when there is no reference page and no page of this type to
+// duplicate: the step is skipped. Judged runs made an events catalogue through a step whose
+// only card read « Page blanche – Commencer avec une page vide », and both the person and the
+// assistant took it for an empty free page.
+const onlyBlankSource = ref(false)
+const goToActionStep = async () => {
   step.value = 'action'
+  onlyBlankSource.value = false
   // Fetch pages for reference/duplicate options
-  referencesFetch.refresh()
-  userPagesFetch.refresh()
+  await Promise.all([referencesFetch.refresh(), userPagesFetch.refresh()])
+  if (step.value !== 'action' || actionType.value) return
+  if (!referencesFetch.data.value?.results?.length && !userPagesFetch.data.value?.results?.length) {
+    onlyBlankSource.value = true
+    selectAction('blank')
+  }
 }
 
 const selectAction = (type: 'blank' | 'reference' | 'duplicate') => {
@@ -482,7 +509,11 @@ const goToPreviousStep = () => {
   } else if (step.value === 'source') {
     step.value = 'action'
   } else if (step.value === 'information') {
-    if (actionType.value === 'blank') step.value = 'action'
+    if (actionType.value === 'blank' && onlyBlankSource.value) {
+      // the source step was skipped: back to what came before it
+      actionType.value = undefined
+      step.value = isGenericPage.value ? 'group' : 'type'
+    } else if (actionType.value === 'blank') step.value = 'action'
     else step.value = 'source'
   }
 }

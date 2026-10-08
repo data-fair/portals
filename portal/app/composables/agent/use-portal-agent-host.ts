@@ -37,7 +37,8 @@ export function usePortalAgentHost (opts: {
   useAgentNavigationTools({
     locale: opts.locale,
     portalConfig: opts.portalConfig,
-    navigationStore: opts.navigationStore
+    navigationStore: opts.navigationStore,
+    localFetch: opts.localFetch
   })
   useAgentGeoTools(opts.locale)
   useAgentPortalContentTools(opts.locale, opts.localFetch, opts.portalId)
