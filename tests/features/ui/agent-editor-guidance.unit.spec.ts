@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-// lib-vue-agents is a workspace dependency of ui/, not of the root where tests run
-import { EVENT_DETAIL_MAX_CHARS } from '../../../ui/node_modules/@data-fair/lib-vue-agents/host-events.js'
+// lib-vue-agents is a dependency of the ui and portal workspaces, installed at the root
+import { EVENT_DETAIL_MAX_CHARS } from '@data-fair/lib-vue-agents/host-events.js'
 import { editorGuidance, draftState, draftSaveState, formCompletenessState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
