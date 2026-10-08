@@ -3,11 +3,18 @@
 ![GitHub License](https://img.shields.io/github/license/data-fair/portals) ![GitHub package.json version](https://img.shields.io/github/package-json/v/data-fair/portals)  
 *Portals manager for data-fair.*
 
+Part of the [Data Fair](https://datafair.cloud) ecosystem.
+
 ## Sponsors
 
-| | Click [here to support the development of this project](https://github.com/sponsors/koumoul-dev). |
-|-|-|
-| [<img alt="Koumoul logo" src="https://koumoul.com/static/logo-slogan.png" height="40">](https://koumoul.com) | [Koumoul](https://koumoul.com) develops the Data Fair ecosystem and hosts it as an online service. |
+<a href="https://koumoul.com"><img alt="Koumoul logo" src="https://cdn.jsdelivr.net/gh/data-fair/data-fair@master/docs/assets/koumoul-logo.png" height="56" align="left"></a>
+
+**[Koumoul](https://koumoul.com)** · *La donnée accessible*<br>
+Koumoul develops the Data Fair ecosystem and hosts it as an online service.
+
+<br clear="left">
+
+Click [here to support the development of this project](https://github.com/sponsors/koumoul-dev).
 
 ## Developers
 
