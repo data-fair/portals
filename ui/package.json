@@ -41,7 +41,6 @@
     "vue-i18n": "^11.1.9",
     "vue-router": "^5.0.3",
     "vue-tsc": "^3.0.1",
-    "vuetify": "4.2.0",
-    "zod-to-json-schema": "^3.25.2"
+    "vuetify": "4.2.4"
   }
 }

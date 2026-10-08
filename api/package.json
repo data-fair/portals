@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@data-fair/lib-common-types": "^1.21.0",
-    "@data-fair/lib-express": "^1.26.0",
-    "@data-fair/lib-node": "^2.12.1",
+    "@data-fair/lib-express": "1.28.0",
+    "@data-fair/lib-node": "~2.13.3",
     "@data-fair/lib-utils": "^1.12.2",
     "@data-fair/portals-shared-markdown": "*",
     "config": "^5.0.1",
@@ -31,6 +31,7 @@
     "resolve-path": "^1.4.0",
     "sharp": "^0.35.4",
     "slugify": "^1.6.6",
-    "tinycolor2": "^1.6.0"
+    "tinycolor2": "^1.6.0",
+    "ws": "^8.22.0"
   }
 }

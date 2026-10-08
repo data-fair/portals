@@ -431,6 +431,7 @@ export default {
             "Filtres transmis à la visualisation au chargement, sans apparaître dans l'URL de la page. Le visiteur peut les modifier si la visualisation le permet.",
             '- **Concept** - `_c_<concept>_<opérateur>`, par exemple `_c_commune_eq`',
             '- **Colonne** - `_d_<id du jeu de données>_<colonne>_<opérateur>`, par exemple `_d_mon-jdd_annee_gte`',
+            '- **Marqueur de sélection** - `_s_<concept>` ou `_s_<id du jeu de données>_<colonne>`, associé à un filtre `_c_`/`_d_` pour marquer une sélection reçue (convention inter-apps `_s_`) et non une restriction.',
             '',
             'Opérateurs : `eq`, `neq`, `in`, `nin` (valeurs séparées par des virgules), `lt`, `lte`, `gt`, `gte`, `starts`, `exists`, `nexists`, `contains`, `search`.'
           ].join('\n'),
@@ -445,8 +446,8 @@ export default {
               key: {
                 type: 'string',
                 title: 'Paramètre',
-                pattern: '^_(c|d|id)_',
-                errorMessage: 'Le paramètre doit commencer par _c_, _d_ ou _id_'
+                pattern: '^_(c|d|id|s)_',
+                errorMessage: 'Le paramètre doit commencer par _c_, _d_, _id_ ou _s_'
               },
               value: {
                 type: 'string',

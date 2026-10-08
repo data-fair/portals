@@ -15,7 +15,8 @@
           :to="resolveLink(link)"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
           :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-          class="simple-link"
+          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
             <v-icon
@@ -42,7 +43,8 @@
         :to="resolveLink(link)"
         :target="link.type === 'external' && link.target ? '_blank' : undefined"
         :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-        class="simple-link my-1"
+        :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+        class="simple-link d-flex align-center my-1"
       >
         <span class="d-flex align-center">
           <v-icon
@@ -76,7 +78,8 @@
           :to="resolveLink(link)"
           :target="link.type === 'external' && link.target ? '_blank' : undefined"
           :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-          class="simple-link"
+          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
             <v-icon
@@ -99,6 +102,13 @@ import type { FooterLinksElement } from '#api/types/footer-elements/index.ts'
 
 defineProps<{ element: FooterLinksElement }>()
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 </script>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>

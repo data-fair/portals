@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/portals",
-  "version": "2.33.1",
+  "version": "2.35.0",
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "type": "module",
@@ -18,6 +18,7 @@
     "dev-bridge": "mkdir -p dev/logs && dotenv -- df-agents-bridge 2>&1 | tee dev/logs/dev-bridge.log",
     "lint": "eslint . && npm -w portal run lint && npm -w ui run lint",
     "lint-fix": "eslint --fix . && npm -w portal run lint-fix && npm -w ui run lint-fix",
+    "postinstall": "patch-package --error-on-fail",
     "prepare": "husky || true",
     "prepare-fonts": "rm -rf api/assets/fonts && mkdir api/assets/fonts && node dev/scripts/prepare-fonts.ts",
     "quality": "npm run lint && npm run build-types && npm -w ui run build && npm run check-types && npm run test && npm audit --omit=dev --audit-level=critical",
@@ -45,7 +46,7 @@
   },
   "homepage": "https://gitlab.com/data-fair/portals#readme",
   "engines": {
-    "node": ">=24.20.0"
+    "node": ">=24.21.0"
   },
   "dependencies": {
     "@data-fair/lib-types-builder": "^1.14.3",
@@ -56,6 +57,7 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@data-fair/lib-agents-sim": "^0.10.0",
+    "@data-fair/lib-node": "~2.13.3",
     "@data-fair/lib-common-types": "^1.21.0",
     "@koumoul/vjsf-compiler": "^1.5.3",
     "@koumoul/vjsf-markdown": "^0.5.2",
@@ -75,10 +77,14 @@
     "eslint-plugin-vue": "^10.4.0",
     "eslint-plugin-vuetify": "^2.7.2",
     "form-data": "^4.0.4",
+    "h3": "^1.15.11",
     "husky": "^9.1.7",
     "neostandard": "^0.12.2",
     "tough-cookie": "^5.1.2",
     "undici": "^7.14.0"
+  },
+  "overrides": {
+    "@nuxt/devtools": "4.0.0-beta.4"
   },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",

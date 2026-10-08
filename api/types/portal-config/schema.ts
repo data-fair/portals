@@ -347,6 +347,12 @@ export default {
             },
             cols: { md: 4 }
           }
+        },
+        newWindowIcon: {
+          type: 'boolean',
+          title: "Afficher un picto sur les liens qui s'ouvrent dans un nouvel onglet",
+          description: "Recommandé pour l'accessibilité : complète par un repère visuel l'information « Nouvelle fenêtre » déjà donnée aux lecteurs d'écran.",
+          default: false
         }
       }
     },

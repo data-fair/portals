@@ -50,6 +50,10 @@
             tabindex="0"
             link
           >
+            <span
+              v-if="link.type === 'external'"
+              class="d-sr-only"
+            > - {{ t('newWindow') }}</span>
             <template #prepend>
               <v-icon
                 v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
@@ -70,7 +74,7 @@ import { mdiChevronDown } from '@mdi/js'
 
 const { element } = defineProps<{ element: MenuElement }>()
 const { portalConfig } = usePortalStore()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { preview } = usePortalStore()
 const { resolveLink, resolveLinkTitle } = useNavigationStore()
 
@@ -95,3 +99,10 @@ const btnHover = useButtonHover(() => config.value)
   /* needed for btn but not for chip ?!! */
 }
 </style>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>

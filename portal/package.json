@@ -20,7 +20,8 @@
     "@data-fair/agent-tools-data-fair": "^0.6.1",
     "@data-fair/frame": "^0.18.7",
     "@data-fair/lib-common-types": "^1.21.0",
-    "@data-fair/lib-node": "^2.12.1",
+    "@data-fair/lib-express": "1.28.0",
+    "@data-fair/lib-node": "~2.13.3",
     "@data-fair/lib-utils": "^1.12.2",
     "@data-fair/lib-vue": "^1.31.1",
     "@data-fair/lib-vue-agents": "^0.6.1",
@@ -34,6 +35,7 @@
     "analytics": "^0.8.19",
     "dayjs": "^1.11.18",
     "eslint": "^9.33.0",
+    "h3": "^1.15.11",
     "memoizee": "^0.4.17",
     "mermaid": "^11.17.2",
     "nuxt": "^4.5.2",
@@ -43,8 +45,7 @@
     "vue": "^3.5.30",
     "vue-router": "^5.0.3",
     "vue3-social-sharing": "^1.4.1",
-    "vuetify": "4.2.0",
-    "vuetify-nuxt-module": "^1.0.0-rc.5",
-    "zod-to-json-schema": "^3.25.2"
+    "vuetify": "4.2.4",
+    "vuetify-nuxt-module": "^1.0.0-rc.5"
   }
 }

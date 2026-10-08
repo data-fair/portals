@@ -142,7 +142,7 @@ const showBaseApplication = computed(() => metadataConfig.value.showBaseApplicat
 const baseApplicationFetch = useLocalFetch<{
   title: string
 }>(`/data-fair/api/v1/applications/${application.id}/base-application`, {
-  params: { html: 'vuetify' },
+  query: { html: 'vuetify' },
   immediate: showBaseApplication.value
 })
 

@@ -15,5 +15,6 @@ export const resolveButtonHover = hover.resolveButtonHover
 export const hoverButtonColor = hover.hoverButtonColor
 export const hoverButtonStyle = hover.hoverButtonStyle
 export const linkColorValue = hover.linkColorValue
+export const portalLinksCss = hover.portalLinksCss
 
 export type { HoverEffect, HoverLike, ResolvedHoverConfig, ButtonHoverEffect, ButtonHoverLike, ResolvedButtonHover } from '#portal/app/utils/hover'

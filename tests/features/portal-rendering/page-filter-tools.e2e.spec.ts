@@ -6,7 +6,7 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('page filter tools', () => {
   test.beforeEach(clean)
 
-  test('pageFilters_set writes a _c_ key and pageFilters_get reads it back', async ({ page, goToPortal }) => {
+  test('pageFilters_set writes _c_ and _s_ keys and pageFilters_get reads it back', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Filter Tools', menu: { children: [] }, agentChat: { active: false } }
     })).data
@@ -28,7 +28,7 @@ test.describe('page filter tools', () => {
     await page.evaluate(async () => {
       await (navigator as any).modelContext.callTool({
         name: 'pageFilters_set',
-        arguments: { params: { _c_theme_eq: 'health' } }
+        arguments: { params: { _c_theme_eq: 'health', _s_theme: 'app_test' } }
       })
     })
 
@@ -41,6 +41,7 @@ test.describe('page filter tools', () => {
     })
     expect(JSON.stringify(got)).toContain('_c_theme_eq')
     expect(JSON.stringify(got)).toContain('health')
+    expect(JSON.stringify(got)).toContain('_s_theme')
 
     // empty value clears the key
     await page.evaluate(async () => {

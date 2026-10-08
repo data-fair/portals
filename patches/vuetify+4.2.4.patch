@@ -1,8 +1,8 @@
 diff --git a/node_modules/vuetify/lib/components/VBadge/VBadge.js b/node_modules/vuetify/lib/components/VBadge/VBadge.js
-index bd68cb2..8745c92 100644
+index a01c784..3c19399 100644
 --- a/node_modules/vuetify/lib/components/VBadge/VBadge.js
 +++ b/node_modules/vuetify/lib/components/VBadge/VBadge.js
-@@ -41,7 +41,7 @@ export const makeVBadgeProps = propsFactory({
+@@ -43,7 +43,7 @@ export const makeVBadgeProps = propsFactory({
      location: 'top end'
    }),
    ...makeRoundedProps(),
@@ -11,7 +11,7 @@ index bd68cb2..8745c92 100644
    ...makeThemeProps(),
    ...makeTransitionProps({
      transition: 'scale-rotate-transition'
-@@ -94,7 +94,7 @@ export const VBadge = genericComponent()({
+@@ -96,7 +96,7 @@ export const VBadge = genericComponent()({
        }, attrs, {
          "style": props.style
        }), {
@@ -89,7 +89,7 @@ index d3fcfdf..8bc36cf 100644
            "class": _normalizeClass(['v-tab__slider', props.inset ? insetColorClasses.value : sliderColorClasses.value]),
            "style": _normalizeStyle([sliderColorStyles.value, props.inset ? insetColorStyles.value : sliderColorClasses.value])
 diff --git a/node_modules/vuetify/lib/composables/router.js b/node_modules/vuetify/lib/composables/router.js
-index 1590630..4a7d26e 100644
+index 3a8481b..44d1ac2 100644
 --- a/node_modules/vuetify/lib/composables/router.js
 +++ b/node_modules/vuetify/lib/composables/router.js
 @@ -1,6 +1,8 @@

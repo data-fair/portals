@@ -26,6 +26,10 @@
         tabindex="0"
         link
       >
+        <span
+          v-if="link.type === 'external' && link.target"
+          class="d-sr-only"
+        > - {{ t('newWindow') }}</span>
         <template #prepend>
           <v-icon
             v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
@@ -63,7 +67,7 @@ defineProps<{
 }>()
 
 const route = useRoute()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
 
 /** Check if the given item is active based on the current route */
@@ -87,3 +91,10 @@ function isItemActive (item: MenuItem): boolean {
   opacity: calc((var(--v-activated-opacity) + var(--v-focus-opacity)) * var(--v-theme-overlay-multiplier));
 }
 </style>
+
+<i18n lang="yaml">
+  en:
+    newWindow: New window
+  fr:
+    newWindow: Nouvelle fenêtre
+</i18n>
