@@ -18,7 +18,8 @@ export default {
           'hover',
           'titleLinesCount',
           'showSummary',
-          'showDepartment'
+          'ownerDisplay',
+          'showContentTypes'
         ]
       },
       'thumbnail',
@@ -84,14 +85,18 @@ export default {
       },
       default: true
     },
-    showDepartment: {
+    ownerDisplay: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/ownerDisplay',
+      layout: { cols: { md: 6 } }
+    },
+    showContentTypes: {
       type: 'boolean',
-      title: 'Afficher le propriétaire',
+      title: 'Afficher les contenus disponibles',
+      description: 'Indique si le jeu de données propose des métadonnées, des données et des visualisations.',
       layout: {
         comp: 'switch',
         cols: { md: 6 }
-      },
-      default: true
+      }
     },
     thumbnail: {
       type: 'object',

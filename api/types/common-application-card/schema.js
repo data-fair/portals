@@ -18,7 +18,7 @@ export default {
         { cols: { md: 6 }, key: 'titleLinesCount' },
         { cols: { md: 6 }, key: 'openInFullPage' },
         { cols: { md: 6 }, key: 'showSummary' },
-        { cols: { md: 6 }, key: 'showDepartment' }
+        { cols: { md: 6 }, key: 'ownerDisplay' }
       ]
     },
     'thumbnail',
@@ -93,14 +93,8 @@ export default {
       },
       default: true
     },
-    showDepartment: {
-      type: 'boolean',
-      title: 'Afficher le propriétaire',
-      layout: {
-        comp: 'switch',
-        cols: { md: 4 }
-      },
-      default: true
+    ownerDisplay: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/ownerDisplay'
     },
     thumbnail: {
       type: 'object',

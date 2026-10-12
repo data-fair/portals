@@ -125,13 +125,13 @@
             class="px-4 py-2"
           >
             <v-col
-              v-if="cardConfig.showDepartment"
+              v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
               cols="auto"
               class="d-flex align-center mr-2"
             >
-              <owner-avatar
+              <card-owner
                 :owner="application.owner"
-                omit-owner-name
+                :display="cardConfig.ownerDisplay"
               />
             </v-col>
             <v-col
@@ -207,7 +207,6 @@
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationCard } from '#api/types/portal-config'
 import { mdiFullscreen } from '@mdi/js'
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { application, cardConfig } = defineProps<{
   application: Application
