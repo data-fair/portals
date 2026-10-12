@@ -125,14 +125,26 @@
 
       <!-- Custom metadata -->
       <v-col
-        v-for="customMeta in metadataSettings.data.value?.custom?.filter(cm => dataset.customMetadata?.[cm.key])"
+        v-for="customMeta in metadataSettings.data.value?.custom?.filter(cm => dataset.customMetadata?.[cm.key] != null)"
         :key="customMeta.key"
         v-bind="metadataColProps"
       >
         <div class="text-body-small text-medium-emphasis">
           {{ customMeta.title || customMeta.key }}
         </div>
-        <div>{{ dataset.customMetadata?.[customMeta.key] }}</div>
+        <a
+          v-if="customMeta.type === 'link'"
+          :href="customLink(customMeta.key).url"
+          rel="noopener"
+          target="_blank"
+          :title="(customLink(customMeta.key).title || customLink(customMeta.key).url) + ' - ' + t('newWindow')"
+          class="simple-link"
+        >
+          {{ customLink(customMeta.key).title || customLink(customMeta.key).url }}
+        </a>
+        <div v-else>
+          {{ formatCustomValue(customMeta) }}
+        </div>
       </v-col>
 
       <v-col
@@ -357,9 +369,20 @@ type BaseMetadataSettings = Partial<Record<'keywords' | 'frequency' | 'temporal'
   { active?: boolean; title?: string }
 >>
 
-type MetadataSettings = BaseMetadataSettings & { custom?: { key: string; title?: string }[] }
+type CustomMetadataDefinition = { key: string; title?: string; type?: 'string' | 'integer' | 'number' | 'date' | 'link'; multiple?: boolean }
+type MetadataSettings = BaseMetadataSettings & { custom?: CustomMetadataDefinition[] }
 const metadataSettings = useLocalFetch<MetadataSettings>('/data-fair/api/v1/datasets/' + dataset.id + '/metadata-settings')
 const metadataLabel = (key: keyof BaseMetadataSettings) => metadataSettings.data.value?.[key]?.title || t(key)
+
+// data-fair empties the values that no longer fit their definition, so the definition's type is trusted
+const customLink = (key: string) => dataset.customMetadata?.[key] as { url: string; title?: string }
+const formatCustomValue = (definition: CustomMetadataDefinition) => {
+  const value = dataset.customMetadata?.[definition.key]
+  if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'number') return value.toLocaleString(locale.value)
+  if (definition.type === 'date') return dayjs(value as string).format('LL')
+  return value
+}
 
 </script>
 
