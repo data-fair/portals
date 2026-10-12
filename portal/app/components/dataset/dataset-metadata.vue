@@ -133,7 +133,7 @@
           {{ customMeta.title || customMeta.key }}
         </div>
         <a
-          v-if="customMeta.type === 'link'"
+          v-if="customMeta.type === 'link' && /^https?:\/\//.test(customLink(customMeta.key).url)"
           :href="customLink(customMeta.key).url"
           rel="noopener"
           target="_blank"
@@ -381,6 +381,8 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
   if (Array.isArray(value)) return value.join(', ')
   if (typeof value === 'number') return value.toLocaleString(locale.value)
   if (definition.type === 'date') return dayjs(value as string).format('LL')
+  // a link whose URL is not http(s) is shown as text, never as an href
+  if (definition.type === 'link') return (value as { url: string }).url
   return value
 }
 
