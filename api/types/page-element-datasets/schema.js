@@ -161,6 +161,19 @@ export default {
                 },
                 props: { chips: true, closableChips: true }
               }
+            },
+            types: {
+              type: 'array',
+              title: 'Types de jeux de données à inclure',
+              items: {
+                type: 'string',
+                oneOf: [
+                  { const: 'file', title: 'Fichier' },
+                  { const: 'rest', title: 'Éditable' },
+                  { const: 'virtual', title: 'Virtuel' },
+                  { const: 'metaOnly', title: 'Métadonnées seules' }
+                ]
+              }
             }
           }
         },
@@ -188,6 +201,7 @@ export default {
                   { const: 'topics', title: 'Filtres par thématiques' },
                   { const: 'keywords', title: 'Filtres par mots-clés' },
                   { const: 'owners', title: 'Filtres par propriétaires' },
+                  { const: 'queryable', title: 'Filtre « Données disponibles »' },
                   { const: 'sort', title: 'Tri' }
                 ]
               }
