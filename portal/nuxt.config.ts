@@ -56,6 +56,8 @@ export default defineNuxtConfig({
       // nuxt-security defaults to no-referrer, but YouTube (error 153) and other embeds
       // reject players when the page origin is missing from the Referer header
       referrerPolicy: 'strict-origin-when-cross-origin',
+      // nuxt-security defaults to fullscreen=(), which breaks the fullscreen button of embedded video players
+      permissionsPolicy: { fullscreen: '*' },
       contentSecurityPolicy
     },
     // we use rate-limiting on reverse proxy instead
