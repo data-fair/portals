@@ -7,7 +7,12 @@ export default {
     identities: 'SECRET_IDENTITIES',
     events: 'SECRET_EVENTS',
     sites: 'SECRET_SITES',
-    ingress: 'SECRET_INGRESS'
+    ingress: 'SECRET_INGRESS',
+    limits: 'SECRET_LIMITS'
+  },
+  defaultLimits: {
+    nbPages: 'DEFAULT_LIMITS_NB_PAGES',
+    nbDomains: 'DEFAULT_LIMITS_NB_DOMAINS'
   },
   observer: {
     active: 'OBSERVER_ACTIVE',

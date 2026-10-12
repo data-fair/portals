@@ -9,6 +9,7 @@ router.delete('/', async (req, res) => {
   for (const name of ['portals', 'pages', 'reuses', 'groups', 'font-assets', 'images']) {
     await mongo.db.collection(name).deleteMany(testOwnerFilter)
   }
+  await mongo.limits.deleteMany({ id: { $regex: /^test_/ } })
 
   res.status(204).send()
 })

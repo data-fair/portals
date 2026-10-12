@@ -13,7 +13,13 @@ export default {
     identities: undefined,
     events: undefined,
     sites: undefined,
-    ingress: undefined
+    ingress: undefined,
+    limits: undefined
+  },
+  // -1 means unlimited, overwritten per account by the customers service
+  defaultLimits: {
+    nbPages: -1,
+    nbDomains: -1
   },
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,

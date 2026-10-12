@@ -10,6 +10,7 @@ const ownedCollections = () => [mongo.portals, mongo.pages, mongo.reuses, mongo.
 
 export const updateIdentity = async (identity: IdentityUpdate) => {
   const { type, id, name, departments } = identity
+  await mongo.limits.updateMany({ type, id }, { $set: { name } })
   for (const collection of ownedCollections()) {
     await collection.updateMany({ 'owner.type': type, 'owner.id': id }, { $set: { 'owner.name': name } })
     for (const department of departments?.filter(d => !!d.name) ?? []) {
@@ -43,4 +44,5 @@ export const deleteIdentity = async (identity: IdentityDelete) => {
   for (const collection of ownedCollections()) {
     await collection.deleteMany({ 'owner.type': type, 'owner.id': id })
   }
+  await mongo.limits.deleteMany({ type, id })
 }

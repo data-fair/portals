@@ -18,7 +18,8 @@
     "observer",
     "secretKeys",
     "portalUrlPattern",
-    "ingressControllers"
+    "ingressControllers",
+    "defaultLimits"
   ],
   "properties": {
     "mongoUrl": {
@@ -56,6 +57,25 @@
         },
         "ingress": {
           "type": "string"
+        },
+        "limits": {
+          "type": "string"
+        }
+      }
+    },
+    "defaultLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nbPages",
+        "nbDomains"
+      ],
+      "properties": {
+        "nbPages": {
+          "type": "number"
+        },
+        "nbDomains": {
+          "type": "number"
         }
       }
     },

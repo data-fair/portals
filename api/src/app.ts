@@ -15,6 +15,7 @@ import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
 import fontsRouter from './fonts/router.ts'
 import fontAssetsRouter from './font-assets/router.ts'
+import limitsRouter from './limits/router.ts'
 
 export const app = express()
 
@@ -48,6 +49,7 @@ app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
+app.use('/api/limits', limitsRouter)
 
 if (process.env.NODE_ENV !== 'production') {
   const testEnvRouter = (await import('./test-env.ts')).default

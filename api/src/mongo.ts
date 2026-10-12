@@ -4,6 +4,7 @@ import type { Page } from '#types/page/index.ts'
 import type { Reuse } from '#types/reuse/index.ts'
 import type { Image } from '#types/image/index.js'
 import type { FontAsset } from '#types/font-asset/index.js'
+import type { Limit } from '#types/limit/index.ts'
 
 import mongo from '@data-fair/lib-node/mongo.js'
 import config from './config.ts'
@@ -41,6 +42,10 @@ export class PortalsMongo {
     return mongo.db.collection<FontAsset>('font-assets')
   }
 
+  get limits () {
+    return mongo.db.collection<Limit>('limits')
+  }
+
   async connect () {
     await mongo.connect(config.mongoUrl)
   }
@@ -76,6 +81,9 @@ export class PortalsMongo {
       },
       'font-assets': {
         'main-keys': { 'owner.type': 1, 'owner.id': 1, key: 1 }
+      },
+      limits: {
+        'main-keys': [{ type: 1, id: 1 }, { unique: true }]
       }
     })
   }
