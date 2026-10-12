@@ -10,7 +10,7 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 // @typescript-eslint instance.
 export default withNuxt([
   // standalone false also drops the ignores Nuxt normally contributes
-  { ignores: ['.nuxt/*', '.output/*', 'dist/*', 'public/*'] },
+  { ignores: ['.nuxt/', '.output/', 'dist/', 'public/'] },
   ...pluginVue.configs['flat/recommended'],
   ...pluginVuetify.configs['flat/recommended'],
   {

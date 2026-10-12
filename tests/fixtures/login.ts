@@ -17,45 +17,45 @@ async function performLogin (page: any, context: any, baseUrl: string, url: stri
 export const test = base.extend<{
   goToWithAuth: (url: string, user: string) => Promise<void>
 }>({
-      page: async ({ page }, use) => {
-        const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
-        await page.context().addCookies([{
-          name: 'i18n_lang',
-          value: 'fr',
-          url: baseUrl
-        }, {
-          name: 'cache_bypass',
-          value: '1',
-          url: baseUrl
-        }])
-        await use(page)
-      },
+  page: async ({ page }, use) => {
+    const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
+    await page.context().addCookies([{
+      name: 'i18n_lang',
+      value: 'fr',
+      url: baseUrl
+    }, {
+      name: 'cache_bypass',
+      value: '1',
+      url: baseUrl
+    }])
+    await use(page)
+  },
 
-      goToWithAuth: async ({ page, context }, use) => {
-        const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
-        // simple-directory's exchange token is single use: each keepalive of a page rotates it,
-        // and presenting an older one after a short grace destroys the session. The cache must
-        // follow the rotations, or the next test reusing it is logged out (401s, no redirect).
-        let currentUser: string | undefined
-        const goToWithAuth = async (url: string, user: string) => {
-          if (currentUser && currentUser !== user) cookieCache.set(currentUser, await context.cookies())
-          currentUser = user
-          const cached = cookieCache.get(user)
-          if (cached) {
-            await context.addCookies(cached)
-            await page.goto(url, { timeout: 10_000 })
-            // Safety: if redirected to login, cache was stale
-            if (page.url().includes('/simple-directory/login')) {
-              cookieCache.delete(user)
-              await performLogin(page, context, baseUrl, url, user)
-            }
-          } else {
-            await performLogin(page, context, baseUrl, url, user)
-          }
+  goToWithAuth: async ({ page, context }, use) => {
+    const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
+    // simple-directory's exchange token is single use: each keepalive of a page rotates it,
+    // and presenting an older one after a short grace destroys the session. The cache must
+    // follow the rotations, or the next test reusing it is logged out (401s, no redirect).
+    let currentUser: string | undefined
+    const goToWithAuth = async (url: string, user: string) => {
+      if (currentUser && currentUser !== user) cookieCache.set(currentUser, await context.cookies())
+      currentUser = user
+      const cached = cookieCache.get(user)
+      if (cached) {
+        await context.addCookies(cached)
+        await page.goto(url, { timeout: 10_000 })
+        // Safety: if redirected to login, cache was stale
+        if (page.url().includes('/simple-directory/login')) {
+          cookieCache.delete(user)
+          await performLogin(page, context, baseUrl, url, user)
         }
-        await use(goToWithAuth)
-        if (currentUser) cookieCache.set(currentUser, await context.cookies())
+      } else {
+        await performLogin(page, context, baseUrl, url, user)
       }
-    })
+    }
+    await use(goToWithAuth)
+    if (currentUser) cookieCache.set(currentUser, await context.cookies())
+  }
+})
 
 export { expect }
