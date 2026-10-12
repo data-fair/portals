@@ -4,6 +4,7 @@
     :iframe-title="element.title ? t('iframeTitle', { title: element.title }) : t('iframeNoTitle', { url: element.url })"
     :src="element.url"
     :scrolling="element.scroll ? 'yes' : 'no'"
+    iframe-allow="fullscreen"
     aspect-ratio
   />
 </template>
