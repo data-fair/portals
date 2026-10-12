@@ -1,7 +1,7 @@
 /**
- * Where a case happens and how its chat is reached. The turn loop is the same on
- * both surfaces; only reaching the page, finding the chat and what the person can
- * see differ.
+ * Where a case happens and what the person can see there. The turn loop is the same on
+ * both surfaces (lib-agents-sim's runSimulation); only reaching the page and what the
+ * person can see differ.
  *
  * backoffice — the data-fair back-office shell (data-fair image) embeds the manager
  *   UI (this repo's dev server) in a d-frame; the chat drawer belongs to the shell
@@ -9,23 +9,17 @@
  *   production topology, iframe changes included.
  * portal — the public Nuxt portal renders its own chat drawer, for an anonymous visitor.
  */
-import type { FrameLocator, Locator, Page } from '@playwright/test'
-import type { SimulationCase } from '@data-fair/lib-agents-sim'
+import type { Page } from '@playwright/test'
+import type { PerceptionRoot, SimulationCase } from '@data-fair/lib-agents-sim'
 import type { SeedIds } from './fixtures.ts'
-import { OWNER, OWNER_ADMIN_EMAIL } from './settings.ts'
+import { OWNER, OWNER_ADMIN_EMAIL, ROOT } from './settings.ts'
 
 export type SimCase = SimulationCase & { surface: 'backoffice' | 'portal' }
 
 export type Surface = {
-  goto: () => Promise<void>
-  chatFrame: FrameLocator
-  ensureChatOpen: (composer: Locator) => Promise<void>
-  perceptionRoots: Array<{ label: string, root: Page | FrameLocator, cap?: number, frames?: boolean }>
+  goto: (ids: SeedIds) => Promise<void>
+  perceptionRoots: PerceptionRoot[]
 }
-
-const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
-/** The agents chat frame, whose src is /agents/<type>/<id>/chat?… — not a bare 'iframe': both surfaces embed other frames. */
-const CHAT_FRAME = 'iframe[src*="/agents/"][src*="/chat"]'
 
 export function resolveRoute (route: string, ids: SeedIds) {
   return route.replaceAll('{portalId}', ids.portalId).replaceAll('{pageId}', ids.pageId)
@@ -44,34 +38,10 @@ async function login (page: Page, target: string) {
   await page.waitForURL(url => url.toString().startsWith(target), { timeout: 30_000 })
 }
 
-export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surface {
-  const chatFrame = page.frameLocator(CHAT_FRAME)
-  /**
-   * The drawer does not survive a full navigation, and the persona may close it.
-   * Reopening before every send keeps the run alive so the friction reaches the
-   * transcript instead of killing it. Probe first: clicking unconditionally would
-   * close a drawer that is already open.
-   */
-  const ensureChatOpen = async (composer: Locator) => {
-    const visible = (timeout: number) => composer.waitFor({ state: 'visible', timeout }).then(() => true, () => false)
-    // 10s, not 2: right after a navigation the open drawer's iframe is still reloading,
-    // and a short probe read it as closed — the click then CLOSED the drawer and the run
-    // died waiting for a composer the harness itself had hidden.
-    if (await visible(10_000)) return
-    const toggle = page.locator('.df-agent-chat-toggle').first()
-    await toggle.click()
-    if (await visible(15_000)) return
-    // Still nothing: the probe raced a drawer that was open after all. One more toggle.
-    await toggle.click()
-    await composer.waitFor({ state: 'visible', timeout: 30_000 })
-  }
-  const route = resolveRoute(simCase.route, ids)
-
+export function createSurface (simCase: SimCase, page: Page): Surface {
   if (simCase.surface === 'backoffice') {
     return {
-      goto: () => login(page, `${ROOT}${route}`),
-      chatFrame,
-      ensureChatOpen,
+      goto: ids => login(page, `${ROOT}${resolveRoute(simCase.route, ids)}`),
       // One root that sees through its iframes: the shell, the manager form inside its
       // d-frame, the page editor's preview nested in the manager, and the chat. Separate
       // roots per frame missed the nested preview. The manager forms are long, hence
@@ -82,9 +52,7 @@ export function createSurface (simCase: SimCase, page: Page, ids: SeedIds): Surf
     }
   }
   return {
-    goto: async () => { await page.goto(portalUrl(ids.portalId) + route, { waitUntil: 'domcontentloaded' }) },
-    chatFrame,
-    ensureChatOpen,
+    goto: async ids => { await page.goto(portalUrl(ids.portalId) + resolveRoute(simCase.route, ids), { waitUntil: 'domcontentloaded' }) },
     // The portal embeds data-fair's own views (table, map, …) in an iframe: a root
     // that stopped at it had a person on a table page showing exactly the 8 rows asked
     // for report "un cadre vide". This one sees through it, and through the chat frame.
