@@ -121,11 +121,14 @@
 
           <!-- Department / Updated At -->
           <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
-          <div class="px-4 py-2">
+          <div
+            v-if="showOwner || cardConfig.showUpdatedAt"
+            class="px-4 py-2"
+          >
             <div class="overflow-hidden">
               <div class="d-flex flex-wrap align-center gr-1 ms-n5">
                 <card-owner
-                  v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
+                  v-if="showOwner"
                   :owner="application.owner"
                   :display="cardConfig.ownerDisplay"
                   class="ms-5"
@@ -144,6 +147,10 @@
               </div>
             </div>
           </div>
+          <div
+            v-else
+            class="mt-3"
+          />
 
           <!-- Actions (Bottom Location) -->
           <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown))">
@@ -226,6 +233,8 @@ const candidates = computed(() => applicationThumbnailCandidates(
   portalConfig.value.topics,
   getPortalImageSrc
 ))
+
+const showOwner = computed(() => !!cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none')
 
 const thumbnailProbe = useTemplateRef('thumbnailProbe')
 const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)
