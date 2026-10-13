@@ -1,6 +1,6 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
-import { migrateCardOwnerDisplay } from '../../../upgrade/2.35.0/card-owner-display.ts'
+import { migrateCardOwnerDisplay } from '../../../upgrade/2.36.0/card-owner-display.ts'
 
 test.describe('card owner display migration', () => {
   test('converts nested cards and leaves page metadata untouched', () => {
