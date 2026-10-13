@@ -6,31 +6,20 @@ Portals is the portal manager for the Data FAIR platform, developed by Koumoul. 
 
 ## Dev environment
 
-The dev environment is managed by zellij (terminal multiplexer) and docker compose. **Never start, stop, or restart dev processes yourself** — the user manages them through zellij panes.
-
-### Checking status
+The user starts the dev environment of a checkout with `npm run dev-zellij` (zellij >= 0.44, session named after the checkout directory). Agents never start or kill the session, and act on processes and containers only through `df-dev`:
 
 ```bash
-bash dev/scripts/status.sh
+npx --no df-dev status                     # containers (health, memory), panes (running / exited + code), dev processes memory
+npx --no df-dev logs api -n 100            # last lines of a pane: api, ui, portal, ingress-manager, bridge
+npx --no df-dev restart api                # Ctrl+C, rerun, wait for /api/ping
+npx --no df-dev up agents events maildev   # optional containers (compose profiles), added to the running env
+npx --no df-dev down maildev
 ```
 
-This shows the health of all services (nginx, API, UI, portal, docker services, databases) and lists log files with sizes and timestamps.
-
-### Log files
-
-All dev processes write to `dev/logs/`:
-
-- `dev-api.log` — API server
-- `dev-ui.log` — UI dev server (Vite)
-- `dev-portal.log` — Portal (Nuxt)
-- `dev-ingress-manager.log` — Mock ingress manager
-- `docker-compose.log` — all docker compose services
-
-### Troubleshooting
-
-1. Run `bash dev/scripts/status.sh` to identify which services are down
-2. Read the relevant log file in `dev/logs/` for error details
-3. Report findings to the user — do not attempt to fix infrastructure issues yourself
+- Read the logs before restarting: nodemon (api, ingress-manager), vite (ui) and nuxt (portal) already reload on file changes. Restart only a pane that exited, hangs, or needs new env.
+- If `restart` answers "not ready", report to the user with the logs instead of retrying.
+- Never use `docker compose restart`, `kill` or `zellij action` directly.
+- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,maildev`.
 
 ### Port assignments
 
@@ -40,19 +29,15 @@ Port numbers are defined in `.env`. Do not modify port assignments.
 
 To work on a separate branch in an isolated environment (own `.env`, own
 docker compose project, randomized ports so it doesn't clash with the main
-checkout), **always use the project scripts** — never `git worktree add` by
-hand:
+checkout), **always use the df-dev scripts from the main checkout** — never
+`git worktree add` by hand:
 
 ```bash
-bash dev/worktree.sh <branch-name>     # create worktree + .env + npm ci + build-types + ui build
-bash dev/delete-worktree.sh <branch>   # stops/removes containers + volumes + images, then removes the worktree
+npx --no df-worktree <branch-name>          # ../portals_<branch>: npm ci + df-dev setup (.env, types, UI build (once))
+npx --no df-worktree-delete <branch> [-f]   # containers + volumes + images + zellij session, then the worktree
 ```
 
-`dev/worktree.sh` does the full setup the manual `git worktree add` skips
-(env file, dependencies, type and UI builds). `dev/delete-worktree.sh` runs
-`docker compose --profile dev --profile test down -v --remove-orphans
---rmi local` so a deleted worktree leaves no leftover containers, named
-volumes, or locally-built images.
+Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
 
 ### Test and dev environment
 
@@ -85,8 +70,9 @@ Run and judge them with the `/agents-sim` skill.
 
 - Never part of `npm test`, CI or hooks (separate `playwright.sim.config.ts`): they spend
   Claude plan quota.
-- They need the Claude Code bridge (`bridge` zellij pane / `npm run dev-bridge`, port
-  `BRIDGE_PORT` in `.env`). Only the user starts it.
+- They need the `agents` container (`npx --no df-dev up agents`) and the Claude Code bridge
+  (`bridge` zellij pane, suspended until the user presses Enter in it, port `BRIDGE_PORT`
+  in `.env`). Only the user starts the bridge.
 - A run wipes `test_`-owned portals data (`DELETE /api/test-env`), recreates the `sim-*`
   datasets in data-fair, and rewrites `test_org1`'s agents settings and data-fair topics.
 - Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
@@ -97,14 +83,14 @@ Run and judge them with the `/agents-sim` skill.
 ```bash
 npm run lint             # ESLint for all workspaces
 npm run lint-fix         # Auto-fix lint issues
-npm run check-types      # TypeScript type checking
+npm run check-types      # TypeScript type checking (needs the UI build made by `npx --no df-dev setup`: it generates the auto-import declarations)
 ```
 
 ### Building
 
 ```bash
 npm run build-types      # Build type definitions from schemas
-npm -w ui run build      # Build UI
+npm -w ui run build      # Production UI build (done once by `npx --no df-dev setup`; re-run only to refresh the auto-import declarations)
 ```
 
 ### Commits & release notes

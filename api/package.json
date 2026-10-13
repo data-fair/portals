@@ -1,9 +1,7 @@
 {
   "name": "api",
   "type": "module",
-  "scripts": {
-    "dev": "bash ../dev/scripts/log-tee.sh ../dev/logs/dev-api.log -- env NODE_ENV=development DEBUG=upgrade* node --watch index.ts"
-  },
+  "scripts": {},
   "imports": {
     "#config": "./src/config.ts",
     "#mongo": "./src/mongo.ts",

@@ -32,7 +32,7 @@ jobs:
       run: npm run check-types
 
     - name: Init .env
-      run: ./dev/init-env.sh
+      run: ./node_modules/.bin/df-dev init-env # local bin only: a bare npx would fetch an unrelated "df-dev" from the registry if the dependency were missing
 
     - name: Use localhost as DEV_HOST in CI
       run: sed -i 's/^DEV_HOST=.*/DEV_HOST=localhost/' .env

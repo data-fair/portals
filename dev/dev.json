@@ -1,0 +1,36 @@
+{
+  "ports": [
+    "NGINX_PORT",
+    "DEV_API_PORT",
+    "DEV_UI_PORT",
+    "DEV_UI_HMR_PORT",
+    "DEV_PORTAL_PORT",
+    "DEV_OBSERVER_PORT",
+    "DEV_INGRESS_PORT",
+    "MAILDEV_UI_PORT",
+    "MAILDEV_SMTP_PORT",
+    "MONGO_PORT",
+    "ES_PORT",
+    "SD_PORT",
+    "DF_PORT",
+    "EVENTS_PORT",
+    "PROCESSINGS_PORT",
+    "AGENTS_PORT",
+    "BRIDGE_PORT"
+  ],
+  "panes": {
+    "api": {
+      "ready": "http://localhost:${DEV_API_PORT}/api/ping"
+    },
+    "ui": {
+      "ready": "http://localhost:${DEV_UI_PORT}/portals-manager/"
+    },
+    "portal": {
+      "ready": "http://localhost:${DEV_PORTAL_PORT}/ping"
+    },
+    "ingress-manager": {}
+  },
+  "urls": {
+    "Manager": "http://${DEV_HOST}:${NGINX_PORT}/portals-manager/dev"
+  }
+}
