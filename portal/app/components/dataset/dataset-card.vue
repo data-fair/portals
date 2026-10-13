@@ -130,7 +130,7 @@
           <!-- Content types -->
           <div
             v-if="cardConfig.showContentTypes"
-            class="d-flex flex-wrap ga-3 px-4 mt-2 text-body-small"
+            class="d-flex flex-wrap ga-3 px-4 mt-2 text-body-medium"
           >
             <span
               v-for="content in contentTypes"
@@ -146,21 +146,32 @@
           </div>
 
           <!-- Owner / Updated At -->
+          <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
           <div
             v-if="showOwner || cardConfig.showUpdatedAt"
-            class="d-flex flex-wrap align-center ga-3 px-4 my-2"
+            class="px-4 my-2"
           >
-            <card-owner
-              v-if="showOwner"
-              :owner="dataset.owner"
-              :display="cardConfig.ownerDisplay"
-            />
-            <span
-              v-if="cardConfig.showUpdatedAt"
-              class="text-body-small"
-            >
-              {{ t('updatedAt') }} {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-            </span>
+            <div class="overflow-hidden">
+              <div class="d-flex flex-wrap align-center gr-1 ms-n5">
+                <card-owner
+                  v-if="showOwner"
+                  :owner="dataset.owner"
+                  :display="cardConfig.ownerDisplay"
+                  class="ms-5"
+                />
+                <span
+                  v-if="cardConfig.showUpdatedAt"
+                  class="d-flex text-body-medium"
+                >
+                  <span
+                    class="text-center flex-shrink-0"
+                    style="width: 20px"
+                    aria-hidden="true"
+                  >{{ cardConfig.ownerDisplay === 'avatarName' ? '·' : '' }}</span>
+                  {{ t('updatedAt') }} {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+                </span>
+              </div>
+            </div>
           </div>
           <div
             v-else

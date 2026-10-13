@@ -17,7 +17,7 @@
         :show-tooltip="false"
         aria-hidden="true"
       />
-      <span class="text-body-small">{{ departmentLabel(owner.department, owner.departmentName) ?? owner.name }}</span>
+      <span class="text-body-medium">{{ departmentLabel(owner.department, owner.departmentName) ?? owner.name }}</span>
     </template>
   </div>
 </template>
@@ -28,7 +28,7 @@ import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 defineProps<{
   owner: Account
-  display?: 'avatar' | 'avatarName'
+  display?: 'none' | 'avatar' | 'avatarName'
 }>()
 
 const { departmentLabel } = useDisplayOwner()

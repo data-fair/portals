@@ -120,30 +120,30 @@
           />
 
           <!-- Department / Updated At -->
-          <v-row
-            no-gutters
-            class="px-4 py-2 gr-1"
-          >
-            <v-col
-              v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
-              cols="auto"
-              class="d-flex align-center mr-2"
-            >
-              <card-owner
-                :owner="application.owner"
-                :display="cardConfig.ownerDisplay"
-              />
-            </v-col>
-            <v-col
-              v-if="cardConfig.showUpdatedAt"
-              cols="auto"
-              class="d-flex align-center"
-            >
-              <span class="text-body-small">
-                {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-              </span>
-            </v-col>
-          </v-row>
+          <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
+          <div class="px-4 py-2">
+            <div class="overflow-hidden">
+              <div class="d-flex flex-wrap align-center gr-1 ms-n5">
+                <card-owner
+                  v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
+                  :owner="application.owner"
+                  :display="cardConfig.ownerDisplay"
+                  class="ms-5"
+                />
+                <span
+                  v-if="cardConfig.showUpdatedAt"
+                  class="d-flex text-body-medium"
+                >
+                  <span
+                    class="text-center flex-shrink-0"
+                    style="width: 20px"
+                    aria-hidden="true"
+                  >{{ cardConfig.ownerDisplay === 'avatarName' ? '·' : '' }}</span>
+                  {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+                </span>
+              </div>
+            </div>
+          </div>
 
           <!-- Actions (Bottom Location) -->
           <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown))">
