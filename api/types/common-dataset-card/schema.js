@@ -16,10 +16,11 @@ export default {
           'elevation',
           'rounded',
           'hover',
-          'titleLinesCount',
-          'showSummary',
-          'ownerDisplay',
-          'showContentTypes'
+          { cols: { md: 6 }, key: 'titleLinesCount' },
+          { cols: { md: 6 }, key: 'ownerDisplay' },
+          { cols: { md: 4 }, key: 'showSummary' },
+          { cols: { md: 4 }, key: 'showUpdatedAt' },
+          { cols: { md: 4 }, key: 'showContentTypes' }
         ]
       },
       'thumbnail',
@@ -88,6 +89,14 @@ export default {
     ownerDisplay: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/ownerDisplay',
       layout: { cols: { md: 6 } }
+    },
+    showUpdatedAt: {
+      type: 'boolean',
+      title: 'Afficher la date de mise à jour',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
     },
     showContentTypes: {
       type: 'boolean',

@@ -122,7 +122,7 @@
           <!-- Department / Updated At -->
           <v-row
             no-gutters
-            class="px-4 py-2"
+            class="px-4 py-2 gr-1"
           >
             <v-col
               v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
@@ -135,6 +135,7 @@
               />
             </v-col>
             <v-col
+              v-if="cardConfig.showUpdatedAt"
               cols="auto"
               class="d-flex align-center"
             >

@@ -14,11 +14,12 @@ export default {
         { cols: { md: 6 }, key: 'actionsStyle' },
         { cols: { md: 6 }, key: 'elevation' },
         { cols: { md: 6 }, key: 'rounded' },
-        { cols: { md: 6 }, key: 'hover' },
+        'hover',
         { cols: { md: 6 }, key: 'titleLinesCount' },
-        { cols: { md: 6 }, key: 'openInFullPage' },
-        { cols: { md: 6 }, key: 'showSummary' },
-        { cols: { md: 6 }, key: 'ownerDisplay' }
+        { cols: { md: 6 }, key: 'ownerDisplay' },
+        { cols: { md: 4 }, key: 'openInFullPage' },
+        { cols: { md: 4 }, key: 'showSummary' },
+        { cols: { md: 4 }, key: 'showUpdatedAt' }
       ]
     },
     'thumbnail',
@@ -95,6 +96,11 @@ export default {
     },
     ownerDisplay: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/ownerDisplay'
+    },
+    showUpdatedAt: {
+      type: 'boolean',
+      title: 'Afficher la date de mise à jour',
+      layout: 'switch'
     },
     thumbnail: {
       type: 'object',

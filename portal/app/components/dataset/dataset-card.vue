@@ -145,12 +145,23 @@
             </span>
           </div>
 
-          <card-owner
-            v-if="cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none'"
-            :owner="dataset.owner"
-            :display="cardConfig.ownerDisplay"
-            class="px-4 my-2"
-          />
+          <!-- Owner / Updated At -->
+          <div
+            v-if="showOwner || cardConfig.showUpdatedAt"
+            class="d-flex flex-wrap align-center ga-3 px-4 my-2"
+          >
+            <card-owner
+              v-if="showOwner"
+              :owner="dataset.owner"
+              :display="cardConfig.ownerDisplay"
+            />
+            <span
+              v-if="cardConfig.showUpdatedAt"
+              class="text-body-small"
+            >
+              {{ t('updatedAt') }} {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+            </span>
+          </div>
           <div
             v-else
             class="mt-3"
@@ -259,6 +270,7 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
 
 const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
+const { dayjs } = useLocaleDayjs()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 const hoverFx = useHoverConfig(() => cardConfig.hover)
@@ -270,6 +282,8 @@ const candidates = computed(() => datasetThumbnailCandidates(
   getPortalImageSrc,
   isPortalConfig ? getPortalImageSrc : getPageImageSrc
 ))
+
+const showOwner = computed(() => !!cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none')
 
 const contentTypes = computed(() => [
   { key: 'metadata', icon: mdiInformationOutline },
@@ -297,6 +311,7 @@ const leftThumbnailStyle = computed(() => {
 
 <i18n lang="yaml">
   en:
+    updatedAt: Updated at
     contentTypes:
       metadata: Metadata
       data: Data
@@ -311,6 +326,7 @@ const leftThumbnailStyle = computed(() => {
       api: Open the API documentation in full page
 
   fr:
+    updatedAt: Mis à jour le
     contentTypes:
       metadata: Métadonnées
       data: Données
