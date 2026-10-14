@@ -15,7 +15,8 @@
   <div
     v-if="src"
     :class="[
-      'd-flex flex-column overflow-hidden',
+      'd-flex flex-column',
+      !(framed && element.elevation) && 'overflow-hidden',
       alignClass,
       !preview && element.banner && context.isRoot ? 'banner-fluid' : '',
       !preview && element.banner && context.isRoot && context.index === 0 && !showTopBreadcrumbs && 'mt-n4',
@@ -35,6 +36,7 @@
         ref="img"
         :alt="element.title"
         :style="imgStyle"
+        :class="frameClass"
         :src="src"
         :fetchpriority="element.fetchPriority ? 'high' : undefined"
       >
@@ -51,6 +53,7 @@
         ref="img"
         :alt="element.title"
         :style="imgStyle"
+        :class="frameClass"
         :src="src"
         :fetchpriority="element.fetchPriority ? 'high' : undefined"
       >
@@ -60,6 +63,7 @@
       ref="img"
       :alt="!element.isPresentation ? element.title : ''"
       :style="imgStyle + ((element.zoomable && zoomedSrc) ? 'cursor:zoom-in;' : '')"
+      :class="frameClass"
       :src="src"
       :fetchpriority="element.fetchPriority ? 'high' : undefined"
       @click="element.zoomable ? zoomed = true : undefined"
@@ -137,10 +141,26 @@ const alignClass = computed(() => {
 
 const imgStyle = computed(() => {
   const fit = `object-fit:${(element.cover || element.banner) ? 'cover' : 'contain'};`
-  const dims = (element.cover || element.banner)
-    ? `width:100%;height:${element.height ? `${element.height}px` : '100%'};`
-    : (element.height ? `height:${element.height}px;` : '')
+  let dims = ''
+  if (element.cover || element.banner) dims = `width:100%;height:${element.height ? `${element.height}px` : '100%'};`
+  else if (element.fitWidth) dims = `max-width:100%;${element.height ? `max-height:${element.height}px;` : ''}`
+  else if (element.height) dims = `height:${element.height}px;`
   return `${fit}${dims}`
+})
+
+const roundedClasses = { '0': 'rounded-0', default: 'rounded', lg: 'rounded-lg', xl: 'rounded-xl' }
+
+// the frame options are only offered with fitWidth, a fixed-height image could crop its own frame
+const framed = computed(() => element.fitWidth && !element.cover && !element.banner)
+
+const frameClass = computed(() => {
+  if (!framed.value) return []
+  return [
+    element.border && 'border',
+    element.rounded && roundedClasses[element.rounded],
+    element.elevation && `elevation-${element.elevation}`,
+    element.backgroundColor && `bg-${element.backgroundColor}`
+  ]
 })
 
 const altLinkTitle = computed(() => {
