@@ -115,8 +115,8 @@ ADD package.json README.md LICENSE BUILD.json* ./
 ENV PORT=8080
 ENV HOST=0.0.0.0
 
-# npm and corepack are never used at runtime and carry their own CVEs
-RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
+# npm, corepack and yarn are never used at runtime and carry their own CVEs
+RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 EXPOSE 8080
 USER node
@@ -143,8 +143,8 @@ ADD package.json README.md LICENSE BUILD.json* ./
 # artificially create a dependency to "portal" target for better caching in github ci
 COPY --from=portal /app/package.json package.json
 
-# npm and corepack are never used at runtime and carry their own CVEs
-RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
+# npm, corepack and yarn are never used at runtime and carry their own CVEs
+RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 EXPOSE 8080
 EXPOSE 9090
