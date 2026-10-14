@@ -6,7 +6,7 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('portal rendering', () => {
   test.beforeEach(clean)
 
-  test('should render home page with title element', async ({ page, goToPortal }) => {
+  test('should render home page with title element', { tag: '@smoke' }, async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Test Portal Home', menu: { children: [] } }
     })).data
@@ -21,7 +21,7 @@ test.describe('portal rendering', () => {
     await expect(page.getByText('Hello E2E Portal')).toBeVisible({ timeout: 10_000 })
   })
 
-  test('should render navigation menu and navigate', async ({ page, goToPortal }) => {
+  test('should render navigation menu and navigate', { tag: '@smoke' }, async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: {
         title: 'Nav Test Portal',

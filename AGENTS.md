@@ -54,11 +54,34 @@ The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owne
 npm test                          # all tests
 npm run test-unit                 # unit tests only
 npm run test-api                  # API tests only
+npm run test-api-fast             # API tests, stop at the first failure (iteration only)
 npm run test-e2e                  # e2e tests only
 npm run test -- path/to/file      # specific file
 ```
 
-The test suite is very long — when iterating on changes always run only the related test cases. The full test suite will be run when pushing by a git hook managed by husky.
+Tests are organized under `tests/features/<topic>/<name>.{unit,api,e2e}.spec.ts`; api and e2e
+specs import `test` / `expect` from `tests/fixtures/login.ts` (manager, API login) or
+`tests/fixtures/portal.ts` (public portal, extends it). The `state-setup` project checks that the
+dev API is up, `e2e-warmup` visits the portal and the heavy manager routes once so the nuxt and
+vite first-hit costs are paid before the e2e tests. On a failure the api, ui and portal pane logs
+are attached to the trace (`npx playwright show-trace test-results/<test>/trace.zip`); per-test
+durations of the last run are in `dev/logs/test-timings.json`. Keep the 30 s test timeout (hooks
+included): a heavy spec calls `test.slow()`. Pure logic goes to unit tests: API functions in
+`api/src/<domain>/operations.ts` (no `#mongo`, `#config` or state), portal ones in `portal/app/utils/`.
+
+Quality gates:
+
+| When | What |
+|---|---|
+| commit (`.husky/pre-commit`) | `npm run lint` |
+| push (`.husky/pre-push` → `dev/pre-push.sh`) | type check, unit tests, the `@smoke` api/e2e tests, and the api/e2e spec files changed since `origin/master` |
+| pull request, release tag, nightly on master (`reuse-quality.yml`) | lint, types, UI build, audit, and the whole unit/api/e2e suite; the nightly runs without retries and is skipped when master has not moved since the last green one |
+
+`@smoke` (`test('...', { tag: '@smoke' }, ...)`) marks a few fast tests over the core flows
+(portal and page creation, publication request, image upload, portal home and navigation,
+portals and pages lists, page editor draft). Tag a test only if it is fast and covers a path
+many features depend on. When iterating, run only the related test cases; `npm run quality`
+runs the full gate locally.
 
 ### Simulations
 
@@ -102,6 +125,6 @@ npm -w ui run build      # Production UI build (done once by `npx --no df-dev se
 
 The edit-config page (page editor) has known performance sensitivity due to the complex VJSF oneOf schema (38 element types). A Playwright seed file exists for interactive profiling:
 
-- **Seed file**: `tests/perf-seed.e2e.spec.ts`
+- **Seed file**: `tests/perf-seed.ts` (project `perf-seed`, declared only when `PERF_SEED` is set, as `.mcp.json` does: it is not part of the suite)
 - **Key schema**: `api/types/page-elements/schema.js` (uses `discriminator: { propertyName: 'type' }` to optimize oneOf resolution in `@json-layout/core`)
 - **Profiling method**: Use Playwright MCP `generator_setup_page` with the seed file, then `browser_evaluate` to inject `PerformanceObserver` for long tasks and measure interaction latency

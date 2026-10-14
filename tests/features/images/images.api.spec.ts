@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
 import FormData from 'form-data'
@@ -17,7 +17,7 @@ test.describe('images management', () => {
     await assert.rejects(user1.post('/api/images', form), { status: 404 })
   })
 
-  test('should load a PNG and resize it', async () => {
+  test('should load a PNG and resize it', { tag: '@smoke' }, async () => {
     const page = (await user1.post('/api/pages', { type: 'home', config: { title: 'My page', elements: [] } })).data
 
     const form = new FormData()

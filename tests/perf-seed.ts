@@ -5,8 +5,8 @@
  * Playwright MCP tools to set up a browser session for interactive performance
  * profiling of the page editor (edit-config).
  *
- * Usage with Playwright MCP:
- *   generator_setup_page({ seedFile: 'tests/perf-seed.e2e.spec.ts', project: 'e2e' })
+ * Usage with Playwright MCP (.mcp.json sets PERF_SEED=1, which declares the perf-seed project):
+ *   generator_setup_page({ seedFile: 'tests/perf-seed.ts', project: 'perf-seed' })
  *
  * Then use browser_evaluate to inject profiling instrumentation (Long Task
  * observer, performance.mark/measure) and interact with the page to measure
@@ -29,7 +29,7 @@
  *   - node_modules/@json-layout/core/src/state/state-node.js:574 — oneOf resolution
  */
 
-import { test } from './fixtures/login.ts'
+import { test, expect } from './fixtures/login.ts'
 import { axiosAuth, clean } from './support/axios.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
@@ -52,6 +52,6 @@ test('perf profiling seed', async ({ page, goToWithAuth }) => {
 
   await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
 
-  // Wait for the VJSF form to be fully rendered
-  await page.waitForTimeout(3000)
+  // the VJSF form is rendered
+  await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 })

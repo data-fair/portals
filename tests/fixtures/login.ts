@@ -1,61 +1,103 @@
-import { test as base, expect } from '@playwright/test'
+import { test as base, expect, request, type BrowserContext } from '@playwright/test'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 
-const cookieCache = new Map<string, Awaited<ReturnType<import('@playwright/test').BrowserContext['cookies']>>>()
+/**
+ * The `test` of every api and e2e spec (tests/fixtures/portal.ts extends it for the portal).
+ *
+ * Sessions come from simple-directory's API, not its login form: one login per user and account
+ * (POST /api/auth/password, then its callback), shared by every test of the worker.
+ * Sharing is safe because no page ever presents the exchange token (id_token_ex): lib-vue skips
+ * its session keepalive while localStorage['sd-keepalive'] is recent, and the init script below
+ * sets it in the future. Without that, each page load would rotate the single-use token and the
+ * next test replaying the old one outside simple-directory's 60 s grace would be logged out.
+ * The id_token itself expires after 15 min, so a session older than 10 min is logged in again.
+ */
+type AccountOpts = { org?: string, dep?: string, adminMode?: boolean }
+type Cookies = Parameters<BrowserContext['addCookies']>[0]
 
-async function performLogin (page: any, context: any, baseUrl: string, url: string, user: string) {
-  const fullUrl = `${baseUrl}${url}`
-  const loginUrl = `${baseUrl}/simple-directory/login?redirect=${encodeURIComponent(fullUrl)}`
-  await page.goto(loginUrl)
-  await page.getByLabel('Adresse mail').fill(`${user}@test.com`)
-  await page.getByRole('textbox', { name: 'Mot de passe' }).fill('passwd')
-  await page.getByRole('button', { name: 'Se connecter' }).click()
-  await page.waitForURL(fullUrl, { timeout: 10_000 })
-  const cookies = await context.cookies()
-  cookieCache.set(user, cookies)
+const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
+const directoryUrl = `${baseUrl}/simple-directory`
+const maxAge = 10 * 60 * 1000
+const sessions = new Map<string, { at: number, cookies: Cookies }>()
+
+const apiLogin = async (user: string, opts: AccountOpts): Promise<Cookies> => {
+  const ctx = await request.newContext()
+  try {
+    const res = await ctx.post(`${directoryUrl}/api/auth/password`, {
+      params: { redirect: `${baseUrl}/portals-manager/` },
+      data: { email: `${user}@test.com`, password: 'passwd', ...opts }
+    })
+    expect(res.ok(), `login of ${user} failed: ${res.status()} ${await res.text()}`).toBe(true)
+    // the callback sets the session cookies and redirects to the app
+    const callback = await ctx.get(await res.text(), { maxRedirects: 0 })
+    expect(callback.status(), `login callback of ${user} failed: ${callback.headers().location}`).toBe(302)
+    return (await ctx.storageState()).cookies
+  } finally {
+    await ctx.dispose()
+  }
 }
 
+const sessionCookies = async (user: string, opts: AccountOpts) => {
+  const key = [user, opts.org ?? '', opts.dep ?? '', opts.adminMode ?? ''].join('|')
+  let session = sessions.get(key)
+  if (!session || Date.now() - session.at > maxAge) {
+    session = { at: Date.now(), cookies: await apiLogin(user, opts) }
+    sessions.set(key, session)
+  }
+  return session.cookies
+}
+
+const exec = promisify(execFile)
+// the scrollback of a df-dev pane; when df-dev cannot read it (no zellij >= 0.44 on PATH, no
+// running session, e.g. in CI) the attachment says why instead of being silently absent
+const paneLogs = async (pane: string) => {
+  try {
+    return (await exec('./node_modules/.bin/df-dev', ['logs', pane, '-n', '200'])).stdout
+  } catch (err: any) {
+    return `no pane logs: "df-dev logs ${pane}" failed (it needs zellij >= 0.44 on PATH and the dev session running; CI writes its own logs to dev/logs/)\n\n${err.stderr || err.message}`
+  }
+}
+
+/**
+ * - `goToWithAuth(url, user, opts?)`: lands on url logged in as user, with the organization /
+ *   department of opts as active account, or in admin mode (super admins).
+ * - `page` override: French, cache bypass, and no session keepalive (see above).
+ * - on a failure, the api, ui and portal pane logs are attached to the report and the trace.
+ */
 export const test = base.extend<{
-  goToWithAuth: (url: string, user: string) => Promise<void>
+  goToWithAuth: (url: string, user: string, opts?: AccountOpts) => Promise<void>,
+  diagnostics: void
 }>({
   page: async ({ page }, use) => {
-    const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
-    await page.context().addCookies([{
-      name: 'i18n_lang',
-      value: 'fr',
-      url: baseUrl
-    }, {
-      name: 'cache_bypass',
-      value: '1',
-      url: baseUrl
-    }])
+    await page.context().addCookies([
+      { name: 'i18n_lang', value: 'fr', url: baseUrl },
+      { name: 'cache_bypass', value: '1', url: baseUrl }
+    ])
+    // ponytail: relies on lib-vue's internal key (decided: option A of the playwright standard §4.1)
+    await page.context().addInitScript(() => {
+      window.localStorage.setItem('sd-keepalive', String(Date.now() + 365 * 86400_000))
+    })
     await use(page)
   },
 
   goToWithAuth: async ({ page, context }, use) => {
-    const baseUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
-    // simple-directory's exchange token is single use: each keepalive of a page rotates it,
-    // and presenting an older one after a short grace destroys the session. The cache must
-    // follow the rotations, or the next test reusing it is logged out (401s, no redirect).
-    let currentUser: string | undefined
-    const goToWithAuth = async (url: string, user: string) => {
-      if (currentUser && currentUser !== user) cookieCache.set(currentUser, await context.cookies())
-      currentUser = user
-      const cached = cookieCache.get(user)
-      if (cached) {
-        await context.addCookies(cached)
-        await page.goto(url, { timeout: 10_000 })
-        // Safety: if redirected to login, cache was stale
-        if (page.url().includes('/simple-directory/login')) {
-          cookieCache.delete(user)
-          await performLogin(page, context, baseUrl, url, user)
-        }
-      } else {
-        await performLogin(page, context, baseUrl, url, user)
-      }
+    await use(async (url, user, opts = {}) => {
+      // replace the session of a previous call (another user or account) as a whole
+      await context.clearCookies({ name: /^id_token/ })
+      await context.addCookies(await sessionCookies(user, opts))
+      await page.goto(url)
+    })
+  },
+
+  // eslint-disable-next-line no-empty-pattern -- playwright requires a destructuring pattern here
+  diagnostics: [async ({}, use, testInfo) => {
+    await use()
+    if (testInfo.status === testInfo.expectedStatus) return
+    for (const pane of ['api', 'ui', 'portal']) {
+      await testInfo.attach(`${pane}.log`, { body: await paneLogs(pane), contentType: 'text/plain' })
     }
-    await use(goToWithAuth)
-    if (currentUser) cookieCache.set(currentUser, await context.cookies())
-  }
+  }, { auto: true }]
 })
 
 export { expect }

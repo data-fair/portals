@@ -1,5 +1,5 @@
 import type { PageConfig, ImageElement } from '../../../api/types/page/index.ts'
-import { test } from '@playwright/test'
+import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
 import FormData from 'form-data'
@@ -14,7 +14,7 @@ const deptAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test
 test.describe('pages management', () => {
   test.beforeEach(clean)
 
-  test('should create a page', async () => {
+  test('should create a page', { tag: '@smoke' }, async () => {
     const pageConfig = { title: 'My page', elements: [] }
     const page = (await user1.post('/api/pages', { type: 'home', config: pageConfig })).data
     assert.equal(page.owner.id, 'test_admin')
@@ -126,7 +126,7 @@ test.describe('contributorDepartments page publication', () => {
 test.describe('staging publication flow', () => {
   test.beforeEach(clean)
 
-  test('contrib can request publication via requestedPortals but cannot publish directly', async () => {
+  test('contrib can request publication via requestedPortals but cannot publish directly', { tag: '@smoke' }, async () => {
     const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Staging', menu: { children: [] } } })).data
     await orgAdmin.patch(`/api/portals/${portal._id}`, { staging: true })
     const page = (await orgAdmin.post('/api/pages', { type: 'generic', title: 'P', config: { title: 'P', elements: [], genericMetadata: { slug: 'p' } } })).data
@@ -143,52 +143,14 @@ test.describe('staging publication flow', () => {
     assert.deepEqual(requested.portals, [])
   })
 
-  test('generates and deduplicates title anchor slugs from the content', async () => {
+  // the slug and table of contents logic is unit-tested in page-anchors.unit.spec.ts
+  test('stores the anchor slugs and the table of contents of the draft, and publishes them', async () => {
     const page = (await user1.post('/api/pages', { type: 'generic', title: 'P', config: { title: 'P', elements: [], genericMetadata: { slug: 'p' } } })).data
-    const titleElement = (content: string) => ({ type: 'title', titleSize: 'h2', content, anchor: { enabled: true } })
-    const patchElements = (elements: any[]) => user1.patch(`/api/pages/${page._id}`, { draftConfig: { title: 'P', elements, genericMetadata: { slug: 'p' } } })
-
-    // the slug is generated from the title content
-    const single = (await patchElements([titleElement('Mon Ancre')])).data
-    assert.equal(single.draftConfig.elements[0].anchor._slug, 'mon-ancre')
-
-    // duplicating a title (same content) deduplicates the generated slug in document order
-    const dup = (await patchElements([titleElement('Intro'), titleElement('Intro')])).data
-    assert.equal(dup.draftConfig.elements[0].anchor._slug, 'intro')
-    assert.equal(dup.draftConfig.elements[1].anchor._slug, 'intro-2')
-
-    // a disabled anchor gets no slug
-    const disabled = (await patchElements([{ type: 'title', titleSize: 'h2', content: 'Plain', anchor: { enabled: false } }])).data
-    assert.equal(disabled.draftConfig.elements[0].anchor._slug, undefined)
-  })
-
-  test('builds the table of contents from anchored titles, including nested ones, in order', async () => {
-    const page = (await user1.post('/api/pages', { type: 'generic', title: 'P', config: { title: 'P', elements: [], genericMetadata: { slug: 'p' } } })).data
-
-    const elements = [
-      { type: 'title', titleSize: 'h2', content: 'Introduction', anchor: { enabled: true, inToc: true } },
-      // an anchored title is not added to the table of contents when inToc is off
-      { type: 'title', titleSize: 'h3', content: 'Anchor without toc', anchor: { enabled: true, inToc: false } },
-      { type: 'title', titleSize: 'h3', content: 'No anchor' },
-      {
-        type: 'two-columns',
-        disposition: 'equal',
-        gutter: 'default',
-        children: [{ type: 'title', titleSize: 'h4', content: 'In a column', anchor: { enabled: true, inToc: true } }],
-        children2: [{ type: 'text', content: 'lorem' }]
-      },
-      // the label overrides the displayed title in the table of contents
-      { type: 'title', titleSize: 'h2', content: 'Conclusion', anchor: { enabled: true, inToc: true, label: 'The end' } }
-    ]
+    const elements = [{ type: 'title', titleSize: 'h2', content: 'Mon Ancre', anchor: { enabled: true, inToc: true } }]
     const updated = (await user1.patch(`/api/pages/${page._id}`, { draftConfig: { title: 'P', elements, genericMetadata: { slug: 'p' } } })).data
+    assert.equal(updated.draftConfig.elements[0].anchor._slug, 'mon-ancre')
+    assert.deepEqual(updated.draftConfig._toc, [{ id: 'mon-ancre', title: 'Mon Ancre' }])
 
-    assert.deepEqual(updated.draftConfig._toc, [
-      { id: 'introduction', title: 'Introduction' },
-      { id: 'in-a-column', title: 'In a column' },
-      { id: 'conclusion', title: 'The end' }
-    ])
-
-    // publishing the draft carries the computed table of contents over to the published config
     await user1.post(`/api/pages/${page._id}/draft`)
     const validated = (await user1.get(`/api/pages/${page._id}`)).data
     assert.deepEqual(validated.config._toc, updated.draftConfig._toc)
