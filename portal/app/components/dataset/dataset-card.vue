@@ -127,36 +127,56 @@
             class="px-4 mt-2 flex-grow-0"
           />
 
-          <!-- Department / Updated At -->
-          <v-row
-            v-if="cardConfig.showDepartment"
-            class="px-4 my-2"
-            density="comfortable"
+          <!-- Content types -->
+          <div
+            v-if="cardConfig.showContentTypes"
+            class="d-flex flex-wrap ga-3 px-4 mt-2 text-body-medium"
           >
-            <v-col
-              v-if="cardConfig.showDepartment"
-              cols="auto"
-              class="d-flex align-center"
+            <span
+              v-for="content in contentTypes"
+              :key="content.key"
+              class="d-flex align-center ga-1"
             >
-              <owner-avatar
-                :owner="dataset.owner"
-                omit-owner-name
+              <v-icon
+                :icon="content.icon"
+                size="small"
               />
-            </v-col>
-            <!-- <v-col
-              cols="auto"
-              class="d-flex align-center"
-              :class="{ 'ml-2': cardConfig.showDepartment }"
-            >
-              <span class="text-body-small">
-                {{ t('updatedAt') }} {{ dayjs(dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
-              </span>
-            </v-col> -->
-          </v-row>
+              {{ t(`contentTypes.${content.key}`) }}
+            </span>
+          </div>
+
+          <!-- Owner / Updated At -->
+          <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
+          <div
+            v-if="showOwner || cardConfig.showUpdatedAt"
+            class="px-4 my-2"
+          >
+            <div class="overflow-hidden">
+              <div class="d-flex flex-wrap align-center gr-1 ms-n5">
+                <card-owner
+                  v-if="showOwner"
+                  :owner="dataset.owner"
+                  :display="cardConfig.ownerDisplay"
+                  class="ms-5"
+                />
+                <span
+                  v-if="cardConfig.showUpdatedAt"
+                  class="d-flex text-body-medium"
+                >
+                  <span
+                    class="text-center flex-shrink-0"
+                    style="width: 20px"
+                    aria-hidden="true"
+                  >{{ cardConfig.ownerDisplay === 'avatarName' ? '·' : '' }}</span>
+                  {{ t('updatedAt') }} {{ dayjs(dataset.modified || dataset.dataUpdatedAt || dataset.updatedAt).format('L') }}
+                </span>
+              </div>
+            </div>
+          </div>
           <div
             v-else
             class="mt-3"
-          /> <!-- TODO: Remove it when dataset expose directly a standardize update date-->
+          />
 
           <!-- Actions (Bottom Location) -->
           <template v-if="(cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown)) && !dataset.isMetaOnly">
@@ -251,8 +271,7 @@
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
 import type { DatasetCard } from '#api/types/portal/index.js'
-import { mdiCog, mdiMapMarker, mdiTableLarge } from '@mdi/js'
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
+import { mdiChartBar, mdiCog, mdiInformationOutline, mdiMapMarker, mdiTableLarge } from '@mdi/js'
 
 const { dataset, cardConfig, isPortalConfig } = defineProps<{
   dataset: Omit<Dataset, 'userPermissions'>,
@@ -260,9 +279,9 @@ const { dataset, cardConfig, isPortalConfig } = defineProps<{
   isPortalConfig?: boolean
 }>()
 
-// const { dayjs } = useLocaleDayjs()
 const { portalConfig, preview } = usePortalStore()
 const { t } = useI18n()
+const { dayjs } = useLocaleDayjs()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 const hoverFx = useHoverConfig(() => cardConfig.hover)
@@ -274,6 +293,14 @@ const candidates = computed(() => datasetThumbnailCandidates(
   getPortalImageSrc,
   isPortalConfig ? getPortalImageSrc : getPageImageSrc
 ))
+
+const showOwner = computed(() => !!cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none')
+
+const contentTypes = computed(() => [
+  { key: 'metadata', icon: mdiInformationOutline },
+  ...(dataset.isMetaOnly ? [] : [{ key: 'data', icon: mdiTableLarge }]),
+  ...(dataset.extras?.applications?.length ? [{ key: 'applications', icon: mdiChartBar }] : [])
+])
 
 const thumbnailProbe = useTemplateRef('thumbnailProbe')
 const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)
@@ -296,6 +323,10 @@ const leftThumbnailStyle = computed(() => {
 <i18n lang="yaml">
   en:
     updatedAt: Updated at
+    contentTypes:
+      metadata: Metadata
+      data: Data
+      applications: Visualizations
     text:
       table: Table
       map: Map
@@ -307,6 +338,10 @@ const leftThumbnailStyle = computed(() => {
 
   fr:
     updatedAt: Mis à jour le
+    contentTypes:
+      metadata: Métadonnées
+      data: Données
+      applications: Visualisations
     text:
       table: Tableau
       map: Carte
