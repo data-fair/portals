@@ -7,7 +7,6 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
-import config from '#config'
 import { duplicateImage } from '../images/service.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
 import { traversePageElements, resolvePageAnchors } from './operations.ts'
@@ -293,8 +292,6 @@ export const sendPageEvent = (
   sessionState?: SessionStateAuthenticated,
   body?: string
 ) => {
-  if (!config.privateEventsUrl && !config.secretKeys.events) return
-
   const title = topicAction.includes('draft-')
     ? `Le brouillon de la page ${page.title} ${actionText}`
     : `La page ${page.title} ${actionText}`

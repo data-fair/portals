@@ -18,7 +18,7 @@ layout {
       args "-c" "cd ui && FORCE_COLOR=1 NODE_CONFIG_DIR=../api/config/ exec ../node_modules/.bin/df-mem-cap vite --port $DEV_UI_PORT"
     }
     pane name="api" command="bash" {
-      args "-c" "./node_modules/.bin/df-dev wait-deps && cd api && FORCE_COLOR=1 NODE_ENV=development DEBUG='upgrade*' exec ../node_modules/.bin/nodemon -e js,ts,json index.ts"
+      args "-c" "./node_modules/.bin/df-dev wait-deps && export NODE_CONFIG=$(./node_modules/.bin/df-dev absent-config) && cd api && FORCE_COLOR=1 NODE_ENV=development DEBUG='upgrade*' exec ../node_modules/.bin/nodemon -e js,ts,json index.ts"
     }
     pane name="portal" command="bash" {
       // piped: in a real terminal nuxt switches to its interactive screen instead of plain logs
