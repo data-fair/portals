@@ -1,7 +1,10 @@
 // a custom fetch intended to make api calls to other services (data-fair, etc)
-// it accepts url starting with / and it redirects the request toward the local proxy
+// it accepts url starting with / and it redirects the request toward the local proxy: the site's own
+// origin, or the in-cluster L2 nginx when upstreamProxyHost is set. Calls go as the visitor: their
+// cookie, their IP and the forwarder secret, so the stack limits them as if they called directly
+// (utils/ssr-forward.ts, data-fair docs/architecture/agent-rate-limiting.md)
 
-import { getRequestHeader, getRequestURL } from 'h3'
+import { getRequestHeader, getRequestURL, type H3Event } from 'h3'
 import type { Dispatcher } from 'undici'
 
 // data-fair is the least stable dependency of a portal, its ssr calls get their own
@@ -13,17 +16,34 @@ const dataFairTimeout = 5000
 export default defineNuxtPlugin(async () => {
   let _ssrDispatcher: Dispatcher
   let _ssrDataFairDispatcher: Dispatcher
+  let clientIp: (event: H3Event) => string | undefined = () => undefined
+  const config = useRuntimeConfig()
+  const upstreamProxyHost = config.upstreamProxyHost || undefined
 
   if (import.meta.server) {
     const { Agent, interceptors } = await import('undici')
+    const dns = await import('node:dns')
+    const { reqIp } = await import('@data-fair/lib-express/req-origin.js')
+    // the visitor's IP as our reverse proxy forwarded it; none for a render that did not come through it
+    clientIp = (event) => reqIp(event.node.req, { optional: true })
+    // our load balancers ips should not change; with an upstream proxy, every site host resolves to it
+    const dnsOptions: NonNullable<Parameters<typeof interceptors.dns>[0]> = { maxTTL: Infinity }
+    if (upstreamProxyHost) {
+      const proxy = proxyLookupTarget(upstreamProxyHost)
+      dnsOptions.lookup = (_origin, opts, cb) => {
+        dns.lookup(proxy.host, { ...opts, all: true }, (err, addresses) => {
+          if (err) return cb(err, [])
+          const list = Array.isArray(addresses) ? addresses : [addresses]
+          cb(null, list.map(a => ({ address: a.address, family: (a.family === 6 ? 6 : 4) as 4 | 6, ttl: Infinity })))
+        })
+      }
+    }
     const createDispatcher = (options?: { headersTimeout: number, bodyTimeout: number }) => new Agent({
       connections: 8,
-      allowH2: true,
+      // the hop to the proxy is plain http
+      allowH2: !upstreamProxyHost,
       ...options
-    }).compose(interceptors.dns({
-      // our load balancers ips should not change
-      maxTTL: Infinity
-    }))
+    }).compose(interceptors.dns(dnsOptions))
     _ssrDispatcher = createDispatcher()
     _ssrDataFairDispatcher = createDispatcher({ headersTimeout: dataFairTimeout, bodyTimeout: dataFairTimeout })
   }
@@ -37,9 +57,13 @@ export default defineNuxtPlugin(async () => {
         const { origin } = getRequestURL(event)
         const cookies = getRequestHeader(event, 'cookie')
         if (cookies) options.headers.set('cookie', cookies)
-        const secretIgnoreRateLimiting = useNuxtApp().$config.secretIgnoreRateLimiting
-        if (secretIgnoreRateLimiting) options.headers.set('x-ignore-rate-limiting', secretIgnoreRateLimiting)
-        options.baseURL = origin
+        const target = ssrTarget(origin, upstreamProxyHost)
+        // TODO: drop secretIgnoreRateLimiting with the legacy ignore secret (see ssrForwardHeaders)
+        const forwardHeaders = ssrForwardHeaders(clientIp(event), config.secretTrustedForwarder || undefined, config.secretIgnoreRateLimiting || undefined)
+        for (const [name, value] of Object.entries({ ...target.headers, ...forwardHeaders })) {
+          options.headers.set(name, value)
+        }
+        options.baseURL = target.baseURL
         options.retry = 0
         options.dispatcher = url.startsWith('/data-fair/') ? _ssrDataFairDispatcher : _ssrDispatcher
       }

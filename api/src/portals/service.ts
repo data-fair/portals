@@ -5,7 +5,10 @@ import type { IngressManagerIngressInfo } from '#types'
 import debugModule from 'debug'
 import equal from 'fast-deep-equal'
 import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, getAccountRole, httpError } from '@data-fair/lib-express'
-import axios from '@data-fair/lib-node/axios.js'
+// calls only our own services: configured URLs (simple-directory, ingress manager) and the request's own
+// origin, which only our ingress routes here — the private instance (lib-node refuses non public
+// addresses in the default one, which is for URLs a user can influence)
+import { privateAxiosInstance as axios } from '@data-fair/lib-node/axios.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'

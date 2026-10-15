@@ -1,5 +1,7 @@
 import memoize from 'memoizee'
-import axios from '@data-fair/lib-node/axios.js'
+// privateDirectoryUrl comes from the configuration: the private instance (lib-node's default one
+// refuses non public addresses)
+import { privateAxiosInstance as axios } from '@data-fair/lib-node/axios.js'
 import type { SiteInfo } from '@data-fair/lib-vue/session'
 
 export const getSiteInfo = memoize(async (privateDirectoryUrl: string, proto: string, hostname: string) => {

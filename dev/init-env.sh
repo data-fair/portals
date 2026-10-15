@@ -29,4 +29,7 @@ EVENTS_PORT=$((RANDOM_NB + 32))
 PROCESSINGS_PORT=$((RANDOM_NB + 33))
 AGENTS_PORT=$((RANDOM_NB + 34))
 BRIDGE_PORT=$((RANDOM_NB + 38))
+
+# lib-node refuses non public addresses in its default http agents (SSRF): the dev services are local
+SSRF_PUBLIC_IPS=127.0.0.1,::1
 EOF

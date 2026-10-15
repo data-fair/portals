@@ -46,6 +46,10 @@ export default defineNuxtConfig({
     mongoUrl: 'mongodb://localhost:27022/data-fair-portals',
     portalUrlPattern: '',
     frameAncestors: '',
+    // the forwarder secret, and the in-cluster proxy a page render's calls go through (app/utils/ssr-forward.ts)
+    secretTrustedForwarder: '',
+    upstreamProxyHost: '',
+    // TODO: remove with the legacy ignore secret (see ssrForwardHeaders in app/utils/ssr-forward.ts)
     secretIgnoreRateLimiting: ''
   },
   security: {
