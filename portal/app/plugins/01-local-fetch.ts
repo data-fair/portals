@@ -58,7 +58,9 @@ export default defineNuxtPlugin(async () => {
         const cookies = getRequestHeader(event, 'cookie')
         if (cookies) options.headers.set('cookie', cookies)
         const target = ssrTarget(origin, upstreamProxyHost)
-        for (const [name, value] of Object.entries({ ...target.headers, ...ssrForwardHeaders(clientIp(event), config.secretTrustedForwarder || undefined) })) {
+        // TODO: drop secretIgnoreRateLimiting with the legacy ignore secret (see ssrForwardHeaders)
+        const forwardHeaders = ssrForwardHeaders(clientIp(event), config.secretTrustedForwarder || undefined, config.secretIgnoreRateLimiting || undefined)
+        for (const [name, value] of Object.entries({ ...target.headers, ...forwardHeaders })) {
           options.headers.set(name, value)
         }
         options.baseURL = target.baseURL

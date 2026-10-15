@@ -29,7 +29,12 @@ export const ssrTarget = (origin: string, upstreamProxyHost?: string): { baseURL
   }
 }
 
-export const ssrForwardHeaders = (clientIp: string | undefined, trustedForwarder: string | undefined): Record<string, string> => ({
+// ignoreRateLimiting: the legacy secret that exempts a render's calls from every limit, kept so a
+// deployment configured with it behaves as before until it sets the forwarder secret instead.
+// TODO: remove it (here, in 01-local-fetch.ts and nuxt.config.ts) once data-fair and the ingresses no
+// longer honour x-ignore-rate-limiting (data-fair docs/architecture/agent-rate-limiting.md, step 7)
+export const ssrForwardHeaders = (clientIp: string | undefined, trustedForwarder: string | undefined, ignoreRateLimiting?: string): Record<string, string> => ({
   ...(clientIp ? { 'x-forwarded-for': clientIp } : {}),
-  ...(trustedForwarder ? { 'x-trusted-forwarder': trustedForwarder } : {})
+  ...(trustedForwarder ? { 'x-trusted-forwarder': trustedForwarder } : {}),
+  ...(ignoreRateLimiting ? { 'x-ignore-rate-limiting': ignoreRateLimiting } : {})
 })

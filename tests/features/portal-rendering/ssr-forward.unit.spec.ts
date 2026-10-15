@@ -25,4 +25,10 @@ test.describe('ssr calls to our services', () => {
   test('carry no IP when the render has none, and no secret when none is configured', () => {
     assert.deepEqual(ssrForwardHeaders(undefined, undefined), {})
   })
+  // TODO: remove with the legacy ignore secret, once data-fair and the ingresses no longer honour
+  // x-ignore-rate-limiting (data-fair docs/architecture/agent-rate-limiting.md, step 7)
+  test('still carry the legacy ignore secret when it is configured', () => {
+    assert.deepEqual(ssrForwardHeaders(undefined, undefined, 'ign'), { 'x-ignore-rate-limiting': 'ign' })
+    assert.deepEqual(ssrForwardHeaders('203.0.113.7', 'tf', 'ign'), { 'x-forwarded-for': '203.0.113.7', 'x-trusted-forwarder': 'tf', 'x-ignore-rate-limiting': 'ign' })
+  })
 })

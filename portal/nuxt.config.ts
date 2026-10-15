@@ -48,7 +48,9 @@ export default defineNuxtConfig({
     frameAncestors: '',
     // the forwarder secret, and the in-cluster proxy a page render's calls go through (app/utils/ssr-forward.ts)
     secretTrustedForwarder: '',
-    upstreamProxyHost: ''
+    upstreamProxyHost: '',
+    // TODO: remove with the legacy ignore secret (see ssrForwardHeaders in app/utils/ssr-forward.ts)
+    secretIgnoreRateLimiting: ''
   },
   security: {
     nonce: true,
