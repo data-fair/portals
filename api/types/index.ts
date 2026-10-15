@@ -76,7 +76,7 @@ export type Dataset = {
     version?: string
     url?: string
   }
-  customMetadata?: Record<string, string>
+  customMetadata?: Record<string, string | number | string[] | { url: string, title?: string }>
 
   attachments?: {
     url: string
