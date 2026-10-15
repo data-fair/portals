@@ -16,9 +16,11 @@ export default {
           'elevation',
           'rounded',
           'hover',
-          'titleLinesCount',
-          'showSummary',
-          'showDepartment'
+          { cols: { md: 6 }, key: 'titleLinesCount' },
+          { cols: { md: 6 }, key: 'ownerDisplay' },
+          { cols: { md: 4 }, key: 'showSummary' },
+          { cols: { md: 4 }, key: 'showUpdatedAt' },
+          { cols: { md: 4 }, key: 'showContentTypes' }
         ]
       },
       'thumbnail',
@@ -84,14 +86,26 @@ export default {
       },
       default: true
     },
-    showDepartment: {
+    ownerDisplay: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/ownerDisplay',
+      layout: { cols: { md: 6 } }
+    },
+    showUpdatedAt: {
       type: 'boolean',
-      title: 'Afficher le propriétaire',
+      title: 'Afficher la date de mise à jour',
       layout: {
         comp: 'switch',
         cols: { md: 6 }
-      },
-      default: true
+      }
+    },
+    showContentTypes: {
+      type: 'boolean',
+      title: 'Afficher les contenus disponibles',
+      description: 'Indique si le jeu de données propose des métadonnées, des données et des visualisations.',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
     },
     thumbnail: {
       type: 'object',

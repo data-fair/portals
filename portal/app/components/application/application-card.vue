@@ -120,29 +120,37 @@
           />
 
           <!-- Department / Updated At -->
-          <v-row
-            no-gutters
+          <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
+          <div
+            v-if="showOwner || cardConfig.showUpdatedAt"
             class="px-4 py-2"
           >
-            <v-col
-              v-if="cardConfig.showDepartment"
-              cols="auto"
-              class="d-flex align-center mr-2"
-            >
-              <owner-avatar
-                :owner="application.owner"
-                omit-owner-name
-              />
-            </v-col>
-            <v-col
-              cols="auto"
-              class="d-flex align-center"
-            >
-              <span class="text-body-small">
-                {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
-              </span>
-            </v-col>
-          </v-row>
+            <div class="overflow-hidden">
+              <div class="d-flex flex-wrap align-center gr-1 ms-n5">
+                <card-owner
+                  v-if="showOwner"
+                  :owner="application.owner"
+                  :display="cardConfig.ownerDisplay"
+                  class="ms-5"
+                />
+                <span
+                  v-if="cardConfig.showUpdatedAt"
+                  class="d-flex text-body-medium"
+                >
+                  <span
+                    class="text-center flex-shrink-0"
+                    style="width: 20px"
+                    aria-hidden="true"
+                  >{{ cardConfig.ownerDisplay === 'avatarName' ? '·' : '' }}</span>
+                  {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            v-else
+            class="mt-3"
+          />
 
           <!-- Actions (Bottom Location) -->
           <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown))">
@@ -207,7 +215,6 @@
 import type { Application } from '#api/types/index.ts'
 import type { ApplicationCard } from '#api/types/portal-config'
 import { mdiFullscreen } from '@mdi/js'
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 
 const { application, cardConfig } = defineProps<{
   application: Application
@@ -226,6 +233,8 @@ const candidates = computed(() => applicationThumbnailCandidates(
   portalConfig.value.topics,
   getPortalImageSrc
 ))
+
+const showOwner = computed(() => !!cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none')
 
 const thumbnailProbe = useTemplateRef('thumbnailProbe')
 const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)

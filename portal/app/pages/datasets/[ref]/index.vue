@@ -468,7 +468,7 @@ const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),

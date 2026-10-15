@@ -180,6 +180,21 @@
     />
   </v-col>
 
+  <!-- Queryable datasets filter (datasets only) -->
+  <v-col
+    v-if="showFilter('queryable')"
+    cols="12"
+    :md="colSize"
+  >
+    <v-checkbox
+      v-model="filters.queryable.value"
+      :label="t('filters.queryable')"
+      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      color="primary"
+      hide-details
+    />
+  </v-col>
+
   <!-- Sort/Order -->
   <v-col
     v-if="showFilter('sort')"
@@ -219,7 +234,7 @@ type BaseApplication = {
 }
 
 type CatalogType = 'datasets' | 'applications' | 'reuses' | 'events' | 'news'
-type FilterType = 'search' | 'include-past' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'sort'
+type FilterType = 'search' | 'include-past' | 'concepts' | 'base-application' | 'topics' | 'keywords' | 'owners' | 'queryable' | 'sort'
 
 const { t } = useI18n()
 const { departmentLabel } = useDisplayOwner()
@@ -239,6 +254,7 @@ const filters = {
   topics: useStringsArraySearchParam('topics'),
   keywords: useStringsArraySearchParam('keywords'),
   owners: useStringsArraySearchParam('owner'),
+  queryable: useBooleanSearchParam('queryable'),
   sort: useStringSearchParam('sort', { default: config.defaultSort })
 }
 
@@ -286,7 +302,8 @@ if (!preview && (catalogType === 'datasets' || catalogType === 'applications')) 
     topics: staticFilterParam([], staticFilters?.includedTopics),
     keywords: staticFilterParam([], staticFilters?.includedKeywords),
     owner: staticFilterParam([], staticFilters?.includedOwners, staticFilters?.excludedOwners),
-    'base-application': staticFilterParam([], staticFilters?.includedBaseApplications)
+    'base-application': staticFilterParam([], staticFilters?.includedBaseApplications),
+    type: staticFilters?.types?.length ? staticFilters.types.join(',') : undefined
   }
   catalogFetch = useLocalFetch<{ facets: Facets }>(endpoint, {
     query: {
@@ -433,6 +450,7 @@ const sortItems = computed(() => {
       topics: Topics
       keywords: Keywords
       owners: Owners
+      queryable: Data available
       includePastEvents: Include past events
       noConcepts: No concepts available
       noBaseApplication: No base applications available
@@ -464,6 +482,7 @@ const sortItems = computed(() => {
       topics: Thématiques
       keywords: Mots-clés
       owners: Propriétaires
+      queryable: Données disponibles
       includePastEvents: Inclure les événements passés
       noConcepts: Aucun concept disponible
       noBaseApplication: Aucune application de base disponible

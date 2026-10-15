@@ -59,6 +59,7 @@ type DatasetFilters = {
   topics: ReturnType<typeof useStringsArraySearchParam>
   keywords: ReturnType<typeof useStringsArraySearchParam>
   owners: ReturnType<typeof useStringsArraySearchParam>
+  queryable: ReturnType<typeof useBooleanSearchParam>
   ids: ReturnType<typeof useStringsArraySearchParam>
 }
 
@@ -82,11 +83,12 @@ const {
     topics: useStringsArraySearchParam('topics'),
     keywords: useStringsArraySearchParam('keywords'),
     owners: useStringsArraySearchParam('owner'),
+    queryable: useBooleanSearchParam('queryable'),
     ids: useStringsArraySearchParam('ids')
   }),
   buildQuery: (filters, sortValue, page, pageSize) => {
     const query: Record<string, string | number> = {
-      select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+      select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
       publicationSites: 'data-fair-portals:' + portal.value._id,
       truncate: 250,
       size: pageSize,
@@ -102,6 +104,8 @@ const {
     if (topics) query.topics = topics
     if (keywords) query.keywords = keywords
     if (owner) query.owner = owner
+    if (filters.queryable.value) query.queryable = 'true'
+    if (staticFilters?.types?.length) query.type = staticFilters.types.join(',')
     if (filters.ids.value?.length) query.ids = filters.ids.value.join(',')
     // No sort during a text search: let data-fair rank results by relevance
     if (sortValue && !filters.search.value) query.sort = sortValue

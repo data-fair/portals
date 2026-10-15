@@ -91,6 +91,18 @@ export default {
       ]
     },
 
+    ownerDisplay: {
+      type: 'string',
+      title: 'Owner display',
+      'x-i18n-title': { fr: 'Affichage du propriétaire' },
+      default: 'avatar',
+      oneOf: [
+        { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+        { const: 'avatar', title: 'Avatar only (name on hover)', 'x-i18n-title': { fr: 'Avatar seul (nom au survol)' } },
+        { const: 'avatarName', title: 'Avatar and name', 'x-i18n-title': { fr: 'Avatar et nom' } }
+      ]
+    },
+
     // Shared effects list for the hover configs (see hoverConfig / hoverConfigFull).
     hoverEffectsList: {
       type: 'array',
