@@ -25,7 +25,7 @@ layout {
       args "-c" "./node_modules/.bin/df-dev wait-deps && cd portal && FORCE_COLOR=1 NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.$DEV_HOST:$NGINX_PORT NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT NUXT_FRAME_ANCESTORS=http://$DEV_HOST:$NGINX_PORT ../node_modules/.bin/df-mem-cap nuxt dev 2>&1 | cat"
     }
   }
-  pane name="urls" size=1 borderless=true command="bash" {
+  pane name="url" size=1 borderless=true command="bash" {
     args "-c" "echo -n -e \"Manager: \\e[1;96mhttp://$DEV_HOST:$NGINX_PORT/portals-manager/dev\\e[0m\"; exec sleep infinity"
   }
 }

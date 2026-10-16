@@ -30,9 +30,7 @@
     },
     "ingress-manager": {}
   },
-  "urls": {
-    "Manager": "http://${DEV_HOST}:${NGINX_PORT}/portals-manager/dev"
-  },
+  "url": "http://${DEV_HOST}:${NGINX_PORT}/portals-manager/dev",
   "optional": {
     "events": {
       "privateEventsUrl": ""
