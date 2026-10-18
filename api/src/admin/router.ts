@@ -13,9 +13,14 @@ router.use(async (req, res, next) => {
   next()
 })
 
-let info = { version: process.env.NODE_ENV }
+let info: Record<string, string> = { version: process.env.NODE_ENV ?? 'development' }
 if (process.env.NODE_ENV === 'production') {
-  info = JSON.parse(await readFile(resolve(import.meta.dirname, '../../../BUILD.json'), 'utf8'))
+  // written by CI only: an image built without it must still start
+  try {
+    info = JSON.parse(await readFile(resolve(import.meta.dirname, '../../../BUILD.json'), 'utf8'))
+  } catch {
+    info = { version: 'unknown (built without CI)' }
+  }
 }
 router.get('/info', (req, res) => {
   res.send(info)

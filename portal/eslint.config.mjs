@@ -12,7 +12,7 @@ export default withNuxt([
   // standalone false also drops the ignores Nuxt normally contributes
   { ignores: ['.nuxt/', '.output/', 'dist/', 'public/'] },
   ...pluginVue.configs['flat/recommended'],
-  ...pluginVuetify.configs['flat/recommended'],
+  ...pluginVuetify.configs['flat/recommended-v4'],
   {
     files: ['**/*.vue'],
     languageOptions: {

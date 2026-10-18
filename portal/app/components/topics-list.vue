@@ -1,7 +1,7 @@
 <template>
   <v-row
     v-if="topics.length"
-    :justify="config?.centered ? 'center' : undefined"
+    :class="config?.centered ? 'justify-center' : undefined"
     density="compact"
   >
     <v-col

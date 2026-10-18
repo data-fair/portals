@@ -8,11 +8,9 @@
   />
   <v-row
     v-else
-    :align="element.align === 'stretch' ? 'stretch' : undefined"
     :density="element.gutter === 'dense' ? 'comfortable' : undefined"
     :no-gutters="element.gutter === 'none'"
-    :justify="element.centered ? 'center' : undefined"
-    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`]"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, element.align === 'stretch' && 'align-stretch', element.centered && 'justify-center']"
   >
     <v-col
       v-for="(child, i) in element.children"
@@ -21,8 +19,7 @@
       :sm="colsConfig.sm"
       :md="colsConfig.md"
       :lg="colsConfig.lg"
-      :align-self="(element.align !== 'stretch') ? element.align : undefined"
-      :class="element.align === 'stretch' ? 'd-flex flex-column' : undefined"
+      :class="element.align === 'stretch' ? 'd-flex flex-column' : (element.align && `align-self-${element.align}`)"
     >
       <slot
         name="page-elements"
