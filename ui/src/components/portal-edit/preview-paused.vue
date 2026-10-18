@@ -1,5 +1,5 @@
 <template>
-  <div class="text-caption text-medium-emphasis px-2 py-1">
+  <div class="text-body-small text-medium-emphasis px-2 py-1">
     {{ t('paused') }}
   </div>
 </template>

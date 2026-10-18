@@ -1,6 +1,6 @@
 <template>
   <v-row
-    :justify="alignment"
+    :class="alignment && `justify-${alignment}`"
     no-gutters
     class="ga-1"
     :style="preview ? 'pointer-events: none' : undefined"

@@ -47,7 +47,7 @@
         <!-- Metadata -->
         <v-col
           :md="portalConfig.applications.page.metadata?.location === 'right' ? 4 : 12"
-          :order-md="portalConfig.applications.page.metadata?.location === 'top' ? 'first' : 1"
+          :class="portalConfig.applications.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
           <application-metadata

@@ -47,7 +47,7 @@
         <!-- Metadata -->
         <v-col
           :md="portalConfig.datasets.page.metadata?.location === 'right' ? 4 : 12"
-          :order-md="portalConfig.datasets.page.metadata?.location === 'top' ? 'first' : 1"
+          :class="portalConfig.datasets.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
           <dataset-metadata :dataset="dataset" />
@@ -256,7 +256,7 @@
               <v-col
                 :md="6"
                 cols="12"
-                :order-md="index % 2 === 0 ? 'first' : 1"
+                :class="index % 2 === 0 ? 'order-md-first' : 'order-md-1'"
               >
                 <d-frame-wrapper
                   :iframe-title="`${t('application')} - ${app.title}`"

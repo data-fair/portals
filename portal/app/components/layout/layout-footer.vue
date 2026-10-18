@@ -22,7 +22,7 @@
           <v-row
             :density="row.gutter === 'dense' ? 'comfortable' : undefined"
             :no-gutters="row.gutter === 'none'"
-            :align="row.align"
+            :class="row.align && `align-${row.align}`"
           >
             <v-col
               v-for="(blocks, columnIndex) in footerRowColumns(row)"

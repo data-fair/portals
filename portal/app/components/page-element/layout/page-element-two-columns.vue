@@ -3,13 +3,12 @@
     <v-row
       :density="element.gutter === 'dense' ? 'comfortable' : undefined"
       :no-gutters="element.gutter === 'none'"
-      :align="isStretch ? 'stretch' : undefined"
+      :class="isStretch ? 'align-stretch' : undefined"
     >
       <v-col
         :cols="12"
-        :align-self="(element.align?.left && element.align.left !== 'stretch') ? element.align.left : undefined"
         :md="element.disposition === 'left' ? 8 : (element.disposition === 'right' ? 4 : 6)"
-        :class="isStretch ? 'd-flex flex-column' : undefined"
+        :class="[isStretch && 'd-flex flex-column', element.align?.left && element.align.left !== 'stretch' && `align-self-${element.align.left}`]"
       >
         <slot
           name="page-elements"
@@ -20,9 +19,8 @@
       </v-col>
       <v-col
         :cols="12"
-        :align-self="(element.align?.right && element.align.right !== 'stretch') ? element.align.right : undefined"
         :md="element.disposition === 'left' ? 4 : (element.disposition === 'right' ? 8 : 6)"
-        :class="isStretch ? 'd-flex flex-column' : undefined"
+        :class="[isStretch && 'd-flex flex-column', element.align?.right && element.align.right !== 'stretch' && `align-self-${element.align.right}`]"
       >
         <slot
           name="page-elements"
