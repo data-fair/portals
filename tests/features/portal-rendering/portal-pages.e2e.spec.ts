@@ -50,14 +50,15 @@ test.describe('portal rendering', () => {
     })
 
     await goToPortal(portal._id)
-    // Menu items are links of the main navigation (French labels since i18n_lang=fr): nav-tabs.vue
-    // strips the tab role after hydration, getByRole('tab') only matched the SSR HTML
+    // Menu items of the main navigation (French labels since i18n_lang=fr): nav-tabs.vue renders tabs
+    // in the SSR HTML and strips the tab role after hydration, which a cold dev server can delay
     const nav = page.getByRole('navigation', { name: 'Navigation principale' })
-    await expect(nav.getByRole('link', { name: 'Catalogue de données' })).toBeVisible({ timeout: 20_000 })
-    await expect(nav.getByRole('link', { name: 'Contact' })).toBeVisible()
+    const menuItem = (name: string) => nav.getByRole('link', { name }).or(nav.getByRole('tab', { name }))
+    await expect(menuItem('Catalogue de données')).toBeVisible({ timeout: 20_000 })
+    await expect(menuItem('Contact')).toBeVisible()
 
     // Click contact link and verify navigation
-    await nav.getByRole('link', { name: 'Contact' }).click()
+    await menuItem('Contact').click()
     await expect(page).toHaveURL(/\/contact/)
     await expect(page.getByText('Contactez-nous')).toBeVisible({ timeout: 10_000 })
   })
