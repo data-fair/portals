@@ -4,7 +4,7 @@
 
 - A Javascript/Typescript IDE with [Vue.js](https://vuejs.org/) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) support.
 - A recent [Docker](https://docs.docker.com/engine/install/) installation.
-- [Node.js v24+](https://nodejs.org/) — the project ships an `.nvmrc`, so if you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use` from the project root to switch to the right version.
+- [Node.js v24.11+](https://nodejs.org/) — the postcss / cssnano dependencies of the portal need at least 24.11. The project ships an `.nvmrc` (the version of the Docker image), so if you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use` from the project root to switch to it.
 
 ## Install dependencies
 
