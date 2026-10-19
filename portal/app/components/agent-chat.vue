@@ -58,7 +58,6 @@ import { defineAsyncComponent, computed } from 'vue'
 import type { PortalConfig } from '#api/types/portal-config'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
 import { portalPromptContext } from '../composables/agent/portal-prompt-context'
-import { canSeeAgentChat, type AgentChatViewer } from '../utils/agent-chat'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -76,13 +75,17 @@ const owner = computed(() => props.owner)
 
 const session = useSession()
 
-const viewerBucket = computed<AgentChatViewer>(() => {
+const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
   if (!session.state.user) return 'anonymous'
   const role = getAccountRole(session.state, props.owner, { acceptDepAsRoot: true }) as 'user' | 'contrib' | 'admin' | undefined
   return role ?? 'external'
 })
 
-const canSee = computed(() => canSeeAgentChat(agentChat.value?.visibleTo, viewerBucket.value))
+const canSee = computed(() => {
+  const visibleTo = agentChat.value?.visibleTo
+  if (!visibleTo) return true
+  return visibleTo.includes(viewerBucket.value)
+})
 
 const systemPrompt = computed(() => {
   const base = agentChat.value?.systemPrompt || ''
