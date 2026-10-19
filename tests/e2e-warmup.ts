@@ -19,7 +19,8 @@ setup('warm up the portal and the heavy manager routes', async ({ page, goToWith
   await clean()
   const admin = await axiosAuth('test_admin@test.com')
   const portal = (await admin.post('/api/portals', {
-    config: { title: 'Warmup Portal', menu: { children: [] } }
+    // the agent chat loads its own modules after hydration, the first visit would reload the page under a test
+    config: { title: 'Warmup Portal', menu: { children: [] }, agentChat: { active: true } }
   })).data
   const createdPage = (await admin.post('/api/pages', {
     type: 'home',
@@ -32,6 +33,7 @@ setup('warm up the portal and the heavy manager routes', async ({ page, goToWith
   await page.goto(portalUrl(portal._id) + '/', { waitUntil: 'domcontentloaded' })
   // exact: the portal title "Warmup Portal" is rendered in the header too
   await expect(page.getByText('Warmup', { exact: true })).toBeVisible()
+  await expect(page.locator('.df-agent-chat-toggle')).toBeVisible()
   stamp('portal home')
 
   await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')

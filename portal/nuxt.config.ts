@@ -156,6 +156,7 @@ export default defineNuxtConfig({
         '@data-fair/lib-common-types/session/index.js',
         '@data-fair/lib-express/req-origin.js',
         '@data-fair/lib-vue-agents',
+        '@data-fair/lib-vuetify-events',
         '@data-fair/lib-vue/session.js',
         '@data-fair/lib-vue/ui-notif.js',
         '@data-fair/lib-vue/locale-dayjs.js',
