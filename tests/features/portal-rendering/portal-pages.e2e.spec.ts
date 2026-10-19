@@ -79,6 +79,36 @@ test.describe('portal rendering', () => {
     await expect(page.getByText('About Our Organization')).toBeVisible({ timeout: 10_000 })
   })
 
+  test('should fit a framed image to a narrow column without cropping it', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Image Portal', menu: { children: [] } }
+    })).data
+    const url = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1032" height="807"><rect width="1032" height="807" fill="teal"/></svg>')
+    await user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Screenshot',
+        genericMetadata: { slug: 'screenshot' },
+        elements: [{ type: 'image', url, height: 425, fitWidth: true, border: true, rounded: 'lg', title: 'Screenshot', legend: 'Caption' }]
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })
+
+    await page.setViewportSize({ width: 390, height: 844 })
+    await goToPortal(portal._id, '/pages/screenshot')
+    const img = page.getByRole('img', { name: 'Screenshot' })
+    await expect(img).toHaveClass(/\bborder\b.*\brounded-lg\b/)
+    const { imgWidth, imgHeight, colWidth } = await img.evaluate((el) => ({
+      imgWidth: el.getBoundingClientRect().width,
+      imgHeight: el.getBoundingClientRect().height,
+      colWidth: el.parentElement!.getBoundingClientRect().width
+    }))
+    expect(imgWidth).toBeLessThanOrEqual(colWidth)
+    expect(imgWidth / imgHeight).toBeCloseTo(1032 / 807, 1)
+    await expect(page.getByText('Caption')).toBeVisible()
+  })
+
   test('should render app bar and footer', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Layout Test Portal', menu: { children: [] } }

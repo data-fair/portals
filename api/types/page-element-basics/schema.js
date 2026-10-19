@@ -274,8 +274,16 @@ export default {
             children: [
               { if: '!data?.banner', children: ['cover'] },
               { if: '!data?.banner && !data?.cover', children: ['alignment'] },
-              'height'
+              'height',
+              { if: '!data?.banner && !data?.cover', children: ['fitWidth'] }
             ]
+          },
+          {
+            if: '!data?.banner && !data?.cover && data?.fitWidth',
+            comp: 'card',
+            title: 'Frame',
+            'x-i18n-title': { fr: 'Cadre' },
+            children: ['border', 'rounded', 'elevation', 'backgroundColor']
           },
           {
             comp: 'card',
@@ -305,8 +313,8 @@ export default {
           type: 'boolean',
           title: 'Full width',
           'x-i18n-title': { fr: 'Pleine largeur' },
-          description: 'Display the image edge-to-edge across the page width, using the dedicated wide image upload.',
-          'x-i18n-description': { fr: "Affiche l'image sur toute la largeur de la page, bord à bord, via l'upload d'image pleine largeur dédié." },
+          description: 'Display the image edge-to-edge across the page width. **Warning:** if you change this setting after uploading an image, upload the image again.',
+          'x-i18n-description': { fr: "Affiche l'image sur toute la largeur de la page, bord à bord. **Attention :** si vous changez ce paramètre après avoir chargé une image, il faut recharger l'image." },
           layout: 'switch'
         },
         isPresentation: {
@@ -386,15 +394,49 @@ export default {
         },
         alignment: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/horizontal-alignment',
-          description: 'Horizontal alignment when the image is narrower than the container (ignored for full-width or cropped images).',
-          'x-i18n-description': { fr: "Alignement horizontal quand l'image est plus étroite que le conteneur (sans effet en pleine largeur ou recadrée)." }
+          description: 'Horizontal alignment when the image is narrower than the container.',
+          'x-i18n-description': { fr: "Alignement horizontal quand l'image est plus étroite que le conteneur." }
+        },
+        fitWidth: {
+          type: 'boolean',
+          title: 'Fit the available width',
+          'x-i18n-title': { fr: 'Adapter à la largeur disponible' },
+          description: 'The image is never wider than the available space and keeps its natural ratio; the height becomes a maximum.',
+          'x-i18n-description': { fr: "L'image ne dépasse jamais la largeur disponible et garde son ratio naturel ; la hauteur devient une hauteur maximale." },
+          layout: 'switch'
+        },
+        border: {
+          type: 'boolean',
+          title: 'Show a border',
+          'x-i18n-title': { fr: 'Afficher une bordure' },
+          layout: 'switch'
+        },
+        rounded: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+        },
+        elevation: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+        },
+        backgroundColor: {
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          title: 'Background color',
+          'x-i18n-title': { fr: 'Couleur de fond' },
+          description: 'Visible behind the transparent parts of the image.',
+          'x-i18n-description': { fr: "Visible derrière les parties transparentes de l'image." },
+          layout: {
+            slots: {
+              item: { name: 'color-select-item' },
+              selection: { name: 'color-select-selection' }
+            },
+            props: { background: true }
+          }
         },
         height: {
           type: 'integer',
-          title: 'Fixed height (px)',
-          'x-i18n-title': { fr: 'Hauteur fixe (px)' },
-          description: 'Force a fixed height in pixels. Leave empty to keep the natural ratio.',
-          'x-i18n-description': { fr: 'Force une hauteur fixe en pixels. Laissez vide pour conserver le ratio naturel.' },
+          title: 'Height (px)',
+          'x-i18n-title': { fr: 'Hauteur (px)' },
+          description: 'Fixed height in pixels, or maximum height when "Fit the available width" is enabled. Leave empty to keep the natural size.',
+          'x-i18n-description': { fr: 'Hauteur fixe en pixels, ou hauteur maximale quand « Adapter à la largeur disponible » est activé. Laissez vide pour conserver la taille naturelle.' },
           minimum: 0
         },
         zoomable: {
