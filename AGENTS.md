@@ -75,7 +75,7 @@ Quality gates:
 |---|---|
 | commit (`.husky/pre-commit`) | `npm run lint` |
 | push (`.husky/pre-push` → `dev/pre-push.sh`) | type check, unit tests, the `@smoke` api/e2e tests, and the api/e2e spec files changed since `origin/master` |
-| pull request, release tag, nightly on master (`reuse-quality.yml`) | lint, types, UI build, audit, and the whole unit/api/e2e suite; the nightly runs without retries and is skipped when master has not moved since the last green one |
+| pull request, release tag, nightly on master (`reuse-quality.yml`) | lint, types, UI build, audit, and the whole unit/api/e2e suite; the nightly runs without retries, its e2e tests on one browser engine per night (chromium, firefox, webkit in turn; pull requests stay on chromium), and is skipped when this master commit already passed a night on that engine |
 
 `@smoke` (`test('...', { tag: '@smoke' }, ...)`) marks a few fast tests over the core flows
 (portal and page creation, publication request, image upload, portal home and navigation,

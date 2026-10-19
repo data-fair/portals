@@ -2,6 +2,10 @@ import { defineConfig, devices } from '@playwright/test'
 import 'dotenv/config'
 
 const ci = !!process.env.CI
+// e2e browser engine: chromium by default, the nightly run rotates firefox and webkit in
+const engines: Record<string, string> = { chromium: 'Desktop Chrome', firefox: 'Desktop Firefox', webkit: 'Desktop Safari' }
+const browser = devices[engines[process.env.TEST_BROWSER || 'chromium']]
+if (!browser) throw new Error(`unknown TEST_BROWSER ${process.env.TEST_BROWSER}, expected one of ${Object.keys(engines).join(', ')}`)
 
 export default defineConfig({
   testDir: './tests',
@@ -49,13 +53,13 @@ export default defineConfig({
       // cold, the portal's first page took 50 s and the page editor over 60 s (measured 2026-10)
       timeout: 300_000,
       expect: { timeout: 120_000 },
-      use: { ...devices['Desktop Chrome'], navigationTimeout: 120_000 },
+      use: { ...browser, navigationTimeout: 120_000 },
     },
     {
       name: 'e2e',
       testMatch: /.*\.e2e\.spec\.ts/,
       dependencies: ['e2e-warmup'],
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...browser },
     },
     // the page editor profiling seed (AGENTS.md "Performance profiling"): no assertion, so it
     // is only a project when PERF_SEED is set (.mcp.json sets it for the Playwright MCP server)

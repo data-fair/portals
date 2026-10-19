@@ -50,12 +50,14 @@ test.describe('portal rendering', () => {
     })
 
     await goToPortal(portal._id)
-    // Menu items should be visible as tabs (French labels since i18n_lang=fr)
-    await expect(page.getByRole('tab', { name: 'Catalogue de données' })).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByRole('tab', { name: 'Contact' })).toBeVisible({ timeout: 10_000 })
+    // Menu items are links of the main navigation (French labels since i18n_lang=fr): nav-tabs.vue
+    // strips the tab role after hydration, getByRole('tab') only matched the SSR HTML
+    const nav = page.getByRole('navigation', { name: 'Navigation principale' })
+    await expect(nav.getByRole('link', { name: 'Catalogue de données' })).toBeVisible({ timeout: 20_000 })
+    await expect(nav.getByRole('link', { name: 'Contact' })).toBeVisible()
 
-    // Click contact tab and verify navigation
-    await page.getByRole('tab', { name: 'Contact' }).click()
+    // Click contact link and verify navigation
+    await nav.getByRole('link', { name: 'Contact' }).click()
     await expect(page).toHaveURL(/\/contact/)
     await expect(page.getByText('Contactez-nous')).toBeVisible({ timeout: 10_000 })
   })
