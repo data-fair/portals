@@ -169,6 +169,7 @@ export default defineNuxtConfig({
         '@vueuse/core',
         '@mdi/js',
         'analytics',
+        'mermaid',
         'undici',
       ]
     }
