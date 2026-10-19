@@ -14,7 +14,6 @@
     "SD_PORT",
     "DF_PORT",
     "EVENTS_PORT",
-    "PROCESSINGS_PORT",
     "AGENTS_PORT",
     "BRIDGE_PORT"
   ],

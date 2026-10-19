@@ -159,7 +159,8 @@ jobs:
         mkdir -p dev/logs
         set -a; . ./.env; set +a
         NODE_ENV=development node --disable-warning=ExperimentalWarning dev/ingress-manager.ts > dev/logs/ingress-manager.log 2>&1 &
-        (cd api && NODE_ENV=development node index.ts > ../dev/logs/api.log 2>&1 &)
+        # absent-config like the api pane: events is not in the CI core
+        (export NODE_CONFIG=$(./node_modules/.bin/df-dev absent-config) && cd api && NODE_ENV=development node index.ts > ../dev/logs/api.log 2>&1 &)
         (cd ui && NODE_CONFIG_DIR=../api/config/ ../node_modules/.bin/vite --port "$DEV_UI_PORT" > ../dev/logs/ui.log 2>&1 &)
         (cd portal && NUXT_MONGO_URL="mongodb://localhost:$MONGO_PORT/data-fair-portals-development" \
           NUXT_PORTAL_URL_PATTERN="http://{subdomain}.portals.$DEV_HOST:$NGINX_PORT" \

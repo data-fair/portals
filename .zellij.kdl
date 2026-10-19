@@ -14,7 +14,6 @@ layout {
   }
   pane split_direction="vertical" {
     pane name="ui" command="bash" {
-      // under df-mem-cap's cgroup V8 sizes its heap to ~2.2 GB, and vite outgrows it on the page editor
       args "-c" "cd ui && FORCE_COLOR=1 NODE_CONFIG_DIR=../api/config/ exec ../node_modules/.bin/df-mem-cap vite --port $DEV_UI_PORT"
     }
     pane name="api" command="bash" {
