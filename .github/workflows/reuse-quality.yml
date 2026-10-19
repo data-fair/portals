@@ -4,8 +4,8 @@ name: Quality checks
 # checks and unit tests in one job; api and e2e tests on fresh runners with the core services
 # and the dev processes of the zellij layout (ingress-manager, api, ui, portal), single worker
 # each (tests share one dev env state).
-# 3 shards: measured 2026-10 locally, api + e2e take ~17 min on one worker, the e2e warm-up
-# (cold nuxt and vite, ~3 min) runs on every shard.
+# Split by project, then the e2e half in 2 shards: measured 2026-10 locally, api takes ~1 min
+# and e2e ~16 min on one worker; the e2e warm-up (cold nuxt and vite, ~3 min) runs on each shard.
 # Used by pull requests, releases and the nightly check of master; the pre-push hook only
 # runs a light subset (dev/pre-push.sh).
 
@@ -93,12 +93,16 @@ jobs:
       run: npm run test-unit
 
   tests:
+    name: tests (${{ matrix.name }})
     needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        include:
+          - { name: api, project: api, args: '' }
+          - { name: e2e 1/2, project: e2e, args: '--shard=1/2' }
+          - { name: e2e 2/2, project: e2e, args: '--shard=2/2' }
     env:
       # empty on workflow_dispatch, where playwright.config.ts falls back to 1
       TEST_RETRIES: ${{ inputs.retries }}
@@ -128,6 +132,7 @@ jobs:
       run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
 
     - name: Cache playwright browsers
+      if: matrix.project == 'e2e'
       id: playwright-cache
       uses: actions/cache@v4
       with:
@@ -135,18 +140,20 @@ jobs:
         key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ inputs.browser || 'chromium' }}
 
     - name: Install playwright browser
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      if: matrix.project == 'e2e' && steps.playwright-cache.outputs.cache-hit != 'true'
       run: npx playwright install --with-deps ${{ inputs.browser || 'chromium' }}
 
     - name: Install playwright system dependencies
-      if: steps.playwright-cache.outputs.cache-hit == 'true'
+      if: matrix.project == 'e2e' && steps.playwright-cache.outputs.cache-hit == 'true'
       run: npx playwright install-deps ${{ inputs.browser || 'chromium' }}
 
     - name: Init .env
       run: ./node_modules/.bin/df-dev init-env # local bin only: a bare npx would fetch an unrelated "df-dev" from the registry if the dependency were missing
 
-    - name: Use localhost as DEV_HOST in CI
-      run: sed -i 's/^DEV_HOST=.*/DEV_HOST=localhost/' .env
+    # a subdomain of localhost, not localhost itself: chromium does not send a cookie set on the
+    # .localhost domain to the portals' {id}.portals.<DEV_HOST> subdomains (French, cache bypass)
+    - name: Use ci.localhost as DEV_HOST in CI
+      run: sed -i 's/^DEV_HOST=.*/DEV_HOST=ci.localhost/' .env
 
     # the core services only, like a developer's default env: no test needs an optional one
     - name: Start docker compose services
@@ -184,13 +191,13 @@ jobs:
         exit 1
 
     - name: Run api and e2e tests
-      run: npm run test -- --project=api --project=e2e --shard=${{ matrix.shard }}/3
+      run: npm run test -- --project=${{ matrix.project }} ${{ matrix.args }}
 
     - name: Upload test results
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: test-results-${{ matrix.shard }}
+        name: test-results-${{ strategy.job-index }}
         path: |
           test-results/
           dev/logs/
