@@ -2,8 +2,9 @@
   <!-- Search -->
   <v-col
     v-if="showFilter('search')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-text-field
       v-model="search"
@@ -25,8 +26,9 @@
   <!-- Concepts filter (datasets only) -->
   <v-col
     v-if="showFilter('concepts')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-autocomplete
       v-model="filters.concepts.value"
@@ -47,8 +49,9 @@
   <!-- Base Application filter (applications only) -->
   <v-col
     v-if="showFilter('base-application')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-autocomplete
       v-model="filters.baseApplication.value"
@@ -69,8 +72,9 @@
   <!-- Topics filters -->
   <v-col
     v-if="showFilter('topics')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-autocomplete
       v-model="filters.topics.value"
@@ -107,8 +111,9 @@
   <!-- Keywords filters (datasets only) -->
   <v-col
     v-if="showFilter('keywords')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-autocomplete
       v-model="filters.keywords.value"
@@ -131,8 +136,9 @@
   <!-- Owners filters -->
   <v-col
     v-if="showFilter('owners')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-autocomplete
       v-model="filters.owners.value"
@@ -167,8 +173,9 @@
   <!-- Include past events filter -->
   <v-col
     v-if="showFilter('include-past')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-checkbox
       v-model="filters.includePast.value"
@@ -183,8 +190,9 @@
   <!-- Queryable datasets filter (datasets only) -->
   <v-col
     v-if="showFilter('queryable')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <v-checkbox
       v-model="filters.queryable.value"
@@ -198,8 +206,9 @@
   <!-- Sort/Order -->
   <v-col
     v-if="showFilter('sort')"
+    :lg="colSize"
     cols="12"
-    :md="colSize"
+    md="6"
   >
     <catalog-sort
       v-model:sort="sort"

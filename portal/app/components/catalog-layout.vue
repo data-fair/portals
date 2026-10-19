@@ -2,7 +2,7 @@
   <v-row>
     <!-- Left Column: Filters (256px) -->
     <v-col
-      v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.smAndDown"
+      v-if="element.filters?.items?.length && element.filters.position === 'left' && !$vuetify.display.mdAndDown"
       style="max-width: 256px;"
     >
       <v-row>
@@ -15,7 +15,8 @@
     </v-col>
 
     <!-- Main Column -->
-    <v-col>
+    <!-- min-width: 0 so a long nowrap chip (keyword, topic) truncates instead of pushing this column below the filters -->
+    <v-col style="min-width: 0;">
       <!-- Action announcements for screen readers (sort, pagination) -->
       <div
         class="d-sr-only"
@@ -45,7 +46,7 @@
 
       <!-- Standard Filters -->
       <v-row
-        v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.smAndDown)"
+        v-if="element.filters?.items?.length && (element.filters.position !== 'left' || $vuetify.display.mdAndDown)"
         class="mb-4"
       >
         <catalog-filters
