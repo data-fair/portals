@@ -87,7 +87,8 @@
     "@nuxt/devtools": "4.0.0-beta.4",
     "mermaid": {
       "katex": "0.18.10"
-    }
+    },
+    "xss": "1.0.15"
   },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
