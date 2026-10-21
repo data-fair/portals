@@ -67,6 +67,7 @@ if (!preview) {
       updatedAt: new Date().toISOString(),
       owner: session.account.value,
       topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
+      completeness: 80,
       isMetaOnly: false
     }))
   })
