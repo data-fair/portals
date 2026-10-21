@@ -15,7 +15,7 @@ import { mdiCamera } from '@mdi/js'
 import { withQuery } from 'ufo'
 import { useTheme } from 'vuetify'
 
-const { application } = defineProps<{
+const { application, appParams } = defineProps<{
   application: {
     id: string
     title: string
@@ -29,6 +29,7 @@ const { application } = defineProps<{
     }
   }
   actionStyle?: DatasetCard['actionsStyle']
+  appParams?: Record<string, string>
 }>()
 
 const { t } = useI18n()
@@ -44,6 +45,7 @@ const handleCapture = () => {
     app_primary: String(theme.current.value.colors.primary)
   }
 
+  for (const [key, value] of Object.entries(appParams ?? {})) params[`app_${key}`] = value
   for (const [key, value] of Object.entries(route.query)) {
     if (typeof value === 'string') {
       params[`app_${key}`] = value

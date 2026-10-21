@@ -456,6 +456,28 @@ export default {
             }
           }
         },
+        colors: {
+          type: 'object',
+          title: 'Couleurs de la visualisation',
+          description: 'Remplacent les couleurs du portail dans cette visualisation uniquement, telles quelles dans tous les thèmes (clair, sombre, contraste renforcé). Le texte posé sur ces couleurs et le texte écrit dans ces couleurs sont recalculés pour rester lisibles. Certaines visualisations dans une ancienne version ignorent tout ou partie de ces couleurs.',
+          layout: 'card',
+          properties: {
+            primary: {
+              type: 'string',
+              title: 'Couleur principale',
+              pattern: '^#[0-9a-fA-F]{6}$',
+              errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5',
+              layout: { comp: 'color-picker', cols: { md: 6 } }
+            },
+            secondary: {
+              type: 'string',
+              title: 'Couleur secondaire',
+              pattern: '^#[0-9a-fA-F]{6}$',
+              errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5',
+              layout: { comp: 'color-picker', cols: { md: 6 } }
+            }
+          }
+        },
         actionButtons: {
           type: 'object',
           title: 'Boutons d\'actions',
