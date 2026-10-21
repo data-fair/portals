@@ -1,6 +1,5 @@
-// The color override of an application block reaches the frame as `_t_*` (recent apps)
-// and `primary`/`secondary` (legacy apps). Without override, no `_t_*` is sent, so the
-// application keeps the hashed, immutable theme stylesheet.
+// The `_t_*` static filters of an application block reach the frame. Without them, no `_t_*`
+// is sent, so the application keeps the hashed, immutable theme stylesheet.
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
@@ -11,7 +10,7 @@ const application = { id: 'no-such-app', slug: 'no-such-app', title: 'Missing ap
 test.describe('application block colors', () => {
   test.beforeEach(clean)
 
-  test('only an overridden block sends _t_* params', async ({ page, goToPortal }) => {
+  test('only a block with _t_* static filters sends them', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'App Colors Portal', menu: { children: [] } }
     })).data
@@ -21,7 +20,7 @@ test.describe('application block colors', () => {
         title: 'Home',
         elements: [
           { uuid: 'app1', type: 'application', application },
-          { uuid: 'app2', type: 'application', application, colors: { primary: '#FF0000', secondary: '#00ff00' } }
+          { uuid: 'app2', type: 'application', application, staticFilters: [{ key: '_t_primary', value: '#FF0000' }, { key: '_t_secondary', value: '00ff00' }] }
         ]
       },
       portals: [portal._id],
@@ -38,9 +37,7 @@ test.describe('application block colors', () => {
     expect([...plain.keys()].filter(k => k.startsWith('_t_'))).toEqual([])
 
     const overridden = await srcOf(1)
-    expect(overridden.get('primary')).toBe('#FF0000')
-    expect(overridden.get('secondary')).toBe('#00ff00')
-    expect(overridden.get('_t_primary')).toBe('FF0000')
+    expect(overridden.get('_t_primary')).toBe('#FF0000')
     expect(overridden.get('_t_secondary')).toBe('00ff00')
   })
 })
