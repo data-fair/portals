@@ -110,8 +110,8 @@ export default {
     },
     showMetadataQuality: {
       type: 'boolean',
-      title: 'Afficher la qualité des métadonnées',
-      description: 'Présente quand le propriétaire a activé la complétude des métadonnées dans ses paramètres.',
+      title: 'Activer le score de complétion des métadonnées',
+      description: 'Présente quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.',
       layout: {
         comp: 'switch',
         cols: { md: 6 }

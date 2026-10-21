@@ -504,9 +504,9 @@ const qualityHint = (criterion: QualityCriterion) => {
     topics: 'Topics:'
     updatedAt: Updated at
     quality:
-      label: 'Metadata quality:'
-      title: Metadata quality
-      detail: Metadata quality detail
+      label: 'Metadata completeness score:'
+      title: Metadata completeness score
+      detail: Metadata completeness score detail
       empty: Not filled
       chars: 'no characters | {n} character | {n} characters'
       values: 'no values | {n} value | {n} values'
@@ -579,9 +579,9 @@ const qualityHint = (criterion: QualityCriterion) => {
     topics: 'Thématiques :'
     updatedAt: Mis à jour le
     quality:
-      label: 'Qualité des métadonnées :'
-      title: Qualité des métadonnées
-      detail: Détail de la qualité des métadonnées
+      label: 'Score de complétion des métadonnées :'
+      title: Score de complétion des métadonnées
+      detail: Détail du score de complétion des métadonnées
       empty: Non renseignée
       chars: 'aucun caractère | {n} caractère | {n} caractères'
       values: 'aucune valeur | {n} valeur | {n} valeurs'

@@ -3,7 +3,7 @@
     <!-- the percentage next to it carries the value -->
     <v-progress-linear
       :model-value="score"
-      :color="score >= 80 ? 'success' : score >= 50 ? 'warning' : 'error'"
+      :color="score >= 50 ? 'success' : score >= 25 ? 'warning' : 'error'"
       height="8"
       rounded
       aria-hidden="true"

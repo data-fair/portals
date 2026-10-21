@@ -336,7 +336,7 @@ const leftThumbnailStyle = computed(() => {
 <i18n lang="yaml">
   en:
     updatedAt: Updated at
-    metadataQuality: Metadata quality
+    metadataQuality: Metadata completeness score
     contentTypes:
       metadata: Metadata
       data: Data
@@ -352,7 +352,7 @@ const leftThumbnailStyle = computed(() => {
 
   fr:
     updatedAt: Mis à jour le
-    metadataQuality: Qualité des métadonnées
+    metadataQuality: Score de complétion des métadonnées
     contentTypes:
       metadata: Métadonnées
       data: Données
