@@ -18,6 +18,7 @@
       v-if="showAction('capture')"
       :application="application"
       :action-style="actionStyle"
+      :app-params="appParams"
     />
     <application-embed
       v-if="showAction('embed') && !$vuetify.display.smAndDown"
@@ -51,6 +52,7 @@ const { application, actions = [] } = defineProps<{
   actions?: readonly ApplicationAction[]
   actionStyle?: DatasetCard['actionsStyle']
   alignment?: 'start' | 'center' | 'end'
+  appParams?: Record<string, string>
 }>()
 
 const { t } = useI18n()

@@ -1,6 +1,6 @@
 {
   "name": "@data-fair/portals",
-  "version": "2.36.0",
+  "version": "2.37.1",
   "description": "Portals manager for data-fair",
   "main": "index.js",
   "type": "module",
@@ -87,7 +87,8 @@
     "@nuxt/devtools": "4.0.0-beta.4",
     "mermaid": {
       "katex": "0.18.10"
-    }
+    },
+    "xss": "1.0.15"
   },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
