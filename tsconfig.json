@@ -8,8 +8,8 @@
     "strict": true,
     "allowJs": true,
     "checkJs": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "erasableSyntaxOnly": true
   },
-  "exclude": ["node_modules", "types", "ui", "portal", "dev", "api/assets", "google-fonts-complete/"],
-  "types": ["vuetify"]
+  "exclude": ["node_modules", "types", "ui", "portal", "dev", "api/assets", "google-fonts-complete/"]
 }

@@ -8,8 +8,8 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { clean } from '../../support/axios.ts'
 import {
-  CAPTURE_URL, PORTAL_IMAGE_URL, REUSE_IMAGE_URL,
-  createCardPortal, makeDataset, makeApplication, makeReuse,
+  CAPTURE_URL, PORTAL_IMAGE_URL,
+  createCardPortal, makeDataset,
   openCatalogWithStub, recordImageRequests, stubImage, stubList,
   linkedApplication, imageRef, thumbnailSrc
 } from '../../support/cards.ts'
@@ -17,6 +17,8 @@ import {
 const TOPIC = { id: 'topic-1', title: 'Thematique', thumbnail: imageRef('topic-img-1', 'topic.png') }
 
 test.describe('card thumbnail fallback', () => {
+  // the cascade waits for failed and delayed image sources
+  test.slow()
   test.beforeEach(clean)
 
   // the whole documented chain, one broken link at a time
@@ -179,35 +181,6 @@ test.describe('card thumbnail fallback', () => {
     expect(defaults.urls).toHaveLength(0)
   })
 
-  // an application image that fails must reach the capture behind it
-  test('a broken application image falls back to the capture', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'applications',
-      card: { titleLinesCount: 2, showSummary: true, thumbnail: { show: true, location: 'center', crop: true } }
-    })
-    await stubList(page, 'applications', [makeApplication({ id: 'app-brokenimg', image: 'https://images.test/gone.png' })])
-    await stubImage(page, '**/images.test/**', 'notFound')
-    await stubImage(page, CAPTURE_URL, 'ok')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Visu app-brokenimg')
-
-    const card = page.locator('.v-card').filter({ hasText: 'Visu app-brokenimg' }).first()
-    await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toContain('/applications/app-brokenimg/capture')
-  })
-
-  // reuses only have two sources, but they cascade like the others
-  test('a broken reuse image falls back to the default image', async ({ page, goToPortal }) => {
-    const { portal, path } = await createCardPortal({
-      kind: 'reuses',
-      card: { titleLinesCount: 2, showAuthor: true, thumbnail: { show: true, location: 'center', crop: true, default: imageRef('default-1') } }
-    })
-    await stubList(page, 'reuses', [makeReuse({ _id: 'reuse-broken', config: { image: imageRef('reuse-img-1') } })])
-    await stubImage(page, REUSE_IMAGE_URL, 'notFound')
-    await stubImage(page, PORTAL_IMAGE_URL, 'ok')
-
-    await openCatalogWithStub(page, goToPortal, portal, path, 'Reutilisation reuse-broken')
-
-    const card = page.locator('.v-card').filter({ hasText: 'Reutilisation reuse-broken' }).first()
-    await expect.poll(() => thumbnailSrc(card), { timeout: 20_000 }).toContain('/portal/api/images/default-1')
-  })
+  // the order of each card kind's sources (application image then capture, reuse image then
+  // default) is unit-tested in thumbnail-candidates.unit.spec.ts; the tests above cover the cascade
 })

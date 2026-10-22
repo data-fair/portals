@@ -143,6 +143,20 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: [
         '@analytics/google-analytics',
+        '@data-fair/agent-tools-data-fair/_utils',
+        '@data-fair/agent-tools-data-fair/aggregate-data',
+        '@data-fair/agent-tools-data-fair/calculate-metric',
+        '@data-fair/agent-tools-data-fair/dataset-data-subagent',
+        '@data-fair/agent-tools-data-fair/describe-dataset',
+        '@data-fair/agent-tools-data-fair/geocode-address',
+        '@data-fair/agent-tools-data-fair/get-dataset-schema',
+        '@data-fair/agent-tools-data-fair/get-field-values',
+        '@data-fair/agent-tools-data-fair/list-datasets',
+        '@data-fair/agent-tools-data-fair/search-data',
+        '@data-fair/lib-common-types/session/index.js',
+        '@data-fair/lib-express/req-origin.js',
+        '@data-fair/lib-vue-agents',
+        '@data-fair/lib-vuetify-events',
         '@data-fair/lib-vue/session.js',
         '@data-fair/lib-vue/ui-notif.js',
         '@data-fair/lib-vue/locale-dayjs.js',
@@ -156,6 +170,8 @@ export default defineNuxtConfig({
         '@vueuse/core',
         '@mdi/js',
         'analytics',
+        'mermaid',
+        'undici',
       ]
     }
   },

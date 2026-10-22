@@ -1,5 +1,5 @@
 import type { Footer } from '../../../api/types/portal-config-footer/index.ts'
-import { test } from '@playwright/test'
+import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
 import FormData from 'form-data'
@@ -14,7 +14,7 @@ const superadmin = await axiosAuth({ email: 'test_superadmin@test.com', adminMod
 test.describe('portals management', () => {
   test.beforeEach(clean)
 
-  test('should create a portal', async () => {
+  test('should create a portal', { tag: '@smoke' }, async () => {
     const portalConfig = { title: 'Portal 1', menu: { children: [] } }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
     assert.equal(portal.owner.id, 'test_admin')
@@ -172,6 +172,7 @@ test.describe('portals management', () => {
     assert.equal(portal.config.footer.rows[0].blocks[0].type, 'links')
   })
 
+  // which footers carry the mention (copyright line, Koumoul logo): hasKoumoulMention in footer-walk.unit.spec.ts
   test('footer without any Koumoul mention is refused on a non white label portal', async () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     const draftConfig = { ...portal.draftConfig, footer: footerWith({ copyright: false }) }
@@ -179,14 +180,6 @@ test.describe('portals management', () => {
       user1.patch(`/api/portals/${portal._id}`, { draftConfig }),
       (err: any) => err.status === 400 && /Koumoul/.test(err.data ?? err.message)
     )
-  })
-
-  test('footer with the Koumoul logo in an images block is accepted without the copyright line', async () => {
-    const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
-    const footer = footerWith({ copyright: false })
-    footer.rows[0].blocks.push({ type: 'images', align: 'center', height: 40, items: [{ source: 'koumoul' }] })
-    const patched = (await user1.patch(`/api/portals/${portal._id}`, { draftConfig: { ...portal.draftConfig, footer } })).data
-    assert.equal(patched.draftConfig.footer.copyright, false)
   })
 
   test('white label portal accepts a footer without Koumoul mention', async () => {

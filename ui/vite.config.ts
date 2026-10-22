@@ -7,12 +7,18 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Vuetify from 'vite-plugin-vuetify'
 import microTemplate from '@data-fair/lib-utils/micro-template.js'
-import { autoImports } from '@data-fair/lib-vue/vite.js'
-import { settingsPath } from '@data-fair/lib-vuetify/vite.js'
+import { autoImports, componentsResolver, settingsPath } from '@data-fair/lib-vuetify/vite.js'
 import { commonjsDeps } from '@koumoul/vjsf/utils/build.js'
 
+// ports come from the .env written by df-dev (see dev/dev.json)
+const envPort = (name: string) => {
+  const port = Number(process.env[name])
+  if (!Number.isInteger(port) || port <= 0) throw new Error(`missing or invalid ${name}, run "npx --no df-dev setup"`)
+  return port
+}
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, isPreview }) => ({
   base: '/portals-manager',
   // pre-bundle dependencies to avoid full page reloads during dev
   // cf https://vite.dev/guide/dep-pre-bundling.html
@@ -52,7 +58,8 @@ export default defineConfig({
   plugins: [
     VueRouter({
       dts: './dts/typed-router.d.ts',
-      exclude: process.env.NODE_ENV === 'development' ? [] : ['src/pages/dev.vue', 'src/pages/topics.vue']
+      // dev pages are never bundled; the vite command is reliable where an inherited NODE_ENV is not
+      exclude: command === 'build' ? ['src/pages/dev.vue', 'src/pages/topics.vue'] : []
     }),
     Vue({ template: { compilerOptions: { isCustomElement: (tag) => ['d-frame'].includes(tag) } } }),
     VueI18nPlugin({ strictMessage: false }),
@@ -77,7 +84,8 @@ export default defineConfig({
         'src/components',
         '../portal/app/components'
       ],
-      globsExclude: ['../portal/app/components/d-frame-wrapper.vue']
+      globsExclude: ['../portal/app/components/d-frame-wrapper.vue'],
+      resolvers: [componentsResolver]
     }),
     {
       name: 'inject-site-context',
@@ -95,5 +103,7 @@ export default defineConfig({
       return { relative: true }
     }
   },
-  server: { hmr: { port: parseInt(process.env.DEV_UI_HMR_PORT!) } }
-})
+  server: command === 'serve' && !isPreview
+    ? { port: envPort('DEV_UI_PORT'), strictPort: true, hmr: { port: envPort('DEV_UI_HMR_PORT') } }
+    : undefined
+}))

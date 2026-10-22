@@ -2,7 +2,7 @@ import { createServer } from 'node:http'
 import * as wsServer from '@data-fair/lib-express/ws-server.js'
 import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import { session } from '@data-fair/lib-express/index.js'
-import { startObserver, stopObserver, internalError } from '@data-fair/lib-node/observer.js'
+import { startObserver, stopObserver } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import locks from '@data-fair/lib-node/locks.js'
@@ -29,13 +29,8 @@ export const start = async () => {
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
 
   // Configure events queue
-  if (config.privateEventsUrl) {
-    if (!config.secretKeys.events) {
-      internalError('portals', 'Missing secretKeys.events in config')
-    } else {
-      await eventsQueue.start({ eventsUrl: config.privateEventsUrl, eventsSecret: config.secretKeys.events })
-    }
-  }
+  // without the events service (optional) the queue is inactive and pushEvent is a no-op
+  await eventsQueue.start({ eventsUrl: config.privateEventsUrl, eventsSecret: config.secretKeys.events })
 
   server.listen(config.port)
   await eventPromise(server, 'listening')

@@ -13,6 +13,7 @@ export default {
       'reuses',
       'seo',
       'simulations',
+      'dev',
     ]],
     'scope-empty': [1, 'never'],
   },

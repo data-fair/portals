@@ -51,7 +51,8 @@ app.use('/api/fonts', fontsRouter)
 app.use('/api/font-assets', fontAssetsRouter)
 app.use('/api/limits', limitsRouter)
 
-if (process.env.NODE_ENV !== 'production') {
+// unauthenticated and destructive: only in the dev environment, which is also the test environment
+if (process.env.NODE_ENV === 'development') {
   const testEnvRouter = (await import('./test-env.ts')).default
   app.use('/api/test-env', testEnvRouter)
 }
