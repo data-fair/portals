@@ -7,6 +7,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 const toolJson = (result: any) => JSON.parse(result?.content?.[0]?.text)
 
 test.describe('page edit WebMCP agent integration', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('should register WebMCP tools and share state with VJSF form', async ({ page, goToWithAuth }) => {
@@ -45,7 +47,7 @@ test.describe('page edit WebMCP agent integration', () => {
       const toolNames = mc.listTools().map((t: any) => t.name)
       return toolNames.includes('pageConfig_getData') &&
              toolNames.includes('pageConfig_setFieldValue')
-    }, { timeout: 30_000 })
+    }, undefined, { timeout: 30_000 })
 
     // Test state sharing: use WebMCP callTool to change the title
     // The title field is at /$comp-1/title due to the layout section wrapper
@@ -103,7 +105,7 @@ test.describe('page edit WebMCP agent integration', () => {
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       return mc && typeof mc.listTools === 'function' && mc.listTools().some((t: any) => t.name === 'pageConfig_getData')
-    }, { timeout: 30_000 })
+    }, undefined, { timeout: 30_000 })
 
     // Verify getData returns elements
     const getData = await page.evaluate(async () => {
@@ -128,7 +130,7 @@ test.describe('page edit WebMCP agent integration', () => {
       owner: portal.owner
     })).data
     await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
-    await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_describeState'), { timeout: 30_000 })
+    await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_describeState'), undefined, { timeout: 30_000 })
     const described = await page.evaluate(async () => {
       const result = await (navigator as any).modelContext.callTool({ name: 'pageConfig_describeState', arguments: {} })
       return result.content.map((c: any) => c.text).join('')

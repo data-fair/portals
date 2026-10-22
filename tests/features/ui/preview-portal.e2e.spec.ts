@@ -7,6 +7,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 // route lost its ?portal= query, and « Portail de prévisualisation » stayed empty: the default
 // portal was only chosen once, when the page was first loaded.
 test.describe('the portal a page is previewed on', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('is chosen again when a navigation drops it from the route', async ({ page, goToWithAuth }) => {

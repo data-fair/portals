@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import 'dotenv/config'
 import { axios, axiosAuth, clean } from '../../support/axios.ts'

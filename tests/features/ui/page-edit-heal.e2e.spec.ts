@@ -37,6 +37,8 @@ const createPage = async () => {
 }
 
 test.describe('page editor on legacy configs rejected by the schema', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('heals stale properties and saves the draft again', async ({ page, goToWithAuth }) => {

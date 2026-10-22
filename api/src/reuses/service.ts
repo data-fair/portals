@@ -6,7 +6,6 @@ import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@d
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
-import config from '#config'
 
 const debug = debugModule('reuses')
 
@@ -171,8 +170,6 @@ export const sendReuseEvent = (
   sessionState?: SessionStateAuthenticated,
   body?: string
 ) => {
-  if (!config.privateEventsUrl && !config.secretKeys.events) return
-
   const title = `La réutilisation ${reuse.title} ${actionText}`
 
   eventsQueue.pushEvent({

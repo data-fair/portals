@@ -4,56 +4,29 @@
 
 - A Javascript/Typescript IDE with [Vue.js](https://vuejs.org/) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) support.
 - A recent [Docker](https://docs.docker.com/engine/install/) installation.
-- [Node.js v24+](https://nodejs.org/) — the project ships an `.nvmrc`, so if you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use` from the project root to switch to the right version.
+- [Node.js v24.11+](https://nodejs.org/) — the postcss / cssnano dependencies of the portal need at least 24.11. The project ships an `.nvmrc` (the version of the Docker image), so if you use [nvm](https://github.com/nvm-sh/nvm) you can simply run `nvm use` from the project root to switch to it.
 
 ## Install dependencies
 
-1. Generate the `.env` file (random ports, dev host) — only needed once on the main checkout, worktrees created via `./dev/worktree.sh` do this automatically :
-
 ```sh
-./dev/init-env.sh
+npm ci
+npx --no df-dev setup   # .env with free ports (kept if it exists, --force to redraw), types, UI build (once)
 ```
-
-2. Install npm dependencies for all workspaces :
-
-```sh
-npm i
-```
-
-3. Build / Update the types based on schemas :
-
-```sh
-npm run build-types
-```
-
-4. Build the UI once :
-
-```sh
-npm -w ui run build
-```
-
-> Known bug: the API currently fails to start without a built UI bundle, so this initial build is required even for pure API/dev work. It only needs to be re-run if you blow away `ui/dist`.
 
 ## Start the development environment
 
 ```sh
-npm run dev-zellij
+npm run dev-zellij                                        # core containers + api, ui, portal, ingress manager
+npm run dev-zellij -- --services agents,events,maildev    # with the optional containers
 ```
 
-*Note : This command will start a Zellij session with 4 panes, each one running a part of the project. You can also run the environment manually by running the commands below in 4 different terminals.*
+This opens a zellij (>= 0.44) session named after the checkout directory, or attaches to it if it is already running. The `status` pane shows containers, panes and memory; the `bridge` pane (Claude Code bridge for the simulations) waits for Enter.
 
-<details>
-<summary>Services</summary>
-
-- **Dev dependencies** (docker compose stack) : `npm run dev-deps`
-- **API** : `npm run dev-api`
-- **UI** : `npm run dev-ui`
-- **Portal** : `npm run dev-portal`
-- **Mock ingress manager** : `npm run dev-ingress-manager`
-
-</details>
+From another terminal (or an agent): `npx --no df-dev status`, `npx --no df-dev logs <pane>`, `npx --no df-dev restart <pane>`, `npx --no df-dev up <service>`.
 
 ## Stop the development environment
+
+Quit zellij, then:
 
 ```sh
 npm run stop-dev-deps
@@ -61,7 +34,7 @@ npm run stop-dev-deps
 
 ## Working with Git Worktrees
 
-This project supports git worktrees with fully isolated port allocations, allowing multiple branches to run concurrently (useful for AI agents or parallel development). Run `./dev/worktree.sh <branch-name>` to create a new worktree with its own `.env`, Docker Compose project, and randomized port range. When setting up for the first time, not in a worktree, you can run `./dev/init-env.sh`.
+From the main checkout, `npx --no df-worktree <branch-name>` creates `../portals_<branch-name>` with its own `.env`, docker compose project and ports; `npx --no df-worktree-delete <branch-name>` removes it with its containers and volumes. Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
 
 ## Building the Docker images
 

@@ -7,6 +7,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 // « Paramètres généraux », the form sub-agent claimed « Barre de navigation » was open, and the
 // person went looking for the change. A tool's write now opens the tab that shows it, and says so.
 test.describe('open sections of the portal editor', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('a form tool writing in another tab opens that tab', async ({ page, goToWithAuth }) => {
