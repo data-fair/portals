@@ -7,9 +7,11 @@ const user1 = await axiosAuth('test_admin@test.com')
 // view's draft preview, and from the editor reopened from there. Both read the page store of
 // the parent route, loaded once: the draft saved by the editor never reached it.
 test.describe('page store', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
-  test('the page view and the reopened editor show the draft the editor saved', async ({ page, goToWithAuth }) => {
+  test('the page view and the reopened editor show the draft the editor saved', { tag: '@smoke' }, async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Store Portal', menu: { children: [] } } })).data
     const createdPage = (await user1.post('/api/pages', {
       type: 'generic',

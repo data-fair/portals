@@ -13,19 +13,21 @@ transcript.
 
 Three things must be true, and each fails confusingly if it is not:
 
-1. The dev stack is up — `bash dev/scripts/status.sh`: nginx, dev-api, dev-ui,
-   portal, simple-directory, data-fair, mongo, elasticsearch, and the `agents`
-   container. Back-office cases run the manager UI from the `dev-ui` server inside
-   the data-fair shell; portal cases run the `portal` dev server.
+1. The dev stack is up — `npx --no df-dev status`: core containers (nginx, simple-directory,
+   data-fair, mongo, elasticsearch) healthy, panes `api`, `ui`, `portal` running, and the
+   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`).
+   Back-office cases run the manager UI from the `ui` pane inside the data-fair shell;
+   portal cases run the `portal` pane.
 2. The data-fair container runs with `PRIVATE_AGENTS_URL` (see docker-compose.yml).
    Without it the back-office shows no chat at all and every back-office case dies
    waiting for the chat toggle. A container created before that line was added must
-   be recreated by the user (`docker compose --profile dev up -d data-fair`).
-3. The bridge is running — it has a `bridge` pane in the zellij layout, and
-   `bash dev/scripts/status.sh` reports it as `dev-bridge (opt)`. The runner checks it
-   and says so. Only the maintainer starts it (`npm run dev-bridge`).
+   be recreated by the user (`docker compose up -d data-fair`).
+3. The bridge is running — the `bridge` pane of the zellij layout starts suspended; the
+   maintainer presses Enter in it. `npx --no df-dev status` shows the pane running. The runner
+   checks the bridge and says so.
 
-Ask the user to start anything that is down. Never start or stop dev processes yourself.
+Use `npx --no df-dev up agents` for the agents container. Ask the user for anything else that
+is down (the session, the bridge). Never use docker or kill directly.
 
 A run calls `clean()`, which wipes the dev environment's test state — see the warning
 in AGENTS.md's Simulations section for exactly what it deletes. Do not run simulations

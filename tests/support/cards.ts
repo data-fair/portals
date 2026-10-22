@@ -28,7 +28,6 @@ const LIST_ENDPOINT: Record<CardKind, string> = {
 
 export const CAPTURE_URL = '**/data-fair/api/v1/applications/*/capture**'
 export const PORTAL_IMAGE_URL = '**/portal/api/images/**'
-export const REUSE_IMAGE_URL = '**/portal/api/reuses/*/images/**'
 
 /** 1x1 transparent PNG, small enough to inline and a valid image for the browser */
 const PNG_1X1 = Buffer.from(
@@ -181,41 +180,6 @@ export const makeDataset = (over: Record<string, any> = {}) => {
   }
 }
 
-export const makeApplication = (over: Record<string, any> = {}) => {
-  const id = over.id ?? nextId('app')
-  return {
-    id,
-    slug: id,
-    title: `Visu ${id}`,
-    summary: `Resume de ${id}`,
-    updatedAt: '2026-01-01T00:00:00.000Z',
-    owner: { type: 'organization', id: 'test_org', name: 'Test Org' },
-    url: 'https://koumoul.com/apps/probe/1/',
-    href: `http://data-fair.test/data-fair/api/v1/applications/${id}`,
-    exposedUrl: `http://data-fair.test/data-fair/app/${id}`,
-    public: true,
-    ...over
-  }
-}
-
-export const makeReuse = (over: Record<string, any> = {}) => {
-  const id = over._id ?? nextId('reuse')
-  const { config: configOver, ...rest } = over
-  return {
-    _id: id,
-    slug: id,
-    updatedAt: '2026-01-01T00:00:00.000Z',
-    config: {
-      title: `Reutilisation ${id}`,
-      summary: `Resume de ${id}`,
-      author: 'Auteur test',
-      ...configOver
-    },
-    ...rest
-  }
-}
-
-/** An application entry as it appears in dataset.extras.applications */
 export const linkedApplication = (id: string) => ({
   id,
   slug: id,

@@ -5,7 +5,10 @@
       "args": [
         "playwright",
         "run-test-mcp-server"
-      ]
+      ],
+      "env": {
+        "PERF_SEED": "1"
+      }
     }
   }
 }

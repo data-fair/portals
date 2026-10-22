@@ -40,6 +40,7 @@ The allowed scopes are enforced by `commitlint.config.ts` (`scope-enum`, level `
 | `reuses` | Content reuse system |
 | `seo` | SEO improvements (`robots.txt`, `sitemap.xml`, `.well-known/*`, structured data, crawl rules) |
 | `simulations` | Judged agent simulations (`simulations/`, sim config, agents-sim skill, QA doc) |
+| `dev` | Dev environment: zellij layout, `dev/dev.json`, docker-compose dev services, worktree and agent tooling (`@data-fair/lib-dev`) |
 
 ### Scope is editorial, not mechanical
 

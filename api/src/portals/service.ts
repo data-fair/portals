@@ -407,8 +407,6 @@ export const sendPortalEvent = (
   sessionState?: SessionStateAuthenticated,
   body?: string
 ) => {
-  if (!config.privateEventsUrl && !config.secretKeys.events) return
-
   const title = topicAction.includes('draft-')
     ? `Le brouillon du portail ${portal.title} ${actionText}`
     : `Le portail ${portal.title} ${actionText}`

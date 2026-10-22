@@ -28,6 +28,8 @@ const readAgentState = async (page: Page) => {
 // Judged simulations: the assistant only knew the route, so it invented buttons,
 // never learned that edits are drafts, and never found where the menu is edited.
 test.describe('agent host state of the editors', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('the page editor publishes its guidance and the draft state', async ({ page, goToWithAuth }) => {

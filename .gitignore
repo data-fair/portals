@@ -1,13 +1,25 @@
+# dependencies and generated code
 node_modules/
-api/config/local-*
 .type/
-/google-fonts-complete
-ui/src/components/vjsf
-tmp/
-data/
+
+# local environment and data
 .env
-.vscode
+**/config/local-*
+data/
 dev/logs/
+
+# test output
 test-results/
-.playwright-mcp
+playwright-report/
+
+# agent working files
+docs/superpowers/
+.superpowers/
+.playwright-mcp/
+
+# portals
+ui/src/components/vjsf
+/google-fonts-complete
+tmp/
 /simulations/tmp/
+.vscode

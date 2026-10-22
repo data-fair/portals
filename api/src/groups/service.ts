@@ -3,7 +3,6 @@ import type { SessionStateAuthenticated } from '@data-fair/lib-express'
 import Debug from 'debug'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import mongo from '#mongo'
-import config from '#config'
 
 const debug = Debug('groups')
 
@@ -72,8 +71,6 @@ export const sendGroupEvent = (
   sessionState?: SessionStateAuthenticated,
   body?: string
 ) => {
-  if (!config.privateEventsUrl && !config.secretKeys.events) return
-
   const title = `Le groupe de pages ${group.title} ${actionText}`
 
   eventsQueue.pushEvent({

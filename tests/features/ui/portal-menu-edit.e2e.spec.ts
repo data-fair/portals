@@ -6,6 +6,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 // Judged simulations: after « Ajouter un lien », the new « Lien non configuré » row had a
 // drop-down with no name, so neither the person nor the assistant could say where to click.
 test.describe('menu items of the portal editor', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('a new menu item names the drop-down that chooses its type', async ({ page, goToWithAuth }) => {

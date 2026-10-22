@@ -7,6 +7,8 @@ const user1 = await axiosAuth('test_admin@test.com')
 // concluded nothing was saved, although the draft had been published. The action was
 // a list item without a button role and validating gave no feedback at all.
 test.describe('draft actions of the page editor', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('validating the draft is a button that confirms and then disables itself', async ({ page, goToWithAuth }) => {
@@ -66,6 +68,8 @@ test.describe('draft actions of the page editor', () => {
 })
 
 test.describe('validating while the page draft is being saved', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('validating right after an edit publishes that edit, once it is saved', async ({ page, goToWithAuth }) => {
@@ -105,6 +109,8 @@ test.describe('validating while the page draft is being saved', () => {
 // as a draft and enabled « Valider le brouillon »: a change nobody made, which the
 // assistant then warned about (« modifications non publiées ») in judged simulations.
 test.describe('draft actions of the portal editor', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('opening a portal saves nothing, an edit makes a draft to validate', async ({ page, goToWithAuth }) => {
@@ -170,6 +176,8 @@ test.describe('draft actions of the portal editor', () => {
 // brouillon » stayed lit with nothing to validate. Each edit saved the form's copy of the
 // config, which carries the defaults the form fills in as it opens.
 test.describe('draft actions of the portal editor', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('an edit undone by hand leaves nothing to validate', async ({ page, goToWithAuth }) => {
@@ -201,6 +209,8 @@ test.describe('draft actions of the portal editor', () => {
 // changement » stayed disabled. Their edits reach the visible form as outside data, which the
 // editor took for the form filling itself in as it opens: it reset the undo history.
 test.describe('undoing an edit of the assistant', () => {
+  // the vjsf page / portal editor loads in 10-25 s on a busy dev env
+  test.slow()
   test.beforeEach(clean)
 
   test('an edit made by the form tools before any by the person can be undone', async ({ page, goToWithAuth }) => {
