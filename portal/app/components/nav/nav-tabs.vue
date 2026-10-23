@@ -49,6 +49,7 @@
             :children="link.children"
             :list-id="`nav-submenu-${i}`"
             :list-label="link.title"
+            @keydown="(e: KeyboardEvent) => onMenuKeydown(i, e)"
           />
         </v-menu>
         <v-tab
@@ -140,6 +141,24 @@ function onMenuToggle (tabIndex: number, open: boolean) {
     if (document.activeElement !== first && attempts++ < 10) setTimeout(tryFocus, 20)
   }
   tryFocus()
+}
+
+/**
+ * Tab past the last item: VMenu closes and VOverlay gives the focus back to the
+ * trigger, then the browser's default Tab moves on from it in Chromium but stays
+ * on it in Firefox. Move to the tab stop after the trigger ourselves.
+ */
+function onMenuKeydown (tabIndex: number, e: KeyboardEvent) {
+  if (e.key !== 'Tab' || e.shiftKey) return
+  const items = document.querySelectorAll<HTMLElement>(`#nav-submenu-${tabIndex} .v-list-item`)
+  if (e.target !== items[items.length - 1]) return
+  e.preventDefault()
+  const trigger = navRootRef.value?.querySelector(`[aria-controls="nav-submenu-${tabIndex}"]`)
+  const tabStops = [...document.querySelectorAll<HTMLElement>('a[href], button, input, select, textarea, [tabindex]')]
+    .filter(el => el.tabIndex >= 0 && !el.matches(':disabled') && !el.closest('.v-overlay-container') && el.checkVisibility())
+  const next = trigger && tabStops[tabStops.indexOf(trigger as HTMLElement) + 1]
+  // after VOverlay's focus return, which runs in a post-flush watcher
+  setTimeout(() => next?.focus())
 }
 
 onMounted(() => {

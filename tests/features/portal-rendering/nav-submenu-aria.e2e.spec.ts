@@ -149,7 +149,7 @@ test.describe('header submenu accessibility', () => {
     await page.keyboard.press('Tab')
 
     await expect(trigger).toHaveAttribute('aria-expanded', 'false')
-    await expect(trigger).not.toBeFocused()
+    await expect(page.locator('.nav-tabs a[href="/reuses"]')).toBeFocused()
   })
 })
 
