@@ -31,7 +31,9 @@ export default defineNuxtConfig({
     port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  // the CSP blocks its websocket, so it never connects, and Firefox throws on the blocked
+  // connection: the dev error overlay then takes the page down
+  devtools: { enabled: false },
   // avoid infinite options traversal in stripDebugProxies during build if DEBUG env var is set
   debug: false,
   experimental: {
