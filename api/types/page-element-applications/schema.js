@@ -431,7 +431,7 @@ export default {
             "Filtres transmis à la visualisation au chargement, sans apparaître dans l'URL de la page. Le visiteur peut les modifier si la visualisation le permet.",
             '- **Concept** - `_c_<concept>_<opérateur>`, par exemple `_c_commune_eq`',
             '- **Colonne** - `_d_<id du jeu de données>_<colonne>_<opérateur>`, par exemple `_d_mon-jdd_annee_gte`',
-            '- **Marqueur de sélection** - `_s_<concept>` ou `_s_<id du jeu de données>_<colonne>`, associé à un filtre `_c_`/`_d_` pour marquer une sélection reçue (convention inter-apps `_s_`) et non une restriction.',
+            '- **Couleurs** - `_t_primary` ou `_t_secondary`, par exemple `#1E88E5`, remplacent les couleurs du portail dans cette visualisation uniquement.',
             '',
             'Opérateurs : `eq`, `neq`, `in`, `nin` (valeurs séparées par des virgules), `lt`, `lte`, `gt`, `gte`, `starts`, `exists`, `nexists`, `contains`, `search`.'
           ].join('\n'),
@@ -446,35 +446,23 @@ export default {
               key: {
                 type: 'string',
                 title: 'Paramètre',
-                pattern: '^_(c|d|id|s)_',
-                errorMessage: 'Le paramètre doit commencer par _c_, _d_, _id_ ou _s_'
+                pattern: '^(_(c|d|id)_|_t_(primary|secondary)$)',
+                errorMessage: 'Le paramètre doit commencer par _c_, _d_ ou _id_, ou être _t_primary ou _t_secondary'
               },
               value: {
                 type: 'string',
                 title: 'Valeur'
               }
-            }
-          }
-        },
-        colors: {
-          type: 'object',
-          title: 'Couleurs de la visualisation',
-          description: 'Remplacent les couleurs du portail dans cette visualisation uniquement, telles quelles dans tous les thèmes (clair, sombre, contraste renforcé). Le texte posé sur ces couleurs et le texte écrit dans ces couleurs sont recalculés pour rester lisibles. Certaines visualisations dans une ancienne version ignorent tout ou partie de ces couleurs.',
-          layout: 'card',
-          properties: {
-            primary: {
-              type: 'string',
-              title: 'Couleur principale',
-              pattern: '^#[0-9a-fA-F]{6}$',
-              errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5',
-              layout: { comp: 'color-picker', cols: { md: 6 } }
             },
-            secondary: {
-              type: 'string',
-              title: 'Couleur secondaire',
-              pattern: '^#[0-9a-fA-F]{6}$',
-              errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5',
-              layout: { comp: 'color-picker', cols: { md: 6 } }
+            // simple-directory rejects any other color value, the visualization would lose its theme
+            if: { required: ['key'], properties: { key: { pattern: '^_t_' } } },
+            then: {
+              properties: {
+                value: {
+                  pattern: '^#?[0-9a-fA-F]{6}$',
+                  errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5'
+                }
+              }
             }
           }
         },

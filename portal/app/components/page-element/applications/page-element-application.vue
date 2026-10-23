@@ -13,7 +13,7 @@
       :actions="element.actionButtons?.items"
       :action-style="element.actionButtons?.style"
       :alignment="element.actionButtons?.alignment ?? 'start'"
-      :app-params="colorParams"
+      :app-params="appParams"
     />
 
     <!-- In preview, we just show a screenshot for performance reasons -->
@@ -51,7 +51,7 @@
       :actions="element.actionButtons?.items"
       :action-style="element.actionButtons?.style"
       :alignment="element.actionButtons?.alignment ?? 'start'"
-      :app-params="colorParams"
+      :app-params="appParams"
     />
   </div>
 </template>
@@ -82,26 +82,23 @@ const syncParams = computed(() => {
   return undefined
 })
 
+// Static filters live in the src only: d-frame never copies a param still equal to its src value
+// up to the page URL, so they act as invisible defaults. `_t_*` ones override the site colors.
+const staticParams = computed(() => Object.fromEntries((element.staticFilters ?? [])
+  .filter(filter => filter.key && filter.value)
+  .map(filter => [filter.key, filter.value])))
 const theme = useTheme()
-// Recent apps follow the site theme and its `_t_*` local override, legacy apps only read `primary`/`secondary`.
-// `_t_*` drops the hashed, immutable `_theme.css`, so it is only sent when the block overrides a color.
-const colorParams = computed(() => {
+// Legacy apps only read `primary`/`secondary`: the `_t_*` overrides are mirrored there.
+const appParams = computed(() => {
   const params: Record<string, string> = { primary: theme.current.value.colors.primary as string }
   for (const key of ['primary', 'secondary'] as const) {
-    const color = element.colors?.[key]
-    if (!color) continue
-    params[key] = color
-    params[`_t_${key}`] = color.slice(1)
+    const color = staticParams.value[`_t_${key}`]
+    if (color) params[key] = color.startsWith('#') ? color : `#${color}`
   }
-  return params
+  return { ...params, ...staticParams.value }
 })
-// Static filters live in the src only: d-frame never copies a param still equal to its src value
-// up to the page URL, so they act as invisible defaults.
 const frameSrc = computed(() => {
-  const params = new URLSearchParams({ 'd-frame': 'true', ...colorParams.value })
-  for (const filter of element.staticFilters ?? []) {
-    if (filter.key && filter.value) params.set(filter.key, filter.value)
-  }
+  const params = new URLSearchParams({ 'd-frame': 'true', ...appParams.value })
   return `/data-fair/app/${element.application?.slug}?${params}`
 })
 
