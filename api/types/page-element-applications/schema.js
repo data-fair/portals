@@ -446,12 +446,22 @@ export default {
               key: {
                 type: 'string',
                 title: 'Paramètre',
-                pattern: '^_(c|d|id|t)_',
-                errorMessage: 'Le paramètre doit commencer par _c_, _d_, _id_ ou _t_'
+                pattern: '^(_(c|d|id)_|_t_(primary|secondary)$)',
+                errorMessage: 'Le paramètre doit commencer par _c_, _d_ ou _id_, ou être _t_primary ou _t_secondary'
               },
               value: {
                 type: 'string',
                 title: 'Valeur'
+              }
+            },
+            // simple-directory rejects any other color value, the visualization would lose its theme
+            if: { required: ['key'], properties: { key: { pattern: '^_t_' } } },
+            then: {
+              properties: {
+                value: {
+                  pattern: '^#?[0-9a-fA-F]{6}$',
+                  errorMessage: 'Couleur hexadécimale sans transparence attendue, par exemple #1E88E5'
+                }
               }
             }
           }

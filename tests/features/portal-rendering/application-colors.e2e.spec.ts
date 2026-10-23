@@ -1,5 +1,6 @@
-// The `_t_*` static filters of an application block reach the frame. Without them, no `_t_*`
-// is sent, so the application keeps the hashed, immutable theme stylesheet.
+// The `_t_*` static filters of an application block reach the frame, mirrored as
+// `primary`/`secondary` for legacy apps. Without them, no `_t_*` is sent, so the application
+// keeps the hashed, immutable theme stylesheet.
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
@@ -37,6 +38,8 @@ test.describe('application block colors', () => {
     expect([...plain.keys()].filter(k => k.startsWith('_t_'))).toEqual([])
 
     const overridden = await srcOf(1)
+    expect(overridden.get('primary')).toBe('#FF0000')
+    expect(overridden.get('secondary')).toBe('#00ff00')
     expect(overridden.get('_t_primary')).toBe('#FF0000')
     expect(overridden.get('_t_secondary')).toBe('00ff00')
   })

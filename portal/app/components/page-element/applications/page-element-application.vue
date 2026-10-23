@@ -13,7 +13,7 @@
       :actions="element.actionButtons?.items"
       :action-style="element.actionButtons?.style"
       :alignment="element.actionButtons?.alignment ?? 'start'"
-      :app-params="staticParams"
+      :app-params="appParams"
     />
 
     <!-- In preview, we just show a screenshot for performance reasons -->
@@ -51,7 +51,7 @@
       :actions="element.actionButtons?.items"
       :action-style="element.actionButtons?.style"
       :alignment="element.actionButtons?.alignment ?? 'start'"
-      :app-params="staticParams"
+      :app-params="appParams"
     />
   </div>
 </template>
@@ -88,8 +88,17 @@ const staticParams = computed(() => Object.fromEntries((element.staticFilters ??
   .filter(filter => filter.key && filter.value)
   .map(filter => [filter.key, filter.value])))
 const theme = useTheme()
+// Legacy apps only read `primary`/`secondary`: the `_t_*` overrides are mirrored there.
+const appParams = computed(() => {
+  const params: Record<string, string> = { primary: theme.current.value.colors.primary as string }
+  for (const key of ['primary', 'secondary'] as const) {
+    const color = staticParams.value[`_t_${key}`]
+    if (color) params[key] = color.startsWith('#') ? color : `#${color}`
+  }
+  return { ...params, ...staticParams.value }
+})
 const frameSrc = computed(() => {
-  const params = new URLSearchParams({ 'd-frame': 'true', primary: theme.current.value.colors.primary as string, ...staticParams.value })
+  const params = new URLSearchParams({ 'd-frame': 'true', ...appParams.value })
   return `/data-fair/app/${element.application?.slug}?${params}`
 })
 
