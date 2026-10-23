@@ -133,3 +133,21 @@ the instance is created; switching `current` still works on both sides.
 
 **Removal criterion**: when Vuetify stops the watcher during SSR (no upstream issue as of 2026-10-23).
 Check with a loop of `createVuetify()` + `renderToString()`: the heap must stay flat.
+
+## Userland workarounds
+
+Fixes applied outside `patch-package` (plugins, config), for defects that belong upstream.
+
+### `portal/server/plugins/prefetch-links.ts` — W3C HTML validity for Nuxt prefetch links
+
+Nuxt (through `vue-bundle-renderer`) renders the chunks of other routes as
+`<link rel="prefetch" as="script">` (and `as="style"`). The hint is sensible and Chromium uses it to
+type the request, but the HTML spec only allows `as` with `rel="preload"` / `rel="modulepreload"`, so
+the W3C validator reports 14 to 38 errors per portal page. RGAA 8.2.
+
+The plugin drops `as` from prefetch links in the rendered `<head>`. The prefetch itself is kept, and
+`modulepreload` / `preload` links keep their `as`. Nothing to see in dev: Nuxt only renders these
+links in a production build.
+
+**Removal criterion**: when the HTML spec allows `as` on `rel="prefetch"` (whatwg/html#5229), or when Nuxt stops
+rendering it (nuxt/nuxt#19752, closed without fix as of 2026-10-23).
