@@ -119,3 +119,17 @@ stays valid.
 > components in `portal/nuxt.config.ts` — the overlay stays mounted, so the ids always
 > resolve. The lists are virtualised, so mounting them up front costs a window of items,
 > not the whole set. Tracked upstream as vuetifyjs/vuetify#23119.
+
+### `lib/locale/adapters/vuetify.js` — SSR memory leak of the locale adapter
+
+Vuetify 4.3.0 rebuilt the default locale adapter on `@vuetify/v0`: each instance builds a locale bundle
+and deep-watches `messages`. Those messages wrap the module-level catalogs (`en`, the `fr`/`en`
+imported in `03-vuetify.ts`), whose reactive deps are shared by every instance, and the server never
+stops the watcher. Every SSR request therefore stays subscribed and keeps its bundle alive (~200 KB per
+render): the portal reached its 4 GB heap limit every ~6 h on staging. Vuetify 4.2.4 had no watcher.
+
+This patch only registers that watcher in the browser. The server never changes the catalogs after
+the instance is created; switching `current` still works on both sides.
+
+**Removal criterion**: when Vuetify stops the watcher during SSR (no upstream issue as of 2026-10-23).
+Check with a loop of `createVuetify()` + `renderToString()`: the heap must stay flat.
