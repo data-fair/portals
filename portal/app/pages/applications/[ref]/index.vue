@@ -154,7 +154,7 @@ const datasetsUrl = computed(() => {
   const datasetsIds = appConfigFetch.data.value?.datasets?.map(d => d.id || d.href.split('/').pop())
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+    select: 'id,slug,title,summary,description,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,completeness,-userPermissions',
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
