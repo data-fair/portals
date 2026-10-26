@@ -344,7 +344,7 @@
 
         <v-row class="d-flex align-stretch">
           <v-col
-            v-for="(relatedDataset, i) in relatedDatasetsFetch.data.value?.results"
+            v-for="(relatedDataset, i) in relatedDatasets"
             :key="i"
             :md="12 / (portalConfig.datasets.page.relatedDatasets.columns || 3)"
             cols="12"
@@ -464,11 +464,12 @@ const reusesCardConfig = computed(() => {
 })
 
 // Related datasets
+const relatedDatasetsSelect = 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions'
 const relatedDatasetsUrl = computed(() => {
   const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
   if (!datasetsIds || datasetsIds.length === 0) return ''
   return withQuery('/data-fair/api/v1/datasets', {
-    select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+    select: relatedDatasetsSelect,
     size: 100,
     html: 'vuetify',
     ids: datasetsIds.join(','),
@@ -476,7 +477,16 @@ const relatedDatasetsUrl = computed(() => {
   })
 })
 const relatedDatasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(relatedDatasetsUrl)
-const relatedDatasets = computed(() => relatedDatasetsFetch.data.value?.results || [])
+// the fragments of a meta-only dataset are never published: listed here, not in the catalog
+const fragmentsFetch = dataset.value?.isMetaOnly
+  ? useLocalFetch<{ count: number, results: Dataset[] }>(withQuery('/data-fair/api/v1/datasets', {
+    select: relatedDatasetsSelect,
+    size: 100,
+    html: 'vuetify',
+    partOf: 'dataset:' + dataset.value.id
+  }))
+  : null
+const relatedDatasets = computed(() => [...(relatedDatasetsFetch.data.value?.results ?? []), ...(fragmentsFetch?.data.value?.results ?? [])])
 const relatedDatasetsCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.relatedDatasets
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
