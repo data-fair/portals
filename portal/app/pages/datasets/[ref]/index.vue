@@ -465,28 +465,29 @@ const reusesCardConfig = computed(() => {
 
 // Related datasets
 const relatedDatasetsSelect = 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions'
+const relatedDatasetsIds = computed(() => dataset.value?.relatedDatasets?.map(d => d.id).join(',') ?? '')
 const relatedDatasetsUrl = computed(() => {
-  const datasetsIds = dataset.value?.relatedDatasets?.map(d => d.id)
-  if (!datasetsIds || datasetsIds.length === 0) return ''
+  if (!relatedDatasetsIds.value) return ''
   return withQuery('/data-fair/api/v1/datasets', {
     select: relatedDatasetsSelect,
     size: 100,
     html: 'vuetify',
-    ids: datasetsIds.join(','),
+    ids: relatedDatasetsIds.value,
     publicationSites: 'data-fair-portals:' + portal.value._id
   })
 })
 const relatedDatasetsFetch = useLocalFetch<{ count: number, results: Dataset[] }>(relatedDatasetsUrl)
-// the fragments of a meta-only dataset are never published: listed here, not in the catalog
-const fragmentsFetch = dataset.value?.isMetaOnly
+// the related fragments of a meta-only dataset are never published: listed here, not in the catalog
+const relatedFragmentsFetch = dataset.value?.isMetaOnly && relatedDatasetsIds.value
   ? useLocalFetch<{ count: number, results: Dataset[] }>(withQuery('/data-fair/api/v1/datasets', {
     select: relatedDatasetsSelect,
     size: 100,
     html: 'vuetify',
+    ids: relatedDatasetsIds.value,
     partOf: 'dataset:' + dataset.value.id
   }))
   : null
-const relatedDatasets = computed(() => [...(relatedDatasetsFetch.data.value?.results ?? []), ...(fragmentsFetch?.data.value?.results ?? [])])
+const relatedDatasets = computed(() => [...(relatedDatasetsFetch.data.value?.results ?? []), ...(relatedFragmentsFetch?.data.value?.results ?? [])])
 const relatedDatasetsCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.relatedDatasets
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
