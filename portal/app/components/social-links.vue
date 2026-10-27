@@ -5,7 +5,7 @@
     :title="t('openAccount', { account: key }) + ' - ' + t('newWindow')"
     :href="platform.url(links[key as keyof SocialLinks] ?? '')"
     target="_blank"
-    rel="noopener"
+    rel="noopener external"
     density="comfortable"
     variant="text"
     icon

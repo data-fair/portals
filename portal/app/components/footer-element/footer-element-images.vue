@@ -55,6 +55,7 @@ const { element } = defineProps<{ element: FooterImagesElement }>()
 
 const { t } = useI18n()
 const { portal, portalConfig } = usePortalStore()
+const { linkRel } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 const themedLogo = useThemedLogo()
 

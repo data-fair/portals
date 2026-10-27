@@ -4,7 +4,7 @@
     v-if="element.markdown"
     :class="[...footerElementClasses(element), element.color && `text-${element.color}`]"
     style="overflow-wrap: break-word;"
-    v-html="element.content_html"
+    v-html="annotateLinks(element.content_html)"
   />
   <div
     v-else
@@ -19,4 +19,5 @@
 import type { FooterTextElement } from '#api/types/footer-elements/index.ts'
 
 defineProps<{ element: FooterTextElement }>()
+const { annotateLinks } = useNavigationStore()
 </script>

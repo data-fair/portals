@@ -54,7 +54,7 @@ const { config } = defineProps<{
 const { locale, t } = useI18n()
 
 const { portalConfig, preview } = usePortalStore()
-const { isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isExternalLink, resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 
 const btnHover = useButtonHover(() => config)
 
