@@ -197,7 +197,7 @@
         ref="copyrightItem"
         href="https://koumoul.com"
         target="_blank"
-        rel="noopener"
+        rel="noopener external"
         :role="undefined"
         tabindex="0"
       >

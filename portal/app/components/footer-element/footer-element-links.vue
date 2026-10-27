@@ -103,7 +103,7 @@ import type { FooterLinksElement } from '#api/types/footer-elements/index.ts'
 defineProps<{ element: FooterLinksElement }>()
 
 const { locale, t } = useI18n()
-const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 </script>
 
 <i18n lang="yaml">

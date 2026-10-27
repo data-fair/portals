@@ -68,7 +68,7 @@ defineProps<{
 
 const route = useRoute()
 const { locale, t } = useI18n()
-const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 
 /** Check if the given item is active based on the current route */
 function isItemActive (item: MenuItem): boolean {

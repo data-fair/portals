@@ -1,5 +1,6 @@
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
+import { annotateLinks as annotateHtmlLinks, linkRel } from '../../../shared/markdown/link-rel.ts'
 
 const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
   if (link.type === 'external') return !link.href?.startsWith('/')
@@ -40,6 +41,7 @@ const resolveLinkTitle = (link: LinkItem | MenuItem, locale: string): string => 
 }
 
 export const useNavigationStore = () => {
+  const { locale } = useI18n({ useScope: 'global' })
   return {
     breadcrumbs: ref([{ title: 'Page libre', to: '/my-page' }]),
     setBreadcrumbs: () => { },
@@ -52,6 +54,9 @@ export const useNavigationStore = () => {
     isExternalLink,
     resolveLink: (_link: any) => undefined,
     resolveLinkTitle,
+    // the preview does not know the portal's host, so no rel "external"
+    linkRel: (href?: string, target?: boolean) => linkRel(href, target),
+    annotateLinks: (html?: string) => html && annotateHtmlLinks(html, undefined, i18n[locale.value === 'fr' ? 'fr' : 'en'].newWindow),
     drawer: ref(false),
     personalDrawer: ref(false),
     isIframe: ref(false),
@@ -79,7 +84,8 @@ const i18n = {
     sitemapPage: 'Sitemap',
     catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
-    link: 'Link'
+    link: 'Link',
+    newWindow: 'New window'
   },
   fr: {
     homePage: 'Accueil',
@@ -97,6 +103,7 @@ const i18n = {
     sitemapPage: 'Plan du site',
     catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
-    link: 'Lien'
+    link: 'Lien',
+    newWindow: 'Nouvelle fenêtre'
   }
 }

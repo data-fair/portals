@@ -2,6 +2,7 @@ import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 import { resolveMenuLink as resolveLink, isMenuItemActive } from '../utils/nav-active'
+import { annotateLinks as annotateHtmlLinks, linkRel as baseLinkRel } from '../../../shared/markdown/link-rel.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -11,7 +12,7 @@ export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
 
 const createNavigationStore = (options: NavigationStoreOptions) => {
-  const { $portal } = useNuxtApp()
+  const { $portal, $i18n } = useNuxtApp()
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
@@ -157,6 +158,11 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const showTopBreadcrumbs = computed(() => showBreadcrumbs('top'))
   const showBottomBreadcrumbs = computed(() => showBreadcrumbs('bottom'))
 
+  // rel "external" compares with the portal's host, the "new window" title follows the visitor's language
+  const host = useRequestURL().hostname
+  const linkRel = (href?: string, target?: boolean) => baseLinkRel(href, target, host)
+  const annotateLinks = (html?: string) => html && annotateHtmlLinks(html, host, i18n[$i18n.locale.value as 'fr' | 'en'].newWindow)
+
   /** Check if a link is external (not internal and not starting with /) */
   const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
     if (link.type === 'external') return !link.href?.startsWith('/')
@@ -203,6 +209,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     isExternalLink,
     resolveLink,
     resolveLinkTitle,
+    linkRel,
+    annotateLinks,
     drawer,
     personalDrawer,
     showTopBreadcrumbs,
@@ -244,7 +252,8 @@ const i18n = {
     sitemapPage: 'Sitemap',
     catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
-    link: 'Link'
+    link: 'Link',
+    newWindow: 'New window'
   },
   fr: {
     homePage: 'Accueil',
@@ -262,6 +271,7 @@ const i18n = {
     sitemapPage: 'Plan du site',
     catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
-    link: 'Lien'
+    link: 'Lien',
+    newWindow: 'Nouvelle fenêtre'
   }
 }

@@ -40,7 +40,7 @@
           />
           <div
             class="text-break"
-            v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
+            v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(dataset.description)"
           />
         </v-col>
 
@@ -66,8 +66,8 @@
               class="simple-link"
               :to="attachment.url"
               :title="(attachment.title || attachment.name) + ' - ' + t('newWindow')"
+              :rel="linkRel(attachment.url, true)"
               target="_blank"
-              rel="noopener"
             >
               {{ attachment.title || attachment.name }}
               <v-icon
@@ -238,7 +238,7 @@
                 </NuxtLink>
                 <div
                   class="mt-2"
-                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                  v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(app.description)"
                 />
               </v-col>
               <v-col cols="12">
@@ -281,7 +281,7 @@
                 </NuxtLink>
                 <div
                   class="mt-2 text-break"
-                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                  v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(app.description)"
                 />
               </v-col>
             </template>
@@ -396,7 +396,7 @@ const { portal, portalConfig } = usePortalStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, linkRel, annotateLinks } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('datasets', route.params.ref as string)
 

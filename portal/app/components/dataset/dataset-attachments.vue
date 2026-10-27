@@ -12,14 +12,14 @@
       {{ attachment.name }}
     </v-list-item-subtitle>
     <!--eslint-disable-next-line vue/no-v-html -->
-    <div v-html="attachment.description" />
+    <div v-html="annotateLinks(attachment.description)" />
     <template #append>
       <v-btn
         :icon="attachmentMode(attachment) === 'open' ? mdiOpenInNew : mdiDownload"
         :href="attachment.url"
-        :title="(attachmentMode(attachment) === 'open' ? t('openInNewWindow') : t('download'))"
+        :title="t(attachmentMode(attachment) === 'open' ? 'openAttachment' : 'downloadAttachment', { title: attachment.title || attachment.name }) + ' - ' + t('newWindow')"
+        :rel="linkRel(attachment.url, true)"
         target="_blank"
-        rel="noopener"
         variant="text"
       />
     </template>
@@ -34,6 +34,7 @@ import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 const { dataset } = defineProps<{ dataset: Pick<Dataset, 'image' | 'attachments'> }>()
 const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
+const { linkRel, annotateLinks } = useNavigationStore()
 
 const attachmentMode = (attachment: { type: string; mimetype?: string }) => {
   if (attachment.type === 'url' || attachment.mimetype === 'application/pdf' || (attachment.mimetype && attachment.mimetype.startsWith('image/'))) return 'open'
@@ -44,11 +45,13 @@ const attachmentMode = (attachment: { type: string; mimetype?: string }) => {
 
 <i18n lang="yaml">
   en:
-    download: Download
-    openInNewWindow: Open in new window
+    downloadAttachment: Download {title}
+    newWindow: New window
+    openAttachment: Open {title}
     updatedAt: Updated at
   fr:
-    download: Télécharger
-    openInNewWindow: Ouvrir dans une nouvelle fenêtre
+    downloadAttachment: Télécharger {title}
+    newWindow: Nouvelle fenêtre
+    openAttachment: Ouvrir {title}
     updatedAt: Mis à jour le
 </i18n>

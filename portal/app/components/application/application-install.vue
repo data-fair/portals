@@ -23,8 +23,8 @@
         <a
           :href="application.exposedUrl"
           :title="application.exposedUrl + ' - ' + t('newWindow')"
+          :rel="linkRel(application.exposedUrl, true) + ' noreferrer'"
           target="_blank"
-          rel="noopener noreferrer"
         >
           {{ application.exposedUrl }}
         </a>
@@ -138,6 +138,7 @@ const { application } = defineProps<{
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const { linkRel } = useNavigationStore()
 
 type BrowserType = 'chrome' | 'firefox' | 'safari' | 'other'
 const browser = ref<BrowserType>('other')

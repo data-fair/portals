@@ -49,7 +49,7 @@
   <div
     v-if="reuseConfig._descriptionHtml"
     class="markdown-content mb-6"
-    v-html="/*eslint-disable-line vue/no-v-html*/reuseConfig._descriptionHtml"
+    v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(reuseConfig._descriptionHtml)"
   />
 
   <!-- Image -->
@@ -126,6 +126,7 @@ const { reuseConfig, slug, reusesCatalogExists, editHref } = defineProps<{
 
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
+const { annotateLinks } = useNavigationStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')

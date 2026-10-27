@@ -80,6 +80,7 @@ const { element, link, lineGrow, lineHovering } = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { linkRel } = useNavigationStore()
 
 const iconPath = computed(() => element.icon?.mdi?.svgPath || element.icon?.custom || undefined)
 
