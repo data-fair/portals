@@ -44,7 +44,7 @@ router.get('', async (req, res, next) => {
 
   const [count, results, facets] = await Promise.all([
     mongo.pages.countDocuments(queryWithFilters),
-    mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray(),
+    size ? mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray() : [],
     mongo.pages.aggregate(pageFacets(query, showAll)).toArray()
   ])
 

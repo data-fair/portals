@@ -34,7 +34,7 @@ router.get('', async (req, res, next) => {
 
   const [count, results] = await Promise.all([
     mongo.reuses.countDocuments(queryWithFilters),
-    mongo.reuses.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
+    size ? mongo.reuses.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray() : []
   ])
 
   res.json({ results, count })
