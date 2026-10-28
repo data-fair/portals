@@ -62,6 +62,7 @@
       v-model:sort="sort"
       v-model:show-all="showAll"
       v-model:portals-selected="portals"
+      v-model:requested-portals-selected="requestedPortals"
       v-model:types-selected="types"
       v-model:groups-selected="groups"
       v-model:owners-selected="owners"
@@ -92,6 +93,7 @@ watch(q, (val) => { if (val !== search.value) search.value = val || '' })
 
 const sort = useStringSearchParam('sort', 'createdAt:-1')
 const portals = useStringsArraySearchParam('portal')
+const requestedPortals = useStringsArraySearchParam('requestedPortal')
 const types = useStringsArraySearchParam('type')
 const groups = useStringsArraySearchParam('group')
 const owners = useStringsArraySearchParam('owner')
@@ -105,6 +107,7 @@ const pagesParams = computed(() => {
   else params.sort = sort.value
   if (types.value.length) params.type = types.value.join(',')
   if (portals.value.length) params.portal = portals.value.join(',')
+  if (requestedPortals.value.length) params.requestedPortal = requestedPortals.value.join(',')
   if (owners.value.length) params.owners = owners.value.join(',')
   if (showAll.value) params.showAll = 'true'
   return params
@@ -118,7 +121,7 @@ const displayPages = computed(() => {
   return pages.filter(page => groups.value.includes(getPageGroupId(page)))
 })
 
-const isFiltered = computed(() => !!q.value || types.value.length > 0 || portals.value.length > 0 || owners.value.length > 0 || groups.value.length > 0)
+const isFiltered = computed(() => !!q.value || types.value.length > 0 || portals.value.length > 0 || requestedPortals.value.length > 0 || owners.value.length > 0 || groups.value.length > 0)
 
 const standardTypes = new Set([
   'home',

@@ -41,6 +41,12 @@ export default {
             type: 'number'
           }
         },
+        requestedPortals: {
+          type: 'object',
+          additionalProperties: {
+            type: 'number'
+          }
+        },
         groups: {
           type: 'object',
           additionalProperties: {

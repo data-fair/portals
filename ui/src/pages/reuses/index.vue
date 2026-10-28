@@ -23,7 +23,7 @@
 
     <!-- No reuses created -->
     <span
-      v-else-if="!reusesFetch.data.value?.results.length"
+      v-else-if="!reusesFetch.data.value?.results.length && !isFiltered"
       class="d-flex justify-center text-title-large mt-4"
     >
       {{ t('noReusesCreated') }}
@@ -57,16 +57,21 @@
       v-model:search="search"
       v-model:sort="sort"
       v-model:show-all="showAll"
+      v-model:portals-selected="portals"
+      v-model:requested-portals-selected="requestedPortals"
+      :facets="facets"
     />
   </v-container>
 </template>
 
 <script setup lang="ts">
-import type { Reuse } from '#api/types/reuse/index'
+import type { ReusesGetRes, ReusesFacets } from '#api/doc/reuses/get-res'
 
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
 const sort = useStringSearchParam('sort', 'createdAt:-1')
+const portals = useStringsArraySearchParam('portal')
+const requestedPortals = useStringsArraySearchParam('requestedPortal')
 const { t } = useI18n()
 
 const reusesParams = computed(() => {
@@ -75,11 +80,15 @@ const reusesParams = computed(() => {
     sort: sort.value,
     select: '_id,title,owner,requestedPortals'
   }
+  if (portals.value.length) params.portal = portals.value.join(',')
+  if (requestedPortals.value.length) params.requestedPortal = requestedPortals.value.join(',')
   if (showAll.value) params.showAll = 'true'
   return params
 })
 
-const reusesFetch = useFetch<{ results: Reuse[], count: number }>($apiPath + '/reuses', { query: reusesParams })
+const reusesFetch = useFetch<ReusesGetRes>($apiPath + '/reuses', { query: reusesParams })
+const facets = computed<ReusesFacets>(() => reusesFetch.data.value?.facets ?? { portals: {}, requestedPortals: {} })
+const isFiltered = computed(() => !!search.value || portals.value.length > 0 || requestedPortals.value.length > 0)
 const displayReuses = computed(() => {
   const reuses = (reusesFetch.data.value?.results ?? [])
   if (!search.value) return reuses
