@@ -116,6 +116,12 @@ test.describe('contributorDepartments page publication', () => {
     assert.deepEqual(patched.requestedPortals, [stagingPortal._id])
     assert.deepEqual(patched.portals, [])
 
+    // the org-root admin finds the request through the requestedPortal filter and facet
+    const pending = (await orgAdmin.get('/api/pages', { params: { requestedPortal: stagingPortal._id, size: 0 } })).data
+    assert.equal(pending.count, 1)
+    assert.deepEqual(pending.results, [])
+    assert.deepEqual(pending.facets.requestedPortals, { [stagingPortal._id]: 1 })
+
     // org-root admin moves the request into actual publication
     const accepted = (await orgAdmin.patch(`/api/pages/${page._id}`, { portals: [stagingPortal._id], requestedPortals: [] })).data
     assert.deepEqual(accepted.portals, [stagingPortal._id])
