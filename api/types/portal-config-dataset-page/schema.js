@@ -141,6 +141,15 @@ export default {
             comp: 'switch',
             cols: { md: 6 }
           }
+        },
+        showMetadataQuality: {
+          type: 'boolean',
+          title: 'Activer le score de complétion des métadonnées',
+          description: 'Score et détail des critères, présents quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.',
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          }
         }
       }
     },

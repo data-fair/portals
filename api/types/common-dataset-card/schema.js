@@ -20,7 +20,8 @@ export default {
           { cols: { md: 6 }, key: 'ownerDisplay' },
           { cols: { md: 4 }, key: 'showSummary' },
           { cols: { md: 4 }, key: 'showUpdatedAt' },
-          { cols: { md: 4 }, key: 'showContentTypes' }
+          { cols: { md: 4 }, key: 'showContentTypes' },
+          { cols: { md: 4 }, key: 'showMetadataQuality' }
         ]
       },
       'thumbnail',
@@ -102,6 +103,15 @@ export default {
       type: 'boolean',
       title: 'Afficher les contenus disponibles',
       description: 'Indique si le jeu de données propose des métadonnées, des données et des visualisations.',
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
+    },
+    showMetadataQuality: {
+      type: 'boolean',
+      title: 'Activer le score de complétion des métadonnées',
+      description: 'Présente quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.',
       layout: {
         comp: 'switch',
         cols: { md: 6 }

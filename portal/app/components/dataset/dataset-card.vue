@@ -145,6 +145,19 @@
             </span>
           </div>
 
+          <!-- Metadata quality -->
+          <div
+            v-if="cardConfig.showMetadataQuality && dataset.completeness != null"
+            class="d-flex align-center ga-2 px-4 mt-2 text-body-medium"
+          >
+            {{ t('metadataQuality') }}
+            <dataset-quality-bar
+              :score="dataset.completeness"
+              class="flex-grow-1"
+              style="max-width: 160px"
+            />
+          </div>
+
           <!-- Owner / Updated At -->
           <!-- the separator leads the date and sits in the clipped negative margin when the date starts a line -->
           <div
@@ -323,6 +336,7 @@ const leftThumbnailStyle = computed(() => {
 <i18n lang="yaml">
   en:
     updatedAt: Updated at
+    metadataQuality: Metadata completeness score
     contentTypes:
       metadata: Metadata
       data: Data
@@ -338,6 +352,7 @@ const leftThumbnailStyle = computed(() => {
 
   fr:
     updatedAt: Mis à jour le
+    metadataQuality: Score de complétion des métadonnées
     contentTypes:
       metadata: Métadonnées
       data: Données

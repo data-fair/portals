@@ -37,7 +37,7 @@ let unavailable: ComputedRef<boolean>
 if (!preview) {
   const ids = element.datasets?.map(d => d.id) || []
   const datasetsQuery = computed(() => ({
-    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,-userPermissions',
+    select: 'id,slug,title,summary,dataUpdatedAt,updatedAt,modified,extras,bbox,topics,keywords,image,isMetaOnly,owner,completeness,-userPermissions',
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,
@@ -67,6 +67,8 @@ if (!preview) {
       updatedAt: new Date().toISOString(),
       owner: session.account.value,
       topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
+      completeness: 80,
+      extras: { applications: [{ id: 'application-1', updatedAt: new Date().toISOString() }] },
       isMetaOnly: false
     }))
   })
