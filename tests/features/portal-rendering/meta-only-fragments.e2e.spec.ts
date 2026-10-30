@@ -1,5 +1,5 @@
-// The fragments of a meta-only dataset are never published on a portal: the "see also"
-// section of the meta-only's page lists those it declares as related datasets, next to the published ones.
+// The fragments of a meta-only dataset are never published on a portal: the page of their parent
+// lists them in a "child datasets" section, before the "see also" one.
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { dataFairUrl, deleteDatasets, seedDataset } from '../../support/data-fair.ts'
@@ -11,7 +11,7 @@ test.describe('fragments of a meta-only dataset', () => {
   test.beforeEach(clean)
   test.afterAll(async () => { await deleteDatasets(seeded) })
 
-  test('are shown in the "see also" section of their parent when related, without being published', async ({ page, goToPortal }) => {
+  test('are listed in the "child datasets" section of their parent, without being published', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Fragments Portal', menu: { children: [] }, datasets: { card: {}, page: { relatedDatasets: { display: 'card' } } } }
     })).data
@@ -26,18 +26,20 @@ test.describe('fragments of a meta-only dataset', () => {
       title,
       partOf: { type: 'dataset', id: parent }
     })).data.id
-    const linkedFragment = await createFragment(`test-fragment-linked-${suffix}`, 'Jeu enfant lié')
-    const unlinkedFragment = await createFragment(`test-fragment-unlinked-${suffix}`, 'Jeu enfant non lié')
-    seeded.unshift(linkedFragment, unlinkedFragment)
-    await user1.patch(`${dataFairUrl}/api/v1/datasets/${parent}`, {
-      relatedDatasets: [{ id: related, title: 'Jeu lié publié' }, { id: linkedFragment, title: 'Jeu enfant lié' }]
-    })
+    seeded.unshift(await createFragment(`test-fragment-a-${suffix}`, 'Arrêts'), await createFragment(`test-fragment-b-${suffix}`, 'Horaires'))
+    await user1.patch(`${dataFairUrl}/api/v1/datasets/${parent}`, { relatedDatasets: [{ id: related, title: 'Jeu lié publié' }] })
 
     await goToPortal(portal._id, `/datasets/${parent}`)
-    await expect(page.getByText('Voir plus')).toBeVisible({ timeout: 20_000 })
-    await expect(page.locator('.v-card').filter({ hasText: 'Jeu lié publié' })).toBeVisible()
-    await expect(page.locator('.v-card').filter({ hasText: 'Jeu enfant lié' })).toBeVisible()
-    // a fragment is shown only when the parent also declares it as a related dataset
-    await expect(page.locator('.v-card').filter({ hasText: 'Jeu enfant non lié' })).toHaveCount(0)
+    const childSection = page.getByRole('heading', { name: 'Jeux enfants' })
+    await expect(childSection).toBeVisible({ timeout: 20_000 })
+    await expect(page.locator('.v-card').filter({ hasText: 'Arrêts' })).toBeVisible()
+    await expect(page.locator('.v-card').filter({ hasText: 'Horaires' })).toBeVisible()
+    // the related datasets come after the child datasets
+    const seeAlso = page.getByRole('heading', { name: 'Voir plus' })
+    await expect(seeAlso).toBeVisible()
+    expect((await childSection.boundingBox())!.y).toBeLessThan((await seeAlso.boundingBox())!.y)
+
+    await page.locator('.v-card').filter({ hasText: 'Arrêts' }).getByRole('link').first().click()
+    await expect(page.getByRole('heading', { name: 'Arrêts' })).toBeVisible()
   })
 })
