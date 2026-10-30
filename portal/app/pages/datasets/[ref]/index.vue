@@ -328,6 +328,34 @@
         </v-row>
       </template>
 
+      <!-- Child datasets section: the fragments of a meta-only dataset, never listed in the catalog -->
+      <template v-if="portalConfig.datasets.page.childDatasets?.display !== 'none' && childDatasets.length">
+        <page-element-title
+          :element="{
+            type: 'title',
+            content: t('sections.childDatasets', { count: childDatasets.length }),
+            titleTag: sectionTitleTag,
+            titleSize: 'h5',
+            line: portalConfig.datasets.page.titleStyle
+          }"
+        />
+
+        <v-row class="d-flex align-stretch">
+          <v-col
+            v-for="childDataset in childDatasets"
+            :key="childDataset.id"
+            :md="12 / (portalConfig.datasets.page.childDatasets?.columns || 3)"
+            cols="12"
+          >
+            <dataset-card
+              :dataset="childDataset"
+              :card-config="childDatasetsCardConfig"
+              is-portal-config
+            />
+          </v-col>
+        </v-row>
+      </template>
+
       <!-- Related datasets section -->
       <template
         v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
@@ -485,6 +513,25 @@ const relatedDatasetsCardConfig = computed(() => {
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
+// Child datasets: the fragments of a meta-only dataset, never published, so not filtered by publication site
+const childDatasetsFetch = dataset.value?.isMetaOnly
+  ? useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
+    query: {
+      partOf: 'dataset:' + dataset.value.id,
+      select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,keywords,isMetaOnly,owner,-userPermissions',
+      sort: 'title:1',
+      size: 100,
+      html: 'vuetify'
+    }
+  })
+  : null
+const childDatasets = computed(() => childDatasetsFetch?.data.value?.results ?? [])
+// a child dataset has no image nor topic of its own: no thumbnail, not even the default one
+const childDatasetsCardConfig = computed(() => ({
+  ...portalConfig.value.datasets.card,
+  thumbnail: { ...portalConfig.value.datasets.card.thumbnail, show: false }
+}))
+
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
   return dataset.value.attachments.filter(a => a.type === 'url' && a.url)
@@ -625,6 +672,7 @@ useJsonLd(() => {
       application: Linked application | Linked applications
       reuse: Linked reuse | Linked reuse | Linked reuses
       relatedDatasets: Related dataset | Related dataset | Related datasets
+      childDatasets: Child dataset | Child dataset | Child datasets
       data: Data
       map: Map
       schema: Schema
@@ -643,6 +691,7 @@ useJsonLd(() => {
       application: Visualisation associée | Visualisation associée | Visualisations associées
       reuse: Réutilisation associée | Réutilisation associée | Réutilisations associées
       relatedDatasets: Voir plus
+      childDatasets: Jeu enfant | Jeu enfant | Jeux enfants
       data: Données
       map: Carte
       schema: Schéma

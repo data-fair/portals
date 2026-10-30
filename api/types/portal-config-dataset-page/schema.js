@@ -24,6 +24,7 @@ export default {
       'keywords',
       'applications',
       'reuses',
+      'childDatasets',
       'relatedDatasets'
     ]
   },
@@ -268,6 +269,37 @@ export default {
         },
         card: {
           $ref: 'https://github.com/data-fair/portals/common-reuse-card'
+        }
+      }
+    },
+
+    childDatasets: {
+      type: 'object',
+      title: 'Configuration des jeux enfants',
+      description: "Les jeux enfants d'un jeu de métadonnées seules (les tables d'un flux GTFS par exemple) ne sont pas publiés dans le catalogue : ils sont affichés sur la page de leur parent, avec la configuration globale des vignettes, sans image.",
+      layout: {
+        comp: 'card',
+        children: ['display', 'columns']
+      },
+      properties: {
+        display: {
+          type: 'string',
+          title: "Mode d'affichage",
+          default: 'card',
+          layout: { cols: { md: 4 } },
+          oneOf: [
+            { const: 'none', title: 'Aucun' },
+            { const: 'card', title: 'Vignette' }
+          ]
+        },
+        columns: {
+          type: 'integer',
+          title: 'Nombre de colonnes',
+          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          layout: { if: 'parent.data?.display !== "none"', cols: { md: 4 } },
+          default: 3,
+          minimum: 1,
+          maximum: 4
         }
       }
     },
