@@ -48,8 +48,8 @@ export const standardPage = {
     type: { const: 'standard' },
     subtype: {
       type: 'string',
-      title: 'Page type',
-      'x-i18n-title': { fr: 'Type de page' },
+      title: 'Standard page type',
+      'x-i18n-title': { fr: 'Page', en: 'Page' },
       description: 'One page of each type per portal. Except for the automatic pages, it must have been created and published on this portal, otherwise the link leads to a page not found.',
       'x-i18n-description': { fr: 'Une seule page de chaque type par portail. Sauf pour les pages automatiques, elle doit avoir été créée et publiée sur ce portail, sinon le lien mène à une page introuvable.' },
       oneOf: standardPageTypes.map(type => ({ ...type })),
@@ -218,8 +218,8 @@ const baseStandardPage = {
     type: { const: 'standard' },
     subtype: {
       type: 'string',
-      title: 'Page type',
-      'x-i18n-title': { fr: 'Type de page' },
+      title: 'Standard page type',
+      'x-i18n-title': { fr: 'Page', en: 'Page' },
       description: 'One page of each type per portal. Except for the automatic pages, it must have been created and published on this portal, otherwise the link leads to a page not found.',
       'x-i18n-description': { fr: 'Une seule page de chaque type par portail. Sauf pour les pages automatiques, elle doit avoir été créée et publiée sur ce portail, sinon le lien mène à une page introuvable.' },
       oneOf: standardPageTypes.map(type => ({ ...type })),
@@ -422,10 +422,11 @@ export default {
   }
 }
 
+// the label first, as the menu shows it, then what the row links to, named as in its link type drop-down
 // @ts-expect-error
 const linkItemTitleFn = (item) => {
   const standardPageTitles = {
-    home: 'Home page',
+    home: 'Home',
     contact: 'Contact',
     accessibility: 'Accessibility',
     'terms-of-service': 'Terms of service',
@@ -440,40 +441,24 @@ const linkItemTitleFn = (item) => {
     sitemap: 'Sitemap',
     'catalog-api-doc': 'API documentation'
   }
-
   // @ts-expect-error
-  const formatPageRef = (pageRef) => pageRef?.title ? ` - ${pageRef.title} (${pageRef.slug})` : ''
+  const pageRefTitle = (kind, pageRef) => pageRef?.title ? `${kind}: ${pageRef.title}` : kind
+  let target
   // @ts-expect-error
-  const formatLabel = (title) => title ? ` - Label: ${title}` : ''
-
-  if (item.type === 'standard') {
-    // @ts-expect-error
-    const pageTitle = standardPageTitles[item.subtype] || 'Standard page'
-    return pageTitle + formatLabel(item.title)
-  }
-  if (item.type === 'event') {
-    return 'Event' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'news') {
-    return 'News' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'generic') {
-    return 'Edited page' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'external') {
-    const targetInfo = item.target ? ' - Opens in a new tab' : ''
-    return `Link - Label: ${item.title} - URL: ${item.href}${targetInfo}`
-  }
-  if (item.type === 'submenu') {
-    return `Submenu - Label: ${item.title}`
-  }
-  return 'Link not configured'
+  if (item.type === 'standard') target = standardPageTitles[item.subtype] ?? 'Standard page'
+  else if (item.type === 'generic') target = pageRefTitle('Free page', item.pageRef)
+  else if (item.type === 'event') target = pageRefTitle('Event page', item.pageRef)
+  else if (item.type === 'news') target = pageRefTitle('News page', item.pageRef)
+  else if (item.type === 'external') target = item.href ? `Link: ${item.href}` : 'Link, address to fill in'
+  else if (item.type === 'submenu') target = 'Submenu'
+  else return 'Link not configured'
+  return item.title ? `${item.title} · ${target}` : target
 }
 
 // @ts-expect-error
 const linkItemTitleFrFn = (item) => {
   const standardPageTitles = {
-    home: 'Page d\'accueil',
+    home: 'Accueil',
     contact: 'Contact',
     accessibility: 'Accessibilité',
     'terms-of-service': "Conditions générales d'utilisation",
@@ -488,34 +473,18 @@ const linkItemTitleFrFn = (item) => {
     sitemap: 'Plan du site',
     'catalog-api-doc': "Documentation d'API"
   }
-
   // @ts-expect-error
-  const formatPageRef = (pageRef) => pageRef?.title ? ` - ${pageRef.title} (${pageRef.slug})` : ''
+  const pageRefTitle = (kind, pageRef) => pageRef?.title ? `${kind} : ${pageRef.title}` : kind
+  let target
   // @ts-expect-error
-  const formatLabel = (title) => title ? ` - Libellé : ${title}` : ''
-
-  if (item.type === 'standard') {
-    // @ts-expect-error
-    const pageTitle = standardPageTitles[item.subtype] || 'Page standard'
-    return pageTitle + formatLabel(item.title)
-  }
-  if (item.type === 'event') {
-    return 'Événement' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'news') {
-    return 'Actualité' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'generic') {
-    return 'Page éditée' + formatPageRef(item.pageRef) + formatLabel(item.title)
-  }
-  if (item.type === 'external') {
-    const targetInfo = item.target ? ' - S\'ouvre dans un nouvel onglet' : ''
-    return `Lien - Libellé : ${item.title} - URL : ${item.href}${targetInfo}`
-  }
-  if (item.type === 'submenu') {
-    return `Sous-menu - Libellé : ${item.title}`
-  }
-  return 'Lien non configuré'
+  if (item.type === 'standard') target = standardPageTitles[item.subtype] ?? 'Page standard'
+  else if (item.type === 'generic') target = pageRefTitle('Page libre', item.pageRef)
+  else if (item.type === 'event') target = pageRefTitle("Page d'événement", item.pageRef)
+  else if (item.type === 'news') target = pageRefTitle("Page d'actualité", item.pageRef)
+  else if (item.type === 'external') target = item.href ? `Lien : ${item.href}` : 'Lien, adresse à saisir'
+  else if (item.type === 'submenu') target = 'Sous-menu'
+  else return 'Lien non configuré'
+  return item.title ? `${item.title} · ${target}` : target
 }
 
 /** @param {Function} fn */
