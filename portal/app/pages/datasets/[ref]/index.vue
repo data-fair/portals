@@ -290,7 +290,7 @@
       </template>
 
       <!-- Reuses section -->
-      <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && (reuses.length || portalConfig.datasets.page.reuses?.inviteUserReuses)">
+      <template v-if="reusesFetch && portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && (reuses.length || portalConfig.datasets.page.reuses?.inviteUserReuses)">
         <page-element-title
           :element="{
             type: 'title',
@@ -491,13 +491,13 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
-// Reuses linked to the dataset
-const reusesUrl = computed(() => withQuery('/portal/api/reuses', {
-  dataset: datasetFetch.data.value?.id,
-  limit: 100
-}))
-const reusesFetch = useLocalFetch<{ count: number, results: Reuse[] }>(reusesUrl)
-const reuses = computed(() => reusesFetch.data.value?.results || [])
+// Reuses linked to the dataset, a fragment can't be picked in a reuse: the section invites to a dead end
+const reusesFetch = dataset.value?.partOf
+  ? null
+  : useLocalFetch<{ count: number, results: Reuse[] }>('/portal/api/reuses', {
+    query: { dataset: dataset.value?.id, limit: 100 }
+  })
+const reuses = computed(() => reusesFetch?.data.value?.results || [])
 const reusesCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.reuses
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
@@ -550,11 +550,8 @@ const childDatasetsCardConfig = computed(() => {
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
-// Parent dataset of a fragment, the back link leads to it instead of the catalog
-const parentFetch = dataset.value?.partOf?.type === 'dataset'
-  ? useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + dataset.value.partOf.id)
-  : null
-const parentDataset = computed(() => parentFetch?.data.value)
+// the back link of a fragment leads to its parent instead of the catalog
+const parentDataset = useParentDataset(dataset.value?.partOf)
 
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
@@ -654,6 +651,13 @@ useJsonLd(() => {
     isRelatedTo: relatedDatasets.value.map(rd => ({
       id: requestURL.origin + `/datasets/${rd.slug}`,
       name: rd.title
+    })),
+    isPartOf: parentDataset.value
+      ? { id: requestURL.origin + `/datasets/${parentDataset.value.slug}`, name: parentDataset.value.title }
+      : undefined,
+    hasPart: childDatasets.value.map(cd => ({
+      id: requestURL.origin + `/datasets/${cd.slug}`,
+      name: cd.title
     }))
   })
 

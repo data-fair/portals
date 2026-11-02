@@ -13,7 +13,7 @@ test.describe('fragments of a meta-only dataset', () => {
 
   test('are listed in the "child datasets" section of their parent, without being published', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
-      config: { title: 'Fragments Portal', menu: { children: [] }, breadcrumb: { position: 'below-nav' }, datasets: { card: {}, page: { relatedDatasets: { display: 'card' } } } }
+      config: { title: 'Fragments Portal', menu: { children: [] }, breadcrumb: { position: 'below-nav' }, datasets: { card: {}, page: { relatedDatasets: { display: 'card' }, reuses: { display: 'card', inviteUserReuses: true } } } }
     })).data
 
     const suffix = Date.now()
@@ -38,10 +38,13 @@ test.describe('fragments of a meta-only dataset', () => {
     const seeAlso = page.getByRole('heading', { name: 'Voir plus' })
     await expect(seeAlso).toBeVisible()
     expect((await childSection.boundingBox())!.y).toBeLessThan((await seeAlso.boundingBox())!.y)
+    await expect(page.getByRole('heading', { name: 'Réutilisation associée' })).toBeVisible()
 
     await page.locator('.v-card').filter({ hasText: 'Arrêts' }).getByRole('link').first().click()
     await expect(page.getByRole('heading', { name: 'Arrêts' })).toBeVisible()
     await expect(page.locator('.v-breadcrumbs').getByRole('link', { name: 'Jeu parent' })).toBeVisible()
+    // a fragment can't be picked in a reuse, the invitation would lead nowhere
+    await expect(page.getByRole('heading', { name: 'Réutilisation associée' })).toHaveCount(0)
 
     // the back link of a fragment leads to its parent, not to the catalog
     await page.getByRole('link', { name: 'Revenir à Jeu parent' }).click()

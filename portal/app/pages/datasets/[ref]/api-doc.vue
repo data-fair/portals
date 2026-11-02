@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
 
@@ -32,11 +33,13 @@ const route = useRoute()
 const standardPagesFetch = await useFetch<Record<string, boolean>>('/portal/api/pages/standard-exists', { watch: false })
 const datasetsCatalogExists = computed(() => standardPagesFetch.data.value?.datasets || false)
 
-const datasetFetch = await useLocalFetch<{ title: string, summary: string, description: string, updatedAt?: string }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+const datasetFetch = await useLocalFetch<{ title: string, summary: string, description: string, updatedAt?: string, partOf?: Dataset['partOf'] }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+const parentDataset = useParentDataset(datasetFetch.data.value?.partOf)
 
-watch([datasetFetch.data, datasetsCatalogExists], () => {
+watch([datasetFetch.data, datasetsCatalogExists, parentDataset], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
+  if (parentDataset.value) { items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` }) }
   items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
   items.push({ title: t('apiDoc') })
   setBreadcrumbs(items)
