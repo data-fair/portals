@@ -50,7 +50,10 @@
           :class="portalConfig.datasets.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
-          <dataset-metadata :dataset="dataset" />
+          <dataset-metadata
+            :dataset="dataset"
+            :fragments="fragments"
+          />
         </v-col>
       </v-row>
 
@@ -406,6 +409,8 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
   query: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
+// a fragment of a meta-only dataset has no page of its own: its actions are given by its parent
+if (dataset.value?.partOf?.type === 'dataset') await navigateTo('/datasets/' + dataset.value.partOf.id, { replace: true })
 // a meta-only dataset carries no data: its export URLs would lead nowhere
 const datasetFiles = dataset.value && !dataset.value.isMetaOnly ? await useDatasetFiles(dataset.value) : null
 
@@ -484,6 +489,19 @@ const relatedDatasetsCardConfig = computed(() => {
   }
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
+
+// The fragments of a meta-only dataset, never published, so not filtered by publication site
+const fragmentsFetch = dataset.value?.isMetaOnly
+  ? useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
+    query: {
+      partOf: 'dataset:' + dataset.value.id,
+      select: 'id,slug,title,bbox,schema,previews,owner,isMetaOnly,isRest,isVirtual,virtual,-userPermissions',
+      sort: 'title:1',
+      size: 100
+    }
+  })
+  : null
+const fragments = computed(() => fragmentsFetch?.data.value?.results ?? [])
 
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
