@@ -276,10 +276,18 @@ export default {
     childDatasets: {
       type: 'object',
       title: 'Configuration des jeux enfants',
-      description: "Les jeux enfants d'un jeu de métadonnées seules (les tables d'un flux GTFS par exemple) ne sont pas publiés dans le catalogue : ils sont affichés sur la page de leur parent, avec la configuration globale des vignettes, sans image.",
+      description: "Les jeux enfants d'un jeu de métadonnées seules (les tables d'un flux GTFS par exemple) ne sont pas publiés dans le catalogue : ils sont affichés sur la page de leur parent. Avec la configuration globale des vignettes, l'image est masquée.",
       layout: {
         comp: 'card',
-        children: ['display', 'columns']
+        children: [
+          'display',
+          'columns',
+          'useGlobalCard',
+          {
+            if: 'data?.display === "card" && data?.useGlobalCard === false',
+            children: ['card']
+          }
+        ]
       },
       properties: {
         display: {
@@ -296,10 +304,23 @@ export default {
           type: 'integer',
           title: 'Nombre de colonnes',
           description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
-          layout: { if: 'parent.data?.display !== "none"', cols: { md: 4 } },
+          layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 3,
           minimum: 1,
           maximum: 4
+        },
+        useGlobalCard: {
+          type: 'boolean',
+          title: 'Utiliser la configuration globale des vignettes',
+          layout: {
+            if: 'parent.data?.display === "card"',
+            comp: 'switch',
+            cols: { md: 4 }
+          },
+          default: true
+        },
+        card: {
+          $ref: 'https://github.com/data-fair/portals/common-dataset-card'
         }
       }
     },

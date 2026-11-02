@@ -386,9 +386,24 @@
         </v-row>
       </template>
 
-      <!-- Back to datasets link -->
+      <!-- Back to parent dataset or datasets link -->
       <v-row
-        v-if="datasetsCatalogExists"
+        v-if="parentDataset"
+        class="my-4 justify-center"
+      >
+        <nav-link
+          :link="{
+            type: 'external',
+            href: `/datasets/${parentDataset.slug}`,
+            title: t('backToParent', { title: parentDataset.title }),
+            target: false,
+            icon: { custom: mdiChevronLeft }
+          }"
+          :config="portalConfig.navLinksConfig"
+        />
+      </v-row>
+      <v-row
+        v-else-if="datasetsCatalogExists"
         class="my-4 justify-center"
       >
         <nav-link
@@ -518,7 +533,7 @@ const childDatasetsFetch = dataset.value?.isMetaOnly
   ? useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
     query: {
       partOf: 'dataset:' + dataset.value.id,
-      select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,keywords,isMetaOnly,owner,-userPermissions',
+      select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,keywords,image,isMetaOnly,owner,-userPermissions',
       sort: 'title:1',
       size: 100,
       html: 'vuetify'
@@ -526,11 +541,20 @@ const childDatasetsFetch = dataset.value?.isMetaOnly
   })
   : null
 const childDatasets = computed(() => childDatasetsFetch?.data.value?.results ?? [])
-// a child dataset has no image nor topic of its own: no thumbnail, not even the default one
-const childDatasetsCardConfig = computed(() => ({
-  ...portalConfig.value.datasets.card,
-  thumbnail: { ...portalConfig.value.datasets.card.thumbnail, show: false }
-}))
+// a child dataset rarely has an image of its own: the global card would repeat the default one on every child
+const childDatasetsCardConfig = computed(() => {
+  const pageConfig = portalConfig.value.datasets.page.childDatasets
+  if (!pageConfig || pageConfig.useGlobalCard !== false) {
+    return { ...portalConfig.value.datasets.card, thumbnail: { ...portalConfig.value.datasets.card.thumbnail, show: false } }
+  }
+  return { ...portalConfig.value.datasets.card, ...pageConfig.card }
+})
+
+// Parent dataset of a fragment, the back link leads to it instead of the catalog
+const parentFetch = dataset.value?.partOf?.type === 'dataset'
+  ? useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' + dataset.value.partOf.id)
+  : null
+const parentDataset = computed(() => parentFetch?.data.value)
 
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
@@ -564,9 +588,10 @@ const onIframeMessage = (message: any) => {
   if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
 }
 
-watch(datasetsCatalogExists, () => {
+watch([datasetsCatalogExists, parentDataset], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
+  if (parentDataset.value) { items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` }) }
   items.push({ title: dataset.value?.title || t('dataset') })
   setBreadcrumbs(items)
 }, { immediate: true })
@@ -663,6 +688,7 @@ useJsonLd(() => {
     newWindow: New window
     application: Application
     backToDatasets: Go to datasets catalog
+    backToParent: Back to {title}
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
@@ -682,6 +708,7 @@ useJsonLd(() => {
     newWindow: Nouvelle fenêtre
     application: Visualisation
     backToDatasets: Aller au catalogue de données
+    backToParent: Revenir à {title}
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données

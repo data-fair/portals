@@ -13,7 +13,7 @@ test.describe('fragments of a meta-only dataset', () => {
 
   test('are listed in the "child datasets" section of their parent, without being published', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
-      config: { title: 'Fragments Portal', menu: { children: [] }, datasets: { card: {}, page: { relatedDatasets: { display: 'card' } } } }
+      config: { title: 'Fragments Portal', menu: { children: [] }, breadcrumb: { position: 'below-nav' }, datasets: { card: {}, page: { relatedDatasets: { display: 'card' } } } }
     })).data
 
     const suffix = Date.now()
@@ -41,5 +41,10 @@ test.describe('fragments of a meta-only dataset', () => {
 
     await page.locator('.v-card').filter({ hasText: 'Arrêts' }).getByRole('link').first().click()
     await expect(page.getByRole('heading', { name: 'Arrêts' })).toBeVisible()
+    await expect(page.locator('.v-breadcrumbs').getByRole('link', { name: 'Jeu parent' })).toBeVisible()
+
+    // the back link of a fragment leads to its parent, not to the catalog
+    await page.getByRole('link', { name: 'Revenir à Jeu parent' }).click()
+    await expect(page.getByRole('heading', { name: 'Jeux enfants' })).toBeVisible()
   })
 })
