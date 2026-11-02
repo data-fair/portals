@@ -8,10 +8,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Texte } from '#api/types/page-elements/index.ts'
+import type { TextElement } from '#api/types/page-elements/index.ts'
 
 const { element } = defineProps({
-  element: { type: Object as () => Texte, required: true }
+  element: { type: Object as () => TextElement, required: true }
 })
 const { annotateLinks } = useNavigationStore()
 </script>

@@ -9,7 +9,7 @@ export default {
         comp: 'tabs',
         children: [
           {
-            title: 'Reuse Card',
+            title: 'Reuse card',
             'x-i18n-title': {
               fr: "Vignette d'une réutilisation"
             },
@@ -28,7 +28,8 @@ export default {
   properties: {
     allowUserReuses: {
       type: 'boolean',
-      title: 'Permettre aux utilisateurs du portail de proposer des réutilisations',
+      title: 'Allow portal users to suggest reuses',
+      'x-i18n-title': { fr: 'Permettre aux utilisateurs du portail de proposer des réutilisations' },
       layout: 'switch',
       default: false
     },

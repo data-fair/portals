@@ -38,7 +38,7 @@
             name="page-elements"
             :on-update="(newElements: PageElement[]) => onTabsChildrenUpdate(newElements, i)"
             :elements="tab.children"
-            add-item-message="Ajouter un bloc à l'onglet"
+            :add-item-message="t('addBlock')"
           />
         </v-tabs-window-item>
       </v-tabs-window>
@@ -54,6 +54,7 @@ const { element } = defineProps({
 })
 
 const { preview } = usePortalStore()
+const { t } = useI18n()
 const activeTab = ref(0)
 
 const onTabsChildrenUpdate = (newElements: PageElement[], i: number) => {
@@ -68,3 +69,10 @@ const onTabsChildrenUpdate = (newElements: PageElement[], i: number) => {
 }
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addBlock: Add a block to the tab
+  fr:
+    addBlock: Ajouter un bloc à l'onglet
+</i18n>

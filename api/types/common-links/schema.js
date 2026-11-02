@@ -1,47 +1,52 @@
 // Definitions of link item types
 export const standardPage = {
-  title: 'Page standard (Accueil, Contact,...)',
+  title: 'Standard page (Home, Contact,...)',
+  'x-i18n-title': { fr: 'Page standard (Accueil, Contact,...)' },
   required: ['type', 'subtype'],
   properties: {
     type: { const: 'standard' },
     subtype: {
       type: 'string',
-      title: 'Type de page',
+      title: 'Page type',
+      'x-i18n-title': { fr: 'Type de page' },
       oneOf: [
         // Editable pages
-        { const: 'home', title: 'Accueil' },
+        { const: 'home', title: 'Home', 'x-i18n-title': { fr: 'Accueil' } },
         { const: 'contact', title: 'Contact' },
-        { const: 'accessibility', title: 'Accessibilité' },
-        { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
-        { const: 'legal-notice', title: 'Mentions légales' },
-        { const: 'privacy-policy', title: 'Politique de confidentialité' },
-        { const: 'cookie-policy', title: 'Politique de cookies' },
-        { const: 'datasets', title: 'Catalogue de données' },
-        { const: 'applications', title: 'Catalogue de visualisations' },
-        { const: 'reuses', title: 'Catalogue de réutilisations' },
-        { const: 'event-catalog', title: "Catalogue d'événements" },
-        { const: 'news-catalog', title: "Catalogue d'actualités" },
+        { const: 'accessibility', title: 'Accessibility', 'x-i18n-title': { fr: 'Accessibilité' } },
+        { const: 'terms-of-service', title: 'Terms of service', 'x-i18n-title': { fr: "Conditions générales d'utilisation" } },
+        { const: 'legal-notice', title: 'Legal notice', 'x-i18n-title': { fr: 'Mentions légales' } },
+        { const: 'privacy-policy', title: 'Privacy policy', 'x-i18n-title': { fr: 'Politique de confidentialité' } },
+        { const: 'cookie-policy', title: 'Cookie policy', 'x-i18n-title': { fr: 'Politique de cookies' } },
+        { const: 'datasets', title: 'Data catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+        { const: 'applications', title: 'Application catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+        { const: 'reuses', title: 'Reuse catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+        { const: 'event-catalog', title: 'Event catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+        { const: 'news-catalog', title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
 
         // Fixed pages
-        { const: 'sitemap', title: 'Plan du site' },
-        { const: 'catalog-api-doc', title: "Documentation d'API" }
+        { const: 'sitemap', title: 'Sitemap', 'x-i18n-title': { fr: 'Plan du site' } },
+        { const: 'catalog-api-doc', title: 'API documentation', 'x-i18n-title': { fr: "Documentation d'API" } }
       ],
       layout: { cols: { md: 6 } }
     },
     title: {
       type: 'string',
-      title: 'Libellé',
+      title: 'Label',
+      'x-i18n-title': { fr: 'Libellé' },
       layout: { cols: { md: 6 } }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     },
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
 export const genericPage = {
-  title: 'Page libre',
+  title: 'Free page',
+  'x-i18n-title': { fr: 'Page libre' },
   required: ['type', 'pageRef'],
   properties: {
     type: { const: 'generic' },
@@ -73,18 +78,21 @@ export const genericPage = {
     },
     title: {
       type: 'string',
-      title: 'Libellé',
+      title: 'Label',
+      'x-i18n-title': { fr: 'Libellé' },
       layout: { cols: { md: 6 } }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     },
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
 export const eventPage = {
-  title: "Page d'événement",
+  title: 'Event page',
+  'x-i18n-title': { fr: "Page d'événement" },
   required: ['type', 'pageRef'],
   properties: {
     type: { const: 'event' },
@@ -103,18 +111,21 @@ export const eventPage = {
     },
     title: {
       type: 'string',
-      title: 'Libellé',
+      title: 'Label',
+      'x-i18n-title': { fr: 'Libellé' },
       layout: { cols: { md: 6 } }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     },
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
 export const newsPage = {
-  title: "Page d'actualité",
+  title: 'News page',
+  'x-i18n-title': { fr: "Page d'actualité" },
   required: ['type', 'pageRef'],
   properties: {
     type: { const: 'news' },
@@ -133,34 +144,40 @@ export const newsPage = {
     },
     title: {
       type: 'string',
-      title: 'Libellé',
+      title: 'Label',
+      'x-i18n-title': { fr: 'Libellé' },
       layout: { cols: { md: 6 } }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     },
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
   }
 }
 export const externalLink = {
-  title: 'Lien',
+  title: 'Link',
+  'x-i18n-title': { fr: 'Lien' },
   required: ['type', 'title', 'href'],
   properties: {
     type: { const: 'external' },
     href: {
       title: 'URL',
       type: 'string',
-      description: 'Si le lien est interne, privilégiez une URL commençant par /',
+      description: 'If the link is internal, prefer a URL starting with /',
+      'x-i18n-description': { fr: 'Si le lien est interne, privilégiez une URL commençant par /' },
     },
     title: {
       type: 'string',
-      title: 'Libellé',
+      title: 'Label',
+      'x-i18n-title': { fr: 'Libellé' },
       layout: { cols: { md: 6 } }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet',
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' },
       default: true
     },
     icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' }
@@ -169,47 +186,53 @@ export const externalLink = {
 
 // Definitions of link item types without title and icon (used for title, image and card pages elements)
 const baseStandardPage = {
-  title: 'Page standard (Accueil, Contact,...)',
+  title: 'Standard page (Home, Contact,...)',
+  'x-i18n-title': { fr: 'Page standard (Accueil, Contact,...)' },
   required: ['type'],
   properties: {
     type: { const: 'standard' },
     subtype: {
       type: 'string',
-      title: 'Type de page',
+      title: 'Page type',
+      'x-i18n-title': { fr: 'Type de page' },
       oneOf: [
         // Editable pages
-        { const: 'home', title: 'Accueil' },
+        { const: 'home', title: 'Home', 'x-i18n-title': { fr: 'Accueil' } },
         { const: 'contact', title: 'Contact' },
-        { const: 'accessibility', title: 'Accessibilité' },
-        { const: 'terms-of-service', title: "Conditions générales d'utilisation" },
-        { const: 'legal-notice', title: 'Mentions légales' },
-        { const: 'privacy-policy', title: 'Politique de confidentialité' },
-        { const: 'cookie-policy', title: 'Politique de cookies' },
-        { const: 'datasets', title: 'Catalogue de données' },
-        { const: 'applications', title: 'Catalogue de visualisations' },
-        { const: 'reuses', title: 'Catalogue de réutilisations' },
-        { const: 'event-catalog', title: "Catalogue d'événements" },
-        { const: 'news-catalog', title: "Catalogue d'actualités" },
+        { const: 'accessibility', title: 'Accessibility', 'x-i18n-title': { fr: 'Accessibilité' } },
+        { const: 'terms-of-service', title: 'Terms of service', 'x-i18n-title': { fr: "Conditions générales d'utilisation" } },
+        { const: 'legal-notice', title: 'Legal notice', 'x-i18n-title': { fr: 'Mentions légales' } },
+        { const: 'privacy-policy', title: 'Privacy policy', 'x-i18n-title': { fr: 'Politique de confidentialité' } },
+        { const: 'cookie-policy', title: 'Cookie policy', 'x-i18n-title': { fr: 'Politique de cookies' } },
+        { const: 'datasets', title: 'Data catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+        { const: 'applications', title: 'Application catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+        { const: 'reuses', title: 'Reuse catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+        { const: 'event-catalog', title: 'Event catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+        { const: 'news-catalog', title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
 
         // Fixed pages
-        { const: 'sitemap', title: 'Plan du site' },
-        { const: 'catalog-api-doc', title: "Documentation d'API" }
+        { const: 'sitemap', title: 'Sitemap', 'x-i18n-title': { fr: 'Plan du site' } },
+        { const: 'catalog-api-doc', title: 'API documentation', 'x-i18n-title': { fr: "Documentation d'API" } }
       ],
       layout: { cols: { md: 6 } }
     },
     title: {
       type: 'string',
-      title: 'Texte alternatif',
-      description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+      title: 'Alternative text',
+      'x-i18n-title': { fr: 'Texte alternatif' },
+      description: 'Text used for accessibility by screen readers',
+      'x-i18n-description': { fr: "Texte utilisé pour l'accessibilité par les lecteurs d'écran" }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     }
   }
 }
 const baseGenericPage = {
-  title: 'Page libre',
+  title: 'Free page',
+  'x-i18n-title': { fr: 'Page libre' },
   required: ['type'],
   properties: {
     type: { const: 'generic' },
@@ -241,17 +264,21 @@ const baseGenericPage = {
     },
     title: {
       type: 'string',
-      title: 'Texte alternatif',
-      description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+      title: 'Alternative text',
+      'x-i18n-title': { fr: 'Texte alternatif' },
+      description: 'Text used for accessibility by screen readers',
+      'x-i18n-description': { fr: "Texte utilisé pour l'accessibilité par les lecteurs d'écran" }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     }
   }
 }
 const baseEventPage = {
-  title: "Page d'événement",
+  title: 'Event page',
+  'x-i18n-title': { fr: "Page d'événement" },
   required: ['type'],
   properties: {
     type: { const: 'event' },
@@ -270,17 +297,21 @@ const baseEventPage = {
     },
     title: {
       type: 'string',
-      title: 'Texte alternatif',
-      description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+      title: 'Alternative text',
+      'x-i18n-title': { fr: 'Texte alternatif' },
+      description: 'Text used for accessibility by screen readers',
+      'x-i18n-description': { fr: "Texte utilisé pour l'accessibilité par les lecteurs d'écran" }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     }
   }
 }
 const baseNewsPage = {
-  title: "Page d'actualité",
+  title: 'News page',
+  'x-i18n-title': { fr: "Page d'actualité" },
   required: ['type'],
   properties: {
     type: { const: 'news' },
@@ -299,33 +330,41 @@ const baseNewsPage = {
     },
     title: {
       type: 'string',
-      title: 'Texte alternatif',
-      description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+      title: 'Alternative text',
+      'x-i18n-title': { fr: 'Texte alternatif' },
+      description: 'Text used for accessibility by screen readers',
+      'x-i18n-description': { fr: "Texte utilisé pour l'accessibilité par les lecteurs d'écran" }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet'
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' }
     }
   }
 }
 const baseExternalLink = {
-  title: 'Lien',
+  title: 'Link',
+  'x-i18n-title': { fr: 'Lien' },
   required: ['type'],
   properties: {
     type: { const: 'external' },
     href: {
       title: 'URL',
       type: 'string',
-      description: 'Si le lien est interne, privilégiez une URL commençant par /',
+      description: 'If the link is internal, prefer a URL starting with /',
+      'x-i18n-description': { fr: 'Si le lien est interne, privilégiez une URL commençant par /' },
     },
     title: {
       type: 'string',
-      title: 'Texte alternatif',
-      description: "Texte utilisé pour l'accessibilité par les lecteurs d'écran"
+      title: 'Alternative text',
+      'x-i18n-title': { fr: 'Texte alternatif' },
+      description: 'Text used for accessibility by screen readers',
+      'x-i18n-description': { fr: "Texte utilisé pour l'accessibilité par les lecteurs d'écran" }
     },
     target: {
       type: 'boolean',
-      title: 'Ouvrir dans un nouvel onglet',
+      title: 'Open in a new tab',
+      'x-i18n-title': { fr: 'Ouvrir dans un nouvel onglet' },
       default: true
     }
   }
@@ -337,7 +376,7 @@ export default {
   $defs: {
     linkItem: {
       type: 'object',
-      oneOfLayout: { label: 'Type de page', emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
+      oneOfLayout: { label: 'Page type', 'x-i18n-label': { fr: 'Type de page' }, emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
@@ -353,7 +392,7 @@ export default {
     // Link item type used for links without title and icon  (used for title, image and card pages elements)
     simpleLinkItem: {
       type: 'object',
-      oneOfLayout: { label: 'Type de page', emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
+      oneOfLayout: { label: 'Page type', 'x-i18n-label': { fr: 'Type de page' }, emptyData: true }, // "Empty data" clears fields when changing type to avoid error: "must NOT have unevaluated properties"
       discriminator: { propertyName: 'type' },
       // layout: { switch: [{ if: 'summary', slots: { component: 'link-item-summary' } }] },
       layout: { switch: [{ if: 'summary', children: [] }] },
@@ -364,7 +403,8 @@ export default {
         baseNewsPage,
         baseExternalLink,
         {
-          title: 'Aucun lien',
+          title: 'No link',
+          'x-i18n-title': { fr: 'Aucun lien' },
           required: ['type'],
           properties: { type: { const: 'none' } }
         }
@@ -375,6 +415,54 @@ export default {
 
 // @ts-expect-error
 const linkItemTitleFn = (item) => {
+  const standardPageTitles = {
+    home: 'Home page',
+    contact: 'Contact',
+    accessibility: 'Accessibility',
+    'terms-of-service': 'Terms of service',
+    'legal-notice': 'Legal notice',
+    'privacy-policy': 'Privacy policy',
+    'cookie-policy': 'Cookie policy',
+    datasets: 'Data catalog',
+    applications: 'Application catalog',
+    reuses: 'Reuse catalog',
+    'event-catalog': 'Event catalog',
+    'news-catalog': 'News catalog',
+    sitemap: 'Sitemap',
+    'catalog-api-doc': 'API documentation'
+  }
+
+  // @ts-expect-error
+  const formatPageRef = (pageRef) => pageRef?.title ? ` - ${pageRef.title} (${pageRef.slug})` : ''
+  // @ts-expect-error
+  const formatLabel = (title) => title ? ` - Label: ${title}` : ''
+
+  if (item.type === 'standard') {
+    // @ts-expect-error
+    const pageTitle = standardPageTitles[item.subtype] || 'Standard page'
+    return pageTitle + formatLabel(item.title)
+  }
+  if (item.type === 'event') {
+    return 'Event' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'news') {
+    return 'News' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'generic') {
+    return 'Edited page' + formatPageRef(item.pageRef) + formatLabel(item.title)
+  }
+  if (item.type === 'external') {
+    const targetInfo = item.target ? ' - Opens in a new tab' : ''
+    return `Link - Label: ${item.title} - URL: ${item.href}${targetInfo}`
+  }
+  if (item.type === 'submenu') {
+    return `Submenu - Label: ${item.title}`
+  }
+  return 'Link not configured'
+}
+
+// @ts-expect-error
+const linkItemTitleFrFn = (item) => {
   const standardPageTitles = {
     home: 'Page d\'accueil',
     contact: 'Contact',
@@ -425,3 +513,4 @@ const linkItemTitleFn = (item) => {
 export const jsFn = (fn) => ({ expr: fn.toString().replace(/^[^{]+{|}$/g, '').trim(), type: 'js-fn' })
 
 export const linkItemTitle = jsFn(linkItemTitleFn)
+export const linkItemTitleFr = jsFn(linkItemTitleFrFn)

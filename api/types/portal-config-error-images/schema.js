@@ -2,18 +2,20 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-error-images',
   'x-exports': [],
   type: 'object',
-  title: "Images personnalisées pour les pages d'erreur (404, 500, etc.)",
+  title: 'Custom images for error pages (404, 500, etc.)',
+  'x-i18n-title': { fr: "Images personnalisées pour les pages d'erreur (404, 500, etc.)" },
   unevaluatedProperties: false,
   properties: {
     forbidden: {
       type: 'object',
-      title: 'Erreur 401/403 - Accès non autorisé',
+      title: 'Error 401/403 - Unauthorized access',
+      'x-i18n-title': { fr: 'Erreur 401/403 - Accès non autorisé' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Erreur 401/403 - Accès non autorisé' }
+            props: { width: 1280, label: 'Error 401/403 - Unauthorized access', 'x-i18n-label': { fr: 'Erreur 401/403 - Accès non autorisé' } }
           }
         },
         cols: { md: 4 }
@@ -35,13 +37,14 @@ export default {
     },
     notFound: {
       type: 'object',
-      title: 'Erreur 404 - Page non trouvée',
+      title: 'Error 404 - Page not found',
+      'x-i18n-title': { fr: 'Erreur 404 - Page non trouvée' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Erreur 404 - Page non trouvée' }
+            props: { width: 1280, label: 'Error 404 - Page not found', 'x-i18n-label': { fr: 'Erreur 404 - Page non trouvée' } }
           }
         },
         cols: { md: 4 }
@@ -63,13 +66,14 @@ export default {
     },
     fallback: {
       type: 'object',
-      title: 'Erreur 500 - Erreur interne',
+      title: 'Error 500 - Internal error',
+      'x-i18n-title': { fr: 'Erreur 500 - Erreur interne' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Erreur 500 - Erreur interne' }
+            props: { width: 1280, label: 'Error 500 - Internal error', 'x-i18n-label': { fr: 'Erreur 500 - Erreur interne' } }
           }
         },
         cols: { md: 4 }

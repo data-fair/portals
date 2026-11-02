@@ -24,6 +24,14 @@ const makeHoverConfig = (colorRef: string) => ({
 // Topics are only clickable as a link to the catalog or as a toggle filter, and the second mode
 // paints its own state, hence a distinct effects list per mode (see hoverConfigTopics).
 const topicsEffectTitles: Record<string, string> = {
+  darken: 'Darken',
+  elevate: 'Elevate',
+  grow: 'Grow',
+  background: 'Background color',
+  border: 'Color the border',
+  invert: 'Fill inversion'
+}
+const topicsEffectTitlesFr: Record<string, string> = {
   darken: 'Assombrissement',
   elevate: 'Élévation',
   grow: 'Agrandissement',
@@ -31,7 +39,7 @@ const topicsEffectTitles: Record<string, string> = {
   border: 'Colorer le bord',
   invert: 'Inversion du remplissage'
 }
-const topicsEffectItems = (...keys: string[]) => keys.map(key => ({ key, title: topicsEffectTitles[key] }))
+const topicsEffectItems = (...keys: string[]) => keys.map(key => ({ key, title: topicsEffectTitles[key], 'x-i18n-title': { fr: topicsEffectTitlesFr[key] } }))
 // Same condition as the `variant` property of the topics element: redirection needs a single source.
 const topicsLinkMode = 'parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1)'
 
@@ -84,10 +92,12 @@ export default {
       type: 'string',
       title: 'Variant',
       'x-i18n-title': { fr: 'Variante' },
+      description: 'The "Tonal" variant is not recommended for accessibility: the contrast between the text and its tinted background may be too low.',
+      'x-i18n-description': { fr: "La variante « Avec fond teinté » est déconseillée pour l'accessibilité : le contraste entre le texte et son fond teinté peut être insuffisant." },
       oneOf: [
         { const: 'default', title: 'Filled', 'x-i18n-title': { fr: 'Avec fond coloré' } },
         { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
-        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Tonale' } }
+        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Avec fond teinté' } }
       ]
     },
 
@@ -140,12 +150,15 @@ export default {
     // mode, filter chips already encoding their selection through their fill.
     hoverConfigTopics: {
       type: 'object',
-      title: 'Effets au survol',
+      title: 'Hover effects',
+      'x-i18n-title': { fr: 'Effets au survol' },
       properties: {
         effects: {
           type: 'array',
-          title: 'Effets',
-          description: 'Appliqués quand les thématiques sont cliquables (redirection ou filtre). Seuls les effets cochés sont appliqués ; sans sélection, ce sont les effets du portail qui sont hérités. En mode filtre, « Inversion du remplissage » remplit au survol une thématique inactive et vide une thématique active.',
+          title: 'Topics effects',
+          'x-i18n-title': { fr: 'Effets', en: 'Effects' },
+          description: 'Applied when topics are clickable (redirection or filter). Only the checked effects are applied; with no selection, the portal effects are inherited. In filter mode, "Fill inversion" fills an inactive topic on hover and empties an active one.',
+          'x-i18n-description': { fr: 'Appliqués quand les thématiques sont cliquables (redirection ou filtre). Seuls les effets cochés sont appliqués ; sans sélection, ce sont les effets du portail qui sont hérités. En mode filtre, « Inversion du remplissage » remplit au survol une thématique inactive et vide une thématique active.' },
           layout: {
             // json-layout only derives the options from the oneOf when the layout provides none,
             // so each case offers the effects that actually do something in that mode.
@@ -157,12 +170,13 @@ export default {
           items: {
             type: 'string',
             // every value stays valid in both modes so switching mode never invalidates a config
-            oneOf: Object.entries(topicsEffectTitles).map(([value, title]) => ({ const: value, title }))
+            oneOf: Object.entries(topicsEffectTitles).map(([value, title]) => ({ const: value, title, 'x-i18n-title': { fr: topicsEffectTitlesFr[value] } }))
           }
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: 'Couleur de survol',
+          title: 'Hover color',
+          'x-i18n-title': { fr: 'Couleur de survol' },
           layout: {
             // "border" colors the outline in both modes, "background" only fills in link mode
             if: `parent.data?.effects?.includes('border') || ((${topicsLinkMode}) && parent.data?.effects?.includes('background'))`,
@@ -178,7 +192,7 @@ export default {
     icon: {
       type: 'object',
       title: 'Icon configuration',
-      'x-i18n-title': { fr: "Configuration de l'icône" },
+      'x-i18n-title': { fr: 'Icône', en: 'Icon' },
       layout: 'card',
       properties: {
         mdi: {
@@ -207,7 +221,7 @@ export default {
           title: 'Custom icon',
           'x-i18n-title': { fr: 'Icône personnalisée' },
           description: 'Only SVG Path are supported.',
-          'x-i18n-description': { fr: 'Seul les SVG Path carrés sont supportés.' },
+          'x-i18n-description': { fr: 'Seuls les SVG Path carrés sont supportés.' },
           layout: { cols: { md: 6 } }
         },
         color: { $ref: '#/$defs/color' }
@@ -220,12 +234,12 @@ export default {
       title: 'Display a line',
       'x-i18n-title': { fr: 'Afficher un trait' },
       oneOf: [
-        { const: 'none', title: 'Aucun trait' },
-        { const: 'left', title: 'Trait à gauche du titre' },
-        { const: 'bottom-small', title: 'Petit trait sous le titre' },
-        { const: 'bottom-medium', title: 'Trait sous le titre (largeur du texte)' },
-        { const: 'underline', title: 'Texte souligné (sous chaque ligne)' },
-        { const: 'bottom-large', title: 'Trait pleine largeur sous le titre' }
+        { const: 'none', title: 'No line', 'x-i18n-title': { fr: 'Aucun trait' } },
+        { const: 'left', title: 'Line to the left of the title', 'x-i18n-title': { fr: 'Trait à gauche du titre' } },
+        { const: 'bottom-small', title: 'Small line under the title', 'x-i18n-title': { fr: 'Petit trait sous le titre' } },
+        { const: 'bottom-medium', title: 'Line under the title (text width)', 'x-i18n-title': { fr: 'Trait sous le titre (largeur du texte)' } },
+        { const: 'underline', title: 'Underlined text (under each line)', 'x-i18n-title': { fr: 'Texte souligné (sous chaque ligne)' } },
+        { const: 'bottom-large', title: 'Full-width line under the title', 'x-i18n-title': { fr: 'Trait pleine largeur sous le titre' } }
       ],
       default: 'none'
     },
@@ -390,7 +404,7 @@ export default {
           title: 'Hover effects',
           'x-i18n-title': { fr: 'Effets au survol' },
           description: 'The "Color" effect tints the button on hover: border color for the "Outlined" variant, background color for the "Tonal" and "Filled" variants. The standard darken effect is applied by default.',
-          'x-i18n-description': { fr: "L'effet « Coloration » teinte le bouton au survol : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Tonale » et « Avec fond coloré ». Par défaut, l'effet d'assombrissement standard est appliqué." },
+          'x-i18n-description': { fr: "L'effet « Coloration » teinte le bouton au survol : couleur de bordure pour la variante « Avec bordure », couleur de fond pour les variantes « Avec fond teinté » et « Avec fond coloré ». Par défaut, l'effet d'assombrissement standard est appliqué." },
           layout: {
             switch: [
               { if: "parent.data?.hoverEffects?.includes('color')", cols: { md: 8 } }
@@ -421,7 +435,8 @@ export default {
         },
         showIcon: {
           type: 'boolean',
-          title: "Afficher l'icône",
+          title: 'Show icon',
+          'x-i18n-title': { fr: "Afficher l'icône" },
           layout: {
             comp: 'switch',
             cols: { md: 4 }
@@ -430,7 +445,8 @@ export default {
         },
         uppercase: {
           type: 'boolean',
-          title: 'Texte en majuscules',
+          title: 'Uppercase text',
+          'x-i18n-title': { fr: 'Texte en majuscules' },
           layout: {
             comp: 'switch',
             cols: { md: 4 }
@@ -445,8 +461,8 @@ export default {
       type: 'object',
       title: 'Topics configuration',
       'x-i18n-title': {
-        en: 'Topics configuration',
-        fr: 'Configuration des thématiques'
+        en: 'Topics',
+        fr: 'Thématiques'
       },
       layout: {
         comp: 'card',
@@ -469,7 +485,8 @@ export default {
       properties: {
         show: {
           type: 'boolean',
-          title: 'Afficher les thématiques',
+          title: 'Show topics',
+          'x-i18n-title': { fr: 'Afficher les thématiques' },
           layout: 'switch',
           default: true
         },
@@ -480,13 +497,15 @@ export default {
         variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' },
         showIcon: {
           type: 'boolean',
-          title: "Afficher l'icône",
+          title: 'Show icon',
+          'x-i18n-title': { fr: "Afficher l'icône" },
           layout: { comp: 'switch' },
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: "Couleur de l'icône",
+          title: 'Icon color',
+          'x-i18n-title': { fr: "Couleur de l'icône" },
           layout: {
             if: 'parent.data?.showIcon === true'
           }
@@ -499,8 +518,8 @@ export default {
       type: 'object',
       title: 'Keywords configuration',
       'x-i18n-title': {
-        en: 'Keywords configuration',
-        fr: 'Configuration des mots-clés'
+        en: 'Keywords',
+        fr: 'Mots-clés'
       },
       layout: {
         comp: 'card',
@@ -521,7 +540,8 @@ export default {
       properties: {
         show: {
           type: 'boolean',
-          title: 'Afficher les mots-clés',
+          title: 'Show keywords',
+          'x-i18n-title': { fr: 'Afficher les mots-clés' },
           layout: 'switch',
           default: true
         },
