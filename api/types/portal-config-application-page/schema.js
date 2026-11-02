@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-application-page',
   'x-exports': [],
@@ -81,11 +83,11 @@ export default {
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 6 }, ...inheritedStyleLayout }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 6 }, ...inheritedStyleLayout }
         },
         showDepartment: {
           type: 'boolean',

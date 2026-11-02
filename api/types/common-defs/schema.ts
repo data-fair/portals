@@ -43,6 +43,9 @@ const topicsEffectItems = (...keys: string[]) => keys.map(key => ({ key, title: 
 // Same condition as the `variant` property of the topics element: redirection needs a single source.
 const topicsLinkMode = 'parent.parent?.data?.redirectPage && (!Array.isArray(parent.parent?.data?.mode) || parent.parent?.data?.mode.length <= 1)'
 
+// a style select left empty takes the portal's « Style visuel par défaut »
+export const inheritedStyleLayout = { placeholder: 'Portal default style', 'x-i18n-placeholder': { fr: 'Style par défaut du portail' }, props: { persistentPlaceholder: true } }
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-defs',
   'x-exports': ['types'],
@@ -385,15 +388,15 @@ export default {
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 4 }, ...inheritedStyleLayout }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 4 }, ...inheritedStyleLayout }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 4 }, ...inheritedStyleLayout }
         },
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant',
@@ -491,9 +494,9 @@ export default {
           default: true
         },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
-        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
-        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
-        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation', layout: { ...inheritedStyleLayout } },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density', layout: { ...inheritedStyleLayout } },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded', layout: { ...inheritedStyleLayout } },
         variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' },
         showIcon: {
           type: 'boolean',

@@ -1,4 +1,5 @@
 import { linkItemTitle, linkItemTitleFr } from '../common-links/schema.js'
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-layout',
@@ -259,10 +260,12 @@ export default {
           ]
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { ...inheritedStyleLayout }
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { ...inheritedStyleLayout }
         },
         border: {
           title: 'Show a border',
@@ -712,10 +715,12 @@ export default {
         // },
 
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { ...inheritedStyleLayout }
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { ...inheritedStyleLayout }
         },
         keepTextSize: {
           title: 'Keep the portal text size',

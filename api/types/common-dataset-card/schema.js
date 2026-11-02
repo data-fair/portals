@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-dataset-card',
   'x-exports': [],
@@ -57,13 +59,13 @@ export default {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
       title: 'Card elevation',
       'x-i18n-title': { fr: 'Élévation de la carte' },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
       title: 'Card rounded corners',
       'x-i18n-title': { fr: 'Arrondi de la carte' },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     hover: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
@@ -260,13 +262,16 @@ export default {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics'
         },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { ...inheritedStyleLayout }
         },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { ...inheritedStyleLayout }
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { ...inheritedStyleLayout }
         },
         variant: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant'
