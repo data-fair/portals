@@ -192,7 +192,7 @@ const items = computed(() => {
       title: 'Jeu de données {i}'
       longTitle: "Voici un jeu de données doté d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
       summary: "Ceci est un exemple de jeu de données pour la prévisualisation."
-      keyword: Mot-cle {i}
+      keyword: Mot-clé {i}
     application:
       title: 'Visualisation {i}'
       longTitle: "Voici une visualisation dotée d'un titre particulièrement long, conçu spécifiquement pour tester l'aperçu et observer avec précision comment la vignette tronque le texte selon les différentes configurations de nombres de lignes."
