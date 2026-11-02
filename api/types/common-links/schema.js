@@ -1,3 +1,44 @@
+// Types of the standard pages, grouped as in the page creation wizard
+const standardPageTypeGroups = [
+  {
+    title: 'Institutional pages',
+    'x-i18n-title': { fr: 'Pages institutionnelles' },
+    types: [
+      { const: 'home', title: 'Home', 'x-i18n-title': { fr: 'Accueil' } },
+      { const: 'contact', title: 'Contact' },
+      { const: 'accessibility', title: 'Accessibility', 'x-i18n-title': { fr: 'Accessibilité' } },
+      { const: 'terms-of-service', title: 'Terms of service', 'x-i18n-title': { fr: "Conditions générales d'utilisation" } },
+      { const: 'legal-notice', title: 'Legal notice', 'x-i18n-title': { fr: 'Mentions légales' } },
+      { const: 'privacy-policy', title: 'Privacy policy', 'x-i18n-title': { fr: 'Politique de confidentialité' } },
+      { const: 'cookie-policy', title: 'Cookie policy', 'x-i18n-title': { fr: 'Politique de cookies' } }
+    ]
+  },
+  {
+    title: 'Catalog pages',
+    'x-i18n-title': { fr: 'Pages de catalogues' },
+    types: [
+      { const: 'datasets', title: 'Data catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
+      { const: 'applications', title: 'Application catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
+      { const: 'reuses', title: 'Reuse catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
+      { const: 'event-catalog', title: 'Event catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
+      { const: 'news-catalog', title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } }
+    ]
+  },
+  {
+    title: 'Automatic pages',
+    'x-i18n-title': { fr: 'Pages automatiques' },
+    types: [
+      { const: 'sitemap', title: 'Sitemap', 'x-i18n-title': { fr: 'Plan du site' } },
+      { const: 'catalog-api-doc', title: 'API documentation', 'x-i18n-title': { fr: "Documentation d'API" } }
+    ]
+  }
+]
+const standardPageTypes = standardPageTypeGroups.flatMap(group => group.types)
+const standardPageTypeItems = standardPageTypeGroups.flatMap(group => [
+  { header: true, title: group.title, 'x-i18n-title': group['x-i18n-title'] },
+  ...group.types.map(({ const: value, ...type }) => ({ value, ...type }))
+])
+
 // Definitions of link item types
 export const standardPage = {
   title: 'Standard page (Home, Contact,...)',
@@ -9,26 +50,10 @@ export const standardPage = {
       type: 'string',
       title: 'Page type',
       'x-i18n-title': { fr: 'Type de page' },
-      oneOf: [
-        // Editable pages
-        { const: 'home', title: 'Home', 'x-i18n-title': { fr: 'Accueil' } },
-        { const: 'contact', title: 'Contact' },
-        { const: 'accessibility', title: 'Accessibility', 'x-i18n-title': { fr: 'Accessibilité' } },
-        { const: 'terms-of-service', title: 'Terms of service', 'x-i18n-title': { fr: "Conditions générales d'utilisation" } },
-        { const: 'legal-notice', title: 'Legal notice', 'x-i18n-title': { fr: 'Mentions légales' } },
-        { const: 'privacy-policy', title: 'Privacy policy', 'x-i18n-title': { fr: 'Politique de confidentialité' } },
-        { const: 'cookie-policy', title: 'Cookie policy', 'x-i18n-title': { fr: 'Politique de cookies' } },
-        { const: 'datasets', title: 'Data catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
-        { const: 'applications', title: 'Application catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-        { const: 'reuses', title: 'Reuse catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-        { const: 'event-catalog', title: 'Event catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
-        { const: 'news-catalog', title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
-
-        // Fixed pages
-        { const: 'sitemap', title: 'Sitemap', 'x-i18n-title': { fr: 'Plan du site' } },
-        { const: 'catalog-api-doc', title: 'API documentation', 'x-i18n-title': { fr: "Documentation d'API" } }
-      ],
-      layout: { cols: { md: 6 } }
+      description: 'One page of each type per portal. Except for the automatic pages, it must have been created and published on this portal, otherwise the link leads to a page not found.',
+      'x-i18n-description': { fr: 'Une seule page de chaque type par portail. Sauf pour les pages automatiques, elle doit avoir été créée et publiée sur ce portail, sinon le lien mène à une page introuvable.' },
+      oneOf: standardPageTypes.map(type => ({ ...type })),
+      layout: { cols: { md: 6 }, items: standardPageTypeItems }
     },
     title: {
       type: 'string',
@@ -195,26 +220,10 @@ const baseStandardPage = {
       type: 'string',
       title: 'Page type',
       'x-i18n-title': { fr: 'Type de page' },
-      oneOf: [
-        // Editable pages
-        { const: 'home', title: 'Home', 'x-i18n-title': { fr: 'Accueil' } },
-        { const: 'contact', title: 'Contact' },
-        { const: 'accessibility', title: 'Accessibility', 'x-i18n-title': { fr: 'Accessibilité' } },
-        { const: 'terms-of-service', title: 'Terms of service', 'x-i18n-title': { fr: "Conditions générales d'utilisation" } },
-        { const: 'legal-notice', title: 'Legal notice', 'x-i18n-title': { fr: 'Mentions légales' } },
-        { const: 'privacy-policy', title: 'Privacy policy', 'x-i18n-title': { fr: 'Politique de confidentialité' } },
-        { const: 'cookie-policy', title: 'Cookie policy', 'x-i18n-title': { fr: 'Politique de cookies' } },
-        { const: 'datasets', title: 'Data catalog', 'x-i18n-title': { fr: 'Catalogue de données' } },
-        { const: 'applications', title: 'Application catalog', 'x-i18n-title': { fr: 'Catalogue de visualisations' } },
-        { const: 'reuses', title: 'Reuse catalog', 'x-i18n-title': { fr: 'Catalogue de réutilisations' } },
-        { const: 'event-catalog', title: 'Event catalog', 'x-i18n-title': { fr: "Catalogue d'événements" } },
-        { const: 'news-catalog', title: 'News catalog', 'x-i18n-title': { fr: "Catalogue d'actualités" } },
-
-        // Fixed pages
-        { const: 'sitemap', title: 'Sitemap', 'x-i18n-title': { fr: 'Plan du site' } },
-        { const: 'catalog-api-doc', title: 'API documentation', 'x-i18n-title': { fr: "Documentation d'API" } }
-      ],
-      layout: { cols: { md: 6 } }
+      description: 'One page of each type per portal. Except for the automatic pages, it must have been created and published on this portal, otherwise the link leads to a page not found.',
+      'x-i18n-description': { fr: 'Une seule page de chaque type par portail. Sauf pour les pages automatiques, elle doit avoir été créée et publiée sur ce portail, sinon le lien mène à une page introuvable.' },
+      oneOf: standardPageTypes.map(type => ({ ...type })),
+      layout: { cols: { md: 6 }, items: standardPageTypeItems }
     },
     title: {
       type: 'string',
