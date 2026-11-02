@@ -85,9 +85,14 @@ const thumbnailUrl = computed(() => {
 watch([datasetFetch.data, datasetsCatalogExists, parentDataset], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
-  if (parentDataset.value) { items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` }) }
-  items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
-  items.push({ title: t('map') })
+  if (parentDataset.value) {
+    // the page of a fragment is not linked anywhere: its sub-pages hang on its parent
+    items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` })
+    items.push({ title: `${datasetFetch.data.value?.title || t('dataset')} - ${t('map')}` })
+  } else {
+    items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
+    items.push({ title: t('map') })
+  }
   setBreadcrumbs(items)
 }, { immediate: true })
 

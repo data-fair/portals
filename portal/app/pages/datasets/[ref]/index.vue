@@ -50,7 +50,10 @@
           :class="portalConfig.datasets.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
-          <dataset-metadata :dataset="dataset" />
+          <dataset-metadata
+            :dataset="dataset"
+            :fragments="fragments"
+          />
         </v-col>
       </v-row>
 
@@ -290,7 +293,7 @@
       </template>
 
       <!-- Reuses section -->
-      <template v-if="reusesFetch && portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && (reuses.length || portalConfig.datasets.page.reuses?.inviteUserReuses)">
+      <template v-if="portalConfig.datasets.page.reuses?.display && portalConfig.datasets.page.reuses?.display !== 'none' && (reuses.length || portalConfig.datasets.page.reuses?.inviteUserReuses)">
         <page-element-title
           :element="{
             type: 'title',
@@ -328,34 +331,6 @@
         </v-row>
       </template>
 
-      <!-- Child datasets section: the fragments of a meta-only dataset, never listed in the catalog -->
-      <template v-if="portalConfig.datasets.page.childDatasets?.display !== 'none' && childDatasets.length">
-        <page-element-title
-          :element="{
-            type: 'title',
-            content: t('sections.childDatasets', { count: childDatasets.length }),
-            titleTag: sectionTitleTag,
-            titleSize: 'h5',
-            line: portalConfig.datasets.page.titleStyle
-          }"
-        />
-
-        <v-row class="d-flex align-stretch">
-          <v-col
-            v-for="childDataset in childDatasets"
-            :key="childDataset.id"
-            :md="12 / (portalConfig.datasets.page.childDatasets?.columns || 3)"
-            cols="12"
-          >
-            <dataset-card
-              :dataset="childDataset"
-              :card-config="childDatasetsCardConfig"
-              is-portal-config
-            />
-          </v-col>
-        </v-row>
-      </template>
-
       <!-- Related datasets section -->
       <template
         v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
@@ -386,24 +361,9 @@
         </v-row>
       </template>
 
-      <!-- Back to parent dataset or datasets link -->
+      <!-- Back to datasets link -->
       <v-row
-        v-if="parentDataset"
-        class="my-4 justify-center"
-      >
-        <nav-link
-          :link="{
-            type: 'external',
-            href: `/datasets/${parentDataset.slug}`,
-            title: t('backToParent', { title: parentDataset.title }),
-            target: false,
-            icon: { custom: mdiChevronLeft }
-          }"
-          :config="portalConfig.navLinksConfig"
-        />
-      </v-row>
-      <v-row
-        v-else-if="datasetsCatalogExists"
+        v-if="datasetsCatalogExists"
         class="my-4 justify-center"
       >
         <nav-link
@@ -449,6 +409,8 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
   query: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
+// a fragment of a meta-only dataset has no page of its own: its actions are given by its parent
+if (dataset.value?.partOf?.type === 'dataset') await navigateTo('/datasets/' + dataset.value.partOf.id, { replace: true })
 // a meta-only dataset carries no data: its export URLs would lead nowhere
 const datasetFiles = dataset.value && !dataset.value.isMetaOnly ? await useDatasetFiles(dataset.value) : null
 
@@ -491,13 +453,13 @@ const applicationCardConfig = computed(() => {
   return { ...portalConfig.value.applications.card, ...pageConfig.card }
 })
 
-// Reuses linked to the dataset, a fragment can't be picked in a reuse: the section invites to a dead end
-const reusesFetch = dataset.value?.partOf
-  ? null
-  : useLocalFetch<{ count: number, results: Reuse[] }>('/portal/api/reuses', {
-    query: { dataset: dataset.value?.id, limit: 100 }
-  })
-const reuses = computed(() => reusesFetch?.data.value?.results || [])
+// Reuses linked to the dataset
+const reusesUrl = computed(() => withQuery('/portal/api/reuses', {
+  dataset: datasetFetch.data.value?.id,
+  limit: 100
+}))
+const reusesFetch = useLocalFetch<{ count: number, results: Reuse[] }>(reusesUrl)
+const reuses = computed(() => reusesFetch.data.value?.results || [])
 const reusesCardConfig = computed(() => {
   const pageConfig = portalConfig.value.datasets.page.reuses
   if (!pageConfig || pageConfig.useGlobalCard !== false) {
@@ -528,30 +490,18 @@ const relatedDatasetsCardConfig = computed(() => {
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
 
-// Child datasets: the fragments of a meta-only dataset, never published, so not filtered by publication site
-const childDatasetsFetch = dataset.value?.isMetaOnly
+// The fragments of a meta-only dataset, never published, so not filtered by publication site
+const fragmentsFetch = dataset.value?.isMetaOnly
   ? useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
     query: {
       partOf: 'dataset:' + dataset.value.id,
-      select: 'id,slug,title,summary,description,createdAt,updatedAt,dataUpdatedAt,modified,extras,bbox,keywords,image,isMetaOnly,owner,-userPermissions',
+      select: 'id,slug,title,bbox,schema,previews,owner,isMetaOnly,isRest,isVirtual,virtual,-userPermissions',
       sort: 'title:1',
-      size: 100,
-      html: 'vuetify'
+      size: 100
     }
   })
   : null
-const childDatasets = computed(() => childDatasetsFetch?.data.value?.results ?? [])
-// a child dataset rarely has an image of its own: the global card would repeat the default one on every child
-const childDatasetsCardConfig = computed(() => {
-  const pageConfig = portalConfig.value.datasets.page.childDatasets
-  if (!pageConfig || pageConfig.useGlobalCard !== false) {
-    return { ...portalConfig.value.datasets.card, thumbnail: { ...portalConfig.value.datasets.card.thumbnail, show: false } }
-  }
-  return { ...portalConfig.value.datasets.card, ...pageConfig.card }
-})
-
-// the back link of a fragment leads to its parent instead of the catalog
-const parentDataset = useParentDataset(dataset.value?.partOf)
+const fragments = computed(() => fragmentsFetch?.data.value?.results ?? [])
 
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []
@@ -585,10 +535,9 @@ const onIframeMessage = (message: any) => {
   if (message) useAnalytics()?.track(message.trackEvent.action, message.trackEvent)
 }
 
-watch([datasetsCatalogExists, parentDataset], () => {
+watch(datasetsCatalogExists, () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
-  if (parentDataset.value) { items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` }) }
   items.push({ title: dataset.value?.title || t('dataset') })
   setBreadcrumbs(items)
 }, { immediate: true })
@@ -651,13 +600,6 @@ useJsonLd(() => {
     isRelatedTo: relatedDatasets.value.map(rd => ({
       id: requestURL.origin + `/datasets/${rd.slug}`,
       name: rd.title
-    })),
-    isPartOf: parentDataset.value
-      ? { id: requestURL.origin + `/datasets/${parentDataset.value.slug}`, name: parentDataset.value.title }
-      : undefined,
-    hasPart: childDatasets.value.map(cd => ({
-      id: requestURL.origin + `/datasets/${cd.slug}`,
-      name: cd.title
     }))
   })
 
@@ -692,7 +634,6 @@ useJsonLd(() => {
     newWindow: New window
     application: Application
     backToDatasets: Go to datasets catalog
-    backToParent: Back to {title}
     dataset: Dataset
     datasetNotFound: The requested dataset was not found
     datasetError: An error occurred while loading the dataset
@@ -702,7 +643,6 @@ useJsonLd(() => {
       application: Linked application | Linked applications
       reuse: Linked reuse | Linked reuse | Linked reuses
       relatedDatasets: Related dataset | Related dataset | Related datasets
-      childDatasets: Child dataset | Child dataset | Child datasets
       data: Data
       map: Map
       schema: Schema
@@ -712,7 +652,6 @@ useJsonLd(() => {
     newWindow: Nouvelle fenêtre
     application: Visualisation
     backToDatasets: Aller au catalogue de données
-    backToParent: Revenir à {title}
     dataset: Jeu de données
     datasetNotFound: Le jeu de données demandé n'a pas été trouvé
     datasetError: Une erreur est survenue lors du chargement du jeu de données
@@ -722,7 +661,6 @@ useJsonLd(() => {
       application: Visualisation associée | Visualisation associée | Visualisations associées
       reuse: Réutilisation associée | Réutilisation associée | Réutilisations associées
       relatedDatasets: Voir plus
-      childDatasets: Jeu enfant | Jeu enfant | Jeux enfants
       data: Données
       map: Carte
       schema: Schéma

@@ -69,8 +69,6 @@ export const createDatasetSchema = (options: {
   spatialCoverage?: string
   isBasedOn?: Array<{ id: string; url: string; name: string }>
   isRelatedTo?: Array<{ id: string; name: string }>
-  isPartOf?: { id: string; name: string }
-  hasPart?: Array<{ id: string; name: string }>
   subjectOf?: Array<{ id: string; url: string; name: string; type: 'WebApplication' | 'CreativeWork' }>
 }): JsonLdGraph => {
   const schema: JsonLdGraph = {
@@ -124,16 +122,6 @@ export const createDatasetSchema = (options: {
       '@type': 'Dataset',
       '@id': r.id,
       name: r.name
-    }))
-  }
-  if (options.isPartOf) {
-    schema.isPartOf = { '@type': 'Dataset', '@id': options.isPartOf.id, name: options.isPartOf.name }
-  }
-  if (options.hasPart?.length) {
-    schema.hasPart = options.hasPart.map(p => ({
-      '@type': 'Dataset',
-      '@id': p.id,
-      name: p.name
     }))
   }
   if (options.subjectOf?.length) {
