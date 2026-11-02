@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 /* eslint-disable no-template-curly-in-string */
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-reuses',
@@ -96,8 +98,8 @@ export default {
                 ]
               }
             },
-            density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
-            rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' }
+            density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density', layout: { ...inheritedStyleLayout } },
+            rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded', layout: { ...inheritedStyleLayout } }
           }
         },
         pagination: {

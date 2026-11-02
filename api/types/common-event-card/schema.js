@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-event-card',
   'x-exports': [],
@@ -28,7 +30,7 @@ export default {
       'x-i18n-title': {
         fr: 'Élévation de la carte'
       },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
@@ -36,7 +38,7 @@ export default {
       'x-i18n-title': {
         fr: 'Arrondi de la carte'
       },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     hover: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',

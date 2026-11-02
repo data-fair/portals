@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-functional',
   'x-exports': [],
@@ -218,9 +220,9 @@ export default {
           'x-i18n-title': { fr: 'Centrer les thématiques' }
         },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
-        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
-        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
-        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation', layout: { ...inheritedStyleLayout } },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density', layout: { ...inheritedStyleLayout } },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded', layout: { ...inheritedStyleLayout } },
         hover: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfigTopics',
           layout: { comp: 'card' }
@@ -606,10 +608,12 @@ export default {
         },
         bodyTemplate_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' },
         elevation: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
+          layout: { ...inheritedStyleLayout }
         },
         rounded: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+          layout: { ...inheritedStyleLayout }
         },
         showInfo: {
           type: 'boolean',

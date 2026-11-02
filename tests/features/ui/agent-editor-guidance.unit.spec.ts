@@ -28,7 +28,7 @@ test.describe('agent editor guidance', () => {
     const text = Object.values(editorGuidance('portal')).join('\n')
     expect(text).toContain('portalConfig_form')
     expect(text).toContain('« Page libre »')
-    // a catalog page (events, datasets, …) is a « Page standard » item with its « Type de page »:
+    // a catalog page (events, datasets, …) is a « Page standard » item with its « Page »:
     // an after-fix run looked for an events catalog under « Page libre » and never found it
     expect(text).toContain('« Page standard (Accueil, Contact,...) »')
     expect(text).toContain('« Catalogue d\'événements »')

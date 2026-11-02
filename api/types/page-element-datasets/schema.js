@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 /* eslint-disable no-template-curly-in-string */
 const ownersGetItems = {
   url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=owner',
@@ -229,10 +231,12 @@ export default {
               }
             },
             density: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+              layout: { ...inheritedStyleLayout }
             },
             rounded: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+              layout: { ...inheritedStyleLayout }
             },
           }
         },

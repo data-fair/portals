@@ -124,8 +124,8 @@ export default {
       type: 'boolean',
       title: 'Show the "©year — Koumoul" credit at the bottom of the footer',
       'x-i18n-title': { fr: 'Afficher la mention « ©année — Koumoul » en bas du pied de page' },
-      description: 'This option is mandatory: if you disable it, you must display the Koumoul logo in the footer.',
-      'x-i18n-description': { fr: 'Cette option est obligatoire : si vous la désactivez, vous devez afficher le logo de Koumoul dans le pied de page.' },
+      description: 'Required, unless the Koumoul logo is shown in a footer row.',
+      'x-i18n-description': { fr: 'Obligatoire, sauf si le logo Koumoul figure dans une ligne du pied de page.' },
       default: true
     },
     background: { ...background, title: 'Footer background', 'x-i18n-title': { fr: 'Fond du pied de page' } },
