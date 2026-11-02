@@ -32,7 +32,7 @@
           {{ t('dataFrom') }}
           <a
             :href="dataset.origin"
-            rel="noopener"
+            :rel="linkRel(dataset.origin, true)"
             target="_blank"
             :title="t('thisSource') + ' - ' + t('newWindow')"
             class="simple-link"
@@ -88,7 +88,7 @@
         </div>
         <a
           :href="dataset.license.href"
-          rel="noopener"
+          :rel="linkRel(dataset.license.href, true)"
           target="_blank"
           :title="dataset.license.title + ' - ' + t('newWindow')"
           class="simple-link"
@@ -135,7 +135,7 @@
         <a
           v-if="customMeta.type === 'link' && /^https?:\/\//.test(customLink(customMeta.key).url)"
           :href="customLink(customMeta.key).url"
-          rel="noopener"
+          :rel="linkRel(customLink(customMeta.key).url, true)"
           target="_blank"
           :title="(customLink(customMeta.key).title || customLink(customMeta.key).url) + ' - ' + t('newWindow')"
           class="simple-link"
@@ -193,7 +193,7 @@
           <a
             v-if="dataset.conformsTo.url"
             :href="dataset.conformsTo.url"
-            rel="noopener"
+            :rel="linkRel(dataset.conformsTo.url, true)"
             target="_blank"
             :title="(dataset.conformsTo.title || dataset.conformsTo.url) + ' - ' + t('newWindow')"
             class="simple-link"
@@ -337,6 +337,7 @@ import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 const { dataset } = defineProps<{ dataset: Dataset }>()
 const { portalConfig } = usePortalStore()
+const { linkRel } = useNavigationStore()
 const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 const { departmentLabel } = useDisplayOwner()

@@ -4,6 +4,7 @@ import slug from 'slugify'
 import { Router } from 'express'
 import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
+import { reuseFacets } from './aggregations.ts'
 import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
@@ -20,7 +21,7 @@ router.get('', async (req, res, next) => {
   const sort = findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
-  const filters = findUtils.query(params, { portal: 'portals' })
+  const filters = findUtils.query(params, { portal: 'portals', requestedPortal: 'requestedPortals' })
 
   // Filter by submitter instead of owner if isSubmitter=true
   let query: Record<string, any> = {}
@@ -32,12 +33,13 @@ router.get('', async (req, res, next) => {
 
   const queryWithFilters = Object.assign(filters, query)
 
-  const [count, results] = await Promise.all([
+  const [count, results, facets] = await Promise.all([
     mongo.reuses.countDocuments(queryWithFilters),
-    mongo.reuses.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray()
+    size ? mongo.reuses.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray() : [],
+    mongo.reuses.aggregate(reuseFacets(query)).toArray()
   ])
 
-  res.json({ results, count })
+  res.json({ results, count, facets: facets[0] })
 })
 
 router.post('', async (req, res, next) => {

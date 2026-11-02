@@ -94,7 +94,7 @@ const { navigation } = defineProps<{
 
 const route = useRoute()
 const { locale, t } = useI18n()
-const { isExternalLink, resolveLink, resolveLinkTitle, activePageGroupRootPath } = useNavigationStore()
+const { isExternalLink, resolveLink, resolveLinkTitle, activePageGroupRootPath, linkRel } = useNavigationStore()
 const { preview } = usePortalStore()
 
 const navRootRef = ref<HTMLElement>()

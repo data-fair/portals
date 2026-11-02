@@ -115,6 +115,20 @@
       multiple
     />
 
+    <!-- Requested portals filters -->
+    <v-autocomplete
+      v-if="requestedPortalsItems.length"
+      v-model="requestedPortalsSelected"
+      :items="requestedPortalsItems"
+      item-title="display"
+      item-value="portalId"
+      :label="t('requestedPortals')"
+      class="mt-4 mx-4"
+      chips
+      closable-chips
+      multiple
+    />
+
     <!-- Page types filters -->
     <v-autocomplete
       v-model="typesSelected"
@@ -183,6 +197,7 @@ const search = defineModel('search', { type: String, default: '' })
 const sort = defineModel('sort', { type: String, default: 'createdAt:-1' })
 const showAll = defineModel('showAll', { type: Boolean, default: false })
 const portalsSelected = defineModel('portalsSelected', { type: Array, required: true })
+const requestedPortalsSelected = defineModel('requestedPortalsSelected', { type: Array, required: true })
 const typesSelected = defineModel('typesSelected', { type: Array, required: true })
 const groupsSelected = defineModel('groupsSelected', { type: Array, required: true })
 const ownersSelected = defineModel('ownersSelected', { type: Array, required: true })
@@ -219,10 +234,10 @@ const portalsFetch = useFetch<{ results: Array<{ _id: string, title: string }> }
   { query: { select: '_id,title', size: 10000 } }
 )
 
-const portalsItems = computed(() => {
-  if (!facets.portals || !portalsFetch.data.value?.results) return []
+const portalsFacetItems = (counts?: Record<string, number>) => {
+  if (!counts || !portalsFetch.data.value?.results) return []
 
-  return Object.entries(facets.portals)
+  return Object.entries(counts)
     .map(([portalId, count]) => {
       const portal = portalsFetch.data.value?.results.find(p => p._id === portalId)
       return {
@@ -231,7 +246,9 @@ const portalsItems = computed(() => {
       }
     })
     .sort((a, b) => a.display.localeCompare(b.display))
-})
+}
+const portalsItems = computed(() => portalsFacetItems(facets.portals))
+const requestedPortalsItems = computed(() => portalsFacetItems(facets.requestedPortals))
 
 const typesItems = computed(() => {
   if (!facets.types) return []
@@ -315,6 +332,7 @@ const deleteGroup = useAsyncAction(
     deleteGroupWarning: Only groups without any page can be deleted.
     owner: Owner
     portal: Portal
+    requestedPortals: Requested publications
     pageGroup: Group
     pageType:
       title: Page Type
@@ -353,6 +371,7 @@ const deleteGroup = useAsyncAction(
     delete: Supprimer
     owner: Propriétaire
     portal: Portail
+    requestedPortals: Publications demandées
     pageGroup: Groupe
     selectGroupToDelete: Groupe à supprimer
     groupTitle:

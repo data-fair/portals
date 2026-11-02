@@ -134,7 +134,7 @@
             <template v-if="element.showInfo">
               <div
                 v-if="portalConfig.contactInformations.infos_html"
-                v-html="/*eslint-disable-line vue/no-v-html*/portalConfig.contactInformations.infos_html"
+                v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(portalConfig.contactInformations.infos_html)"
               />
               <v-divider
                 v-if="portalConfig.contactInformations.infos_html && (portalConfig.contactInformations.phone || portalConfig.contactInformations.website)"
@@ -155,8 +155,8 @@
                 :prepend-icon="mdiWeb"
                 :title="portalConfig.contactInformations.websiteLabel || portalConfig.contactInformations.website"
                 :href="portalConfig.contactInformations.website"
+                :rel="linkRel(portalConfig.contactInformations.website, true)"
                 target="_blank"
-                rel="noopener"
               />
             </template>
 
@@ -188,6 +188,7 @@ const { element } = defineProps<{ element: ContactElement }>()
 const rules = useRules() // https://vuetifyjs.com/en/features/rules/
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
+const { linkRel, annotateLinks } = useNavigationStore()
 const url = !preview ? useRequestURL() : null
 
 // v-bind:title.attr causes SSR hydration mismatch with Vuetify 4

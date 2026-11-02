@@ -21,7 +21,7 @@ router.get('', async (req, res, next) => {
   const sort = params.q ? { _score: { $meta: 'textScore' } } : findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)
-  const filters = findUtils.query(params, { portal: 'portals', type: 'type', groupId: 'config.genericMetadata.group._id' })
+  const filters = findUtils.query(params, { portal: 'portals', requestedPortal: 'requestedPortals', type: 'type', groupId: 'config.genericMetadata.group._id' })
 
   // If groupId is not specified, exclude documents that have one
   if (params.groupId === 'default') filters['config.genericMetadata.group._id'] = { $exists: false }
@@ -44,7 +44,7 @@ router.get('', async (req, res, next) => {
 
   const [count, results, facets] = await Promise.all([
     mongo.pages.countDocuments(queryWithFilters),
-    mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray(),
+    size ? mongo.pages.find(queryWithFilters).project(project).skip(skip).limit(size).sort(sort).toArray() : [],
     mongo.pages.aggregate(pageFacets(query, showAll)).toArray()
   ])
 

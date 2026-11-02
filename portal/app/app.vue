@@ -68,7 +68,8 @@ useHead({
   link
 })
 
-const linksCss = computed(() => portalLinksCss($portal.config.linksConfig, '.v-application'))
+// dialogs and menus are teleported out of .v-application, into .v-overlay-container
+const linksCss = computed(() => portalLinksCss($portal.config.linksConfig, ':is(.v-application, .v-overlay-container)'))
 useHead({ style: () => linksCss.value ? [{ key: 'portal-links-css', textContent: linksCss.value }] : [] })
 </script>
 

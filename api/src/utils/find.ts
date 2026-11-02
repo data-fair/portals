@@ -96,6 +96,7 @@ export default {
   query,
   filterPermissions,
   sort: mongoSort,
+  // size=0 asks for the count (and facets) only: callers skip the find, as mongo's limit(0) means no limit
   pagination: mongoPagination,
   project: mongoProjection
 }

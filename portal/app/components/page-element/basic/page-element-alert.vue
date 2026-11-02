@@ -21,7 +21,7 @@
     </template>
     <template #text>
       <!--eslint-disable-next-line vue/no-v-html -->
-      <div v-html="element._html" />
+      <div v-html="annotateLinks(element._html)" />
     </template>
   </v-alert>
 </template>
@@ -34,6 +34,7 @@ const { element } = defineProps({
 })
 
 const { preview } = usePortalStore()
+const { annotateLinks } = useNavigationStore()
 
 // dismissals are persisted in a cookie shared with SSR, but never in the editor preview
 const dismissedAlerts = preview

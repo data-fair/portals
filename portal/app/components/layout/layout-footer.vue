@@ -49,8 +49,9 @@
           href="https://koumoul.com"
           :title="t('koumoulWebsite') + ' - ' + t('newWindow')"
           target="_blank"
-          rel="noopener"
-          class="simple-link"
+          rel="noopener external"
+          class="text-decoration-underline"
+          style="color: inherit"
         >Koumoul</a></strong>
       </div>
     </template>

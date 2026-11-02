@@ -22,7 +22,7 @@ router.get('', async (req, res) => {
   const query = findUtils.filterPermissions(params, session)
 
   const [results, count] = await Promise.all([
-    mongo.fontAssets.find(query).skip(skip).limit(size).skip(skip).sort(sort).toArray(),
+    size ? mongo.fontAssets.find(query).skip(skip).limit(size).skip(skip).sort(sort).toArray() : [],
     mongo.fontAssets.countDocuments(query)
   ])
 

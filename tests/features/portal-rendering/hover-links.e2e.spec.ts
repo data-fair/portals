@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
+import { deleteDatasets, seedDataset } from '../../support/data-fair.ts'
 
 const user1 = await axiosAuth('test_admin@test.com')
 
@@ -133,18 +134,21 @@ test.describe('hover effects and links style', () => {
     }).toBe('matrix(1, 0, 0, 1, 0, 0)')
   })
 
-  test('new window icon is shown only on links opening a new tab', async ({ page, goToPortal }) => {
+  test('new window icon is shown only on links opening a new tab, never on the footer credit', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'New Window Icon Portal', menu: { children: [] }, linksConfig: { newWindowIcon: true } }
     })).data
-    await createHomePage(portal, [{ type: 'text', content: 'Voir [mon lien](https://example.com/page) pour en savoir plus.' }])
+    await createHomePage(portal, [{ type: 'text', content: 'Voir [mon lien](https://example.com/page) ou <a href="https://example.com/doc" target="_blank">la doc</a>.' }])
 
     await goToPortal(portal._id)
     const sameTab = page.locator('a.simple-link', { hasText: 'mon lien' })
-    const newTab = page.locator('footer a.simple-link[target="_blank"]', { hasText: 'Koumoul' })
+    const newTab = page.locator('a.simple-link[target="_blank"]', { hasText: 'la doc' })
+    const credit = page.locator('footer a[target="_blank"]', { hasText: 'Koumoul' })
     await expect(sameTab).toBeVisible({ timeout: 10_000 })
     expect(await sameTab.evaluate(el => getComputedStyle(el, '::after').maskImage)).toBe('none')
     expect(await newTab.evaluate(el => getComputedStyle(el, '::after').maskImage)).toContain('data:image/svg+xml')
+    await expect(newTab).toHaveAttribute('title', 'la doc - Nouvelle fenêtre')
+    expect(await credit.evaluate(el => getComputedStyle(el, '::after').maskImage)).toBe('none')
   })
 
   test('title small line grows on link hover', async ({ page, goToPortal }) => {
@@ -237,5 +241,29 @@ test.describe('hover effects and links style', () => {
       return layer.evaluate(el => el.style.transform)
     }, { timeout: 15_000 }).toBe('scale(1.05)')
     await expect(card).toHaveCSS('transform', 'none')
+  })
+
+  test('links style also applies in dialogs, rendered outside .v-application', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Dialog Links Portal', menu: { children: [] }, linksConfig: { underline: 'always' } }
+    })).data
+    await createHomePage(portal, [])
+    const id = await seedDataset(portal._id, {
+      id: `test-dialog-links-${Date.now()}`,
+      title: 'Jeu avec pièce jointe',
+      attachments: [{ type: 'url', url: 'https://example.com/annexe.pdf', title: 'Annexe', description: 'Voir [la doc](https://example.com/doc)' }]
+    })
+    try {
+      await goToPortal(portal._id, `/datasets/${id}`)
+      const link = page.locator('.v-overlay-container a.simple-link', { hasText: 'la doc' })
+      // a click before hydration does not open the dialog, retry until it does
+      await expect.poll(async () => {
+        if (!await link.isVisible()) await page.getByRole('button', { name: 'Pièces jointes' }).click()
+        return link.isVisible()
+      }, { timeout: 15_000 }).toBe(true)
+      await expect(link).toHaveCSS('text-decoration-line', 'underline')
+    } finally {
+      await deleteDatasets([id])
+    }
   })
 })

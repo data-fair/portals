@@ -5,8 +5,8 @@
     :title="(isSecondary ? t('imageAltSecondary') : t('imageAlt')) + ' - ' + t('newWindow')"
     :class="['d-flex align-center', $attrs.class]"
     :href="link"
+    :rel="linkRel(link, true)"
     target="_blank"
-    rel="noopener"
   >
     <img
       :alt="(isSecondary ? t('imageAltSecondary') : t('imageAlt')) + ' - ' + t('newWindow')"
@@ -50,6 +50,7 @@ defineProps<{
 
 const { t } = useI18n()
 const { portalConfig } = usePortalStore()
+const { linkRel } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 
 </script>

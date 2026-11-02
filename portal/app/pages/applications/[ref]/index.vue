@@ -40,7 +40,7 @@
           />
           <div
             class="text-break"
-            v-html="/*eslint-disable-line vue/no-v-html*/application.description"
+            v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(application.description)"
           />
         </v-col>
 
@@ -133,7 +133,7 @@ const { portal, portalConfig } = usePortalStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, annotateLinks } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('applications', route.params.ref as string)
 

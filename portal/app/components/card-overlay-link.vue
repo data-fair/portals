@@ -55,6 +55,7 @@ const toPath = computed(() => {
   if (typeof props.to === 'string') return props.to
   return props.to && 'path' in props.to ? props.to.path : undefined
 })
+const { linkRel } = useNavigationStore()
 const rel = computed(() => linkRel(props.href ?? toPath.value, props.target))
 </script>
 

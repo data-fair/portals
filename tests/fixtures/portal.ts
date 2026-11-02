@@ -18,7 +18,8 @@ export const test = base.extend<{
     if (browserName === 'webkit') {
       await page.route('**/*', async (route) => {
         if (route.request().resourceType() !== 'document') return route.fallback()
-        const response = await route.fetch()
+        // no own timeout: the navigation timeout bounds it, actionTimeout (5 s) is shorter than a cold SSR
+        const response = await route.fetch({ timeout: 0 })
         const headers = response.headers()
         const csp = headers['content-security-policy']
         if (csp) headers['content-security-policy'] = csp.replace(/upgrade-insecure-requests;?\s*/, '')

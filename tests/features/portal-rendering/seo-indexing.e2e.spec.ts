@@ -499,7 +499,7 @@ test.describe('SEO / indexation', () => {
     for (const tag of publicAnchors) expect(tag).not.toContain('nofollow')
     const external = anchorsTo(home, 'https://example.com')
     expect(external.length).toBeGreaterThanOrEqual(1)
-    for (const tag of external) expect(tag).toMatch(/rel="noopener"/)
+    for (const tag of external) expect(tag).toMatch(/rel="noopener external"/)
 
     const sitemap = await fetchHtml(request, portalUrl(portal._id) + '/sitemap')
     const loginAnchors = [...sitemap.matchAll(/<a\b[^>]*>/gi)].map(m => m[0]).filter(tag => tag.includes('/simple-directory/login'))

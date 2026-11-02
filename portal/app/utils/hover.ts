@@ -32,7 +32,7 @@ export const linkColorValue = (color: string): string =>
   `rgb(var(--v-theme-text-${color}, var(--v-theme-${color})))`
 
 // Global style of text links (a.simple-link, markdown included), shared by the portal
-// (scope .v-application) and the manager page preview (scope of its theme provider).
+// (scope .v-application and the overlays) and the manager page preview (scope of its theme provider).
 // The doubled .simple-link.simple-link beats the rule from the simple-directory
 // _theme.css (.v-theme--<name> a.simple-link) whatever the loading order.
 export const portalLinksCss = (cfg: PortalConfig['linksConfig'], scope: string): string => {
