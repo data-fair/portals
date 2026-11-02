@@ -8,7 +8,8 @@ export default {
   $id: 'https://github.com/data-fair/portals/font-assets/post-req-body',
   title: 'Post font asset req body',
   'x-exports': ['validate', 'types', 'vjsf'],
-  'x-vjsf': { compName: 'font-asset' },
+  'x-vjsf': { compName: 'font-asset', xI18n: true },
+  'x-vjsf-locales': ['en', 'fr'],
   layout: { title: null }
 
 }

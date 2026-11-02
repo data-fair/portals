@@ -354,7 +354,7 @@ const pages = computed(() => {
 
     if (page.type === 'generic') {
       const groupId = item.group?._id ?? 'no-group'
-      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId] ??= { title: item.group?.title ?? t('noGroup'), pages: [] }
       genericByGroup[groupId].pages.push(item)
     } else {
       result[page.type as 'event' | 'news'].push(item)
@@ -408,6 +408,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
     home: Home
+    noGroup: No group
     portals: Portals
     portalConfig: Portal configuration
     configurePrompt: Help me configure this portal
@@ -417,6 +418,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     home: Accueil
+    noGroup: Sans groupe
     portals: Portails
     portalConfig: Configuration du portail
     configurePrompt: Aide-moi à configurer ce portail

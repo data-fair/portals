@@ -21,9 +21,12 @@ export type EditorKind = 'page' | 'portal'
 // The options of a menu row, from the schema the form is built from: both judged runs of a
 // page then its menu entry guided the menu without having the form described, and made the
 // person read the drop-downs out to it.
-const pageTypes = (standardPage.properties.subtype.oneOf as Array<{ const?: string, title?: string }>)
-  .filter(o => o.const).map(o => `« ${o.title} »`).join(', ')
-const MENU_OPTIONS = `Options of a menu row, added by « Ajouter un lien » as « Lien non configuré »: its « Type de lien » is « ${standardPage.title} » (then its « Type de page »: ${pageTypes}), « ${genericPage.title} » (then its « Page », among the pages published on this portal), « ${eventPage.title} » or « ${newsPage.title} » (one event or news page), « Sous-menu » (a « Libellé » and its own rows) or « ${externalLink.title} » (a URL). Each has a « Libellé ».`
+type Titled = { const?: string, title?: string, 'x-i18n-title'?: { fr?: string } }
+// the guidance quotes the labels of the French form
+const frTitle = (schema: Titled) => schema['x-i18n-title']?.fr ?? schema.title
+const pageTypes = (standardPage.properties.subtype.oneOf as Titled[])
+  .filter(o => o.const).map(o => `« ${frTitle(o)} »`).join(', ')
+const MENU_OPTIONS = `Options of a menu row, added by « Ajouter un lien » as « Lien non configuré »: its « Type de lien » is « ${frTitle(standardPage)} » (then its « Type de page »: ${pageTypes}), « ${frTitle(genericPage)} » (then its « Page », among the pages published on this portal), « ${frTitle(eventPage)} » or « ${frTitle(newsPage)} » (one event or news page), « Sous-menu » (a « Libellé » and its own rows) or « ${frTitle(externalLink)} » (a URL). Each has a « Libellé ».`
 
 const DRAFT = 'Every change, the sub-agent\'s or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it. When the draft is ready and the person wants to see the result first, tell them where it shows and end your turn asking whether it suits them; once they agree (at once if they did not ask to see it), only then declare wait_for_user_action asking them to press it. The draft state tells you once it is published.'
 

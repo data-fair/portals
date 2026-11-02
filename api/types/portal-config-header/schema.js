@@ -17,7 +17,8 @@ export default {
       },
       {
         comp: 'card',
-        title: 'Contenu',
+        title: 'Content',
+        'x-i18n-title': { fr: 'Contenu' },
         if: 'data?.show',
         children: [
           'showSocial',
@@ -32,13 +33,16 @@ export default {
     show: {
       type: 'boolean',
       layout: 'switch',
-      title: "Afficher l'entête",
+      title: 'Show the header',
+      'x-i18n-title': { fr: "Afficher l'entête" },
       default: true
     },
     showSocial: {
       type: 'boolean',
-      title: 'Afficher les liens de réseaux sociaux',
-      description: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Paramètres généraux › Réseaux sociaux ».",
+      title: 'Show social network links',
+      'x-i18n-title': { fr: 'Afficher les liens de réseaux sociaux' },
+      description: 'No link is shown until a social network is set in "General settings › Social networks".',
+      'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Paramètres généraux › Réseaux sociaux »." },
       layout: {
         if: 'parent.data?.show',
         comp: 'switch'
@@ -46,7 +50,8 @@ export default {
     },
     logoPrimaryType: {
       type: 'string',
-      title: 'Logo principal',
+      title: 'Main logo',
+      'x-i18n-title': { fr: 'Logo principal' },
       default: 'default',
       layout: {
         if: 'parent.data?.show',
@@ -56,21 +61,22 @@ export default {
         ]
       },
       oneOf: [
-        { const: 'default', title: 'Utiliser le logo principal' },
-        { const: 'local', title: 'Charger une image' },
-        { const: 'hidden', title: 'Ne pas afficher de logo' }
+        { const: 'default', title: 'Use the main logo', 'x-i18n-title': { fr: 'Utiliser le logo principal' } },
+        { const: 'local', title: 'Upload an image', 'x-i18n-title': { fr: 'Charger une image' } },
+        { const: 'hidden', title: 'Do not show a logo', 'x-i18n-title': { fr: 'Ne pas afficher de logo' } }
       ]
     },
     logoPrimary: {
       type: 'object',
-      title: 'Logo principal',
+      title: 'Main logo',
+      'x-i18n-title': { fr: 'Logo principal' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         if: 'parent.data?.logoPrimaryType === "local"',
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Logo principal' }
+            props: { width: 1280, label: 'Main logo', 'x-i18n-label': { fr: 'Logo principal' } }
           }
         },
         cols: { md: 6 }
@@ -92,7 +98,8 @@ export default {
     },
     logoPrimaryMobile: {
       type: 'object',
-      title: 'Logo principal - Alternative mobile',
+      title: 'Main logo - mobile alternative',
+      'x-i18n-title': { fr: 'Logo principal - Alternative mobile' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         if: 'parent.data?.show && parent.data?.logoPrimaryType !== "hidden"',
@@ -102,7 +109,7 @@ export default {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Logo principal - Alternative mobile' }
+            props: { width: 1280, label: 'Main logo - mobile alternative', 'x-i18n-label': { fr: 'Logo principal - Alternative mobile' } }
           }
         },
         cols: { md: 6 }
@@ -124,8 +131,10 @@ export default {
     },
     logoPrimaryLink: {
       type: 'string',
-      title: 'Lien au clic sur le logo principal',
-      description: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d'accueil.",
+      title: 'Link when clicking the main logo',
+      'x-i18n-title': { fr: 'Lien au clic sur le logo principal' },
+      description: 'Link the user is redirected to when clicking the logo. By default, they are redirected to the home page.',
+      'x-i18n-description': { fr: "Lien vers lequel l'utilisateur sera redirigé en cliquant sur le logo. Par défaut, il sera redirigé vers la page d'accueil." },
       layout: {
         if: 'parent.data?.show && parent.data?.logoPrimaryType !== "hidden"',
         switch: [
@@ -137,8 +146,10 @@ export default {
     },
     logoPrimaryCentered: {
       type: 'boolean',
-      title: 'Centrer le logo principal',
-      description: "Centre le logo principal dans l'entête. Le titre du portail et le logo secondaire ne sont alors pas affichés.",
+      title: 'Center the main logo',
+      'x-i18n-title': { fr: 'Centrer le logo principal' },
+      description: 'Centers the main logo in the header. The portal title and the secondary logo are then not displayed.',
+      'x-i18n-description': { fr: "Centre le logo principal dans l'entête. Le titre du portail et le logo secondaire ne sont alors pas affichés." },
       layout: {
         if: 'parent.data?.show && parent.data?.logoPrimaryType !== "hidden"',
         comp: 'switch',
@@ -148,7 +159,8 @@ export default {
     },
     showTitle: {
       type: 'boolean',
-      title: 'Afficher le titre du portail',
+      title: 'Show the portal title',
+      'x-i18n-title': { fr: 'Afficher le titre du portail' },
       layout: {
         if: 'parent.data?.show && !(parent.data?.logoPrimaryType !== "hidden" && parent.data?.logoPrimaryCentered)',
         comp: 'switch',
@@ -158,19 +170,21 @@ export default {
     },
     logoSecondary: {
       type: 'object',
-      title: 'Logo secondaire',
+      title: 'Secondary logo',
+      'x-i18n-title': { fr: 'Logo secondaire' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         if: 'parent.data?.show && !(parent.data?.logoPrimaryType !== "hidden" && parent.data?.logoPrimaryCentered)',
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 1280, label: 'Logo secondaire' }
+            props: { width: 1280, label: 'Secondary logo', 'x-i18n-label': { fr: 'Logo secondaire' } }
           }
         },
         cols: { md: 6 }
       },
-      description: "Logo affiché à droite de l'entête",
+      description: 'Logo displayed on the right of the header',
+      'x-i18n-description': { fr: "Logo affiché à droite de l'entête" },
       properties: {
         _id: {
           type: 'string'
@@ -188,8 +202,10 @@ export default {
     },
     logoSecondaryLink: {
       type: 'string',
-      title: 'Lien au clic sur le logo secondaire',
-      description: "Lien vers lequel sera redirigé l'utilisateur lors du clic sur le logo secondaire.",
+      title: 'Link when clicking the secondary logo',
+      'x-i18n-title': { fr: 'Lien au clic sur le logo secondaire' },
+      description: 'Link the user is redirected to when clicking the secondary logo.',
+      'x-i18n-description': { fr: "Lien vers lequel sera redirigé l'utilisateur lors du clic sur le logo secondaire." },
       layout: {
         if: 'parent.data?.show && !(parent.data?.logoPrimaryType !== "hidden" && parent.data?.logoPrimaryCentered)',
         props: { clearable: true },
@@ -198,8 +214,10 @@ export default {
     },
     color: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
-      title: "Couleur de l'entête",
-      description: 'Laisser vide pour utiliser la couleur de la barre de navigation.',
+      title: 'Header color',
+      'x-i18n-title': { fr: "Couleur de l'entête" },
+      description: 'Leave empty to use the navigation bar color.',
+      'x-i18n-description': { fr: 'Laisser vide pour utiliser la couleur de la barre de navigation.' },
       layout: {
         if: 'parent.data?.show',
         slots: {
@@ -212,7 +230,8 @@ export default {
     },
     keepOnScroll: {
       type: 'boolean',
-      title: "Garder l'entête affiché au scroll",
+      title: 'Header always visible at the top of the screen',
+      'x-i18n-title': { fr: "En-tête toujours visible en haut de l'écran" },
       layout: {
         if: 'parent.data?.show',
         comp: 'switch',

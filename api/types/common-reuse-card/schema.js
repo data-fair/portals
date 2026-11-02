@@ -41,18 +41,21 @@ export default {
     },
     hover: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
-      title: 'Effets au survol de la carte'
+      title: 'Card hover effects',
+      'x-i18n-title': { fr: 'Effets au survol de la carte' }
     },
     titleLinesCount: {
       type: 'number',
-      title: 'Nombre de lignes pour le titre',
-      description: 'Force le titre à occuper exactement N lignes.',
+      title: 'Number of title lines',
+      'x-i18n-title': { fr: 'Nombre de lignes pour le titre' },
+      description: 'Forces the title to take up exactly N lines.',
+      'x-i18n-description': { fr: 'Force le titre à occuper exactement N lignes.' },
       layout: { cols: { md: 4 } },
       default: 2,
       oneOf: [
-        { const: 1, title: '1 ligne' },
-        { const: 2, title: '2 lignes' },
-        { const: 0, title: 'Sans limite de lignes' }
+        { const: 1, title: '1 line', 'x-i18n-title': { fr: '1 ligne' } },
+        { const: 2, title: '2 lines', 'x-i18n-title': { fr: '2 lignes' } },
+        { const: 0, title: 'No line limit', 'x-i18n-title': { fr: 'Sans limite de lignes' } }
       ]
     },
     showSummary: {
@@ -83,7 +86,8 @@ export default {
       type: 'object',
       title: 'Image configuration',
       'x-i18n-title': {
-        fr: "Configuration de l'image"
+        fr: 'Image',
+        en: 'Image'
       },
       layout: {
         comp: 'card',
@@ -129,7 +133,7 @@ export default {
           'x-i18n-title': {
             fr: 'Image par défaut'
           },
-          description: 'Image to display if no image is set for the use.',
+          description: 'Image to display if no image is set for the reuse.',
           'x-i18n-description': {
             fr: "Image à afficher si la réutilisation n'a pas d'image définie."
           },
@@ -138,7 +142,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 1280, label: 'Image par défaut' }
+                props: { width: 1280, label: 'Default image', 'x-i18n-label': { fr: 'Image par défaut' } }
               }
             }
           },
@@ -172,13 +176,13 @@ export default {
         },
         useSummary: {
           type: 'boolean',
-          title: 'Use dataset summary',
+          title: 'Use reuse summary',
           'x-i18n-title': {
-            fr: 'Utiliser le résumé du jeu de données'
+            fr: 'Utiliser le résumé de la réutilisation'
           },
-          description: "Use the dataset's summary when no image is set for it and when 'Show summary' is not enabled.",
+          description: "Use the reuse's summary when no image is set for it and when 'Show summary' is not enabled.",
           'x-i18n-description': {
-            fr: "Permet d'utiliser le résumé du jeu de données si aucune image n'est définie pour cette dernière et si l'option 'Afficher le résumé' n'est pas activée."
+            fr: "Permet d'utiliser le résumé de la réutilisation si aucune image n'est définie pour celle-ci et si l'option 'Afficher le résumé' n'est pas activée."
           },
           layout: {
             comp: 'switch',

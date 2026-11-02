@@ -38,7 +38,7 @@
               name="page-elements"
               :on-update="(newElements: PageElement[]) => onPanelsChildrenUpdate(newElements, i)"
               :elements="panel.children"
-              add-item-message="Ajouter un bloc au panneau"
+              :add-item-message="t('addBlock')"
             />
           </div>
         </template>
@@ -55,6 +55,7 @@ const { element } = defineProps({
 })
 
 const { preview, portalConfig } = usePortalStore()
+const { t } = useI18n()
 const activePanels = ref<number[] | number | null>(element.multiple ? [] : null)
 
 const count = element.panels.filter(Boolean).length
@@ -73,3 +74,10 @@ const onPanelsChildrenUpdate = (newElements: PageElement[], i: number) => {
 }
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addBlock: Add a block to the panel
+  fr:
+    addBlock: Ajouter un bloc au panneau
+</i18n>

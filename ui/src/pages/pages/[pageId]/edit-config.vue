@@ -171,7 +171,7 @@ const pages = computed(() => {
 
     if (page.type === 'generic') {
       const groupId = item.group?._id ?? 'no-group'
-      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId] ??= { title: item.group?.title ?? t('noGroup'), pages: [] }
       genericByGroup[groupId].pages.push(item)
     } else {
       result[page.type as 'event' | 'news'].push(item)
@@ -261,6 +261,7 @@ watch(pageFetch.data, (page) => {
     askAssistant: Ask the assistant
     addItemMessage: Add a block to the page
     edit: Editing draft
+    noGroup: No group
     pages: Pages
     pageConfig: Page configuration
     configurePrompt: Help me configure this page
@@ -269,6 +270,7 @@ watch(pageFetch.data, (page) => {
     askAssistant: Demander à l'assistant
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon
+    noGroup: Sans groupe
     pages: Pages
     pageConfig: Configuration de la page
     configurePrompt: Aide-moi à configurer cette page

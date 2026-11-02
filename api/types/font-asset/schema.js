@@ -13,20 +13,24 @@ export default {
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },
     name: {
       type: 'string',
-      title: 'Nom de la famille de police'
+      title: 'Font family name',
+      'x-i18n-title': { fr: 'Nom de la famille de police' }
     },
     subset: {
-      title: 'Ensemble de caractères',
+      title: 'Character set',
+      'x-i18n-title': { fr: 'Ensemble de caractères' },
       default: 'latin',
       oneOf: [
         { const: 'latin', title: 'Latin' },
-        { const: 'latin-ext', title: 'Latin étendu' }
+        { const: 'latin-ext', title: 'Extended Latin', 'x-i18n-title': { fr: 'Latin étendu' } }
       ]
     },
     weightRange: {
       type: 'string',
-      title: 'Poids',
-      description: 'WOFF2 variable : plage ex. "300 700". OTF/TTF statique : valeur unique ex. "400".',
+      title: 'Weight',
+      'x-i18n-title': { fr: 'Poids' },
+      description: 'Variable WOFF2: range, e.g. "300 700". Static OTF/TTF: single value, e.g. "400".',
+      'x-i18n-description': { fr: 'WOFF2 variable : plage ex. "300 700". OTF/TTF statique : valeur unique ex. "400".' },
       default: '400 700'
     },
     style: {
@@ -37,7 +41,8 @@ export default {
     },
     file: {
       type: 'object',
-      title: 'Fichier de police',
+      title: 'Font file',
+      'x-i18n-title': { fr: 'Fichier de police' },
       required: ['name', 'size'],
       layout: { comp: 'file-input', accept: '.woff2,.otf,.ttf' },
       properties: {

@@ -9,7 +9,8 @@ export default {
   },
   oneOf: [
     {
-      title: 'Aucun suivi',
+      title: 'No tracking',
+      'x-i18n-title': { fr: 'Aucun suivi' },
       required: ['type'],
       additionalProperties: false,
       properties: {
@@ -28,11 +29,13 @@ export default {
       properties: {
         type: {
           const: 'google-analytics-v4',
-          title: 'Type de système'
+          title: 'System type',
+          'x-i18n-title': { fr: 'Type de système' }
         },
         params: {
           type: 'object',
-          description: '[Voir la documentation du plugin](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)',
+          description: '[See the plugin documentation](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)',
+          'x-i18n-description': { fr: '[Voir la documentation du plugin](https://github.com/DavidWells/analytics/blob/master/packages/analytics-plugin-google-analytics/README.md)' },
           additionalProperties: false,
           properties: {
             measurementIds: {
@@ -46,7 +49,8 @@ export default {
         },
         anonymized: {
           const: false,
-          title: 'Système configuré en mode anonyme'
+          title: 'System configured in anonymous mode',
+          'x-i18n-title': { fr: 'Système configuré en mode anonyme' }
         }
       }
     },
@@ -57,7 +61,8 @@ export default {
       properties: {
         type: {
           const: 'matomo',
-          title: 'Type de système'
+          title: 'System type',
+          'x-i18n-title': { fr: 'Type de système' }
         },
         params: {
           type: 'object',
@@ -65,19 +70,23 @@ export default {
           properties: {
             trackerBase: {
               type: 'string',
-              title: 'URL du tracker'
+              title: 'Tracker URL',
+              'x-i18n-title': { fr: 'URL du tracker' }
             },
             siteId: {
               type: 'string',
-              title: 'Identifiant du site'
+              title: 'Site ID',
+              'x-i18n-title': { fr: 'Identifiant du site' }
             }
           }
         },
         anonymized: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Système configuré en mode anonyme',
-          description: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
+          title: 'System configured in anonymous mode',
+          'x-i18n-title': { fr: 'Système configuré en mode anonyme' },
+          description: "Check this box if your user tracking system is configured to anonymize users' personal identifiers (IP addresses). If so, the portal will not display a banner warning the user that the site uses tracking cookies.",
+          'x-i18n-description': { fr: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi." }
         }
       }
     },
@@ -88,7 +97,8 @@ export default {
       properties: {
         type: {
           const: 'piano',
-          title: 'Type de système'
+          title: 'System type',
+          'x-i18n-title': { fr: 'Type de système' }
         },
         params: {
           type: 'object',
@@ -107,8 +117,10 @@ export default {
         anonymized: {
           type: 'boolean',
           layout: 'switch',
-          title: 'Système configuré en mode anonyme',
-          description: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi."
+          title: 'System configured in anonymous mode',
+          'x-i18n-title': { fr: 'Système configuré en mode anonyme' },
+          description: "Check this box if your user tracking system is configured to anonymize users' personal identifiers (IP addresses). If so, the portal will not display a banner warning the user that the site uses tracking cookies.",
+          'x-i18n-description': { fr: "Cochez cette case si votre système de suivi des utilisateurs est configuré pour anonymiser les identifiants personnels des utilisateurs (adresses IPs). Si c'est le cas le portail n'affichera pas de bandeau avertissant l'utilisateur que le site utilise des cookies de suivi." }
         }
       }
     }

@@ -4,7 +4,7 @@
     name="page-elements"
     :on-update="(newElements: PageElement[]) => ({ ...element, children: newElements })"
     :elements="element.children"
-    add-item-message="Ajouter un bloc à la grille"
+    :add-item-message="t('addBlock')"
   />
   <v-row
     v-else
@@ -25,7 +25,7 @@
         name="page-elements"
         :on-update="() => {}"
         :elements="[child]"
-        add-item-message="Ajouter un bloc à la grille"
+        :add-item-message="t('addBlock')"
       />
     </v-col>
   </v-row>
@@ -39,6 +39,7 @@ import type { PageElement, ResponsiveGridElement } from '#api/types/page-element
 defineOptions({ inheritAttrs: false })
 const { element } = defineProps<{ element: ResponsiveGridElement }>()
 const { preview } = usePortalStore()
+const { t } = useI18n()
 
 const colsConfig = computed(() => {
   const configs: Record<number, Record<string, number>> = {
@@ -51,3 +52,10 @@ const colsConfig = computed(() => {
 })
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addBlock: Add a block to the grid
+  fr:
+    addBlock: Ajouter un bloc à la grille
+</i18n>

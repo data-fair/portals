@@ -367,7 +367,7 @@ const deleteGroup = useAsyncAction(
     deletingGroup: "Suppression d'un groupe"
     deleteGroupSuccess: Groupe supprimé.
     deleteGroupError: Erreur lors de la suppression du groupe.
-    deleteGroupWarning: Seuls les groupes sans aucune page peuvent être supprimes.
+    deleteGroupWarning: Seuls les groupes sans aucune page peuvent être supprimés.
     delete: Supprimer
     owner: Propriétaire
     portal: Portail
