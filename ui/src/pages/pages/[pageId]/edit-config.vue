@@ -49,6 +49,7 @@
     </portal-preview-provider>
 
     <navigation-right>
+      <unsaved-edit-alert v-if="unsavedEdit" />
       <page-edit-actions :changes-stack="changesStack" />
     </navigation-right>
   </v-container>
@@ -67,6 +68,7 @@ import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
 import { useEditorAgentState } from '~/composables/use-editor-agent-state'
 import { usePagePublicationAgentState } from '~/composables/use-page-publication-agent-state'
+import { useUnsavedEditGuard } from '~/composables/use-unsaved-edit-guard'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
@@ -215,9 +217,14 @@ const vjsfDefaults = {
   }
 }
 
+const unsavedEdit = useUnsavedEditGuard(locale)
 const saveDraft = useAsyncAction(async () => {
-  if (!formValid.value) return
+  if (!formValid.value) {
+    unsavedEdit.value = true
+    return
+  }
   await patchPage.execute({ draftConfig: editConfig.value })
+  unsavedEdit.value = false
   // the stored draft was accepted by the API, it no longer carries errors
   storedConfigErrors.value = []
 })
