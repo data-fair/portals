@@ -35,6 +35,13 @@ test.describe('pages management', () => {
     assert.match(stored.draftConfig.elements[0]._html, /<strong>texte<\/strong>/)
   })
 
+  test('should create a catalog page with a search bar and a sort', async () => {
+    const datasets = (await user1.post('/api/pages', { type: 'datasets', config: { title: 'Data', elements: [] } })).data
+    assert.deepEqual(datasets.config.elements[0].filters, { position: 'top', items: ['search', 'sort'] })
+    const events = (await user1.post('/api/pages', { type: 'event-catalog', config: { title: 'Events', elements: [] } })).data
+    assert.deepEqual(events.draftConfig.elements[0].filters, { position: 'top', items: ['search', 'include-past', 'sort'] })
+  })
+
   test('should duplicate a page with an image', async () => {
     const sourcePageConfig: PageConfig = {
       title: 'Source page',
