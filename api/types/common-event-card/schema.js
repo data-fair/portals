@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-event-card',
   'x-exports': [],
@@ -28,7 +30,7 @@ export default {
       'x-i18n-title': {
         fr: 'Élévation de la carte'
       },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
@@ -36,22 +38,25 @@ export default {
       'x-i18n-title': {
         fr: 'Arrondi de la carte'
       },
-      layout: { cols: { md: 6 } }
+      layout: { cols: { md: 6 }, ...inheritedStyleLayout }
     },
     hover: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
-      title: 'Effets au survol de la carte'
+      title: 'Card hover effects',
+      'x-i18n-title': { fr: 'Effets au survol de la carte' }
     },
     titleLinesCount: {
       type: 'number',
-      title: 'Nombre de lignes pour le titre',
-      description: 'Force le titre à occuper exactement N lignes.',
+      title: 'Number of title lines',
+      'x-i18n-title': { fr: 'Nombre de lignes pour le titre' },
+      description: 'Forces the title to take up exactly N lines.',
+      'x-i18n-description': { fr: 'Force le titre à occuper exactement N lignes.' },
       layout: { cols: { md: 4 } },
       default: 2,
       oneOf: [
-        { const: 1, title: '1 ligne' },
-        { const: 2, title: '2 lignes' },
-        { const: 0, title: 'Sans limite de lignes' }
+        { const: 1, title: '1 line', 'x-i18n-title': { fr: '1 ligne' } },
+        { const: 2, title: '2 lines', 'x-i18n-title': { fr: '2 lignes' } },
+        { const: 0, title: 'No line limit', 'x-i18n-title': { fr: 'Sans limite de lignes' } }
       ]
     },
     showDescription: {
@@ -70,7 +75,8 @@ export default {
       type: 'object',
       title: 'Image configuration',
       'x-i18n-title': {
-        fr: "Configuration de l'image"
+        fr: 'Image',
+        en: 'Image'
       },
       layout: {
         comp: 'card',
@@ -125,7 +131,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 1280, label: 'Image par défaut' }
+                props: { width: 1280, label: 'Default image', 'x-i18n-label': { fr: 'Image par défaut' } }
               }
             }
           },

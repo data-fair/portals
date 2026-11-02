@@ -27,12 +27,12 @@ export default {
           },
           type: 'string',
           oneOf: [
-            { const: 'h1', title: 'Titre principal' },
-            { const: 'h2', title: 'Très grand' },
-            { const: 'h3', title: 'Grand' },
-            { const: 'h4', title: 'Moyen' },
-            { const: 'h5', title: 'Petit' },
-            { const: 'h6', title: 'Très petit' }
+            { const: 'h1', title: 'Main title', 'x-i18n-title': { fr: 'Titre principal' } },
+            { const: 'h2', title: 'Very large', 'x-i18n-title': { fr: 'Très grand' } },
+            { const: 'h3', title: 'Large', 'x-i18n-title': { fr: 'Grand' } },
+            { const: 'h4', title: 'Medium', 'x-i18n-title': { fr: 'Moyen' } },
+            { const: 'h5', title: 'Small', 'x-i18n-title': { fr: 'Petit' } },
+            { const: 'h6', title: 'Very small', 'x-i18n-title': { fr: 'Très petit' } }
           ],
           default: 'h3',
           layout: { cols: { xs: 8 } },
@@ -72,7 +72,8 @@ export default {
           type: 'object',
           title: 'Line configuration',
           'x-i18n-title': {
-            fr: 'Configuration du trait'
+            fr: 'Trait',
+            en: 'Line'
           },
           layout: 'card',
           properties: {
@@ -101,7 +102,8 @@ export default {
         },
         link: {
           $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
-          title: 'Configuration du lien',
+          title: 'Title link',
+          'x-i18n-title': { fr: 'Lien', en: 'Link' },
           layout: { comp: 'card' }
         },
         anchor: {
@@ -152,19 +154,22 @@ export default {
     },
     'element-text': {
       type: 'object',
-      title: 'Texte',
+      title: 'Text element',
+      'x-i18n-title': { fr: 'Texte', en: 'Text' },
       required: ['type'],
       properties: {
         type: { const: 'text' },
         uuid: { type: 'string', layout: 'none' },
         content: {
-          title: 'Contenu',
+          title: 'Content',
+          'x-i18n-title': { fr: 'Contenu' },
           type: 'string',
           layout: 'markdown'
         },
         centered: {
           type: 'boolean',
-          title: 'Centrer le contenu',
+          title: 'Center the content',
+          'x-i18n-title': { fr: 'Centrer le contenu' },
           default: false,
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
@@ -195,14 +200,15 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         alertType: {
           type: 'string',
-          title: 'Type prédéfini',
+          title: 'Predefined type',
+          'x-i18n-title': { fr: 'Type prédéfini' },
           default: 'info',
           oneOf: [
-            { const: 'none', title: 'Aucun' },
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
             { const: 'info', title: 'Information' },
-            { const: 'success', title: 'Succès' },
-            { const: 'error', title: 'Erreur' },
-            { const: 'warning', title: 'Avertissement' }
+            { const: 'success', title: 'Success', 'x-i18n-title': { fr: 'Succès' } },
+            { const: 'error', title: 'Error', 'x-i18n-title': { fr: 'Erreur' } },
+            { const: 'warning', title: 'Warning', 'x-i18n-title': { fr: 'Avertissement' } }
           ]
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
@@ -221,11 +227,13 @@ export default {
           default: 'default'
         },
         title: {
-          title: 'Titre',
+          title: 'Title',
+          'x-i18n-title': { fr: 'Titre' },
           type: 'string',
         },
         content: {
-          title: 'Contenu',
+          title: 'Content',
+          'x-i18n-title': { fr: 'Contenu' },
           type: 'string',
           layout: 'markdown'
         },
@@ -339,7 +347,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 2400, label: 'Chargez une image' } // max width of v-container
+                props: { width: 2400, label: 'Upload an image', 'x-i18n-label': { fr: 'Chargez une image' } } // max width of v-container
               }
             }
           },
@@ -365,7 +373,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image' }
+                props: { width: 2560, label: 'Upload an image', 'x-i18n-label': { fr: 'Chargez une image' } }
               }
             }
           },
@@ -483,24 +491,31 @@ export default {
         type: { const: 'iframe' },
         uuid: { type: 'string', layout: 'none' },
         title: {
-          title: "Titre de l'iframe",
-          description: "Recommandé pour l'accessibilité.",
+          title: 'Iframe title',
+          'x-i18n-title': { fr: "Titre de l'iframe" },
+          description: 'Recommended for accessibility.',
+          'x-i18n-description': { fr: "Recommandé pour l'accessibilité." },
           type: 'string'
         },
         url: {
-          title: "URL de l'iframe",
-          description: "URL de la page web à afficher dans l'iframe.",
+          title: 'Iframe URL',
+          'x-i18n-title': { fr: "URL de l'iframe" },
+          description: 'URL of the web page to display in the iframe.',
+          'x-i18n-description': { fr: "URL de la page web à afficher dans l'iframe." },
           type: 'string',
           layout: {
             slots: {
-              before: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**."
+              before: '**Important**: for the iframe integration to work properly, you must add the domain name of the URL in **Portal configuration** → **General settings** → **Security**.',
+              'x-i18n-before': { fr: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**." }
             }
           }
         },
         scroll: {
           type: 'boolean',
-          title: 'Activer le scroll',
-          description: "Permet de scroller dans le contenu de l'iframe"
+          title: 'Enable scrolling',
+          'x-i18n-title': { fr: 'Activer le scroll' },
+          description: 'Allows scrolling within the iframe content',
+          'x-i18n-description': { fr: "Permet de scroller dans le contenu de l'iframe" }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

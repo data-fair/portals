@@ -8,7 +8,7 @@ export default {
   properties: {
     _id: {
       type: 'string',
-      title: 'Identifiant',
+      title: 'Identifier',
       readOnly: true
     },
     slug: {
@@ -17,17 +17,17 @@ export default {
     },
     title: {
       type: 'string',
-      title: 'Titre'
+      title: 'Title'
     },
     description: {
       type: 'string',
       title: 'Description',
-      description: 'Une zone de texte libre pour décrire le groupe. Elle sera affichée sur la vignette du groupe.'
+      description: 'A free text describing the group. It is shown on the group card.'
     },
     rootPage: {
       type: 'string',
-      title: 'Page racine',
-      description: "Slug d'une page utilisée comme racine du groupe pour le fil d'Ariane des pages du groupe."
+      title: 'Root page',
+      description: 'Slug of a page used as the root of the group in the breadcrumbs of its pages.'
     },
     owner: { $ref: 'https://github.com/data-fair/lib/account' },
     createdAt: { $ref: 'https://github.com/data-fair/portals/partial#/$defs/createdAt' },

@@ -3,7 +3,8 @@ export default {
   'x-exports': [],
   $defs: {
     'margin-bottom': {
-      title: 'Espacement inférieur',
+      title: 'Bottom spacing',
+      'x-i18n-title': { fr: 'Espacement inférieur' },
       type: 'integer',
       layout: {
         comp: 'slider',

@@ -8,7 +8,7 @@ export default {
         comp: 'tabs',
         children: [
           {
-            title: 'Event Card',
+            title: 'Event card',
             'x-i18n-title': {
               fr: "Vignette d'un événement"
             },

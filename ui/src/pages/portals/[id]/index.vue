@@ -173,6 +173,7 @@
     </v-defaults-provider>
 
     <navigation-right v-if="portalFetch.data.value">
+      <unsaved-edit-alert v-if="unsavedEdit" />
       <portal-actions
         :has-draft-diff="hasDraftDiff"
         :is-saving-draft="saveDraft.loading.value"
@@ -195,6 +196,7 @@ import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import equal from 'fast-deep-equal'
 import { useEditorAgentState } from '~/composables/use-editor-agent-state'
+import { useUnsavedEditGuard } from '~/composables/use-unsaved-edit-guard'
 
 const { t, locale } = useI18n()
 const session = useSessionAuthenticated()
@@ -271,12 +273,17 @@ watch(() => editConfig.value?.theme?.assistedMode, (newVal, oldVal) => {
   }
 })
 
+const unsavedEdit = useUnsavedEditGuard(locale)
 const saveDraft = useAsyncAction(async () => {
-  if (!formValid.value) return
+  if (!formValid.value) {
+    unsavedEdit.value = true
+    return
+  }
   const backToOpening = loadedDraftConfig && openedFormConfig && equal(toRaw(editConfig.value), openedFormConfig)
   const draftConfig = backToOpening ? loadedDraftConfig : editConfig.value
   const updated = await $fetch<Portal>(`/portals/${route.params.id}`, { method: 'PATCH', body: { draftConfig } })
   storedDraftConfig.value = updated.draftConfig
+  unsavedEdit.value = false
 })
 
 // Only edits are saved: a person's input or the assistant's form tools, which move the form
@@ -354,7 +361,7 @@ const pages = computed(() => {
 
     if (page.type === 'generic') {
       const groupId = item.group?._id ?? 'no-group'
-      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId] ??= { title: item.group?.title ?? t('noGroup'), pages: [] }
       genericByGroup[groupId].pages.push(item)
     } else {
       result[page.type as 'event' | 'news'].push(item)
@@ -408,6 +415,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     appBarPreview: Header & Navigation Bar
     breadcrumbs: Breadcrumbs
     home: Home
+    noGroup: No group
     portals: Portals
     portalConfig: Portal configuration
     configurePrompt: Help me configure this portal
@@ -417,6 +425,7 @@ const vjsfOptions = computed<VjsfOptions | null>(() => ({
     appBarPreview: Entête & Barre de navigation
     breadcrumbs: Fil d'Ariane
     home: Accueil
+    noGroup: Sans groupe
     portals: Portails
     portalConfig: Configuration du portail
     configurePrompt: Aide-moi à configurer ce portail

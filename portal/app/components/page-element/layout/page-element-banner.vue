@@ -24,7 +24,7 @@
         name="page-elements"
         :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
         :elements="element.children"
-        add-item-message="Ajouter un bloc à la section"
+        :add-item-message="t('addBlock')"
       />
     </v-container>
   </v-sheet>
@@ -43,11 +43,19 @@ const { element } = defineProps<{
 }>()
 
 const { preview } = usePortalStore()
+const { t } = useI18n()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
 const { showTopBreadcrumbs } = useNavigationStore()
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addBlock: Add a block to the section
+  fr:
+    addBlock: Ajouter un bloc à la section
+</i18n>
 
 <style scoped>
 .banner-fluid {

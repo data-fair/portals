@@ -1,9 +1,12 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-dataset-page',
   'x-exports': [],
   title: 'Dataset Page',
   'x-i18n-title': {
-    fr: "Page d'un jeu de données"
+    fr: "Page d'un jeu de données",
+    en: 'Dataset page'
   },
   type: 'object',
   unevaluatedProperties: false,
@@ -31,28 +34,35 @@ export default {
   properties: {
     showData: {
       type: 'boolean',
-      title: 'Afficher la section "Données"',
-      description: 'Affiche une section avec les onglets "Tableau", "Carte", "Schéma",... en fonction des vues disponibles.',
+      title: 'Show the "Data" section',
+      'x-i18n-title': { fr: 'Afficher la section "Données"' },
+      description: 'Shows a section with the "Table", "Map", "Schema",... tabs depending on the available views.',
+      'x-i18n-description': { fr: 'Affiche une section avec les onglets "Tableau", "Carte", "Schéma",... en fonction des vues disponibles.' },
       layout: 'switch'
     },
 
     showImage: {
       type: 'boolean',
-      title: "Afficher l'image",
-      description: "L'image sera affichée au dessus de la description.  \n**Seule l'image spécifique au jeu de données sera affichée**, les images de thématique,  \nd'application ou par défaut sont ignorées sur cette page.",
+      title: 'Show image',
+      'x-i18n-title': { fr: "Afficher l'image" },
+      description: 'The image will be displayed above the description.  \n**Only the image specific to the dataset will be displayed**, topic,  \napplication or default images are ignored on this page.',
+      'x-i18n-description': { fr: "L'image sera affichée au-dessus de la description.  \n**Seule l'image spécifique au jeu de données sera affichée**, les images de thématique,  \nd'application ou par défaut sont ignorées sur cette page." },
       layout: 'switch'
     },
 
     showAttachments: {
       type: 'boolean',
-      title: 'Afficher les pièces jointes de type lien',
-      description: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Paramètres généraux** → **Sécurité**.",
+      title: 'Show link-type attachments',
+      'x-i18n-title': { fr: 'Afficher les pièces jointes de type lien' },
+      description: "Displays link-type attachments directly on the page in an iframe.\n\n**Important**: For the IFrame integration to work correctly, you must add the URL's domain name in **General settings** → **Security**.",
+      'x-i18n-description': { fr: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Paramètres généraux** → **Sécurité**." },
       layout: 'switch'
     },
 
     titleStyle: {
       type: 'object',
-      title: 'Configuration des titres',
+      title: 'Dataset page section titles',
+      'x-i18n-title': { fr: 'Titres de section', en: 'Section titles' },
       layout: { comp: 'card' },
       properties: {
         position: {
@@ -70,64 +80,69 @@ export default {
 
     metadata: {
       type: 'object',
-      title: 'Configuration des métadonnées',
+      title: 'Dataset page metadata',
+      'x-i18n-title': { fr: 'Métadonnées', en: 'Metadata' },
       layout: { comp: 'card' },
       properties: {
         location: {
           type: 'string',
-          title: 'Position des métadonnées',
+          title: 'Metadata position',
+          'x-i18n-title': { fr: 'Position des métadonnées' },
           layout: { cols: { md: 4 } },
           default: 'right',
           oneOf: [
-            { const: 'top', title: 'Sous le titre' },
-            { const: 'bottom', title: 'Sous la description' },
-            { const: 'right', title: 'À droite' }
+            { const: 'top', title: 'Below title', 'x-i18n-title': { fr: 'Sous le titre' } },
+            { const: 'bottom', title: 'Below description', 'x-i18n-title': { fr: 'Sous la description' } },
+            { const: 'right', title: 'Right', 'x-i18n-title': { fr: 'À droite' } }
           ]
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 4 }, ...inheritedStyleLayout }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } }
+          layout: { cols: { md: 4 }, ...inheritedStyleLayout }
         },
         actionButtons: {
           type: 'array',
           title: 'Action Buttons',
           'x-i18n-title': {
-            fr: "Boutons d'actions"
+            fr: "Boutons d'actions",
+            en: 'Action buttons'
           },
           layout: { cols: { md: 8 } },
           items: {
             type: 'string',
             oneOf: [
-              { const: 'download', title: 'Télécharger' },
+              { const: 'download', title: 'Download', 'x-i18n-title': { fr: 'Télécharger' } },
               { const: 'api', title: 'API' },
-              { const: 'embed', title: 'Intégrer' },
+              { const: 'embed', title: 'Embed', 'x-i18n-title': { fr: 'Intégrer' } },
               { const: 'notifications', title: 'Notifications' },
-              { const: 'attachments', title: 'Pièces jointes' },
-              { const: 'table', title: 'Tableau' },
-              { const: 'map', title: 'Carte' },
-              { const: 'schema', title: 'Schéma' }
+              { const: 'attachments', title: 'Attachments', 'x-i18n-title': { fr: 'Pièces jointes' } },
+              { const: 'table', title: 'Table', 'x-i18n-title': { fr: 'Tableau' } },
+              { const: 'map', title: 'Map', 'x-i18n-title': { fr: 'Carte' } },
+              { const: 'schema', title: 'Schema', 'x-i18n-title': { fr: 'Schéma' } }
             ]
           }
         },
 
         actionsStyle: {
           type: 'string',
-          title: "Style des boutons d'actions",
+          title: 'Action buttons style',
+          'x-i18n-title': { fr: "Style des boutons d'actions" },
           layout: { cols: { md: 4 } },
           default: 'full',
           oneOf: [
-            { const: 'icon', title: 'Icône seulement' },
-            { const: 'full', title: 'Icône et texte' },
-            { const: 'text', title: 'Texte seulement' }
+            { const: 'icon', title: 'Icon only', 'x-i18n-title': { fr: 'Icône seulement' } },
+            { const: 'full', title: 'Icon and text', 'x-i18n-title': { fr: 'Icône et texte' } },
+            { const: 'text', title: 'Text only', 'x-i18n-title': { fr: 'Texte seulement' } }
           ]
         },
         showDepartment: {
           type: 'boolean',
-          title: 'Afficher le propriétaire',
+          title: 'Show owner',
+          'x-i18n-title': { fr: 'Afficher le propriétaire' },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -136,8 +151,10 @@ export default {
         },
         showAttachments: {
           type: 'boolean',
-          title: 'Afficher les pièces jointes',
-          description: 'Affiche les pièces jointes directement dans les métadonnées.',
+          title: 'Show attachments',
+          'x-i18n-title': { fr: 'Afficher les pièces jointes' },
+          description: 'Shows the attachments directly in the metadata.',
+          'x-i18n-description': { fr: 'Affiche les pièces jointes directement dans les métadonnées.' },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -156,7 +173,8 @@ export default {
 
     applications: {
       type: 'object',
-      title: 'Configuration des visualisations',
+      title: 'Dataset page applications',
+      'x-i18n-title': { fr: 'Visualisations associées', en: 'Related applications' },
       layout: {
         comp: 'card',
         children: [
@@ -172,20 +190,23 @@ export default {
       properties: {
         display: {
           type: 'string',
-          title: "Mode d'affichage",
+          title: 'Display mode',
+          'x-i18n-title': { fr: "Mode d'affichage" },
           default: 'side-by-side',
           layout: { cols: { md: 4 } },
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'card', title: 'Vignette' },
-            { const: 'full-list', title: 'Liste pleine page' },
-            { const: 'side-by-side', title: 'Liste en alternance' }
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'card', title: 'Card', 'x-i18n-title': { fr: 'Vignette' } },
+            { const: 'full-list', title: 'Full-page list', 'x-i18n-title': { fr: 'Liste pleine page' } },
+            { const: 'side-by-side', title: 'Alternating list', 'x-i18n-title': { fr: 'Liste en alternance' } }
           ]
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns will be reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 2,
           minimum: 1,
@@ -193,7 +214,8 @@ export default {
         },
         useGlobalCard: {
           type: 'boolean',
-          title: 'Utiliser la configuration globale des vignettes',
+          title: 'Use the global card configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration globale des vignettes' },
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
@@ -209,7 +231,8 @@ export default {
 
     reuses: {
       type: 'object',
-      title: 'Configuration des réutilisations',
+      title: 'Dataset page reuses',
+      'x-i18n-title': { fr: 'Réutilisations', en: 'Reuses' },
       layout: {
         comp: 'card',
         children: [
@@ -230,18 +253,21 @@ export default {
       properties: {
         display: {
           type: 'string',
-          title: "Mode d'affichage",
+          title: 'Display mode',
+          'x-i18n-title': { fr: "Mode d'affichage" },
           default: 'none',
           layout: { cols: { md: 4 } },
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'card', title: 'Vignette' }
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'card', title: 'Card', 'x-i18n-title': { fr: 'Vignette' } }
           ]
         },
         inviteUserReuses: {
           type: 'boolean',
-          title: 'Inviter les utilisateurs à proposer une réutilisation',
-          description: 'Rendre la section réutilisations visible en permanence. Un message invite vos utilisateurs à en proposer depuis leur espace personnel.',
+          title: 'Invite users to suggest a reuse',
+          'x-i18n-title': { fr: 'Inviter les utilisateurs à proposer une réutilisation' },
+          description: 'Make the reuses section always visible. A message invites your users to suggest some from their personal space.',
+          'x-i18n-description': { fr: 'Rendre la section réutilisations visible en permanence. Un message invite vos utilisateurs à en proposer depuis leur espace personnel.' },
           layout: {
             if: 'parent.data?.display === "card" && rootData.reuses?.allowUserReuses',
             comp: 'switch',
@@ -250,8 +276,10 @@ export default {
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns will be reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 3,
           minimum: 1,
@@ -259,7 +287,8 @@ export default {
         },
         useGlobalCard: {
           type: 'boolean',
-          title: 'Utiliser la configuration globale des vignettes',
+          title: 'Use the global card configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration globale des vignettes' },
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
@@ -327,7 +356,8 @@ export default {
 
     relatedDatasets: {
       type: 'object',
-      title: 'Configuration des jeux de données liés',
+      title: 'Dataset page related datasets',
+      'x-i18n-title': { fr: 'Jeux de données liés', en: 'Related datasets' },
       layout: {
         comp: 'card',
         children: [
@@ -343,18 +373,21 @@ export default {
       properties: {
         display: {
           type: 'string',
-          title: "Mode d'affichage",
+          title: 'Display mode',
+          'x-i18n-title': { fr: "Mode d'affichage" },
           default: 'card',
           layout: { cols: { md: 4 } },
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'card', title: 'Vignette' },
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'card', title: 'Card', 'x-i18n-title': { fr: 'Vignette' } },
           ]
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns will be reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 2,
           minimum: 1,
@@ -362,7 +395,8 @@ export default {
         },
         useGlobalCard: {
           type: 'boolean',
-          title: 'Utiliser la configuration globale des vignettes',
+          title: 'Use the global card configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration globale des vignettes' },
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
