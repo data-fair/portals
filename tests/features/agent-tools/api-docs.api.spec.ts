@@ -29,6 +29,21 @@ test.describe('api docs', () => {
     assert.equal((await bearerAx.get('/api/api-docs.json')).status, 200)
   })
 
+  test('the skill bodies are served anonymously as markdown', async () => {
+    const doc = (await axios().get('/api/api-docs.json')).data
+    const hrefs = doc['x-agent'].skills.map((s: any) => s.href)
+    assert.deepEqual(hrefs, ['agents/skills/pages.md', 'agents/skills/config.md'])
+    const res = await axios().get('/api/agents/skills/pages.md')
+    assert.equal(res.status, 200)
+    assert.match(String(res.headers['content-type']), /text\/markdown/)
+    assert.match(res.data, /^# /)
+    const { bearerAx } = await nhiSession('pages:read')
+    assert.equal((await bearerAx.get('/api/agents/skills/config.md')).status, 200)
+    for (const file of ['nope.md', 'pages', '..%2Fapi-docs.ts', 'PAGES.md']) {
+      assert.equal((await axios().get(`/api/agents/skills/${file}`, { validateStatus: () => true })).status, 404, file)
+    }
+  })
+
   test('a font file uploaded without its metadata takes them from the upload, as upload_font_asset sends it', async () => {
     const ax = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
     const form = new FormData()

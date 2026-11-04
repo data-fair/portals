@@ -18,8 +18,33 @@ import { acceptedScopes, type ScopeFamily, type ScopeTier, type ScopedOperationI
 /** the security of a tool reaching the operation at this tier: the cookie session, or a token holding one of the accepted scopes */
 export const agentSecurity = (family: ScopeFamily, tier: ScopeTier) => [{ sdCookie: [] }, ...oauth2Alternatives(acceptedScopes(family, tier))]
 
-// skills arrive with the business skills registry (served under /api/agents/skills)
-export const root: AgentRoot = {}
+const editorTools = (name: string) => ['describeState', 'getData', 'setFieldValue', 'setData', 'getFieldSuggestions', 'editArray', 'saveForm', 'reloadForm'].map(verb => `${name}_${verb}`)
+
+// the bodies are agent-skills/<name>.md, served next to this document (/api/agents/skills/<name>.md).
+// A skill is offered while one of its tools is: upload_image is left out of both lists, it would offer
+// the portal skill to a pages or reuses token. The page design knowledge (layouts, composition, visual
+// review) lives in skills of the platform registry, not here.
+export const root: AgentRoot = {
+  skills: [{
+    name: 'pages',
+    description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in portals-page-config.',
+    href: 'agents/skills/pages.md',
+    tools: [
+      'list_pages', 'get_page', 'create_page', 'create_page_on_portals', 'update_page', 'attach_page_to_portals', 'request_page_publication', 'transfer_page', 'delete_page', 'publish_page', 'cancel_page_draft',
+      ...editorTools('page_config'),
+      'list_groups', 'get_group', 'create_group', 'update_group', 'delete_group'
+    ]
+  }, {
+    name: 'config',
+    description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in portals-portal-config.',
+    href: 'agents/skills/config.md',
+    tools: [
+      'list_portals', 'get_portal', 'create_portal', 'update_portal_settings', 'delete_portal', 'publish_portal_config', 'cancel_portal_config_draft',
+      ...editorTools('portal_config'),
+      'list_font_assets', 'upload_font_asset', 'delete_font_asset'
+    ]
+  }]
+}
 
 export const tagGuides = {
   Portals: 'A portal keeps a live configuration and a draft one. The portals_portal_config tools edit the draft as a form (start with portals_portal_config_describeState) and save it at once; portals_publish_portal_config puts the draft live, portals_cancel_portal_config_draft discards it.',

@@ -8,6 +8,7 @@ import { getStatus } from './admin/status.ts'
 import { scopeDescriptions } from './scopes.ts'
 import { apiRouters } from './routers.ts'
 import apiDocs from '../contract/api-docs.ts'
+import { readAgentSkill } from '../contract/agent-skills.ts'
 
 export const app = express()
 
@@ -55,6 +56,15 @@ app.get('/api/api-docs.json', allowAnyScope, (req, res) => {
   res.set('Cache-Control', 'public, max-age=300')
   res.vary('Accept-Language')
   res.json(apiDocsByLocale[locale] ??= apiDocs(locale))
+})
+
+// the bodies of the document's skills, linked from its x-agent.skills; public like the document
+app.get('/api/agents/skills/:file', allowAnyScope, (req, res) => {
+  const file = String(req.params.file)
+  const body = /^[a-z0-9-]+\.md$/.test(file) ? readAgentSkill(file.slice(0, -3)) : undefined
+  if (!body) return res.status(404).send('unknown skill')
+  res.set('Cache-Control', 'public, max-age=300')
+  res.type('text/markdown').send(body)
 })
 
 app.get('/api/ping', allowAnyScope, async (req, res) => {

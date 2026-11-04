@@ -57,7 +57,9 @@
       "upload_image"
     ],
     "skills": [
+      "config",
       "page-config",
+      "pages",
       "portal-config"
     ]
   },
@@ -71,7 +73,9 @@
       "list_font_assets",
       "list_portals"
     ],
-    "skills": []
+    "skills": [
+      "config"
+    ]
   },
   "portals:write": {
     "tools": [
@@ -91,6 +95,7 @@
       "upload_image"
     ],
     "skills": [
+      "config",
       "portal-config"
     ]
   },
@@ -117,6 +122,7 @@
       "upload_image"
     ],
     "skills": [
+      "config",
       "portal-config"
     ]
   },
@@ -127,7 +133,9 @@
       "list_groups",
       "list_pages"
     ],
-    "skills": []
+    "skills": [
+      "pages"
+    ]
   },
   "pages:write": {
     "tools": [
@@ -151,7 +159,8 @@
       "upload_image"
     ],
     "skills": [
-      "page-config"
+      "page-config",
+      "pages"
     ]
   },
   "pages:admin": {
@@ -183,7 +192,8 @@
       "upload_image"
     ],
     "skills": [
-      "page-config"
+      "page-config",
+      "pages"
     ]
   },
   "reuses:read": {
@@ -233,7 +243,10 @@
       "list_portals",
       "list_reuses"
     ],
-    "skills": []
+    "skills": [
+      "config",
+      "pages"
+    ]
   },
   "all:admin": {
     "tools": [
@@ -293,7 +306,9 @@
       "upload_image"
     ],
     "skills": [
+      "config",
       "page-config",
+      "pages",
       "portal-config"
     ]
   }

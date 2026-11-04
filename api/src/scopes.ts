@@ -179,6 +179,7 @@ export const anyScopeRoutes: ApiRoute[] = [
   { method: 'get', path: '/ping' },
   { method: 'get', path: '/scopes.json' },
   { method: 'get', path: '/api-docs.json' },
+  { method: 'get', path: '/agents/skills/{file}' },
   { method: 'get', path: '/portals/{id}/public' },
   { method: 'get', path: '/fonts' },
   { method: 'get', path: '/fonts/{name}/css' },

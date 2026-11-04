@@ -12,6 +12,7 @@ import path from 'node:path'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { load, toolsForScopes, type ToolSet } from '@data-fair/openapi-mcp'
 import apiDocs from '../../../api/contract/api-docs.ts'
+import { readAgentSkill } from '../../../api/contract/agent-skills.ts'
 
 const goldenPath = path.resolve(import.meta.dirname, '../../fixtures/agent-surface.json')
 const baseUrl = 'http://portals.test/portals-manager/api'
@@ -37,7 +38,14 @@ const scopeSets: Record<string, string[] | undefined> = {
 const editorVerbs = ['describeState', 'getData', 'setFieldValue', 'setData', 'getFieldSuggestions', 'editArray', 'saveForm', 'reloadForm']
 const editorTools = (name: string) => editorVerbs.map(verb => `${name}_${verb}`)
 
-const loadSurface = (options: Parameters<typeof load>[1] = {}) => load(apiDocs('en'), { baseUrl, files: FILES, lint: 'error', ...options })
+/** Reads the linked skill bodies as the API serves them at /api/agents/skills/<name>.md. */
+const skillBodies = async (url: string) => {
+  const prefix = `${baseUrl}/agents/skills/`
+  const body = url.startsWith(prefix) && url.endsWith('.md') ? readAgentSkill(url.slice(prefix.length, -3)) : undefined
+  return body ? { text: body } : { error: `not served: ${url}` }
+}
+
+const loadSurface = (options: Parameters<typeof load>[1] = {}) => load(apiDocs('en'), { baseUrl, files: FILES, lint: 'error', skillBodies, ...options })
 
 const surface = (toolSet: ToolSet) => Object.fromEntries(Object.entries(scopeSets).map(([key, scopes]) => {
   const kept = toolsForScopes(toolSet, scopes)
@@ -100,6 +108,37 @@ test.describe('agent surface of the api docs', () => {
     const authored = toolSet.tools.filter(t => !editorVerbs.some(verb => t.name.endsWith(`_${verb}`)))
     const found = authored.flatMap(t => [...JSON.stringify({ description: t.description, inputSchema: t.inputSchema }).matchAll(unprefixed)].map(m => `${t.name}: ${m[1]}`))
     assert.deepEqual(found, [])
+  })
+
+  test('the pages and config skills are read and follow the scopes', async () => {
+    const toolSet = await loadSurface()
+    for (const name of ['pages', 'config']) {
+      const skill = toolSet.skills.find(s => s.name === name)
+      assert.ok(skill, name)
+      assert.equal(skill.error, undefined, `${name}: its linked body is read`)
+      assert.ok(skill.description.length <= 1024, `${name}: description too long`)
+      assert.ok(Buffer.byteLength(skill.body) < 25_000, `${name}: body too long`)
+    }
+    const skills = (scopes: string[]) => toolsForScopes(toolSet, scopes).skills.map(s => s.name)
+    assert.ok(skills(['pages:read']).includes('pages'))
+    assert.ok(!skills(['pages:read']).includes('config'))
+    assert.ok(skills(['portals:read']).includes('config'))
+    assert.ok(!skills(['portals:read']).includes('pages'))
+    for (const scopes of [['reuses:write'], ['pages:write']]) assert.ok(!skills(scopes).includes('config'), scopes.join())
+  })
+
+  test('skill bodies name existing tools by their platform names', async () => {
+    const toolSet = await loadSurface()
+    const baseNames = toolSet.tools.map(t => t.name)
+    const unprefixed = new RegExp(`(?<![A-Za-z0-9_])(${baseNames.join('|')})(?![A-Za-z0-9_])`, 'g')
+    // an editor group is named by its prefix (the portals_page_config tools)
+    const known = new Set([...baseNames, 'page_config', 'portal_config'].map(name => `portals_${name}`))
+    for (const skill of toolSet.skills.filter(s => ['pages', 'config'].includes(s.name))) {
+      const text = skill.description + '\n' + skill.body.replace(/\n\nTools: .*$/, '')
+      assert.deepEqual([...text.matchAll(unprefixed)].map(m => m[1]), [], `${skill.name}: unprefixed tool names`)
+      const named = [...text.matchAll(/(?<![A-Za-z0-9_])portals_[A-Za-z0-9_]+/g)].map(m => m[0])
+      assert.deepEqual(named.filter(name => !known.has(name)), [], `${skill.name}: unknown tools`)
+    }
   })
 
   test('the upload tools take a file URL, and are not offered without a file store', async () => {
