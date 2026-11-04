@@ -1,21 +1,12 @@
 import { resolve } from 'node:path'
-import { session, errorHandler, createSiteMiddleware, createSpaMiddleware, defaultNonceCSPDirectives } from '@data-fair/lib-express/index.js'
+import { session, errorHandler, createSiteMiddleware, createSpaMiddleware, defaultNonceCSPDirectives, allowAnyScope } from '@data-fair/lib-express/index.js'
 import express from 'express'
 import helmet from 'helmet'
 import { uiConfig } from './ui-config.ts'
 import config from '#config'
 import { getStatus } from './admin/status.ts'
-
-import identitiesRouter from './identities/router.ts'
-import groupRouter from './groups/router.ts'
-import portalsRouter from './portals/router.ts'
-import pagesRouter from './pages/router.ts'
-import reusesRouter from './reuses/router.ts'
-import adminRouter from './admin/router.ts'
-import imagesRouter from './images/router.ts'
-import fontsRouter from './fonts/router.ts'
-import fontAssetsRouter from './font-assets/router.ts'
-import limitsRouter from './limits/router.ts'
+import { scopeDescriptions } from './scopes.ts'
+import { apiRouters } from './routers.ts'
 
 export const app = express()
 
@@ -34,22 +25,15 @@ app.use(helmet({
 // no fancy embedded arrays, just string and arrays of strings in req.query
 app.set('query parser', 'simple')
 app.use(createSiteMiddleware('portals-manager'))
+// calls carrying an access token are answered from any origin (it answers their preflights)
+app.use(session.bearerCors())
 app.use(session.middleware())
 
 app.use(express.json())
 
 // TODO: tune cache headers, fonts files are public and immutable
 app.use('/api/assets', express.static(resolve(import.meta.dirname, '../assets')))
-app.use('/api/groups', groupRouter)
-app.use('/api/portals', portalsRouter)
-app.use('/api/pages', pagesRouter)
-app.use('/api/reuses', reusesRouter)
-app.use('/api/images', imagesRouter)
-app.use('/api/identities', identitiesRouter)
-app.use('/api/admin', adminRouter)
-app.use('/api/fonts', fontsRouter)
-app.use('/api/font-assets', fontAssetsRouter)
-app.use('/api/limits', limitsRouter)
+for (const [path, router] of Object.entries(apiRouters)) app.use('/api' + path, router)
 
 // unauthenticated and destructive: only in the dev environment, which is also the test environment
 if (process.env.NODE_ENV === 'development') {
@@ -57,7 +41,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use('/api/test-env', testEnvRouter)
 }
 
-app.get('/api/ping', async (req, res) => {
+// the scopes of the service, read by simple-directory (PLATFORM_SCOPES_URL) and data-fair
+app.get('/api/scopes.json', allowAnyScope, (req, res) => {
+  res.json(scopeDescriptions((req.acceptsLanguages('fr', 'en') || 'fr') as 'fr' | 'en'))
+})
+
+app.get('/api/ping', allowAnyScope, async (req, res) => {
   const status = await getStatus(req)
   if (status.status === 'error') res.status(500)
   res.send(status.status)

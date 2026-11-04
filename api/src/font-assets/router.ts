@@ -8,11 +8,12 @@ import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fai
 import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { randomUUID } from 'node:crypto'
 import { readFile, unlink } from 'node:fs/promises'
+import { requireOperationScope } from '../scopes.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res) => {
+router.get('', requireOperationScope('listFontAssets'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -29,7 +30,7 @@ router.get('', async (req, res) => {
   res.json({ results, count })
 })
 
-router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res, next) => {
+router.post('', requireOperationScope('createFontAsset'), upload.single('font-asset'), jsonFromMultiPart, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
@@ -52,7 +53,7 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
   res.json({ ...fontAsset, data: undefined })
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireOperationScope('updateFontAsset'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
@@ -65,7 +66,7 @@ router.patch('/:id', async (req, res) => {
   res.json({ ...fontAsset, ...body, data: undefined })
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireOperationScope('deleteFontAsset'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
@@ -74,7 +75,7 @@ router.delete('/:id', async (req, res) => {
   res.status(204).send()
 })
 
-router.get('/:id/data/:filename', async (req, res) => {
+router.get('/:id/data/:filename', requireOperationScope('getFontAssetData'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)

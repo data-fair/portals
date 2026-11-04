@@ -9,11 +9,12 @@ import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode 
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, initCatalogPageElements, sendPageEvent } from './service.ts'
 import { pageFacets } from './aggregations.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
+import { requireOperationScope } from '../scopes.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res, next) => {
+router.get('', requireOperationScope('listPages'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -51,7 +52,7 @@ router.get('', async (req, res, next) => {
   res.json({ results, count, facets: facets[0] })
 })
 
-router.post('', async (req, res, next) => {
+router.post('', requireOperationScope('createPage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   // Auto-generate slug if not provided, before validation
@@ -108,11 +109,11 @@ router.post('', async (req, res, next) => {
   res.status(201).json(page)
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', requireOperationScope('getPage'), async (req, res, next) => {
   res.send(await getPageAsContrib(reqSessionAuthenticated(req), req.params.id))
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', requireOperationScope('updatePage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
@@ -123,7 +124,7 @@ router.patch('/:id', async (req, res, next) => {
   res.send({ ...updatedPage, body })
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireOperationScope('deletePage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await mongo.pages.findOne({ _id: req.params.id })
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
@@ -133,14 +134,14 @@ router.delete('/:id', async (req, res, next) => {
   res.status(204).send()
 })
 
-router.post('/:id/draft', async (req, res, next) => {
+router.post('/:id/draft', requireOperationScope('publishPageDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await validatePageDraft(page, session)
   res.status(204).send()
 })
 
-router.delete('/:id/draft', async (req, res, next) => {
+router.delete('/:id/draft', requireOperationScope('cancelPageDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await cancelPageDraft(page, session)

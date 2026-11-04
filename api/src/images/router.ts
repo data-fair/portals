@@ -9,6 +9,7 @@ import { type Request, type Response, type NextFunction, Router } from 'express'
 import mongo from '#mongo'
 import * as postReq from '#doc/images/post-req/index.ts'
 import { httpError, reqSessionAuthenticated } from '@data-fair/lib-express/index.js'
+import { imageScope } from '../scopes.ts'
 
 const router = Router()
 export default router
@@ -28,7 +29,7 @@ const mutableQuery = (req: Request, res: Response, next: NextFunction) => {
   next()
 }
 
-router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (req, res, next) => {
+router.post('', upload.single('image'), jsonFromMultiPart, imageScope, mutableQuery, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const { body, query, file } = postReq.returnValid(req, { name: 'request' })
@@ -76,7 +77,7 @@ router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, async (
   res.json({ ...image, data: undefined })
 })
 
-router.get('/:id/data', async (req, res, next) => {
+router.get('/:id/data', imageScope, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const image = await mongo.images.findOne({ _id: req.params.id, 'owner.type': session.account.type, 'owner.id': session.account.id, 'owner.department': session.account.department })

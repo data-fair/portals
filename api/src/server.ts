@@ -24,7 +24,7 @@ server.headersTimeout = (60 * 1000) + 2000
 
 export const start = async () => {
   if (config.observer.active) await startObserver(config.observer.port)
-  session.init(config.privateDirectoryUrl)
+  session.init(config.privateDirectoryUrl, undefined, undefined, { scopeAware: true })
   await mongo.init()
   await locks.start(mongo.db)
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
