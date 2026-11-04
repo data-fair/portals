@@ -12,7 +12,6 @@ import fontAssetsRouter from './font-assets/router.ts'
 import limitsRouter from './limits/router.ts'
 
 export const apiRouters = {
-  // first: its /portals/config-schema.json would otherwise be read as a portal id
   '': draftConfigsRouter,
   '/groups': groupRouter,
   '/portals': portalsRouter,

@@ -2,6 +2,7 @@ import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
+import { MongoClient } from 'mongodb'
 
 // the test NHI is admin of test_org1, as orgAdmin
 const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
@@ -14,6 +15,18 @@ const statusOf = async (promise: Promise<any>) => {
   } catch (err: any) {
     if (!err.status) throw err
     return err.status as number
+  }
+}
+
+// old editors stored properties the schema rejects (leftovers of an element type switch): they are
+// injected directly in the database of the dev API
+const injectLegacyData = async (pageId: string, mongoPatch: Record<string, any>) => {
+  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  try {
+    const result = await client.db().collection('pages').updateOne({ _id: pageId as any }, mongoPatch)
+    if (result.matchedCount !== 1) throw new Error(`mongo legacy data injection matched ${result.matchedCount} pages`)
+  } finally {
+    await client.close()
   }
 }
 
@@ -40,6 +53,24 @@ test.describe('page draft config', () => {
     assert.deepEqual(stored.draftConfig, read)
     // what is read is accepted as is
     assert.equal(await statusOf(orgAdmin.put(`/api/pages/${page._id}/draft-config`, read)), 200)
+  })
+
+  test('a stored draft with leftover properties is read healed, and saved again as read', async () => {
+    const page = (await orgAdmin.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Legacy page', elements: [{ uuid: 'el000001', type: 'title', titleSize: 'h3', content: 'hello' }], genericMetadata: { slug: 'legacy-page' } }
+    })).data
+    await injectLegacyData(page._id, { $set: { 'draftConfig.elements.0.mb': 0 } })
+    assert.equal((await orgAdmin.get(`/api/pages/${page._id}`)).data.draftConfig.elements[0].mb, 0)
+
+    const read = (await orgAdmin.get(`/api/pages/${page._id}/draft-config`)).data
+    assert.equal(read.elements[0].mb, undefined)
+    assert.equal(read.elements[0].content, 'hello')
+    const saved = (await orgAdmin.put(`/api/pages/${page._id}/draft-config`, read)).data
+    assert.deepEqual(saved, read)
+    // a leftover sent back is stripped the same way
+    const resaved = (await orgAdmin.put(`/api/pages/${page._id}/draft-config`, { ...read, elements: [{ ...read.elements[0], mb: 0 }] })).data
+    assert.equal(resaved.elements[0].mb, undefined)
   })
 
   test('an invalid draft config is refused with the validation message', async () => {
@@ -72,9 +103,10 @@ test.describe('page draft config', () => {
     const res = await orgAdmin.get(`/api/pages/${page._id}/draft-config/schema`)
     assert.equal(res.data.title, 'PageConfigSimple')
     assert.ok(res.data.properties.elements)
-    assert.equal(res.data.properties.genericMetadata.layout.if, '"generic" === "generic"')
-    assert.equal(res.data.properties.eventMetadata.layout.if, '"generic" === "event"')
+    assert.equal(res.data.properties.genericMetadata.layout.if, '("generic") === "generic"')
+    assert.equal(res.data.properties.eventMetadata.layout.if, '("generic") === "event"')
     assert.ok(!JSON.stringify(res.data).includes('"$ref":"https://'), 'refs are local')
+    assert.ok(!JSON.stringify(res.data).includes('context.pages'), 'no expression reads the form context')
     assert.equal(await statusOf(outsider.get(`/api/pages/${page._id}/draft-config/schema`)), 403)
   })
 })

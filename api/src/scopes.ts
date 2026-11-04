@@ -68,6 +68,7 @@ export const scopedOperations = {
   cancelPortalDraft: { method: 'delete', path: '/portals/{id}/draft', family: 'portals', tier: 'write' },
   getPortalDraftConfig: { method: 'get', path: '/portals/{id}/draft-config', family: 'portals', tier: 'read' },
   putPortalDraftConfig: { method: 'put', path: '/portals/{id}/draft-config', family: 'portals', tier: 'write' },
+  getPortalConfigSchema: { method: 'get', path: '/portals/{id}/draft-config/schema', family: 'portals', tier: 'read' },
   listFontAssets: { method: 'get', path: '/font-assets', family: 'portals', tier: 'read' },
   createFontAsset: { method: 'post', path: '/font-assets', family: 'portals', tier: 'write' },
   updateFontAsset: { method: 'patch', path: '/font-assets/{id}', family: 'portals', tier: 'write' },
@@ -178,7 +179,6 @@ export const anyScopeRoutes: ApiRoute[] = [
   { method: 'get', path: '/ping' },
   { method: 'get', path: '/scopes.json' },
   { method: 'get', path: '/portals/{id}/public' },
-  { method: 'get', path: '/portals/config-schema.json' },
   { method: 'get', path: '/fonts' },
   { method: 'get', path: '/fonts/{name}/css' },
   { method: 'get', path: '/limits/{type}/{id}' }

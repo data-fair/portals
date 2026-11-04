@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import themeSchema from '@data-fair/lib-common-types/theme/schema.js'
-import { bundleSchema, bakePageType } from './operations.ts'
+import { bundleSchema, bakeContext, pageConfigContext, portalConfigContext } from './operations.ts'
 
 const typesDir = resolve(import.meta.dirname, '../../types')
 
@@ -29,13 +29,14 @@ const pageConfigSchemas: Record<string, Promise<Record<string, any>>> = {}
 // form), for a page type
 export const pageConfigSchema = (pageType: string) => {
   pageConfigSchemas[pageType] ??= typeSchemas().then(schemas => {
-    return bakePageType(bundleSchema(schemas['https://github.com/data-fair/portals/page-config-simple'], schemas), pageType)
+    return bakeContext(bundleSchema(schemas['https://github.com/data-fair/portals/page-config-simple'], schemas), pageConfigContext(pageType))
   })
   return pageConfigSchemas[pageType]
 }
 
-let portalConfigSchemaPromise: Promise<Record<string, any>> | undefined
-export const portalConfigSchema = () => {
-  portalConfigSchemaPromise ??= typeSchemas().then(schemas => bundleSchema(schemas['https://github.com/data-fair/portals/portal-config'], schemas))
-  return portalConfigSchemaPromise
+let portalConfigBundle: Promise<Record<string, any>> | undefined
+// the form of the portal editor, for a portal (its owner and white label decide parts of it)
+export const portalConfigSchema = async (portal: Parameters<typeof portalConfigContext>[0]) => {
+  portalConfigBundle ??= typeSchemas().then(schemas => bundleSchema(schemas['https://github.com/data-fair/portals/portal-config'], schemas))
+  return bakeContext(await portalConfigBundle, portalConfigContext(portal))
 }

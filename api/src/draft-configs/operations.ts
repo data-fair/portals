@@ -61,10 +61,27 @@ export const bundleSchema = (root: JsonSchema, schemas: Record<string, JsonSchem
 }
 
 /**
- * The layout expressions of the page config read the page type from the form context, which an
- * editor tool group cannot pass: the type is written into them instead.
+ * The layout expressions of the forms read the form context (page type, pages to link to, owner...),
+ * which an editor tool group cannot pass: its values are written into them instead, so that no
+ * expression throws on a missing context. Each value is a parenthesized JSON literal.
  */
-export const bakePageType = (schema: JsonSchema, pageType: string): JsonSchema => {
-  const literal = JSON.stringify(pageType)
-  return JSON.parse(JSON.stringify(schema), (key, value) => typeof value === 'string' ? value.replace(/(?<![\w.])(options\.)?context\.pageType\b/g, literal) : value)
+export const bakeContext = (schema: JsonSchema, context: Record<string, unknown>): JsonSchema => {
+  const keys = Object.keys(context)
+  if (!keys.length) return structuredClone(schema)
+  const pattern = new RegExp(`(?<![\\w.])(?:options\\.)?context\\.(${keys.join('|')})\\b`, 'g')
+  const bake = (value: string) => value.replace(pattern, (_match, key: string) => `(${JSON.stringify(context[key])})`)
+  return JSON.parse(JSON.stringify(schema), (_key, value) => typeof value === 'string' ? bake(value) : value)
 }
+
+// an editor session is never in admin mode nor embedded, and has no list of pages to link to
+const pagesContext = { pages: { generic: [], event: [], news: [] }, adminMode: false }
+
+export const pageConfigContext = (pageType: string) => ({ ...pagesContext, pageType })
+
+export const portalConfigContext = (portal: { owner: Record<string, unknown>, whiteLabel?: boolean }) => ({
+  ...pagesContext,
+  owner: portal.owner,
+  whiteLabel: !!portal.whiteLabel,
+  // as the portal editor: the theme form without the advanced font and logo settings
+  simplifiedTheme: true
+})

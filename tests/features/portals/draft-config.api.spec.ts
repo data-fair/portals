@@ -1,6 +1,6 @@
 import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
-import { axios, axiosAuth, clean } from '../../support/axios.ts'
+import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 
 // the test NHI is admin of test_org1, as orgAdmin
@@ -57,13 +57,21 @@ test.describe('portal draft config', () => {
     assert.equal(await statusOf(write.put(`/api/portals/${portal._id}/draft-config`, portal.draftConfig)), 200)
   })
 
-  test('the schema of the portal config is public', async () => {
-    const res = await axios().get('/api/portals/config-schema.json')
-    assert.equal(res.headers['cache-control'], 'public, max-age=300')
+  test('the schema of the draft config is the portal editor form for the portal', async () => {
+    const portal = await createPortal()
+    const res = await orgAdmin.get(`/api/portals/${portal._id}/draft-config/schema`)
+    assert.equal(res.headers['cache-control'], 'private, max-age=300')
     assert.equal(res.data.title, 'Portal Config')
     assert.ok(res.data.properties.theme)
-    assert.ok(!JSON.stringify(res.data).includes('"$ref":"https://'), 'refs are local')
-    const scoped = (await nhiSession('reuses:read')).bearerAx
-    assert.equal(await statusOf(scoped.get('/api/portals/config-schema.json')), 200)
+    const serialized = JSON.stringify(res.data)
+    assert.ok(!serialized.includes('"$ref":"https://'), 'refs are local')
+    // the topics of the portal owner, not of the form context
+    assert.ok(serialized.includes('test_org1'), 'owner baked in')
+    assert.ok(!/context\.(owner|whiteLabel|simplifiedTheme|pages)/.test(serialized), 'no expression reads the form context')
+    assert.equal(await statusOf(orgContrib.get(`/api/portals/${portal._id}/draft-config/schema`)), 403)
+    const read = (await nhiSession('portals:read')).bearerAx
+    assert.equal(await statusOf(read.get(`/api/portals/${portal._id}/draft-config/schema`)), 200)
+    const otherFamily = (await nhiSession('reuses:read')).bearerAx
+    assert.equal(await statusOf(otherFamily.get(`/api/portals/${portal._id}/draft-config/schema`)), 403)
   })
 })
