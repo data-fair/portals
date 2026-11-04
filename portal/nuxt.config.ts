@@ -148,7 +148,7 @@ export default defineNuxtConfig({
         '@data-fair/agent-tools-data-fair/_utils',
         '@data-fair/agent-tools-data-fair/aggregate-data',
         '@data-fair/agent-tools-data-fair/calculate-metric',
-        '@data-fair/agent-tools-data-fair/dataset-data-subagent',
+        '@data-fair/agent-tools-data-fair/dataset-data-skill',
         '@data-fair/agent-tools-data-fair/describe-dataset',
         '@data-fair/agent-tools-data-fair/geocode-address',
         '@data-fair/agent-tools-data-fair/get-dataset-schema',
