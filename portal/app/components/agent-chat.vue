@@ -30,7 +30,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-            :btn-props="agentChat.btnProps"
+          :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
       </Teleport>
@@ -42,7 +42,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-            :btn-props="agentChat.btnProps"
+          :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
       </div>
