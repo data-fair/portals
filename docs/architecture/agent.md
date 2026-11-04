@@ -154,3 +154,7 @@ Constraints the judge should know:
 
 `simulations/` runs judged scenarios on both surfaces; see AGENTS.md (Simulations) and
 `docs/qa/simulations-assistant-ia.md` for the latest results.
+
+The autonomous agents (an organization's agent acting as its own NHI on the mcp server's
+`portals_*` tools, limited by its scopes) have their own simulation cases, see AGENTS.md
+(Simulations) and `docs/qa/simulations-assistant-ia.md`.

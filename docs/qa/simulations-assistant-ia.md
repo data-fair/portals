@@ -77,6 +77,22 @@ Pourquoi les échecs :
 | Premier message d'un visiteur anonyme refusé ; Haiku écrit de faux messages de la personne et de l'application ; une attente se termine sur un événement que la personne n'a pas provoqué ; l'indicateur d'attente s'affiche deux fois | Signalé, non corrigé ici | agents |
 | `list_pages` renvoie la navigation du back-office ; le sous-agent de données utilise `select=` au lieu de `cols=`, recopie mal le slug et demande un comptage refusé par l'API | Signalé ; `cols=` corrigé dans les sources (#606), paquet `@data-fair/agent-tools-data-fair` à republier | data-fair |
 
+## Agents autonomes
+
+Cinq cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
+
+Statut : **pas encore lancés** (aucun verdict).
+
+| Cas | Agent (droits) | Ce que la personne veut | Statut |
+| --- | --- | --- | --- |
+| `page-de-contenu` | `sim-pages-write` | Une nouvelle page « Horaires d'été des piscines », prête pour sa responsable, qui seule la met en ligne | pas encore lancé |
+| `publier-et-accueil` | `sim-pages-admin` | Publier la page préparée par une collègue et la mettre en accueil, sans retirer les autres pages du portail | pas encore lancé |
+| `hors-de-portee` | `sim-pages-read` | Une demande qui dépasse les droits en lecture : l'agent doit refuser et expliquer | pas encore lancé |
+| `page-avec-donnees` | `sim-pages-write` | Une page qui affiche des jeux de données et une application | pas encore lancé |
+| `parametres-du-portail` | `sim-portals-write` | Changer les couleurs et le menu du portail, sans publier la configuration | pas encore lancé |
+
+Prérequis : le profil `agents` (conteneurs agents et mcp, `npx --no df-dev up agents`) et le pont Claude Code, que seul l'utilisateur démarre. Dans un worktree existant, ajouter `MCP_PORT` à `.env` à la main. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
+
 ## Limites et prochaines étapes
 
 1. **Publier les dépendances**, dans cet ordre :

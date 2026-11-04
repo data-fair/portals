@@ -116,6 +116,26 @@ Run and judge them with the `/agents-sim` skill.
 - Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
   product's promises: `docs/architecture/agent.md`.
 
+Autonomous-agent cases (`simulations/autonomous-agent.sim.spec.ts`, cases in
+`simulations/cases/autonomous-agents.ts`, runner in `simulations/runner/autonomous-agent.ts`):
+an agent of `test_org1`, acting as its own NHI, uses the `portals_*` / `datafair_*` tools of the
+mcp server. The judge also reads the stored portals state (`hostState`) read back by the case's `check`.
+
+- They need the `agents` profile (agents + mcp containers: `npx --no df-dev up agents`) and the
+  bridge, which only the user starts. Never part of `npm test` or CI.
+- Four agent identities (NHIs of `test_org1`, defined in `dev/resources/users.template.json`;
+  `dev/resources/users.json` is rendered from it by `dev/render-users.mjs` and git-ignored):
+  `sim-pages-write`, `sim-pages-admin`, `sim-pages-read`, `sim-portals-write`
+  (user ids `test_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
+- `MCP_PORT` (nginx exposes the mcp server on `/mcp-server/`). `df-dev init-env` never adds a port
+  to an existing `.env` (`--force` redraws all of them): in an existing worktree add `MCP_PORT=<free port>`
+  by hand, otherwise nginx cannot start when it is recreated.
+- simple-directory validates NHI scopes against data-fair's `scopes.json` (`PLATFORM_SCOPES_URL`),
+  which lists portals' scopes only while data-fair's platform document holds a good fragment of portals
+  (fetched while the portals api was up).
+- Seeding the data case registers a base application from cdn.jsdelivr: the data-fair container
+  needs internet access.
+
 ### Linting & Type Checking
 
 ```bash
