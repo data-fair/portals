@@ -1,10 +1,12 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { validateVocabulary } from '@data-fair/openapi-mcp'
-import apiDocs from '../../../api/contract/api-docs.ts'
+import apiDocs, { anyScopeSessionSecurity } from '../../../api/contract/api-docs.ts'
 import { scopedOperations, imageOperations, anyScopeRoutes } from '../../../api/src/scopes.ts'
 
 const httpMethods = ['get', 'put', 'post', 'delete', 'patch']
+// the any-scope routes of the document that need a session
+const sessionAnyScopePaths = ['/fonts']
 
 // The x-agent keys data-fair's platform merge keeps (agentEntryKeys / agentTagKeys / agentSkillKeys
 // of its api/contract/platform-api-docs.ts, pinned there to openapi-mcp's vocabulary): a key
@@ -85,7 +87,11 @@ test.describe('openapi document and the scopes', () => {
       const known = [...Object.values(scopedOperations), ...Object.values(imageOperations), ...anyScopeRoutes]
         .some(o => o.method === method && o.path === path)
       assert.ok(known, `${method} ${path} is a guarded or any-scope route`)
-      if (anyScopeRoutes.some(o => o.method === method && o.path === path)) assert.deepEqual(op.security, [], `${method} ${path} is public`)
+      if (anyScopeRoutes.some(o => o.method === method && o.path === path)) {
+        // public, or a session whatever its scopes (/fonts lists the fonts of the active account)
+        if (sessionAnyScopePaths.includes(path)) assert.deepEqual(op.security, anyScopeSessionSecurity, `${method} ${path} needs a session, any scope`)
+        else assert.deepEqual(op.security, [], `${method} ${path} is public`)
+      }
     }
   })
 

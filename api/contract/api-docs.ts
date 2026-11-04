@@ -170,6 +170,9 @@ const scopedSecurity = (operationId: ScopedOperationId) => {
   const { family, tier } = scopedOperations[operationId]
   return [{ sdCookie: [] }, ...oauth2Alternatives(acceptedScopes(family, tier))]
 }
+// an any-scope route that still needs a session (allowAnyScope, then reqSessionAuthenticated): the
+// cookie, or a token whatever its scopes (an oauth2 requirement with no scope)
+export const anyScopeSessionSecurity = [{ sdCookie: [] }, { oauth2: [] }]
 // an image belongs to a portal, a page or a reuse: the family of its scope is the one of that resource
 const imageSecurity = (operationId: keyof typeof imageOperations) => {
   const { families, tier } = imageOperations[operationId]
@@ -300,7 +303,7 @@ const paths = {
       operationId: 'listFonts',
       summary: 'List the font families available to the active account',
       tags: ['Fonts'],
-      security: [],
+      security: anyScopeSessionSecurity,
       responses: ok('The names of the font families.', { type: 'array', items: { type: 'string' } })
     }
   },

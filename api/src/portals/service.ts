@@ -336,7 +336,7 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
     debugSyncPortal('sync to data-fair', publicationSite)
     if (!caller) throw httpError(500, 'the publication site of a portal can only be synced on behalf of a user')
     // TODO: unify on the secret-key path once every supported data-fair has it
-    if (syncPath(caller.session) === 'cookie') {
+    if (syncPath(caller.session, caller.headers) === 'cookie') {
       try {
         await axios.post(
           `${reqOrigin}/data-fair${publicationSitesPath(portal)}`,
@@ -399,7 +399,7 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, caller: Sync
   assertCanSyncPortal(caller.session, portal)
   const sitePath = `${publicationSitesPath(portal)}/data-fair-portals/${portal._id}`
   // TODO: unify on the secret-key path once every supported data-fair has it
-  if (syncPath(caller.session) === 'cookie') {
+  if (syncPath(caller.session, caller.headers) === 'cookie') {
     await axios.delete(`${reqOrigin}/data-fair${sitePath}`, { headers: { cookie: caller.headers.cookie } })
   } else {
     const headers = dataFairSecretHeaders(caller.session)

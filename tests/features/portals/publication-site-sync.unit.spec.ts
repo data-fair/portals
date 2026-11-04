@@ -15,13 +15,19 @@ const orgSession = (role: string, extra: Partial<SessionStateAuthenticated> = {}
 })
 
 test.describe('publication-site sync operations', () => {
-  test('syncPath: cookie for unscoped sessions, secret for scope-restricted ones', () => {
-    assert.equal(syncPath(orgSession('admin')), 'cookie')
-    assert.equal(syncPath(orgSession('admin', {}, { nhi: 1 })), 'cookie')
-    assert.equal(syncPath(orgSession('admin', { scopes: ['portals:admin'] }, { nhi: 1, scope: 'portals:admin' })), 'secret')
+  test('syncPath: cookie for unscoped cookie sessions, secret for bearer or scope-restricted ones', () => {
+    const cookie = { cookie: 'id_token=x' }
+    const bearer = { authorization: 'Bearer t' }
+    assert.equal(syncPath(orgSession('admin'), cookie), 'cookie')
+    assert.equal(syncPath(orgSession('admin', {}, { nhi: 1 }), cookie), 'cookie')
+    assert.equal(syncPath(orgSession('admin', { scopes: ['portals:admin'] }, { nhi: 1, scope: 'portals:admin' }), cookie), 'secret')
     // a raw scope claim alone is enough to be scope-restricted (same test as lib-express)
-    assert.equal(syncPath(orgSession('admin', {}, { scope: '' })), 'secret')
-    assert.equal(syncPath(orgSession('admin', { scopes: [] })), 'secret')
+    assert.equal(syncPath(orgSession('admin', {}, { scope: '' }), cookie), 'secret')
+    assert.equal(syncPath(orgSession('admin', { scopes: [] }), cookie), 'secret')
+    // a bearer session, scoped or not: its cookie (if any) is not the credential that was read
+    assert.equal(syncPath(orgSession('admin'), bearer), 'secret')
+    assert.equal(syncPath(orgSession('admin'), { ...cookie, ...bearer }), 'secret')
+    assert.equal(syncPath(orgSession('admin', { scopes: ['portals:admin'] }, { nhi: 1, scope: 'portals:admin' }), bearer), 'secret')
   })
 
   test('subscriptionRequests: one request per subscription with only the caller credential', () => {

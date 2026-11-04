@@ -52,4 +52,15 @@ test.describe('api docs', () => {
     const res = await ax.post('/api/font-assets', form)
     assert.deepEqual(res.data.file, { name: 'test-font.woff2', size: statSync(fontFile).size, type: 'font/woff2' })
   })
+
+  test('a multipart body part that is not a JSON object is refused with a 400', async () => {
+    const ax = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+    for (const body of ['null', '1', '[]', '{']) {
+      const form = new FormData()
+      form.append('body', body)
+      form.append('font-asset', createReadStream(fontFile), { filename: 'test-font.woff2', contentType: 'font/woff2' })
+      const res = await ax.post('/api/font-assets', form, { validateStatus: () => true })
+      assert.equal(res.status, 400, body)
+    }
+  })
 })

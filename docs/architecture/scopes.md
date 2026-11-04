@@ -95,6 +95,10 @@ nothing a tier would restrict: `GET /ping`, `/scopes.json`, `/api-docs.json`,
 `/agents/skills/{file}`, `/portals/{id}/public`, `/fonts`, `/fonts/{name}/css`,
 `/limits/{type}/{id}`.
 
+In the OpenAPI document an any-scope route is public (`security: []`), except `GET /fonts`, which
+lists the fonts of the session's active account: `anyScopeSessionSecurity`, the cookie or a token
+whatever its scopes (`{ oauth2: [] }`).
+
 ## What stays refused
 
 Fail closed: a route neither guarded nor marked refuses a scoped session (lib-express). Listed on
@@ -109,9 +113,10 @@ is created, deleted, or changed in a way that changes its publication site
 scoped token on its settings writes, so the path depends on the session (`syncPath` in
 `api/src/portals/operations.ts`):
 
-- unrestricted session (humans): the cookie is forwarded to data-fair's public URL
+- unrestricted cookie session (humans): the cookie is forwarded to data-fair's public URL
   (`<origin>/data-fair/api/v1/settings/<type>/<id>/publication-sites`), as before;
-- scope-restricted session (agents): the write goes to `config.privateDataFairUrl`
+- bearer session (an `Authorization` header, scoped or not: a cookie beside it is not the
+  credential lib-express read) or scope-restricted session (agents): the write goes to `config.privateDataFairUrl`
   (`PRIVATE_DATA_FAIR_URL`) with the header `x-secret-key: config.secretKeys.dataFair`
   (`SECRET_DATA_FAIR`, data-fair's `secretKeys.portals`) and `x-acting-user` (the session's user
   id and name). Without both settings the save answers 500 and stores nothing.

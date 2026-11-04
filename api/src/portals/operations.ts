@@ -12,12 +12,14 @@ export const syncHeaders = (req: { headers: SyncCredentials }): SyncCredentials 
 const isScopeRestricted = (session: SessionStateAuthenticated) => !!session.scopes || session.user.scope !== undefined
 
 /**
- * How the publication site of a portal is synced to data-fair: an unrestricted session forwards
- * its cookie to data-fair's public url (data-fair subscribes the user itself), a scope-restricted
- * session (an agent's token, refused by data-fair on that route) goes through the secret key.
+ * How the publication site of a portal is synced to data-fair: a cookie session forwards its cookie
+ * to data-fair's public url (data-fair subscribes the user itself); a bearer session (the cookie
+ * would not be the credential lib-express read) or a scope-restricted one (an agent's token, refused
+ * by data-fair on that route) goes through the secret key.
  */
 // TODO: unify on the secret-key path once every supported data-fair has it
-export const syncPath = (session: SessionStateAuthenticated): 'cookie' | 'secret' => isScopeRestricted(session) ? 'secret' : 'cookie'
+export const syncPath = (session: SessionStateAuthenticated, headers: SyncCredentials): 'cookie' | 'secret' =>
+  (headers.authorization || isScopeRestricted(session)) ? 'secret' : 'cookie'
 
 /**
  * The first of the portal ids a page or reuse of `owner` may not be attached to: a portal not
