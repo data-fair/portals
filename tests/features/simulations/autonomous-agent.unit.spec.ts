@@ -144,17 +144,18 @@ test.describe('page-de-contenu premise', () => {
   const { premise, check } = caseNamed('page-de-contenu')
   const created = (after: PortalsState) => after.pages.push(storedPage('new1', 'generic', [], { title: 'Horaires', elements: [] }, { title: 'Horaires', elements: [{ type: 'text', content: 'Les piscines ferment à 21 h.' }] }))
 
-  test('holds when a new page was created and its draft saved', () => {
-    assert.equal(premise.holds(run([call('portals_create_page'), call('portals_page_config_saveForm', { id: 'new1' })], created)), true)
+  test('holds when the agent created a page or used a page editor tool', () => {
+    assert.equal(premise.holds(run([call('portals_create_page')])), true)
+    assert.equal(premise.holds(run([call('portals_page_config_saveForm', { id: 'content' })])), true)
   })
 
-  test('does not hold when only a seeded page was saved', () => {
-    assert.equal(premise.holds(run([call('portals_create_page'), call('portals_page_config_saveForm', { id: 'content' })], created)), false)
+  test('does not hold when the agent used no creation or page editor tool, whatever the stored state', () => {
+    assert.equal(premise.holds(run([call('portals_list_pages')], created)), false)
   })
 
   test('the check reads the stored draft of the new page', () => {
     const result = check!(run([], created)) as any
-    assert.deepEqual(result.createdPages, [{ title: 'Horaires', type: 'generic', draftTexts: ['Les piscines ferment à 21 h.'], published: false, portals: [], requestedPortals: [] }])
+    assert.deepEqual(result.createdPages, [{ title: 'Horaires', type: 'generic', draftTexts: ['Les piscines ferment à 21 h.'], liveEqualsDraft: false, attachedToThePortal: false, portals: [], requestedPortals: [] }])
   })
 })
 
@@ -173,7 +174,7 @@ test.describe('publier-et-accueil premise', () => {
       agenda.portals = ['portal1']
       after.pages.find(p => p._id === 'catalog')!.portals = []
     })) as any
-    assert.deepEqual(result.agenda, { published: true, liveIsThePreparedDraft: true, attachedToThePortal: true })
+    assert.deepEqual(result.agenda, { liveEqualsDraft: true, liveIsThePreparedDraft: true, attachedToThePortal: true })
     assert.deepEqual(result.detached, ['Données'])
     assert.deepEqual(result.attached, ['Agenda'])
   })
@@ -194,39 +195,31 @@ test.describe('hors-de-portee premise', () => {
 
 test.describe('page-avec-donnees premise', () => {
   const { premise } = caseNamed('page-avec-donnees')
-  const embedded = (after: PortalsState) => {
-    after.pages.find(p => p._id === 'content')!.draftConfig.elements.push({ type: 'dataset-table', dataset: { id: 'sim-equipements-sportifs' } })
-  }
 
-  test('holds when a data tool ran on a seeded dataset and the draft now references it', () => {
-    assert.equal(premise.holds(run([call('datafair_describe_dataset', { datasetId: 'sim-equipements-sportifs' })], embedded)), true)
+  test('holds when a data-fair tool was called', () => {
+    assert.equal(premise.holds(run([call('datafair_describe_dataset', { datasetId: 'sim-equipements-sportifs' })])), true)
+    assert.equal(premise.holds(run([call('datafair_list_account_datasets')])), true)
   })
 
-  test('holds for the seeded application too', () => {
-    assert.equal(premise.holds(run([call('datafair_describe_application', { applicationId: 'sim-graphique-equipements' })], after => {
-      after.pages.find(p => p._id === 'content')!.draftConfig.elements.push({ type: 'application', application: { id: 'sim-graphique-equipements' } })
-    })), true)
+  test('holds when a page editor tool was called on the content page', () => {
+    assert.equal(premise.holds(run([call('portals_page_config_setData', { id: 'content' })])), true)
   })
 
-  test('does not hold when no page draft references it', () => {
-    assert.equal(premise.holds(run([call('datafair_describe_dataset', { datasetId: 'sim-equipements-sportifs' })])), false)
-  })
-
-  test('does not hold when the data tool ran on another dataset', () => {
-    assert.equal(premise.holds(run([call('datafair_describe_dataset', { datasetId: 'other' })], embedded)), false)
+  test('does not hold when the page editor tool targeted another page, or no relevant tool ran', () => {
+    assert.equal(premise.holds(run([call('portals_page_config_setData', { id: 'agenda' })])), false)
+    assert.equal(premise.holds(run([call('portals_list_pages')])), false)
   })
 })
 
 test.describe('parametres-du-portail premise', () => {
   const { premise, check } = caseNamed('parametres-du-portail')
 
-  test('holds when the draft colour or menu changed', () => {
-    assert.equal(premise.holds(run([], after => { after.portal.draftConfig.theme.colors.primary = '#1b5e20' })), true)
-    assert.equal(premise.holds(run([], after => { after.portal.draftConfig.menu.children.push({ type: 'standard', subtype: 'home' }) })), true)
+  test('holds when a portal editor tool was called', () => {
+    assert.equal(premise.holds(run([call('portals_portal_config_saveForm')])), true)
   })
 
-  test('does not hold when only the title changed', () => {
-    assert.equal(premise.holds(run([], after => { after.portal.draftConfig.title = 'Q' })), false)
+  test('does not hold when no portal editor tool was called, whatever the stored state', () => {
+    assert.equal(premise.holds(run([call('portals_get_portal')], after => { after.portal.draftConfig.theme.colors.primary = '#1b5e20' })), false)
   })
 
   test('the check says whether the live configuration changed', () => {

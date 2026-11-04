@@ -28,7 +28,7 @@ export function elementsOfType (config: unknown, type: string): any[] {
 
 const pageOf = (state: PortalsState, id: string) => state.pages.find(p => p._id === id)
 const newPages = ({ before, after }: RunState) => after.pages.filter(p => !before.pages.some(b => b._id === p._id))
-const isPublished = (page: StoredPage) => isDeepStrictEqual(page.config, page.draftConfig)
+const liveEqualsDraft = (page: StoredPage) => isDeepStrictEqual(page.config, page.draftConfig)
 /** The seeded resources of data-fair a configuration names. */
 const referencedResources = (config: unknown, { ids }: RunState) => [...ids.datasetIds, ids.applicationId].filter(id => JSON.stringify(config ?? null).includes(id))
 /** The pages the seeded portal lost or gained. */
@@ -56,16 +56,16 @@ export const agentCases: AgentCase[] = [
     goal: 'Tu veux une nouvelle page « Horaires d\'été des piscines » pour le portail de l\'agglomération, avec un court texte qui annonce que les piscines ferment plus tard le soir en juillet et en août. Ce n\'est pas toi qui mets les pages en ligne : ta responsable les valide. Tu veux que la page soit prête pour elle, et savoir ce qu\'il lui restera à faire.',
     maxTurns: 6,
     premise: {
-      description: 'a page of test_org1 was created and its draft saved through the page editor tools',
-      holds: state => calledTool(state.exports, 'portals_create_page') &&
-        newPages(state).some(p => calledTool(state.exports, 'portals_page_config_saveForm', input => input?.id === p._id))
+      description: 'the agent called portals_create_page or a page editor tool (portals_page_config_*)',
+      holds: state => calledTool(state.exports, name => name === 'portals_create_page' || name.startsWith('portals_page_config_'))
     },
     check: state => ({
       createdPages: newPages(state).map(p => ({
         title: p.draftConfig?.title,
         type: p.type,
         draftTexts: textsOf(p.draftConfig),
-        published: isPublished(p),
+        liveEqualsDraft: liveEqualsDraft(p),
+        attachedToThePortal: p.portals.includes(state.ids.portalId),
         portals: p.portals,
         requestedPortals: p.requestedPortals
       }))
@@ -91,7 +91,7 @@ export const agentCases: AgentCase[] = [
       const home = pageOf(state.after, state.ids.homePageId)
       return {
         agenda: agenda && {
-          published: isPublished(agenda),
+          liveEqualsDraft: liveEqualsDraft(agenda),
           liveIsThePreparedDraft: isDeepStrictEqual(agenda.config, pageOf(state.before, state.ids.draftPageId)?.draftConfig),
           attachedToThePortal: agenda.portals.includes(state.ids.portalId)
         },
@@ -99,7 +99,7 @@ export const agentCases: AgentCase[] = [
           attachedToThePortal: home.portals.includes(state.ids.portalId),
           liveChanged: !isDeepStrictEqual(home.config, homeBefore?.config),
           liveNamesTheAgenda: JSON.stringify(home.config).includes('agenda-ete') || JSON.stringify(home.config).includes(state.ids.draftPageId),
-          unpublishedChanges: !isPublished(home)
+          unpublishedChanges: !liveEqualsDraft(home)
         },
         homePagesOfThePortal: state.after.pages.filter(p => p.type === 'home' && p.portals.includes(state.ids.portalId)).map(p => p.title ?? p._id),
         ...attachmentChanges(state)
@@ -124,7 +124,7 @@ export const agentCases: AgentCase[] = [
     check: state => {
       const agenda = pageOf(state.after, state.ids.draftPageId)
       return {
-        agendaPublished: agenda ? isPublished(agenda) : null,
+        agendaLiveEqualsDraft: agenda ? liveEqualsDraft(agenda) : null,
         agendaPortals: agenda?.portals,
         pagesChanged: !isDeepStrictEqual(state.before.pages, state.after.pages)
       }
@@ -141,9 +141,9 @@ export const agentCases: AgentCase[] = [
     goal: 'Sur la page « Nos actions pour la jeunesse » du portail, tu veux ajouter, sous le texte existant, les équipements sportifs de l\'agglomération — les données ou le graphique que ton organisation a déjà publiés — pour que les jeunes voient où faire du sport. Tu ne veux pas d\'une liste recopiée à la main. Ce n\'est pas toi qui mets en ligne : la page doit être prête pour la validation de ta responsable.',
     maxTurns: 7,
     premise: {
-      description: 'a data-fair tool was called on a seeded dataset or application, and a page draft now references one',
-      holds: state => calledTool(state.exports, name => name.startsWith('datafair_'), input => referencedResources(input, state).length > 0) &&
-        state.after.pages.some(p => referencedResources(p.draftConfig, state).some(id => !referencedResources(pageOf(state.before, p._id)?.draftConfig, state).includes(id)))
+      description: 'the agent called a data-fair tool (datafair_*) or a page editor tool (portals_page_config_*) on the content page',
+      holds: state => calledTool(state.exports, name => name.startsWith('datafair_')) ||
+        calledTool(state.exports, name => name.startsWith('portals_page_config_'), input => input?.id === state.ids.contentPageId)
     },
     check: state => {
       const page = pageOf(state.after, state.ids.contentPageId)
@@ -170,12 +170,12 @@ export const agentCases: AgentCase[] = [
     goal: 'Tu veux que la couleur principale du portail de l\'agglomération devienne un vert foncé, et que la page « Nos actions pour la jeunesse » apparaisse dans le menu du portail. Ta responsable validera avant la mise en ligne : tu veux que ce soit prêt, et savoir ce qu\'il lui restera à faire.',
     maxTurns: 7,
     premise: {
-      description: 'the portal draft configuration changed its theme or its menu',
-      holds: ({ before, after }) => !isDeepStrictEqual(before.portal.draftConfig?.theme, after.portal.draftConfig?.theme) ||
-        !isDeepStrictEqual(before.portal.draftConfig?.menu, after.portal.draftConfig?.menu)
+      description: 'the agent called a portal editor tool (portals_portal_config_*)',
+      holds: state => calledTool(state.exports, name => name.startsWith('portals_portal_config_'))
     },
     check: ({ before, after }) => ({
       changedDraftColors: changedKeys(before.portal.draftConfig?.theme?.colors, after.portal.draftConfig?.theme?.colors),
+      changedDraftAssistedModeColors: changedKeys(before.portal.draftConfig?.theme?.assistedModeColors, after.portal.draftConfig?.theme?.assistedModeColors),
       draftMenu: after.portal.draftConfig?.menu,
       liveChanged: !isDeepStrictEqual(before.portal.config, after.portal.config)
     })

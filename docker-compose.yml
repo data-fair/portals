@@ -150,6 +150,7 @@ services:
     network_mode: host
     depends_on:
       - mongo
+      - mcp
     environment:
       - PORT=${AGENTS_PORT}
       - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}

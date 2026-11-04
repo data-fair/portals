@@ -15,7 +15,9 @@ Three things must be true, and each fails confusingly if it is not:
 
 1. The dev stack is up — `npx --no df-dev status`: core containers (nginx, simple-directory,
    data-fair, mongo, elasticsearch) healthy, panes `api`, `ui`, `portal` running, and the
-   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`).
+   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`;
+   it starts the `mcp` container too, which the autonomous-agent cases need, and nginx needs
+   `MCP_PORT` in `.env`: add it by hand in an existing worktree).
    Back-office cases run the manager UI from the `ui` pane inside the data-fair shell;
    portal cases run the `portal` pane.
 2. The data-fair container runs with `PRIVATE_AGENTS_URL` (see docker-compose.yml).
@@ -35,7 +37,7 @@ while someone is relying on that data.
 
 ## Steps
 
-1. **Read the case list** in `simulations/cases/index.ts`. Note each `name` and `goal`.
+1. **Read the case lists** in `simulations/cases/index.ts` (in-page assistant cases) and `simulations/cases/autonomous-agents.ts` (autonomous-agent cases). Note each `name` and `goal`.
 
 2. **Delete evidence from earlier runs.**
 
@@ -52,6 +54,8 @@ while someone is relying on that data.
    ```bash
    npm run simulate                              # every case
    SIM_CASES=page-parametres npm run simulate   # one case
+   SIM_CASES=page-de-contenu,publier-et-accueil,hors-de-portee,page-avec-donnees,parametres-du-portail npm run simulate   # only the autonomous-agent cases
+   npx playwright test -c playwright.sim.config.ts simulations/simulate.sim.spec.ts   # only the in-page cases (the other spec file: autonomous-agent.sim.spec.ts)
    SIM_HEADED=1 npm run simulate                 # open the browser window to watch a run (headless by default)
    ```
 
