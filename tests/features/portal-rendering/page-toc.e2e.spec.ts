@@ -144,4 +144,61 @@ test.describe('content page table of contents', () => {
       })
     }, { timeout: 15_000 }).toBeGreaterThanOrEqual(190)
   })
+
+  // The app bar keeps its full height below its scroll threshold and shows it again while
+  // scrolling up, so a title reached through its anchor in either case must stop below the
+  // whole bar, not only below the navigation bar.
+  test('stops anchored titles below the full app bar when it stays or comes back', async ({ page, goToPortal }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+
+    const portal = (await user1.post('/api/portals', {
+      config: {
+        title: 'TOC Portal',
+        menu: { children: [] },
+        agentChat: { active: false },
+        header: { show: true, showTitle: true, logoPrimaryType: 'hidden', keepOnScroll: false },
+        navBar: { keepOnScroll: true }
+      }
+    })).data
+    const createdPage = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Documentation',
+        elements: [
+          { uuid: 't1', type: 'title', content: 'Introduction', titleSize: 'h2', titleTag: 'h2', anchor: { enabled: true, inToc: true } },
+          text('x1', 30),
+          { uuid: 't2', type: 'title', content: 'Conclusion', titleSize: 'h2', titleTag: 'h2', anchor: { enabled: true, inToc: true } },
+          text('x2', 30)
+        ]
+      },
+      portals: [portal._id],
+      owner: portal.owner
+    })).data
+
+    // gap between the bottom of the app bar and the title, once the scroll has settled
+    const titleGap = (id: string) => page.evaluate(async (id) => {
+      let y = -1
+      while (y !== window.scrollY) {
+        y = window.scrollY
+        await new Promise(resolve => setTimeout(resolve, 300))
+      }
+      const bar = document.querySelector('.v-app-bar')
+      const title = document.getElementById(id)
+      if (!bar || !title) return null
+      return Math.round(title.getBoundingClientRect().top - bar.getBoundingClientRect().bottom)
+    }, id)
+
+    // the first title sits right under the header: its anchor stays below the scroll threshold
+    await goToPortal(portal._id, `/pages/${createdPage.config.genericMetadata.slug}#introduction`)
+    const toc = page.getByRole('navigation', { name: 'Sommaire' })
+    await expect(toc.getByText('Sommaire')).toBeVisible({ timeout: 15_000 })
+    await expect.poll(() => titleGap('introduction'), { timeout: 15_000 }).toBeGreaterThanOrEqual(0)
+
+    // jumping back up from the bottom of the page reveals the header again
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+    await expect.poll(async () => {
+      await toc.locator('.v-list-item', { hasText: 'Conclusion' }).click()
+      return titleGap('conclusion')
+    }, { timeout: 15_000 }).toBeGreaterThanOrEqual(0)
+  })
 })

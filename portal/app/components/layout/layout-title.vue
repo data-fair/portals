@@ -27,11 +27,13 @@
       its own and stays centred on the whole title. Left inline it would sit on the
       first line and the following lines would wrap back underneath it. Inline flex
       rather than flex: the row stays an inline box, so the copy button below still
-      follows the title instead of being pushed onto its own line.
+      follows the title instead of being pushed onto its own line. Top-aligned, because its
+      baseline is the icon's bottom edge, which would push the line down and off-center the title.
       --><component
         :is="linkTag"
         v-bind="linkAttrs"
         :class="iconPath ? 'd-inline-flex align-center' : undefined"
+        :style="iconPath ? 'vertical-align: top' : undefined"
       ><v-icon
         v-if="iconPath"
         :icon="iconPath"

@@ -63,7 +63,9 @@ export const useNavigationStore = () => {
     scrolled: ref(false),
     // Preview keeps the app bar fully shown, so the offset stays the full header + navigation bar height.
     appBarActive: ref(true),
-    appBarBottom: ref(192)
+    appBarBottom: ref(192),
+    anchorTop: ref(224),
+    updateAnchorMargins: () => { }
   }
 }
 
