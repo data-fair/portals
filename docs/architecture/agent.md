@@ -54,6 +54,10 @@ portal (Nuxt, <portal>.portals.<host>/...)           ← this repo's portal/
 - `agentChat.type` is `menu` (default) or `drawer`; `agentChat.systemPrompt` is
   prepended to the context built by `portal/app/composables/agent/portal-prompt-context.ts`
   (portal title, owner, available pages and features).
+  **Not applied since agents libs 0.7**: `hostInitConfig` ignores the `systemPrompt` prop (a
+  persona is a configured agent, chosen by `agentId`), so neither `agentChat.systemPrompt` nor the
+  `custom-agent` page block's prompt and focus datasets reach the chat
+  (`tests/features/portal-rendering/custom-agent-block.e2e.spec.ts` fails); to be decided.
 - Tools are registered on every portal page, independent of whether the chat is shown.
 
 ## Manager tools (back-office)
