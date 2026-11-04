@@ -4,13 +4,14 @@
  * judge's call, from the transcript.
  */
 import { test } from '@playwright/test'
-import { runSimulation, selectCases, simCaseNames } from '@data-fair/lib-agents-sim'
+import { runSimulation } from '@data-fair/lib-agents-sim'
 import { cases } from './cases/index.ts'
+import { selectOwnCases } from './cases/select.ts'
 import { seedAll } from './runner/fixtures.ts'
 import { ROOT, OWNER_ADMIN_ID, seedSettings, eraseConversations, fetchConversationExports } from './runner/settings.ts'
 import { createSurface } from './runner/surfaces.ts'
 
-for (const simCase of selectCases(cases, simCaseNames())) {
+for (const simCase of selectOwnCases(cases)) {
   test(`simulation: ${simCase.name}`, async ({ page }) => {
     const surface = createSurface(simCase, page)
     await runSimulation(page, simCase, {

@@ -11,11 +11,12 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { axiosAuth, clean } from '../../tests/support/axios.ts'
 import { OWNER, OWNER_ADMIN_EMAIL } from './settings.ts'
+import type { AgentSeedIds, PortalsState } from './autonomous-agent.ts'
 
 const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 const resourcesDir = path.join(process.cwd(), 'simulations', 'resources')
 
-export type SeedIds = { portalId: string, pageId: string, datasetIds: string[] }
+export type SeedIds = { portalId: string, pageId: string, homePageId: string, catalogPageId: string, datasetIds: string[] }
 
 /** data-fair topics of the owner: datasets are classified with them, the portal shows them. */
 const TOPICS = [
@@ -65,7 +66,7 @@ export async function seedAll (): Promise<SeedIds> {
   }
 
   const owner = portal.owner
-  await ax.post('/api/pages', {
+  const homePage = (await ax.post('/api/pages', {
     type: 'home',
     config: {
       title: 'Accueil',
@@ -76,13 +77,13 @@ export async function seedAll (): Promise<SeedIds> {
     },
     portals: [portalId],
     owner
-  })
-  await ax.post('/api/pages', {
+  })).data
+  const catalogPage = (await ax.post('/api/pages', {
     type: 'datasets',
     config: { title: 'Données', elements: [{ uuid: 'cat1', type: 'datasets-catalog', columns: 3, filters: { items: ['search'] } }] },
     portals: [portalId],
     owner
-  })
+  })).data
   const contentPage = (await ax.post('/api/pages', {
     type: 'generic',
     config: {
@@ -93,7 +94,77 @@ export async function seedAll (): Promise<SeedIds> {
     portals: [portalId],
     owner
   })).data
-  return { portalId, pageId: contentPage._id, datasetIds: DATASETS.map(d => d.id) }
+  return { portalId, pageId: contentPage._id, homePageId: homePage._id, catalogPageId: catalogPage._id, datasetIds: DATASETS.map(d => d.id) }
+}
+
+export const DRAFT_PAGE_TITLE = 'Agenda culturel de l\'été'
+export const APPLICATION = { id: 'sim-graphique-equipements', title: 'Capacité des équipements sportifs par commune' }
+/** A public base application, fetched by data-fair at registration: the dev stack serves none of its own. */
+const BASE_APP_URL = 'https://cdn.jsdelivr.net/npm/@data-fair/app-charts@1/dist/'
+const SUPER_ADMIN_EMAIL = 'test_superadmin@test.com'
+
+/**
+ * The autonomous-agent cases' world: seedAll's portal (home, catalog and the published content page,
+ * all attached), plus a free page a colleague prepared and never published, attached to no portal,
+ * and an application of test_org1 on the sports facilities dataset, published on the portal.
+ */
+export async function seedAgentFixtures (): Promise<AgentSeedIds> {
+  const ids = await seedAll()
+  const ax = await axiosAuth({ email: OWNER_ADMIN_EMAIL, org: OWNER.id })
+
+  // live: a placeholder, as the page was when it was created; draft: the content prepared since
+  const draftPage = (await ax.post('/api/pages', {
+    type: 'generic',
+    config: {
+      title: DRAFT_PAGE_TITLE,
+      elements: [{ type: 'text', content: 'Page en préparation.' }],
+      genericMetadata: { slug: 'agenda-ete' }
+    }
+  })).data
+  const draft = (await ax.get(`/api/pages/${draftPage._id}/draft-config`)).data
+  await ax.put(`/api/pages/${draftPage._id}/draft-config`, {
+    ...draft,
+    elements: [
+      { type: 'text', content: 'Tout l\'été, l\'agglomération propose des concerts, des projections en plein air et des ateliers pour toute la famille.' },
+      { type: 'text', content: '- 5 juillet : concert d\'ouverture au parc des Rives\n- 19 juillet : cinéma en plein air\n- 2 août : ateliers créatifs à la médiathèque' }
+    ]
+  })
+
+  const admin = await axiosAuth({ email: SUPER_ADMIN_EMAIL, adminMode: true })
+  const baseApp = (await admin.post(`${ROOT}/data-fair/api/v1/base-applications`, { url: BASE_APP_URL })).data
+  await admin.patch(`${ROOT}/data-fair/api/v1/base-applications/${encodeURIComponent(baseApp.id)}`, { public: true })
+  await ax.delete(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`).catch(() => {})
+  const dataset = DATASETS[0]
+  await ax.put(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`, {
+    url: BASE_APP_URL,
+    title: APPLICATION.title,
+    description: 'Graphique de la capacité d\'accueil cumulée des équipements sportifs, par commune.',
+    configuration: { datasets: [{ href: `${ROOT}/data-fair/api/v1/datasets/${dataset.id}`, id: dataset.id, title: dataset.title }] }
+  })
+  await ax.patch(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`, { publicationSites: [`data-fair-portals:${ids.portalId}`] })
+  await ax.put(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}/permissions`, [{ classes: ['read', 'list'] }])
+
+  return {
+    portalId: ids.portalId,
+    homePageId: ids.homePageId,
+    catalogPageId: ids.catalogPageId,
+    contentPageId: ids.pageId,
+    draftPageId: draftPage._id,
+    datasetIds: ids.datasetIds,
+    applicationId: APPLICATION.id
+  }
+}
+
+/** The portal's configurations and every page of test_org1, as stored: what premises and checks read. */
+export async function readPortalsState (portalId: string): Promise<PortalsState> {
+  const ax = await axiosAuth({ email: OWNER_ADMIN_EMAIL, org: OWNER.id })
+  const portal = (await ax.get(`/api/portals/${portalId}`)).data
+  const { results, count } = (await ax.get('/api/pages', { params: { size: 100 } })).data
+  if (count > results.length) throw new Error(`test_org1 has ${count} pages, only ${results.length} were read`)
+  return {
+    portal: { _id: portal._id, config: portal.config, draftConfig: portal.draftConfig },
+    pages: results.map((p: any) => ({ _id: p._id, type: p.type, title: p.title, portals: p.portals ?? [], requestedPortals: p.requestedPortals ?? [], config: p.config, draftConfig: p.draftConfig }))
+  }
 }
 
 /** Indexing is asynchronous; asking about an unfinalized dataset measures nothing. */
