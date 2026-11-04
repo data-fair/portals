@@ -31,7 +31,7 @@ import { type Account, getAccountRole } from '@data-fair/lib-common-types/sessio
 const DfAgentChatBlock = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatBlock.vue'))
 
 const { element } = defineProps<{ element: CustomAgentElement }>()
-const { portal, portalConfig } = usePortalStore()
+const { portal } = usePortalStore()
 const owner = computed(() => portal.value.owner)
 
 const session = useSession()
