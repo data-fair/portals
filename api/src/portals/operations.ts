@@ -5,6 +5,9 @@ import { type SessionStateAuthenticated, assertAccountRole } from '@data-fair/li
 
 export type SyncCredentials = { cookie?: string, authorization?: string }
 
+// the caller's credentials, forwarded by the syncs that act as the caller (data-fair, events)
+export const syncHeaders = (req: { headers: SyncCredentials }): SyncCredentials => ({ cookie: req.headers.cookie, authorization: req.headers.authorization })
+
 // the same test as lib-express (assertRouteCheckedScope): a parsed scopes list or a raw scope claim
 const isScopeRestricted = (session: SessionStateAuthenticated) => !!session.scopes || session.user.scope !== undefined
 

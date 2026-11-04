@@ -1,4 +1,5 @@
 // the api routers and their mount paths (relative to /api), also walked by the scopes coverage test
+import draftConfigsRouter from './draft-configs/router.ts'
 import groupRouter from './groups/router.ts'
 import portalsRouter from './portals/router.ts'
 import pagesRouter from './pages/router.ts'
@@ -11,6 +12,8 @@ import fontAssetsRouter from './font-assets/router.ts'
 import limitsRouter from './limits/router.ts'
 
 export const apiRouters = {
+  // first: its /portals/config-schema.json would otherwise be read as a portal id
+  '': draftConfigsRouter,
   '/groups': groupRouter,
   '/portals': portalsRouter,
   '/pages': pagesRouter,

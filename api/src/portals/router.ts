@@ -1,7 +1,7 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 
 import { randomUUID } from 'node:crypto'
-import { Router, type Request } from 'express'
+import { Router } from 'express'
 import mongo from '#mongo'
 import config from '#config'
 import findUtils from '../utils/find.ts'
@@ -13,11 +13,10 @@ import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
 import { requireOperationScope } from '../scopes.ts'
+import { syncHeaders } from './operations.ts'
 
 const router = Router()
 
-// the caller's credentials, forwarded by the syncs that act as the caller (data-fair, events)
-const syncHeaders = (req: Request) => ({ cookie: req.headers.cookie, authorization: req.headers.authorization })
 export default router
 
 router.get('', requireOperationScope('listPortals'), async (req, res, next) => {
