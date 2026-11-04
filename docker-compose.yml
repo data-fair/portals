@@ -71,7 +71,7 @@ services:
       retries: 60
 
   data-fair:
-    # DF_IMAGE: a data-fair build that accepts the portals secret key, for the agent publication-site test (tests/features/portals/publication-site-sync.api.spec.ts)
+    # DF_IMAGE: another data-fair build (data-fair:master accepts the portals secret key that agent sessions sync publication sites with)
     image: ${DF_IMAGE:-ghcr.io/data-fair/data-fair:master}
     restart: on-failure:10
     network_mode: host

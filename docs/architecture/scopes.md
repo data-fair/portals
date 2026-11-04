@@ -146,14 +146,13 @@ own credential (its bearer, else its cookie; `subscriptionRequests`). A failure 
 - `tests/features/scopes/`: unit tests of the vocabulary, of the route coverage and of the OpenAPI
   security; API tests of the tiers per family, the body-dependent tiers, images, refused and
   any-scope routes, cookie and bearer sessions.
-- `tests/features/portals/publication-site-sync.{unit,api}.spec.ts`: the choice of path and the
-  subscriptions (unit); the cookie path and, against `data-fair:master`, the refusal of an agent
-  save (api). With `DF_IMAGE` set to a data-fair build that accepts the portals secret key, the
-  refusal case is skipped.
+- `tests/features/portals/publication-site-sync.{unit,api}.spec.ts`: the choice of path, the
+  status mapping of sync errors and the subscriptions (unit); the cookie path of a human save and
+  the secret-key path of an agent save, end to end against `data-fair:master` (api).
 
 ## Known gaps
 
-- The secret-key sync needs a data-fair release with `secretKeys.portals`, and portals configured with `SECRET_DATA_FAIR` and `PRIVATE_DATA_FAIR_URL`; until then an agent save that touches a publication site is refused.
+- The secret-key sync needs a data-fair version with `secretKeys.portals` (on master since 2026-11-04), and portals configured with `SECRET_DATA_FAIR` (matching data-fair's `SECRET_PORTALS`) and `PRIVATE_DATA_FAIR_URL`; against an older data-fair, an agent save that touches a publication site is refused (502) and nothing is stored.
 - TODO: unify the human path on the secret key once every supported data-fair has it (the cookie path stays for humans meanwhile).
 - An agent session's subscriptions to the events of a new publication site are probably refused by events (its token is portals-only); the failure is only logged.
 - A page transfer does not update its images' `owner.department` (pre-existing).
