@@ -14,7 +14,11 @@ import type { PerceptionRoot, SimulationCase } from '@data-fair/lib-agents-sim'
 import type { SeedIds } from './fixtures.ts'
 import { OWNER, OWNER_ADMIN_EMAIL, ROOT } from './settings.ts'
 
-export type SimCase = SimulationCase & { surface: 'backoffice' | 'portal' }
+/**
+ * `host`, not `surface`: lib-agents-sim (0.12) names `surface` what a case is dispatched as
+ * (in-page chat, autonomous agent, unattended); every case here is an in-page chat.
+ */
+export type SimCase = SimulationCase & { host: 'backoffice' | 'portal' }
 
 export type Surface = {
   goto: (ids: SeedIds) => Promise<void>
@@ -39,7 +43,7 @@ async function login (page: Page, target: string) {
 }
 
 export function createSurface (simCase: SimCase, page: Page): Surface {
-  if (simCase.surface === 'backoffice') {
+  if (simCase.host === 'backoffice') {
     return {
       goto: ids => login(page, `${ROOT}${resolveRoute(simCase.route, ids)}`),
       // One root that sees through its iframes: the shell, the manager form inside its

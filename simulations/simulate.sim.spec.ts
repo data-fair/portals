@@ -7,7 +7,7 @@ import { test } from '@playwright/test'
 import { runSimulation, selectCases, simCaseNames } from '@data-fair/lib-agents-sim'
 import { cases } from './cases/index.ts'
 import { seedAll } from './runner/fixtures.ts'
-import { ROOT, seedSettings } from './runner/settings.ts'
+import { ROOT, OWNER_ADMIN_ID, seedSettings, eraseConversations, fetchConversationExports } from './runner/settings.ts'
 import { createSurface } from './runner/surfaces.ts'
 
 for (const simCase of selectCases(cases, simCaseNames())) {
@@ -19,12 +19,14 @@ for (const simCase of selectCases(cases, simCaseNames())) {
       setup: async ({ assistantModel, toolsModel }) => {
         const ids = await seedAll()
         await seedSettings(assistantModel, toolsModel)
+        await eraseConversations(OWNER_ADMIN_ID)
         // Same cookie as the e2e fixtures, on the parent domain so it reaches both the
         // back-office host and the portal subdomain: the portal's own language choice.
         await page.context().addCookies([{ name: 'i18n_lang', value: 'fr', domain: `.${process.env.DEV_HOST}`, path: '/' }])
         await surface.goto(ids)
       },
-      perceptionRoots: surface.perceptionRoots
+      perceptionRoots: surface.perceptionRoots,
+      fetchExports: fetchConversationExports
     })
   })
 }

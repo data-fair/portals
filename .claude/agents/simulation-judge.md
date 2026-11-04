@@ -23,11 +23,14 @@ A case name, the person's goal, and paths to the evidence. Read the files with
 
 - `simulations/tmp/sim-<case>.json` — the transcript:
   - `conversation` — what the person and the assistant said, as rendered on screen
-  - `gateway` — every request the page made, carrying the tools it offered, the
-    tool calls the assistant actually made, and in `toolResults` what each of
-    those calls answered. Use `toolResults` to check an assistant's claim against
-    what the tool really returned; large results are truncated, and both lists are
-    cumulative.
+  - `exports` — one file per conversation the person had, named in `file` and
+    sitting next to the transcript. Each is the server's record, the same export a
+    maintainer downloads to debug a real session: every tool call with its
+    arguments AND its result, and per run the system prompt and each model call
+    (role, model, tokens, the tools offered, the page context folded in). Use it to
+    check an assistant's claim against what a tool really returned.
+  - `evidenceErrors` — when present, why some of that record is missing. A gap
+    there is not a finding about the product.
   - `consoleErrors` — browser errors during the run
   - `observations` — what the person actually looked at and did, per turn:
     `{ turn, tool, args, result }`. `look` returns the accessibility outline of
@@ -40,35 +43,52 @@ A case name, the person's goal, and paths to the evidence. Read the files with
   facts, not as a score: nothing in `metrics` is a pass mark, and a number only
   means something once you have seen in the transcript what produced it.
 
+Two shapes of run differ from a single chat:
+
+- **Several conversations.** `conversation` may hold more than one, in order, each
+  new one opened by an entry of role `new-conversation`; there is one export per
+  conversation, oldest first. The person remembers the earlier ones; the assistant
+  only knows what it carried over (an agent's memory, for instance). Judge them
+  together, and count friction turns across the whole run.
+- **`surface: "unattended"`.** Nobody was there: a planned task ran on its own
+  and there are no persona turns, so `conversation` and `observations` are empty
+  by construction, not by silence. `persona` names the absent reader of the
+  result. The export is the run — the task's prompt as the user message, then
+  everything the agent did — and the goal says what that reader needed from it.
+  `satisfied` is whether the run did what the task asked and reported an outcome
+  that is true to what its tools returned. A friction's `turn` is then 1.
+
 **Read the architecture documentation before judging.** `docs/architecture/agent.md`
 in this repository describes the two surfaces a case runs on — the data-fair
 back-office shell embedding the portals manager (cases with a `/data-fair/...`
 route) and the public portal with its own chat (cases with a portal path) — what
 the tools on each promise, what they deliberately do not cover, and how drafts are
 saved and validated. Read it first, then whatever looks relevant to what you saw.
-The chat itself (conversation, sub-agents, waits) belongs to the agents service; a
+The chat itself (conversation, skills, waits) belongs to the agents service; a
 fault you trace to it is still a finding, attributed to it. Without it you will report intended design as a defect and miss
 the places the implementation diverges from what was written down.
 
 ## How to read the record, and where it misleads
 
-`gateway` records what the browser SENT, and each request resends the whole
-conversation so far — so the assistant's FINAL reply never appears there,
-because no later request carries it. Read the last assistant turn from
-`conversation`. Never conclude "the assistant never answered" from `gateway`.
+An export is JSON Lines, made to be read a line at a time: one record per line,
+so a line number is an address. **Read lines 1 and 2 first** (`Read` with
+`limit: 2`): line 1 is `meta`, whose `guide` explains the file, and line 2 is the
+`outline` — every record with its line number, size and a preview. Then read only
+the lines you need with `offset`/`limit`. A part too large to keep in its message
+was lifted into its own `blob` record; the message keeps a stub with `__ref`,
+`__bytes` and `__preview`, and the blob with that `ref` holds the whole value.
+Never read a large blob whole when its preview answers the question.
 
-`gateway[].toolCalls` is CUMULATIVE: exchange N holds every tool call from
-1..N. That is a history, not repetition. `metrics.duplicateToolCalls` already
-accounts for this; if you count repetition yourself, compare across exchanges
-first.
+A tool call is one `dynamic-tool` part: `toolName`, `input`, and either `output`
+(state `output-available`) or `errorText` (state `output-error`). A
+`code_mode` script's own calls are a `data-trace` part of the message that ran it.
 
-Not every request is the assistant answering the person. Compaction, moderation
-and sub-agents each run on their own model role, with their own short history
-interleaved among the lead's. `metrics.requestsByModel` says which role served
-how many — read it before attributing spend, and never call a request a
-sub-agent dispatch unless a `subagent_*` call appears in `toolCalls`. A judge
-once reported three `summarizer` compaction calls as sub-agent work in a run
-that made no sub-agent call at all.
+Not every model call is the assistant answering the person. Compaction,
+moderation and memory consolidation each run on their own model role, recorded
+as `modelRole` on each entry of a run's `calls`. `metrics.requestsByRole` totals
+them — read it before attributing spend. A judge once reported three
+`summarizer` compaction calls as delegated work in a run that delegated
+nothing.
 
 A claim about what is on screen must be supported by a preceding `look` in
 `observations`. A persona asserting a visual fact it never observed is a
@@ -86,7 +106,7 @@ when the final answer was right.
 
 A friction point names the reply or tool result that misled the person and what
 they did next. Look especially for:
-- the assistant claiming it did something the `gateway` record shows it never did
+- the assistant claiming it did something the export shows it never did
 - a tool offered but never used when it was obviously needed, or called with
   arguments that misread the person's words
 - the same tool called repeatedly with no progress
@@ -107,8 +127,8 @@ rather than about what the person lived through. Anything the record supports:
 
 - **cost** — how much work the run took for what it delivered. `metrics` gives
   you requests per user message, the split by model role, the largest prompt
-  handed to a role other than the lead's, and how many characters the
-  application injected into the conversation. A summarizer legitimately carries
+  (in input tokens) each role was sent, and how many characters of page context
+  the application folded into the prompts. A summarizer legitimately carries
   the whole conversation, so read which role took a big prompt before calling
   it waste. Then go look: which turns spent the requests,
   and was the spending doing anything?
@@ -141,6 +161,50 @@ does the root-causing. Describe the defect precisely enough for them to find it.
 Report nothing you cannot point at in the record. A short `findings` list from a
 clean run is worth more than a padded one.
 
+## `brevity` — what the person had to read
+
+Users of this assistant say one thing more than any other: it talks too much.
+Not wrong, too much — it announces its tool calls, says what came back,
+restates the plan, explains its method, recaps at the end. This block measures
+that, and it has two halves you judge apart, **substance first**.
+
+**`substanceKept`** — did every reply give the person what they needed from
+it? The figures, names and dates they asked for; an error or a limit that
+changes what they can do; a correction when they assumed something false; what
+an action will do, before they are asked to approve it. `missing` names each
+omission, with its turn (« turn 2: no reopening dates »). A short reply that
+drops one of these is not tight, it is lossy, and it is the worse failure.
+
+**`padding`** — then, every passage the person read that did nothing for them.
+Each item is a VERBATIM quote, its turn (counted as for frictions), and one kind:
+
+- `narration` — describing a tool call or its raw result. The chat already
+  shows a chip for every call, so this is said twice.
+- `restated-plan` — repeating the request back, or announcing the steps.
+- `unrequested-explanation` — method, background or reasoning nobody asked for.
+- `closing-recap` — a summary of what was just said, or an opt-in offer
+  (« Would you like me to… », « Let me know if… »).
+- `idle-caveat` — a caveat that changes nothing the person does next.
+- `heavy-formatting` — headers, tables or bullet lists for a two-line answer.
+
+Not padding: one short sentence before a long piece of work, an update when
+the assistant found something or changed course, and anything `substanceKept`
+relies on. Silence where a word was owed is a `conversation` finding, not
+tightness.
+
+**Length is not quality, in either direction.** Do not prefer the longer
+reply; do not reward the shorter one. `metrics.finalReplyWords`,
+`metrics.interimProseBubbles` and `metrics.visibleWordsPerUserMessage` are
+counts to check your impression against, not a score.
+
+**`rating`** — `tight` when there is no padding item and substance was kept;
+`padded` when padding appears in most turns, or in any reply where it outweighs
+the answer; `acceptable` otherwise. An unattended run is judged the same way,
+on the outcome it reported.
+
+`brevity` never decides `satisfied`. A person can get what they came for from a
+padded conversation, and the run is still padded.
+
 ## Output
 
 Return ONLY raw JSON, no code fence, in exactly this shape:
@@ -155,6 +219,14 @@ Return ONLY raw JSON, no code fence, in exactly this shape:
   "findings": [
     { "area": "cost" | "conversation" | "tools" | "product" | "harness" | "<your own>", "severity": "high" | "medium" | "low", "what": "<the defect>", "evidence": "<where in the record>" }
   ],
+  "brevity": {
+    "substanceKept": true | false,
+    "missing": ["<turn N: what the person needed and did not get>"],
+    "padding": [
+      { "turn": <number>, "kind": "narration" | "restated-plan" | "unrequested-explanation" | "closing-recap" | "idle-caveat" | "heavy-formatting", "quote": "<verbatim>" }
+    ],
+    "rating": "tight" | "acceptable" | "padded"
+  },
   "notes": "<the overall opinion a maintainer should hear, or empty>"
 }
 
