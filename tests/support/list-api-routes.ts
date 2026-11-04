@@ -11,15 +11,18 @@ mounts.set(testEnvRouter, '/test-env')
 // express '/:id/data/:filename' -> OpenAPI '/{id}/data/{filename}', relative to /api, no trailing slash
 const openapiPath = (path: string) => path.replace(/:(\w+)/g, '{$1}').replace(/(.)\/$/, '$1')
 
-const routes: { method: string, path: string, guards: string[], lastIsGuard: boolean }[] = []
+// before: the names of the handlers that run before the first scope guard (all of them if none)
+const routes: { method: string, path: string, guards: string[], before: string[], lastIsGuard: boolean }[] = []
 const errors: string[] = []
 const addRoutes = (stack: any[], prefix: string) => {
   for (const layer of stack) {
     if (layer.route) {
       const handlers = layer.route.stack.map((l: any) => l.handle)
       const guards = handlers.map(scopeGuardOf).filter(Boolean)
+      const guardIndex = handlers.findIndex((h: unknown) => scopeGuardOf(h))
+      const before = handlers.slice(0, guardIndex === -1 ? handlers.length : guardIndex).map((h: any) => h.name || '<anonymous>')
       for (const method of Object.keys(layer.route.methods)) {
-        routes.push({ method, path: openapiPath(prefix + layer.route.path), guards, lastIsGuard: !!scopeGuardOf(handlers[handlers.length - 1]) })
+        routes.push({ method, path: openapiPath(prefix + layer.route.path), guards, before, lastIsGuard: !!scopeGuardOf(handlers[handlers.length - 1]) })
       }
     } else if (layer.handle?.stack) {
       const mount = mounts.get(layer.handle)

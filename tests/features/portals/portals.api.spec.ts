@@ -189,6 +189,16 @@ test.describe('portals management', () => {
     assert.equal(patched.draftConfig.footer.copyright, false)
   })
 
+  test('only a super admin sets the white label, reference and md2 compat flags, even to false', async () => {
+    const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
+    for (const flag of ['whiteLabel', 'isReference', 'md2Compat']) {
+      await assert.rejects(user1.patch(`/api/portals/${portal._id}`, { [flag]: false }), { status: 403 }, flag)
+    }
+    await superadmin.patch(`/api/portals/${portal._id}`, { whiteLabel: true })
+    await assert.rejects(user1.patch(`/api/portals/${portal._id}`, { whiteLabel: false }), { status: 403 })
+    assert.equal((await user1.get(`/api/portals/${portal._id}`)).data.whiteLabel, true)
+  })
+
   test('markdown of footer text blocks is rendered on save', async () => {
     const portal = (await user1.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
     const footer = footerWith({})

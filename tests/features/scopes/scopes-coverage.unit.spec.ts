@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import { scopedOperations, imageOperations, anyScopeRoutes, refusedRoutes } from '../../../api/src/scopes.ts'
 
-type ListedRoute = { method: string, path: string, guards: string[], lastIsGuard: boolean }
+type ListedRoute = { method: string, path: string, guards: string[], before: string[], lastIsGuard: boolean }
 
 // the api modules need the config, the routes are listed in a node process of their own
 const listRoutes = (): { routes: ListedRoute[], errors: string[] } => JSON.parse(execFileSync(
@@ -40,6 +40,13 @@ test.describe('scopes coverage', () => {
       else if (anyScopeRoutes.some(r => r.method === route.method && r.path === route.path)) assert.deepEqual(route.guards, ['any'], key)
       else if (refused(route)) assert.deepEqual(route.guards, [], `${key} is refused on purpose, it has no guard`)
       else assert.fail(`${key} is neither scoped, marked nor refused on purpose`)
+    }
+    // the guard runs before any handler that could read the session or write; the image upload needs
+    // the multipart body to pick the family, its guard comes right after the parsers
+    for (const route of routes.filter(r => r.guards.length)) {
+      const key = `${route.method} ${route.path}`
+      const expected = key === 'post /images' ? ['multerMiddleware', 'jsonFromMultiPart', 'mutableQuery'] : []
+      assert.deepEqual(route.before, expected, `${key}: handlers before the scope guard`)
     }
     for (const op of [...Object.values(scopedOperations), ...Object.values(imageOperations), ...anyScopeRoutes]) {
       assert.ok(seen.has(`${op.method} ${op.path}`), `${op.method} ${op.path} is not a route`)

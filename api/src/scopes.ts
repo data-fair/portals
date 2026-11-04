@@ -86,7 +86,8 @@ export const scopedOperations = {
   listReuses: { method: 'get', path: '/reuses', family: 'reuses', tier: 'read' },
   createReuse: { method: 'post', path: '/reuses', family: 'reuses', tier: 'write', bodyTiers: { portals: 'admin' } },
   getReuse: { method: 'get', path: '/reuses/{id}', family: 'reuses', tier: 'read' },
-  updateReuse: { method: 'patch', path: '/reuses/{id}', family: 'reuses', tier: 'write', bodyTiers: { portals: 'admin', requestedPortals: 'admin', owner: 'admin' } },
+  // config is the live published content: changing it directly is a publication
+  updateReuse: { method: 'patch', path: '/reuses/{id}', family: 'reuses', tier: 'write', bodyTiers: { config: 'admin', portals: 'admin', requestedPortals: 'admin', owner: 'admin' } },
   deleteReuse: { method: 'delete', path: '/reuses/{id}', family: 'reuses', tier: 'admin' },
   publishReuseDraft: { method: 'post', path: '/reuses/{id}/draft', family: 'reuses', tier: 'admin' },
   cancelReuseDraft: { method: 'delete', path: '/reuses/{id}/draft', family: 'reuses', tier: 'write' },

@@ -29,7 +29,7 @@ const mutableQuery = (req: Request, res: Response, next: NextFunction) => {
   next()
 }
 
-router.post('', upload.single('image'), jsonFromMultiPart, imageScope, mutableQuery, async (req, res, next) => {
+router.post('', upload.single('image'), jsonFromMultiPart, mutableQuery, imageScope, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const { body, query, file } = postReq.returnValid(req, { name: 'request' })

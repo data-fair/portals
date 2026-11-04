@@ -42,7 +42,7 @@ test.describe('scope tier of write bodies', () => {
     assert.deepEqual((await orgAdmin.get(`/api/pages/${page._id}`)).data.portals, [portal._id])
   })
 
-  test('reuses: the write tier edits the draft, not the portals nor the owner', async () => {
+  test('reuses: the write tier edits the draft, not the live config, the portals nor the owner', async () => {
     const portal = await newPortal()
     const reuse = (await orgAdmin.post('/api/reuses', { config: { title: 'Reuse' } })).data
     const write = await scoped('reuses:write')
@@ -54,9 +54,14 @@ test.describe('scope tier of write bodies', () => {
     assert.equal(stored.draftConfig.title, 'Draft by write')
     assert.deepEqual(stored.portals, [])
     assert.equal(await statusOf(write.post('/api/reuses', { config: { title: 'R' }, portals: [portal._id] })), 403)
+    // the live config is published content: writing it directly is a publication
+    assert.equal(await statusOf(write.patch(`/api/reuses/${reuse._id}`, { config: { ...reuse.config, title: 'Live by write' } })), 403)
+    assert.equal((await orgAdmin.get(`/api/reuses/${reuse._id}`)).data.config.title, 'Reuse')
 
     assert.equal(await statusOf((await scoped('reuses:admin')).patch(`/api/reuses/${reuse._id}`, { portals: [portal._id] })), 200)
     assert.deepEqual((await orgAdmin.get(`/api/reuses/${reuse._id}`)).data.portals, [portal._id])
+    assert.equal(await statusOf((await scoped('reuses:admin')).patch(`/api/reuses/${reuse._id}`, { config: { ...reuse.config, title: 'Live by admin' } })), 200)
+    assert.equal((await orgAdmin.get(`/api/reuses/${reuse._id}`)).data.config.title, 'Live by admin')
   })
 
   test('portals: the write tier edits the draft, not the contributor departments nor the owner', async () => {
