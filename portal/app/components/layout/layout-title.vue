@@ -23,22 +23,26 @@
       but never the copy button: a button inside a link is interactive content
       nested in a link.
 
-      With an icon the link becomes an inline flex row, so the icon keeps a column of
-      its own and stays centred on the whole title. Left inline it would sit on the
-      first line and the following lines would wrap back underneath it. Inline flex
-      rather than flex: the row stays an inline box, so the copy button below still
-      follows the title instead of being pushed onto its own line.
-      --><component
+      With an icon, the link and the copy button share an inline flex row and the link is
+      itself a flex row: the icon keeps a column of its own and stays centred on the whole
+      title (left inline, the following lines would wrap back underneath it), and the button
+      sits right of the text instead of dropping onto a line of its own. Top-aligned, because
+      the row's baseline is the icon's bottom edge, which would push the line down and
+      off-center the title. Without an icon, the button stays inline after the last word.
+      --><span
+        :class="iconPath ? 'd-inline-flex align-center' : undefined"
+        :style="iconPath ? 'vertical-align: top' : undefined"
+      ><component
         :is="linkTag"
         v-bind="linkAttrs"
-        :class="iconPath ? 'd-inline-flex align-center' : undefined"
+        :class="iconPath ? 'd-flex align-center' : undefined"
       ><v-icon
         v-if="iconPath"
         :icon="iconPath"
         :color="element.icon!.color"
         size="small"
         class="mr-4 flex-shrink-0"
-      /><span :style="textUnderlineStyle">{{ element.content }}</span></component><!-- keep the copy button inline so it follows the last line of a wrapping title --><v-btn
+      /><span :style="textUnderlineStyle">{{ element.content }}</span></component><v-btn
         v-if="anchorId"
         :icon="copied ? mdiCheck : mdiLinkVariant"
         :title="copied ? t('linkCopied') : t('copyLink')"
@@ -46,9 +50,9 @@
         variant="text"
         density="comfortable"
         size="small"
-        class="page-anchor-btn ml-1"
+        class="page-anchor-btn ml-1 flex-shrink-0"
         @click.prevent.stop="copyLink"
-      /><span
+      /></span><span
         v-if="showBottomLine"
         :class="['d-block mt-2', element.centered ? 'mx-auto' : undefined]"
         :style="bottomLineStyle"
