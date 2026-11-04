@@ -47,6 +47,10 @@ services:
       - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
       - MANAGE_SITES=true
+      # the test non-human identity of dev/resources/users.json (scope tests)
+      - MANAGE_NHIS=true
+      - NHIS_ALLOW_INSECURE_ISSUERS=true
+      - PLATFORM_SCOPES_URL=http://localhost:${DEV_API_PORT}/portals-manager/api/scopes.json
       - SECRET_SITES=secret-sites
       - SECRET_EVENTS=secret-events
       - SECRET_SENDMAILS=secret-sendmails

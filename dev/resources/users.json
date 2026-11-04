@@ -88,5 +88,27 @@
     "password": {
       "clear": "passwd"
     }
+  },
+  {
+    "id": "test_org1_scope_nhi",
+    "email": "test_org1_scope_nhi@test.com",
+    "nhi": {
+      "provider": {
+        "issuer": "https://portals-tests.example.com",
+        "jwks": {
+          "keys": [
+            {
+              "kty": "RSA",
+              "n": "wiQuTVNmLuvJAzqVsM7y0pQmrZsPDuQXdg8V6nQ8Y64Hf7SCbC6UxZhNQNteY66VqS-RN0oyqyRHmOBnjhNO91XEHqpdsJpoiHIz_XlINNa07o3OEA9P6xIIasjLn8nU0O8rFljjloByt8yZcZkabyVgwQs-JqbzMrPMxtAJBim8Ru-jAn4fHhfdAhmJzE-Ve4-NgQHOBx2DMR--PB_E16w88pvHCEBItSeiE49dMbNH_lJHeVJhuBAVoeJ9QtWNZjxcTzQJkUcKPWIIwOL_kaQ_LWlcNcRh-S8k05fgoZNq1qvKZm37zBa9OgvWUmtxzmSyEp37GPdbfmF63SxLnw",
+              "e": "AQAB",
+              "kid": "test-nhi-key",
+              "alg": "RS256",
+              "use": "sig"
+            }
+          ]
+        }
+      },
+      "subject": "scope-tests"
+    }
   }
 ]

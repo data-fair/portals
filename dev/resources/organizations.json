@@ -34,6 +34,10 @@
         "id": "test_contrib_dep",
         "role": "contrib",
         "department": "dep1"
+      },
+      {
+        "id": "test_org1_scope_nhi",
+        "role": "admin"
       }
     ]
   },
