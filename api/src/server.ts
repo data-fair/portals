@@ -2,6 +2,7 @@ import { createServer } from 'node:http'
 import * as wsServer from '@data-fair/lib-express/ws-server.js'
 import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import { session } from '@data-fair/lib-express/index.js'
+import log from '@data-fair/lib-node/log.js'
 import { startObserver, stopObserver } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
@@ -38,7 +39,7 @@ export const start = async () => {
   await wsServer.start(server, mongo.db, async () => false)
   await wsEmitter.init(mongo.db)
 
-  console.log(`API server listening on port ${config.port}`)
+  log.info(`API server listening on port ${config.port}`)
 }
 
 export const stop = async () => {
