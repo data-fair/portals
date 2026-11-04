@@ -33,8 +33,8 @@ export const cases: SimCase[] = [
     goal: 'Sur la page « Nos actions pour la jeunesse », tu veux que le titre devienne « Jeunesse : nos dispositifs » et que la description dise en une phrase qu\'elle présente les dispositifs pour les 16-25 ans. Tu veux voir le changement à l\'écran avant qu\'il soit enregistré, et que ce soit enregistré à la fin.',
     maxTurns: 6
   },
-  // Page content: the page elements form (a oneOf over every element type) and its
-  // sub-agent.
+  // Page content: the page elements form (a oneOf over every element type) through the
+  // pageConfig_ form tools and the page-config-form skill.
   {
     name: 'page-contenu',
     surface: 'backoffice',
@@ -43,7 +43,7 @@ export const cases: SimCase[] = [
     goal: 'Sur la page « Nos actions pour la jeunesse », tu veux ajouter en haut un court paragraphe d\'introduction, puis en dessous la liste des données publiées sur le portail. Tu veux voir le résultat à l\'écran avant d\'enregistrer, et que ce soit enregistré à la fin.',
     maxTurns: 8
   },
-  // Portal config through the portalConfig_form sub-agent.
+  // Portal config through the portalConfig_ form tools and the portal-config-form skill.
   {
     name: 'portail-configuration',
     surface: 'backoffice',

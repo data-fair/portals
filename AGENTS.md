@@ -46,6 +46,10 @@ Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
 Test users are defined in dev/resources/users.json
 
+The scope tests use a non-human identity, `test_org1_scope_nhi` (admin of `test_org1`,
+in dev/resources/users.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
+exchanges its assertion for a scoped (or, without scope, unrestricted) session.
+
 The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.
 
 ### Testing
@@ -82,6 +86,17 @@ Quality gates:
 portals and pages lists, page editor draft). Tag a test only if it is fast and covers a path
 many features depend on. When iterating, run only the related test cases; `npm run quality`
 runs the full gate locally.
+
+### API for agents
+
+The manager API is usable by AI agents through OAuth scopes and an `x-agent` annotated OpenAPI
+document that data-fair merges into its platform document:
+
+- `docs/architecture/scopes.md`: scope vocabulary and tiers, the operations table in
+  `api/src/scopes.ts`, any-scope and refused routes, the publication-site sync of agent sessions.
+- `docs/architecture/api-docs.md`: the document, its tools, editor tool groups and skills, how
+  data-fair merges it (namespace `portals`). The agent surface is pinned by
+  `tests/fixtures/agent-surface.json`.
 
 ### Simulations
 
