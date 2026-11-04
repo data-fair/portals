@@ -19,7 +19,7 @@ How the pages of the data portals work: their model (draft and live content, own
 1. Find the portal (**portals_list_portals**) and the existing pages (**portals_list_pages**, filter on type, or search with `q`).
 2. **portals_create_page** with `type` and `config.title` (or edit an existing page).
 3. Build the content with the portals_page_config tools, starting with **portals_page_config_describeState**, saved with **portals_page_config_saveForm**.
-4. **portals_publish_page**, then **portals_attach_page_to_portals** (or **portals_create_page_on_portals** to create it attached at once). A contributor asks instead with **portals_request_page_publication**; a portal administrator accepts by attaching it.
+4. **portals_publish_page**, then **portals_attach_page_to_portals** (or **portals_create_page_on_portals** to create it attached at once). A contributor asks instead with **portals_request_page_publication**; a portal administrator accepts by attaching it, then removes the portal from `requestedPortals` with **portals_request_page_publication** (attaching does not clear the request).
 
 ## Roles and token tiers
 
@@ -49,7 +49,7 @@ With a write-tier token, prepare everything, then tell the person exactly what r
 - `event` and `news`: `eventMetadata` / `newsMetadata` with their slug, shown in the event and news catalogs.
 - **Standard pages**, one per type and per portal, at fixed addresses: `home` (`/`), `contact`, `accessibility`, `terms-of-service`, `legal-notice`, `privacy-policy`, `cookie-policy` (`/<type>`), `datasets`, `applications`, `reuses` (`/<type>`), `event-catalog` (`/event`), `news-catalog` (`/news`).
 
-Slugs (generic, event, news) are **unique per owner** (type and id, all departments and portals together): a duplicate is refused with a 409 naming the conflict. When an organization has several portals, give distinct slugs. Without a slug, one is generated from the title, already unique.
+Slugs (generic, event, news) are **unique per owner** (type and id, all departments and portals together) on the **live** configuration: a duplicate slug saves fine in a draft, and the 409 naming the conflict comes at **portals_publish_page** (or at **portals_create_page**, whose configuration is live at once). When an organization has several portals, give distinct slugs. Without a slug, one is generated from the title, already unique.
 
 ### Standard pages
 

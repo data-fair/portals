@@ -27,7 +27,7 @@ How a data portal is configured: its model (draft and live configuration, owner,
 
 ## A portal created through the API has no pages
 
-**portals_create_portal** creates no page: the manager's wizard creates them, the API does not. A new portal has no home page and `/datasets` answers "Page not found" until a `datasets` page is attached; the same for `/contact`, `/legal-notice`… Create each useful page (`home`, `datasets`, `applications`, then `contact`, `legal-notice`, `privacy-policy`, `accessibility`…) with **portals_create_page_on_portals** (or **portals_create_page**, then **portals_attach_page_to_portals**), owned by the **portal's account** (a portal shows only the pages of its own account), then add them to the menu. Catalog types get their default catalog block; the others start empty and their content belongs to `portals-pages`. A menu item towards a type without an attached page leads to a 404.
+**portals_create_portal** creates no page: the manager's wizard creates them, the API does not. A new portal has no home page and `/datasets` answers "Page not found" until a `datasets` page is attached; the same for `/contact`, `/legal-notice`… Create each useful page (`home`, `datasets`, `applications`, then `contact`, `legal-notice`, `privacy-policy`, `accessibility`…) with **portals_create_page_on_portals** (or **portals_create_page**, then **portals_attach_page_to_portals**), owned by the **portal's account** (a portal shows only the pages of its own account), then add them to the menu. Without a pages scope (no pages tools offered), ask the person to create and attach these pages from the back-office. Catalog types get their default catalog block; the others start empty and their content belongs to `portals-pages`. A menu item towards a type without an attached page leads to a 404.
 
 ## Saving
 
@@ -41,7 +41,7 @@ How a data portal is configured: its model (draft and live configuration, owner,
 
 At each save and each publication, before writing, the manager syncs the other services; if one refuses, the whole call fails with its message (`data-fair error (…)`, `simple-directory error (…)`).
 
-- **data-fair**: the portal's publication site (`data-fair-portals:<id>`): title and address of the live configuration, dataset and application URL templates, `private` when `authentication` is `required`, staging and contributor departments. Sent only when one of these changes. Known limitation: until the platform's data-fair accepts the portals secret key for agent sessions, a publication or settings change that alters the publication site can fail with a "data-fair error": then ask the person to do that step from the back-office.
+- **data-fair**: the portal's publication site (`data-fair-portals:<id>`): title and address of the live configuration, dataset and application URL templates, `private` when `authentication` is `required`, staging and contributor departments. Sent only when one of these changes. If a save that changes the portal's title or address (or its other publication-site fields) fails with a "data-fair error", the platform cannot sync it yet: tell the person, and ask them to do that step from the back-office.
 - **simple-directory**: two sites, the draft (updated at each save) and the live one (updated at **publication** only), carrying theme, logo, fonts and the contact address.
 - **ingress manager**: the draft host and, with an `ingress`, the dedicated domain.
 
