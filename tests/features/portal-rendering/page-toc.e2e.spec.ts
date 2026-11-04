@@ -125,6 +125,10 @@ test.describe('content page table of contents', () => {
         return Math.round(nav.getBoundingClientRect().top - ext.getBoundingClientRect().bottom)
       })
     }, { timeout: 15_000 }).toBeGreaterThanOrEqual(0)
+    // the navigation bar itself stays on screen: Vuetify 4 slides a hidden app bar out whole
+    await expect.poll(() => page.evaluate(() =>
+      Math.round(document.querySelector('.v-toolbar__extension')?.getBoundingClientRect().bottom ?? 0)
+    )).toBe(64)
 
     // Scrolling back up re-reveals the whole header: Vuetify's `hide` behaviour reacts to the
     // scroll direction, so a continuous upward gesture keeps the header shown even while still
