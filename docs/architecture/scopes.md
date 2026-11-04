@@ -117,8 +117,10 @@ scoped token on its settings writes, so the path depends on the session (`syncPa
   id and name). Without both settings the save answers 500 and stores nothing.
 
 Both paths first assert the caller is admin of the portal owner (`assertCanSyncPortal`). The sync
-runs before the portal is stored: a data-fair error (with data-fair's status, `formatSyncError`)
-leaves the portal unchanged. The maintenance scripts (`api/scripts/sync-portals-sd.ts`,
+runs before the portal is stored: a data-fair error leaves the portal unchanged. Its message keeps
+data-fair's status and message (`data-fair error (401): ...`); the status answered passes data-fair's
+400, 403, 404 and 409 through, and turns a 401, a 5xx and a network error into a 502 (`formatSyncError`,
+`syncErrorStatus`): those are a failure of portals' call, not of the caller's request. The maintenance scripts (`api/scripts/sync-portals-sd.ts`,
 `sync-portals-ingress.ts`) pass no caller: they sync simple-directory or the ingress only, a
 data-fair sync without a caller answers 500.
 

@@ -27,9 +27,10 @@ test.describe('publication-site sync', () => {
     test.skip(!!process.env.DF_IMAGE, 'data-fair accepts the portals secret key (DF_IMAGE)')
     const agent = (await nhiSession('portals:admin')).bearerAx
 
-    // creation: data-fair:master ignores the secret key, the scope-restricted session is refused
+    // creation: data-fair:master ignores the secret key, the scope-restricted session is refused;
+    // a 401 of data-fair is portals' credential refused downstream, answered as a bad gateway
     const createErr: any = await agent.post('/api/portals', portalBody('Agent portal')).catch(err => err)
-    assert.ok([401, 403].includes(createErr.status), `unexpected status ${createErr.status}`)
+    assert.ok([502, 403].includes(createErr.status), `unexpected status ${createErr.status}`)
     assert.match(String(createErr.data), /data-fair error \((401|403)\)/)
     const portals = (await orgAdmin.get('/api/portals')).data.results as { config: { title: string } }[]
     assert.ok(!portals.some(p => p.config.title === 'Agent portal'))
@@ -37,7 +38,7 @@ test.describe('publication-site sync', () => {
     // patch of a field of the publication site: refused before the portal is stored
     const portal = (await orgAdmin.post('/api/portals', portalBody('Human portal'))).data
     const patchErr: any = await agent.patch(`/api/portals/${portal._id}`, { staging: true }).catch(err => err)
-    assert.ok([401, 403].includes(patchErr.status), `unexpected status ${patchErr.status}`)
+    assert.ok([502, 403].includes(patchErr.status), `unexpected status ${patchErr.status}`)
     assert.match(String(patchErr.data), /data-fair error \((401|403)\)/)
     assert.ok(!(await orgAdmin.get(`/api/portals/${portal._id}`)).data.staging)
   })

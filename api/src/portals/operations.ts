@@ -35,6 +35,16 @@ export const foreignPortalId = (
   return !portal || portal.owner.type !== owner.type || portal.owner.id !== owner.id
 })
 
+/**
+ * The status portals answers for a failed sync call: the downstream 4xx that tell the caller
+ * something about its request (400, 403, 404, 409...) pass through; a 401 (portals' own credential
+ * to the service was refused), a 5xx and a network error (no status) are a bad gateway.
+ */
+export const syncErrorStatus = (downstreamStatus?: number): number => {
+  if (!downstreamStatus || downstreamStatus === 401 || downstreamStatus >= 500) return 502
+  return downstreamStatus
+}
+
 /** the caller of a sync must be admin of the portal owner (also asserted by getPortalAsAdmin) */
 export const assertCanSyncPortal = (session: SessionStateAuthenticated, portal: Pick<Portal, 'owner'>): void => {
   assertAccountRole(session, portal.owner, 'admin')

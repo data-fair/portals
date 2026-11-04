@@ -18,7 +18,7 @@ import config from '#config'
 import log from '@data-fair/lib-node/log.js'
 import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
-import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId } from './operations.ts'
+import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId, syncErrorStatus } from './operations.ts'
 
 const debug = debugModule('portals')
 
@@ -293,7 +293,7 @@ const formatSyncError = (service: string, err: any) => {
   const status = err.status ?? err.response?.status
   const data = err.data ?? err.response?.data
   const message = (typeof data === 'string' && data) || data?.message || data?.msg || err.message
-  throw httpError(status || 500, `${service} error${status ? ` (${status})` : ''}: ${message}`)
+  throw httpError(syncErrorStatus(status), `${service} error${status ? ` (${status})` : ''}: ${message}`)
 }
 
 const publicationSitesPath = (portal: Portal) => {

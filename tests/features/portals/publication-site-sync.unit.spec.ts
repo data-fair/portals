@@ -1,7 +1,7 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import type { SessionStateAuthenticated } from '@data-fair/lib-express'
-import { syncPath, subscriptionRequests, assertCanSyncPortal } from '../../../api/src/portals/operations.ts'
+import { syncPath, subscriptionRequests, assertCanSyncPortal, syncErrorStatus } from '../../../api/src/portals/operations.ts'
 
 const org1 = { type: 'organization' as const, id: 'org1', name: 'Org 1' }
 
@@ -58,5 +58,12 @@ test.describe('publication-site sync operations', () => {
       lang: 'fr'
     }
     assert.throws(() => assertCanSyncPortal(otherOrg, portal), (err: any) => err.status === 403)
+  })
+
+  test('syncErrorStatus: the request errors pass through, the downstream failures are a bad gateway', () => {
+    for (const status of [400, 403, 404, 409]) assert.equal(syncErrorStatus(status), status)
+    for (const status of [401, 500, 502, 503]) assert.equal(syncErrorStatus(status), 502)
+    // a network error has no status
+    assert.equal(syncErrorStatus(undefined), 502)
   })
 })
