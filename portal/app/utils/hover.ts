@@ -1,7 +1,7 @@
 // Relative (not the portal's #api alias) so this file still resolves under the
 // root tsconfig that type-checks the unit test importing it — that config has no
 // #api alias, and the tests import api types relatively too.
-import type { Effects as SchemaHoverEffects, Effets as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
+import type { Effects as SchemaHoverEffects, TopicsEffects as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
 import type { PortalConfig } from '../../../api/types/portal-config/index.ts'
 import { mdiOpenInNew } from '@mdi/js'
 

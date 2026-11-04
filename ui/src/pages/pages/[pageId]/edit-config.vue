@@ -49,6 +49,7 @@
     </portal-preview-provider>
 
     <navigation-right>
+      <unsaved-edit-alert v-if="unsavedEdit" />
       <page-edit-actions :changes-stack="changesStack" />
     </navigation-right>
   </v-container>
@@ -67,6 +68,7 @@ import { DfAgentChatAction } from '@data-fair/lib-vuetify-agents'
 import { usePageConfigWebMCP } from '~/composables/use-page-config-webmcp'
 import { useEditorAgentState } from '~/composables/use-editor-agent-state'
 import { usePagePublicationAgentState } from '~/composables/use-page-publication-agent-state'
+import { useUnsavedEditGuard } from '~/composables/use-unsaved-edit-guard'
 
 const { t, locale } = useI18n()
 const route = useRoute<'/pages/[pageId]/edit-config'>()
@@ -171,7 +173,7 @@ const pages = computed(() => {
 
     if (page.type === 'generic') {
       const groupId = item.group?._id ?? 'no-group'
-      genericByGroup[groupId] ??= { title: item.group?.title ?? 'Sans groupe', pages: [] }
+      genericByGroup[groupId] ??= { title: item.group?.title ?? t('noGroup'), pages: [] }
       genericByGroup[groupId].pages.push(item)
     } else {
       result[page.type as 'event' | 'news'].push(item)
@@ -215,9 +217,14 @@ const vjsfDefaults = {
   }
 }
 
+const unsavedEdit = useUnsavedEditGuard(locale)
 const saveDraft = useAsyncAction(async () => {
-  if (!formValid.value) return
+  if (!formValid.value) {
+    unsavedEdit.value = true
+    return
+  }
   await patchPage.execute({ draftConfig: editConfig.value })
+  unsavedEdit.value = false
   // the stored draft was accepted by the API, it no longer carries errors
   storedConfigErrors.value = []
 })
@@ -261,6 +268,7 @@ watch(pageFetch.data, (page) => {
     askAssistant: Ask the assistant
     addItemMessage: Add a block to the page
     edit: Editing draft
+    noGroup: No group
     pages: Pages
     pageConfig: Page configuration
     configurePrompt: Help me configure this page
@@ -269,6 +277,7 @@ watch(pageFetch.data, (page) => {
     askAssistant: Demander à l'assistant
     addItemMessage: Ajouter un bloc à la page
     edit: Édition du brouillon
+    noGroup: Sans groupe
     pages: Pages
     pageConfig: Configuration de la page
     configurePrompt: Aide-moi à configurer cette page

@@ -119,7 +119,7 @@ test.describe('agent host state of the editors', () => {
     // row complete at once, and a judged run nearly published a duplicate home link
     await page.waitForTimeout(1000)
     expect((await readAgentState(page)).form ?? '').toContain('NOT saved')
-    await page.locator('.v-field', { has: page.getByRole('combobox', { name: 'Type de page' }) }).click()
+    await page.locator('.v-field', { has: page.getByRole('combobox', { name: 'Page', exact: true }) }).click()
     await page.getByRole('option', { name: 'Catalogue de données' }).click()
     await expect.poll(async () => (await readAgentState(page)).form ?? '').toContain('complete again')
   })

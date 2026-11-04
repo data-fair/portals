@@ -91,10 +91,16 @@ const catalogElementTypes: Record<string, PageElement['type']> = {
   'news-catalog': 'news-catalog'
 }
 
+// without filters a new catalog shows no search bar, and the option to add one is hard to find
+const catalogDefaultFilters: Record<string, string[]> = {
+  'event-catalog': ['search', 'include-past', 'sort']
+}
+
 export const initCatalogPageElements = (pageType: string): PageElement[] | null => {
   const elementType = catalogElementTypes[pageType]
   if (!elementType) return null
-  return [{ type: elementType } as PageElement]
+  const items = catalogDefaultFilters[pageType] ?? ['search', 'sort']
+  return [{ type: elementType, filters: { position: 'top', items } } as PageElement]
 }
 
 export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 'news' | 'generic', owner: { type: string, id: string }) => {

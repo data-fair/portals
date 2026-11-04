@@ -41,7 +41,7 @@ const groups = [
       { from: basics, def: 'element-image', title: 'Image', 'x-i18n-title': { fr: 'Image' } },
       { from: basics, def: 'element-iframe', title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
       { from: basics, def: 'element-icon', title: 'Icon', 'x-i18n-title': { fr: 'Icône' } },
-      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (Beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } }
+      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } }
     ]
   },
   {
@@ -61,9 +61,9 @@ const groups = [
     items: [
       { from: layout, def: 'element-divider', title: 'Divider', 'x-i18n-title': { fr: 'Séparateur horizontal' } },
       { from: layout, def: 'element-banner', title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
-      { from: layout, def: 'element-card', title: 'Card', 'x-i18n-title': { fr: 'Boite' } },
+      { from: layout, def: 'element-card', title: 'Box', 'x-i18n-title': { fr: 'Boîte' } },
       { from: layout, def: 'element-two-columns', title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-      { from: layout, def: 'element-responsive-grid', title: 'Responsive Grid', 'x-i18n-title': { fr: 'Grille responsive' } },
+      { from: layout, def: 'element-responsive-grid', title: 'Responsive grid', 'x-i18n-title': { fr: 'Grille responsive' } },
       { from: layout, def: 'element-tabs', title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
       { from: layout, def: 'element-expansion-panels', title: 'Expansion panels', 'x-i18n-title': { fr: 'Accordéons' } }
     ]

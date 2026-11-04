@@ -12,7 +12,8 @@ const background = {
   properties: {
     color: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-background',
-      title: 'Couleur de fond',
+      title: 'Background color',
+      'x-i18n-title': { fr: 'Couleur de fond' },
       layout: {
         slots: {
           item: { name: 'color-select-item' },
@@ -23,10 +24,11 @@ const background = {
     },
     image: {
       type: 'object',
-      title: 'Image de fond',
+      title: 'Background image',
+      'x-i18n-title': { fr: 'Image de fond' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
-        slots: { component: { name: 'image-upload', props: { width: 2560, label: 'Chargez une image de fond' } } }
+        slots: { component: { name: 'image-upload', props: { width: 2560, label: 'Upload a background image', 'x-i18n-label': { fr: 'Chargez une image de fond' } } } }
       },
       properties: {
         _id: { type: 'string' },
@@ -37,14 +39,15 @@ const background = {
     },
     imageLocation: {
       type: 'string',
-      title: "Position de l'image de fond",
+      title: 'Background image position',
+      'x-i18n-title': { fr: "Position de l'image de fond" },
       default: 'right',
       layout: { if: 'parent.data?.image?._id', cols: { md: 4 } },
       oneOf: [
-        { const: 'left', title: 'Gauche' },
-        { const: 'center', title: 'Centre' },
-        { const: 'right', title: 'Droite' },
-        { const: 'repeat', title: 'Répétée' }
+        { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'Gauche' } },
+        { const: 'center', title: 'Center', 'x-i18n-title': { fr: 'Centre' } },
+        { const: 'right', title: 'Right', 'x-i18n-title': { fr: 'Droite' } },
+        { const: 'repeat', title: 'Repeated', 'x-i18n-title': { fr: 'Répétée' } }
       ]
     }
   }
@@ -54,10 +57,27 @@ const background = {
 /** @param {any} item @param {any} parent */
 const rowTitleFn = (item, parent) => {
   const index = parent.data.rows.indexOf(item)
+  return index === -1 ? 'Row' : `Row ${index + 1}`
+}
+/** @param {any} item @param {any} parent */
+const rowTitleFnFr = (item, parent) => {
+  const index = parent.data.rows.indexOf(item)
   return index === -1 ? 'Ligne' : `Ligne ${index + 1}`
 }
 /** @param {any} item */
 const rowSubtitleFn = (item) => {
+  /** @param {string} label @param {any[] | undefined} blocks */
+  const column = (label, blocks) => `${label}: ${blocks?.length ?? 0} block${(blocks?.length ?? 0) > 1 ? 's' : ''}`
+  if (item.columns === 3) return [column('Left', item.blocks), column('Center', item.blocks2), column('Right', item.blocks3)].join(' · ')
+  if (item.columns === 2) {
+    const left = new Map([['left', 'Left (wide)'], ['right', 'Left (narrow)']]).get(item.disposition) ?? 'Left'
+    const right = new Map([['left', 'Right (narrow)'], ['right', 'Right (wide)']]).get(item.disposition) ?? 'Right'
+    return [column(left, item.blocks), column(right, item.blocks2)].join(' · ')
+  }
+  return column('Single column', item.blocks)
+}
+/** @param {any} item */
+const rowSubtitleFnFr = (item) => {
   /** @param {string} label @param {any[] | undefined} blocks */
   const column = (label, blocks) => `${label} : ${blocks?.length ?? 0} bloc${(blocks?.length ?? 0) > 1 ? 's' : ''}`
   if (item.columns === 3) return [column('Gauche', item.blocks), column('Centre', item.blocks2), column('Droite', item.blocks3)].join(' · ')
@@ -72,9 +92,10 @@ const rowSubtitleFn = (item) => {
 const blocks = { $ref: 'https://github.com/data-fair/portals/footer-elements' }
 /**
  * @param {string} title
+ * @param {string} fr
  * @param {string} key
  */
-const columnSection = (title, key) => ({ comp: 'section', title, children: [key] })
+const columnSection = (title, fr, key) => ({ comp: 'section', title, 'x-i18n-title': { fr }, children: [key] })
 
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-footer',
@@ -93,7 +114,7 @@ export default {
           'background'
         ]
       },
-      { comp: 'card', title: 'Lignes', children: ['rows'] },
+      { comp: 'card', title: 'Rows', 'x-i18n-title': { fr: 'Lignes' }, children: ['rows'] },
       { name: 'footer-preview' }
     ]
   },
@@ -101,22 +122,27 @@ export default {
   properties: {
     copyright: {
       type: 'boolean',
-      title: 'Afficher la mention « ©année — Koumoul » en bas du pied de page',
-      description: 'Cette option est obligatoire : si vous la désactivez, vous devez afficher le logo de Koumoul dans le pied de page.',
+      title: 'Show the "©year — Koumoul" credit at the bottom of the footer',
+      'x-i18n-title': { fr: 'Afficher la mention « ©année — Koumoul » en bas du pied de page' },
+      description: 'Required, unless the Koumoul logo is shown in a footer row.',
+      'x-i18n-description': { fr: 'Obligatoire, sauf si le logo Koumoul figure dans une ligne du pied de page.' },
       default: true
     },
-    background: { ...background, title: 'Fond du pied de page' },
+    background: { ...background, title: 'Footer background', 'x-i18n-title': { fr: 'Fond du pied de page' } },
     rows: {
       type: 'array',
-      title: 'Lignes',
+      title: 'Rows',
+      'x-i18n-title': { fr: 'Lignes' },
       default: [],
       layout: {
         title: '',
         listEditMode: 'inline-single',
         listActions: ['add', 'edit', 'delete', 'sort', 'duplicate'],
         itemTitle: { ...jsFn(rowTitleFn), pure: false },
+        'x-i18n-itemTitle': { fr: { ...jsFn(rowTitleFnFr), pure: false } },
         itemSubtitle: jsFn(rowSubtitleFn),
-        messages: { addItem: 'Ajouter une ligne' }
+        'x-i18n-itemSubtitle': { fr: jsFn(rowSubtitleFnFr) },
+        messages: { addItem: 'Add a row', 'x-i18n-addItem': { fr: 'Ajouter une ligne' } }
       },
       items: { $ref: '#/$defs/row' }
     }
@@ -137,8 +163,8 @@ export default {
               { cols: { md: 3 }, key: 'gutter' },
               { cols: { md: 3 }, key: 'align' },
               'background',
-              columnSection('Colonne de gauche', 'blocks'),
-              columnSection('Colonne de droite', 'blocks2')
+              columnSection('Left column', 'Colonne de gauche', 'blocks'),
+              columnSection('Right column', 'Colonne de droite', 'blocks2')
             ]
           },
           {
@@ -148,9 +174,9 @@ export default {
               { cols: { md: 4 }, key: 'gutter' },
               { cols: { md: 4 }, key: 'align' },
               'background',
-              columnSection('Colonne de gauche', 'blocks'),
-              columnSection('Colonne centrale', 'blocks2'),
-              columnSection('Colonne de droite', 'blocks3')
+              columnSection('Left column', 'Colonne de gauche', 'blocks'),
+              columnSection('Center column', 'Colonne centrale', 'blocks2'),
+              columnSection('Right column', 'Colonne de droite', 'blocks3')
             ]
           },
           {
@@ -165,45 +191,56 @@ export default {
       properties: {
         columns: {
           type: 'integer',
-          title: 'Colonnes',
+          title: 'Columns',
+          'x-i18n-title': { fr: 'Colonnes' },
           default: 1,
           oneOf: [
-            { const: 1, title: '1 colonne' },
-            { const: 2, title: '2 colonnes' },
-            { const: 3, title: '3 colonnes' }
+            { const: 1, title: '1 column', 'x-i18n-title': { fr: '1 colonne' } },
+            { const: 2, title: '2 columns', 'x-i18n-title': { fr: '2 colonnes' } },
+            { const: 3, title: '3 columns', 'x-i18n-title': { fr: '3 colonnes' } }
           ]
         },
         disposition: {
           type: 'string',
-          title: 'Disposition',
+          title: 'Layout',
+          'x-i18n-title': { fr: 'Disposition' },
           default: 'equal',
           oneOf: [
-            { const: 'equal', title: 'Largeurs égales' },
-            { const: 'left', title: 'Gauche plus large' },
-            { const: 'right', title: 'Droite plus large' }
+            { const: 'equal', title: 'Equal widths', 'x-i18n-title': { fr: 'Largeurs égales' } },
+            { const: 'left', title: 'Wider left', 'x-i18n-title': { fr: 'Gauche plus large' } },
+            { const: 'right', title: 'Wider right', 'x-i18n-title': { fr: 'Droite plus large' } }
           ]
         },
         gutter: {
           type: 'string',
-          title: 'Espacement',
+          title: 'Spacing',
+          'x-i18n-title': { fr: 'Espacement' },
           default: 'default',
           oneOf: [
-            { const: 'none', title: 'Aucun espacement' },
-            { const: 'dense', title: 'Petit espacement' },
-            { const: 'default', title: 'Espacement normal' }
+            { const: 'none', title: 'No spacing', 'x-i18n-title': { fr: 'Aucun espacement' } },
+            { const: 'dense', title: 'Small spacing', 'x-i18n-title': { fr: 'Petit espacement' } },
+            { const: 'default', title: 'Normal spacing', 'x-i18n-title': { fr: 'Espacement normal' } }
           ]
         },
         align: {
           type: 'string',
-          title: 'Alignement vertical',
+          title: 'Vertical alignment',
+          'x-i18n-title': { fr: 'Alignement vertical' },
           default: 'start',
           oneOf: [
-            { const: 'start', title: 'Aligné en haut' },
-            { const: 'center', title: 'Aligné au centre' },
-            { const: 'end', title: 'Aligné en bas' }
+            { const: 'start', title: 'Top-aligned', 'x-i18n-title': { fr: 'Aligné en haut' } },
+            { const: 'center', title: 'Center-aligned', 'x-i18n-title': { fr: 'Aligné au centre' } },
+            { const: 'end', title: 'Bottom-aligned', 'x-i18n-title': { fr: 'Aligné en bas' } }
           ]
         },
-        background: { ...structuredClone(background), title: 'Fond de la ligne', description: 'Laissez la couleur vide pour utiliser le fond du pied de page.', required: [] },
+        background: {
+          ...structuredClone(background),
+          title: 'Row background',
+          'x-i18n-title': { fr: 'Fond de la ligne' },
+          description: 'Leave the color empty to use the footer background.',
+          'x-i18n-description': { fr: 'Laissez la couleur vide pour utiliser le fond du pied de page.' },
+          required: []
+        },
         blocks,
         blocks2: { ...blocks },
         blocks3: { ...blocks }

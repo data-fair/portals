@@ -14,8 +14,11 @@
         (full width or single column)
       -->
 
-      <!-- Records count / Size -->
-      <v-col v-bind="metadataColProps">
+      <!-- Records count / Size, a meta-only dataset carries no data -->
+      <v-col
+        v-if="!dataset.isMetaOnly"
+        v-bind="metadataColProps"
+      >
         <div class="text-body-small text-medium-emphasis">
           {{ t('size') }}
         </div>
@@ -245,6 +248,37 @@
       </ClientOnly>
     </v-row>
 
+    <!-- Fragments of a meta-only dataset (the tables of a GTFS feed for example): never listed in the catalog -->
+    <template v-if="fragments?.length">
+      <div class="text-body-small text-medium-emphasis px-3">
+        {{ t('resources') }}
+      </div>
+      <v-expansion-panels
+        bg-color="transparent"
+        variant="accordion"
+        static
+      >
+        <v-expansion-panel
+          v-for="fragment in fragments"
+          :key="fragment.id"
+          elevation="0"
+        >
+          <v-expansion-panel-title class="px-3">
+            {{ fragment.title }}
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <div class="mx-n3 mb-n2">
+              <dataset-actions :dataset="fragment" />
+              <dataset-notifications
+                v-if="portalConfig.authentication !== 'none' && shouldShowActionButton('notifications')"
+                :dataset="fragment"
+              />
+            </div>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </template>
+
     <v-divider />
 
     <!-- Actions, update date and share -->
@@ -253,51 +287,10 @@
       class="align-center px-3 py-2"
     >
       <v-col cols="12">
-        <template v-if="!dataset.isMetaOnly">
-          <action-btn
-            v-if="shouldShowActionButton('table')"
-            :to="{
-              path: `/datasets/${dataset.slug}/table`,
-              query: $route.query
-            }"
-            :action-style="metadataConfig.actionsStyle"
-            :icon="mdiTableLarge"
-            :resource-title="dataset.title"
-            :text="t('text.table')"
-            :tooltip="t('tooltip.table')"
-          />
-          <action-btn
-            v-if="dataset.bbox?.length && shouldShowActionButton('map')"
-            :to="`/datasets/${dataset.slug}/map`"
-            :action-style="metadataConfig.actionsStyle"
-            :icon="mdiMapMarker"
-            :resource-title="dataset.title"
-            :text="t('text.map')"
-            :tooltip="t('tooltip.map')"
-          />
-          <action-btn
-            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('api')"
-            :to="`/datasets/${dataset.slug}/api-doc`"
-            :action-style="metadataConfig.actionsStyle"
-            :icon="mdiCog"
-            :resource-title="dataset.title"
-            :text="t('text.api')"
-            :tooltip="t('tooltip.api')"
-          />
-
-          <dataset-download
-            v-if="shouldShowActionButton('download')"
-            :dataset="dataset"
-          />
-          <dataset-schema
-            v-if="shouldShowActionButton('schema')"
-            :dataset="dataset"
-          />
-          <dataset-embed
-            v-if="!$vuetify.display.smAndDown && shouldShowActionButton('embed') && dataset.previews?.length"
-            :dataset="dataset"
-          />
-        </template>
+        <dataset-actions
+          v-if="!dataset.isMetaOnly"
+          :dataset="dataset"
+        />
 
         <dataset-attachments-preview
           v-if="shouldShowActionButton('attachments') && dataset.attachments?.filter(a => a.url !== dataset.image).length"
@@ -331,11 +324,11 @@
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
-import { mdiCog, mdiLabel, mdiMapMarker, mdiTableLarge } from '@mdi/js'
+import { mdiLabel } from '@mdi/js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
-const { dataset } = defineProps<{ dataset: Dataset }>()
+const { dataset, fragments } = defineProps<{ dataset: Dataset, fragments?: Dataset[] }>()
 const { portalConfig } = usePortalStore()
 const { linkRel } = useNavigationStore()
 const { t, locale } = useI18n()
@@ -395,6 +388,7 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     creator: 'Producer:'
     dataFrom: 'Data from'
     dataProducedBy: 'Origin:'
+    resources: 'Resources:'
     records: '0 record | {formatted} record | {formatted} records'
     frequencyLabels:
       annual: 'Every year'
@@ -427,14 +421,6 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     spatial: 'Geographic coverage:'
     temporal: 'Temporal coverage:'
     temporalStart: 'From'
-    text:
-      api: API
-      map: Map
-      table: Table
-    tooltip:
-      map: Open the map view in full page
-      table: Open the table view in full page
-      api: Open the API documentation in full page
     thisSource: 'this source'
     frequency: 'Update frequency:'
     topics: 'Topics:'
@@ -444,6 +430,7 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     creator: 'Producteur :'
     dataFrom: 'Données issues de'
     dataProducedBy: 'Provenance :'
+    resources: 'Ressources :'
     records: '0 enregistrement | {formatted} enregistrement | {formatted} enregistrements'
     frequencyLabels:
       annual: 'Tous les ans'
@@ -476,14 +463,6 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     spatial: 'Couverture géographique :'
     temporal: 'Couverture temporelle :'
     temporalStart: 'À partir de'
-    text:
-      api: API
-      map: Carte
-      table: Tableau
-    tooltip:
-      map: Ouvrir la vue carte en pleine page
-      table: Ouvrir la vue tableau en pleine page
-      api: Ouvrir la documentation d'API en pleine page
     thisSource: 'cette source'
     frequency: 'Fréquence de mise à jour :'
     topics: 'Thématiques :'

@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 /* eslint-disable no-template-curly-in-string */
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-events',
@@ -17,39 +19,46 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         defaultSort: {
           type: 'string',
-          title: 'Tri par défaut',
-          description: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page.",
+          title: 'Default sort',
+          'x-i18n-title': { fr: 'Tri par défaut' },
+          description: 'This sort is applied by default when the user arrives on the page.',
+          'x-i18n-description': { fr: "Ce tri sera appliqué par défaut lorsque l'utilisateur arrive sur la page." },
           default: 'startDate:1',
           oneOf: [
-            { const: 'startDate:1', title: 'Date de début (du plus ancien au plus récent)' },
-            { const: 'title:1', title: 'Ordre alphabétique (A à Z)' }
+            { const: 'startDate:1', title: 'Start date (oldest to newest)', 'x-i18n-title': { fr: 'Date de début (du plus ancien au plus récent)' } },
+            { const: 'title:1', title: 'Alphabetical order (A to Z)', 'x-i18n-title': { fr: 'Ordre alphabétique (A à Z)' } }
           ]
         },
         includePast: {
           type: 'boolean',
-          title: 'Inclure les évènements passés'
+          title: 'Include past events',
+          'x-i18n-title': { fr: 'Inclure les événements passés' }
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns is reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           default: 2,
           minimum: 1,
           maximum: 3
         },
         countPosition: {
           type: 'string',
-          title: 'Position du nombre de résultats',
+          title: 'Results count position',
+          'x-i18n-title': { fr: 'Position du nombre de résultats' },
           default: 'top',
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'top', title: 'Au dessus des filtres' },
-            { const: 'bottom', title: 'Au dessus des résultats' }
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'top', title: 'Above the filters', 'x-i18n-title': { fr: 'Au-dessus des filtres' } },
+            { const: 'bottom', title: 'Above the results', 'x-i18n-title': { fr: 'Au-dessus des résultats' } }
           ]
         },
         showSortBesideCount: {
           type: 'boolean',
-          title: 'Afficher le tri à droite du nombre de résultats.',
+          title: 'Show the sort to the right of the results count.',
+          'x-i18n-title': { fr: 'Afficher le tri à droite du nombre de résultats.' },
           layout: {
             if: 'parent.data?.countPosition === "bottom"',
             comp: 'switch'
@@ -57,60 +66,70 @@ export default {
         },
         showAdvancedFilters: {
           type: 'boolean',
-          title: 'Activer les filtres avancés',
-          description: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.',
+          title: 'Enable advanced filters',
+          'x-i18n-title': { fr: 'Activer les filtres avancés' },
+          description: 'Advanced configuration mode. Lets you configure custom page blocks between the basic filters and the results.',
+          'x-i18n-description': { fr: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.' },
           layout: { comp: 'switch' }
         },
         filters: {
           type: 'object',
-          title: 'Configuration des filtres',
+          title: 'Events catalog filters',
+          'x-i18n-title': { fr: 'Filtres', en: 'Filters' },
           layout: 'card',
           properties: {
             position: {
               type: 'string',
-              title: 'Position des filtres',
+              title: 'Filters position',
+              'x-i18n-title': { fr: 'Position des filtres' },
               default: 'top',
               oneOf: [
-                { const: 'top', title: 'Au dessus des résultats' },
-                { const: 'left', title: 'À gauche des résultats' }
+                { const: 'top', title: 'Above the results', 'x-i18n-title': { fr: 'Au-dessus des résultats' } },
+                { const: 'left', title: 'To the left of the results', 'x-i18n-title': { fr: 'À gauche des résultats' } }
               ]
             },
             items: {
               type: 'array',
-              title: 'Filtres à afficher',
-              description: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.',
+              title: 'Filters to display',
+              'x-i18n-title': { fr: 'Filtres à afficher' },
+              description: 'Simplified mode to choose the filters displayed on the page. You can also use functional blocks to customize the filters further.',
+              'x-i18n-description': { fr: 'Mode simplifié pour choisir les filtres à afficher sur la page. Vous pouvez aussi utiliser des blocs fonctionnels pour plus de personnalisation des filtres.' },
               items: {
                 type: 'string',
                 oneOf: [
-                  { const: 'search', title: 'Barre de recherche' },
-                  { const: 'include-past', title: 'Inclure les événements passés' },
-                  { const: 'sort', title: 'Tri' }
+                  { const: 'search', title: 'Search bar', 'x-i18n-title': { fr: 'Barre de recherche' } },
+                  { const: 'include-past', title: 'Include past events', 'x-i18n-title': { fr: 'Inclure les événements passés' } },
+                  { const: 'sort', title: 'Sort', 'x-i18n-title': { fr: 'Tri' } }
                 ]
               }
             },
             density: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+              layout: { ...inheritedStyleLayout }
             },
             rounded: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'
+              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
+              layout: { ...inheritedStyleLayout }
             }
           }
         },
         pagination: {
           type: 'object',
-          title: 'Configuration de la pagination',
+          title: 'Events catalog pagination',
+          'x-i18n-title': { fr: 'Pagination', en: 'Pagination' },
           layout: 'card',
           properties: {
             position: {
               type: 'string',
               title: 'Position',
-              description: 'Désactiver la pagination affichera les résultats en scroll infini.',
+              description: 'Disabling pagination displays the results with infinite scroll.',
+              'x-i18n-description': { fr: 'Désactiver la pagination affichera les résultats en scroll infini.' },
               default: 'none',
               oneOf: [
-                { const: 'none', title: 'Scroll infini' },
-                { const: 'before', title: 'Avant les résultats' },
-                { const: 'after', title: 'Après les résultats' },
-                { const: 'both', title: 'Les deux' }
+                { const: 'none', title: 'Infinite scroll', 'x-i18n-title': { fr: 'Scroll infini' } },
+                { const: 'before', title: 'Before the results', 'x-i18n-title': { fr: 'Avant les résultats' } },
+                { const: 'after', title: 'After the results', 'x-i18n-title': { fr: 'Après les résultats' } },
+                { const: 'both', title: 'Both', 'x-i18n-title': { fr: 'Les deux' } }
               ]
             },
             alignment: {
@@ -151,9 +170,9 @@ export default {
           'columns',
           'mb',
           {
-            title: 'Event Card',
+            title: 'Event cards',
             'x-i18n-title': {
-              fr: 'Configuration des vignettes'
+              fr: 'Vignettes'
             },
             comp: 'card',
             children: [
@@ -172,7 +191,8 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         mode: {
           type: 'string',
-          title: 'Type de liste',
+          title: 'List type',
+          'x-i18n-title': { fr: 'Type de liste' },
           default: 'upcoming',
           oneOf: [
             { const: 'upcoming', title: 'Upcoming', 'x-i18n-title': { fr: 'Les prochains événements' } },
@@ -181,8 +201,10 @@ export default {
         },
         events: {
           type: 'array',
-          title: 'Événements',
-          description: 'Sélectionnez manuellement les événements à afficher.',
+          title: 'Events',
+          'x-i18n-title': { fr: 'Événements' },
+          description: 'Manually select the events to display.',
+          'x-i18n-description': { fr: 'Sélectionnez manuellement les événements à afficher.' },
           layout: {
             getItems: {
               url: '/portals-manager/api/pages?type=event&select=title,config.eventMetadata.slug&size=20',
@@ -209,23 +231,28 @@ export default {
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns is reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           default: 2,
           minimum: 1,
           maximum: 3
         },
         limit: {
           type: 'integer',
-          title: "Nombre d'événements",
-          description: "Nombre total d'événements à afficher.",
+          title: 'Number of events',
+          'x-i18n-title': { fr: "Nombre d'événements" },
+          description: 'Total number of events to display.',
+          'x-i18n-description': { fr: "Nombre total d'événements à afficher." },
           default: 3,
           minimum: 1,
           maximum: 12
         },
         usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du portail',
+          title: 'Use the portal configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration du portail' },
           layout: 'switch',
           default: true
         },
@@ -246,9 +273,9 @@ export default {
           'event',
           'mb',
           {
-            title: 'Event Card',
+            title: 'Event card',
             'x-i18n-title': {
-              fr: 'Configuration de la vignette'
+              fr: 'Vignette'
             },
             comp: 'card',
             children: [
@@ -267,7 +294,8 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         event: {
           type: 'object',
-          title: 'Événement',
+          title: 'Selected event',
+          'x-i18n-title': { fr: 'Événement', en: 'Event' },
           additionalProperties: false,
           required: ['slug'],
           layout: {
@@ -286,7 +314,8 @@ export default {
         },
         usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du portail',
+          title: 'Use the portal configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration du portail' },
           layout: 'switch',
           default: true
         },
