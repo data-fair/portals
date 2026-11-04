@@ -70,6 +70,13 @@ guard in the router, and its path in the document: `scopes-coverage.unit.spec.ts
 | `POST /reuses` (write) | `portals` |
 | `PATCH /reuses/{id}` (write) | `config` (the live configuration: changing it is a publication), `portals`, `requestedPortals`, `owner` |
 
+Whatever the session, the `portals` ids a page or a reuse is attached to must be portals of its
+owner (type and id, the department may differ): another owner's or an unknown portal is refused
+with a 400 naming it (`assertOwnerPortals`, `foreignPortalId`), so attaching a standard page never
+detaches a page of another account (`switchStandardPages` also stays within the owner).
+`requestedPortals` is not checked: a request on a portal of another owner is never shown, and the
+reuse submission moves the reuse to the portal's owner first.
+
 Superadmin-only body properties (`whiteLabel`, `isReference`, `md2Compat` of a portal) stay behind
 `assertAdminMode`, which a scoped session never passes (lib-express refuses superadmin claims on
 scoped tokens), present with any value, `false` included.
@@ -143,5 +150,4 @@ own credential (its bearer, else its cookie; `subscriptionRequests`). A failure 
 - The secret-key sync needs a data-fair release with `secretKeys.portals`, and portals configured with `SECRET_DATA_FAIR` and `PRIVATE_DATA_FAIR_URL`; until then an agent save that touches a publication site is refused.
 - TODO: unify the human path on the secret key once every supported data-fair has it (the cookie path stays for humans meanwhile).
 - An agent session's subscriptions to the events of a new publication site are probably refused by events (its token is portals-only); the failure is only logged.
-- `portals` attach (`attach_page_to_portals`, `PATCH /pages/{id}`) does not check that the portal belongs to the page owner (pre-existing; `switchStandardPages` queries across owners).
 - A page transfer does not update its images' `owner.department` (pre-existing).

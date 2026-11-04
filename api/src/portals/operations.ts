@@ -19,6 +19,22 @@ const isScopeRestricted = (session: SessionStateAuthenticated) => !!session.scop
 // TODO: unify on the secret-key path once every supported data-fair has it
 export const syncPath = (session: SessionStateAuthenticated): 'cookie' | 'secret' => isScopeRestricted(session) ? 'secret' : 'cookie'
 
+/**
+ * The first of the portal ids a page or reuse of `owner` may not be attached to: a portal not
+ * found, or owned by another account. A portal only shows the pages and reuses of its owner
+ * (type and id: the department may differ, see contributorDepartments), and attaching a
+ * standard page detaches the one of the same type: across owners, that would detach the page
+ * of another account.
+ */
+export const foreignPortalId = (
+  owner: { type: string, id: string },
+  portalIds: string[],
+  portals: Pick<Portal, '_id' | 'owner'>[]
+): string | undefined => portalIds.find(portalId => {
+  const portal = portals.find(p => p._id === portalId)
+  return !portal || portal.owner.type !== owner.type || portal.owner.id !== owner.id
+})
+
 /** the caller of a sync must be admin of the portal owner (also asserted by getPortalAsAdmin) */
 export const assertCanSyncPortal = (session: SessionStateAuthenticated, portal: Pick<Portal, 'owner'>): void => {
   assertAccountRole(session, portal.owner, 'admin')

@@ -4,6 +4,7 @@ import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
 const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+const otherUser = await axiosAuth('test_alone@test.com')
 
 test.describe('reuses list', () => {
   test.beforeEach(clean)
@@ -27,5 +28,16 @@ test.describe('reuses list', () => {
     assert.equal(pending.count, 1)
     assert.deepEqual(pending.results, [])
     assert.deepEqual(pending.facets.requestedPortals, { [portal._id]: 1 })
+  })
+
+  test('a reuse is attached only to the portals of its owner', async () => {
+    const otherPortal = (await otherUser.post('/api/portals', { config: { title: 'Other portal', menu: { children: [] } } })).data
+    await assert.rejects(orgAdmin.post('/api/reuses', { config: { title: 'Intruder' }, portals: [otherPortal._id] }),
+      (err: any) => err.status === 400 && String(err.data).includes(`portal "${otherPortal._id}"`))
+    const reuse = (await orgAdmin.post('/api/reuses', { config: { title: 'Reuse' } })).data
+    await assert.rejects(orgAdmin.patch(`/api/reuses/${reuse._id}`, { portals: [otherPortal._id] }),
+      (err: any) => err.status === 400 && String(err.data).includes(`portal "${otherPortal._id}"`))
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Portal', menu: { children: [] } } })).data
+    assert.deepEqual((await orgAdmin.patch(`/api/reuses/${reuse._id}`, { portals: [portal._id] })).data.portals, [portal._id])
   })
 })

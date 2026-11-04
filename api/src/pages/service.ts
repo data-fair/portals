@@ -9,6 +9,7 @@ import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
 import { duplicateImage } from '../images/service.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
+import { assertOwnerPortals } from '../portals/service.ts'
 import { traversePageElements, resolvePageAnchors } from './operations.ts'
 
 const debug = debugModule('pages')
@@ -137,6 +138,7 @@ const throwSlugConflict = (err: any) => {
 export const createPage = async (page: Page, sourcePageId?: string) => {
   debug('createPage', page)
   validateMetadata(page)
+  await assertOwnerPortals(page.owner, page.portals)
   // text blocks display their rendered _html: a page created with content showed empty blocks
   // until its draft was first edited
   await renderMarkdownElements(page.config)
@@ -191,6 +193,8 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   // Track portal additions/removals
   const addedPortals = patch.portals ? patch.portals.filter(portalId => !page.portals.includes(portalId)) : []
   const removedPortals = patch.portals ? page.portals.filter(portalId => !patch.portals!.includes(portalId)) : []
+  // only the added ones: a transferred page may keep the ids of its former owner's portals
+  await assertOwnerPortals(patch.owner ?? page.owner, addedPortals)
   let standardReplacements: Record<string, string> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
@@ -390,9 +394,13 @@ const validateMetadata = (page: Page, patch?: Partial<Page>) => {
 const switchStandardPages = async (page: Page, addedPortals: string[]): Promise<Record<string, string>> => {
   const replacements: Record<string, string> = {}
 
-  // Find other pages of the same type already published on these portals
+  // Find other pages of the same type already published on these portals, of the same owner
+  // (type and id: a department page can replace the organization's one) — the portals ids are
+  // checked by assertOwnerPortals, this keeps the detachment within the owner whatever happens
   const conflictingPages = await mongo.pages.find({
     _id: { $ne: page._id },
+    'owner.type': page.owner.type,
+    'owner.id': page.owner.id,
     type: page.type,
     portals: { $in: addedPortals }
   }).toArray()

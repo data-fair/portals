@@ -18,9 +18,17 @@ import config from '#config'
 import log from '@data-fair/lib-node/log.js'
 import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
-import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath } from './operations.ts'
+import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId } from './operations.ts'
 
 const debug = debugModule('portals')
+
+/** 400 when a page or reuse of `owner` is attached to a portal of another owner (foreignPortalId) */
+export const assertOwnerPortals = async (owner: { type: string, id: string }, portalIds: string[]) => {
+  if (!portalIds.length) return
+  const portals = await mongo.portals.find({ _id: { $in: portalIds } }, { projection: { _id: 1, owner: 1 } }).toArray()
+  const foreignId = foreignPortalId(owner, portalIds, portals)
+  if (foreignId) throw httpError(400, `portal "${foreignId}" not found among the portals of the owner ${owner.type}:${owner.id}`)
+}
 const debugSyncPortal = debugModule('sync-portal')
 
 export const getPortalAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {

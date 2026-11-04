@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
 const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+const otherUser = await axiosAuth('test_alone@test.com')
 
 const errorOf = async (promise: Promise<any>) => {
   try {
@@ -88,6 +89,38 @@ test.describe('page creation pitfalls', () => {
     const second = (await orgAdmin.post('/api/pages', { type: 'home', portals: [portal._id], config: { title: 'Second home', elements: [] } })).data
     assert.deepEqual((await orgAdmin.get(`/api/pages/${first._id}`)).data.portals, [])
     assert.deepEqual((await orgAdmin.get(`/api/pages/${second._id}`)).data.portals, [portal._id])
+  })
+
+  test('a page is attached only to the portals of its owner', async () => {
+    // another account's portal and its home page
+    const otherPortal = (await otherUser.post('/api/portals', { config: { title: 'Other portal', menu: { children: [] } } })).data
+    const otherHome = (await otherUser.post('/api/pages', { type: 'home', portals: [otherPortal._id], config: { title: 'Other home', elements: [] } })).data
+
+    // created on it: refused, the other owner's home page untouched
+    const postError = await errorOf(orgAdmin.post('/api/pages', { type: 'home', portals: [otherPortal._id], config: { title: 'Intruder', elements: [] } }))
+    assert.equal(postError.status, 400)
+    assert.match(String(postError.data), new RegExp(`portal "${otherPortal._id}"`))
+    assert.deepEqual((await otherUser.get(`/api/pages/${otherHome._id}`)).data.portals, [otherPortal._id])
+
+    // attached to it: refused, untouched too
+    const page = (await orgAdmin.post('/api/pages', { type: 'home', config: { title: 'Intruder', elements: [] } })).data
+    const patchError = await errorOf(orgAdmin.patch(`/api/pages/${page._id}`, { portals: [otherPortal._id] }))
+    assert.equal(patchError.status, 400)
+    assert.match(String(patchError.data), new RegExp(`portal "${otherPortal._id}"`))
+    assert.deepEqual((await otherUser.get(`/api/pages/${otherHome._id}`)).data.portals, [otherPortal._id])
+    assert.deepEqual((await orgAdmin.get(`/api/pages/${page._id}`)).data.portals, [])
+
+    // an unknown portal id is refused the same way
+    const unknownError = await errorOf(orgAdmin.patch(`/api/pages/${page._id}`, { portals: ['unknown-portal'] }))
+    assert.equal(unknownError.status, 400)
+    assert.match(String(unknownError.data), /portal "unknown-portal"/)
+
+    // attached to a portal of its owner: switches that portal's home page
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Portal', menu: { children: [] } } })).data
+    const ownHome = (await orgAdmin.post('/api/pages', { type: 'home', portals: [portal._id], config: { title: 'Own home', elements: [] } })).data
+    await orgAdmin.patch(`/api/pages/${page._id}`, { portals: [portal._id] })
+    assert.deepEqual((await orgAdmin.get(`/api/pages/${page._id}`)).data.portals, [portal._id])
+    assert.deepEqual((await orgAdmin.get(`/api/pages/${ownHome._id}`)).data.portals, [])
   })
 
   test('a slug taken by another page of the owner is named in the conflict', async () => {
