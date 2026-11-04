@@ -111,7 +111,7 @@ export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOp
   },
   putPortalDraftConfig: {
     name: 'portal_config',
-    title: { en: 'Portal configuration', fr: 'Configuration de portail' },
+    title: { en: 'Portal draft configuration (published only by portals_publish_portal_config)', fr: 'Brouillon de configuration de portail (publié seulement par portals_publish_portal_config)' },
     editor: { schemaOperation: 'getPortalConfigSchema', readOperation: 'getPortalDraftConfig' }
   },
   listFontAssets: {
@@ -221,7 +221,7 @@ export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOp
   },
   putPageDraftConfig: {
     name: 'page_config',
-    title: { en: 'Page content', fr: 'Contenu de page' },
+    title: { en: 'Page draft content (published only by portals_publish_page)', fr: 'Brouillon de contenu de page (publié seulement par portals_publish_page)' },
     editor: { schemaOperation: 'getPageConfigSchema', readOperation: 'getPageDraftConfig' }
   },
   listGroups: {
