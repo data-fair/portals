@@ -33,9 +33,12 @@ router.get('', requireOperationScope('listFontAssets'), async (req, res) => {
 router.post('', requireOperationScope('createFontAsset'), upload.single('font-asset'), jsonFromMultiPart, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
-  const body = postReqBody.returnValid(req.body, { name: 'body' })
   const file = req.file
   if (!file) throw httpError(400, 'missing font-asset file')
+  // the metadata of the file are those of the upload when the body does not give them (an agent tool
+  // sends the file from a URL, it does not know its size)
+  if (!req.body.file?.name) req.body.file = { name: Buffer.from(file.originalname, 'latin1').toString('utf8'), size: file.size, type: file.mimetype }
+  const body = postReqBody.returnValid(req.body, { name: 'body' })
 
   body.name = body.name.trim()
   const createdAt = new Date().toISOString()

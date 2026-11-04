@@ -7,6 +7,7 @@ import config from '#config'
 import { getStatus } from './admin/status.ts'
 import { scopeDescriptions } from './scopes.ts'
 import { apiRouters } from './routers.ts'
+import apiDocs from '../contract/api-docs.ts'
 
 export const app = express()
 
@@ -44,6 +45,16 @@ if (process.env.NODE_ENV === 'development') {
 // the scopes of the service, read by simple-directory (PLATFORM_SCOPES_URL) and data-fair
 app.get('/api/scopes.json', allowAnyScope, (req, res) => {
   res.json(scopeDescriptions((req.acceptsLanguages('fr', 'en') || 'fr') as 'fr' | 'en'))
+})
+
+// the OpenAPI document with its agent annotations, merged by data-fair into its platform document;
+// public and identical for every caller, scope descriptions in the requested language
+const apiDocsByLocale: Partial<Record<'fr' | 'en', ReturnType<typeof apiDocs>>> = {}
+app.get('/api/api-docs.json', allowAnyScope, (req, res) => {
+  const locale = (req.acceptsLanguages('fr', 'en') || 'fr') as 'fr' | 'en'
+  res.set('Cache-Control', 'public, max-age=300')
+  res.vary('Accept-Language')
+  res.json(apiDocsByLocale[locale] ??= apiDocs(locale))
 })
 
 app.get('/api/ping', allowAnyScope, async (req, res) => {
